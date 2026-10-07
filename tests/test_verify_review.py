@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import scripts.verify_review as verify_review_cli

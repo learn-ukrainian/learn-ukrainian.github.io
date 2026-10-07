@@ -1382,8 +1382,8 @@ entries:
 
   - id: registry-atlas-word-cards
     kind: registry
-    paths: [registry/atlas/identity/registry.json, registry/atlas/pilot/pilot-v1.json]
-    purpose: Word Atlas word-card foundation data - the identity registry (card entries with keys at creation, source records and lineage events) and the frozen pilot manifest (selection, admission record, database fingerprints, counts and manifest hash).
+    paths: [registry/atlas/identity/registry.json, registry/atlas/pilot/pilot-v1.json, registry/atlas/pilot/pilot-v1.register-pin.json]
+    purpose: Word Atlas word-card foundation data - the identity registry (card entries with keys at creation, source records and lineage events), the frozen pilot manifest (selection, admission record, database fingerprints, counts and manifest hash), and its register pin sidecar.
     keywords: [word card identity registry, card id, pilot selection, source keys, admission state]
     lifecycle: active
     owner: atlas-practice
@@ -1778,6 +1778,20 @@ entries:
     query:
       - {surface: mcp, how: "sources MCP verify_word / verify_words / verify_lemma / inspect_word"}
     content_searchable: true
+
+  - id: data-grac-frequency-db
+    kind: data_store
+    store: [data/grac_frequency.db, data/grac-10.db]
+    producer: [scripts/ingest/grac_frequency_ingest.py]
+    producer_note: grac_frequency.db is the default snapshot; --db selects alternate destinations, including the grac-10.db frequency-floor example.
+    local_only: true
+    purpose: Resumable local GRAC lemma and word frequency snapshots with per-attribute checkpoints and per-page retrieval provenance, used for offline frequency lookups before live GRAC fallback.
+    keywords: [GRAC, corpus frequency, lemma frequency, word frequency, local snapshot, query_grac]
+    lifecycle: active
+    owner: corpus-channels
+    query:
+      - {surface: mcp, how: "sources MCP query_grac with mode frequency or lemma_forms; cache_only=true for offline snapshot lookups"}
+    content_searchable: false
 
   - id: data-atlas-db
     kind: data_store

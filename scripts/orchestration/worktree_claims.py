@@ -29,13 +29,14 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, TypeGuard
 
-from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
 from scripts.guardrails import worktree_containment
+from scripts.orchestration.execution_safe_git import SafeGitRunner
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
@@ -71,7 +72,6 @@ RELEASED_TASK_STATUSES = frozenset(
         "cancelled",
         "crashed",
         "dry_run",
-        "reaped",
     }
 )
 
@@ -482,22 +482,25 @@ class WorktreeRemoval:
     branch: str | None = None
     dirty: bool | None = None
     error: str | None = None
+    preserved_artifacts: dict[str, Any] | None = None
 
     def as_record(self) -> dict[str, Any]:
         """Return the outcome as a JSON-ready dict."""
-        return dataclasses.asdict(self)
+        record = dataclasses.asdict(self)
+        if self.preserved_artifacts is None:
+            record.pop("preserved_artifacts")
+        return record
 
 
 def _git_probe(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str] | None:
     """Run a read-only git command; ``None`` when it could not run at all."""
     try:
-        return subprocess.run(
-            ["git", *args],
+        return safe_git(
+            args,
             cwd=cwd,
             capture_output=True,
             text=True,
             check=False,
-            env=sanitized_git_env(),
             timeout=_GIT_PROBE_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -527,6 +530,24 @@ def public_primary_root() -> Path:
     checkouts under a temporary directory.
     """
     return main_checkout_root(Path(__file__).resolve().parents[2])
+
+
+def identity_cache_publication_allowed(worktree: Path, tasks_dir: Path) -> bool:
+    """Publish only for the public repository's own tree and task directory.
+
+    Use the tree's Git metadata, never a caller's repo/control-root hint.
+    Sibling maintenance must leave even the public control plane unchanged
+    (#9797). Foreign or unresolvable task directories remain read-only.
+    """
+    try:
+        public = public_primary_root().resolve(strict=True)
+        return (
+            (public / ".git").is_dir()
+            and tasks_dir.resolve(strict=True) == public / "batch_state" / "tasks"
+            and main_checkout_root(worktree.resolve(strict=True)).resolve(strict=True) == public
+        )
+    except (OSError, ValueError, RuntimeError):
+        return False
 
 
 def control_plane_root(repo_root: Path) -> Path:
@@ -588,7 +609,12 @@ def git_worktree_remove(
     force: bool,
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
+    control_root: Path | None = None,
+    tasks_dir: Path | None = None,
+    task_id: str | None = None,
+    task_record: Mapping[str, Any] | None = None,
+    preservation_receipt: dict[str, Any] | None = None,
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -603,8 +629,14 @@ def git_worktree_remove(
     The reaper does not pass a timeout: removal keeps that 120s bound and is
     not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
-    A caller may supply ``git_runner`` to preserve its fixed executable,
-    environment and execution-safe configuration inside this chokepoint.
+    A caller may supply ``SafeGitRunner`` to pin an executable; mandatory
+    execution controls cannot be replaced by a callback.
+    Ignored non-cache output is verified and preserved here for every caller
+    (#9645). Failure returns a refusal without invoking destructive Git.
+    The gate resolves canonical worktree-bound records itself and honors
+    keep_worktree even when callers supply no task record. Baselines label
+    attribution only; missing attribution and failed retrieval retain the tree.
+    ``preservation_receipt`` receives retrieval or retention metadata.
     """
     target = worktree
     if force:
@@ -616,21 +648,32 @@ def git_worktree_remove(
             )
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
+    # Both locked removal pipelines meet here. Preserve exactly once, after
+    # their ownership/claim checks and immediately before destructive Git.
+    from scripts.fleet.ignored_task_output import preserve_worktree_artifacts
+
+    try:
+        primary = control_root if control_root is not None else control_plane_root(repo_root)
+        ok, refusal, metadata = preserve_worktree_artifacts(
+            target,
+            primary=primary,
+            task_id=task_id,
+            tasks_dir=tasks_dir if tasks_dir is not None else primary / "batch_state" / "tasks",
+            task_record=task_record,
+            repo_root=repo_root,
+        )
+    except (ControlPlaneError, OSError, ValueError) as exc:
+        return f"artifact preservation failed: {exc}; refusing worktree removal"
+    if metadata is not None and preservation_receipt is not None:
+        preservation_receipt.update(metadata)
+    if not ok:
+        return refusal
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = (
-            git_runner(repo_root, argv[1:])
-            if git_runner is not None
-            else subprocess.run(
-                argv,
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=sanitized_git_env(),
-                timeout=bound,
-            )
+        proc = safe_git(
+            argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
+            text=True, check=False, timeout=bound,
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"
@@ -661,7 +704,8 @@ def remove_unclaimed_worktree(
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -689,14 +733,23 @@ def remove_unclaimed_worktree(
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
     caller's purpose, recorded on success. This never raises.
-    ``git_runner`` supplies the branch probe and raw removal runner for
-    closed maintenance callers; it does not bypass locks or the claim scan.
+    ``git_runner`` may pin a fixed executable for closed maintenance callers;
+    it cannot bypass execution controls, locks or the claim scan.
     """
     branch: str | None = None
     dirty: bool | None = None
+    preservation_receipt: dict[str, Any] = {}
 
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
-        return WorktreeRemoval(action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty, error=error)
+        return WorktreeRemoval(
+            action=action,
+            path=str(worktree),
+            reason=why,
+            branch=branch,
+            dirty=dirty,
+            error=error,
+            preserved_artifacts=preservation_receipt or None,
+        )
 
     with contextlib.ExitStack() as locks:
         try:
@@ -718,7 +771,10 @@ def remove_unclaimed_worktree(
             if git_runner is None:
                 branch = checked_out_branch(worktree)
             else:
-                probe = git_runner(worktree, ["symbolic-ref", "--quiet", "--short", "HEAD"])
+                probe = safe_git(
+                    ["symbolic-ref", "--quiet", "--short", "HEAD"], cwd=worktree,
+                    runner=git_runner, text=True, capture_output=True, check=False,
+                )
                 branch = probe.stdout.strip() if probe.returncode == 0 else None
             if force:
                 dirty = (dirty_probe if dirty_probe is not None else worktree_is_dirty)(worktree)
@@ -738,23 +794,44 @@ def remove_unclaimed_worktree(
                 # which reports git's own error.
                 _git_probe(["worktree", "unlock", str(worktree)], cwd=repo_root)
             runner_options = {} if git_runner is None else {"git_runner": git_runner}
-            error = git_worktree_remove(repo_root, worktree, force=force, **runner_options)
+            error = git_worktree_remove(
+                repo_root,
+                worktree,
+                force=force,
+                control_root=control_root,
+                tasks_dir=tasks_dir,
+                task_id=owner_task_id,
+                task_record=task_record,
+                preservation_receipt=preservation_receipt,
+                **runner_options,
+            )
         except Exception as exc:
             return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
         if error is not None:
+            if error.startswith("artifact preservation failed:"):
+                return outcome("skipped", error)
             return outcome("error", "worktree removal failed", error=error)
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
 
 
-def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path, repo_root: Path) -> str | None:
+def owner_release_refusal(
+    worktree: Path,
+    *,
+    owner_task_id: str,
+    tasks_dir: Path,
+    repo_root: Path,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+) -> str | None:
     """Return why ``owner_task_id`` may not release ``worktree``, or ``None`` when it may.
 
     The owner's record must identify the requested task and run with a
     non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
-    ``worktree_path``, and record ``worktree_reused: false``, the proof that
+    ``worktree_path`` (or fallback ``cwd``), and record ``worktree_reused: false``, the proof that
     its dispatch created the checkout. A reused checkout belongs to its
-    creator, which reaps it.
+    creator, which reaps it. Only a ``needs_finalize`` creator may use the
+    caller's independently proven ``settled_claim``; other unfinished statuses
+    remain refused.
     """
     record_path = task_record_path(tasks_dir, owner_task_id)
     try:
@@ -771,9 +848,11 @@ def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path
     if not isinstance(nonce, str) or not nonce.strip():
         return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
     status = record.get("status")
-    if not isinstance(status, str) or status not in RELEASED_TASK_STATUSES:
+    if (not isinstance(status, str) or status not in RELEASED_TASK_STATUSES) and not (
+        status == NEEDS_FINALIZE_STATUS and settled_claim is not None and settled_claim(record)
+    ):
         return f"owner task {owner_task_id} is not finished (status {status!r}); refusing worktree removal"
-    claimed_path = record.get("worktree_path")
+    claimed_path = record.get("worktree_path") or record.get("cwd")
     if not isinstance(claimed_path, str) or not claimed_path:
         return f"owner task {owner_task_id} records no worktree_path; refusing worktree removal"
     try:

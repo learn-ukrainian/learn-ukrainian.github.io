@@ -12,6 +12,7 @@ from pathlib import Path
 import jsonschema
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     _get_language_usage_masks,
     assert_file_no_private_host_paths,
@@ -40,7 +41,7 @@ def _has_full_sources_db() -> bool:
     for cand in candidates:
         if cand.is_file():
             try:
-                conn = sqlite3.connect(f"file:{cand.resolve()}?mode=ro", uri=True)
+                conn = open_readonly(cand.resolve())
                 cur = conn.cursor()
                 cur.execute(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literary_texts', 'textbooks')"

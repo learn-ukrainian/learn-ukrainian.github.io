@@ -1084,3 +1084,50 @@ def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
     assert refusal is None
     assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
     assert received[0]["codex"] == "cursor"
+
+
+def test_quota_hop_replays_real_durable_fleet_jobs_without_execution(monkeypatch, tmp_path):
+    """Fresh authority connections replay both terminal seats from SQLite, without a provider call."""
+    import hashlib
+
+    from scripts.fleet_comms.authority import AuthorityService
+
+    root = tmp_path / "fleet-comms"
+    with AuthorityService(root=root):
+        pass
+    invoke = _wire(
+        monkeypatch,
+        _FakeAuthority(),
+        {"codex": _capacity_result("codex"), "cursor": _ok_result("cursor", "durable answer")},
+        tmp_path=tmp_path,
+    )
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: AuthorityService(root=root))
+    first = _acp_compat._run_compat_ask_impl("codex", "question", task_id="durable-9742")
+    assert first.ok and first.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert [c.args[0] for c in invoke.call_args_list] == ["codex", "cursor"]
+    with AuthorityService(root=root) as authority:
+        rows = authority._conn.execute(
+            "SELECT job_id, state FROM authority_jobs ORDER BY created_at, job_id"
+        ).fetchall()
+        before = {r["job_id"]: hashlib.sha256(authority.read_job_result(r["job_id"])).hexdigest() for r in rows}
+        assert sorted(r["state"] for r in rows) == ["complete", "failed"]
+    invoke.reset_mock()
+    invoke.side_effect = AssertionError("durable replay executed a provider twice")
+    second = _acp_compat._run_compat_ask_impl("codex", "question", task_id="durable-9742")
+    assert second.ok and second.response == "durable answer"
+    assert second.seat_substitution == first.seat_substitution
+    invoke.assert_not_called()
+    with AuthorityService(root=root) as authority:
+        rows = authority._conn.execute("SELECT job_id FROM authority_jobs").fetchall()
+        assert {r["job_id"]: hashlib.sha256(authority.read_job_result(r["job_id"])).hexdigest() for r in rows} == before
+
+
+@pytest.mark.parametrize("error", [KeyboardInterrupt("cancelled"), TimeoutError("timeout")])
+def test_cancel_and_timeout_never_hop_or_execute_on_replay(monkeypatch, tmp_path, error):
+    authority = _FakeAuthority()
+    invoke = _wire(monkeypatch, authority, {"codex": error, "cursor": _ok_result("cursor")}, tmp_path=tmp_path)
+    with pytest.raises(type(error)):
+        _acp_compat._run_compat_ask_impl("codex", "question", task_id="no-hop-9742")
+    assert [c.args[0] for c in invoke.call_args_list] == ["codex"]
+    receipt = json.loads(authority.finished[0]["result"])
+    assert receipt["substitution_decision"] == {"substitute": False, "reason": None}

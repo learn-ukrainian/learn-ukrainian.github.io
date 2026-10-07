@@ -16,6 +16,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration.execution_safe_git import primary_repository
+from scripts.orchestration.execution_safe_git import run_git as safe_git
+
 _STATE_RELATIVE = Path("batch_state") / "worktree-reaper"
 _PENDING_NAME = "reap-pending.json"
 _CAP_NAME = "first-class-cap.json"
@@ -249,8 +252,8 @@ def create_recovery_ref(
     ref = f"refs/reaper-rescue/{stamp}/{label}-{head[:12]}"
     bound = DEFAULT_GIT_TIMEOUT_SECONDS if timeout is None else timeout
     try:
-        proc = subprocess.run(
-            ["git", "update-ref", ref, head],
+        proc = safe_git(
+            ["update-ref", ref, head],
             cwd=repo_root,
             capture_output=True,
             text=True,
@@ -276,6 +279,11 @@ def restore_worktree(
     This deliberately never moves old directories: Git recreates the checkout
     from the recovery ref after the target and branch identity are verified.
     """
+    try:
+        if primary_repository(repo_root) != repo_root.resolve():
+            return False, "restore requires the primary repository"
+    except (OSError, ValueError):
+        return False, "restore requires the primary repository"
     target = worktree_path.resolve()
     try:
         target.relative_to((repo_root / ".worktrees").resolve())
@@ -284,8 +292,8 @@ def restore_worktree(
     if target.exists():
         return False, "restore target already exists"
     try:
-        resolved = subprocess.run(
-            ["git", "rev-parse", "--verify", recovery_ref],
+        resolved = safe_git(
+            ["rev-parse", "--verify", recovery_ref],
             cwd=repo_root,
             capture_output=True,
             text=True,
@@ -298,8 +306,8 @@ def restore_worktree(
         return False, "recovery ref is unavailable"
     sha = (resolved.stdout or "").strip()
     try:
-        branch_ref = subprocess.run(
-            ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
+        branch_ref = safe_git(
+            ["rev-parse", "--verify", f"refs/heads/{branch}"],
             cwd=repo_root,
             capture_output=True,
             text=True,

@@ -9,6 +9,7 @@ import { CHROME_STRINGS, type ChromeLocale, type ChromeKey } from '../lib/i18n/c
 import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import type { CefrLevel } from '../lib/lexicon/levels';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
+import { practiceDisplayGloss } from '../lib/lexicon/practice-shard-fetch';
 
 export interface PracticeDailyDeckProps {
   snapshot: DailyPracticeDeckSnapshot;
@@ -83,7 +84,12 @@ export default function PracticeDailyDeck({
     setFlipped((value) => !value);
   };
 
-  const displayGloss = currentItem?.gloss ?? currentLexeme?.gloss ?? null;
+  const rawGloss = currentItem?.gloss ?? currentLexeme?.gloss ?? null;
+  const displayGloss = rawGloss && currentItem ? practiceDisplayGloss({
+    ...currentLexeme,
+    lemma: currentItem.lemma || currentLexeme?.lemma || currentItem.lemmaId,
+    gloss: rawGloss,
+  }) : null;
   const displayCefr = currentItem?.cefr ?? currentLexeme?.cefr ?? null;
   // The pick payload's own pos wins wherever it exists; the lexeme map fills the
   // gap only when the payload has none (#5856 — same precedence as gloss/cefr).
@@ -258,7 +264,8 @@ export default function PracticeDailyDeck({
             const meta = STATUS_META[row.state];
             const entry = lexemes.get(row.item.lemmaId);
             const rowLemma = row.item.lemma || entry?.lemma || row.item.lemmaId;
-            const rowGloss = row.item.gloss ?? entry?.gloss ?? null;
+            const rawRowGloss = row.item.gloss ?? entry?.gloss ?? null;
+            const rowGloss = rawRowGloss ? practiceDisplayGloss({ ...entry, lemma: rowLemma, gloss: rawRowGloss }) : null;
             const lastSeen = row.lastSeenAt === null ? null : formatLastSeenAgo(row.lastSeenAt);
             const why =
               row.state === 'due'

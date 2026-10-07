@@ -19,7 +19,6 @@ import gzip
 import hashlib
 import json
 import re
-import sqlite3
 import sys
 import tempfile
 from pathlib import Path
@@ -39,6 +38,7 @@ from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic, load_manifest
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.publish.github import Asset, publish
 from scripts.verification.vesum import verify_word
 
@@ -840,7 +840,7 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     # Enrich new entries
     kaikki_lookup = enrich_manifest._load_kaikki_lookup()
     enriched_count = 0
-    with sqlite3.connect(f"file:{SOURCES_DB_PATH}?mode=ro", uri=True) as conn:
+    with _open_readonly(SOURCES_DB_PATH) as conn:
         for idx, entry in enumerate(new_entries, 1):
             if enrich_manifest.enrich_entry(entry, conn, kaikki_lookup):
                 enriched_count += 1

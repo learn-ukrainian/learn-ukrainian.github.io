@@ -19,7 +19,8 @@ lookup error, is reuse=false and the queue run executes every job:
 * the run's jobs: exactly the complete ci.yml inventory (``EXPECTED_JOBS``
   plus ``pytest (N)`` for every shard in ci.yml's matrix), each exactly once,
   completed with ``success``; the only other jobs allowed are the queue-only
-  jobs (``SKIPPED_ON_PULL_REQUEST``), and those must be ``skipped``.
+  jobs (``SKIPPED_ON_PULL_REQUEST``), and those must be ``skipped``. Advisory
+  jobs (``REUSE_NEUTRAL_JOBS``) are ignored and never included in reused jobs.
 
 Decision, written to ``$GITHUB_OUTPUT`` as ``reuse`` and ``run_id``; the job
 summary names the reused run and the job id of every reused job.
@@ -40,6 +41,11 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 ARTIFACT = "ci-tested-tree"
 FULL_TIER = "full"
 WORKFLOW = ".github/workflows/ci.yml"
@@ -55,6 +61,8 @@ EXPECTED_JOBS = (
 )
 # ci.yml jobs that run only in the merge queue.
 SKIPPED_ON_PULL_REQUEST = ("Reuse check", "Queue commit metadata scan")
+# Advisory jobs have no bearing on reuse, regardless of their result.
+REUSE_NEUTRAL_JOBS = ("Component shadow (advisory)",)
 # refs/heads/gh-readonly-queue/<base>/pr-<number>-<parent sha>; the prefix is
 # stripped by GitHub in merge_group.head_ref for some payloads, so match both.
 _QUEUE_REF = re.compile(r"(?:^|/)gh-readonly-queue/.+/pr-(?P<number>[1-9][0-9]*)-[0-9a-f]{40}$")
@@ -159,6 +167,7 @@ def job_inventory(listing: dict, expected: tuple[str, ...]) -> tuple[tuple[str, 
     jobs = listing.get("jobs", [])
     if listing.get("total_count") != len(jobs):
         return f"{len(jobs)} of {listing.get('total_count')} jobs listed"
+    jobs = [job for job in jobs if job.get("name") not in REUSE_NEUTRAL_JOBS]
     if attempts := sorted({job.get("run_attempt") for job in jobs} - {1}):
         return f"jobs from run attempt {attempts}"
     counts = Counter(job.get("name") for job in jobs)
@@ -212,7 +221,7 @@ def decide(queued: Queued, candidates: Iterable[Candidate]) -> Decision:
 
 
 def _gh(*args: str) -> str:
-    return subprocess.run(["gh", *args], capture_output=True, text=True, check=True, timeout=_GH_TIMEOUT_SECONDS).stdout
+    return github_client.run(["gh", *args], capture_output=True, text=True, check=True, timeout=_GH_TIMEOUT_SECONDS).stdout
 
 
 def _gh_json(path: str, jq: str) -> object:

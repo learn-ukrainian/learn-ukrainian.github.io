@@ -60,7 +60,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
-        "stderr_excerpt": str | null,
+        "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
         "require_review_verdict": bool,  # opt-in bridge review completion gate
@@ -75,6 +75,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "launch_user_bus": {source: "caller" | "derived" | "unavailable", variables?, reason?},  # #9534
         "peak_rss_mib": float | null,               # terminal records; largest reaped child
         "owned_paths": [str] | absent,              # the --owned-path values: auto-finalize scope (#8991)
+        "authoring_review_admission": {check, reviewer_availability, target, head_sha, author_families,
+                                       risk, reviewer, ...} | absent,  # write dispatches: review feasibility (#9739)
+        "review_subject_seats": [str] | absent,     # --subject-seat values the verdict recorder re-applies (#9739)
+        "review_subject_families": [str] | absent,  # --subject-family values, likewise
         "leftovers_scan": "clear" | "live" | "unknown" | absent,  # exit scan of the worker's scope
         "leftovers_scope": {task_id, launch_mode, unit, cgroup, run_nonce, ...} | absent,
         "leftovers_scan_error": str | absent,       # why the scan was unknown
@@ -99,7 +103,14 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
         "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
                               # advisor runs: a consistency checksum of the result as its worker wrote it
+        "routing_facts": object | absent,  # --force-agent with a budget check: the lane's routing_facts summary
+                                           # (quota, health, freshness). Missing telemetry is explicit unknown.
     }
+
+    Reason fields (``PUBLIC_RECORD_REASON_FIELDS`` and ``auto_finalize.error``)
+    hold only registered public causes (``public_causes``, #9878): the record
+    writer replaces anything else, and the raw text goes to the task's local
+    ``<task-id>.diag`` file (0600, bounded, rotated once to ``.diag.prev``).
 
 Design notes:
 
@@ -147,6 +158,9 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import dataclasses
+import errno
+import fcntl
 import functools
 import hashlib
 import json
@@ -181,12 +195,12 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
-from scripts.api.subscription_usage import pace_is_visible
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
+    ScratchScanRootError,
     ensure_scratch_root,
     fallback_scratch_root,
     resolve_scratch_root,
@@ -199,11 +213,12 @@ from scripts.config import (
     DELEGATE_WORKTREE_ADD_TIMEOUT_S,
 )
 from scripts.fleet import credit_lane
+from scripts.fleet.regenerable_output import is_disposable_auto_finalize_path as _is_disposable_auto_finalize_path
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.lib import rules_core
-from scripts.opsec.prepublish import publication_boundary
+from scripts.opsec.prepublish import PublishBlocked, publication_boundary
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -220,7 +235,10 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
+from scripts.review.verdict_parser import recognized_verdicts
+from scripts.secret_redactor import redact_text
 
 if TYPE_CHECKING:
     from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
@@ -720,7 +738,7 @@ def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, An
 
 
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
-    """Move the prior record and result aside. Never overwrite an archive.
+    """Move the prior record, result and local diagnostics aside. Never overwrite an archive.
 
     Holds the per-task lock for the whole rename. The retention sweep holds
     that same lock across its digest and record write; without it, this move
@@ -731,7 +749,9 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
     state_path = _state_path(task_id)
     archived: list[Path] = []
     with task_state_lock(state_path):
-        for path in (state_path, _result_path(task_id)):
+        diagnostic = _diagnostic_path(task_id)
+        rotated = diagnostic.with_name(diagnostic.name + _DIAG_ROTATED_SUFFIX)
+        for path in (state_path, _result_path(task_id), diagnostic, rotated):
             if not path.exists():
                 continue
             dest = _archived_artifact_path(path, stamp)
@@ -893,7 +913,7 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
         }
     state = _detach_read_only_checkout_snapshots(state)
     with task_state_lock(path):
-        write_state_unlocked(path, state)
+        _write_record_unlocked(path, state)
 
 
 def _review_task_failure_reason(state: dict[str, Any]) -> str:
@@ -1550,6 +1570,19 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
         return False
 
 
+def _scratch_scan_roots() -> list[Path]:
+    """Return reaper scan roots, or raise ``ScratchScanRootError`` here.
+
+    A misconfigured ``LU_SCRATCH_SCAN_ROOT`` fails at this dispatch boundary.
+    The error names the variable and the reason, includes no filesystem path,
+    and is not chained to the resolver's traceback.
+    """
+    try:
+        return scratch_scan_roots()
+    except ScratchScanRootError as exc:
+        raise ScratchScanRootError(exc.reason) from None
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1572,7 +1605,7 @@ def _sweep_runtime_tmp_orphans(
     # namespaces still drain.
     namespaces: list[Path] = []
     seen_namespaces: set[Path] = set()
-    for scratch_base in scratch_scan_roots():
+    for scratch_base in _scratch_scan_roots():
         namespace = scratch_base / "learn-ukrainian"
         if namespace in seen_namespaces:
             continue
@@ -1659,13 +1692,17 @@ def _reap_runtime_tmp_lease(
     This is intentionally stricter than a generic ``rm -rf``. It only removes
     a non-symlink direct child of the dispatcher-created namespace and uses
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
-    cleanup into a deletion outside the lease. Any failure is state telemetry,
-    never a worker failure.
+    cleanup into a deletion outside the lease. A filesystem or validation
+    failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    ``ScratchScanRootError`` propagates: a misconfigured scan root is not
+    telemetry, and this function raises it before it deletes the lease.
     """
     result: dict[str, int | str | None] = {
         "tmp_bytes_freed": 0,
         "tmp_reap_error": None,
     }
+    worker_base_root: Path | None = None
+    resolved_lease: Path | None = None
     try:
         if lease_root is None or namespace_root is None:
             raise ValueError("runtime tmp lease metadata is missing")
@@ -1693,12 +1730,13 @@ def _reap_runtime_tmp_lease(
             runtime_tmp_base_root = os.environ.get("LU_RUNTIME_TMP_BASE_ROOT")
             if not runtime_tmp_base_root:
                 raise ValueError("runtime tmp worker is missing its base root")
-            accepted_parents = {Path(runtime_tmp_base_root).resolve(strict=True)}
+            worker_base_root = Path(runtime_tmp_base_root).resolve(strict=True)
+            accepted_parents = {worker_base_root}
         else:
             # #7164: leases live under the disk-backed fleet scratch root; the
             # legacy tmpfs $TMPDIR namespace stays accepted so pre-change
             # leases can still be reaped. Fallback scratch root is also accepted.
-            accepted_parents = {root.resolve() for root in scratch_scan_roots()}
+            accepted_parents = {root.resolve() for root in _scratch_scan_roots()}
             with contextlib.suppress(OSError):
                 accepted_parents.add(resolve_scratch_root().resolve())
             with contextlib.suppress(OSError):
@@ -1724,9 +1762,41 @@ def _reap_runtime_tmp_lease(
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
         result["tmp_bytes_freed"] = bytes_freed
+    except ScratchScanRootError:
+        raise
     except Exception as exc:
         result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
+    if worker_base_root is not None and resolved_lease is not None and not os.path.lexists(resolved_lease):
+        _rebind_reaped_process_tmp(resolved_lease, worker_base_root)
     return result
+
+
+def _rebind_reaped_process_tmp(lease: Path, base_root: Path) -> None:
+    """Move this process's temporary-file root off its reaped runtime lease (#9878).
+
+    A worker process runs with ``TMPDIR`` at its lease, and ``tempfile`` caches
+    that root per process. The worker reaps the lease as soon as its agent
+    exits, yet the finalize steps after the reap still create temporary files:
+    the Kimi content check's and auto-finalize's scratch index, and the hooks of
+    the commit and push they spawn. Each found its root gone (FileNotFoundError).
+    Those steps now use the base root the lease lived under, which outlives
+    them; the runtime lease variable naming the removed directory is dropped.
+    """
+
+    def _in_lease(value: str | None) -> bool:
+        if not value:
+            return False
+        try:
+            return Path(value).resolve().is_relative_to(lease)
+        except (OSError, RuntimeError, ValueError):
+            return False
+
+    if _in_lease(tempfile.tempdir):
+        tempfile.tempdir = str(base_root)
+    if _in_lease(os.environ.get("TMPDIR")):
+        os.environ["TMPDIR"] = str(base_root)
+    if _in_lease(os.environ.get("LU_RUNTIME_TMP_ROOT")):
+        os.environ.pop("LU_RUNTIME_TMP_ROOT", None)
 
 
 def _derive_worktree_branch(agent: str, task_id: str) -> str:
@@ -1994,7 +2064,7 @@ def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admissio
         ):
             raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
         hold = dispatch_admission.new_admission_hold(run_nonce)
-        write_state_unlocked(
+        _write_record_unlocked(
             state_path,
             {
                 "task_id": task_id,
@@ -2049,7 +2119,7 @@ def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -
             if existing is not None and _is_own_provisional_record(existing, run_nonce)
             else {}
         )
-        write_state_unlocked(
+        _write_record_unlocked(
             state_path,
             {
                 "task_id": task_id,
@@ -2073,7 +2143,7 @@ def _update_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) ->
         existing = _read_state_json(state_path)
         if existing is not None and _is_own_worktree_prep_record(existing, run_nonce):
             existing["worktree_prep"] = dict(prep)
-            write_state_unlocked(state_path, existing)
+            _write_record_unlocked(state_path, existing)
 
 
 def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
@@ -2093,7 +2163,7 @@ def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
         if not isinstance(hold, dict):
             state_path.unlink(missing_ok=True)
             return
-        write_state_unlocked(
+        _write_record_unlocked(
             state_path,
             {
                 "task_id": task_id,
@@ -2481,13 +2551,13 @@ def _cursor_model_state(
     substitution: dict[str, Any] | None = None,
     initial: bool = False,
 ) -> dict[str, Any]:
-    """Return a truthful Cursor model-attribution companion for task state.
+    """Return runtime model-attribution companions for Cursor and native Grok.
 
     ``model`` remains the requested selector unless the runtime supplied a
-    concrete Cursor model. The separate ``resolved_model`` field makes an
+    concrete runtime model. The separate ``resolved_model`` field makes an
     unresolved Auto run explicit without promoting ``auto`` to family proof.
     """
-    if agent != "cursor":
+    if agent not in {"cursor", "grok", "grok-build"}:
         return {}
 
     if initial:
@@ -2527,6 +2597,14 @@ def _cursor_model_state(
         # one field, while leaving it at the requested ``auto`` selector when
         # attribution is unknown.
         state["model"] = resolved_model
+        if agent in {"grok", "grok-build"} and isinstance(substitution, dict):
+            from scripts.review.model_catalog import runtime_model_matches_requested
+
+            requested_model = substitution.get("requested_model")
+            if isinstance(requested_model, str) and runtime_model_matches_requested(requested_model, resolved_model):
+                # Keep the requested pin for legacy substitution comparisons;
+                # resolved_model retains the exact runtime attestation bytes.
+                state["model"] = requested_model
     return state
 
 
@@ -2574,40 +2652,6 @@ _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _AUTO_FINALIZE_NOTHING_OWNED_REASON = "no_changes_under_owned_paths"
 _AUTO_FINALIZE_NO_OWNED_PATHS_REASON = "no_owned_paths_declared"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
-# Verdict vocabulary mirrors the live review parsers — no third vocabulary
-# (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
-# APPROVED / CHANGES_REQUESTED / BLOCKED by
-# scripts/fleet_comms/review_publication.py (and formerly
-# scripts/ai_agent_bridge/_review_verdict.py, removed in #8520). REQUEST_CHANGES is the token
-# cf_preflight.py and the review prompts actually ask reviewers to write.
-# Reviewers routinely render the label and token in Markdown emphasis
-# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). A verdict line
-# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
-# emphasis/backticks/whitespace around its colon, then the token and a word
-# boundary. Anything may follow the token — reviewers write
-# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
-# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
-# quoted example ("I will report ``VERDICT: APPROVE`` later",
-# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
-# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
-# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
-# Indentation follows CommonMark: at most three leading spaces; four or more,
-# or a tab, make the line an indented code block, i.e. an example.
-# After that indentation an ATX heading marker (``#`` to ``######`` plus at
-# least one space) may precede the label, so ``## VERDICT: REQUEST_CHANGES``
-# and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
-# has no space, which CommonMark does not treat as a heading, and
-# ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
-_REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
-    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
-    r"(?![^\W_]|_+[^\W_])",
-    re.IGNORECASE,
-)
-# A CommonMark fence line: at most three leading spaces, then three or more
-# backticks or tildes; group 2 is the rest of the line (info string).
-_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2828,59 +2872,10 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
-def _code_fence_opener(line: str) -> str | None:
-    """Return the fence run when ``line`` opens a CommonMark code fence.
-
-    A backtick fence's info string may not contain a backtick (that line is
-    inline code, not a fence).
-    """
-    match = _CODE_FENCE_RE.match(line)
-    if match is None:
-        return None
-    fence, info = match.groups()
-    if fence[0] == "`" and "`" in info:
-        return None
-    return fence
-
-
-def _closes_code_fence(line: str, opener: str) -> bool:
-    """Return whether ``line`` closes the fence opened by ``opener``.
-
-    Per CommonMark the closer uses the opener's character, is at least as
-    long, and carries nothing but trailing spaces or tabs; any other line —
-    including a fence of the other character — is block content.
-    """
-    match = _CODE_FENCE_RE.match(line)
-    if match is None:
-        return False
-    fence, rest = match.groups()
-    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
-
-
 def parse_review_verdict(response: str) -> str | None:
-    """Return the review's verdict token, or ``None`` when it states none.
-
-    The single verdict parser for the review-success contract (#8786): the
-    dispatch worker and the ask-* review wrapper both call it. Only a line
-    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
-    code block counts, and the LAST such line wins — a report may discuss earlier
-    drafts, but its closing line is its verdict. An unclosed fence runs to the
-    end of the text, as in CommonMark.
-    """
-    verdict: str | None = None
-    open_fence: str | None = None
-    for line in response.splitlines():
-        if open_fence is not None:
-            if _closes_code_fence(line, open_fence):
-                open_fence = None
-            continue
-        open_fence = _code_fence_opener(line)
-        if open_fence is not None:
-            continue
-        match = _REVIEW_VERDICT_LINE_RE.match(line)
-        if match:
-            verdict = match.group(1).upper()
-    return verdict
+    """Return the final recognized verdict token, preserving dispatch policy."""
+    verdicts = recognized_verdicts(response)
+    return verdicts[-1] if verdicts else None
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:
@@ -3591,13 +3586,14 @@ def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProces
         return None
 
 
-def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
+def _ls_remote_branch_sha(remote: str, branch: str, *, strict: bool = False) -> str | None:
     """Probe the SHA ``remote`` serves for ``branch`` without touching refs.
 
     ``git ls-remote`` answers from the remote directly, so a lagging mirror
     can be detected (#7522) while ``refs/remotes/origin/<branch>`` is written
     only by the canonical fetch. Best-effort: a spawn failure, timeout, or
-    unresolved ref yields None.
+    unresolved ref yields None. With ``strict``, read failures raise instead
+    of being confused with an absent branch; diagnostics omit remote URLs.
     """
     try:
         proc = subprocess.run(
@@ -3609,9 +3605,20 @@ def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
             env=_sanitized_git_env(),
             timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
+    except subprocess.TimeoutExpired as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) timed out") from exc
+        return None
+    except OSError as exc:
+        if strict:
+            raise _AuthoringObservationUnknown("canonical remote branch lookup (git ls-remote) could not run") from exc
         return None
     if proc.returncode != 0:
+        if strict:
+            raise _AuthoringObservationUnknown(
+                f"canonical remote branch lookup (git ls-remote) failed (exit {proc.returncode}); "
+                "check network/authentication and remote access, then retry"
+            )
         return None
     for line in (proc.stdout or "").splitlines():
         sha, sep, ref = line.partition("\t")
@@ -3820,8 +3827,14 @@ def _fetch_existing_branch(branch: str) -> None:
         raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
 
 
-def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
-    """Return fetched origin SHA or refuse a local-only branch divergence."""
+def _require_local_branch_is_ancestor_of_origin(
+    branch: str, *, continuation_head_sha: str | None = None, continuation_remote_sha: str | None = None
+) -> str:
+    """Return fetched origin SHA, or an admitted same-writer local continuation.
+
+    Only an existing checkout admitted on its local-only commits can supply
+    ``continuation_head_sha`` (#9988). Never reset that head to the remote.
+    """
     origin_ref = f"origin/{branch}"
     local_ref = f"refs/heads/{branch}"
     origin_sha = _resolve_sha(_REPO_ROOT, origin_ref)
@@ -3851,6 +3864,12 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
         raise RuntimeError(
             f"could not compare local {branch!r} against {origin_ref}: {_format_process_failure(ancestry)}"
         )
+    if continuation_head_sha == local_sha and continuation_remote_sha == origin_sha:
+        try:
+            if _git_is_ancestor(origin_sha, local_sha):
+                return local_sha
+        except _AuthoringObservationUnknown as exc:
+            raise RuntimeError(f"could not verify continuation ancestry: {exc}") from exc
     raise WorktreeBranchDiverged(
         f"refusing --branch {branch!r}: local {local_ref} is not an ancestor of "
         f"{origin_ref}; local_sha={local_sha} origin_sha={origin_sha}. "
@@ -4621,9 +4640,10 @@ def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) 
         allowed_statuses=("running", "spawning"),
         pid_alive=_pid_alive,
         resolve_head=_resolve_sha,
+        write=_write_record_unlocked,
     )
     state.clear()
-    state.update(_hydrate_read_only_checkout_snapshots(current))
+    state.update(_hydrate_read_only_checkout_snapshots(_public_record(current)[0]))
 
 
 def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
@@ -4648,9 +4668,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
             state,
             source=source,
             is_orphaned=worktree_prep.is_orphaned_prep_record,
+            write=_write_record_unlocked,
         )
         state.clear()
-        state.update(current)
+        state.update(_public_record(current)[0])
     elif dispatch_admission.is_orphaned_admission_hold(state):
         current, _changed = mark_orphaned_admission_hold_crashed(
             state_path,
@@ -4658,9 +4679,10 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
             source=source,
             is_orphaned=dispatch_admission.is_orphaned_admission_hold,
             reason=dispatch_admission.ORPHANED_HOLD_REASON,
+            write=_write_record_unlocked,
         )
         state.clear()
-        state.update(current)
+        state.update(_public_record(current)[0])
 
 
 # Exit code for a dispatch refused by host admission: retryable once a worker
@@ -4936,9 +4958,16 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
     sound. A present base that has no common ancestor with HEAD or whose
     computation failed fails closed ((None, False)).
     """
+    sha, base_missing, _why = _run_merge_base_detail(worktree, base)
+    return sha, base_missing
+
+
+def _run_merge_base_detail(worktree: Path, base: str) -> tuple[str | None, bool, _TypedCause | None]:
+    """:func:`_run_merge_base` plus why it failed, typed, with git's own error from this run (#9878)."""
+    command = ["git", "merge-base", base, "HEAD"]
     try:
         proc = subprocess.run(
-            ["git", "merge-base", base, "HEAD"],
+            command,
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -4946,18 +4975,27 @@ def _run_merge_base(worktree: Path, base: str) -> tuple[str | None, bool]:
             env=_sanitized_git_env(),
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
-    except (OSError, subprocess.TimeoutExpired):
-        return None, False
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, False, _exception_cause("merge_base_unresolved", exc, command=command)
     if proc.returncode == 0:
         sha = (proc.stdout or "").strip()
-        return (sha or None), False
+        if sha:
+            return sha, False, None
+        return (
+            None,
+            False,
+            _TypedCause("merge_base_unresolved", "merge-base", 0, diagnostic=f"{' '.join(command)} printed no commit"),
+        )
+    why = _git_cause("merge_base_unresolved", proc)
+    if proc.returncode == 1 and not (proc.stderr or proc.stdout or "").strip():
+        why = dataclasses.replace(why, diagnostic=f"{' '.join(command)} failed (exit 1): no common ancestor")
     ref_check = _run_git_stdout(worktree, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
     if ref_check is not None and ref_check[0] == 1:
         # Confirmed absence: git rev-parse ran and confirmed the ref does not exist (exit 1).
-        return None, True
+        return None, True, why
     # Either ref exists (0), verification was unavailable (None), or failed operationally (!= 1).
     # Fail closed in all these cases: do NOT treat as missing and do NOT fall back.
-    return None, False
+    return None, False, why
 
 
 def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = None) -> str | None:
@@ -4975,25 +5013,53 @@ def _resolve_merge_base(worktree: Path, base_ref: str, base_sha: str | None = No
 
     Returns None if no merge base can be resolved (failing closed).
     """
-    for candidate in _commit_count_refs(worktree, base_ref):
-        sha, base_missing = _run_merge_base(worktree, candidate)
-        if sha is not None:
-            return sha
-        if not base_missing:
-            return None
+    return _resolve_merge_base_detail(worktree, base_ref, base_sha)[0]
 
-    for candidate, _exact in _fallback_base_candidates(worktree, base_sha):
-        sha, base_missing = _run_merge_base(worktree, candidate)
+
+def _resolve_merge_base_detail(
+    worktree: Path, base_ref: str, base_sha: str | None = None
+) -> tuple[str | None, _TypedCause | None]:
+    """``(merge_base, None)`` as :func:`_resolve_merge_base` resolves it, or ``(None, why)`` (#9878).
+
+    ``why`` is ``merge_base_unresolved`` with the last attempt's exit status;
+    its diagnostic carries each failed attempt's own command and git error,
+    from the attempt that failed: nothing is run again to explain a failure.
+    """
+    failures: list[str] = []
+    last: _TypedCause | None = None
+
+    def unresolved() -> tuple[None, _TypedCause]:
+        detail = "; ".join(failures) or f"no base candidate for {base_ref!r}"
+        if last is None:
+            return None, _TypedCause("merge_base_unresolved", "merge-base", diagnostic=detail)
+        return None, dataclasses.replace(last, diagnostic=f"no merge base with {base_ref!r}: {detail}")
+
+    for candidate in _commit_count_refs(worktree, base_ref):
+        sha, base_missing, why = _run_merge_base_detail(worktree, candidate)
+        if sha is not None:
+            return sha, None
+        last = why or last
+        failures.append(why.diagnostic if why else candidate)
+        if not base_missing:
+            return unresolved()
+
+    fallbacks = _fallback_base_candidates(worktree, base_sha)
+    if base_sha and all(candidate != base_sha for candidate, _exact in fallbacks):
+        failures.append(f"the recorded base commit {base_sha} is not an ancestor of HEAD")
+    for candidate, _exact in fallbacks:
+        sha, base_missing, why = _run_merge_base_detail(worktree, candidate)
         if sha is not None:
             print(
                 f"⚠️  base {base_ref!r} is gone; resolved merge-base against {candidate!r} instead",
                 file=sys.stderr,
             )
-            return sha
+            return sha, None
+        last = why or last
+        failures.append(why.diagnostic if why else candidate)
         if not base_missing:
-            return None
+            return unresolved()
 
-    return None
+    return unresolved()
 
 
 def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
@@ -5177,9 +5243,11 @@ def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
 
 
 def _worktree_is_dirty(worktree: Path) -> bool | None:
+    from scripts.orchestration.execution_safe_git import run_git as safe_git
+
     try:
-        status_proc = subprocess.run(
-            ["git", "status", "--porcelain"],
+        status_proc = safe_git(
+            ["status", "--porcelain"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5632,22 +5700,6 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     return tuple(sorted(changed))
 
 
-def _is_disposable_auto_finalize_path(path: str) -> bool:
-    """Return whether a changed path is scratch residue, not deliverable content.
-
-    This is intentionally a narrow allowlist of known generated dependency and
-    cache paths. A single other path means the auto-finalizer retains its
-    existing preserve-and-publish behavior rather than guessing whether that
-    content is important.
-    """
-    parts = tuple(part for part in path.replace("\\", "/").split("/") if part and part != ".")
-    if not parts:
-        return True
-    if any(part in {".venv", "node_modules", "__pycache__", ".pytest_cache"} for part in parts):
-        return True
-    return parts[-1].endswith(".pyc")
-
-
 def _auto_finalize_is_junk_only(changed_files: tuple[str, ...]) -> bool:
     """Return whether auto-finalization would publish only disposable residue."""
     return bool(changed_files) and all(_is_disposable_auto_finalize_path(path) for path in changed_files)
@@ -5682,16 +5734,647 @@ def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
 
 
 def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
-    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown.
+    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown."""
+    return _worktree_diff_read(worktree, diff_args, git_options=git_options)[0]
+
+
+# #9878: the closed registry of public causes. A reason that can leave the
+# machine (a task record's reason fields, a refusal or rescue row, the lines
+# that print them, and through them a PR, issue, inbox or the Monitor) is one
+# of these causes, with fixed parameters only: a known git subcommand, an exit
+# status, a count, an exception class and its errno name. Raw stderr, exception
+# messages, paths and URLs never are: :func:`public_cause` replaces them with
+# :data:`UNCLASSIFIED_CAUSE` and they go only to the task's local diagnostic
+# file (:func:`_append_diagnostics`).
+TYPED_CAUSE_CODES = frozenset(
+    {
+        # Reading a Kimi worker's changes for the content check.
+        "merge_base_unresolved",
+        "temp_index_failed",
+        "diff_command_failed",
+        "changes_parse_failed",
+        "file_unreadable",
+        "changes_unreadable",
+        "kimi_content_refused",
+        # The worker-side Kimi admission and worktree boundary.
+        "kimi_admission_refused",
+        "kimi_worktree_mismatch",
+        "review_admission_refused",
+        "boundary_remove_failed",
+        "boundary_install_failed",
+        # The worker's own outcome.
+        "worker_failed",
+        "worker_cancelled",
+        "worker_timed_out",
+        "worker_rate_limited",
+        "worker_runtime_error",
+        "worker_unexpected_error",
+        "adapter_rejected",
+        "runtime_returncode_missing",
+        "read_only_checkout_mutation",
+        "task_records_snapshot_failed",
+        # Dispatch before the worker ran.
+        "worktree_preparation_failed",
+        "forward_configuration_failed",
+        "dispatch_not_started",
+        "worker_spawn_failed",
+        "dispatch_isolation_failed",
+        "dispatch_fallback_refused",
+        # Finalize and auto-finalize.
+        "finalize_failed",
+        "interrupted_during_finalize",
+        "finalize_skipped_paths",
+        "auto_finalize_unsafe_branch",
+        "auto_finalize_add_failed",
+        "auto_finalize_commit_failed",
+        "auto_finalize_push_failed",
+        "auto_finalize_reset_failed",
+        "auto_finalize_pr_failed",
+        "auto_finalize_publish_blocked",
+        "auto_finalize_failed",
+        # Rescue.
+        "rescue_worktree_unregistered",
+        "rescue_tree_unavailable",
+        "rescue_identity_unavailable",
+        "rescue_commit_failed",
+        "rescue_filtered_path",
+        "rescue_embedded_repository",
+        "rescue_new_gitlink",
+        "rescue_input_unreadable",
+        "rescue_input_changed",
+        "rescue_push_url_unavailable",
+        "rescue_push_failed",
+        "rescue_remote_unverified",
+        "rescue_step_failed",
+        "remote_unreachable",
+        # Review task records (``_review_task_failure_reason``) and the dead-worker settle.
+        "read_only_checkout_snapshot_failed",
+        "review_worker_not_started",
+        "review_worker_returncode_missing",
+        "review_worker_nonzero_exit",
+        "review_worker_reported_failure",
+        "worker_process_dead",
+        "worktree_missing_at_settle",
+    }
+)
+UNCLASSIFIED_CAUSE = "unclassified_error"
+# Fixed reason phrases already published verbatim (rescue rows, finalize and
+# auto-finalize states): closed literals, never built from data.
+_PUBLIC_REASON_PHRASES = frozenset(
+    {
+        "activity probe unavailable",
+        "ahead count unavailable",
+        "already rescued at HEAD",
+        "changed files unavailable",
+        "clean disposable residue",
+        "could not clean disposable residue",
+        "disposable residue removed",
+        "files exceed 5 MB",
+        "HEAD unavailable",
+        "invalid finished_at",
+        "no finished_at",
+        "no provable unpushed work",
+        "no recorded worktree",
+        "not a registered dispatch worktree",
+        "rescue remote branch already exists at another head",
+        "task attempt changed after rescue push; recovery ref preserved",
+        "task is not terminal non-success",
+        "task lease active",
+        "task process alive",
+        "task state changed",
+        "unreadable task state",
+        "worktree active",
+        "worktree already removed",
+        "worktree branch differs from task record",
+        "worktree ownership unknown or reused",
+        "unpushed work - needs rescue",
+        "unpushed state unknown - needs rescue",
+        "rescued",
+        "clean-tree",
+        "not a git worktree",
+        "move detection failed; nothing committed",
+        "interrupted before the completion gates ran",
+    }
+)
+# Task-record fields whose value is a reason; ``auto_finalize.error`` is the nested one.
+PUBLIC_RECORD_REASON_FIELDS = (
+    "last_error",
+    "finalize_error",
+    "incomplete_run_reason",
+    "no_deliverable_reason",
+    "failure_reason",
+    "failure_code",
+    "review_verdict_failure",
+    "rescue_status",
+    "kimi_content_refusal",
+)
+PUBLIC_RECORD_NESTED_REASON_FIELDS = (("auto_finalize", "error"),)
+# Rescue and refusal rows: the keys whose value is a reason.
+PUBLIC_ROW_REASON_KEYS = ("reason", "failure_code")
+_PUBLIC_CAUSE_MAX_CHARS = 512
+# git's own command names: a closed vocabulary.
+_PUBLIC_GIT_SUBCOMMANDS = frozenset(
+    {
+        "add", "am", "apply", "archive", "branch", "cat-file", "check-attr", "check-ignore", "check-ref-format",
+        "checkout", "cherry-pick", "clean", "clone", "commit", "commit-tree", "config", "count-objects",
+        "describe", "diff", "diff-files", "diff-index", "diff-tree", "fetch", "for-each-ref", "fsck", "gc",
+        "hash-object", "init", "log", "ls-files", "ls-remote", "ls-tree", "merge", "merge-base", "mktree", "mv",
+        "notes", "pack-refs", "prune", "pull", "push", "read-tree", "rebase", "reflog", "remote", "repack",
+        "reset", "restore", "rev-list", "rev-parse", "rm", "show", "show-ref", "sparse-checkout", "stash",
+        "status", "submodule", "switch", "symbolic-ref", "tag", "update-index", "update-ref", "var",
+        "verify-commit", "worktree", "write-tree",
+    }
+)  # fmt: skip
+# An exception class: a CamelCase identifier with one of Python's exception-name endings.
+_PUBLIC_ERROR_CLASS_RE = re.compile(
+    r"[A-Z][A-Za-z0-9]{0,63}(?:Error|Exception|Exit|Interrupt|Expired|Refused|Unreadable|Blocked|Iteration|Warning)"
+)
+_PUBLIC_ERRNO_NAMES = frozenset(errno.errorcode.values())
+_PUBLIC_INT_PARAM_RE = re.compile(r"(?:exit -?|count )\d{1,9}")
+_GIT_SUBCOMMAND_RE = re.compile(r"[a-z][a-z-]{0,39}")
+# git's own words for a remote it never reached (DNS, routing, refused connection).
+_REMOTE_UNREACHABLE_STDERR = (
+    "could not resolve host",
+    "could not resolve hostname",
+    "temporary failure in name resolution",
+    "name or service not known",
+    "connection refused",
+    "connection timed out",
+    "network is unreachable",
+    "no route to host",
+)
+
+
+@functools.cache
+def public_causes() -> frozenset[str]:
+    """Every cause a public reason may name: the one closed registry (#9878).
+
+    Delegate's own codes and phrases, the agent runtime's failure codes, AGY's
+    incomplete-run reasons, the bounded-advisory refusal and gate codes, the
+    exit-scan reasons, and the completion-gate and delivery causes.
+    """
+    from scripts.agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+    from scripts.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+
+    advisory = {
+        getattr(bounded_advisory, name)
+        for name in (
+            "ENVELOPE_REQUIRED", "FLAG_CONFLICT", "TASK_NOT_FOUND", "TASK_NOT_DONE", "TASK_WRONG_MODEL",
+            "TASK_WRONG_ROLE", "RESULT_UNREADABLE", "ENVELOPE_MISSING", "ENVELOPE_INCOMPLETE",
+            "OWNED_PATHS_INVALID", "BINDING_MISMATCH", "OWNED_PATHS_MISMATCH", "ENVELOPE_CHANGED", "SEAL_MISSING",
+            "SEAL_MISMATCH", "ADMISSION_MISSING", "ADMISSION_INVALID", "ADVISOR_ROUTE_REFUSED",
+            "EXECUTION_MISMATCH", "CEILING_EXCEEDED", "CEILING_UNMEASURED", "EXEMPT_CODE_CHANGE",
+            "EXEMPT_CHANGES_UNMEASURED",
+        )
+        if isinstance(getattr(bounded_advisory, name, None), str)
+    }  # fmt: skip
+    delegate_causes = {
+        _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON,
+        _NO_DELIVERABLE_NO_COMMITS_REASON,
+        _NO_DELIVERABLE_INVALID_DECLARATION_REASON,
+        _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON,
+        _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON,
+        _AUTO_FINALIZE_NOTHING_OWNED_REASON,
+        _AUTO_FINALIZE_NO_OWNED_PATHS_REASON,
+        COMPLETION_GATE_RESPONSE_UNAVAILABLE,
+        RECOVERY_REQUIRES_RERUN,
+        _INTERRUPTED_BEFORE_COMPLETION_GATES,
+        worker_leftovers.BACKGROUND_JOBS_REASON,
+        worker_leftovers.SCAN_UNKNOWN_REASON,
+        UNCLASSIFIED_CAUSE,
+    }
+    return frozenset(
+        TYPED_CAUSE_CODES
+        | _PUBLIC_REASON_PHRASES
+        | RUNTIME_FAILURE_CODES
+        | frozenset(AGY_INCOMPLETE_RUN_REASONS)
+        | advisory
+        | delegate_causes
+    )
+
+
+def _is_public_error(text: str) -> bool:
+    """An exception class, optionally with its errno name: ``OSError EACCES``."""
+    error_class, _, errno_name = text.partition(" ")
+    return bool(_PUBLIC_ERROR_CLASS_RE.fullmatch(error_class)) and (not errno_name or errno_name in _PUBLIC_ERRNO_NAMES)
+
+
+def _is_public_param(text: str) -> bool:
+    """One fixed parameter: ``git <known subcommand>``, ``exit <n>``, ``count <n>``, or ``<ErrorClass>[ <ERRNO>]``."""
+    if text.startswith("git "):
+        return text[4:] in _PUBLIC_GIT_SUBCOMMANDS
+    return bool(_PUBLIC_INT_PARAM_RE.fullmatch(text)) or _is_public_error(text)
+
+
+def _is_public_item(text: str) -> bool:
+    """A registered cause, alone or followed by fixed parameters (``cause, git push, exit 1``)."""
+    if text in public_causes():
+        return True
+    cause, *params = text.split(", ")
+    return cause in public_causes() and bool(params) and all(_is_public_param(param) for param in params)
+
+
+def is_public_cause(value: object) -> bool:
+    """Whether ``value`` may be published as it is: registered causes with fixed parameters, joined by ``; ``."""
+    if not isinstance(value, str) or not value or len(value) > _PUBLIC_CAUSE_MAX_CHARS:
+        return False
+    return value in public_causes() or all(_is_public_item(item) for item in value.split("; "))
+
+
+@dataclass(frozen=True)
+class _TypedCause:
+    """Why a refusal, rescue step or worker failed, in a form that may leave the machine (#9878).
+
+    :meth:`public` renders only registered parts: the code (one of
+    :func:`public_causes`), a known git subcommand, the exit status, a count
+    and the exception class. ``path`` and ``diagnostic`` (the raw stderr or
+    exception text) go only to the task's local diagnostic file.
+    """
+
+    code: str
+    command: str | None = None
+    exit_status: int | None = None
+    error: str | None = None
+    path: str | None = None
+    count: int | None = None
+    diagnostic: str = dataclasses.field(default="", compare=False, repr=False)
+
+    def public(self) -> str:
+        parts = [self.code if self.code in public_causes() else UNCLASSIFIED_CAUSE]
+        if self.command in _PUBLIC_GIT_SUBCOMMANDS:
+            parts.append(f"git {self.command}")
+        for label, number in (("exit", self.exit_status), ("count", self.count)):
+            if isinstance(number, int) and not isinstance(number, bool) and abs(number) < 10**9:
+                parts.append(f"{label} {number}")
+        if self.error and _is_public_error(self.error):
+            parts.append(self.error)
+        return ", ".join(parts)
+
+
+def public_cause(value: object) -> tuple[str | None, _TypedCause | None]:
+    """The sink every public reason is written through: ``(public text, cause to record locally)`` (#9878).
+
+    A :class:`_TypedCause` renders its public form. A string that is already
+    a public cause (:func:`is_public_cause`) passes unchanged with nothing to
+    record. Anything else (free text, an exception, another type) is replaced
+    item by item with :data:`UNCLASSIFIED_CAUSE` (an exception keeps its class)
+    and returned as the cause whose raw text the caller records in the task's
+    local diagnostic file. Pure: it writes nothing.
+    """
+    if value is None:
+        return None, None
+    if isinstance(value, _TypedCause):
+        return value.public(), value
+    if isinstance(value, BaseException):
+        cause = _exception_cause(UNCLASSIFIED_CAUSE, value)
+        return cause.public(), cause
+    if isinstance(value, str):
+        if not value or is_public_cause(value):
+            return value, None
+        kept: list[str] = []
+        for item in value.split("; "):
+            public = item if _is_public_item(item) else UNCLASSIFIED_CAUSE
+            if public not in kept:
+                kept.append(public)
+        text = "; ".join(kept)
+        return (text if len(text) <= _PUBLIC_CAUSE_MAX_CHARS else UNCLASSIFIED_CAUSE), _TypedCause(
+            UNCLASSIFIED_CAUSE, diagnostic=value
+        )
+    return UNCLASSIFIED_CAUSE, _TypedCause(UNCLASSIFIED_CAUSE, diagnostic=f"{type(value).__name__}: {value!r}")
+
+
+def _public_record(state: Mapping[str, Any]) -> tuple[dict[str, Any], list[tuple[str, _TypedCause]]]:
+    """``state`` with every public reason field through :func:`public_cause`, and the ``(field, cause)`` to record."""
+    public = dict(state)
+    recorded: list[tuple[str, _TypedCause]] = []
+    for field in PUBLIC_RECORD_REASON_FIELDS:
+        if field in public:
+            public[field], cause = public_cause(public[field])
+            if cause is not None:
+                recorded.append((field, cause))
+    for parent, key in PUBLIC_RECORD_NESTED_REASON_FIELDS:
+        nested = public.get(parent)
+        if isinstance(nested, Mapping) and key in nested:
+            text, cause = public_cause(nested[key])
+            public[parent] = {**nested, key: text}
+            if cause is not None:
+                recorded.append((f"{parent}.{key}", cause))
+    return public, recorded
+
+
+def _public_row(row: Mapping[str, Any], record_path: Path | None, *, source: str) -> dict[str, Any]:
+    """A rescue or refusal row with its reason keys through :func:`public_cause`; raw text goes beside ``record_path``."""
+    public = dict(row)
+    recorded: list[tuple[str, _TypedCause]] = []
+    for key in PUBLIC_ROW_REASON_KEYS:
+        if key in public:
+            public[key], cause = public_cause(public[key])
+            if cause is not None:
+                recorded.append((key, cause))
+    if recorded and record_path is not None:
+        pointer = _append_diagnostics(record_path, recorded, source=source)
+        if pointer:
+            public["diagnostic"] = pointer
+    return public
+
+
+def _write_record_unlocked(path: Path, state: dict[str, Any]) -> None:
+    """Write a task record through the public-reason sink; the caller holds its lock (#9878).
+
+    The only writer of a task record in this module, and the one it hands the
+    dead-worker markers (``write=``): at this persistence point every reason
+    field is checked against the cause registry and replaced by its public
+    form, whoever assigned it, and the raw text it replaced is recorded in the
+    task's local diagnostic file after the write.
+    """
+    public, recorded = _public_record(state)
+    write_state_unlocked(path, public)
+    if recorded:
+        _append_diagnostics(path, recorded, source="record")
+
+
+def _is_repo_relative(path: str) -> bool:
+    """Whether ``path`` reads as a repository-relative path: no root, home, parent step or control character."""
+    if not path or path.startswith(("/", "~", "\\")) or re.match(r"[A-Za-z]:", path):
+        return False
+    if any(unicodedata.category(char).startswith("C") for char in path):
+        return False
+    return ".." not in re.split(r"[/\\]", path) and "://" not in path
+
+
+def _git_subcommand(args: Sequence[str] | str | None) -> str | None:
+    """The subcommand of a ``git [options] <subcommand> ...`` argv, skipping global options and their values."""
+    if not isinstance(args, (list, tuple)):
+        return None
+    words = [str(arg) for arg in args]
+    index = 1 if words and Path(words[0]).name == "git" else 0
+    while index < len(words):
+        word = words[index]
+        if word in ("-c", "-C"):
+            index += 2
+            continue
+        if word.startswith("-"):
+            index += 1
+            continue
+        return word if _GIT_SUBCOMMAND_RE.fullmatch(word) else None
+    return None
+
+
+def _git_cause(code: str, proc: subprocess.CompletedProcess[str], *, path: str | None = None) -> _TypedCause:
+    """A failed git run as a :class:`_TypedCause`; its argv and stderr stay in the local diagnostic."""
+    args = proc.args if isinstance(proc.args, (list, tuple)) else [str(proc.args)]
+    return _TypedCause(
+        code,
+        command=_git_subcommand(args),
+        exit_status=proc.returncode,
+        path=path,
+        diagnostic=f"{' '.join(str(arg) for arg in args)} failed (exit {proc.returncode}): "
+        f"{(proc.stderr or proc.stdout or '').strip() or 'no output'}",
+    )
+
+
+def _remote_git_cause(code: str, proc: subprocess.CompletedProcess[str]) -> _TypedCause:
+    """:func:`_git_cause` for a git run that talks to a remote: ``remote_unreachable`` when it never reached it."""
+    stderr = (proc.stderr or "").lower()
+    unreachable = any(marker in stderr for marker in _REMOTE_UNREACHABLE_STDERR)
+    return _git_cause("remote_unreachable" if unreachable else code, proc)
+
+
+def _exception_cause(
+    code: str, exc: BaseException, *, command: Sequence[str] | None = None, path: str | None = None
+) -> _TypedCause:
+    """An exception as a :class:`_TypedCause`: its class (and errno name) public, its message local."""
+    if isinstance(exc, _TypedFailure):
+        return exc.cause
+    errno_name = errno.errorcode.get(exc.errno, "") if isinstance(exc, OSError) and isinstance(exc.errno, int) else ""
+    step = f"{' '.join(command)} " if command else ""
+    return _TypedCause(
+        code,
+        command=_git_subcommand(list(command)) if command else None,
+        error=f"{type(exc).__name__}{f' {errno_name}' if errno_name else ''}",
+        path=path,
+        diagnostic=f"{step}raised {type(exc).__name__}: {exc}",
+    )
+
+
+class _TypedFailure(RuntimeError):
+    """A step failed with a :class:`_TypedCause`: ``str()`` is its public form, never the raw error (#9878).
+
+    ``message`` is a literal for the local diagnostic; nothing read from git,
+    the remote or the host enters the public form.
+    """
+
+    def __init__(self, message: str, cause: _TypedCause) -> None:
+        super().__init__(cause.public())
+        self.message = message
+        self.cause = dataclasses.replace(
+            cause, diagnostic=f"{message}: {cause.diagnostic}" if cause.diagnostic else message
+        )
+
+    @property
+    def code(self) -> str:
+        return self.cause.code
+
+
+# The task's local diagnostic file: ``<id>.diag`` beside the record, rotated once
+# to ``<id>.diag.prev``. Never served or published. Each entry is one JSON line
+# of at most _DIAG_MAX_ENTRY_BYTES; each of the two files stays within
+# _DIAG_MAX_FILE_BYTES and mode 0600, whatever was on disk before the append.
+_DIAG_MAX_ENTRY_BYTES = 4096
+_DIAG_MAX_FILE_BYTES = 256 * 1024
+_DIAG_ROTATED_SUFFIX = ".prev"
+_DIAG_TRUNCATED = "…[truncated]"
+
+
+def _diagnostic_path(task_id: str) -> Path:
+    """The task's local diagnostic file, ``batch_state/tasks/<id>.diag``: never served or published."""
+    return _state_path_no_create(task_id).with_suffix(".diag")
+
+
+def _diagnostic_line(source: str, field: str, cause: _TypedCause) -> bytes:
+    """One JSON line of at most :data:`_DIAG_MAX_ENTRY_BYTES`: the raw text secret-redacted, cut to fit."""
+    diagnostic = redact_text(cause.diagnostic) or ""
+    path = (redact_text(cause.path) or "")[:512] if cause.path else None
+
+    def encode(text: str) -> bytes:
+        entry = {
+            "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "source": source[:64],
+            "field": field[:64],
+            "code": cause.code[:64],
+            "public": cause.public(),
+            **({"path": path} if path else {}),
+            "diagnostic": text,
+        }
+        return (json.dumps(entry, ensure_ascii=False) + "\n").encode("utf-8")
+
+    line = encode(diagnostic)
+    if len(line) <= _DIAG_MAX_ENTRY_BYTES:
+        return line
+    # The longest prefix that fits, in encoded bytes (escapes and multi-byte characters included).
+    low, high = 0, min(len(diagnostic), _DIAG_MAX_ENTRY_BYTES)
+    while low < high:
+        middle = (low + high + 1) // 2
+        if len(encode(diagnostic[:middle] + _DIAG_TRUNCATED)) <= _DIAG_MAX_ENTRY_BYTES:
+            low = middle
+        else:
+            high = middle - 1
+    return encode(diagnostic[:low] + _DIAG_TRUNCATED)
+
+
+def _open_diagnostic(directory_fd: int, name: str, flags: int = os.O_RDWR | os.O_APPEND | os.O_CREAT) -> int:
+    """Open ``name`` in the trusted task directory: no symlink, a private regular file of ours, made 0600."""
+    fd = os.open(name, flags | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK, 0o600, dir_fd=directory_fd)
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.geteuid() or info.st_nlink != 1:
+            raise OSError(errno.EPERM, "diagnostic file is not a private regular file")
+        if stat.S_IMODE(info.st_mode) != 0o600:
+            os.fchmod(fd, 0o600)
+        return fd
+    except BaseException:
+        os.close(fd)
+        raise
+
+
+def _newest_lines(data: bytes, limit: int) -> bytes:
+    """The newest whole lines of ``data`` that fit in ``limit`` bytes."""
+    if len(data) <= limit:
+        return data
+    tail = data[len(data) - limit :]
+    return tail if data[len(data) - limit - 1 : len(data) - limit] == b"\n" else tail.partition(b"\n")[2]
+
+
+def _bound_diagnostic_fd(fd: int) -> None:
+    """Cut the locked diagnostic file ``fd`` to its newest lines within :data:`_DIAG_MAX_FILE_BYTES`."""
+    size = os.fstat(fd).st_size
+    if size <= _DIAG_MAX_FILE_BYTES:
+        return
+    kept = _newest_lines(os.pread(fd, _DIAG_MAX_FILE_BYTES + 1, size - _DIAG_MAX_FILE_BYTES - 1), _DIAG_MAX_FILE_BYTES)
+    os.ftruncate(fd, 0)
+    os.lseek(fd, 0, os.SEEK_SET)
+    view = memoryview(kept)
+    while view:
+        view = view[os.write(fd, view) :]
+
+
+def _bound_rotated_diagnostic(directory_fd: int, name: str) -> None:
+    """Bring the rotated generation ``name`` within :data:`_DIAG_MAX_FILE_BYTES` and 0600, keeping its newest lines.
+
+    A name that is not a private regular file of ours (a symlink, a hard
+    link, another owner's file) is unlinked: the name alone goes, never what
+    it points at. The caller holds the lock on the current diagnostic file;
+    this one is locked too, against the writer that rotated it.
+    """
+    try:
+        fd = _open_diagnostic(directory_fd, name, os.O_RDWR)
+    except FileNotFoundError:
+        return
+    except OSError:
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(name, dir_fd=directory_fd)
+        return
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        _bound_diagnostic_fd(fd)
+    finally:
+        os.close(fd)
+
+
+def _append_diagnostics(record_path: Path, causes: Sequence[tuple[str, _TypedCause]], *, source: str) -> str | None:
+    """Append each ``(field, cause)`` with its raw text to the record's local ``.diag`` file (#9878).
+
+    Writes only beside an existing task record, so a refused worker still
+    leaves no task file behind. The task directory is opened without following
+    a symlink and each file through it, never following one either, created
+    0600 and refused unless it is a private regular file with one link.
+    Entries are bounded (:data:`_DIAG_MAX_ENTRY_BYTES`). Each file is
+    unconditionally bounded (:data:`_DIAG_MAX_FILE_BYTES`) and 0600: an
+    oversized ``.diag`` rotates, and before every append the rotated
+    ``.diag.prev`` is cut to its newest lines and made private, so neither a
+    pre-existing oversized file nor a rotation leaves one over the limit.
+    Returns the file's repository-relative path for a row to point at, or
+    None when nothing was written; a write error never hides the failure
+    being recorded.
+    """
+    if not causes:
+        return None
+    data = _newest_lines(
+        b"".join(_diagnostic_line(source, field, cause) for field, cause in causes), _DIAG_MAX_FILE_BYTES
+    )
+    name = record_path.with_suffix(".diag").name
+    try:
+        directory_fd = os.open(record_path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    except OSError:
+        return None
+    fd: int | None = None
+    try:
+        if not stat.S_ISREG(os.stat(record_path.name, dir_fd=directory_fd, follow_symlinks=False).st_mode):
+            return None
+        for _attempt in range(3):
+            fd = _open_diagnostic(directory_fd, name)
+            fcntl.flock(fd, fcntl.LOCK_EX)
+            # Another writer may have rotated the file between our open and lock.
+            if os.stat(name, dir_fd=directory_fd, follow_symlinks=False).st_ino != os.fstat(fd).st_ino:
+                os.close(fd)
+                fd = None
+                continue
+            if os.fstat(fd).st_size + len(data) > _DIAG_MAX_FILE_BYTES:
+                os.replace(name, name + _DIAG_ROTATED_SUFFIX, src_dir_fd=directory_fd, dst_dir_fd=directory_fd)
+                _bound_diagnostic_fd(fd)  # the rotated copy, still locked: never left over the limit
+                os.close(fd)
+                fd = None
+                continue
+            _bound_rotated_diagnostic(directory_fd, name + _DIAG_ROTATED_SUFFIX)
+            view = memoryview(data)
+            while view:
+                view = view[os.write(fd, view) :]
+            break
+        else:
+            return None
+    except OSError:
+        return None
+    finally:
+        if fd is not None:
+            os.close(fd)
+        os.close(directory_fd)
+    path = record_path.with_suffix(".diag")
+    try:
+        return path.resolve().relative_to(_REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return f"{path.parent.name}/{path.name}"
+
+
+def _record_diagnostic(task_id: object, cause: _TypedCause | None, *, source: str, field: str = "") -> str | None:
+    """Record ``cause``'s raw text beside ``task_id``'s record (:func:`_append_diagnostics`); its pointer or None."""
+    if cause is None or not isinstance(task_id, str) or not task_id:
+        return None
+    return _append_diagnostics(_state_path_no_create(task_id), [(field or source, cause)], source=source)
+
+
+def _publish_cause(task_id: object, cause: _TypedCause, *, source: str, field: str = "") -> str:
+    """Record ``cause`` locally and return its public form: the producer side of :func:`public_cause`."""
+    _record_diagnostic(task_id, cause, source=source, field=field)
+    return cause.public()
+
+
+def _worktree_diff_read(
+    worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()
+) -> tuple[str | None, _TypedCause | None]:
+    """``(git diff <diff_args>, None)`` as if every change, untracked files included, were committed; ``(None, why)``.
 
     Untracked files are marked intent-to-add in a throwaway copy of the index
     (no file content is written to the object store) so they show up as
-    additions; the real index is never touched.
+    additions; the real index is never touched. ``why`` is
+    ``temp_index_failed`` while the scratch index is being made and
+    ``diff_command_failed`` for the diff itself (#9878).
     """
     env = _sanitized_git_env()
+    index_command = ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"]
+    step, code = index_command, "temp_index_failed"
     try:
         index_proc = subprocess.run(
-            ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"],
+            index_command,
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5700,15 +6383,18 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if index_proc.returncode != 0:
-            return None
+            return None, _git_cause("temp_index_failed", index_proc)
+        step = []  # creating the scratch index: no git command runs
         with tempfile.TemporaryDirectory(prefix="lu-finalize-index-") as scratch:
             scratch_index = Path(scratch) / "index"
             real_index = Path(index_proc.stdout.strip())
             if real_index.is_file():
                 shutil.copyfile(real_index, scratch_index)
             scratch_env = {**env, "GIT_INDEX_FILE": str(scratch_index)}
+            add_command = ["git", "add", "-A", "--intent-to-add"]
+            step = add_command
             add_proc = subprocess.run(
-                ["git", "add", "-A", "--intent-to-add"],
+                add_command,
                 cwd=worktree,
                 capture_output=True,
                 text=True,
@@ -5717,9 +6403,11 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
             if add_proc.returncode != 0:
-                return None
+                return None, _git_cause("temp_index_failed", add_proc)
+            diff_command = ["git", *git_options, "diff", *diff_args]
+            step, code = diff_command, "diff_command_failed"
             diff_proc = subprocess.run(
-                ["git", *git_options, "diff", *diff_args],
+                diff_command,
                 cwd=worktree,
                 capture_output=True,
                 text=True,
@@ -5729,11 +6417,11 @@ def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_optio
                 env=scratch_env,
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, _exception_cause(code, exc, command=step or None)
     if diff_proc.returncode != 0:
-        return None
-    return diff_proc.stdout
+        return None, _git_cause("diff_command_failed", diff_proc)
+    return diff_proc.stdout, None
 
 
 def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
@@ -5774,6 +6462,10 @@ def _kimi_worker_refusal(
     The worker's seat and model are resolved and admitted in one step
     (``resolve_and_admit``); the worker invokes the admitted target.
 
+    The refusal is a public cause only (#9878). A tree reader's error and the
+    boundary's errors go to the task's local diagnostic file; a policy refusal
+    writes nothing, its text being the fixed policy the dispatch-time gate prints.
+
     A Kimi seat is refused unless its mode and review flags are admitted (read
     first, from the argv alone), the task's owned paths pass admission read in
     ``cwd`` — the tree the worker runs in — and in the commit checked out
@@ -5786,7 +6478,6 @@ def _kimi_worker_refusal(
     from scripts.agent_runtime.kimi_admission import (
         ADMITTED_MODE,
         KimiAdmissionRefused,
-        format_refusal,
         is_kimi_seat,
     )
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
@@ -5797,11 +6488,13 @@ def _kimi_worker_refusal(
             try:
                 kimi_boundary.remove(cwd, env=_sanitized_git_env())
             except boundary_errors as exc:
-                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
+                return _publish_cause(task_id, _exception_cause("boundary_remove_failed", exc), source="worker"), None
         try:
             (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
         except ReviewAdmissionRefused as exc:  # #9583: a review model without a catalog review role
-            return str(exc), None
+            return _publish_cause(
+                task_id, _TypedCause("review_admission_refused", diagnostic=str(exc)), source="worker"
+            ), None
         return None, target
     try:
         if mode != ADMITTED_MODE or review:
@@ -5820,15 +6513,22 @@ def _kimi_worker_refusal(
             trees=lambda: _kimi_worktree_trees(cwd),
         )
     except KimiAdmissionRefused as exc:
-        return str(exc), None
+        if not exc.read_errors:
+            # A policy refusal: its text is fixed policy that the dispatch-time gate prints in full,
+            # and a refused Kimi worker writes nothing.
+            return _TypedCause("kimi_admission_refused").public(), None
+        # A tree reader failed: the refusal names its class; the reader's message stays local.
+        cause = _exception_cause("kimi_admission_refused", exc.read_errors[0])
+        detail = "\n".join(f"{type(error).__name__}: {error}" for error in exc.read_errors)
+        return _publish_cause(task_id, dataclasses.replace(cause, diagnostic=f"{exc}\n{detail}"), source="worker"), None
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
-        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"]), None
+        return _TypedCause("kimi_worktree_mismatch").public(), None
     base_ref = _commit_count_base_ref(cwd, str(launch.get("worktree_base") or "main"))
     try:
         kimi_boundary.install(cwd, agent=agent, base_ref=base_ref, owned_paths=owned, env=_sanitized_git_env())
     except boundary_errors as exc:
-        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"]), None
+        return _publish_cause(task_id, _exception_cause("boundary_install_failed", exc), source="worker"), None
     return None, target
 
 
@@ -5840,28 +6540,71 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str, *, base_sha: s
     files. Each changed path's post-image is read in full, so git's binary
     classification cannot hide text. When ``base_ref`` was deleted after
     merging, falls back to the recorded ``base_sha`` and then the default-branch
-    merge base (#9489). Fails closed: changes that cannot be read are a refusal.
+    merge base (#9489). Fails closed: changes that cannot be read are a refusal
+    that names only its typed cause (#9878); see :func:`_kimi_diff_refusal_detail`.
+    """
+    return _kimi_diff_refusal_detail(worktree, base_ref, agent, base_sha=base_sha)[0]
+
+
+def _kimi_diff_refusal_detail(
+    worktree: Path, base_ref: str, agent: str, *, base_sha: str | None = None
+) -> tuple[str | None, _TypedCause | None]:
+    """``(refusal, cause)`` for :func:`_kimi_diff_refusal`; ``cause`` is set when the changes could not be read.
+
+    The caller records ``cause`` with :func:`_record_diagnostic`: its raw
+    diagnostic never enters the refusal.
     """
     from scripts.agent_runtime import kimi_boundary
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
 
-    unreadable = format_refusal(agent, ["the finalized changes could not be read for Ukrainian content"])
-    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
-    if not merge_base:
-        return unreadable
-    name_status = _worktree_diff_output(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
+    merge_base, why = _resolve_merge_base_detail(worktree, base_ref, base_sha=base_sha)
+    if merge_base is None:
+        why = why or _TypedCause("merge_base_unresolved", "merge-base")
+        return _kimi_unreadable(agent, why), why
+    name_status, why = _worktree_diff_read(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
     if name_status is None:
-        return unreadable
-    try:
-        changes = kimi_boundary.changes(
+        why = why or _TypedCause("diff_command_failed", "diff")
+        return _kimi_unreadable(agent, why), why
+    return _kimi_changes_refusal(
+        agent,
+        lambda: kimi_boundary.changes(
             worktree, kimi_boundary.parse_name_status(name_status), after=None, env=_sanitized_git_env()
-        )
-        refuse_kimi_changes(agent, changes)
+        ),
+    )
+
+
+def _kimi_unreadable(agent: str, cause: _TypedCause) -> str:
+    """The typed refusal for Kimi changes that could not be read: only ``cause``'s public form (#9878)."""
+    from scripts.agent_runtime.kimi_admission import format_refusal
+
+    return format_refusal(agent, [f"the finalized changes could not be read for Ukrainian content [{cause.public()}]"])
+
+
+def _kimi_changes_refusal(agent: str, read: Callable[[], Any]) -> tuple[str | None, _TypedCause | None]:
+    """Run the Kimi content check on the changes ``read()`` returns: ``(refusal, cause)``, ``(None, None)`` on a pass.
+
+    Each way the changes can fail to be read is a typed refusal (#9878): a
+    changed file that cannot be read (``file_unreadable``), git output that
+    cannot be parsed (``changes_parse_failed``), and git or the filesystem
+    failing (``changes_unreadable``).
+    """
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_changes
+
+    try:
+        refuse_kimi_changes(agent, read())
     except KimiAdmissionRefused as exc:
-        return str(exc)
-    except (OSError, subprocess.SubprocessError):
-        return unreadable
-    return None
+        return str(exc), None
+    except kimi_boundary.ChangeUnreadable as exc:
+        cause = _TypedCause(
+            "file_unreadable", error=exc.cause, path=exc.path, diagnostic=f"{exc}: {exc.__cause__ or ''}"
+        )
+    except ValueError as exc:
+        cause = _exception_cause("changes_parse_failed", exc)
+    except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+        cause = _exception_cause("changes_unreadable", exc)
+    else:
+        return None, None
+    return _kimi_unreadable(agent, cause), cause
 
 
 def _advisory_ceiling_check(
@@ -5925,7 +6668,8 @@ def _advisory_worker_diff(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
         except (OSError, subprocess.TimeoutExpired) as exc:
-            return None, f"the worker's committed diff could not be read: {exc}"
+            # The class only: the measurement is recorded and shown; the message can hold host paths (#9878).
+            return None, f"the worker's committed diff could not be read ({type(exc).__name__})"
         return (proc.stdout, None) if proc.returncode == 0 else (None, "the worker's committed diff could not be read")
     output = _worktree_diff_output(worktree, [*diff_args, merge_base, "--"])
     if output is None:
@@ -6322,9 +7066,12 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
             timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git push timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s") from exc
+        raise _TypedFailure(
+            f"git push timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s",
+            _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"]),
+        ) from exc
     if proc.returncode != 0:
-        raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
+        raise _TypedFailure("git push failed", _remote_git_cause("auto_finalize_push_failed", proc))
 
 
 @publication_boundary(RuntimeError)
@@ -6347,9 +7094,22 @@ def _create_auto_finalize_pr(
             timeout=DEFAULT_GH_CLI_TIMEOUT_S,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"gh pr create timed out after {DEFAULT_GH_CLI_TIMEOUT_S}s") from exc
+        raise _TypedFailure(
+            f"gh pr create timed out after {DEFAULT_GH_CLI_TIMEOUT_S}s",
+            _exception_cause("auto_finalize_pr_failed", exc),
+        ) from exc
+    except PublishBlocked as exc:
+        # The OPSEC gate refused the publication: typed, its reason kept for the local diagnostic (#9878).
+        raise _TypedFailure(
+            "publish blocked", _TypedCause("auto_finalize_publish_blocked", diagnostic=str(exc))
+        ) from None
     if proc.returncode != 0:
-        raise RuntimeError(f"gh pr create failed: {_format_process_failure(proc)}")
+        raise _TypedFailure(
+            "gh pr create failed",
+            _TypedCause(
+                "auto_finalize_pr_failed", exit_status=proc.returncode, diagnostic=_format_process_failure(proc)
+            ),
+        )
     lines = [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
     return lines[-1] if lines else None
 
@@ -6359,6 +7119,7 @@ def _auto_finalize_dirty_worktree(
     worktree: Path,
     task_id: str,
     agent: str,
+    model: str | None = None,
     branch: str | None,
     base_branch: str,
     open_pr: bool = False,
@@ -6375,7 +7136,8 @@ def _auto_finalize_dirty_worktree(
     addition is committed, and when any outside file was added, no owned
     deletion is. Those paths are listed in ``cross_boundary_moves``.
     A task that declared no owned paths gets no commit at all
-    (``no_owned_paths_declared``).
+    (``no_owned_paths_declared``). ``error`` is a public cause (#9878): git's
+    stderr and an exception's message go only to the task's ``.diag`` file.
     """
     owned = _declared_owned_paths(owned_paths)
     all_changed = _auto_finalize_changed_files(worktree)
@@ -6430,12 +7192,14 @@ def _auto_finalize_dirty_worktree(
         # Real work exists only outside the declared scope: a human decides.
         return _result(ok=False, error=_AUTO_FINALIZE_NOTHING_OWNED_REASON, changed_files=changed_files)
 
+    def _failed(cause: _TypedCause, **fields: Any) -> AutoFinalizeResult:
+        error = _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error")
+        return _result(ok=False, error=error, changed_files=changed_files, **fields)
+
     resolved_branch = branch or _current_branch(worktree)
     if not resolved_branch or resolved_branch in {"HEAD", "main", "master"}:
-        return _result(
-            ok=False,
-            error=f"unsafe or unresolved branch {resolved_branch!r}",
-            changed_files=changed_files,
+        return _failed(
+            _TypedCause("auto_finalize_unsafe_branch", diagnostic=f"unsafe or unresolved branch {resolved_branch!r}")
         )
 
     safe_task = _x_agent_task_id(agent, task_id)
@@ -6454,6 +7218,11 @@ def _auto_finalize_dirty_worktree(
     scoped_args = ["--pathspec-from-file=-", "--pathspec-file-nul"]
     git_prefix = ["git", "--literal-pathspecs"]
     commit_sha: str | None = None
+    # This commit is made by the supervisor, outside build_agent_env. Use the
+    # worker lane's identity instead of the launcher's inherited driver identity.
+    from scripts.lib.git_identity import git_identity_env
+
+    commit_env = {**_sanitized_git_env(), **git_identity_env(agent, model)}
     try:
         add_proc = subprocess.run(
             [*git_prefix, "add", "-A", *scoped_args],
@@ -6462,15 +7231,11 @@ def _auto_finalize_dirty_worktree(
             capture_output=True,
             text=True,
             check=False,
-            env=_sanitized_git_env(),
+            env=commit_env,
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if add_proc.returncode != 0:
-            return _result(
-                ok=False,
-                error=f"git add failed: {_format_process_failure(add_proc)}",
-                changed_files=changed_files,
-            )
+            return _failed(_git_cause("auto_finalize_add_failed", add_proc))
 
         commit_proc = subprocess.run(
             [
@@ -6490,7 +7255,7 @@ def _auto_finalize_dirty_worktree(
             capture_output=True,
             text=True,
             check=False,
-            env=_sanitized_git_env(),
+            env=commit_env,
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         if commit_proc.returncode != 0:
@@ -6505,16 +7270,13 @@ def _auto_finalize_dirty_worktree(
                     env=_sanitized_git_env(),
                     timeout=DEFAULT_GIT_TIMEOUT_S,
                 )
-            return _result(
-                ok=False,
-                error=f"git commit failed: {_format_process_failure(commit_proc)}",
-                changed_files=changed_files,
-            )
+            return _failed(_git_cause("auto_finalize_commit_failed", commit_proc))
 
         commit_sha = _resolve_sha(worktree)
         _push_auto_finalize_branch(worktree, resolved_branch)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        error = str(exc)
+        step = exc.cmd if isinstance(exc, subprocess.TimeoutExpired) and isinstance(exc.cmd, (list, tuple)) else None
+        causes = [_exception_cause("auto_finalize_failed", exc, command=step)]
         if commit_sha is not None:
             try:
                 reset_proc = subprocess.run(
@@ -6527,18 +7289,16 @@ def _auto_finalize_dirty_worktree(
                     timeout=DEFAULT_GIT_TIMEOUT_S,
                 )
             except (OSError, subprocess.TimeoutExpired) as reset_exc:
-                error = f"{error}; git reset failed: {reset_exc}"
+                causes.append(_exception_cause("auto_finalize_reset_failed", reset_exc, command=["git", "reset"]))
             else:
                 if reset_proc.returncode != 0:
-                    error = f"{error}; git reset failed: {_format_process_failure(reset_proc)}"
+                    causes.append(_git_cause("auto_finalize_reset_failed", reset_proc))
                 else:
                     commit_sha = None
-        return _result(
-            ok=False,
-            commit_sha=commit_sha,
-            error=error,
-            changed_files=changed_files,
+        error = "; ".join(
+            _publish_cause(task_id, cause, source="auto_finalize", field="auto_finalize.error") for cause in causes
         )
+        return _result(ok=False, commit_sha=commit_sha, error=error, changed_files=changed_files)
 
     pr_url = None
     if open_pr:
@@ -6556,7 +7316,7 @@ def _auto_finalize_dirty_worktree(
             )
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
             # The commit is already pushed. Never soft-reset it after a PR error.
-            return _result(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
+            return _failed(_exception_cause("auto_finalize_pr_failed", exc), commit_sha=commit_sha)
 
     return _result(
         ok=True,
@@ -6566,56 +7326,201 @@ def _auto_finalize_dirty_worktree(
     )
 
 
-_RESCUE_TERMINAL_STATUSES = frozenset({"crashed", "timeout", "failed", "no_deliverable", "needs_finalize"})
+_RESCUE_TERMINAL_STATUSES = frozenset(
+    {"crashed", "timeout", "failed", "no_deliverable", "needs_finalize", "cancelled", "rate_limited"}
+)
 _RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
 
 
-def _rescue_git(worktree: Path, *args: str, network: bool = False) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
-        cwd=worktree,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=_sanitized_git_env(),
-        timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S if network else DEFAULT_GIT_TIMEOUT_S,
+class _RescueFailure(_TypedFailure):
+    """A rescue step failed: its row shows only the :class:`_TypedCause`; the raw error goes to the ``.diag`` file."""
+
+def _rescue_git(context: SafeGitContext, *args: str, **kwargs) -> subprocess.CompletedProcess[str]:
+    """All rescue execution uses the fresh context, including checking and network proof."""
+    return context.run(*args, **kwargs)
+
+
+@dataclass(frozen=True)
+class _RescueRepo:
+    """Validated source registration, used only for ref reads and borrowed objects."""
+
+    worktree: Path
+    git_dir: Path
+    admin_dir: Path
+
+    @property
+    def head_ref(self) -> str:
+        return f"worktrees/{self.admin_dir.name}/HEAD"
+
+
+def _rescue_canonical_push_url() -> str:
+    """Driver-side destination; source repository configuration is not authority."""
+    return CANONICAL_ORIGIN
+
+
+def _rescue_execution_context(repo: _RescueRepo) -> SafeGitContext:
+    from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity
+
+    identity = resolve_agent_github_identity(
+        bash_secrets_path=_BASH_SECRETS_PATH,
+        repository="learn-ukrainian/learn-ukrainian.github.io",
+    )
+    if not identity.token:
+        raise _RescueFailure("driver identity unavailable", _TypedCause("rescue_identity_unavailable"))
+    return SafeGitContext(
+        objects=repo.git_dir / "objects", origin=_rescue_canonical_push_url(),
+        token=identity.token, temp_root=Path(tempfile.gettempdir()),
     )
 
 
-def _rescue_remote_head(worktree: Path, branch: str) -> str | None:
-    proc = _rescue_git(worktree, "ls-remote", "--heads", "origin", branch, network=True)
-    if proc.returncode != 0:
-        raise RuntimeError("rescue remote proof unavailable")
+def _rescue_repo(worktree: Path) -> _RescueRepo:
+    """``worktree`` as a :class:`_RescueRepo`, read from the files git keeps, without running git in it."""
+    from scripts.agent_runtime import kimi_boundary
+
+    admin = kimi_boundary.worktree_git_dir(worktree)
+    try:
+        if admin is None:
+            raise FileNotFoundError(".git")
+        admin = admin.resolve(strict=True)
+        git_dir = (admin / (admin / "commondir").read_text(encoding="utf-8").strip()).resolve(strict=True)
+        registered = Path((admin / "gitdir").read_text(encoding="utf-8").strip()).resolve()
+    except (OSError, ValueError) as exc:
+        raise _RescueFailure(
+            "the worktree's git directory cannot be read", _exception_cause("rescue_worktree_unregistered", exc)
+        ) from exc
+    if (
+        git_dir != (_REPO_ROOT / ".git").resolve()
+        or admin.parent != git_dir / "worktrees"
+        or registered != (worktree / ".git").resolve()
+    ):
+        raise _RescueFailure(
+            "the worktree is not a linked worktree of the main repository",
+            _TypedCause("rescue_worktree_unregistered"),
+        )
+    return _RescueRepo(worktree, git_dir, admin)
+
+
+def _rescue_head(repo: _RescueRepo, context: SafeGitContext) -> tuple[str, str] | None:
+    """Resolve the worker HEAD by plumbing, then use only that exact object ID."""
+    commit = context.read_source_ref(repo.git_dir, repo.head_ref)
+    name = context.read_source_ref(repo.git_dir, repo.head_ref, symbolic=True)
+    if commit.returncode or name.returncode or not commit.stdout.strip():
+        return None
+    full_name = name.stdout.strip()
+    return commit.stdout.strip(), full_name.removeprefix("refs/heads/") if full_name.startswith("refs/heads/") else "HEAD"
+
+
+def _rescue_base(repo: _RescueRepo, context: SafeGitContext, state: Mapping[str, Any]) -> str:
+    base = str(state.get("worktree_base") or "main")
+    for ref in (base, _origin_base_ref(base), _recorded_base_sha(state), "refs/remotes/origin/main", "refs/heads/main"):
+        if ref:
+            proc = context.read_source_ref(repo.git_dir, ref)
+            if proc.returncode == 0:
+                return proc.stdout.strip()
+    raise _RescueFailure("base unavailable", _TypedCause("merge_base_unresolved", "rev-parse"))
+
+
+def _rescue_commit_matches(context: SafeGitContext, commit: str, tree: str, parent: str) -> bool:
+    proc = _rescue_git(context, "show", "-s", "--format=%T %P", commit)
+    return proc.returncode == 0 and proc.stdout.split() == [tree, parent]
+
+
+def _rescue_commit(context: SafeGitContext, tree: str, parent: str, *, agent: str, task_id: str) -> str:
+    """Fixed driver commit identity, never the source repository's user config."""
+    message = f"chore(dispatch): rescue {task_id}\n\nX-Agent: {agent}/{task_id}"
+    proc = _rescue_git(
+        context, "commit-tree", tree, "-p", parent, "-m", message,
+    )
+    if proc.returncode or not proc.stdout.strip():
+        raise _RescueFailure("cannot commit rescue work", _git_cause("rescue_commit_failed", proc))
+    return proc.stdout.strip()
+
+
+def _rescue_remote_head(context: SafeGitContext, branch: str) -> str | None:
+    proc = _rescue_git(context, "ls-remote", "--heads", "origin", f"refs/heads/{branch}", network=True)
+    if proc.returncode:
+        raise _RescueFailure("rescue remote proof unavailable", _remote_git_cause("rescue_remote_unverified", proc))
     lines = [line for line in proc.stdout.splitlines() if line.strip()]
     if not lines:
         return None
     if len(lines) != 1 or lines[0].split("\t")[-1] != f"refs/heads/{branch}":
-        raise RuntimeError("rescue remote proof ambiguous")
+        raise _RescueFailure("rescue remote proof ambiguous", _TypedCause("rescue_remote_unverified", "ls-remote"))
     return lines[0].split("\t", 1)[0]
 
 
-def _clean_rescue_junk(worktree: Path, changed: tuple[str, ...]) -> bool:
-    """Remove only the already classified disposable changes."""
-    index = _rescue_git(worktree, "ls-files", "-z", "--", *changed)
-    head = _rescue_git(worktree, "ls-tree", "-r", "-z", "--name-only", "HEAD", "--", *changed)
-    if index.returncode != 0 or head.returncode != 0:
+def _is_kimi_task_record(state: Mapping[str, Any]) -> bool:
+    """Whether a task record names a Kimi seat or an effective Kimi model."""
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
+    model = state.get("model")
+    return is_kimi_seat(str(state.get("agent") or ""), model=model if isinstance(model, str) else None)
+
+
+def _kimi_tree_refusal(
+    context: SafeGitContext, base: str, agent: str, *, tree: str
+) -> tuple[str | None, _TypedCause | None]:
+    """Existing Kimi checker on the exact captured tree, read only inside the context."""
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import FileChange
+
+    proc = _rescue_git(context, "diff-tree", "-r", "-z", "--name-status", "--no-renames", base, tree)
+    if proc.returncode:
+        why = _git_cause("diff_command_failed", proc)
+        return _kimi_unreadable(agent, why), why
+
+    def changes():
+        result = []
+        for status, path in kimi_boundary.parse_name_status(proc.stdout):
+            if status == "D":
+                result.append(FileChange(path, None, deleted=True))
+                continue
+            blob = _rescue_git(context, "cat-file", "blob", f"{tree}:{path}", binary=True)
+            content = blob.stdout if blob.returncode == 0 else None
+            result.append(FileChange(path, content))
+        return result
+
+    return _kimi_changes_refusal(agent, changes)
+
+
+def _clean_rescue_junk(repo: _RescueRepo, context: SafeGitContext, head: str, changed: tuple[str, ...]) -> bool:
+    """Restore classified disposable files using the same driver-owned context."""
+    present = _rescue_git(context, "ls-tree", "-r", "-z", "--name-only", head, "--", *changed)
+    if present.returncode:
         return False
-    indexed_paths = set(index.stdout.split("\0"))
-    head_paths = set(head.stdout.split("\0"))
-    indexed = tuple(path for path in changed if path in indexed_paths)
-    restore = tuple(path for path in changed if path in head_paths)
-    remove = tuple(path for path in changed if path not in head_paths)
-    if indexed and _rescue_git(worktree, "restore", "--staged", "--", *indexed).returncode != 0:
+    tracked = {path for path in present.stdout.split("\0") if path}
+    for name in changed:
+        path = repo.worktree / name
+        if name in tracked:
+            proc = _rescue_git(context, "restore", f"--source={head}", "--worktree", "--", name, work_tree=repo.worktree)
+            if proc.returncode:
+                return False
+        elif path.is_file() or path.is_symlink():
+            path.unlink()
+        else:
+            return False
+    # The source index may still stage classified residue after its files
+    # are restored/deleted. Reset only those paths through the fresh context.
+    staged = _rescue_git(
+        context, "--literal-pathspecs", "reset", head, "--", *changed,
+        work_tree=repo.worktree, index=repo.admin_dir / "index",
+    )
+    if staged.returncode:
         return False
-    if restore and _rescue_git(worktree, "restore", "--source=HEAD", "--worktree", "--", *restore).returncode != 0:
-        return False
-    if remove and _rescue_git(worktree, "clean", "-fd", "--", *remove).returncode != 0:
-        return False
-    return _worktree_is_dirty(worktree) is False
+    return context.capture(repo.worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude") == context.checked("rev-parse", f"{head}^{{tree}}")
 
 
 def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
-    """Preserve one terminal task on origin; never remove its worktree here."""
+    """:func:`_rescue_task_row` through the public-reason sink: a row's reason is a public cause only (#9878)."""
+    return _public_row(_rescue_task_row(state_path, apply=apply), state_path, source="rescue")
+
+
+def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
+    """Preserve one terminal task on origin; never remove its worktree here.
+
+    Rescue captures, checks, commits and pushes in a fresh bare Git context.
+    The source contributes only resolved refs and objects; its checkout is
+    retained, apart from classified disposable residue (#9878).
+    """
     state = _read_state(state_path)
     task_id = state.get("task_id") if state else None
     row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
@@ -6628,7 +7533,16 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
         return row
     worktree = Path(raw_worktree).resolve()
     dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
-    if not worktree.is_relative_to(dispatch_root) or _resolve_verified_worktree_path(worktree) != worktree:
+    if not worktree.is_relative_to(dispatch_root):
+        row["reason"] = "not a registered dispatch worktree"
+        return row
+    # A reaped or hand-removed worktree has nothing left to preserve. Before
+    # #9878 the registration check skipped it; reading its git files now would
+    # raise FileNotFoundError and fail every scheduled rescue run.
+    if not worktree.is_dir():
+        row["reason"] = "worktree already removed"
+        return row
+    if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
     if state.get("worktree_reused") is not False:
@@ -6657,114 +7571,131 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
                 row["reason"] = "worktree active"
                 return row
-            current_branch = _current_branch(worktree)
-            recorded_branch = state.get("worktree_branch")
-            agent = str(state.get("agent") or "agent")
-            safe_task = _x_agent_task_id(agent, str(task_id))
-            branch = f"rescue/{agent}/{safe_task}"
-            if current_branch not in {recorded_branch, branch}:
-                row["reason"] = "worktree branch differs from task record"
-                return row
-            dirty = _worktree_is_dirty(worktree)
-            if dirty is None:
-                row["reason"] = "git status unavailable"
-                return row
-            changed = _auto_finalize_changed_files(worktree) if dirty else ()
-            if dirty and not changed:
-                row["reason"] = "changed files unavailable"
-                return row
-            large = [
-                name
-                for name in changed
-                if (worktree / name).is_file() and (worktree / name).stat().st_size > _RESCUE_MAX_FILE_BYTES
-            ]
-            if large:
-                row["reason"] = "files exceed 5 MB"
-                row["large_files"] = large
-                return row
-            cleaned_junk = False
-            if _auto_finalize_is_junk_only(changed):
-                if not apply:
-                    row["action"] = "candidate"
-                    row["reason"] = "clean disposable residue"
-                    return row
-                if not _clean_rescue_junk(worktree, changed):
-                    row["action"] = "error"
-                    row["reason"] = "could not clean disposable residue"
-                    return row
-                cleaned_junk = True
-                dirty = False
-                changed = ()
-            head = _resolve_sha(worktree)
-            if head is None:
-                row["reason"] = "HEAD unavailable"
-                return row
-            if not dirty and state.get("rescue_status") == "rescued" and state.get("rescue_head_commit") == head:
-                row["reason"] = "already rescued at HEAD"
-                return row
-            if not dirty:
-                ahead = _count_commits_ahead(
-                    worktree,
-                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
-                    base_sha=_recorded_base_sha(state),
-                )
-                if ahead is None:
-                    row["reason"] = "ahead count unavailable"
-                    return row
-                if ahead == 0 or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0:
-                    row["action"] = "cleaned" if cleaned_junk else "skipped"
-                    row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
-                    return row
-            existing_remote = _rescue_remote_head(worktree, branch)
-            if existing_remote is not None and existing_remote != head:
-                row["reason"] = "rescue remote branch already exists at another head"
-                return row
-            row.update({"action": "candidate", "rescue_ref": branch, "head": head})
-            if not apply:
-                return row
-            if dirty:
-                if current_branch != branch:
-                    proc = _rescue_git(worktree, "switch", "-c", branch)
-                    if proc.returncode != 0:
-                        raise RuntimeError("cannot create rescue branch")
-                proc = _rescue_git(worktree, "add", "-A")
-                if proc.returncode != 0:
-                    raise RuntimeError("cannot stage rescue work")
-                proc = _rescue_git(
-                    worktree,
-                    "commit",
-                    "-m",
-                    f"chore(dispatch): rescue {task_id}",
-                    "--trailer",
-                    f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
-                )
-                if proc.returncode != 0:
-                    detail = (proc.stderr or proc.stdout or "").strip()
-                    raise RuntimeError(f"cannot commit rescue work: {detail or f'exit {proc.returncode}'}")
-                head = _resolve_sha(worktree)
-                if head is None:
-                    raise RuntimeError("rescue commit HEAD unavailable")
-            proc = _rescue_git(worktree, "push", "origin", f"HEAD:refs/heads/{branch}", network=True)
-            if proc.returncode != 0:
-                raise RuntimeError("cannot push rescue branch")
-            if _rescue_remote_head(worktree, branch) != head:
-                raise RuntimeError("rescue remote verification failed")
-            proc = _rescue_git(
-                worktree,
-                "fetch",
-                "origin",
-                f"refs/heads/{branch}:refs/remotes/origin/{branch}",
-                network=True,
-            )
-            if proc.returncode != 0 or _resolve_sha(worktree, f"refs/remotes/origin/{branch}") != head:
-                raise RuntimeError("rescue tracking ref verification failed")
-            state.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
-            _write_state_atomic(state_path, state)
-            row.update({"action": "rescued", "head": head})
-            return row
+            repo = _rescue_repo(worktree)
+            with _rescue_execution_context(repo) as context:
+                return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        row.update({"action": "error", "reason": str(exc)})
+        cause = _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
+        reason = cause.public()
+        row.update(action="error", reason=reason, failure_code=reason.split(", ")[0])
+        diagnostic = _record_diagnostic(task_id, cause, source="rescue", field="reason")
+        if diagnostic:
+            row["diagnostic"] = diagnostic
         return row
+
+
+def _rescue_in_context(
+    repo: _RescueRepo, context: SafeGitContext, state: Mapping[str, Any],
+    state_path: Path, row: dict[str, Any], *, apply: bool,
+) -> dict[str, Any]:
+    from scripts.agent_runtime import kimi_boundary
+
+    worktree = repo.worktree
+    task_id = state["task_id"]
+    worker_head = _rescue_head(repo, context)
+    if worker_head is None:
+        row["reason"] = "HEAD unavailable"
+        return row
+    head, current_branch = worker_head
+    recorded_branch = state.get("worktree_branch")
+    agent = str(state.get("agent") or "agent")
+    branch = f"rescue/{agent}/{_x_agent_task_id(agent, str(task_id))}"
+    if current_branch not in {recorded_branch, branch}:
+        row["reason"] = "worktree branch differs from task record"
+        return row
+    tree = context.capture(worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude")
+    changed = tuple(path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path)
+    large = []
+    for name in changed:
+        try:
+            info = (worktree / name).lstat()
+        except FileNotFoundError:  # tracked deletion
+            continue
+        if stat.S_ISREG(info.st_mode) and info.st_size > _RESCUE_MAX_FILE_BYTES:
+            large.append(name)
+    if large:
+        row.update(reason="files exceed 5 MB", large_files=large)
+        return row
+    cleaned_junk = False
+    if _auto_finalize_is_junk_only(changed):
+        if not apply:
+            row.update(action="candidate", reason="clean disposable residue")
+            return row
+        if not _clean_rescue_junk(repo, context, head, changed):
+            row.update(action="error", reason="could not clean disposable residue")
+            return row
+        cleaned_junk = True
+        changed = ()
+        tree = context.checked("rev-parse", f"{head}^{{tree}}")
+    base = _rescue_base(repo, context, state)
+    merge = _rescue_git(context, "merge-base", base, head)
+    if merge.returncode:
+        raise _RescueFailure("merge base unavailable", _git_cause("merge_base_unresolved", merge))
+    merge_base = merge.stdout.strip()
+    context.refuse_tree(merge_base, tree)
+    rescued = state.get("rescue_head_commit") if state.get("rescue_status") == "rescued" else None
+    if isinstance(rescued, str) and changed:
+        _rescue_git(context, "fetch", "--no-tags", "origin", f"refs/heads/{branch}", network=True)
+    if isinstance(rescued, str) and (rescued == head if not changed else _rescue_commit_matches(context, rescued, tree, head)):
+        row["reason"] = "already rescued at HEAD"
+        return row
+    if not changed:
+        count = _rescue_git(context, "rev-list", "--count", f"{base}..{head}")
+        if count.returncode:
+            row["reason"] = "ahead count unavailable"
+            return row
+        tracking = context.read_source_ref(repo.git_dir, f"refs/remotes/origin/{recorded_branch}")
+        unpushed = _rescue_git(context, "rev-list", "--count", f"{tracking.stdout.strip()}..{head}") if tracking.returncode == 0 else None
+        if count.stdout.strip() == "0" or (unpushed is not None and unpushed.returncode == 0 and unpushed.stdout.strip() == "0"):
+            row.update(action="cleaned" if cleaned_junk else "skipped", reason="disposable residue removed" if cleaned_junk else "no provable unpushed work")
+            return row
+    if kimi_boundary.is_installed(worktree) or _is_kimi_task_record(state):
+        refusal, unreadable = _kimi_tree_refusal(context, merge_base, agent, tree=tree)
+        if refusal is not None:
+            reason, cause = _kimi_refusal_cause(refusal, unreadable)
+            row.update(action="error", reason=reason, failure_code="kimi_content_refused")
+            diagnostic = _record_diagnostic(task_id, cause, source="rescue", field="reason")
+            if diagnostic:
+                row["diagnostic"] = diagnostic
+            return row
+    existing_remote = _rescue_remote_head(context, branch)
+    commit = head if not changed else None
+    if changed and existing_remote:
+        # A previous process may have pushed before recording its success.
+        fetched = _rescue_git(context, "fetch", "--no-tags", "origin", f"refs/heads/{branch}", network=True)
+        if fetched.returncode == 0 and _rescue_commit_matches(context, existing_remote, tree, head):
+            commit = existing_remote
+    if existing_remote is not None and existing_remote != commit:
+        row["reason"] = "rescue remote branch already exists at another head"
+        return row
+    row.update(action="candidate", rescue_ref=branch, head=commit or head)
+    if not apply:
+        return row
+    if commit is None:
+        commit = _rescue_commit(context, tree, head, agent=agent, task_id=str(task_id))
+    context.verify_inputs()
+    if _rescue_head(repo, context) != worker_head:
+        raise SnapshotRefusal("rescue_input_changed")
+    proc = _rescue_git(context, "push", "--no-verify", "origin", f"{commit}:refs/heads/{branch}", network=True)
+    if proc.returncode:
+        raise _RescueFailure("cannot push rescue branch", _remote_git_cause("rescue_push_failed", proc))
+    if _rescue_remote_head(context, branch) != commit:
+        raise _RescueFailure("rescue remote verification failed", _TypedCause("rescue_remote_unverified", "ls-remote"))
+    with task_state_lock(state_path):
+        current = _read_state(state_path)
+        if not current or current.get("run_nonce") != state.get("run_nonce"):
+            row.update(
+                action="skipped",
+                reason="task attempt changed after rescue push; recovery ref preserved",
+                owner=task_id,
+                next_condition="rescue the current attempt from its own task record",
+                head=commit,
+            )
+            return row
+        current.update({"rescue_ref": branch, "rescue_head_commit": commit, "rescue_status": "rescued"})
+        _write_record_unlocked(state_path, current)
+    row.update({"action": "rescued", "head": commit})
+    return row
 
 
 def cmd_rescue(args: argparse.Namespace) -> int:
@@ -6811,6 +7742,8 @@ def cmd_rescue(args: argparse.Namespace) -> int:
             if age_hours < min_age_hours:
                 continue
         rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
+    # Every row leaves through the public-reason sink (#9878).
+    rows = [_public_row(row, None, source="rescue") for row in rows]
     summary = {
         action: sum(row["action"] == action for row in rows)
         for action in ("candidate", "rescued", "cleaned", "skipped", "error")
@@ -6914,24 +7847,6 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
-    from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
-
-    preserved_artifacts = None
-
-    def preserve_before_remove() -> tuple[bool, str]:
-        nonlocal preserved_artifacts
-        ok, detail = releasable()
-        if not ok:
-            return ok, detail
-        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
-            worktree,
-            primary=_REPO_ROOT,
-            task_id=owner_task_id,
-            tasks_dir=tasks_dir(),
-            task_record=task_record,
-        )
-        return (True, detail) if ok else (False, refusal)
-
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
         # A ``--repo`` sibling worktree is git-operated in its own repository,
@@ -6940,15 +7855,14 @@ def _remove_dispatch_worktree(
         control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
-        releasable=preserve_before_remove,
+        releasable=releasable,
+        task_record=task_record,
         force=force,
         tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
     record = {**removal.as_record(), "pr": None}
-    if preserved_artifacts is not None:
-        record["preserved_artifacts"] = preserved_artifacts
     return record
 
 
@@ -7001,6 +7915,26 @@ def _settle_worktree_reap(
         ok, detail = _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch)
         if not ok or task_record is None:
             return ok, detail
+        if task_record.get("mode") == "read-only":
+            from scripts.orchestration.reap_worktrees import _is_head_reachable_from_remote
+
+            current = _read_state(_state_path(settling_task_id))
+            if current is None or (current.get("run_nonce"), current.get("pid")) != (
+                task_record.get("run_nonce"),
+                task_record.get("pid"),
+            ):
+                return False, (
+                    f"read-only settle attempt changed; retained for owner {settling_task_id}; "
+                    "next condition: settle the current attempt"
+                )
+            head = _resolve_sha(worktree)
+            if head is None or (
+                head != _recorded_base_sha(task_record) and not _is_head_reachable_from_remote(worktree, head)
+            ):
+                return False, (
+                    f"read-only HEAD moved or unknown; retained for owner {settling_task_id}; "
+                    "next condition: HEAD equals recorded base or is reachable from a remote ref"
+                )
         stopped, refusal = _stop_worker_background_jobs(task_record, task_id=settling_task_id)
         return (True, detail) if stopped else (False, refusal)
 
@@ -7032,6 +7966,7 @@ def _validate_existing_worktree(
     expected_branch: str,
     base: str,
     allow_rebase: bool = True,
+    onto: str | None = None,
 ) -> bool:
     """Validate a reused worktree. Returns True if a rebase occurred.
 
@@ -7040,6 +7975,9 @@ def _validate_existing_worktree(
     checks skip silently when the path isn't a real git worktree (e.g.
     a tmp_path fixture) — those cases either fail at the first real git
     operation later or were never on the dispatch path to begin with.
+    ``onto``, when given, is the commit of ``origin/{base}`` admission
+    checked (#9739 A7): staleness and the rebase use it as is, never the
+    ref fetched again.
     """
     # 1. Branch check.
     try:
@@ -7096,10 +8034,13 @@ def _validate_existing_worktree(
     # runbooks mandate) never yields ``origin/origin/main`` — that
     # unresolvable ref made this whole check a silent no-op.
     origin_ref = _origin_base_ref(base)
-    _fetch_base(base)
+    target = onto or origin_ref
+    if onto is None:
+        _fetch_base(base)
+    shown = f"{origin_ref} at {onto[:12]}" if onto else origin_ref
     try:
         count_proc = subprocess.run(
-            ["git", "rev-list", "--count", f"HEAD..{origin_ref}"],
+            ["git", "rev-list", "--count", f"HEAD..{target}"],
             cwd=path,
             capture_output=True,
             text=True,
@@ -7120,19 +8061,19 @@ def _validate_existing_worktree(
 
     if not allow_rebase:
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref}; "
+            f"worktree at {path} is {behind} commit(s) behind {shown}; "
             "automatic rebasing is disabled. Synchronize it explicitly (for "
             "example, `git merge --ff-only "
-            f"{origin_ref}`) before attaching a worker."
+            f"{target}`) before attaching a worker."
         )
 
     print(
-        f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; attempting fast-forward rebase",
+        f"⚠️  worktree {path} is {behind} commit(s) behind {shown}; attempting fast-forward rebase",
         file=sys.stderr,
     )
     try:
         rebase_proc = subprocess.run(
-            ["git", "rebase", origin_ref],
+            ["git", "rebase", target],
             cwd=path,
             capture_output=True,
             text=True,
@@ -7150,7 +8091,7 @@ def _validate_existing_worktree(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
+            f"worktree at {path} is {behind} commit(s) behind {shown} "
             f"and rebase timed out after {DEFAULT_GIT_TIMEOUT_S}s."
         ) from exc
     if rebase_proc.returncode != 0:
@@ -7165,7 +8106,7 @@ def _validate_existing_worktree(
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
+            f"worktree at {path} is {behind} commit(s) behind {shown} "
             f"and rebase failed. Resolve manually or remove:\n"
             f"    git worktree remove {path}"
         )
@@ -7739,10 +8680,13 @@ def _resolve_worktree_base_sha(
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
+    rebase_onto: str | None = None,
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
     review_dependencies: Sequence[tuple[str, Path]] = (),
+    continuation_head_sha: str | None = None,
+    continuation_remote_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -7751,6 +8695,8 @@ def _resolve_worktree_base_sha(
     :func:`_ensure_worktree`. The latter must not fetch, rebase, or dereference
     a branch again when the SHA is supplied. ``validated_path``, when given, is
     used as is and never resolved again (#8775, :func:`_helper_worktree_path`).
+    ``rebase_onto`` pins a reused worktree's auto-rebase to the commit
+    authoring-review admission checked (#9739 A7).
     """
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
@@ -7774,6 +8720,7 @@ def _resolve_worktree_base_sha(
             # Review admission already read these dependencies. A stale target
             # must refuse rather than advance to different admitted bytes.
             allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
+            onto=rebase_onto,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -7782,7 +8729,11 @@ def _resolve_worktree_base_sha(
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
             _refuse_if_gate_head_moved(
-                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                _require_local_branch_is_ancestor_of_origin(
+                    requested_branch,
+                    continuation_head_sha=continuation_head_sha,
+                    continuation_remote_sha=continuation_remote_sha,
+                ),
                 pinned_head_sha,
             )
         resolved = _resolve_sha(worktree_path)
@@ -8597,6 +9548,69 @@ def _first_error_line(stderr_excerpt: str | None) -> str | None:
     )
 
 
+def _worker_last_error(
+    task_id: str | None,
+    *,
+    stderr_excerpt: str | None,
+    failure_cause: str | None,
+    final_status: str,
+    returncode: int | None,
+    runtime_failure_code: str | None,
+    worker_exception: _TypedCause | None,
+) -> str | None:
+    """The public cause a failed run's ``last_error`` names; None when no error line was captured (#9878).
+
+    A gate's or refusal's cause comes first, then an error line that is itself
+    a registered cause (an adapter's typed reason), the runtime's typed failure
+    code, the terminal status, the exception class that ended the run, and
+    else ``worker_failed`` with its exit status. The captured error line it
+    summarizes stays in ``stderr_excerpt`` and goes to the task's ``.diag``.
+    """
+    line = _first_error_line(stderr_excerpt)
+    if line is None:
+        return None
+    if failure_cause:
+        public = public_cause(failure_cause)[0] or UNCLASSIFIED_CAUSE
+    elif is_public_cause(line):
+        return line
+    elif runtime_failure_code in public_causes():
+        public = str(runtime_failure_code)
+    elif final_status in _STATUS_FAILURE_CAUSES:
+        public = _STATUS_FAILURE_CAUSES[final_status]
+    elif worker_exception is not None:
+        public = worker_exception.public()
+    else:
+        public = _TypedCause("worker_failed", exit_status=returncode).public()
+    if task_id:
+        _record_diagnostic(
+            task_id,
+            _TypedCause(public.split("; ")[0].split(", ")[0], diagnostic=line),
+            source="worker",
+            field="last_error",
+        )
+    return public
+
+
+_STATUS_FAILURE_CAUSES = {
+    "cancelled": "worker_cancelled",
+    "timeout": "worker_timed_out",
+    "rate_limited": "worker_rate_limited",
+}
+
+
+def _kimi_refusal_cause(refusal: str, unreadable: _TypedCause | None) -> tuple[str, _TypedCause]:
+    """``(public form, cause to record)`` for a Kimi content refusal (#9878).
+
+    The public form is ``kimi_content_refused``, followed by the typed cause
+    when the changes could not be read; the refusal text (paths and the lines
+    that held Cyrillic text) and git's error go only to the task's ``.diag``.
+    """
+    cause = unreadable or _TypedCause("kimi_content_refused")
+    detail = f"{refusal}\n{cause.diagnostic}" if cause.diagnostic else refusal
+    public = "kimi_content_refused" if unreadable is None else f"kimi_content_refused; {unreadable.public()}"
+    return public, dataclasses.replace(cause, diagnostic=detail)
+
+
 def _emit_terminal_dispatch_event(
     *,
     task_id: str,
@@ -8726,7 +9740,11 @@ def _run_worker(
         review=require_review_verdict or review_id is not None,
     )
     if kimi_refusal:
-        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        from scripts.agent_runtime import kimi_admission
+
+        # A fixed prefix and the typed cause only (#9878).
+        policy = f"{kimi_admission.POLICY_NAME}: " if kimi_admission.is_kimi_seat(agent, model=model) else ""
+        print(f"❌ ROUTING REFUSED: {policy}{kimi_refusal}", file=sys.stderr)
         return 1
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
@@ -8829,6 +9847,10 @@ def _run_worker(
     returncode_reason: str | None = None
     rate_limited = False
     runtime_failure_code: str | None = None
+    # The typed cause of an exception that ended the run (#9878); its message stays in stderr_excerpt.
+    worker_exception: _TypedCause | None = None
+    # A gate's or refusal's public cause, which names the failure ahead of the worker's own outcome.
+    failure_cause: str | None = None
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
@@ -8890,15 +9912,44 @@ def _run_worker(
     rescue_status: str | None = None
     kimi_worker = is_kimi_seat(agent, model=model)
     kimi_content_refusal: str | None = None
+    kimi_refusal_text: str | None = None
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    agy_telemetry = AgyTelemetry(parent_task_id=task_id) if agent == "agy" else None
 
     try:
         try:
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if state.get("mechanical_task"):
+                tool_config["mechanical_task"] = state["mechanical_task"]
+            if (
+                agent in {"agy", "gemini"}
+                and mode == "read-only"
+                and (state.get("review") or require_review_verdict or review_id is not None)
+            ):
+                tool_config["review_profile"] = state.get("review_profile")
+                if (
+                    state.get("review_profile") == "ukrainian"
+                    and mcp_config_path is None
+                    and review_id is None
+                    and attempt_id is None
+                ):
+                    # Formal attempts provision their home at the runtime boundary;
+                    # missing attempt inputs must reach its typed refusal first.
+                    from scripts.agent_runtime.review_mcp import prepare_agy_permission_home
+
+                    if runtime_tmp_root is None:
+                        raise ValueError("agy_review_permissions_require_scoped_home")
+                    tool_config["agy_home_override"] = str(prepare_agy_permission_home(Path(runtime_tmp_root)))
+            if agent in {"agy", "gemini"} and mcp_config_path is not None and attempt_id is not None:
+                from scripts.agent_runtime.review_mcp import review_ledger_path
+
+                tool_config["review_ledger_path"] = str(review_ledger_path(mcp_config_path))
             if max_budget_usd is not None:
                 tool_config["max_budget_usd"] = max_budget_usd
             if provider is not None:
@@ -9041,6 +10092,7 @@ def _run_worker(
             if not isinstance(runtime_failure_code, str):
                 runtime_failure_code = None
             substitution = getattr(result, "substitution", None)
+            agy_telemetry = getattr(result, "agy_telemetry", agy_telemetry)
         except KeyboardInterrupt as exc:
             # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
             # The runtime's finally block has already killed the CLI
@@ -9050,10 +10102,12 @@ def _run_worker(
             stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
             returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
         except RateLimitedError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             rate_limited = True
             stderr_excerpt = str(exc)[:500]
             returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
         except AgentStalledError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             timed_out = True
             substitution = getattr(exc, "substitution", None)
             if getattr(exc, "kind", "stall") == "initial_response_timeout":
@@ -9073,6 +10127,7 @@ def _run_worker(
                 )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentTimeoutError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             substitution = getattr(exc, "substitution", None)
             stderr_excerpt = (
                 f"hard_timeout fired after {exc.hard_timeout}s: {exc} "
@@ -9081,23 +10136,29 @@ def _run_worker(
             )[:500]
             returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
         except AgentRuntimeError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
+            worker_exception = _exception_cause("worker_runtime_error", exc)
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
         except bounded_advisory.AdvisoryRefused as exc:
             pre_spawn_failure = True
             advisory_handoff_refusal = exc.code
+            failure_cause = exc.code
             stderr_excerpt = f"worker refused at the provider handoff: {exc}"[:500]
             returncode_reason = (
                 "bounded model failed its advisory admission at the provider handoff; provider not started"
             )
         except ValueError as exc:
+            agy_telemetry = getattr(exc, "agy_telemetry", None) or agy_telemetry
             pre_spawn_failure = True
+            worker_exception = _exception_cause("adapter_rejected", exc)
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
             returncode_reason = "adapter rejected the dispatch before a process was spawned"
         except Exception as exc:
             # Last-ditch: don't crash the worker on an unexpected bug — we
             # need to update the state file or the parent will see us as
             # "crashed" forever.
+            worker_exception = _exception_cause("worker_unexpected_error", exc)
             stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
@@ -9142,6 +10203,7 @@ def _run_worker(
             ok_outcome = False
             returncode_reason = "runtime reported success without a terminal subprocess returncode"
             stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
+            failure_cause = "runtime_returncode_missing"
         elif returncode is None and returncode_reason is None:
             returncode_reason = "no terminal subprocess returncode was available"
         if returncode is not None and returncode < 0 and returncode_reason is None:
@@ -9314,12 +10376,16 @@ def _run_worker(
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
                 if kimi_worker:
-                    kimi_content_refusal = _kimi_diff_refusal(
+                    kimi_refusal_text, kimi_unreadable_cause = _kimi_diff_refusal_detail(
                         Path(worktree_path),
                         base_ref,
                         agent,
                         base_sha=_recorded_base_sha(final_state),
                     )
+                    if kimi_refusal_text is not None:
+                        # The record names the typed cause; the refusal and git's own error stay local (#9878).
+                        kimi_content_refusal, kimi_cause = _kimi_refusal_cause(kimi_refusal_text, kimi_unreadable_cause)
+                        _record_diagnostic(task_id, kimi_cause, source="finalize", field="kimi_content_refusal")
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
@@ -9336,7 +10402,9 @@ def _run_worker(
                 # the task for finalization rather than letting it settle as ``done``.
                 # A worker cut off mid-work (#8502) leaves unfinished edits even
                 # when it had pushed earlier commits: surface them, never ``done``.
-                run_incomplete = _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
+                # Exit 0 does not override the adapter's provider-neutral verdict
+                # (#9771): rejected work stays unconfirmed, even after an earlier push.
+                run_incomplete = not ok_outcome or _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
                 if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
@@ -9383,10 +10451,17 @@ def _run_worker(
                         from scripts.agent_runtime import kimi_boundary
 
                         kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
+                    from learn_ukrainian_v4_runtime.model_families import is_cursor_auto_selector
+
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
+                        model=(
+                            model
+                            if agent == "cursor" and is_cursor_auto_selector(model)
+                            else getattr(result, "model", None) or model or _lane_default_model(agent)
+                        ),
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
                         open_pr=finalize_open_pr,
@@ -9402,11 +10477,10 @@ def _run_worker(
                         final_status = "done"
                     elif auto_finalize.ok:
                         # Owned work is committed and pushed, but changes outside
-                        # the owned paths are still in the tree: a human decides.
-                        finalize_error = (
-                            f"{len(auto_finalize.skipped_paths)} changed path(s) outside the owned paths "
-                            "left uncommitted (finalize_skipped_paths)"
-                        )
+                        # the owned paths are still in the tree (finalize_skipped_paths): a human decides.
+                        finalize_error = _TypedCause(
+                            "finalize_skipped_paths", count=len(auto_finalize.skipped_paths)
+                        ).public()
                     elif auto_finalize.error == _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON:
                         # A dirty tree with only known scratch residue has no
                         # user-visible deliverable. Refuse before staging so it
@@ -9417,7 +10491,10 @@ def _run_worker(
         # Deliberately broad: this is measurement about a worker that has already
         # finished, and no measurement failure may cost the task its terminal status.
         except Exception as finalize_exc:
-            finalize_error = f"{type(finalize_exc).__name__}: {finalize_exc}"[:300]
+            # The record names the exception class; its message stays local (#9878).
+            finalize_error = _publish_cause(
+                task_id, _exception_cause("finalize_failed", finalize_exc), source="finalize", field="finalize_error"
+            )
             # Unknown telemetry cannot prove the work was committed, so surface
             # the task for a human instead of settling it as done.
             needs_finalize = True
@@ -9484,11 +10561,13 @@ def _run_worker(
                 final_status = "failed"
                 ok_outcome = False
                 stderr_excerpt = gate_result.failure
+                failure_cause = gate_result.failure
             else:
                 final_state["failure_reason"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
                 needs_finalize = False
+                failure_cause = gate_result.failure
                 message = f"{gate_result.failure}: {gate_result.detail}"
                 stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
 
@@ -9502,7 +10581,8 @@ def _run_worker(
             final_status = "failed"
             ok_outcome = False
             final_state["kimi_content_refusal"] = kimi_content_refusal
-            stderr_excerpt = f"{kimi_content_refusal}\n{stderr_excerpt}" if stderr_excerpt else kimi_content_refusal
+            failure_cause = kimi_content_refusal
+            stderr_excerpt = f"{kimi_refusal_text}\n{stderr_excerpt}" if stderr_excerpt else kimi_refusal_text
         elif needs_finalize:
             final_status = "needs_finalize"
         elif no_deliverable:
@@ -9512,7 +10592,16 @@ def _run_worker(
         # interrupt persists it with its gate evidence, as the checkpoint would.
         completion_gates_settled = True
 
-        last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
+        # last_error is a public cause (#9878): the stderr line it summarizes stays in stderr_excerpt and the .diag.
+        last_error = _worker_last_error(
+            task_id,
+            stderr_excerpt=stderr_excerpt if final_status != "done" else None,
+            failure_cause=failure_cause,
+            final_status=final_status,
+            returncode=returncode,
+            runtime_failure_code=runtime_failure_code,
+            worker_exception=worker_exception,
+        )
         if leftovers_scan is not None and leftovers_scan.reason and final_status == "needs_finalize":
             reason = leftovers_scan.reason
             last_error = f"{reason}; {last_error}" if last_error else reason
@@ -9534,9 +10623,23 @@ def _run_worker(
             # overwriting it hid the actual cause (e.g. a SIGKILLed worker's
             # stderr) behind the mutation list. The paths stay independently
             # queryable via ``read_only_mutation_paths`` either way.
-            last_error = f"{last_error}; {mutation_diagnostic}" if last_error else mutation_diagnostic
+            mutation = _publish_cause(
+                task_id,
+                _TypedCause(
+                    "read_only_checkout_mutation", count=len(read_only_mutation_paths), diagnostic=mutation_diagnostic
+                ),
+                source="worker",
+                field="last_error",
+            )
+            last_error = f"{last_error}; {mutation}" if last_error else mutation
         if task_records_snapshot_error:
-            last_error = f"{last_error}; {task_records_snapshot_error}" if last_error else task_records_snapshot_error
+            snapshot = _publish_cause(
+                task_id,
+                _TypedCause("task_records_snapshot_failed", diagnostic=task_records_snapshot_error),
+                source="worker",
+                field="last_error",
+            )
+            last_error = f"{last_error}; {snapshot}" if last_error else snapshot
         if no_deliverable_reason is not None:
             last_error = no_deliverable_reason
 
@@ -9570,6 +10673,8 @@ def _run_worker(
             finalize_error=finalize_error,
             last_error=last_error,
         )
+        if isinstance(agy_telemetry, AgyTelemetry):
+            core_terminal_state.update(agy_telemetry.task_fields())
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
@@ -9639,11 +10744,19 @@ def _run_worker(
                         dirty_on_exit=dirty_on_exit,
                         commits_ahead=commits_ahead,
                         needs_finalize=interrupted_needs_finalize,
-                        finalize_error=(f"interrupted during finalize: {type(interrupt_exc).__name__}"),
+                        finalize_error=_exception_cause("interrupted_during_finalize", interrupt_exc).public(),
                         last_error=(
                             no_deliverable_reason
                             or interrupted_gate_error
-                            or (_first_error_line(stderr_excerpt) if interrupted_status != "done" else None)
+                            or _worker_last_error(
+                                None,
+                                stderr_excerpt=stderr_excerpt if interrupted_status != "done" else None,
+                                failure_cause=failure_cause,
+                                final_status=interrupted_status,
+                                returncode=returncode,
+                                runtime_failure_code=runtime_failure_code,
+                                worker_exception=worker_exception,
+                            )
                         ),
                     ),
                 },
@@ -9985,7 +11098,12 @@ def _record_worktree_prep_failure(
         "stderr_excerpt": f"{returncode_reason}: {error_str}"[:500],
         "returncode": None,
         "returncode_reason": returncode_reason,
-        "last_error": _first_error_line(error_str) or error_str,
+        # A typed cause: the record writer renders it public and keeps the error text in the .diag (#9878).
+        "last_error": _TypedCause(
+            _DISPATCH_FAILURE_CAUSES.get(returncode_reason, "dispatch_not_started"),
+            error=_exception_cause(UNCLASSIFIED_CAUSE, error).error if isinstance(error, BaseException) else None,
+            diagnostic=error_str,
+        ),
         "exit_code": None,
         "substitution": substitution,
         "agent_alias_note": agent_alias_note,
@@ -10007,6 +11125,12 @@ def _record_worktree_prep_failure(
             failed_state["admission"] = existing["admission"]
     _write_state_atomic(state_path, failed_state)
     return True
+
+
+_DISPATCH_FAILURE_CAUSES = {
+    "worktree preparation failed": "worktree_preparation_failed",
+    "forward configuration failed": "forward_configuration_failed",
+}
 
 
 def _record_forward_failure(
@@ -10614,10 +11738,42 @@ def _dispatch(
         print(f"❌ review attempt refused: {exc}", file=sys.stderr)
         return 2
 
+    # #9874: --branch only continues a remote branch. Observe it before any
+    # content scan or launch routing, using the same canonical read as authoring
+    # admission. Reuse the observation at initial admission, never at a recheck.
+    observed_branch_head: str | None = None
+    if args.mode in _WRITE_CAPABLE_MODES and getattr(args, "branch", None) and fleet_repo.default:
+        cross_repo_error = _resolve_cross_repo_binding_error(
+            worktree_arg=worktree_arg or "auto",
+            cwd_arg=args.cwd,
+            requested_branch=args.branch,
+            target_repo_root=target_repo_root,
+        )
+        if cross_repo_error:
+            print(cross_repo_error, file=sys.stderr)
+            return 2
+        try:
+            args.branch = _validate_branch_reuse_name(args.branch)
+            observed_branch_head = _ls_remote_branch_sha(_authoring_canonical_remote(), args.branch, strict=True)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        except _AuthoringObservationUnknown as exc:
+            print(f"❌ DISPATCH_BRANCH_REMOTE_READ_FAILED: {exc}", file=sys.stderr)
+            return 2
+        if observed_branch_head is None:
+            print(
+                f"❌ DISPATCH_BRANCH_NOT_FOUND: --branch {args.branch!r} does not exist on the canonical remote. "
+                "--branch continues an existing remote branch; for a new branch omit --branch "
+                "(default: <agent>/<task-id>), optionally with --base.",
+                file=sys.stderr,
+            )
+            return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
-    # other check that can run an external command, write a record, sweep runtime tmp,
+    # later preflight that can run an external command, write a record, sweep runtime tmp,
     # archive a task or create a worktree. Owned paths are read in the tree the worker
     # starts from: a reused worktree on disk and at its commit, a new one at its creation
     # base commit (fetched and read with git plumbing). The worktree must start from
@@ -10684,16 +11840,48 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}", file=sys.stderr)
         return 2
 
-    # Prompt is resolved early so forward failure records and sparse inference
-    # have access to the raw prompt text.
+    # Formal attempts and permission-only AGY Ukrainian reviews share the
+    # effective sources grant. Refuse before archival, provisioning or spawn.
+    sources_review_access = None
+    if review_attempt:
+        sources_review_access = getattr(args, "review_access", "full")
+    elif (
+        dispatch_agent in {"agy", "gemini"}
+        and args.mode == "read-only"
+        and getattr(args, "review_profile", None) == "ukrainian"
+        and (
+            getattr(args, "review", False)
+            or getattr(args, "require_review_verdict", False)
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+        )
+    ):
+        sources_review_access = "isolated"
+
+    # Match the launch prompt's precedence. Ordinary review stdin is consumed
+    # before side effects; formal attempts require a render-recorded file and
+    # must refuse stdin without consuming it.
     early_prompt: str | None = None
-    if getattr(args, "prompt", None):
-        early_prompt = str(args.prompt)
-    elif getattr(args, "prompt_file", None):
+    if getattr(args, "prompt_file", None):
         try:
             early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
         except OSError:
             early_prompt = None
+    elif getattr(args, "prompt", None):
+        early_prompt = (
+            sys.stdin.read()
+            if args.prompt == "-" and sources_review_access is not None and not review_attempt
+            else str(args.prompt)
+        )
+
+    if sources_review_access is not None:
+        from scripts.agent_runtime.review_mcp import ReviewToolRequirementsRefused, check_review_tool_requirements
+
+        if early_prompt is not None:
+            try:
+                check_review_tool_requirements(early_prompt, sources_review_access)
+            except ReviewToolRequirementsRefused as exc:
+                print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+                return 2
 
     dor_reason = getattr(args, "allow_dor_warn", None)
     if dor_reason is not None:
@@ -10881,7 +12069,6 @@ def _dispatch(
         if write_intent_error:
             print(write_intent_error, file=sys.stderr)
             return 2
-    state_path = _state_path(task_id)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,
@@ -10959,11 +12146,6 @@ def _dispatch(
         print(write_cwd_error, file=sys.stderr)
         return 2
 
-    if getattr(args, "preflight_triage", False):
-        preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
-        if preflight_rc is not None:
-            return preflight_rc
-
     dirty_primary_error = _resolve_dirty_primary_checkout_error(mode=args.mode)
     if dirty_primary_error:
         print(dirty_primary_error, file=sys.stderr)
@@ -10973,6 +12155,44 @@ def _dispatch(
     if primary_integrity_error:
         print(primary_integrity_error, file=sys.stderr)
         return 2
+
+    # #9739: after the argument and checkout checks above, so a malformed dispatch
+    # gets its own refusal; before preflight triage, the task directory, archival,
+    # runtime cleanup, forwarding, any rebase, worktree or provider. A forwarded
+    # dispatch runs this again on its host; a checkout reaped while dispatch
+    # waits for its lock is admitted again under that lock (#8610).
+    def admit_authoring(branch_head: str | None = None) -> _AuthoringAdmission | None:
+        return _authoring_review_admission(
+            args,
+            dispatch_agent=dispatch_agent,
+            requested_harness=requested_harness,
+            requested_branch=requested_branch,
+            worktree_arg=worktree_arg,
+            validated_worktree=validated_worktree,
+            validated_cwd=validated_cwd,
+            target_repo_root=target_repo_root,
+            repository=fleet_repo.github,
+            default_repo=bool(fleet_repo.default),
+            observed_branch_head=branch_head,
+        )
+
+    try:
+        authoring_admission = admit_authoring(observed_branch_head)
+    except _AuthoringReviewRefused as exc:
+        print(exc.render(), file=sys.stderr)
+        return 2
+    # A worktree's base defaults to the repository's actual default branch where
+    # admission discovered it (M4); "main" only where admission does not apply.
+    worktree_base = getattr(args, "base", None) or (
+        authoring_admission.default_branch if authoring_admission is not None else "main"
+    )
+    # The task directory is created only once the writer is admitted (#9739).
+    state_path = _state_path(task_id)
+
+    if getattr(args, "preflight_triage", False):
+        preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
+        if preflight_rc is not None:
+            return preflight_rc
 
     _warn_node_modules_integrity()
     _warn_venv_integrity()
@@ -11056,7 +12276,7 @@ def _dispatch(
     if args.prompt_file:
         prompt = Path(args.prompt_file).read_text()
     elif args.prompt == "-":
-        prompt = sys.stdin.read()
+        prompt = early_prompt if sources_review_access is not None and not review_attempt else sys.stdin.read()
     elif args.prompt is not None:
         prompt = args.prompt
     else:
@@ -11065,6 +12285,14 @@ def _dispatch(
     # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+    if sources_review_access is not None:
+        # Recheck the launch text, including a file changed since the early read.
+        try:
+            check_review_tool_requirements(prompt, sources_review_access)
+        except ReviewToolRequirementsRefused as exc:
+            print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+            return 2
 
     if review_attempt and review_contract is not None and source_prompt_sha256 != review_contract["prompt_sha256"]:
         # Admission checked the prompt file before any side effect; the file must still be that prompt (#9163).
@@ -11257,7 +12485,7 @@ def _dispatch(
                         requested_harness=getattr(args, "harness", None),
                         worktree_path=getattr(args, "worktree", None),
                         worktree_branch=getattr(args, "branch", None),
-                        worktree_base=getattr(args, "base", None) or "main",
+                        worktree_base=worktree_base,
                         keep_worktree=bool(getattr(args, "keep_worktree", False)),
                         hard_timeout=getattr(args, "hard_timeout", DEFAULT_HARD_TIMEOUT_S),
                         silence_timeout=getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
@@ -11307,6 +12535,7 @@ def _dispatch(
     # Resolve the immutable worktree base once before ownership admission.
     resolved_worktree_base_sha: str | None = None
     resolved_worktree_raw: str | None = None
+    rebase_onto: str | None = None
     if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
         resolved_worktree_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
@@ -11332,18 +12561,59 @@ def _dispatch(
             changed_error = validated_worktree and _validated_path_changed_error("--worktree", validated_worktree)
             if changed_error:
                 raise ValueError(changed_error.removeprefix("❌ "))
-            if fleet_repo.default:
+            # A3 (#9739): under the lock and before any rebase, the admitted
+            # branch head must still be the head the authors were read from;
+            # a checkout reaped meanwhile becomes a fresh worktree, admitted again.
+            try:
+                authoring_admission, moved = _authoring_recheck_under_lock(authoring_admission, readmit=admit_authoring)
+            except _AuthoringReviewRefused as exc:
+                print(exc.render(), file=sys.stderr)
+                return 2
+            if moved:
+                print(moved.render(), file=sys.stderr)
+                return 2
+            # A Kimi worktree is never rebased: it must stay at the commit the gate read.
+            allow_rebase = not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None
+            if (
+                allow_rebase
+                and authoring_admission is not None
+                and authoring_admission.kind == "existing-worktree"
+                and not requested_branch
+                and not review_dependencies
+            ):
+                # A7: the auto-rebase of a reused worktree is admitted before it
+                # runs, and runs onto exactly the commit admitted.
+                try:
+                    rebase_onto = _authoring_rebase_plan(authoring_admission, base=worktree_base)
+                except _AuthoringReviewRefused as exc:
+                    print(exc.render(), file=sys.stderr)
+                    return 2
+            if authoring_admission is not None and authoring_admission.creation_sha is not None:
+                # A7: a new worktree starts at the commit admission enumerated from,
+                # never at a base dereferenced again.
+                resolved_worktree_base_sha = authoring_admission.creation_sha
+            elif fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
                     task_id=task_id,
                     raw_path=resolved_worktree_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
-                    # A Kimi worktree is never rebased: it must stay at the commit the gate read.
-                    allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    allow_rebase=allow_rebase,
+                    rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    continuation_head_sha=(
+                        authoring_admission.head_sha
+                        if authoring_admission is not None and authoring_admission.record.get("local_continuation")
+                        else None
+                    ),
+                    continuation_remote_sha=(
+                        (authoring_admission.record.get("local_continuation") or {}).get("remote_head_sha")
+                        if authoring_admission is not None
+                        else None
+                    ),
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -11369,7 +12639,7 @@ def _dispatch(
                     lifecycle_carrier=lifecycle_carrier,
                     worktree_path=resolved_worktree_raw,
                     worktree_branch=requested_branch,
-                    worktree_base=getattr(args, "base", None) or "main",
+                    worktree_base=worktree_base,
                     agent_alias_note=agent_alias_note,
                     output_schema_path=output_schema_path,
                     output_schema_sha256=output_schema_sha256,
@@ -11385,12 +12655,23 @@ def _dispatch(
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
             return 1
 
+    # A3, A7 (#9739): the head the worker gets is the admitted one: commits pushed
+    # to an attached --branch since admission were never checked, and a reused
+    # worktree's auto-rebase must have produced the planned head.
+    if resolved_worktree_base_sha is not None:
+        moved = _authoring_target_moved(
+            authoring_admission, resolved=resolved_worktree_base_sha, rebase_onto=rebase_onto
+        )
+        if moved:
+            print(moved.render(), file=sys.stderr)
+            return 2
+
     # The base resolved under the worktree lock must be the commit the Kimi gate read.
     if kimi_start_commit is not None and worktree_arg and resolved_worktree_base_sha != kimi_start_commit:
         from scripts.agent_runtime.kimi_admission import format_refusal
 
-        moved = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
-        print(f"❌ {format_refusal(dispatch_agent, [moved + '; retry the dispatch'])}", file=sys.stderr)
+        drift = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
+        print(f"❌ {format_refusal(dispatch_agent, [drift + '; retry the dispatch'])}", file=sys.stderr)
         return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
@@ -11473,7 +12754,7 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
@@ -11551,12 +12832,17 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if mechanical_task := _mechanical_task_scope(args):
+                dry_run_state["mechanical_task"] = mechanical_task
+            if routing.budget_diagnostics:
+                dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
             if not admission.exempt:
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
@@ -11631,6 +12917,15 @@ def _dispatch(
     stdout_fd = open(stdout_log, "ab", buffering=0)  # noqa: SIM115
     stderr_fd = open(stderr_log, "ab", buffering=0)  # noqa: SIM115
 
+    def discard_logs() -> None:
+        """A refusal before any worker exists: close the logs and remove the ones still empty."""
+        stdout_fd.close()
+        stderr_fd.close()
+        for log in (stdout_log, stderr_log):
+            with contextlib.suppress(OSError):
+                if log.stat().st_size == 0:
+                    log.unlink()
+
     worktree_path: Path | None = None
     worktree_branch: str | None = None
     worktree_telemetry: dict[str, Any] = {}
@@ -11655,7 +12950,7 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     branch=requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
@@ -11671,12 +12966,21 @@ def _dispatch(
                     task_id=task_id,
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
-                    base=getattr(args, "base", None) or "main",
+                    base=worktree_base,
                     run_nonce=run_nonce,
                     detached=detached_read_only,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
+            if not worktree_telemetry.get("reused"):
+                from scripts.fleet.ignored_task_output import creation_inventory
+
+                worktree_telemetry["ignored_output_baseline"] = creation_inventory(
+                    worktree_path,
+                    primary=_REPO_ROOT,
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                )
         except (ValueError, RuntimeError) as exc:
             stdout_fd.close()
             stderr_fd.close()
@@ -11706,7 +13010,7 @@ def _dispatch(
                     None if detached_read_only else requested_branch or _derive_worktree_branch(dispatch_agent, task_id)
                 ),
                 worktree_base_sha=resolved_worktree_base_sha,
-                worktree_base=getattr(args, "base", None) or "main",
+                worktree_base=worktree_base,
                 agent_alias_note=agent_alias_note,
                 output_schema_path=output_schema_path,
                 output_schema_sha256=output_schema_sha256,
@@ -11745,8 +13049,7 @@ def _dispatch(
         # git in this path, before either re-check.
         changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
         if changed_error:
-            stdout_fd.close()
-            stderr_fd.close()
+            discard_logs()
             print(changed_error, file=sys.stderr)
             return 1
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
@@ -11754,8 +13057,7 @@ def _dispatch(
             try:
                 worktree_locks.enter_context(worktree_lock(resolved_wt))
             except WorktreeLockError as exc:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(f"❌ failed to lock worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
             # A removal that held the lock may have taken the checkout while
@@ -11764,13 +13066,11 @@ def _dispatch(
             # A symlink swapped in since validation is refused too (#8775).
             changed_error = _validated_path_changed_error("--cwd", candidate_cwd)
             if changed_error:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(changed_error, file=sys.stderr)
                 return 1
             if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(
                     f"❌ worktree {resolved_wt} for {task_id!r} was removed while dispatch waited for its lock; "
                     f"refusing to spawn in {candidate_cwd}",
@@ -11780,10 +13080,14 @@ def _dispatch(
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
-                stdout_fd.close()
-                stderr_fd.close()
+                discard_logs()
                 print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
+            moved = _authoring_bindings_moved(authoring_admission)
+            if moved:
+                discard_logs()
+                print(moved.render(), file=sys.stderr)
+                return 2
             worktree_path = resolved_wt
             worktree_branch = _current_branch(resolved_wt)
             worktree_telemetry["reused"] = True
@@ -11804,8 +13108,7 @@ def _dispatch(
 
         kimi_head = _resolve_sha(worktree_path) if worktree_path is not None else None
         if kimi_head is None or (kimi_start_commit is not None and kimi_head != kimi_start_commit):
-            stdout_fd.close()
-            stderr_fd.close()
+            discard_logs()
             where = f"is at {kimi_head}, not {kimi_start_commit}" if kimi_head else "is missing"
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
@@ -11873,7 +13176,7 @@ def _dispatch(
             worktree_path=worktree_path,
             worktree_branch=worktree_branch,
             worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
-            worktree_base=getattr(args, "base", None) or "main",
+            worktree_base=worktree_base,
             agent_alias_note=agent_alias_note,
             output_schema_path=output_schema_path,
             output_schema_sha256=output_schema_sha256,
@@ -11938,6 +13241,8 @@ def _dispatch(
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
             "task_id": task_id,
+            "review": bool(getattr(args, "review", False))
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
             # delegate join (#7083); None stays unclassified and fails closed.
@@ -11957,12 +13262,13 @@ def _dispatch(
             "worktree_path": str(worktree_path) if worktree_path else None,
             "worktree_branch": worktree_branch,
             "worktree_base_sha": worktree_telemetry.get("base_sha"),
-            "worktree_base": getattr(args, "base", None) or ("main" if worktree_path else None),
+            "worktree_base": worktree_base if worktree_path else None,
             "worktree_rebased": bool(worktree_telemetry.get("rebased")),
             "worktree_reused": bool(worktree_telemetry.get("reused")),
             "worktree_layout": worktree_layout,
             "worktree_sparse": worktree_telemetry.get("sparse"),
             "worktree_local_venv": worktree_telemetry.get("local_venv"),
+            "ignored_output_baseline": worktree_telemetry.get("ignored_output_baseline"),
             "runtime_tmp_root": str(runtime_tmp_root),
             "tmp_bytes_freed": None,
             "tmp_reap_error": None,
@@ -11994,9 +13300,12 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if routing.budget_diagnostics:
+            initial_state["routing_facts"] = routing.budget_diagnostics
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
+        initial_state.update(_authoring_review_state_fields(args, authoring_admission))
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -12014,6 +13323,8 @@ def _dispatch(
             initial_state["review_contract"] = review_contract
             initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
+        if mechanical_task := _mechanical_task_scope(args):
+            initial_state["mechanical_task"] = mechanical_task
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -12229,6 +13540,13 @@ def _dispatch(
             failed_state = _read_state(state_path) or initial_state
             if fallback_refused:
                 failed_state["failure_reason"] = "dispatch_fallback_refused"
+            spawn_code = (
+                "dispatch_fallback_refused"
+                if fallback_refused
+                else "dispatch_isolation_failed"
+                if isinstance(exc, dispatch_isolation.DispatchIsolationError)
+                else "worker_spawn_failed"
+            )
             failed_state.update(
                 {
                     "status": "failed",
@@ -12236,7 +13554,8 @@ def _dispatch(
                     "stderr_excerpt": spawn_error,
                     "returncode": None,
                     "returncode_reason": returncode_reason,
-                    "last_error": _first_error_line(spawn_error),
+                    # The record writer renders the typed cause; the error text goes to the .diag (#9878).
+                    "last_error": dataclasses.replace(_exception_cause(spawn_code, exc), diagnostic=spawn_error),
                     "exit_code": None,
                 }
             )
@@ -12474,15 +13793,26 @@ def _budget_headroom_blocked(agent_info: dict[str, Any]) -> bool:
     return isinstance(runtime, dict) and bool(runtime.get("headroom_blocked"))
 
 
-def _pace_expected_pct(pace: dict[str, Any] | None) -> float | None:
-    if not isinstance(pace, dict):
-        return None
-    for key in ("expected_pct", "weekly_expected_pct", "expectedUsedPercent"):
-        value = pace.get(key)
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            continue
-        return float(value)
-    return None
+def _budget_owner_facts(
+    lane: str,
+    info: dict[str, Any] | None,
+    *,
+    model: str | None,
+    is_stale: bool,
+    snapshot_metadata: Mapping[str, Any] | None = None,
+) -> credit_lane.RoutingFacts:
+    """The owner's reading (:func:`credit_lane.routing_facts`, #9740) of one lane for this dispatch.
+
+    No model resolves to the lane default; none at all is never on a
+    credit-period allowlist. ``snapshot_metadata`` is the snapshot's
+    ``diagnostics`` (absent: the stale flag alone).
+    """
+    return credit_lane.routing_facts(
+        lane,
+        info,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata if snapshot_metadata is not None else {"stale": is_stale},
+    )
 
 
 def _budget_needs_hard_capacity_action(
@@ -12490,7 +13820,7 @@ def _budget_needs_hard_capacity_action(
     status: str | None,
     will_last: bool | None,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     pace: dict[str, Any] | None = None,
     headroom_blocked: bool = False,
     lane: str = "",
@@ -12499,38 +13829,43 @@ def _budget_needs_hard_capacity_action(
 ) -> tuple[bool, str]:
     """Return (needs_action, reason) for near_cap / hot / a real pace deficit.
 
-    ``near_cap`` is unchanged. ``status=hot`` still hard-acts, except when the
-    hot label is the early-window or on-pace false positive: a pace reading is
-    present and the deficit is covered, hidden or within the on-pace band,
-    and runtime headroom did not set the hot label. A bare ``will_last`` with no pace record still
-    counts only when no pace dict was supplied.
+    A stale snapshot is advisory (A2): never a hard action. Otherwise the
+    decision is the owner's (:func:`credit_lane.routing_facts`, #9740) over the
+    same lane record and snapshot ``diagnostics`` (``snapshot_metadata``):
+
+    * near cap (the ``near_cap`` status, the owner's effective status or
+      :func:`credit_lane.plan_window_exhausted`) hard-acts unless the owner
+      grants credit relief for ``model``, whether or not the USD cost ledger
+      has records;
+    * a hot label hard-acts unless the owner cleared it: a weekly-pace label
+      whose deficit is covered, whose pace is hidden below the visibility
+      floor, or whose fresh pace reading finds no deficit (#9040: the
+      early-window/on-pace false positive; A8). A hot label from any other
+      source (Cursor Auto, ledger burn, a source-less record), or one set by
+      runtime headroom, stays;
+    * an uncovered pace deficit hard-acts.
+
+    A bare ``will_last`` False still counts only when no pace dict was supplied.
+    No model (none requested, no lane default) is never on a credit-period
+    allowlist, so it gets no credit relief or coverage.
     """
     if is_stale:
         return False, ""
-    # Keep existing near_cap gate (fresh ledger) and extend to hot/deficit.
-    if status == "near_cap" and records_loaded > 0:
-        return True, "near_cap (>90% on FRESH snapshot)"
     if status == "hot" and headroom_blocked:
         return True, "status=hot"
-    decision = credit_lane.pace_deficit_state(
-        lane,
-        info,
-        pace=pace,
-        model=model if model is not None else (_lane_default_model(lane) or ""),
-        snapshot_stale=is_stale,
-    )
-    deficit = decision["uncovered"] if pace else None
-    if decision["covered_by"]:
-        print(f"⚠ lane {lane}: {decision['reason']}", file=sys.stderr)
-    expected = _pace_expected_pct(pace)
-    hidden = expected is not None and not pace_is_visible({"expected_pct": expected})
-    # Clear a pace-only hot label when the deficit is covered or the pace is
-    # hidden/on pace. Runtime headroom hot was returned above.
-    if status == "hot" and pace and deficit is not True and (deficit is False or hidden):
-        return False, ""
-    if deficit is True:
+    facts = _budget_owner_facts(lane, info, model=model, is_stale=is_stale, snapshot_metadata=snapshot_metadata)
+    if "near_cap" in {status, facts.status} or credit_lane.plan_window_exhausted(lane, info):
+        if facts.credit_relief:
+            return False, ""
+        remaining = facts.plan_remaining_pct
+        where = f"{remaining:g}% remaining" if remaining is not None else ">90% used"
+        return True, f"near_cap ({where} on FRESH snapshot)"
+    if facts.covered_by:
+        print(f"⚠ lane {lane}: {facts.pace_reason}", file=sys.stderr)
+    if facts.uncovered is True:
         return True, "codexbar will_last_to_reset=False (deficit)"
-    if status == "hot":
+    # The owner clears a qualifying weekly-pace hot label (#9040, A8); whatever it keeps hot hard-acts.
+    if facts.status == "hot":
         return True, "status=hot"
     if pace is None and will_last is False:
         return True, "codexbar will_last_to_reset=False (deficit)"
@@ -12972,6 +14307,969 @@ def _cursor_auto_refusal(
     )
 
 
+# #9739: a writer is admitted only while a qualified reviewer outside every
+# author family (the incoming writer's included) remains under the live catalog
+# floors. Typed reasons for the refusal; none can be overridden.
+AUTHORING_REVIEW_NO_ROUTE = "AUTHORING_REVIEW_NO_ROUTE"
+AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN = "AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN"
+AUTHORING_REVIEW_SCOPE_UNKNOWN = "AUTHORING_REVIEW_SCOPE_UNKNOWN"
+AUTHORING_REVIEW_TARGET_MOVED = "AUTHORING_REVIEW_TARGET_MOVED"
+AUTHORING_REVIEW_CATALOG_UNKNOWN = "AUTHORING_REVIEW_CATALOG_UNKNOWN"
+AUTHORING_REVIEW_REPOSITORY_MISMATCH = "AUTHORING_REVIEW_REPOSITORY_MISMATCH"
+AUTHORING_REVIEW_STATE_KEY = "authoring_review_admission"
+# A write dispatch that names no planned review risk is checked at the strictest
+# risk; path inference may raise a declared risk, never lower it.
+AUTHORING_REVIEW_DEFAULT_RISK = "critical"
+# A7 (#9739): an open-PR lookup that returns this many rows may be truncated, so
+# it is incomplete (M3).
+AUTHORING_REVIEW_PR_LOOKUP_LIMIT = 100
+_AUTHORING_COMMIT_SHA_RE = re.compile(r"[0-9a-f]{40}")
+
+
+class _AuthoringReviewRefused(Exception):
+    """Dispatch refused before a task record or a worker.
+
+    The branch is untouched, except a refusal whose record binding is
+    ``rebase``: that rebase has already run, and :meth:`render` says so.
+    """
+
+    def __init__(self, code: str, detail: str, record: dict[str, Any]) -> None:
+        super().__init__(f"{code}: {detail}")
+        self.code = code
+        self.detail = detail
+        self.record = record
+
+    def render(self) -> str:
+        """The stderr refusal: one actionable line, then one JSON line for tools.
+
+        A post-rebase refusal (``binding`` ``rebase``) has already moved the
+        worktree. It names the pre-rebase head and the refs that still point
+        at it. Every earlier refusal leaves the branch untouched.
+        """
+        payload = json.dumps({AUTHORING_REVIEW_STATE_KEY: {**self.record, "refusal": self.code}}, sort_keys=True)
+        if self.record.get("binding") == "rebase":
+            pre = self.record.get("pre_rebase_head") or self.record.get("admitted_sha") or ""
+            refs = self.record.get("recovery_refs") or ("ORIG_HEAD", "HEAD@{1}")
+            tail = (
+                f"Worktree was rebased; pre-rebase head {pre}. "
+                f"Recover it with {' or '.join(str(ref) for ref in refs)}. provider_calls=0."
+            )
+        else:
+            tail = "Branch preserved; provider_calls=0."
+        return f"❌ {self.code}: {self.detail} {tail}\n{payload}"
+
+
+class _AuthoringObservationUnknown(Exception):
+    """A review-target observation did not complete; the message names no private detail."""
+
+
+@dataclass(frozen=True)
+class _ReviewBase:
+    """The commit the verdict recorder enumerates authors from, and what bound it (A7).
+
+    ``source`` is ``pr`` (``--pr``), ``open-pr`` (the one open PR of the head
+    branch) or ``default-branch`` (no open PR: the repository's actual default).
+    """
+
+    sha: str
+    branch: str
+    pr: int | None
+    source: str
+
+    def binding(self) -> tuple[str, str, int | None]:
+        return (self.sha, self.branch, self.pr)
+
+    def receipt(self, repository: str) -> dict[str, Any]:
+        return {"repository": repository, "branch": self.branch, "pr": self.pr, "source": self.source}
+
+
+@dataclass(frozen=True)
+class _AuthoringAdmission:
+    """The endpoints authoring-review admission froze, for the re-check under the worktree lock (A3, A7).
+
+    ``head_sha`` is the commit authors were enumerated to: an existing target's
+    head, or ``creation_sha`` for a new branch, which worktree creation then
+    uses as is. ``review_base`` is the enumeration's lower end.
+    """
+
+    kind: str  # existing-worktree | existing-branch | new-branch
+    head_sha: str
+    checkout: Path | None
+    branch: str | None
+    pinned_head: str | None
+    record: dict[str, Any]
+    repository: str
+    remote: str
+    head_branch: str
+    pr: int | None
+    review_base: _ReviewBase
+    default_branch: str
+    creation_ref: str | None = None
+    creation_sha: str | None = None
+    # This writer's facts over ``base..head`` (raises ``_AuthoringReviewRefused``),
+    # and the planned risk, for the rebase plan and its result (A7).
+    collect: Callable[..., Any] | None = dataclasses.field(default=None, compare=False, repr=False)
+    planned_risk: str | None = None
+
+
+def _authoring_canonical_remote() -> str:
+    """The remote serving the canonical GitHub repository, chosen as the fetch helpers choose it (#7522, M2)."""
+    return _resolve_canonical_remote_name(_git_remote_urls(_REPO_ROOT)) or "origin"
+
+
+def _authoring_default_branch(remote: str) -> tuple[str, str]:
+    """The remote's actual default branch and its commit, from ``git ls-remote --symref`` (M4)."""
+    try:
+        proc = subprocess.run(
+            ["git", "ls-remote", "--symref", remote, "HEAD"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise _AuthoringObservationUnknown("the default-branch lookup timed out") from exc
+    except OSError as exc:
+        raise _AuthoringObservationUnknown("the default-branch lookup is unavailable") from exc
+    name = sha = None
+    for line in (proc.stdout or "").splitlines() if proc.returncode == 0 else ():
+        value, _, ref = line.partition("\t")
+        if ref.strip() != "HEAD":
+            continue
+        if value.startswith("ref: refs/heads/"):
+            name = value.removeprefix("ref: refs/heads/").strip()
+        elif _AUTHORING_COMMIT_SHA_RE.fullmatch(value.strip()):
+            sha = value.strip()
+    if not name or not sha:
+        raise _AuthoringObservationUnknown("the canonical remote's default branch is unavailable")
+    return name, sha
+
+
+def _authoring_gh_json(command: list[str], *, what: str) -> Any:
+    """One GitHub read; a failure is typed (timeout, quota, unavailable, malformed), never echoed."""
+    try:
+        proc = subprocess.run(command, capture_output=True, text=True, check=False, timeout=DEFAULT_GH_CLI_TIMEOUT_S)
+    except subprocess.TimeoutExpired as exc:
+        raise _AuthoringObservationUnknown(f"{what} timed out") from exc
+    except OSError as exc:
+        raise _AuthoringObservationUnknown(f"{what} is unavailable") from exc
+    if proc.returncode != 0:
+        detail = f"{proc.stderr or ''} {proc.stdout or ''}".casefold()
+        if "rate limit" in detail or "http 429" in detail:
+            raise _AuthoringObservationUnknown(f"{what} hit the GitHub API quota")
+        raise _AuthoringObservationUnknown(f"{what} is unavailable")
+    try:
+        return json.loads(proc.stdout)
+    except ValueError as exc:
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer") from exc
+
+
+def _authoring_pr_base(row: Any, *, source: str, what: str) -> tuple[_ReviewBase, str]:
+    """A PR row's review base and head branch; a row missing either is malformed."""
+    if not isinstance(row, dict):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    number, base, base_sha, head = (row.get(key) for key in ("number", "baseRefName", "baseRefOid", "headRefName"))
+    if (
+        type(number) is not int
+        or not isinstance(base, str)
+        or not base.strip()
+        or not isinstance(base_sha, str)
+        or not _AUTHORING_COMMIT_SHA_RE.fullmatch(base_sha)
+        or not isinstance(head, str)
+    ):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    return _ReviewBase(base_sha, base.strip(), number, source), head
+
+
+def _authoring_open_pr_bases(repository: str, head_branch: str) -> list[_ReviewBase]:
+    """The review base of every open PR whose head is ``head_branch`` in ``repository`` itself (M3).
+
+    A fork's branch of the same name belongs to another repository and is left
+    out, so no outside fork can block a dispatch. A list at the lookup limit
+    may be truncated and is refused as incomplete.
+    """
+    what = "the open-PR lookup"
+    rows = _authoring_gh_json(
+        [
+            "gh",
+            "pr",
+            "list",
+            "--repo",
+            repository,
+            "--state",
+            "open",
+            "--head",
+            head_branch,
+            "--limit",
+            str(AUTHORING_REVIEW_PR_LOOKUP_LIMIT),
+            "--json",
+            "number,headRefName,isCrossRepository,baseRefName,baseRefOid",
+        ],
+        what=what,
+    )
+    if not isinstance(rows, list):
+        raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+    if len(rows) >= AUTHORING_REVIEW_PR_LOOKUP_LIMIT:
+        raise _AuthoringObservationUnknown(f"{what} reached its limit, so it is incomplete")
+    bases: list[_ReviewBase] = []
+    for row in rows:
+        cross = row.get("isCrossRepository") if isinstance(row, dict) else None
+        if not isinstance(cross, bool):
+            raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+        if cross:
+            continue
+        base, head = _authoring_pr_base(row, source="open-pr", what=what)
+        if head != head_branch:
+            raise _AuthoringObservationUnknown(f"{what} returned a malformed answer")
+        bases.append(base)
+    return bases
+
+
+def _authoring_review_base(
+    repository: str, *, pr: int | None, head_branch: str, default_branch: Callable[[], tuple[str, str]]
+) -> _ReviewBase:
+    """The base the verdict recorder will enumerate this branch's authors from (A7 §2).
+
+    ``--pr``: that PR's ``baseRefOid``, once the PR is shown open, in this
+    repository and headed by ``head_branch``. Otherwise the one open PR of
+    ``head_branch``, or, when the lookup establishes there is none, the
+    repository's actual default branch commit. A caller's ``--base`` never
+    enters. Raises ``_AuthoringObservationUnknown`` when the binding cannot be
+    established: unavailable, malformed, incomplete or ambiguous.
+    """
+    if pr is not None:
+        what = f"the lookup of PR #{int(pr)}"
+        row = _authoring_gh_json(
+            [
+                "gh",
+                "pr",
+                "view",
+                str(int(pr)),
+                "--repo",
+                repository,
+                "--json",
+                "number,state,headRefName,isCrossRepository,baseRefName,baseRefOid",
+            ],
+            what=what,
+        )
+        base, head = _authoring_pr_base(row, source="pr", what=what)
+        if row.get("state") != "OPEN" or row.get("isCrossRepository") is not False:
+            raise _AuthoringObservationUnknown(f"PR #{int(pr)} is not an open PR headed in {repository}")
+        if head != head_branch:
+            raise _AuthoringObservationUnknown(f"PR #{int(pr)} is headed by another branch than {head_branch}")
+        return base
+    bases = _authoring_open_pr_bases(repository, head_branch)
+    if len(bases) > 1:
+        raise _AuthoringObservationUnknown(
+            f"{len(bases)} open PRs are headed by {head_branch}, so the review base is ambiguous"
+        )
+    if bases:
+        return bases[0]
+    name, sha = default_branch()
+    return _ReviewBase(sha, name, None, "default-branch")
+
+
+def _authoring_start_commit(remote: str, ref: str, default: tuple[str, str]) -> str:
+    """The commit a new branch would start at: ``ref`` on the canonical remote, or the observed default tip."""
+    name, sha = default
+    start = sha if ref == name else _ls_remote_branch_sha(remote, ref)
+    if not start:
+        raise _AuthoringObservationUnknown(f"start branch {ref} is not readable on the canonical remote")
+    return start
+
+
+def _authoring_commit_available(sha: str) -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _authoring_require_commit(sha: str, *, fetch: Callable[[], object], what: str, refresh: bool = False) -> None:
+    """M1: make an observed commit local, fetching from the canonical remote at most once.
+
+    The fetch only mirrors remote state into ``origin/<branch>``; the SHA stays
+    the one observed and is never resolved from a ref again. ``refresh``
+    fetches even when the commit is already local, keeping the tracking ref as
+    current as the base fetch at worktree creation used to (the Kimi gate reads
+    it, #9275).
+    """
+    if not refresh and _authoring_commit_available(sha):
+        return
+    # A failed fetch is judged by its outcome: the commit is still missing.
+    with contextlib.suppress(RuntimeError, ValueError):
+        fetch()
+    if not _authoring_commit_available(sha):
+        raise _AuthoringObservationUnknown(f"{what} {sha[:12]} is not available locally after fetching")
+
+
+def _authoring_attach_head(
+    *,
+    kind: str,
+    checkout: Path | None,
+    branch: str | None,
+    pinned_head: str | None,
+    remote: str,
+    observed_branch_head: str | None = None,
+) -> str:
+    """The head an attaching writer continues: the checkout's commit, or the branch on the canonical remote.
+
+    A branch head is observed on the remote, never read from a possibly stale
+    tracking ref (M2); a pinned head is the commit the dispatch was pinned to.
+    Initial admission may reuse the early branch observation; rechecks omit it.
+    """
+    if kind == "existing-worktree":
+        head = _resolve_sha(checkout) if checkout is not None and checkout.is_dir() else None
+        if not head:
+            raise _AuthoringObservationUnknown("the checkout's HEAD is unreadable")
+        return head
+    head = pinned_head or observed_branch_head or (_ls_remote_branch_sha(remote, branch) if branch else None)
+    if not head:
+        raise _AuthoringObservationUnknown(f"branch {branch} is not readable on the canonical remote")
+    return head
+
+
+def _git_common_dir_identity(path: Path) -> Path | None:
+    """The repository ``path`` belongs to: git's absolute common directory, canonical; None outside git."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    common = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    return Path(common).resolve() if common else None
+
+
+def _is_other_repository(checkout: Path, repo_root: Path) -> bool:
+    """True only when git proves ``checkout`` belongs to a repository other than ``repo_root``'s.
+
+    Repository identity is the shared git common directory, never a path name:
+    a sibling worktree laid out like one of the primary's still has its own
+    common directory. Unresolvable identity is not proof of a sibling.
+    """
+    checkout_repo = _git_common_dir_identity(checkout)
+    target_repo = _git_common_dir_identity(repo_root)
+    return checkout_repo is not None and target_repo is not None and checkout_repo != target_repo
+
+
+def _authoring_review_admission(
+    args: argparse.Namespace,
+    *,
+    dispatch_agent: str,
+    requested_harness: str | None,
+    requested_branch: str | None,
+    worktree_arg: str | None,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+    target_repo_root: Path,
+    repository: str,
+    default_repo: bool,
+    observed_branch_head: str | None = None,
+) -> _AuthoringAdmission | None:
+    """Admit a writer only if a qualified independent reviewer remains (#9739).
+
+    Applies to every write-capable dispatch: an attach to an existing branch or
+    worktree, and a new branch whose proposed scope is protected. Complete
+    authorship (every branch-owned commit plus this
+    writer, after substitution, aliases and ``--force-agent``) and protected
+    scope come from ``record_cf_verdict.collect_branch_review_facts``, the
+    calculation the verdict recorder uses. The check is structural (A2):
+    catalog qualification, families, protected seats and the risk floor; it
+    records reviewer availability as unknown. Authors are enumerated over
+    ``review_base_sha..creation_sha`` for a new branch and
+    ``review_base_sha..head_sha`` for an attach (A7): the review base is the
+    one the recorder will read (:func:`_authoring_review_base`), never
+    ``--base``; main-side commits are excluded from authorship while retaining
+    the stale-base diff's protected scope (#9988). Every endpoint is observed on the canonical remote, frozen in
+    the receipt and never resolved from a ref again. Fetches only to mirror
+    remote state (M1); runs before any task record, archival, forwarding,
+    rebase, worktree or provider. Returns None for read-only dispatches and
+    for checkouts of a sibling repository (``--repo``, or a ``--cwd`` checkout
+    whose git common directory is another repository's); a ``--repo`` whose
+    ``--cwd`` belongs to a different repository is refused. Raises
+    ``_AuthoringReviewRefused``, which no override flag bypasses.
+    """
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        return None
+    from agent_runtime.telemetry import _resolve_model_from_defaults
+    from scripts.review.model_catalog import ModelCatalogError
+
+    planned_risk = getattr(args, "authoring_review_risk", None)
+    writer_model = _resolve_model_from_defaults(dispatch_agent, getattr(args, "model", None), harness=requested_harness)
+    record: dict[str, Any] = {
+        "checked_at": datetime.now(UTC).isoformat(),
+        "check": "structural",
+        "reviewer_availability": "unknown",
+        "planned_risk": planned_risk,
+        "incoming_agent": dispatch_agent,
+        "incoming_model": writer_model,
+    }
+    declared = _declared_owned_paths(getattr(args, "owned_path", None))
+    if not declared:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_SCOPE_UNKNOWN,
+            "write dispatch declares no --owned-path, so its review scope cannot be checked; "
+            "pass every path this writer owns.",
+            record,
+        )
+    cwd_only = (
+        validated_cwd is not None and validated_worktree is None and worktree_arg != "auto" and not requested_branch
+    )
+    # Applicability follows the repository the writer's checkout belongs to,
+    # never the --repo label alone: protected seats and risk floors describe the
+    # default repository's own paths.
+    if not default_repo and cwd_only:
+        checkout_repo = _git_common_dir_identity(validated_cwd)
+        if checkout_repo is None or checkout_repo != _git_common_dir_identity(target_repo_root):
+            raise _AuthoringReviewRefused(
+                AUTHORING_REVIEW_REPOSITORY_MISMATCH,
+                f"--cwd is not a checkout of --repo {repository} (git common directory differs or is unknown); "
+                "pass a --cwd worktree of that repository, or drop --repo for a checkout of this one.",
+                record,
+            )
+    if not default_repo or (cwd_only and _is_other_repository(validated_cwd, target_repo_root)):
+        record.update({"applicable": False, "reason": "sibling repository"})
+        return None
+    try:
+        from scripts.review.record_cf_verdict import (
+            FACTS_SCOPE_UNKNOWN,
+            BranchFactsError,
+            collect_branch_review_facts,
+        )
+        from scripts.review.security_paths import is_security_sensitive_change
+    except (ImportError, ModelCatalogError) as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog or reviewer resolver unavailable ({exc}).", record
+        ) from exc
+
+    checkout: Path | None = None
+    if validated_worktree is not None:
+        checkout = validated_worktree
+    elif worktree_arg == "auto" or requested_branch:
+        checkout = _auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)
+    elif validated_cwd is not None:
+        checkout = validated_cwd
+    pinned_head = getattr(args, "pinned_head", None)
+    if checkout is not None and checkout.exists():
+        kind = "existing-worktree"
+    elif requested_branch:
+        kind, checkout = "existing-branch", None
+    else:
+        kind, checkout = "new-branch", None
+    record.update({"target": kind, "branch": requested_branch})
+    remote = _authoring_canonical_remote()
+    pr = getattr(args, "pr", None)
+    creation_ref: str | None = None
+    creation_sha: str | None = None
+    try:
+        default_name, default_sha = _authoring_default_branch(remote)
+        if kind == "existing-worktree":
+            head_branch = _current_branch(checkout)
+            if head_branch in (None, "HEAD"):
+                raise _AuthoringObservationUnknown("the checkout has a detached HEAD, which names no PR")
+        else:
+            head_branch = requested_branch or _derive_worktree_branch(dispatch_agent, args.task_id)
+        record["head_branch"] = head_branch
+        # Authorship is enumerated from the base the verdict recorder will use,
+        # never from --base, which only names where a new branch starts (A2, A7).
+        review_base = _authoring_review_base(
+            repository, pr=pr, head_branch=head_branch, default_branch=lambda: (default_name, default_sha)
+        )
+        record.update({"review_base": review_base.receipt(repository), "review_base_sha": review_base.sha})
+        _authoring_require_commit(
+            review_base.sha, fetch=lambda: _fetch_base(review_base.branch), what="the review base commit"
+        )
+        if kind == "new-branch":
+            # The commit a new worktree starts at, frozen here and used as is by creation.
+            base_arg = getattr(args, "base", None)
+            creation_ref = _base_branch_name(base_arg) if base_arg else default_name
+            creation_sha = _authoring_start_commit(remote, creation_ref, (default_name, default_sha))
+            record.update({"creation_base": creation_ref, "creation_sha": creation_sha})
+            _authoring_require_commit(
+                creation_sha, fetch=lambda: _fetch_base(creation_ref), what="the creation commit", refresh=True
+            )
+            head = creation_sha
+        else:
+            head = _authoring_attach_head(
+                kind=kind,
+                checkout=checkout,
+                branch=requested_branch,
+                pinned_head=pinned_head,
+                remote=remote,
+                observed_branch_head=observed_branch_head,
+            )
+            _authoring_require_commit(
+                head, fetch=lambda: _fetch_existing_branch(head_branch), what="the branch head commit"
+            )
+    except _AuthoringObservationUnknown as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc}, so the branch's authors are unknown; retry.", record
+        ) from exc
+
+    # A stale main PR base still determines scope, but main's newer commits
+    # are not branch authors (#9988). Non-main target branches keep their
+    # existing enumeration. The rebase plan and result use this same exclusion,
+    # never the caller's --base or the rebase target.
+    authorship_exclude = default_sha if review_base.branch == default_name else None
+    record["authorship_exclude_sha"] = authorship_exclude
+    if authorship_exclude is not None:
+        try:
+            _authoring_require_commit(
+                authorship_exclude, fetch=lambda: _fetch_base(default_name), what="the authorship exclusion commit"
+            )
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
+
+    def collect(base_sha: str, head_sha: str, *, authorship_exclude_sha: str | None = authorship_exclude) -> Any:
+        """This writer's branch facts over ``base_sha..head_sha``; a fact that cannot be established refuses."""
+        try:
+            return collect_branch_review_facts(
+                repository=repository,
+                repo_root=target_repo_root,
+                base_tip_sha=base_sha,
+                head_sha=head_sha,
+                task_root=tasks_dir(),
+                incoming_agent=dispatch_agent,
+                incoming_model=writer_model,
+                owned_paths=declared,
+                subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+                subject_families=tuple(getattr(args, "subject_family", None) or ()),
+                authorship_exclude_sha=authorship_exclude_sha,
+            )
+        except BranchFactsError as exc:
+            code = (
+                AUTHORING_REVIEW_SCOPE_UNKNOWN
+                if exc.code == FACTS_SCOPE_UNKNOWN
+                else AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN
+            )
+            raise _AuthoringReviewRefused(code, f"{exc} (head {head_sha[:12]}).", record) from exc
+
+    facts = collect(review_base.sha, head)
+    record.update(facts.receipt())
+    if kind == "existing-worktree" and requested_branch:
+        try:
+            remote_head = observed_branch_head or _ls_remote_branch_sha(remote, requested_branch, strict=True)
+            if not remote_head:
+                raise _AuthoringObservationUnknown("the continuation's remote head is unavailable")
+            _authoring_require_commit(
+                remote_head, fetch=lambda: _fetch_existing_branch(requested_branch), what="the remote branch head"
+            )
+            if remote_head != head and _git_is_ancestor(remote_head, head):
+                local = collect(remote_head, head, authorship_exclude_sha=remote_head)
+                if local.existing_families != {facts.incoming_family}:
+                    raise _AuthoringReviewRefused(
+                        AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+                        "local-only commits are not all by the incoming writer family; "
+                        "reconcile the branch before continuation.",
+                        record,
+                    )
+                record["local_continuation"] = {"remote_head_sha": remote_head, "head_sha": head}
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
+    protected = bool(
+        facts.subject_seats
+        or facts.subject_families
+        or is_security_sensitive_change(facts.changed_paths, facts.scope_paths)
+    )
+    record["protected_scope"] = protected
+    admission = _AuthoringAdmission(
+        kind=kind,
+        head_sha=head,
+        checkout=checkout,
+        branch=requested_branch,
+        pinned_head=pinned_head,
+        record=record,
+        repository=repository,
+        remote=remote,
+        head_branch=head_branch,
+        pr=pr,
+        review_base=review_base,
+        default_branch=default_name,
+        creation_ref=creation_ref,
+        creation_sha=creation_sha,
+        collect=collect,
+        planned_risk=planned_risk,
+    )
+    if kind == "new-branch" and not protected:
+        record["applicable"] = False
+        return admission
+    _authoring_require_route(facts, planned_risk=planned_risk, record=record, at=head)
+    return admission
+
+
+def _authoring_require_route(facts: Any, *, planned_risk: str | None, record: dict[str, Any], at: str) -> None:
+    """Record the structural reviewer for ``facts``; refuse when none remains outside all authors (A2)."""
+    from scripts.review.model_catalog import ModelCatalogError
+    from scripts.review.record_cf_verdict import structural_review_route
+    from scripts.review.security_paths import effective_review_risk
+
+    risk = str(planned_risk or AUTHORING_REVIEW_DEFAULT_RISK).strip().casefold()
+    try:
+        resolution = structural_review_route(facts, risk=risk)
+    except ModelCatalogError as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_CATALOG_UNKNOWN, f"model catalog unavailable ({exc}).", record
+        ) from exc
+    record.update(
+        {
+            "applicable": True,
+            "risk": effective_review_risk(risk, facts.changed_paths, facts.scope_paths),
+            "reviewer": (
+                {
+                    "name": resolution.selected.name,
+                    "model": resolution.selected.concrete_model,
+                    "family": resolution.selected.family,
+                    "route": resolution.selected.route,
+                }
+                if resolution.selected
+                else None
+            ),
+        }
+    )
+    if resolution.selected is None:
+        reason = resolution.fail_closed_reason or "no eligible formal reviewer in the catalog ladder"
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_NO_ROUTE,
+            f"write dispatch refused at {at[:12]}; authors={','.join(sorted(facts.existing_families)) or '(none)'}; "
+            f"incoming={facts.incoming_family}; risk={record['risk']}; no qualified reviewer remains outside all "
+            f"authors and protected seats ({reason}).",
+            record,
+        )
+
+
+def _authoring_review_state_fields(args: argparse.Namespace, admission: _AuthoringAdmission | None) -> dict[str, Any]:
+    """Task-record fields: the admission receipt, and explicit subjects the verdict recorder re-applies."""
+    fields: dict[str, Any] = {}
+    if admission is not None:
+        fields[AUTHORING_REVIEW_STATE_KEY] = admission.record
+    for flag, key in (("subject_seat", "review_subject_seats"), ("subject_family", "review_subject_families")):
+        values = getattr(args, flag, None)
+        if values:
+            fields[key] = [values] if isinstance(values, str) else list(values)
+    return fields
+
+
+def _authoring_recheck_under_lock(
+    admission: _AuthoringAdmission | None,
+    *,
+    readmit: Callable[[], _AuthoringAdmission | None],
+) -> tuple[_AuthoringAdmission | None, _AuthoringReviewRefused | None]:
+    """A3 and A7 under the worktree lock: the admission that now applies, and the refusal if a binding moved.
+
+    A removal holding the lock may take the admitted checkout while dispatch
+    waits (#8610); dispatch then creates a fresh worktree, so the observation
+    is discarded and admission runs again in full for that target, freezing
+    its own creation and review-base commits (becoming a new branch exempts
+    nothing). Otherwise every frozen binding is observed again
+    (:func:`_authoring_bindings_moved`). Raises ``_AuthoringReviewRefused``
+    when the re-run refuses.
+    """
+    if (
+        admission is not None
+        and admission.kind == "existing-worktree"
+        and admission.checkout is not None
+        and not os.path.lexists(admission.checkout)
+    ):
+        return readmit(), None
+    return admission, _authoring_bindings_moved(admission)
+
+
+def _authoring_bindings_moved(admission: _AuthoringAdmission | None) -> _AuthoringReviewRefused | None:
+    """A7: the refusal when an admitted endpoint differs before use; None when every binding is unchanged.
+
+    Observed as at admission: an attached head (the checkout's commit, or the
+    branch on the canonical remote), a new branch's start commit, and the
+    review base with its branch and PR identity. An observation that cannot
+    complete refuses as unknown authorship, never as a proven move. The base
+    auto-rebase of a reused worktree runs after this and is not a move (A3).
+    """
+    if admission is None:
+        return None
+    default_branch = functools.cache(lambda: _authoring_default_branch(admission.remote))
+    try:
+        if admission.kind == "new-branch":
+            assert admission.creation_ref is not None  # set for every new-branch admission
+            current = _authoring_start_commit(admission.remote, admission.creation_ref, default_branch())
+            moved = _authoring_drift(admission, "creation", current)
+        else:
+            current = _authoring_attach_head(
+                kind=admission.kind,
+                checkout=admission.checkout,
+                branch=admission.branch,
+                pinned_head=admission.pinned_head,
+                remote=admission.remote,
+            )
+            moved = _authoring_drift(admission, "head", current)
+            if not moved and admission.kind == "existing-worktree":
+                # The checkout's branch names its PR and so its review base: a switch at
+                # the same commit changes both (``HEAD`` when detached).
+                assert admission.checkout is not None  # set for every existing-worktree admission
+                moved = _authoring_branch_moved(admission, _current_branch(admission.checkout))
+        if moved:
+            return moved
+        base = _authoring_review_base(
+            admission.repository, pr=admission.pr, head_branch=admission.head_branch, default_branch=default_branch
+        )
+    except _AuthoringObservationUnknown as exc:
+        return _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"{exc} on re-checking the admitted target, so the branch's authors are unknown; retry.",
+            admission.record,
+        )
+    if base.binding() == admission.review_base.binding():
+        return None
+    return _authoring_drift(admission, "review_base", base.sha, current_base=base)
+
+
+def _authoring_branch_moved(admission: _AuthoringAdmission, current: str | None) -> _AuthoringReviewRefused | None:
+    """The ``TARGET_MOVED`` refusal when the checkout no longer has the branch admission read; None when it does."""
+    if current == admission.head_branch:
+        return None
+    now = "a detached HEAD" if current == "HEAD" else (current or "an unreadable branch")
+    record = {
+        **admission.record,
+        "binding": "head_branch",
+        "admitted_branch": admission.head_branch,
+        "current_branch": current,
+    }
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"the checkout's branch moved after authoring-review admission (admitted {admission.head_branch}, now {now}), "
+        "so its PR and review base are no longer the admitted ones; retry the dispatch so its authors are checked again.",
+        record,
+    )
+
+
+def _authoring_target_moved(
+    admission: _AuthoringAdmission | None, *, resolved: str, rebase_onto: str | None = None
+) -> _AuthoringReviewRefused | None:
+    """A3, A7: the refusal when the head the worktree helpers settled on is not the admitted one.
+
+    A planned auto-rebase (``rebase_onto``, from :func:`_authoring_rebase_plan`)
+    legitimately moves a reused worktree's head; its result is checked by
+    :func:`_authoring_rebase_result_refusal` instead.
+    """
+    if admission is None or admission.kind == "new-branch" or resolved == admission.head_sha:
+        return None
+    if rebase_onto is not None and admission.record.get("rebase_planned"):
+        return _authoring_rebase_result_refusal(admission, onto=rebase_onto, rebased=resolved)
+    return _authoring_drift(admission, "head", resolved)
+
+
+def _authoring_merge_facts(lower: Any, upper: Any) -> Any:
+    """Branch facts for the union of two enumerations (A7 rebase plan): every commit, family, path and subject."""
+    return dataclasses.replace(
+        upper,
+        base_tip_sha=lower.base_tip_sha,
+        commits=(*lower.commits, *upper.commits),
+        existing_families=lower.existing_families | upper.existing_families,
+        changed_paths=tuple(dict.fromkeys((*lower.changed_paths, *upper.changed_paths))),
+        subject_seats=lower.subject_seats | upper.subject_seats,
+        subject_families=lower.subject_families | upper.subject_families,
+        subject_evidence=tuple(dict.fromkeys((*lower.subject_evidence, *upper.subject_evidence))),
+    )
+
+
+def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
+    """A7: the commit a reused worktree may be rebased onto, its result admitted before the branch is touched.
+
+    The auto-rebase replays the branch's own commits (``onto..head``) onto
+    ``onto``. Rebasing keeps each commit's message and attribution.
+    Enumerate ``review_base..onto`` plus those replays, retaining the stale-base
+    diff's protected scope. Use admission's frozen main-side authorship
+    exclusion only for PRs targeting main (#9988); other targets keep every
+    imported author. The caller's ``base`` never changes that exclusion.
+    Both are checked under the admitted risk. ``onto`` is
+    observed on the canonical remote and returned for the rebase to use as is,
+    so the rebase can never move onto a later, unchecked tip. Read-only: it
+    only fetches to make the observed commit local (M1). Raises
+    ``_AuthoringReviewRefused``: ``AUTHORSHIP_UNKNOWN`` when ``onto`` or the
+    planned authors cannot be determined, ``NO_ROUTE`` when no reviewer
+    remains for the rebased branch.
+    """
+    assert admission.collect is not None  # set by every admission
+    record = admission.record
+    ref = _base_branch_name(base)
+    try:
+        # Observed as a new branch's start commit is (A7 §3).
+        onto = _authoring_start_commit(admission.remote, ref, _authoring_default_branch(admission.remote))
+        _authoring_require_commit(onto, fetch=lambda: _fetch_base(base), what="the rebase target commit")
+        behind = _git_rev_count(f"{admission.head_sha}..{onto}")
+    except _AuthoringObservationUnknown as exc:
+        raise _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+            f"{exc}, so the authors of the rebased branch are unknown; retry. Branch not rebased.",
+            record,
+        ) from exc
+    record.update({"rebase_onto": onto, "rebase_planned": behind > 0})
+    if behind == 0:
+        return onto
+    planned = _authoring_merge_facts(
+        admission.collect(admission.review_base.sha, onto),
+        admission.collect(onto, admission.head_sha),
+    )
+    record["rebase_existing_families"] = sorted(planned.existing_families)
+    _authoring_require_route(planned, planned_risk=admission.planned_risk, record=record, at=onto)
+    return onto
+
+
+def _git_rev_parse_at(cwd: Path, ref: str) -> str | None:
+    """The commit ``ref`` names in ``cwd``, or None when it cannot be read. Stderr is discarded."""
+    # Same helper as the other worktree reads, so this probe adds no git spawn.
+    parsed = _run_git_stdout(cwd, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}")
+    if parsed is None or parsed[0] != 0:
+        return None
+    sha = parsed[1].strip()
+    return sha if _AUTHORING_COMMIT_SHA_RE.fullmatch(sha) else None
+
+
+def _authoring_post_rebase_recovery(admission: _AuthoringAdmission) -> dict[str, Any]:
+    """Refs that still name the pre-rebase head. Names no host path.
+
+    ``ORIG_HEAD`` is the immediate pre-rebase head. ``<branch>@{1}`` is that
+    head on the branch reflog (git-rebase(1)). The admitted head stays
+    ``head_sha`` when a later commit landed before the rebase.
+    """
+    branch = admission.head_branch if admission.head_branch not in (None, "", "HEAD") else None
+    reflog = f"{branch}@{{1}}" if branch else "HEAD@{1}"
+    pre = _git_rev_parse_at(admission.checkout, "ORIG_HEAD") if admission.checkout is not None else None
+    return {"pre_rebase_head": pre or admission.head_sha, "recovery_refs": ["ORIG_HEAD", reflog]}
+
+
+def _authoring_rebase_result_refusal(
+    admission: _AuthoringAdmission, *, onto: str, rebased: str
+) -> _AuthoringReviewRefused | None:
+    """A7: the refusal when the rebased head is not the planned one; None when it is.
+
+    The planned head is the admitted commits replayed onto ``onto``: ``onto``
+    must be an ancestor, and the authors the recorder now enumerates must be
+    among the planned ones, with a reviewer still remaining. Runs before any
+    task record or worker; the rebase itself has already happened.
+
+    On success ``rebased_existing_families`` is those enumerated families. The
+    planned superset stays on ``rebase_existing_families`` (#9782): a commit
+    git drops as patch-equivalent was planned and is not an author of the
+    rebased branch. A refusal names the pre-rebase head and its recovery refs.
+    """
+    assert admission.collect is not None  # set by every admission
+    record = {
+        **admission.record,
+        "binding": "rebase",
+        "admitted_sha": admission.head_sha,
+        "current_sha": rebased,
+        **_authoring_post_rebase_recovery(admission),
+    }
+    planned = set(record.get("rebase_existing_families") or ())
+    try:
+        on_plan = _git_is_ancestor(onto, rebased)
+    except _AuthoringObservationUnknown as exc:
+        return _AuthoringReviewRefused(
+            AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc} after the rebase, so its authors are unknown; retry.", record
+        )
+    try:
+        actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
+        if actual is not None and actual.existing_families <= planned:
+            _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
+            # Enforcement already decided from ``actual``. The receipt records that
+            # set, not the planned superset a dropped patch-equivalent commit inflated.
+            admission.record.update(
+                {"rebased_head_sha": rebased, "rebased_existing_families": sorted(actual.existing_families)}
+            )
+            return None
+    except _AuthoringReviewRefused as exc:
+        return _AuthoringReviewRefused(exc.code, exc.detail, {**exc.record, **record})
+    record["current_existing_families"] = sorted(actual.existing_families) if actual is not None else None
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"the rebased branch head {rebased[:12]} is not the planned rebase of {admission.head_sha[:12]} onto "
+        f"{onto[:12]}; retry the dispatch so its authors are checked again.",
+        record,
+    )
+
+
+def _git_rev_count(revisions: str) -> int:
+    """``git rev-list --count`` in the repository; raises ``_AuthoringObservationUnknown`` when it cannot complete."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", revisions],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise _AuthoringObservationUnknown("the commit count is unavailable") from exc
+    count = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    if not count.isdigit():
+        raise _AuthoringObservationUnknown("the commit count is unavailable")
+    return int(count)
+
+
+def _git_is_ancestor(ancestor: str, descendant: str) -> bool:
+    """Whether ``ancestor`` is an ancestor of ``descendant``; raises ``_AuthoringObservationUnknown`` on failure."""
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise _AuthoringObservationUnknown("the ancestry check is unavailable") from exc
+    if proc.returncode not in (0, 1):
+        raise _AuthoringObservationUnknown("the ancestry check is unavailable")
+    return proc.returncode == 0
+
+
+def _authoring_drift(
+    admission: _AuthoringAdmission, binding: str, current: str, *, current_base: _ReviewBase | None = None
+) -> _AuthoringReviewRefused | None:
+    """The structured ``TARGET_MOVED`` refusal (A6, M5) for one binding; None when it still holds."""
+    if binding == "review_base":
+        assert current_base is not None
+        admitted = admission.review_base.sha
+        what = f"the review base (admitted branch {admission.review_base.branch}, now {current_base.branch})"
+    else:
+        admitted = admission.creation_sha if binding == "creation" else admission.head_sha
+        what = "the start commit of the new branch" if binding == "creation" else "the branch head"
+        if current == admitted:
+            return None
+    assert admitted is not None
+    record = {**admission.record, "binding": binding, "admitted_sha": admitted, "current_sha": current}
+    if binding == "head":
+        record["current_head_sha"] = current
+    if current_base is not None:
+        record["current_review_base"] = current_base.receipt(admission.repository)
+    return _AuthoringReviewRefused(
+        AUTHORING_REVIEW_TARGET_MOVED,
+        f"{what} moved after authoring-review admission (admitted {admitted[:12]}, now {current[:12]}); "
+        "retry the dispatch so its authors are checked again.",
+        record,
+    )
+
+
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
     from scripts.agent_runtime.kimi_admission import worktree_trees
@@ -13009,7 +15307,9 @@ def _resolve_local_base_sha(*, base: str, branch: str | None, pinned_head_sha: s
         proc = None
     sha = (proc.stdout or "").strip() if proc is not None and proc.returncode == 0 else ""
     if not sha:
-        raise RuntimeError(f"base not available locally ({ref}); refresh origin and retry")
+        from scripts.agent_runtime.kimi_admission import TreeUnavailable
+
+        raise TreeUnavailable(f"base not available locally ({ref}); refresh origin and retry")
     return sha
 
 
@@ -13050,11 +15350,16 @@ def _kimi_start_trees(
         return trees, trees[-1].commit
     if getattr(args, "pr", None) and not getattr(args, "branch", None):
         raise ValueError("--pr without --branch: name the PR branch so its head is read before dispatch")
-    base_sha = _resolve_local_base_sha(
-        base=getattr(args, "base", None) or "main",
-        branch=getattr(args, "branch", None),
-        pinned_head_sha=getattr(args, "pinned_head", None),
-    )
+    branch, pinned_head = getattr(args, "branch", None), getattr(args, "pinned_head", None)
+    base = getattr(args, "base", None)
+    if not (base or branch or pinned_head):
+        # The new worktree starts at the repository's actual default branch, as
+        # authoring-review admission discovers it (#9739 M4), never an assumed main.
+        try:
+            base = _authoring_default_branch(_authoring_canonical_remote())[0]
+        except _AuthoringObservationUnknown as exc:
+            raise RuntimeError(f"{exc}; retry") from exc
+    base_sha = _resolve_local_base_sha(base=base or "", branch=branch, pinned_head_sha=pinned_head)
     return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha
 
 
@@ -13077,6 +15382,11 @@ class _DispatchRouting:
     alias_note: str | None = None
     substitution: dict[str, Any] | None = None
 
+    def __post_init__(self) -> None:
+        # Forced-lane routing_facts (#9673). Kept off the dataclass fields so the
+        # frozen dispatch surface stays the route decision; copied to the task record when set.
+        self.budget_diagnostics: dict[str, Any] | None = None
+
 
 class _DispatchRouteRefused(Exception):
     """The launch route refused the dispatch; the message says why."""
@@ -13092,8 +15402,9 @@ def _dispatch_route(
     """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
 
     A retired CLI resolves to its successor (a review attempt refuses that,
-    #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
-    may substitute a coding seat from ``dispatch_fallbacks``; its model is
+    #8517); with ``--check-budget`` the budget guard may substitute a coding
+    seat from ``dispatch_fallbacks`` unless ``--force-agent`` is set, which
+    keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
     Refusals raise
@@ -13109,7 +15420,7 @@ def _dispatch_route(
         # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
         # BEFORE the budget guard and unconditionally — a hot/cool budget reading
         # for a retired lane is not proof its binary still exists. --force-agent
-        # bypasses the budget guard, not this — there is no CLI left to force.
+        # disables budget substitution, not this — there is no CLI left to force.
         if retired_target:
             if review_attempt:
                 raise _DispatchRouteRefused(
@@ -13160,7 +15471,9 @@ def _dispatch_route(
             requested_agent = selected_agent
             original_model = selected_model
 
-        if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+        if _dispatch_check_budget_enabled(args):
+            force_agent = bool(getattr(args, "force_agent", False))
+            diagnostic_sink: dict[str, Any] = {}
             dispatch_agent = _resolve_agent_with_budget_guard(
                 requested_agent,
                 provider="openrouter" if getattr(args, "provider", None) == "openrouter" else None,
@@ -13173,7 +15486,11 @@ def _dispatch_route(
                 review_trusted_inputs=bool(
                     getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
                 ),
+                force_agent=force_agent,
+                diagnostic_sink=diagnostic_sink if force_agent else None,
             )
+            if diagnostic_sink:
+                routing.budget_diagnostics = diagnostic_sink
         else:
             dispatch_agent = requested_agent
 
@@ -13312,7 +15629,34 @@ def _dispatch_review_changed_paths(args: argparse.Namespace) -> tuple[str, ...]:
     else:
         raise TargetResolutionError("review target required: supply --branch, --pr or a resolved --review-attempt")
     literal = git_changed_paths(_local_repo_root, target.base_sha, target.head_sha)
+    # The frozen endpoints the complete-authorship facts are read from (#9739).
+    args._review_target = target
     return tuple(dict.fromkeys((*literal, *(paths or ()))))
+
+
+def _dispatch_review_facts(args: argparse.Namespace, owned_paths: Sequence[str]) -> Any:
+    """Complete authorship and scope of the review target for a trusted code review (#9739).
+
+    Only a review that names its author and risk attests cross-family
+    independence, so only it reads the facts; legacy reviews keep intrinsic
+    eligibility. Runs after :func:`_dispatch_review_changed_paths` pinned the
+    target. Returns None without a branch or PR target.
+    """
+    from scripts.review.record_cf_verdict import collect_branch_review_facts
+
+    target = getattr(args, "_review_target", None)
+    if target is None or not (getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)):
+        return None
+    return collect_branch_review_facts(
+        repository=_resolve_dispatch_repository(_local_repo_root) or "",
+        repo_root=_local_repo_root,
+        base_tip_sha=target.base_sha,
+        head_sha=target.head_sha,
+        task_root=tasks_dir(),
+        owned_paths=owned_paths,
+        subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
+        subject_families=tuple(getattr(args, "subject_family", None) or ()),
+    )
 
 
 def _admit_dispatch_target(
@@ -13334,6 +15678,7 @@ def _admit_dispatch_target(
     ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.target_resolution import TargetResolutionError
 
@@ -13351,6 +15696,14 @@ def _admit_dispatch_target(
         try:
             return _dispatch_review_changed_paths(args)
         except (TargetResolutionError, OSError, subprocess.TimeoutExpired) as exc:
+            raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
+
+    def collect_review_facts() -> Any:
+        from scripts.review.record_cf_verdict import BranchFactsError
+
+        try:
+            return _dispatch_review_facts(args, tuple(declared))
+        except BranchFactsError as exc:
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
     try:
@@ -13375,6 +15728,11 @@ def _admit_dispatch_target(
             ),
             review_subject_seats=frozenset(flag_paths("subject_seat")),
             review_subject_families=frozenset(flag_paths("subject_family")),
+            review_facts=(
+                collect_review_facts
+                if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
+                else None
+            ),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -13384,10 +15742,31 @@ def _admit_dispatch_target(
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
             trees=trees,
+            task_family=getattr(args, "research_task_family", None),
+            task_role=getattr(args, "research_role", None),
+            task_prompt=getattr(args, "prompt", None),
         )
-    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
+
+
+def _mechanical_task_scope(args: argparse.Namespace) -> dict[str, Any]:
+    """Persist the admission inputs the execution adapter must recheck (#9996)."""
+    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES
+
+    family = getattr(args, "research_task_family", None)
+    if family not in MECHANICAL_FAMILIES:
+        return {}
+    return {
+        "family": family,
+        "role": getattr(args, "research_role", None),
+        "track": getattr(args, "research_track", None),
+        "language_lane": _dispatch_is_language_lane(args),
+        "review": _dispatch_is_review_typed(args),
+        "paths": list(dict.fromkeys((getattr(args, "owned_path", None) or []) +
+                                    (getattr(args, "research_owned_path", None) or []))),
+    }
 
 
 def _discard_model_probe_output(plan: object) -> None:
@@ -13442,12 +15821,35 @@ def _adapter_model_rejection(agent: str, model: str) -> str | None:
         return None
     except Exception as exc:
         print(
-            f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
+            f"⚠ model probe for {_registry_seat(entry)} could not verify {_catalog_model_label(model)}: "
+            f"{type(exc).__name__}",
             file=sys.stderr,
         )
         return None
     _discard_model_probe_output(plan)
     return None
+
+
+def _registry_seat(entry: object) -> str:
+    """The registry's name for ``entry`` (an alias's canonical seat), for log text (#9739).
+
+    Log text names seats and models as the registry and catalog spell them,
+    never as the caller passed them, which CodeQL's
+    ``py/clear-text-logging-sensitive-data`` flagged as secret data.
+    """
+    from agent_runtime.registry import AGENTS
+
+    return next((name for name, row in AGENTS.items() if row is entry), "an unregistered seat")
+
+
+def _catalog_model_label(model: str) -> str:
+    """The catalog id ``model`` names, for log text; an unknown model gets a fixed label (#9739)."""
+    from scripts.review.model_catalog import ModelCatalogError, canonical_model_id
+
+    try:
+        return canonical_model_id(model) or "an uncatalogued model"
+    except ModelCatalogError:
+        return "a model (catalog unavailable)"
 
 
 def _adapter_rejects_model(agent: str, model: str) -> bool:
@@ -13456,10 +15858,11 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
 
 
 def _lane_default_model(agent: str) -> str | None:
-    """Registry default for ``agent`` — the dispatch pin, not the seat identity."""
+    """Role-backed dispatch default, with registry-only lanes retained until PR 3c."""
     from agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import substitution_default_model
 
-    return _default_model_for(agent)
+    return substitution_default_model(agent) or _default_model_for(agent)
 
 
 def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:
@@ -13599,6 +16002,56 @@ def _merge_agent_substitution(prior: Any, runtime: Any) -> Any:
     return merged
 
 
+def _ranked_reports_lane_health(ranked: Any, lane: str) -> bool:
+    """True when the snapshot's ranked rows already carry a health record for ``lane``."""
+    if not isinstance(ranked, list):
+        return False
+    return any(isinstance(item, dict) and item.get("lane") == lane and item.get("health") for item in ranked)
+
+
+def _publish_forced_lane_diagnostics(
+    lane: str,
+    record: Mapping[str, Any] | None,
+    snapshot_metadata: Mapping[str, Any] | None,
+    *,
+    model: str | None,
+    sink: dict[str, Any] | None,
+    ranked: Any = None,
+) -> None:
+    """Print and retain one forced lane's quota and health (#9673).
+
+    The text reuses the guard's existing lines: the health-unknown sentence,
+    and ``⚠ ROUTING CHECK:`` around the owner's ``capacity_reason``. A known
+    remaining percent is added with the owner's ``% remaining`` phrase when
+    that reason does not already include it. ``sink`` receives
+    :meth:`credit_lane.RoutingFacts.summary`, whose missing quota, health and
+    freshness are explicit unknowns.
+    """
+    facts = credit_lane.routing_facts(
+        lane,
+        record if isinstance(record, Mapping) else None,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata,
+    )
+    if facts.health == credit_lane.UNKNOWN and not _ranked_reports_lane_health(ranked, lane):
+        print(
+            f"⚠ lane {lane} health unknown ({facts.health_basis}); not counted as healthy",
+            file=sys.stderr,
+        )
+    quota = facts.capacity_reason
+    remaining = facts.plan_remaining_pct
+    if (
+        isinstance(remaining, (int, float))
+        and not isinstance(remaining, bool)
+        and f"{remaining:g}% remaining" not in quota
+    ):
+        quota = f"{quota} ({remaining:g}% remaining)"
+    print(f"⚠ ROUTING CHECK: lane {lane}: {quota}", file=sys.stderr)
+    if sink is not None:
+        sink.clear()
+        sink.update(facts.summary())
+
+
 def _resolve_agent_with_budget_guard(
     agent: str,
     *,
@@ -13610,6 +16063,8 @@ def _resolve_agent_with_budget_guard(
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
     review_trusted_inputs: bool = False,
+    force_agent: bool = False,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -13617,7 +16072,9 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError) unless caller used --force-agent before this call.
+    BudgetGuardRefuseError). ``force_agent`` disables that substitution and
+    the capacity refusal, and still prints and stores the lane's quota and
+    health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
@@ -13632,11 +16089,19 @@ def _resolve_agent_with_budget_guard(
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
-        if requested == "deepseek" or provider == "openrouter":
+        if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
                 "NOTE: ROUTING REFUSED: prepaid capacity NEED_PROBE; Monitor API unreachable."
             ) from None
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
     prepaid = "openrouter" if provider == "openrouter" else requested if requested == "deepseek" else None
@@ -13646,16 +16111,32 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if (
+        blocked = (
             status not in {"cool", "warm"}
             or account.get("is_available") is False
             or account.get("status") == "near_cap"
-        ):
+        )
+        if blocked and not force_agent:
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                 f"freshness={account.get('freshness', 'unavailable')}. "
                 "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
+            )
+        if force_agent:
+            if blocked:
+                print(
+                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={status}; "
+                    f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
+                    f"freshness={account.get('freshness', 'unavailable')}.",
+                    file=sys.stderr,
+                )
+            _publish_forced_lane_diagnostics(
+                requested,
+                account if isinstance(account, dict) else None,
+                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
             )
         return requested
 
@@ -13675,16 +16156,30 @@ def _resolve_agent_with_budget_guard(
             "usage snapshots; lanes may be in deficit; no hard sub.",
             file=sys.stderr,
         )
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                diags if isinstance(diags, dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
-    # Check for demoted lanes and print warnings
+    # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
     for item in payload.get("ranked_by_headroom") or []:
-        h = item.get("health")
-        if h and not h.get("healthy", True):
-            lane = item.get("lane")
-            cf = h.get("consecutive_failures", 0)
-            sm = h.get("span_minutes", 0)
-            print(f"⚠ lane {lane} demoted: {cf} spawn failures in {sm}m", file=sys.stderr)
+        if not isinstance(item, dict) or not item.get("health"):
+            continue
+        lane = item.get("lane")
+        health, basis = credit_lane.health_fact(item)
+        if health == credit_lane.UNHEALTHY:
+            h = item["health"]
+            print(
+                f"⚠ lane {lane} demoted: {h.get('consecutive_failures')} spawn failures in {h.get('span_minutes')}m",
+                file=sys.stderr,
+            )
+        elif health == credit_lane.UNKNOWN:
+            print(f"⚠ lane {lane} health unknown ({basis}); not counted as healthy", file=sys.stderr)
 
     if records_loaded == 0:
         for warning in rec.get("warnings") or []:
@@ -13714,12 +16209,16 @@ def _resolve_agent_with_budget_guard(
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
     reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
+    # The reserve never overrides the owner (#9740): it needs the owner's verified capacity.
     reserve_relaxes = (
         requested == "codex"
-        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_is_threatened(agent_dict)
         and _codex_reset_reserve_eligible(
             reserve,
-            agent_info if isinstance(agent_info, dict) else {},
+            agent_dict,
+            owner_capacity=_budget_owner_facts(
+                requested, agent_dict, model=requested_model, is_stale=is_stale, snapshot_metadata=diags
+            ).capacity,
             snapshot_stale=is_stale,
         )
     )
@@ -13734,8 +16233,6 @@ def _resolve_agent_with_budget_guard(
         # #9518: a lane with a credit balance present and no recent rate limit stays
         # usable (the credit-period model check runs on the admitted route); unknown,
         # stale or contradicted credit data, or an unreadable policy, keeps today's guard.
-        from scripts.fleet import credit_lane
-
         try:
             credit = credit_lane.lane_credit_state(
                 requested, agent_dict, credit_lane.load_policy(), snapshot_stale=is_stale
@@ -13762,7 +16259,7 @@ def _resolve_agent_with_budget_guard(
             status=status,
             will_last=will_last,
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(agent_dict),
             headroom_blocked=_budget_headroom_blocked(agent_dict),
             lane=requested,
@@ -13770,6 +16267,16 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
+    if force_agent:
+        _publish_forced_lane_diagnostics(
+            requested,
+            agent_dict,
+            diags if isinstance(diags, dict) else None,
+            model=requested_model,
+            sink=diagnostic_sink,
+            ranked=payload.get("ranked_by_headroom"),
+        )
+        return requested
     if not needs_action:
         return requested
 
@@ -13798,7 +16305,7 @@ def _resolve_agent_with_budget_guard(
             status=_budget_lane_status(sub, sub_dict),
             will_last=_budget_will_last_to_reset(sub_dict),
             is_stale=is_stale,
-            records_loaded=records_loaded,
+            snapshot_metadata=diags,
             pace=_budget_pace(sub_dict),
             headroom_blocked=_budget_headroom_blocked(sub_dict),
             lane=sub,
@@ -13842,7 +16349,7 @@ def _resolve_agent_with_budget_guard(
                 fallbacks,
                 agents if isinstance(agents, dict) else {},
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=diags,
                 reset_reserve=reserve,
                 requested_model=requested_model,
                 model_resolution=model_resolution,
@@ -13886,7 +16393,7 @@ def _language_lane_substitute(
     agents: dict[str, Any],
     *,
     is_stale: bool,
-    records_loaded: int,
+    snapshot_metadata: Mapping[str, Any] | None = None,
     reset_reserve: dict[str, Any] | None = None,
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
@@ -13905,7 +16412,14 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {},
+                info_dict,
+                owner_capacity=_budget_owner_facts(
+                    seat, info_dict, model=current_model, is_stale=is_stale, snapshot_metadata=snapshot_metadata
+                ).capacity,
+                snapshot_stale=is_stale,
+            )
         )
         needs, why = (
             (False, "")
@@ -13914,7 +16428,7 @@ def _language_lane_substitute(
                 status=status,
                 will_last=will_last,
                 is_stale=is_stale,
-                records_loaded=records_loaded,
+                snapshot_metadata=snapshot_metadata,
                 pace=_budget_pace(info_dict),
                 headroom_blocked=_budget_headroom_blocked(info_dict),
                 lane=seat,
@@ -14839,8 +17353,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="EXISTING",
         help=(
-            "Attach the dispatch to this existing remote branch instead of creating "
-            "{agent}/{task}. Fetches and validates the branch from the primary "
+            "Continue an existing remote branch, e.g. codex/fix-123. "
+            "For a new branch omit --branch (default: <agent>/<task-id>), optionally with --base. "
+            "Fetches and validates the branch from the primary "
             "checkout, then creates/reuses an isolated worktree on it (--branch "
             "implies --worktree). Refuses protected branches (main/master), "
             "branches checked out in another worktree, and invocation from a "
@@ -14904,13 +17419,25 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--authoring-review-risk",
+        default=None,
+        choices=("low", "medium", "high", "critical"),
+        help=(
+            "#9739: the planned review risk of the branch this write dispatch authors. Admission refuses "
+            "a writer when no qualified reviewer outside every author family would remain at this risk; "
+            "protected paths only raise it. Does not type the dispatch as a review. "
+            "Default: None, checked as critical. Example: medium for a routine mixed-family branch."
+        ),
+    )
+    d.add_argument(
         "--subject-seat",
         action="append",
         default=None,
         metavar="SEAT",
         help=(
-            "Seat governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
-            "Default: none. Example: --subject-seat codex for a shared adapter change."
+            "Seat governed by the change (repeatable); excluded by the reviewer resolver, and by "
+            "write-dispatch review admission (#9739). Default: none. "
+            "Example: --subject-seat codex for a shared adapter change."
         ),
     )
     d.add_argument(
@@ -14987,11 +17514,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     d.add_argument(
         "--base",
-        default="main",
+        default=None,
         help=(
             "Base branch to fetch and branch the worktree from "
-            "(default: main). The worktree is branched from "
-            "origin/{base}, not local {base}."
+            "(default: the repository's default branch, read from the canonical "
+            "remote for a write dispatch; main otherwise). The worktree is branched "
+            "from origin/{base}, not local {base}. Where a writer starts, never "
+            "the base its authors are reviewed against (#9739)."
         ),
     )
     d.add_argument(
@@ -15026,8 +17555,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--force-agent",
         action="store_true",
         help=(
-            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent; "
-            "also overrides a live Cursor driver-lease refusal with a NOTE."
+            "Dispatch the requested agent with no budget substitution. "
+            "--check-budget / LU_DISPATCH_CHECK_BUDGET still prints and records that lane's "
+            "quota and health, using explicit unknowns when telemetry is missing. "
+            "Also overrides a live Cursor driver-lease refusal with a NOTE."
         ),
     )
     d.add_argument(
@@ -15112,7 +17643,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-task-family",
         default=None,
         metavar="FAMILY",
-        help="ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate).",
+        help=("ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
+              "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
+              "declare narrow safe owned paths. Classification and recon use read-only mode."),
     )
     d.add_argument(
         "--research-track",
@@ -15149,8 +17682,9 @@ def build_parser() -> argparse.ArgumentParser:
             "#8991: a repo-relative path (dir/, dir/**, file, or glob) this task may "
             "commit. Repeatable; recorded as the task's owned_paths. Auto-finalize of a "
             "dirty danger-mode worktree commits only changes under these paths; without "
-            "any it commits nothing and the task ends needs_finalize. Independent of "
-            "--research-owned-path."
+            "any it commits nothing and the task ends needs_finalize. Required for a "
+            "write-capable --mode: review admission checks the branch's scope from it (#9739). "
+            "Independent of --research-owned-path."
         ),
     )
     d.add_argument(

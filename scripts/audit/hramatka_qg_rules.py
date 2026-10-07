@@ -29,6 +29,22 @@ from uuid import uuid4
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(PROJECT_ROOT) not in sys.path:
@@ -788,7 +804,7 @@ def _sources_conn():
     db = _SOURCES_DB_OVERRIDE or (PROJECT_ROOT / "data" / "sources.db")
     if not db.exists():
         return None
-    conn = sqlite3.connect(str(db))
+    conn = _open_readonly(str(db))
     conn.row_factory = sqlite3.Row
     return conn
 

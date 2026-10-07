@@ -6,6 +6,8 @@ import json
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 from scripts.ci.check_issue_task_quality import main, score_body
 from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
@@ -116,7 +118,7 @@ def test_first_line_trivial_exemption(first_line: str) -> None:
 def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "Correct spelling", "labels": [{"name": label}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 0
@@ -127,7 +129,7 @@ def test_issue_trivial_label_exemption(label: str, monkeypatch, capsys) -> None:
 def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
     payload = {"title": "Fix typo", "body": "trivial:\nCorrect spelling", "labels": []}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 0
@@ -138,7 +140,7 @@ def test_issue_first_line_trivial_exemption(monkeypatch, capsys) -> None:
 def test_nontrivial_issue_warns(monkeypatch, capsys) -> None:
     payload = {"title": "trivial:", "body": "Correct spelling", "labels": [{"name": "task"}]}
     monkeypatch.setattr(
-        "scripts.ci.check_issue_task_quality.subprocess.check_output",
+        "scripts.ci.check_issue_task_quality.github_client.check_output",
         lambda *_args, **_kwargs: json.dumps(payload),
     )
     assert main(["--issue", "123", "--strict", "--json"]) == 1
@@ -221,3 +223,16 @@ def test_dor_workflow_comment_creates_once_for_empty_comments() -> None:
     assert len(calls) == 1
     assert calls[0][0:2] == ("POST", "/issues/123/comments")
     assert "Missing fields:" in calls[0][2]["body"]
+
+
+def test_intake_accepted_plain_colon_criteria_initialize_lifecycle():
+    from scripts.orchestration import task_lifecycle
+
+    assert score_body(COMPLETE)["verdict"] == "PASS"
+    policy = {key: {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}
+              for key in ("AC-01", "AC-02")}
+    snapshot = task_lifecycle.build_ac_snapshot(COMPLETE, policy, finalized_at="2026-10-05T12:36:05Z")
+    assert [(item["id"], item["text"]) for item in snapshot["criteria"]] == [
+        ("AC-01", "checker WARN when new DoR fields missing"),
+        ("AC-02", "PR merged with CF + green CI"),
+    ]

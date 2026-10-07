@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# The shim's own lookups (the real git, its commands and aliases, the guard)
+# publish nothing, so they run without the command's LU_OPSEC_OVERRIDE; only
+# the Git command the caller asked for receives it back (#9681).
+_opsec_override_set="${LU_OPSEC_OVERRIDE+set}"
+_opsec_override="${LU_OPSEC_OVERRIDE-}"
+unset LU_OPSEC_OVERRIDE
+_opsec_restore_override() {
+  if [[ -n "$_opsec_override_set" ]]; then
+    export LU_OPSEC_OVERRIDE="$_opsec_override"
+  fi
+}
+
 _deny() {
   cat >&2 <<'EOF'
 error: agent invoked with AGENT_NO_MERGE=1 cannot push directly to main.
@@ -393,7 +405,9 @@ if [[ "$_opsec_push" == 1 ]]; then
   [[ -f "$_opsec_root/scripts/opsec/git_push.py" ]] || _opsec_refuse "push scanner unavailable"
   [[ -n "$_opsec_python" && -x "$_opsec_python" ]] || _opsec_refuse "project interpreter unavailable"
   export LU_OPSEC_PUSH_PYTHON="$_opsec_python" LU_OPSEC_REAL_GIT="$real_git"
+  _opsec_restore_override
   exec "$real_git" "${_opsec_globals[@]}" -c "core.hooksPath=$_opsec_hooks" "${@:_opsec_index+1}"
 fi
 
+_opsec_restore_override
 exec "$real_git" "$@"

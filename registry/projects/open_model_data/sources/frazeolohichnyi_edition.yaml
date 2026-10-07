@@ -1,0 +1,57 @@
+# Edition verification for sources.db `frazeolohichnyi` (#9609, plan PA2). Evidence only; no dictionary text.
+schema_version: 1
+table: frazeolohichnyi
+verified_on: '2026-10-03'
+verdict: verified
+edition:
+  title: Словник фразеологізмів української мови
+  compilers: В. М. Білоноженко, І. С. Гнатюк, В. В. Дятчук, Неровня, Т. О. Федоренко
+  compilers_note: Неровня's initials read Н. М. on the OCR title page and В. Н. in the archive.org metadata.
+  responsible_editor: В. О. Винник
+  place_publisher_year: 'Київ: Наукова думка, 2003'
+  isbn: 966-00-0797-3
+  volumes: 1
+  series: Словники України
+corrects_register: The register entry names a two-volume «Фразеологічний словник української мови», Наукова думка 2003,
+  as a probable source. That conflates two books. The two-volume dictionary is the 1993 edition (stereotype reprint
+  1999); the 2003 one-volume «Словник фразеологізмів» is built on it. The held table matches the 2003 book.
+held_copy:
+  rows: 24683
+  distinct_word: 24672
+  distinct_definition: 7878
+  source_value: Фразеологічний словник (all rows)
+  row_hash: see holdings_manifest.yaml id frazeolohichnyi
+  shape: one row per variant phrase, about three rows per dictionary entry
+evidence:
+- kind: size
+  finding: The 2003 preface gives the dictionary's size as 7,922 phraseological units. The source JSON holds 7,883
+    distinct entry bodies and the table 7,878 distinct definitions.
+  source: archive.org item slov557, OCR file slov557_djvu.txt (sha1 48440c42b5c38d642c5bf1458d2350a0ec5faa3d)
+- kind: lineage
+  finding: The 2003 preface names the two-book «Фразеологічний словник української мови» (1993; reprint 1999) as the
+    basis of its register.
+  source: archive.org item slov557, OCR file slov557_djvu.txt
+- kind: dating
+  finding: Table rows 4416, 4417, 10680 and 10681 cite a newspaper quotation with 1999 hryvnia figures. A 1993 book
+    cannot contain it. The quotation occurs verbatim in the 2003 OCR.
+  source: sources.db frazeolohichnyi ids 4416, 4417, 10680, 10681; slov557_djvu.txt
+- kind: text_match
+  finding: For 6,018 entries long enough to test, the first or last 20 letters of the first definition were found in
+    the 2003 OCR for 5,658 (94.0%). The misses are consistent with OCR noise.
+  source: comparison run 2026-10-03, letters-only normalisation
+- kind: catalogue
+  finding: The archive.org metadata gives the title «Словник фразеологізмів української мови», date 2003, Наукова думка,
+    responsible editor Винник В. О., and the five compilers.
+  source: https://archive.org/metadata/slov557/metadata
+- kind: chain_of_custody
+  finding: The JSON metadata names «Український Фразелогічний Словник» and carries an MS Access XML header generated
+    2008-07-11. The redistributing repository names no edition. All 24,683 chunks.jsonl lines match the table rows in
+    order on word, definition, text and source.
+  source: https://github.com/bakustarver/ukr-dictionaries-list-opensource; scripts/rag/convert_dictionaries.py
+    --frazeolohichnyi (commit b82002a582); scripts/wiki/build_sources_db.py
+origin_files_sha256:
+  frazeolohichnyi.zip: ac27911e87f13f8aa60f35f5e70d2903f728d19193c29bfd17856db0cba4a023
+  fl.frasesUkUk.json: 2622a86c158cc696007ac8489a9a0c9c6dc3ab2df557d7e0968b662083c161d1
+  chunks.jsonl: 3ed99de6f462e293ad79db835ad499978d5b696ec8151f883ef729b989a48d84
+unverified: The printed page count is unverified. The archive.org description gives 788 с.; it was not checked
+  against the print.

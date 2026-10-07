@@ -19,6 +19,7 @@ import os
 import re
 import subprocess
 import sys
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import pytest
@@ -531,6 +532,48 @@ def test_reuse_when_one_green_attempt_tested_the_identical_tree() -> None:
     assert "PR #7" in decision.reason and _MERGE in decision.reason
 
 
+@pytest.mark.parametrize(
+    "shadow",
+    [
+        {"status": "completed", "conclusion": conclusion, "run_attempt": 1}
+        for conclusion in ("success", "failure", "cancelled", "skipped", "timed_out", "neutral", "action_required", "stale")
+    ]
+    + [
+        {"status": "in_progress", "conclusion": None, "run_attempt": 1},
+        {"status": "queued", "conclusion": None, "run_attempt": 1},
+        {"status": "completed", "conclusion": "failure", "run_attempt": 2},
+        {},
+    ],
+)
+@pytest.mark.parametrize(
+    "candidate",
+    [
+        _candidate(),
+        _candidate(jobs=_jobs(_set("Checks", conclusion="failure"))),
+        _candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "pytest (2)"])),
+        _candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[0], name="Unexpected advisory")])),
+        _candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[0], id=7)])),
+        _candidate(jobs=_jobs(_set("Reuse check", conclusion="success"))),
+        _candidate(jobs=_jobs(_set("pytest (3)", run_attempt=2))),
+        _candidate(record=_record(tier="fast")),
+    ],
+    ids=("green", "failed", "missing", "unknown", "duplicate", "queue-job", "rerun", "not-full"),
+)
+def test_component_shadow_leaves_reuse_decision_and_record_byte_identical(candidate, shadow) -> None:
+    record_before = json.dumps(candidate.load_record(), sort_keys=True).encode()
+    baseline = reuse_green_run.decide(_QUEUED, [candidate])
+    listing = candidate.load_jobs()
+    with_shadow = {
+        "total_count": listing["total_count"] + 1,
+        "jobs": [{"name": "Component shadow (advisory)", "id": 900, **shadow}, *listing["jobs"]],
+    }
+    decision = reuse_green_run.decide(_QUEUED, [replace(candidate, load_jobs=lambda: with_shadow)])
+    # Includes the reason and reused job IDs, not just the reuse boolean.
+    assert json.dumps(asdict(decision), sort_keys=True).encode() == json.dumps(asdict(baseline), sort_keys=True).encode()
+    assert json.dumps(candidate.load_record(), sort_keys=True).encode() == record_before
+    assert "Component shadow (advisory)" not in dict(decision.jobs)
+
+
 _OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": ["b" * 40, _PR_HEAD]}}
 
 
@@ -610,11 +653,14 @@ def test_reuse_takes_the_first_matching_candidate() -> None:
 def test_pytest_shards_match_the_ci_matrix() -> None:
     matrix = _jobs_of_ci()["pytest"]["strategy"]["matrix"]["shard"]
     assert reuse_green_run.pytest_shards(_CI.read_text(encoding="utf-8")) == tuple(matrix)
-    # Every other ci.yml job name is either required in the reused run or queue-only.
+    # Every other ci.yml job name is required, queue-only, or explicitly advisory.
     names = {job.get("name") for job in _jobs_of_ci().values()}
-    assert set(reuse_green_run.EXPECTED_JOBS) | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST) == names - {
-        "pytest (${{ matrix.shard }})"
-    }
+    assert set(reuse_green_run.REUSE_NEUTRAL_JOBS) == {"Component shadow (advisory)"}
+    assert (
+        set(reuse_green_run.EXPECTED_JOBS)
+        | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST)
+        | set(reuse_green_run.REUSE_NEUTRAL_JOBS)
+    ) == names - {"pytest (${{ matrix.shard }})"}
 
 
 @pytest.mark.parametrize("text", ["", "        shard: [1, 2]\n        shard: [1]\n", "        shard: [2, 3]\n"])
@@ -864,7 +910,10 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
     assert job_id == "pytest" and telemetry["continue-on-error"] is True
     assert telemetry["uses"].startswith("actions/download-artifact@")
     assert telemetry["with"]["name"] == "pytest-duration-snapshot"
-    assert all("continue-on-error" not in job for job in _jobs_of_ci().values())
+    # Only the report-only component shadow may tolerate a whole-job failure.
+    assert {
+        job_id: job["continue-on-error"] for job_id, job in _jobs_of_ci().items() if "continue-on-error" in job
+    } == {"component-shadow": True}
     for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")

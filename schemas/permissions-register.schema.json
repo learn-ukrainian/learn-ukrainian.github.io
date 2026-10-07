@@ -151,6 +151,7 @@
       "additionalProperties": false,
       "required": [
         "id",
+        "permission_status",
         "name",
         "organisation",
         "role",
@@ -376,6 +377,21 @@
           "items": {
             "$ref": "#/$defs/nonEmpty"
           }
+        },
+        "permission_status": {
+          "description": "Recorded permission status, distinct from the licence as found. Citation/provenance only; not a publication gate.",
+          "enum": [
+            "open-licence",
+            "public-domain",
+            "granted",
+            "verbal-granted-written-pending",
+            "pending-expert-contact",
+            "none",
+            "unknown"
+          ]
+        },
+        "permission_note": {
+          "$ref": "#/$defs/nonEmpty"
         }
       }
     }

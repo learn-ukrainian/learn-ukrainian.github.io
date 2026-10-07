@@ -12,13 +12,31 @@ import html
 import json
 import re
 import sqlite3
+import sys
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from html.parser import HTMLParser
+from pathlib import Path
 
 import requests
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SUM20_SOURCE_ID = "sum20_official"
 SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
@@ -26,6 +44,7 @@ SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
 PARSER_VERSION = "sum20_official_v1"
+QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
 _ARTICLE_RE = re.compile(r"<article\b[^>]*>.*?</article\s*>", re.IGNORECASE | re.DOTALL)
@@ -272,7 +291,8 @@ CREATE TABLE IF NOT EXISTS sum20_articles (
     official_url TEXT NOT NULL,
     fetched_at TEXT NOT NULL,
     content_sha256 TEXT NOT NULL,
-    parser_version TEXT NOT NULL
+    parser_version TEXT NOT NULL,
+    quarantine_reason TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS sum20_senses (
     id INTEGER PRIMARY KEY,
@@ -343,10 +363,43 @@ CREATE TABLE IF NOT EXISTS sum20_crawl_outcomes (
 """
 
 
-def ensure_sum20_official_schema(conn: sqlite3.Connection) -> None:
+def ensure_sum20_official_schema(conn: SQLiteConnection) -> None:
     """Create the official СУМ-20 collection and resumable-crawl metadata."""
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SUM20_SCHEMA_SQL)
+    ensure_sum20_quarantine_column(conn)
+
+
+def ensure_sum20_quarantine_column(conn: SQLiteConnection) -> bool:
+    """Add ``sum20_articles.quarantine_reason`` to a table created before #9609; return whether it was added."""
+    columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
+    if not columns or QUARANTINE_COLUMN in columns:
+        return False
+    conn.execute(f"ALTER TABLE sum20_articles ADD COLUMN {QUARANTINE_COLUMN} TEXT NOT NULL DEFAULT ''")
+    return True
+
+
+def live_article_predicate(columns: Iterable[str], alias: str = "") -> str:
+    """SQL predicate that keeps only non-quarantined ``sum20_articles`` rows.
+
+    Quarantined rows stay in the table (never deleted) but no retrieval path
+    returns them.  A restored table may predate the quarantine column while retaining
+    unverified codification rows; their parser version remains excluded.
+    """
+    prefix = f"{alias}." if alias else ""
+    columns = set(columns)
+    predicates = []
+    if QUARANTINE_COLUMN in columns:
+        predicates.append(f"{prefix}{QUARANTINE_COLUMN} = ''")
+    if "parser_version" in columns:
+        predicates.append(f"{prefix}parser_version != 'v1-official-codification'")
+    return " AND ".join(predicates) or "1 = 1"
+
+
+def live_article_predicate_for(conn: SQLiteConnection | sqlite3.Cursor, alias: str = "") -> str:
+    """``live_article_predicate`` for the ``sum20_articles`` table behind a connection or cursor."""
+    rows = conn.execute("PRAGMA table_info(sum20_articles)").fetchall()
+    return live_article_predicate((str(row[1]) for row in rows), alias)
 
 
 def utc_now() -> str:
@@ -354,7 +407,7 @@ def utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
 
 
-def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
+def upsert_sum20_article(conn: SQLiteConnection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
     """Store one parsed article; return whether its content changed."""
     fetched_at = fetched_at or utc_now()
     content_sha256 = article.content_sha256
@@ -441,7 +494,7 @@ def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fet
 
 
 def record_crawl_outcome(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     wordid: int,
     status: str,
@@ -465,7 +518,7 @@ def record_crawl_outcome(
     )
 
 
-def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
+def advance_crawl_checkpoint(conn: SQLiteConnection, wordid: int) -> None:
     """Advance only after an unambiguous terminal outcome."""
     conn.execute(
         """
@@ -477,7 +530,7 @@ def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
     )
 
 
-def crawl_resume_wordid(conn: sqlite3.Connection) -> int:
+def crawl_resume_wordid(conn: SQLiteConnection) -> int:
     """Return the next safe wordid after the durable terminal checkpoint."""
     row = conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint WHERE singleton = 1").fetchone()
     last_wordid = int(row[0]) if row else 0

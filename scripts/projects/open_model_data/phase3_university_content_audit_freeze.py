@@ -14,7 +14,6 @@ import gzip
 import hashlib
 import json
 import os
-import sqlite3
 import subprocess
 import tempfile
 from collections import Counter
@@ -24,6 +23,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
@@ -302,8 +302,7 @@ def validate_document(
 def _database_evidence(path: Path) -> tuple[dict[str, Any], list[str]]:
     require(path.is_file(), f"database is missing: {path}")
     require(sha256_file(path) == EXPECTED_DATABASE["sha256"], "live database SHA-256 drift")
-    uri = f"file:{path.resolve()}?mode=ro"
-    with sqlite3.connect(uri, uri=True) as connection:
+    with _open_readonly(path.resolve()) as connection:
         counts = {
             "textbook_rows": connection.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0],
             "fts_rows": connection.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],

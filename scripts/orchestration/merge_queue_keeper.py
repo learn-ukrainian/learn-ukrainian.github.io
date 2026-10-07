@@ -18,6 +18,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
 from scripts.opsec.prepublish import (
     PublishBlocked,
@@ -34,6 +35,20 @@ MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 SHA = re.compile(r"[0-9a-f]{40}\Z")
+# Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
+# the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
+# check stands in for Analyze only when every changed file is an npm or pip/uv
+# lockfile or package.json, whoever authored the PR: anyone with write access
+# can push code to a dependabot branch, and github-actions bumps edit workflows.
+CODEQL_CHECK = "CodeQL"
+# GitHub's code-scanning app; both its id and its reserved slug must match.
+CODEQL_APP_ID = 57789
+CODEQL_APP = "github-advanced-security"
+CODEQL_PASSING = frozenset({"success", "neutral"})
+DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
+REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
+# GitHub's PR-files endpoint stops at this many files without saying so.
+PR_FILES_LIMIT = 3000
 
 
 class KeeperError(RuntimeError):
@@ -62,6 +77,9 @@ class GitHub:
             )
         except subprocess.TimeoutExpired as exc:
             raise KeeperError("GitHub request timed out") from exc
+        observation = getattr(result, "github_result", None)
+        if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+            raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise KeeperError((result.stderr or result.stdout or "GitHub request failed").strip()[:500])
         return result.stdout
@@ -121,7 +139,7 @@ class GitHub:
         queues = {branch: repo.get(f"q{i}") is not None for i, branch in enumerate(sorted(branches))}
         if any(f"q{i}" not in repo for i in range(len(branches))):
             raise KeeperError("queue configuration unknown")
-        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"]}
+        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"], "reset_at": rate.get("resetAt")}
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-comments", repo=self.repository, number=number))
@@ -136,6 +154,19 @@ class GitHub:
         ):
             raise KeeperError("check-runs page incomplete")
         return data["check_runs"]
+
+    def files(self, number: int) -> list[dict[str, Any]]:
+        """Every changed file of a PR; raises when the list may be truncated or incomplete."""
+        pull = self.json(Request("read-pull", repo=self.repository, number=number))
+        changed = pull.get("changed_files") if isinstance(pull, dict) else None
+        if type(changed) is not int:
+            raise KeeperError("PR changed-file count unknown")
+        if changed >= PR_FILES_LIMIT:
+            raise KeeperError("PR file list truncated")
+        rows = self.paged(Request("read-pr-files", repo=self.repository, number=number))
+        if len(rows) >= PR_FILES_LIMIT or len(rows) != changed:
+            raise KeeperError("PR file list incomplete")
+        return rows
 
     def current(self, number: int) -> dict[str, Any]:
         row = self.json(
@@ -255,7 +286,31 @@ def _hold(row: Mapping[str, Any]) -> bool | None:
     return bool(HOLD_TITLE.search(title) or any(item["name"].casefold() in HOLD_LABELS for item in labels))
 
 
-def _check_state(checks: list[dict[str, Any]], head: str) -> str:
+def _latest(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
+
+
+def _codeql_rows(checks: list[dict[str, Any]], head: str) -> list[dict[str, Any]]:
+    """Top-level CodeQL check runs at ``head`` from GitHub code scanning (not a same-named workflow job)."""
+    return [
+        row
+        for row in checks
+        if isinstance(row, dict)
+        and row.get("head_sha") == head
+        and row.get("name") == CODEQL_CHECK
+        and isinstance(row.get("app"), dict)
+        and row["app"].get("id") == CODEQL_APP_ID
+        and row["app"].get("slug") == CODEQL_APP
+    ]
+
+
+def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: bool = False) -> str:
+    """``ok``, a pending reason or ``CI-red-<check>`` for ``CI Gate`` plus CodeQL at ``head``.
+
+    CodeQL evidence is the ``Analyze (…)`` runs. A PR with none of them waits
+    (``CodeQL-pending``) unless ``dependency_update`` is set, in which case the
+    completed top-level CodeQL check must be success or neutral (#9921).
+    """
     names: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in checks:
         if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
@@ -263,18 +318,50 @@ def _check_state(checks: list[dict[str, Any]], head: str) -> str:
         names[row["name"]].append(row)
     required = ["CI Gate", *(name for name in names if name.startswith("Analyze ("))]
     pending: str | None = "CodeQL-pending" if len(required) == 1 else None
+    if pending and dependency_update:
+        codeql = _codeql_rows(checks, head)
+        latest = _latest(codeql) if codeql else None
+        if latest is not None and latest.get("status") == "completed":
+            if latest.get("conclusion") not in CODEQL_PASSING:
+                return f"CI-red-{CODEQL_CHECK}"
+            pending = None
     for name in required:
         rows = names.get(name, [])
         if not rows:
             pending = pending or f"CI-pending-{name}"
             continue
-        row = max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
+        row = _latest(rows)
         if row.get("status") != "completed":
             pending = pending or f"CI-pending-{name}"
             continue
         if row.get("conclusion") != "success":
             return f"CI-red-{name}"
     return pending or "ok"
+
+
+def _dependency_file(path: Any) -> bool:
+    if not isinstance(path, str) or not path:
+        return False
+    name = path.rsplit("/", 1)[-1]
+    return name in DEPENDENCY_FILES or bool(REQUIREMENTS_FILE.fullmatch(name))
+
+
+def _dependency_update(gh: GitHub, number: int) -> bool:
+    """Whether the PR changes only lockfiles and package.json; the author never matters."""
+    files = gh.files(number)
+    return bool(files) and all(
+        _dependency_file(row.get("filename"))
+        and ("previous_filename" not in row or _dependency_file(row.get("previous_filename")))
+        for row in files
+    )
+
+
+def _evaluate_checks(gh: GitHub, number: int, head: str, checks: list[dict[str, Any]]) -> str:
+    """:func:`_check_state`, reading the file list only when a PR has no ``Analyze`` runs but a CodeQL check."""
+    state = _check_state(checks, head)
+    if state != "CodeQL-pending" or not _codeql_rows(checks, head):
+        return state
+    return _check_state(checks, head, dependency_update=_dependency_update(gh, number))
 
 
 def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
@@ -411,6 +498,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     failed = False
     estimated_remaining = snap["remaining"]
     budget = estimated_remaining - 30 >= FLOOR
+    if not budget:
+        return [f"GraphQL budget stop: skipped remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR} reset_at={snap.get('reset_at')}"], False
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
@@ -433,7 +522,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             comments = gh.comments(number)
             verdict = lookup_verdict(comments, head, login)
             check_rows = gh.checks(head)
-            checks = _check_state(check_rows, head)
+            checks = _evaluate_checks(gh, number, head, check_rows)
         except KeeperError:
             comments, verdict, checks, check_rows = [], Verdict("unknown"), "CI-unknown", []
             comment_safe = False
@@ -528,7 +617,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before = True
                         approved_now[key] = head
                 try:
-                    current_checks = _check_state(gh.checks(head), head)
+                    current_checks = _evaluate_checks(gh, number, head, gh.checks(head))
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
@@ -620,8 +709,6 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 failed = True
                 lines.append(f"flaky-test issue FAILED: {exc}")
         _save(state_path, previous)
-    if not budget:
-        lines.append(f"GraphQL budget stop: remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR}")
     return lines, failed
 
 
@@ -653,6 +740,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.apply:
         try:
             lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=False)
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1
@@ -668,6 +758,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         try:
             lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=args.apply)
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1

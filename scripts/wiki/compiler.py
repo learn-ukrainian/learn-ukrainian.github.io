@@ -43,6 +43,22 @@ from .sources_schema import (
 )
 from .state import is_compiled, mark_compiled
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 # Gemini CLI path (same pattern as agent bridge)
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 
@@ -363,7 +379,7 @@ def _fetch_chunks_by_chunk_id(chunk_ids: list[str]) -> list[dict]:
 
 
 def _fetch_chunks_by_chunk_id_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_ids: list[str],
 ) -> list[dict]:
     """Fetch exact chunks on an existing DB connection, preserving request order."""
@@ -381,7 +397,7 @@ def _fetch_chunks_by_chunk_id_with_conn(
 
 
 def _fetch_chunk_by_chunk_id_with_conn(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     chunk_id: str,
 ) -> dict | None:
     for fetcher in (
@@ -397,7 +413,7 @@ def _fetch_chunk_by_chunk_id_with_conn(
     return None
 
 
-def _fetch_textbook_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_textbook_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -426,7 +442,7 @@ def _fetch_textbook_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_literary_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_literary_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -458,7 +474,7 @@ def _fetch_literary_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_external_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_external_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -490,7 +506,7 @@ def _fetch_external_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> 
     }
 
 
-def _fetch_wikipedia_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_wikipedia_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -516,7 +532,7 @@ def _fetch_wikipedia_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) ->
     }
 
 
-def _fetch_ukrainian_wiki_chunk_with_conn(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
+def _fetch_ukrainian_wiki_chunk_with_conn(conn: SQLiteConnection, chunk_id: str) -> dict | None:
     row = _fetchone_dict(
         conn,
         """
@@ -543,7 +559,7 @@ def _fetch_ukrainian_wiki_chunk_with_conn(conn: sqlite3.Connection, chunk_id: st
 
 
 def _fetchone_dict(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     sql: str,
     params: tuple[object, ...],
 ) -> dict[str, object] | None:

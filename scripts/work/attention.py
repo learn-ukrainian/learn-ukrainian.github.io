@@ -1,11 +1,15 @@
 """Deterministic health, attention rank, and safe-next-action derivation.
 
 Activity volume, comment counts, story points, and model opinion are never
-health evidence (frozen brief semantics).
+health evidence (frozen brief semantics). Merge advice is a read of the latest
+persisted lifecycle receipt plus Work's own same-head observation. It never
+calls the live closeout observer, a GitHub runner, the local-git observer,
+``reconcile``, or ``write_lifecycle``.
 """
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from typing import Any
 
 from scripts.github_check_rollup import collapse_status_rollup
@@ -18,10 +22,38 @@ HEALTH_RANK = {
 }
 
 # Actionable-view deny list (#6850): rows whose only next step is browsing
-# GitHub, inspecting an unknown, or nothing are not pick-list work. This is
-# the SSOT for the server-side predicate; dashboards/work.html mirrors it in
-# JS (parity contract test in tests/test_work_dashboard.py).
+# GitHub, inspecting an unknown, or nothing are not pick-list work. The server
+# stamps ``flags.attention`` from ``is_actionable``; the dashboard reads that
+# flag and does not keep a copy of this set.
 NON_ACTIONABLE_ACTION_CODES = frozenset({"INSPECT_UNKNOWN", "OPEN_GITHUB", "NONE"})
+
+# Receipt ``observed_at`` older than this cannot support merge advice (#9741 A1).
+LEDGER_RECEIPT_FRESHNESS_S = 900
+# Age below this is a future receipt, not freshness. The value is a small
+# negative clock-skew allowance (#9741). A timestamp further ahead stays
+# unknown so it cannot remain fresh for the skew plus the 900s window.
+LEDGER_RECEIPT_FUTURE_TOLERANCE_S = -30
+
+_FAILING_CHECK_TOKENS = frozenset({"FAILURE", "FAILED", "ERROR", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"})
+_PENDING_CHECK_TOKENS = frozenset({"PENDING", "QUEUED", "IN_PROGRESS", "EXPECTED"})
+_PASSING_CHECK_TOKENS = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+_TERMINAL_CHECK_STATES = _FAILING_CHECK_TOKENS | _PASSING_CHECK_TOKENS
+
+# Unsuccessful terminals stay visible. ``done`` is termination, not delivery.
+_OFF_TRACK_TERMINALS = frozenset({"failed", "timeout", "no_deliverable"})
+_VISIBLE_TERMINALS = frozenset(
+    {
+        "failed",
+        "timeout",
+        "no_deliverable",
+        "cancelled",
+        "crashed",
+        "rate_limited",
+        "dry_run",
+        "blocked",
+    }
+)
+_ACTIVE_EXECUTION = frozenset({"running", "spawning"})
 
 
 def is_actionable(item: dict[str, Any] | None) -> bool:
@@ -38,6 +70,31 @@ def is_actionable(item: dict[str, Any] | None) -> bool:
     return bool(code) and code not in NON_ACTIONABLE_ACTION_CODES
 
 
+def _action(code: str, reasons: list[str], state: str) -> dict[str, Any]:
+    """One safe-next-action object. ``state`` qualifies the action, not admission."""
+    return {"code": code, "reason_codes": reasons, "state": state}
+
+
+def _rollup_token(entry: dict[str, Any]) -> str:
+    """Check token from ``state`` or ``status``, then ``conclusion``.
+
+    Check runs in production carry ``status`` (REST and ``gh``). Commit
+    statuses carry ``state``. A status other than ``COMPLETED`` is pending,
+    including an in-progress run with no conclusion. A completed run is its
+    conclusion. A terminal state that disagrees with the conclusion is unknown.
+    """
+    state = str(entry.get("state") or "").strip().upper()
+    status = str(entry.get("status") or "").strip().upper()
+    conclusion = str(entry.get("conclusion") or "").strip().upper()
+    if status and status != "COMPLETED":
+        return "PENDING"
+    if state in _TERMINAL_CHECK_STATES and conclusion and state != conclusion:
+        return "UNKNOWN"
+    if state == "COMPLETED" or status == "COMPLETED":
+        return conclusion or "UNKNOWN"
+    return state or status or conclusion
+
+
 def _pr_check_state(pr: dict[str, Any] | None) -> str:
     """Return failing | pending | passing | unknown from GH list rollup only."""
     if not pr:
@@ -49,22 +106,67 @@ def _pr_check_state(pr: dict[str, Any] | None) -> str:
     if isinstance(rollup, list):
         for entry in collapse_status_rollup(rollup):
             if isinstance(entry, dict):
-                states.append(str(entry.get("state") or entry.get("conclusion") or "").upper())
+                states.append(_rollup_token(entry))
             else:
                 states.append(str(entry).upper())
     elif isinstance(rollup, dict):
-        states.append(str(rollup.get("state") or "").upper())
+        states.append(_rollup_token(rollup))
     else:
         states.append(str(rollup).upper())
     if not states:
         return "unknown"
-    if any(s in {"FAILURE", "FAILED", "ERROR", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"} for s in states):
+    if any(token in _FAILING_CHECK_TOKENS for token in states):
         return "failing"
-    if any(s in {"PENDING", "QUEUED", "IN_PROGRESS", "EXPECTED"} for s in states):
+    if any(token in _PENDING_CHECK_TOKENS for token in states):
         return "pending"
-    if all(s in {"SUCCESS", "NEUTRAL", "SKIPPED", "COMPLETED"} for s in states):
+    if all(token in _PASSING_CHECK_TOKENS for token in states):
         return "passing"
     return "unknown"
+
+
+def _task_alive(item: dict[str, Any]) -> bool | None:
+    """Liveness of a task row. Missing evidence is unknown, not alive."""
+    dispatch = (item.get("projections") or {}).get("dispatch") or {}
+    alive = dispatch.get("alive")
+    if isinstance(alive, list):
+        if not alive:
+            return None
+        flag = alive[0]
+    else:
+        flag = alive
+    if flag is True:
+        return True
+    if flag is False:
+        return False
+    return None
+
+
+def _execution_liveness_reason(dispatch: dict[str, Any]) -> str | None:
+    """A running or spawning task with dead or unknown liveness is not healthy execution."""
+    statuses = dispatch.get("statuses") or []
+    alive = dispatch.get("alive") or []
+    if not isinstance(statuses, list):
+        return None
+    for index, status in enumerate(statuses):
+        if status not in _ACTIVE_EXECUTION:
+            continue
+        flag = alive[index] if isinstance(alive, list) and index < len(alive) else None
+        if flag is True:
+            continue
+        if flag is False:
+            return "task_liveness_dead"
+        return "task_liveness_unknown"
+    return None
+
+
+def _linked_terminal(dispatch: dict[str, Any]) -> str | None:
+    statuses = dispatch.get("statuses") or []
+    if not isinstance(statuses, list):
+        return None
+    for status in statuses:
+        if status in _VISIBLE_TERMINALS or status == "needs_finalize":
+            return str(status)
+    return None
 
 
 def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
@@ -99,15 +201,19 @@ def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
         if decision in {"", "REVIEW_REQUIRED", "NONE"} and check == "passing":
             return "AT_RISK"
         if decision == "APPROVED" and check == "passing":
-            return "ON_TRACK"
+            evidence = verification.get("merge_evidence") or {}
+            if evidence.get("state") == "ready":
+                return "ON_TRACK"
+            return "UNKNOWN"
         if check == "unknown":
             return "UNKNOWN"
         return "AT_RISK"
 
     if kind == "issue":
         status = stream.get("status") or "unknown"
-        # Streams authority missing/stale for membership → UNKNOWN not green.
-        if status == "unknown" and not stream.get("fresh") and stream.get("authority_missing"):
+        # Current membership unknown is never green, including a stale orphan
+        # or multi-home classification kept only as history.
+        if status == "unknown":
             return "UNKNOWN"
         if flags.get("has_blocker"):
             return "AT_RISK"
@@ -117,20 +223,22 @@ def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
             return "AT_RISK"
         if status == "pending_native":
             return "AT_RISK"
-        if any(s in {"failed", "timeout", "no_deliverable"} for s in (dispatch.get("statuses") or [])):
+        if _execution_liveness_reason(dispatch) or _linked_terminal(dispatch):
             return "AT_RISK"
         if status in {"homed", "epic"}:
             return "ON_TRACK"
-        return "ON_TRACK"
+        return "UNKNOWN"
 
     if kind == "task":
         status = str(item.get("lifecycle") or "")
-        if status in {"failed", "timeout", "no_deliverable"}:
+        if status in _OFF_TRACK_TERMINALS:
             return "OFF_TRACK"
-        if status in {"running", "spawning", "needs_finalize"}:
+        if status in _VISIBLE_TERMINALS or status == "needs_finalize":
             return "AT_RISK"
-        if status == "done":
-            return "ON_TRACK"
+        if status in _ACTIVE_EXECUTION:
+            # Dead or unknown liveness is attention, not healthy execution.
+            return "AT_RISK"
+        # ``done`` proves the dispatch ended. It does not prove delivery.
         return "UNKNOWN"
 
     if kind == "review":
@@ -148,6 +256,19 @@ def derive_health(item: dict[str, Any], *, source_ok: bool) -> str:
     return "UNKNOWN"
 
 
+def _issue_unknown_reasons(item: dict[str, Any], stream: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    flags = item.get("flags") or {}
+    if flags.get("source_ok") is False:
+        reasons.append("source_unavailable")
+    membership_reason = stream.get("membership_reason")
+    if isinstance(membership_reason, str) and membership_reason:
+        reasons.append(membership_reason)
+    if not reasons:
+        reasons.append("authority_unknown")
+    return reasons
+
+
 def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
     kind = item.get("resource_kind")
     flags = item.get("flags") or {}
@@ -155,65 +276,244 @@ def derive_safe_next_action(item: dict[str, Any]) -> dict[str, Any]:
     stream = projections.get("stream") or {}
     review = projections.get("review") or {}
     verification = projections.get("verification") or {}
-    reasons: list[str] = []
+    dispatch = projections.get("dispatch") or {}
 
+    # Missing qualification fails closed. Unit callers that omit the flag keep
+    # the previous rule path; a projection row always sets the flag.
+    if flags.get("source_ok") is False:
+        return _action("INSPECT_UNKNOWN", ["source_unavailable"], "unknown")
     if flags.get("dependency_cycle"):
-        return {"code": "RESOLVE_BLOCKER", "reason_codes": ["dependency_cycle"]}
+        return _action("RESOLVE_BLOCKER", ["dependency_cycle"], "ready")
     if flags.get("has_blocker"):
-        return {"code": "RESOLVE_BLOCKER", "reason_codes": ["blocked_by"]}
+        return _action("RESOLVE_BLOCKER", ["blocked_by"], "waiting")
 
     if kind == "issue":
         status = stream.get("status")
         if status == "orphan":
-            return {"code": "TRIAGE_ORPHAN", "reason_codes": ["stream_orphan"]}
+            return _action("TRIAGE_ORPHAN", ["stream_orphan"], "ready")
         if status == "multi_homed":
-            return {"code": "RESOLVE_MULTI_HOME", "reason_codes": ["stream_multi_homed"]}
+            return _action("RESOLVE_MULTI_HOME", ["stream_multi_homed"], "ready")
         if status == "pending_native":
-            return {"code": "LINK_PENDING_NATIVE", "reason_codes": ["pending_native_link"]}
-        if item.get("health") == "UNKNOWN":
-            return {"code": "INSPECT_UNKNOWN", "reason_codes": ["authority_unknown"]}
-        return {"code": "OPEN_GITHUB", "reason_codes": ["public_issue"]}
+            return _action("LINK_PENDING_NATIVE", ["pending_native_link"], "ready")
+        liveness = _execution_liveness_reason(dispatch)
+        if liveness:
+            return _action("INSPECT_UNKNOWN", [liveness], "unknown")
+        terminal = _linked_terminal(dispatch)
+        if terminal:
+            return _action("INSPECT_UNKNOWN", [f"task_{terminal}"], "unknown")
+        if status == "unknown" or item.get("health") == "UNKNOWN":
+            return _action("INSPECT_UNKNOWN", _issue_unknown_reasons(item, stream), "unknown")
+        return _action("OPEN_GITHUB", ["public_issue"], "none")
 
     if kind == "pr":
         ci = verification.get("ci_state") or "unknown"
         decision = str(review.get("review_decision") or "").upper()
         if ci == "failing":
-            return {"code": "FIX_CI", "reason_codes": ["ci_failing"]}
+            return _action("FIX_CI", ["ci_failing"], "ready")
         if ci == "pending":
-            return {"code": "WAIT_CI", "reason_codes": ["ci_pending"]}
+            return _action("WAIT_CI", ["ci_pending"], "waiting")
         if decision == "CHANGES_REQUESTED":
-            return {"code": "ADDRESS_REVIEW", "reason_codes": ["changes_requested"]}
+            return _action("ADDRESS_REVIEW", ["changes_requested"], "ready")
         if decision in {"", "NONE", "REVIEW_REQUIRED"} and ci == "passing":
-            return {"code": "REQUEST_CF_REVIEW", "reason_codes": ["review_required"]}
+            return _action("REQUEST_CF_REVIEW", ["review_required"], "ready")
         if decision == "APPROVED" and ci == "passing":
-            return {"code": "MERGE_WHEN_READY", "reason_codes": ["approved_ci_green"]}
+            evidence = verification.get("merge_evidence") or {}
+            if evidence.get("state") == "ready":
+                return _action("MERGE_WHEN_READY", ["ci_passed_current_head"], "ready")
+            reason = str(evidence.get("reason") or "merge_evidence_unknown")
+            return _action("INSPECT_UNKNOWN", [reason], "unknown")
+        if decision == "APPROVED":
+            # Unknown CI must name the same reason as merge evidence. Waiting
+            # on review would hide that the head is already approved.
+            evidence = verification.get("merge_evidence") or {}
+            reason = str(evidence.get("reason") or "ci_unknown")
+            return _action("INSPECT_UNKNOWN", [reason], "unknown")
         if item.get("lifecycle") == "draft":
-            return {"code": "OPEN_GITHUB", "reason_codes": ["draft_pr"]}
-        reasons.append("pr_open")
-        return {"code": "WAIT_REVIEW", "reason_codes": reasons or ["review_pending"]}
+            return _action("OPEN_GITHUB", ["draft_pr"], "none")
+        return _action("WAIT_REVIEW", ["pr_open"], "waiting")
 
     if kind == "task":
         status = str(item.get("lifecycle") or "")
-        if status in {"running", "spawning", "needs_finalize"}:
-            return {"code": "CONTINUE_DISPATCH", "reason_codes": [f"task_{status}"]}
-        if status in {"failed", "timeout", "no_deliverable"}:
-            return {"code": "INSPECT_UNKNOWN", "reason_codes": [f"task_{status}"]}
-        return {"code": "NONE", "reason_codes": ["task_terminal"]}
+        if status in _ACTIVE_EXECUTION:
+            alive = _task_alive(item)
+            if alive is True:
+                return _action("CONTINUE_DISPATCH", [f"task_{status}"], "ready")
+            reason = "task_liveness_dead" if alive is False else "task_liveness_unknown"
+            return _action("INSPECT_UNKNOWN", [reason], "unknown")
+        if status == "needs_finalize":
+            return _action("INSPECT_UNKNOWN", ["task_needs_finalize"], "unknown")
+        if status in _VISIBLE_TERMINALS:
+            return _action("INSPECT_UNKNOWN", [f"task_{status}"], "unknown")
+        if status == "done":
+            return _action("NONE", ["task_done_not_delivered"], "none")
+        return _action("INSPECT_UNKNOWN", ["task_terminal"], "unknown")
 
     if kind == "review":
         if item.get("lifecycle") in {"running", "queued", "pending"}:
-            return {"code": "WAIT_REVIEW", "reason_codes": ["formal_review_pending"]}
+            return _action("WAIT_REVIEW", ["formal_review_pending"], "waiting")
         if review.get("sealed_verdict_available"):
-            return {"code": "NONE", "reason_codes": ["sealed_verdict_available"]}
+            return _action("NONE", ["sealed_verdict_available"], "none")
         # Retired sealed-CF era rows (terminal or unresolved "open" jobs the
         # dead pipeline never sealed) never ask for a CF review themselves —
         # that ask belongs to the PR row under the current direct ask-<lane>
         # flow (issue #6862).
-        return {"code": "NONE", "reason_codes": ["formal_review_terminal_historical"]}
+        return _action("NONE", ["formal_review_terminal_historical"], "none")
 
     if item.get("health") == "UNKNOWN":
-        return {"code": "INSPECT_UNKNOWN", "reason_codes": ["unknown_health"]}
-    return {"code": "NONE", "reason_codes": ["no_action"]}
+        return _action("INSPECT_UNKNOWN", ["unknown_health"], "unknown")
+    return _action("NONE", ["no_action"], "none")
+
+
+def _parse_observed_at(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip().replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _unknown(reason: str) -> dict[str, str]:
+    return {"state": "unknown", "reason": reason}
+
+
+def qualify_merge_advice(
+    item: dict[str, Any],
+    ledger: dict[str, Any] | None,
+    *,
+    now: datetime | None = None,
+) -> dict[str, str]:
+    """Public-safe merge qualification for one PR row.
+
+    Positive advice requires ``evaluate`` on the latest persisted receipt to
+    return ``CI_PASSED`` with no hard blockers, the receipt to match this
+    repository, PR, and head within ``LEDGER_RECEIPT_FRESHNESS_S`` and not
+    further ahead than ``LEDGER_RECEIPT_FUTURE_TOLERANCE_S``, and Work's own
+    same-head observation to show a non-draft PR whose merge state is
+    neither ``DIRTY`` nor ``UNKNOWN``, with no requested changes and CI neither
+    failing nor pending. Anything else suppresses merge advice.
+    """
+    if not isinstance(ledger, dict):
+        return _unknown("no_ledger")
+    receipts = ledger.get("observation_receipts")
+    if not isinstance(receipts, list) or not receipts or not isinstance(receipts[-1], dict):
+        return _unknown("no_ledger")
+    receipt = receipts[-1]
+    observation = receipt.get("observation")
+    if not isinstance(observation, dict):
+        return _unknown("no_ledger")
+
+    github = observation.get("github") if isinstance(observation.get("github"), dict) else {}
+    pr = github.get("pr") if isinstance(github.get("pr"), dict) else {}
+    repository = str(item.get("repository_id") or "")
+    if str(github.get("repository") or "") != repository:
+        return _unknown("receipt_repository_mismatch")
+    try:
+        pr_number = int(item.get("remote_id"))
+    except (TypeError, ValueError):
+        return _unknown("receipt_pr_mismatch")
+    if pr.get("number") != pr_number:
+        return _unknown("receipt_pr_mismatch")
+    verification = (item.get("projections") or {}).get("verification") or {}
+    head = verification.get("head_sha")
+    if not isinstance(head, str) or not head or pr.get("head_sha") != head:
+        return _unknown("receipt_head_mismatch")
+
+    observed = _parse_observed_at(receipt.get("observed_at"))
+    if observed is None:
+        return _unknown("receipt_observed_at_missing")
+    moment = now if now is not None else datetime.now(UTC)
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=UTC)
+    age_s = (moment.astimezone(UTC) - observed).total_seconds()
+    if age_s < LEDGER_RECEIPT_FUTURE_TOLERANCE_S:
+        return _unknown("receipt_observed_at_future")
+    if age_s > LEDGER_RECEIPT_FRESHNESS_S:
+        return _unknown("receipt_stale")
+
+    try:
+        from scripts.orchestration.task_lifecycle import LifecycleError, evaluate
+
+        result = evaluate(ledger, observation)
+    except LifecycleError:
+        return _unknown("lifecycle_error")
+    except Exception:
+        return _unknown("evaluation_exception")
+    if not isinstance(result, dict):
+        return _unknown("evaluation_exception")
+    hard = result.get("hard_blockers") or []
+    if hard:
+        return _unknown("hard_blockers")
+    if result.get("last_success_state") != "CI_PASSED":
+        return _unknown("ci_not_passed")
+
+    if item.get("lifecycle") == "draft":
+        return _unknown("draft")
+    merge_state = str(verification.get("merge_state_status") or "").upper()
+    if not merge_state or merge_state == "UNKNOWN":
+        return _unknown("merge_state_unknown")
+    if merge_state == "DIRTY":
+        return _unknown("merge_state_dirty")
+    decision = str((((item.get("projections") or {}).get("review") or {}).get("review_decision")) or "").upper()
+    if decision == "CHANGES_REQUESTED":
+        return _unknown("changes_requested")
+    ci_state = verification.get("ci_state") or "unknown"
+    if ci_state == "failing":
+        return _unknown("ci_failing")
+    if ci_state == "pending":
+        return _unknown("ci_pending")
+    if ci_state != "passing":
+        return _unknown("ci_unknown")
+    return {"state": "ready", "reason": "ci_passed_current_head"}
+
+
+def index_ledgers_by_pr(ledgers: list[dict[str, Any]] | None) -> dict[tuple[str, int], list[dict[str, Any]]]:
+    """Group persisted ledgers by ``(repository, pr number)``. Ambiguous groups stay lists."""
+    found: dict[tuple[str, int], list[dict[str, Any]]] = {}
+    for ledger in ledgers or []:
+        if not isinstance(ledger, dict):
+            continue
+        identity = ledger.get("identity") if isinstance(ledger.get("identity"), dict) else {}
+        pr = ledger.get("pr") if isinstance(ledger.get("pr"), dict) else {}
+        repository = identity.get("repository")
+        number = pr.get("number")
+        if isinstance(repository, str) and isinstance(number, int) and not isinstance(number, bool):
+            found.setdefault((repository, number), []).append(ledger)
+    return found
+
+
+def attach_merge_evidence(
+    items: list[dict[str, Any]],
+    ledgers: list[dict[str, Any]] | None,
+    *,
+    now: datetime | None = None,
+) -> None:
+    """Stamp each PR row with a public-safe merge qualification. Ledger bodies stay out."""
+    index = index_ledgers_by_pr(ledgers)
+    for item in items:
+        if item.get("resource_kind") != "pr":
+            continue
+        projections = item.setdefault("projections", {})
+        verification = projections.setdefault("verification", {})
+        repository = str(item.get("repository_id") or "")
+        try:
+            number = int(item.get("remote_id"))
+        except (TypeError, ValueError):
+            verification["merge_evidence"] = _unknown("no_ledger")
+            continue
+        group = index.get((repository, number), [])
+        if len(group) > 1:
+            verification["merge_evidence"] = _unknown("ledger_ambiguous")
+            continue
+        verification["merge_evidence"] = qualify_merge_advice(
+            item,
+            group[0] if group else None,
+            now=now,
+        )
 
 
 def attention_rank_key(item: dict[str, Any]) -> tuple:
@@ -259,6 +559,11 @@ def apply_health_and_actions(
     source_ok: bool,
 ) -> list[dict[str, Any]]:
     for item in items:
-        item["health"] = derive_health(item, source_ok=source_ok)
+        flags = item.get("flags")
+        row_ok = bool(flags["source_ok"]) if isinstance(flags, dict) and "source_ok" in flags else source_ok
+        item["health"] = derive_health(item, source_ok=row_ok)
         item["safe_next_action"] = derive_safe_next_action(item)
+        if not isinstance(item.get("flags"), dict):
+            item["flags"] = {}
+        item["flags"]["attention"] = is_actionable(item)
     return assign_attention(items)

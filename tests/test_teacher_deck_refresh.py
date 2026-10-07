@@ -36,7 +36,7 @@ HEADING = "Combined Master Vocabulary Table (#3)"
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, github_command_boundary, monkeypatch):
     """Exercise the real publisher using synthetic policy and send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
 
@@ -243,6 +243,8 @@ def test_checker_is_independent_of_the_generator() -> None:
         if isinstance(node, (ast.Import, ast.ImportFrom))
         for alias in node.names
     }
+    # The shared read-only opener is not the deck generator.
+    imported.discard("scripts.lib.readonly_sqlite")
     assert not any(str(name).startswith("scripts") for name in imported), imported
 
 

@@ -13,6 +13,12 @@ import re
 import subprocess
 import sys
 from dataclasses import dataclass
+from pathlib import Path
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
 
 HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
 PLACEHOLDER_RE = re.compile(
@@ -216,7 +222,7 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
 
 
 def _fetch_issue_body(repo: str, number: int) -> tuple[str, bool]:
-    raw = subprocess.check_output(
+    raw = github_client.check_output(
         [
             "gh",
             "issue",

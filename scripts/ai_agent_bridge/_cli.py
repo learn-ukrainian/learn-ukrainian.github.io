@@ -14,6 +14,7 @@ from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
 from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
+from scripts.common import github_client
 
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import (
@@ -83,7 +84,7 @@ def _detect_caller_identity_from_env() -> str | None:
     handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
     if handoff_agent:
         # Phantom `{provider}-{empty-slots-area}` handoff identities (minted by
-        # pre-#7597 launchers, e.g. grok-open-model-data) resolve to the
+        # pre-#7597 launchers, e.g. grok-monitor) resolve to the
         # provider so the explicit handoff marker still beats the GROK_AGENT /
         # CLAUDE_PROJECT_DIR heuristics below.
         resolved = resolve_invocation_attribution(env={"SESSION_HANDOFF_AGENT": handoff_agent})
@@ -518,7 +519,7 @@ def _build_parser() -> argparse.ArgumentParser:
         dest="for_llm",
         default=None,
         # type= runs before choices: an already-minted phantom
-        # `{provider}-{empty-slots-area}` (e.g. grok-open-model-data, #7597)
+        # `{provider}-{empty-slots-area}` (e.g. grok-monitor, #7597)
         # normalizes to its provider so live sessions can drain.
         type=_channels.resolve_recipient_alias,
         choices=recipient_choices,
@@ -1553,8 +1554,9 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         "headRefName,headRefOid,isCrossRepository",
     ]
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             cmd,
+            fresh=True,
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
@@ -1834,15 +1836,12 @@ def _dispatch_headless_review(
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
-    prompt = content
-    if data:
-        prompt += "\n\n--- attached inert text ---\n" + data
-
     try:
         result = run_ask_review_dispatch(
             dispatch_agent,
-            prompt,
+            content,
             task_id=task_id,
+            data=data,
             model=model,
             effort=effort,
             hard_timeout=hard_timeout,

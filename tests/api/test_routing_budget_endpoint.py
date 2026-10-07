@@ -153,6 +153,13 @@ def _mock_cursor_lane(*, auto_pct: float | None = None, api_pct: float = 20.0, l
 
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     budget_path = _write_budget_config(tmp_path)
+    # The producer's runtime plane defaults to the shared checkout's ``batch_state``. Pin it to a
+    # fixture checkout whose lane-health scan runs over an empty tasks directory (observed idle,
+    # so healthy): never the host's live tasks and rate limits, and never an unscannable plane
+    # whose unknown health would fail the reserve's health precondition (#9740 A1).
+    shared_checkout = tmp_path / "shared-checkout"
+    (shared_checkout / "batch_state" / "tasks").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(state_router, "main_checkout_root", lambda _root: shared_checkout)
     monkeypatch.setattr(
         state_router,
         "_load_agent_budgets",

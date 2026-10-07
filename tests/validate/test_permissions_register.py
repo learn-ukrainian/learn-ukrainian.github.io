@@ -23,6 +23,16 @@ SCHEMA = REPO_ROOT / "schemas" / "permissions-register.schema.json"
 
 ISSUES_URL = "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues"
 
+PERMISSION_STATUSES = {
+    "open-licence",
+    "public-domain",
+    "granted",
+    "verbal-granted-written-pending",
+    "pending-expert-contact",
+    "none",
+    "unknown",
+}
+
 # The denominator named in the #8979 dispatch brief; more sources may be listed.
 REQUIRED_SOURCES = {
     "ulif",
@@ -108,9 +118,102 @@ def test_no_publication_gate_fields_remain(register: dict) -> None:
 
 
 def test_operator_decisions_are_recorded(register: dict) -> None:
-    ids = {d["id"] for d in register["operator_decisions"]}
-    assert ids == {"d1_content_stays", "d2_teacher_consent", "d3_takedown_via_issues", "d4_no_outreach"}
-    assert {d["date"] for d in register["operator_decisions"]} == {"2026-09-27"}
+    decisions = {d["id"]: d for d in register["operator_decisions"]}
+    assert len(decisions) == len(register["operator_decisions"])
+    assert {key: d["date"] for key, d in decisions.items()} == {
+        "d1_content_stays": "2026-09-27",
+        "d2_teacher_consent": "2026-09-27",
+        "d3_takedown_via_issues": "2026-09-27",
+        "d4_no_outreach": "2026-09-27",
+        "o1_verbatim_use": "2026-10-03",
+        "o3_textbooks_used": "2026-10-03",
+        "d5_permissions_sought": "2026-10-06",
+    }
+    for key in ("o1_verbatim_use", "o3_textbooks_used", "d5_permissions_sought"):
+        assert decisions[key]["url"] == f"{ISSUES_URL}/6321"
+    update = decisions["d5_permissions_sought"]["decision"]
+    assert "d4_no_outreach only for these permissions" in update
+    assert "verbal permission in 2026-10" in update
+    assert "written confirmation pending" in update
+
+
+def test_every_source_has_a_valid_permission_status(sources: list[dict]) -> None:
+    for source in sources:
+        assert source["permission_status"] in PERMISSION_STATUSES, source["id"]
+
+
+def test_schema_rejects_an_invalid_permission_status(register: dict) -> None:
+    broken = copy.deepcopy(register)
+    broken["sources"][0]["permission_status"] = "approved-for-export"
+    errors = list(_validator().iter_errors(broken))
+    assert any(list(e.absolute_path) == ["sources", 0, "permission_status"] for e in errors)
+
+
+def test_schema_requires_permission_status(register: dict) -> None:
+    broken = copy.deepcopy(register)
+    del broken["sources"][0]["permission_status"]
+    messages = [e.message for e in _validator().iter_errors(broken)]
+    assert any("'permission_status' is a required property" in m for m in messages), messages
+
+
+def test_schema_rejects_an_empty_permission_note(register: dict) -> None:
+    broken = copy.deepcopy(register)
+    broken["sources"][0]["permission_note"] = ""
+    errors = list(_validator().iter_errors(broken))
+    assert any(list(e.absolute_path) == ["sources", 0, "permission_note"] for e in errors)
+
+
+def test_stress_data_follows_ulif_permission_and_provenance(sources: list[dict]) -> None:
+    by_id = {s["id"]: s for s in sources}
+    stress = by_id["ukrainian_word_stress"]
+    assert stress["permission_status"] == by_id["ulif"]["permission_status"] == "verbal-granted-written-pending"
+    assert "written confirmation pending" in stress["permission_note"]
+    assert "MIT licence covers only the code" in stress["permission_note"]
+    assert stress["terms"]["licence"]["spdx"] is None  # No MIT grant for the data.
+    assert "no licence in the stress data repository" in stress["terms"]["licence"]["name"]
+    quotes = {q["id"]: q for q in stress["terms"]["quotes"]}
+    assert "by ULIF" in quotes["uws_ulif_provenance"]["quote"]
+    assert quotes["uws_ulif_provenance"]["url"].endswith("/CONTRIBUTING.md")
+    assert 'на основі "Словників України"' in quotes["uws_dictionary_provenance"]["quote"]
+    assert not stress["open_questions"]
+
+
+def test_puls_licence_is_cc_by_nc_sa_4(sources: list[dict]) -> None:
+    puls = next(s for s in sources if s["id"] == "puls")
+    licence = puls["terms"]["licence"]
+    assert licence["name"] == "CC BY-NC-SA 4.0"
+    assert licence["spdx"] == "CC-BY-NC-SA-4.0"
+    assert puls["permission_status"] == "open-licence"
+    assert puls["terms"]["conditions"]["share_alike"] is True
+    assert puls["terms"]["conditions"]["non_commercial"] is True
+    quotes = {q["id"]: q for q in puls["terms"]["quotes"]}
+    verbatim = quotes[licence["verbatim_quote"]]
+    assert "PULS data are distributed under" in verbatim["quote"]
+    assert "(CC BY-NC-SA 4.0)" in verbatim["quote"]
+    assert verbatim["url"] == "https://puls.peremova.org/terms"
+    assert verbatim["read_on"] == "2026-10-06"
+    assert quotes["puls_footer"]["quote"] == "© 2026 ПУЛЬС."
+
+
+def test_textbook_dataset_use_does_not_decide_dataset_licence(register: dict, sources: list[dict]) -> None:
+    textbooks = next(s for s in sources if s["id"] == "textbooks")
+    assert "dataset" in textbooks["appears_in"]
+    assert "C9" in textbooks["appears_note"]
+    assert "#6321" in textbooks["appears_note"]
+    assert textbooks["permission_status"] == "none"
+    question = register["open_questions"][0]
+    assert "Not decided" in question
+    assert "O1/O3" in question and "decided use, not the dataset's licence" in question
+    assert "E6 (dataset licence choice) remains an operator decision" in question
+
+
+def test_dbnary_licence_question_is_resolved(sources: list[dict]) -> None:
+    source = next(s for s in sources if s["id"] == "dmklinger")
+    quote = next(q for q in source["terms"]["quotes"] if q["id"] == "dbnary_licence")
+    assert "Creative Commons Attribution-ShareAlike 3.0" in quote["quote"]
+    assert quote["url"] == "https://kaiko.getalp.org/about-dbnary/"
+    assert quote["read_on"] == "2026-10-06"
+    assert not source["open_questions"]
 
 
 def test_required_sources_present_and_ids_unique(sources: list[dict]) -> None:
@@ -201,3 +304,14 @@ def test_markdown_twin_lists_every_source(sources: list[dict]) -> None:
     text = REGISTER_MD.read_text(encoding="utf-8")
     missing = [s["id"] for s in sources if f"`{s['id']}`" not in text]
     assert not missing, f"permissions-register.md does not list: {missing}"
+
+
+def test_markdown_twin_records_each_permission_status(sources: list[dict]) -> None:
+    text = REGISTER_MD.read_text(encoding="utf-8")
+    sections = text.split("\n### ")[1:]
+    assert len(sections) == len(sources)
+    for source in sources:
+        section = next(s for s in sections if s.splitlines()[0].endswith(f"`{source['id']}`"))
+        assert f"**Permission status:** `{source['permission_status']}`" in section
+        if "permission_note" in source:
+            assert source["permission_note"] in section

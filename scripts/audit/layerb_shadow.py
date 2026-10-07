@@ -731,10 +731,10 @@ def _select_route(
     if norm_reviewer is not None and norm_reviewer != "fixture":
         excluded.add(norm_reviewer)
 
-    # grok/xai is never a QG judge seat (model-assignment rule). cursor routes
-    # are already unsatisfiable: ``normalize_lineage_family("cursor")`` is
-    # UNKNOWN (cursor-Auto), so the ``is not None`` route guard skips them.
-    excluded.add(model_families.Family.XAI.value)
+    # Grok and Cursor Auto are not QG judge identities. Cursor now has a real
+    # author family, so keep reviewer admission explicit instead of relying
+    # on it being unknown to the family normalizer.
+    excluded.update({model_families.Family.XAI.value, model_families.Family.CURSOR.value})
 
     return next(
         (

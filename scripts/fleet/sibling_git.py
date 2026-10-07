@@ -24,6 +24,8 @@ import yaml
 
 from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
 from scripts.orchestration import worktree_claims
+from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS, SafeGitRunner
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
 
 _GIT = "/usr/bin/git"
@@ -192,6 +194,20 @@ class Git:
         ]
 
     def run(self, path: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
+        if args and args[0] in LOCAL_COMMANDS:
+            return safe_git(
+                args,
+                cwd=path,
+                runner=SafeGitRunner(_GIT),
+                env=self.env,
+                capture_output=True,
+                text=True,
+                timeout=120,
+                check=False,
+            )
+        git_dir, common = _git_dir(path)
+        if git_dir != common:
+            raise Refusal("non-local sibling commands require the independent primary checkout")
         return subprocess.run(
             [_GIT, *self.options, "-C", str(path), *args],
             env=self.env,
@@ -208,6 +224,9 @@ class Git:
         return result.stdout if "-z" in args else result.stdout.strip()
 
     def fetch(self, repo: Repository) -> None:
+        git_dir, common = _git_dir(repo.checkout)
+        if git_dir != common:
+            raise Refusal("sibling fetch requires the independent primary checkout")
         args = [
             "-c",
             f"remote.{_FETCH_REMOTE}.url={repo.remote}",
@@ -227,10 +246,16 @@ class Git:
         _safe_config(self, repo.checkout, https=True)
         _https_url(repo.remote, repo.github)
         # Resolve in the parent; no credential material enters other Git verbs.
-        app_environment = {k: os.environ[k] for k in (
-            "LU_AGENT_GITHUB_APP_ID", "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
-            "LU_AGENT_GITHUB_APP_PRIVATE_KEY", "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
-        ) if k in os.environ}
+        app_environment = {
+            k: os.environ[k]
+            for k in (
+                "LU_AGENT_GITHUB_APP_ID",
+                "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+                "LU_AGENT_GITHUB_APP_PRIVATE_KEY",
+                "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+            )
+            if k in os.environ
+        }
         if not any(app_environment.values()):
             raise Refusal("HTTPS transport requires an App installation identity")
         try:
@@ -246,8 +271,14 @@ class Git:
         if identity.source != "app" or not identity.token:
             raise Refusal("HTTPS transport requires an App installation identity")
         try:
-            url = repo.remote if self.https_base_url is None else self.https_base_url + repo.remote.removeprefix("https://github.com")
-            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode("ascii")
+            url = (
+                repo.remote
+                if self.https_base_url is None
+                else self.https_base_url + repo.remote.removeprefix("https://github.com")
+            )
+            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode(
+                "ascii"
+            )
             env = {
                 "PATH": "/usr/bin:/bin",
                 "LANG": "C",
@@ -311,18 +342,28 @@ class Git:
             # silently dropping required filters or attribute transformations.
             env.pop("GIT_CONFIG_GLOBAL")
             env.pop("GIT_CONFIG_NOSYSTEM")
-        result = subprocess.run(
-            [_GIT, "-C", str(path), "config", "--null", "--list", "--show-scope"],
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
+        git_dir, common = _git_dir(path)
+        if git_dir != common:
+            result = safe_git(
+                ["config", "--null", "--list", "--show-scope"], cwd=path,
+                runner=SafeGitRunner(_GIT), env=env, capture_output=True, text=True,
+                timeout=30, check=False,
+            )
+        else:
+            result = subprocess.run(
+                [_GIT, "--no-pager", "-C", str(path), "config", "--null", "--list", "--show-scope"],
+                env=env, capture_output=True, text=True, timeout=30, check=False,
+            )
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
         fields = result.stdout.split("\0")
-        return [(scope, *item.split("\n", 1)) for scope, item in zip(fields[::2], fields[1::2], strict=False) if "\n" in item]
+        return [
+            (scope, *item.split("\n", 1))
+            for scope, item in zip(fields[::2], fields[1::2], strict=False)
+            # The shared runner strips inherited command config. These rows
+            # are therefore its own controls, not installed repository data.
+            if "\n" in item and (git_dir == common or scope != "command")
+        ]
 
 
 @contextmanager
@@ -340,11 +381,19 @@ def _safe_config(git: Git, path: Path, *, https: bool = False) -> None:
             key in {"core.worktree", "core.sshcommand", "core.attributesfile"}
             or (key == "core.bare" and value != "false")
             or key.startswith(("include.", "includeif.", "url."))
-            or key in {
-                "core.gitproxy", "core.alternaterefscommand", "extensions.refstorage",
-                "extensions.partialclone", "gc.recentobjectshook", "gpg.ssh.defaultkeycommand",
+            or key
+            in {
+                "core.gitproxy",
+                "core.alternaterefscommand",
+                "extensions.refstorage",
+                "extensions.partialclone",
+                "gc.recentobjectshook",
+                "gpg.ssh.defaultkeycommand",
             }
-            or (key.startswith("remote.") and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor")))
+            or (
+                key.startswith("remote.")
+                and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor"))
+            )
             # Git resolves remote names before URLs. Reserve our fetch remote
             # entirely; even another URL value would precede a -c override.
             or remote_name == _FETCH_REMOTE
@@ -356,13 +405,22 @@ def _safe_config(git: Git, path: Path, *, https: bool = False) -> None:
             # Inherited helpers are inspected but excluded from execution;
             # repository and command scopes remain untrusted.
             or (
-                key.startswith("credential.") and scope not in {"global", "system"}
+                key.startswith("credential.")
+                and scope not in {"global", "system"}
                 and (https or (key.endswith(".helper") and key != "credential.helper"))
             )
             or (key.startswith("diff.") and key.endswith((".command", ".textconv")))
-            or (key.startswith("gpg.") and key.endswith("program") and key not in {
-                "gpg.program", "gpg.openpgp.program", "gpg.x509.program", "gpg.ssh.program",
-            })
+            or (
+                key.startswith("gpg.")
+                and key.endswith("program")
+                and key
+                not in {
+                    "gpg.program",
+                    "gpg.openpgp.program",
+                    "gpg.x509.program",
+                    "gpg.ssh.program",
+                }
+            )
             or (key.startswith("branch.") and key.endswith(".mergeoptions"))
         ):
             raise Refusal("unsupported redirect, transport, or executable configuration")
@@ -444,8 +502,10 @@ def _checkout_safe(git: Git, checkout: Path, commit: str) -> None:
         if not entry.is_relative_to(checkout) or (entry.is_file() and entry.stat().st_nlink > 1):
             raise Refusal("checkout paths are redirected or shared")
     for source in ([f"--source={commit}"], ["--cached"], []):
-        result = subprocess.run(
-            [_GIT, *git.options, "-C", str(checkout), "check-attr", *source, "-z", "--stdin", "filter"],
+        result = safe_git(
+            ["check-attr", *source, "-z", "--stdin", "filter"],
+            cwd=checkout,
+            runner=SafeGitRunner(_GIT),
             input=paths,
             env=git.env,
             capture_output=True,
@@ -482,13 +542,31 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
     _checkout_safe(git, repo.checkout, fetched)
     if preflight() != old:
         raise Refusal("checkout changed during fetch")
-    added = set(git.text(
-        repo.checkout, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
-        "--name-only", "--diff-filter=A", "-z", old, fetched, "--",
-    ).split("\0")) - {""}
-    ignored = set(git.text(
-        repo.checkout, "ls-files", "--others", "--ignored", "--exclude-standard", "-z",
-    ).split("\0")) - {""}
+    added = set(
+        git.text(
+            repo.checkout,
+            "diff",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--name-only",
+            "--diff-filter=A",
+            "-z",
+            old,
+            fetched,
+            "--",
+        ).split("\0")
+    ) - {""}
+    ignored = set(
+        git.text(
+            repo.checkout,
+            "ls-files",
+            "--others",
+            "--ignored",
+            "--exclude-standard",
+            "-z",
+        ).split("\0")
+    ) - {""}
     if added & ignored:
         raise Refusal("fast-forward would overwrite ignored local files; preserve local work")
     git.text(repo.checkout, "merge", "--ff-only", "--no-edit", "--no-stat", "--no-overwrite-ignore", fetched)
@@ -543,8 +621,10 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
     if not lock_file.is_file():
         raise Refusal("dispatch ownership lock is missing; use the existing cleanup workflow")
     _plain_path(lock_file)
+    reachability_refusal = None
 
     def releasable() -> tuple[bool, str]:
+        nonlocal reachability_refusal
         resolve_repository(repo.key, primary, git)
         _plain_path(target)
         marker, common = _git_dir(target)
@@ -556,24 +636,74 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         if record is None or any(line == "locked" or line.startswith("locked ") for line in record):
             return False, "target is unregistered or locked"
         _safe_config(git, target, https=repo.transport == "https")
-        _checkout_safe(git, target, git.text(target, "rev-parse", "HEAD"))
+        head = git.text(target, "rev-parse", "--verify", "HEAD^{commit}")
+        _checkout_safe(git, target, head)
         _clean(git, target)
-        return True, "registered, clean and unlocked"
+        # A detached worker commit has no branch keeping it reachable after
+        # removal. Task status alone is not proof that its work was pushed.
+        reachability_refusal = "HEAD reachability is unknown"
+        try:
+            if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head):
+                return False, reachability_refusal
+            tasks = primary / "batch_state/tasks"
+            needles = worktree_claims.worktree_claim_needles(target, target)
+            bases = set()
+            for state_file in sorted(tasks.iterdir()):
+                if state_file.suffix != ".json" or worktree_claims.is_superseded_record(state_file):
+                    continue
+                raw = state_file.read_bytes()
+                if not worktree_claims.record_may_claim_worktree(raw, needles):
+                    continue
+                state = json.loads(raw)
+                if not isinstance(state, dict):
+                    return False, reachability_refusal
+                claimed = state.get("worktree_path")
+                if claimed is None:
+                    continue
+                if not isinstance(claimed, str):
+                    return False, reachability_refusal
+                if worktree_claims.resolve_claim_path(claimed, repo_root=repo.checkout) != target:
+                    continue
+                if "worktree_base_sha" in state:
+                    base = state["worktree_base_sha"]
+                    if not isinstance(base, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", base):
+                        return False, reachability_refusal
+                    if git.text(target, "rev-parse", "--verify", f"{base}^{{commit}}") != base:
+                        return False, reachability_refusal
+                    bases.add(base)
+            if len(bases) > 1:
+                return False, reachability_refusal
+            if bases == {head}:
+                reachability_refusal = None
+                return True, "registered, clean, unlocked and at recorded base"
+            # Only the validated canonical origin's fetched refs count; local
+            # branches, tags, other remotes and FETCH_HEAD do not prove a push.
+            refs = git.text(
+                repo.checkout, "for-each-ref", "--format=%(refname)", "--contains", head, "refs/remotes/origin/"
+            ).splitlines()
+            if any(ref.startswith("refs/remotes/origin/") and ref != "refs/remotes/origin/HEAD" for ref in refs):
+                reachability_refusal = None
+                return True, "registered, clean, unlocked and reachable from canonical remote"
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+            return False, reachability_refusal
+        reachability_refusal = "HEAD is neither the recorded base nor reachable from canonical remote refs (unpushed)"
+        return False, reachability_refusal
 
     result = worktree_claims.remove_unclaimed_worktree(
         target,
         repo_root=repo.checkout,
         reason="closed sibling maintenance",
+        control_root=primary,
         owner_task_id=None,
         force=False,
         releasable=releasable,
         tasks_dir=primary / "batch_state/tasks",
         lock_dir=lock_dir,
         lock_timeout_s=0,
-        git_runner=git.run,
+        git_runner=SafeGitRunner(_GIT),
     )
     if result.action != "removed":
-        raise Refusal("cleanup policy refused or removal failed; local work preserved")
+        raise Refusal(f"{reachability_refusal or 'cleanup policy refused or removal failed'}; local work preserved")
     return {"repo": repo.key, "verb": "worktree-remove", "removed": True}
 
 
@@ -587,7 +717,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Maintain a registered sibling with three closed Git verbs.\nUse from this repository root; raw sibling Git and arbitrary Git arguments receive no exemption.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         allow_abbrev=False,
-        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; scripts/config/fleet_repos.yaml; #9309.",
+        epilog=f"Examples (use the shared project's absolute interpreter from a dispatch root):\n{examples()}\n\nOutputs: JSON on stdout; sync-main fetches and fast-forwards main; worktree-remove removes one clean, unlocked, unclaimed dispatch tree without force, only at its recorded base or reachable from canonical origin's fetched refs.\nExit codes: 0 success; 2 invalid invocation or refused maintenance.\nRelated: docs/runbooks/sibling-git.md; scripts/config/fleet_repos.yaml; #9309; #9742.",
     )
     parser.add_argument(
         "verb",

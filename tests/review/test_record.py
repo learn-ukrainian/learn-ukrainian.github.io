@@ -208,7 +208,13 @@ class World:
         )
 
     def record(
-        self, made: dict[str, Any], *, task_id: str = "review-claude", register: bool = True, **kwargs: Any
+        self,
+        made: dict[str, Any],
+        *,
+        task_id: str = "review-claude",
+        register: bool = True,
+        document_path: Path | None = None,
+        **kwargs: Any,
     ) -> record.Outcome:
         if register and kwargs.get("seed_id"):
             self.register_unit(kwargs["seed_id"], made["n"])
@@ -219,7 +225,7 @@ class World:
         return record.record_return(
             made["review"],
             manifest_path=self.manifest(made["n"]),
-            document_path=self.expanded(made["n"]),
+            document_path=self.expanded(made["n"]) if document_path is None else document_path,
             ledger_path=made["ledger"],
             task_id=task_id,
             repo_root=self.root,
@@ -690,6 +696,14 @@ def test_two_concurrent_records_at_the_budget_edge_accept_exactly_one(
     _revise(world)
     _revise(world)  # two rounds spent: one more is allowed
     contenders = [world.make_return(2, [finding("F-01", severity="MAJOR")]) for _ in range(2)]
+    # One shared expanded lesson. ``World.record`` rewrites it with
+    # ``Path.write_text`` on every call. Concurrent contenders then race: one
+    # truncates the file while the other validates, and ``validate_review``
+    # reports ``lesson_unreadable`` plus ``location_not_in_lesson`` (an unreadable
+    # document leaves ``units`` empty, and the location check still runs) before
+    # the transaction prepends ``budget_terminal``. The document is an input, so
+    # it is written once, before either contender runs.
+    document = world.expanded(2)
     barrier = threading.Barrier(2, timeout=30)
     checked = record._rejection_codes
 
@@ -699,7 +713,7 @@ def test_two_concurrent_records_at_the_budget_edge_accept_exactly_one(
         return result
 
     monkeypatch.setattr(record, "_rejection_codes", synchronized)
-    outcomes = _run_together([lambda made=made: world.record(made) for made in contenders])
+    outcomes = _run_together([lambda made=made: world.record(made, document_path=document) for made in contenders])
     assert all(isinstance(outcome, record.Outcome) for outcome in outcomes), outcomes
     assert sorted(outcome.accepted for outcome in outcomes) == [False, True]
     [refused] = [outcome for outcome in outcomes if not outcome.accepted]

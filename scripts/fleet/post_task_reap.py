@@ -18,6 +18,7 @@ Default mode is dry-run; pass --apply to delete anything.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import subprocess
@@ -26,9 +27,9 @@ from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
-from scripts.fleet import pr_identity
+from scripts.fleet import ignored_task_output, pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
-from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _DISPATCH_WORKTREES_ROOT = ROOT / ".worktrees" / "dispatch"
@@ -77,8 +78,8 @@ def _run_git(
     timeout: int | None = 30,
     check: bool = False,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
+    return safe_git(
+        args,
         cwd=cwd,
         capture_output=True,
         text=True,
@@ -100,14 +101,14 @@ def _load_task_state(tasks_dir: Path, task_id: str) -> dict[str, Any] | None:
     return data if isinstance(data, dict) else None
 
 
-def _worktree_path_from_state(state: dict[str, Any]) -> Path | None:
+def _worktree_path_from_state(state: dict[str, Any], *, repo_root: Path) -> Path | None:
     """Return the bound worktree path recorded in task state, if any."""
     for key in ("worktree_path", "cwd"):
         value = state.get(key)
         if value:
             try:
-                return Path(str(value)).resolve()
-            except OSError:
+                return worktree_claims.resolve_claim_path(str(value), repo_root=repo_root)
+            except (OSError, ValueError, RuntimeError):
                 continue
     return None
 
@@ -270,13 +271,7 @@ def _remove_acp_runtime_worktree(
     def releasable() -> tuple[bool, str]:
         if not _is_under_acp_runtime_root(path, repo_root):
             return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-        ok, refusal, _artifacts = preserve_worktree_artifacts(
-            path,
-            primary=worktree_claims.control_plane_root(repo_root),
-            task_id=task_id,
-            tasks_dir=tasks_dir,
-        )
-        return ok, refusal
+        return True, ""
 
     removal = worktree_claims.remove_unclaimed_worktree(
         path,
@@ -290,7 +285,13 @@ def _remove_acp_runtime_worktree(
         tasks_dir=tasks_dir,
     )
     if removal.action == "skipped":
-        return {"path": str(path), "action": "retained", "reason": removal.reason, "error": None}
+        return {
+            "path": str(path),
+            "action": "retained",
+            "reason": removal.reason,
+            "error": None,
+            **({"preserved_artifacts": removal.preserved_artifacts} if removal.preserved_artifacts is not None else {}),
+        }
     if removal.action == "removed" and path.exists():
         return {
             "path": str(path),
@@ -298,7 +299,13 @@ def _remove_acp_runtime_worktree(
             "reason": reason,
             "error": f"worktree path still exists after remove: {path}",
         }
-    return {"path": str(path), "action": removal.action, "reason": reason, "error": removal.error}
+    return {
+        "path": str(path),
+        "action": removal.action,
+        "reason": reason,
+        "error": removal.error,
+        "preserved_artifacts": removal.preserved_artifacts,
+    }
 
 
 def _parse_state_pid(state: dict[str, Any]) -> int | None:
@@ -319,8 +326,10 @@ def _reap_main_worktree(
     state: dict[str, Any],
     repo_root: Path,
     apply: bool,
+    tasks_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Evaluate and optionally reap the dispatch worktree bound to task_id."""
+    tasks_dir = default_tasks_dir() if tasks_dir is None else tasks_dir
     status = state.get("status")
     status_str = str(status) if status is not None else None
 
@@ -339,7 +348,7 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    bound_path = _worktree_path_from_state(state)
+    bound_path = _worktree_path_from_state(state, repo_root=repo_root)
     if bound_path is None:
         return {
             "path": None,
@@ -377,9 +386,20 @@ def _reap_main_worktree(
     except ValueError:  # guarded above; retain if the filesystem changed.
         relative = ()
     expected_agent = str(state.get("agent") or "")
+    reuse_matches = []
+    if len(relative.parts) == 2 and relative.parts[1] != task_id:
+        try:
+            reuse_matches = ignored_task_output.matching_worktree_records(
+                bound_path, tasks_dir, repo_root=repo_root, publish_cache=False
+            )
+            _, creator = ignored_task_output.reused_worktree_creator(reuse_matches, bound_path, repo_root=repo_root)
+            if creator != state or creator.get("task_id") != task_id or len(reuse_matches) < 2:
+                reuse_matches = []
+        except (OSError, ValueError, RuntimeError):
+            reuse_matches = []
     if (
         len(relative.parts) != 2
-        or relative.parts[1] != task_id
+        or (relative.parts[1] != task_id and not reuse_matches)
         or not expected_agent
         or relative.parts[0] != expected_agent
     ):
@@ -472,6 +492,12 @@ def _reap_main_worktree(
                 "error": None,
             }
 
+    retrieval = _retrieve_retained_reuse(
+        task_id, state, bound_path, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply
+    )
+    if retrieval is not None:
+        return retrieval
+
     row = _reap_via_canonical(
         repo_root=repo_root,
         bound_path=bound_path,
@@ -505,6 +531,56 @@ def _reap_main_worktree(
             branch=row.get("branch") or f"{expected_agent}/{task_id}",
         )
     return row
+
+
+def _retrieve_retained_reuse(
+    task_id: str, state: dict[str, Any], worktree: Path, *, tasks_dir: Path, repo_root: Path, apply: bool
+) -> dict[str, Any] | None:
+    """Retrieve a retained creator's bytes without relaxing any removal claim."""
+    try:
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        if len(matches) < 2 or not any(record.get("keep_worktree") for _, record in matches):
+            return None
+        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        if creator != state or creator.get("task_id") != task_id:
+            raise ValueError("retained reuse output belongs to its creator")
+        if not all(reap_worktrees._pid_proven_absent(record) for _, record in matches):
+            raise ValueError("retained reuse retrieval requires all recorded processes gone")
+        receipt = creator.get("preserved_artifacts") or {
+            "owner": task_id,
+            "location": f"batch_state/preserved/{task_id}/<retrieval-attempt>",
+        }
+        reason = "would retrieve retained reuse output; creator must release retention before reap"
+        if apply:
+            with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+                current = ignored_task_output.matching_worktree_records(
+                    worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+                )
+                if current != matches or not all(reap_worktrees._pid_proven_absent(record) for _, record in current):
+                    raise ValueError("retained reuse records or processes changed")
+                _, reason, receipt = ignored_task_output.preserve_worktree_artifacts(
+                    worktree,
+                    primary=worktree_claims.control_plane_root(repo_root),
+                    task_id=task_id,
+                    tasks_dir=tasks_dir,
+                    repo_root=repo_root,
+                )
+        return {
+            "path": str(worktree),
+            "action": "retained",
+            "reason": reason,
+            "error": None,
+            "preserved_artifacts": receipt,
+        }
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+        return {
+            "path": str(worktree),
+            "action": "retained",
+            "reason": "retained reuse retrieval refused: ownership, record or process proof unavailable",
+            "error": None,
+        }
 
 
 def _reap_via_canonical(
@@ -545,6 +621,7 @@ def _reap_via_canonical(
         "recovery_ref": row.recovery_ref,
         "branch": row.branch,
         "needs_attention": row.needs_attention,
+        "preserved_artifacts": row.preserved_artifacts,
     }
 
 
@@ -650,6 +727,7 @@ def _reap_terminal_without_pr(
         "error": result.error,
         "pr": result.pr,
         "recovery_ref": result.recovery_ref,
+        "preserved_artifacts": result.preserved_artifacts,
     }
 
 
@@ -779,6 +857,7 @@ def post_task_reap(
     repo_root: Path = ROOT,
     apply: bool = False,
     include_acp_runtime: bool = True,
+    release_retention: bool = False,
 ) -> dict[str, Any]:
     """Return a reap report for ``task_id``; delete only when ``apply`` is True."""
     tasks_dir = tasks_dir or default_tasks_dir()
@@ -793,17 +872,37 @@ def post_task_reap(
                 "action": "retained",
                 "reason": "no task state file found",
                 "error": None,
+                "preserved_artifacts": {
+                    "retention_disposition": "retained",
+                    "owner": "infra lane",
+                    "next_condition": "establish canonical task attribution before removal",
+                },
             },
             "acp_runtimes": [],
-            "errors": [],
+            "errors": ["retention release requires an existing task state"] if release_retention else [],
             "needs_attention": [],
         }
+
+    if release_retention:
+        refusal = _release_retention(task_id, tasks_dir=tasks_dir, repo_root=repo_root, apply=apply)
+        if refusal:
+            return {
+                "task_id": task_id,
+                "task_status": state.get("status"),
+                "apply": apply,
+                "main_worktree": {"action": "retained", "reason": refusal, "error": refusal},
+                "acp_runtimes": [],
+                "errors": [refusal],
+                "needs_attention": [],
+            }
+        state = _load_task_state(tasks_dir, task_id)
 
     main_result = _reap_main_worktree(
         task_id=task_id,
         state=state,
         repo_root=repo_root,
         apply=apply,
+        tasks_dir=tasks_dir,
     )
     acp_results: list[dict[str, Any]] = []
     if include_acp_runtime:
@@ -840,9 +939,172 @@ def post_task_reap(
     }
 
 
+def _finalized_reuse_proof(
+    worktree: Path, matches: list[tuple[Path, dict[str, Any]]], *, repo_root: Path
+) -> dict[str, Any] | None:
+    """A done successor must have shipped the checkout's exact head; status alone is insufficient."""
+    head = _run_git(["rev-parse", "HEAD"], cwd=worktree)
+    if head.returncode != 0:
+        return None
+    for _, record in matches:
+        if (
+            record.get("worktree_reused") is True
+            and record.get("status") == "done"
+            and record.get("final_branch_head_commit") == head.stdout.strip()
+            and reap_worktrees._needs_finalize_claim_proven_settled(repo_root, record) is not None
+        ):
+            return record
+    return None
+
+
+def _release_retention(task_id: str, *, tasks_dir: Path, repo_root: Path, apply: bool) -> str | None:
+    """Release a creator's retrieved output and every settled reused successor.
+
+    Worktree lock precedes all task-state locks. Validate the entire cohort
+    before any writes; publish successors first and owner last so an interrupted
+    release retains the owner's keep flag. Each record uses atomic replacement.
+    """
+    if not apply:
+        return "retention release requires --apply"
+    try:
+        state = _load_task_state(tasks_dir, task_id)
+        worktree = _worktree_path_from_state(state or {}, repo_root=repo_root)
+        if worktree is None or not worktree.exists():
+            return "retention release requires an existing bound worktree"
+        # Network merge proof belongs outside the worktree lock. Recheck the
+        # complete records, checkout head and worker absence under the locks.
+        before = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        finalized = None
+        if state.get("status") == "needs_finalize":
+            ignored_task_output.reused_worktree_creator(before, worktree, repo_root=repo_root)
+            finalized = _finalized_reuse_proof(worktree, before, repo_root=repo_root)
+        with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo_root)):
+            matches = ignored_task_output.matching_worktree_records(
+                worktree,
+                tasks_dir,
+                repo_root=repo_root,
+                publish_cache=worktree_claims.identity_cache_publication_allowed(worktree, tasks_dir),
+            )
+            if matches != before:
+                return "retention release refused: task records changed"
+            if len(matches) > 1:
+                path, record = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+            else:
+                path, record = matches[0] if matches else (None, {})
+            if path is None or record.get("task_id") != task_id:
+                return "retention release requires unambiguous owner attribution"
+            receipt = record.get("preserved_artifacts", {})
+            if (
+                not isinstance(receipt, dict)
+                or not receipt.get("retrieval_proof_sha256")
+                or receipt.get("task_id") != task_id
+                or receipt.get("run_nonce") != record.get("run_nonce")
+            ):
+                return "retention release requires an existing passing retrieval receipt"
+            with contextlib.ExitStack() as stack:
+                for member_path, member in sorted(matches):
+                    stack.enter_context(ignored_task_output.artifacts.task_state_lock(member_path))
+                    if json.loads(member_path.read_text(encoding="utf-8")) != member:
+                        return "retention release refused: task records changed"
+                    if (
+                        not isinstance(member.get("task_id"), str)
+                        or not member["task_id"].strip()
+                        or not isinstance(member.get("run_nonce"), str)
+                        or not member["run_nonce"].strip()
+                    ):
+                        return "retention release refused: task run identity unavailable"
+                if (
+                    ignored_task_output.matching_worktree_records(
+                        worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+                    )
+                    != matches
+                ):
+                    return "retention release refused: task records changed"
+
+                def settled_creator(current: dict[str, Any]) -> bool:
+                    # AC-03: a merged exact-head done successor completes this
+                    # reuse case only. Never rewrite the creator's status.
+                    head = _run_git(["rev-parse", "HEAD"], cwd=worktree)
+                    return bool(
+                        current == record
+                        and finalized is not None
+                        and head.returncode == 0
+                        and head.stdout.strip() == finalized.get("final_branch_head_commit")
+                        and reap_worktrees._pid_proven_absent(current)
+                        and reap_worktrees._pid_proven_absent(finalized)
+                    )
+
+                refusal = worktree_claims.owner_release_refusal(
+                    worktree,
+                    owner_task_id=task_id,
+                    tasks_dir=tasks_dir,
+                    repo_root=repo_root,
+                    settled_claim=settled_creator,
+                )
+                if refusal:
+                    return refusal
+                primary = worktree_claims.control_plane_root(repo_root)
+                digest = ignored_task_output.verify_retrieval(primary, receipt)
+                files = ignored_task_output._ignored_output_files(worktree, primary, record)
+                if digest != receipt["retrieval_proof_sha256"] or digest != ignored_task_output._content_digest(
+                    worktree, files
+                ):
+                    return "retention release requires retrieval of the current output bytes"
+                release = {"owner": task_id, "run_nonce": record["run_nonce"], "retrieval_proof_sha256": digest}
+                if finalized is not None:
+                    release["finalized_by"] = {
+                        "task_id": finalized["task_id"],
+                        "run_nonce": finalized["run_nonce"],
+                        "head_sha": finalized["final_branch_head_commit"],
+                    }
+                # A successor-only keep claim needs the same interruption guard:
+                # reserve the creator before clearing successors, then release it last.
+                if not record.get("keep_worktree") and any(member.get("keep_worktree") for _, member in matches):
+                    reaper_lifecycle._atomic_write(path, dict(record, keep_worktree=True))
+                # The owner is the final commit marker for a multi-record release.
+                ordered = [match for match in matches if match[0] != path] + [(path, record)]
+                for member_path, member in ordered:
+                    if member_path != path and not member.get("keep_worktree"):
+                        continue
+                    member_receipt = dict(receipt)
+                    member_receipt.update(
+                        {
+                            "owner": task_id,
+                            "retrieval_owner": {"task_id": task_id, "run_nonce": record["run_nonce"]},
+                            "task_id": member["task_id"],
+                            "run_nonce": member["run_nonce"],
+                            "retention_disposition": "released",
+                            "next_condition": "none",
+                            "retention_release": release,
+                        }
+                    )
+                    updated = dict(member, keep_worktree=False, preserved_artifacts=member_receipt)
+                    reaper_lifecycle._atomic_write(member_path, updated)
+        return None
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        return "retention release refused: owner or retrieval proof unavailable"
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.fleet.post_task_reap --task-id example
+  .venv/bin/python -m scripts.fleet.post_task_reap --task-id example --release-retention --apply
+Outputs: JSON disposition; --apply updates retention receipts and invokes the common reaper.
+Exit codes: 0 = report without errors (may retain); 1 = release or reap error.
+Related: #9934; scripts/orchestration/reap_worktrees.py; docs/runbooks/worktree-cleanup.md
+""",
+    )
     parser.add_argument("--task-id", required=True, help="Task id whose worktree should be reaped")
+    parser.add_argument(
+        "--release-retention",
+        action="store_true",
+        help="Release creator and settled reused successors after current-byte retrieval (requires --apply; default: off)",
+    )
     parser.add_argument(
         "--apply",
         action="store_true",
@@ -874,6 +1136,7 @@ def main(argv: list[str] | None = None) -> int:
         repo_root=args.repo_root,
         apply=args.apply,
         include_acp_runtime=args.include_acp_runtime,
+        release_retention=args.release_retention,
     )
 
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

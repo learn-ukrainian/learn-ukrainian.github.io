@@ -17,12 +17,29 @@ import json
 import os
 import posixpath
 import sqlite3
+import sys
 import time
 import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
 # matching scripts/delegate.py (Claude CF #5649 r12 F001).
@@ -371,11 +388,12 @@ def _pid_matches_task(
 
     Returns:
         True: Confirmed match (environ, cmdline, or cwd positively verified).
-        False: Confirmed mismatch (all probes inspected without error/denial,
-               and no task identity marker matched; or process is dead).
+        False: Confirmed mismatch (every probe returned readable, non-empty
+               evidence and no task identity marker matched; or process is dead).
         None: Unknown identity (inspection unavailable, probe missing, or denied,
-              e.g. /proc missing, FileNotFoundError, PermissionError, or cwd
-              resolution failure while process remains alive).
+              e.g. /proc missing, FileNotFoundError, PermissionError, a readable
+              but empty environ or cmdline, or cwd resolution failure while the
+              process remains alive).
               Callers must preserve claim protection when identity is unknown.
     """
     if pid <= 0:
@@ -405,26 +423,39 @@ def _pid_matches_task(
     task_bytes = task_id.encode("utf-8")
     safe_task_id = _safe_task_state_name(task_id)
 
-    # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID
+    # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID.
+    # No non-empty entries is the exec window: begin_new_exec closes Popen's
+    # pipe before the new environment is installed. That is not a mismatch.
     try:
         env_raw = (proc_dir / "environ").read_bytes()
-        expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
-        if expected_env in env_raw.split(b"\0"):
-            return True
+        if not env_raw.strip(b"\0"):
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
+        else:
+            expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
+            if expected_env in env_raw.split(b"\0"):
+                return True
     except OSError:
         if not _pid_alive(pid):
             return False
         evidence_unavailable = True
 
-    # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>
+    # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>.
+    # No non-empty parts is the same exec window, not a confirmed mismatch.
     try:
         cmd_raw = (proc_dir / "cmdline").read_bytes()
         parts = [p for p in cmd_raw.split(b"\0") if p]
-        for i, part in enumerate(parts):
-            if part == b"--task-id" and i + 1 < len(parts) and parts[i + 1] == task_bytes:
-                return True
-            if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
-                return True
+        if not parts:
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
+        else:
+            for i, part in enumerate(parts):
+                if part == b"--task-id" and i + 1 < len(parts) and parts[i + 1] == task_bytes:
+                    return True
+                if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
+                    return True
     except OSError:
         if not _pid_alive(pid):
             return False
@@ -586,7 +617,7 @@ class OwnershipLedger:
         self.process_matches_task = process_matches_task
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
+    def _connect(self, *, read_only: bool = False) -> SQLiteConnection:
         conn = cp_connect(
             StoreId.WRITE_OWNERSHIP,
             path=self.path,
@@ -622,7 +653,7 @@ class OwnershipLedger:
             )
         return conn
 
-    def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
+    def _reconcile_stale(self, conn: SQLiteConnection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
             "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"

@@ -31,6 +31,8 @@ from scripts.lexicon.runner.ulif_dictua_parse import (
     parse_dictua_envelope,
     summarize_artifacts,
 )
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PHASE = "offline_reduce"
 DEFAULT_CHUNK_SIZE = 25
@@ -39,19 +41,18 @@ DEFAULT_CHUNK_SIZE = 25
 DEFAULT_REDUCE_LEASE_TTL_SECONDS = 60.0
 
 
-def open_raw_cache_ro(path: Path) -> sqlite3.Connection:
+def open_raw_cache_ro(path: Path) -> SQLiteConnection:
     """Open network-cache.sqlite read-only without the exclusive writer lock."""
     resolved = Path(path).resolve()
     if not resolved.is_file():
         raise FileNotFoundError(resolved)
-    uri = f"file:{resolved.as_posix()}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True)
+    conn = _open_readonly(resolved)
     conn.execute("PRAGMA query_only = ON")
     conn.row_factory = sqlite3.Row
     return conn
 
 
-def build_lemma_request_index(conn: sqlite3.Connection) -> dict[str, str]:
+def build_lemma_request_index(conn: SQLiteConnection) -> dict[str, str]:
     """Map lemma → request_key from ``raw_cache.meta_json`` (no body decompress)."""
     index: dict[str, str] = {}
     for request_key, meta_json in conn.execute("SELECT request_key, meta_json FROM raw_cache"):
@@ -67,7 +68,7 @@ def build_lemma_request_index(conn: sqlite3.Connection) -> dict[str, str]:
 
 
 def load_raw_envelope(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     request_key: str,
 ) -> tuple[dict[str, Any], str]:
     """Return (envelope_dict, body_sha256) for one request_key."""
@@ -167,7 +168,7 @@ def _write_artifact_atomic(path: Path, artifact: dict[str, Any]) -> str:
 
 
 def reduce_lemma(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     lemma: str,
     request_key: str | None,

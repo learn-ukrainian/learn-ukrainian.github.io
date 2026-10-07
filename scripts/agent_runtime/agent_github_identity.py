@@ -26,6 +26,8 @@ from typing import Any
 
 import jwt
 
+from scripts.common.github_client import http_open
+
 _GITHUB_API_URL = "https://api.github.com"
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _GIT_TIMEOUT_SECONDS = 30
@@ -125,7 +127,7 @@ def revoke_installation_token(
             },
             method="DELETE",
         )
-        with _restricted_opener(ssl_context).open(request, timeout=15) as response:
+        with http_open(request, opener=_restricted_opener(ssl_context).open, timeout=15) as response:
             if response.status != 204:
                 raise ValueError("unexpected revocation response")
     except Exception:
@@ -174,7 +176,7 @@ def mint_installation_token(
     )
     try:
         open_request = urllib.request.urlopen if permissions is None else _restricted_opener(ssl_context).open
-        with open_request(request, timeout=15) as response:
+        with http_open(request, opener=open_request, timeout=15) as response:
             payload: dict[str, Any] = json.loads(response.read().decode("utf-8"))
         if not isinstance(payload, dict):
             raise ValueError("invalid response")

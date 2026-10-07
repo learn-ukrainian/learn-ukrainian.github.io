@@ -11,6 +11,7 @@ import sqlite3
 import subprocess
 import threading
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -162,7 +163,7 @@ def patch_gh(
             return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     return calls
 
 
@@ -230,7 +231,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         def fail_copy(_source, _destination):
             raise OSError("injected reaper copy failure")
 
-        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+        monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -245,7 +246,7 @@ def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, c
         assert not worktree.exists()
         assert state["preserved_artifacts"]["count"] == 1
         assert (
-            Path(state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
+            (repo / state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
         ).read_bytes() == b"independent evidence\x00\xff"
 
 
@@ -405,10 +406,16 @@ def test_needs_finalize_claim_proof_requires_a_proven_merge_of_the_recorded_head
     settled: bool,
 ) -> None:
     monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: (states, error))
-    record = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
+    record = {
+        "task_id": "t1",
+        "worktree_branch": "claude/x",
+        "final_branch_head_commit": "abc",
+        "pid": _dead_pid(),
+        "run_nonce": "proof-attempt",
+    }
 
     assert (rw._needs_finalize_claim_proven_settled(tmp_path, record) is not None) is settled
-    for missing in ("task_id", "worktree_branch", "final_branch_head_commit"):
+    for missing in ("task_id", "worktree_branch", "final_branch_head_commit", "run_nonce"):
         assert rw._needs_finalize_claim_proven_settled(tmp_path, {**record, missing: None}) is None
 
 
@@ -422,7 +429,12 @@ def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dea
     monkeypatch.setattr(
         rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None)
     )
-    record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
+    record: dict[str, Any] = {
+        "task_id": "t1",
+        "worktree_branch": "claude/x",
+        "final_branch_head_commit": "abc",
+        "run_nonce": "proof-attempt",
+    }
     if bad_pid != "missing":
         record["pid"] = bad_pid
 
@@ -452,6 +464,7 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
         repo,
         "impl-9230-r3",
         status="needs_finalize",
+        run_nonce="proof-attempt",
         worktree_path=str(worktree),
         worktree_branch="claude/impl-9230",
         final_branch_head_commit=head,
@@ -473,9 +486,11 @@ def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
     assert not any(lookups_under_lock)
 
 
+@pytest.mark.parametrize("changed_field", ["final_branch_head_commit", "run_nonce", "pid"])
 def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    changed_field: str,
 ) -> None:
     """The record is re-validated against the precomputed proof under the lock; a changed head keeps the claim."""
     repo = init_repo(tmp_path)
@@ -484,20 +499,26 @@ def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
     patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
     fields = {
         "status": "needs_finalize",
+        "run_nonce": "proof-attempt",
         "worktree_path": str(worktree),
         "worktree_branch": "claude/impl-9230",
         "final_branch_head_commit": head,
         "pid": _dead_pid(),
     }
     _write_task_record(repo, "impl-9230-r3", **fields)
-    real_query = rw._query_pr_states
+    from contextlib import contextmanager
 
-    def query_then_record_moves_on(repo_root: Path, branch: str) -> Any:
-        result = real_query(repo_root, branch)
-        _write_task_record(repo, "impl-9230-r3", **{**fields, "final_branch_head_commit": "f" * 40})
-        return result
+    real_lock = worktree_claims.worktree_lock
 
-    monkeypatch.setattr(rw, "_query_pr_states", query_then_record_moves_on)
+    @contextmanager
+    def lock_after_replacement(path, **kwargs):
+        if path == worktree:
+            replacement = _dead_pid() + 1 if changed_field == "pid" else "f" * 40
+            _write_task_record(repo, "impl-9230-r3", **{**fields, changed_field: replacement})
+        with real_lock(path, **kwargs):
+            yield
+
+    monkeypatch.setattr(worktree_claims, "worktree_lock", lock_after_replacement)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -733,11 +754,11 @@ def test_merged_worktree_is_kept_while_its_dispatch_lock_is_held(
     assert worktree.exists()
 
 
-def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
+def test_merged_worktree_with_real_untracked_venv_is_retained(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Ignored worker environments do not defeat a fully qualified P0 reap."""
+    """A real environment is non-disposable even when its branch is merged."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/venv-residue")
     venv_file = worktree / ".venv" / "bin" / "python"
@@ -746,13 +767,13 @@ def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
     patch_gh(monkeypatch, {"codex/venv-residue": [{"number": 6482, "state": "MERGED"}]})
 
     assert "?? .venv/bin/python" in git(worktree, "status", "--porcelain", "-uall")
-    assert rw._worktree_clean(worktree) is True
+    assert rw._worktree_clean(worktree) is False
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
-    assert result.action == "removed"
-    assert result.reason == "PR #6482 MERGED"
-    assert not worktree.exists()
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert venv_file.read_text() == "worker environment residue\n"
     assert_main_checkout_unchanged(repo)
 
 
@@ -919,6 +940,9 @@ def test_pushed_origin_clean_worktree_is_removed(
     git(worktree, "add", "pushed.txt")
     git(worktree, "commit", "-m", "feat: pushed")
     git(worktree, "push", "-u", "origin", "codex/pushed")
+    # This case isolates remote containment; fixture push-hook subprocesses
+    # must not replace that decision with incidental host process activity.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {})
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, merged_pr_only=False)
@@ -1396,6 +1420,102 @@ def test_class_b_settled_task_removed(
     assert not worktree_path.exists()
 
 
+@pytest.mark.parametrize("status", ["done", "failed", "no_deliverable"])
+def test_class_b_unavailable_activity_probe_retains(tmp_path, monkeypatch, status):
+    import hashlib
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    worktree = repo / ".worktrees/dispatch/codex/unavailable-task"
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
+    result_file = repo / "batch_state/tasks/unavailable-task.result"
+    result_file.parent.mkdir(parents=True)
+    result_file.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    output = worktree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored\x00\xff")
+    _write_task_record(
+        repo,
+        "unavailable-task",
+        status=status,
+        run_nonce="attempt",
+        pid=_dead_pid(),
+        worktree_path=str(worktree),
+        worktree_reused=False,
+        result_file=str(result_file),
+        result_sha256=hashlib.sha256(result_file.read_bytes()).hexdigest(),
+    )
+    record = result_file.with_suffix(".json")
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result_file, output)]
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+    patch_gh(monkeypatch, {})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), merged_pr_only=False), worktree)
+
+    assert result.action == "skipped", result
+    assert "probe unavailable" in result.reason, result.reason
+    assert worktree.exists()
+    assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result_file, output)] == before
+
+
+@pytest.mark.parametrize("caller", ["scheduled", "success", "guarded"])
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_reap_callers_interrupted_retention_preserves_bytes(tmp_path, monkeypatch, caller, status):
+    import hashlib
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    tree = add_worktree(repo, "codex/interrupted", path=repo / ".worktrees/dispatch/codex/interrupted")
+    (repo / ".git/info/exclude").write_text("batch_state/\n.cache/\n.worktrees/\n")
+    output = tree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    _write_task_record(
+        repo,
+        "interrupted",
+        status=status,
+        run_nonce="attempt",
+        pid=_dead_pid(),
+        worktree_path=str(tree),
+        keep_worktree=True,
+    )
+    record = repo / "batch_state/tasks/interrupted.json"
+    result = record.with_suffix(".result")
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    state = json.loads(record.read_text())
+    state.update(result_file=str(result), result_sha256=hashlib.sha256(result.read_bytes()).hexdigest())
+    record.write_text(json.dumps(state))
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    patch_gh(monkeypatch, {"codex/interrupted": []})
+    for _ in range(2):
+        if caller == "scheduled":
+            row = result_for(rw.reap_worktrees(repo_root=repo, apply=True), tree)
+        elif caller == "success":
+            row = rw.reap_success_worktree(repo_root=repo, worktree_path=tree, reason="settled dispatch", apply=True)
+        else:
+            row = worktree_claims.remove_unclaimed_worktree(
+                tree,
+                repo_root=repo,
+                reason="caller qualification",
+                owner_task_id=None,
+            )
+        assert row.action == "skipped", row
+        assert row.reason and tree.exists()
+        after = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+        assert after[1:] == before[1:]
+        current = json.loads(record.read_text())
+        receipt = current.pop("preserved_artifacts", None)
+        assert current == state
+        if receipt:
+            assert after[0] != before[0]
+            assert receipt["retention_disposition"] == "retained"
+            assert receipt["owner"] == "interrupted" and receipt["next_condition"]
+            assert receipt["retrieval_proof_sha256"] == receipt["content_sha256"]
+            copied = repo / receipt["location"] / ".cache/output.bin"
+            assert hashlib.sha256(copied.read_bytes()).hexdigest() == before[2]
+
+
 def test_class_b_fail_safe_skips(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -1495,6 +1615,8 @@ def test_open_pr_matching_origin_is_not_reaped(
     git(worktree, "add", "wip.txt")
     git(worktree, "commit", "-m", "wip")
     git(worktree, "push", "-u", "origin", "codex/open-pr")
+    # PR precedence is the subject here; liveness refusals have separate tests.
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/open-pr": [{"number": 99, "state": "OPEN"}]},
@@ -2548,7 +2670,8 @@ def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label,
     caller reads an empty list as permission to DELETE the worktree. That was
     a destructive fail-open on malformed input.
     """
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2559,7 +2682,8 @@ def test_query_pr_states_reports_unreadable_rows_as_an_error(monkeypatch, label,
 def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> None:
     """An empty list is a real answer (no PR), not an unknown -- reaping must
     still be possible or nothing would ever be cleaned up."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout("[]"))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout("[]"))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2569,7 +2693,8 @@ def test_query_pr_states_still_reports_a_genuinely_empty_list(monkeypatch) -> No
 
 def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
     payload = json.dumps([{"number": 7120, "state": "OPEN", "headRefOid": "abc123"}])
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2581,7 +2706,8 @@ def test_query_pr_states_parses_a_well_formed_row(monkeypatch) -> None:
 def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, payload) -> None:
     """End-to-end on the destructive path: an unreadable PR response must
     retain, never delete."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     no_open_pr, guard_error = post_task_reap._no_open_pr_for_branch(
         repo_root=Path("/nonexistent"), branch="some/branch"
@@ -2605,7 +2731,8 @@ def test_unreadable_rows_make_post_task_reap_retain_the_worktree(monkeypatch, pa
 def test_query_pr_states_rejects_incomplete_rows(monkeypatch, label, payload) -> None:
     """An incomplete or unrecognised row is ambiguous, and ambiguity must not
     read as "no open PR" -- callers treat that as permission to DELETE."""
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
@@ -2618,12 +2745,92 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
     """The tightened validation must not reject legitimate answers, or
     nothing would ever be reaped."""
     payload = json.dumps([{"number": 7126, "state": state, "headRefOid": "abc"}])
-    monkeypatch.setattr(rw, "_run", lambda *_a, **_k: _gh_stdout(payload))
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: None)
+    monkeypatch.setattr(rw, "_run_gh", lambda *_a, **_k: _gh_stdout(payload))
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "some/branch")
 
     assert error is None
     assert [(s.number, s.state) for s in states] == [(7126, state)]
+
+
+def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
+    """FORCE_COLOR / CLICOLOR_FORCE must not reach a gh call that parses JSON."""
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setenv("NO_COLOR", "already")
+    captured: list[dict[str, str]] = []
+
+    def fake_run(args, **kwargs):
+        captured.append(kwargs["env"])
+        if args[0] == "gh":
+            colored = kwargs["env"].get("FORCE_COLOR") or kwargs["env"].get("CLICOLOR_FORCE") not in {None, "0"}
+            uncolored = not colored and kwargs["env"].get("NO_COLOR") == "1"
+            stdout = "[]" if uncolored else "\x1b[32m[]\x1b[0m"
+            return subprocess.CompletedProcess(args, 0, stdout, "")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(rw.subprocess, "run", fake_run)
+    monkeypatch.setattr(rw, "safe_git", fake_run)
+
+    git_proc = rw._run(["git", "status"], cwd=tmp_path)
+    direct = rw._run(["gh", "pr", "list"], cwd=tmp_path)
+
+    assert git_proc.returncode == 0
+    assert direct.returncode == 0
+    assert captured[0]["FORCE_COLOR"] == "1"
+    assert captured[0]["CLICOLOR_FORCE"] == "1"
+    assert "FORCE_COLOR" not in captured[1]
+    assert captured[1]["NO_COLOR"] == "1"
+    assert captured[1]["CLICOLOR_FORCE"] == "0"
+
+    transport_env: list[dict[str, str]] = []
+
+    def fake_transport(command, **kwargs):
+        transport_env.append(kwargs["env"])
+        return subprocess.CompletedProcess(command, 0, b"[]", b"")
+
+    monkeypatch.setattr(rw.github_client, "_transport_process", fake_transport)
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert transport_env
+    assert "FORCE_COLOR" not in transport_env[0]
+    assert "CLICOLOR_FORCE" not in transport_env[0]
+    assert transport_env[0]["NO_COLOR"] == "1"
+    assert error is None
+    assert states == []
+
+
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [("", True), ("[]", False)],
+    ids=["empty-stdout", "empty-list"],
+)
+def test_graphql_pr_list_empty_stdout_is_unknown(monkeypatch, tmp_path: Path, stdout: str, unknown: bool) -> None:
+    """A blank ``gh pr list`` body is not ``[]``. Only a JSON list is "no PR"."""
+    monkeypatch.setattr(rw, "_run_gh", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert (error is not None) is unknown
+    if unknown:
+        assert error is not None and "empty" in error
+
+
+def test_colored_gh_json_stays_fail_closed(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("CLICOLOR_FORCE", "1")
+    monkeypatch.setattr(
+        rw,
+        "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, "\x1b[32m[]\x1b[0m", ""),
+    )
+
+    states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
+
+    assert states == []
+    assert error is not None and "invalid JSON" in error
 
 
 # --- REST-first PR lookup with GraphQL fallback (#8536) --
@@ -2653,7 +2860,48 @@ def _patch_gh_transports(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     return gh_calls
+
+
+@pytest.mark.parametrize(
+    ("stdout", "unknown"),
+    [
+        ("", True),
+        ("[]", False),
+        ("[[]]", False),
+        ("[[null]]", True),
+        ("[[{}]]", True),
+        ('[[null], [{"number": 1, "state": "open", "merged_at": None, "head": {"sha": "abc"}}]]', True),
+    ],
+    ids=["empty-stdout", "no-pages", "empty-page", "null-row", "empty-object", "null-then-object"],
+)
+def test_rest_pr_lookup_empty_stdout_and_unusable_rows_are_unknown(
+    monkeypatch, tmp_path: Path, stdout: str, unknown: bool
+) -> None:
+    """Blank REST output, ``null`` and a non-object are unknown, not "no PR"."""
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _root: ("owner", "repo"))
+    monkeypatch.setattr(rw, "_run_gh", lambda *_args, **_kwargs: _gh_stdout(stdout))
+
+    states, error = rw._query_pr_states_rest(tmp_path, "codex/task")
+
+    assert (error is not None) is unknown
+    if unknown:
+        assert states == []
+        assert error is not None
+    else:
+        assert error is None
+        assert states == []
+
+
+def test_both_pr_transports_empty_stdout_fail_closed(monkeypatch) -> None:
+    _patch_gh_transports(monkeypatch, rest=_gh_stdout(""), graphql=_gh_stdout(""))
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert states == []
+    assert error is not None
+    assert "empty" in error
 
 
 def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -> None:
@@ -3226,7 +3474,9 @@ def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {branch: []})
 
-    def fake_remove(repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None) -> str:
+    def fake_remove(
+        repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None, **_preservation_options
+    ) -> str:
         return "permission denied removing worktree: [Errno 13] Permission denied"
 
     monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", fake_remove)
@@ -3366,6 +3616,7 @@ def test_open_pr_worktree_counted_as_open_pr_not_unmerged(tmp_path: Path, monkey
     git(worktree, "add", "code.py")
     git(worktree, "commit", "-m", "add code")
     git(worktree, "push", "-u", "origin", "codex/feature-open")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(
         monkeypatch,
         {"codex/feature-open": [{"number": 105, "state": "OPEN"}]},
@@ -3692,6 +3943,81 @@ def test_review_issue_number_does_not_block_merged_pr(
     else:
         assert result.action == "would_remove"
         assert result.reason == "PR #8243 MERGED"
+
+
+def test_issue_numbered_review_checkout_is_absence_through_github_client(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An issue number in a review path is absence when ``pr view`` is translated.
+
+    The lookup goes through ``github_client.run``. A REST 404 is not gh's
+    GraphQL sentence; native gh supplies it, and the checkout is not held as
+    an unreadable guard.
+    """
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "agy" / "review-8183-preflight-r6"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    git(repo, "remote", "set-url", "origin", "git@github.com:o/r.git")
+    head = git(worktree, "rev-parse", "HEAD")
+    monkeypatch.delenv("GH_REPO", raising=False)
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    def http(value: object, *, status: int = 200) -> rw.github_client.Response:
+        return rw.github_client.Response(
+            status,
+            {
+                "ETag": '"one"',
+                "X-RateLimit-Remaining": "100",
+                "X-RateLimit-Reset": "2000",
+            },
+            json.dumps(value).encode(),
+        )
+
+    endpoints: list[str] = []
+
+    def transport(method: str, endpoint: str, headers: dict, body: bytes | None, timeout: float):
+        endpoints.append(endpoint.split("?", 1)[0].rstrip("/"))
+        path = endpoints[-1]
+        if path.endswith("/pulls/8183"):
+            return http({"message": "Not Found"}, status=404)
+        if path.endswith("/pulls"):
+            return http([])
+        raise AssertionError(endpoint)
+
+    seen: list[list[str]] = []
+
+    def native(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        seen.append(args)
+        if args[1:3] == ["pr", "view"]:
+            assert args[3] == "8183"
+            return subprocess.CompletedProcess(
+                args,
+                1,
+                "",
+                "GraphQL: Could not resolve to a PullRequest with the number of 8183. (repository.pullRequest)",
+            )
+        if args[1:3] == ["search", "prs"]:
+            assert args[3] == head
+            return subprocess.CompletedProcess(args, 0, json.dumps([{"number": 8243, "state": "MERGED"}]), "")
+        raise AssertionError(args)
+
+    real_client = rw.github_client.GitHubClient
+
+    def client_factory(**kwargs: Any) -> rw.github_client.GitHubClient:
+        kwargs["transport"] = transport
+        kwargs["runner"] = native
+        return real_client(**kwargs)
+
+    monkeypatch.setattr(rw.github_client, "GitHubClient", client_factory)
+    results = rw.reap_worktrees(repo_root=repo, live_cwds=set(), merged_pr_only=True)
+    result = result_for(results, worktree)
+    assert result.action == "would_remove"
+    assert result.reason == "PR #8243 MERGED"
+    assert any(path.endswith("/pulls/8183") for path in endpoints)
+    assert any(command[1:4] == ["pr", "view", "8183"] for command in seen)
 
 
 @pytest.mark.parametrize("gh_outage", [False, True])
@@ -4512,11 +4838,14 @@ def test_dispatch_husk_is_kept_when_git_hangs_under_the_lock(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" worktree list "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_age = rw._tree_newest_age_hours
@@ -4612,11 +4941,14 @@ def test_qualified_reap_skips_when_git_hangs_under_the_guard(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" worktree list "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_guard = rw._enter_dispatch_worktree_guard
@@ -4671,11 +5003,14 @@ def test_removed_then_branch_prune_timeout_reports_removed(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = branch ] && [ "$2" = -D ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" branch -D "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_guard = rw._enter_dispatch_worktree_guard
@@ -4745,10 +5080,13 @@ def test_qualified_reap_skips_when_the_region_deadline_expires(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        f'#!/bin/sh\nif [ -e "{hang_marker}" ] && [ "$1" = status ]; then exec sleep 5; fi\nexec "{real_git}" "$@"\n',
+        f'#!/bin/sh\nif [ -e "{hang_marker}" ]; then case " $* " in *" status "*) exec sleep 5;; esac; fi\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
     real_guard = rw._enter_dispatch_worktree_guard
 
@@ -4832,10 +5170,13 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        f'#!/bin/sh\nif [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\nexec "{real_git}" "$@"\n',
+        f'#!/bin/sh\ncase " $* " in *" worktree remove "*) sleep 0.4;; esac\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     result = result_for(
@@ -5323,6 +5664,7 @@ def test_detached_clean_contained_in_remote_branch_only_is_reaped(
     git(worktree, "commit", "--allow-empty", "-m", "pushed side commit")
     git(worktree, "push", "origin", "HEAD:refs/heads/side")
     git(repo, "fetch", "origin")
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
 
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
 
@@ -6810,7 +7152,37 @@ def test_sha_search_failures_are_reported_not_swallowed(
     monkeypatch: pytest.MonkeyPatch,
     search: _GhSearch,
 ) -> None:
-    monkeypatch.setattr(rw, "_run", search)
+    monkeypatch.setattr(rw, "_run_gh", search)
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+
+
+def test_sha_search_empty_stdout_is_unknown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A blank ``gh search`` body is not ``[]`` and must not license removal."""
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout=""))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+    assert "empty" in error
+
+
+@pytest.mark.parametrize(
+    "stdout",
+    ["[null]", "[{}]", "[null, {}]", '[{"number": 7, "state": "open"}, null]', "null", "{}"],
+    ids=["null", "empty-object", "null-and-empty-object", "valid-then-null", "null-payload", "object-payload"],
+)
+def test_sha_search_null_and_empty_objects_are_unknown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: str
+) -> None:
+    """``[null, {}]`` used to be skipped and read as no PR. Any other shape is unknown."""
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout=stdout))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
@@ -6823,7 +7195,7 @@ def test_sha_search_success_returns_states_without_error(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(rw, "_run", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
+    monkeypatch.setattr(rw, "_run_gh", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
 
     states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
 
@@ -6850,13 +7222,68 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
     assert result.action == "removed", result
     assert not worktree.exists()
-    location = repo / "batch_state/preserved" / task_id
-    if reference == "ignored/report.txt":
-        assert (location / reference).read_bytes() == b"named evidence"
-        saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
-        assert saved["preserved_artifacts"]["count"] == 1
-    else:
-        assert not location.exists()
+    location = repo / result.preserved_artifacts["location"]
+    assert (location / "ignored/report.txt").read_bytes() == b"named evidence"
+    assert not (location / ".pytest_cache/cache.txt").exists()
+    saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    assert saved["preserved_artifacts"]["count"] == 1
+
+
+def test_canonical_reaper_preserves_old_output_when_task_id_was_redispatched(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "redispatched"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"old task output")
+    other = repo / ".worktrees/dispatch/claude" / task_id
+    other.mkdir(parents=True)
+    _write_task_record(repo, task_id, status="done", worktree_path=str(other), started_at="2999-01-01T00:00:00Z")
+    record_path = repo / "batch_state/tasks" / f"{task_id}.json"
+    before = record_path.read_bytes()
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "skipped", result
+    assert worktree.exists() and record_path.read_bytes() == before
+    assert source.read_bytes() == b"old task output"
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and receipt["owner"] == "infra lane"
+    assert receipt["retention_disposition"] == "retained" and receipt["next_condition"]
+
+
+def test_canonical_reaper_preserves_earlier_attempt_output_in_reused_checkout(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "reused-output"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n")
+    source = worktree / ".cache/out/page.txt"
+    source.parent.mkdir(parents=True)
+    payload = b"earlier attempt output"
+    source.write_bytes(payload)
+    # The later record binds to the same checkout, as on a same-id re-dispatch.
+    later_start = max(source.stat().st_mtime, source.stat().st_ctime) + 2
+    _write_task_record(
+        repo,
+        task_id,
+        status="done",
+        worktree_path=str(worktree),
+        worktree_reused=True,
+        started_at=datetime.fromtimestamp(later_start, UTC).isoformat(),
+    )
+    assert git(worktree, "status", "--porcelain") == ""
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9645, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    receipt = result.preserved_artifacts
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())["preserved_artifacts"] == receipt
+    assert ((repo / receipt["location"]) / ".cache/out/page.txt").read_bytes() == payload
 
 
 @pytest.mark.parametrize("scenario", links.SCENARIOS)
@@ -6875,7 +7302,9 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
-    location = repo / "batch_state/preserved" / task_id
+    location = repo / Path(
+        state.get("preserved_artifacts", {}).get("location", repo / "batch_state/preserved" / task_id)
+    )
     if scenario in links.REFUSALS:
         assert result.action == "skipped" and links.REFUSALS[scenario] in result.reason
         assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
@@ -6884,8 +7313,17 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     assert result.action == "removed", result
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2

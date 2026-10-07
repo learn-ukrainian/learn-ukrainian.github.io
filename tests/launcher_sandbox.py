@@ -27,8 +27,8 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def copy_interactive_launcher_checkout(root: Path) -> None:
-    """Copy real launcher/deploy sources so production's root lookup stays in tmp.
+def copy_launcher_sources(root: Path) -> None:
+    """Copy the tracked launcher/deploy surface without an interpreter or Git init.
 
     Copy tracked files, rather than symlinking source directories: shell and
     Python helpers resolve their own physical location to choose deploy roots.
@@ -57,6 +57,11 @@ def copy_interactive_launcher_checkout(root: Path) -> None:
                 capture_output=True, check=True, timeout=30,
             )
             destination.write_bytes(blob.stdout)
+
+
+def copy_interactive_launcher_checkout(root: Path) -> None:
+    """Copy real launcher/deploy sources so production's root lookup stays in tmp."""
+    copy_launcher_sources(root)
     # This is a temporary standalone fixture, not a dispatch worktree.
     (root / ".venv").symlink_to(Path(sys.prefix))
     subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=30)
@@ -150,7 +155,10 @@ def _copy_bytecode(source: Path, destination: Path) -> None:
         return
     target = Path(importlib.util.cache_from_source(destination))
     target.parent.mkdir(parents=True, exist_ok=True)
+    if target.exists():
+        target.chmod(target.stat().st_mode | 0o200)
     shutil.copy2(cached, target)
+    target.chmod(target.stat().st_mode | 0o200)
 
 
 def copy_slot_registry(root: Path) -> None:
@@ -165,5 +173,7 @@ def copy_slot_registry(root: Path) -> None:
             continue
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+        # A read-only canonical mode must not make the sandbox copy unwritable.
+        destination.chmod(destination.stat().st_mode | 0o200)
         if relative.suffix == ".py":
             _copy_bytecode(_REPO_ROOT / relative, destination)

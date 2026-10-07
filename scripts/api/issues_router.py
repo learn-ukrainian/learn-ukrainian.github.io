@@ -27,6 +27,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Query
 
+from scripts.common import github_client
 from scripts.orchestration import issue_stream_audit as audit
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
@@ -70,7 +71,7 @@ def _run_gh(
 ) -> tuple[int, str, str]:
     """Bounded ``gh`` call that never raises — see ``site_router._run``."""
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             args,
             cwd=resolve_context(ctx).roots.project_root,
             capture_output=True,

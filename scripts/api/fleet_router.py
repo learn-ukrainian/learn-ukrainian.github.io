@@ -25,6 +25,13 @@ import psycopg
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
+
 from scripts.control_plane import storage
 from scripts.control_plane.health import authority_collector_payload, read_failure_code
 from scripts.fleet_comms import message_plane
@@ -147,11 +154,10 @@ def _read_connection(
     connection = None
     availability = "available"
     try:
-        connection = storage.connect(
-            storage.StoreId.FLEET_COMMS,
-            path=db_path,
-            read_only=True,
-            timeout=0.25,
+        connection = (
+            storage.connect(storage.StoreId.FLEET_COMMS, path=db_path, read_only=True, timeout=0.25)
+            if authority is storage.Authority.PG
+            else open_readonly(db_path, timeout=0.25)
         )
         if authority is storage.Authority.PG:
             connection.autocommit = True
@@ -174,7 +180,7 @@ def _read_connection(
 def _table_exists(connection: Any, table: str) -> bool:
     query = (
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?"
-        if isinstance(connection, sqlite3.Connection)
+        if is_sqlite_connection(connection)
         else "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
     )
     row = connection.execute(query, (table,)).fetchone()
@@ -337,7 +343,7 @@ def _empty_collection(
 
 
 def _paged_query(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     *,
     key: str,
     select_sql: str,
@@ -630,7 +636,7 @@ def _authority_health_snapshot(
     }
     if connection is None:
         return unavailable
-    placeholder = "?" if isinstance(connection, sqlite3.Connection) else "%s"
+    placeholder = "?" if is_sqlite_connection(connection) else "%s"
     try:
         if not _table_exists(connection, "authority_jobs"):
             return {**unavailable, "availability": "schema_read_failed"}
@@ -753,11 +759,7 @@ def _legacy_broker_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]
     result["db_exists"] = True
     try:
         result["size_kb"] = round(db_path.stat().st_size / 1024, 1)
-        connection = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro",
-            uri=True,
-            timeout=0.25,
-        )
+        connection = open_readonly(db_path.resolve(), timeout=0.25)
         try:
             connection.execute("PRAGMA query_only = ON")
             result["readable"] = True
@@ -1152,7 +1154,7 @@ def _populate_fleet_overview(
     return result
 
 
-def _registered_endpoints(connection: sqlite3.Connection | None) -> dict[str, dict[str, Any]]:
+def _registered_endpoints(connection: SQLiteConnection | None) -> dict[str, dict[str, Any]]:
     if connection is None or not _table_exists(connection, "agent_endpoints"):
         return {}
     try:
@@ -1790,7 +1792,7 @@ def fleet_messages(
         )
 
 
-def _message_detail(connection: sqlite3.Connection, message_id: str) -> dict[str, Any] | None:
+def _message_detail(connection: SQLiteConnection, message_id: str) -> dict[str, Any] | None:
     if not _table_exists(connection, "comms_messages"):
         return None
     has_conversations = _table_exists(connection, "conversations")

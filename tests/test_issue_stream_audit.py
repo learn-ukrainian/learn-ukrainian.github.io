@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import itertools
 import json
-import re
 import subprocess
 import textwrap
 import threading
+import time
 from datetime import date
-from pathlib import Path
 
 import pytest
+
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 from scripts.orchestration import issue_stream_audit
 from scripts.orchestration.issue_stream_audit import (
@@ -269,7 +271,7 @@ def test_depth_eight_known_leaf_does_not_warn():
     assert warnings == []
 
 
-def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
+def test_subissue_batch_uses_one_typed_request_for_multiple_parents(monkeypatch):
     calls = []
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
@@ -280,10 +282,9 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: "cursor"}, body_roots={100})
     assert len(calls) == 1
-    query = _query_arg(calls[0][0])
-    assert "i100:issue(number:100){body subIssues(first:100)" in query
-    assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
-    assert "nodes{number repository{nameWithOwner} subIssuesSummary{total}}" in query
+    request = calls[0][0]
+    assert request.verb == "read-subissue-batch"
+    assert request.fields == {"repo": "acme/repo", "cursors": {100: None, 200: "cursor"}, "body_roots": {100}}
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
@@ -893,7 +894,7 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
             return _FakeCompletedProcess(json.dumps(open_issues))
         if args[1:3] == ["repo", "view"]:
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
-        if args[1] == "api" and args[2] == "graphql":
+        if args[1:3] == ["read", "subissue-batch"]:
             return _FakeCompletedProcess(
                 json.dumps(
                     {
@@ -950,6 +951,21 @@ def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(tmp_p
     cache_path = target_root / "batch_state" / "issue_stream_audit.json"
     assert cache_path.exists()
     assert not (other_root / "batch_state" / "issue_stream_audit.json").exists()
+
+
+def test_9852_audit_records_resolved_repository_in_report_and_cache(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    _make_repo(tmp_path, epics=[100])
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess, "run",
+        _fake_gh_run(calls, owner="Acme", name="Target-Repo", open_issues=[]),
+    )
+    report = run_audit(tmp_path)
+    cached = json.loads((tmp_path / "batch_state" / "issue_stream_audit.json").read_text())
+    assert report["repository"] == cached["repository"] == "Acme/Target-Repo"
+    assert {cwd for _args, cwd in calls} == {tmp_path.resolve()}
+    assert len([args for args, _cwd in calls if args[1:3] == ("repo", "view")]) == 1
 
 
 def test_run_audit_default_root_preserves_module_root_behavior(tmp_path, monkeypatch):
@@ -1381,7 +1397,8 @@ def test_subissue_batch_returns_none_for_null_node_and_scopes_repo(monkeypatch):
     assert pages[100] is None
     assert pages[200]["subIssues"]["nodes"][0]["number"] == 20
     # Node lookups carry their repository so cross-repo children are detectable.
-    assert "repository{nameWithOwner}" in _query_arg(calls[0])
+    assert calls[0].verb == "read-subissue-batch"
+    assert calls[0].fields["repo"] == "acme/repo"
 
 
 def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
@@ -1393,8 +1410,7 @@ def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = _query_arg(args)
-        if "i200:issue" in query:
+        if 200 in args.fields["cursors"]:
             raise RuntimeError("gh api graphql… failed: errors present")
         return {"data": {"repository": {"i100": _page([10], False)}}}
 
@@ -1411,8 +1427,7 @@ def test_subissue_batch_graphql_errors_are_incomplete_not_absent(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = _query_arg(args)
-        if "i200:issue" in query:
+        if 200 in args.fields["cursors"]:
             return {"data": {"repository": {"i200": None}}, "errors": [{"message": "boom"}]}
         return {"data": {"repository": {"i100": _page([10], False)}}}
 
@@ -1458,9 +1473,9 @@ def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict],
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
-        if args[1] == "api" and args[2] == "graphql":
+        if args[1:3] == ["read", "subissue-batch"]:
             repo = {}
-            for number_text in re.findall(r"i(\d+):issue\(number:", args[-1]):
+            for number_text in args[-1]["cursors"]:
                 number = int(number_text)
                 nodes = tree.get(number, [])
                 if nodes is None:
@@ -1542,7 +1557,7 @@ def test_run_audit_reports_cross_repo_child_without_following_it(tmp_path, monke
         "repository": "other/foreign",
     } in report["warnings"]
     # The foreign number was never looked up in THIS repository.
-    assert not any("i77:issue" in args[-1] for args, _cwd in calls if args[1:2] == ["api"])
+    assert not any(77 in args[-1]["cursors"] for args, _cwd in calls if args[1:3] == ["read", "subissue-batch"])
     assert report["ok"] is True
 
 
@@ -1562,8 +1577,8 @@ def _run_audit_fake_gh_failing_nodes(
             return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
-        if args[1] == "api" and args[2] == "graphql":
-            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+        if args[1:3] == ["read", "subissue-batch"]:
+            numbers = list(args[-1]["cursors"])
             if failing & set(numbers):
                 failed = _FakeCompletedProcess("")
                 failed.returncode = 1
@@ -1650,9 +1665,9 @@ def test_run_audit_singleton_retry_budget_is_shared_per_run(tmp_path, monkeypatc
     singleton_retries = [
         args
         for args, _cwd in calls
-        if list(args[1:3]) == ["api", "graphql"]
-        and len(re.findall(r"i(\d+):issue\(number:", args[-1])) == 1
-        and int(re.search(r"i(\d+):issue\(number:", args[-1]).group(1)) in failing
+        if list(args[1:3]) == ["read", "subissue-batch"]
+        and len(args[-1]["cursors"]) == 1
+        and next(iter(args[-1]["cursors"])) in failing
     ]
     # All 30 children fail: batch of 20 → 20 singleton retries, batch of 10 →
     # only 5 more before the shared per-run budget is spent; the remaining 5
@@ -1754,64 +1769,19 @@ def test_tree_membership_pagination_truncation_counts_as_incomplete():
     assert 100 in membership
 
 
-def test_subissue_batch_real_github_not_found_error_is_absent_not_incomplete(monkeypatch):
-    """Finding 2 (#8661): real GitHub GraphQL returns exit code 1 with a NOT_FOUND
-    error payload when an issue does not exist. _fetch_subissue_batch must recognize
-    this as genuinely absent (None), not INCOMPLETE_NODE, while preserving intact nodes."""
+def test_subissue_batch_confirmed_absence_preserves_other_nodes(monkeypatch):
+    """The client projects a REST parent 404 as a null alias; retain other nodes."""
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
-
-    def fake_subprocess_run(args, capture_output, text, timeout, cwd, **_kwargs):
-        args = _inspect_frozen_query(args)
-        assert args[0] == "gh"
-        if args[1:3] == ["api", "graphql"]:
-            query = _query_arg(args)
-            if "i999:issue" in query and "i100:issue" in query:
-                # Batch with one present and one deleted issue
-                stdout = json.dumps(
-                    {
-                        "data": {
-                            "repository": {
-                                "i100": {
-                                    "body": "",
-                                    "subIssues": {
-                                        "nodes": [{"number": 10}],
-                                        "pageInfo": {"hasNextPage": False, "endCursor": None},
-                                    },
-                                },
-                                "i999": None,
-                            }
-                        },
-                        "errors": [
-                            {
-                                "type": "NOT_FOUND",
-                                "path": ["repository", "i999"],
-                                "message": "Could not resolve to an Issue with the number of 999.",
-                            }
-                        ],
-                    }
-                )
-                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
-            if "i999:issue" in query:
-                # Singleton retry for deleted issue
-                stdout = json.dumps(
-                    {
-                        "data": {"repository": {"i999": None}},
-                        "errors": [
-                            {
-                                "type": "NOT_FOUND",
-                                "path": ["repository", "i999"],
-                                "message": "Could not resolve to an Issue with the number of 999.",
-                            }
-                        ],
-                    }
-                )
-                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
-        raise AssertionError(f"unexpected invocation: {args}")
-
-    monkeypatch.setattr(issue_stream_audit.subprocess, "run", fake_subprocess_run)
+    calls = []
+    def read_batch(request, *, cwd):
+        calls.append(request)
+        assert request.verb == "read-subissue-batch"
+        return {"data": {"repository": {"i100": _page([10], False), "i999": None}}}
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", read_batch)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 999: None})
     assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
     assert pages[999] is None
+    assert len(calls) == 1
 
 
 def test_validate_membership_report_and_read_membership_index_reject_incomplete_cache(tmp_path):
@@ -1940,8 +1910,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
             return _FakeCompletedProcess(json.dumps({"owner": {"login": "acme"}, "name": "repo"}))
         if args[1:3] == ["issue", "view"]:
             return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "OPEN"}))
-        if args[1] == "api" and args[2] == "graphql":
-            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+        if args[1:3] == ["read", "subissue-batch"]:
+            numbers = list(args[-1]["cursors"])
             if 20 in numbers:
                 return _FakeCompletedProcess("", returncode=1, stderr="connection refused")
             repo = {}
@@ -1968,6 +1938,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
         issue_number=500,
         stream_epic=10,
         native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
         registered_epics=[10, 20],
         membership_report=report,
     )
@@ -1986,6 +1958,7 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     """Finding 1 (issue #8661): run_audit with incomplete nodes writes membership_complete=False
     and incomplete_nodes, and the resulting cache fails closed."""
     monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
     root = tmp_path / "repo"
     _make_repo(root, epics=[100])
 
@@ -2010,33 +1983,213 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     assert validate_membership_report(report, 3600) is None
 
 
+# --------------------------------------------------------------------------- #
+# #9783 review: a depth-truncated traversal is incomplete. Epic 10 reaches
+# parent 30 -> issue 42 directly; epic 20 reaches the same parent through a
+# chain 201 -> 202 -> ... that the fetch walk stops inside, so its claim on 30
+# and 42 is never read. Only the unread frontier betrays the second owner.
+# --------------------------------------------------------------------------- #
+_DEEP_CHAIN = list(range(201, 209))  # eight links: 208 is the depth-8 frontier
+
+
+def _deep_chain_edges(chain: list[int]) -> dict[int, list[int]]:
+    edges = {10: [30], 30: [42], 20: [chain[0]]}
+    edges.update({a: [b] for a, b in itertools.pairwise(chain)})
+    edges[chain[-1]] = [30]
+    return edges
+
+
+def _run_deep_chain_audit(tmp_path, monkeypatch, chain: list[int], *, body_refs: dict[int, str] | None = None):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[10, 20])
+    edges = _deep_chain_edges(chain)
+
+    def fetch_batch(cursors):
+        return {
+            number: _page(edges.get(number, []), False, body=(body_refs or {}).get(number, ""), child_totals={42: 0})
+            for number in cursors
+        }
+
+    monkeypatch.setattr(
+        issue_stream_audit,
+        "fetch_tree_membership",
+        lambda roots, repo_root, warnings: _tree_membership(roots, fetch_batch, warnings),
+    )
+    monkeypatch.setattr(issue_stream_audit, "fetch_open_issues", lambda _r: _issues(10, 20, 30, 42, 500, *chain))
+    monkeypatch.setattr(
+        issue_stream_audit, "fetch_issue_states", lambda nums, _r, **_k: ({n: "OPEN" for n in nums}, set())
+    )
+    return run_audit(root)
+
+
+def test_depth_truncated_audit_is_incomplete_and_refuses_native_chain(tmp_path, monkeypatch):
+    from scripts.orchestration import task_lifecycle
+
+    report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN)
+
+    assert {"code": "truncated_depth", "depth": 8, "frontier": [208]} in report["warnings"]
+    assert report["ok"] is False
+    assert report["membership_complete"] is False
+    assert report["incomplete_nodes"] == [208]
+    # The trap: everything that WAS read shows one owner for both nodes.
+    assert report["effective_membership"]["42"]["epics"] == [10]
+    assert report["effective_membership"]["30"]["epics"] == [10]
+    assert issue_stream_audit.membership_report_is_complete(report) is False
+    assert validate_membership_report(report, 3600) is None
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert result["method"] is None
+    assert "incomplete" in result["reason"]
+    assert "#208" in result["reason"]
+
+    # Completing the same traversal reveals both nodes as multi-homed.
+    monkeypatch.setattr(issue_stream_audit, "_MAX_SUBISSUE_DEPTH", 16)
+    complete = _run_deep_chain_audit(tmp_path / "complete", monkeypatch, _DEEP_CHAIN)
+    assert complete["membership_complete"] is True
+    assert complete["incomplete_nodes"] == []
+    assert complete["effective_membership"]["42"]["epics"] == [10, 20]
+    assert complete["effective_membership"]["30"]["epics"] == [10, 20]
+    refused = task_lifecycle.resolve_membership(
+        issue_number=42,
+        stream_epic=10,
+        native_parent_epic=30,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
+        registered_epics=[10, 20],
+        membership_report=complete,
+    )
+    assert refused["valid"] is False
+    assert "multi-homed" in refused["reason"]
+
+
+def test_depth_truncated_audit_refuses_body_path(tmp_path, monkeypatch):
+    """The body path consumes the same completeness contract: epic 10's body
+    names #500, and the unread depth frontier under epic 20 could claim it too."""
+    from scripts.orchestration import task_lifecycle
+
+    report = _run_deep_chain_audit(tmp_path, monkeypatch, _DEEP_CHAIN, body_refs={10: "Tracked: #500"})
+
+    assert report["effective_membership"]["500"] == {
+        "epics": [10],
+        "streams": ["s"],
+        "via": "body",
+        "unique_stream": True,
+    }
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        repository="acme/repo",
+        native_parent_repository="acme/repo",
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]
+    assert "#208" in result["reason"]
+
+
+def test_shared_walk_closes_each_root_past_the_fetch_depth():
+    """A node fetched shallowly from one root can sit deeper than the fetch
+    depth below another root. Every adjacency was read, so the traversal is
+    complete and the deeper root must still claim the node's descendants."""
+    chain = list(range(201, 208))  # 30 sits at level 8 below epic 20, 42 at level 9
+    edges = _deep_chain_edges(chain)
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False, child_totals={42: 0}) for number in cursors}
+
+    warnings = []
+    membership = _tree_membership({10, 20}, fetch_batch, warnings)
+    assert warnings == []
+    assert membership[10][0] == {30, 42}
+    assert membership[20][0] == {*chain, 30, 42}
+    report = classify(_issues(10, 20, 30, 42, *chain), {"s": [10, 20]}, membership)
+    assert report["effective_membership"]["42"]["unique_stream"] is False
+
+
+def test_truncated_depth_warning_alone_makes_report_incomplete():
+    """A cache claiming completeness while carrying a depth-truncation warning,
+    even one whose frontier is malformed, is unverified."""
+    base = {
+        "generated_at": int(time.time()),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "effective_membership": {},
+        "open_issue_numbers": [],
+    }
+    truncated = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": [208, 209]}]}
+    assert issue_stream_audit.unread_membership_nodes(truncated) == {208, 209}
+    assert issue_stream_audit.membership_report_is_complete(truncated) is False
+    assert validate_membership_report(truncated, 3600) is None
+    assert make_membership_resolver(truncated)(1, 1) is False
+    assert make_issue_resolver(truncated)("1") is False
+
+    malformed = {**base, "warnings": [{"code": "truncated_depth", "depth": 8, "frontier": "208"}]}
+    assert issue_stream_audit.membership_report_is_complete(malformed) is False
+
+    benign = {
+        **base,
+        "warnings": [
+            {"code": "unresolved_subissue", "issue": 7},
+            {"code": "cross_repo_subissue", "parent": 1, "issue": 2, "repository": "other/repo"},
+        ],
+    }
+    assert issue_stream_audit.membership_report_is_complete(benign) is True
+
+
 @pytest.fixture(autouse=True)
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
 
 
-def _query_arg(args):
-    """Inspect the real fixed-query helper's frozen payload in transport spies."""
-    import json
+@pytest.fixture(autouse=True)
+def _typed_audit_command_boundary(monkeypatch):
+    """Consumer tests inject projected named reads; HTTP proofs live in client tests."""
+    from scripts.publish.github import Request
 
-    from scripts.publish.github import Request, request_run
-
-    if isinstance(args, Request):
-        queries = []
-
-        def inspect(command, **kwargs):
-            queries.append(json.loads(Path(command[command.index("--input") + 1]).read_bytes())["query"])
-            return _FakeCompletedProcess("{}")
-
-        request_run(args, runner=inspect)
-        return queries[0]
-    if "--input" in args:
-        return json.loads(Path(args[args.index("--input") + 1]).read_bytes())["query"]
-    return args[-1]
+    original = issue_stream_audit.request_run
+    def execute(request, **kwargs):
+        if isinstance(request, Request):
+            assert request.verb == "read-subissue-batch"
+            return subprocess.run(
+                ["gh", "read", "subissue-batch", request.fields], timeout=kwargs.pop("timeout", 30), **kwargs
+            )
+        return original(request, **kwargs)
+    monkeypatch.setattr(issue_stream_audit, "request_run", execute)
 
 
 def _inspect_frozen_query(args):
-    if "graphql" in args and "--input" in args:
-        return ["gh", "api", "graphql", "query=" + _query_arg(args)]
     return args
+
+
+@pytest.mark.parametrize("code", [[], {}, None, 1, True])
+def test_9794_malformed_warning_code_is_typed_membership_refusal(code):
+    from scripts.orchestration import task_lifecycle
+
+    report = {
+        "generated_at": time.time(), "membership_complete": True,
+        "incomplete_nodes": [], "warnings": [{"code": code}],
+        "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    }
+    assert issue_stream_audit.membership_report_is_complete(report) is False
+    assert issue_stream_audit.validate_membership_report(report, 3600) is None
+    result = task_lifecycle.resolve_membership(
+        issue_number=42, stream_epic=10, native_parent_epic=None,
+        repository="acme/repo", native_parent_repository=None,
+        registered_epics=[10], membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "incomplete" in result["reason"]

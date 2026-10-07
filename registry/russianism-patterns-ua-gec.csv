@@ -1,5 +1,7 @@
 # UA-GEC v2 F/Calque lookup derived from https://github.com/grammarly/ua-gec; license: CC-BY-4.0.
 # Attribution: Syvokon et al., UNLP 2023. Rows are lowercased, stripped pairs with frequency >= 2.
+# Split: gec-fluency layer, train AND test partitions, every annotator file (a1 and a2); the only selection that reproduces all 218 frequencies (#9609).
+# 54 of the 218 pairs (98 of 612 counts) occur in the UA-GEC test split, so this file must not feed training data (#9602).
 bad,good,error_type,frequency,source,license,attribution
 дозволяє,дає змогу,F/Calque,13,UA-GEC v2,CC-BY-4.0,"Syvokon et al., UNLP 2023"
 доктор,лікар,F/Calque,12,UA-GEC v2,CC-BY-4.0,"Syvokon et al., UNLP 2023"

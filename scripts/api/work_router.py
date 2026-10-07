@@ -21,7 +21,7 @@ from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_are
 from scripts.orchestration.issue_stream_audit import load_registry
 from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.work.attention import is_actionable
-from scripts.work.normalize import build_public_projection
+from scripts.work.normalize import build_public_projection, downgrade_expired_projection, qualify_pr_snapshot_age
 from scripts.work.schema import (
     SchemaValidationError,
     admit_projection_filters,
@@ -29,7 +29,7 @@ from scripts.work.schema import (
     schema_digest_sha256,
     validate_projection,
 )
-from scripts.work.sources_public import private_capability_seam, public_repository_id
+from scripts.work.sources_public import fetch_open_prs, private_capability_seam, public_repository_id
 
 from .monitor_context import (
     _WORK_IN_FLIGHT_BUILDS,
@@ -157,8 +157,6 @@ _WORKER_LOOP_LOCK = threading.Lock()
 _WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
-
-
 def _in_flight_builds(
     ctx: MonitorContext | None = None,
 ) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
@@ -210,6 +208,7 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
         return False
 
     if loop.is_running():
+
         async def stop_loop() -> None:
             await loop.shutdown_default_executor()
             loop.stop()
@@ -393,9 +392,7 @@ def _get_or_create_build_task(
     return _ensure_in_flight(key, filters, ctx)
 
 
-def wait_for_in_flight_build(
-    key: str, timeout: float = 10.0, ctx: MonitorContext | None = None
-) -> None:
+def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContext | None = None) -> None:
     """Block until the single-flight build for ``key`` settles.
 
     Sync TestClient does not pump request-loop ``create_task`` work between
@@ -412,9 +409,7 @@ def wait_for_in_flight_build(
         fut.result(timeout=timeout)
     except Exception:
         if not fut.done():
-            raise TimeoutError(
-                f"in-flight work projection build for {key!r} did not settle in {timeout}s"
-            ) from None
+            raise TimeoutError(f"in-flight work projection build for {key!r} did not settle in {timeout}s") from None
         return
 
 
@@ -438,13 +433,17 @@ def warm_projection_cache(
 async def refresh_projection_cache_periodically(ctx: MonitorContext) -> None:
     """Keep the default public queue warm while the application is idle.
 
-    Startup warmup handles the first build. Each TTL tick joins the same
+    Startup warmup handles the first build. Half-TTL ticks also keep the PR
+    snapshot refreshing while the projection is warm, so an idle board does
+    not repeatedly rebuild from the previous expired PR observation.
+    Each expired projection joins the same
     bounded single-flight job as HTTP callers; failures retry on the next
     tick and never relax /next's maximum stale age.
     """
     key = projection_cache_key({}, ctx)
     while True:
-        await asyncio.sleep(CACHE_TTL_S)
+        await asyncio.sleep(CACHE_TTL_S / 2)
+        fetch_open_prs()  # nonblocking single-flight snapshot refresh
         if cache_get_with_age(key, CACHE_TTL_S) is not None:
             continue
         try:
@@ -468,9 +467,13 @@ async def work_projection(
         if cached is not None:
             payload, age = cached
             if isinstance(payload, dict):
-                # Return a shallow copy with updated cache_age_s.
-                out = dict(payload)
+                out = qualify_pr_snapshot_age(payload)
                 out["cache_age_s"] = float(age)
+                # Refresh an aged PR observation independently of projection TTL.
+                if any(
+                    (s.get("sections", {}).get("prs") or {}).get("status") == "stale" for s in out.get("sources", [])
+                ):
+                    _get_or_create_build_task(key, filters, ctx)
                 return JSONResponse(content=out)
 
     if fresh:
@@ -482,9 +485,14 @@ async def work_projection(
     except TimeoutError as exc:
         stale = cache_get_with_age(key, float("inf"))
         if stale is not None and isinstance(stale[0], dict):
-            out = dict(stale[0])
-            out["cache_age_s"] = float(stale[1])
-            return JSONResponse(content=out)
+            # Past the freshness bound, decision-bearing fields are unknown.
+            # A just-built cache (age within CACHE_TTL_S) stays as stored.
+            out = downgrade_expired_projection(
+                stale[0],
+                age_s=float(stale[1]),
+                freshness_s=CACHE_TTL_S,
+            )
+            return JSONResponse(content=qualify_pr_snapshot_age(out))
         # Typed degradation envelope — never a bare 500 hide of healthy sources.
         raise HTTPException(
             status_code=504,
@@ -507,7 +515,7 @@ async def work_projection(
 
     # The builder already validates JSON-native data. Avoid FastAPI walking
     # every nested value again through jsonable_encoder on this large response.
-    out = dict(payload)
+    out = qualify_pr_snapshot_age(payload)
     return JSONResponse(content=out)
 
 
@@ -523,6 +531,37 @@ def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
         return None
     cache_set(key, names)
     return names
+
+
+def _unscoped_unknown_digest(items: list[dict[str, Any]], stream: str) -> dict[str, Any]:
+    """Unknown rows that are not already on this lane's pick list.
+
+    An empty stream queue must not read as "no remaining work". A row that
+    still names the requested stream is counted here when it is not actionable,
+    so ``source_ok: false`` cannot drop it. Rows already on the pick list stay
+    there and are not counted twice.
+    """
+    reason_counts: dict[str, int] = {}
+    count = 0
+    for item in items:
+        action = item.get("safe_next_action") if isinstance(item.get("safe_next_action"), dict) else {}
+        stream_status = ((item.get("projections") or {}).get("stream") or {}).get("status")
+        unknown = (
+            item.get("health") == "UNKNOWN"
+            or action.get("state") == "unknown"
+            or action.get("code") == "INSPECT_UNKNOWN"
+            or stream_status == "unknown"
+        )
+        if not unknown or (stream in _item_streams(item) and is_actionable(item)):
+            continue
+        count += 1
+        reasons = action.get("reason_codes") if isinstance(action.get("reason_codes"), list) else []
+        if not reasons:
+            reasons = ["authority_unknown"]
+        for reason in reasons:
+            if isinstance(reason, str) and reason:
+                reason_counts[reason] = reason_counts.get(reason, 0) + 1
+    return {"count": count, "reason_counts": reason_counts}
 
 
 def _item_streams(item: dict[str, Any]) -> list[str]:
@@ -643,6 +682,9 @@ async def work_next(
     if age >= CACHE_TTL_S:
         _get_or_create_build_task(key, {}, ctx)
 
+    payload = qualify_pr_snapshot_age(payload)
+    if any((s.get("sections", {}).get("prs") or {}).get("status") == "stale" for s in payload.get("sources", [])):
+        _get_or_create_build_task(key, {}, ctx)
     items = [i for i in payload.get("items") or [] if isinstance(i, dict)]
     actionable = [i for i in items if is_actionable(i)]
 
@@ -718,10 +760,7 @@ async def work_next(
         "cache_age_s": float(age),
         "limit": limit,
         "queue": queue,
-        "sources": [
-            source for source in payload.get("sources", [])
-            if source.get("source_id") == "public-monitor"
-        ],
+        "sources": [source for source in payload.get("sources", []) if source.get("source_id") == "public-monitor"],
         "denominator": payload.get("denominator", {}),
         "digest": {
             "other_streams": {
@@ -729,6 +768,7 @@ async def work_next(
                 "top_blockers": top_blockers,
             },
             "unscoped_actionable_count": unscoped,
+            "unscoped_unknown": _unscoped_unknown_digest(items, stream),
             "excluded_pending_native": {
                 "count": len(excluded_pending),
                 "items": excluded_pending[:NEXT_MAX_LIMIT],

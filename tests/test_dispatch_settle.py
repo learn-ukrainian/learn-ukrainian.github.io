@@ -10,6 +10,69 @@ from typing import Any
 
 import pytest
 
+from tests.orchestration.test_interrupted_caller_matrix import hashes
+from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_push_settle_preserves_interrupted_record_and_outputs(interrupted_checkout, monkeypatch, status):
+    repo, tree, tasks, record, result, output = interrupted_checkout
+    state = {
+        "task_id": "interrupted",
+        "status": status,
+        "run_nonce": "attempt",
+        "worktree_path": str(tree),
+        "worktree_branch": "codex/interrupted",
+        "result_file": str(result),
+        "result_sha256": hashes([result])[0],
+        "keep_worktree": True,
+    }
+    record.write_text(json.dumps(state))
+    before = hashes([record, result, output])
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: repo / "ownership.sqlite3")
+    monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
+    for _ in range(2):
+        report = ds.settle_task("interrupted", task_dir=tasks, repo_root=repo, release_stale=False)
+        assert report.status == status
+        assert hashes([record, result, output]) == before
+
+
+@pytest.mark.parametrize("writer", ["settle", "locked_healer"])
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited"])
+@pytest.mark.parametrize("keep", [False, True], ids=["ordinary", "retention"])
+def test_needs_finalize_missing_tree_preserves_exact_bytes(tmp_path, writer, status, keep):
+    import hashlib
+
+    from scripts.orchestration.dead_worker_state import mark_missing_worktree_failed
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    path = tasks / "unfinished.json"
+    result = path.with_suffix(".result")
+    result.write_text("Український звіт\u2028recoverable report\n", encoding="utf-8")
+    output = tmp_path / "ignored-output.bin"
+    output.write_bytes(b"recoverable output\x00\xff")
+    state = {
+        "task_id": "unfinished",
+        "run_nonce": "attempt-1",
+        "pid": 999_999_999,
+        "status": status,
+        "keep_worktree": keep,
+        "worktree_path": str(tmp_path / "gone"),
+        "result_file": str(result),
+        "result_sha256": hashlib.sha256(result.read_bytes()).hexdigest(),
+    }
+    path.write_text(json.dumps(state, indent=2))
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)]
+    for _ in range(2):
+        if writer == "settle":
+            assert ds.settle_missing_worktree(tasks, "unfinished") == []
+        else:
+            current, changed = mark_missing_worktree_failed(path, state, pid_alive=lambda _: False)
+            assert not changed and current == state
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (path, result, output)] == before
+
+
 from scripts.fleet import idle_settle
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.orchestration import dispatch_settle as ds
@@ -202,7 +265,7 @@ def test_attach_idle_reminder_requires_disposition_when_eligible(tmp_path: Path)
     )
     snapshot = idle_settle.parse_snapshot(
         {
-            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True}],
             "items": [{"item_id": "issue:6976", "ready": True, "valuable": True, "independent": True}],
             "caps": {},
         }
@@ -214,6 +277,40 @@ def test_attach_idle_reminder_requires_disposition_when_eligible(tmp_path: Path)
     assert decision.reminder_fired is True
     assert event is not None
     assert event["outcome"] == "missing_action"
+
+
+def test_attach_idle_reminder_treats_missing_quota_as_ineligible(tmp_path: Path) -> None:
+    """A lane row without ``quota_ok`` has unknown quota, which is not permission (#9740 F5)."""
+    report = ds.SettleReport(
+        task_id="infra-6976",
+        status="done",
+        pid=None,
+        pid_alive=False,
+        worktree_path=None,
+        branch=None,
+        commits_ahead=0,
+        dirty=False,
+        pr_url=None,
+        pr_number=None,
+        actions=[],
+        closeout={},
+    )
+    snapshot = idle_settle.parse_snapshot(
+        {
+            "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+            "items": [{"item_id": "issue:6976", "ready": True, "valuable": True, "independent": True}],
+            "caps": {},
+        }
+    )
+    assert snapshot.lanes[0].quota_ok is None
+    assert idle_settle.eligible_pairs(snapshot) == ()
+    store = tmp_path / "idle.jsonl"
+    rc, decision, event = ds.attach_idle_reminder(report, snapshot=snapshot, store=store)
+    assert rc == 0
+    assert decision.outcome == "silent"
+    assert decision.reminder_fired is False
+    assert event is not None
+    assert event["outcome"] == "silent"
 
 
 def test_attach_idle_reminder_rejects_unknown_disposition() -> None:
@@ -272,7 +369,7 @@ def test_cmd_task_prints_reminder_and_accepts_disposition(
     snap.write_text(
         json.dumps(
             {
-                "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+                "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True, "quota_ok": True}],
                 "items": [{"item_id": "issue:6976"}],
             }
         ),
@@ -373,7 +470,7 @@ def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytes
         json.dumps(
             {
                 "task_id": task_id,
-                "status": "needs_finalize",
+                "status": "spawning",
                 "pid": 999_999_999,
                 "worktree_path": str(tmp_path / "reaped-wt"),
                 "worktree_branch": "atlas/dead-wt",
@@ -396,7 +493,7 @@ def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytes
     assert "released_ownership_claims" in report.actions
     healed = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
     assert healed["status"] == "failed"
-    assert "worktree is missing" in healed["last_error"]
+    assert healed["last_error"] == "worktree_missing_at_settle"
     assert _claim_count(ledger_path, task_id) == 0
     assert report.commits_ahead is None
     assert report.pr_url is None

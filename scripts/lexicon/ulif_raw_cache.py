@@ -8,6 +8,8 @@ import os
 import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
+
 RAW_TABLE = "ulif_dictua_raw_responses"
 RAW_SCHEMA = """
 CREATE TABLE IF NOT EXISTS ulif_dictua_raw_responses (
@@ -53,7 +55,7 @@ def open_cache(path: str | Path | None = None, *, create: bool = True) -> sqlite
         conn.execute(RAW_SCHEMA)
         conn.commit()
     else:
-        conn = sqlite3.connect(f"file:{target.resolve()}?mode=ro", uri=True)
+        conn = _shared_open_readonly(target.resolve())
     return conn
 
 

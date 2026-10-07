@@ -1,0 +1,62 @@
+{
+  "schema_version": "atlas-pilot-register-pin.v1",
+  "manifest_sha256": "7e95dbc7d5b0b5dcf2df329bfc319abf699a16d1ae4ce92706eb994acda97197",
+  "legacy_source_register_sha256": "eb286a61a5a68ca282482bf747ac27f546022b1becdadb32bfbd707c2bac8873",
+  "basis": "sha256 canonical UTF-8 JSON of {sources: referenced register entries sorted by id, legal_references: cited terms.legal_refs objects resolved by id and sorted by id}",
+  "source_ids": [
+    "frazeolohichnyi",
+    "puls",
+    "ukrainian_word_stress",
+    "ulif"
+  ],
+  "pins": [
+    {
+      "entries_sha256": "912713e18fff712fd2dec8f5300e037a8b276e5fd048b69cfc926a348e7ecb38",
+      "reason": "#9643 migration: entries digest of the admitted register (whole-file digest unchanged at migration)",
+      "recorded": "2026-10-06"
+    },
+    {
+      "entries_sha256": "d1a78d493ad6c6ccc0b342aca523d6bf2e2a4796f6d65ee2c57c4898af70a70c",
+      "reason": "Register licence corrections: PULS CC BY-NC-SA 4.0; ukrainian_word_stress data derived from ULIF (code MIT only); permission_status added (ULIF and stress data verbal-granted-written-pending)",
+      "recorded": "2026-10-06",
+      "admission": {
+        "admission": "APPROVE",
+        "author_seat_distinct": true,
+        "candidate_sha256": "d1a78d493ad6c6ccc0b342aca523d6bf2e2a4796f6d65ee2c57c4898af70a70c",
+        "checked_at": "2026-10-06T01:36:00Z",
+        "denominator": {
+          "atlas_articles": 114,
+          "source_records": 272,
+          "units": 150
+        },
+        "review_family": "google",
+        "review_harness": "native AGY",
+        "review_model": "gemini-3.8-flash-high",
+        "review_report_sha256": "45ef622753c4ad3b03d721e737df07a5e1c66f199edd64142fea7f91015d9b22"
+      }
+    },
+    {
+      "entries_sha256": "9c044db54b2a20e99823fee21a7371040cf58717c97aebaf54f77fadc0001850",
+      "reason": "#9609 authenticates the frazeolohichnyi 2003 edition and held citation provenance; prior #9826 licence and permission-status entries preserved.",
+      "recorded": "2026-10-06",
+      "admission": {
+        "admission": "APPROVE",
+        "candidate_sha256": "9c044db54b2a20e99823fee21a7371040cf58717c97aebaf54f77fadc0001850",
+        "review_report_sha256": "fb9676d2f1ea846f183bcd897c8a8039a4a1f381a55d1041f0ba87b876afc9b1",
+        "review_family": "google",
+        "review_model": "gemini-3.8-flash-high",
+        "review_harness": "native AGY",
+        "review_task_id": "admit-9609-register-r2",
+        "review_run_nonce": "26f7099901584c7c",
+        "author_task_id": "impl-9609-split-r2",
+        "author_seat_distinct": true,
+        "checked_at": "2026-10-06T05:23:23Z",
+        "denominator": {
+          "units": 150,
+          "source_records": 272,
+          "atlas_articles": 114
+        }
+      }
+    }
+  ]
+}

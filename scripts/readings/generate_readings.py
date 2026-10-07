@@ -22,6 +22,24 @@ from typing import Any
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -431,7 +449,7 @@ class CorpusLookup:
     ) -> CorpusText | None:
         if not self.db_path.exists():
             return None
-        with sqlite3.connect(self.db_path) as conn:
+        with _open_readonly(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             for hint in _matching_hints(candidate, hints):
                 if hint.packet_chunk_id:
@@ -460,7 +478,7 @@ class CorpusLookup:
 
     def _candidate_rows(
         self,
-        conn: sqlite3.Connection,
+        conn: SQLiteConnection,
         candidate: PrimaryReadingCandidate,
     ) -> list[sqlite3.Row]:
         rows: list[sqlite3.Row] = []
@@ -802,7 +820,7 @@ def _ordered_unique(values: Iterable[str]) -> list[str]:
 
 def _load_corpus_chunk_rows(db_path: Path) -> dict[str, sqlite3.Row]:
     rows_by_chunk_id: dict[str, sqlite3.Row] = {}
-    with sqlite3.connect(db_path) as conn:
+    with _open_readonly(db_path) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             """

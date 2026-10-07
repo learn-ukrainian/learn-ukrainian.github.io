@@ -29,7 +29,6 @@ from scripts.review import reviewer_resolver
 from scripts.review.model_catalog import CURSOR_AUTO_EXPECTED_ATTESTATION_RULE, load_model_catalog
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_MODEL_TOKENS,
-    CURSOR_AUTO_UNION_FAMILIES,
     CURSOR_AUTO_UNION_FAMILY,
     OPENAI_FRONTIER,
     REVIEW_CANDIDATES,
@@ -69,25 +68,13 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
 
 def test_cursor_attested_grok_author_refuses_same_family_review():
-    """Attested Cursor Grok is xAI; native Grok never judges, and the attested
-    Cursor Grok seat (#9488) is refused as the same family as a Grok author.
-
-    Composer above separately proves the non-Grok same-family refusal.
-    """
+    """Both Grok transports refuse an attested xAI author (#9769)."""
     inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium")
     assert resolve_author_family(inputs.author_model) == "xai"
-
-    for name, reason in (
-        (
-            "grok-4.7",
-            "native Grok never judges: Grok reviews code and infra only through the "
-            "runtime-attested Cursor seat (core.md P2, #9488)",
-        ),
-        ("grok-4.7-cursor-fallback", "same family as author (xai) — cross-family review requires a different family"),
-    ):
+    for name in ("grok-4.7", "grok-4.7-cursor-fallback"):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        assert result.status == "excluded", (name, result.status)
-        assert result.reason == reason
+        assert result.status == "excluded"
+        assert result.reason == "same family as author (xai) — cross-family review requires a different family"
 
     resolution = resolve_reviewer(inputs)
     assert resolution.fail_closed_reason is None
@@ -162,12 +149,10 @@ def test_cursor_auto_null_resolved_model_is_not_driver_of_record():
 
 
 def test_cursor_unattested_auto_is_not_a_single_reviewer_cf_identity():
-    """cursor:auto is never an acceptable formal-review identity: it resolves
-    to the allowlist-union sentinel (not a concrete family), no Auto candidate
-    exists on the review ladder, and an Auto author's reviewer comes from
-    OUTSIDE the {xAI, Moonshot} union — never a Cursor transport."""
+    """Auto is a Cursor author identity, but never a formal reviewer model.
+    Its reviewer comes from another family and never a Cursor transport."""
     assert resolve_author_family("cursor:auto") == CURSOR_AUTO_UNION_FAMILY
-    # The union sentinel is a resolution outcome, not a concrete vendor family.
+    # Auto is an author family; no Auto model is admitted as a reviewer.
     assert CURSOR_AUTO_UNION_FAMILY not in {candidate.family for candidate in REVIEW_CANDIDATES.values()}
 
     # No formal-review candidate is an unattested Cursor Auto identity.
@@ -180,7 +165,7 @@ def test_cursor_unattested_auto_is_not_a_single_reviewer_cf_identity():
     resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", risk="medium"))
     assert resolution.fail_closed_reason is None
     assert resolution.selected is not None
-    assert resolution.selected.family not in CURSOR_AUTO_UNION_FAMILIES
+    assert resolution.selected.family != "cursor"
     assert resolution.selected.transport != "cursor"
     assert resolution.quorum == ()
 

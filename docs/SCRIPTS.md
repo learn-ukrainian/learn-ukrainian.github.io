@@ -30,6 +30,64 @@ This diagnostic exception changes neither eligibility nor routing policy.
 
 For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
 
+## Routing facts (capacity and admission)
+
+`scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
+is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
+`idle_settle`, the curriculum wave gate and the `delegate.py` budget guard use its
+facts before adding their own restrictions (role, risk, egress, transport, wave
+config). The reviewer scheduler uses the same plan-window reader.
+Pass `model=None` for lane inventory. It returns the tightest plan window and its
+source, snapshot/probe freshness, `health` (`healthy`, `unhealthy` or `unknown`,
+with `health_basis`), the pace deficit, credit evidence and a `capacity` class:
+`verified`, `unknown`, `unknown_stale` or `avoid`. Missing data stays `unknown`, never
+fresh or healthy.
+
+- **`UNKNOWN — stale/advisory`:** a pace deficit or weekly-pace hot label read
+  from a stale snapshot or probe is `unknown_stale`. It is history, not a current
+  refusal. `capacity_pick` ranks these rows after every row with verified capacity
+  and before AVOID rows. They never appear in `cooler_lanes` and never satisfy
+  `--strict`. Near cap, runtime-blocked hot, unhealthy, `NEED_LOGIN` and ineligible
+  lanes stay AVOID.
+- **Lane health scan:** `scripts.api.lane_health.scan_lane_health` returns a typed
+  `LaneHealthScan`. Each lane's `health_for(lane)` record carries a `basis`:
+  `recent_tasks` (computed from tasks in the window), `scan_observed_idle` (scan ran,
+  no tasks, so healthy) or `scan_unavailable` (scan failed; `healthy` and failure
+  counts are null).
+- **Unobservable load:** if the task directory cannot be read, the routing budget
+  publishes `in_flight: null` (`—` in the picker). It never publishes `0`. Unknown
+  load is not idle: `idle_settle` needs `in_flight == 0` and explicit quota
+  permission (`quota_ok: true` or a `verified` class) before it counts a lane as
+  available.
+- **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
+  `true`/`false` when known, or `null` with a required `health_basis` when unknown,
+  such as a scan error or a missing lane record. It also records the owner's
+  `freshness` (`fresh`, `stale` or `unknown`). The wave is `fresh` only when
+  `diagnostics.stale` is explicitly `false` and no relevant lane probe is stale;
+  missing staleness metadata is unknown, never fresh.
+- **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
+  substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
+  tightest plan window at or below the threshold) unless the owner grants credit
+  relief for the model, whether or not the USD cost ledger has records. It
+  substitutes or refuses whenever the owner (`credit_lane.routing_facts`) keeps
+  the lane `hot`; it never clears a label itself. The owner clears a hot label
+  only when its source is weekly pace and no runtime headroom block set it:
+  either its pace is hidden below the visibility floor, or its pace reading on a
+  fresh observation finds no deficit (#9040). The status then comes from
+  remaining allowance, and the picker, reviewer resolver, wave gate and routing
+  recommendation read the same cleared status. A hot label from Cursor Auto, the
+  ledger or no source stays hot. A stale snapshot stays advisory. Lane health warnings print `demoted` for an
+  unhealthy lane and `health unknown (<basis>)` when health is unknown.
+- **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
+  only when `credit_lane.published_credit_relief` re-decides it with
+  `lane_credit_state` over the complete published lane record: snapshot
+  staleness, probe freshness, age and stale flag, the raw balance and its fetch
+  time, and runtime rate-limit evidence. A published `credit_balance_present`
+  leaf alone is not enough.
+- **Routing recommendation:** a past-cap lane is a credit candidate only when
+  the owner's `routing_facts` for the record grant credit relief as verified
+  capacity; the published `credit` leaf is not read.
+
 ## Git hooks
 
 Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
@@ -984,6 +1042,7 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 | `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
 | `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
+| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) | 2 GiB |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
@@ -994,7 +1053,10 @@ dead worker never holds a slot. The final count, the check, and publication of t
 `spawning` record happen under one host-wide lock (`batch_state/tasks/dispatch-admission.lock`),
 so concurrent dispatches cannot all take the last slot. `--dry-run` runs the same check but
 only reports dead records. Without `/proc` (macOS) memory and CPU are reported as `unknown`,
-and only the worker cap applies. `python -m scripts.fleet.capacity_pick` prints the same
+and only the worker cap applies. The pool check reads `memory.current`, `memory.high` and
+`memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
+`active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
+missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
 decision as its last line (JSON key `admission`). Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
@@ -2104,3 +2166,23 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 ### Dispatch settle (Luna handoff)
 
 `.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
+
+## Private open-model-data review build (RB-1)
+
+`.venv/bin/python -m scripts.projects.open_model_data.review_build {build|verify} --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"`
+
+Builds or re-verifies cited `review_only` records from host-local candidates and reviewed
+component specifications. The `omd-review-request.v1` JSON descriptor supplies candidate
+JSONL, catalog/register YAML paths, database store paths, per-component independent unit
+queries and frozen counts, declarative bindings, and citation compatibility/role mappings.
+See [the RB-1 design](projects/open-model-data/REVIEW_BUILD.md) and the `build.execute`,
+`bindings` and `roles` module contracts for the extension interface. Real extraction and
+attribution adapters ship with their components; the framework's synthetic adapter refuses
+unmarked sources. `--help` includes required flags, outputs and exit codes.
+
+All records, candidate accounting, attribution notices, metrics, manifest, README and error
+tracebacks stay under `--out` (directories `0700`, files `0600`); repository paths, symlinks,
+unsupported filesystems, unsafe ownership/modes and POSIX ACLs are refused. Console failures
+contain only reason codes, record ids, component ids and hashed row keys. `verify` re-runs
+all gates against pinned inputs and compares every artifact byte; it does not certify D2/D3,
+training readiness or RB-1 delivery. No network calls or database writes are performed.

@@ -6,6 +6,8 @@ import pytest
 
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 
 @pytest.mark.parametrize("selector", ("devops", "infra.devops", "atlas.practice", "seminars-folk"))
 def test_driver_accepts_canonical_and_legacy_lane_selectors(selector: str) -> None:

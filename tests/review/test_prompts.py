@@ -550,7 +550,18 @@ def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path
     assert "inspect_word" in rendered
     assert "inspect_words" in rendered
     assert "query_sum20" in rendered
-    assert "`query_ulif`" not in rendered
+    assert "`query_ulif` and other Sources\nwriters are unavailable on every review route, including full access." in rendered
+    for tool in (
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
+    ):
+        assert f"`{tool}`" in rendered
+    assert "Sovietization context only" in rendered
+    assert "it can never settle meaning, norm or stress" in rendered
     assert "verify_stress" in rendered
 
     for tool in REVIEW_TOOLS:

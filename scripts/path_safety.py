@@ -171,7 +171,9 @@ def assert_delete_target(
 
     ``approved_temp_roots`` is for a narrow, caller-owned temporary directory;
     it is not a mechanism to approve a broad parent such as a repository or
-    home directory.
+    home directory.  A repository, home, or filesystem root configured anywhere
+    in the approved set is rejected before any root is accepted, so an earlier
+    match cannot hide it.
     """
     raw_target = str(target)
     if raw_target.strip() in {"", "."}:
@@ -196,11 +198,16 @@ def assert_delete_target(
         allowed_roots.append(Path(tmpdir).resolve())
     allowed_roots.extend(Path(root).resolve() for root in approved_temp_roots)
 
+    # Reject every forbidden root before accepting a match.  Returning on the
+    # first containing root would let ``.worktrees/``, ``batch_state/tmp/``, or
+    # ``$TMPDIR`` hide a later repository, home, or filesystem root (#9758).
     for root in allowed_roots:
         if root.parent == root:
             raise ValueError("approved deletion root must not be the filesystem root")
         if root in {resolved_repo_root, home_root}:
             raise ValueError("approved deletion root must not be the repository or home directory")
+
+    for root in allowed_roots:
         if resolved_target == root:
             raise ValueError("delete target must be below an approved root, not the root itself")
         if _is_within(root, resolved_target):

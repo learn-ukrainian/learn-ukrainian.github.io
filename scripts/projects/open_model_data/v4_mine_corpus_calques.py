@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,
@@ -75,7 +75,7 @@ def _stems_from_zno_html(html: str) -> dict[int, str]:
 
 def load_official_zno_stems_from_sources(sources_db: Path) -> dict[int, str]:
     """Map ``zno_tasks.id`` → official ``stem``."""
-    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    conn = _open_readonly(sources_db)
     try:
         rows = conn.execute("SELECT id, stem FROM zno_tasks ORDER BY id").fetchall()
     finally:
@@ -270,8 +270,8 @@ def parse_textbook_contrast_tables(
     train_only_author_hashes: bool = True,
 ) -> list[dict[str, Any]]:
     """Extract explicit contrast pairs (НЕПРАВИЛЬНО -> ПРАВИЛЬНО, ❌ -> ✅) from textbook chunks."""
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_db)
+    v_conn = _open_readonly(vesum_db)
     sc = s_conn.cursor()
     vc = v_conn.cursor()
 
@@ -588,7 +588,7 @@ def parse_textbook_contrast_tables(
 
 def parse_zno_exam_tasks(sources_db: Path) -> list[dict[str, Any]]:
     """Extract all official ZNO/NMT exam tasks with distractors and keys."""
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_db)
     sc = s_conn.cursor()
 
     rows = sc.execute(

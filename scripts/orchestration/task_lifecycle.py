@@ -15,9 +15,10 @@ import json
 import os
 import re
 import subprocess
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -89,7 +90,16 @@ _ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-lifecycle.v1.schema.json"
 _SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _VALIDATOR = Draft202012Validator(_SCHEMA, format_checker=FormatChecker())
-_AC_RE = re.compile(r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31})\*\*\s+[—-]\s+(?P<text>.+?)\s*$")
+# Preserve the legacy bold-ID grammar, adding observed numeric suffix IDs.
+_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31}|AC-[0-9]+[a-zA-Z]+)"
+    r"\*\*\s+[—-]\s+(?P<text>.+?)\s*$"
+)
+_PLAIN_AC_RE = re.compile(
+    r"^- \[(?P<checked>[ xX])\] (?P<id>AC-(?:[A-Z0-9][A-Z0-9_-]{0,28}|[0-9]+[a-zA-Z]+))"
+    r"(?:\s*:\s*|\s+(?![:\s]))(?P<text>\S.*?)\s*$"
+)
+_AC_LIKE_CHECKBOX_RE = re.compile(r"^[-*+]\s*\[[^\]]*\]\s*[*_`]*AC(?=[^A-Za-z]|$)", re.IGNORECASE)
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
@@ -133,11 +143,222 @@ def lifecycle_id(identity: Mapping[str, Any]) -> str:
     )
 
 
+def membership_needs_audit(native_parent_epic: int | None, registered_epics: list[int] | None) -> bool:
+    """Whether :func:`resolve_membership` must consult the live audit (#9783).
+
+    A native parent that is itself a registered stream epic decides alone
+    (accept when it is the identity's epic, refuse otherwise), so fetching a
+    live audit there would only let an unrelated audit failure mask that
+    decision. No native parent (body path) or an unregistered native parent
+    (native-chain path) can only be decided by the fresh audit.
+    """
+    if native_parent_epic is None:
+        return True
+    return isinstance(registered_epics, list) and native_parent_epic not in registered_epics
+
+
+def _fresh_membership_audit(
+    membership_report: Mapping[str, Any] | None, max_age_s: int
+) -> tuple[Mapping[str, Any] | None, str | None]:
+    """Return ``(validated_report, None)`` or ``(None, refusal_reason)``."""
+    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
+        # Same predicate as validate_membership_report (#8661): the flag must
+        # be boolean True and incomplete_nodes must be a list. A missing flag
+        # or the string "false" is unverified, not a finished traversal.
+        unread = issue_stream_audit.unread_membership_nodes(membership_report)
+        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
+        return None, f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"
+    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+    if validated_report is None:
+        return None, "fresh issue-stream membership audit evidence is missing, stale, or malformed"
+    return validated_report, None
+
+
+def _resolve_native_chain(
+    *,
+    repository: str,
+    issue_number: int,
+    stream_epic: int,
+    native_parent_epic: int,
+    membership_report: Mapping[str, Any] | None,
+    max_age_s: int,
+) -> dict[str, Any]:
+    """Accept a native descendant reached through unregistered epics (#9783).
+
+    Reuses the audit's own native-chain resolution: ``issue_stream_audit``
+    walks native sub-issues down from every registered epic (stopping at other
+    registered epics) and records ``via: "native"`` for each descendant. The
+    issue must resolve that way to exactly the identity's epic, and its live
+    native parent must resolve the same way, so the audit and the current
+    GitHub parentage agree on the chain.
+    """
+    prefix = f"native parent #{native_parent_epic} is not a registered stream epic and "
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
+    if validated_report is None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": prefix + str(failure),
+        }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(prefix + failure)
+    generated_at = validated_report.get("generated_at")
+    index = validated_report.get("effective_membership") or {}
+    evidence_digest = digest(index)
+    entry = index.get(str(issue_number))
+    parent_entry = index.get(str(native_parent_epic))
+    reason: str | None = None
+    if not isinstance(entry, dict) or entry.get("via") != "native":
+        reason = "the fresh membership audit does not resolve the issue through a native sub-issue chain"
+    elif not entry.get("unique_stream"):
+        reason = "the native sub-issue chain is multi-homed across more than one registered epic"
+    elif entry.get("epics") != [stream_epic]:
+        reason = "the native sub-issue chain reaches a different registered epic than the identity's stream epic"
+    elif not (
+        isinstance(parent_entry, dict)
+        and parent_entry.get("via") == "native"
+        and parent_entry.get("epics") == [stream_epic]
+    ):
+        reason = "the native parent is not itself a native descendant of the identity's stream epic in the fresh audit"
+    if reason is not None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": generated_at,
+            "digest": evidence_digest,
+            "reason": prefix + reason,
+        }
+    return {
+        "valid": True,
+        "method": "native_chain",
+        "epic": stream_epic,
+        "generated_at": generated_at,
+        "digest": evidence_digest,
+        "reason": None,
+    }
+
+
+def _membership_refusal(reason: str) -> dict[str, Any]:
+    return {
+        "valid": False, "method": None, "epic": None,
+        "generated_at": None, "digest": None, "reason": reason,
+    }
+
+
+def repository_identity_valid(repository: object) -> bool:
+    """Require a typed owner/name identity, never an issue-number inference."""
+    return isinstance(repository, str) and re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is not None
+
+
+def repository_evidence_refusal(repository: str, evidence_repository: object, *, source: str) -> str | None:
+    """Bind membership evidence to a typed repository, without inference."""
+    if not repository_identity_valid(repository):
+        return "task repository identity is malformed"
+    if not repository_identity_valid(evidence_repository):
+        return f"{source} repository is missing or malformed"
+    if evidence_repository.casefold() != repository.casefold():
+        return f"{source} repository does not match the task identity"
+    return None
+
+
+def resolve_live_ancestry(
+    *,
+    repository: str,
+    issue_number: int,
+    stream_epic: int,
+    registered_epics: list[int] | None,
+    read_parent: Callable[[str, int], Mapping[str, Any] | None],
+    membership_report: Mapping[str, Any] | None = None,
+    max_age_s: int = 3600,
+) -> dict[str, Any]:
+    """Read at most eight qualified parents to the first registered root (#9794).
+
+    A read failure is a refusal. The injected reader returns a qualified parent
+    with ``number`` and ``repository``, or None only after a successful target
+    read explicitly returned ``parent: null``. Only that target null permits
+    body evidence from the same invocation's live audit, repository and registry.
+    Callers carry the in-memory report; this function never audits or reads a cache.
+    """
+    if not repository_identity_valid(repository):
+        return _membership_refusal("live ancestry repository identity is malformed")
+    if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
+        return _membership_refusal("identity stream epic is absent from the registered issue-stream epics")
+    current = issue_number
+    visited = {current}
+    for _ in range(issue_stream_audit._MAX_SUBISSUE_DEPTH):
+        try:
+            parent = read_parent(repository, current)
+        except (LifecycleError, OSError, ValueError, RuntimeError, subprocess.TimeoutExpired):
+            return _membership_refusal(f"live ancestry parent of #{current} could not be read")
+        if parent is None:
+            if current != issue_number or membership_report is None:
+                return _membership_refusal(f"live ancestry parent of #{current} is missing")
+            report, failure = _fresh_membership_audit(membership_report, max_age_s)
+            if report is None:
+                return _membership_refusal(str(failure))
+            failure = repository_evidence_refusal(
+                repository, report.get("repository"), source="live body membership audit"
+            )
+            if failure is not None:
+                return _membership_refusal(failure)
+            # An unresolved root skipped its checklist. It cannot rule out a
+            # second body owner, even though the reporting audit stays complete.
+            for warning in report.get("warnings") or ():
+                if warning["code"] == "unresolved_subissue" and (
+                    warning.get("issue") in registered_epics
+                    or not isinstance(warning.get("issue"), int)
+                    or isinstance(warning.get("issue"), bool)
+                    or warning["issue"] < 1
+                ):
+                    return _membership_refusal("live body membership audit has an unresolved unread root checklist")
+            entry = report["effective_membership"].get(str(issue_number))
+            if not (
+                isinstance(entry, dict)
+                and entry.get("via") == "body"
+                and entry.get("epics") == [stream_epic]
+                and entry.get("unique_stream") is True
+            ):
+                return _membership_refusal("live body membership requires exact unique body evidence for the claimed epic")
+            return {
+                "valid": True, "method": "body", "epic": stream_epic,
+                "generated_at": report["generated_at"],
+                "digest": digest(report["effective_membership"]), "reason": None,
+            }
+        if not isinstance(parent, Mapping) or not repository_identity_valid(parent.get("repository")):
+            return _membership_refusal("live ancestry parent repository identity is malformed")
+        if parent["repository"].casefold() != repository.casefold():
+            return _membership_refusal("live ancestry crosses a repository boundary")
+        number = parent.get("number")
+        if not isinstance(number, int) or isinstance(number, bool) or number < 1:
+            return _membership_refusal("live ancestry parent number is malformed")
+        if number in visited:
+            return _membership_refusal("live ancestry is cyclic")
+        if number in registered_epics:
+            if number != stream_epic:
+                return _membership_refusal("live ancestry reaches a different registered stream epic")
+            return {
+                "valid": True, "method": "native_chain", "epic": stream_epic,
+                "generated_at": None, "digest": None, "reason": None,
+            }
+        visited.add(number)
+        current = number
+    return _membership_refusal("live ancestry exceeds the maximum sub-issue depth")
+
+
 def resolve_membership(
     *,
     issue_number: int,
     stream_epic: int,
     native_parent_epic: int | None,
+    repository: str,
+    native_parent_repository: str | None,
     registered_epics: list[int] | None,
     membership_report: Mapping[str, Any] | None,
     max_age_s: int = 3600,
@@ -150,28 +371,40 @@ def resolve_membership(
     (``task_closeout._assert_mutation_ready``) — so drift discovered by any
     one of them is enforced identically by all the others.
 
+    Native parents require typed repository identity matching ``repository``
+    case-insensitively, before any number-based branch. Snapshot agreement is
+    read-only evidence; membership-reliant writes additionally require
+    :func:`resolve_live_ancestry`, including transferred-scope follow-ups.
+    Audit evidence on either snapshot path must name the same repository.
+
     Native GitHub sub-issue parentage is authoritative and takes precedence
     over any body-derived evidence: if ``native_parent_epic`` is set at all,
-    it alone decides the outcome — a native parent that differs from
-    ``stream_epic`` is a hard rejection, never a fall-through to body
-    evidence. Only when there is NO native parent does a fresh
-    ``issue_stream_audit`` effective-membership proof get consulted, and only
-    when it resolves this exact issue to exactly one effective epic equal to
-    ``stream_epic``. That proof is sourced entirely from the epic-side
-    checklist/reference ``issue_stream_audit`` already interprets — never from
-    the child issue's own body, so a child's own ``Refs #<epic>`` prose can
-    never establish membership here.
+    the native chain alone decides the outcome, never a fall-through to body
+    evidence. A native parent equal to ``stream_epic`` is accepted; a native
+    parent that is a different registered stream epic is a hard rejection. A
+    native parent that is NOT a registered stream epic (#9783) is accepted
+    only when the fresh, complete audit resolves this exact issue — and the
+    parent — ``via: "native"`` to exactly ``stream_epic``. Only when there is
+    NO native parent does a fresh ``issue_stream_audit`` effective-membership
+    proof get consulted for body evidence, and only when it resolves this
+    exact issue to exactly one effective epic equal to ``stream_epic``. That
+    proof is sourced entirely from the epic-side checklist/reference
+    ``issue_stream_audit`` already interprets — never from the child issue's
+    own body, so a child's own ``Refs #<epic>`` prose can never establish
+    membership here.
 
     Fails **closed** — ``valid: False`` — for every failure mode: the
     identity's stream epic absent from the registry, a native parent that
-    disagrees, and (for the body path) audit evidence that is missing, stale,
-    malformed, orphaned, wrong-epic, multi-homed, or otherwise ambiguous.
+    disagrees, and (for the native-chain and body paths) audit evidence that
+    is missing, stale, malformed, incomplete, orphaned, wrong-epic,
+    multi-homed, or otherwise ambiguous.
 
     The return value always carries the four AC-PROVENANCE fields — method
-    (``"native"`` / ``"body"`` / ``None``), epic, the audit's
-    ``generated_at``, and a deterministic digest of the effective-membership
-    index that was consulted — so every caller can persist identical
-    provenance regardless of which path accepted (or rejected) the proof.
+    (``"native"`` / ``"native_chain"`` / ``"body"`` / ``None``), epic, the
+    audit's ``generated_at``, and a deterministic digest of the
+    effective-membership index that was consulted — so every caller can
+    persist identical provenance regardless of which path accepted (or
+    rejected) the proof.
     """
     if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
         return {
@@ -183,6 +416,10 @@ def resolve_membership(
             "reason": "identity stream epic is absent from the registered issue-stream epics",
         }
     if native_parent_epic is not None:
+        if not repository_identity_valid(repository) or not repository_identity_valid(native_parent_repository):
+            return _membership_refusal("native parent repository identity is missing or malformed")
+        if native_parent_repository.casefold() != repository.casefold():
+            return _membership_refusal("native ancestry crosses a repository boundary")
         if native_parent_epic == stream_epic:
             return {
                 "valid": True,
@@ -192,29 +429,26 @@ def resolve_membership(
                 "digest": None,
                 "reason": None,
             }
-        return {
-            "valid": False,
-            "method": None,
-            "epic": native_parent_epic,
-            "generated_at": None,
-            "digest": None,
-            "reason": ("issue has a native parent epic that differs from the identity's exact registered stream epic"),
-        }
-    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
-        # Same predicate as validate_membership_report (#8661): the flag must
-        # be boolean True and incomplete_nodes must be a list. A missing flag
-        # or the string "false" is unverified, not a finished traversal.
-        unread = issue_stream_audit.unread_membership_nodes(membership_report)
-        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
-        return {
-            "valid": False,
-            "method": None,
-            "epic": None,
-            "generated_at": None,
-            "digest": None,
-            "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
-        }
-    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+        if native_parent_epic in registered_epics:
+            return {
+                "valid": False,
+                "method": None,
+                "epic": native_parent_epic,
+                "generated_at": None,
+                "digest": None,
+                "reason": (
+                    "issue has a native parent epic that differs from the identity's exact registered stream epic"
+                ),
+            }
+        return _resolve_native_chain(
+            repository=repository,
+            issue_number=issue_number,
+            stream_epic=stream_epic,
+            native_parent_epic=native_parent_epic,
+            membership_report=membership_report,
+            max_age_s=max_age_s,
+        )
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
     if validated_report is None:
         return {
             "valid": False,
@@ -222,8 +456,13 @@ def resolve_membership(
             "epic": None,
             "generated_at": None,
             "digest": None,
-            "reason": "fresh issue-stream membership audit evidence is missing, stale, or malformed",
+            "reason": failure,
         }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(failure)
     generated_at = validated_report.get("generated_at")
     index = validated_report.get("effective_membership") or {}
     evidence_digest = digest(index)
@@ -261,10 +500,15 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     criteria: list[dict[str, Any]] = []
     seen: set[str] = set()
     for raw_line in str(body or "").splitlines():
-        match = _AC_RE.fullmatch(raw_line.strip())
+        line = raw_line.strip()
+        match = _AC_RE.fullmatch(line) or _PLAIN_AC_RE.fullmatch(line)
         if not match:
+            if _AC_LIKE_CHECKBOX_RE.match(line):
+                raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
             continue
         ac_id = match.group("id")
+        if len(ac_id) > 32:
+            raise LifecycleError("acceptance criterion ID exceeds 32 characters")
         if ac_id in seen:
             raise LifecycleError(f"duplicate acceptance criterion ID in issue body: {ac_id}")
         seen.add(ac_id)
@@ -422,6 +666,16 @@ def _receipt_event_payload(record: Mapping[str, Any]) -> dict[str, Any]:
     return {key: deepcopy(value) for key, value in record.items() if key != "id"}
 
 
+def _utc_timestamp(value: str) -> datetime:
+    try:
+        timestamp = datetime.fromisoformat(value.upper().replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise LifecycleError("correction chronology requires a valid timestamp") from exc
+    if timestamp.tzinfo is None:
+        raise LifecycleError("correction chronology requires a timezone-aware timestamp")
+    return timestamp.astimezone(UTC)
+
+
 def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
     reference = details.get("behavior_proof_receipt")
     if not isinstance(reference, Mapping):
@@ -475,6 +729,8 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise LifecycleError(f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence")
     criteria_by_id = {item["id"]: item for item in criteria}
     evidence_ids: set[str] = set()
+    earlier_evidence: dict[str, Mapping[str, Any]] = {}
+    superseded_ids: set[str] = set()
     for record in ledger["evidence"]:
         if record["id"] != digest(_evidence_payload(record)):
             raise LifecycleError(f"evidence {record['id']} digest is invalid")
@@ -505,9 +761,30 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
             reference = _validate_behavior_proof_reference_shape(record["details"])
             if subject["commit"] is None or reference["target_sha"] != subject["commit"]:
                 raise LifecycleError("behavior-proof receipt target SHA does not match its evidence subject")
+        if "supersedes_evidence_id" in record["details"]:
+            target_id = record["details"]["supersedes_evidence_id"]
+            if not isinstance(target_id, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", target_id):
+                raise LifecycleError("supersedes_evidence_id must be sha256:<64 lowercase hex>")
+            target = earlier_evidence.get(target_id)
+            if target is None:
+                raise LifecycleError("supersedes_evidence_id must reference an existing earlier evidence record")
+            if target_id in superseded_ids:
+                raise LifecycleError("evidence record already has a superseder")
+            if (
+                target["ac_id"] != record["ac_id"]
+                or target["type"] != record["type"]
+                or any(target["subject"][key] != subject[key] for key in ("repository", "issue", "pr"))
+            ):
+                raise LifecycleError("superseding evidence must have the same criterion, type, repository, issue, and PR")
+            if _utc_timestamp(record["recorded_at"]) <= _utc_timestamp(target["recorded_at"]):
+                raise LifecycleError("superseding evidence recorded_at must be strictly later than its target")
+            superseded_ids.add(target_id)
+        earlier_evidence[record["id"]] = record
     for evidence_id in ledger["remaining_scope"]["evidence_ids"]:
         if evidence_id not in evidence_ids:
             raise LifecycleError("remaining-scope evidence ID is not present in the evidence ledger")
+        if evidence_id in superseded_ids:
+            raise LifecycleError("remaining-scope evidence ID references a superseded record")
     remaining = ledger["remaining_scope"]
     if remaining["status"] == "none":
         if remaining["follow_up_issue"] is not None or remaining["follow_up_stream_epic"] is not None:
@@ -593,6 +870,11 @@ def add_evidence(
     for existing in ledger["evidence"]:
         if existing["id"] == record["id"]:
             return ledger, existing
+    if (
+        "supersedes_evidence_id" in record["details"]
+        and _utc_timestamp(recorded_at) < _utc_timestamp(ledger["updated_at"])
+    ):
+        raise LifecycleError("new superseding evidence recorded_at must not predate ledger updated_at")
     ledger["evidence"].append(record)
     ledger["updated_at"] = recorded_at
     return validate_lifecycle(ledger), record
@@ -923,25 +1205,50 @@ def _evidence_status(
     *,
     head_sha: str | None,
     comment_urls: set[str],
-) -> tuple[dict[str, set[str]], list[str]]:
+) -> dict[str, Any]:
+    """Validate rows independently, then retire errors only at valid chain tips."""
     valid: dict[str, set[str]] = {}
-    invalid: list[str] = []
+    errors: dict[str, str] = {}
     for record in ledger["evidence"]:
         kind = record["type"]
         commit = record["subject"]["commit"]
         if kind in CURRENT_HEAD_EVIDENCE and head_sha and commit != head_sha:
-            invalid.append(f"{record['ac_id']}: {kind} evidence is not bound to current PR head")
+            errors[record["id"]] = f"{record['ac_id']}: {kind} evidence is not bound to current PR head"
             continue
         if kind == "behavior_proof":
             reference_error = _behavior_proof_reference_error(record, head_sha=head_sha)
             if reference_error:
-                invalid.append(f"{record['ac_id']}: {reference_error}")
+                errors[record["id"]] = f"{record['ac_id']}: {reference_error}"
                 continue
         if kind == "review" and (not record["url"] or record["url"] not in comment_urls):
-            invalid.append(f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments")
+            errors[record["id"]] = f"{record['ac_id']}: review receipt URL is absent from authoritative PR comments"
             continue
-        valid.setdefault(record["ac_id"], set()).add(kind)
-    return valid, invalid
+
+    superseders = {
+        record["details"]["supersedes_evidence_id"]: record["id"]
+        for record in ledger["evidence"]
+        if "supersedes_evidence_id" in record["details"]
+    }
+    # Validation guarantees earlier-only links and at most one superseder.
+    # Reverse ledger order resolves every chain in linear time without recursion.
+    tips: dict[str, str] = {}
+    for record in reversed(ledger["evidence"]):
+        record_id = record["id"]
+        successor = superseders.get(record_id)
+        tips[record_id] = tips[successor] if successor else record_id
+    retired = {record_id: error for record_id, error in errors.items() if tips[record_id] not in errors}
+    valid_ids: set[str] = set()
+    for record in ledger["evidence"]:
+        if record["id"] not in superseders and record["id"] not in errors:
+            valid_ids.add(record["id"])
+            valid.setdefault(record["ac_id"], set()).add(record["type"])
+    return {
+        "valid_evidence": valid,
+        "valid_evidence_ids": valid_ids,
+        "invalid_evidence": [error for record_id, error in errors.items() if record_id not in retired],
+        "superseded_evidence_ids": [record["id"] for record in ledger["evidence"] if record["id"] in superseders],
+        "retired_evidence_errors": retired,
+    }
 
 
 def _criteria_due_blockers(
@@ -999,9 +1306,8 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
     return blockers
 
 
-def _review_passed(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[str]]) -> bool:
-    review_records = [record for record in ledger["evidence"] if record["type"] == "review"]
-    return any("review" in valid_evidence.get(record["ac_id"], set()) for record in review_records)
+def _review_passed(ledger: Mapping[str, Any], valid_evidence_ids: set[str]) -> bool:
+    return any(record["type"] == "review" and record["id"] in valid_evidence_ids for record in ledger["evidence"])
 
 
 def _checks_status(required: list[str], checks: list[Mapping[str, Any]]) -> tuple[bool, bool, list[str]]:
@@ -1053,6 +1359,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue.get("parent_epic"),
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=github.get("membership_audit"),
     )
@@ -1081,8 +1389,10 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         for comment in github.get("comments") or []
         if isinstance(comment, Mapping) and comment.get("url")
     }
-    valid_evidence, invalid_evidence = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
-    hard.extend(invalid_evidence)
+    evidence_status = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
+    valid_evidence = evidence_status["valid_evidence"]
+    valid_evidence_ids = evidence_status["valid_evidence_ids"]
+    hard.extend(evidence_status["invalid_evidence"])
 
     readiness_local = local
     prior_local = _latest_premerge_local(ledger)
@@ -1115,7 +1425,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             hard.append("unresolved requested changes remain on the PR")
             actions.append("address requested changes and obtain fresh current-head review")
         elif pr_state == "OPEN":
-            review_ok = _review_passed(ledger, valid_evidence)
+            review_ok = _review_passed(ledger, valid_evidence_ids)
             if not review_ok:
                 last_success = "REVIEW_REQUESTED"
                 waiting.append("independent outside-author-family review is pending")
@@ -1130,9 +1440,11 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                     review_times = [
                         record["recorded_at"]
                         for record in ledger["evidence"]
-                        if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
+                        if record["type"] == "review" and record["id"] in valid_evidence_ids
                     ]
-                    if auto_enabled and review_times and auto_enabled < max(review_times):
+                    if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                        _utc_timestamp(recorded_at) for recorded_at in review_times
+                    ):
                         hard.append("auto-merge was armed before the verified review gate")
                 checks_ok, checks_waiting, checks_failed = _checks_status(
                     ledger["required_checks"], list(pr.get("checks") or [])
@@ -1151,7 +1463,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                         actions.append("arm or await auto-merge, then reconcile the merged PR")
 
         if pr_state == "MERGED":
-            review_ok = _review_passed(ledger, valid_evidence)
+            review_ok = _review_passed(ledger, valid_evidence_ids)
             checks_ok, checks_waiting, checks_failed = _checks_status(
                 ledger["required_checks"], list(pr.get("checks") or [])
             )
@@ -1162,9 +1474,11 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 review_times = [
                     record["recorded_at"]
                     for record in ledger["evidence"]
-                    if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
+                    if record["type"] == "review" and record["id"] in valid_evidence_ids
                 ]
-                if auto_enabled and review_times and auto_enabled < max(review_times):
+                if auto_enabled and review_times and _utc_timestamp(auto_enabled) < max(
+                    _utc_timestamp(recorded_at) for recorded_at in review_times
+                ):
                     hard.append("auto-merge was armed before the verified review gate")
             if checks_failed:
                 hard.append(f"merged PR has failed required CI: {', '.join(checks_failed)}")
@@ -1202,7 +1516,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             waiting.append("terminal goal requires deployment")
             actions.append("deploy the merged commit and record authoritative evidence")
     certified = any(
-        record["type"] == "certification" and "certification" in valid_evidence.get(record["ac_id"], set())
+        record["type"] == "certification" and record["id"] in valid_evidence_ids
         for record in ledger["evidence"]
     )
     if last_success == "DEPLOYED" and goal == "certify":
@@ -1230,6 +1544,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             issue_number=remaining["follow_up_issue"],
             stream_epic=remaining["follow_up_stream_epic"],
             native_parent_epic=follow_up.get("parent_epic"),
+            repository=identity["repository"],
+            native_parent_repository=follow_up.get("parent_repository"),
             registered_epics=registered_epics,
             membership_report=github.get("membership_audit"),
         )
@@ -1306,6 +1622,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         "waiting": list(dict.fromkeys(waiting)),
         "next_actions": list(dict.fromkeys(actions)),
         "valid_evidence": {key: sorted(value) for key, value in valid_evidence.items()},
+        "superseded_evidence_ids": evidence_status["superseded_evidence_ids"],
+        "retired_evidence_errors": evidence_status["retired_evidence_errors"],
         "preclose_missing_evidence": preclose_missing,
         "preclose_unchecked": preclose_unchecked,
         "goal_reached": goal_reached,

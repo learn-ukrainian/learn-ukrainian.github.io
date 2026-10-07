@@ -15,12 +15,32 @@ Usage:
 
 import argparse
 import re
-import sqlite3
 import sys
 from collections import Counter
 from pathlib import Path
 
 import yaml
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 # ---------------------------------------------------------------------------
 # Setup project paths
@@ -65,7 +85,7 @@ def tokenize_ukrainian(text: str) -> list[str]:
     return [t.lower() for t in tokens if len(t) >= MIN_WORD_LEN]
 
 
-def lookup_vesum(conn: sqlite3.Connection, word_forms: list[str]) -> dict[str, dict]:
+def lookup_vesum(conn: SQLiteConnection, word_forms: list[str]) -> dict[str, dict]:
     """
     Batch-lookup word forms in VESUM. Returns lemma → {pos, count} for content words.
 
@@ -121,7 +141,7 @@ def is_valid_vocab(vocab_path: Path) -> bool:
 
 
 def process_module(
-    md_path: Path, vocab_dir: Path, conn: sqlite3.Connection,
+    md_path: Path, vocab_dir: Path, conn: SQLiteConnection,
     force: bool = False, dry_run: bool = False,
 ) -> str:
     """Process a single module. Returns status string."""
@@ -185,7 +205,7 @@ def main():
         sys.exit(1)
 
     vocab_dir = level_dir / "vocabulary"
-    conn = sqlite3.connect(str(VESUM_DB))
+    conn = _open_readonly(str(VESUM_DB))
 
     wrote = 0
     skipped = 0

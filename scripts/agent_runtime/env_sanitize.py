@@ -169,6 +169,12 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "gemini": {
         "GEMINI_AUTH_MODE",
     },
+    # The Claude adapter sets this on every headless run so the CLI cannot
+    # leave work in the background when the run ends (#9690). It is a
+    # feature switch, never a credential.
+    "claude": {
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
+    },
     # CODEX_HOME must reach the codex subprocess so the V7 writer's
     # scoped config (materialized by
     # `linear_pipeline._ensure_codex_writer_home`) actually takes
@@ -217,6 +223,11 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         "KIMI_CODE_CREDENTIALS_PATH",
         "KIMI_CODE_OAUTH_HOST",
         "KIMI_CODE_OAUTH_MARGIN",
+        # The KimiCC harness runs headless Claude Code and sets this like the
+        # Claude adapter (#9690). The provider name is "kimi" for both Kimi
+        # harnesses, so build_agent_env admits it only from adapter overrides:
+        # the native Kimi CLI plan never sets it.
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
     },
 }
 
@@ -454,12 +465,15 @@ def _isolated_git_env(
 def build_agent_env(
     *,
     provider: str,
+    model: str | None = None,
     overrides: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Return a scrubbed env for a spawned agent CLI.
 
     ``overrides`` are applied to the parent environment before sanitization so
     adapter-supplied values are subject to the same policy as inherited values.
+    ``model`` is the effective model selected for this invocation, never an
+    inherited parent model. Cursor Auto or an absent model has Unknown identity.
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
     For a Kimi seat it raises ``KimiAdmissionRefused`` when credential
     isolation (an empty ``GH_CONFIG_DIR``, the credential-helper and GitHub
@@ -472,6 +486,11 @@ def build_agent_env(
         # AGY_APP_DATA_DIR (#8617); an ambient export must not leak into an
         # ordinary dispatch.
         raw.pop("AGY_APP_DATA_DIR", None)
+    if _normalized_provider(provider) == "kimi":
+        # Only the KimiCC plan sets the Claude background switch (#9690); an
+        # ambient export (a dispatch started from a headless Claude worker's
+        # shell) must not reach the native Kimi CLI.
+        raw.pop("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", None)
     raw.update(overrides or {})
     raw.pop("LU_OPSEC_OVERRIDE", None)
 
@@ -547,6 +566,12 @@ def build_agent_env(
         failure = f"a launch whose credential isolation could not be established ({exc})"
         raise KimiAdmissionRefused(format_refusal(provider, [failure])) from exc
     env.update(isolation)
+
+    # Inherited GIT_* values are scrubbed above. Recreate both identities from
+    # this lane after isolation so a driver's identity cannot leak to workers.
+    from scripts.lib.git_identity import git_identity_env
+
+    env.update(git_identity_env(provider, model))
 
     # Git reads this process-scoped config for ordinary child invocations,
     # including shell and Python subprocess wrappers. pushInsteadOf affects only

@@ -109,7 +109,11 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
             return corpus_hits["milozvuchnist_v_to_w_gloss"]
         return corpus_hits["default_not_in_corpus"]
 
-    monkeypatch.setattr(retrieval_playback.sqlite3, "connect", lambda *args, **kwargs: FakeConnection())
+    # run_diagnostic opens with _open_readonly and uses the connection as a
+    # context manager. It does not close on success (retrieval_playback.py:751).
+    # Patching sqlite3.connect hands the helper a fake, setup execute fails,
+    # and the helper's failure-path close raises (readonly_sqlite.py:73).
+    monkeypatch.setattr(retrieval_playback, "_open_readonly", lambda *args, **kwargs: FakeConnection())
     monkeypatch.setattr(retrieval_playback, "query_full_corpus_for_concept", fake_query)
 
     result = retrieval_playback.run_diagnostic("a1", "sounds-letters-and-hello")
@@ -250,7 +254,8 @@ def test_run_diagnostic_modern_dense_uses_search_sources(tmp_path, monkeypatch):
     monkeypatch.setattr(retrieval_playback, "DISCOVERY_PATH", discovery_path)
     monkeypatch.setattr(retrieval_playback, "SOURCE_REGISTRY_PATH", registry_path)
     monkeypatch.setattr(retrieval_playback, "search_sources", fake_search_sources)
-    monkeypatch.setattr(retrieval_playback.sqlite3, "connect", lambda *args, **kwargs: FakeConnection())
+    # Same opener seam as the legacy diagnostic: context manager, no success-path close.
+    monkeypatch.setattr(retrieval_playback, "_open_readonly", lambda *args, **kwargs: FakeConnection())
     monkeypatch.setattr(retrieval_playback, "query_full_corpus_for_concept", fake_query)
 
     result = retrieval_playback.run_diagnostic(

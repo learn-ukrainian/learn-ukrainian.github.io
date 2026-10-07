@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from scripts.fleet import capacity_pick
+from scripts.fleet import capacity_pick, credit_lane
+from scripts.fleet.reset_reserve import codex_reset_reserve_eligible
 
 
 def _fixture_budget() -> dict:
@@ -167,6 +169,7 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
         health={"healthy": True},
         freshness="fresh",
         age_s=0,
+        status_source="weekly_pace",
         reset_credits={
             "available_count": live,
             "expires_at": [None] * live,
@@ -175,6 +178,7 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
         codexbar={
             **budget["agents"]["codex"]["codexbar"],
             "weekly_used_pct": 72.0,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
             "windows": {"primary": {"remaining_pct": 12.0}},
         },
         runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
@@ -194,6 +198,46 @@ def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected
     assert reserve["remaining_resets"] == asserted
 
 
+def test_reset_reserve_never_lifts_the_owner_avoid():
+    """#9740 P1: a hot label the owner keeps (not weekly pace) stays AVOID whatever the reserve."""
+    now = datetime.now(UTC)
+    budget = _fixture_budget()
+    info = budget["agents"]["codex"]
+    info.update(
+        eligible=True,
+        health={"healthy": True},
+        freshness="fresh",
+        age_s=0,
+        reset_credits={"available_count": 2, "expires_at": [None, None], "fetched_at": now.isoformat()},
+        codexbar={
+            **info["codexbar"],
+            "weekly_used_pct": 72.0,
+            "weekly_resets_at": (now + timedelta(days=3.5)).isoformat(),
+            "windows": {"primary": {"remaining_pct": 12.0}},
+        },
+        runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+    )
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (now - timedelta(minutes=1)).isoformat(),
+        "expires_at": (now + timedelta(days=1)).isoformat(),
+    }
+    facts = credit_lane.routing_facts("codex", info, model=None, snapshot_metadata=budget["diagnostics"])
+    assert facts.capacity == credit_lane.CAPACITY_AVOID
+    # Every reserve precondition but the owner's verdict holds.
+    assert codex_reset_reserve_eligible(reserve, info, owner_capacity=credit_lane.CAPACITY_VERIFIED)
+
+    rows = capacity_pick.build_lane_rows(budget, reset_reserve=reserve)
+    row = next(row for row in rows if row["lane"] == "codex")
+    assert row["avoid"] is True
+    assert row["reset_reserve_eligible"] is False
+    assert row["capacity"]["state"] == credit_lane.CAPACITY_AVOID
+    assert "codex" not in capacity_pick.cooler_lanes(rows)
+    assert capacity_pick.build_report(budget, reset_reserve=reserve)["pick_order"][0]["lane"] != "codex"
+
+
 def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp_path):
     from scripts.fleet import reset_reserve
 
@@ -205,6 +249,7 @@ def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp
         health={"healthy": True},
         freshness="fresh",
         age_s=10,
+        status_source="weekly_pace",
         runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
         reset_credits={
             "available_count": 1,
@@ -212,7 +257,11 @@ def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp
             "fetched_at": now.isoformat(),
         },
     )
-    info["codexbar"].update(weekly_used_pct=72, windows={"primary": {"remaining_pct": 12}})
+    info["codexbar"].update(
+        weekly_used_pct=72,
+        weekly_resets_at=(now + timedelta(days=3.5)).isoformat(),
+        windows={"primary": {"remaining_pct": 12}},
+    )
     path = tmp_path / "batch_state" / "routing_budget" / "operator_reset_reserve.json"
     path.parent.mkdir(parents=True)
     path.write_text(
@@ -273,8 +322,12 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
     assert row["avoid"] is True
     assert row["reset_reserve_eligible"] is False
 
+    # On a fresh snapshot the owner verifies a weekly-pace label whose deficit the live resets cover.
+    fresh_codex = copy.deepcopy(budget["agents"]["codex"])
+    fresh_codex["status_source"] = "weekly_pace"
+    fresh_codex["codexbar"]["weekly_resets_at"] = (datetime.now(UTC) + timedelta(days=3.5)).isoformat()
     only_codex = {
-        "agents": {"codex": budget["agents"]["codex"]},
+        "agents": {"codex": fresh_codex},
         "diagnostics": {"stale": False},
         "recommendation": {"primary_agent_for_code": None, "warnings": []},
     }
@@ -387,13 +440,154 @@ def test_unhealthy_deepseek_account_row_is_avoid():
 
 
 def test_healthy_deepseek_account_row_unaffected():
-    """health.healthy True changes neither avoid nor notes."""
+    """health.healthy True adds no unhealthy note; the lane stays excluded from picks."""
     budget = _fixture_budget()
     baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
     budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
     row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
-    assert row["avoid"] is baseline["avoid"] is False
+    assert row["avoid"] is baseline["avoid"] is True
     assert "unhealthy:" not in row["notes"]
+
+
+def test_deepseek_prepaid_lane_is_never_a_pick():
+    """A cool, funded, healthy DeepSeek account stays visible but is AVOID and never a cooler seat."""
+    report = capacity_pick.build_report(_fixture_budget())
+    row = next(r for r in report["pick_order"] if r["lane"] == "deepseek")
+    assert row["pick"] == "AVOID"
+    assert "excluded from dispatch and review" in row["notes"]
+    assert row["capacity"]["state"] == credit_lane.CAPACITY_AVOID
+    assert "deepseek" not in report["cooler_lanes"]
+
+
+def _pick_row(lane: str, status: str, remaining: float | None, in_flight: int | None, *, avoid: bool = False) -> dict:
+    return {
+        "lane": lane,
+        "status": status,
+        "remaining_pct": remaining,
+        "in_flight": in_flight,
+        "avoid": avoid,
+        "capacity": {"state": credit_lane.CAPACITY_AVOID if avoid else credit_lane.CAPACITY_VERIFIED},
+        "reset_reserve_eligible": False,
+    }
+
+
+def _ranked(rows: list[dict]) -> list[str]:
+    return [p["lane"] for p in capacity_pick.build_pick_order(rows) if p["pick"] != "AVOID"]
+
+
+def test_pick_order_prefers_cool_lane_with_most_headroom_then_fewest_in_flight():
+    """2026-10-07 live shape: codex 92%/2 in flight, grok 47%/2, kimi 94%/0, agy 99.9%/0; claude, cursor hot."""
+    rows = [
+        _pick_row("claude", "hot", 56.0, 1, avoid=True),
+        _pick_row("codex", "cool", 92.0, 2),
+        _pick_row("grok", "cool", 47.0, 2),
+        _pick_row("cursor", "hot", 16.4, 0, avoid=True),
+        _pick_row("kimi", "cool", 94.0, 0),
+        _pick_row("agy", "cool", 99.9, 0),
+    ]
+    assert _ranked(rows) == ["kimi", "agy", "codex", "grok"]
+
+
+def test_pick_order_falls_back_to_static_priority_without_quota():
+    rows = [_pick_row(lane, "cool", None, 0) for lane in ("agy", "kimi", "grok", "codex")]
+    assert _ranked(rows) == ["codex", "grok", "kimi", "agy"]
+
+
+def test_pick_order_known_headroom_ranks_before_unknown_headroom():
+    rows = [_pick_row("codex", "cool", None, 0), _pick_row("agy", "cool", 15.0, 3)]
+    assert _ranked(rows) == ["agy", "codex"]
+
+
+def test_pick_order_status_still_outranks_headroom_and_cool_cursor_still_leads():
+    rows = [
+        _pick_row("agy", "warm", 99.0, 0),
+        _pick_row("kimi", "cool", 60.0, 4),
+        _pick_row("cursor", "cool", 30.0, 1),
+    ]
+    assert _ranked(rows) == ["cursor", "kimi", "agy"]
+
+
+_WS_NOW = datetime(2026, 10, 7, 18, 0, tzinfo=UTC)
+
+
+def _write_record(agent: str, status: str, *, mode: str = "workspace-write", hours_ago: float = 1.0) -> dict:
+    stamp = (_WS_NOW - timedelta(hours=hours_ago)).isoformat()
+    return {"agent": agent, "mode": mode, "status": status, "started_at": stamp, "finished_at": stamp}
+
+
+def test_write_success_stats_counts_terminal_write_attempts_in_window():
+    records = [
+        _write_record("kimi", "done"),
+        _write_record("kimi", "failed"),
+        _write_record("kimi", "failed"),
+        _write_record("kimi", "no_deliverable"),
+        _write_record("kimi", "dry_run"),
+        _write_record("kimi", "running"),
+        _write_record("kimi", "cancelled"),
+        _write_record("kimi", "failed", mode="read-only"),
+        _write_record("kimi", "failed", hours_ago=8 * 24),
+        _write_record("grok-build", "done", mode="danger"),
+        _write_record("gemini", "failed"),
+    ]
+    stats = capacity_pick.write_success_stats(records, now=_WS_NOW)
+    assert stats["kimi"] == {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True}
+    assert stats["grok"] == {"attempts": 1, "done": 1, "rate": 1.0, "demoted": False}
+    assert stats["agy"]["attempts"] == 1 and stats["agy"]["demoted"] is False
+
+
+def test_write_success_under_min_attempts_is_not_demoted():
+    stats = capacity_pick.write_success_stats(
+        [_write_record("agy", "failed"), _write_record("agy", "no_deliverable")], now=_WS_NOW
+    )
+    assert stats["agy"] == {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False}
+
+
+def test_write_success_at_threshold_is_not_demoted():
+    records = [_write_record("codex", "done")] * 3 + [_write_record("codex", "failed")] * 2
+    assert capacity_pick.write_success_stats(records, now=_WS_NOW)["codex"]["demoted"] is False  # 60% exactly
+
+
+def test_kimi_at_one_in_four_cannot_take_first_place_on_headroom_alone():
+    rows = [
+        _pick_row("codex", "cool", 92.0, 2),
+        _pick_row("kimi", "cool", 94.0, 0),
+        _pick_row("agy", "cool", 91.0, 1),
+    ]
+    assert _ranked(rows)[0] == "kimi"
+    rows[1]["write_success"] = {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True}
+    ranked = _ranked(rows)
+    assert ranked[0] != "kimi"
+    assert ranked == ["agy", "codex", "kimi"]
+
+
+def test_build_report_attaches_write_success_and_notes_the_demotion():
+    budget = _fixture_budget()
+    budget["agents"]["kimi"] = {"status": "cool", "burn_pct_7d": 6.0, "remaining_pct": 94.0}
+    stats = {
+        "kimi": {"attempts": 4, "done": 1, "rate": 0.25, "demoted": True},
+        "agy": {"attempts": 2, "done": 0, "rate": 0.0, "demoted": False},
+    }
+    report = capacity_pick.build_report(budget, active_in_flight={}, write_success=stats)
+    rows = {row["lane"]: row for row in report["rows"]}
+    assert rows["kimi"]["write_success"]["demoted"] is True
+    assert "write success 1/4 in 7d (<60%): one headroom band down" in rows["kimi"]["notes"]
+    assert rows["agy"]["write_success"]["demoted"] is False
+    assert rows["grok"]["write_success"] == {"attempts": 0, "done": 0, "rate": None, "demoted": False}
+    assert report["write_success"]["kimi"]["attempts"] == 4
+    without = capacity_pick.build_report(budget, active_in_flight={})
+    assert all("write_success" not in row for row in without["rows"])
+
+
+def test_load_write_success_stats_reads_hot_and_archived_records(tmp_path):
+    (tmp_path / "archive").mkdir()
+    (tmp_path / "a.json").write_text(json.dumps(_write_record("kimi", "done")))
+    (tmp_path / "b.20261007T170000Z.archived.json").write_text(json.dumps(_write_record("kimi", "failed")))
+    (tmp_path / "archive" / "c.json").write_text(json.dumps(_write_record("kimi", "failed")))
+    (tmp_path / "broken.json").write_text("{not json")
+    stats = capacity_pick.load_write_success_stats(tmp_path, now=_WS_NOW + timedelta(hours=1))
+    assert stats["kimi"] == {"attempts": 3, "done": 1, "rate": 1 / 3, "demoted": True}
+    assert capacity_pick.load_write_success_stats(tmp_path, now=_WS_NOW + timedelta(days=8)) == {}
+    assert capacity_pick.load_write_success_stats(tmp_path / "missing") is None
 
 
 def test_unavailable_subscription_never_cool():
@@ -574,3 +768,89 @@ def test_codex_without_usable_credits_stays_near_cap_avoid(overrides, state):
     codex = next(row for row in rows if row["lane"] == "codex")
     assert (codex["credit"]["state"], codex["status"], codex["avoid"]) == (state, "near_cap", True)
     assert "codex" not in capacity_pick.cooler_lanes(rows)
+
+
+# --- #9740: shared routing facts in rows, order and CLI -------------------------
+
+
+def test_unknown_load_renders_as_dash_and_null(monkeypatch):
+    budget = _fixture_budget()
+    budget.pop("in_flight")
+    rows = capacity_pick.build_lane_rows(budget, reset_reserve={"available": False})
+    assert {row["in_flight"] for row in rows} == {None}
+    assert all("idle" not in row["notes"].split("; ") for row in rows)
+    table = capacity_pick.format_table(rows)
+    cursor_line = next(line for line in table.splitlines() if line.startswith("cursor"))
+    assert " — " in cursor_line or cursor_line.split(" | ")[5].strip() == "—"
+
+
+def test_unreadable_active_work_is_none_not_empty(monkeypatch):
+    def broken(*_a, **_k):
+        raise OSError("down")
+
+    monkeypatch.setattr(capacity_pick.urllib.request, "urlopen", broken)
+    assert capacity_pick.fetch_active_in_flight() is None
+
+
+def test_rows_carry_owner_facts_and_remaining_reading():
+    """F1: the row's remaining is the owner's tightest window; every row carries the facts."""
+    budget = _fixture_budget()
+    budget["agents"]["grok"]["codexbar"] = {"primary_remaining_pct": 3.0}
+    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget, reset_reserve={"available": False})}
+    assert rows["grok"]["remaining_pct"] == 3.0
+    assert rows["grok"]["remaining_source"] == "codexbar.primary_remaining_pct"
+    for row in rows.values():
+        assert row["routing_facts"]["plan_remaining_pct"] == row["remaining_pct"]
+        assert row["capacity"]["state"] in {"verified", "unknown", "unknown_stale", "avoid"}
+
+
+def test_stale_unknown_never_ranks_ahead_of_verified_capacity():
+    """F2 rank-inversion control (A5): a stale-advisory lane with far more remaining allowance
+    ranks after cool, warm and credit-balance rows, and is not a cooler lane or --strict success."""
+    stale = {
+        "lane": "codex",
+        "status": "unknown",
+        "remaining_pct": 99.0,
+        "in_flight": 0,
+        "avoid": False,
+        "capacity": {"state": "unknown_stale"},
+    }
+    warm = {
+        "lane": "kimi",
+        "status": "warm",
+        "remaining_pct": 11.0,
+        "in_flight": 3,
+        "avoid": False,
+        "capacity": {"state": "verified"},
+    }
+    credit = {"lane": "grok", "status": "credit_balance_present", "remaining_pct": 2.0, "in_flight": 0, "avoid": False}
+    order = capacity_pick.build_pick_order([stale, warm, credit])
+    assert [row["lane"] for row in order] == ["kimi", "grok", "codex"]
+    assert capacity_pick.cooler_lanes([stale]) == []
+
+
+def test_strict_fails_when_the_only_capacity_is_stale_advisory(monkeypatch, capsys):
+    from scripts.fleet import usage
+
+    budget = {
+        "agents": {
+            "codex": {
+                "status": "hot",
+                "status_source": "weekly_pace",
+                "remaining_pct": 60.0,
+                "freshness": "stale_last_good",
+                "codexbar": {"weekly_expected_pct": 25.0, "weekly_pace_delta_pct": 15.0, "will_last_to_reset": False},
+            }
+        },
+        "diagnostics": {"stale": True},
+        "recommendation": {"primary_agent_for_code": None, "warnings": []},
+    }
+    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: budget)
+    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
+    monkeypatch.setattr(capacity_pick, "load_reset_reserve", lambda *_a, **_k: {"available": False})
+    monkeypatch.setattr(capacity_pick, "admission_status", lambda: {"admitted": None, "line": "admission: fixture"})
+    assert capacity_pick.main(["--strict", "--json"]) == 2
+    report = json.loads(capsys.readouterr().out)
+    codex = next(row for row in report["rows"] if row["lane"] == "codex")
+    assert (codex["status"], codex["avoid"], codex["capacity"]["state"]) == ("unknown", False, "unknown_stale")
+    assert report["cooler_lanes"] == []

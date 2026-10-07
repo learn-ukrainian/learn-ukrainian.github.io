@@ -11,12 +11,30 @@ import hashlib
 import importlib.util
 import json
 import re
-import sqlite3
+import sys
 import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -593,7 +611,7 @@ def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(visible, key=lambda row: _uk_sort_key(row["l"]))
 
 
-def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
+def _site_build_entry_model_gates(conn: SQLiteConnection) -> None:
     """Fail the site artifact build on the entry-model's count/target gates.
 
     ``atlas_db`` runs the same checks while materializing the database. Repeating
@@ -652,7 +670,7 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
         )
 
 
-def _primary_source_for_slug(conn: sqlite3.Connection, slug: str) -> str | None:
+def _primary_source_for_slug(conn: SQLiteConnection, slug: str) -> str | None:
     families = [
         row[0]
         for row in conn.execute(
@@ -667,7 +685,7 @@ def _primary_source_for_slug(conn: sqlite3.Connection, slug: str) -> str | None:
 
 
 def _heritage_status_for_slug(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     slug: str,
     *,
     heritage_classification: str | None,
@@ -687,7 +705,7 @@ def _heritage_status_for_slug(
     return {}
 
 
-def _definition_cards_for_slug(conn: sqlite3.Connection, slug: str) -> object:
+def _definition_cards_for_slug(conn: SQLiteConnection, slug: str) -> object:
     row = conn.execute(
         "SELECT payload_json FROM enrichment WHERE slug = ? AND section = 'definition_cards'",
         (slug,),
@@ -706,7 +724,7 @@ def browse_rows_from_db_articles(
 ) -> list[dict[str, Any]]:
     """Attach browse ``cls`` codes to DB article rows using stored heritage/provenance."""
 
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         article_meta = {
             slug: (heritage_classification, lemma, gloss)
@@ -816,7 +834,7 @@ def build_atlas_db_search_artifacts(
     are deliberately never copied into the article index.
     """
 
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     try:
         _site_build_entry_model_gates(conn)
         article_rows = conn.execute(

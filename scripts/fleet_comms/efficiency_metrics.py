@@ -18,6 +18,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection, open_readonly  # type: ignore[no-redef]
+
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneError,
@@ -53,9 +60,9 @@ _RETIRED_AGENTS = frozenset({"gemini"})
 
 
 @contextmanager
-def _connect_legacy(db_path: Path) -> Iterator[sqlite3.Connection]:
+def _connect_legacy(db_path: Path) -> Iterator[SQLiteConnection]:
     """Open a read path connection and always close it (sqlite3 `with` only commits)."""
-    conn = sqlite3.connect(str(db_path))
+    conn = open_readonly(str(db_path))
     conn.row_factory = sqlite3.Row
     try:
         yield conn
@@ -81,7 +88,11 @@ def _connect_ro(db_path: Path) -> Iterator[Any]:
     authority = assert_component_supported(StoreId.FLEET_COMMS, "efficiency_metrics")
     if authority is not Authority.PG and not db_path.is_file():
         raise FileNotFoundError(db_path)
-    conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
+    conn = (
+        cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
+        if authority is Authority.PG
+        else open_readonly(db_path)
+    )
     try:
         if authority is Authority.PG:
             conn.row_factory = dict_row
@@ -97,22 +108,22 @@ def _connect_ro(db_path: Path) -> Iterator[Any]:
 
 
 def _placeholder(conn: Any) -> str:
-    return "?" if isinstance(conn, sqlite3.Connection) else "%s"
+    return "?" if is_sqlite_connection(conn) else "%s"
 
 
 def _table_exists(conn: Any, name: str) -> bool:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         query = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?"
     else:
         query = "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
     exists = conn.execute(query, (name,)).fetchone() is not None
-    if not exists and not isinstance(conn, sqlite3.Connection):
+    if not exists and not is_sqlite_connection(conn):
         raise EfficiencyMetricsReadError("control-plane store 'fleet_comms' metrics table unavailable")
     return exists
 
 
 def _column_names(conn: Any, table: str) -> set[str]:
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
     return {
         str(r["attname"])
@@ -128,7 +139,7 @@ def _delivery_latency(
     conn: Any, *, table: str, start: str, end: str, delivered_only: bool = False,
 ) -> dict[str, Any] | None:
     """Aggregate durable timestamps; identifiers are collector-owned constants."""
-    if isinstance(conn, sqlite3.Connection):
+    if is_sqlite_connection(conn):
         duration = f"(julianday({end}) - julianday({start})) * 86400.0"
     else:
         duration = f"EXTRACT(EPOCH FROM ({end}::timestamptz - {start}::timestamptz))"
@@ -635,18 +646,6 @@ def _store_merge_facts(path: Path, facts: dict[str, str]) -> None:
             return
 
 
-def _run_gh(
-    args: list[str], *, timeout: float = _GH_TIMEOUT_S,
-) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        args,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=timeout,
-    )
-
-
 def _graphql_failure_message(payload: object) -> str:
     if isinstance(payload, dict):
         errors = payload.get("errors")
@@ -725,16 +724,8 @@ def _parse_merge_fact_payload(
 
 def _fetch_merge_facts(
     missing: list[tuple[str, int]],
-    *,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]],
-    gh_bin: str,
 ) -> dict[tuple[str, int], tuple[datetime | None, str | None, str | None]]:
-    """One ``gh api graphql`` call per ≤50 cache misses.
-
-    ``gh`` exits non-zero when any alias errors, but stdout can still hold
-    partial ``data``. Those aliases are parsed. Only a missing or unparseable
-    payload fails the whole batch.
-    """
+    """Read merge facts through the shared REST client in bounded batches."""
     fetched: dict[tuple[str, int], tuple[datetime | None, str | None, str | None]] = {}
     valid: list[tuple[str, int]] = []
     for repo, number in missing:
@@ -747,10 +738,14 @@ def _fetch_merge_facts(
         batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
         try:
             from scripts.publish.github import read
-            def transport(args, **kwargs):
-                return gh_runner([gh_bin, *args[1:]], timeout=kwargs["timeout"])
-            proc = read("merge-facts", batch=batch, runner=transport if gh_runner is not _run_gh else None,
-                        timeout=_GH_TIMEOUT_S, capture_output=True, text=True)
+
+            proc = read(
+                "merge-facts",
+                batch=batch,
+                timeout=_GH_TIMEOUT_S,
+                capture_output=True,
+                text=True,
+            )
             stdout = proc.stdout or ""
             if isinstance(stdout, bytes):
                 stdout = stdout.decode("utf-8", errors="replace")
@@ -775,7 +770,7 @@ def _fetch_merge_facts(
             fetched.update(_parse_merge_fact_payload(payload, batch))
         except subprocess.TimeoutExpired:
             for key in batch:
-                fetched[key] = (None, f"gh api graphql timed out after {_GH_TIMEOUT_S}s", None)
+                fetched[key] = (None, f"GitHub merge facts timed out after {_GH_TIMEOUT_S}s", None)
         except Exception as exc:
             message = str(exc)[:300] or "gh failed"
             for key in batch:
@@ -787,8 +782,6 @@ def _resolve_pr_merge_facts(
     keys: list[tuple[str, int]],
     *,
     cache_path: Path | None,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
-    gh_bin: str = "gh",
 ) -> dict[tuple[str, int], tuple[datetime | None, str | None]]:
     """Return merge timestamps for ``keys``. Cache hits do not call ``gh``."""
     unique: list[tuple[str, int]] = []
@@ -811,7 +804,7 @@ def _resolve_pr_merge_facts(
     if not missing:
         return resolved
 
-    fetched = _fetch_merge_facts(missing, gh_runner=gh_runner or _run_gh, gh_bin=gh_bin)
+    fetched = _fetch_merge_facts(missing)
     updates: dict[str, str] = {}
     for key, (merged_at, error, raw) in fetched.items():
         resolved[key] = (merged_at, error)
@@ -828,9 +821,7 @@ def collect_stream_bottleneck_metrics(
     plane_db: Path,
     now: datetime | None = None,
     github_lookup: Callable[..., tuple[datetime | None, str | None]] | None = None,
-    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
     merge_cache_path: Path | None = None,
-    gh_bin: str = "gh",
 ) -> dict[str, Any]:
     """Collect lifecycle-only per-stream bottlenecks from independent sources.
 
@@ -988,8 +979,6 @@ def collect_stream_bottleneck_metrics(
                     lookups = _resolve_pr_merge_facts(
                         [item[2] for item in pending_merges],
                         cache_path=cache_path,
-                        gh_runner=gh_runner,
-                        gh_bin=gh_bin,
                     )
                 except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
                     lookups = {item[2]: (None, str(exc)[:300]) for item in pending_merges}

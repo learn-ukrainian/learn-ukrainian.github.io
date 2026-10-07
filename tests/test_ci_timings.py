@@ -43,6 +43,8 @@ from scripts.ci.ci_timings import (
 _FIXTURE_PATH = Path(__file__).parent / "fixtures" / "ci_timings" / "sample_ci_runs.json"
 
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 def test_nearest_rank_percentile_hand_computed() -> None:
     """Validate nearest-rank percentile against hand-computed reference values.
 

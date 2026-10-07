@@ -46,7 +46,7 @@
 # A single-route lane is NOT a failover chain (loader requires >= 2 routes),
 # so no chains are declared. On a lane fault the ORCHESTRATOR reroutes BY
 # SEAT per model-assignment.md (review stall -> the next resolve-reviewer pick,
-# never native grok; deepseek fault -> grok/codex), never by silently burning API credit.
+# including attested native or Cursor Grok, #9769; deepseek fault -> grok/codex), never by silently burning API credit.
 # The chain machinery itself stays (tests + probe cover it) for any future
 # chain the user explicitly approves.
 chains: {}

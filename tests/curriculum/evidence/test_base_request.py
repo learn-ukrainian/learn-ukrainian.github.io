@@ -16,6 +16,7 @@ import yaml
 
 from scripts.curriculum.evidence import sources, words
 from scripts.curriculum.learner_state.base_layer import resolve_base_ids
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -148,7 +149,7 @@ def test_a1_base_request_accepted_by_build_words(tmp_path: Path) -> None:
             "INSERT INTO vesum_build_metadata VALUES (?, ?)",
             ("canonical_jsonl_sha256", hashlib.sha256(b"synthetic-vesum").hexdigest()),
         )
-        with sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True) as real_conn:
+        with open_readonly(VESUM_DB_PATH) as real_conn:
             slots = ",".join("?" * len(lemmas))
             rows = real_conn.execute(
                 f"SELECT id, entry_id, word_form, lemma, pos, tags, source_comment, source_location FROM forms_all WHERE lemma IN ({slots})",

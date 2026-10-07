@@ -37,7 +37,6 @@ SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
 DEFAULT_DELEGATE_TIMEOUT_SECONDS = 180.0
 TASK_STATUS_ATTENTION = {
-
     "cancelled",
     "crashed",
     "failed",
@@ -574,7 +573,14 @@ def build_delegate_command(args: argparse.Namespace, prompt_file: Path) -> list[
         command.extend(["--max-budget-usd", str(args.max_budget_usd)])
     if args.lifecycle_file:
         command.extend(["--lifecycle-file", str(Path(args.lifecycle_file).expanduser().resolve())])
+    for path in getattr(args, "owned_path", None) or []:
+        command.extend(["--owned-path", str(path)])
+    if getattr(args, "authoring_review_risk", None):
+        command.extend(["--authoring-review-risk", args.authoring_review_risk])
     return command
+
+
+WRITE_MODES = frozenset({"workspace-write", "danger"})
 
 
 def cmd_start_run(args: argparse.Namespace) -> int:
@@ -610,6 +616,10 @@ def cmd_add_task(args: argparse.Namespace) -> int:
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     repo_root = Path(args.repo_root).resolve()
+    if args.mode in WRITE_MODES and not getattr(args, "owned_path", None):
+        # delegate.py refuses a write dispatch without scope (#9739); say so before writing a prompt file.
+        print(json.dumps({"error": f"--mode {args.mode} requires --owned-path (#9739)"}, indent=2))
+        return 2
     try:
         prompt_file = resolve_prompt_file(repo_root, args)
     except (FileNotFoundError, ValueError) as exc:
@@ -648,10 +658,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     "error": "delegate dispatch timed out",
                     "returncode": 124,
                     "stdout": (exc.stdout or "") if isinstance(exc.stdout, str) else "",
-                    "stderr": (
-                        exc.stderr
-                        or f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s"
-                    )
+                    "stderr": (exc.stderr or f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s")
                     if isinstance(exc.stderr, str)
                     else f"delegate dispatch timed out after {DEFAULT_DELEGATE_TIMEOUT_SECONDS}s",
                     "command": command,
@@ -661,7 +668,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 124
     if proc.returncode != 0:
-
         print(
             json.dumps(
                 {
@@ -778,8 +784,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Pass through to delegate.py: keep a default-excluded tree "
-            "(curriculum, wiki, data/projects, data/lexicon)."
+            "Pass through to delegate.py: keep a default-excluded tree (curriculum, wiki, data/projects, data/lexicon)."
         ),
     )
     dispatch.add_argument("--base", default="main")
@@ -790,6 +795,18 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument(
         "--lifecycle-file",
         help="Canonical task-lifecycle.v1 ledger forwarded to delegate state and the run ledger.",
+    )
+    dispatch.add_argument(
+        "--owned-path",
+        action="append",
+        default=None,
+        metavar="PATH",
+        help="Pass through to delegate.py (repeatable): a path this worker owns. Required for write modes (#9739).",
+    )
+    dispatch.add_argument(
+        "--authoring-review-risk",
+        choices=["low", "medium", "high", "critical"],
+        help="Pass through to delegate.py: the branch's planned review risk. Default: unset (checked as critical).",
     )
     dispatch.add_argument("--dry-run", action="store_true")
     dispatch.set_defaults(func=cmd_dispatch)

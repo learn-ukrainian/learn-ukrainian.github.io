@@ -21,6 +21,13 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly  # type: ignore[no-redef]
+
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 
@@ -392,7 +399,7 @@ def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
         if path.stem in {"__init__", "acpx", "base", "hermes_deepseek", "hermes_grok", "hermes_qwen"} or path.stem.startswith("_"):
             continue
         try:
-            module = importlib.import_module(f"agent_runtime.adapters.{path.stem}")
+            module = import_named_module(f"agent_runtime.adapters.{path.stem}")
         except Exception:
             continue
 
@@ -1090,20 +1097,20 @@ def _acp_db_path(ctx: MonitorContext) -> Path:
     return message_plane.default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
 
 
-def _open_acp_db_readonly(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _open_acp_db_readonly(ctx: MonitorContext) -> SQLiteConnection | None:
     """Open fleet-comms storage read-only, returning ``None`` when unavailable."""
     db_path = _acp_db_path(ctx)
     if not db_path.is_file():
         return None
     try:
-        connection = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)
+        connection = open_readonly(db_path.resolve())
     except (OSError, sqlite3.Error, ValueError):
         return None
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def _acp_table_exists(connection: sqlite3.Connection, table: str) -> bool:
+def _acp_table_exists(connection: SQLiteConnection, table: str) -> bool:
     row = connection.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)
     ).fetchone()
@@ -1266,7 +1273,7 @@ def _sanitize_acp_event(
 
 
 def _acp_events(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     conversation_id: str,
     participants: tuple[str, str],
 ) -> list[dict[str, Any]]:
@@ -1381,7 +1388,7 @@ def _acp_summary(
     }
 
 
-def _acp_available_connection(ctx: MonitorContext) -> sqlite3.Connection | None:
+def _acp_available_connection(ctx: MonitorContext) -> SQLiteConnection | None:
     connection = _open_acp_db_readonly(ctx)
     if connection is None:
         return None
@@ -1496,7 +1503,7 @@ def _acp_transcript_body(value: Any, *, remaining_bytes: int) -> str | None:
 
 
 def _acp_transcript_entries(
-    connection: sqlite3.Connection,
+    connection: SQLiteConnection,
     conversation_id: str,
     participants: tuple[str, str],
 ) -> list[dict[str, Any]] | None:

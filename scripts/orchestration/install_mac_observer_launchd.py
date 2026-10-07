@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Install the Mac GUI observer presence heartbeat LaunchAgent on macOS (#7104)."""
+"""Install the Mac GUI observer presence heartbeat LaunchAgent on macOS (#7104).
+
+The plist is written to a temporary file and renamed into place; a symlinked
+plist, or a symlink in any directory from the home directory down to
+``Library/LaunchAgents``, is refused by install and status; uninstall refuses
+such a directory before unloading the service.
+"""
 
 from __future__ import annotations
 
@@ -8,10 +14,23 @@ import json
 import os
 import plistlib
 import subprocess
-import tempfile
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_unit_dir,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.mac-observer-heartbeat"
 DEFAULT_INTERVAL_MINUTES = 5
@@ -100,42 +119,6 @@ def render_plist(
     )
 
 
-def _fsync_directory(path: Path) -> None:
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    try:
-        descriptor = os.open(path, flags)
-        try:
-            os.fsync(descriptor)
-        finally:
-            os.close(descriptor)
-    except OSError:
-        pass
-
-
-def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
-    """Atomically replace path and report whether its contents changed."""
-    if path.is_file() and path.read_bytes() == content:
-        return False
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    temporary_path = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as handle:
-            handle.write(content)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.chmod(temporary_path, mode)
-        os.replace(temporary_path, path)
-        _fsync_directory(path.parent)
-    except BaseException:
-        temporary_path.unlink(missing_ok=True)
-        raise
-    return True
-
-
 def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
     try:
         return subprocess.run(
@@ -151,7 +134,6 @@ def _launchctl(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         raise LaunchdError(
             f"/bin/launchctl {' '.join(command)} timed out after {DEFAULT_LAUNCHCTL_TIMEOUT_SECONDS}s"
         ) from exc
-
 
 
 def _domain() -> str:
@@ -203,21 +185,21 @@ def install(
         home=home,
         interval_minutes=interval_minutes,
     )
+    # Refuse a symlinked home or plist directory before creating state under it.
+    installed = load_unit(destination, home=home)
     runtime = state_dir(home)
     logs_dir = runtime / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(logs_dir, 0o700)
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    ensure_state_dirs(logs_dir, home=home)
 
     before = _loaded_readback()
     was_loaded = before.returncode == 0
-    changed = not destination.is_file() or destination.read_bytes() != content
+    changed = installed is None or installed[0] != content
     if changed and was_loaded:
         bootout = _launchctl(["bootout", _service_target()])
         if bootout.returncode != 0:
             raise _failure("bootout", bootout)
 
-    wrote_plist = atomic_write(destination, content)
+    wrote_plist = install_unit(destination, content, mode=0o600, home=home)
     if changed or not was_loaded:
         bootstrap = _launchctl(["bootstrap", _domain(), str(destination)])
         if bootstrap.returncode != 0:
@@ -268,12 +250,13 @@ def status(
     interval_minutes: int,
 ) -> tuple[dict[str, Any], int]:
     destination = plist_path(home)
+    installed = load_unit(destination, home=home)
     loaded = _loaded_readback().returncode == 0
     persisted: Any = None
     parse_error = None
-    if destination.is_file():
+    if installed is not None:
         try:
-            persisted = plistlib.loads(destination.read_bytes())
+            persisted = plistlib.loads(installed[0])
         except Exception as exc:
             parse_error = str(exc)
     valid = _valid_persisted_plist(
@@ -284,7 +267,7 @@ def status(
     )
     result = {
         "action": "status",
-        "installed": destination.is_file(),
+        "installed": installed is not None,
         "interval_minutes": interval_minutes,
         "label": LABEL,
         "loaded": loaded,
@@ -297,12 +280,13 @@ def status(
 
 def uninstall(*, home: Path) -> dict[str, Any]:
     destination = plist_path(home)
+    check_unit_dir(destination, home=home)
     was_loaded = _loaded_readback().returncode == 0
     if was_loaded:
         bootout = _launchctl(["bootout", _service_target()])
         if bootout.returncode != 0:
             raise _failure("bootout", bootout)
-    destination.unlink(missing_ok=True)
+    remove_unit(destination, home=home)
     return {
         "action": "uninstall",
         "label": LABEL,
@@ -342,7 +326,8 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_root = args.repo_root.expanduser().resolve()
-    home = args.home.expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(args.home.expanduser()))
     if args.command == "render":
         print(
             render_plist(
@@ -376,6 +361,6 @@ def main(argv: Sequence[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(json.dumps({"error": str(exc), "label": LABEL}, sort_keys=True))
         raise SystemExit(2) from None

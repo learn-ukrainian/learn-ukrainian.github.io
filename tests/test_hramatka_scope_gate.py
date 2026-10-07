@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import subprocess
 
 import pytest
 
@@ -257,60 +256,39 @@ def test_issue_refs_reject_unqualified_or_nonpositive_identifiers() -> None:
         gate.IssueRef(PUBLIC, 0)
 
 
-def test_gh_reader_uses_the_repo_qualified_graphql_target(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[tuple[list[str], dict[str, object]]] = []
+def test_gh_reader_uses_the_repo_qualified_rest_target(github_transport) -> None:
+    from scripts.common.github_client import Response
 
-    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
-        from pathlib import Path
-        payload = json.loads(Path(command[command.index("--input") + 1]).read_text())
-        calls.append((command, {**kwargs, "query_payload": payload}))
-        return subprocess.CompletedProcess(
-            command,
-            0,
-            stdout=json.dumps(
-                {
-                    "data": {
-                        "repository": {
-                            "issue": {
-                                "number": 349,
-                                "body": "<!-- stream:hramatka -->",
-                                "labels": {"nodes": [{"name": "hramatka"}]},
-                                "parent": None,
-                            }
-                        }
-                    }
-                }
-            ),
-            stderr="",
-        )
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        if endpoint.endswith("/parent"):
+            return Response(404, {}, b'{"message":"Not Found"}')
+        assert endpoint == f"repos/{PRIVATE}/issues/349"
+        return Response(200, {}, json.dumps({
+            "number": 349, "state": "open", "html_url": f"https://github.com/{PRIVATE}/issues/349",
+            "repository_url": f"https://api.github.com/repos/{PRIVATE}",
+            "body": "<!-- stream:hramatka -->", "labels": [{"name": "hramatka"}],
+        }).encode())
 
-    monkeypatch.setattr(gate.subprocess, "run", fake_run)
-
+    calls = github_transport(transport)
     observation = gate._gh_issue_observation(_issue(PRIVATE, 349))
+    assert github_transport.clients[0].cwd == gate.REPO_ROOT
 
     assert observation == _observation(labels={"hramatka"}, body="<!-- stream:hramatka -->")
-    assert len(calls) == 1
-    command, kwargs = calls[0]
-    assert command[:5] == ["gh", "api", "--method", "POST", "graphql"]
-    assert kwargs["query_payload"]["variables"] == {"owner": PRIVATE.split("/", 1)[0], "name": PRIVATE.split("/", 1)[1], "number": 349}
-    assert kwargs["cwd"] == gate.REPO_ROOT
+    assert [(call[0], call[1]) for call in calls] == [
+        ("GET", f"repos/{PRIVATE}/issues/349"), ("GET", f"repos/{PRIVATE}/issues/349/parent"),
+    ]
 
 
-def test_gh_reader_hides_private_api_errors_and_treats_malformed_output_as_unknown(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    def nonzero_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
-        return subprocess.CompletedProcess(command, 1, stdout="", stderr="private issue title: sensitive")
+def test_gh_reader_hides_private_api_errors_and_treats_malformed_output_as_unknown(github_transport) -> None:
+    from scripts.common.github_client import Response
 
-    monkeypatch.setattr(gate.subprocess, "run", nonzero_run)
+    github_transport(lambda *args: Response(503, {}, b'{"message":"private issue title: sensitive"}'))
     with pytest.raises(gate.IssueLookupUnavailable) as nonzero_error:
         gate._gh_issue_observation(_issue(PRIVATE, 349))
     assert "sensitive" not in str(nonzero_error.value)
 
-    def malformed_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
-        return subprocess.CompletedProcess(command, 0, stdout="not json", stderr="")
-
-    monkeypatch.setattr(gate.subprocess, "run", malformed_run)
+    github_transport(lambda *args: Response(200, {}, b"not json"))
     with pytest.raises(gate.IssueLookupUnavailable):
         gate._gh_issue_observation(_issue(PRIVATE, 349))
 
@@ -341,8 +319,3 @@ def test_cli_allows_configured_epic_and_returns_zero(capsys: pytest.CaptureFixtu
     payload = json.loads(capsys.readouterr().out)
     assert payload["outcome"] == "ALLOW"
     assert "destination" not in payload
-
-
-@pytest.fixture(autouse=True)
-def _publisher_transport(publisher_transport):
-    """Inject the subprocess spy into typed GitHub read transport."""

@@ -116,11 +116,10 @@ def test_bootstrap_uses_dedicated_devops_stream(tmp_path: Path) -> None:
     assert "**Stream:** `epic:5703`" in board  # allow-hardcoded-epic: devops stream canary pin
 
 
-def test_stream_defaults_require_canonical_devops_selector() -> None:
-    assert (
-        codex_lane.EPIC_STREAM_DEFAULTS["devops"] == "epic:5703"
-    )  # allow-hardcoded-epic: devops stream defaults lookup
-    assert "infra.devops" not in codex_lane.EPIC_STREAM_DEFAULTS
+def test_devops_alias_resolves_to_dedicated_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("SESSION_STREAM_ID", raising=False)
+    for selector in ("devops", "infra.devops"):
+        assert codex_lane._stream_id(argparse.Namespace(epic=selector, stream=None)) == "epic:5703"  # allow-hardcoded-epic: devops launcher stream fixture
 
 
 def test_bootstrap_records_exact_rollover_without_rendering_lease_credentials(

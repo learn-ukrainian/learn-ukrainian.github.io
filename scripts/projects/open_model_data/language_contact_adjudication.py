@@ -36,6 +36,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 correction_factory = importlib.import_module("scripts.projects.open_model_data.correction_factory")
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
@@ -632,7 +633,7 @@ def _selected_source_metadata(
     require(table in allowed, f"unsupported selected source table: {table}")
     columns = [id_column, str(adapter["text_column"]), *allowed[table]]
     quoted = ", ".join(f'"{name}"' for name in columns)
-    connection = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
+    connection = _open_readonly(database)
     connection.row_factory = sqlite3.Row
     try:
         row = connection.execute(

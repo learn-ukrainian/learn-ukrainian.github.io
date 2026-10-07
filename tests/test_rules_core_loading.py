@@ -35,6 +35,8 @@ from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 REAL_CORE_DIR = REPO / rules_core.RULES_DIR_REL
 FIXTURE_CORE_DIR = REPO / "tests" / "fixtures" / "rules_core"
 CORE_DIR = (

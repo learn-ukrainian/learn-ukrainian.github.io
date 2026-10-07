@@ -8,10 +8,12 @@ unexpected child exit before returning a non-zero status to ``launchd``.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import plistlib
 import signal
+import stat
 import subprocess
 import sys
 import threading
@@ -21,8 +23,19 @@ from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from xml.parsers.expat import ExpatError
 
 from scripts.api.release_snapshot import build_release, prune_releases
+from scripts.common.safe_unit_install import (
+    InstallError,
+    check_state_paths,
+    ensure_state_dirs,
+    install_unit,
+    load_unit,
+    open_state_log,
+    open_unit_dir,
+    remove_unit,
+)
 
 LABEL = "com.learn-ukrainian.monitor-api"
 PORT = 8765
@@ -105,36 +118,14 @@ def _now_z() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _fsync_directory(path: Path) -> None:
-    flags = os.O_RDONLY
-    if hasattr(os, "O_DIRECTORY"):
-        flags |= os.O_DIRECTORY
-    descriptor = os.open(path, flags)
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
-
-
 def atomic_write(path: Path, content: bytes, *, mode: int = 0o600) -> bool:
-    """Atomically replace ``path`` and report whether its content changed."""
-    if path.is_file() and path.read_bytes() == content:
+    """Replace a state file without following links; preserve no-op behavior."""
+    anchor = path.parent.parent
+    installed = load_unit(path, home=anchor)
+    if installed == (content, mode):
         return False
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
-    try:
-        with temporary.open("xb") as handle:
-            handle.write(content)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.chmod(temporary, mode)
-        os.replace(temporary, path)
-        _fsync_directory(path.parent)
-    except BaseException:
-        temporary.unlink(missing_ok=True)
-        raise
-    return True
+    ensure_state_dirs(path.parent, home=anchor)
+    return install_unit(path, content, mode=mode, home=anchor)
 
 
 def build_plist(*, repo_root: Path) -> dict[str, object]:
@@ -187,11 +178,16 @@ def _validate_runtime(repo_root: Path) -> None:
 
 
 def install(*, repo_root: Path, home: Path) -> dict[str, object]:
-    """Write or reconcile the LaunchAgent plist without starting the service."""
+    """Write or reconcile the LaunchAgent plist without starting the service.
+
+    The plist goes through the shared unit helper, which refuses a symlinked
+    plist or a symlink in any directory from ``home`` down to
+    ``Library/LaunchAgents`` (#9875).
+    """
     root = repo_root.resolve()
     _validate_runtime(root)
     destination = plist_path(home)
-    changed = atomic_write(destination, render_plist(repo_root=root))
+    changed = install_unit(destination, render_plist(repo_root=root), mode=0o600, home=home)
     return {
         "action": "install",
         "changed": changed,
@@ -262,9 +258,10 @@ def _set_launch_config(*, repo_root: Path, live_mode: bool, port: int) -> None:
 
 def _load_launch_config(repo_root: Path) -> tuple[bool, int]:
     try:
-        data = json.loads(_config_path(repo_root).read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        return False, PORT
+        installed = load_unit(_config_path(repo_root), home=repo_root.parent)
+        if installed is None:
+            return False, PORT
+        data = json.loads(installed[0])
     except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
         raise LaunchdError(f"invalid API launch configuration at {_config_path(repo_root)}") from exc
 
@@ -280,6 +277,7 @@ def start(*, repo_root: Path, home: Path, live_mode: bool, port: int = PORT) -> 
     root = repo_root.resolve()
     if not 1 <= port <= 65535:
         raise LaunchdError(f"invalid API port: {port}")
+    check_state_paths(root / "logs", _pid_dir(root), files=(_config_path(root),), home=root.parent)
     result = install(repo_root=root, home=home)
     _set_launch_config(repo_root=root, live_mode=live_mode, port=port)
 
@@ -325,13 +323,17 @@ def stop(*, home: Path) -> dict[str, object]:
 
 
 def uninstall(*, home: Path) -> dict[str, object]:
-    """Disable, unload, and remove the plist while preserving crash evidence."""
-    result = stop(home=home)
+    """Disable, unload, and remove the plist while preserving crash evidence.
+
+    The destination is checked before launchd is touched: a symlink anywhere
+    from ``home`` down to the plist is refused, so neither the service nor the
+    link target changes. The plist then goes through the unit helper's
+    descriptor-relative removal (#9875).
+    """
     destination = plist_path(home)
-    existed = destination.exists()
-    if existed:
-        destination.unlink()
-        _fsync_directory(destination.parent)
+    load_unit(destination, home=home)
+    result = stop(home=home)
+    existed = remove_unit(destination, home=home)
     return {
         **result,
         "action": "uninstall",
@@ -341,15 +343,39 @@ def uninstall(*, home: Path) -> dict[str, object]:
 
 
 def status(*, home: Path) -> tuple[dict[str, object], int]:
-    """Report persisted configuration and launchd state."""
+    """Report persisted configuration and launchd state.
+
+    The plist is read through the unit helper, which refuses a symlink anywhere
+    from ``home`` down to the plist before launchd is queried (#9875).
+    Configured stdout/stderr paths are checked without following links;
+    unsafe paths make status fail even when the job is loaded (#9894).
+    """
     destination = plist_path(home)
-    loaded = _loaded_readback()
-    installed = destination.is_file()
-    valid_plist = False
     parse_error: str | None = None
-    if installed:
+    try:
+        unit = load_unit(destination, home=home)
+    except OSError as exc:
+        # Present but unreadable (a permission error, say): report it, as a failed parse is.
+        unit, parse_error = None, str(exc)
+    loaded = _loaded_readback()
+    installed = unit is not None or parse_error is not None
+    valid_plist = False
+    unsafe_log_paths: list[str] = []
+    if unit is not None:
         try:
-            payload = plistlib.loads(destination.read_bytes())
+            payload = plistlib.loads(unit[0])
+            if isinstance(payload, dict):
+                for key in ("StandardOutPath", "StandardErrorPath"):
+                    if key not in payload:
+                        continue
+                    raw = payload[key]
+                    if not isinstance(raw, str) or not Path(raw).is_absolute():
+                        unsafe_log_paths.append(f"{key}: expected an absolute log path")
+                        continue
+                    try:
+                        check_state_paths(files=(Path(raw),), home=home)
+                    except (InstallError, OSError) as exc:
+                        unsafe_log_paths.append(f"{key}: {exc}")
             arguments = payload.get("ProgramArguments") if isinstance(payload, dict) else None
             valid_plist = (
                 isinstance(payload, dict)
@@ -363,7 +389,7 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
                 and WRAPPER_NAME in str(arguments)
                 and not any(".venv/bin/python" in str(part) for part in arguments)
             )
-        except (OSError, ValueError, plistlib.InvalidFileException) as exc:
+        except (ValueError, plistlib.InvalidFileException, ExpatError) as exc:
             parse_error = str(exc)
     result = {
         "action": "status",
@@ -374,20 +400,34 @@ def status(*, home: Path) -> tuple[dict[str, object], int]:
         "parse_error": parse_error,
         "plist_path": str(destination),
         "valid_plist": valid_plist,
+        "unsafe_log_paths": unsafe_log_paths,
     }
-    return result, 0 if installed and loaded.returncode == 0 and valid_plist else 1
+    return result, 0 if installed and loaded.returncode == 0 and valid_plist and not unsafe_log_paths else 1
 
 
 def _rotate_log(path: Path) -> None:
-    if not path.is_file() or path.stat().st_size <= _LOG_ROTATE_BYTES:
+    """Rotate entries relative to a held directory, refusing links before mutation."""
+    names = [path.name, *(f"{path.name}.{index}" for index in (1, 2, 3))]
+    check_state_paths(files=tuple(path.with_name(name) for name in names), home=path.parent.parent)
+    fd = open_unit_dir(path.parent, home=path.parent.parent)
+    if fd is None:
         return
-    oldest = path.with_name(f"{path.name}.3")
-    oldest.unlink(missing_ok=True)
-    for index in (2, 1):
-        previous = path.with_name(f"{path.name}.{index}")
-        if previous.exists():
-            previous.replace(path.with_name(f"{path.name}.{index + 1}"))
-    path.replace(path.with_name(f"{path.name}.1"))
+    try:
+        try:
+            info = os.stat(path.name, dir_fd=fd, follow_symlinks=False)
+        except FileNotFoundError:
+            return
+        if not stat.S_ISREG(info.st_mode):
+            raise InstallError(f"refusing non-regular or symlinked state log: {path}")
+        if info.st_size <= _LOG_ROTATE_BYTES:
+            return
+        with contextlib.suppress(FileNotFoundError):
+            os.unlink(names[3], dir_fd=fd)
+        for index in (2, 1, 0):
+            with contextlib.suppress(FileNotFoundError):
+                os.replace(names[index], names[index + 1], src_dir_fd=fd, dst_dir_fd=fd)
+    finally:
+        os.close(fd)
 
 
 def _append_log(handle: Any, message: str) -> None:
@@ -491,14 +531,24 @@ def run_managed_api(
 ) -> int:
     """Run one API child in the foreground and preserve unexpected-exit evidence."""
     root = repo_root.resolve()
+    api_log = _api_log_path(root)
+    stderr_log = _api_stderr_log_path(root)
+    check_state_paths(
+        root / "logs",
+        _pid_dir(root),
+        files=(
+            _config_path(root),
+            crash_record_path(root),
+            api_log,
+            stderr_log,
+            *(path.with_name(f"{path.name}.{index}") for path in (api_log, stderr_log) for index in (1, 2, 3)),
+        ),
+        home=root.parent,
+    )
     configured_live, configured_port = _load_launch_config(root)
     effective_live = configured_live if live_mode is None else live_mode
     effective_port = configured_port if port is None else port
-    logs_dir = root / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-    _pid_dir(root).mkdir(parents=True, exist_ok=True)
-    api_log = _api_log_path(root)
-    stderr_log = _api_stderr_log_path(root)
+    ensure_state_dirs(root / "logs", _pid_dir(root), home=root.parent)
     _rotate_log(api_log)
     _rotate_log(stderr_log)
     stopped_by_launchd = threading.Event()
@@ -516,7 +566,9 @@ def run_managed_api(
 
     stderr_tail: deque[str] = deque(maxlen=50)
     try:
-        with api_log.open("ab") as combined, stderr_log.open("ab") as stderr_handle:
+        with contextlib.ExitStack() as stack:
+            combined = stack.enter_context(os.fdopen(open_state_log(api_log, home=root.parent), "ab"))
+            stderr_handle = stack.enter_context(os.fdopen(open_state_log(stderr_log, home=root.parent), "ab"))
             try:
                 factory = prepare_command or (
                     lambda root_path, live, selected_port: _prepare_api_command(
@@ -579,12 +631,23 @@ def run_managed_api(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__ + "\nUse status for read-only checks; start/stop change the local service.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python -m scripts.api.launchd_supervisor status\n"
+        "  .venv/bin/python -m scripts.api.launchd_supervisor install --dry-render\n"
+        "Outputs: JSON state, or rendered plist; install/start/stop/uninstall mutate local service state.\n"
+        "Exit codes: 0 success or healthy status; 1 failure or unhealthy/unsafe status.\n"
+        "Related: #9894; docs/runbooks/launchd-inventory.md",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     def add_repo_arguments(command: argparse.ArgumentParser) -> None:
-        command.add_argument("--repo-root", type=Path, default=default_repo_root())
-        command.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+        command.add_argument("--repo-root", type=Path, default=default_repo_root(),
+                             help="checkout to supervise (default: this project root)")
+        command.add_argument("--home", type=Path, default=default_home(),
+                             help="home owning Library/LaunchAgents (default: current user's home)")
 
     install_parser = subparsers.add_parser("install", help="write the LaunchAgent plist")
     add_repo_arguments(install_parser)
@@ -596,25 +659,26 @@ def build_parser() -> argparse.ArgumentParser:
     start_parser = subparsers.add_parser("start", help="enable and start the supervised API")
     add_repo_arguments(start_parser)
     start_parser.add_argument("--live", action="store_true", help="serve the mutable checkout for emergency recovery")
-    start_parser.add_argument("--port", type=int, default=PORT, help=argparse.SUPPRESS)
+    start_parser.add_argument("--port", type=int, default=PORT, help=f"API port, 1–65535 (default: {PORT})")
 
     stop_parser = subparsers.add_parser("stop", help="disable and unload the supervised API")
-    stop_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    stop_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
     uninstall_parser = subparsers.add_parser("uninstall", help="remove the LaunchAgent plist")
-    uninstall_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    uninstall_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
     status_parser = subparsers.add_parser("status", help="show persistent and launchd state")
-    status_parser.add_argument("--home", type=Path, default=default_home(), help=argparse.SUPPRESS)
+    status_parser.add_argument("--home", type=Path, default=default_home(), help="LaunchAgent home (default: current user's home)")
 
-    run_parser = subparsers.add_parser("run", help=argparse.SUPPRESS)
-    run_parser.add_argument("--repo-root", type=Path, default=default_repo_root())
+    run_parser = subparsers.add_parser("run", help="run one supervised API child (launchd entry point)")
+    run_parser.add_argument("--repo-root", type=Path, default=default_repo_root(), help="checkout to run (default: this project root)")
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    home = getattr(args, "home", default_home()).expanduser().resolve()
+    # Unresolved: the unit helper must see a symlinked home to refuse it (#9875).
+    home = Path(os.path.abspath(getattr(args, "home", default_home()).expanduser()))
     try:
         if args.command in {"install", "render"}:
             root = args.repo_root.expanduser().resolve()
@@ -646,7 +710,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return returncode
         if args.command == "run":
             return run_managed_api(repo_root=args.repo_root.expanduser().resolve())
-    except LaunchdError as exc:
+    except (LaunchdError, InstallError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     return 1

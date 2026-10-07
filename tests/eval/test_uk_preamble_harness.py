@@ -62,6 +62,7 @@ class FakeDispatcher:
         self.foreign_prompt: set[str] = set()
         self.conditions_for: dict[str, dict[str, Any]] = {}
         self.writing_for: dict[tuple[bool, str], str] = {}  # (has preamble, item id) -> text
+        self.hard_timeout = 3600
         self.core = "[rules core]\n\n"
 
     def _composed(self, prompt: str) -> str:
@@ -126,8 +127,8 @@ class FakeDispatcher:
     def known(self, task_id: str) -> bool:
         return task_id in self.records
 
-    def expected_args_sha256(self, task_id, seat, prompt_path: Path) -> str:
-        return sha256_text(f"{task_id}|{seat.seat_id}|{prompt_path}")
+    def expected_args_sha256(self, task_id, seat, kind, prompt_path: Path) -> str:
+        return sha256_text(f"{task_id}|{seat.seat_id}|{kind}|{prompt_path}|{self.hard_timeout}")
 
     def dispatch(self, task_id, seat, kind, prompt_path: Path, *, force_new: bool) -> str:
         if task_id in self.refuse:
@@ -139,7 +140,7 @@ class FakeDispatcher:
         conditions = {
             "effective_prompt_sha256": sha256_text(self._composed(prompt)),
             "prompt_blocks": ["rules_core", "worktree"],
-            "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, prompt_path),
+            "dispatch_args_sha256": self.expected_args_sha256(task_id, seat, kind, prompt_path),
             "cwd": str(self.cwd),
             "mode": "read-only",
             "worktree_path": str(self.cwd),
@@ -200,7 +201,12 @@ def _make_env(
     worker.mkdir()
     fake = FakeDispatcher(set_dict, worker.resolve())
     workspace = {"head": "commit-a"}
-    monkeypatch.setattr(cli, "make_dispatcher", lambda args, cwd: fake)
+
+    def make_dispatcher(args, cwd, bound=fake):
+        bound.hard_timeout = args.hard_timeout
+        return bound
+
+    monkeypatch.setattr(cli, "make_dispatcher", make_dispatcher)
     monkeypatch.setattr(cli, "make_workspace", lambda cwd: lambda: dict(workspace))
     monkeypatch.setattr(cli, "make_sources", FakeSources)
     results = outside_dir / "results"
@@ -277,7 +283,9 @@ def _dispatcher_python(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, python: 
             seen.update(kwargs)
 
     monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
-    args = cli.build_parser().parse_args(["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])])
+    args = cli.build_parser().parse_args(
+        ["run", "--set", "s", "--results", "r", "--variant", "none", *(["--python", python] if python else [])]
+    )
     cli.make_dispatcher(args, tmp_path)
     return seen["python"]
 
@@ -309,7 +317,6 @@ def test_missing_project_interpreter_is_a_harness_error(monkeypatch, tmp_path: P
     monkeypatch.setattr(cli, "project_interpreter", missing)
     with pytest.raises(HarnessError, match="--python"):
         _dispatcher_python(monkeypatch, tmp_path, None)
-
 
 
 def test_run_dispatches_every_cell_and_resume_skips_accepted(env):
@@ -405,8 +412,25 @@ def test_dry_run_preflights_every_task_without_dispatch(env):
     assert cli.main([*env["run"], "--dry-run"]) == 0
     assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
     assert all(task_id.endswith("-preflight") for task_id in env["fake"].preflighted)
+    assert cli.main([*env["run"], "--dry-run"]) == 0  # a completed dry run can be repeated
+    assert len(env["fake"].preflighted) == PLANNED * 2 and env["fake"].dispatched == []
     assert cli.main(env["run"]) == 0  # a later real run dispatches every task
     assert len(env["fake"].dispatched) == PLANNED
+
+
+def test_manifest_frozen_under_old_dispatch_arguments_refuses_to_resume(env, capsys):
+    assert cli.main([*env["run"], "--dry-run"]) == 0
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    frozen_args = manifest["frozen"]["dispatch_args_sha256"]
+    assert set(frozen_args) == {f"{kind}/{seat}" for kind in ("review", "writing") for seat in SEATS}
+    manifest["frozen"]["dispatch_args_sha256"] = {key: "0" * 64 for key in frozen_args}
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    capsys.readouterr()
+    assert cli.main([*env["run"], "--dry-run"]) == 2
+    err = capsys.readouterr().err
+    assert "different dispatch arguments" in err and "--run-tag" in err and "never mixed" in err
+    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
 
 
 def test_malformed_output_counted_as_failed_items(env):
@@ -482,6 +506,83 @@ def test_manifest_freezes_the_complete_plan_and_refuses_plan_drift(env, capsys):
     assert "repeats" in capsys.readouterr().err
     assert cli.main([*env["run"], "--seat", "gpt-6.1-sol"]) == 2
     assert "seats" in capsys.readouterr().err
+
+
+# --------------------------------------------------------------------------- --review-profile (#9623, #8771)
+
+
+def test_review_profile_reaches_the_real_dispatcher_and_defaults_off(monkeypatch, tmp_path: Path):
+    seen: dict[str, Any] = {}
+
+    class Recorder:
+        def __init__(self, **kwargs: Any) -> None:
+            seen.update(kwargs)
+
+    monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
+    base = ["run", "--set", "s", "--results", "r", "--variant", "none", "--python", "py"]
+    cli.make_dispatcher(cli.build_parser().parse_args(base), tmp_path)
+    assert seen["review_profile"] is None
+    cli.make_dispatcher(cli.build_parser().parse_args([*base, "--review-profile", "ukrainian"]), tmp_path)
+    assert seen["review_profile"] == "ukrainian"
+    with pytest.raises(SystemExit):
+        cli.build_parser().parse_args([*base, "--review-profile", "code"])
+
+
+def test_review_profile_is_frozen_marks_review_prompts_only_and_refuses_a_changed_resume(env, capsys):
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
+    prompts = {p.name: p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md")}
+    review = [text for name, text in prompts.items() if "-review-" in name]
+    writing = [text for name, text in prompts.items() if "-writing-" in name]
+    assert review and writing
+    assert all("VERDICT: APPROVE" in text for text in review)
+    assert not any("VERDICT" in text for text in writing)
+    dispatched = len(env["fake"].dispatched)
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0  # the same value resumes
+    assert len(env["fake"].dispatched) == dispatched
+    capsys.readouterr()
+    assert cli.main(env["run"]) == 2  # dropping the value is a changed frozen term
+    assert "review_profile" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
+def test_review_gate_marker_digest_is_frozen_and_an_edited_marker_refuses_the_resume(env, capsys, monkeypatch):
+    from scripts.eval.uk_preamble import prompts
+
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert frozen["review_gate_marker_sha256"] == prompts.sha256_text(prompts.REVIEW_GATE_MARKER)
+    assert frozen["templates_sha256"] == prompts.template_fingerprint()  # the marker is outside the fingerprint
+    dispatched = len(env["fake"].dispatched)
+    capsys.readouterr()
+    monkeypatch.setattr(prompts, "REVIEW_GATE_MARKER", prompts.REVIEW_GATE_MARKER + " Edited.")
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2
+    assert "review_gate_marker_sha256" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
+def test_default_run_manifest_and_prompts_are_unchanged_by_the_review_profile_option(env, capsys):
+    assert cli.main(env["run"]) == 0
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert "review_profile" not in frozen and "review_gate_marker_sha256" not in frozen
+    assert not any("VERDICT" in p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md"))
+    capsys.readouterr()
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2  # adding the value to a default run
+    assert "review_profile" in capsys.readouterr().err
+
+
+def test_dry_run_with_a_review_profile_validates_every_task_and_freezes_the_value(env):
+    assert cli.main([*env["run"], "--review-profile", "ukrainian", "--dry-run"]) == 0
+    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
+    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
+
+
+def test_the_review_gate_marker_does_not_break_the_json_answer():
+    from scripts.eval.uk_preamble.prompts import validate_response
+
+    answer = '{"items": [{"id": "R1", "corrected_text": "Текст.", "corrections": [], "style_suggestions": []}]}'
+    results = validate_response("review", f"{answer}\n\nVERDICT: APPROVE\n", ["R1"])
+    assert [r.error for r in results] == [None] and results[0].entry["id"] == "R1"
 
 
 @pytest.mark.parametrize("old", [None, "uk-preamble-scoring/1"])
@@ -724,6 +825,157 @@ def test_judge_ratio_exactly_at_the_bound_is_judged_and_terms_are_frozen(env, ca
     capsys.readouterr()
     assert _score(env, "--judge-length-ratio", "0.5") == 2
     assert "judge terms were frozen" in capsys.readouterr().err
+
+
+def test_score_judge_refuses_a_legacy_manifest_before_any_dispatch(env, capsys):
+    """A manifest without dispatch_args_sha256 must not start judges (review round 2)."""
+    assert cli.main(env["run"]) == 0
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    del manifest["frozen"]["dispatch_args_sha256"]
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    before = list(env["fake"].dispatched)
+    capsys.readouterr()
+    assert _score(env, "--judge") == 2
+    err = capsys.readouterr().err
+    assert "dispatch_args_sha256" in err and "--run-tag" in err and "never mixed" in err
+    assert env["fake"].dispatched == before
+    assert "judge" not in read_json(path)
+
+
+def test_judge_retry_with_different_arguments_is_refused_before_dispatch(env, capsys):
+    """A retry that changes --hard-timeout must not dispatch, or reuse judges frozen earlier."""
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    manifest = read_json(env["results"] / "manifest.json")
+    frozen_args = manifest["judge"]["dispatch_args_sha256"]
+    assert set(frozen_args) == set(SEATS)
+    judge_ids = [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
+    assert judge_ids
+    victim = judge_ids[0]
+    raw_path = env["results"] / "raw" / f"{victim}.json"
+    raw = read_json(raw_path)
+    raw["accepted"] = False
+    raw["status"] = "timeout"
+    raw_path.write_text(json.dumps(raw), encoding="utf-8")
+    before = list(env["fake"].dispatched)
+    capsys.readouterr()
+    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
+    err = capsys.readouterr().err
+    assert "per seat" in err and "--run-tag" in err and "never mixed" in err
+    assert env["fake"].dispatched == before
+    assert read_json(env["results"] / "manifest.json")["judge"]["dispatch_args_sha256"] == frozen_args
+    # The same frozen arguments still retry only the failed judge.
+    assert _score(env, "--judge", "--retry-failed") == 0
+    assert env["fake"].dispatched == [*before, (victim, True)]
+
+
+def _judge_dispatch_ids(env) -> list[str]:
+    return [task_id for task_id, _force in env["fake"].dispatched if "-judge-" in task_id]
+
+
+def _clear_judge_scores(env) -> None:
+    path = env["results"] / "scores.json"
+    scores = read_json(path)
+    scores["judge"] = []
+    path.write_text(json.dumps(scores), encoding="utf-8")
+
+
+def _remove_judge_raw(env) -> None:
+    for path in (env["results"] / "raw").glob("*judge*"):
+        path.unlink()
+
+
+@pytest.mark.parametrize("keep", ["result", "record", "score", "pending", "result-no-block"])
+def test_missing_judge_hash_with_prior_judge_evidence_is_refused(env, capsys, keep):
+    """Judges that ran before per-seat hashes existed must not be mixed with new arguments.
+
+    A manifest with candidate hashes but no judge hash, plus any judge record, result
+    or accepted score for this run tag, is refused before the manifest changes and
+    before any dispatch. The guidance is a new ``--run-tag``.
+    """
+    assert cli.main(env["run"]) == 0
+    assert _score(env, "--judge") == 0
+    judge_ids = _judge_dispatch_ids(env)
+    assert len(judge_ids) == 12
+    scores = read_json(env["results"] / "scores.json")
+    assert any(row.get("failed") is False and "-judge-" in row["task_id"] for row in scores["judge"])
+    victim = judge_ids[0]
+    raw_path = env["results"] / "raw" / f"{victim}.json"
+    raw = read_json(raw_path)
+    raw["accepted"] = False
+    raw["status"] = "timeout"
+    raw_path.write_text(json.dumps(raw), encoding="utf-8")
+    path = env["results"] / "manifest.json"
+    manifest = read_json(path)
+    if keep == "result-no-block":
+        del manifest["judge"]
+    else:
+        del manifest["judge"]["dispatch_args_sha256"]
+    path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if keep in {"record", "score", "pending"}:
+        _remove_judge_raw(env)
+    if keep != "score":
+        _clear_judge_scores(env)
+    if keep != "record":
+        env["fake"].records.clear()
+    if keep == "pending":
+        (env["results"] / "raw" / f"{victim}.pending.json").write_text("{}\n", encoding="utf-8")
+    raw_names = sorted(p.name for p in (env["results"] / "raw").glob("*judge*"))
+    if keep in {"result", "result-no-block"}:
+        assert raw_names
+        assert not env["fake"].known(victim)
+    elif keep == "pending":
+        assert raw_names == [f"{victim}.pending.json"]
+        assert not env["fake"].known(victim)
+    elif keep == "record":
+        assert raw_names == []
+        assert env["fake"].known(victim)
+    else:
+        assert raw_names == []
+        assert not env["fake"].known(victim)
+        assert any(row.get("failed") is False for row in read_json(env["results"] / "scores.json")["judge"])
+    blob = path.read_bytes()
+    dispatched = list(env["fake"].dispatched)
+    waited = list(env["fake"].waited)
+    capsys.readouterr()
+    assert _score(env, "--judge", "--retry-failed", "--hard-timeout", "17") == 2
+    err = capsys.readouterr().err
+    assert "never frozen" in err and "already ran" in err and "--run-tag" in err and "never mixed" in err
+    if keep == "pending":
+        assert f"result {victim}.pending.json" in err
+    elif keep == "record":
+        assert "judge record " in err
+    elif keep == "score":
+        assert "accepted score " in err
+    else:
+        assert "result " in err and ".pending.json" not in err
+    assert path.read_bytes() == blob
+    assert env["fake"].dispatched == dispatched
+    assert env["fake"].waited == waited
+
+
+def test_first_judge_execution_freezes_arguments_and_dispatches(env):
+    """No judge record, result or score: the first ``score --judge`` still freezes and runs.
+
+    An earlier candidate-only score writes ``scores.json`` with an empty judge list.
+    That is not judge evidence, so the hash is stored and the judges are dispatched.
+    """
+    assert cli.main(env["run"]) == 0
+    assert _score(env) == 0
+    assert read_json(env["results"] / "scores.json")["judge"] == []
+    manifest_path = env["results"] / "manifest.json"
+    assert "judge" not in read_json(manifest_path)
+    before = list(env["fake"].dispatched)
+    assert _score(env, "--judge") == 0
+    frozen = read_json(manifest_path)["judge"]["dispatch_args_sha256"]
+    assert set(frozen) == set(SEATS)
+    new = env["fake"].dispatched[len(before) :]
+    assert new and all("-judge-" in task_id for task_id, _force in new)
+    assert all(read_json(env["results"] / "raw" / f"{task_id}.json")["accepted"] for task_id, _force in new)
+    assert _score(env, "--judge") == 0
+    assert env["fake"].dispatched == [*before, *new]
+    assert read_json(manifest_path)["judge"]["dispatch_args_sha256"] == frozen
 
 
 def test_judge_terms_freeze_on_the_first_judging_call_even_when_every_pair_is_excluded(env, capsys):

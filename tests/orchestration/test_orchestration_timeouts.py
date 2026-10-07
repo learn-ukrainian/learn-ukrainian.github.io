@@ -47,6 +47,7 @@ from scripts.orchestration import (
     task_lifecycle as tl,
 )
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def _completed(
     args: list[str] | None = None,
@@ -74,7 +75,7 @@ def test_reaper_lifecycle_create_recovery_ref_timeout(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0)
 
-    with patch("subprocess.run", side_effect=fake_run):
+    with patch.object(rl, "safe_git", side_effect=fake_run):
         ref, err = rl.create_recovery_ref(tmp_path, branch="feature", head="a" * 40)
         assert ref is not None
         assert err is None
@@ -83,7 +84,7 @@ def test_reaper_lifecycle_create_recovery_ref_timeout(tmp_path: Path) -> None:
     assert calls[0]["timeout"] == rl.DEFAULT_GIT_TIMEOUT_SECONDS
 
     with patch(
-        "subprocess.run",
+        "scripts.orchestration.reaper_lifecycle.safe_git",
         side_effect=subprocess.TimeoutExpired(["git", "update-ref"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ref, err = rl.create_recovery_ref(tmp_path, branch="feature", head="a" * 40)
@@ -94,13 +95,14 @@ def test_reaper_lifecycle_create_recovery_ref_timeout(tmp_path: Path) -> None:
 def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
+    (repo / ".git").mkdir()
     wt_dir = repo / ".worktrees"
     wt_dir.mkdir()
     target = wt_dir / "target"
 
     # 1. Timeout on rev-parse recovery_ref
     with patch(
-        "subprocess.run",
+        "scripts.orchestration.reaper_lifecycle.safe_git",
         side_effect=subprocess.TimeoutExpired(["git", "rev-parse"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ok, err = rl.restore_worktree(
@@ -114,7 +116,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     # 2. Timeout on rev-parse branch
     with patch(
-        "subprocess.run",
+        "scripts.orchestration.reaper_lifecycle.safe_git",
         side_effect=[
             _completed(stdout="a" * 40 + "\n"),
             subprocess.TimeoutExpired(["git", "rev-parse"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
@@ -131,12 +133,14 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
 
     # 3. Timeout on worktree add
     with patch(
-        "subprocess.run",
+        "scripts.orchestration.reaper_lifecycle.safe_git",
         side_effect=[
             _completed(stdout="a" * 40 + "\n"),
             _completed(returncode=0, stdout="a" * 40 + "\n"),
-            subprocess.TimeoutExpired(["git", "worktree", "add"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
         ],
+    ), patch(
+        "subprocess.run",
+        side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], rl.DEFAULT_GIT_TIMEOUT_SECONDS),
     ):
         ok, err = rl.restore_worktree(
             repo,
@@ -154,7 +158,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0, stdout="a" * 40 + "\n")
 
-    with patch("subprocess.run", side_effect=fake_run):
+    with patch.object(rl, "safe_git", side_effect=fake_run), patch("subprocess.run", side_effect=fake_run):
         ok, err = rl.restore_worktree(
             repo,
             recovery_ref="refs/reaper-rescue/test",

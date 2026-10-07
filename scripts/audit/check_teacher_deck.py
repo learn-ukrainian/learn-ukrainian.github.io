@@ -27,6 +27,27 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 WORD_NS = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
 HEADING = "Combined Master Vocabulary Table (#3)"
 DECK_FILE = "practice-deck.teacher.json"
@@ -268,7 +289,7 @@ def own_overlaps(
 class AspectLookup:
     """Own read-only lemma lookup: VESUM ``forms_all`` tags and checked ULIF labels."""
 
-    def __init__(self, vesum: sqlite3.Connection, sources: sqlite3.Connection) -> None:
+    def __init__(self, vesum: SQLiteConnection, sources: SQLiteConnection) -> None:
         self.vesum = vesum
         self.sources = sources
         self.cache: dict[str, tuple[set[str], bool, set[str], bool]] = {}
@@ -425,7 +446,7 @@ def slot(tags: str) -> tuple[str, ...]:
     return (parts[0], *sorted(part for part in parts[1:] if part in SLOT_TAG_PARTS))
 
 
-def atlas_articles(atlas: sqlite3.Connection) -> dict[str, list[dict[str, Any]]]:
+def atlas_articles(atlas: SQLiteConnection) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for (raw,) in atlas.execute(
         "SELECT payload_json FROM article_payloads WHERE is_public_route = 1 ORDER BY route_order"
@@ -776,8 +797,8 @@ def check_cloze(
     overlaps: dict[str, set[str]],
     partners: dict[str, set[str]],
     report: Report,
-    vesum: sqlite3.Connection | None,
-    sources: sqlite3.Connection | None,
+    vesum: SQLiteConnection | None,
+    sources: SQLiteConnection | None,
     senses: dict[str, tuple[str, int | None]] | None = None,
     withheld: dict[str, str] | None = None,
     kept: set[str] | None = None,
@@ -884,7 +905,7 @@ def check_slots(
     item: dict[str, Any],
     wanted: set[tuple[str, ...]],
     by_id: dict[str, dict[str, Any]],
-    vesum: sqlite3.Connection,
+    vesum: SQLiteConnection,
     report: Report,
 ) -> None:
     """Same-slot rule: a single-word distractor is a form of its own single-word entry that
@@ -919,7 +940,7 @@ def check_slots(
             report.fail(f"{item.get('clozeId')}: distractor {label!r} is a form of the answer's lemma")
 
 
-def _lesson_texts(sources: sqlite3.Connection) -> dict[str, list[str]]:
+def _lesson_texts(sources: SQLiteConnection) -> dict[str, list[str]]:
     texts: dict[str, list[str]] = {}
     for (text,) in sources.execute("SELECT text FROM textbooks WHERE source_file = 'private-teacher-lessons-a'"):
         first = text.split("\n", 1)[0]
@@ -935,7 +956,7 @@ def _dehyphenate(text: str) -> str:
 
 
 def _sentence_in_source(
-    sources: sqlite3.Connection, item: dict[str, Any], restored: str, lesson_texts: dict[str, list[str]]
+    sources: SQLiteConnection, item: dict[str, Any], restored: str, lesson_texts: dict[str, list[str]]
 ) -> bool:
     locator = (item.get("attribution") or {}).get("locator")
     if item.get("source") == "teacher-lesson":
@@ -1083,12 +1104,12 @@ def residuals(
     return out
 
 
-def _read_only(path: Path | None) -> sqlite3.Connection | None:
+def _read_only(path: Path | None) -> SQLiteConnection | None:
     if path is None:
         return None
     if not path.exists():
         raise FileNotFoundError(path)
-    return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    return _open_readonly(path)
 
 
 def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:

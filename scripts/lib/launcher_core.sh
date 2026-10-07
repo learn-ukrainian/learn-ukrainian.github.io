@@ -304,6 +304,15 @@ launcher_clear_foreign_route_state() {
   unset LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
 }
 
+launcher_export_git_identity() {
+  local py identity name email
+  py="$(launcher_project_python)" || return 3
+  identity="$("$py" "$LC_ROOT/scripts/lib/git_identity.py" "$LC_PROVIDER" "${LC_MODEL:-}")" || return 3
+  IFS=$'\t' read -r name email <<< "$identity"
+  export GIT_AUTHOR_NAME="$name" GIT_COMMITTER_NAME="$name"
+  export GIT_AUTHOR_EMAIL="$email" GIT_COMMITTER_EMAIL="$email"
+}
+
 launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
@@ -1325,6 +1334,7 @@ launcher_main() {
   fi
   # Before any adapter check, plane probe or deploy: no core, no launch.
   launcher_load_rules_core
+  launcher_export_git_identity || exit 3
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate

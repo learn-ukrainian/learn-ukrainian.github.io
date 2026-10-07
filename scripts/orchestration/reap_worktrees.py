@@ -41,7 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common import task_store_paths
+from scripts.common import github_client, task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -53,8 +53,9 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_claims, worktree_prep
-from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
+from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
+from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -108,6 +109,7 @@ class ReapResult:
     branch_pruned: bool = False
     recovery_ref: str | None = None
     owner: str | None = None
+    preserved_artifacts: dict[str, Any] | None = None
     # Report-only findings (#8663): kind, evidence, and a "verify first:"
     # removal command a human runs; the reaper never acts on them.
     needs_attention: dict[str, Any] | None = None
@@ -174,9 +176,22 @@ def _run(
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    if args and Path(args[0]).name == "gh":
+        # FORCE_COLOR and CLICOLOR_FORCE beat NO_COLOR and make gh wrap piped
+        # JSON in ANSI. That is not JSON, and a parse error must stay fail-closed,
+        # so every JSON gh call is uncolored instead of being repaired later.
+        env.pop("FORCE_COLOR", None)
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR_FORCE"] = "0"
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
+    if args and args[0] == "git":
+        command = args[1] if len(args) > 1 else ""
+        profile = "remote" if command in REMOTE_COMMANDS else "commit" if command in COMMIT_COMMANDS else "local"
+        return safe_git(
+            args[1:], cwd=cwd, profile=profile, capture_output=True, text=True, check=False, timeout=timeout, env=env
+        )
     return subprocess.run(
         args,
         cwd=cwd,
@@ -185,6 +200,34 @@ def _run(
         check=False,
         timeout=timeout,
         env=env,
+    )
+
+
+def _run_gh(
+    args: list[str],
+    *,
+    cwd: Path,
+    timeout: float | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Read GitHub through the shared client.
+
+    Modelled argv translates to REST. Every other shape, including
+    ``gh pr list --head`` and ``gh search prs``, falls through to native gh
+    on that client's colour-safe transport. Callers still parse stdout:
+    an empty body is unknown, and a JSON ``[]`` is no PR.
+    """
+    timeout = _effective_timeout(timeout)
+    if timeout is not None and timeout <= 0:
+        raise subprocess.TimeoutExpired(args, 0)
+    return github_client.run(
+        args,
+        cwd=cwd,
+        fresh=True,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+        env=sanitized_git_env(),
     )
 
 
@@ -358,8 +401,8 @@ def is_under_worktrees(repo_root: Path, path: Path) -> bool:
 def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     """Return True when the worktree has no meaningful dirty files.
 
-    Dispatch workers often leave an untracked ``.venv`` (or nested site
-    venv) which must not block reaping multi-hundred-MB trees. Callers
+    Untracked known caches and verified provisioned links are disposable;
+    real environments and tracked changes retain the tree. Callers
     holding delegate's per-worktree lock pass
     :data:`_LOCKED_GIT_STATUS_TIMEOUT_S` so a wedged ``git status``
     surfaces as :class:`subprocess.TimeoutExpired` (a skip) instead of
@@ -368,12 +411,12 @@ def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path, timeout=timeout)
     if proc.returncode != 0:
         return None
-    ignored_prefixes = (".venv/", ".venv", "node_modules/", "node_modules")
+    primary = primary_checkout_root(path)
     for raw in (proc.stdout or "").splitlines():
         if len(raw) < 4:
             continue
         rel = raw[3:].strip().strip('"')
-        if rel in ignored_prefixes or rel.startswith((".venv/", "node_modules/")):
+        if raw[:2] == "??" and worktree_artifacts.is_disposable_path(Path(rel), worktree=path, primary=primary):
             continue
         return False
     return True
@@ -438,7 +481,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "api",
@@ -456,8 +499,12 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], f"REST PR lookup failed: {exc}"
     if proc.returncode != 0:
         return [], f"REST PR lookup failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "REST PR lookup returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"REST PR lookup returned invalid JSON: {exc}"
     if not isinstance(raw_items, list) or any(not isinstance(page, list) for page in raw_items):
@@ -488,7 +535,7 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
 
 def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -509,8 +556,12 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
         return [], f"gh pr list failed: {exc}"
     if proc.returncode != 0:
         return [], f"gh pr list failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "gh pr list returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"gh pr list returned invalid JSON: {exc}"
     if not isinstance(raw_items, list):
@@ -587,7 +638,7 @@ def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullReq
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "api", "-X", "GET", f"repos/{owner}/{repo}/pulls/{number}"],
             cwd=repo_root,
             timeout=30,
@@ -622,7 +673,7 @@ def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestS
 
 def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -865,7 +916,7 @@ def _query_prs_by_head_sha(
     if not head_sha:
         return [], None
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "search", "prs", head_sha, "--json", "number,state"],
             cwd=repo_root,
             timeout=30,
@@ -874,8 +925,12 @@ def _query_prs_by_head_sha(
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs: {type(exc).__name__})"
     if proc.returncode != 0:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs exit {proc.returncode})"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned empty output)"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned malformed JSON)"
     if not isinstance(raw_items, list):
@@ -883,20 +938,31 @@ def _query_prs_by_head_sha(
 
     states: list[PullRequestState] = []
     for item in raw_items:
-        if not isinstance(item, dict):
-            continue
-        state = str(item.get("state") or "").upper()
-        if not state:
-            continue
-        number = item.get("number")
-        states.append(
-            PullRequestState(
-                number=number if isinstance(number, int) else None,
-                state=state,
-                head_sha=head_sha,
-            )
-        )
+        # ``[null]`` and ``[{}]`` used to be skipped, which is an empty list,
+        # and an empty list is permission to delete. Any row that is not a PR
+        # object makes the whole answer unknown.
+        parsed, err = _parse_search_pr_item(item, head_sha)
+        if err is not None or parsed is None:
+            return [], err or f"{_PR_LOOKUP_FAILED} (gh search prs returned an unusable row)"
+        states.append(parsed)
     return states, None
+
+
+def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | None, str | None]:
+    """Map one ``gh search prs`` row; anything else is an unknown, not an absence."""
+    if not isinstance(item, dict):
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row is not an object)"
+    raw_state = item.get("state")
+    state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+    if state not in _PR_STATES:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has an unusable state)"
+    number = item.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
+    return (
+        PullRequestState(number=number, state=state, head_sha=head_sha),
+        None,
+    )
 
 
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
@@ -1001,32 +1067,34 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
         return listed.stdout.splitlines() if listed.returncode == 0 else [info.head]
 
     try:
+        primary = primary_checkout_root(info.path)
         if pr_state.number is None or not pr_state.head_sha:
             return unproven(local_commits(), "PR head unavailable")
         live_branch = _run(
             ["git", "ls-remote", "--heads", "origin", info.branch or ""],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if live_branch.returncode != 0:
-            return unproven(local_commits(), "origin branch probe failed")
+            detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
+            return unproven(local_commits(), f"origin branch probe failed{detail}")
         if live_branch.stdout.strip():
             return unproven(local_commits(), "origin branch returned")
 
         fetched_pr = _run(
             ["git", "fetch", "--no-tags", "origin", f"refs/pull/{pr_state.number}/head"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_pr.returncode != 0:
             return unproven(local_commits(), "PR head fetch failed")
-        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=info.path)
+        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=primary)
         if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != pr_state.head_sha:
             return unproven(local_commits(), "fetched PR head does not match PR state")
 
         fetched_main = _run(
             ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_main.returncode != 0:
@@ -2068,14 +2136,16 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
 
 
 def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
-    """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
+    """Return whether origin has ``branch``; None on failure, reporting typed refusals."""
     if not branch:
         return False
     # Called before the per-worktree lock. 30s is this probe's own cap; it is
     # not part of the locked-region deadline. The locked re-check uses the
     # local remote-tracking ref (:func:`_origin_branch_present`) instead.
-    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path, timeout=30)
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=primary_checkout_root(path), timeout=30)
     if proc.returncode != 0:
+        if isinstance(proc, GitRefusal):
+            print(f"live origin proof unavailable: {proc.code}", file=sys.stderr)
         return None
     return bool((proc.stdout or "").strip())
 
@@ -2201,28 +2271,7 @@ def _terminal_dispatch_reason(
     return f"settled dispatch task-id={task_id} status={task_status}"
 
 
-# Tool-regenerated caches and exact dispatcher-provisioned links are disposable.
-# Real ``.venv/`` and ``node_modules/`` entries may hold an only copy of work.
-_PYCACHE_DIR = "__pycache__"
-_TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
-_ENV_DIRS = frozenset({".venv", "node_modules"})
-_PROVISIONED_LINK_PATHS = frozenset({"data/sources.db", "data/vesum.db", "node_modules", "site/node_modules"})
-
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
-
-
-def _is_regenerable_cache_path(path: str) -> bool:
-    """True for a path inside a ``__pycache__/`` or a top-level tool cache.
-
-    Any ``.venv`` or ``node_modules`` segment disqualifies the path, and a loose
-    ``*.pyc`` outside ``__pycache__/`` is not a cache. A hand-made file placed
-    inside an ignored cache directory is treated as disposable (documented
-    residual in the worktree-cleanup runbook).
-    """
-    segments = path.split("/")
-    if _ENV_DIRS.intersection(segments):
-        return False
-    return _PYCACHE_DIR in segments[:-1] or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
 
 
 def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
@@ -2249,18 +2298,9 @@ def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = N
         if not entry.startswith("!! "):
             return False
         relative = entry[3:]
-        if _is_regenerable_cache_path(relative):
-            continue
-        if relative not in _PROVISIONED_LINK_PATHS:
-            return False
-        link = path / relative
         try:
             primary = primary_checkout_root(path)
-            if (
-                not link.is_symlink()
-                or primary.resolve(strict=True) == path.resolve(strict=True)
-                or link.resolve(strict=True) != (primary / relative).resolve(strict=True)
-            ):
+            if not worktree_artifacts.is_disposable_path(Path(relative), worktree=path, primary=primary):
                 return False
         except (OSError, RuntimeError):
             return False
@@ -2755,7 +2795,7 @@ def _qualifying_reason(
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
                     if task_status in ("done", "failed", "no_deliverable") and (
-                        active_ids is None or task_id not in active_ids
+                        active_ids is not None and task_id not in active_ids
                     ):
                         task_settled = True
                 except Exception:
@@ -3005,7 +3045,7 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
-_ClaimIdentity = tuple[str, str, str]
+_ClaimIdentity = tuple[str, str, str, str, int]
 
 
 def _pid_proven_absent(record: dict[str, Any]) -> bool:
@@ -3027,10 +3067,16 @@ def _pid_proven_absent(record: dict[str, Any]) -> bool:
 
 
 def _needs_finalize_claim_identity(record: dict[str, Any]) -> _ClaimIdentity | None:
-    """Return the (task id, branch, recorded head) a settled-claim proof is bound to, if all are present."""
-    identity = (record.get("task_id"), record.get("worktree_branch"), record.get("final_branch_head_commit"))
-    if all(isinstance(part, str) and part for part in identity):
-        return identity  # type: ignore[return-value]
+    """Bind a settled-claim proof to its task, branch, head, nonce and worker PID."""
+    identity = (
+        record.get("task_id"),
+        record.get("worktree_branch"),
+        record.get("final_branch_head_commit"),
+        record.get("run_nonce"),
+    )
+    pid = record.get("pid")
+    if all(isinstance(part, str) and part for part in identity) and type(pid) is int and pid > 0:
+        return (*identity, pid)  # type: ignore[return-value]
     return None
 
 
@@ -3046,10 +3092,58 @@ def _needs_finalize_claim_proven_settled(repo_root: Path, record: dict[str, Any]
     identity = _needs_finalize_claim_identity(record)
     if identity is None or not _pid_proven_absent(record):
         return None
-    _, branch, head = identity
+    _, branch, head, _, _ = identity
     states, error = _query_pr_states(repo_root, branch)
     if error is None and any(state.state == "MERGED" and state.head_sha == head for state in states):
         return identity
+    return None
+
+
+def _released_reuse_claim_proven_settled(
+    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]] | None:
+    """Prove a released creator via its exact-head merged successor, outside the lock."""
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if record.get("status") != "needs_finalize" or _needs_finalize_claim_identity(record) is None:
+            return None
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        if creator != record or any(member.get("keep_worktree") for _, member in matches):
+            return None
+        receipt = record["preserved_artifacts"]
+        release = receipt["retention_release"]
+        finalized = release["finalized_by"]
+        if (
+            receipt.get("retention_disposition") not in {"released", "retrieved"}
+            or receipt.get("owner") != record["task_id"]
+            or receipt.get("task_id") != record["task_id"]
+            or receipt.get("run_nonce") != record["run_nonce"]
+            or release.get("owner") != record["task_id"]
+            or release.get("run_nonce") != record["run_nonce"]
+            or not receipt.get("retrieval_proof_sha256")
+            or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
+            or not all(_pid_proven_absent(member) for _, member in matches)
+        ):
+            return None
+        head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+        if head.returncode != 0 or head.stdout.strip() != finalized["head_sha"]:
+            return None
+        for _, successor in matches:
+            if (
+                successor.get("worktree_reused") is True
+                and successor.get("status") == "done"
+                and successor.get("task_id") == finalized["task_id"]
+                and successor.get("run_nonce") == finalized["run_nonce"]
+                and successor.get("final_branch_head_commit") == finalized["head_sha"]
+                and _needs_finalize_claim_proven_settled(repo_root, successor) is not None
+            ):
+                return matches
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        pass
     return None
 
 
@@ -3089,12 +3183,26 @@ def _enter_dispatch_worktree_guard(
         "owner_task_id": owner_task_id,
         "owner_state_file": tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
     }
+    owner_record = _task_record(repo_root, owner_task_id) if owner_task_id else None
+    owner_attempt = None
+    if owner_record is not None and owner_record.get("status") == "needs_finalize":
+        nonce = owner_record.get("run_nonce")
+        if not isinstance(nonce, str) or not nonce or not _pid_proven_absent(owner_record):
+            return f"needs_finalize owner {owner_task_id} attempt unknown; retain until nonce and absent PID are proven"
+        owner_attempt = (nonce, owner_record.get("pid"))
 
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
     proven: set[_ClaimIdentity] = set()
+    reused_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
 
     def prove(record: dict[str, Any]) -> bool:
+        reuse = _released_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        if reuse is not None:
+            identity = _needs_finalize_claim_identity(record)
+            if identity is not None:
+                reused_proofs[identity] = reuse
+                return True
         identity = _needs_finalize_claim_proven_settled(primary, record)
         if identity is not None:
             proven.add(identity)
@@ -3112,8 +3220,33 @@ def _enter_dispatch_worktree_guard(
     def still_settled(record: dict[str, Any]) -> bool:
         # Under the lock: no network. The record must still be the one proven.
         identity = _needs_finalize_claim_identity(record)
+        if identity in reused_proofs:
+            from scripts.fleet import ignored_task_output
+
+            try:
+                current = ignored_task_output.matching_worktree_records(
+                    info.path, tasks_dir, repo_root=primary, publish_cache=False
+                )
+                head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                finalized = record["preserved_artifacts"]["retention_release"]["finalized_by"]
+                return bool(
+                    current == reused_proofs[identity]
+                    and head.returncode == 0
+                    and head.stdout.strip() == finalized["head_sha"]
+                    and all(_pid_proven_absent(member) for _, member in current)
+                )
+            except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+                return False
         return identity is not None and identity in proven and _pid_proven_absent(record)
 
+    if owner_attempt is not None:
+        current_owner = _task_record(repo_root, owner_task_id)
+        if (
+            current_owner is None
+            or (current_owner.get("run_nonce"), current_owner.get("pid")) != owner_attempt
+            or not _pid_proven_absent(current_owner)
+        ):
+            return f"needs_finalize owner {owner_task_id} attempt changed; retain until current attempt is qualified"
     return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
 
 
@@ -3569,43 +3702,35 @@ def _reap_qualified_worktree(
         # fraction of a second kills ``git worktree remove --force``
         # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
         # (120s). A waiter that hits its 30s lock timeout retries.
-        # ``_worktree_clean`` accepts disposable ignored residue such as a
-        # worker's ``.venv``; git still counts it, so force is required.
+        # Git still counts ignored residue on a clean checkout, so force is
+        # required. The shared gate preserves non-disposable output first.
         control_root = control_plane_root(repo_root)
-        artifacts_ok, artifact_refusal, _artifacts = preserve_worktree_artifacts(
-            info.path,
-            primary=control_root,
-            task_id=_dispatch_task_id(repo_root, info),
-            tasks_dir=task_store_paths.tasks_dir(),
-        )
-        if not artifacts_ok:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=artifact_refusal,
-                dirty=dirty,
-                pr=_pr_dict(pr_state),
-                recovery_ref=recovery_ref,
-            )
+        preservation_receipt: dict[str, Any] = {}
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
             info.path,
             force=True,
+            control_root=control_root,
+            task_id=_dispatch_task_id(repo_root, info),
+            tasks_dir=task_store_paths.tasks_dir(),
+            preservation_receipt=preservation_receipt,
             **approval,
         )
+        preserved_artifacts = preservation_receipt or None
         if remove_error is not None:
+            preservation_failed = remove_error.startswith("artifact preservation failed:")
             return ReapResult(
                 path=str(info.path),
                 branch=info.branch,
-                action="error",
-                reason=reason,
+                action="skipped" if preservation_failed else "error",
+                reason=remove_error if preservation_failed else reason,
                 dirty=dirty,
                 pr=_pr_dict(pr_state),
-                error=remove_error,
+                error=None if preservation_failed else remove_error,
                 recovery_ref=recovery_ref,
+                preserved_artifacts=preserved_artifacts,
             )
 
         # Prune and the daily-cap write do not need the per-worktree lock.
@@ -3640,6 +3765,7 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
                 error=branch_prune_error,
                 recovery_ref=recovery_ref,
+                preserved_artifacts=preserved_artifacts,
             )
         return ReapResult(
             path=str(info.path),
@@ -3650,6 +3776,7 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
             branch_pruned=branch_pruned,
             recovery_ref=recovery_ref,
+            preserved_artifacts=preserved_artifacts,
         )
     except subprocess.TimeoutExpired as exc:
         # A git call outlived its locked-region bound (#8748): skip, never

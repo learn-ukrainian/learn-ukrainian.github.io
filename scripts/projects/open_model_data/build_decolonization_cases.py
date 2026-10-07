@@ -8,9 +8,13 @@ Assembles verified Ukrainian decolonization cases from accepted authorities:
 - Катерина Городенська («Чи правильне слововживання?»)
 - СУМ-20 & Правопис 2019
 
+The candidate catalog targets 70% substantive corrections and 30% protective
+controls across four categories. Unsupported cases are withheld rather than
+replaced to fill those quotas; output counts reflect only retained cases.
+
 Strictly enforces:
-1. Real content share: 70% substantive corrections, 30% protective controls against hyperpurism.
-2. 4 balanced categories: calque_lexical, calque_syntactic, calque_prepositional, protective_authentic.
+1. Withholding unsupported held-source evidence with a reason and owner.
+2. Four categories: calque_lexical, calque_syntactic, calque_prepositional, protective_authentic.
 3. Clean train/eval partition: held-out evaluation split with 100% disjoint target phenomena.
 4. Rich register diversity: official administrative, journalistic, educational, and conversational contexts.
 5. Traceable reviewer confirmations backed by live database verification in VESUM and sources.db.
@@ -28,11 +32,14 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import is_sqlite_connection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.audit_dataset_acceptance import PROJECT_ROOT, _resolve_db_path
 from scripts.projects.open_model_data.decolonization_cases_data import (
     LEXICAL_CALQUES,
@@ -46,12 +53,24 @@ from scripts.projects.open_model_data.decolonization_language_reviews import (
     compute_case_content_sha256,
 )
 from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR, REGISTRY_DECOLONIZATION_DIR
-from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
+from scripts.projects.open_model_data.sum20_codification_records import (
+    COMMITTED_SUM20_RECORDS,
+    _quarantined_headwords,
+    _record_source,
+    committed_record_dispositions,
+    ensure_reproducible_sum20_table,
+)
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import write_artifact_set
+from scripts.wiki.sum20_official import live_article_predicate_for, normalize_sum20_lookup
 
 _COMPONENT_GROUP = "open_model_component_payload"
 _DECOLONIZATION_REL = "projects/open_model_data/components/decolonization"
+_PROJECT_CASE_IDS = frozenset(
+    item["case_id"]
+    for group in (LEXICAL_CALQUES, SYNTACTIC_CALQUES, PREPOSITIONAL_CALQUES, PROTECTIVE_CONTROLS)
+    for item in group
+)
 
 
 def _managed_decolonization_destination(output_dir: Path) -> bool:
@@ -91,6 +110,14 @@ def _publish_decolonization_outputs(payloads: dict[str, bytes], companions: dict
             for name, data in companions.items()
         },
     )
+
+
+class SourceEvidenceUnavailable(ValueError):
+    """A held source cannot substantiate a case; review and integrity failures still abort."""
+
+    def __init__(self, message: str, reason_code: str):
+        super().__init__(message)
+        self.reason_code = reason_code
 
 
 @dataclass
@@ -311,6 +338,225 @@ def validate_ua_gec_phrase(cand_str: str, rec_str: str, cur: sqlite3.Cursor) -> 
     return True
 
 
+def validate_dictionary_schema(cur: sqlite3.Cursor) -> None:
+    """Compile required source queries; absent tables/columns are integrity errors.
+
+    These are the held dictionary contracts used below, not optional telemetry.
+    LIMIT 0 validates the schema without reading or changing source rows.
+    """
+    for query in (
+        "SELECT id, headword, normalized_lookup_key, article_text, definition_text, official_url FROM sum20_articles LIMIT 0",
+        "SELECT id, canonical_headword, normalized_query, sense_gloss FROM ulif_dictua_entries LIMIT 0",
+        "SELECT id, title, text FROM external_articles LIMIT 0",
+    ):
+        cur.execute(query)
+    if cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='slovnyk_me_entries'").fetchone():
+        cur.execute("SELECT id, source_url, dictionary_slug, text FROM slovnyk_me_entries LIMIT 0")
+
+
+def validate_source_schema(cur: sqlite3.Cursor) -> None:
+    """Validate every required source contract before any case can withhold."""
+    validate_dictionary_schema(cur)
+    for query in (
+        "SELECT id, error, correct, error_type, doc_id FROM ua_gec_errors LIMIT 0",
+        "SELECT id, word, section, source, text, excerpt_full, page FROM style_guide LIMIT 0",
+        "SELECT id, title, text, speaker, source_file, channel_id, domain, decolonization_tag FROM external_articles LIMIT 0",
+        "SELECT id, title, text, author, author_uk, source_file FROM textbooks LIMIT 0",
+        "SELECT rowid, title, text FROM textbooks_fts WHERE textbooks_fts MATCH 'schema' LIMIT 0",
+        "SELECT source_id, number, text, text_sha256, locator FROM pravopys_paragraphs LIMIT 0",
+    ):
+        cur.execute(query)
+
+
+def _literal_binding(
+    passage: str,
+    table: str,
+    row_id: Any,
+    field: str,
+    text: str,
+    provenance: dict[str, Any],
+    *,
+    locator: str | None = None,
+    text_sha256: str | None = None,
+) -> dict[str, Any] | None:
+    """Bind raw quotation bytes to one resolving admitted row and field."""
+    if row_id is None or row_id == "":
+        raise ValueError(f"Missing resolving source row identity in {table}")
+    digest = hashlib.sha256((text or "").encode("utf-8")).hexdigest()
+    if text_sha256 is not None and digest != text_sha256:
+        raise ValueError(f"Source text digest mismatch at {table}:{row_id}:{field}")
+    if not passage or not text or passage not in text:
+        return None
+    return {
+        "table": table,
+        "row_id": row_id,
+        "text_field": field,
+        "text_sha256": digest,
+        "passage_sha256": hashlib.sha256(passage.encode("utf-8")).hexdigest(),
+        "locator": locator or f"{table}:{row_id}",
+        "source_provenance": provenance,
+    }
+
+
+def _bind_admitted_passage(case_id: str, ev: dict[str, Any], cur: sqlite3.Cursor) -> dict[str, Any]:
+    """Search all literal witnesses; metadata/body/title guesses never grant identity."""
+    auth, source, passage = ev["authority"], ev.get("source"), ev.get("supporting_passage", "")
+    seen = False
+    if auth in {"СУМ-20", "ВТС"}:
+        validate_dictionary_schema(cur)
+        if normalize_sum20_lookup(ev.get("article") or ev["target_term"]) in _quarantined_headwords(cur.connection):
+            raise SourceEvidenceUnavailable("Lexical evidence missing: quarantined headword", "quarantined_headword")
+        live = live_article_predicate_for(cur)
+        rows = cur.execute(
+            f"SELECT id, article_text, definition_text, official_url FROM sum20_articles WHERE {live} ORDER BY id"
+        ).fetchall()
+        for row_id, article, definition, url in rows:
+            seen = True
+            # This table's admitted provenance is SUM-20, never a VTS or ULIF identity.
+            try:
+                parsed = urlsplit(url or "")
+            except ValueError:
+                continue
+            if auth != "СУМ-20" or source != auth or parsed.scheme != "https" or parsed.netloc != "sum20ua.com":
+                continue
+            for field, text in (("article_text", article), ("definition_text", definition)):
+                binding = _literal_binding(
+                    passage, "sum20_articles", row_id, field, text, {"source": "СУМ-20", "official_url": url}
+                )
+                if binding:
+                    return binding
+        tables = {r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if "slovnyk_me_entries" in tables:
+            # Optional absence is allowed; an existing malformed cache/query must abort.
+            for row_id, url, slug, text in cur.execute(
+                "SELECT id, source_url, dictionary_slug, text FROM slovnyk_me_entries ORDER BY id"
+            ).fetchall():
+                seen = True
+                if (
+                    _record_source(url or "") != auth
+                    or source != auth
+                    or slug != {"СУМ-20": "newsum", "ВТС": "vts"}[auth]
+                ):
+                    continue
+                binding = _literal_binding(
+                    passage,
+                    "slovnyk_me_entries",
+                    row_id,
+                    "text",
+                    text,
+                    {"source": auth, "source_url": url, "dictionary_slug": slug},
+                )
+                if binding:
+                    return binding
+        # ULIF and generic external articles have no admitted provenance for these credits.
+        seen = seen or bool(cur.execute("SELECT id FROM ulif_dictua_entries LIMIT 1").fetchone())
+        seen = seen or bool(cur.execute("SELECT id FROM external_articles LIMIT 1").fetchone())
+    elif auth == "Український правопис (2019)" and source == auth:
+        from scripts.wiki.pravopys_official import PRAVOPYS_SOURCE_ID
+
+        for source_id, number, text, digest, locator in cur.execute(
+            "SELECT source_id, number, text, text_sha256, locator FROM pravopys_paragraphs WHERE source_id = ? ORDER BY number",
+            (PRAVOPYS_SOURCE_ID,),
+        ).fetchall():
+            seen = True
+            if not locator:
+                raise ValueError(f"Missing admitted Pravopys locator at paragraph {number}")
+            binding = _literal_binding(
+                passage,
+                "pravopys_paragraphs",
+                f"{source_id}:{number}",
+                "text",
+                text,
+                {"source": auth, "source_id": source_id, "number": number},
+                locator=locator,
+                text_sha256=digest,
+            )
+            if binding:
+                return binding
+    else:
+        if source != auth:
+            raise SourceEvidenceUnavailable("Held source disagrees with credited authority", "held_source_unproven")
+        if auth == "Борис Антоненко-Давидович «Як ми говоримо»":
+            for row_id, provenance, text, excerpt in cur.execute(
+                "SELECT id, source, text, excerpt_full FROM style_guide ORDER BY id"
+            ).fetchall():
+                if provenance != "Антоненко-Давидович":
+                    continue
+                seen = True
+                for field, body in (("text", text), ("excerpt_full", excerpt)):
+                    binding = _literal_binding(
+                        passage, "style_guide", row_id, field, body, {"source": auth, "source_record": provenance}
+                    )
+                    if binding:
+                        return binding
+        # Full authority in speaker is explicit book attribution; titles and body anchors are not.
+        for row_id, text, speaker, source_file, channel, domain, tag in cur.execute(
+            "SELECT id, text, speaker, source_file, channel_id, domain, decolonization_tag FROM external_articles "
+            "WHERE speaker = ? OR decolonization_tag = ? ORDER BY id",
+            (auth, case_id),
+        ).fetchall():
+            seen = True
+            if (
+                channel == "omd"
+                or domain == "codification"
+                or (source_file or "").startswith("codification-")
+                or tag == case_id
+                or tag in EXPLICIT_SOURCE_EVIDENCE
+                or tag in _PROJECT_CASE_IDS
+            ):
+                continue
+            if speaker != auth or not source_file:
+                continue
+            binding = _literal_binding(
+                passage, "external_articles", row_id, "text", text, {"source": speaker, "source_file": source_file}
+            )
+            if binding:
+                return binding
+        # The approved full-book source ID is pinned by holdings_manifest.yaml.
+        # Other books require exact author and cited title, not inline aliases or co-author guesses.
+        author, sep, book = auth.partition(" «")
+        book = book.removesuffix("»") if sep else ""
+        for row_id, title, text, row_author, author_uk, source_file in cur.execute(
+            "SELECT id, title, text, author, author_uk, source_file FROM textbooks "
+            "WHERE source_file = ? OR (title = ? AND (author = ? OR author_uk = ?)) ORDER BY id",
+            (
+                "antonenko-davydovych-yak-my-hovorymo" if auth == "Борис Антоненко-Давидович «Як ми говоримо»" else "",
+                book,
+                author,
+                author,
+            ),
+        ).fetchall():
+            pinned = (
+                auth == "Борис Антоненко-Давидович «Як ми говоримо»"
+                and source_file == "antonenko-davydovych-yak-my-hovorymo"
+                and author_uk == author
+            )
+            exact_book = bool(book and title == book and author in (row_author, author_uk) and source_file)
+            if not (pinned or exact_book):
+                continue
+            seen = True
+            binding = _literal_binding(
+                passage,
+                "textbooks",
+                row_id,
+                "text",
+                text,
+                {
+                    "source": auth,
+                    "source_file": source_file,
+                    "author": row_author,
+                    "author_uk": author_uk,
+                    "title": title,
+                },
+            )
+            if binding:
+                return binding
+    raise SourceEvidenceUnavailable(
+        f"Held source has no admitted literal passage/source binding for case '{case_id}'",
+        "held_source_unproven" if seen else "held_source_missing",
+    )
+
+
 def query_source_evidence(
     case_id: str,
     term: str,
@@ -381,6 +627,32 @@ def query_source_evidence(
                 f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
             )
 
+    if auth in {"СУМ-20", "ВТС"}:
+        conn = getattr(s_cur, "connection", None)
+        # Preserve quarantine precedence for direct queries; build/CLI validate all contracts first.
+        if (
+            conn is not None
+            and is_sqlite_connection(conn)
+            and normalize_sum20_lookup(ev.get("article") or term) in _quarantined_headwords(conn)
+        ):
+            raise SourceEvidenceUnavailable("Lexical evidence missing: quarantined headword", "quarantined_headword")
+        validate_dictionary_schema(s_cur)
+
+    # Headword/phrase fallback must not attest a passage from an unproven committed record.
+    candidates = [
+        key
+        for key, record in COMMITTED_SUM20_RECORDS.items()
+        if ev.get("supporting_passage") in (record["article_text"], record.get("definition_text"))
+    ]
+    if candidates:
+        dispositions = committed_record_dispositions(s_cur.connection)
+        for key in candidates:
+            if dispositions[key]["status"] == "withheld":
+                raise SourceEvidenceUnavailable(
+                    f"Committed source record '{key}' is withheld for case '{case_id}'",
+                    dispositions[key]["reason_code"],
+                )
+
     # 4. Mandatory live database queries on v_cur and s_cur (non-bypassable; fails closed on zero rows, exceptions, or unrelated results)
     t_tokens = [_PUNCT_PAT.sub("", w).lower() for w in t_clean.split()]
     t_tokens = [tok for tok in t_tokens if tok]
@@ -407,8 +679,9 @@ def query_source_evidence(
         )
         source_record = s_cur.fetchone()
         if not source_record:
-            raise ValueError(
-                f"UA-GEC evidence missing: record {rec_id} for case '{case_id}' not found in ua_gec_errors"
+            raise SourceEvidenceUnavailable(
+                f"UA-GEC evidence missing: record {rec_id} for case '{case_id}' not found in ua_gec_errors",
+                "held_source_missing",
             )
         _db_id, db_error, db_correct, _db_error_type, _db_doc_id = source_record
         corr_clean = db_correct.strip().lower()
@@ -451,357 +724,27 @@ def query_source_evidence(
                 )
             if int(_db_id) != rec_meta["id"]:
                 raise ValueError(f"UA-GEC record ID mismatch: expected {rec_meta['id']}, got {_db_id}")
-    elif "Антоненко" in auth or "Як ми говоримо" in auth or "антоненко" in auth.lower():
-        art = (ev.get("article") or "").strip()
-        from_style_guide_table = False
-        if art:
-            s_cur.execute(
-                "SELECT id, word, section, text FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1",
-                (f"%{art}%", f"%{t_clean}%"),
-            )
-            source_record = s_cur.fetchone()
-            if source_record:
-                from_style_guide_table = True
-        if not source_record:
-            s_cur.execute(
-                "SELECT id, word, section, text FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1",
-                (f"%{t_clean}%", f"%{t_clean}%"),
-            )
-            source_record = s_cur.fetchone()
-            if source_record:
-                from_style_guide_table = True
-        if not source_record:
-            # Query external_articles for authentic Antonenko codification records
-            s_cur.execute(
-                "SELECT id, title, text, speaker, source_file FROM external_articles WHERE (decolonization_tag = ? OR ((speaker LIKE '%Антоненко%' OR title LIKE '%Як ми говоримо%') AND (title LIKE ? OR text LIKE ?))) LIMIT 1",
-                (case_id, f"%{t_clean}%", f"%{t_clean}%"),
-            )
-            source_record = s_cur.fetchone()
-            if source_record:
-                from_style_guide_table = False
-
-        if not source_record:
-            antonenko_anchors = ("антоненко", "antonenko", "як ми говоримо")
-            for tok in t_tokens:
-                try:
-                    s_cur.execute(
-                        "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
-                        "FROM textbooks_fts f "
-                        "LEFT JOIN textbooks t ON f.rowid = t.id "
-                        "WHERE textbooks_fts MATCH ? LIMIT 50",
-                        (tok,),
-                    )
-                    cands = s_cur.fetchall()
-                except sqlite3.OperationalError:
-                    s_cur.execute(
-                        "SELECT rowid, title, text, '', '', '' FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 50",
-                        (tok,),
-                    )
-                    cands = s_cur.fetchall()
-
-                for cand in cands:
-                    c_head = cand[1]
-                    c_text = cand[2]
-                    c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
-                    c_src = cand[5] if len(cand) > 5 else ""
-                    c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
-                    if any(k in c_low for k in antonenko_anchors):
-                        source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
-                        from_style_guide_table = False
-                        break
-                if source_record:
+        binding = None
+        if ev["source"] == "UA-GEC v2.0" and auth == "UA-GEC (Syvokon et al., 2023)":
+            for field, text in (("error", db_error), ("correct", db_correct)):
+                binding = _literal_binding(
+                    ev.get("supporting_passage", ""),
+                    "ua_gec_errors",
+                    _db_id,
+                    field,
+                    text,
+                    {"source": "UA-GEC v2.0", "authority": auth, "doc_id": _db_doc_id},
+                )
+                if binding:
                     break
-
-        if not source_record:
-            raise ValueError(
-                f"Style guide evidence missing: no matching record for case '{case_id}' (target: '{term}', article: '{art}')"
-            )
-        rec_id_val = source_record[0]
-        rec_head = str(source_record[1])
-        rec_text = str(source_record[3] if len(source_record) > 3 and from_style_guide_table else source_record[2])
-        rec_author_meta = str(source_record[3]) if len(source_record) > 3 and not from_style_guide_table else ""
-        rec_src_meta = str(source_record[4]) if len(source_record) > 4 and not from_style_guide_table else ""
-        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
-        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
-        combined_text = f"{head_low} {text_low} {rec_author_meta.lower()} {rec_src_meta.lower()}"
-        if not from_style_guide_table:
-            antonenko_anchors = ("антоненко", "antonenko", "як ми говоримо")
-            if not any(k in combined_text for k in antonenko_anchors):
-                raise ValueError(
-                    f"Retrieved record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate citation '{auth}')"
-                )
-        if not (
-            t_clean in head_low
-            or t_clean in text_low
-            or any(tok in head_low or tok in text_low for tok in t_tokens)
-            or any(p.strip().lower() in text_low for p in proper_list)
-            or (art and art.lower() in head_low)
-        ):
-            raise ValueError(
-                f"Retrieved style_guide record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
-            )
-    elif "СУМ-20" in auth or "ВТС" in auth:
-        conn = getattr(s_cur, "connection", None)
-        if conn is not None and isinstance(conn, sqlite3.Connection):
-            ensure_reproducible_sum20_table(conn)
-
-        art = (ev.get("article") or term).strip()
-        art_head = art.split()[0] if " " in art else art
-        is_phrase = len(term.split()) > 1
-
-        # 1. Query modern academic dictionary СУМ-20 by exact cited headword
-        sum20_keys = list(dict.fromkeys([art, art.upper(), art.lower(), art_head, art_head.upper(), art_head.lower()]))
-        placeholders = ",".join(["?"] * len(sum20_keys))
-        source_record = None
-        for tbl in ("reproducible_sum20_articles", "sum20_articles"):
-            try:
-                s_cur.execute(
-                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) LIMIT 1",
-                    (*sum20_keys, *sum20_keys),
-                )
-                source_record = s_cur.fetchone()
-                if source_record:
-                    break
-            except sqlite3.OperationalError:
-                continue
-
-        # If not found by headword, search by exact phrase in article_text
-        if not source_record and is_phrase:
-            for tbl in ("reproducible_sum20_articles", "sum20_articles"):
-                try:
-                    s_cur.execute(
-                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE article_text LIKE ? OR definition_text LIKE ? LIMIT 1",
-                        (f"%{t_clean}%", f"%{t_clean}%"),
-                    )
-                    source_record = s_cur.fetchone()
-                    if source_record:
-                        break
-                except sqlite3.OperationalError:
-                    continue
-
-        # 2. Modern normative fallback: ULIF (sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
-        if not source_record:
-            dictua_keys = list(
-                dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else []))
-            )
-            for k in dictua_keys:
-                try:
-                    s_cur.execute(
-                        "SELECT id, COALESCE(NULLIF(canonical_headword, ''), normalized_query), COALESCE(NULLIF(sense_gloss, ''), normalized_query) FROM ulif_dictua_entries WHERE normalized_query = ? LIMIT 1",
-                        (k,),
-                    )
-                    source_record = s_cur.fetchone()
-                    if source_record:
-                        break
-                except sqlite3.OperationalError:
-                    pass
-
-        # 3. Modern normative fallback: ВТС (Великий тлумачний словник) in external_articles
-        if not source_record:
-            try:
-                s_cur.execute(
-                    "SELECT id, title, text FROM external_articles WHERE (title LIKE '%ВТС%' OR title LIKE '%тлумачний%' OR text LIKE '%тлумачний%') AND (title LIKE ? OR text LIKE ?) LIMIT 1",
-                    (f"%{art_head}%", f"%{t_clean}%"),
-                )
-                source_record = s_cur.fetchone()
-            except sqlite3.OperationalError:
-                pass
-
-        if not source_record:
-            raise ValueError(
-                f"Lexical evidence missing: no matching modern dictionary (СУМ-20 / ULIF / ВТС) record for case '{case_id}' (term '{term}')"
-            )
-
-        rec_id_val = source_record[0]
-        rec_head = str(source_record[1])
-        rec_text = str(source_record[2])
-        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower()).strip()
-        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower()).strip()
-        text_clean = re.sub(r"\s+", " ", re.sub(r"\(.*?\)", "", text_low))
-
-        # Prohibit Soviet dictionary СУМ-11 as positive normative evidence
-        if any(s in head_low or s in text_low for s in ("sum11", "sum-11", "сум-11", "сум 11")):
-            raise ValueError(
-                f"Soviet dictionary СУМ-11 is strictly forbidden as positive normative evidence for case '{case_id}'"
-            )
-
-        art_clean = re.sub(r"[\u0301\u0300]", "", art.lower()).strip()
-        art_head_clean = re.sub(r"[\u0301\u0300]", "", art_head.lower()).strip()
-
-        # For multi-word phrase cases, the record MUST substantiate the phrase itself
-        if is_phrase:
-            phrase_attested = t_clean in text_low or t_clean in text_clean or t_clean in head_low
-            if not phrase_attested:
-                raise ValueError(
-                    f"Retrieved lexical record {rec_id_val} ('{rec_head}') does not substantiate claimed phrase '{term}' (matching headword lacks the phrase)"
-                )
-
-        # Bind selected record strictly to the cited entry or phrase
-        is_bound = (
-            head_low in (art_clean, art_head_clean)
-            or head_low.startswith(art_clean + " ")
-            or head_low.startswith(art_head_clean + " ")
-            or art_clean in head_low.split()
-            or art_head_clean in head_low.split()
-            or (not is_phrase and head_low == t_clean)
-            or t_clean in text_low
-            or t_clean in text_clean
-        )
-        if not is_bound:
-            raise ValueError(
-                f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate cited entry '{art}' or phrase '{term}')"
-            )
-    elif "правопис" in auth.lower():
-        s_cur.execute(
-            "SELECT id, title, text FROM external_articles WHERE (title LIKE '%Правопис%' OR text LIKE '%правопис%') AND text LIKE ? LIMIT 1",
-            (f"%{t_clean}%",),
-        )
-        source_record = s_cur.fetchone()
-        if not source_record:
-            s_cur.execute(
-                "SELECT id, title, text FROM external_articles WHERE title LIKE '%Правопис%' OR text LIKE '%правопис%' LIMIT 1"
-            )
-            source_record = s_cur.fetchone()
-        if not source_record:
-            raise ValueError(
-                f"Orthographic evidence missing: no matching orthography record for case '{case_id}' (term '{term}')"
-            )
-        rec_id_val = source_record[0]
-        rec_head = str(source_record[1])
-        rec_text = str(source_record[2])
-        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
-        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
-        if "правопис" not in head_low and "правопис" not in text_low:
-            raise ValueError(
-                f"Retrieved orthography record {rec_id_val} ('{rec_head}') is unrelated to orthographic rules"
-            )
+        if not binding:
+            raise SourceEvidenceUnavailable("UA-GEC row lacks literal passage/source binding", "held_source_unproven")
     else:
-        # Ponomariv, Horodenska, and school textbooks
-        auth_low = auth.lower()
-        locus_low = (ev.get("locus") or "").lower()
-
-        # Build specific authority anchors bound to auth (strictly purge generic vocabulary)
-        if "пономарів" in auth_low or "культура слова" in auth_low:
-            citation_anchors = ["пономарів", "культура слова", "мовностилістичні поради"]
-            for co_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний", "pohribnyi"):
-                if co_author in locus_low:
-                    citation_anchors.append(co_author)
-        elif "городенськ" in auth_low:
-            citation_anchors = ["городенськ", "чи правильне слововживання"]
-            for co_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний", "pohribnyi"):
-                if co_author in locus_low:
-                    citation_anchors.append(co_author)
-        elif "чак" in auth_low:
-            citation_anchors = ["чак", "складні випадки українського слововживання", "чи правильно ми говоримо"]
-        elif "скрипник" in auth_low:
-            citation_anchors = ["скрипник"]
-        elif "синявськ" in auth_low:
-            citation_anchors = ["синявськ", "норми української літературної мови"]
-        elif "караванськ" in auth_low:
-            citation_anchors = ["караванськ", "пошук українського слова", "секрети української мови"]
-        elif "радчук" in auth_low:
-            citation_anchors = ["радчук"]
-        else:
-            citation_anchors = []
-            for textbook_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний"):
-                if textbook_author in auth_low or textbook_author in locus_low:
-                    citation_anchors.append(textbook_author)
-            if not citation_anchors:
-                citation_anchors = ["підручник", "слововживання", "стилістик", "правопис"]
-
-        # 1. Primary check: authentic monograph records in external_articles
-        s_cur.execute(
-            "SELECT id, title, text, speaker, source_file FROM external_articles WHERE decolonization_tag = ? OR ((speaker LIKE ? OR title LIKE ?) AND (title LIKE ? OR text LIKE ?)) LIMIT 1",
-            (case_id, f"%{auth[:15]}%", f"%{auth[:15]}%", f"%{t_clean}%", f"%{t_clean}%"),
-        )
-        source_record = s_cur.fetchone()
-
-        # 2. Textbooks search if not found in primary monograph records
-        if not source_record:
-            first_tok = t_tokens[0]
-            try:
-                s_cur.execute(
-                    "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
-                    "FROM textbooks_fts f "
-                    "LEFT JOIN textbooks t ON f.rowid = t.id "
-                    "WHERE textbooks_fts MATCH ? LIMIT 100",
-                    (first_tok,),
-                )
-                cands = s_cur.fetchall()
-            except sqlite3.OperationalError:
-                s_cur.execute(
-                    "SELECT rowid, title, text, '', '', '' FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 100",
-                    (first_tok,),
-                )
-                cands = s_cur.fetchall()
-
-            for cand in cands:
-                c_head = cand[1]
-                c_text = cand[2]
-                c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
-                c_src = cand[5] if len(cand) > 5 else ""
-                c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
-                if any(k in c_low for k in citation_anchors):
-                    source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
-                    break
-
-            if not source_record and len(t_tokens) > 1:
-                second_tok = t_tokens[1]
-                try:
-                    s_cur.execute(
-                        "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
-                        "FROM textbooks_fts f "
-                        "LEFT JOIN textbooks t ON f.rowid = t.id "
-                        "WHERE textbooks_fts MATCH ? LIMIT 100",
-                        (second_tok,),
-                    )
-                    for cand in s_cur.fetchall():
-                        c_head = cand[1]
-                        c_text = cand[2]
-                        c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
-                        c_src = cand[5] if len(cand) > 5 else ""
-                        c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
-                        if any(k in c_low for k in citation_anchors):
-                            source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
-                            break
-                except sqlite3.OperationalError:
-                    pass
-
-        if not source_record:
-            raise ValueError(
-                f"Textbook/monograph evidence missing: no matching text record for case '{case_id}' (term '{term}', authority '{auth}')"
-            )
-
-        rec_id_val = source_record[0]
-        rec_head = str(source_record[1])
-        rec_text = str(source_record[2])
-        rec_author_meta = str(source_record[3]) if len(source_record) > 3 else ""
-        rec_src_meta = str(source_record[4]) if len(source_record) > 4 else ""
-        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
-        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
-        combined_text = f"{head_low} {text_low} {rec_author_meta.lower()} {rec_src_meta.lower()}"
-
-        # Verify that retrieved record substantiates the claimed citation / curriculum authority
-        # An unrelated book (e.g. agricultural machinery 'Книга про трактори') fails closed
-        if not any(anchor in combined_text for anchor in citation_anchors):
-            raise ValueError(
-                f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate claimed citation '{auth}' / locus '{ev.get('locus')}')"
-            )
-
-        art = (ev.get("article") or "").strip().lower()
-        if not (
-            t_clean in head_low
-            or t_clean in text_low
-            or any(tok in head_low or tok in text_low for tok in t_tokens)
-            or any(p.strip().lower() in text_low for p in proper_list)
-            or (art and (art in head_low or art in text_low))
-        ):
-            raise ValueError(
-                f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
-            )
+        binding = _bind_admitted_passage(case_id, ev, s_cur)
 
     return {
         "source": ev["source"],
+        "binding": binding,
         "section": ev.get("section"),
         "article": ev.get("article"),
         "page": ev.get("page"),
@@ -987,19 +930,8 @@ def make_reviewer_confirmation(
             f"Material change detected for case '{case_id}': authority '{auth}' differs from reviewed authority '{rev_rec.get('authority')}'. Confirmation invalidated."
         )
 
-    # 2. Automated Source Verification
-    source_ev = query_source_evidence(
-        case_id,
-        target_term,
-        russian_copy,
-        auth,
-        cat_name,
-        s_cur,
-        v_cur,
-        style_guide_cache,
-        proper_list=proper_list,
-    )
-
+    # Validate reviewed content before source availability can produce withholding.
+    source_ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
     # 3. Verify Source Evidence binding to Reviewed Dossier
     if rev_rec.get("supporting_passage") != source_ev.get("supporting_passage"):
         raise ValueError(
@@ -1031,6 +963,19 @@ def make_reviewer_confirmation(
             f"Material change detected for case '{case_id}': dossier content digest mismatch (dossier: '{dossier.get('content_sha256')}', current: '{computed_hash}'). Confirmation invalidated."
         )
 
+    # 2. Automated Source Verification
+    source_ev = query_source_evidence(
+        case_id,
+        target_term,
+        russian_copy,
+        auth,
+        cat_name,
+        s_cur,
+        v_cur,
+        style_guide_cache,
+        proper_list=proper_list,
+    )
+
     # 5. Automated VESUM Verification
     vesum_ev = query_vesum_evidence(target_term, proper_list, v_cur)
 
@@ -1050,6 +995,7 @@ def make_reviewer_confirmation(
         "vesum_evidence": vesum_ev,
         "source_evidence": {
             "source_name": source_ev["source"],
+            "binding": source_ev["binding"],
             "locus": source_ev["locus"],
             "supporting_passage": source_ev.get("supporting_passage"),
             "verification_method": source_ev.get("verification_method"),
@@ -1059,13 +1005,14 @@ def make_reviewer_confirmation(
     }
 
 
-def build_all_cases() -> list[DecolonizationCase]:
-    """Compile and validate all 250 decolonization phenomena across 4 categories."""
+def build_all_cases(*, withheld: list[dict[str, Any]] | None = None) -> list[DecolonizationCase]:
+    """Validate the 250 candidates, accounting for unsupported sources as withheld."""
     vesum_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
 
-    v_conn = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    v_conn = _open_readonly(vesum_path)
+    s_conn = sqlite3.connect(sources_path.resolve().as_uri() + "?mode=ro", uri=True)
+    validate_source_schema(s_conn.cursor())
     ensure_reproducible_sum20_table(s_conn)
 
     v_cur = v_conn.cursor()
@@ -1074,6 +1021,7 @@ def build_all_cases() -> list[DecolonizationCase]:
     style_guide_cache = s_cur.execute("SELECT id, word, section, page, text, excerpt_full FROM style_guide").fetchall()
 
     cases: list[DecolonizationCase] = []
+    withheld_cases = withheld if withheld is not None else []
 
     all_defs = [
         ("calque_lexical", LEXICAL_CALQUES),
@@ -1084,7 +1032,24 @@ def build_all_cases() -> list[DecolonizationCase]:
 
     for cat_name, items in all_defs:
         for item in items:
-            rev_conf = make_reviewer_confirmation(item, cat_name, v_cur, s_cur, style_guide_cache)
+            try:
+                rev_conf = make_reviewer_confirmation(item, cat_name, v_cur, s_cur, style_guide_cache)
+            except SourceEvidenceUnavailable as exc:
+                withheld_cases.append(
+                    {
+                        "case_id": item["case_id"],
+                        "reason_code": exc.reason_code,
+                        "record_keys": [
+                            key
+                            for key, record in COMMITTED_SUM20_RECORDS.items()
+                            if EXPLICIT_SOURCE_EVIDENCE[item["case_id"]].get("supporting_passage")
+                            in (record["article_text"], record.get("definition_text"))
+                        ],
+                        "owner": "claude-open-model-data",
+                        "issue": 6321,
+                    }
+                )
+                continue
             case = DecolonizationCase(
                 case_id=item["case_id"],
                 target_term=item["target_term"],
@@ -1190,15 +1155,20 @@ def main(argv: list[str] | None = None) -> int:
     managed = _managed_decolonization_destination(out_dir) if not args.check else False
 
     print(f"Building decolonization dataset at {out_dir}...")
-    cases = build_all_cases()
-    print(f"Loaded {len(cases)} verified cases.")
+    withheld: list[dict[str, Any]] = []
+    cases = build_all_cases(withheld=withheld)
+    print(f"Loaded {len(cases)} verified cases; withheld {len(withheld)} of {len(cases) + len(withheld)} candidates.")
+    for disposition in withheld:
+        print(f"Withheld {disposition['case_id']}: {disposition['reason_code']}")
 
     train_recs, eval_recs = generate_dataset_records(cases)
     total_recs = len(train_recs) + len(eval_recs)
     print(f"Generated {total_recs} records (Train: {len(train_recs)}, Eval: {len(eval_recs)})")
 
     if args.check:
-        print("Dry-run/check validation passed: all 250 cases and 500 records verified successfully in memory.")
+        print(
+            f"Check passed: {len(cases)} substantiated cases, {len(withheld)} withheld; {total_recs} records in memory."
+        )
         return 0
 
     # Prepare all outputs before any managed pathname can change.
@@ -1218,6 +1188,8 @@ def main(argv: list[str] | None = None) -> int:
             "decolonization_eval.jsonl": hashlib.sha256(eval_bytes).hexdigest(),
         },
         "version": "1.0.0",
+        "candidate_cases": len(cases) + len(withheld),
+        "withheld_cases": withheld,
         "task_type": "correction",
         "has_evaluation_split": True,
         "splits": {

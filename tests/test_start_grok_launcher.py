@@ -7,6 +7,8 @@ import pytest
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
+
 
 def test_grok_interactive_defaults_to_native_harness_and_rejects_epic() -> None:
     interactive = run_launcher("start-grok.sh")

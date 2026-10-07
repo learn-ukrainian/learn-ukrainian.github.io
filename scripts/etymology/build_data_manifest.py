@@ -44,8 +44,25 @@ import argparse
 import datetime as dt
 import json
 import sqlite3
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 try:
     from scripts.etymology.transliterate import transliterate
@@ -59,7 +76,7 @@ MANIFEST_VERSION = "2026-05-15-v1"
 
 def load_manifest(db_path: Path) -> dict:
     """Load all ESUM entries from sources.db and shape into the build manifest."""
-    conn = sqlite3.connect(db_path)
+    conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:
         cognate_columns = {row["name"] for row in conn.execute("PRAGMA table_info(esum_cognate_forms)")}

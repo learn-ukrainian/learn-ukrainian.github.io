@@ -9,6 +9,7 @@ import pytest
 
 from scripts.practice_deck import publish as publish_module
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def test_release_subprocesses_use_operation_timeouts_and_preserve_clobber(
     tmp_path: Path,

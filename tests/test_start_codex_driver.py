@@ -11,13 +11,15 @@ from pathlib import Path
 
 import pytest
 
-from tests.launcher_libraries import launcher_library_files
+from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
 )
 from tests.test_launcher_contract import REPO, run_launcher
 from tests.test_launcher_driver_scope import install_scope_sandbox
+
+pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
 
 @pytest.fixture(autouse=True)
@@ -47,14 +49,48 @@ def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -
     assert Path("scripts/lib/driver_scope.sh") in launcher_library_files(REPO)
 
 
+def test_launcher_catalog_inventory_follows_transitive_imports(tmp_path: Path) -> None:
+    files = {
+        "scripts/__init__.py": "",
+        "scripts/review/__init__.py": "from scripts.common import package_helper\n",
+        "scripts/review/model_catalog.py": (
+            "import sys\nfrom pathlib import Path\n"
+            "sys.path.insert(0, str(Path(__file__).resolve().parents[2]))\n"
+            "Path(__file__).resolve().parents[2].joinpath('.git/HEAD').read_text()\n"
+            "Path(__file__).resolve().parents[2].joinpath('local-state.txt').read_text()\n"
+            "def load():\n    from scripts.review.future_route import resolve\n    resolve()\n"
+            "load()\n"
+        ),
+        "scripts/review/future_route.py": (
+            "import importlib\nfrom pathlib import Path\n"
+            "importlib.import_module('scripts.common.transitive')\n"
+            "def resolve():\n"
+            "    Path(__file__).resolve().parents[1].joinpath('config/model_catalog.yaml').read_text()\n"
+        ),
+        "scripts/common/package_helper.py": "import sys\n",
+        "scripts/common/transitive.py": "from scripts.review import future_route\n",
+        "scripts/config/model_catalog.yaml": "schema_version: fixture\n",
+    }
+    for relative, body in files.items():
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(body, encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(["git", "add", *files], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / "local-state.txt").write_text("untracked local state\n", encoding="utf-8")
+    unrelated = tmp_path / "scripts/review/unrelated.py"
+    unrelated.write_text("raise RuntimeError('do not import repository code')\n", encoding="utf-8")
+
+    assert launcher_catalog_files(tmp_path) == tuple(sorted(Path(relative) for relative in files))
+
+
 def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
     """Build the minimal shared-launcher surface with observable probe and CLI stubs."""
     root = tmp_path / "repo"
     for relative in (
         "start-codex-driver.sh",
         "scripts/config/context_profiles.yaml",
-        "scripts/review/model_catalog.py",
-        "scripts/config/model_catalog.yaml",
+        *launcher_catalog_files(REPO),
         "scripts/config/launcher_stream_aliases.tsv",
         "scripts/launchers/codex.sh",
         *launcher_library_files(REPO),
@@ -104,6 +140,33 @@ printf 'CODEX_EXEC %s\\n' "$*"
     return root / "start-codex-driver.sh", executable_dir
 
 
+@pytest.mark.parametrize(
+    ("arguments", "expected"),
+    [
+        (("--check-retired-model", "gpt-6.1-sol"), ""),
+        (("--resolve-kimi-model", "k3"), "kimi-code/k3\n"),
+        (("--resolve-glm-model", "glm"), "glm-5.3\n"),
+        (("--resolve-role", "bounded_advisor"), '"role": "bounded_advisor"'),
+    ],
+)
+def test_runtime_launcher_stages_catalog_command_imports(
+    tmp_path: Path, arguments: tuple[str, ...], expected: str,
+) -> None:
+    launcher, _ = _runtime_launcher(tmp_path)
+    # Isolated mode excludes PYTHONPATH and the checkout from import lookup.
+    result = subprocess.run(
+        [sys.executable, "-I", str(launcher.parent / "scripts/review/model_catalog.py"), *arguments],
+        cwd=tmp_path,
+        env=_clean_environ(),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert expected in result.stdout
+
+
 def _run_runtime_governor(
     launcher: Path,
     executable_dir: Path,
@@ -123,6 +186,113 @@ def _run_runtime_governor(
         check=False,
         timeout=10,
     )
+
+
+def _runtime_driver_launcher(tmp_path: Path) -> tuple[Path, Path]:
+    """Keep selector resolution and the Codex adapter real, with local lifecycle stubs."""
+    launcher, executable_dir = _runtime_launcher(tmp_path)
+    root = launcher.parent
+    shutil.copy2(REPO / "scripts/config/issue_streams.yaml", root / "scripts/config/issue_streams.yaml")
+    for relative, body in {
+        "scripts/lib/thread_rollover_link.sh": """
+clear_codex_launcher_rollover_env() { :; }
+bootstrap_codex_checkout() { :; }
+resolve_codex_pending_rollover() { :; }
+""",
+        "scripts/lib/deploy_extensions.sh": "deploy_agent_extensions() { :; }\n",
+        "scripts/lib/fleet_comms_cold_start.sh": "fleet_comms_cold_clause() { :; }\n",
+    }.items():
+        (root / relative).write_text(body, encoding="utf-8")
+    core = root / "scripts/lib/launcher_core.sh"
+    with core.open("a", encoding="utf-8") as output:
+        output.write("""
+launcher_import_rollover_bundle() { :; }
+launcher_claim_driver_lease() {
+  launcher_prepare_driver_identity
+  printf 'LEASE_STUB %s\\n' "$(launcher_selector_stream "$LC_EPIC")"
+}
+""")
+    probe = root / ".venv/bin/python"
+    body = probe.read_text(encoding="utf-8")
+    body = body.replace(
+        f'exec {sys.executable!r} "$@"',
+        f"""if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_canary.codex_lane" ]]; then
+  printf 'CANARY_EXEC '; printf '%q ' "$@"; printf '\\n'
+  # A missing/wrong stream must refuse execution, just as real mint does.
+  case "${{5:-}}" in
+    curriculum-upgrade) expected=epic:7994 ;;
+    devops) expected=epic:5703 ;;
+    *) exit 91 ;;
+  esac
+  [[ "$#" == 7 && "$4" == --epic && "$6" == --stream && "$7" == "$expected" ]] || exit 92
+  exit 0
+fi
+# Refuse any unplanned module so this fixture cannot contact live services.
+[[ "${{1:-}}" != -m ]] || exit 93
+exec {sys.executable!r} "$@"
+""",
+    )
+    probe.write_text(body, encoding="utf-8")
+    return launcher, executable_dir
+
+
+@pytest.mark.parametrize(
+    ("selector", "stream"),
+    [("curriculum-upgrade", "epic:7994"), ("devops", "epic:5703")],
+)
+def test_driver_canaries_use_canonical_stream_then_exec_provider(tmp_path: Path, selector: str, stream: str) -> None:
+    launcher, executable_dir = _runtime_driver_launcher(tmp_path)
+    result = run_launcher(
+        launcher.name,
+        "--epic",
+        selector,
+        root=launcher.parent,
+        dry_run=False,
+        env={
+            **_clean_environ(),
+            "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
+            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+        },
+    )
+
+    assert result.returncode == 0, result.stderr
+    canaries = [
+        shlex.split(line.removeprefix("CANARY_EXEC "))
+        for line in result.stdout.splitlines()
+        if line.startswith("CANARY_EXEC ")
+    ]
+    assert canaries == [
+        ["-m", "scripts.session_canary.codex_lane", operation, "--epic", selector, "--stream", stream]
+        for operation in ("mint", "bootstrap")
+    ]
+    assert f"LEASE_STUB {stream}" in result.stdout
+    assert result.stdout.index("LEASE_STUB") < result.stdout.index("CANARY_EXEC")
+    assert result.stdout.rindex("CANARY_EXEC") < result.stdout.index("CODEX_EXEC")
+
+
+def test_runtime_driver_refuses_unknown_selector_before_canary_or_provider(tmp_path: Path) -> None:
+    launcher, executable_dir = _runtime_driver_launcher(tmp_path)
+    result = run_launcher(
+        launcher.name,
+        "--epic",
+        "unknown-selector",
+        root=launcher.parent,
+        dry_run=False,
+        env={
+            **_clean_environ(),
+            "CODEX_CANONICAL_REPO_ROOT": str(launcher.parent),
+            "PATH": f"{executable_dir}:{os.environ.get('PATH', '')}",
+        },
+    )
+
+    assert result.returncode == 2, result.stderr
+    assert "unknown lane selector 'unknown-selector'" in result.stderr
+    assert "LEASE_STUB" not in result.stdout
+    assert "CANARY_EXEC" not in result.stdout
+    assert "CODEX_EXEC" not in result.stdout
 
 
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:

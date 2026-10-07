@@ -156,7 +156,8 @@ def patch_gh(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
+    monkeypatch.setattr(rw, "_run_gh", fake_run)
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
     return calls
 
@@ -173,9 +174,7 @@ def test_fetch_pr_info_parses_gh_payload(tmp_path: Path, monkeypatch: pytest.Mon
 
     pr = mc.fetch_pr_info(repo, 42)
 
-    assert pr == mc.PullRequestInfo(
-        number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef"
-    )
+    assert pr == mc.PullRequestInfo(number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef")
 
 
 @pytest.mark.parametrize(
@@ -205,7 +204,7 @@ def test_fetch_pr_info_maps_rest_state(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -214,9 +213,7 @@ def test_fetch_pr_info_maps_rest_state(
     assert calls[0][-1] == "repos/learn-ukrainian/learn-ukrainian.github.io/pulls/42"
 
 
-def test_fetch_pr_info_rest_failure_falls_back_to_graphql(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fetch_pr_info_rest_failure_falls_back_to_graphql(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     calls: list[list[str]] = []
 
@@ -231,7 +228,7 @@ def test_fetch_pr_info_rest_failure_falls_back_to_graphql(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -239,9 +236,7 @@ def test_fetch_pr_info_rest_failure_falls_back_to_graphql(
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
-def test_fetch_pr_info_both_fail_includes_both_errors(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fetch_pr_info_both_fail_includes_both_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
 
     def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
@@ -252,7 +247,7 @@ def test_fetch_pr_info_both_fail_includes_both_errors(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     with pytest.raises(mc.MergeCloseoutError) as exc_info:
         mc.fetch_pr_info(repo, 42)
@@ -278,7 +273,7 @@ def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
         return _REAL_RUN(args, **kwargs)
 
     monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42)
 
@@ -286,9 +281,7 @@ def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
     assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
 
 
-def test_fetch_pr_info_honors_repo_override_for_rest(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_fetch_pr_info_honors_repo_override_for_rest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     calls: list[list[str]] = []
     payload = {"number": 42, "state": "open", "merged_at": None, "head": {"ref": "override", "sha": "sha"}}
@@ -299,7 +292,7 @@ def test_fetch_pr_info_honors_repo_override_for_rest(
             return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     pr = mc.fetch_pr_info(repo, 42, repo="other/project")
 
@@ -307,9 +300,7 @@ def test_fetch_pr_info_honors_repo_override_for_rest(
     assert calls[0][-1] == "repos/other/project/pulls/42"
 
 
-def test_run_merge_closeout_fails_closed_when_not_merged(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_run_merge_closeout_fails_closed_when_not_merged(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     patch_gh(
         monkeypatch,
@@ -333,7 +324,7 @@ def test_run_merge_closeout_fails_closed_when_gh_pr_view_errors(
             return subprocess.CompletedProcess(args, 1, "", "no such PR")
         return _REAL_RUN(args, **kwargs)
 
-    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+    monkeypatch.setattr(mc.github_client, "run", fake_run)
 
     with pytest.raises(mc.MergeCloseoutError, match="gh pr view 99 failed"):
         mc.run_merge_closeout(repo, 99, apply=True)
@@ -378,9 +369,53 @@ def test_apply_reaps_matched_worktree_by_branch_and_deletes_branches(
     assert local.returncode != 0
 
 
-def test_apply_matches_detached_review_sibling_by_exact_sha(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+@pytest.mark.parametrize("failure", [None, "cap", "copy"])
+def test_merge_closeout_preserves_unnamed_ignored_output_without_task_record(tmp_path, monkeypatch, failure):
+    from scripts.fleet import ignored_task_output as output
+
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/output")
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write(".cache/\n__pycache__/\n")
+    source = worktree / ".cache/transcriptions/page.txt"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"transcription proof")
+    cache = worktree / "__pycache__/worker.pyc"
+    cache.parent.mkdir()
+    cache.write_bytes(b"tool cache")
+    head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", "codex/output")
+    patch_gh(
+        monkeypatch,
+        pr_number=9645,
+        state="MERGED",
+        head_ref_name="codex/output",
+        head_sha=head,
+        branch_prs={"codex/output": [{"number": 9645, "state": "MERGED", "headRefOid": head}]},
+    )
+    if failure == "cap":
+        monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", 1)
+    elif failure == "copy":
+
+        def fail_copy(*args, **_kwargs):
+            raise OSError("copy denied")
+
+        monkeypatch.setattr(output.artifacts, "_copy_verified", fail_copy)
+
+    result = mc.run_merge_closeout(repo, 9645, apply=True, live_cwds=set())
+
+    assert not result.ok and worktree.exists()
+    assert source.read_bytes() == b"transcription proof"
+    assert result.reap_results[0]["action"] == "skipped"
+    receipt = result.reap_results[0]["preserved_artifacts"]
+    assert receipt["count"] == 1 and receipt["bytes"] == len(b"transcription proof")
+    assert receipt["retention_disposition"] == "retained"
+    assert receipt["owner"] == "infra lane" and receipt["next_condition"]
+    assert "missing canonical task attribution" in result.reap_results[0]["reason"]
+    assert not (repo / "batch_state/preserved").exists()
+
+
+def test_apply_matches_detached_review_sibling_by_exact_sha(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/reviewed", "notes.txt")
     publish_pr_head(repo, 202, "codex/reviewed", head_sha)
@@ -457,9 +492,7 @@ def test_apply_deletes_local_branch_when_tip_is_ancestor_of_live_pr_head(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     repo = init_repo(tmp_path)
-    local_head, main_head, pr_head = make_pr_merge_head_after_main_advance(
-        repo, "codex/updated", "note.txt"
-    )
+    local_head, main_head, pr_head = make_pr_merge_head_after_main_advance(repo, "codex/updated", "note.txt")
     assert git(repo, "rev-parse", "refs/heads/codex/updated") == local_head
     publish_pr_head(repo, 8560, "codex/updated", pr_head)
     patch_gh(
@@ -491,9 +524,7 @@ def test_apply_deletes_local_branch_when_tip_is_ancestor_of_live_pr_head(
     assert local.returncode != 0
 
 
-def test_apply_exact_head_delete_does_not_fetch_live_pr_head(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_apply_exact_head_delete_does_not_fetch_live_pr_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     pr_head = commit_on_branch(repo, "codex/exact-head-no-fetch", "note.txt")
     publish_pr_head(repo, 8565, "codex/exact-head-no-fetch", pr_head)
@@ -616,9 +647,7 @@ def test_apply_refuses_ancestor_delete_when_fetching_live_pr_head_fails(
     assert git(repo, "rev-parse", "refs/heads/codex/fetch-fails") == local_head
 
 
-def test_apply_refuses_timed_out_live_pr_head_fetch(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_apply_refuses_timed_out_live_pr_head_fetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     local_head, pr_head = make_pr_head_after(repo, "codex/fetch-timeout", "note.txt")
     publish_pr_head(repo, 8566, "codex/fetch-timeout", pr_head)
@@ -649,18 +678,14 @@ def test_apply_refuses_timed_out_live_pr_head_fetch(
 
     assert status is not None
     assert status.local_gone is False
-    assert status.local_error == (
-        "cannot fetch live PR head refs/pull/8566/head: timed out after 30 seconds"
-    )
+    assert status.local_error == ("cannot fetch live PR head refs/pull/8566/head: timed out after 30 seconds")
     assert fetch_kwargs is not None
     assert fetch_kwargs["timeout"] == 30
     assert fetch_kwargs["env_overrides"] == {"GIT_TERMINAL_PROMPT": "0"}
     assert git(repo, "rev-parse", "refs/heads/codex/fetch-timeout") == local_head
 
 
-def test_apply_refuses_local_delete_when_ancestry_check_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_apply_refuses_local_delete_when_ancestry_check_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     local_head, pr_head = make_pr_head_after(repo, "codex/ancestry-fails", "note.txt")
     publish_pr_head(repo, 8564, "codex/ancestry-fails", pr_head)
@@ -692,9 +717,7 @@ def test_apply_refuses_local_delete_when_ancestry_check_fails(
     assert git(repo, "rev-parse", "refs/heads/codex/ancestry-fails") == local_head
 
 
-def test_apply_reports_residual_when_branch_head_diverges(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_apply_reports_residual_when_branch_head_diverges(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A branch whose live head no longer matches the merged PR head is left
     alone and reported as residual, never force-deleted."""
     repo = init_repo(tmp_path)
@@ -755,9 +778,7 @@ def test_apply_exits_nonzero_when_matched_worktree_stays_dirty(
     assert exit_code == 1
 
 
-def test_apply_fails_closed_when_origin_is_unreachable(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_apply_fails_closed_when_origin_is_unreachable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A failed ``git ls-remote`` (unreachable/auth-failing origin) must never
     be read as "branch already gone" -- CF F2."""
     repo = init_repo(tmp_path)
@@ -831,20 +852,14 @@ def test_apply_expected_head_missing_still_refuses_branch_with_open_pr(
         state="MERGED",
         head_ref_name="codex/open-pr-no-expected-head",
         head_sha=None,
-        branch_prs={
-            "codex/open-pr-no-expected-head": [
-                {"number": 8568, "state": "OPEN", "headRefOid": local_head}
-            ]
-        },
+        branch_prs={"codex/open-pr-no-expected-head": [{"number": 8568, "state": "OPEN", "headRefOid": local_head}]},
     )
 
     result = mc.run_merge_closeout(repo, 8567, apply=True, live_cwds=set())
 
     assert result.branch_status is not None
     assert result.branch_status.local_gone is False
-    assert result.branch_status.local_error == (
-        "branch has an open PR (#8568); refusing to delete"
-    )
+    assert result.branch_status.local_error == ("branch has an open PR (#8568); refusing to delete")
     assert result.ok is False
     assert git(repo, "rev-parse", "refs/heads/codex/open-pr-no-expected-head") == local_head
 

@@ -22,11 +22,28 @@ import hashlib
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 ULIF_SYNONYMS_SOURCE = "ulif-synonyms"
 ULIF_DICTUA_URL = "https://lcorp.ulif.org.ua/dictua"
@@ -266,7 +283,7 @@ class UlifSynonymGroups:
             return None
         keys = {plain(lemma) for lemma in lemmas} - {""}
         payloads: list[dict[str, Any]] = []
-        with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
+        with _open_readonly(db_path) as conn:
             try:
                 checked = conn.execute(
                     "SELECT s.id, json_extract(s.payload_json, '$.terms') FROM ulif_dictua_sections s "

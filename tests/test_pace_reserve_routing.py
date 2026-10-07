@@ -117,7 +117,10 @@ def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_pat
     competing = {**claude, "lane": "codex", "status": "warm"}
     assert capacity_pick.build_pick_order([claude, competing])[0]["lane"] == ("claude" if visible else "codex")
     recommendation = state_router._recommend_agent(
-        {"claude": data["agents"]["claude"], "codex": {"status": "warm", "burn_pct_7d": 10.0}},
+        {
+            "claude": data["agents"]["claude"],
+            "codex": {"status": "warm", "burn_pct_7d": 10.0, "health": {"healthy": True}},
+        },
         [],
         current_time=now,
         authoritative_data_available=True,
@@ -242,8 +245,15 @@ def test_capacity_pick_covered_deficit(reserve_case):
         now=now,
     )
     row = next(row for row in rows if row["lane"] == "codex")
-    assert row["avoid"] is (not covered)
-    assert row["status"] == ("cool" if covered else "hot")
+    if info["freshness"] == "stale_last_good":
+        # #9740 F2: a weekly-pace deficit read from a stale probe is UNKNOWN — stale/advisory,
+        # not a confirmed current deficit and not verified capacity.
+        assert (row["avoid"], row["status"], row["capacity"]["state"]) == (False, "unknown", "unknown_stale")
+        assert credit_lane.STALE_ADVISORY_LABEL in row["notes"]
+        assert "codex" not in capacity_pick.cooler_lanes(rows)
+    else:
+        assert row["avoid"] is (not covered)
+        assert row["status"] == ("cool" if covered else "hot")
     assert "+2.5" in row["pace"]
     if covered:
         assert "deficit covered by" in row["notes"]
@@ -273,26 +283,45 @@ def test_idle_settle_covered_deficit(reserve_case):
     info, covered, _ = reserve_case
     row = {**info, "lane": "codex", "quota_ok": True}
     snapshot = idle_settle.parse_snapshot({"lanes": [row]})
-    assert snapshot.lanes[0].quota_ok is covered
+    # #9740 F2: a deficit read from a stale probe is unknown, neither permission nor refusal.
+    expected = None if info["freshness"] == "stale_last_good" else covered
+    assert snapshot.lanes[0].quota_ok is expected
+    assert snapshot.lanes[0].is_healthy_available() is False
     assert snapshot.lanes[0].status == ("cool" if covered else "hot")
     lanes = idle_settle.lanes_from_capacity_rows([row])
-    assert lanes[0].quota_ok is covered
+    assert lanes[0].quota_ok is expected
     assert lanes[0].status == snapshot.lanes[0].status
 
 
-def test_reviewer_resolver_covered_deficit(reserve_case):
+@pytest.mark.parametrize("grok_status", [None, "healthy", "unhealthy"])
+def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
     info, covered, _ = reserve_case
+    agents = {"codex": info, "cursor": {"status": "unhealthy"}}
+    if grok_status is not None:
+        agents["grok"] = {"status": grok_status}
     result = resolve_reviewer(
         ResolverInputs(
             author_model="claude-opus-5-5",
             review_profile="code",
             risk="critical",
-            routing_snapshot={"agents": {"codex": info}},
+            routing_snapshot={"agents": agents},
         )
     )
-    assert (result.selected is not None) is covered
+    sol = next(candidate for candidate in result.trace if candidate.name == "openai_frontier")
+    assert sol.status == ("selected" if covered else "excluded")
     if covered:
+        # An eligible Sol still precedes native Grok, even with credit relief.
         assert result.selected.concrete_model == "gpt-6.1-sol"
+    else:
+        # #9769 admits native Grok after Sol's uncovered deficit excludes it.
+        # Same-family Opus cannot review this author; Cursor is unavailable.
+        assert "quota bucket is near cap" in sol.reason
+        if grok_status == "unhealthy":
+            assert result.selected is None
+        else:
+            assert result.selected.name == "grok-4.7"
+            assert result.selected.transport == "native_grok"
+            assert result.selected.health == grok_status
 
 
 @pytest.mark.parametrize("native_only", [False, True])
@@ -303,7 +332,7 @@ def test_capacity_rows_retain_reserve_evidence_for_idle_settle(reserve_case, nat
         for key in ("freshness", "age_s", "fetched_at", "reset_credits", "credit_balance"):
             info["codexbar"][key] = info.pop(key)
     rows = capacity_pick.build_lane_rows(
-        {"agents": {"codex": info}},
+        {"agents": {"codex": info}, "in_flight": {}},
         reset_reserve=unavailable_reserve(),
         now=now,
     )
@@ -397,10 +426,13 @@ def test_missing_lane_never_covers_deficit(reserve_case, lane):
     decision = credit_lane.pace_deficit_state(lane, info, now=now)
     assert decision["uncovered"] is True
     assert decision["covered_by"] == []
-    assert capacity_pick.is_avoid_lane(info, lane=lane)
+    stale = info["freshness"] == "stale_last_good"
+    facts = credit_lane.routing_facts(lane, info, model=None, now=now)
+    assert facts.capacity == (credit_lane.CAPACITY_UNKNOWN_STALE if stale else credit_lane.CAPACITY_AVOID)
+    assert capacity_pick.is_avoid_lane(info, lane=lane) is not stale
     assert state_router._status_from_weekly_used(13.0, info["codexbar"], info=info, now=now) == "hot"
     needs_action, _ = delegate._budget_needs_hard_capacity_action(
-        status="hot", will_last=False, is_stale=False, records_loaded=1, pace=info["codexbar"], info=info
+        status="hot", will_last=False, is_stale=False, pace=info["codexbar"], info=info
     )
     assert needs_action
 

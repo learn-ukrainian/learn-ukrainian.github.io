@@ -17,12 +17,35 @@ Issue: #1009, #1012
 from __future__ import annotations
 
 import re
-import sqlite3
+import sys
 from pathlib import Path
 
 import yaml
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_SCRIPTS_DIR = _REPO_ROOT / "scripts"
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 from build.text_utils import parse_vocab_hint
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CURRICULUM_ROOT = _PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -56,7 +79,7 @@ def _vesum_lookup(word: str) -> tuple[str, str]:
     if not _VESUM_DB.exists():
         return "", ""
     try:
-        db = sqlite3.connect(str(_VESUM_DB))
+        db = _open_readonly(str(_VESUM_DB))
         row = db.execute(
             "SELECT pos, tags FROM forms WHERE lemma = ? LIMIT 1",
             (word.lower(),),
@@ -385,7 +408,6 @@ def _resolve_textbook_url(title: str) -> str:
 
     # Try to find matching source_file in our textbook_refs module
     try:
-        import sqlite3
         from pathlib import Path
 
         from build.textbook_refs import _PDF_BASE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
@@ -393,7 +415,7 @@ def _resolve_textbook_url(title: str) -> str:
         if not db_path.exists():
             return ""
 
-        conn = sqlite3.connect(str(db_path))
+        conn = _open_readonly(str(db_path))
         # Find source_file matching author + grade, prefer ukrmova over ukrlit
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks "

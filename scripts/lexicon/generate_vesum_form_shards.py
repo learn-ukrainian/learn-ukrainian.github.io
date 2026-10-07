@@ -39,7 +39,6 @@ from __future__ import annotations
 import argparse
 import gzip
 import json
-import sqlite3
 import sys
 from collections import defaultdict
 from datetime import UTC, datetime
@@ -50,6 +49,7 @@ from scripts.lexicon.vesum_form_key import (
     vesum_form_key,
     vesum_shard_id,
 )
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
@@ -73,7 +73,7 @@ def _read_forms(db_path: Path) -> dict[str, set[str]]:
     """``form_key -> {lemma, ...}`` from the VESUM ``forms`` table."""
     if not db_path.exists():
         raise FileNotFoundError(f"VESUM database not found at {db_path}")
-    conn = sqlite3.connect(str(db_path))
+    conn = _open_readonly(Path(db_path).resolve())
     try:
         by_key: dict[str, set[str]] = defaultdict(set)
         for word_form, lemma in conn.execute("SELECT word_form, lemma FROM forms"):

@@ -40,6 +40,12 @@ from typing import Any
 # "no result" indicator. check_text is clean only when both lists are empty
 # and the summary is not truncated; errors are not that result.
 REVIEW_TOOL_NO_RESULT_PATTERNS: dict[str, dict[str, Any]] = {
+    "verify_word": {"pattern": "NOT FOUND in VESUM", "handler": "sources_handlers.handle_verify_word"},
+    "verify_lemma": {"pattern": "NOT FOUND in VESUM", "handler": "sources_handlers.handle_verify_lemma"},
+    "search_slovnyk_me": {"pattern": "No slovnyk.me results for:", "handler": "handle_search_slovnyk_me"},
+    "search_esum": {"pattern": '{"status": "not_implemented"}', "handler": "handle_search_esum"},
+    "search_grinchenko_1907": {"pattern": "No results in Грінченко for:", "handler": "handle_dict_search"},
+    "search_definitions": {"pattern": "No results in СУМ-11 for:", "handler": "handle_dict_search"},
     "check_text": {
         "line": 2433,
         "pattern": '{"problems": [], "suspicions": []}',
@@ -175,6 +181,27 @@ def _check_text_hits(parsed: dict[str, Any]) -> int:
 
 
 def _classify_tool_hits(tool: str, text: str, parsed: Any | None) -> int:
+    if tool in {"verify_word", "verify_lemma"}:
+        key = "matches" if tool == "verify_word" else "forms"
+        if isinstance(parsed, dict):
+            payload = parsed.get("result", parsed)
+            if isinstance(payload, dict) and isinstance(payload.get(key), list):
+                return len(payload[key])
+        return 0 if "NOT FOUND in VESUM" in text else (1 if text.strip() else 0)
+
+    if tool == "search_slovnyk_me":
+        return 0 if text.startswith("No slovnyk.me results for:") else (1 if text.strip() else 0)
+
+    if tool == "search_esum":
+        if isinstance(parsed, dict) and parsed.get("status") == "not_implemented":
+            return 0
+        return 0 if "No results in ЕСУМ for:" in text else (1 if text.strip() else 0)
+
+    if tool in {"search_grinchenko_1907", "search_definitions"}:
+        label = "Грінченко" if tool == "search_grinchenko_1907" else "СУМ-11"
+        # СУМ-11 prepends its non-authority notice even on a miss.
+        return 0 if f"No results in {label} for:" in text else (1 if text.strip() else 0)
+
     if tool == "check_text" and isinstance(parsed, dict) and isinstance(parsed.get("problems"), list):
         return _check_text_hits(parsed)
 

@@ -40,6 +40,11 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 MAIN_REF = "refs/heads/main"
 PER_PAGE = 100
 MAX_PAGES = 50
@@ -113,9 +118,9 @@ def lock_hash(lock_file: Path) -> str:
 
 
 def _gh_api(args: list[str]) -> str:
-    result = subprocess.run(
+    result = github_client.run(
         ["gh", "api", *args],
-        capture_output=True,
+        fresh=True, capture_output=True,
         text=True,
         check=True,
         timeout=GH_TIMEOUT_SECONDS,
@@ -155,43 +160,21 @@ def list_caches(repo: str, gh_api: GhApi = _gh_api) -> list[CacheEntry]:
 
 
 def open_pr_base_shas(repo: str, gh_api: GhApi = _gh_api) -> set[str]:
-    """``pull_request.base.sha`` of every open pull request, or IncompleteListingError.
-
-    CodeQL reads ``pull_request.base.sha`` from the event payload; GraphQL
-    ``baseRefOid`` is the same field, and its cursor pagination plus
-    ``totalCount`` let the listing be checked for completeness. Every open
-    pull request must yield a 40-hex base SHA: one without it would leave its
-    TRAP entry unprotected, so it fails the listing like a missing page.
-    """
-    shas: set[str] = set()
-    numbers: set[int] = set()
-    totals: set[int] = set()
-    cursor: str | None = None
-    for _ in range(MAX_PAGES):
-        from scripts.publish.github import read
-        def transport(args, **kwargs):
-            return subprocess.CompletedProcess(args, 0, gh_api(args[2:]), "")
-        result = read("pr-bases", repo=repo, cursor=cursor, runner=transport if gh_api is not _gh_api else None,
-                      text=True, capture_output=True)
-        if result.returncode:
-            raise IncompleteListingError("open PR base read failed")
-        prs = json.loads(result.stdout)["data"]["repository"]["pullRequests"]
-        totals.add(int(prs["totalCount"]))
-        for node in prs["nodes"]:
-            base = node["baseRefOid"]
-            if not isinstance(base, str) or not COMMIT_SHA_RE.fullmatch(base):
-                raise IncompleteListingError(f"open pull request #{node['number']} has no valid base SHA: {base!r}")
-            numbers.add(int(node["number"]))
-            shas.add(base)
-        if not prs["pageInfo"]["hasNextPage"]:
-            break
-        cursor = prs["pageInfo"]["endCursor"]
-    else:
-        raise IncompleteListingError(f"open pull request list did not end within {MAX_PAGES} pages")
-    if len(totals) != 1 or len(numbers) != next(iter(totals)):
-        raise IncompleteListingError(
-            f"open pull request list is incomplete: {len(numbers)} pull requests, totalCount per page {sorted(totals)}"
-        )
+    """Protect every open PR base; compare REST pages with Search's count."""
+    from urllib.parse import urlencode
+    rows = json.loads(gh_api(["--paginate", f"repos/{repo}/pulls?state=open&per_page=100"]))
+    count = json.loads(gh_api(["search/issues?" + urlencode({"q":f"repo:{repo} is:pr is:open", "per_page":1})]))
+    if not isinstance(rows, list) or count.get("incomplete_results") is not False or type(count.get("total_count")) is not int:
+        raise IncompleteListingError("open PR base read is incomplete")
+    shas, numbers = set(), set()
+    for row in rows:
+        base = (row.get("base") or {}).get("sha")
+        if not isinstance(base, str) or not COMMIT_SHA_RE.fullmatch(base):
+            raise IncompleteListingError(f"open pull request #{row['number']} has no valid base SHA: {base!r}")
+        numbers.add(int(row["number"]))
+        shas.add(base)
+    if len(numbers) != len(rows) or len(numbers) != count["total_count"]:
+        raise IncompleteListingError(f"open pull request list is incomplete: {len(numbers)} pull requests, total_count {count['total_count']}")
     return shas
 
 
@@ -277,6 +260,8 @@ def delete_entries(repo: str, deletions: list[Deletion], gh_api: GhApi = _gh_api
         try:
             gh_api(["--method", "DELETE", f"repos/{repo}/actions/caches/{deletion.entry.id}"])
         except subprocess.CalledProcessError as exc:
+            if exc.returncode == 75:
+                raise
             if "404" in (exc.stderr or ""):
                 continue
             print(f"failed to delete {deletion.entry.key}: {(exc.stderr or '').strip()}", file=sys.stderr)
@@ -284,6 +269,7 @@ def delete_entries(repo: str, deletions: list[Deletion], gh_api: GhApi = _gh_api
     return failed
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--repo", required=True, help="owner/name")
@@ -295,6 +281,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         entries = list_caches(args.repo)
         pr_base_shas = open_pr_base_shas(args.repo)
+    except subprocess.CalledProcessError as exc:
+        if exc.returncode == 75:
+            raise
+        print(f"aborting, nothing deleted: {exc.stderr}", file=sys.stderr)
+        return 2
     except (IncompleteListingError, subprocess.SubprocessError, ValueError, KeyError, TypeError) as exc:
         detail = getattr(exc, "stderr", None) or exc
         print(

@@ -8,7 +8,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -31,6 +30,7 @@ from scripts.audit.generate_practice_deck import (
     read_manifest,
 )
 from scripts.lexicon.enrich_manifest import _load_current_slovnyk_cache_file, _slovnyk_cache_path
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def word_in_text(word: str, text: str) -> bool:
@@ -163,7 +163,7 @@ def main() -> int:
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     if sources_db_path.exists():
         try:
-            conn = sqlite3.connect(sources_db_path)
+            conn = _open_readonly(Path(sources_db_path).resolve())
             cursor = conn.cursor()
             cursor.execute("SELECT word, synonyms, antonyms FROM wiktionary")
             for word, syns, ants in cursor.fetchall():

@@ -24,6 +24,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, TextIO
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
 from agent_runtime.agent_identity import seat_read_aliases
 from secret_redactor import redact_text
 
@@ -407,7 +414,7 @@ def build_poll_query(recipients: tuple[str, ...]) -> str:
 
 
 def poll_once(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     agent: str,
     last_seen: int = 0,
 ) -> list[InboxEvent]:
@@ -438,10 +445,9 @@ def emit_notifications(events: list[InboxEvent], last_seen: int, output: TextIO)
     return last_seen
 
 
-def open_readonly_db(db_path: Path) -> sqlite3.Connection:
+def open_readonly_db(db_path: Path) -> SQLiteConnection:
     """Open the broker database without running migrations or taking a write lock."""
-    database_uri = f"{db_path.resolve().as_uri()}?mode=ro"
-    conn = sqlite3.connect(database_uri, uri=True, isolation_level=None)
+    conn = open_readonly(db_path, isolation_level=None)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA busy_timeout = 5000")
     return conn
@@ -527,7 +533,7 @@ def run_watcher(
         raise ValueError("poll interval must be greater than zero")
 
     lock = acquire_watcher_lock(agent, lock_dir)
-    conn: sqlite3.Connection | None = None
+    conn: SQLiteConnection | None = None
     last_seen = 0
     watchdog_warned = False
     try:

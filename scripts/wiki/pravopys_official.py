@@ -33,6 +33,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
@@ -40,6 +41,24 @@ from datetime import UTC, datetime
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PRAVOPYS_SOURCE_ID = "pravopys_2019_official"
 PARSER_VERSION = "pravopys_2019_pdf_v3"
@@ -841,7 +860,7 @@ def _line_end_hyphen(before: str, left: str, right: str, is_word: LexiconPredica
 
 def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
     """Exact word-form membership in VESUM (read-only, cached)."""
-    conn = sqlite3.connect(f"{vesum_db.resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(vesum_db)
     cache: dict[str, bool] = {}
 
     def is_word(form: str) -> bool:
@@ -1005,7 +1024,7 @@ CREATE TABLE IF NOT EXISTS pravopys_paragraphs (
 """
 
 
-def ensure_pravopys_schema(conn: sqlite3.Connection) -> None:
+def ensure_pravopys_schema(conn: SQLiteConnection) -> None:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(PRAVOPYS_SCHEMA_SQL)
     columns = {row[1] for row in conn.execute("PRAGMA table_info(pravopys_paragraphs)")}
@@ -1044,7 +1063,7 @@ class IngestCounts:
 
 
 def store_edition(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     parsed: ParsedEdition,
     official: OfficialFile,
     *,
@@ -1161,7 +1180,7 @@ def _dict_rows(cursor: sqlite3.Cursor) -> list[dict[str, Any]]:
     return [dict(zip(columns, row, strict=True)) for row in cursor.fetchall()]
 
 
-def pravopys_store_status(conn: sqlite3.Connection) -> dict[str, Any]:
+def pravopys_store_status(conn: SQLiteConnection) -> dict[str, Any]:
     """``{"state": "complete", **source_row}`` only when the full edition is stored."""
     tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
     if not {"pravopys_sources", "pravopys_paragraphs"} <= tables:
@@ -1198,7 +1217,7 @@ def _paragraph_record(record: dict[str, Any], source: dict[str, Any]) -> dict[st
     }
 
 
-def get_paragraph(conn: sqlite3.Connection, number: int) -> dict[str, Any] | None:
+def get_paragraph(conn: SQLiteConnection, number: int) -> dict[str, Any] | None:
     """The stored § ``number``, or None when the store is incomplete or the § does not exist."""
     status = pravopys_store_status(conn)
     if status["state"] != "complete":
@@ -1233,7 +1252,7 @@ def _word_hits(words: list[str], stems: list[str]) -> int:
     return sum(any(_matches(word, stem) for word in words) for stem in stems)
 
 
-def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
+def search_paragraphs(conn: SQLiteConnection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
     """Rank stored §§ for a topic.
 
     Top tier: every topic word is in the § title or in its heading path (the
@@ -1267,8 +1286,8 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     return [_paragraph_record(record, status) for _score, _number, record in scored[:limit]]
 
 
-def open_read_only(db_path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+def open_read_only(db_path: Path) -> SQLiteConnection:
+    conn = _open_readonly(Path(db_path), check_same_thread=False)
     conn.execute("PRAGMA busy_timeout = 30000")
     return conn
 

@@ -13,6 +13,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
+from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import Request, request_run
 
@@ -21,7 +23,7 @@ SHA = re.compile(r"[0-9a-f]{40}\Z")
 MARKER = re.compile(
     r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
     r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|CHANGES_REQUESTED|BLOCKED) "
-    r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+) -->\Z"
+    r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))? -->\Z"
 )
 MARKER_PREFIX = "<!-- cf-verdict"
 TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
@@ -43,6 +45,7 @@ class Verdict:
     family: str | None = None
     started: datetime | None = None
     untrusted_markers: tuple[str, ...] = ()
+    review_mode: str = "cross_family"
 
 
 @dataclass(frozen=True)
@@ -79,13 +82,20 @@ def _author_login(comment: Mapping[str, Any]) -> str | None:
 
 def parse_marker(body: str) -> dict[str, str] | None:
     """Accept only an intact recorder comment with one terminal marker."""
-    if body.count(MARKER_PREFIX) != 1 or not body.startswith("### Cross-family review\n"):
+    if body.count(MARKER_PREFIX) != 1:
         return None
     last = body.rstrip("\n").split("\n")[-1]
     match = MARKER.fullmatch(last)
     if match is None:
         return None
     item = match.groupdict()
+    mode = item.pop("review_mode")
+    if mode is not None:
+        item["review_mode"] = mode
+        if not body.startswith("### Adversarial red-team review\nReview mode: red_team\n"):
+            return None
+    elif not body.startswith("### Cross-family review\n") or "Review mode:" in body.split("<details>", 1)[0]:
+        return None
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(?:Z|\+00:00)", item["started"]):
         return None
     if _timestamp(item["started"]) is None:
@@ -138,6 +148,8 @@ def lookup_verdict(
         if marker["sha"] != sha:
             other_head = True
             continue
+        if marker["family"] in {"unknown", "unattested", "ambiguous", "conflicting"}:
+            return Verdict("unknown", untrusted_markers=tuple(untrusted))
         created = _timestamp(_field(comment, "created_at", "createdAt"))
         updated = _timestamp(_field(comment, "updated_at", "updatedAt"))
         if created is None or updated is None or created != updated:
@@ -151,7 +163,8 @@ def lookup_verdict(
     # At a true timestamp tie any rejection wins, irrespective of comment arrival order.
     winner = next((item for item in tied if item[2]["verdict"] in REJECTED), tied[0])
     marker = winner[2]
-    return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start, tuple(untrusted))
+    return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start,
+                   tuple(untrusted), marker.get("review_mode", "cross_family"))
 
 
 def _check_row_kind(row: Mapping[str, Any]) -> str:
@@ -168,7 +181,7 @@ def _check_row_kind(row: Mapping[str, Any]) -> str:
 
 
 def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CHECKS) -> list[str]:
-    """Block when any row that survives the shared collapse is red or pending.
+    """Block when any non-advisory row surviving the shared collapse is red or pending.
 
     A missing rollup or a non-check value is still ``CI unknown``. Timestamp
     ties and same-named jobs from different workflows are not collapsed to one
@@ -180,7 +193,15 @@ def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CH
     if any(not isinstance(check, Mapping) for check in checks):
         return ["CI unknown"]
     named, _other = group_collapsed_by_name(list(checks))
-    grouped = {name: rows for name, rows in named.items() if name != "fleet/cross-family-review"}
+    policy = load_advisory_checks()
+    grouped = {
+        name: blocking_rows
+        for name, rows in named.items()
+        if name != "fleet/cross-family-review"
+        if (blocking_rows := [row for row in rows if not is_advisory(
+            name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
+        )])
+    }
     blockers = []
     for name in set(required) | set(grouped):
         versions = grouped.get(name, [])
@@ -258,6 +279,9 @@ class GitHubAdapter:
             raise SweepError(
                 f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s"
             ) from exc
+        observation = getattr(result, "github_result", None)
+        if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+            raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise SweepError((result.stderr or result.stdout or "GitHub lookup failed")[:1000])
         return result.stdout
@@ -347,13 +371,24 @@ def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None)
     return rows
 
 
+@timer
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Report exact-head PR review, CI and queue state without mutations.\n"
+                    "Use for landing evidence; the local keeper owns queue changes.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --report\n"
+               "  .venv/bin/python -m scripts.orchestration.integration_sweep --repo owner/repo --json\n"
+               "Outputs: Read-only GitHub PR state report on stdout; no writes.\n"
+               "Exit codes: 0: report complete; 1: lookup failed; 2: retired --apply refused.\n"
+               "Related: scripts/review/record_cf_verdict.py, scripts/orchestration/merge_queue_keeper.py; #9951",
+    )
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
-    parser.add_argument("--report", action="store_true", help="Print the read-only PR state report")
-    parser.add_argument("--json", action="store_true", help="Print JSON instead of text")
-    parser.add_argument("--apply", action="store_true", help="Retired: automatic landing is owned by the local keeper")
-    parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument("--report", action="store_true", help="Print the read-only PR state report (default behavior)")
+    parser.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
+    parser.add_argument("--apply", action="store_true", help="Retired and refused; landing is keeper-owned (default: false)")
+    parser.add_argument("--repo-root", type=Path, default=Path.cwd(),
+                        help="Checkout used for GitHub commands, e.g. . (default: current working directory)")
     args = parser.parse_args(argv)
     if args.apply:
         print("integration sweep refused: --apply is retired; this sweep is report-only")

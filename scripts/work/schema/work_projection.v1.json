@@ -237,6 +237,7 @@
               "status": { "$ref": "#/$defs/sourceStatus" },
               "reason": { "type": "string" },
               "age_s": { "type": ["number", "null"] },
+              "observed_at": { "type": ["string", "null"], "format": "date-time" },
               "count": { "type": "integer", "minimum": 0 }
             }
           }
@@ -311,6 +312,10 @@
         "reason_codes": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "state": {
+          "type": "string",
+          "enum": ["ready", "waiting", "unknown", "none"]
         }
       }
     },
@@ -385,10 +390,78 @@
           "additionalProperties": false,
           "required": ["stream", "dispatch", "review", "verification"],
           "properties": {
-            "stream": { "type": "object" },
-            "dispatch": { "type": "object" },
+            "stream": {
+              "type": "object",
+              "properties": {
+                "status": { "type": "string" },
+                "streams": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "fresh": { "type": "boolean" },
+                "authority_missing": { "type": "boolean" },
+                "stale": { "type": "boolean" },
+                "membership_reason": { "type": "string" },
+                "historical_status": { "type": "string" },
+                "historical_streams": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "dispatch": {
+              "type": "object",
+              "properties": {
+                "task_ids": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "statuses": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "alive": {
+                  "type": "array",
+                  "items": { "type": ["boolean", "null"] }
+                },
+                "runtime_age_s": {
+                  "type": "array",
+                  "items": { "type": ["number", "null"] }
+                },
+                "unresolved": { "type": "boolean" },
+                "agents": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "accountable_owner": { "type": "string" },
+                "owner_reason": { "type": "string" },
+                "association_reason": { "type": ["string", "null"] }
+              }
+            },
             "review": { "type": "object" },
-            "verification": { "type": "object" }
+            "verification": {
+              "type": "object",
+              "properties": {
+                "kind": { "type": "string" },
+                "state": { "type": "string" },
+                "ci_state": { "type": "string" },
+                "merge_state_status": { "type": ["string", "null"] },
+                "head_sha": { "type": ["string", "null"] },
+                "head_ref": { "type": ["string", "null"] },
+                "merge_evidence": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["state", "reason"],
+                  "properties": {
+                    "state": {
+                      "type": "string",
+                      "enum": ["ready", "unknown"]
+                    },
+                    "reason": { "type": "string" }
+                  }
+                }
+              }
+            }
           }
         },
         "relationships": {
@@ -437,7 +510,18 @@
         },
         "flags": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "properties": {
+            "attention": { "type": "boolean" },
+            "source_ok": { "type": "boolean" },
+            "has_blocker": { "type": "boolean" },
+            "is_duplicate": { "type": "boolean" },
+            "is_superseded": { "type": "boolean" },
+            "is_draft": { "type": "boolean" },
+            "dependency_cycle": { "type": "boolean" },
+            "dependency_violated": { "type": "boolean" },
+            "unresolved_github_relation": { "type": "boolean" }
+          }
         }
       }
     }

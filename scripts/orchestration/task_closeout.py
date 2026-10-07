@@ -4,6 +4,18 @@
 Read-only reconciliation is the default.  Remote changes require the ``mutate``
 subcommand, an exact action, ``--authorize``, and an actor recorded in the
 append-only mutation receipt.
+
+Membership-reliant writes require a bounded live, repository-qualified ancestry
+read to the claimed registered root (#9794). GitHub has no parentage compare-and-
+swap: a re-parent after the final read and before the write remains a read/write
+race residual owned by claude-infra.
+
+An explicitly parentless target may instead use complete, exact body membership
+from the same invocation's live audit. These reads are fresh observations, not
+an atomic snapshot: the audit reads checklists across requests and timestamps
+the assembled report afterward. Observed contradictions are refused; unobserved
+checklist edits during traversal or between supporting reads and the write remain
+a concurrency residual owned by claude-infra, alongside the native-parent race.
 """
 
 from __future__ import annotations
@@ -144,20 +156,9 @@ def project_closeout_checks(rollup: list[Any]) -> list[Any]:
 class GhGitHubAdapter:
     """Authoritative GitHub reads and the three explicitly allowed mutations."""
 
-    def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
+    def __init__(self, repo_root: Path) -> None:
         self.repo_root = repo_root.resolve()
-        if runner is None:
-            self._run = _default_runner(self.repo_root)
-        else:
-
-            @publication_boundary(task_lifecycle.LifecycleError)
-            def checked(command, stdin=None):
-                def send(args, **kwargs):
-                    return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
-
-                return request_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
-
-            self._run = checked
+        self._run = _default_runner(self.repo_root)
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
         raw = self._run(args, stdin)
@@ -168,7 +169,21 @@ class GhGitHubAdapter:
                 f"GitHub command returned invalid JSON: {args.verb if isinstance(args, Request) else ' '.join(args[:4])}"
             ) from exc
 
-    def registered_stream_epics(self) -> list[int]:
+    def registered_stream_epics(self, repository: str | None = None) -> list[int]:
+        """Use the checkout's registry only for its resolved repository.
+
+        Init and every mutation observation pass the task identity here, so
+        both native ancestry and body fallback consume a bound registry.
+        Read-only registry inspection may omit the identity.
+        """
+        if repository is not None:
+            document = self._json(["gh", "repo", "view", "--json", "nameWithOwner"])
+            failure = task_lifecycle.repository_evidence_refusal(
+                repository, document.get("nameWithOwner") if isinstance(document, dict) else None,
+                source="issue-stream registry",
+            )
+            if failure is not None:
+                raise task_lifecycle.LifecycleError(failure)
         try:
             from scripts.orchestration import issue_stream_audit
 
@@ -199,18 +214,47 @@ class GhGitHubAdapter:
 
         try:
             return issue_stream_audit.run_audit(self.repo_root)
-        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.TimeoutExpired) as exc:
             raise task_lifecycle.LifecycleError(
                 f"cannot run the issue-stream membership audit: {exc}"
             ) from exc
 
-    @staticmethod
-    def _owner_name(repository: str) -> tuple[str, str]:
-        try:
-            owner, name = repository.split("/", 1)
-        except ValueError as exc:
-            raise task_lifecycle.LifecycleError("repository must be owner/name") from exc
-        return owner, name
+    def read_issue_parent(self, repository: str, issue_number: int) -> dict[str, Any] | None:
+        """Read a typed, repository-qualified parent; refuse partial/unread data."""
+        document = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
+        if not isinstance(document, dict) or document.get("errors"):
+            raise task_lifecycle.LifecycleError("GitHub parent read failed")
+        data = document.get("data")
+        repository_doc = data.get("repository") if isinstance(data, dict) else None
+        if not isinstance(repository_doc, dict):
+            raise task_lifecycle.LifecycleError("GitHub parent repository is unread")
+        observed_repository = repository_doc.get("nameWithOwner")
+        if (
+            not task_lifecycle.repository_identity_valid(observed_repository)
+            or observed_repository.casefold() != repository.casefold()
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent read repository does not match")
+        issue = repository_doc.get("issue")
+        if (
+            not isinstance(issue, dict)
+            or not isinstance(issue.get("number"), int)
+            or isinstance(issue["number"], bool)
+            or issue["number"] != issue_number
+            or "parent" not in issue
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent issue is unread or malformed")
+        parent = issue["parent"]
+        if parent is None:
+            return None
+        parent_repository = parent.get("repository") if isinstance(parent, dict) else None
+        slug = parent_repository.get("nameWithOwner") if isinstance(parent_repository, dict) else None
+        number = parent.get("number") if isinstance(parent, dict) else None
+        if (
+            not task_lifecycle.repository_identity_valid(slug)
+            or not isinstance(number, int) or isinstance(number, bool) or number < 1
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent identity is malformed")
+        return {"number": number, "repository": slug}
 
     def read_issue(self, repository: str, issue_number: int) -> dict[str, Any]:
         issue = self._json(
@@ -225,10 +269,7 @@ class GhGitHubAdapter:
                 "number,state,body,url,closedAt",
             ]
         )
-        parent_doc = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
-        repository_doc = ((parent_doc or {}).get("data") or {}).get("repository") or {}
-        parent_issue = repository_doc.get("issue") or {}
-        parent = parent_issue.get("parent") or {}
+        parent = self.read_issue_parent(repository, issue_number) or {}
         return {
             "number": issue.get("number"),
             "state": str(issue.get("state") or "").upper(),
@@ -236,6 +277,7 @@ class GhGitHubAdapter:
             "url": issue.get("url"),
             "closed_at": issue.get("closedAt"),
             "parent_epic": parent.get("number"),
+            "parent_repository": parent.get("repository"),
         }
 
     def _read_pr(self, repository: str, pr_number: int) -> dict[str, Any]:
@@ -362,14 +404,18 @@ class GhGitHubAdapter:
             issue["body"],
             ledger["remaining_scope"],
         )
-        # Native GitHub parentage is conclusive on its own — present (even a
-        # mismatched) native parent must never fall through to body evidence,
-        # so it never needs a live audit. Only a missing native parent (on
-        # the lifecycle issue itself, or on the transferred-scope follow-up
-        # read above) leaves body evidence as the sole path, and that is the
-        # only case that justifies fetching the live membership snapshot.
-        needs_membership_audit = issue.get("parent_epic") is None or (
-            follow_up is not None and follow_up.get("parent_epic") is None
+        # A native parent that is a registered stream epic is conclusive on
+        # its own (even when mismatched) and never needs a live audit. A
+        # missing native parent (body path) or an unregistered native parent
+        # (native-chain path, #9783) — on the lifecycle issue itself or on the
+        # transferred-scope follow-up read above — can only be decided by the
+        # live membership snapshot, so only those cases fetch it.
+        registered_epics = self.registered_stream_epics(repository)
+        needs_membership_audit = task_lifecycle.membership_needs_audit(
+            issue.get("parent_epic"), registered_epics
+        ) or (
+            follow_up is not None
+            and task_lifecycle.membership_needs_audit(follow_up.get("parent_epic"), registered_epics)
         )
         membership_audit = self.membership_audit_report() if needs_membership_audit else None
         pr_number = ledger["pr"]["number"]
@@ -399,7 +445,7 @@ class GhGitHubAdapter:
                 deployments = self._deployments(repository, pr.get("merge_sha") or pr.get("head_sha"))
         return {
             "repository": repository,
-            "registered_stream_epics": self.registered_stream_epics(),
+            "registered_stream_epics": registered_epics,
             "membership_audit": membership_audit,
             "issue": issue,
             "pr": pr,
@@ -670,6 +716,32 @@ def record_unauthorized_mutation(
         }
 
 
+def _assert_live_memberships(
+    adapter: GhGitHubAdapter,
+    ledger: Mapping[str, Any],
+    *,
+    registered_epics: list[int] | None,
+    membership_report: Mapping[str, Any] | None,
+) -> None:
+    """Revalidate all targets using this invocation's registry and live audit."""
+    identity = ledger["identity"]
+    targets = [(identity["github_issue_number"], identity["stream_epic"])]
+    remaining = ledger["remaining_scope"]
+    if remaining["status"] == "transferred":
+        targets.append((remaining["follow_up_issue"], remaining["follow_up_stream_epic"]))
+    for issue_number, epic in targets:
+        membership = task_lifecycle.resolve_live_ancestry(
+            repository=identity["repository"], issue_number=issue_number,
+            stream_epic=epic, registered_epics=registered_epics,
+            read_parent=adapter.read_issue_parent,
+            membership_report=membership_report,
+        )
+        if not membership["valid"]:
+            raise task_lifecycle.LifecycleError(
+                f"live stream epic membership refused for #{issue_number}: {membership['reason']}"
+            )
+
+
 def perform_mutation(
     state_file: Path,
     adapter: GhGitHubAdapter,
@@ -683,9 +755,26 @@ def perform_mutation(
     with task_lifecycle.lifecycle_lock(state_file):
         ledger = task_lifecycle.load_lifecycle(state_file)
         before = adapter.observe(ledger, now=now, branch=branch, worktree=worktree)
+        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
+        try:
+            if before["github"].get("error"):
+                raise task_lifecycle.LifecycleError(f"GitHub observation failed: {before['github']['error']}")
+            _assert_live_memberships(
+                adapter, ledger,
+                registered_epics=before["github"].get("registered_stream_epics"),
+                membership_report=before["github"].get("membership_audit"),
+            )
+        except task_lifecycle.LifecycleError as exc:
+            _, failed = _record_failed_mutation(
+                state_file, ledger, operation_id=operation_id, action=action,
+                authorized_by=authorized_by, requested_at=now,
+                detail=f"mutation gate rejected the action: {exc}",
+            )
+            raise task_lifecycle.LifecycleError(
+                f"mutation blocked with durable receipt {failed['id']}: {exc}"
+            ) from exc
         ledger, before_receipt, _ = task_lifecycle.reconcile(ledger, before, now=now)
         task_lifecycle.write_lifecycle(state_file, ledger)
-        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
 
         if prior_status == "complete" and _desired_remote_state(
@@ -847,17 +936,22 @@ def cmd_init(args: argparse.Namespace) -> int:
     identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
-    registered_epics = adapter.registered_stream_epics()
-    # Native precedence needs no audit at all: any native parent — matching or
-    # not — decides the outcome alone in resolve_membership. Only fetch the
-    # live audit snapshot when native parentage is absent.
+    registered_epics = adapter.registered_stream_epics(identity["repository"])
+    # A native parent that is a registered stream epic decides alone in
+    # resolve_membership. Only fetch the live audit snapshot when native
+    # parentage is absent (body path) or the native parent is an unregistered
+    # sub-epic (native-chain path, #9783).
     membership_report = (
-        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
+        adapter.membership_audit_report()
+        if task_lifecycle.membership_needs_audit(issue["parent_epic"], registered_epics)
+        else None
     )
     membership = task_lifecycle.resolve_membership(
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue["parent_epic"],
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=membership_report,
     )
@@ -886,6 +980,10 @@ def cmd_init(args: argparse.Namespace) -> int:
         if existing["lifecycle_id"] != ledger["lifecycle_id"]:
             raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
         ledger = existing
+    _assert_live_memberships(
+        adapter, ledger, registered_epics=registered_epics,
+        membership_report=membership_report,
+    )
     return _write_and_print(path, ledger)
 
 

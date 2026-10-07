@@ -303,7 +303,10 @@ def test_apply_settles_class_c_with_receipt_and_leaves_a_b_d_untouched(tasks_dir
     assert merged["settle_evidence"]["branch_on_origin"] is False
     no_commits = json.loads((tasks_dir / "no-commits.json").read_text())
     assert no_commits["status"] == "no_deliverable"
-    assert no_commits["no_deliverable_reason"] == no_commits["settle_reason"]
+    # #9878: a reason field is a public cause; the settle's free-text reason stays in settle_reason and the .diag.
+    assert no_commits["no_deliverable_reason"] == "unclassified_error"
+    assert no_commits["settle_reason"] == "orphaned: clean exit with no commits; worktree and branch gone"
+    assert no_commits["settle_reason"] in (tasks_dir / "no-commits.diag").read_text(encoding="utf-8")
     assert json.loads((tasks_dir / "crashed.json").read_text())["status"] == "failed"
     # Settled records release their claim: the worktree claim scan no longer honors them.
     assert all(
@@ -436,6 +439,41 @@ def test_candidate_older_than_the_pull_coverage_is_skipped(tasks_dir, mixed):
 
 def _settle(tasks_dir: Path, repo: Path, pulls: list[dict[str, Any]], **kwargs: Any) -> dict[str, Any]:
     return str_mod.settle_stale(tasks_dir, repo_checkouts={SLUG: repo}, pager=FakePager(pulls), now=NOW, **kwargs)
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+def test_stale_settle_existing_interrupted_tree_preserves_bytes(tasks_dir, repo, status):
+    import hashlib
+
+    tree = repo.parent / "interrupted-tree"
+    _git(repo, "worktree", "add", "-b", "codex/interrupted", str(tree), "main")
+    (tree / "work.txt").write_bytes(b"unique work\x00\xff")
+    _git(tree, "add", "work.txt")
+    _git(tree, "commit", "-m", "work")
+    _git(repo, "config", "core.excludesFile", str(repo.parent / "ignore"))
+    (repo.parent / "ignore").write_text(".cache/\n")
+    output = tree / ".cache/output.bin"
+    output.parent.mkdir()
+    output.write_bytes(b"ignored output\x00\xff")
+    result = tasks_dir / "interrupted.result"
+    result.write_text("Український звіт\u2028result\n", encoding="utf-8")
+    record = _record(
+        tasks_dir,
+        "interrupted",
+        status=status,
+        run_nonce="attempt",
+        worktree_path=str(tree),
+        result_file=str(result),
+        result_sha256=hashlib.sha256(result.read_bytes()).hexdigest(),
+        final_branch_head_commit=_git(tree, "rev-parse", "HEAD"),
+        commits_ahead=1,
+    )
+    before = [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)]
+    for _ in range(2):
+        report = _settle(tasks_dir, repo, [], apply=True)
+        assert all(row["action"] == "report" for row in report["records"])
+        assert tree.exists()
+        assert [hashlib.sha256(p.read_bytes()).hexdigest() for p in (record, result, output)] == before
 
 
 @pytest.mark.parametrize("head_field", ["final", "legacy", "neither"])
@@ -680,7 +718,7 @@ def test_gh_error_text_never_carries_credentials(monkeypatch):
     def failing_gh(*_args, **_kwargs):
         return subprocess.CompletedProcess(["gh"], 1, "", f"error: https://user:{SECRET}@api.github.com denied\n")
 
-    monkeypatch.setattr(str_mod.subprocess, "run", failing_gh)
+    monkeypatch.setattr(str_mod.github_client, "run", failing_gh)
     index = str_mod.build_pull_index(SLUG, oldest_start=None, pager=str_mod.gh_pull_page, max_pages=1)
     assert index.error and "https://api.github.com denied" in index.error
     assert SECRET not in index.error
@@ -871,7 +909,6 @@ def test_task_state_lock_preserves_stable_lock_anchor_against_split_brain(tmp_pa
     with dead_worker_state.task_state_lock(record_path):
         inode_second = lock_path.stat().st_ino
         assert inode_first == inode_second
-
 
 
 def test_archive_selects_only_old_terminal_records_without_a_live_worktree(tasks_dir, tmp_path):
@@ -1455,7 +1492,11 @@ def _assert_rerun_settled(tasks_dir: Path, name: str, gate: str, failure: str = 
     record = json.loads((tasks_dir / f"{name}.json").read_text())
     assert (record["status"], record["failure_reason"], record["needs_finalize"]) == ("failed", failure, False)
     assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
-    assert failure in record["last_error"] and "re-run the task or finalize it by hand" in record["last_error"]
+    # #9878: last_error is a public cause; the settle's free-text reason stays in settle_reason and the .diag.
+    assert record["last_error"] == "unclassified_error"
+    reason = record["settle_reason"]
+    assert failure in reason and "re-run the task or finalize it by hand" in reason
+    assert reason in (tasks_dir / f"{name}.diag").read_text(encoding="utf-8")
     assert "merged_pr" not in record
     return record
 

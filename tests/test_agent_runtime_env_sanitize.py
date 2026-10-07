@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.env_sanitize import build_agent_env
@@ -388,6 +390,32 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
+
+
+@pytest.mark.parametrize(
+    "provider,model,name",
+    [("codex", "gpt-6.1-sol", "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "Cursor")],
+)
+def test_runner_passes_lane_identity_to_worker(tmp_path, provider, model, name):
+    script = "import json, os; print(json.dumps([os.environ[k] for k in ('GIT_AUTHOR_NAME', 'GIT_COMMITTER_NAME')]))"
+    plan = _SmokePlan(cmd=[sys.executable, "-c", script], cwd=tmp_path)
+    with patch("agent_runtime.runner._POLL_INTERVAL_S", 0.01):
+        outcome = _execute_invocation_plan(
+            agent_name=provider,
+            adapter=_SmokeAdapter(),
+            plan=plan,
+            prompt="identity smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model=model,
+            task_id="identity-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+    assert outcome.parse.ok is True
+    assert json.loads(outcome.stdout_text) == [name, name]
 
 
 def test_runner_passes_runtime_tmp_lease_to_agent_subprocess(tmp_path):

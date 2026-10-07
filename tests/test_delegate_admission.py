@@ -6,6 +6,7 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import resource
@@ -71,7 +72,17 @@ def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspa
     return path
 
 
-def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "adm-probe"):
+def _lease_task_id(prefix: str) -> str:
+    """One lease task id for this case. A shared id names one shared lease directory (#9927)."""
+    current = os.environ.get("PYTEST_CURRENT_TEST", prefix)
+    node = current.split(" ", 1)[0]
+    digest = hashlib.sha256(node.encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}-{digest}"
+
+
+def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str | None = None):
+    if task_id is None:
+        task_id = _lease_task_id("adm-probe")
     argv = [
         "dispatch",
         "--agent",
@@ -88,14 +99,34 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
         *extra,
     ]
     if mode != "read-only":
-        argv.append("--worktree")
+        # A write dispatch declares its scope (#9739); an ordinary path keeps a new branch unprotected.
+        argv.extend(("--worktree", "--owned-path", "scripts/example.py"))
     return delegate.build_parser().parse_args(argv)
 
 
+def _pin_origin_main_to_head(monkeypatch) -> None:
+    """Give write-dispatch review admission (#9739) a canonical default branch at the checkout's own HEAD.
+
+    Admission observes the default branch and the open PRs on GitHub (A7);
+    here that is HEAD and none, so the dispatch is a fresh branch with no
+    commits of its own and these tests check host admission, not the network
+    or the runner's clone depth (tests/test_authoring_review_feasibility.py
+    covers authored branches against a real remote). The dry-run worktree base
+    is that HEAD too.
+    """
+    from tests.test_authoring_review_feasibility import pin_review_target
+
+    head = _git(delegate._REPO_ROOT, "rev-parse", "HEAD")
+    pin_review_target(monkeypatch, head)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+
+
 def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args())
+    args = _dry_run_args()
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == delegate._ADMISSION_REFUSED_EXIT == 3
     refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
@@ -104,10 +135,11 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
         "(DISPATCH_MAX_LIVE_WRITE_WORKERS=0). Wait for a worker to finish or for the host to recover, raise the "
         'threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
     ]
-    assert not delegate._state_path("adm-probe").exists()
+    assert not delegate._state_path(args.task_id).exists()
 
 
 def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setattr(
         dispatch_admission,
         "probe_host",
@@ -135,13 +167,16 @@ def test_read_only_dispatch_is_exempt(tasks_dir, monkeypatch, capsys):
 
 
 def test_force_admission_records_the_reason(tasks_dir, monkeypatch, capsys):
+    # Admission metadata must not depend on a real origin/main fetch.
+    _stub_worktree(monkeypatch, tasks_dir)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix #1234 while one worker drains"))
+    args = _dry_run_args("--force-admission", "hotfix #1234 while one worker drains")
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     assert "overridden by --force-admission ('hotfix #1234 while one worker drains')" in capsys.readouterr().err
-    state = delegate._read_state(delegate._state_path("adm-probe"))
+    state = delegate._read_state(delegate._state_path(args.task_id))
     assert state is not None
     admission = state["admission"]
     assert admission["admitted"] is False
@@ -171,6 +206,7 @@ def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir
 
 
 def test_dry_run_reports_dead_workers_without_marking_them(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     dead = _running_record(tasks_dir, "dead-writer", pid=424242)
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
@@ -208,6 +244,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
+        owned_path=["scripts/example.py"],
     )
 
 
@@ -219,11 +256,17 @@ def _stub_worktree(monkeypatch, tasks: Path):
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_resolve_write_cwd_error", lambda **_kwargs: None)
-    monkeypatch.setattr(
-        delegate.subprocess,
-        "run",
-        lambda cmd, **_kwargs: delegate.subprocess.CompletedProcess(cmd, 0, "", ""),
-    )
+
+    def run(cmd, **kwargs):
+        # The creation inventory requests binary, NUL-delimited Git output;
+        # other dispatch probes opt into text mode, just as subprocess does.
+        text_mode = (
+            kwargs.get("text") or kwargs.get("universal_newlines") or kwargs.get("encoding") or kwargs.get("errors")
+        )
+        output = "" if text_mode else b""
+        return delegate.subprocess.CompletedProcess(cmd, 0, output, output)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: "abc1234")
     monkeypatch.setattr(
         delegate,
@@ -231,6 +274,9 @@ def _stub_worktree(monkeypatch, tasks: Path):
         lambda **_kwargs: (wt, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
     )
     monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "abc1234")
+    # Git is stubbed, so branch authorship cannot be enumerated; these tests
+    # cover host admission. Authoring-review admission has its own tests (#9739).
+    monkeypatch.setattr(delegate, "_authoring_review_admission", lambda *_args, **_kwargs: None)
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):
@@ -387,13 +433,19 @@ def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(tasks_di
 
 
 def test_dispatch_that_stops_after_admission_drops_its_hold(tasks_dir, monkeypatch, capsys):
+    from scripts.fleet import ignored_task_output
+
     _stub_worktree(monkeypatch, tasks_dir)
-    vanished = tasks_dir / "wt-vanished"
-    monkeypatch.setattr(
-        delegate,
-        "_ensure_worktree",
-        lambda **_kwargs: (vanished, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
-    )
+    inventory = ignored_task_output.creation_inventory
+
+    def inventory_then_disappear(worktree, **kwargs):
+        # Simulate loss after successful preparation, before record publication.
+        # An already-missing tree now correctly fails the creation inventory first.
+        baseline = inventory(worktree, **kwargs)
+        worktree.rmdir()
+        return baseline
+
+    monkeypatch.setattr(ignored_task_output, "creation_inventory", inventory_then_disappear)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("must not spawn"))
 
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-stopped")) == 1
@@ -519,7 +571,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
         "admission (write dispatch): would admit now | live write workers 1/12, "
-        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50); "
+        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50), "
+        "lu.slice pool check skipped (test host); "
         "1 record(s) dead pid, not counted: gone"
     )
 
@@ -530,3 +583,24 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert admission["line"].startswith("admission (write dispatch): would REFUSE now: live write workers 1/1")
     # capacity_pick only reports; marking dead records crashed is dispatch's job.
     assert json.loads(dead.read_text(encoding="utf-8"))["status"] == "running"
+
+
+def test_live_dispatch_admitted_line_shows_a_skipped_pool_check(tasks_dir, tmp_path, monkeypatch, capsys):
+    """delegate.py configures no logging, so the pool skip reason must be on the admitted line (#9975)."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
+
+    class _Proc:
+        pid = 13580
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: _Proc())
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-pool-skip")) == 0
+
+    admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
+    assert len(admitted) == 1
+    assert "lu.slice pool check skipped (lu.slice memory.current unavailable: " in admitted[0]
+    state = delegate._read_state(delegate._state_path("adm-pool-skip"))
+    assert state is not None
+    assert "memory.current unavailable" in state["admission"]["pool_check_skipped"]

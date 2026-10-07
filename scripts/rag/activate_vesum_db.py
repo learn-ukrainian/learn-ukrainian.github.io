@@ -12,11 +12,26 @@ import argparse
 import json
 import os
 import shutil
-import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
@@ -63,7 +78,7 @@ def verify_shadow_database(
     if not isinstance(expected, dict):
         raise ActivationError("Source lock has no expected semantic summary")
 
-    conn = sqlite3.connect(f"file:{shadow_path}?mode=ro", uri=True)
+    conn = _open_readonly(shadow_path)
     try:
         # 1. Schema check
         tables = {
@@ -223,7 +238,7 @@ def rollback_database(
         raise ActivationError(f"Backup file not found or empty: {backup_path}")
 
     # Validate backup can be read
-    conn = sqlite3.connect(f"file:{backup_path}?mode=ro", uri=True)
+    conn = _open_readonly(backup_path)
     try:
         conn.execute("SELECT 1 FROM forms LIMIT 1").fetchall()
     except Exception as exc:

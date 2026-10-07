@@ -15,7 +15,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,6 +22,7 @@ from typing import Any
 import jsonschema
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
@@ -386,8 +386,7 @@ def build(
             if sf and sf not in provenance_map:
                 provenance_map[sf] = meta_entry
 
-    db_uri = f"file:{db_path.resolve()}?mode=ro"
-    conn = sqlite3.connect(db_uri, uri=True)
+    conn = _open_readonly(db_path.resolve())
     cur = conn.cursor()
 
     out_index_path = resolve_open_model_path(config["outputs"]["index"], repo=norm_out)

@@ -27,6 +27,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import github_client
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
 
@@ -72,9 +73,10 @@ def _run_gh(
     cwd: Path,
     timeout: int = DEFAULT_TIMEOUT,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         args,
         cwd=cwd,
+        fresh=True,
         capture_output=True,
         text=True,
         check=False,
@@ -229,9 +231,11 @@ def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, st
     """Fetch GitHub's current PR head and return its commit SHA.
 
     The explicit source ref avoids relying on stale local or remote-tracking
-    refs. A failed fetch or unreadable fetched commit is never deletion proof.
+    refs. A failed fetch (including a typed safe-Git refusal) or unreadable
+    fetched commit is never deletion proof; its reason is returned to closeout.
     """
     ref = f"refs/pull/{pr_number}/head"
+    repo_root = rw.primary_checkout_root(repo_root)
     try:
         fetch = rw._run(
             ["git", "fetch", "--no-tags", "origin", ref],

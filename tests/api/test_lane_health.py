@@ -9,10 +9,15 @@ from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
 from scripts.api import state_helpers, state_router
 from scripts.api.lane_health import (
+    BASIS_RECENT_TASKS,
+    BASIS_SCAN_OBSERVED_IDLE,
+    BASIS_SCAN_UNAVAILABLE,
+    LaneHealthScan,
     compute_lane_health,
     is_spawn_phase_failure,
     normalize_agent_name,
     sanitize_error_excerpt,
+    scan_lane_health,
 )
 from scripts.delegate import _resolve_agent_with_budget_guard
 
@@ -138,7 +143,7 @@ def test_routing_budget_attaches_health_to_api_accounts(monkeypatch, tmp_path):
 
     monkeypatch.setattr(state_router, "_load_agent_budgets", lambda budget_config_path=None, **_: ({}, []))
     monkeypatch.setattr(
-        state_router, "compute_lane_health", lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now)
+        state_router, "scan_lane_health", lambda _tasks_dir, now=None: scan_lane_health(tmp_path, now=now)
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(
@@ -251,7 +256,7 @@ def test_routing_budget_demotes_unhealthy(monkeypatch, tmp_path):
     # Configure mock budgets (empty budget or mock loaded)
     monkeypatch.setattr(state_router, "_load_agent_budgets", lambda budget_config_path=None, **_: ({}, []))
     monkeypatch.setattr(
-        state_router, "compute_lane_health", lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now)
+        state_router, "scan_lane_health", lambda _tasks_dir, now=None: scan_lane_health(tmp_path, now=now)
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
     monkeypatch.setattr(
@@ -392,8 +397,8 @@ gemini:
     )
     monkeypatch.setattr(
         state_router,
-        "compute_lane_health",
-        lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now),
+        "scan_lane_health",
+        lambda _tasks_dir, now=None: scan_lane_health(tmp_path, now=now),
     )
     monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: records)
     # These tests exercise ledger burn plus task-file health. Keep process-global
@@ -562,10 +567,11 @@ def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
         records_loaded=len(records),
         authoritative_data_available=False,
     )
-    # Claude has lowest burn and should be recommended as health is treated as healthy when absent
+    # Absent health is unknown (#9740 F4): the budget pick stands, but it is not reported as health-verified.
     assert rec["primary_agent_for_code"] == "claude"
     assert not any("skipped" in w for w in rec["warnings"])
     assert not any("unhealthy" in w for w in rec["warnings"])
+    assert any("recommendation is not health-verified" in w for w in rec["warnings"])
 
 
 def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_path):
@@ -590,3 +596,101 @@ def test_recommendation_all_unavailable_does_not_claim_all_hot(monkeypatch, tmp_
     assert rec["primary_agent_for_code"] != "inline_orchestrator"
     assert not any("all agents near cap" in w for w in rec["warnings"])
     assert "All agents are hot or near cap" not in rec["rationale"]
+
+
+# --- #9740 A1: typed scan outcome --------------------------------------------
+
+
+def test_scan_outcome_distinguishes_idle_observed_from_scan_unavailable(tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    _write_task(tmp_path, "c-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=30))
+    _write_task(tmp_path, "c-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=10))
+    scan = scan_lane_health(tmp_path, now=now)
+    assert scan.observed is True
+    assert scan.records == compute_lane_health(tmp_path, now=now)
+    assert scan.health_for("claude")["healthy"] is False
+    assert scan.health_for("claude")["basis"] == BASIS_RECENT_TASKS
+    idle = scan.health_for("codex")
+    assert idle["healthy"] is True and idle["basis"] == BASIS_SCAN_OBSERVED_IDLE
+
+    missing = scan_lane_health(tmp_path / "absent", now=now)
+    assert missing.observed is False and missing.records == {}
+    unknown = missing.health_for("codex")
+    assert unknown["healthy"] is None and unknown["consecutive_failures"] is None
+    assert unknown["basis"] == BASIS_SCAN_UNAVAILABLE
+    assert str(tmp_path) not in json.dumps(unknown)
+
+
+def test_scan_error_is_unknown_not_healthy(tmp_path, monkeypatch):
+    from scripts.api import lane_health
+
+    def broken(_path):
+        raise PermissionError("denied")
+
+    monkeypatch.setattr(lane_health.os, "scandir", broken)
+    scan = scan_lane_health(tmp_path)
+    assert scan.observed is False
+    assert scan.health_for("codex")["healthy"] is None
+    assert compute_lane_health(tmp_path) == {}
+
+
+def test_lane_health_scan_dataclass_default_is_unobserved():
+    assert LaneHealthScan(observed=False).health_for("kimi")["basis"] == BASIS_SCAN_UNAVAILABLE
+
+
+def _budget_with_tasks_dir(monkeypatch, tmp_path, tasks_dir):
+    monkeypatch.setattr(state_router, "_load_agent_budgets", lambda budget_config_path=None, **_: ({}, []))
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
+    monkeypatch.setattr(state_router.delegate_api, "list_delegate_tasks", lambda **_kwargs: {"tasks": []})
+    return state_router.compute_routing_budget(
+        datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC),
+        tasks_dir=tasks_dir,
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+
+
+def test_producer_publishes_idle_scan_observed_lanes_as_healthy(monkeypatch, tmp_path):
+    """A1: a successful scan with no recent tasks is observed healthy, everywhere it is published."""
+    (tmp_path / "tasks").mkdir()
+    budget = _budget_with_tasks_dir(monkeypatch, tmp_path, tmp_path / "tasks")
+    for lane in state_router.SUBSCRIPTION_LANES:
+        health = budget["agents"][lane]["health"]
+        assert health["healthy"] is True and health["basis"] == BASIS_SCAN_OBSERVED_IDLE, lane
+    assert budget["api_accounts"]["deepseek"]["health"]["basis"] == BASIS_SCAN_OBSERVED_IDLE
+
+
+def test_producer_never_fills_in_healthy_for_a_scan_error(monkeypatch, tmp_path):
+    """A1/F4: the scan-unknown case drops the ``healthy: True`` fill-in in agents, API accounts and ranking."""
+    budget = _budget_with_tasks_dir(monkeypatch, tmp_path, tmp_path / "missing-tasks")
+    for lane in state_router.SUBSCRIPTION_LANES:
+        health = budget["agents"][lane]["health"]
+        assert health["healthy"] is None and health["basis"] == BASIS_SCAN_UNAVAILABLE, lane
+        assert budget["agents"][lane]["routing_facts"]["health"] == "unknown"
+    assert budget["api_accounts"]["deepseek"]["health"]["healthy"] is None
+    assert all(item["health"]["healthy"] is not True for item in budget["ranked_by_headroom"])
+
+
+def test_ranked_view_orders_healthy_then_unknown_then_unhealthy():
+    items = [
+        {"lane": "a", "health": {"healthy": False}},
+        {"lane": "b", "health": {"healthy": None}},
+        {"lane": "c", "health": {"healthy": True}},
+        {"lane": "d"},
+    ]
+    assert [item["lane"] for item in sorted(items, key=state_router._health_rank)] == ["c", "b", "d", "a"]
+
+
+def test_recommendation_prefers_established_health_over_unknown():
+    agents = {
+        "claude": {"status": "cool", "burn_pct_7d": 5.0, "interactive": {"status": "cool", "burn_pct_7d": 5.0}},
+        "codex": {
+            "status": "cool",
+            "burn_pct_7d": 30.0,
+            "health": {"healthy": True, "basis": BASIS_SCAN_OBSERVED_IDLE},
+        },
+    }
+    rec = state_router._recommend_agent(agents, [], records_loaded=1, authoritative_data_available=True)
+    assert rec["primary_agent_for_code"] == "codex"
+    assert any("lane health unknown for claude" in warning for warning in rec["warnings"])

@@ -98,7 +98,7 @@ from typing import Any
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
-from scripts.review.receipts.ledger import review_tools
+from scripts.review.receipts.ledger import REVIEW_TOOLS, review_tools
 from scripts.review.render_contract import check_launch_contract, check_render_contract
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -107,6 +107,52 @@ ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
 SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex"})
+
+# The isolated contract is mandatory even when a brief declares an empty list.
+# Full access adds grants, not mandatory requirements (#9949).
+REVIEW_REQUIRED_SOURCES_TOOLS = REVIEW_TOOLS
+_REQUIRED_SOURCES_HEADER = re.compile(r"^Required-Sources-Tools:[ \t]*(.*)$", re.MULTILINE)
+_SOURCES_TOOL_NAME = re.compile(r"[a-z][a-z0-9_]*\Z")
+
+
+class ReviewToolRequirementsRefused(ValueError):
+    """A brief cannot run on the selected review route; never retry a provider."""
+
+    def __init__(self, code: str, *, unsupported: Sequence[str] = ()) -> None:
+        self.code = code
+        self.unsupported = tuple(sorted(unsupported))
+        detail = ", ".join(self.unsupported) if self.unsupported else "expected one JSON array of sources tool names"
+        super().__init__(f"{code}: {detail}")
+
+
+def check_review_tool_requirements(brief: str, review_access: str = "isolated") -> frozenset[str]:
+    """Compare brief requirements plus mandatory defaults with effective grants.
+
+    The optional standalone ``Required-Sources-Tools: [\"tool\"]`` header is
+    additive only. Malformed or duplicate declarations refuse rather than
+    silently reverting to defaults. No declaration can authorize a tool.
+    """
+    declarations = _REQUIRED_SOURCES_HEADER.findall(brief)
+    declared: list[str] = []
+    if declarations:
+        try:
+            if len(declarations) != 1:
+                raise ValueError("duplicate declaration")
+            declared = json.loads(declarations[0])
+            if not isinstance(declared, list) or any(
+                not isinstance(name, str) or not _SOURCES_TOOL_NAME.fullmatch(name) for name in declared
+            ):
+                raise ValueError("invalid declaration")
+        except (ValueError, TypeError) as exc:
+            raise ReviewToolRequirementsRefused("review_tool_requirements_invalid") from exc
+    required = REVIEW_REQUIRED_SOURCES_TOOLS | frozenset(declared)
+    unsupported = required - review_tools(review_access)
+    if unsupported:
+        # All current review routes derive from review_tools; do not promise
+        # another route (in particular full access for query_ulif).
+        raise ReviewToolRequirementsRefused("review_tools_unsupported", unsupported=sorted(unsupported))
+    return required
+
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
     "cursor": "formal attempts require a proven manifest filesystem boundary; Cursor is not admitted (#9251)",
@@ -547,24 +593,25 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
-def agy_review_settings(review_access: str = "isolated") -> dict[str, Any]:
-    """Grant the shared Sources contract and the route's evidence-reading commands.
+def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any]:
+    """Grant the review contract and explicitly deny the other Sources tools.
 
-    AGY command rules match token prefixes, not executable capabilities. The
-    existing OS review boundary remains responsible for file and write access.
-    Never grant a shell, interpreter, arbitrary Git command or MCP wildcard.
+    Non-receipt Ukrainian reviews use REVIEW_TOOLS too. Full attempts retain
+    their existing contract's search_resources grant. Read the launched server
+    afresh so an unavailable inventory cannot yield a partial deny profile.
     """
-    tools = review_tools(review_access)
-    # Only readers with no execute-program or output-file options. Search uses
-    # AGY's built-in tool: rg --pre executes programs. Git's --output can
-    # overwrite the scoped settings, and even inspection can run helpers.
-    commands = ["cat", "head", "tail", "wc"]
+    readers, writers = sources_tool_sets.__wrapped__(sources_server_launch()[1])
+    tools = review_tools(review_access or "isolated")
+    if not set(readers) >= tools:
+        raise ValueError("review_contract_contains_non_read_only_sources_tool")
     return {
         "permissions": {
-            "allow": [
-                *[f"mcp(sources/{name})" for name in sorted(tools)],
-                *[f"command({command})" for command in commands],
-            ]
+            "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - tools)],
+            ],
         }
     }
 
@@ -637,7 +684,7 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
-        access = json.loads(config_bytes)["mcpServers"]["sources"]["env"]["LU_REVIEW_ACCESS"]
+        access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
         _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access)).encode())
         # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
         # token) must land in the real token file. A refreshed copy would leave the real
@@ -648,6 +695,38 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         for fd in (app_data_fd, config_fd, gemini_fd):
             if fd is not None:
                 os.close(fd)
+
+
+def prepare_agy_permission_home(root: Path) -> Path:
+    """Use the review-attempt home provisioner for a trusted non-receipt review.
+
+    The caller supplies its existing runtime scratch lease. No receipt attempt
+    or ledger is invented for a dispatch that has none.
+    """
+    token = _real_agy_token()
+    if not token.is_file():
+        raise ValueError("agy_review_permissions_require_scoped_home")
+    python_bin, server = sources_server_launch()
+    config = isolated_sources_mcp_config(python_bin, server)
+    parent = _open_runtime_dir(root, ())
+    home_fd = None
+    try:
+        os.mkdir("agy-review-home", 0o700, dir_fd=parent)
+        home_fd = _open_owned_dir("agy-review-home", dir_fd=parent)
+        _populate_agy_review_home(home_fd, token, json.dumps(config).encode())
+    finally:
+        if home_fd is not None:
+            os.close(home_fd)
+        os.close(parent)
+    return root / "agy-review-home"
+
+
+def review_ledger_path(config_path: Path | str) -> Path:
+    """Resolve the host ledger paired with an existing attempt config."""
+    config = Path(config_path)
+    if not config.name.endswith(".mcp.json"):
+        raise ValueError("invalid_review_attempt_config")
+    return config.with_name(config.name.removesuffix(".mcp.json") + ".jsonl")
 
 
 def agy_oauth_link_problem(config_path: Path | str) -> str | None:

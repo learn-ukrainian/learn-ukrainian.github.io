@@ -10,12 +10,29 @@ from __future__ import annotations
 import datetime as dt
 import html
 import re
-import sqlite3
+import sys
 from html.parser import HTMLParser
+from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
 import requests
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 try:
     from audit.sum11_sovietization_scan import classify_entry
@@ -242,7 +259,7 @@ class _SlovnykHTMLParser(HTMLParser):
             self.h1_parts.append(data)
 
 
-def ensure_slovnyk_me_schema(conn: sqlite3.Connection) -> None:
+def ensure_slovnyk_me_schema(conn: SQLiteConnection) -> None:
     """Create the curated slovnyk.me table and FTS index if missing."""
     conn.executescript(SLOVNYK_ME_SCHEMA_SQL)
 

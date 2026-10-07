@@ -17,20 +17,23 @@ import sqlite3
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 import requests
 from bs4 import BeautifulSoup
 
 from scripts.wiki.sum20_official import (
     ensure_sum20_official_schema,
+    live_article_predicate,
     normalize_sum20_lookup,
     parse_sum20_article,
     upsert_sum20_article,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 
 
 @lru_cache(maxsize=1)
@@ -56,12 +59,26 @@ def _resolve_sources_db() -> Path:
     return local
 
 
+def _read_only_uri(uri: str) -> str:
+    """``uri`` with ``mode=ro`` enforced; a fragment or any other ``mode`` is refused."""
+    parts = urlsplit(uri)
+    if "#" in uri:  # SQLite ends the path/query at "#", so even an empty fragment changes the parse
+        raise ValueError(f"read-only СУМ-20 lookup refuses a URI with a fragment: {uri}")
+    params = parse_qsl(parts.query, keep_blank_values=True)
+    for key, value in params:
+        if key == "mode" and value != "ro":
+            raise ValueError(f"read-only СУМ-20 lookup refuses a URI with mode={value}: {uri}")
+    kept = [(key, value) for key, value in params if key != "mode"]
+    return urlunsplit(parts._replace(query=urlencode([*kept, ("mode", "ro")])))
+
+
 def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
-    if isinstance(db_path, str) and (db_path.startswith("file:") or "?" in db_path):
-        conn = sqlite3.connect(db_path, uri=True)
+    if isinstance(db_path, str) and db_path.startswith("file:"):
+        conn = sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)
     else:
         target = Path(db_path) if db_path else _resolve_sources_db()
-        conn = sqlite3.connect(target)
+        read_only_uri = f"{target.resolve().as_uri()}?mode=ro"
+        conn = sqlite3.connect(target) if write else sqlite3.connect(read_only_uri, uri=True)
     conn.row_factory = sqlite3.Row
     if not write:
         with contextlib.suppress(sqlite3.OperationalError):
@@ -79,11 +96,13 @@ def lookup_sum20_cached(lemma: str, conn: sqlite3.Connection) -> list[dict[str, 
         cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum20_articles'")
         if not cur.fetchone():
             return []
+        columns = [str(row[1]) for row in cur.execute("PRAGMA table_info(sum20_articles)").fetchall()]
         cur.execute(
-            """
+            f"""
             SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
             FROM sum20_articles a
-            WHERE a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?
+            WHERE (a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?)
+              AND {live_article_predicate(columns, "a")}
             ORDER BY a.wordid
             """,
             (norm, f"{norm} %"),
@@ -186,13 +205,17 @@ def lookup_sum20_articles(
     enforcing PRAGMA query_only = ON and never attempting schema creation or cache writes.
     To allow network fetching and caching on miss, pass write=True.
     """
-    conn = _get_db(db_path, write=False)
     try:
-        cached = lookup_sum20_cached(lemma, conn)
-        if cached or not write:
-            return cached
-    finally:
-        conn.close()
+        conn = _get_db(db_path, write=False)
+    except sqlite3.OperationalError:  # no database file yet: nothing cached
+        cached: list[dict[str, Any]] = []
+    else:
+        try:
+            cached = lookup_sum20_cached(lemma, conn)
+        finally:
+            conn.close()
+    if cached or not write:
+        return cached
 
     try:
         write_conn = _get_db(db_path, write=True)

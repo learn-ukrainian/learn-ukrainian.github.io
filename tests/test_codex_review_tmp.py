@@ -28,25 +28,25 @@ def review_plan(cwd, lease, session_id=None):
 
 
 @pytest.mark.parametrize("args", [("issue", "view", "7814"), ("pr", "view", "123")])
-def test_review_gh_shim_creates_and_cleans_tempfiles(tmp_path, args, gh_shim_sandbox):
+def test_review_gh_shim_uses_client_with_review_lease(tmp_path, args, gh_shim_sandbox):
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     lease = tmp_path / "learn-ukrainian" / "review-test"
     lease.mkdir(parents=True)
     backend = tmp_path / "fake-gh"
     backend.write_text(
-        '#!/bin/sh\nset -eu\ntest -f "$TMPDIR"/agent-gh.stdout.*\ntest -f "$TMPDIR"/agent-gh.stderr.*\nprintf "%s\\n" "$@"\n'
+        '#!/bin/sh\nset -eu\ntest -d "$TMPDIR" || { echo "missing scratch lease" >&2; exit 1; }\nprintf "%s\\n" "$@"\n'
     )
     backend.chmod(0o755)
-    _root, shim, _tooling = gh_shim_sandbox
+    root, shim, _tooling = gh_shim_sandbox
     env = {**os.environ, "TMPDIR": str(tmp_path / "missing"), "AGENT_REAL_GH": str(backend), "AGENT_NO_MERGE": "1"}
-    before = subprocess.run([str(shim), *args], env=env, capture_output=True, text=True, timeout=30)
+    before = subprocess.run([str(shim), *args], env=env, cwd=root, capture_output=True, text=True, timeout=30)
     assert before.returncode != 0
-    assert "mktemp" in before.stderr
+    assert before.returncode == 1
 
     plan = review_plan(checkout, lease)
     after = subprocess.run(
-        [str(shim), *args], env={**env, **plan.env_overrides}, capture_output=True, text=True, timeout=30
+        [str(shim), *args], env={**env, **plan.env_overrides}, cwd=root, capture_output=True, text=True, timeout=30
     )
     assert after.returncode == 0, after.stderr
     assert after.stdout.splitlines() == list(args)

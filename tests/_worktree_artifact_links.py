@@ -8,7 +8,7 @@ names the returned path in the worker result and asserts the expectation:
 * ``dotdot_after_link``: ``ignored/dir`` -> ``real/sub`` named as
   ``ignored/dir/../report.bin``, i.e. ``ignored/real/report.bin`` (preserved);
 * ``outbound``: ``ignored/link`` -> a file outside the checkout (refused);
-* ``outbound_batch_state``: ``ignored/link`` -> primary ``batch_state`` (removed, no copy);
+* ``outbound_batch_state``: ``ignored/link`` -> primary ``batch_state`` (link record only; payload not copied);
 * ``link_loop``: a self-referencing link (refused);
 * ``permission_denied``: a name inside a mode-000 directory (refused; the file may exist);
 * ``nul_name``, ``overlong_name``, ``worker_tokens``: names that cannot refer to
@@ -36,6 +36,12 @@ SCENARIOS = (
     "overlong_name",
     "worker_tokens",
 )
+# Ignored symlinks that are themselves output, stored as raw readlink text.
+IGNORED_LINK = {
+    "file_link": ("ignored/link", "report.bin"),
+    "parent_link": ("ignored/dir", "real"),
+    "dotdot_after_link": ("ignored/dir", "real/sub"),
+}
 REFUSAL = "links outside the checkout"
 REFUSALS = {
     "outbound": REFUSAL,

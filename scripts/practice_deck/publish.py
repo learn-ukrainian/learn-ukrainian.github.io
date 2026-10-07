@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.common import github_client
 from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.publish.github import Asset, Request, request_run
 from scripts.storage.paths import REGISTRY_ROOT
@@ -379,7 +380,7 @@ def upload_release_asset(
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
     try:
-        result = subprocess.run(
+        result = github_client.run(
             ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
             check=True,
             capture_output=True,
@@ -402,7 +403,7 @@ def _download_release_asset(
     repo: str = DEFAULT_REPO,
 ) -> bytes:
     try:
-        result = subprocess.run(
+        result = github_client.run(
             ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
             check=True,
             capture_output=True,

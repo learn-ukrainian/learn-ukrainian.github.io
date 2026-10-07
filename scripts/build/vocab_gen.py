@@ -12,10 +12,26 @@ Issue: #1025
 from __future__ import annotations
 
 import logging
-import sqlite3
+import sys
 from pathlib import Path
 
 import yaml
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 logger = logging.getLogger(__name__)
 
@@ -23,14 +39,25 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 def _resolve_shared_data_file(*parts: str) -> Path:
-    """Resolve repo-shared data files from a worktree when needed."""
+    """Resolve repo-shared data files from a worktree when needed.
+
+    Dispatch worktrees nest under ``.worktrees/``, and a read-write opener can
+    leave a 0-byte placeholder in the worktree. Prefer a non-empty file here,
+    otherwise the populated database next to that ``.worktrees`` directory.
+    """
+
+    def usable(path: Path) -> bool:
+        return path.is_file() and path.stat().st_size > 0
+
     candidate = PROJECT_ROOT.joinpath(*parts)
-    if candidate.exists():
+    if usable(candidate):
         return candidate
-    if PROJECT_ROOT.parent.name == ".worktrees":
-        shared_candidate = PROJECT_ROOT.parent.parent.joinpath(*parts)
-        if shared_candidate.exists():
-            return shared_candidate
+    for ancestor in PROJECT_ROOT.parents:
+        if ancestor.name == ".worktrees":
+            shared = ancestor.parent.joinpath(*parts)
+            if usable(shared):
+                return shared
+            break
     return candidate
 
 
@@ -95,7 +122,7 @@ def vesum_enrich_entry(entry: dict) -> dict:
 
     if VESUM_DB.exists():
         try:
-            db = sqlite3.connect(str(VESUM_DB))
+            db = _open_readonly(str(VESUM_DB))
             try:
                 row = db.execute(
                     "SELECT pos, tags FROM forms WHERE word_form = ? LIMIT 1",

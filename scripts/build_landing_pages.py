@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Stub: module moved to scripts/build/build_landing_pages.py"""
+"""Compatibility entrypoint for non-arc landing generation and read-only --check.
+
+Run with --help for usage, outputs and exit codes from the owning producer.
+"""
 import importlib.util as _ilu
 import sys as _sys
 from pathlib import Path as _P

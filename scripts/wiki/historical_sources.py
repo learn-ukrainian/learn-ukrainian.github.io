@@ -5,10 +5,26 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import sqlite3
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SCHEMA_VERSION = "historical-source-record.v1"
 ALLOWED_DISPOSITIONS = {
@@ -122,7 +138,7 @@ def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def ensure_historical_source_schema(conn: sqlite3.Connection) -> None:
+def ensure_historical_source_schema(conn: SQLiteConnection) -> None:
     conn.executescript(HISTORICAL_SOURCE_SCHEMA)
 
 
@@ -216,13 +232,13 @@ def load_rows(path: Path) -> list[tuple[Any, ...]]:
     return rows
 
 
-def insert_rows(conn: sqlite3.Connection, rows: Iterable[tuple[Any, ...]]) -> int:
+def insert_rows(conn: SQLiteConnection, rows: Iterable[tuple[Any, ...]]) -> int:
     materialized = list(rows)
     conn.executemany(INSERT_SQL, materialized)
     return len(materialized)
 
 
-def validate_historical_fts(conn: sqlite3.Connection) -> None:
+def validate_historical_fts(conn: SQLiteConnection) -> None:
     source_count = conn.execute("SELECT COUNT(*) FROM historical_source_records").fetchone()[0]
     fts_count = conn.execute("SELECT COUNT(*) FROM historical_source_records_fts").fetchone()[0]
     if source_count != fts_count:

@@ -106,7 +106,7 @@ core:
   R03: p2-table
   Em03: p2-table
   Em05: p2-table
-  # p2-review
+  # p2-review: attested native and Cursor Grok at every risk (#9769).
   Em02: p2-review
   M17: p2-review
   M30: p2-review

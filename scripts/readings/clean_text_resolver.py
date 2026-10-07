@@ -19,6 +19,22 @@ from pathlib import Path
 from typing import Any, Literal, TypedDict
 from urllib.parse import quote, quote_plus
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -135,9 +151,8 @@ class WorkIndex:
 def load_work_index(db_path: Path = DEFAULT_DB) -> WorkIndex:
     """Load literary_texts into a deterministic in-memory work index."""
 
-    uri = f"{db_path.resolve().as_uri()}?mode=ro"
     try:
-        with sqlite3.connect(uri, uri=True) as conn:
+        with _open_readonly(db_path) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(
                 """
