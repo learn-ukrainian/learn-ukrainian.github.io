@@ -7,7 +7,8 @@ setup. Module probes import without running legacy main logic. Each probe uses
 a fresh interpreter without pytest's sys.path. The
 known-failures baseline is a shrink-only ratchet: regressions and fixed rows
 both fail until the baseline reflects the remaining failures. Its denominator
-fingerprint must be refreshed explicitly when the import graph changes.
+inventory prevents silent removals; newly discovered CLIs are probed without
+requiring a snapshot refresh. Reviewed removals require an explicit refresh.
 """
 
 from __future__ import annotations
@@ -214,8 +215,21 @@ def denominator_snapshot(clis: list[str]) -> dict:
     return {
         "cli_count": len(clis),
         "probe_count": len(STYLES) * len(clis),
+        "cli_paths": sorted(clis),
         "cli_paths_sha256": hashlib.sha256("\n".join(sorted(clis)).encode()).hexdigest(),
     }
+
+
+def assert_denominator_fresh(clis: list[str], snapshot: dict) -> None:
+    """Allow growth while rejecting removals and inconsistent saved inventories."""
+    saved = snapshot.get("cli_paths", [])
+    assert saved and len(saved) == len(set(saved)) and snapshot == denominator_snapshot(saved), (
+        f"Invalid CLI inventory snapshot; review and refresh with: {REFRESH_COMMAND}"
+    )
+    removed = sorted(set(saved) - set(clis))
+    assert not removed, (
+        f"CLIs disappeared from the inventory: {removed}; review removals and refresh with: {REFRESH_COMMAND}"
+    )
 
 
 def refresh_denominator() -> None:
@@ -253,10 +267,7 @@ def assert_failure_ratchet(observed: set[tuple[str, str, str]],
 @pytest.mark.repo_invariant
 def test_source_tool_baseline_is_fresh() -> None:
     assert BASELINE["schema"] == "source-tool-import-baseline.v1"
-    assert BASELINE["denominator"] == denominator_snapshot(CLIS), (
-        "CLI denominator changed; review the inventory and refresh its snapshot explicitly"
-        f" with: {REFRESH_COMMAND}"
-    )
+    assert_denominator_fresh(CLIS, BASELINE["denominator"])
     assert len(KNOWN_FAILURES) == len(BASELINE["failures"]), "duplicate baseline rows"
     assert set(CLIS) >= URGENT_CLIS, "urgent ingest CLIs must stay in the denominator"
     for path, form, kind in KNOWN_FAILURES:
@@ -290,6 +301,92 @@ def test_denominator_snapshot_detects_shrink_and_substitution() -> None:
     assert snapshot != denominator_snapshot(original[:1])
     assert snapshot != denominator_snapshot(["scripts/a.py", "scripts/c.py"])
     assert snapshot != denominator_snapshot([*original, "scripts/c.py"])
+
+
+@pytest.mark.parametrize("current", [
+    ["scripts/a.py"],
+    ["scripts/a.py", "scripts/c.py"],
+    ["scripts/a.py", "scripts/c.py", "scripts/d.py"],
+])
+def test_denominator_freshness_rejects_removals_even_with_growth(current) -> None:
+    snapshot = denominator_snapshot(["scripts/a.py", "scripts/b.py"])
+    with pytest.raises(AssertionError, match=re.escape(REFRESH_COMMAND)):
+        assert_denominator_fresh(current, snapshot)
+    assert_denominator_fresh(current, denominator_snapshot(current))
+
+
+@pytest.mark.parametrize("current", [
+    ["scripts/b.py", "scripts/a.py"],
+    ["scripts/a.py", "scripts/b.py", "scripts/c.py"],
+])
+def test_denominator_freshness_accepts_unchanged_and_growing_inventory(current) -> None:
+    assert_denominator_fresh(current, denominator_snapshot(["scripts/a.py", "scripts/b.py"]))
+
+
+@pytest.mark.parametrize("field, value", [
+    ("cli_count", 1), ("probe_count", 1), ("cli_paths_sha256", "invalid"),
+    ("cli_paths", ["scripts/a.py", "scripts/a.py"]),
+])
+def test_denominator_freshness_rejects_inconsistent_snapshot(field, value) -> None:
+    snapshot = denominator_snapshot(["scripts/a.py", "scripts/b.py"])
+    with pytest.raises(AssertionError, match="Invalid CLI inventory snapshot"):
+        assert_denominator_fresh(snapshot["cli_paths"], {**snapshot, field: value})
+
+
+def test_two_prs_adding_clis_share_snapshot_and_probe_merged_inventory(tmp_path: Path, monkeypatch) -> None:
+    files = {"scripts/rag/source_query.py": "", "scripts/wiki/slovnyk_me.py": ""}
+    cli_source = (
+        'import sys\nfrom pathlib import Path\n'
+        'sys.path.insert(0, str(Path(__file__).resolve().parents[1]))\n'
+        'from scripts.rag import source_query\n'
+        'if __name__ == "__main__": pass\n'
+    )
+    files["scripts/original.py"] = cli_source
+    original_run = subprocess.run
+    # Materialize each branch's tracked files before computing its import graph.
+    def inventory(extra):
+        branch_files = {**files, **extra}
+        for path, source in branch_files.items():
+            target = tmp_path / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(source)
+        monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
+            args[0], 0, stdout="\0".join(branch_files) + "\0",
+        ))
+        return source_tool_clis(tmp_path)
+
+    original = inventory({})
+    snapshot = denominator_snapshot(original)
+    first = inventory({"scripts/first.py": cli_source})
+    second = inventory({"scripts/second.py": cli_source})
+    merged = inventory({"scripts/first.py": cli_source, "scripts/second.py": cli_source})
+    assert set(merged) == set(first) | set(second)
+    for clis in (first, second, merged):
+        assert_denominator_fresh(clis, snapshot)
+    for branch_snapshot in (denominator_snapshot(first), denominator_snapshot(second)):
+        assert_denominator_fresh(merged, branch_snapshot)
+    monkeypatch.setattr(subprocess, "run", original_run)
+    monkeypatch.setattr(sys.modules[__name__], "ROOT", tmp_path)
+    monkeypatch.setattr(sys.modules[__name__], "KNOWN_FAILURES", set())
+    test_source_tool_cli_imports(merged)
+
+
+@pytest.mark.parametrize("failing_style", [None, *STYLES])
+def test_new_cli_is_probed_and_new_failure_rejected(monkeypatch, failing_style) -> None:
+    probed = []
+
+    def probe(root, path, style):
+        probed.append((path, style))
+        return "ImportError: new CLI failure" if style == failing_style else None
+
+    monkeypatch.setattr(sys.modules[__name__], "smoke_import", probe)
+    monkeypatch.setattr(sys.modules[__name__], "KNOWN_FAILURES", set())
+    if failing_style is None:
+        test_source_tool_cli_imports(["scripts/new.py"])
+    else:
+        with pytest.raises(pytest.fail.Exception, match="New failures"):
+            test_source_tool_cli_imports(["scripts/new.py"])
+    assert probed == [("scripts/new.py", style) for style in STYLES]
 
 
 def test_refresh_denominator_preserves_failure_rows(tmp_path: Path, monkeypatch, capsys) -> None:

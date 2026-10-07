@@ -45,9 +45,16 @@ invocation without arguments retains the existing audit and exit codes.
 The baseline stores only repository-relative path, form, and failure class.
 The observed set must equal its remaining rows: a new failure fails, and a
 repaired CLI fails until its stale row is removed. Both urgent ingest CLIs
-must remain clean and cannot be baselined. The inventory uses exact equality
-on count, probe count, and a SHA-256 of sorted CLI paths, so growth, shrinkage,
-and same-size substitutions all require review.
+must remain clean and cannot be baselined. The inventory saves sorted CLI paths,
+their count, probe count, and SHA-256. Freshness validates the saved snapshot and
+requires every saved path to remain in the discovered inventory. A removal or
+substitution fails even when additions leave the total count unchanged or larger.
+Reviewed removals require the explicit refresh command below.
+
+Newly discovered CLIs automatically receive both probes and do not require a
+snapshot edit. Passing additions are accepted; a failing addition is a new
+failure row and fails the ratchet. Two PRs adding different CLIs can therefore
+share the same saved inventory and both pass on their combined merge tree.
 
 The round-e re-baseline retains 412 CLIs / 824 probes. Of the 30 probes that
 previously stopped at temp-directory validation, 28 now pass; file launches of
@@ -70,7 +77,7 @@ libraries that bypass Python audit hooks remain residual scope for the #9991
 driver. A successful probe does not establish that no guard exception was caught
 by the CLI, or that a compiled library performed no writes.
 
-After reviewing an inventory change, run the exact refresh command printed
+After reviewing an inventory removal, run the exact refresh command printed
 by the freshness failure. It uses the test interpreter, including the shared
 interpreter in dispatch worktrees. In an ordinary checkout the command is:
 
