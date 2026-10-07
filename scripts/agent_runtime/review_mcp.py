@@ -98,7 +98,7 @@ from typing import Any
 from scripts.agent_runtime.sources_read_only import sources_tool_sets
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
-from scripts.review.receipts.ledger import review_tools
+from scripts.review.receipts.ledger import REVIEW_TOOLS, review_tools
 from scripts.review.render_contract import check_launch_contract, check_render_contract
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -107,6 +107,52 @@ ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
 SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex"})
+
+# The isolated contract is mandatory even when a brief declares an empty list.
+# Full access adds grants, not mandatory requirements (#9949).
+REVIEW_REQUIRED_SOURCES_TOOLS = REVIEW_TOOLS
+_REQUIRED_SOURCES_HEADER = re.compile(r"^Required-Sources-Tools:[ \t]*(.*)$", re.MULTILINE)
+_SOURCES_TOOL_NAME = re.compile(r"[a-z][a-z0-9_]*\Z")
+
+
+class ReviewToolRequirementsRefused(ValueError):
+    """A brief cannot run on the selected review route; never retry a provider."""
+
+    def __init__(self, code: str, *, unsupported: Sequence[str] = ()) -> None:
+        self.code = code
+        self.unsupported = tuple(sorted(unsupported))
+        detail = ", ".join(self.unsupported) if self.unsupported else "expected one JSON array of sources tool names"
+        super().__init__(f"{code}: {detail}")
+
+
+def check_review_tool_requirements(brief: str, review_access: str = "isolated") -> frozenset[str]:
+    """Compare brief requirements plus mandatory defaults with effective grants.
+
+    The optional standalone ``Required-Sources-Tools: [\"tool\"]`` header is
+    additive only. Malformed or duplicate declarations refuse rather than
+    silently reverting to defaults. No declaration can authorize a tool.
+    """
+    declarations = _REQUIRED_SOURCES_HEADER.findall(brief)
+    declared: list[str] = []
+    if declarations:
+        try:
+            if len(declarations) != 1:
+                raise ValueError("duplicate declaration")
+            declared = json.loads(declarations[0])
+            if not isinstance(declared, list) or any(
+                not isinstance(name, str) or not _SOURCES_TOOL_NAME.fullmatch(name) for name in declared
+            ):
+                raise ValueError("invalid declaration")
+        except (ValueError, TypeError) as exc:
+            raise ReviewToolRequirementsRefused("review_tool_requirements_invalid") from exc
+    required = REVIEW_REQUIRED_SOURCES_TOOLS | frozenset(declared)
+    unsupported = required - review_tools(review_access)
+    if unsupported:
+        # All current review routes derive from review_tools; do not promise
+        # another route (in particular full access for query_ulif).
+        raise ReviewToolRequirementsRefused("review_tools_unsupported", unsupported=sorted(unsupported))
+    return required
+
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
     "cursor": "formal attempts require a proven manifest filesystem boundary; Cursor is not admitted (#9251)",

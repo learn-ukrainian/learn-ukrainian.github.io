@@ -1209,3 +1209,49 @@ def test_a_duplicate_activity_id_in_the_lesson_is_refused() -> None:
     )
     with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
         settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, two_steps)
+
+
+@pytest.mark.parametrize(
+    "tool,authority",
+    [
+        ("verify_word", "vesum"),
+        ("verify_lemma", "vesum"),
+        ("search_slovnyk_me", "slovnyk_me"),
+        ("search_esum", "esum"),
+        ("search_grinchenko_1907", "grinchenko"),
+    ],
+)
+def test_facet_tool_authorities_can_supply_lemma_and_counterevidence(world, tool, authority):
+    assert settle._source({"tool": tool}) == authority
+    assert tool in settle.SEARCH_TOOLS["lemma"]
+    assert tool in settle.SEARCH_TOOLS["counterevidence"]
+    assert (
+        settle.validate_reply(
+            world.reply("refuted", _evidence(world, tool)), world.manifest.read_bytes(), world.own_ledger
+        )[0]
+        == "refuted"
+    )
+
+
+@pytest.mark.parametrize("facet", ["meaning", "norm", "stress"])
+@pytest.mark.parametrize("outcome", ["supported_defect", "refuted", "source_conflict"])
+def test_sum11_cannot_settle_language_authority(world, facet, outcome):
+    assert "search_definitions" not in settle.SOURCES
+    assert all("search_definitions" not in tools for tools in settle.SEARCH_TOOLS.values())
+    assert settle._source({"tool": "search_definitions"}) is None
+    evidence = _evidence(world, "search_definitions", result=f"Historical {facet} contrast.")
+    if outcome == "source_conflict":
+        evidence += _evidence(world, "query_sum20", result="Modern dictionary evidence.")
+    with pytest.raises(
+        settle.SettleError, match=r"needs (a cited receipt with hits|hit receipts from two different sources)"
+    ):
+        settle.validate_reply(world.reply(outcome, evidence), world.manifest.read_bytes(), world.own_ledger)
+
+
+def test_sum11_cannot_be_a_broadened_counterevidence_search(world):
+    receipt = world.call("search_definitions", "Contrast only.")
+    searches = [{"category": "counterevidence", "receipt": receipt, "quote": "Contrast only."}]
+    with pytest.raises(settle.SettleError, match="wrong tool"):
+        settle.validate_reply(
+            world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+        )

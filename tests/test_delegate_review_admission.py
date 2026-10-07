@@ -1915,3 +1915,89 @@ def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, 
     )
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
     assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+
+
+@pytest.mark.parametrize("route", ["formal-isolated", "formal-full", "agy-review", "agy-verdict", "agy-type"])
+@pytest.mark.parametrize("prompt_source", ["literal", "file", "stdin"])
+@pytest.mark.parametrize(
+    "header", ["", "Required-Sources-Tools: []\n", 'Required-Sources-Tools: ["query_ulif", "query_wikipedia"]\n']
+)
+def test_sources_requirements_admitted_before_any_provider_or_provisioning(
+    tmp_path, monkeypatch, capsys, route, header, prompt_source
+):
+    from importlib import import_module
+    from io import StringIO
+
+    from tests.test_delegate import _write_args
+
+    if route.startswith("formal") and prompt_source == "stdin":
+        # Render admission imports may perform local Git discovery. Load them
+        # before the stdlib Popen trap that forbids provider launches below.
+        import_module("scripts.review.prompts.check")
+
+    class AdmittedTools(Exception):
+        pass
+
+    agent = "claude" if route.startswith("formal") else "agy"
+    model = "claude-opus-5-5" if agent == "claude" else "gemini-3.8-flash-high"
+    monkeypatch.setattr(
+        delegate,
+        "_kimi_dispatch_gate",
+        lambda *_args, **_kwargs: (
+            None,
+            None,
+            SimpleNamespace(recipient=agent, model=model),
+        ),
+    )
+    monkeypatch.setattr(delegate, "_credit_period_refusal", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_admit_advisory", lambda *_args, **_kwargs: delegate._AdvisoryAdmission())
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("provider must not start"))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.prepare_review_attempt", lambda **_kwargs: pytest.fail("must not provision")
+    )
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.prepare_agy_permission_home", lambda *_args: pytest.fail("must not provision")
+    )
+
+    def after_tool_admission(*_args, **_kwargs):
+        if route.startswith("formal") and prompt_source == "stdin":
+            return None  # reach the existing formal render-record admission
+        raise AdmittedTools
+
+    monkeypatch.setattr(delegate, "_cursor_auto_refusal", after_tool_admission)
+    if route.startswith("formal"):
+        (tmp_path / "manifest.yaml").write_text("review: test\n", encoding="utf-8")
+    args = _write_args(
+        agent=agent,
+        model=model,
+        mode="read-only",
+        review_profile="ukrainian",
+        prompt=header + "Review the supplied evidence.",
+        review=route == "agy-review",
+        require_review_verdict=route == "agy-verdict",
+        type="review" if route == "agy-type" else None,
+        review_attempt=str(tmp_path / "manifest.yaml") if route.startswith("formal") else None,
+        review_id="rev-tools" if route.startswith("formal") else None,
+        attempt_id="att-tools" if route.startswith("formal") else None,
+        full_checkout=route == "formal-full",
+        review_access="full" if route == "formal-full" else "isolated",
+    )
+    if prompt_source == "file":
+        prompt_file = tmp_path / "review-brief.md"
+        prompt_file.write_text(args.prompt, encoding="utf-8")
+        args.prompt_file = str(prompt_file)
+        # The file takes precedence even if both options are supplied.
+        args.prompt = "A literal brief without a declaration."
+    elif prompt_source == "stdin":
+        monkeypatch.setattr(delegate.sys, "stdin", StringIO(args.prompt))
+        args.prompt = "-"
+    if route.startswith("formal") and prompt_source == "stdin":
+        assert delegate.cmd_dispatch(args) == 2
+        assert "review_render_record_missing" in capsys.readouterr().err
+        assert delegate.sys.stdin.tell() == 0
+    elif "query_ulif" in header:
+        assert delegate.cmd_dispatch(args) == 2
+        assert "review_tools_unsupported: query_ulif, query_wikipedia" in capsys.readouterr().err
+    else:
+        with pytest.raises(AdmittedTools):
+            delegate.cmd_dispatch(args)
