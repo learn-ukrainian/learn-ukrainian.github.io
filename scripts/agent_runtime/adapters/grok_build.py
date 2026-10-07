@@ -17,7 +17,8 @@ injected — HOME (already allow-listed by env_sanitize) is sufficient.
 Mode → ``--permission-mode``:
 - ``read-only``       → ``auto`` + ``--deny`` on write tools and ``Bash`` by
   default. Ordinary reviewer opt-ins replace the Bash deny with fleet and
-  publish PreToolUse guards.
+  publish PreToolUse guards plus a fail-closed tool guard. Only tracked
+  checkout reads and literal Git inspection commands are exposed and approved.
 - ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
   plus the tracked fleet PreToolUse guards through the hook bridge
@@ -28,7 +29,7 @@ for approval on shell commands and terminates headless turns (``stopReason=cance
 while ``plan`` blocks all tool calls outright. Write dispatches map to
 ``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
 maps to ``auto`` so non-shell read tools can run; only opted-in reviewers get
-guarded Bash. Other read-only calls retain their Bash deny.
+a bounded, pre-authorized tool set (#9987). Other read-only calls retain their Bash deny.
 
 Issue #8965: Grok 1.0.41 treats an explicit ``--permission-mode auto`` as winning
 over ``--always-approve``, so ``yolo_mode`` stays false and the auto classifier
@@ -37,7 +38,7 @@ refuses ``git push`` before the command runs. ``workspace-write`` therefore uses
 Write sessions install the fleet PreToolUse guards (primary-checkout write,
 secret-print, merge, and the rest of the tracked worker set) through the same
 hook bridge. They do not load the reviewer publish guard or the read-only Git
-push rewrite. Read-only reviewer sessions stay as #8945 shipped them.
+push rewrite. Read-only reviewers pre-authorize only their guarded read contract.
 
 Issue #9008: ``danger`` keeps that argv. Claude loads the same fleet guards
 on both write modes; ``workspace-write`` is ``dontAsk`` plus an allow list and
@@ -67,12 +68,15 @@ import shlex
 import shutil
 import tempfile
 from dataclasses import replace
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
+from uuid import UUID
 
 from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..grok_reviewer_permissions import GROK_REVIEWER_READ_COMMANDS, GROK_REVIEWER_TOOLS
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -150,6 +154,12 @@ _MODE_PERMISSION: dict[str, str] = {
 # Non-isolated write-capable dispatches grant --always-approve so tool executions
 # run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
+
+# The installed CLI can still cancel under dontAsk. A fail-closed PreToolUse
+# guard rejects everything except literal safe commands before permissions;
+# the execution mode pre-authorizes only that guarded read contract.
+_REVIEWER_PERMISSION_MODE = "bypassPermissions"
+_REVIEWER_ALLOW_RULES = ("Read", "Grep", *(f"Bash({command})" for command in GROK_REVIEWER_READ_COMMANDS))
 
 # Default deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
 # --permission-mode auto may approve unnamed commands, and prefix Bash denies
@@ -274,15 +284,39 @@ def _guard_agent_definition(
     return "\n".join(lines)
 
 
-def _reviewer_agent_definition() -> str:
+def _reviewer_agent_definition(cwd: Path) -> str:
     """Read-only reviewer agent: fleet guards plus the publish guard."""
-    return _guard_agent_definition(
+    from scripts.common.repo_root import project_interpreter
+
+    source_root = Path(__file__).resolve().parents[3]
+    guard = source_root / "scripts/agent_runtime/grok_reviewer_permissions.py"
+    if not guard.is_file():
+        raise RuntimeError("Grok reviewer permission guard unavailable")
+    definition = _guard_agent_definition(
         name="lu-read-only-reviewer",
         description="Read-only reviewer with fleet PreToolUse guards",
-        body="Review the requested work using the available tools and report executed evidence.",
+        body=(
+            "Review the requested work using the available tools and report executed evidence. "
+            "Approval-requiring tools are denied without prompting. Continue with permitted "
+            "read tools on tracked files inside this checkout (grep requires a file path); "
+            "do not retry a denied action through a wrapper. "
+            "Only these literal shell commands are permitted:\n"
+            + "\n".join(GROK_REVIEWER_READ_COMMANDS)
+            + "\nReport any evidence you could not obtain."
+        ),
         publish_guard=True,
         native_aliases=False,
     )
+    guard_command = shlex.join([str(project_interpreter(source_root)), str(guard), "--review-root", str(cwd)])
+    # This guard consumes native Grok events directly, before native approval.
+    hook = (
+        '    - matcher: ".*"\n'
+        "      hooks:\n"
+        "        - type: command\n"
+        f"          command: {json.dumps(guard_command)}\n"
+        "          timeout: 15\n"
+    )
+    return definition.replace("\n---\n", "\n" + hook + "---\n", 1)
 
 
 def _write_guard_agent_definition() -> str:
@@ -340,6 +374,47 @@ def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     identical, documented lookup rule.
     """
     return grok_cwd_sessions_dir(grok_home, cwd) / session_id
+
+
+def _permission_cancellation(
+    envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None
+) -> bool:
+    """Classify only typed cancellation evidence for this exact native turn."""
+    if envelope is None or envelope.get("stopReason") != "cancelled":
+        return False
+    for key in ("cancellation_category", "cancellationCategory"):
+        if envelope.get(key) in ("permission_cancelled", "PermissionCancelled"):
+            return True
+    # Native JSON may omit the category. Never scan peers or infer it from
+    # assistant/tool text; bind the last terminal event to the returned UUID.
+    sid = envelope.get("sessionId") or envelope.get("session_id")
+    if plan is None or not isinstance(sid, str):
+        return False
+    try:
+        if str(UUID(sid)) != sid:
+            return False
+        if sid in plan.metadata.get(_META_LIVENESS_SNAPSHOT, ()):
+            return False
+        events = grok_session_dir(resolve_grok_home(env=plan.env_overrides), plan.cwd, sid) / "events.jsonl"
+        terminal = None
+        with events.open(encoding="utf-8") as stream:
+            for line in stream:
+                if not line.strip():
+                    continue
+                event = json.loads(line)
+                if not isinstance(event, dict):
+                    return False
+                if event.get("type") == "turn_ended":
+                    terminal = event
+        if terminal is None:
+            return False
+        if call_start_time is not None:
+            stamp = datetime.fromisoformat(terminal["ts"].replace("Z", "+00:00"))
+            if stamp.tzinfo is None or stamp.timestamp() < call_start_time:
+                return False
+        return terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+    except (OSError, ValueError, TypeError, KeyError, UnicodeError, RecursionError):
+        return False
 
 
 class GrokBuildAdapter:
@@ -417,7 +492,7 @@ class GrokBuildAdapter:
         guard_agent_suffix: str | None = None
         guard_definition: str | None = None
         if reviewer_tools:
-            guard_definition = _reviewer_agent_definition()
+            guard_definition = _reviewer_agent_definition(cwd)
             guard_agent_suffix = ".grok-reviewer-agent.md"
             guard_agent_key = _META_REVIEWER_AGENT_FILE
         elif mode in _UNATTENDED_WRITE_MODES and not trail_isolation and not review_isolation and not mcp_read_only:
@@ -468,7 +543,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. The reviewer opt-in replaces the Bash deny with hooks.
+        # read tools can run. Reviewers replace the Bash deny with a closed tool set and
+        # an all-tool guard, then pre-authorize only that read contract.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
@@ -480,10 +556,18 @@ class GrokBuildAdapter:
             permission_mode = "default"
         elif review_isolation:
             permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
+        elif reviewer_tools:
+            permission_mode = _REVIEWER_PERMISSION_MODE
         else:
             permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(execution_cwd)])
+        if reviewer_tools:
+            cmd.extend(["--always-approve", "--no-subagents", "--disable-web-search"])
+            for rule in _REVIEWER_ALLOW_RULES:
+                cmd.extend(["--allow", rule])
+            for rule in ("MCPTool", "WebFetch", "WebSearch"):
+                cmd.extend(["--deny", rule])
         if (mcp_read_only or mode in _UNATTENDED_WRITE_MODES) and not review_isolation and not trail_isolation:
             cmd.append("--always-approve")
         if mcp_read_only and not review_isolation:
@@ -566,6 +650,8 @@ class GrokBuildAdapter:
         if disallowed:
             cmd.extend(["--disallowed-tools", str(disallowed)])
         allowed = tc.get("allowed_tools")
+        if reviewer_tools:
+            allowed = ",".join(GROK_REVIEWER_TOOLS)
         if allowed:
             cmd.extend(["--tools", str(allowed)])
 
@@ -579,7 +665,7 @@ class GrokBuildAdapter:
             "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
             task_id,
             mode,
-            _MODE_PERMISSION[mode],
+            permission_mode,
             requested_model,
             effective_effort,
         )
@@ -640,10 +726,13 @@ class GrokBuildAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        _ = (output_file, call_start_time)  # grok -p flushes to stdout
+        _ = output_file  # grok -p flushes to stdout
 
         obj = _parse_json_object(stdout)
         terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
+        permission_cancelled = _permission_cancellation(obj, plan, call_start_time)
+        if permission_cancelled:
+            obj = {**obj, "cancellation_category": "permission_cancelled"}
         usage = obj.get("modelUsage") if obj else None
         runtime_model = next(iter(usage)) if isinstance(usage, dict) and len(usage) == 1 else None
         if not isinstance(runtime_model, str) or not runtime_model.strip():
@@ -692,6 +781,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             envelope = json_value(stdout)
             envelope = envelope if isinstance(envelope, dict) else {}
+            if permission_cancelled:
+                envelope = {**envelope, "cancellation_category": "permission_cancelled"}
             parsed = structured_result(
                 envelope.get("structuredOutput"),
                 output_schema,
@@ -706,6 +797,8 @@ class GrokBuildAdapter:
             )
             return replace(
                 parsed,
+                failure_code="permission_cancelled" if permission_cancelled else parsed.failure_code,
+                provider_error_text=provider_error,
                 substitution=attribution,
                 stderr_excerpt=(
                     _stop_diagnostic(envelope, stderr)
@@ -730,7 +823,9 @@ class GrokBuildAdapter:
         usable = bool(text)
         failed = returncode != 0 or not usable or not terminal_ok
         failure_code = (
-            "provider_stream_incomplete"
+            "permission_cancelled"
+            if permission_cancelled
+            else "provider_stream_incomplete"
             if not terminal_ok
             else provider_failure_code(provider_error)
             if failed

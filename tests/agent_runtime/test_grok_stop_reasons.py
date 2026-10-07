@@ -11,13 +11,14 @@ from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
 from scripts.agent_runtime.runner import classify_failover_trigger
 
 
-def _parse(envelope, *, stderr="", returncode=0, plan=None):
+def _parse(envelope, *, stderr="", returncode=0, plan=None, call_start_time=None):
     return GrokBuildAdapter().parse_response(
         stdout=json.dumps(envelope),
         stderr=stderr,
         returncode=returncode,
         output_file=None,
         plan=plan,
+        call_start_time=call_start_time,
     )
 
 
@@ -185,3 +186,105 @@ def test_stop_detail_reaches_task_diagnostic_file(tmp_path, monkeypatch):
     for diagnostic in (json.loads(record.read_text())["stderr_excerpt"], entry["diagnostic"]):
         assert 'stopReason="cancelled"' in diagnostic
         assert "permission_cancelled" in diagnostic
+
+
+@pytest.mark.parametrize("structured", [False, True])
+@pytest.mark.parametrize("key,category", [
+    ("cancellation_category", "permission_cancelled"),
+    ("cancellationCategory", "PermissionCancelled"),
+])
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_permission_cancelled_is_distinct_and_does_not_fail_over(tmp_path, structured, key, category, returncode):
+    from scripts.agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+    from scripts.agent_runtime.runner import _privacy_safe_failure_code
+
+    plan = InvocationPlan(
+        cmd=["grok"], cwd=tmp_path,
+        metadata={"output_schema": {"type": "object"}} if structured else {},
+    )
+    result = _parse(
+        {"stopReason": "cancelled", key: category, "text": "HTTP 429 narration", "structuredOutput": {}},
+        plan=plan, returncode=returncode,
+    )
+    assert not result.ok and result.response == "" and not result.rate_limited
+    assert result.failure_code == "permission_cancelled"
+    assert result.failure_code in RUNTIME_FAILURE_CODES
+    assert _privacy_safe_failure_code(
+        outcome="failed", rate_limited=False, stalled=False, returncode=returncode,
+        explicit_code=result.failure_code,
+    ) == "permission_cancelled"
+    assert classify_failover_trigger(
+        parse=result, returncode=returncode, kill_reason=None,
+        stdout_text="HTTP 429 narration", stderr_text="HTTP 429 narration",
+    ) is None
+
+
+def _session_plan(tmp_path, events, *, sid="11111111-1111-4111-8111-111111111111", snapshot=()):
+    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
+
+    home = tmp_path / "grok-home"
+    plan = InvocationPlan(
+        cmd=["grok"], cwd=tmp_path, env_overrides={"GROK_HOME": str(home)},
+        metadata={"liveness_session_dir_snapshot": list(snapshot)},
+    )
+    trace = grok_session_dir(home, tmp_path, sid) / "events.jsonl"
+    trace.parent.mkdir(parents=True)
+    trace.write_text(events, encoding="utf-8")
+    return plan, sid
+
+
+@pytest.mark.parametrize("structured", [False, True])
+def test_permission_category_comes_from_exact_session_last_terminal(tmp_path, structured):
+    event = {"type": "turn_ended", "outcome": "cancelled", "cancellation_category": "permission_cancelled",
+             "ts": "2026-10-07T18:00:00Z"}
+    plan, sid = _session_plan(tmp_path, json.dumps(event))
+    if structured:
+        plan.metadata["output_schema"] = {"type": "object"}
+    result = _parse({"stopReason": "cancelled", "sessionId": sid, "text": "partial"}, plan=plan,
+                    call_start_time=1791395999)
+    assert result.failure_code == "permission_cancelled"
+    assert "permission_cancelled" in result.stderr_excerpt
+    assert str(tmp_path) not in result.stderr_excerpt
+
+
+@pytest.mark.parametrize("trace", [
+    "broken json", "[]", "", "\n", "{",
+    json.dumps({"type": "tool_output", "cancellation_category": "permission_cancelled"}),
+    json.dumps({"type": "turn_ended", "outcome": "completed", "cancellation_category": "permission_cancelled"}),
+    json.dumps({"type": "turn_ended", "outcome": "cancelled", "cancellation_category": "user_cancelled"}),
+    json.dumps({"type": "turn_ended", "outcome": "cancelled", "cancellation_category": "permission_cancelled"})
+    + "\n" + json.dumps({"type": "turn_ended", "outcome": "completed"}),
+])
+def test_untrusted_or_superseded_trace_does_not_classify_permission(tmp_path, trace):
+    plan, sid = _session_plan(tmp_path, trace)
+    result = _parse({"stopReason": "cancelled", "sessionId": sid, "text": "permission_cancelled"}, plan=plan)
+    assert result.failure_code == "provider_stream_incomplete"
+
+
+@pytest.mark.parametrize("case", ["missing", "preexisting", "peer", "stale", "bad_timestamp", "naive_timestamp", "traversal"])
+def test_permission_trace_requires_current_bound_session(tmp_path, case):
+    from scripts.agent_runtime.adapters.grok_build import grok_session_dir
+
+    event = {"type": "turn_ended", "outcome": "cancelled", "cancellation_category": "permission_cancelled",
+             "ts": "2026-10-07T18:00:00Z"}
+    sid = "11111111-1111-4111-8111-111111111111"
+    if case == "bad_timestamp":
+        event["ts"] = "bad"
+    if case == "naive_timestamp":
+        event["ts"] = "2026-10-07T18:00:00"
+    plan, sid = _session_plan(tmp_path, json.dumps(event), snapshot=[sid] if case == "preexisting" else [])
+    if case == "missing":
+        grok_session_dir(tmp_path / "grok-home", tmp_path, sid).joinpath("events.jsonl").unlink()
+    if case == "peer":
+        sid = "22222222-2222-4222-8222-222222222222"
+    if case == "traversal":
+        sid = "../" + sid
+    result = _parse({"stopReason": "cancelled", "sessionId": sid}, plan=plan,
+                    call_start_time=1791396001 if case == "stale" else 1791395999)
+    assert result.failure_code == "provider_stream_incomplete"
+
+
+@pytest.mark.parametrize("reason", ["end_turn", "max_tokens"])
+def test_permission_category_does_not_override_other_terminal_reason(reason):
+    result = _parse({"stopReason": reason, "cancellation_category": "permission_cancelled", "text": "report"})
+    assert result.failure_code is None if reason == "end_turn" else result.failure_code == "provider_stream_incomplete"
