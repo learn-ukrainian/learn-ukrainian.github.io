@@ -40,6 +40,13 @@ def write_state_unlocked(path: Path, state: dict[str, Any]) -> None:
     os.replace(tmp, path)
 
 
+def _write_public_state_unlocked(path: Path, state: dict[str, Any]) -> None:
+    """Use delegate's cause sink by default; import lazily because it imports these markers."""
+    from scripts.delegate import _write_record_unlocked
+
+    _write_record_unlocked(path, state)
+
+
 def mark_dead_worker_terminal(
     path: Path,
     observed: dict[str, Any],
@@ -54,7 +61,7 @@ def mark_dead_worker_terminal(
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker under the writer lock, then persist its final HEAD.
 
-    ``write`` replaces :func:`write_state_unlocked` for a caller with its own record writer.
+    ``write`` replaces the default delegate public-cause sink for a caller with its own record writer.
     """
     with task_state_lock(path):
         try:
@@ -91,7 +98,7 @@ def mark_dead_worker_terminal(
             current["stderr_excerpt"] = (
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
-        (write or write_state_unlocked)(path, current)
+        (write or _write_public_state_unlocked)(path, current)
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)
@@ -125,7 +132,7 @@ def _mark_orphaned_pidless_crashed(
         current["finished_at"] = datetime.now(UTC).isoformat()
         current["returncode_reason"] = reason
         current["stderr_excerpt"] = excerpt(current, prior_status)
-        (write or write_state_unlocked)(path, current)
+        (write or _write_public_state_unlocked)(path, current)
         return current, True
 
 
@@ -191,10 +198,12 @@ def mark_missing_worktree_failed(
     *,
     pid_alive: Callable[[int], bool],
     ledger: OwnershipLedger | None = None,
+    write: Callable[[Path, dict[str, Any]], None] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Recheck a dead worker whose worktree is missing under the writer lock, then mark it failed.
 
     If ledger is provided, releases write claims bound to the observed PID before releasing the lock (#8659).
+    ``write`` replaces the default delegate public-cause sink, as in :func:`mark_dead_worker_terminal`.
     """
     with task_state_lock(path):
         try:
@@ -228,7 +237,7 @@ def mark_missing_worktree_failed(
             current.get("last_error")
             or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
         )
-        write_state_unlocked(path, current)
+        (write or _write_public_state_unlocked)(path, current)
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
             ledger.release(task_id, pid=pid)
