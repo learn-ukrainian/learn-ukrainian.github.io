@@ -25,7 +25,7 @@ from scripts.common.git_context import sanitized_git_env
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
-from scripts.review.record_cf_verdict import BranchFactsError, collect_branch_review_facts
+from scripts.review.record_cf_verdict import BranchFactsError, authorship_exclude_sha, collect_branch_review_facts
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
@@ -425,6 +425,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             # same facts the verdict recorder accepts (#9739). --author-model is
             # added to them, never substituted for them.
             try:
+                raw_base = target_args.get("base")
                 facts = collect_branch_review_facts(
                     repository=args.repository or _checkout_repository(repo_root),
                     repo_root=repo_root,
@@ -434,6 +435,9 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                     owned_paths=tuple(args.owned_path or []),
                     subject_seats=tuple(args.subject_seat or []),
                     subject_families=tuple(args.subject_family or []),
+                    authorship_exclude_sha=authorship_exclude_sha(
+                        repo_root, base_branch=raw_base if isinstance(raw_base, str) else None
+                    ),
                 )
             except (BranchFactsError, CloseoutStateError) as exc:
                 payload = {"selected": None, "fail_closed_reason": f"branch review facts unavailable: {exc}"}

@@ -886,3 +886,108 @@ def test_resolve_reviewer_fails_closed_on_an_unattributed_commit(tmp_path, monke
     assert payload["selected"] is None
     assert "branch review facts unavailable" in payload["fail_closed_reason"]
     assert "missing explicit X-Agent" in payload["fail_closed_reason"]
+
+
+def _point_origin_head(repo) -> None:
+    repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+
+
+def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_path, monkeypatch):
+    """A stale frozen base plus a later main merge must not inherit main's authors (#10009)."""
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="branch author")
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    frozen_base = json.loads(state.read_text(encoding="utf-8"))["target"]["base_sha"]
+
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    head = repo.sha("HEAD")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == frozen_base
+    saved["target"]["head_sha"] = head
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tasks),
+        "--risk",
+        "medium",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["branch_facts"]["existing_families"] == ["anthropic"]
+    assert payload["branch_facts"]["commits"] == 2
+    assert payload["selected"]["name"] == "grok-4.7"
+    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
+    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
+    assert squash != head
+
+
+def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_main(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    saved["target"]["head_sha"] = squash
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "missing explicit X-Agent" in payload["fail_closed_reason"]

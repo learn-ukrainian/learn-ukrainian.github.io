@@ -1823,6 +1823,67 @@ def test_stale_main_base_excludes_merged_main_authors_but_not_branch_authors(rep
     assert set(fact.changed_paths) == {"docs/a.md", "src/app.py"}
 
 
+def test_pr_review_facts_drop_a_main_squash_merged_onto_a_stale_base(repo, tasks, monkeypatch):
+    repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+    stale = repo.sha("origin/main")
+    own = repo.commit(OPUS, message="branch author")
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    head = repo.sha("HEAD")
+    listing = github_listing(repo, stale, head)
+    assert squash in {entry["sha"] for entry in listing}
+
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda _args, **_kwargs: {"baseRefName": "main", "baseRefOid": stale, "headRefOid": head},
+    )
+    monkeypatch.setattr(recorder, "_pages", lambda _request: listing)
+    facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
+    assert facts.existing_families == {"anthropic"}
+    shas = {commit.sha for commit in facts.commits}
+    assert own in shas and squash not in shas
+
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda _args, **_kwargs: {"baseRefName": "release", "baseRefOid": stale, "headRefOid": head},
+    )
+    with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+        recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
+
+
+def test_a_main_merge_with_no_branch_commit_still_refuses(repo, tasks):
+    base = repo.sha("origin/main")
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
+        recorder.collect_branch_review_facts(
+            repository=REPOSITORY,
+            repo_root=repo.root,
+            base_tip_sha=base,
+            head_sha=repo.sha("HEAD"),
+            task_root=tasks,
+            authorship_exclude_sha=squash,
+        )
+
+
+def test_authorship_exclude_sha_is_the_default_tip_only(repo):
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="origin/main") is None
+    repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+    tip = repo.sha("origin/main")
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="origin/main") == tip
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="main") == tip
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="release") is None
+    assert recorder.authorship_exclude_sha(repo.root, base_branch=None) is None
+
+
 @pytest.mark.parametrize("exclude", ["not-a-sha", "a" * 40])
 def test_authorship_exclusion_requires_a_real_commit(repo, tasks, exclude):
     with pytest.raises(recorder.BranchFactsError) as refused:
