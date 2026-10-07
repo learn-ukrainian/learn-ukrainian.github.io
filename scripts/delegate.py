@@ -14969,19 +14969,11 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
 
 def _git_rev_parse_at(cwd: Path, ref: str) -> str | None:
     """The commit ``ref`` names in ``cwd``, or None when it cannot be read. Stderr is discarded."""
-    try:
-        proc = subprocess.run(
-            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired):
+    # Same helper as the other worktree reads, so this probe adds no git spawn.
+    parsed = _run_git_stdout(cwd, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}")
+    if parsed is None or parsed[0] != 0:
         return None
-    sha = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    sha = parsed[1].strip()
     return sha if _AUTHORING_COMMIT_SHA_RE.fullmatch(sha) else None
 
 
