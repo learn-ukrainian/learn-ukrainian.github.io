@@ -198,6 +198,7 @@ from scripts.common.repo_root import main_checkout_root as _main_checkout_root  
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.scratch import (
     DEFAULT_SCRATCH_ROOT,
+    ScratchScanRootError,
     ensure_scratch_root,
     fallback_scratch_root,
     resolve_scratch_root,
@@ -1567,6 +1568,19 @@ def _runtime_tmp_state_has_live_pid(state: dict[str, Any]) -> bool:
         return False
 
 
+def _scratch_scan_roots() -> list[Path]:
+    """Return reaper scan roots, or raise ``ScratchScanRootError`` here.
+
+    A misconfigured ``LU_SCRATCH_SCAN_ROOT`` fails at this dispatch boundary.
+    The error names the variable and the reason, includes no filesystem path,
+    and is not chained to the resolver's traceback.
+    """
+    try:
+        return scratch_scan_roots()
+    except ScratchScanRootError as exc:
+        raise ScratchScanRootError(exc.reason) from None
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1589,7 +1603,7 @@ def _sweep_runtime_tmp_orphans(
     # namespaces still drain.
     namespaces: list[Path] = []
     seen_namespaces: set[Path] = set()
-    for scratch_base in scratch_scan_roots():
+    for scratch_base in _scratch_scan_roots():
         namespace = scratch_base / "learn-ukrainian"
         if namespace in seen_namespaces:
             continue
@@ -1676,8 +1690,10 @@ def _reap_runtime_tmp_lease(
     This is intentionally stricter than a generic ``rm -rf``. It only removes
     a non-symlink direct child of the dispatcher-created namespace and uses
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
-    cleanup into a deletion outside the lease. Any failure is state telemetry,
-    never a worker failure.
+    cleanup into a deletion outside the lease. A filesystem or validation
+    failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    ``ScratchScanRootError`` propagates: a misconfigured scan root is not
+    telemetry, and this function raises it before it deletes the lease.
     """
     result: dict[str, int | str | None] = {
         "tmp_bytes_freed": 0,
@@ -1718,7 +1734,7 @@ def _reap_runtime_tmp_lease(
             # #7164: leases live under the disk-backed fleet scratch root; the
             # legacy tmpfs $TMPDIR namespace stays accepted so pre-change
             # leases can still be reaped. Fallback scratch root is also accepted.
-            accepted_parents = {root.resolve() for root in scratch_scan_roots()}
+            accepted_parents = {root.resolve() for root in _scratch_scan_roots()}
             with contextlib.suppress(OSError):
                 accepted_parents.add(resolve_scratch_root().resolve())
             with contextlib.suppress(OSError):
@@ -1744,6 +1760,8 @@ def _reap_runtime_tmp_lease(
         if os.path.lexists(lease):
             raise OSError(f"runtime tmp lease survived hardened cleanup: {lease}")
         result["tmp_bytes_freed"] = bytes_freed
+    except ScratchScanRootError:
+        raise
     except Exception as exc:
         result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
     if worker_base_root is not None and resolved_lease is not None and not os.path.lexists(resolved_lease):
