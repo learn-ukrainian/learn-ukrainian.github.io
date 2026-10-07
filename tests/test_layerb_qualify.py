@@ -913,15 +913,27 @@ def test_grok_route_self_family_rows_fail_closed() -> None:
         # self-judgment, not a blanket ban on grok-lineage content.
         assert layerb_qualify.route_eligibility(case, gpt)["eligible"] is True, case["case_id"]
 
-    # cursor-Auto is now UNKNOWN (separate from grok, 2026-07-17 routing
-    # decision): it fails closed via UNKNOWN_LINEAGE for EVERY route, not via
-    # the grok self-family guard, and is not eligible for gpt either.
+    # Cursor Auto has an author family, but cannot attest a QG reviewer model:
+    # it fails closed via UNKNOWN_LINEAGE for every route.
     cursor_reviewed = _case("cursor-reviewed-row", "raw")
     cursor_reviewed["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "cursor"}
     for route in (grok, gpt):
         row = layerb_qualify.route_eligibility(cursor_reviewed, route)
         assert row["eligible"] is False, (route.family, row)
         assert row["reason"] == "UNKNOWN_LINEAGE", (route.family, row)
+
+
+@pytest.mark.parametrize("identity", ["cursor", "auto", "cursor:auto", {"family": "cursor", "model": "default"}])
+@pytest.mark.parametrize("field", ["writer_family", "qg_reviewer_family"])
+@pytest.mark.parametrize("family,model", [("grok", "grok-4.7"), ("gpt", "gpt-6.1-sol"),
+    ("claude", "claude-opus-5-5"), ("gemini", "gemini-3.8-flash-high")])
+def test_auto_lineage_is_never_qualified(identity, field, family, model):
+    route = layerb_qualify.EffectiveRoute.from_mapping({**ROUTE.to_dict(), "family": family, "resolved_model": model})
+    case = _case("auto-lineage", "raw")
+    case["lineage"] = {"writer_family": "claude", "qg_reviewer_family": "fixture", field: identity}
+    row = layerb_qualify.route_eligibility(case, route)
+    assert row["eligible"] is False
+    assert row["reason"] == "UNKNOWN_LINEAGE"
 
 
 def test_unknown_route_family_still_refused() -> None:

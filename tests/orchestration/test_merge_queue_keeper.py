@@ -142,7 +142,7 @@ def mutations(fake: FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind != "squash-read"]
 
 
-def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
+def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str = "cross_family") -> dict[str, Any]:
     return {
         "body": build_comment(
             sha=head,
@@ -152,12 +152,33 @@ def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
             model="gpt-6.1-sol",
             family="openai",
             reply="VERDICT: " + verdict,
+            review_mode=review_mode,
         ),
         "user": {"login": "driver"},
         "author_association": "MEMBER",
         "created_at": "2026-09-23T13:00:00Z",
         "updated_at": "2026-09-23T13:00:00Z",
     }
+
+
+def test_prompt_bound_red_team_marker_is_accepted_by_keeper(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", review_mode="red_team")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["enqueue"]
+    assert "reason=ready" in lines[0]
+
+
+def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    item = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", review_mode="red_team")
+    item["body"] = item["body"].replace(" review_mode=red_team", "")
+    fake.comments_rows = [item]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-unknown" in lines[0]
 
 
 def test_queued_legacy_approval_is_report_only(tmp_path: Path) -> None:

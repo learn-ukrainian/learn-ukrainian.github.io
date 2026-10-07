@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record a completed branch-pinned cross-family review on its exact PR head."""
+"""Record a completed branch-pinned cross-family or explicit red-team review."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from learn_ukrainian_v4_runtime.agent_identity import normalize_seat
-from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model
+from learn_ukrainian_v4_runtime.model_families import canonical_cursor_model, is_cursor_auto_selector
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
@@ -47,8 +47,6 @@ from scripts.review.model_catalog import (
     resolve_catalog_model_id,
 )
 from scripts.review.reviewer_resolver import (
-    CURSOR_AUTO_UNION_FAMILIES,
-    CURSOR_AUTO_UNION_FAMILY,
     FORMAL_CURSOR_REVIEW_MODELS,
     REVIEW_CANDIDATES,
     UNKNOWN_AUTHOR_FAMILY,
@@ -252,6 +250,14 @@ class CommitAttribution:
     source: str
 
 
+def _author_model_family(harness: str, model: str) -> str:
+    """Resolve a model in its harness context; only Cursor accepts Auto selectors."""
+    cursor = normalize_seat(harness.strip().lower().removesuffix("-tools")) == "cursor"
+    if is_cursor_auto_selector(model) and not cursor:
+        return UNKNOWN_AUTHOR_FAMILY
+    return resolve_author_family(f"cursor:{model}" if cursor else model)
+
+
 def _attribute_commit(
     entry: dict[str, Any],
     *,
@@ -286,7 +292,7 @@ def _attribute_commit(
         raise RecordError("author model unknown")
     # Cursor has historically required harness-aware resolution; otherwise
     # resolve the model itself before consulting task provenance.
-    family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
+    family = _author_model_family(harness, model)
     source = "trailer-model"
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
         if not TASK_ID.fullmatch(model):
@@ -307,13 +313,15 @@ def _attribute_commit(
                 or not str(author_task.get("agent") or "").startswith(harness)
             ):
                 raise RecordError("author task provenance conflicts with commit trailer")
-            if harness.startswith("cursor"):
+            if harness.startswith("cursor") and is_cursor_auto_selector(author_task.get("model")):
+                author_model = author_task["model"]
+            elif harness.startswith("cursor"):
                 author_model = (
                     author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None
                 )
             else:
                 author_model = author_task.get("model")
-            family = resolve_author_family(str(author_model or ""))
+            family = _author_model_family(harness, str(author_model or ""))
             source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
         elif harness in SINGLE_FAMILY_HARNESSES:
             family = SINGLE_FAMILY_HARNESSES[harness]
@@ -321,7 +329,7 @@ def _attribute_commit(
         else:
             family = UNKNOWN_AUTHOR_FAMILY
             source = "unresolved-author"
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == CURSOR_AUTO_UNION_FAMILY:
+    if family in UNRESOLVED_AUTHOR_FAMILIES:
         # A committed author without a concrete identity is reviewable by any
         # known family (#9944). This does not grant Unknown a reviewer identity.
         family = UNKNOWN_AUTHOR_FAMILY
@@ -403,17 +411,14 @@ class BranchReviewFacts:
 
     @property
     def author_families(self) -> frozenset[str]:
-        """Every committed author family plus the incoming writer's (the Cursor Auto union stays one token)."""
+        """Every committed author family plus the incoming writer's (Cursor Auto stays its own family)."""
         incoming = frozenset({self.incoming_family}) if self.incoming_family else frozenset()
         return self.existing_families | incoming
 
     @property
     def excluded_families(self) -> frozenset[str]:
-        """``author_families`` with the Cursor Auto union expanded to its member families."""
-        expanded = set(self.author_families - {CURSOR_AUTO_UNION_FAMILY})
-        if CURSOR_AUTO_UNION_FAMILY in self.author_families:
-            expanded |= CURSOR_AUTO_UNION_FAMILIES
-        return frozenset(expanded)
+        """Every author family excluded from review, including Cursor Auto's own family."""
+        return self.author_families
 
     @property
     def scope_paths(self) -> tuple[str, ...]:
@@ -524,13 +529,12 @@ def _read_commit_entries(repo_root: Path, shas: list[str], *, deadline: float) -
 def incoming_writer_family(agent: str, model: str | None) -> str:
     """The family an incoming writer adds, resolved like a committed ``X-Agent: <agent>/<model>`` trailer.
 
-    Cursor Auto resolves to the {xAI, Moonshot} union token (A5): its concrete
-    model is unknown until the runtime attests it. Raises ``BranchFactsError``
+    Cursor Auto resolves to its own Cursor family. Raises ``BranchFactsError``
     when the family is unknown.
     """
     harness = str(agent or "").strip().lower()
     concrete = str(model or "").strip()
-    family = resolve_author_family(f"cursor:{concrete}" if harness == "cursor" else concrete)
+    family = _author_model_family(harness, concrete)
     if (family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown") and harness in SINGLE_FAMILY_HARNESSES:
         family = SINGLE_FAMILY_HARNESSES[harness]
     if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
@@ -702,7 +706,9 @@ def _task_flag_values(task: dict[str, Any], key: str) -> tuple[str, ...]:
     return tuple(value)
 
 
-def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any], model: str, family: str) -> None:
+def _require_qualified_reviewer(
+    facts: BranchReviewFacts, *, task: dict[str, Any], model: str, family: str, review_mode: str = "cross_family"
+) -> None:
     """Evaluate the actual reviewer against the resolver's rules on the branch facts (AC-01).
 
     Protected seats and the risk floor bind as in selection; the reviewer need
@@ -729,7 +735,7 @@ def _require_qualified_reviewer(facts: BranchReviewFacts, *, task: dict[str, Any
     if not candidates:
         raise RecordError(f"reviewer not qualified: {agent}/{model} is not a catalog review candidate")
     inputs = facts.resolver_inputs(risk=str(task.get("review_risk") or "medium"), review_profile=profile)
-    results = [evaluate_candidate(candidate, inputs) for candidate in candidates]
+    results = [evaluate_candidate(candidate, inputs, review_mode=review_mode) for candidate in candidates]
     if not any(result.status == "eligible" for result in results):
         reasons = "; ".join(sorted({str(result.reason) for result in results}))
         raise RecordError(f"reviewer not qualified for this branch: {reasons}")
@@ -759,13 +765,23 @@ def sha_lock(repository: str, sha: str, lock_root: Path):
             fcntl.flock(lock_file, fcntl.LOCK_UN)
 
 
-def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str) -> str:
+def build_comment(
+    *, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str,
+    review_mode: str = "cross_family",
+) -> str:
+    if review_mode not in {"cross_family", "red_team"}:
+        raise RecordError("unsupported review mode")
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
-    marker = f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} model={model} family={family} -->"
+    mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
+    marker = (
+        f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
+        f"model={model} family={family}{mode_field} -->"
+    )
     prefix = (
-        "### Cross-family review\n"
-        f"head: {sha}\n"
+        ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
+        + ("Review mode: red_team\n" if review_mode == "red_team" else "")
+        + f"head: {sha}\n"
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
         f"Reviewer model: {model}\n"
@@ -922,12 +938,30 @@ def _require_formal_reviewer(
 
 @publication_boundary(RecordError)
 def record(
-    task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None
+    task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None,
+    review_mode: str | None = None, red_team_prompt: Path | None = None,
 ) -> dict[str, Any]:
     root = _repo_root() if task_root is None or lock_root is None else None
     task_root = task_root or root / "batch_state" / "tasks"
     lock_root = lock_root or root / "batch_state" / "locks"
     task, reply = _task(task_id, task_root)
+    review_mode = review_mode if review_mode is not None else task.get("review_mode", "cross_family")
+    if not isinstance(review_mode, str) or review_mode not in {"cross_family", "red_team"}:
+        raise RecordError("unsupported review mode")
+    if task.get("review_mode", review_mode) != review_mode:
+        raise RecordError("review mode conflicts with task")
+    if review_mode == "red_team":
+        try:
+            prompt = red_team_prompt.read_text(encoding="utf-8") if red_team_prompt is not None else ""
+        except (OSError, UnicodeError) as exc:
+            raise RecordError("red-team prompt unavailable") from exc
+        if not re.search(r"\bred[-_ ]team\b", prompt, re.IGNORECASE):
+            raise RecordError("explicit adversarial red-team prompt required")
+        digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        if digest not in (task.get("prompt_sha256"), task.get("effective_prompt_sha256")):
+            raise RecordError("red-team prompt digest does not match completed review task")
+    elif red_team_prompt is not None:
+        raise RecordError("red-team prompt requires review_mode=red_team")
     repository = task.get("repository")
     branch = task["worktree_branch"]
     sha = task.get("worktree_base_sha")
@@ -982,14 +1016,15 @@ def record(
     )
     if not facts.existing_families:
         raise RecordError("PR has no attributed author commits")
-    if family in facts.excluded_families:
+    if family in facts.excluded_families and review_mode != "red_team":
         raise RecordError("reviewer family equals an author family")
-    _require_qualified_reviewer(facts, task=task, model=model, family=family)
+    _require_qualified_reviewer(facts, task=task, model=model, family=family, review_mode=review_mode)
     adapter = GitHubAdapter(Path.cwd())
     login = adapter.identity()
     reply = repository_relative_reply(reply, task=task, primary_root=root or _repo_root())
     comment = build_comment(
-        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply
+        sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply,
+        review_mode=review_mode,
     )
     posted = False
     with sha_lock(repository, sha, lock_root):
@@ -1022,6 +1057,7 @@ def record(
                         or marker["verdict"] != verdict
                         or marker["model"] != model
                         or marker["family"] != family
+                        or marker.get("review_mode", "cross_family") != review_mode
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -1061,6 +1097,7 @@ def record(
         "head": sha,
         "task": task_id,
         "verdict": verdict,
+        "review_mode": review_mode,
         "comment": "posted" if posted else "existing",
         "status": status,
     }
@@ -1069,15 +1106,24 @@ def record(
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.",
+        description="Publish a completed exact-head verdict; cross-family is the default.\n"
+                    "Use after the reviewer exits; same-family needs an explicit prompt-bound red-team review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297",
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\n"
+               "  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1 "
+               "--review-mode red_team --red-team-prompt brief.md\n"
+               "Outputs: GitHub review comment and commit status; JSON publication receipt on stdout.\n"
+               "Exit codes: 0: recorded; 1: refused or status publication failed.\nRelated: #9297, #9951",
     )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
+    parser.add_argument("--review-mode", choices=("cross_family", "red_team"),
+                        help="Review mode (default: task review_mode, otherwise cross_family); red_team permits same-family")
+    parser.add_argument("--red-team-prompt", type=Path,
+                        help="Prompt file used by the completed red-team task; required for red_team, default: none")
     args = parser.parse_args(argv)
     try:
-        result = record(args.task_id, pr_number=args.pr)
+        result = record(args.task_id, pr_number=args.pr, review_mode=args.review_mode, red_team_prompt=args.red_team_prompt)
     except (RecordError, SweepError, ValueError) as exc:
         print(f"CF verdict refused: {exc}")
         return 1

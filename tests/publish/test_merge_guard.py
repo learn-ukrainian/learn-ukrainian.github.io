@@ -50,6 +50,18 @@ def test_empty_json_check_list_with_exit_code_1_is_refused():
 def test_failing_advisory_check_with_exit_code_1_allows_merge():
     checks = [
         {"name": "CI Gate", "bucket": "pass"},
-        {"name": "Lint (advisory)", "bucket": "fail"},
+        {"name": "Component shadow (advisory)", "bucket": "fail", "workflow": "CI"},
     ]
     assert merge_with_checks(json.dumps(checks), returncode=1) == "a" * 40
+
+
+@pytest.mark.parametrize("identity", [
+    {}, {"workflow": None}, {"workflow": ""}, {"workflow": "Nightly"}, {"workflowName": "CI"},
+])
+def test_failing_advisory_name_without_ci_workflow_blocks_merge(identity):
+    checks = [
+        {"name": "CI Gate", "bucket": "pass"},
+        {"name": "Component shadow (advisory)", "bucket": "fail", **identity},
+    ]
+    with pytest.raises(PublishBlocked, match=r"merge refused: FAILING checks\."):
+        merge_with_checks(json.dumps(checks), returncode=1)
