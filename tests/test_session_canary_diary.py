@@ -139,7 +139,14 @@ def test_score_fail_writes_handback(tmp_path: Path, monkeypatch) -> None:
         stdout = "SCORE 6/10 (failed)\n"
         stderr = ""
 
-    monkeypatch.setattr(gl.subprocess, "run", lambda *a, **k: FakeProc())
+    real_run = gl.subprocess.run
+
+    def run_scorer(command, *args, **kwargs):
+        if len(command) > 1 and str(command[1]).endswith("context_canary.py"):
+            return FakeProc()
+        return real_run(command, *args, **kwargs)
+
+    monkeypatch.setattr(gl.subprocess, "run", run_scorer)
     monkeypatch.setattr(
         "scripts.session_canary.diary.resolve_handoff_path",
         lambda repo, epic, override=None, preferred=None: handoff,
