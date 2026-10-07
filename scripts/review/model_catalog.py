@@ -90,12 +90,10 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 )
 CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
-CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
+CURSOR_AUTO_EXPECTED_RESOLUTION: str = "cursor_family"
 # Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
 # task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
-# Values that ask Cursor to choose the model instead of naming one.
-_CURSOR_SELECTOR_MODELS = frozenset({"auto", "default"})
 # Typed refusal reasons for Cursor model selection.
 CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
 CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
@@ -991,20 +989,6 @@ def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedEx
     )
 
 
-def is_cursor_auto_selector(model: Any) -> bool:
-    """True when ``model`` asks Cursor to choose the model (Auto) instead of naming one.
-
-    Matches case-insensitively, with or without a ``cursor:`` or ``cursor/`` prefix.
-    ``None`` and an empty value are not selectors: the Cursor adapter pins its
-    default model when none is given.
-    """
-    text = str(model or "").strip().casefold()
-    for prefix in ("cursor:", "cursor/"):
-        if text.startswith(prefix):
-            text = text[len(prefix) :]
-    return text in _CURSOR_SELECTOR_MODELS
-
-
 def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     seat = (catalog or load_model_catalog())["orchestrator_seats"]["cursor"]
@@ -1033,6 +1017,19 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
     if text not in pins:
         return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
     return None
+
+
+def is_cursor_auto_selector(model: Any) -> bool:
+    """Recognize Cursor selectors without depending on the installed runtime.
+
+    Catalog lint and shell launchers also load this module before runtime
+    installation. Keep this predicate aligned with runtime model_families.
+    """
+    text = str(model or "").strip().casefold()
+    for prefix in ("cursor:", "cursor/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+    return text in {"auto", "default"}
 
 
 def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:

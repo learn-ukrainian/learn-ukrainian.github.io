@@ -137,7 +137,7 @@ def test_seat_key_is_canonical_not_python_dict_order() -> None:
 def test_normalize_lineage_family_uses_canonical_vendor_families() -> None:
     # Single source of truth: layer-B now agrees with the live dispatcher on
     # every token (see test_model_families for the cross-layer agreement
-    # table). grok/cursor are SEPARATE; cursor-Auto is UNKNOWN (None here).
+    # table). grok/cursor are SEPARATE; Cursor Auto has its own family.
     cases = (
         ({"family": "deepseek", "pin": "openrouter/deepseek/deepseek-v4-flash"}, "deepseek"),
         ({"family": "google", "pin": "openrouter/google/gemma-4-31b-it"}, "google"),
@@ -148,8 +148,8 @@ def test_normalize_lineage_family_uses_canonical_vendor_families() -> None:
         ({"family": "grok", "pin": "grok-4"}, "xai"),
         # cursor seat with a pinned model inherits the pin's family.
         ({"family": "cursor", "pin": "grok-4"}, "xai"),
-        # cursor-Auto (no pin) is UNKNOWN -> None at the compatibility seam.
-        ({"family": "cursor"}, None),
+        # Cursor Auto has its own family without a concrete pin.
+        ({"family": "cursor"}, "cursor"),
         ("adversarial-fixture", "fixture"),
         # Ambiguous concrete signals fail closed.
         ({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"}, None),
@@ -188,8 +188,7 @@ def test_route_selection_ignores_adversarial_fixture_reviewer_marker() -> None:
 
 
 def test_route_selection_excludes_grok_xai_and_cursor_routes() -> None:
-    # grok/xai is never a QG judge seat; cursor-Auto is UNKNOWN and thus
-    # unsatisfiable. Both drop out, leaving the cross-family claude route.
+    # Grok and Cursor Auto remain ineligible as QG judge identities.
     grok = JudgeRoute("grok", "grok-2")
     cursor = JudgeRoute("cursor", "cursor-fast")
     claude = JudgeRoute("claude", "claude-opus-4-6")

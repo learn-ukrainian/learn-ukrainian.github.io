@@ -10417,7 +10417,7 @@ def _run_worker(
                         from scripts.agent_runtime import kimi_boundary
 
                         kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
-                    from scripts.review.model_catalog import is_cursor_auto_selector
+                    from learn_ukrainian_v4_runtime.model_families import is_cursor_auto_selector
 
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),

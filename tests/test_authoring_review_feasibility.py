@@ -313,12 +313,17 @@ GROK_RECEIPT = {
     "agent,model,review",
     [("claude", "claude-opus-5-5", {}), ("codex", "gpt-6.1-sol", {}), ("cursor", "grok-4.7-high", GROK_RECEIPT)],
 )
-def test_unknown_author_records_a_known_family_verdict(repo, tasks, monkeypatch, tmp_path, trailer, agent, model, review):
+def test_auto_and_unknown_authors_preserve_review_independence(repo, tasks, monkeypatch, tmp_path, trailer, agent, model, review):
     task_record(tasks, "unattested", agent="cursor", resolved_model_known=False, resolved_model="unknown")
     task_record(tasks, "unrecognized", agent="codex", model="not-a-catalog-model")
     head = repo.commit(trailer)
     repo.publish()
-    assert facts(repo, tasks).existing_families == {"unknown"}
+    expected = "cursor" if trailer == "cursor/auto" else "unknown"
+    assert facts(repo, tasks).existing_families == {expected}
+    if expected == "cursor" and agent == "cursor":
+        with pytest.raises(recorder.RecordError, match="Cursor-authored work"):
+            record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
+        return
     receipt = record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
     assert receipt["head"] == head and receipt["verdict"] == "APPROVED"
     assert receipt["comment"] == "posted" and receipt["status"] == "posted"
@@ -429,16 +434,16 @@ def test_incoming_family_joins_the_authors(repo, tasks):
     assert selected(facts(repo, tasks, writer="claude/claude-sonnet-5-5"), "critical") == "openai_frontier"
 
 
-def test_cursor_auto_incoming_writer_is_the_xai_moonshot_union(repo, tasks):
+def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
     repo.commit(OPUS)
     repo.commit(SOL)
     auto = facts(repo, tasks, writer="cursor/auto")
 
-    assert auto.incoming_family == "cursor-auto-union"
-    assert auto.excluded_families == {"anthropic", "openai", "xai", "moonshot"}
-    # Without Auto the Cursor Grok seat reviews at medium; with it, nothing remains.
+    assert auto.incoming_family == "cursor"
+    assert auto.excluded_families == {"anthropic", "openai", "cursor"}
+    # Native Grok remains eligible when Cursor Auto joins the authors.
     assert selected(facts(repo, tasks, writer=OPUS), "medium") == "grok-4.7"
-    assert selected(auto, "medium") is None
+    assert selected(auto, "medium") == "grok-4.7"
 
 
 @pytest.mark.parametrize(
@@ -449,7 +454,7 @@ def test_cursor_auto_incoming_writer_is_the_xai_moonshot_union(repo, tasks):
     ],
 )
 def test_committed_cursor_authorship_is_unknown_without_runtime_attestation(repo, tasks, record, attributed):
-    task_record(tasks, "run", agent="cursor", model="auto", **record)
+    task_record(tasks, "run", agent="cursor", model="grok-4.7-high", **record)
     repo.commit("cursor/run")
     if attributed:
         assert facts(repo, tasks).existing_families == {"anthropic"}
@@ -937,6 +942,7 @@ def test_new_protected_branch_refuses_an_author_whose_reviewer_is_the_governed_s
 def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boundary, capsys, repo, tasks, monkeypatch):
     repo.commit(OPUS)
     repo.commit(SOL)
+    repo.commit(GROK)
     repo.publish()
     pass_card = {"issues": [9739], "warnings": {}, "allow_warn_reason": None}
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_args, **_kwargs: (None, pass_card))
@@ -958,7 +964,7 @@ def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boun
         ),
         delegate.AUTHORING_REVIEW_NO_ROUTE,
     )
-    assert receipt["incoming_family"] == "cursor-auto-union"
+    assert receipt["incoming_family"] == "cursor"
 
 
 @pytest.mark.parametrize(
@@ -1064,8 +1070,9 @@ def test_branch_fix_writer_is_admitted_with_unknown_committed_author(
         rc, before = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run")
     assert rc == 0, capsys.readouterr().err
     admission = dry_run_admission(tasks)
-    assert admission["existing_families"] == ["unknown"]
-    assert admission["author_families"] == ["anthropic", "unknown"]
+    expected = "cursor" if trailer == "cursor/auto" else "unknown"
+    assert admission["existing_families"] == [expected]
+    assert admission["author_families"] == ["anthropic", expected]
     assert admission["reviewer"]["name"] == "openai_frontier" and admission["head_sha"] == head
     assert repo.snapshot() == before and boundary.calls == []
 

@@ -37,18 +37,28 @@ def test_denominator_admission_and_independence(profile, risk, author, health):
     inputs = ResolverInputs(author_model=author, risk=risk, review_profile=profile, routing_snapshot=snapshot)
     resolution = resolve_reviewer(inputs)
     assert resolution.selected is not None
-    if author in {"grok-4.7", "cursor:auto"}:
+    if author == "grok-4.7":
         assert resolution.selected.family not in {"xai", "moonshot"}
+    if author == "cursor:auto":
+        assert resolution.selected.family != "cursor"
+        assert resolution.selected.route != "cursor"
     if author == "gpt-6.1-sol":
         assert resolution.selected.family != "openai"
     for name in GROK_SEATS:
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
-        excluded = author in {"grok-4.7", "cursor:auto"} or (author == "composer-2.5" and name == GROK_SEAT) or health == "both_dark" or (
+        excluded = author == "grok-4.7" or (author in {"composer-2.5", "cursor:auto"} and name == GROK_SEAT) or health == "both_dark" or (
             name == "grok-4.7" and health == "native_dark"
         )
         assert result.status == ("excluded" if excluded else "eligible")
-        if author in {"grok-4.7", "cursor:auto"}:
+        if author == "grok-4.7":
             assert "same family as author" in result.reason or "union" in result.reason
+        elif author == "cursor:auto":
+            if health != "healthy":
+                assert "unhealthy" in result.reason or "Cursor-as-reviewer" in result.reason
+            elif name == GROK_SEAT:
+                assert "Cursor-as-reviewer" in result.reason
+            else:
+                assert result.family == "xai"
 
 
 @pytest.mark.parametrize("risk", RISKS)
@@ -298,12 +308,17 @@ def _all_catalog_roles() -> list[str]:
 
 
 @pytest.mark.parametrize("role", _all_catalog_roles())
-def test_requested_roles_preserve_grok_self_review_exclusion_at_critical(role):
+def test_requested_roles_preserve_author_independence_at_critical(role):
     for author in ("grok-4.7", "cursor:auto"):
         for name in GROK_SEATS:
             result = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", requested_role=role, pinned_candidate=name, pressure_override_reason="self-review probe"))
-            assert result.selected is None
-            assert next(entry for entry in result.trace if entry.name == name).status == "excluded"
+            excluded = author == "grok-4.7" or name == GROK_SEAT or role not in REVIEW_CANDIDATES[name].model_roles
+            if excluded:
+                assert result.selected is None
+                assert next(entry for entry in result.trace if entry.name == name).status == "excluded"
+            else:
+                assert result.selected.name == "grok-4.7"
+                assert result.selected.family == "xai"
 
 
 @pytest.mark.parametrize("role", _all_catalog_roles())

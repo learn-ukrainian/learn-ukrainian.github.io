@@ -233,6 +233,145 @@ def test_same_family_refused(monkeypatch, tmp_path):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
 
 
+def red_team_task(tasks, tmp_path, *, prompt="Adversarial red-team review: find failures and missing tests.", **updates):
+    path = tmp_path / "red-team.md"
+    path.write_text(prompt, encoding="utf-8")
+    write_task(tasks, review_mode="red_team", prompt_sha256=hashlib.sha256(prompt.encode()).hexdigest(), **updates)
+    return path
+
+
+@pytest.mark.parametrize("families", [{"openai"}, {"google", "openai"}, {"cursor", "openai"}, {"unknown", "openai"}])
+def test_same_family_red_team_records_and_reconciles(monkeypatch, tmp_path, families):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families=families)
+    prompt = red_team_task(tasks, tmp_path)
+    for expected in ("posted", "existing"):
+        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                                 red_team_prompt=prompt)
+        assert result["comment"] == expected
+        assert result["review_mode"] == "red_team"
+    assert calls == {"posts": 1, "statuses": 2}
+    body = comments[0]["body"]
+    assert body.startswith("### Adversarial red-team review\nReview mode: red_team\n")
+    assert body.endswith("review_mode=red_team -->")
+    from scripts.orchestration.integration_sweep import lookup_verdict
+
+    verdict = lookup_verdict(comments, SHA, "fleet")
+    assert verdict.state == "APPROVED"
+    assert verdict.review_mode == "red_team"
+
+
+@pytest.mark.parametrize("case", ["missing", "unreadable", "ordinary", "digest_mismatch", "unbound", "mode_conflict"])
+def test_red_team_prompt_required_and_bound_before_publication(monkeypatch, tmp_path, case):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    options = {"red_team_prompt": prompt}
+    if case == "missing":
+        options = {}
+    elif case == "unreadable":
+        options["red_team_prompt"] = tmp_path / "missing.md"
+    elif case == "ordinary":
+        prompt = red_team_task(tasks, tmp_path, prompt="Review the patch.")
+    elif case == "digest_mismatch":
+        prompt.write_text("A different red-team prompt.")
+    elif case == "unbound":
+        write_task(tasks, review_mode="red_team")
+    else:
+        options["review_mode"] = "cross_family"
+    with pytest.raises(recorder.RecordError, match=r"prompt|mode conflicts"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", **options)
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_explicit_red_team_flag_accepts_legacy_task_with_bound_prompt(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(tasks, prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                    review_mode="red_team", red_team_prompt=prompt)
+    assert "review_mode=red_team" in comments[0]["body"]
+
+
+def test_red_team_effective_prompt_digest_is_supported(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path, families={"openai"})
+    prompt = red_team_task(tasks, tmp_path)
+    write_task(tasks, review_mode="red_team", prompt_sha256="b" * 64,
+               effective_prompt_sha256=hashlib.sha256(prompt.read_bytes()).hexdigest())
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert "review_mode=red_team" in comments[0]["body"]
+
+
+@pytest.mark.parametrize("mode", ["anything", None, {}, []])
+def test_invalid_task_review_mode_refuses_before_publication(monkeypatch, tmp_path, mode):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, review_mode=mode)
+    with pytest.raises(recorder.RecordError, match="unsupported review mode"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+def test_red_team_prompt_does_not_implicitly_enable_mode(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    prompt = tmp_path / "red-team.md"
+    prompt.write_text("Adversarial red-team review.")
+    with pytest.raises(recorder.RecordError, match="requires review_mode=red_team"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert comments == []
+
+
+def test_cli_forwards_explicit_red_team_arguments(monkeypatch, tmp_path, capsys):
+    seen = {}
+
+    def fake_record(task_id, **kwargs):
+        seen.update(task_id=task_id, **kwargs)
+        return {"status": "posted", "review_mode": "red_team"}
+
+    monkeypatch.setattr(recorder, "record", fake_record)
+    prompt = tmp_path / "red-team.md"
+    assert recorder.main(["--task-id", "review-one", "--pr", "42", "--review-mode", "red_team",
+                          "--red-team-prompt", str(prompt)]) == 0
+    assert seen == {"task_id": "review-one", "pr_number": 42, "review_mode": "red_team", "red_team_prompt": prompt}
+    assert json.loads(capsys.readouterr().out)["review_mode"] == "red_team"
+
+
+@pytest.mark.parametrize("model", ["unknown@local.invalid", "LU Unknown", "auto"])
+def test_unknown_red_team_reviewer_cannot_self_certify(monkeypatch, tmp_path, model):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"unknown"})
+    prompt = red_team_task(tasks, tmp_path, model=model)
+    with pytest.raises(recorder.RecordError, match=r"reviewer (model|family) unknown|reviewer not qualified"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                        red_team_prompt=prompt)
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("scope", ["subject", "risk"])
+def test_red_team_keeps_qualification_gates(monkeypatch, tmp_path, scope):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    if scope == "subject":
+        monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts_for({"openai"}, subject_seats={"codex"}))
+        updates = {}
+    else:
+        monkeypatch.setattr(recorder, "pr_review_facts", lambda *a, **k: facts_for({"anthropic"}))
+        updates = {"agent": "claude", "model": "claude-sonnet-5-5", "review_risk": "critical"}
+    prompt = red_team_task(tasks, tmp_path, **updates)
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks",
+                        red_team_prompt=prompt)
+    assert comments == []
+
+
+def test_rerecording_same_task_in_another_mode_refuses(monkeypatch, tmp_path):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    prompt = red_team_task(tasks, tmp_path)
+    with pytest.raises(recorder.RecordError, match="edited or conflicts"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks", red_team_prompt=prompt)
+    assert len(comments) == 1
+    assert calls == {"posts": 1, "statuses": 1}
+
+
 def test_rerun_same_task_reconciles_status_without_new_comment(monkeypatch, tmp_path):
     tasks, comments, calls = setup_record(monkeypatch, tmp_path)
     first = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
@@ -957,13 +1096,42 @@ def test_unknown_harness_model_is_retained(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
-def test_committed_cursor_auto_family_is_unknown(monkeypatch, tmp_path):
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+def test_committed_cursor_auto_family_is_cursor(monkeypatch, tmp_path, selector):
     monkeypatch.setattr(
         recorder,
         "_pages",
-        lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/auto"}}],
+        lambda args: [{"commit": {"message": f"work\n\nX-Agent: cursor/{selector.strip()}"}}],
     )
-    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"cursor"}
 
 
 def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
@@ -1417,7 +1585,7 @@ def test_an_attested_composer_receipt_is_refused_because_the_resolver_never_sele
     [
         ({"resolved_model": "Composer 2.5", "resolved_model_known": False}, "Cursor reviewer model unknown"),
         ({"resolved_model": "Composer 2.5"}, "Cursor reviewer model unknown"),
-        ({"resolved_model": "auto", "resolved_model_known": True}, "reviewer family unknown"),
+        ({"resolved_model": "auto", "resolved_model_known": True}, "reviewer model unknown"),
         ({"resolved_model": "unknown", "resolved_model_known": True}, "reviewer family unknown"),
         ({"resolved_model": "unattested-harness", "resolved_model_known": True}, "reviewer family unknown"),
         ({"resolved_model": "", "resolved_model_known": True}, "reviewer model unknown"),
@@ -1826,3 +1994,81 @@ def test_attested_native_grok_refuses_xai_and_unknown_auto_authors(monkeypatch, 
     with pytest.raises(recorder.RecordError, match="reviewer family equals an author family"):
         recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
     assert comments == []
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+@pytest.mark.parametrize("resolved", [None, "Grok 4.7 256K High"])
+def test_cursor_auto_task_attribution_preserves_selector(monkeypatch, tmp_path, selector, resolved):
+    tasks = tmp_path / "tasks"
+    write_task(
+        tasks,
+        task_id="author-auto",
+        agent="cursor",
+        model=selector,
+        resolved_model_known=resolved is not None,
+        resolved_model=resolved,
+    )
+    monkeypatch.setattr(
+        recorder, "_pages", lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/author-auto"}}]
+    )
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"cursor"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped", "grok", "codex"])
+@pytest.mark.parametrize("selector", ["auto", "DEFAULT"])
+def test_non_cursor_auto_author_attribution_stays_unknown(monkeypatch, tmp_path, harness, selector):
+    monkeypatch.setattr(recorder, "_pages", lambda args: [
+        {"commit": {"message": f"work\n\nX-Agent: {harness}/{selector}"}}
+    ])
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
+@pytest.mark.parametrize("selector", ["auto", "cursor/default"])
+def test_non_cursor_auto_task_record_stays_unknown(monkeypatch, tmp_path, harness, selector):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-selector", agent=harness, model=selector)
+    monkeypatch.setattr(recorder, "_pages", lambda args: [
+        {"commit": {"message": f"work\n\nX-Agent: {harness}/author-selector"}}
+    ])
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"unknown"}
+
+
+@pytest.mark.parametrize("harness", ["ox-alpha", "acp", "unmapped"])
+def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
+    with pytest.raises(recorder.BranchFactsError, match="incoming writer family unknown"):
+        recorder.incoming_writer_family(harness, "auto")
+
+
+@pytest.mark.parametrize("harness", ["cursor", "cursor-tools", "Cursor"])
+@pytest.mark.parametrize("selector", ["auto", "default", "cursor:auto", "cursor/default"])
+def test_cursor_auto_harness_aliases_keep_cursor_family(harness, selector):
+    assert recorder._author_model_family(harness, selector) == "cursor"

@@ -1866,7 +1866,7 @@ def test_trusted_review_of_an_unattributed_branch_refuses(tmp_path, monkeypatch)
 @pytest.mark.parametrize(
     "agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("cursor", "grok-4.7-high")]
 )
-def test_pr_pinned_review_admits_known_family_for_unknown_author(tmp_path, monkeypatch, trailer, author_model, agent, model):
+def test_pr_pinned_review_admits_independent_routes_for_cursor_author(tmp_path, monkeypatch, trailer, author_model, agent, model):
     from scripts.review import target_resolution
     from tests.test_authoring_review_feasibility import mini_repo
 
@@ -1889,8 +1889,12 @@ def test_pr_pinned_review_admits_known_family_for_unknown_author(tmp_path, monke
         "--review-author-model", author_model, "--review-risk", "medium",
     )
     refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
-    assert refusal is None and (target.recipient, target.model) == (agent, model)
-    assert args._review_admission_head == head
+    cursor_author = trailer == "cursor/auto" or author_model == "cursor:auto"
+    if agent == "cursor" and cursor_author:
+        assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+    else:
+        assert refusal is None and (target.recipient, target.model) == (agent, model)
+        assert args._review_admission_head == head
 
 
 def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, monkeypatch):
