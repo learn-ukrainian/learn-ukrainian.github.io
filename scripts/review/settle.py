@@ -648,6 +648,12 @@ def _source(entry: dict[str, Any]) -> str | None:
     return authority
 
 
+def _rejected_call(record: dict[str, Any]) -> bool:
+    """A sources call the server rejected, including invalid input (#9979)."""
+    facts = record.get("outcome_facts")
+    return isinstance(facts, dict) and facts.get("status") == "error"
+
+
 def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path) -> tuple[str, list[str]]:
     """Validate structure only; never decide whether quoted evidence supports a claim."""
     manifest = yaml.safe_load(manifest_bytes)
@@ -718,6 +724,8 @@ def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path)
         receipt, record = citation({"receipt": value["receipt"], "quote": value["quote"]})
         if receipt in searches.values() or record["tool"] not in SEARCH_TOOLS[category]:
             raise SettleError("broadened search receipt is duplicated or uses the wrong tool")
+        if _rejected_call(record):
+            raise SettleError("rejected call cannot count as a broadened search")
         if category == "style_prose" and record.get("arguments", {}).get("source_file") != (
             "antonenko-davydovych-yak-my-hovorymo"
         ):
@@ -727,6 +735,7 @@ def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path)
     if outcome in {"supported_defect", "refuted"} and not any(
         record.get("status") == "ok"
         and record.get("tool") != "search_definitions"
+        and not _rejected_call(record)
         and record.get("outcome_facts", {}).get("hits", 0) > 0
         for _, record in evidence
     ):
@@ -735,7 +744,9 @@ def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path)
         sources = {
             _source(record)
             for _, record in evidence
-            if record.get("status") == "ok" and record.get("outcome_facts", {}).get("hits", 0) > 0
+            if record.get("status") == "ok"
+            and not _rejected_call(record)
+            and record.get("outcome_facts", {}).get("hits", 0) > 0
         }
         sources.discard(None)
         if len(sources) < 2:

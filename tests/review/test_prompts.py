@@ -525,6 +525,15 @@ def test_check_and_render_fail_on_unauthorized_file_read(tmp_path: Path, monkeyp
     assert any("unauthorized_file_read" in err for err in res.errors)
 
 
+# The continuation line is not on the SUM-11/search_definitions line, so a
+# line-scoped source guard can miss a weakened clause. Pin both lines together
+# in every rendered lesson prompt (#9979).
+_SUM11_NEVER_SETTLES = (
+    "`search_definitions` (SUM-11) is available for Sovietization context only;\n"
+    "it can never settle meaning, norm or stress."
+)
+
+
 # ---------------------------------------------------------------------------
 # Acceptance 3: Required rules and sections in rendered text
 # ---------------------------------------------------------------------------
@@ -560,8 +569,7 @@ def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path
         "search_definitions",
     ):
         assert f"`{tool}`" in rendered
-    assert "Sovietization context only" in rendered
-    assert "it can never settle meaning, norm or stress" in rendered
+    assert _SUM11_NEVER_SETTLES in rendered
     assert "verify_stress" in rendered
 
     for tool in REVIEW_TOOLS:
@@ -702,6 +710,7 @@ def test_lesson_rereview_prompt_rendering_and_check(tmp_path: Path, monkeypatch:
 
     rendered, _prompt_sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
 
+    assert _SUM11_NEVER_SETTLES in rendered
     assert "Previous Attempt ID: attempt-1" in rendered
     assert "### Diff from Previous Attempt" in rendered
     assert "### Previous Findings" in rendered

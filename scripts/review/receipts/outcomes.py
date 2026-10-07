@@ -363,6 +363,29 @@ def _classify_tool_hits(tool: str, text: str, parsed: Any | None) -> int:
     return 1 if text.strip() else 0
 
 
+_REJECTED_CALL = {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
+
+
+def _is_invalid_input(text: str, parsed: object) -> bool:
+    """True when a sources handler rejected the call instead of searching.
+
+    Handlers say this as a line beginning ``invalid_input:``, as the stress
+    summary ``<word> — invalid_input:``, or as JSON ``error_code`` / ``status``.
+    A rejected call is not a miss and must not fall through to the hit fallback.
+    """
+    if isinstance(parsed, dict):
+        if parsed.get("error_code") == "invalid_input" or parsed.get("status") == "invalid_input":
+            return True
+        error = parsed.get("error")
+        if isinstance(error, str) and error.lstrip().startswith("invalid_input:"):
+            return True
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("invalid_input:") or "\u2014 invalid_input:" in stripped:
+            return True
+    return False
+
+
 def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     """Derive structured outcome_facts from tool call status and result text/JSON."""
     if status == "error":
@@ -373,6 +396,11 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     text = result if isinstance(result, str) else ""
     stripped = text.strip()
     parsed = _extract_json(text)
+
+    # Before unavailable markers and the hit fallback: an invalid-input
+    # rejection is a rejected call with zero hits, never evidence (#9979).
+    if _is_invalid_input(text, parsed):
+        return dict(_REJECTED_CALL)
 
     if tool == "search_resources" and "Resource catalogue ingestion is required before searching resources." in text:
         return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}

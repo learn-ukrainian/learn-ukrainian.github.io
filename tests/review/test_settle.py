@@ -1248,6 +1248,40 @@ def test_sum11_cannot_settle_language_authority(world, facet, outcome):
         settle.validate_reply(world.reply(outcome, evidence), world.manifest.read_bytes(), world.own_ledger)
 
 
+def test_invalid_input_receipt_cannot_settle(world):
+    from scripts.review.receipts.outcomes import classify_outcome
+
+    prose = "0 analyses (0 distinct lemmas)\n\ninvalid_input: word is required"
+    facts = classify_outcome("verify_word", "ok", prose)
+    assert facts == {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
+    receipt = ledger.append(
+        world.own_ledger,
+        review_id="settle-R",
+        attempt_id="settle-A",
+        manifest_sha256=world.current_hash(),
+        tool="verify_word",
+        server_version="fixture",
+        arguments={"word": ""},
+        snapshots={},
+        status="ok",
+        result=prose,
+        outcome_facts=facts,
+    )
+    quote = "invalid_input: word is required"
+    with pytest.raises(settle.SettleError, match="needs a cited receipt with hits"):
+        settle.validate_reply(
+            world.reply("refuted", [{"receipt": receipt, "quote": quote}]),
+            world.manifest.read_bytes(),
+            world.own_ledger,
+        )
+    with pytest.raises(settle.SettleError, match="rejected call cannot count as a broadened search"):
+        settle.validate_reply(
+            world.reply("unresolved", searches=[{"category": "lemma", "receipt": receipt, "quote": quote}]),
+            world.manifest.read_bytes(),
+            world.own_ledger,
+        )
+
+
 def test_sum11_cannot_be_a_broadened_counterevidence_search(world):
     receipt = world.call("search_definitions", "Contrast only.")
     searches = [{"category": "counterevidence", "receipt": receipt, "quote": "Contrast only."}]

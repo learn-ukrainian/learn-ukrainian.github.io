@@ -202,6 +202,9 @@ def _outcome_shown(outcome: str, record: dict[str, Any]) -> bool:
 
     if outcome == "error":
         return call_status == "error" or facts.get("status") == "error"
+    # A rejected call (invalid input, tool error) is not a miss and not a hit.
+    if facts.get("status") == "error":
+        return False
     if call_status != "ok":
         return False
     if outcome == "unavailable":
