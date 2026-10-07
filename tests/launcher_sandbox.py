@@ -27,8 +27,8 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def copy_interactive_launcher_checkout(root: Path) -> None:
-    """Copy real launcher/deploy sources so production's root lookup stays in tmp.
+def copy_launcher_sources(root: Path) -> None:
+    """Copy the tracked launcher/deploy surface without an interpreter or Git init.
 
     Copy tracked files, rather than symlinking source directories: shell and
     Python helpers resolve their own physical location to choose deploy roots.
@@ -57,6 +57,11 @@ def copy_interactive_launcher_checkout(root: Path) -> None:
                 capture_output=True, check=True, timeout=30,
             )
             destination.write_bytes(blob.stdout)
+
+
+def copy_interactive_launcher_checkout(root: Path) -> None:
+    """Copy real launcher/deploy sources so production's root lookup stays in tmp."""
+    copy_launcher_sources(root)
     # This is a temporary standalone fixture, not a dispatch worktree.
     (root / ".venv").symlink_to(Path(sys.prefix))
     subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=30)

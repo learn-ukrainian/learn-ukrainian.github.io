@@ -24,7 +24,7 @@ from scripts.common.repo_root import project_interpreter
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_libraries import launcher_library_files
-from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_slot_registry
+from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_launcher_sources, copy_slot_registry
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
@@ -776,21 +776,11 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
 
 def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) -> None:
     root = tmp_path / "repo"
-    for relative in (
-        "start-claude-driver.sh",
-        *launcher_library_files(REPO),
-        "scripts/review/model_catalog.py",
-        "scripts/config/model_catalog.yaml",
-        "scripts/config/issue_streams.yaml",
-        "scripts/config/launcher_stream_aliases.tsv",
-    ):
-        destination = root / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REPO / relative, destination)
+    copy_launcher_sources(root)
     install_scope_sandbox(root)
     install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
-    watcher.parent.mkdir(parents=True)
+    watcher.parent.mkdir(parents=True, exist_ok=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
     python_bin = root / ".venv" / "bin" / "python"
@@ -816,6 +806,11 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     )
     adapter.chmod(0o755)
     subprocess.run(["git", "init", "-q", "-b", "main", os.fspath(root)], check=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+         "commit", "--allow-empty", "-q", "-m", "Initial launcher fixture"],
+        cwd=root, capture_output=True, check=True, timeout=30,
+    )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["PYTHONPATH"] = os.fspath(REPO)
     env["LEARN_UK_REPO_ROOT"] = os.fspath(root)
