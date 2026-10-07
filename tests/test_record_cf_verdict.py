@@ -331,6 +331,27 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
         recorder.author_families(REPOSITORY, 42, tasks)
 
 
+@pytest.mark.parametrize("trailer", ["", "X-Agent: acp/unknown", "X-Agent: cursor/unknown"])
+def test_unknown_git_identity_cannot_self_certify_author(monkeypatch, tmp_path, trailer):
+    unknown = {"name": "LU Unknown", "email": "unknown@local.invalid"}
+    entry = {"commit": {"message": f"work\n\n{trailer}", "author": unknown, "committer": unknown}}
+    monkeypatch.setattr(recorder, "_pages", lambda args: [entry])
+    with pytest.raises(recorder.RecordError, match=r"unknown|provenance unavailable"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert recorder.resolve_family(unknown["name"]) == "unknown"
+    assert recorder.resolve_author_family(unknown["email"]) == "unknown"
+
+
+@pytest.mark.parametrize("model", ["LU Unknown", "unknown@local.invalid"])
+def test_unknown_identity_cannot_be_a_formal_reviewer(monkeypatch, tmp_path, model):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    write_task(tasks, model=model)
+    with pytest.raises(recorder.RecordError, match=r"reviewer (model|family) unknown"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []
+    assert calls == {"posts": 0, "statuses": 0}
+
+
 @pytest.fixture
 def real_commit_set(monkeypatch, tmp_path):
     """Build Git objects and PR commit listings without mocking the merge proof."""
