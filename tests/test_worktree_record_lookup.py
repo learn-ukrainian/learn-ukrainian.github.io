@@ -72,7 +72,11 @@ def legacy_resolve_worktree_record(
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
         creators = [match for match in matches if match[1].get("worktree_reused") is False]
-        return creators[0] if len(creators) == 1 else (None, {})
+        if creators:
+            # These replay fixtures are directories without Git branch proof.
+            # #10008 requires a verified cohort even without retention intent.
+            raise ValueError("ambiguous worktree task attribution with retention intent")
+        return None, {}
     return matches[0] if matches else (None, {})
 
 
@@ -119,8 +123,8 @@ def test_ac01_full_and_cached_fixture_replay(store):
     trees = [tree, alias, root / "absent", tree / ".." / "tree", tree / "."]
     replay(tasks, root, trees)
     replay(tasks, root, trees)
-    actual = output.resolve_worktree_record(tree, tasks, repo_root=root)
-    assert actual[0].name == "creator.json" and actual[1]["extra"] == {"a": 3}
+    with pytest.raises(ValueError, match="ambiguous"):
+        output.resolve_worktree_record(tree, tasks, repo_root=root)
 
 
 @pytest.mark.parametrize(

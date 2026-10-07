@@ -129,6 +129,28 @@ release before removal. Missing proof, changed output, corrupt copies, a reused
 checkout or mismatched owner refuses release. Dry-run never releases intent.
 No new lock or state authority is introduced.
 
+Continuation rounds keep the checkout's creator as its owner (#10008). Even
+without retention intent, attribution requires exactly one creator and settled
+reused successors on the same resolved checkout and checked-out branch.
+`session_env` attribution is accepted through those recorded bindings; it does
+not grant a successor ownership. A terminal timestamped `--force-new` archive
+is excluded only when its same-task canonical replacement matches the checkout,
+has a different run nonce, and a current creator remains. Ordinary archives,
+missing replacement evidence, two current creators, or a running successor
+remain ambiguous.
+
+For a keep-false continuation cohort, exact merged-PR-head equality plus a
+clean checkout permits the common reaper to record `worktree_reap_proof`
+(`merged-reuse-reap.v1`) on the creator and `merged_head_proof` in its removal
+receipt. The proof records the PR, head, creator/run and cohort runs; the
+worktree lock precedes task-state locks and all identities are rechecked.
+A `needs_finalize` creator additionally requires a done successor whose
+recorded head is that merged head, with every recorded process proven absent.
+Its status remains unchanged. Removal uses no force flag for this cohort;
+ignored non-cache bytes still require verified preservation and retrieval.
+Retention intent continues to require the receipt-based retrieve/release
+sequence above; merged-head proof never clears it.
+
 ```bash
 .venv/bin/python -m scripts.fleet.post_task_reap --task-id <task-id> --release-retention --apply
 ```

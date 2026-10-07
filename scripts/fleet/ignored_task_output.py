@@ -113,16 +113,57 @@ def matching_worktree_records(
     ``publish_cache=False`` suppresses publication on both inventory attempts.
     """
     try:
-        return _matching_worktree_records_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
+        matches = _matching_worktree_records_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
     except _InventoryReadError as exc:
         print("Task identity inventory read failed; retrying complete inventory once", file=sys.stderr)
-        return _matching_worktree_records_once(
+        matches = _matching_worktree_records_once(
             worktree,
             tasks_dir,
             repo_root=repo_root,
             publish_cache=publish_cache,
             missing_path=exc.path if exc.missing else None,
         )
+    return _current_reuse_records(matches, tasks_dir)
+
+
+def _current_reuse_records(
+    matches: list[tuple[Path, dict[str, Any]]], tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]]:
+    """Exclude proven force-new history, never an ordinary archived creator.
+
+    Both attempts already match the checkout. Require the exact delegate archive
+    name, a terminal prior run, a distinct canonical replacement nonce, and a
+    current creator. A sole historical creator of a same-task reused run remains
+    available to the existing receipt attribution path.
+    """
+    from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+
+    current = {
+        record.get("task_id"): (path, record)
+        for path, record in matches
+        if isinstance(record.get("task_id"), str) and path == task_record_path(tasks_dir, record["task_id"])
+    }
+    has_creator = any(record.get("worktree_reused") is False for _, record in current.values())
+    result = []
+    for path, record in matches:
+        identity, nonce = record.get("task_id"), record.get("run_nonce")
+        replacement = current.get(identity) if isinstance(identity, str) else None
+        if (
+            has_creator
+            and replacement is not None
+            and path.parent == tasks_dir
+            and re.fullmatch(re.escape(identity) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name)
+            and isinstance(record.get("status"), str)
+            and record["status"] in RELEASED_TASK_STATUSES
+            and isinstance(nonce, str)
+            and bool(nonce.strip())
+            and isinstance(replacement[1].get("run_nonce"), str)
+            and bool(replacement[1]["run_nonce"].strip())
+            and nonce != replacement[1]["run_nonce"]
+        ):
+            continue
+        result.append((path, record))
+    return result
 
 
 def _matching_worktree_records_once(
@@ -284,7 +325,9 @@ def resolve_worktree_record(
                     )
                 ):
                     return current[0]
-        return creators[0] if len(creators) == 1 else (None, {})
+        if creators:
+            return reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        return None, {}
     return matches[0] if matches else (None, {})
 
 

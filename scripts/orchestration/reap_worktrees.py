@@ -3135,6 +3135,117 @@ def _released_reuse_claim_proven_settled(
     return None
 
 
+def _merged_reuse_claim_proven_settled(
+    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]] | None:
+    """Settle a keep-false creator via a done successor's exact merged head.
+
+    This is merge evidence, not retention release. Existing release receipts
+    continue through their original verifier; ignored bytes still pass the
+    mandatory preservation gate before removal.
+    """
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if record.get("status") != "needs_finalize" or _needs_finalize_claim_identity(record) is None:
+            return None
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        if (
+            creator != record
+            or len(matches) < 2
+            or any(member.get("keep_worktree") for _, member in matches)
+            or any(member.get("preserved_artifacts", {}).get("retention_release") for _, member in matches)
+            or not all(_pid_proven_absent(member) for _, member in matches)
+        ):
+            return None
+        head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+        if head.returncode != 0:
+            return None
+        for _, successor in matches:
+            if (
+                successor.get("worktree_reused") is True
+                and successor.get("status") == "done"
+                and successor.get("final_branch_head_commit") == head.stdout.strip()
+                and _needs_finalize_claim_proven_settled(repo_root, successor) is not None
+            ):
+                return matches
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError, AttributeError):
+        pass
+    return None
+
+
+def _record_merged_reuse_proof(
+    repo_root: Path, info: WorktreeInfo, pr: PullRequestState | None, *, tasks_dir: Path
+) -> dict[str, Any] | None:
+    """Record exact merged-head proof under the caller's worktree lock.
+
+    Task locks follow the worktree lock. The complete cohort is re-read before
+    publishing; preservation still handles all ignored output independently.
+    """
+    from scripts.fleet import ignored_task_output
+    from scripts.orchestration.task_record_store import task_record_path
+
+    matches = ignored_task_output.matching_worktree_records(
+        info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+    )
+    if len(matches) < 2 or any(member.get("keep_worktree") for _, member in matches):
+        return None
+    path, creator = ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=repo_root)
+    if pr is None or pr.state != "MERGED" or pr.head_sha != info.head:
+        if any(
+            isinstance(member.get("preserved_artifacts"), dict)
+            and member["preserved_artifacts"].get("retention_release")
+            for _, member in matches
+        ):
+            return None  # Preserve #9940's explicit receipt-release path.
+        raise ValueError("continuation requires an exact merged PR head")
+    if any(
+        not isinstance(member.get(key), str) or not member[key].strip()
+        for _, member in matches
+        for key in ("task_id", "run_nonce")
+    ):
+        raise ValueError("continuation run identity unavailable")
+    if path not in (
+        task_record_path(tasks_dir, creator["task_id"]),
+        task_record_path(tasks_dir / "archive", creator["task_id"]),
+    ):
+        raise ValueError("continuation creator has no canonical task record")
+    if not all(_pid_proven_absent(member) for _, member in matches):
+        raise ValueError("continuation process absence unavailable")
+    proof = {
+        "schema": "merged-reuse-reap.v1",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": info.head,
+        "pr_number": pr.number,
+        "pr_state": pr.state,
+        "clean": True,
+        "members": [{"task_id": member["task_id"], "run_nonce": member["run_nonce"]} for _, member in matches],
+    }
+    with contextlib.ExitStack() as stack:
+        for member_path, member in sorted(matches):
+            stack.enter_context(ignored_task_output.artifacts.task_state_lock(member_path))
+            if json.loads(member_path.read_text(encoding="utf-8")) != member:
+                raise ValueError("continuation records changed before merged-head proof")
+        if (
+            ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+            )
+            != matches
+        ):
+            raise ValueError("continuation cohort changed before merged-head proof")
+        if not all(_pid_proven_absent(member) for _, member in matches):
+            raise ValueError("continuation process absence changed before merged-head proof")
+        head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+        if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
+            raise ValueError("checkout changed before merged-head proof")
+        reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
+    return proof
+
+
 def _enter_dispatch_worktree_guard(
     stack: contextlib.ExitStack,
     *,
@@ -3173,18 +3284,29 @@ def _enter_dispatch_worktree_guard(
     }
     owner_record = _task_record(repo_root, owner_task_id) if owner_task_id else None
     owner_attempt = None
+    owner_needs_merge_proof = False
     if owner_record is not None and owner_record.get("status") == "needs_finalize":
         nonce = owner_record.get("run_nonce")
         if not isinstance(nonce, str) or not nonce or not _pid_proven_absent(owner_record):
             return f"needs_finalize owner {owner_task_id} attempt unknown; retain until nonce and absent PID are proven"
         owner_attempt = (nonce, owner_record.get("pid"))
+        # #9940's receipt-based owner release keeps its original guard. This
+        # extra proof applies to creators that have not taken that path.
+        owner_needs_merge_proof = not owner_record.get("preserved_artifacts", {}).get("retention_release")
 
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
     proven: set[_ClaimIdentity] = set()
     reused_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
+    merged_reuse_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
 
     def prove(record: dict[str, Any]) -> bool:
+        merged_reuse = _merged_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        if merged_reuse is not None:
+            identity = _needs_finalize_claim_identity(record)
+            if identity is not None:
+                merged_reuse_proofs[identity] = merged_reuse
+                return True
         reuse = _released_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
         if reuse is not None:
             identity = _needs_finalize_claim_identity(record)
@@ -3197,6 +3319,8 @@ def _enter_dispatch_worktree_guard(
         return identity is not None
 
     worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=prove, **claim_scan)
+    if owner_needs_merge_proof and not prove(owner_record):
+        return f"active task {owner_task_id} needs_finalize merge proof unavailable"
 
     try:
         stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
@@ -3208,6 +3332,22 @@ def _enter_dispatch_worktree_guard(
     def still_settled(record: dict[str, Any]) -> bool:
         # Under the lock: no network. The record must still be the one proven.
         identity = _needs_finalize_claim_identity(record)
+        if identity in merged_reuse_proofs:
+            from scripts.fleet import ignored_task_output
+
+            try:
+                current = ignored_task_output.matching_worktree_records(
+                    info.path, tasks_dir, repo_root=primary, publish_cache=False
+                )
+                head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                return bool(
+                    current == merged_reuse_proofs[identity]
+                    and head.returncode == 0
+                    and head.stdout.strip() == info.head
+                    and all(_pid_proven_absent(member) for _, member in current)
+                )
+            except (OSError, ValueError, RuntimeError):
+                return False
         if identity in reused_proofs:
             from scripts.fleet import ignored_task_output
 
@@ -3233,6 +3373,7 @@ def _enter_dispatch_worktree_guard(
             current_owner is None
             or (current_owner.get("run_nonce"), current_owner.get("pid")) != owner_attempt
             or not _pid_proven_absent(current_owner)
+            or (owner_needs_merge_proof and not still_settled(current_owner))
         ):
             return f"needs_finalize owner {owner_task_id} attempt changed; retain until current attempt is qualified"
     return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
@@ -3272,6 +3413,35 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
         )
     if not apply:
+        from scripts.fleet import ignored_task_output
+
+        try:
+            control_root = control_plane_root(repo_root)
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
+            )
+            if len(matches) > 1:
+                ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=control_root)
+                if any(member.get("keep_worktree") for _, member in matches):
+                    raise ValueError("keep_worktree intent set; retrieval and owner release required")
+                if not all(_pid_proven_absent(member) for _, member in matches):
+                    raise ValueError("continuation process absence unavailable")
+                released = any(
+                    isinstance(member.get("preserved_artifacts"), dict)
+                    and member["preserved_artifacts"].get("retention_release")
+                    for _, member in matches
+                )
+                if not released and (pr_state is None or pr_state.state != "MERGED" or pr_state.head_sha != info.head):
+                    raise ValueError("continuation requires an exact merged PR head")
+        except (OSError, ValueError, RuntimeError) as exc:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"continuation ownership or retention refused: {exc}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
         action = "would_preserve_then_remove" if dirty else "would_remove"
         return ReapResult(
             path=str(info.path),
@@ -3690,16 +3860,32 @@ def _reap_qualified_worktree(
         # fraction of a second kills ``git worktree remove --force``
         # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
         # (120s). A waiter that hits its 30s lock timeout retries.
-        # Git still counts ignored residue on a clean checkout, so force is
-        # required. The shared gate preserves non-disposable output first.
+        # Legacy classes retain their force setting. Proven continuation
+        # cohorts use ordinary Git removal after mandatory preservation.
         control_root = control_plane_root(repo_root)
         preservation_receipt: dict[str, Any] = {}
+        try:
+            merged_reuse_proof = _record_merged_reuse_proof(
+                control_root, info, pr_state, tasks_dir=task_store_paths.tasks_dir()
+            )
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+            detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"merged continuation proof unavailable: {detail}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+        if merged_reuse_proof is not None:
+            preservation_receipt["merged_head_proof"] = merged_reuse_proof
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
             info.path,
-            force=True,
+            force=merged_reuse_proof is None,
             control_root=control_root,
             task_id=_dispatch_task_id(repo_root, info),
             tasks_dir=task_store_paths.tasks_dir(),
