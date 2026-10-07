@@ -227,7 +227,7 @@ def test_ci_red_pending_and_ready():
     assert sweep.classify_pr(pr(), approved, queued=False, observed_at=START).state == "ready"
 
 
-@pytest.mark.parametrize("name", ["Component shadow (advisory)", "ADVISORY smoke", "nightly advisory"])
+@pytest.mark.parametrize("name", ["Component shadow (advisory)"])
 @pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
 def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
     item = pr()

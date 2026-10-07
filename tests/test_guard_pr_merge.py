@@ -483,9 +483,9 @@ def test_quoted_merge_not_detected():
 
 
 def test_is_advisory():
-    assert guard._is_advisory("pip-audit (advisory)")
-    assert not guard._is_advisory("boundary-and-tests")
-    assert not guard._is_advisory("Test (pytest)")
+    assert guard.is_advisory("Component shadow (advisory)")
+    assert not guard.is_advisory("boundary-and-tests")
+    assert not guard.is_advisory("Test (pytest)")
 
 
 def test_pr_snapshot_reads_metadata_and_checks_concurrently(monkeypatch):
@@ -667,7 +667,7 @@ def test_check_states_splits_failing_and_pending(monkeypatch):
         '[{"name":"boundary-and-tests","bucket":"fail"},'
         '{"name":"Test (pytest)","bucket":"pending"},'
         '{"name":"Lint (ruff)","bucket":"pass"},'
-        '{"name":"pip-audit (advisory)","bucket":"fail"}]'
+        '{"name":"Component shadow (advisory)","bucket":"fail"}]'
     )
     _fake_gh(monkeypatch, returncode=8, stdout=rows)
     assert guard._check_states("5") == (["boundary-and-tests"], ["Test (pytest)"])

@@ -7,20 +7,15 @@ import re
 import subprocess
 from datetime import UTC, datetime
 
+from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.opsec.prepublish import PublishBlocked
 
-ADVISORY_NAME_MARKERS = ("advisory",)
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
 _PENDING_BUCKETS = {"pending", "queued", "in_progress", "waiting", "expected"}
 _PASS_BUCKETS = {"pass", "success", "skipping", "skipped", "neutral"}
 _ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR", "STARTUP_FAILURE"}
 _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
-
-
-def _is_advisory(name: str) -> bool:
-    low = name.lower()
-    return any(m in low for m in ADVISORY_NAME_MARKERS)
 
 
 def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
@@ -100,6 +95,7 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
 def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
     if not rows:
         return [], []
+    policy = load_advisory_checks()
     named = []
     for row in rows:
         if not isinstance(row, dict):
@@ -109,7 +105,9 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
             return None
         # Cancelled runs can retain an unexpanded matrix parent. It is not an
         # executed job and cannot be superseded by the differently named shards.
-        if "${{" not in name and not _is_advisory(name):
+        if "${{" not in name and not is_advisory(
+            name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
+        ):
             named.append(row)
     latest = _latest_rollup_rows(named)
     if latest is None:
@@ -150,12 +148,15 @@ def parse_checks(rows):
     """Parse gh check buckets with the hook's advisory and unknown-state policy."""
     if not isinstance(rows, list):
         return None
+    policy = load_advisory_checks()
     failing, pending = [], []
     for row in rows:
         if not isinstance(row, dict):
             return None
         name = str(row.get("name") or "")
-        if "${{" in name or _is_advisory(name):
+        if "${{" in name or is_advisory(
+            name, workflow=row.get("workflowName") or row.get("workflow"), policy=policy
+        ):
             continue
         bucket = str(row.get("bucket") or row.get("state") or "").lower()
         if bucket in _FAIL_BUCKETS:
@@ -212,7 +213,7 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
             or not re.fullmatch(r"[0-9a-fA-F]{40}", meta["headRefOid"])
         ):
             raise ValueError("invalid metadata")
-        checks = get(["checks", str(number), "--json", "name,bucket,state"])
+        checks = get(["checks", str(number), "--json", "name,bucket,state,workflow"])
         if _checks_json_unsupported(checks):
             rollup = get(["view", str(number), "--json", "statusCheckRollup"])
             states = (

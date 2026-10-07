@@ -50,6 +50,6 @@ def test_empty_json_check_list_with_exit_code_1_is_refused():
 def test_failing_advisory_check_with_exit_code_1_allows_merge():
     checks = [
         {"name": "CI Gate", "bucket": "pass"},
-        {"name": "Lint (advisory)", "bucket": "fail"},
+        {"name": "Component shadow (advisory)", "bucket": "fail"},
     ]
     assert merge_with_checks(json.dumps(checks), returncode=1) == "a" * 40

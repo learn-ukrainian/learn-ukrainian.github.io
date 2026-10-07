@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.ci.advisory_checks import is_advisory
 from scripts.opsec.prepublish import PublishBlocked
 from scripts.orchestration import integration_sweep as sweep
 from scripts.publish.merge_guard import ensure_merge_ready
@@ -16,9 +17,11 @@ HEAD = "a" * 40
 
 @pytest.fixture
 def shadow_name():
-    workflow = yaml.safe_load(Path(".github/workflows/ci.yml").read_text())
+    workflow_path = Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml"
+    workflow = yaml.safe_load(workflow_path.read_text())
     name = workflow["jobs"]["component-shadow"]["name"]
     assert name == "Component shadow (advisory)"
+    assert is_advisory(name)
     return name
 
 
@@ -47,8 +50,9 @@ def test_failed_shadow_does_not_change_merge_guard_readiness(shadow_name, requir
 def test_failed_shadow_is_not_reported_red_by_integration_sweep(
     shadow_name, required_conclusion, expected, shadow_conclusion,
 ):
-    pr = {"statusCheckRollup": [
+    pr = {"number": 1, "headRefOid": HEAD, "statusCheckRollup": [
         {"name": "CI Gate", "status": "COMPLETED", "conclusion": required_conclusion},
         {"name": shadow_name, "status": "COMPLETED", "conclusion": shadow_conclusion},
     ]}
-    assert sweep._check_blockers(pr) == expected
+    report = sweep.classify_pr(pr, sweep.Verdict("APPROVED"), queued=False, observed_at="fixture")
+    assert report.blockers == tuple(expected)
