@@ -225,7 +225,9 @@ def test_probe_host_reads_meminfo_and_loadavg(tmp_path):
     assert probe.load1 == 3.25
     assert probe.cpu_steal_ticks == 8
     assert probe.cpu_total_ticks == 558
-    snapshot = adm.AdmissionDecision(mode="workspace-write", exempt=False, admitted=True, thresholds=_LIMITS, probe=probe).to_record()
+    snapshot = adm.AdmissionDecision(
+        mode="workspace-write", exempt=False, admitted=True, thresholds=_LIMITS, probe=probe
+    ).to_record()
     assert (snapshot["cpu_steal_ticks"], snapshot["cpu_total_ticks"]) == (8, 558)
 
 
@@ -250,7 +252,11 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
         min_mem_available_gib=config.DISPATCH_MIN_MEM_AVAILABLE_GIB,
         max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
     )
-    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (12, 6.0, 1.5)
+    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (
+        12,
+        6.0,
+        1.5,
+    )
 
     overridden = adm.load_thresholds(
         {
@@ -394,3 +400,90 @@ def test_summary_omits_the_slice_when_it_is_not_reported(tmp_path, probe):
     summary = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS).summary()
 
     assert "lu-dispatch.slice" not in summary
+
+
+# --- Shared lu.slice pool headroom (#9975) --------------------------------------------------
+
+
+def _fake_pool(directory: Path, *, current: int, file_cache: int, high: int = 24 * _GIB) -> Path:
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "memory.current").write_text(f"{current}\n", encoding="ascii")
+    (directory / "memory.high").write_text(f"{high}\n", encoding="ascii")
+    (directory / "memory.max").write_text(f"{26 * _GIB}\n", encoding="ascii")
+    (directory / "memory.stat").write_text(f"active_file {file_cache}\ninactive_file 0\n", encoding="ascii")
+    return directory
+
+
+def test_full_shared_pool_refuses_a_write_worker(tmp_path, probe, monkeypatch):
+    pool = _fake_pool(tmp_path / "lu.slice", current=25 * _GIB, file_cache=2 * _GIB)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    tasks = tmp_path / "tasks"
+
+    decision = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=_LIMITS)
+
+    assert not decision.admitted
+    [failure] = decision.failures
+    assert failure == (
+        "lu.slice non-cache use 23.0 GiB plus a 2 GiB worker reserve exceeds MemoryHigh 24.0 GiB "
+        "(DISPATCH_WORKER_MEM_RESERVE_GIB=2)"
+    )
+    record = decision.to_record()
+    assert record["pool_nonreclaimable_gib"] == 23.0
+    assert record["pool_file_cache_gib"] == 2.0
+    assert record["pool_limit_gib"] == 24.0
+    assert record["worker_mem_reserve_gib"] == 2.0
+    assert record["pool_check_skipped"] is None
+
+
+def test_file_cache_does_not_count_against_the_pool(tmp_path, probe, monkeypatch):
+    pool = _fake_pool(tmp_path / "lu.slice", current=23 * _GIB, file_cache=6 * _GIB)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+
+    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert "lu.slice 17.0/24.0 GiB non-cache (+6.0 GiB file cache; worker reserve 2 GiB)" in decision.summary()
+
+
+def test_worker_reserve_env_override_changes_the_pool_decision(tmp_path, probe, monkeypatch):
+    pool = _fake_pool(tmp_path / "lu.slice", current=21 * _GIB, file_cache=0)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
+    tasks = tmp_path / "tasks"
+
+    roomy = adm.evaluate("workspace-write", tasks, thresholds=_LIMITS)
+    strict = adm.evaluate(
+        "workspace-write", tasks, thresholds=adm.load_thresholds({adm.ENV_WORKER_MEM_RESERVE_GIB: "4"})
+    )
+
+    assert roomy.admitted
+    assert not strict.admitted
+    assert any("DISPATCH_WORKER_MEM_RESERVE_GIB=4" in failure for failure in strict.failures)
+
+
+def test_missing_pool_cgroup_skips_the_check_and_logs_why(tmp_path, probe, monkeypatch, caplog):
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
+
+    with caplog.at_level("INFO", logger=adm.__name__):
+        decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert "lu.slice" not in decision.summary()
+    assert "memory.current unavailable" in decision.to_record()["pool_check_skipped"]
+    assert "shared pool check skipped" in caplog.text
+
+
+def test_healthy_test_host_never_reads_the_real_pool(tmp_path, probe, monkeypatch):
+    monkeypatch.delenv("LU_SLICE_CGROUP", raising=False)
+    monkeypatch.setattr(adm.pool_headroom, "check_pool", lambda *_a, **_k: pytest.fail("real pool read"))
+
+    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    assert decision.admitted
+    assert decision.pool is not None
+    assert decision.pool.skipped == "test host"
+
+
+def test_read_only_dispatch_does_not_probe_the_pool(tmp_path, monkeypatch):
+    monkeypatch.setattr(adm, "probe_pool", lambda *_a, **_k: pytest.fail("read-only must not probe the pool"))
+
+    assert adm.evaluate("read-only", tmp_path / "tasks").admitted

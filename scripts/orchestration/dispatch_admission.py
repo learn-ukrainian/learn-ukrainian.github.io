@@ -25,6 +25,11 @@ every check passes. Read-only dispatches are exempt.
 * **``MemAvailable``** from ``/proc/meminfo`` at or above the floor.
 * **CPU:** the 1-minute load average divided by ``os.cpu_count()`` at or below
   the limit.
+* **Shared pool headroom (#9975).** ``lu.slice`` is the capped pool drivers and
+  workers share. Its non-reclaimable use (``memory.current`` minus file cache
+  from ``memory.stat``) plus a per-worker reserve must stay at or below its
+  ``memory.high``. Missing cgroup files (CI, macOS) skip this check; the reason
+  is logged and recorded (:mod:`scripts.orchestration.pool_headroom`).
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -60,7 +65,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import task_record_store, worktree_prep
+from scripts.orchestration import pool_headroom, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
 _logger = logging.getLogger(__name__)
@@ -76,6 +81,8 @@ PROC_ROOT = Path("/proc")
 ENV_MAX_LIVE_WRITE_WORKERS = "DISPATCH_MAX_LIVE_WRITE_WORKERS"
 ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
+ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
+_DEFAULT_WORKER_MEM_RESERVE_GIB = 2.0
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
 # slot until the worker exists (#8717).
@@ -95,6 +102,7 @@ class Thresholds:
     max_live_write_workers: int
     min_mem_available_gib: float
     max_load_per_cpu: float
+    worker_mem_reserve_gib: float = _DEFAULT_WORKER_MEM_RESERVE_GIB
 
 
 @dataclass(frozen=True)
@@ -128,6 +136,7 @@ class AdmissionDecision:
     dead_task_ids: tuple[str, ...] = ()
     swept: bool = False
     failures: tuple[str, ...] = field(default_factory=tuple)
+    pool: pool_headroom.PoolCheck | None = None
 
     @property
     def live_write_workers(self) -> int:
@@ -155,6 +164,8 @@ class AdmissionDecision:
         slice_use = slice_usage_clause()
         if slice_use:
             parts.append(slice_use)
+        if self.pool is not None and self.pool.memory is not None:
+            parts.append(self.pool.clause())
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"
@@ -179,6 +190,9 @@ class AdmissionDecision:
         probe = self.probe
         mem = probe.mem_available_gib if probe else None
         load = probe.load_per_cpu if probe else None
+        pool = self.pool
+        pool_memory = pool.memory if pool else None
+        pool_limit = pool_memory.limit if pool_memory else None
         return {
             "checked_at": datetime.now(UTC).isoformat(),
             "admitted": self.admitted,
@@ -198,6 +212,11 @@ class AdmissionDecision:
             "cpu_steal_ticks": probe.cpu_steal_ticks if probe else None,
             "cpu_total_ticks": probe.cpu_total_ticks if probe else None,
             "proc_available": probe.proc_available if probe else None,
+            "pool_nonreclaimable_gib": round(pool_memory.nonreclaimable / _GIB, 2) if pool_memory else None,
+            "pool_file_cache_gib": round(pool_memory.file_cache / _GIB, 2) if pool_memory else None,
+            "pool_limit_gib": round(pool_limit / _GIB, 2) if pool_limit is not None else None,
+            "worker_mem_reserve_gib": limits.worker_mem_reserve_gib if limits else None,
+            "pool_check_skipped": pool.skipped if pool else None,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
 
@@ -212,6 +231,7 @@ def config_defaults() -> Thresholds:
         max_live_write_workers=int(config.DISPATCH_MAX_LIVE_WRITE_WORKERS),
         min_mem_available_gib=float(config.DISPATCH_MIN_MEM_AVAILABLE_GIB),
         max_load_per_cpu=float(config.DISPATCH_MAX_LOAD_PER_CPU),
+        worker_mem_reserve_gib=float(config.DISPATCH_WORKER_MEM_RESERVE_GIB),
     )
 
 
@@ -241,6 +261,9 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             env, ENV_MIN_MEM_AVAILABLE_GIB, defaults.min_mem_available_gib, integer=False
         ),
         max_load_per_cpu=_env_number(env, ENV_MAX_LOAD_PER_CPU, defaults.max_load_per_cpu, integer=False),
+        worker_mem_reserve_gib=_env_number(
+            env, ENV_WORKER_MEM_RESERVE_GIB, defaults.worker_mem_reserve_gib, integer=False
+        ),
     )
 
 
@@ -310,6 +333,22 @@ def probe_host() -> HostProbe:
     ):
         return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=8, proc_available=True)
     return read_host(PROC_ROOT)
+
+
+def probe_pool(reserve_gib: float) -> pool_headroom.PoolCheck:
+    """Shared ``lu.slice`` headroom for one more worker. The seam pool tests replace.
+
+    Under pytest with the healthy-host fixture, the host's real pool is not
+    read unless ``LU_SLICE_CGROUP`` points the test at a fake cgroup.
+    """
+    reserve = int(reserve_gib * _GIB)
+    if (
+        os.environ.get("PYTEST_CURRENT_TEST")
+        and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
+        and not os.environ.get(pool_headroom.ENV_LU_SLICE_CGROUP)
+    ):
+        return pool_headroom.PoolCheck(reserve_bytes=reserve, skipped="test host")
+    return pool_headroom.check_pool(reserve)
 
 
 def process_alive(pid: int) -> bool:
@@ -514,6 +553,11 @@ def evaluate(
             f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPU{'' if probe.cpu_count == 1 else 's'}) is above the "
             f"limit of {limits.max_load_per_cpu:.2f} ({ENV_MAX_LOAD_PER_CPU}={limits.max_load_per_cpu:g})"
         )
+    pool = probe_pool(limits.worker_mem_reserve_gib)
+    if pool.skipped is not None:
+        _logger.info("dispatch admission: shared pool check skipped: %s", pool.skipped)
+    elif not pool.fits:
+        failures.append(f"{pool.failure()} ({ENV_WORKER_MEM_RESERVE_GIB}={limits.worker_mem_reserve_gib:g})")
     return AdmissionDecision(
         mode=mode,
         exempt=False,
@@ -524,6 +568,7 @@ def evaluate(
         dead_task_ids=tuple(str(state.get("task_id") or path.stem) for path, state in scan.dead),
         swept=on_dead is not None,
         failures=tuple(failures),
+        pool=pool,
     )
 
 
