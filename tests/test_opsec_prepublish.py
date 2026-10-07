@@ -530,10 +530,22 @@ def test_publishers_translate_policy_refusals(module, function, args, error_type
     if module == "scripts.delegate":
         args = (tmp_path,)
         kwargs = {"branch": "unit", "base_branch": "main", "title": "clean", "body": "clean"}
-    with pytest.raises(error_type, match=r"publish_blocked:.*synthetic refusal") as error:
+    typed_delegate = module == "scripts.delegate"
+    expected = r"^auto_finalize_publish_blocked$" if typed_delegate else r"publish_blocked:.*synthetic refusal"
+    with pytest.raises(error_type, match=expected) as error:
         getattr(publisher, function)(*args, **kwargs)
     assert not isinstance(error.value, gate.PublishBlocked)
     assert error.value.__suppress_context__
+    if typed_delegate:
+        # #9878: the refusal detail stays in the task's private diagnostic, not the public exception.
+        assert isinstance(error.value, publisher._TypedFailure)
+        assert error.value.cause.code == "auto_finalize_publish_blocked"
+        record = tmp_path / "policy-refusal.json"
+        record.write_text("{}\n", encoding="utf-8")
+        assert publisher._append_diagnostics(record, [("auto_finalize.error", error.value.cause)], source="test")
+        entries = [json.loads(line) for line in record.with_suffix(".diag").read_text().splitlines()]
+        assert entries[-1]["code"] == "auto_finalize_publish_blocked"
+        assert "synthetic refusal" in entries[-1]["diagnostic"]
 
 
 def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path):

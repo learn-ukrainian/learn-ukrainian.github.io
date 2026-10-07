@@ -1,7 +1,9 @@
 """Render and install the nightly data-tier systemd user timer.
 
 Use --check before installation; use --apply after the branch has merged.
---enable starts the timer only when paired with --apply.
+--enable starts the timer only when paired with --apply. A symlinked unit
+file, or a symlink anywhere from the home directory down to the unit
+directory, is refused, and units are replaced by rename within the directory.
 """
 
 from __future__ import annotations
@@ -14,13 +16,11 @@ import sys
 import tempfile
 from pathlib import Path
 
+from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
 UNITS = ("learn-ukrainian-data-tier.service", "learn-ukrainian-data-tier.timer")
-
-
-class InstallError(RuntimeError):
-    """The requested unit state could not be produced."""
 
 
 def render_units(repo_root: Path) -> dict[str, str]:
@@ -58,11 +58,13 @@ def systemctl_user(*args: str) -> None:
 
 
 def check(rendered: dict[str, str], unit_dir: Path) -> int:
-    differences = []
-    for name, content in rendered.items():
-        target = unit_dir / name
-        if not target.is_file() or target.read_text(encoding="utf-8") != content:
-            differences.append(name)
+    dir_fd = open_unit_dir(unit_dir)
+    try:
+        installed = {name: read_unit(dir_fd, name) if dir_fd is not None else None for name in rendered}
+    finally:
+        if dir_fd is not None:
+            os.close(dir_fd)
+    differences = [name for name, content in rendered.items() if (installed[name] or (b"",))[0] != content.encode()]
     if differences:
         print("unit drift: " + ", ".join(differences))
         return 1
@@ -71,20 +73,18 @@ def check(rendered: dict[str, str], unit_dir: Path) -> int:
 
 
 def apply(rendered: dict[str, str], unit_dir: Path, *, enable: bool) -> int:
-    unit_dir.mkdir(parents=True, exist_ok=True)
+    dir_fd = open_unit_dir(unit_dir, create=True)
+    if dir_fd is None:
+        raise InstallError("unit directory vanished during installation")
     changed = 0
-    for name, content in rendered.items():
-        target = unit_dir / name
-        if (
-            target.is_file()
-            and target.read_text(encoding="utf-8") == content
-            and target.stat().st_mode & 0o777 == 0o600
-        ):
-            continue
-        target.touch(mode=0o600, exist_ok=True)
-        os.chmod(target, 0o600)
-        target.write_text(content, encoding="utf-8")
-        changed += 1
+    try:
+        for name, content in rendered.items():
+            if read_unit(dir_fd, name) == (content.encode(), 0o600):
+                continue
+            write_unit(dir_fd, name, content.encode(), mode=0o600)
+            changed += 1
+    finally:
+        os.close(dir_fd)
     systemctl_user("daemon-reload")
     if enable:
         systemctl_user("enable", "--now", UNITS[1])
@@ -103,7 +103,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  <project-python> -m scripts.orchestration.install_data_tier_timer --check\n"
             "  <project-python> -m scripts.orchestration.install_data_tier_timer --apply --enable\n"
-            "Outputs: owner-only units in the user systemd directory; --apply reloads the user manager.\n"
+            "Outputs: owner-only units in the user systemd directory, replaced by rename; a symlinked unit "
+            "file, or a symlink in any directory from home down to the unit directory, is refused; "
+            "--apply reloads the user manager.\n"
             "Exit codes: 0 = current or applied; 1 = drift or installation failure; 2 = invalid usage.\n"
             "Related: issue #9229 and packaging/systemd/learn-ukrainian-data-tier.*."
         ),
@@ -115,7 +117,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--unit-dir",
         type=Path,
         default=Path.home() / ".config/systemd/user",
-        help="User unit directory (default: ~/.config/systemd/user).",
+        help="User unit directory; no directory from home down to it may be a symlink (default: ~/.config/systemd/user).",
     )
     parser.add_argument(
         "--check",

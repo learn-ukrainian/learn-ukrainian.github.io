@@ -11,6 +11,7 @@ from typing import Any
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 
 from scripts.fleet import credit_lane
 from scripts.orchestration import curriculum_coordinator as coordinator
@@ -380,10 +381,26 @@ def _credit_snapshot(
     healthy: bool = True,
     stale: bool = False,
 ) -> dict[str, Any]:
-    """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``."""
+    """Health snapshot whose codex lane carries ``credit`` as its published ``agents.codex.credit``.
+
+    The lane record is complete (#9740 F6): relief is re-decided by the owner
+    from the record's remaining allowance, probe freshness, raw balance and its
+    fetch time, not only the published leaf.
+    """
     snapshot = _health()()
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
     snapshot["agents"]["codex"].update(
-        {"status": status, "health": {"healthy": healthy}, "codexbar": {"stale": stale}, "credit": credit}
+        {
+            "status": status,
+            "health": {"healthy": healthy},
+            "freshness": "fresh",
+            "age_s": 30,
+            "remaining_pct": 1.0,
+            "credit_balance": credit.get("credit_balance") if isinstance(credit, dict) else None,
+            "fetched_at": (evidence or {}).get("credit_fetched_at"),
+            "codexbar": {"stale": stale},
+            "credit": credit,
+        }
     )
     return snapshot
 
@@ -466,7 +483,14 @@ def test_near_cap_lane_without_credit_field_is_unchanged() -> None:
     passed, assessment = coordinator._health_assessment(_health(codex="near_cap")(), config["health"], now=CREDIT_NOW)
     assert not passed
     assert _build_group(assessment)["lanes"] == [
-        {"lane": "codex", "status": "near_cap", "healthy": True, "stale": False, "credit_state": None}
+        {
+            "lane": "codex",
+            "status": "near_cap",
+            "healthy": True,
+            "stale": False,
+            "freshness": "fresh",
+            "credit_state": None,
+        }
     ]
 
 
@@ -570,6 +594,93 @@ def test_unreadable_rate_limit_evidence_fails_the_wave_gate(monkeypatch: pytest.
     assert not passed
     [lane] = _build_group(assessment)["lanes"]
     assert lane["credit"]["state"] == "credits_unverified"
+
+
+def _health_lane_validator() -> Draft202012Validator:
+    schema = json.loads(coordinator.LEDGER_SCHEMA_PATH.read_text(encoding="utf-8"))
+    return Draft202012Validator({"$defs": schema["$defs"], "$ref": "#/$defs/healthLane"})
+
+
+@pytest.mark.parametrize(
+    "receipt",
+    [
+        {"lane": "codex", "status": "cool", "healthy": True, "stale": False, "credit_state": None},
+        {"lane": "codex", "status": "cool", "healthy": False, "stale": False},
+        {"lane": "codex", "status": "missing", "healthy": False, "stale": True},
+        {"lane": "codex", "status": "cool", "healthy": None, "health_basis": "scan error", "stale": False},
+    ],
+    ids=["healthy", "unhealthy", "legacy-missing", "unknown-with-basis"],
+)
+def test_health_lane_schema_accepts_established_legacy_and_explained_unknown(receipt: dict[str, Any]) -> None:
+    assert list(_health_lane_validator().iter_errors(receipt)) == []
+
+
+@pytest.mark.parametrize(
+    "receipt",
+    [
+        {"lane": "codex", "status": "cool", "healthy": None, "stale": False},
+        {"lane": "codex", "status": "cool", "healthy": None, "health_basis": "", "stale": False},
+        {"lane": "codex", "status": "cool", "healthy": "unknown", "health_basis": "scan error", "stale": False},
+        {"lane": "codex", "status": "cool", "stale": False},
+    ],
+    ids=["unknown-without-basis", "empty-basis", "string-healthy", "healthy-absent"],
+)
+def test_health_lane_schema_rejects_unexplained_unknown_health(receipt: dict[str, Any]) -> None:
+    assert list(_health_lane_validator().iter_errors(receipt)) != []
+
+
+@pytest.mark.parametrize(
+    ("health", "expected_healthy", "expected_basis"),
+    [
+        ({"healthy": True}, True, None),
+        ({"healthy": False, "last_error": "auth"}, False, None),
+        ({"healthy": None, "basis": "lane-health scan error: OSError"}, None, "lane-health scan error: OSError"),
+        (None, None, "lane health record missing"),
+    ],
+    ids=["healthy", "unhealthy", "scan-error", "no-health-record"],
+)
+def test_wave_receipt_keeps_unknown_health_distinct_from_unhealthy(
+    health: dict[str, Any] | None, expected_healthy: bool | None, expected_basis: str | None
+) -> None:
+    """Unknown health never counts as available, and the receipt says unknown, not unhealthy (#9740)."""
+    snapshot = _health()()
+    if health is None:
+        del snapshot["agents"]["codex"]["health"]
+    else:
+        snapshot["agents"]["codex"]["health"] = health
+    passed, assessment = coordinator._health_assessment(snapshot, coordinator.load_config()["health"], now=CREDIT_NOW)
+    [lane] = _build_group(assessment)["lanes"]
+    assert lane["healthy"] is expected_healthy
+    assert lane.get("health_basis") == expected_basis
+    assert list(_health_lane_validator().iter_errors(lane)) == []
+    if expected_healthy is not True:
+        assert not passed
+        assert _build_group(assessment)["available"] == 0
+
+
+def test_missing_lane_record_is_unknown_health_in_a_valid_paused_ledger(repo: Path, tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    _path, ledger = _start(repo, runtime)
+
+    def missing_codex() -> dict[str, Any]:
+        snapshot = _health()()
+        del snapshot["agents"]["codex"]
+        return snapshot
+
+    path, paused, item = _acquire(repo, runtime, ledger["run_id"], health_probe=missing_codex)
+    assert item is None
+    assert coordinator.compact_status(paused)["status"] == "paused"
+    [lane] = _build_group(paused["history"][-1]["details"]["health"])["lanes"]
+    assert lane == {
+        "lane": "codex",
+        "status": "missing",
+        "healthy": None,
+        "health_basis": "lane record missing",
+        "stale": True,
+    }
+    coordinator._validate(
+        json.loads(path.read_text(encoding="utf-8")), coordinator.LEDGER_SCHEMA_PATH, "coordinator ledger"
+    )
 
 
 def test_global_mutation_lease_blocks_cross_track_work(repo: Path, tmp_path: Path) -> None:

@@ -251,7 +251,7 @@ def build() -> Path:
     if DST.exists():
         DST.unlink()
 
-    src = sqlite3.connect(f"file:{SRC}?mode=ro", uri=True)
+    src = sqlite3.connect(f"{Path(SRC).resolve().as_uri()}?mode=ro", uri=True)
     src.row_factory = sqlite3.Row
     dst = sqlite3.connect(DST)
     dst.executescript(atlas_db.SCHEMA)
@@ -368,7 +368,7 @@ def build() -> Path:
 
 def sanitized_fixture_db(source: Path, destination: Path) -> Path:
     """Make the historical fixture exportable without its legacy Soviet citations."""
-    with contextlib.closing(sqlite3.connect(f"file:{source.resolve()}?mode=ro", uri=True)) as reader:
+    with contextlib.closing(sqlite3.connect(f"{source.resolve().as_uri()}?mode=ro", uri=True)) as reader:
         reader.execute("VACUUM INTO ?", (str(destination),))
     with contextlib.closing(sqlite3.connect(destination)) as target, target:
         for slug, raw in target.execute("SELECT slug, payload_json FROM article_payloads"):

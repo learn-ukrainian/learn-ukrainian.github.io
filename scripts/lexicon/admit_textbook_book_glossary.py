@@ -37,7 +37,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import sqlite3
 import subprocess
 import sys
 import time
@@ -49,6 +48,9 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 try:
     from scripts.storage.topology import (
@@ -219,7 +221,7 @@ def fetch_slovnyk_curl(word: str, slug: str, *, timeout: int = 15) -> tuple[int,
     return 0, ""
 
 
-def load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
+def load_dmklinger_index(conn: SQLiteConnection) -> dict[str, list[tuple[str, str]]]:
     index: dict[str, list[tuple[str, str]]] = {}
     for word, pos, translations in conn.execute("SELECT word, pos, translations FROM dmklinger_uk_en"):
         index.setdefault(_dmklinger_key(str(word or "")), []).append((str(pos or ""), str(translations or "")))
@@ -390,7 +392,7 @@ def main(argv: list[str] | None = None) -> int:
     attempted = payload["attempted"]
 
     sources_db = resolve_sources_db(args.sources_db)
-    conn = sqlite3.connect(str(sources_db))
+    conn = _open_readonly(Path(sources_db).resolve())
     try:
         dmklinger_index = load_dmklinger_index(conn)
     finally:

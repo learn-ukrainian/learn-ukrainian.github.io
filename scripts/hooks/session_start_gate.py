@@ -444,6 +444,32 @@ def phase_rollover_detect(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def _installed_stage_cleanup_warnings(payload: dict[str, Any]) -> list[str]:
+    """SessionStart lines for an install that committed and kept its stage."""
+    items = payload.get("bundles", [payload])
+    if not isinstance(items, list):
+        return []
+    warnings: list[str] = []
+    for item in items:
+        if not isinstance(item, dict) or item.get("status") != "installed":
+            continue
+        warning = item.get("cleanup_warning")
+        if not isinstance(warning, dict):
+            continue
+        stage = warning.get("stage")
+        code = warning.get("code")
+        if not isinstance(stage, str) or not stage or not isinstance(code, str) or not code:
+            continue
+        message = f"WARNING: rollover bundle installed; {code}; retained stage: {stage}"
+        leftovers = warning.get("leftovers")
+        if isinstance(leftovers, list):
+            names = [item for item in leftovers if isinstance(item, str) and item]
+            if names:
+                message += "; leftovers: " + ", ".join(names)
+        warnings.append(message)
+    return warnings
+
+
 def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
     """Fetch the newest remote packet before detect, without blocking startup."""
     if not getattr(args, "import_bundle", False):
@@ -500,6 +526,21 @@ def phase_rollover_import(args: argparse.Namespace) -> dict[str, Any]:
             "status": "issue",
             "warning": f"WARNING: rollover bundle import exceeded its 3-second sub-budget ({elapsed:.2f}s); detect continues.",
         }
+    if rc == 0 and isinstance(payload, dict):
+        copies = [
+            item["preserved_copy"]
+            for item in payload.get("bundles", [payload])
+            if isinstance(item, dict) and item.get("status") == "warning" and item.get("preserved_copy")
+        ]
+        notices = []
+        if copies:
+            notices.append(
+                "WARNING: rollover bundle differs at equal order; kept local; "
+                f"remote preserved at {', '.join(copies)}"
+            )
+        notices.extend(_installed_stage_cleanup_warnings(payload))
+        if notices:
+            return {"status": "issue", "warning": " ".join(notices)}
     if rc == 0 and isinstance(payload, dict) and payload.get("status") not in {"warning", "refused"}:
         return {"status": "ok", "elapsed_seconds": round(elapsed, 3)}
     detail = " ".join((out or err).split()) or "no structured output"

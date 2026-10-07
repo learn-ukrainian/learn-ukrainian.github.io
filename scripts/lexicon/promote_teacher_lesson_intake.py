@@ -28,7 +28,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 import tempfile
 import uuid
@@ -48,6 +47,7 @@ from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
 from scripts.lexicon import enrich_manifest as enrich_module
 from scripts.lexicon import verify_manifest
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_INTAKE_DIR = PROJECT_ROOT / "data" / "lexicon" / "intake"
 DEFAULT_JOURNAL = DEFAULT_INTAKE_DIR / "private_teacher_lesson_intake_journal.json"
@@ -355,7 +355,7 @@ def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> dict[s
     if not wanted:
         return {}
     anchors: dict[str, str] = {}
-    with sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True) as conn:
+    with _open_readonly(sources_db) as conn:
         for word, translations in conn.execute("SELECT word, translations FROM dmklinger_uk_en"):
             key = _dmklinger_key(str(word or ""))
             target = wanted.get(key)
@@ -437,9 +437,7 @@ def _build_rows(
     canonical_analyses: dict[str, list[dict[str, Any]]] = {}
     for row in source_rows:
         row_analyses = analyses.get(row.lemma, [])
-        canonical = _canonical_lemma(
-            row.lemma, row_analyses, preserve_case=_reviewed_proper_name(row.lemma, row.pos)
-        )
+        canonical = _canonical_lemma(row.lemma, row_analyses, preserve_case=_reviewed_proper_name(row.lemma, row.pos))
         canonical_rows[canonical].append(row)
         canonical_analyses.setdefault(canonical, row_analyses)
 
@@ -580,7 +578,7 @@ def _enrich_promoted_entries(
     db_path = sources_db if sources_db is not None else enrich_module.SOURCES_DB
     enriched = 0
     kaikki_lookup = enrich_module._load_kaikki_lookup()
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
+    with _open_readonly(db_path) as conn:
         for entry in entries:
             if _lemma_key(str(entry.get("lemma") or "")) not in promoted_lemma_keys:
                 continue
@@ -930,14 +928,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Related: #9151 reviewed teacher-lesson intake and promotion plan."
         ),
     )
-    parser.add_argument("--full-decisions", type=Path, default=DEFAULT_FULL_DECISIONS,
-                        help=f"Reviewed decision ledger (default: {DEFAULT_FULL_DECISIONS})")
-    parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY,
-                        help=f"Curated source inventory (default: {DEFAULT_CURATED_INVENTORY})")
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST,
-                        help=f"Atlas manifest (default: {DEFAULT_MANIFEST})")
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT,
-                        help=f"Manifest fingerprint sidecar (default: {DEFAULT_FINGERPRINT})")
+    parser.add_argument(
+        "--full-decisions",
+        type=Path,
+        default=DEFAULT_FULL_DECISIONS,
+        help=f"Reviewed decision ledger (default: {DEFAULT_FULL_DECISIONS})",
+    )
+    parser.add_argument(
+        "--curated-inventory",
+        type=Path,
+        default=DEFAULT_CURATED_INVENTORY,
+        help=f"Curated source inventory (default: {DEFAULT_CURATED_INVENTORY})",
+    )
+    parser.add_argument(
+        "--manifest", type=Path, default=DEFAULT_MANIFEST, help=f"Atlas manifest (default: {DEFAULT_MANIFEST})"
+    )
+    parser.add_argument(
+        "--fingerprint",
+        type=Path,
+        default=DEFAULT_FINGERPRINT,
+        help=f"Manifest fingerprint sidecar (default: {DEFAULT_FINGERPRINT})",
+    )
     parser.add_argument(
         "--vesum-db",
         type=Path,
@@ -948,10 +959,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         help="Optional read-only local sources.db for the Dmklinger fallback",
     )
-    parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES,
-                        help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})")
-    parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS,
-                        help=f"Decision YAML output (default: {DEFAULT_DECISIONS})")
+    parser.add_argument(
+        "--candidates-out",
+        type=Path,
+        default=DEFAULT_CANDIDATES,
+        help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})",
+    )
+    parser.add_argument(
+        "--decisions-out",
+        type=Path,
+        default=DEFAULT_DECISIONS,
+        help=f"Decision YAML output (default: {DEFAULT_DECISIONS})",
+    )
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
     parser.add_argument(

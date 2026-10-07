@@ -7,6 +7,8 @@ import argparse
 import sqlite3
 from pathlib import Path
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = Path(__file__).with_name("vesum_sample.db")
 
@@ -93,7 +95,7 @@ def build(
     if db_path.exists():
         db_path.unlink()
 
-    source_conn = sqlite3.connect(f"file:{source}?mode=ro", uri=True)
+    source_conn = open_readonly(source)
     source_conn.row_factory = sqlite3.Row
     try:
         rows = _extract_rows(source_conn)

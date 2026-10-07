@@ -13,7 +13,6 @@ import argparse
 import hashlib
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 from collections.abc import Mapping
@@ -27,6 +26,7 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,
@@ -205,8 +205,8 @@ def mine_uagec_calques(
     uagec_out_file = output_dir / "uagec_mined_calques.jsonl"
     gold_contexts = load_curated_gold_contexts(gold_file)
 
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_db)
+    v_conn = _open_readonly(vesum_db)
     sc = s_conn.cursor()
     vc = v_conn.cursor()
 

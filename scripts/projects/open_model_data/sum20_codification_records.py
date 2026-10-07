@@ -2,19 +2,19 @@
 """Committed, reproducible СУМ-20 and ВТС codification records (#8340, Epic #6321).
 
 Provides committed entries from СУМ-20 and ВТС for cited decolonization cases.
-Retrieval respects the database's quarantine and derives source labels from
-held provenance URLs without modifying persistent source records.
+Retrieval requires exact text in an admitted held row with a resolving locator,
+respects quarantine, and never modifies persistent source records.
 """
 
 from __future__ import annotations
 
-import sqlite3
 from typing import Any
 from urllib.parse import urlsplit
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.wiki.sum20_official import live_article_predicate, normalize_sum20_lookup
 
-# Authentic СУМ-20 & ВТС entries with exact provenance from published academic codifications (slovnyk.me/dict/newsum / slovnyk.me/dict/vts)
+# Historical candidate passages (#8340). URLs alone do not establish provenance.
 COMMITTED_SUM20_RECORDS: dict[str, dict[str, Any]] = {
     "ТОЧКА": {
         "headword": "ТОЧКА",
@@ -224,14 +224,77 @@ def _quarantined_headwords(conn: Any) -> set[str]:
     return {normalize_sum20_lookup(value) for row in rows for value in row if value}
 
 
-def ensure_reproducible_sum20_table(conn: sqlite3.Connection) -> None:
+def _held_record_match(conn: Any, data: dict[str, Any], source: str) -> str | None:
+    """Resolve verbatim candidate text to an admitted dictionary row, never a URL alone."""
+    tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    article = data["article_text"]
+    definition = data.get("definition_text", article)
+    if not article or not definition:
+        return None
+    if source == "СУМ-20" and "sum20_articles" in tables:
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(sum20_articles)")}
+        conn.execute("SELECT id, normalized_lookup_key, article_text, official_url FROM sum20_articles LIMIT 0")
+        rows = conn.execute(
+            f"SELECT id, article_text, official_url FROM sum20_articles "
+            f"WHERE normalized_lookup_key = ? AND {live_article_predicate(columns)} ORDER BY id",
+            (normalize_sum20_lookup(data["headword"]),),
+        )
+        for row_id, text, url in rows:
+            try:
+                parsed = urlsplit(url or "")
+            except ValueError:
+                continue
+            if (
+                parsed.scheme == "https"
+                and parsed.netloc == "sum20ua.com"
+                and article in (text or "")
+                and definition in (text or "")
+            ):
+                return f"sum20_articles:{row_id}"
+    if "slovnyk_me_entries" in tables:
+        slug = {"СУМ-20": "newsum", "ВТС": "vts"}[source]
+        rows = conn.execute(
+            "SELECT id, text FROM slovnyk_me_entries WHERE source_url = ? AND dictionary_slug = ? ORDER BY id",
+            (data["official_url"], slug),
+        )
+        for row_id, text in rows:
+            if article in (text or "") and definition in (text or ""):
+                return f"slovnyk_me_entries:{row_id}"
+    return None
+
+
+def committed_record_dispositions(conn: Any) -> dict[str, dict[str, Any]]:
+    """Account for every candidate; quarantine takes precedence over text matches."""
+    quarantined = _quarantined_headwords(conn)
+    dispositions = {}
+    for key, data in COMMITTED_SUM20_RECORDS.items():
+        source = _record_source(data.get("official_url", ""))
+        locator = None
+        if normalize_sum20_lookup(data["headword"]) in quarantined:
+            reason = "quarantined_headword"
+        elif source is None:
+            reason = "unrecognized_provenance"
+        else:
+            locator = _held_record_match(conn, data, source)
+            reason = "held_text_match" if locator else "held_source_unproven"
+        dispositions[key] = {
+            "status": "substantiated" if locator else "withheld",
+            "reason_code": reason,
+            "source": source,
+            "locator": locator,
+        }
+    return dispositions
+
+
+def ensure_reproducible_sum20_table(conn: SQLiteConnection) -> None:
     """Populate a temporary table with provenance-backed, non-quarantined entries.
 
-    Entries lacking recognized provenance are withheld. Headwords excluded by the
-    shared live-article predicate cannot be reintroduced through committed text.
+    Entries lacking a verbatim match in an admitted held row are withheld.
+    Headwords excluded by the shared live-article predicate cannot be
+    reintroduced through committed text.
     Only the connection-local projection is refreshed; persistent rows stay intact.
     """
-    quarantined = _quarantined_headwords(conn)
+    dispositions = committed_record_dispositions(conn)
     conn.execute(
         """
         CREATE TEMP TABLE IF NOT EXISTS reproducible_sum20_articles (
@@ -252,8 +315,9 @@ def ensure_reproducible_sum20_table(conn: sqlite3.Connection) -> None:
         head = data["headword"]
         lookup_key = normalize_sum20_lookup(head)
         url = data.get("official_url", "")
-        source = _record_source(url)
-        if lookup_key in quarantined or source is None:
+        disposition = dispositions[_key]
+        source = disposition["source"]
+        if disposition["status"] != "substantiated":
             continue
         text = data["article_text"]
         defn = data.get("definition_text", text)

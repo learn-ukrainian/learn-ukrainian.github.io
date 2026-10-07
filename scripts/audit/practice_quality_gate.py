@@ -35,6 +35,22 @@ import sys
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -301,7 +317,7 @@ class _SourceRows:
     def __init__(self, sources_db: Path, vesum: VesumLookup | None):
         import sqlite3
 
-        self._conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+        self._conn = _open_readonly(sources_db)
         try:
             self._conn.execute("SELECT id, grade, author, title, text FROM textbooks LIMIT 0")
             self._conn.execute("SELECT id, word, section, text FROM style_guide LIMIT 0")

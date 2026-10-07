@@ -266,7 +266,7 @@ def connect(
             raise ControlPlaneStoreUnavailableError(
                 f"control-plane store {store.value!r} database does not exist"
             )
-        uri = f"file:{db_path.resolve().as_posix()}?mode=ro"
+        uri = db_path.resolve().as_uri() + "?mode=ro"
         conn = sqlite3.connect(uri, uri=True, **sqlite_kwargs)
     else:
         db_path.parent.mkdir(parents=True, exist_ok=True)

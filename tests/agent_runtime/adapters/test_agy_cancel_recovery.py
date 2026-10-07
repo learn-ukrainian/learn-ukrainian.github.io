@@ -242,9 +242,12 @@ def test_file_auto_denial_target_survives_attempt_evidence_and_record(tmp_path, 
     result = _parse(tmp_path, events, stderr=auto_denial("read_file(evidence.txt)"), profile_id=profile)
     assert not result.ok
     assert result.failure_code == "provider_policy_refusal"
-    assert result.agy_attempt.permission_target == "evidence.txt"
+    assert result.agy_attempt.permission_target == "workspace:evidence.txt"
     record = AgyTelemetry(attempts=(result.agy_attempt,)).task_fields()
-    assert record["agy_attempts"][0]["permission_target"] == "evidence.txt"
+    assert record["agy_attempts"][0]["permission_target"] == "workspace:evidence.txt"
+    assert record["agy_attempts"][0]["permission_target_unknown_reason"] is None
+    assert record["agy_attempts"][0]["via_symlink"] is False
+    assert record["agy_attempts"][0]["permission_kind"] == "read_file"
     assert record["agy_attempts"][0]["permission_profile_id"] == profile
 
 

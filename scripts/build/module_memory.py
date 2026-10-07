@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import sqlite3
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,24 @@ import yaml
 
 from build.alignment_manifest import manifest_hash, stamp_artifact
 from scripts.storage.paths import artifact_path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PLAN_LEVEL_ERROR_CLASSES = {
     "vocab_density",
@@ -127,7 +146,7 @@ def _manifest_path_key(path: Path, root: Path) -> str:
         return str(path.resolve())
 
 
-def _sqlite_table_names(connection: sqlite3.Connection) -> set[str]:
+def _sqlite_table_names(connection: SQLiteConnection) -> set[str]:
     rows = connection.execute(
         """
         SELECT name
@@ -139,7 +158,7 @@ def _sqlite_table_names(connection: sqlite3.Connection) -> set[str]:
     return {str(row[0]) for row in rows}
 
 
-def _sqlite_table_digest(connection: sqlite3.Connection, table_name: str) -> str:
+def _sqlite_table_digest(connection: SQLiteConnection, table_name: str) -> str:
     columns = [str(row[1]) for row in connection.execute(f'PRAGMA table_info("{table_name}")')]
     digest = hashlib.sha256()
     digest.update(table_name.encode("utf-8"))
@@ -166,7 +185,7 @@ def _sqlite_group_digest(db_path: Path, tables: tuple[str, ...]) -> str | None:
     if not db_path.exists():
         return None
 
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path) as connection:
         existing_tables = _sqlite_table_names(connection)
         digest = hashlib.sha256()
         used = False
@@ -185,7 +204,7 @@ def _sqlite_table_hashes(db_path: Path, tables: tuple[str, ...]) -> dict[str, st
     if not db_path.exists():
         return {}
 
-    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as connection:
+    with _open_readonly(db_path) as connection:
         existing_tables = _sqlite_table_names(connection)
         return {
             table_name: _sqlite_table_digest(connection, table_name)

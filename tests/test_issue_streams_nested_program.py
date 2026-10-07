@@ -50,7 +50,9 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
 
     membership = _tree_membership(roots, fetch_batch)
     issues = [{"number": n, "title": f"issue {n}"} for n in sorted(set(open_numbers) | roots)]
-    return classify(issues, registry, membership)
+    report = classify(issues, registry, membership)
+    report["repository"] = "org/repo"
+    return report
 
 
 def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():

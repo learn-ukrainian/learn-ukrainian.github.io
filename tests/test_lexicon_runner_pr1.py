@@ -722,7 +722,7 @@ def test_side_dbs_match_python_index_lookups(
     em._BALLA_REVERSE_INDEX.clear()
     monkeypatch.setattr(em, "_vesum_word_analyses", lambda word: ((word, "noun"),))
 
-    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{fixture_paths['sources'].resolve().as_uri()}?mode=ro", uri=True)
     try:
         py_balla = em._load_balla_reverse_index(conn)
         py_dmk = em._load_dmklinger_index(conn)
@@ -770,7 +770,7 @@ def test_sealed_cefr_matches_legacy_prepare(tmp_path: Path, fixture_paths: dict[
     em._CEFR_ESTIMATE_LEVEL_BY_KEY.clear()
     em._GRAC_FREQUENCY_CACHE_DATA = grac
 
-    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{fixture_paths['sources'].resolve().as_uri()}?mode=ro", uri=True)
     try:
         em._prepare_cefr_estimates(conn, {"entries": entries})
         legacy = dict(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
@@ -839,7 +839,7 @@ def test_coordinator_warms_grac_before_cefr_seal(
 
     # Legacy baseline ranks on this cohort (with warmed fixture GRAC).
     em._GRAC_FREQUENCY_CACHE_DATA = dict(grac)
-    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{fixture_paths['sources'].resolve().as_uri()}?mode=ro", uri=True)
     try:
         em._prepare_cefr_estimates(conn, {"entries": entries})
         legacy_count = len(em._CEFR_ESTIMATE_LEVEL_BY_KEY)
@@ -1027,7 +1027,7 @@ def test_relation_closure_matches_legacy_by_headword(
     entries = json.loads(fixture_paths["input"].read_text(encoding="utf-8"))["entries"]
     monkeypatch.setattr(em, "_vesum_valid_synonym", lambda term: bool(term))
 
-    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{fixture_paths['sources'].resolve().as_uri()}?mode=ro", uri=True)
     try:
         monkeypatch.setattr(
             em,
@@ -1088,7 +1088,7 @@ def test_500_lemma_equivalence_cefr_and_relations(
 
     tmp_cefr = tmp_path / "cefr.sqlite"
     tmp_rel = tmp_path / "rel.sqlite"
-    conn = sqlite3.connect(f"file:{fixture_paths['sources'].resolve().as_posix()}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{fixture_paths['sources'].resolve().as_uri()}?mode=ro", uri=True)
     try:
         sealed_cefr_precompute(
             lemmas=(str(e.get("lemma") or "") for e in entries),

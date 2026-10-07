@@ -36,6 +36,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
@@ -47,9 +49,7 @@ SOURCE_LABEL_AUTHOR = "Anna Ohoiko"
 
 CYRILLIC_CHAR_RE = re.compile(r"[\u0400-\u04ff\u0301]")
 LATIN_CHAR_RE = re.compile(r"[a-zA-Z]")
-TWO_COL_BOUNDARY_RE = re.compile(
-    r"(?<=[\u0400-\u04ff\u0301.?!»\)\x27\x22”’])\s*(?=[A-Z\x22“«\x270-9])"
-)
+TWO_COL_BOUNDARY_RE = re.compile(r"(?<=[\u0400-\u04ff\u0301.?!»\)\x27\x22”’])\s*(?=[A-Z\x22“«\x270-9])")
 
 HEADS_7397 = frozenset(
     {
@@ -405,17 +405,13 @@ def parse_1000_words_head_and_gloss(lines: list[str]) -> tuple[str, str, int]:
                 or ("1)" in gloss and "2)" in en1)
                 or (
                     not CYRILLIC_CHAR_RE.search(l1)
-                    and (
-                        gloss.endswith((",", ";", "/"))
-                        or gloss.count("(") > gloss.count(")")
-                        or not gloss
-                    )
+                    and (gloss.endswith((",", ";", "/")) or gloss.count("(") > gloss.count(")") or not gloss)
                 )
             )
 
             if is_uk_cont or is_en_cont:
                 if pair1:
-                    if CYRILLIC_CHAR_RE.search(uk1) and not any(c in uk1 for c in ".?!…”»\""):
+                    if CYRILLIC_CHAR_RE.search(uk1) and not any(c in uk1 for c in '.?!…”»"'):
                         head = (head + " " + uk1).strip()
                     if is_en_cont or not gloss:
                         gloss = (gloss + " " + en1).strip() if gloss else en1.strip()
@@ -506,8 +502,7 @@ def extract_500_verbs_example(lines: list[str], *, start_i: int = 2, locator: st
         j = i + 1
         hops = 0
         while hops < 5 and not (
-            uk.rstrip().endswith(TERMINAL_PUNCT_500_VERBS)
-            and en.rstrip().endswith(TERMINAL_PUNCT_500_VERBS)
+            uk.rstrip().endswith(TERMINAL_PUNCT_500_VERBS) and en.rstrip().endswith(TERMINAL_PUNCT_500_VERBS)
         ):
             if j >= len(lines):
                 break
@@ -547,11 +542,7 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
     for line in raw_lines:
         ls = line.strip()
         if lines and ls.startswith("\u0301"):
-            if (
-                len(lines) >= 2
-                and LATIN_CHAR_RE.search(lines[-1])
-                and not CYRILLIC_CHAR_RE.search(lines[-1])
-            ):
+            if len(lines) >= 2 and LATIN_CHAR_RE.search(lines[-1]) and not CYRILLIC_CHAR_RE.search(lines[-1]):
                 content = re.sub(r"^\u0301\s*", "\u0301", ls)
                 lines[-2] = lines[-2] + content
                 continue
@@ -637,9 +628,7 @@ def is_duplicate_sense(prior_term: str, anna_gloss: str) -> bool:
         return True
     a_subterms = [normalize_for_comparison(s) for s in re.split(r"[,;/]", anna_gloss)]
     p_subterms = [normalize_for_comparison(s) for s in re.split(r"[,;/]", prior_term)]
-    return any(s and s in a_subterms for s in p_subterms) or any(
-        s and s in p_subterms for s in a_subterms
-    )
+    return any(s and s in a_subterms for s in p_subterms) or any(s and s in p_subterms for s in a_subterms)
 
 
 def merge_translation(
@@ -812,7 +801,7 @@ def _load_500_verbs_full_text_by_number(cur: sqlite3.Cursor) -> dict[str, str]:
 
 
 def build_ohoiko_book_catalog(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
 ) -> tuple[list[ParsedOhoikoEntry], list[ParsedOhoikoEntry]]:
     """Load and parse all 1000-words and 500-verbs chunks from sources.db."""
     cur = conn.cursor()
@@ -838,7 +827,7 @@ def build_ohoiko_book_catalog(
 
 def apply_ohoiko_quality_enrichment(
     manifest: dict[str, Any],
-    conn: sqlite3.Connection | None = None,
+    conn: SQLiteConnection | None = None,
     *,
     parsed_1000: list[ParsedOhoikoEntry] | None = None,
     parsed_500: list[ParsedOhoikoEntry] | None = None,
@@ -920,9 +909,7 @@ def apply_ohoiko_quality_enrichment(
                 partner: dict[str, Any] = {"lemma": perf_lemmas[0], "source": SOURCE_LABEL_AUTHOR}
                 if first_perf_entry is not None and first_perf_entry.get("url_slug"):
                     partner["url_slug"] = first_perf_entry["url_slug"]
-                if enrich_entry_with_verb_pedagogy(
-                    imperf_entry, aspect_partner=partner, locator=item.locator
-                ):
+                if enrich_entry_with_verb_pedagogy(imperf_entry, aspect_partner=partner, locator=item.locator):
                     aspect_partner_updated_500 += 1
             for perf_lemma in perf_lemmas:
                 perf_entry = entries_by_lemma.get(perf_lemma)
@@ -931,9 +918,7 @@ def apply_ohoiko_quality_enrichment(
                 partner = {"lemma": imperf_lemma, "source": SOURCE_LABEL_AUTHOR}
                 if imperf_entry is not None and imperf_entry.get("url_slug"):
                     partner["url_slug"] = imperf_entry["url_slug"]
-                if enrich_entry_with_verb_pedagogy(
-                    perf_entry, aspect_partner=partner, locator=item.locator
-                ):
+                if enrich_entry_with_verb_pedagogy(perf_entry, aspect_partner=partner, locator=item.locator):
                     aspect_partner_updated_500 += 1
 
     # Verify #7397 heads
@@ -965,9 +950,7 @@ def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint for Ohoiko quality enrichment."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", type=Path, default=DEFAULT_DB_PATH, help="Path to sources.db")
-    parser.add_argument(
-        "--manifest", type=Path, default=DEFAULT_MANIFEST_PATH, help="Path to manifest JSON"
-    )
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST_PATH, help="Path to manifest JSON")
     parser.add_argument("--write", action="store_true", help="Write changes to manifest file")
     args = parser.parse_args(argv)
 
@@ -978,7 +961,7 @@ def main(argv: list[str] | None = None) -> int:
     from scripts.lexicon.manifest_io import load_manifest, write_manifest
 
     manifest = load_manifest(args.manifest)
-    conn = sqlite3.connect(args.db)
+    conn = _open_readonly(Path(args.db).resolve())
     try:
         stats = apply_ohoiko_quality_enrichment(manifest, conn)
     finally:

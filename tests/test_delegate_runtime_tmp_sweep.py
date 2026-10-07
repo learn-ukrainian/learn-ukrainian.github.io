@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import stat
@@ -351,12 +352,22 @@ def test_read_only_dispatch_inline_snapshot_mutation_check(tmp_tasks_dir):
     assert state_path.stat().st_size >= delegate._READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET
 
 
+def _lease_task_id(prefix: str) -> str:
+    """One lease task id for this case. A shared id names one shared lease directory (#9927)."""
+    current = os.environ.get("PYTEST_CURRENT_TEST", prefix)
+    node = current.split(" ", 1)[0]
+    digest = hashlib.sha256(node.encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}-{digest}"
+
+
 def _seed_legacy_running_lease(
     tmp_path: Path,
     tasks_dir: Path,
     *,
-    task_id: str = "legacy-running-task",
+    task_id: str | None = None,
 ) -> Path:
+    if task_id is None:
+        task_id = _lease_task_id("legacy-running")
     namespace = tmp_path / "learn-ukrainian"
     lease = namespace / delegate._runtime_tmp_lease_name(task_id)
     lease.mkdir(parents=True)

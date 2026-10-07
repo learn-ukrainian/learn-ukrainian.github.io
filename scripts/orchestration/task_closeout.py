@@ -776,6 +776,8 @@ def perform_mutation(
         before = adapter.observe(ledger, now=now, branch=branch, worktree=worktree)
         operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         try:
+            if before["github"].get("error"):
+                raise task_lifecycle.LifecycleError(f"GitHub observation failed: {before['github']['error']}")
             _assert_live_memberships(
                 adapter, ledger,
                 registered_epics=before["github"].get("registered_stream_epics"),

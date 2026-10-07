@@ -55,6 +55,20 @@ def _remove(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, s
     return code, captured.out, captured.err
 
 
+@pytest.mark.parametrize("returncode,stdout,expected", [(0, "", False), (0, "?? new.txt\n", True), (128, "", None)])
+def test_worktree_is_dirty_uses_the_ordinary_git_probe(tmp_path, monkeypatch, returncode, stdout, expected):
+    calls = []
+
+    def runner(args, *, cwd):
+        calls.append((cwd, args))
+        return subprocess.CompletedProcess(["git", *args], returncode, stdout, "")
+
+    monkeypatch.setattr(worktree_claims, "_git_probe", runner)
+
+    assert worktree_claims.worktree_is_dirty(tmp_path) is expected
+    assert calls == [(tmp_path, ["status", "--porcelain"])]
+
+
 def test_removes_an_unclaimed_linked_worktree_and_keeps_its_branch(tmp_path, capsys):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-1")

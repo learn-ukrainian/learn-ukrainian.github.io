@@ -31,6 +31,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -240,9 +242,9 @@ class CoTClaimVerifier:
 
     def __init__(
         self,
-        vesum_conn: sqlite3.Connection,
-        sources_conn: sqlite3.Connection,
-        ulif_conn: sqlite3.Connection | None = None,
+        vesum_conn: SQLiteConnection,
+        sources_conn: SQLiteConnection,
+        ulif_conn: SQLiteConnection | None = None,
         r2u_cache: dict[str, Any] | None = None,
         allow_network: bool = False,
     ) -> None:
@@ -1299,8 +1301,8 @@ def run_claim_verifier(
     if not sources_db.is_file():
         raise FileNotFoundError(f"Required sources database not found: {sources_db}")
 
-    vesum_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    sources_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(vesum_db)
+    sources_conn = _open_readonly(sources_db)
 
     if ulif_db is None and DEFAULT_ULIF_DB and DEFAULT_ULIF_DB.is_file():
         ulif_db = DEFAULT_ULIF_DB
@@ -1309,7 +1311,7 @@ def run_claim_verifier(
 
     ulif_conn = None
     if ulif_db and ulif_db.is_file():
-        ulif_conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
+        ulif_conn = _open_readonly(ulif_db)
 
     r2u_cache = {}
     if r2u_cache_path and r2u_cache_path.is_file():

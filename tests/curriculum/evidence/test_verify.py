@@ -21,7 +21,7 @@ def synthetic_checked_ulif_oracle(synthetic_sources, monkeypatch):
     def oracle(form, *, lemma, tags):
         import json
 
-        with sqlite3.connect(f"file:{synthetic_sources}?mode=ro", uri=True) as conn:
+        with sqlite3.connect(f"{Path(synthetic_sources).resolve().as_uri()}?mode=ro", uri=True) as conn:
             (payload,) = conn.execute(
                 "SELECT s.payload_json FROM ulif_dictua_sections s "
                 "JOIN ulif_dictua_entries e ON s.entry_id = e.id "

@@ -6,6 +6,13 @@ import sqlite3
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection  # type: ignore[no-redef]
+
 
 class CommsMigrationError(RuntimeError):
     """A database is newer, corrupt, or otherwise unsafe to migrate."""
@@ -647,17 +654,17 @@ _COMPATIBLE_MIGRATION_CHECKSUMS = {
 }
 
 
-def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def _table_exists(conn: SQLiteConnection, table: str) -> bool:
     return conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)
     ).fetchone() is not None
 
 
-def _columns(conn: sqlite3.Connection, table: str) -> set[str]:
+def _columns(conn: SQLiteConnection, table: str) -> set[str]:
     return {str(row[1]) for row in conn.execute(f"PRAGMA table_info({table})")}
 
 
-def _ensure_delivery_contract_columns(conn: sqlite3.Connection) -> None:
+def _ensure_delivery_contract_columns(conn: SQLiteConnection) -> None:
     """Extend the legacy channel table instead of replacing its live writers."""
     if not _table_exists(conn, "deliveries"):
         conn.execute(
@@ -684,7 +691,7 @@ def _ensure_delivery_contract_columns(conn: sqlite3.Connection) -> None:
             conn.execute(f"ALTER TABLE deliveries ADD COLUMN {name} {definition}")
 
 
-def _ensure_migration_table(conn: sqlite3.Connection) -> None:
+def _ensure_migration_table(conn: SQLiteConnection) -> None:
     conn.execute(
         """CREATE TABLE IF NOT EXISTS comms_schema_migrations (
             version INTEGER PRIMARY KEY,
@@ -695,7 +702,7 @@ def _ensure_migration_table(conn: sqlite3.Connection) -> None:
     )
 
 
-def _applied_migrations(conn: sqlite3.Connection) -> dict[int, tuple[str, str]]:
+def _applied_migrations(conn: SQLiteConnection) -> dict[int, tuple[str, str]]:
     return {
         int(row[0]): (str(row[1]), str(row[2]))
         for row in conn.execute("SELECT version, name, checksum FROM comms_schema_migrations")
@@ -718,7 +725,7 @@ def _validate_applied_migrations(
             raise CommsMigrationError(f"Communications migration {version} has an unexpected checksum")
 
 
-def verify_applied_migrations(conn: sqlite3.Connection) -> int:
+def verify_applied_migrations(conn: SQLiteConnection) -> int:
     """Verify the complete applied-migration receipt set without mutating it.
 
     Authority cutover must not be the operation that repairs a target schema.
@@ -726,7 +733,7 @@ def verify_applied_migrations(conn: sqlite3.Connection) -> int:
     its expected name, and its approved checksum receipt to be present before
     a caller can transfer authority to the Fleet Comms plane.
     """
-    if not isinstance(conn, sqlite3.Connection):
+    if not is_sqlite_connection(conn):
         raise CommsMigrationError("communications migration verification requires sqlite")
     known = {migration.version: migration for migration in MIGRATIONS}
     try:
@@ -739,9 +746,9 @@ def verify_applied_migrations(conn: sqlite3.Connection) -> int:
     return max(applied, default=0)
 
 
-def apply_migrations(conn: sqlite3.Connection) -> int:
+def apply_migrations(conn: SQLiteConnection) -> int:
     """Apply each known migration atomically and refuse unknown future versions."""
-    if not isinstance(conn, sqlite3.Connection):
+    if not is_sqlite_connection(conn):
         # #7482 interlock, defense in depth: the ledger is sqlite-only in this
         # slice; a psycopg connection reaching this point would fail later
         # with an opaque driver error (``BEGIN IMMEDIATE`` is not pg syntax).

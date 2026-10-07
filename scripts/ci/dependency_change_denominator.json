@@ -1,0 +1,22 @@
+{
+  "schema_version": "dependency_change_denominator_v1",
+  "version": "2",
+  "description": "Changed-path denominator for the CI dependency-audit cheap-exit (#9871). The dependency-audit job runs the full audit only when the diff touches one of these dependency inputs; otherwise it ends success with 'not applicable: no dependency input changed'. Entries are exact paths, directory prefixes ending in /, or fnmatch globs. A glob without a slash matches only root-level files (e.g. requirements*.txt matches requirements-lock.txt but not scripts/requirements-x.txt); a glob with a slash matches the full repo-relative POSIX path. Added, modified, deleted and renamed (either side) paths all count. Keep this file and scripts/ci/dependency_change_scope.py listed here so changes to the mechanism itself always run the audit.",
+  "paths": [
+    "requirements*.txt",
+    "requirements-lock.txt",
+    "pyproject.toml",
+    "uv.lock",
+    "poetry.lock",
+    "package.json",
+    "package-lock.json",
+    "packages/*/package.json",
+    "site/package.json",
+    "site/package-lock.json",
+    "scripts/config/pip-audit-ignore.yaml",
+    "scripts/config/npm-audit-ignore.yaml",
+    "scripts/ci/audit_dependencies.py",
+    "scripts/ci/dependency_change_denominator.json",
+    "scripts/ci/dependency_change_scope.py"
+  ]
+}

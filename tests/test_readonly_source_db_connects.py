@@ -308,20 +308,21 @@ def test_only_listed_source_ingest_build_writers_declare_protected_databases():
     assert actual == SOURCE_INGEST_BUILD_WRITERS
 
 
-def test_allowlisted_vesum_reader_cannot_switch_to_writable(tmp_path):
-    entry = next(e for e in lint.load_allowlist() if e.path == "scripts/verification/vesum.py")
-    source = (REPO_ROOT / entry.path).read_text()
-    path = tmp_path / entry.path
+def test_migrated_vesum_reader_cannot_switch_to_writable(tmp_path):
+    rel_path = "scripts/verification/vesum.py"
+    assert rel_path not in {entry.path for entry in lint.load_allowlist()}
+    source = (REPO_ROOT / rel_path).read_text()
+    path = tmp_path / rel_path
     path.parent.mkdir(parents=True)
     path.write_text(source)
-    assert lint.find_violations(tmp_path, (entry,)) == ([], [])
-    assert 'sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)' in source
+    assert lint.find_violations(tmp_path, ()) == ([], [])
+    assert 'open_readonly(resolved_path.resolve(), check_same_thread=False)' in source
     path.write_text(
         source.replace(
-            'sqlite3.connect(f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)',
+            'open_readonly(resolved_path.resolve(), check_same_thread=False)',
             "sqlite3.connect(str(resolved_path))",
         )
     )
-    violations, unreadable = lint.find_violations(tmp_path, (entry,))
+    violations, unreadable = lint.find_violations(tmp_path, ())
     assert not unreadable
-    assert any("reader opens differ" in v for v in violations)
+    assert any("constructor reference" in v for v in violations)

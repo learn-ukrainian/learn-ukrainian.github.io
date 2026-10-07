@@ -20,6 +20,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection, open_readonly  # type: ignore[no-redef]
+
+
 THREADS_TABLE = "threads"
 THREADS_REQUIRED_COLUMNS = frozenset({"id", "title", "cwd", "archived", "archived_at"})
 # Codex uses versioned filenames such as ``state_5.sqlite`` and longer opaque
@@ -153,12 +161,12 @@ def _row_to_cleanup_record(row: sqlite3.Row) -> CleanupThreadRecord:
     )
 
 
-def _thread_columns(connection: sqlite3.Connection) -> frozenset[str]:
+def _thread_columns(connection: SQLiteConnection) -> frozenset[str]:
     rows = connection.execute(f"PRAGMA table_info({THREADS_TABLE})").fetchall()
     return frozenset(str(row[1]) for row in rows)
 
 
-def _sqlite_tables(connection: sqlite3.Connection) -> frozenset[str]:
+def _sqlite_tables(connection: SQLiteConnection) -> frozenset[str]:
     rows = connection.execute(
         "SELECT name FROM sqlite_master WHERE type='table'",
     ).fetchall()
@@ -169,12 +177,6 @@ def _require_threads_schema(columns: frozenset[str]) -> None:
     if not THREADS_REQUIRED_COLUMNS.issubset(columns):
         missing = sorted(THREADS_REQUIRED_COLUMNS - columns)
         raise CodexStateSchemaError(f"missing threads columns: {', '.join(missing)}")
-
-
-def _make_uri(path: Path, mode: str) -> str:
-    if mode != "ro":
-        raise ValueError("mode must be 'ro'")
-    return f"file:{path.resolve().as_posix()}?mode=ro"
 
 
 def _raise_db_failure(exc: Exception, *, context: str) -> None:
@@ -195,13 +197,7 @@ def open_state_db(
     if mode != "ro":
         raise ValueError("mode must be 'ro'")
 
-    uri = _make_uri(path, mode)
-    connection = sqlite3.connect(
-        uri,
-        uri=True,
-        timeout=timeout_seconds,
-        check_same_thread=False,
-    )
+    connection = open_readonly(path, timeout=timeout_seconds, check_same_thread=False)
     try:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA query_only = ON")
@@ -272,7 +268,7 @@ def discover_state_database(
     return candidates[0][0]
 
 
-def _select_sql(connection: sqlite3.Connection) -> str:
+def _select_sql(connection: SQLiteConnection) -> str:
     columns = ["id", "title", "cwd", "archived", "archived_at"]
     if "host" in _thread_columns(connection):
         columns.append("host")

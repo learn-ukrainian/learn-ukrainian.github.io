@@ -14,7 +14,8 @@ disk / integration, plus queue readiness and reason codes.
 
 Eligibility (issue #6976): healthy available lane AND compatible / ready /
 valuable / independent item AND quota/capacity AND no WIP / dependency
-constraint.
+constraint. A lane is available only with established quota permission and
+an established zero in-flight count; missing values stay unknown (#9740).
 """
 
 from __future__ import annotations
@@ -139,19 +140,20 @@ class ReadyItem:
 class LaneState:
     lane: str
     status: str = "unknown"
-    in_flight: int = 0
+    in_flight: int | None = None
     will_last: bool | None = None
     quota_ok: bool | None = None
 
     def is_healthy_available(self) -> bool:
         if self.status not in _HEALTHY_STATUSES:
             return False
-        if int(self.in_flight or 0) != 0:
+        # Unknown load is not idle; unknown quota is not permission (#9740 F5).
+        if self.in_flight != 0:
             return False
         # Raw will_last is not a gate. A freshly reset lane reports False before
         # the pace is visible. Confirmed deficits are stored as quota_ok False
         # via the shared uncovered-deficit decision (or capacity_pick's avoid flag).
-        return self.quota_ok is not False
+        return self.quota_ok is True
 
 
 def _optional_int(raw: Any) -> int | None:
@@ -299,17 +301,57 @@ def empty_snapshot() -> EligibilitySnapshot:
     return EligibilitySnapshot()
 
 
-def _lane_pace_deficit(row: dict[str, Any]) -> bool:
-    """True only for an uncovered pace deficit, never for a raw will_last flag."""
-    return credit_lane.pace_deficit_state(str(row.get("lane") or ""), row)["uncovered"] is True
+def _optional_count(raw: Any) -> int | None:
+    """An observed non-negative count, else None (missing is unknown, not zero)."""
+    if isinstance(raw, bool) or not isinstance(raw, (int, float)) or not math.isfinite(raw) or raw < 0:
+        return None
+    return int(raw)
 
 
-def _lane_quota_ok(row: dict[str, Any], *, avoid_blocks: bool) -> bool | None:
-    quota_raw = row.get("quota_ok")
-    quota_ok: bool | None = None if quota_raw is None else bool(quota_raw)
-    if avoid_blocks or _lane_pace_deficit(row):
-        return False
-    return quota_ok
+def _lane_from_row(row: dict[str, Any]) -> LaneState | None:
+    """One lane from a snapshot or capacity row, through the shared routing facts (#9740).
+
+    A ``capacity_pick`` row carries the owner's facts (``routing_facts`` and
+    ``capacity``); they are used as published by that in-process owner call.
+    Any other row is re-read through :func:`credit_lane.routing_facts` from its
+    own fields (only a complete row can establish a pace deficit). Quota
+    permission is established by an explicit ``quota_ok: true`` or by an owner
+    ``verified`` capacity class; an avoid flag or ``avoid`` class is False; a
+    stale-advisory class is unknown; then a current uncovered deficit is False;
+    anything else is unknown.
+    """
+    lane = str(row.get("lane") or "").strip()
+    if not lane:
+        return None
+    published = row.get("routing_facts") if isinstance(row.get("routing_facts"), dict) else None
+    if published is not None:
+        status = published.get("status")
+        uncovered = published.get("uncovered")
+        capacity = (row.get("capacity") or {}).get("state") if isinstance(row.get("capacity"), dict) else None
+        capacity = capacity or published.get("capacity")
+    else:
+        facts = credit_lane.routing_facts(lane, row, model=None)
+        status, uncovered, capacity = facts.status, facts.uncovered, None
+        if facts.capacity in {credit_lane.CAPACITY_AVOID, credit_lane.CAPACITY_UNKNOWN_STALE}:
+            capacity = facts.capacity
+    explicit = row.get("quota_ok")
+    quota_ok: bool | None = None
+    if explicit is False or row.get("avoid") is True or capacity == credit_lane.CAPACITY_AVOID:
+        quota_ok = False
+    elif capacity == credit_lane.CAPACITY_UNKNOWN_STALE:
+        quota_ok = None  # a stale deficit is historical: neither permission nor a current refusal
+    elif uncovered is True:
+        quota_ok = False
+    elif explicit is True or capacity == credit_lane.CAPACITY_VERIFIED:
+        quota_ok = True
+    will_last = row.get("will_last")
+    return LaneState(
+        lane=lane,
+        status=str(status or "unknown"),
+        in_flight=_optional_count(row.get("in_flight")),
+        will_last=None if will_last is None else bool(will_last),
+        quota_ok=quota_ok,
+    )
 
 
 def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
@@ -318,24 +360,7 @@ def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
     items_raw = data.get("items") or []
     caps_raw = data.get("caps") if isinstance(data.get("caps"), dict) else {}
 
-    lanes: list[LaneState] = []
-    for row in lanes_raw:
-        if not isinstance(row, dict):
-            continue
-        lane = str(row.get("lane") or "").strip()
-        if not lane:
-            continue
-        will_last = row.get("will_last")
-        deficit = credit_lane.pace_deficit_state(lane, row)
-        lanes.append(
-            LaneState(
-                lane=lane,
-                status=str(deficit["status"] or "unknown"),
-                in_flight=int(row.get("in_flight") or 0),
-                will_last=None if will_last is None else bool(will_last),
-                quota_ok=_lane_quota_ok(row, avoid_blocks=bool(row.get("avoid"))),
-            )
-        )
+    lanes = [state for row in lanes_raw if isinstance(row, dict) and (state := _lane_from_row(row)) is not None]
 
     items: list[ReadyItem] = []
     for row in items_raw:
@@ -384,25 +409,8 @@ def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
 
 
 def lanes_from_capacity_rows(rows: list[dict[str, Any]] | None) -> tuple[LaneState, ...]:
-    lanes: list[LaneState] = []
-    for row in rows or []:
-        if not isinstance(row, dict):
-            continue
-        lane = str(row.get("lane") or "").strip()
-        if not lane:
-            continue
-        will_last = row.get("will_last")
-        deficit = credit_lane.pace_deficit_state(lane, row)
-        lanes.append(
-            LaneState(
-                lane=lane,
-                status=str(deficit["status"] or "unknown"),
-                in_flight=int(row.get("in_flight") or 0),
-                will_last=None if will_last is None else bool(will_last),
-                quota_ok=_lane_quota_ok(row, avoid_blocks=bool(row.get("avoid"))),
-            )
-        )
-    return tuple(lanes)
+    """Idle lanes from ``capacity_pick.build_lane_rows`` rows (see :func:`_lane_from_row`)."""
+    return tuple(state for row in rows or [] if isinstance(row, dict) and (state := _lane_from_row(row)) is not None)
 
 
 def items_from_work_next_queue(queue: list[dict[str, Any]] | None) -> tuple[ReadyItem, ...]:

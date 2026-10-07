@@ -910,13 +910,17 @@ def test_9852_mutation_refuses_foreign_repository_before_writing(tmp_path, monke
     monkeypatch.setattr(adapter, "update_issue_body", lambda *args: writes.append("sync"))
     monkeypatch.setattr(adapter, "enqueue_pr", lambda *args: writes.append("enqueue"))
     monkeypatch.setattr(adapter, "close_issue", lambda *args: writes.append("close"))
-    with pytest.raises(task_lifecycle.LifecycleError, match="live stream epic membership refused"):
+    reason = "registry repository does not match" if source == "registry" else "live body membership audit repository does not match"
+    with pytest.raises(task_lifecycle.LifecycleError, match=reason):
         task_closeout.perform_mutation(
             path, adapter, action=action, authorized_by="codex/impl-9852",
             branch=None, worktree=None, now=NOW,
         )
     assert writes == []
-    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert reason in failed["detail"]
+    assert "identity stream epic is absent" not in failed["detail"]
 
 
 def test_cmd_init_accepts_native_membership_without_a_live_audit(
@@ -1341,6 +1345,56 @@ def test_9794_transferred_follow_up_gets_live_check_before_each_mutation(tmp_pat
     assert reads == [42, 43]
     assert adapter.calls == []
     assert task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]["status"] == "failed"
+
+
+@pytest.mark.parametrize("action", ["sync-acs", "arm-auto-merge", "close-issue"])
+@pytest.mark.parametrize("evidence_repository", ["other/repo", None], ids=["foreign", "unknown"])
+def test_9866_transferred_follow_up_refuses_foreign_audit_without_writes(tmp_path, action, evidence_repository):
+    path, ledger = _ledger(tmp_path)
+    ledger, evidence = task_lifecycle.add_evidence(
+        ledger, ac_id="AC-IMPL", evidence_type="follow_up", summary="Scope transferred",
+        url="https://github.com/org/repo/issues/43", commit=None, details={}, recorded_at=NOW,
+    )
+    ledger = task_lifecycle.set_remaining_scope(
+        ledger, status="transferred", summary="Scope transferred", follow_up_issue=43,
+        follow_up_stream_epic=20, evidence_ids=[evidence["id"]], now=NOW,
+    )
+    task_lifecycle.write_lifecycle(path, ledger)
+    observation = _observation()
+    observation["github"]["registered_stream_epics"] = [10, 20]
+    observation["github"]["follow_up"] = {
+        "number": 43, "parent_epic": None, "reciprocal_links_verified": True,
+    }
+    report = _body_audit()
+    report["effective_membership"]["43"] = {
+        "epics": [20], "streams": ["other"], "via": "body", "unique_stream": True,
+    }
+    if evidence_repository is None:
+        report.pop("repository")
+        reason = "is missing or malformed"
+    else:
+        report["repository"] = evidence_repository
+        reason = "does not match"
+    observation["github"]["membership_audit"] = report
+    adapter = FakeAdapter(observation)
+    reads = []
+
+    def live_parent(repository, number):
+        reads.append(number)
+        return {"number": 10, "repository": repository} if number == 42 else None
+
+    adapter.read_issue_parent = live_parent
+    with pytest.raises(task_lifecycle.LifecycleError, match=rf"#43.*membership audit repository.*{reason}"):
+        task_closeout.perform_mutation(
+            path, adapter, action=action, authorized_by="codex/impl-9866",
+            branch=None, worktree=None, now=NOW,
+        )
+    assert reads == [42, 43]
+    assert adapter.calls == []
+    failed = task_lifecycle.load_lifecycle(path)["mutation_receipts"][-1]
+    assert failed["status"] == "failed"
+    assert failed["remote_mutation_performed"] is False
+    assert f"live stream epic membership refused for #43: live body membership audit repository {reason}" in failed["detail"]
 
 
 @pytest.mark.parametrize("parents,reason", [

@@ -9,11 +9,30 @@ Usage:
 
     Then open: http://localhost:5050
 """
-
 import sqlite3
+import sys
 from pathlib import Path
 
 from flask import Flask, jsonify, render_template_string
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 app = Flask(__name__)
 
@@ -324,7 +343,7 @@ def get_db():
     """Get database connection."""
     if not DB_PATH.exists():
         return None
-    conn = sqlite3.connect(DB_PATH)
+    conn = _open_readonly(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 

@@ -32,6 +32,8 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import model_view_exporter
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
@@ -374,7 +376,7 @@ class CacheOnlyDictionaryAdapters:
 
     def __init__(self, database: Path):
         self.database = database
-        self.connection: sqlite3.Connection | None = None
+        self.connection: SQLiteConnection | None = None
         self.ulif_rows: dict[str, dict[str, Any]] = {}
         self.slovnyk_available = False
         self.ulif = AdapterCounter(
@@ -394,7 +396,7 @@ class CacheOnlyDictionaryAdapters:
         }
         self.ulif.source_snapshot = database_snapshot
         self.slovnyk.source_snapshot = database_snapshot
-        self.connection = sqlite3.connect(f"file:{database.resolve()}?mode=ro", uri=True)
+        self.connection = _open_readonly(database.resolve())
         self.connection.row_factory = sqlite3.Row
         tables = {str(row[0]) for row in self.connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         if "ulif_dictua_entries" in tables:
@@ -559,7 +561,7 @@ class GenreResolver:
             id_column = str(adapter["id_column"])
             genre_column = str(spec["column"])
             require(table == "literary_texts", f"unsupported dynamic genre table: {table}")
-            connection = sqlite3.connect(f"file:{database.resolve()}?mode=ro", uri=True)
+            connection = _open_readonly(database.resolve())
             try:
                 rows = connection.execute(f'SELECT "{id_column}", "{genre_column}" FROM "{table}"').fetchall()
             finally:

@@ -465,12 +465,15 @@ def _isolated_git_env(
 def build_agent_env(
     *,
     provider: str,
+    model: str | None = None,
     overrides: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Return a scrubbed env for a spawned agent CLI.
 
     ``overrides`` are applied to the parent environment before sanitization so
     adapter-supplied values are subject to the same policy as inherited values.
+    ``model`` is the effective model selected for this invocation, never an
+    inherited parent model. Cursor Auto or an absent model has Unknown identity.
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
     For a Kimi seat it raises ``KimiAdmissionRefused`` when credential
     isolation (an empty ``GH_CONFIG_DIR``, the credential-helper and GitHub
@@ -563,6 +566,12 @@ def build_agent_env(
         failure = f"a launch whose credential isolation could not be established ({exc})"
         raise KimiAdmissionRefused(format_refusal(provider, [failure])) from exc
     env.update(isolation)
+
+    # Inherited GIT_* values are scrubbed above. Recreate both identities from
+    # this lane after isolation so a driver's identity cannot leak to workers.
+    from scripts.lib.git_identity import git_identity_env
+
+    env.update(git_identity_env(provider, model))
 
     # Git reads this process-scoped config for ordinary child invocations,
     # including shell and Python subprocess wrappers. pushInsteadOf affects only

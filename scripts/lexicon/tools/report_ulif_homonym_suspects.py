@@ -18,22 +18,27 @@ The spelling list is written under ``batch_state/`` (gitignored).
 from __future__ import annotations
 
 import argparse
-import sqlite3
 import sys
 import unicodedata
 from collections.abc import Callable, Iterable
 from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 REASON_TRIE = "trie_stress"
 REASON_VESUM = "vesum_comment"
 REASON_CASE = "capitalisation"
 
 
-def _connect_readonly(path: Path) -> sqlite3.Connection:
+def _connect_readonly(path: Path) -> SQLiteConnection:
     resolved = path.resolve()
     if not resolved.is_file():
         raise FileNotFoundError(resolved)
-    conn = sqlite3.connect(f"file:{resolved}?mode=ro", uri=True)
+    conn = _open_readonly(resolved)
     conn.execute("PRAGMA query_only=ON")
     return conn
 
@@ -52,7 +57,7 @@ def capitalisation_differs(lemma: str, canonical_headword: str) -> bool:
     return bare.casefold() == query.casefold() and bare != query
 
 
-def vesum_multi_comment_spellings(conn: sqlite3.Connection) -> set[str]:
+def vesum_multi_comment_spellings(conn: SQLiteConnection) -> set[str]:
     """Word forms that carry more than one distinct non-empty VESUM comment."""
     rows = conn.execute(
         """
@@ -121,7 +126,7 @@ def _trie_position_sets() -> Callable[[str], set[tuple[int, ...]]]:
     return positions
 
 
-def load_ok_entries(conn: sqlite3.Connection) -> list[tuple[str, str]]:
+def load_ok_entries(conn: SQLiteConnection) -> list[tuple[str, str]]:
     rows = conn.execute(
         """
         SELECT lemma, canonical_headword

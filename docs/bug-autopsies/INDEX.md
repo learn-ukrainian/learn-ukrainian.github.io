@@ -63,5 +63,6 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-08-25 | #7311 | dispatch-needs-finalize-unpushed-gap | `needs_finalize` misses committed-but-unpushed dispatches (cursor, 2026-08-25) |
 | 2026-09-20 | #8344 | 2026-09-20-acp-runtime-worktree-lock-leak | killed ACP ask leaks a locked runtime worktree the reaper cannot clear |
 | 2026-09-24 | #8645 | 2026-09-24-dispatch-fanout-oom | dispatch fan-out OOM killed the infra driver and its workers |
+| 2026-10-03 | #9595 (parent #6321) | v4-shared-postgres-queue-leak | unrelated changes failed the merge queue when an operation claim |
 <!-- INDEX-END -->
 - 2026-07-10 · destructive-restore: `npm run hydrate` overwrote the richer in-flight intake manifest (8,706→5,787) with the published release — restore tools must never destroy more data than they replace by default → detail: destructive-restores.md

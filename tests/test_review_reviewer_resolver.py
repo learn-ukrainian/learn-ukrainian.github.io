@@ -1788,12 +1788,33 @@ def test_ordinary_paths_preserve_resolution(risk):
 _REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
 
 
-def _credit_codex(credit: dict | None, **overrides) -> dict:
-    """A near-cap, healthy Codex routing-budget record publishing ``credit``."""
-    record = {"status": "near_cap", "health": {"healthy": True}, **overrides}
+# The probe reading a published credit leaf rests on; relief is re-checked against it (#9740 F6).
+_FRESH_PROBE = {"freshness": "fresh", "age_s": 60.0}
+
+
+def _credit_codex(credit: dict | None, *, diagnostics: dict | None = None, **overrides) -> dict:
+    """A near-cap, healthy Codex routing-budget record with a fresh probe, publishing ``credit``.
+
+    The record carries the inputs the producer computed ``credit`` from (remaining
+    allowance, raw balance and its fetch time): relief is re-decided from them (#9740).
+    """
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
+    fetched = (evidence or {}).get("credit_fetched_at") or (datetime.now(UTC) - timedelta(minutes=1)).isoformat()
+    record = {
+        "status": "near_cap",
+        "health": {"healthy": True},
+        "remaining_pct": 1.0,
+        "credit_balance": 62500.0,
+        "fetched_at": fetched,
+        **_FRESH_PROBE,
+        **overrides,
+    }
     if credit is not None:
         record["credit"] = credit
-    return {"agents": {"codex": record}}
+    snapshot: dict = {"agents": {"codex": record}}
+    if diagnostics is not None:
+        snapshot["diagnostics"] = diagnostics
+    return snapshot
 
 
 def _published_credit(*, fetched_at: datetime | None = None) -> dict:
@@ -1873,6 +1894,27 @@ def test_stale_published_credit_balance_stays_excluded():
     assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
 
 
+@pytest.mark.parametrize(
+    ("record", "diagnostics", "why"),
+    [
+        ({"freshness": "stale_last_good"}, None, "credit probe freshness=stale_last_good"),
+        ({"stale": True}, None, "credit probe freshness=fresh"),
+        ({"freshness": None, "age_s": None}, None, "credit probe freshness=missing"),
+        ({}, {"stale": True}, "routing-budget snapshot is stale"),
+    ],
+    ids=["stale-probe", "stale-flag", "missing-freshness", "stale-snapshot"],
+)
+def test_published_credit_relief_is_rechecked_against_the_full_record(record, diagnostics, why):
+    """#9740 F6: a published ``credit_balance_present`` leaf never outlives contradictory probe evidence."""
+    snapshot = _credit_codex(_published_credit(), diagnostics=diagnostics, **record)
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=snapshot)
+    )
+    assert result.status == "excluded"
+    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+    assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+
+
 def test_credit_balance_never_relaxes_hard_health_exclusion():
     snapshot = _credit_codex(_published_credit(), health={"healthy": False})
     result = evaluate_candidate(
@@ -1908,7 +1950,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
 
     credit_backed = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit(), "scheduler": light_codex},
+            "codex": {**_credit_codex(_published_credit())["agents"]["codex"], "scheduler": light_codex},
             "claude": {"status": "healthy", "scheduler": busy_claude},
         }
     }
@@ -1919,7 +1961,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
     only_credit = {
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit()},
+            "codex": _credit_codex(_published_credit())["agents"]["codex"],
             "claude": {"status": "near_cap"},
         }
     }
@@ -2014,7 +2056,7 @@ def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
 
 @pytest.mark.parametrize(
     "families,author_model",
-    [({"anthropic", "unknown"}, ""), ({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
+    [({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
 )
 def test_complete_set_with_an_unresolved_member_fails_closed(families, author_model):
     from scripts.review.reviewer_resolver import ResolverInputs, evaluate_candidate
@@ -2030,6 +2072,43 @@ def test_cursor_auto_member_keeps_the_union_and_transport_restrictions():
     reasons = {entry.name: entry.reason for entry in resolution.trace}
     assert "within author union family" in reasons["grok-4.7-cursor-fallback"]
     assert resolution.selected.family == "anthropic"
+
+
+@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7, GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize("author_model", ["", "cursor:auto"])
+def test_unknown_committed_author_accepts_any_qualified_known_family(candidate, author_model):
+    inputs = ResolverInputs(author_model=author_model, author_families=frozenset({"unknown"}), risk="medium")
+    assert evaluate_candidate(candidate, inputs).status == "eligible"
+    selected = resolve_reviewer(inputs, ladder=((candidate,),)).selected
+    assert (selected.name, selected.family, selected.concrete_model) == (
+        candidate.name, candidate.family, candidate.concrete_model
+    )
+
+
+def test_unknown_committed_author_does_not_hide_known_author_exclusions():
+    resolution = _complete({"unknown", "anthropic"})
+    assert resolution.selected.family != "anthropic"
+    assert evaluate_candidate(
+        SONNET_5_5, ResolverInputs(author_model="", author_families=frozenset({"unknown", "anthropic"}))
+    ).status == "excluded"
+
+
+def test_unknown_committed_author_does_not_hide_incoming_cursor_auto_union():
+    inputs = ResolverInputs(
+        author_model="cursor:auto", author_families=frozenset({"unknown", "cursor-auto-union"})
+    )
+    assert evaluate_candidate(GROK_4_7, inputs).status == "excluded"
+    selected = resolve_reviewer(inputs).selected
+    assert selected is not None and selected.family in {"anthropic", "openai"}
+
+
+@pytest.mark.parametrize("authors", [{"unknown"}, {"anthropic"}])
+def test_unknown_reviewer_family_is_always_refused(authors):
+    candidate = replace(OPENAI_FRONTIER, family="unknown")
+    inputs = ResolverInputs(author_model="", author_families=frozenset(authors))
+    result = evaluate_candidate(candidate, inputs)
+    assert result.status == "excluded" and "reviewer family unknown" in result.reason
+    assert resolve_reviewer(inputs, ladder=((candidate,),)).selected is None
 
 
 def test_empty_complete_set_keeps_single_author_selection_identical():

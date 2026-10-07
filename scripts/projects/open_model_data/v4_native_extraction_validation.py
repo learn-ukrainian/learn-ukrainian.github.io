@@ -15,7 +15,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -28,6 +27,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.rag.extract_text import detect_native_text_anomalies
 
@@ -354,8 +354,7 @@ def build(
     eligible_sources.sort(key=lambda r: (r["cohort_id"], r["source_id"]))
 
     # 4. Connect to database read-only
-    db_uri = f"file:{db_path.resolve()}?mode=ro"
-    conn = sqlite3.connect(db_uri, uri=True)
+    conn = _open_readonly(db_path.resolve())
     cur = conn.cursor()
 
     out_index_path = resolve_open_model_path(config["outputs"]["index"], repo=norm_out)

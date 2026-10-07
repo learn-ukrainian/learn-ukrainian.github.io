@@ -24,6 +24,10 @@ ancestors as residue.
 ``LU_RUNTIME_TMP_BASE_ROOT`` is deliberately *not* a creation override: the
 dispatcher records it so nested cleanup can find the namespace base, and
 honoring it here would pull worker scratch back onto tmpfs.
+
+``LU_SCRATCH_SCAN_ROOT`` confines reaper scans to one existing directory.
+It does not change where new scratch is created. Unset, scans still cover
+the current root, the default, the fallback, and legacy tmpfs locations.
 """
 
 from __future__ import annotations
@@ -33,6 +37,7 @@ import tempfile
 from pathlib import Path
 
 SCRATCH_ROOT_ENV_VAR = "LU_SCRATCH_ROOT"
+SCRATCH_SCAN_ROOT_ENV_VAR = "LU_SCRATCH_SCAN_ROOT"
 DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
 FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
 
@@ -93,12 +98,31 @@ def make_scratch_dir(prefix: str) -> Path:
     return Path(tempfile.mkdtemp(prefix=prefix, dir=ensure_scratch_root()))
 
 
+def _existing_scan_dir(path: Path) -> Path | None:
+    """Return ``path`` resolved when it is an existing directory."""
+    try:
+        resolved = path.resolve(strict=True)
+    except OSError:
+        return None
+    if not resolved.is_dir():
+        return None
+    return resolved
+
+
 def scratch_scan_roots() -> list[Path]:
     """Return existing roots a reaper must scan for stale fleet scratch.
 
     Covers the current scratch root plus the fallback root, default root,
     dispatcher base override, and legacy tmpfs locations that pre-#7164
     tooling used, so the reaper drains both old and new residue.
+
+    When ``LU_SCRATCH_SCAN_ROOT`` is set, only candidates that resolve inside
+    that directory are returned. The variable must name an existing directory;
+    a missing path raises rather than falling open onto the host roots. If
+    none of the usual candidates lie inside it, the scan is that directory
+    alone. An empty result is not safe here: review orphan cleanup treats
+    an empty scan as "use the host temp". Unset, the historical set is
+    unchanged. This is a scan confinement, not a creation override.
     """
     roots: list[Path] = []
     seen: set[Path] = set()
@@ -111,13 +135,22 @@ def scratch_scan_roots() -> list[Path]:
     if base_override:
         candidates.append(Path(base_override))
     candidates.append(Path(tempfile.gettempdir()))
+
+    confine_raw = os.environ.get(SCRATCH_SCAN_ROOT_ENV_VAR, "").strip()
+    confine: Path | None = None
+    if confine_raw:
+        confine = _existing_scan_dir(Path(confine_raw))
+        if confine is None:
+            raise OSError(f"{SCRATCH_SCAN_ROOT_ENV_VAR} is set but is not an existing directory: {confine_raw}")
+
     for candidate in candidates:
-        try:
-            resolved = candidate.resolve(strict=True)
-        except OSError:
+        resolved = _existing_scan_dir(candidate)
+        if resolved is None or resolved in seen:
             continue
-        if resolved in seen or not resolved.is_dir():
+        if confine is not None and not resolved.is_relative_to(confine):
             continue
         seen.add(resolved)
         roots.append(resolved)
+    if confine is not None and not roots:
+        roots.append(confine)
     return roots

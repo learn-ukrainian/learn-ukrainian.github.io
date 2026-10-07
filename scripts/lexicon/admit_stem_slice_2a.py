@@ -16,7 +16,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import urllib.parse
 from pathlib import Path
@@ -40,6 +39,7 @@ from scripts.lexicon.enrich_manifest import (
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.artifacts import write_artifact
 from scripts.storage.paths import artifact_path, load_manifest
 
@@ -335,7 +335,7 @@ def admit_slice_2a(
     print(f"Enriching {len(new_entries)} newly promoted entries...")
     kaikki_lookup = enrich_manifest._load_kaikki_lookup()
     enriched_count = 0
-    with sqlite3.connect(f"file:{SOURCES_DB_PATH}?mode=ro", uri=True) as conn:
+    with _open_readonly(SOURCES_DB_PATH) as conn:
         for idx, entry in enumerate(new_entries, 1):
             if enrich_manifest.enrich_entry(entry, conn, kaikki_lookup):
                 enriched_count += 1

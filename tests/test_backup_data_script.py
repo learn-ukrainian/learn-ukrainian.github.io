@@ -995,7 +995,7 @@ def test_execute_restores_agent_wal_database_without_sidecars(
     restored_database = restore_target / ".agent" / "session-streams" / "v1" / database.name
     assert not restored_database.with_name(f"{database.name}-wal").exists()
     assert not restored_database.with_name(f"{database.name}-shm").exists()
-    with sqlite3.connect(f"file:{restored_database}?mode=ro", uri=True) as restored_connection:
+    with sqlite3.connect(f"{Path(restored_database).resolve().as_uri()}?mode=ro", uri=True) as restored_connection:
         rows = restored_connection.execute("SELECT value FROM recovery_probe ORDER BY rowid").fetchall()
     assert rows == [("first",), ("latest",)]
     assert (restore_target / ".agent").is_dir()

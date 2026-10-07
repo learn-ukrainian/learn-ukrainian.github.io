@@ -8,13 +8,21 @@ from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from shlex import split as shell_split
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import yaml
+
+# Launchers invoke this file directly, without a repository PYTHONPATH.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+if TYPE_CHECKING:
+    from scripts.review.role_resolution import RoleResolution
 
 CATALOG_PATH = Path(__file__).resolve().parents[1] / "config" / "model_catalog.yaml"
 PROJECT_ROOT = CATALOG_PATH.parents[2]
 EXPECTED_SCHEMA_VERSION = "model-catalog.v1"
+SUPPORTED_SCHEMA_VERSIONS = frozenset({EXPECTED_SCHEMA_VERSION, "model-catalog.v1.1"})
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
@@ -606,9 +614,9 @@ def validate_catalog(data: Any) -> dict[str, Any]:
     # matters to tests and tooling that compare the parsed YAML before/after
     # validation.
     catalog = _require_mapping(data, "catalog").copy()
-    if catalog.get("schema_version") != EXPECTED_SCHEMA_VERSION:
+    if not isinstance(catalog.get("schema_version"), str) or catalog["schema_version"] not in SUPPORTED_SCHEMA_VERSIONS:
         raise ModelCatalogError(
-            f"schema_version must be {EXPECTED_SCHEMA_VERSION!r}, got {catalog.get('schema_version')!r}"
+            f"schema_version must be one of {sorted(SUPPORTED_SCHEMA_VERSIONS)!r}, got {catalog.get('schema_version')!r}"
         )
 
     reviewed_on = catalog.get("reviewed_on")
@@ -870,7 +878,22 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 previous_rank = rung_rank
             seen_models.update(rung_models)
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
+    from scripts.review.role_resolution import validate_role_catalog
+
+    validate_role_catalog(catalog)
     return catalog
+
+
+def resolve_role(
+    role: str, *, catalog: dict[str, Any] | None = None, purpose: str,
+    transport: str | None = None, family: str | None = None,
+    context: dict[str, Any] | None = None, health: dict[str, Any] | None = None,
+) -> RoleResolution:
+    """Shared Python/shell API for additive routing roles; never launch a process."""
+    from scripts.review.role_resolution import resolve_role as resolve
+
+    return resolve(role, catalog=catalog, purpose=purpose, transport=transport,
+                   family=family, context=context, health=health)
 
 
 @lru_cache(maxsize=1)
@@ -1236,7 +1259,7 @@ def _main() -> int:
 
     parser = argparse.ArgumentParser(
         description=(
-            "Resolve Kimi or GLM aliases and refuse retired models for shell launchers.\n"
+            "Resolve routing roles or Kimi/GLM aliases and refuse retired models for shell launchers.\n"
             "Use for catalog admission and route lookup, not provider-health or quota probing."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1245,7 +1268,8 @@ def _main() -> int:
             "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
             "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
             "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
-            "Outputs: resolved model or tab-separated route fields on stdout; no writes.\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --resolve-role bounded_advisor\n"
+            "Outputs: model id, tab-separated alias route fields, or role-resolution JSON on stdout; no writes.\n"
             "Exit codes: 0 resolved or not retired; 2 retired model, invalid arguments or unknown route.\n"
             "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
         ),
@@ -1253,17 +1277,35 @@ def _main() -> int:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--resolve-kimi-model", metavar="ALIAS", help="Kimi catalog alias to resolve, e.g. k3")
     group.add_argument("--resolve-glm-model", metavar="ALIAS", help="GLM catalog alias to resolve, e.g. glm")
+    group.add_argument("--resolve-role", metavar="ROLE", help="Stable routing role to inspect as JSON, e.g. bounded_advisor")
     group.add_argument(
         "--check-retired-model", metavar="MODEL",
         help="Refuse a retired catalog identity, including aliases and context suffixes; e.g. claude-fable-5",
     )
     parser.add_argument(
         "--format", choices=("native", "kimicc", "glmcc"), default="native",
-        help="Output model id (native, default) or route fields (kimicc/glmcc)",
+        help="Alias output: model id (native, default) or route fields (kimicc/glmcc); roles always emit JSON",
     )
+    parser.add_argument("--purpose", choices=("inspect", "launch"), default="inspect",
+                        help="Role inspection or explicit launch argv construction (default: inspect; never executes)")
+    parser.add_argument("--transport", help="Optional role transport filter, e.g. native_codex; default: all")
+    parser.add_argument("--family", help="Optional role independence-family filter, e.g. openai; default: all")
+    parser.add_argument("--role-context-file", type=Path, help="Optional role context JSON path; default: no requirements")
+    parser.add_argument("--role-health-file", type=Path, help="Optional role health JSON path; default: unknown observation, v1 ranking")
     args = parser.parse_args()
 
-    if args.check_retired_model:
+    if args.resolve_role:
+        import json
+
+        try:
+            context = json.loads(args.role_context_file.read_text()) if args.role_context_file else None
+            health = json.loads(args.role_health_file.read_text()) if args.role_health_file else None
+            resolution = resolve_role(args.resolve_role, purpose=args.purpose, transport=args.transport,
+                                      family=args.family, context=context, health=health)
+        except (ModelCatalogError, ValueError, OSError) as exc:
+            parser.error(str(exc))
+        print(json.dumps(resolution.to_dict(), indent=2))
+    elif args.check_retired_model:
         try:
             refusal = retired_model_refusal(args.check_retired_model)
         except ModelCatalogError as exc:

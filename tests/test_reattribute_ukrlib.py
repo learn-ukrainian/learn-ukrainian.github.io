@@ -15,6 +15,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from rag.config import LITERARY_DIR
+from scripts.lib.readonly_sqlite import open_readonly
+
+_SOURCES_DB = Path(__file__).resolve().parents[1] / "data" / "sources.db"
 
 # ── Post-execution tests ─────────────────────────────────────────────
 
@@ -81,11 +84,11 @@ def _literary_corpus_available() -> bool:
     post-reattribution corpus checks below skip there and run only locally
     against the full SQLite corpus.
     """
-    db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+    db_path = _SOURCES_DB
     if not db_path.exists():
         return False
     try:
-        with sqlite3.connect(db_path) as conn:
+        with open_readonly(db_path) as conn:
             has_table = conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='literary_texts'"
             ).fetchone()
@@ -113,10 +116,10 @@ class TestPostSearchQuality:
     )
     @pytest.mark.parametrize("author,work_substr", AUTHOR_CHECKS)
     def test_post_author_chunks_in_sources_db(self, author, work_substr):
-        db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+        db_path = _SOURCES_DB
         assert db_path.exists(), f"Missing source corpus DB: {db_path}"
 
-        with sqlite3.connect(db_path) as conn:
+        with open_readonly(db_path) as conn:
             count = conn.execute(
                 """
                 SELECT count(*)

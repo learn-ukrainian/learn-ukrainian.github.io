@@ -11,9 +11,31 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_LEXEMES_DIR = Path("site/public/lexicon")
@@ -395,7 +417,7 @@ class VesumSentenceVerifier:
     """Small cached VESUM lookup used only for sentence-shape screening."""
 
     def __init__(self, path: Path) -> None:
-        self.conn = sqlite3.connect(path)
+        self.conn = _open_readonly(path)
         self.cache: dict[str, bool] = {}
         self.imperative_cache: dict[str, bool] = {}
 
@@ -480,7 +502,7 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
 
 
 def _fts_rows(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     fts_table: str,
     content_table: str,
@@ -525,7 +547,7 @@ def _fts_rows(
 
 
 def _source_sentences(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     target: dict[str, str],
     source_kind: str,
@@ -758,7 +780,7 @@ def build_inventory(
         raise ValueError("max_per_lemma must be positive")
     if textbook_search_limit < 1:
         raise ValueError("textbook search limit must be positive")
-    conn = sqlite3.connect(sources_db)
+    conn = _open_readonly(sources_db)
     conn.row_factory = sqlite3.Row
     vesum = VesumSentenceVerifier(vesum_db) if vesum_db is not None and vesum_db.exists() else None
     try:

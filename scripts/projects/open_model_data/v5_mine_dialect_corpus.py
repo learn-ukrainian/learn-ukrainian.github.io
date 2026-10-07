@@ -45,6 +45,7 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import write_artifact_set
@@ -385,7 +386,7 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
     if not db_path.exists() or db_path.stat().st_size == 0:
         raise FileNotFoundError(f"Database missing or empty: {db_path}")
 
-    con = sqlite3.connect(db_path)
+    con = _open_readonly(db_path)
     cur = con.cursor()
 
     candidates: list[MinedSentence] = []
@@ -915,7 +916,7 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
     if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
         return None
 
-    con_ves = sqlite3.connect(vesum_db)
+    con_ves = _open_readonly(vesum_db)
     cur = con_ves.cursor()
 
     patterns = [
@@ -1008,7 +1009,7 @@ def build_sft_dialect_dataset(
     if V02_SFT_SHARDS_DIR is not None:
         assert_not_archived_path(V02_SFT_SHARDS_DIR, context="dialect replay shards")
 
-    con_ves = sqlite3.connect(vesum_db)
+    con_ves = _open_readonly(vesum_db)
     cur_ves = con_ves.cursor()
 
     sft_trajectories: list[dict[str, Any]] = []

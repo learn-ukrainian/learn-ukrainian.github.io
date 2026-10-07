@@ -24,6 +24,7 @@ from scripts.projects.open_model_data.review_build.errors import BuildError
 from scripts.projects.open_model_data.review_build.gate import Gate
 from scripts.projects.open_model_data.review_build.output import OutputGuard
 from scripts.projects.open_model_data.review_build.snapshot import SnapshotReader
+from tests.helpers.restore_import_state import restore_import_state
 from tests.projects.open_model_data.review_build.conftest import catalog_data, register_data
 
 
@@ -501,15 +502,16 @@ def test_official_reader_loader_preserves_environment(tmp_path, monkeypatch):
     )
     import sys
 
-    monkeypatch.delitem(sys.modules, "ua_gec", raising=False)
-    try:
-        corpus = ua_gec_split.official_corpus(root, "gec-only")
-        assert corpus.partition == "all" and corpus._data_dir == root / "data/gec-only"
-        assert ua_gec_split.official_corpus(root, "gec-fluency").layer == "gec-fluency"
-        with pytest.raises(BuildError, match="reader_identity"):
-            ua_gec_split.official_corpus(tmp_path / "SYNTHETIC-other", "gec-only")
-    finally:
-        sys.modules.pop("ua_gec", None)
+    with restore_import_state("ua_gec"):
+        monkeypatch.delitem(sys.modules, "ua_gec", raising=False)
+        try:
+            corpus = ua_gec_split.official_corpus(root, "gec-only")
+            assert corpus.partition == "all" and corpus._data_dir == root / "data/gec-only"
+            assert ua_gec_split.official_corpus(root, "gec-fluency").layer == "gec-fluency"
+            with pytest.raises(BuildError, match="reader_identity"):
+                ua_gec_split.official_corpus(tmp_path / "SYNTHETIC-other", "gec-only")
+        finally:
+            sys.modules.pop("ua_gec", None)
 
 
 def test_invalid_component_selection_is_refused(store):

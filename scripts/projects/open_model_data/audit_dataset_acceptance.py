@@ -40,6 +40,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import (
     ARTIFACT_DECOLONIZATION_DIR,
     ARTIFACT_GRAMMAR_DIR,
@@ -246,7 +247,7 @@ class LinguisticNormalizer:
             with aspect_pairs_path.open("r", encoding="utf-8") as f:
                 self.aspect_pairs = json.load(f)
 
-        self._conn = sqlite3.connect(f"file:{self.vesum_db_path}?mode=ro", uri=True)
+        self._conn = _open_readonly(self.vesum_db_path)
         self._cur = self._conn.cursor()
         self._lemma_cache: dict[str, list[dict[str, str]]] = {}
 

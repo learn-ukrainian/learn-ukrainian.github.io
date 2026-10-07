@@ -308,6 +308,31 @@ GROK_RECEIPT = {
 }
 
 
+@pytest.mark.parametrize("trailer", ["cursor/feature", "cursor/auto", "cursor/unattested", "codex/unrecognized"])
+@pytest.mark.parametrize(
+    "agent,model,review",
+    [("claude", "claude-opus-5-5", {}), ("codex", "gpt-6.1-sol", {}), ("cursor", "grok-4.7-high", GROK_RECEIPT)],
+)
+def test_unknown_author_records_a_known_family_verdict(repo, tasks, monkeypatch, tmp_path, trailer, agent, model, review):
+    task_record(tasks, "unattested", agent="cursor", resolved_model_known=False, resolved_model="unknown")
+    task_record(tasks, "unrecognized", agent="codex", model="not-a-catalog-model")
+    head = repo.commit(trailer)
+    repo.publish()
+    assert facts(repo, tasks).existing_families == {"unknown"}
+    receipt = record_verdict(monkeypatch, tmp_path, repo, agent=agent, model=model, **review)
+    assert receipt["head"] == head and receipt["verdict"] == "APPROVED"
+    assert receipt["comment"] == "posted" and receipt["status"] == "posted"
+
+
+def test_unknown_author_cannot_record_an_unknown_reviewer_verdict(repo, tasks, monkeypatch, tmp_path):
+    repo.commit("cursor/feature")
+    repo.publish()
+    posted = []
+    with pytest.raises(recorder.RecordError, match="reviewer family unknown"):
+        record_verdict(monkeypatch, tmp_path, repo, agent="codex", model="unknown", comments=posted)
+    assert posted == []
+
+
 # --- 1. single-family eligible -------------------------------------------------------------------
 
 
@@ -423,15 +448,13 @@ def test_cursor_auto_incoming_writer_is_the_xai_moonshot_union(repo, tasks):
         ({"resolved_model_known": False, "resolved_model": "unknown"}, False),
     ],
 )
-def test_committed_cursor_authorship_needs_a_runtime_attested_model(repo, tasks, record, attributed):
+def test_committed_cursor_authorship_is_unknown_without_runtime_attestation(repo, tasks, record, attributed):
     task_record(tasks, "run", agent="cursor", model="auto", **record)
     repo.commit("cursor/run")
     if attributed:
         assert facts(repo, tasks).existing_families == {"anthropic"}
     else:
-        with pytest.raises(recorder.BranchFactsError, match="author family unknown") as refused:
-            facts(repo, tasks)
-        assert refused.value.code == recorder.FACTS_AUTHORSHIP_UNKNOWN
+        assert facts(repo, tasks).existing_families == {"unknown"}
 
 
 # --- 4. protected-scope qualification ------------------------------------------------------------
@@ -508,26 +531,19 @@ def test_recorder_refuses_a_github_listing_that_differs_from_rev_list(repo, task
     [
         ("missing-trailer", "missing explicit X-Agent"),
         ("duplicate-trailer", "missing explicit X-Agent"),
-        ("missing-record", "provenance unavailable"),
         ("repository-mismatch", "conflicts with commit trailer"),
-        ("conflicting-model", "author family unknown"),
         ("unproven-merge", "missing explicit X-Agent"),
     ],
 )
-def test_unknown_attribution_is_never_green(repo, tasks, case, reason):
+def test_invalid_attribution_is_never_green(repo, tasks, case, reason):
     repo.commit(OPUS)
     if case == "missing-trailer":
         repo.commit(None)
     elif case == "duplicate-trailer":
         repo.commit(f"{OPUS}\nX-Agent: {SOL}")
-    elif case == "missing-record":
-        repo.commit("codex/no-such-task")
     elif case == "repository-mismatch":
         task_record(tasks, "elsewhere", agent="codex", model="gpt-6.1-sol", repository="other/repo")
         repo.commit("codex/elsewhere")
-    elif case == "conflicting-model":
-        task_record(tasks, "odd", agent="codex", model="not-a-catalog-model")
-        repo.commit("codex/odd")
     else:
         repo.git("checkout", "-q", "-b", "side", "origin/main")
         repo.commit(SOL, path="src/app.py")
@@ -951,13 +967,28 @@ def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boun
         (("--worktree",), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
         (("--worktree", "--owned-path", SHARED_HOOK), delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN),
         (("--branch", "feature", "--owned-path", "docs/a.md"), delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
-        (("--branch", "absent", "--owned-path", "docs/a.md"), delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
+        (("--branch", "absent", "--owned-path", "docs/a.md"), "DISPATCH_BRANCH_NOT_FOUND"),
     ],
 )
 def test_unknown_scope_or_authorship_refuses_at_the_boundary(boundary, capsys, repo, tasks, extra, code):
     repo.commit(None)  # an unattributed commit on feature
     repo.publish()
-    assert_refused(boundary, capsys, repo, tasks, boundary(*extra), code)
+    result = boundary(*extra)
+    if code == "DISPATCH_BRANCH_NOT_FOUND":
+        # #9874: an absent branch is refused before authoring review admission.
+        rc, before = result
+        assert rc == 2
+        assert capsys.readouterr().err == (
+            "❌ DISPATCH_BRANCH_NOT_FOUND: --branch 'absent' does not exist on the canonical remote. "
+            "--branch continues an existing remote branch; for a new branch omit --branch "
+            "(default: <agent>/<task-id>), optionally with --base.\n"
+        )
+        assert boundary.calls == []
+        assert repo.snapshot() == before
+        assert list(tasks.rglob("*")) == []
+        assert not (repo.root / ".worktrees").exists()
+    else:
+        assert_refused(boundary, capsys, repo, tasks, result, code)
 
 
 def test_catalog_failure_keeps_its_own_reason(boundary, capsys, repo, tasks, monkeypatch):
@@ -1017,6 +1048,26 @@ def test_dry_run_evaluates_the_check_without_side_effects(boundary, capsys, repo
     assert admission["head_sha"] == head and admission["applicable"] is True
     assert repo.snapshot() == before and not worktree.exists()
     assert boundary.calls == []
+
+
+@pytest.mark.parametrize("trailer", ["cursor/feature", "cursor/auto", "cursor/unattested"])
+def test_branch_fix_writer_is_admitted_with_unknown_committed_author(
+    boundary, capsys, repo, tasks, monkeypatch, dry_run_telemetry, trailer
+):
+    task_record(tasks, "unattested", agent="cursor", resolved_model_known=False, resolved_model="unknown")
+    head = repo.commit(trailer)
+    repo.publish()
+    worktree = repo.root / "wt"
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+    monkeypatch.setattr(delegate, "_ensure_worktree", lambda **_kwargs: (worktree, "feature", {"base_sha": head}))
+    with _admitted_host(monkeypatch):
+        rc, before = boundary("--branch", "feature", "--owned-path", "docs/a.md", "--dry-run")
+    assert rc == 0, capsys.readouterr().err
+    admission = dry_run_admission(tasks)
+    assert admission["existing_families"] == ["unknown"]
+    assert admission["author_families"] == ["anthropic", "unknown"]
+    assert admission["reviewer"]["name"] == "openai_frontier" and admission["head_sha"] == head
+    assert repo.snapshot() == before and boundary.calls == []
 
 
 def test_dry_run_refusal_writes_nothing(boundary, capsys, repo, tasks):

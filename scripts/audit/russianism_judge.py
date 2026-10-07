@@ -47,12 +47,27 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
@@ -81,7 +96,7 @@ def retrieve_antonenko(text: str, k: int = 8) -> list[dict]:
     Used to ground the judge prompt in the canonical Russianism reference
     rather than relying on the judge's pre-training memory of Antonenko.
     """
-    conn = sqlite3.connect(DB)
+    conn = _open_readonly(DB)
     try:
         words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
         if not words:

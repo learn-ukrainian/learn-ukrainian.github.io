@@ -75,6 +75,7 @@ def test_status_rejects_modified_program_arguments(tmp_path: Path, monkeypatch: 
 def test_install_is_verified_and_idempotent(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = tmp_path / "repo"
     home = tmp_path / "home"
+    home.mkdir()
     (repo / ".git").mkdir(parents=True)
     interpreter = repo / ".venv" / "bin" / "python"
     interpreter.parent.mkdir(parents=True)

@@ -16,7 +16,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from collections.abc import Mapping
@@ -26,6 +25,24 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection, is_sqlite_connection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -89,7 +106,7 @@ class VesumLemmaLookup:
 
     def __init__(self, db_path: Path = DEFAULT_VESUM):
         self.db_path = Path(db_path)
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
 
     def __enter__(self) -> VesumLemmaLookup:
@@ -103,7 +120,7 @@ class VesumLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"VESUM database not found: {self.db_path}")
-            self._conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            self._conn = _open_readonly(self.db_path)
 
     def close(self) -> None:
         if self._conn is not None:
@@ -145,7 +162,7 @@ class HeritageLemmaLookup:
 
     def __init__(self, db_path: Path = DEFAULT_SOURCES_DB):
         self.db_path = Path(db_path)
-        self._conn: sqlite3.Connection | None = None
+        self._conn: SQLiteConnection | None = None
         self._cache: dict[str, bool] = {}
 
     def __enter__(self) -> HeritageLemmaLookup:
@@ -159,7 +176,7 @@ class HeritageLemmaLookup:
         if self._conn is None:
             if not self.db_path.exists():
                 raise FileNotFoundError(f"sources database not found: {self.db_path}")
-            self._conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            self._conn = _open_readonly(self.db_path)
 
     def close(self) -> None:
         if self._conn is not None:
@@ -289,7 +306,7 @@ def _manifest_entries(manifest: Any) -> list[Any]:
 def _vesum_has_entry(vesum: Any, lemma: str) -> bool:
     if hasattr(vesum, "has_lemma"):
         return bool(vesum.has_lemma(lemma))
-    if isinstance(vesum, sqlite3.Connection):
+    if is_sqlite_connection(vesum):
         return any(
             vesum.execute("SELECT 1 FROM forms WHERE lemma = ? OR word_form = ? LIMIT 1", (variant, variant)).fetchone()
             for variant in _lookup_variants(lemma)

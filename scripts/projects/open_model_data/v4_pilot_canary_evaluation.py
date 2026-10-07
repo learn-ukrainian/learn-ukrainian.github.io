@@ -41,6 +41,7 @@ import safetensors.numpy
 from safetensors import safe_open
 from scipy.stats import beta
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import refuse_quarantined, resolve_open_model_path
 
 try:
@@ -1254,8 +1255,7 @@ def get_vesum_forms_count(lemma: str, vesum_db_path: Path | None = None) -> tupl
     db_path = vesum_db_path or DEFAULT_VESUM_DB
     if db_path.exists():
         try:
-            db_uri = f"file:{db_path.resolve()}?mode=ro"
-            con = sqlite3.connect(db_uri, uri=True)
+            con = _open_readonly(db_path.resolve())
             cur = con.cursor()
             cur.execute("SELECT count(*), tags FROM forms_all WHERE lemma = ?", (lemma,))
             row = cur.fetchone()
@@ -3069,8 +3069,7 @@ def verify_pilot_canary(
     s_conn = None
     if check_sources:
         try:
-            s_uri = f"file:{s_db.resolve()}?mode=ro"
-            s_conn = sqlite3.connect(s_uri, uri=True)
+            s_conn = _open_readonly(s_db.resolve())
         except sqlite3.OperationalError:
             s_conn = None
 

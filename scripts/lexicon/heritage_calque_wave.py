@@ -34,7 +34,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from dataclasses import dataclass, field
@@ -47,6 +46,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.audit.generate_practice_deck import _plain, read_atlas_db
 from scripts.audit.lexeme_filter import is_practice_eligible
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words as _vesum_verify_words
 
@@ -114,7 +115,7 @@ class GecPair:
 
 def load_gec_calque_pairs(sources_db: Path) -> list[GecPair]:
     """Load, normalize, and dedupe UA-GEC ``F/Calque`` (error, correct) pairs."""
-    con = sqlite3.connect(sources_db)
+    con = _open_readonly(Path(sources_db).resolve())
     try:
         rows = con.execute("SELECT error, correct, doc_id FROM ua_gec_errors WHERE error_type = 'F/Calque'").fetchall()
     finally:
@@ -285,7 +286,7 @@ def substitute_single(pattern: re.Pattern[str], sentence: str, replacement: str)
 
 
 def find_carrier_sentence(
-    con: sqlite3.Connection,
+    con: SQLiteConnection,
     target: str,
     replacement: str,
     *,
@@ -497,7 +498,7 @@ def run_wave(
         ),
     )
 
-    con = sqlite3.connect(sources_db)
+    con = _open_readonly(Path(sources_db).resolve())
     overlay_pairs: list[dict[str, Any]] = []
     total_emitted = 0
 
