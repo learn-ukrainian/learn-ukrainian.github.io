@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import ast
+import errno
 import json
 import os
 import sys
 import time
+from collections.abc import Callable
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -353,9 +356,7 @@ def _corrupt_combined_usage(tmp_path: Path, corrupt_kind: str) -> float:
     "corrupt_kind",
     ["json-non-object", "invalid-utf8", "invalid-utf8-in-string"],
 )
-def test_fleet_burn_keeps_gemini_agy_durations_when_agy_evidence_is_corrupt(
-    tmp_path: Path, corrupt_kind: str
-) -> None:
+def test_fleet_burn_keeps_gemini_agy_durations_when_agy_evidence_is_corrupt(tmp_path: Path, corrupt_kind: str) -> None:
     """Malformed AGY lines keep 5h, 7d, and 30d durations and show the fault.
 
     A non-object, a standalone invalid byte, and an invalid byte inside a
@@ -538,9 +539,121 @@ def test_runtime_cache_ignores_other_lanes_and_drops_stale_alias_entries(tmp_pat
         usage_mod._reset_rate_limit_cache_for_tests()
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 directories")
+# Declared stand-in for kernel denial. Not physical proof. Physical proof is a
+# mode-0 directory when this process cannot list it.
+_DECLARED_DIRECTORY_DENIAL = "declared-deterministic-directory-denial-not-physical-proof"
+
+
+def _mode_bits_deny_owned_directory_listing(parent: Path) -> bool:
+    """Return whether this process cannot list a mode-0 directory it owns.
+
+    Root ignores directory mode bits, so chmod 0 is not denial there. Listing
+    and ``os.access`` must agree. Any other result is uncertain and fails.
+    """
+    probe = parent / "mode-bit-probe"
+    probe.mkdir()
+    probe.chmod(0)
+    try:
+        listed = True
+        try:
+            os.listdir(probe)
+        except PermissionError:
+            listed = False
+        except OSError as exc:
+            raise AssertionError(f"mode-0 listing raised {type(exc).__name__}: {exc}") from exc
+        access_allowed = os.access(probe, os.R_OK | os.X_OK)
+        if listed and access_allowed:
+            return False
+        if not listed and not access_allowed:
+            return True
+        raise AssertionError(
+            f"mode-0 directory listing and os.access disagree: listed={listed} access_allowed={access_allowed}"
+        )
+    finally:
+        probe.chmod(0o700)
+        probe.rmdir()
+
+
+@contextmanager
+def _declared_directory_denial(root: Path):
+    """Present ``root`` as unlistable without changing its mode bits.
+
+    Deterministic simulation, not physical proof. The readers count an
+    ``os.access`` failure as one unreadable file, then ``Path.glob`` swallows
+    the listing error and yields no rows. Both halves are required: an access
+    failure alone would still count readable rows, and an empty listing alone
+    would look like a missing directory.
+    """
+    target = os.path.abspath(os.fspath(root))
+    real_access = usage_mod.os.access
+    real_scandir = Path._scandir
+
+    def access(path, mode, *args, **kwargs):
+        denied = os.path.abspath(os.fspath(path)) == target and mode & (os.R_OK | os.X_OK)
+        if denied:
+            return False
+        return real_access(path, mode, *args, **kwargs)
+
+    def scandir(self):
+        if os.path.abspath(os.fspath(self)) == target:
+            raise PermissionError(errno.EACCES, "Permission denied", os.fspath(self))
+        return real_scandir(self)
+
+    usage_mod.os.access = access
+    Path._scandir = scandir
+    try:
+        yield _DECLARED_DIRECTORY_DENIAL
+    finally:
+        usage_mod.os.access = real_access
+        Path._scandir = real_scandir
+
+
+def _prove_unlistable_directory(root: Path, prove: Callable[[], None]) -> None:
+    """Run ``prove`` under declared denial, and under mode bits when they bind.
+
+    The directory stays listable around the simulation. That is what shows the
+    simulation did not change permissions. Physical proof is a separate mode-0
+    directory, and only when listing it fails. Root keeps the declared
+    simulation and does not claim chmod 0 as proof.
+    """
+    assert root.is_dir()
+    visible = sorted(os.listdir(root))
+    assert visible
+    assert os.access(root, os.R_OK | os.X_OK) is True
+    mode_bits_bind = _mode_bits_deny_owned_directory_listing(root.parent)
+    with _declared_directory_denial(root) as denial:
+        assert denial == _DECLARED_DIRECTORY_DENIAL
+        assert (root.stat().st_mode & 0o777) != 0
+        prove()
+    assert sorted(os.listdir(root)) == visible
+    assert os.access(root, os.R_OK | os.X_OK) is True
+    assert list(root.glob("usage_*.jsonl"))
+    if mode_bits_bind:
+        root.chmod(0)
+        try:
+            assert (root.stat().st_mode & 0o777) == 0
+            with pytest.raises(PermissionError):
+                os.listdir(root)
+            assert os.access(root, os.R_OK | os.X_OK) is False
+            prove()
+        finally:
+            root.chmod(0o700)
+        assert sorted(os.listdir(root)) == visible
+        assert os.access(root, os.R_OK | os.X_OK) is True
+        return
+    if os.geteuid() != 0:
+        raise AssertionError(
+            "directory mode bits did not deny listing and the effective user "
+            "is not root; platform semantics are uncertain"
+        )
+
+
 def test_unlistable_usage_directory_counts_as_one_unreadable_file(tmp_path: Path) -> None:
-    """A directory the process cannot list is a file fault, not a crash or a row."""
+    """A directory the process cannot list is a file fault, not a crash or a row.
+
+    Mode bits are the physical proof when this process obeys them. The declared
+    listing simulation always runs too, including for root, and is not that proof.
+    """
     usage_mod._reset_rate_limit_cache_for_tests()
     now = time.time()
     day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
@@ -550,15 +663,15 @@ def test_unlistable_usage_directory_counts_as_one_unreadable_file(tmp_path: Path
         root / f"usage_codex-bridge_{day}.jsonl",
         {"ts": _stamp(now, 20), "outcome": "rate_limited", "model": "hidden"},
     )
-    root.chmod(0)
-    try:
+
+    def prove() -> None:
         summary = usage_mod.summarize_lane_runtime("codex", window_s=300, usage_dir=root, now=now)
-    finally:
-        root.chmod(0o700)
-    assert summary["total"] == 0
-    assert summary["rate_limited"] == 0
-    assert summary["models_rate_limited"] == []
-    assert summary["unreadable"] == {"files": 1, "lines": 0, "records": 0, "total": 1}
+        assert summary["total"] == 0
+        assert summary["rate_limited"] == 0
+        assert summary["models_rate_limited"] == []
+        assert summary["unreadable"] == {"files": 1, "lines": 0, "records": 0, "total": 1}
+
+    _prove_unlistable_directory(root, prove)
 
 
 _EMPTY_BURN_COUNTS = {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0, "total": 0}
@@ -577,13 +690,49 @@ def _assert_empty_burn(burn: dict, agent: str) -> None:
         assert window["hours"] == 0.0
 
 
-@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 directories")
+def _assert_unlistable_directory_hides_rows(root: Path, now: float) -> None:
+    """One unlistable directory is one file fault for every lane, with no rows."""
+    usage_mod._reset_rate_limit_cache_for_tests()
+    try:
+        for agent in ("gemini", "agy", "codex"):
+            runtime = usage_mod.summarize_lane_runtime(agent, window_s=300, usage_dir=root, now=now)
+            burn = usage_mod.summarize_fleet_burn(agent, usage_dir=root, now=now)
+            assert runtime["total"] == 0
+            assert runtime["rate_limited"] == 0
+            assert runtime["unreadable"] == _DIRECTORY_FAULT
+            assert burn["unreadable"] == runtime["unreadable"], agent
+            _assert_empty_burn(burn, agent)
+        usage_mod._RATE_LIMIT_CACHE[("agy", "gemini-fresh")] = now - 12
+        usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] = now - 8
+        cached = usage_mod.summarize_lane_runtime("gemini", window_s=300, usage_dir=root, now=now)
+        assert cached["rate_limited"] == 1
+        assert cached["total"] == 1
+        assert cached["models_rate_limited"] == ["gemini-fresh"]
+        assert cached["headroom_blocked"] is False
+        assert cached["unreadable"] == _DIRECTORY_FAULT
+        cached_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=root, now=now)
+        assert cached_burn["unreadable"] == _DIRECTORY_FAULT
+        _assert_empty_burn(cached_burn, "gemini")
+        assert usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] == now - 8
+        codex_runtime = usage_mod.summarize_lane_runtime("codex", window_s=300, usage_dir=root, now=now)
+        assert codex_runtime["rate_limited"] == 1
+        assert codex_runtime["models_rate_limited"] == ["kept-model"]
+        assert codex_runtime["unreadable"] == _DIRECTORY_FAULT
+        claude_hidden = usage_mod.summarize_fleet_burn("claude", usage_dir=root, now=now)
+        assert claude_hidden["unreadable"] == _DIRECTORY_FAULT
+        _assert_empty_burn(claude_hidden, "claude")
+    finally:
+        usage_mod._reset_rate_limit_cache_for_tests()
+
+
 def test_unlistable_usage_directory_is_unreadable_burn_for_each_alias_and_codex(tmp_path: Path) -> None:
     """Gemini, AGY, and Codex burn report one fault when the usage directory cannot be listed.
 
     A missing directory stays empty. A readable directory keeps 5h, 7d, and 30d
     counts, one copy of a hard-linked file, and the JSON line fault. An in-process
     rate-limit cache does not hide the directory fault or invent burn rows.
+    Mode bits are the physical proof when this process obeys them. The declared
+    listing simulation always runs too, and it is not physical proof.
     """
     usage_mod._reset_rate_limit_cache_for_tests()
     now = time.time()
@@ -652,35 +801,7 @@ def test_unlistable_usage_directory_is_unreadable_burn_for_each_alias_and_codex(
     assert gemini_runtime["headroom_blocked"] is False
     assert gemini_runtime["unreadable"] == line_fault
 
-    root.chmod(0)
-    try:
-        for agent in ("gemini", "agy", "codex"):
-            runtime = usage_mod.summarize_lane_runtime(agent, window_s=300, usage_dir=root, now=now)
-            burn = usage_mod.summarize_fleet_burn(agent, usage_dir=root, now=now)
-            assert runtime["total"] == 0
-            assert runtime["rate_limited"] == 0
-            assert runtime["unreadable"] == _DIRECTORY_FAULT
-            assert burn["unreadable"] == runtime["unreadable"], agent
-            _assert_empty_burn(burn, agent)
-        usage_mod._RATE_LIMIT_CACHE[("agy", "gemini-fresh")] = now - 12
-        usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] = now - 8
-        cached = usage_mod.summarize_lane_runtime("gemini", window_s=300, usage_dir=root, now=now)
-        assert cached["rate_limited"] == 1
-        assert cached["total"] == 1
-        assert cached["models_rate_limited"] == ["gemini-fresh"]
-        assert cached["headroom_blocked"] is False
-        assert cached["unreadable"] == _DIRECTORY_FAULT
-        cached_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=root, now=now)
-        assert cached_burn["unreadable"] == _DIRECTORY_FAULT
-        _assert_empty_burn(cached_burn, "gemini")
-        assert usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] == now - 8
-        codex_runtime = usage_mod.summarize_lane_runtime("codex", window_s=300, usage_dir=root, now=now)
-        assert codex_runtime["rate_limited"] == 1
-        assert codex_runtime["models_rate_limited"] == ["kept-model"]
-        assert codex_runtime["unreadable"] == _DIRECTORY_FAULT
-        claude_hidden = usage_mod.summarize_fleet_burn("claude", usage_dir=root, now=now)
-        assert claude_hidden["unreadable"] == _DIRECTORY_FAULT
-        _assert_empty_burn(claude_hidden, "claude")
-    finally:
-        root.chmod(0o700)
-        usage_mod._reset_rate_limit_cache_for_tests()
+    def prove_denial() -> None:
+        _assert_unlistable_directory_hides_rows(root, now)
+
+    _prove_unlistable_directory(root, prove_denial)
