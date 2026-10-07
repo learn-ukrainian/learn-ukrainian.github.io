@@ -19,6 +19,7 @@ import tests.conftest as project_conftest
 import tests.test_atlas_conformance as atlas
 import tests.test_esum_search as esum
 import tests.test_reattribute_ukrlib as ukrlib
+import tests.test_vocab_coverage as vocab
 from scripts.audit._judge_eval_lib import ANTONENKO_SOURCE
 from scripts.lib.readonly_sqlite import open_readonly
 from tests.audit import test_antonenko_prose_narrowing as antonenko
@@ -36,12 +37,15 @@ def _write_source_shaped_db(path: Path) -> None:
             CREATE TABLE esum_etymology (headword TEXT);
             CREATE TABLE literary_texts (author TEXT);
             CREATE TABLE grinchenko (lemma TEXT);
+            CREATE TABLE vesum (form TEXT, lemma TEXT);
             """
         )
         connection.execute("INSERT INTO textbooks (source_file) VALUES (?)", (ANTONENKO_SOURCE,))
         connection.execute("INSERT INTO esum_etymology (headword) VALUES ('x')")
         connection.execute("INSERT INTO literary_texts (author) VALUES ('x')")
         connection.execute("INSERT INTO grinchenko (lemma) VALUES ('x')")
+        connection.execute("INSERT INTO vesum (form, lemma) VALUES ('звук', 'звук')")
+        connection.execute("INSERT INTO vesum (form, lemma) VALUES ('звуки', 'звук')")
         connection.commit()
     finally:
         connection.close()
@@ -87,6 +91,7 @@ def test_presence_checks_open_readonly_copy_and_skip_when_absent(tmp_path: Path,
     monkeypatch.setattr(esum, "_SOURCES_DB", copy)
     monkeypatch.setattr(ukrlib, "_SOURCES_DB", copy)
     monkeypatch.setattr(atlas, "SOURCES_PATH", copy)
+    monkeypatch.setattr(vocab.vocab_coverage, "VESUM_DB_PATH", copy)
     monkeypatch.setenv("LEARN_UKRAINIAN_TEST_DATA_ROOT", str(root))
 
     assert antonenko._antonenko_corpus_present() is True
@@ -94,6 +99,7 @@ def test_presence_checks_open_readonly_copy_and_skip_when_absent(tmp_path: Path,
     assert esum._esum_row_count() == 1
     assert ukrlib._literary_corpus_available() is True
     assert atlas._sources_has_grinchenko_table() is True
+    assert vocab._vesum_has_sound_lemma() is True
     found = project_conftest._require_data_artifact(
         "data/sources.db",
         required_sqlite_tables=(
@@ -109,7 +115,7 @@ def test_presence_checks_open_readonly_copy_and_skip_when_absent(tmp_path: Path,
         with pytest.raises(sqlite3.OperationalError):
             connection.execute("INSERT INTO textbooks (source_file) VALUES ('mutated')")
 
-    assert len(calls) == 7
+    assert len(calls) == 8
     for database in calls:
         _assert_readonly_open(database, copy)
     assert copy.read_bytes() == before
@@ -123,11 +129,17 @@ def test_presence_checks_open_readonly_copy_and_skip_when_absent(tmp_path: Path,
     monkeypatch.setattr(esum, "_SOURCES_DB", absent)
     monkeypatch.setattr(ukrlib, "_SOURCES_DB", absent)
     monkeypatch.setattr(atlas, "SOURCES_PATH", absent)
+    monkeypatch.setattr(vocab.vocab_coverage, "VESUM_DB_PATH", absent)
     assert antonenko._antonenko_corpus_present() is False
     assert ua_gec._ua_gec_table_present() is False
     assert esum._esum_row_count() == 0
     assert ukrlib._literary_corpus_available() is False
     assert atlas._sources_has_grinchenko_table() is False
+    assert vocab._vesum_has_sound_lemma() is False
+    empty_vesum = tmp_path / "empty-vesum.db"
+    empty_vesum.write_bytes(b"")
+    monkeypatch.setattr(vocab.vocab_coverage, "VESUM_DB_PATH", empty_vesum)
+    assert vocab._vesum_has_sound_lemma() is False
 
     empty = tmp_path / "empty-root"
     empty.mkdir()
