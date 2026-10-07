@@ -99,3 +99,36 @@ candidate is already migrated or a normative authority rule.
 
 Stop on any unexplained output difference. The baseline is mechanism and
 regression evidence, not a real-route qualification or independent PR approval.
+
+
+## PR 2 strengthening (first commit, untouched production code)
+
+Executable source: `0d98123470b5a6870512571d01590f3e3210b268` (`origin/main`
+at intake). The capture driver runs outside a detached checkout of that SHA.
+The historical occurrence and source-hash census retains its original SHA.
+Resolved holder evidence now includes every seat, role and transport wire id.
+Role rows project every reviewer input onto the role API and deduplicate equal
+projections (author identity and the review profile are not role API inputs).
+The separate catalog digest is omitted because it binds authored catalog bytes;
+all resolved candidate fields, order, exclusions and health provenance are kept.
+Dispatch rows include every explicit substitution source pin and review-attempt
+immutability cases at both budget states.
+
+`no-cli/` is an independent configuration with its own expected bytes and test.
+Its closed PATH contains only the three allowlisted system tools and one pinned
+`npx` stub. That stub accepts exactly `npx @anthropic-ai/claude-code@latest
+--version`, reports the fixed Claude version, and refuses everything else.
+HOME is empty. Missing Grok and Cursor refusals, Claude fallback argv and Cursor
+model-probe warnings are captured unchanged. No provider is invoked.
+
+The current-tree operator contract is read as bytes and its present two-holder
+author/vote truth table is executed by the capture, including absent approval,
+dissent and self-approval. There is no production designated-approval evaluator
+at this base: this is labeled contract evaluation, not engine proof. Generic
+additional-family approval execution stays in PR 5.
+
+`test_frozen_artifacts_are_pinned_independently_of_manifest` contains literal
+SHA-256 digests for every baseline file, including the capture and specification.
+Those literals never come from the fixture's SHA256SUMS. After this commit no
+baseline byte may change; compare the final head against the first commit with
+`git diff --exit-code <first-commit> -- tests/fixtures/routing_baseline`.
