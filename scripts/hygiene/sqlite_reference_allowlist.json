@@ -1154,5 +1154,47 @@
       "sqlite3.connect(str(db_path))",
       "sqlite3.connect(str(db_path))"
     ]
+  },
+  {
+    "path": "scripts/storage/topology.py",
+    "reference_count": 0,
+    "kind": "store_resolver",
+    "target_db": null,
+    "reason": "Only sanctioned store builders; legacy sources resolver pending caller migration (#9945).",
+    "functions": [
+      "resolve_store",
+      "resolve_active_sources_db"
+    ]
+  },
+  {
+    "path": "tests/test_readonly_harness_readers.py",
+    "reference_count": 4,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",
+    "calls": [
+      "sqlite3.connect(db)"
+    ]
+  },
+  {
+    "path": "tests/test_readonly_special_path_9662.py",
+    "reference_count": 8,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",
+    "calls": [
+      "sqlite3.connect(':memory:')",
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "tests/test_store_resolver.py",
+    "reference_count": 1,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Synthetic SQLite factory for resolver read-binding tests (#9945).",
+    "calls": [
+      "sqlite3.connect(path)"
+    ]
   }
 ]

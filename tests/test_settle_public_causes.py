@@ -15,8 +15,8 @@ from scripts.orchestration import dead_worker_state, dispatch_settle
 
 RAW_REASON = "synthetic settle diagnostic at private-worker.example.invalid"
 DEFAULT_REASONS = {
-    "dead-worker": "dispatch_settle: recorded PID is dead while status=running",
-    "missing-worktree": "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history",
+    "dead-worker": "worker_process_dead",
+    "missing-worktree": "worktree_missing_at_settle",
 }
 
 
@@ -48,17 +48,19 @@ def _assert_persisted(path: Path, writer: str, last_error: str | None) -> None:
     for field in delegate.PUBLIC_RECORD_REASON_FIELDS:
         if record.get(field) is not None:
             assert delegate.is_public_cause(record[field]), (field, record[field])
-    assert record["last_error"] == (last_error if last_error == "worker_failed" else "unclassified_error")
+    assert record["last_error"] == (
+        last_error if last_error == "worker_failed" else "unclassified_error" if last_error else DEFAULT_REASONS[writer]
+    )
     assert record["finalize_error"] == record["auto_finalize"]["error"] == "unclassified_error"
     diagnostic = path.with_suffix(".diag")
     assert stat.S_IMODE(diagnostic.stat().st_mode) == 0o600
     entries = [json.loads(line) for line in diagnostic.read_text(encoding="utf-8").splitlines()]
     kept = {entry["field"]: entry["diagnostic"] for entry in entries}
     assert kept["finalize_error"] == kept["auto_finalize.error"] == RAW_REASON
-    if last_error == "worker_failed":
+    if not last_error or last_error == "worker_failed":
         assert "last_error" not in kept
     else:
-        assert kept["last_error"] == (last_error or DEFAULT_REASONS[writer])
+        assert kept["last_error"] == last_error
     assert all(entry["source"] == "record" for entry in entries)
 
 
@@ -154,3 +156,41 @@ def test_settle_default_writers_cannot_bypass_the_public_cause_sink():
         "_mark_orphaned_pidless_crashed": "write or _write_public_state_unlocked",
         "mark_missing_worktree_failed": "write or _write_public_state_unlocked",
     }
+
+
+@pytest.mark.parametrize("writer", ["dead-failed", "dead-crashed", "missing-worktree"])
+@pytest.mark.parametrize("review", [False, True])
+@pytest.mark.parametrize("last_error", [None, ""])
+def test_settle_default_reason_shows_registered_code(tmp_path, monkeypatch, capsys, writer, review, last_error):
+    """Exercise each marker branch, including delegate's crashed-record callback."""
+    path, state = _record(tmp_path, writer, last_error)
+    state["require_review_verdict"] = review
+    path.write_text(json.dumps(state), encoding="utf-8")
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path)
+    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
+
+    if writer == "dead-failed":
+        _current, changed = dead_worker_state.mark_dead_worker_terminal(
+            path,
+            state,
+            source="test",
+            terminal_status="failed",
+            allowed_statuses=("running",),
+            pid_alive=lambda _pid: False,
+            resolve_head=lambda _path: None,
+        )
+        assert changed
+    elif writer == "missing-worktree":
+        _current, changed = dead_worker_state.mark_missing_worktree_failed(
+            path, state, pid_alive=lambda _pid: False
+        )
+        assert changed
+    # dead-crashed is settled by cmd_status -> _mark_crashed_task.
+    assert delegate.cmd_status(argparse.Namespace(task_id=writer, run_nonce=None)) == 0
+    shown = json.loads(capsys.readouterr().out)
+    expected = "worktree_missing_at_settle" if writer == "missing-worktree" else "worker_process_dead"
+    assert shown["status"] == ("crashed" if writer == "dead-crashed" else "failed")
+    assert shown["last_error"] == expected
+    assert json.loads(path.read_text(encoding="utf-8"))["last_error"] == expected
+    if review and writer != "dead-crashed":
+        assert shown["failure_reason"] == expected

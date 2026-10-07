@@ -25,19 +25,11 @@ def family_exclusion(
     reviewer_family = family
     family = author_family
     cursor_transport = transport == "cursor" or route == "cursor"
-    if family == union_family:
-        if reviewer_family in union_families:
-            return (
-                "excluded",
-                f"candidate family ({reviewer_family}) is within author union family "
-                f"{sorted(union_families)} — cross-family review requires a reviewer outside the union",
-            )
-        if cursor_transport:
-            return (
-                "excluded",
-                f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-                f"for author union family {sorted(union_families)}",
-            )
+    if family == union_family and cursor_transport:
+        return (
+            "excluded",
+            "candidate uses Cursor transport — Cursor-as-reviewer is ineligible for Cursor-authored work",
+        )
     if reviewer_family == family and family in advisory_only_for_author_families:
         return ("advisory_only", f"same family as author ({family}) — advisory-only, not a formal cross-family gate")
     if reviewer_family == family:

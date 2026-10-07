@@ -102,14 +102,12 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
+    from scripts.ci.advisory_checks import is_advisory as is_advisory
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
         parse_checks,
         readiness_reason,
-    )
-    from scripts.publish.merge_guard import (
-        _is_advisory as _is_advisory,
     )
     from scripts.publish.merge_guard import (
         _latest_rollup_rows as _latest_rollup_rows,
@@ -145,12 +143,6 @@ def _gh_env() -> dict[str, str]:
 def _decolorize(text: str) -> str:
     return _ANSI_RE.sub("", text)
 
-
-# A check is treated as merge-blocking unless its name marks it explicitly advisory.
-# Same inversion as guard-admin-merge.py, and it matters more here: an allowlist of
-# "known required" names would UNDER-block, and on a repo where GitHub marks nothing
-# required, under-blocking is the entire failure mode this hook exists to close.
-ADVISORY_NAME_MARKERS = ("advisory",)
 
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
 _PENDING_BUCKETS = {"pending", "queued", "in_progress", "waiting", "expected"}
@@ -817,7 +809,7 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
     """(failing, pending) non-advisory check names, or None if undeterminable."""
     try:
         out = subprocess.run(
-            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
+            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state,workflow"],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,

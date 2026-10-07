@@ -44,7 +44,7 @@ from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.scratch import ensure_scratch_root, scratch_scan_roots
+from scripts.common.scratch import ScratchScanRootError, ensure_scratch_root, scratch_scan_roots
 from scripts.orchestration.thread_handoff import (
     _default_machine_id,
     _default_process_snapshot,
@@ -525,6 +525,19 @@ def _is_disk_pressure_active(tmp_dir: Path, min_free_gb: float = LU_REVIEW_TEMP_
     return (free_bytes / (1024**3)) < min_free_gb
 
 
+def _scratch_scan_roots() -> list[Path]:
+    """Return reaper scan roots, or raise ``ScratchScanRootError`` here.
+
+    A misconfigured ``LU_SCRATCH_SCAN_ROOT`` fails at this review boundary.
+    The error names the variable and the reason, includes no filesystem path,
+    and is not chained to the resolver's traceback.
+    """
+    try:
+        return scratch_scan_roots()
+    except ScratchScanRootError as exc:
+        raise ScratchScanRootError(exc.reason) from None
+
+
 def sweep_review_temp_orphans(
     *,
     now: float | None = None,
@@ -542,7 +555,7 @@ def sweep_review_temp_orphans(
     # task-namespaced review roots. #7164: review roots now live under the
     # disk-backed fleet scratch root; scan it plus every legacy tmp base so
     # pre-change residue still drains.
-    bases = scratch_scan_roots()
+    bases = _scratch_scan_roots()
     if not bases:
         bases = [Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))]
     current_time = time.time() if now is None else now

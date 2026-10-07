@@ -453,11 +453,6 @@ def complete_author_families(inputs: ResolverInputs, single_family: str) -> froz
         return frozenset({single_family})
     members = set(inputs.author_families)
     if inputs.author_model or inputs.author_family:
-        # A declared Auto label cannot reintroduce the prospective writer union
-        # for a commit already attributed as Unknown. Incoming writers still
-        # carry their union explicitly in ``author_families``.
-        if single_family == CURSOR_AUTO_UNION_FAMILY and UNKNOWN_AUTHOR_FAMILY in members:
-            single_family = UNKNOWN_AUTHOR_FAMILY
         members.add(single_family)
     if not all(
         member in _VALID_CONCRETE_FAMILIES or member in {CURSOR_AUTO_UNION_FAMILY, UNKNOWN_AUTHOR_FAMILY}
@@ -547,8 +542,7 @@ class ReviewerResolution:
     # reviewer selected, since there is nothing reliable to diff a
     # candidate's family against.
     fail_closed_reason: str | None = None
-    # Dual-family quorum plan for an unattested-harness author (Cursor Auto:
-    # the harness attests no pinned model). ``selected`` stays None — there
+    # Dual-family quorum plan for a generic unattested-harness author. ``selected`` stays None — there
     # is no single reviewer of record; BOTH quorum seats must independently
     # return an exact-head PASS verdict. Because the seats are from distinct
     # attested families and the hidden author is at most one family, at
@@ -741,18 +735,24 @@ def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: 
     return result(*exclusion) if exclusion else None
 
 
+
 def evaluate_candidate(
     candidate: ReviewerCandidate,
     inputs: ResolverInputs,
     *,
     author_family: str | None = None,
+    review_mode: str = "cross_family",
 ) -> CandidateResult:
     """Evaluate one candidate against ``inputs`` independent of ladder position.
 
     Exposed directly (not just via :func:`resolve_reviewer`) so domain and
     data-egress fail-closed behavior is testable per-candidate, including for
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
+    ``red_team`` relaxes authorship independence only; callers must first
+    validate an explicit adversarial prompt bound to the completed review.
     """
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ValueError("unsupported review mode")
     # Direct dispatch admission calls this without walking a ladder. The floor
     # must bind here too, before suitability or explicit-pin evaluation.
     inputs = replace(
@@ -910,6 +910,10 @@ def evaluate_candidate(
         )
     advisory: CandidateResult | None = None
     for author in sorted(authors):
+        # Only the recorder's prompt-bound red-team path opts into this.
+        # Qualification, risk, subject exclusions and runtime identity still bind.
+        if review_mode == "red_team" and candidate.family not in {*UNRESOLVED_AUTHOR_FAMILIES, "unknown"}:
+            continue
         result = _author_family_exclusion(candidate, author, health)
         if result is not None and result.status == "excluded":
             return result
@@ -1096,10 +1100,9 @@ def resolve_reviewer(
     disambiguation, or a conflicting override). See
     :func:`resolve_author_family`.
 
-    Cursor Auto / unknown-Auto authors resolve to the allowlist-union
-    family {xAI, Moonshot}, selecting a single cross-family reviewer from
-    outside {xAI, Moonshot}. Quorum logic remains supported as fallback
-    for generic unattested harnesses.
+    Cursor Auto authors use the Cursor family and a single cross-family
+    reviewer outside Cursor. Quorum logic remains supported as fallback for
+    generic unattested harnesses.
     """
     if runtime_state is not None:
         # The state owner injects a transaction-consistent snapshot. This

@@ -1,4 +1,4 @@
-# Routing baseline v1 (#9302)
+# Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
 The pinned source-contract/occurrence census is
 `dae3d752426d6c11c5dc82260ec07ae8164e7730`. The host-independent executable
@@ -16,9 +16,26 @@ project interpreter and the corrected `capture.py` (outside the clone):
   --project-python <project-python> --output <scratch-output>
 ```
 
-Compare all three hashes, not just the catalog or selected reviewer. Never
-replace this fixture with outputs from migrated code. Run the same driver
-against a changed checkout to compare behavior, without updating expected data.
+The executable expectations include the approved #9951 Cursor family change.
+The original baseline remains in Git history. Its source-contract and
+occurrence census still use the pinned SHA above; this revision does not
+regenerate that historical evidence or change the input matrix.
+
+The #9960 regeneration compared every captured surface before accepting the
+new bytes. Only two Cursor catalog fields (`unknown_auto_family_resolution`
+and `note`) and reviewer rows 21, 205, 389, 573, 757, 941, 1125 and 1309 changed.
+Those eight rows are the `cursor:auto` author across four risks and two review
+profiles: native Grok becomes eligible, and every Cursor transport stays
+excluded. All other reviewer receipts, capacity, dispatch, adapter, launcher,
+registry, fallback and source-contract surfaces are unchanged. `inputs.json`
+and `occurrences.json.gz` remain byte-identical.
+
+Reproduce the current executable expectations from the #9960 fix checkout
+using the same command. The capture loads the runtime source from that checkout
+alongside its scripts, so an older installed package cannot supply the family
+normalizer. Compare all three hashes, not just the catalog or selected reviewer.
+Future regeneration must explain every difference against the approved outcome;
+an unexplained difference fails the capture comparison.
 
 ## Inputs and captured evidence
 
@@ -132,3 +149,25 @@ SHA-256 digests for every baseline file, including the capture and specification
 Those literals never come from the fixture's SHA256SUMS. After this commit no
 baseline byte may change; compare the final head against the first commit with
 `git diff --exit-code <first-commit> -- tests/fixtures/routing_baseline`.
+
+
+## PR 2 merge revision (#9302, round b)
+
+The approved PR 2 head `45253e51eb4ca37a206692a2f09d3d2ddfc0776e`
+is merged with `2c0b22b6961ea676a48d3fc7b238b405a643f7be` from main.
+This separately ordered revision regenerates both configurations using the
+capture procedure above against the merged checkout; add `--configuration
+no-cli` for the independent no-CLI artifact. The independent digest pins in
+`tests/review/test_model_catalog.py` bind this revision.
+
+Against that approved PR 2 head, both configurations change only the Cursor
+catalog `unknown_auto_family_resolution` and `note` fields and reviewer rows
+21, 205, 389, 573, 757, 941, 1125 and 1309 (zero-based). Each change comes from
+`9c233c5eaa` (#9960): Cursor Auto authors use the Cursor family, native Grok
+is eligible, and Cursor transports remain excluded. All 672 role rows,
+992 dispatch rows, 112 adapter rows, 42 capacity rows and 70 launcher rows,
+resolved holders, approval, registry, fallbacks and source contracts remain
+unchanged. Inputs and occurrence artifacts remain byte-identical.
+`aea2281aa9` (#9972) preserves forced-lane quota/health diagnostics on task
+records without changing the captured routing surface, so it changes no rows.
+Any difference beyond this attribution blocks regeneration.

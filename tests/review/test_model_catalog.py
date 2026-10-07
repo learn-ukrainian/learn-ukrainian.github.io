@@ -1,4 +1,4 @@
-"""Frozen base-code evidence for the additive #9302 routing migration."""
+"""Frozen routing evidence for #9302 with the approved #9951 Cursor revision."""
 
 from __future__ import annotations
 
@@ -23,15 +23,15 @@ INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
 
-# Literal digests are filled only in the first baseline-strengthening commit.
+# Literal digests bind the explicitly ordered #9960 merge revision; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "1fb16c2efeea7e031946046d1c02da1bb0cdecf642b5762fd8cddee83f3e146c",
-    "SPEC.md": "4ae0e34def54327a2bc219c7c595006fb31d520226bfe9eb72b12153c947a257",
-    "baseline.json.gz": "50862470773fc263a6d6ca12d9f4929a3bce6dbfaeb29ff4a1ff7dba916fc110",
-    "capture.py": "b89195893ae1c9a3b42978cd0264734c5c70e2dd9599f95d0d4abb4a6605c934",
+    "SHA256SUMS": "69e4bffafadde593bbcfd83f86583e2cc3dbcdcf6eeda5c87fee00553a9bae50",
+    "SPEC.md": "119ac2011cb315c591f86f85b784384c34b57a3b0160766a5268dfdcb4d34437",
+    "baseline.json.gz": "c7fa505eed1f76ab1160c021ed381d2dc26c9119aa6b57290c14cb2ff565bafd",
+    "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
     "inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
-    "no-cli/SHA256SUMS": "8bbc8c1a409b0dbd02ea61809cff32dd8c6b14e49c044a38e9ed11ce78794b34",
-    "no-cli/baseline.json.gz": "95f2f192eec841e1772cc446601514810299b22868dbcd52364818ee654855b3",
+    "no-cli/SHA256SUMS": "f3bf8dd0124d5821041693205f1b1c4a94dbbee25ea659d79f391d2b2e28037e",
+    "no-cli/baseline.json.gz": "9ec53d97bcdb8099671bb82796cfaa6fa932f3b38ca83377bfd217824a37860b",
     "no-cli/inputs.json": "3078c95cf2275c51e302a9179c9986a60aa3d611aa568f50ec3fc6e915a46fd8",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
@@ -59,8 +59,26 @@ def test_frozen_hashes_and_matrix_denominator():
     assert ledger and all(row["disposition"] and row["purpose"] and row["owner"] for row in ledger)
 
 
-def test_legacy_catalog_equals_untouched_base():
+def test_legacy_catalog_equals_approved_routing_baseline():
     assert expanded_legacy_view() == BASELINE["catalog"]
+
+
+@pytest.mark.parametrize("entrypoint,args", [
+    ("scripts/review/model_catalog.py", ["--resolve-role", "bounded_advisor"]),
+    ("scripts/lint/lint_model_catalog.py", ["--as-of", "2026-10-07"]),
+])
+def test_direct_catalog_callers_without_repository_pythonpath(entrypoint, args, tmp_path):
+    source = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "-I", str(source / entrypoint), *args],
+        cwd=tmp_path, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    if entrypoint.endswith("lint_model_catalog.py"):
+        assert payload["ok"] is True
+    else:
+        assert payload["candidates"][0]["model_id"] == "gpt-6.1-sol"
 
 
 @pytest.mark.parametrize("host_clis", ["absent", "present"])

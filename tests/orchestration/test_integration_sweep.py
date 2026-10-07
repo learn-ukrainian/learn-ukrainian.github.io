@@ -18,7 +18,8 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 
 def comment(
-    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False
+    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False,
+    review_mode="cross_family", family="openai",
 ):
     body = build_comment(
         sha=sha,
@@ -26,8 +27,9 @@ def comment(
         started=started,
         verdict=verdict,
         model="gpt-6.1-sol",
-        family="openai",
+        family=family,
         reply="VERDICT: APPROVE",
+        review_mode=review_mode,
     )
     return {
         "id": task,
@@ -37,6 +39,47 @@ def comment(
         "created_at": "2026-09-23T13:00:00Z",
         "updated_at": "2026-09-23T13:01:00Z" if edited else "2026-09-23T13:00:00Z",
     }
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_review_mode_round_trip_and_legacy_marker(mode):
+    item = comment(review_mode=mode)
+    marker = sweep.parse_marker(item["body"])
+    assert marker is not None
+    assert marker.get("review_mode", "cross_family") == mode
+    verdict = sweep.lookup_verdict([item], SHA, "fleet")
+    assert verdict.state == "APPROVED"
+    assert verdict.review_mode == mode
+    assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == "ready"
+
+
+@pytest.mark.parametrize("case", ["missing_mode", "wrong_heading", "wrong_label", "invalid_mode", "duplicate_mode"])
+def test_red_team_marker_tampering_is_unknown(case):
+    item = comment(review_mode="red_team")
+    replacements = {
+        "missing_mode": (" review_mode=red_team", ""),
+        "wrong_heading": ("### Adversarial red-team review", "### Cross-family review"),
+        "wrong_label": ("Review mode: red_team", "Review mode: cross_family"),
+        "invalid_mode": ("review_mode=red_team", "review_mode=anything"),
+        "duplicate_mode": ("review_mode=red_team", "review_mode=red_team review_mode=red_team"),
+    }
+    item["body"] = item["body"].replace(*replacements[case])
+    assert sweep.parse_marker(item["body"]) is None
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_unknown_reviewer_marker_never_approves(mode):
+    assert sweep.lookup_verdict([comment(review_mode=mode, family="unknown")], SHA, "fleet").state == "unknown"
+
+
+def test_red_team_keeps_trust_head_and_latest_rejection_gates():
+    assert sweep.lookup_verdict([comment(review_mode="red_team", login="outsider")], SHA, "fleet").state == "needs-CF"
+    assert sweep.lookup_verdict([comment(review_mode="red_team", sha=OTHER)], SHA, "fleet").state == "CF-stale"
+    assert sweep.lookup_verdict([comment(review_mode="red_team", edited=True)], SHA, "fleet").state == "unknown"
+    rows = [comment(review_mode="red_team"),
+            comment(task="later", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED")]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
 def pr(**updates):
@@ -227,18 +270,18 @@ def test_ci_red_pending_and_ready():
     assert sweep.classify_pr(pr(), approved, queued=False, observed_at=START).state == "ready"
 
 
-@pytest.mark.parametrize("name", ["Component shadow (advisory)", "ADVISORY smoke", "nightly advisory"])
+@pytest.mark.parametrize("name", ["Component shadow (advisory)"])
 @pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
 def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
     item = pr()
-    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion})
+    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion, "workflowName": "CI"})
     report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
     assert report.state == "ready"
     assert report.blockers == ()
 
 
 def test_advisory_failure_does_not_hide_other_blockers():
-    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE"}
+    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE", "workflowName": "CI"}
     assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
     item = pr()
     item["statusCheckRollup"].extend([

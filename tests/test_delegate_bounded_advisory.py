@@ -15,6 +15,7 @@ import json
 import os
 import subprocess
 import sys
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -114,6 +115,10 @@ def env(monkeypatch, tmp_path):
     def health_only(url, *_args, **_kwargs):
         if "/api/health" in str(url):
             return _Health()
+        # --force-agent still probes routing-budget (#9673). Unavailable telemetry
+        # is an explicit unknown; it does not waive the envelope refusal below.
+        if "/api/state/routing-budget" in str(url):
+            raise urllib.error.URLError("budget unavailable")
         raise AssertionError(f"unexpected urlopen {url}")
 
     # Same seam as tests/test_delegate.py: the base resolver fetches and

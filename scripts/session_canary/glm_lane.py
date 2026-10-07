@@ -37,8 +37,6 @@ from scripts.agent_runtime.adapters.glm import (
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
-EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
-
 _HOLDER_AGENT = "glm"
 _HOLDER_HARNESS = "opencode-glm"
 _DEFAULT_MODEL = "glm-5.3"
@@ -243,7 +241,7 @@ def run_glm_probe(
 
 
 def _stream_id(args: argparse.Namespace) -> str:
-    return str(getattr(args, "stream", None) or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}"))
+    return _gl._stream_id(args)
 
 
 def _cmd_mint_glm(args: argparse.Namespace) -> int:
@@ -468,7 +466,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not hasattr(args, "repo") or args.repo is None:
         args.repo = ROOT
-    return int(args.func(args))
+    try:
+        return int(args.func(args))
+    except _gl.StreamResolutionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

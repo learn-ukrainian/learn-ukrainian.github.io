@@ -232,6 +232,33 @@ def test_shared_author_independence_and_advisory_outcomes():
     )
 
 
+
+@pytest.mark.parametrize(
+    "family,route,transport,excluded",
+    [
+        ("xai", "grok", "native_grok", False),
+        ("moonshot", "kimi", "native_kimi", False),
+        ("xai", "cursor", "cursor", True),
+        ("xai", "other", "cursor", True),
+        ("cursor", "other", "native", True),
+    ],
+)
+def test_shared_cursor_author_policy_preserves_main_family_separation(family, route, transport, excluded):
+    from scripts.review.reviewer_resolver import CURSOR_AUTO_UNION_FAMILIES, CURSOR_AUTO_UNION_FAMILY
+
+    result = family_exclusion(
+        family=family,
+        route=route,
+        transport=transport,
+        author_family=CURSOR_AUTO_UNION_FAMILY,
+        union_family=CURSOR_AUTO_UNION_FAMILY,
+        union_families=CURSOR_AUTO_UNION_FAMILIES,
+    )
+    assert bool(result) is excluded
+    if excluded:
+        assert result[0] == "excluded"
+
+
 def test_cursor_bridge_and_substitution_defaults_use_role_api(monkeypatch):
     from scripts import delegate
     from scripts.ai_agent_bridge import _cursor
