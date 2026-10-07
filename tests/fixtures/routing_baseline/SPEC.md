@@ -37,6 +37,25 @@ normalizer. Compare all three hashes, not just the catalog or selected reviewer.
 Future regeneration must explain every difference against the approved outcome;
 an unexplained difference fails the capture comparison.
 
+## Haiku 5.5 adoption (#9996)
+
+The executable revision adds eight author cases for `claude-haiku-5-5`: code
+and infra across low, medium, high and critical risk. This is author-family
+resolution evidence; Haiku never becomes a reviewer candidate. All 1,472
+pre-existing reviewer cases remain byte-equivalent when joined by input identity.
+Current Cursor Auto indices are 22, 207, 392, 577, 762, 947, 1132 and 1317;
+their verdicts and traces are unchanged.
+
+The catalog changes are exactly the new Haiku model metadata and the
+`routine_mechanical` role added to Sonnet for the task fallback. The additive
+mechanical seat/task roles are excluded by the capture's existing v1 projection.
+Fallback configuration adds one routine mechanical substitution description.
+Registry, capacity, dispatch, adapters, launchers and source-contract surfaces
+remain identical. The occurrence ledger remains byte-identical and pinned to
+its historical source census; it does not claim to census the new model. The
+input matrix changes only by those eight author cases. `SHA256SUMS` binds the
+new executable fixture and inputs, and the unchanged occurrence ledger.
+
 ## Inputs and captured evidence
 
 - Reviewer: every catalog identity and alias plus ambiguous harness identities,

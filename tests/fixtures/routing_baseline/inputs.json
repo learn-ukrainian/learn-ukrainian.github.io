@@ -2567,6 +2567,11 @@
       "risk": "low"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "low"
@@ -3779,6 +3784,11 @@
       "risk": "low"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "low"
@@ -4991,6 +5001,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "medium"
@@ -6203,6 +6218,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "medium"
@@ -7415,6 +7435,11 @@
       "risk": "high"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "high"
@@ -8627,6 +8652,11 @@
       "risk": "high"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "high"
@@ -9839,6 +9869,11 @@
       "risk": "critical"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "critical"
@@ -11047,6 +11082,11 @@
     },
     {
       "author_model": "claude-fable-5-1-thinking-high",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "claude-haiku-5-5",
       "review_profile": "infra",
       "risk": "critical"
     },
