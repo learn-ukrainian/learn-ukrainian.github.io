@@ -288,3 +288,185 @@ def test_permission_trace_requires_current_bound_session(tmp_path, case):
 def test_permission_category_does_not_override_other_terminal_reason(reason):
     result = _parse({"stopReason": reason, "cancellation_category": "permission_cancelled", "text": "report"})
     assert result.failure_code is None if reason == "end_turn" else result.failure_code == "provider_stream_incomplete"
+
+
+def _ndjson(events: list[dict]) -> str:
+    return "".join(json.dumps(event) + "\n" for event in events)
+
+
+def _assistant_frame(text: str, *, session_id: str = "session-placeholder") -> dict:
+    return {
+        "type": "assistant",
+        "message": {
+            "id": "msg_1",
+            "role": "assistant",
+            "content": [{"type": "text", "text": text}],
+        },
+        "session_id": session_id,
+    }
+
+
+def _error_result(
+    *,
+    stop_reason: str,
+    subtype: str,
+    errors: list[str],
+    session_id: str = "session-placeholder",
+) -> dict:
+    return {
+        "type": "result",
+        "subtype": subtype,
+        "is_error": True,
+        "stop_reason": stop_reason,
+        "errors": errors,
+        "session_id": session_id,
+        "modelUsage": {"grok-4.7-build": {"modelCalls": 1}},
+    }
+
+
+def _parse_messages(events: list[dict], **kwargs):
+    return GrokBuildAdapter().parse_response(
+        stdout=_ndjson(events),
+        stderr=kwargs.pop("stderr", ""),
+        returncode=kwargs.pop("returncode", 0),
+        output_file=None,
+        **kwargs,
+    )
+
+
+@pytest.mark.parametrize("returncode", [0, 1])
+@pytest.mark.parametrize(
+    "case,stop_reason,subtype,detail",
+    [
+        ("cancelled", "cancelled", "error", "turn cancelled"),
+        ("max_turns", "max_turns", "error_max_turns", "Reached the maximum number of turns"),
+        # Grok 1.0.46 --max-turns 1: stop_reason stays "cancelled"; the
+        # max-turns fact is subtype error_max_turns plus errors[0].
+        ("max_turns_wire", "cancelled", "error_max_turns", "Reached the maximum number of turns"),
+    ],
+)
+def test_messages_stream_stop_reason_matches_old_format(case, stop_reason, subtype, detail, returncode):
+    partial = "partial report"
+    new = _parse_messages(
+        [
+            _assistant_frame(partial),
+            _error_result(stop_reason=stop_reason, subtype=subtype, errors=[detail]),
+        ],
+        returncode=returncode,
+    )
+    old = _parse({"text": partial, "stopReason": stop_reason}, returncode=returncode)
+    assert new.failure_code == old.failure_code == "provider_stream_incomplete", case
+    assert new.response == "" and new.rate_limited is False
+    assert f'stopReason="{stop_reason}"' in new.stderr_excerpt
+    assert detail in new.stderr_excerpt
+    assert partial in new.stderr_excerpt
+    assert new.substitution["actual_model"] == "grok-4.7-build"
+    assert (
+        classify_failover_trigger(
+            parse=new,
+            returncode=returncode,
+            kill_reason=None,
+            stdout_text="",
+            stderr_text="",
+        )
+        is None
+    )
+
+
+def test_real_max_turns_stderr_stays_incomplete():
+    """Grok 1.0.46 exits 1 with 'Error: max turns reached' and an error result."""
+    partial = "I'll read the note first."
+    result = _parse_messages(
+        [
+            _assistant_frame(partial),
+            _error_result(
+                stop_reason="cancelled",
+                subtype="error_max_turns",
+                errors=["Reached the maximum number of turns"],
+            ),
+        ],
+        stderr="Error: max turns reached",
+        returncode=1,
+    )
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.response == ""
+    assert 'stopReason="cancelled"' in result.stderr_excerpt
+    assert "Reached the maximum number of turns" in result.stderr_excerpt
+    assert partial in result.stderr_excerpt
+
+
+@pytest.mark.parametrize("returncode", [0, 1])
+def test_messages_stream_permission_cancelled_matches_old_format(tmp_path, returncode):
+    event = {
+        "type": "turn_ended",
+        "outcome": "cancelled",
+        "cancellation_category": "permission_cancelled",
+        "ts": "2026-10-07T18:00:00Z",
+    }
+    plan, sid = _session_plan(tmp_path, json.dumps(event))
+    partial = "partial report"
+    new = _parse_messages(
+        [
+            _assistant_frame(partial, session_id=sid),
+            _error_result(
+                stop_reason="cancelled",
+                subtype="error",
+                errors=["permission cancelled"],
+                session_id=sid,
+            ),
+        ],
+        plan=plan,
+        call_start_time=1791395999,
+        returncode=returncode,
+    )
+    old = _parse(
+        {"stopReason": "cancelled", "sessionId": sid, "text": partial},
+        plan=plan,
+        call_start_time=1791395999,
+        returncode=returncode,
+    )
+    assert new.failure_code == old.failure_code == "permission_cancelled"
+    assert new.response == "" and new.rate_limited is False
+    assert "permission_cancelled" in new.stderr_excerpt
+    assert 'stopReason="cancelled"' in new.stderr_excerpt
+    assert str(tmp_path) not in new.stderr_excerpt
+    assert (
+        classify_failover_trigger(
+            parse=new,
+            returncode=returncode,
+            kill_reason=None,
+            stdout_text="HTTP 429 narration",
+            stderr_text="HTTP 429 narration",
+        )
+        is None
+    )
+
+
+def test_messages_stream_type_error_is_still_a_provider_failure():
+    result = _parse_messages(
+        [
+            _assistant_frame("partial"),
+            {"type": "error", "message": "Error code: 429"},
+        ]
+    )
+    assert not result.ok and result.response == ""
+    assert result.failure_code == "rate_limited"
+    assert result.provider_error_text == "Error code: 429"
+
+
+def test_result_error_without_stop_reason_is_not_a_provider_failure():
+    result = _parse_messages(
+        [
+            _assistant_frame("partial report"),
+            {
+                "type": "result",
+                "subtype": "error",
+                "is_error": True,
+                "errors": ["boom"],
+                "session_id": "session-placeholder",
+            },
+        ]
+    )
+    assert result.failure_code == "provider_stream_incomplete"
+    assert "missing stopReason" in result.stderr_excerpt
+    assert "boom" in result.stderr_excerpt

@@ -1142,19 +1142,19 @@ def _result_is_error(obj: dict) -> bool:
     return isinstance(subtype, str) and subtype.startswith("error")
 
 
-def _result_error_message(obj: dict) -> str:
+def _result_error_detail(obj: dict) -> str | None:
+    """Return ``errors[0]`` when it is a non-empty string.
+
+    That string is diagnostic detail on an ordinary final envelope. It does
+    not classify the turn; ``stop_reason`` does.
+    """
     errors = obj.get("errors")
-    if isinstance(errors, list):
-        for item in errors:
-            if isinstance(item, str) and item.strip():
-                return item
-    result = obj.get("result")
-    if isinstance(result, str) and result.strip():
-        return result
-    subtype = obj.get("subtype")
-    if isinstance(subtype, str) and subtype:
-        return subtype
-    return "grok result error"
+    if not isinstance(errors, list) or not errors:
+        return None
+    first = errors[0]
+    if isinstance(first, str) and first.strip():
+        return first
+    return None
 
 
 def _message_text_blocks(message: dict) -> str:
@@ -1183,11 +1183,16 @@ def _stream_envelope(
     session_id: str | None,
     model_usage: dict | None,
     error_message: str | None,
+    detail_message: str | None = None,
 ) -> dict:
     if error_message is not None:
         envelope: dict = {"type": "error", "message": error_message, "text": text}
     else:
         envelope = {"text": text}
+        # Detail from a result frame's errors[0]. Presence of message does not
+        # make the envelope a provider failure; only type=error does.
+        if detail_message:
+            envelope["message"] = detail_message
     if stop_reason is not None:
         envelope["stopReason"] = stop_reason
     if session_id is not None:
@@ -1204,7 +1209,10 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
     assistant messages join with a newline. A flushed assistant frame for an
     id replaces that id's deltas so partial framing is not counted twice.
     ``result.result`` is only the last message and is used when no assistant
-    text was assembled.
+    text was assembled. A ``result`` frame, including an error subtype that
+    carries ``stop_reason``, stays this ordinary envelope: ``stopReason`` is
+    the turn's reason and ``errors[0]`` is ``message``. Only a ``type:error``
+    line becomes a provider failure (#10005).
     """
     slots: dict[str, dict] = {}
     order: list[str] = []
@@ -1215,6 +1223,7 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
     session_id: str | None = None
     model_usage: dict | None = None
     error_message: str | None = None
+    detail_message: str | None = None
 
     def fresh_id() -> str:
         nonlocal anon
@@ -1259,8 +1268,12 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
             stop_reason, session_id, model_usage = _remember_terminal(
                 obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
             )
-            if error_message is None and _result_is_error(obj):
-                error_message = _result_error_message(obj)
+            # Never promote a result frame to type=error. Cancelled and
+            # max-turns turns are ordinary finals whose stop_reason selects
+            # provider_stream_incomplete or permission_cancelled (#9987).
+            if _result_is_error(obj):
+                if detail_message is None:
+                    detail_message = _result_error_detail(obj)
             elif isinstance(obj.get("result"), str):
                 result_text = obj["result"]
         elif kind == "error" and error_message is None:
@@ -1279,6 +1292,7 @@ def _messages_stream_envelope(objects: list[dict]) -> dict:
         session_id=session_id,
         model_usage=model_usage,
         error_message=error_message,
+        detail_message=None if error_message is not None else detail_message,
     )
 
 
