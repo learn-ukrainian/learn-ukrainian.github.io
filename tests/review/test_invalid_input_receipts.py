@@ -218,11 +218,67 @@ def test_real_stress_oracle_rejection_summary_is_not_evidence(server_module, mon
     assert facts["status"] == "error" and facts["hits"] == 0
 
 
+# Recorded handle_check_text output for text="слово", checks=["vesum"],
+# with a controlled VESUM miss. Its stress provenance still required
+# sources.db even though stress was not selected (#9979). Replay the real
+# handler payload so classifier coverage runs without local stores in CI.
+RECORDED_CHECK_TEXT_OUTPUT = {
+    "provenance": {
+        "stress": {
+            "dictionary": "ukrainian-word-stress (ULIF-derived)",
+            "package_version": "2.1.0",
+            "trie_entries": 2892732,
+            "trie_digest": "c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec",
+            "teaching": {
+                "dictionary": "Pohribnyi orthoepic dictionary, first-listed variant",
+                "available": True,
+                "rows": 0,
+                "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            },
+            "overrides_digest": "2d85be950b6e6943f4ac51462a8ba801d7eaedc316f35b1d25420bfc931505fb",
+            "ulif": {
+                "dictionary": "ULIF ulif_forms (homonym_checked=1)",
+                "build": {
+                    "id": 1,
+                    "state": "complete",
+                    "parser_version": "ulif-forms-v4",
+                    "total_entries": 262812,
+                    "entries_done": 262753,
+                    "entries_failed": 59,
+                    "total_forms": 4742272,
+                    "started_at": "2026-09-30T04:35:49.190706+00:00",
+                    "finished_at": "2026-09-30T06:22:48.886437+00:00",
+                    "source_fingerprint": "d1d1a93417fe55ec1be950956138089d98d3604c9a85b22603ff577cc594bf12",
+                },
+                "digest": "7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493",
+            },
+            "digest": "8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0",
+        },
+        "vesum_version": "vesum-source-unversioned",
+        "ua_gec_file_signature": None,
+        "ua_gec_dropped_skipped_kind_rows": 0,
+        "antonenko_pattern_count": 0,
+    },
+    "summary": {
+        "tokens": 1,
+        "unique_forms": 1,
+        "problems_per_check": {"vesum": 1, "stress": 0, "russian_shadow": 0, "ua_gec": 0},
+        "suspicions_count": 0,
+        "uncut_count": 1,
+        "truncated": False,
+    },
+    "problems": [
+        {"form": "слово", "check": "vesum", "detail": {"status": "no_vesum_row"}, "locations": [[None, 0, 5]]}
+    ],
+    "suspicions": [],
+}
+
+
 @pytest.mark.parametrize("tool", INVALID_INPUT_TOOLS)
-def test_populated_real_handlers_keep_their_outcomes(server_module, monkeypatch, tmp_path, tool):
-    """Run server formatters with populated controlled stores, never live lookups."""
+def test_populated_real_handlers_keep_their_outcomes(server_module, monkeypatch, tool):
+    """Use controlled backends and a recorded check_text handler payload."""
     import rag.source_query as queries
-    from scripts.verification import check_text, vesum
+    from scripts.verification import vesum
     from wiki import sources_db
 
     rows = [{"lemma": "fixture", "pos": "noun", "tags": "noun"}]
@@ -273,17 +329,15 @@ def test_populated_real_handlers_keep_their_outcomes(server_module, monkeypatch,
             "section_path": [],
         },
     )
-    # A controlled VESUM miss yields one real check_text problem.
-    marker = tmp_path / "vesum-fixture"
-    marker.touch()
-    monkeypatch.setattr(check_text, "_vesum_path_resolved", lambda: marker)
-    monkeypatch.setattr(check_text, "verify_words", lambda *_args, **_kwargs: {})
     arguments = {"word": "fixture", "words": ["fixture"], "lemma": "fixture", "topic": "fixture"}
     if tool == "verify_stress":
         arguments.pop("lemma")
-    if tool == "check_text":
-        arguments = {"text": "слово", "checks": ["vesum"]}
-    facts = classify_outcome(tool, "ok", _result(server_module, tool, arguments))
+    result = (
+        json.dumps(RECORDED_CHECK_TEXT_OUTPUT, ensure_ascii=False)
+        if tool == "check_text"
+        else _result(server_module, tool, arguments)
+    )
+    facts = classify_outcome(tool, "ok", result)
     assert facts == {"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False}
 
 
