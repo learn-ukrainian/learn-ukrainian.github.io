@@ -5211,9 +5211,11 @@ def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
 
 
 def _worktree_is_dirty(worktree: Path) -> bool | None:
+    from scripts.orchestration.execution_safe_git import run_git as safe_git
+
     try:
-        status_proc = subprocess.run(
-            ["git", "status", "--porcelain"],
+        status_proc = safe_git(
+            ["status", "--porcelain"],
             cwd=worktree,
             capture_output=True,
             text=True,

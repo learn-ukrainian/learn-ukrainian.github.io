@@ -59,6 +59,17 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolate_delegate_import_path(monkeypatch):
+    """Worker setup prepends the primary scripts path; keep it within one test.
+
+    Otherwise later fixture imports can mix primary-checkout modules with
+    this worktree's packages, depending on xdist's scheduling order.
+    """
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+
+
+@pytest.fixture(autouse=True)
 def _worktree_add_via_run(monkeypatch):
     """Route ``git worktree add`` through ``subprocess.run`` in this file.
 
@@ -7278,6 +7289,25 @@ _STUB_HEAD_SHA = "deadbeef" * 5
 _STUB_ORIGIN_SHA = "feedc0de" * 5
 
 
+def _stub_git_command(cmd):
+    """Normalize shared execution controls only for existing command fakes.
+
+    Real-Git tests pass the original argv to subprocess; this lets unit fakes
+    continue matching the subcommand without pretending the controls vanished.
+    """
+    if cmd and Path(str(cmd[0])).name == "git" and "--no-lazy-fetch" in cmd:
+        index = 1
+        while index < len(cmd):
+            if cmd[index] in {"--no-pager", "--no-lazy-fetch"}:
+                index += 1
+            elif cmd[index] == "-c":
+                index += 2
+            else:
+                break
+        return ["git", *cmd[index:]]
+    return cmd
+
+
 def _make_run_stub(
     *,
     rev_parse_verify_ok: bool = True,
@@ -7298,8 +7328,11 @@ def _make_run_stub(
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        cmd = _stub_git_command(cmd)
         calls.append(list(cmd))
         if "--no-replace-objects" in cmd or cmd[:2] == ["git", "--literal-pathspecs"]:
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
+        if cmd[:2] == ["git", "config"] and "--name-only" in cmd:
             return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
@@ -9147,8 +9180,10 @@ def test_branch_reuse_releases_clean_terminal_holder_then_attaches(tmp_path, mon
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        original_cmd = cmd
+        cmd = _stub_git_command(cmd)
         if cmd[:2] == ["git", "ls-files"]:
-            return real_run(cmd, **kwargs)
+            return real_run(original_cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -9251,8 +9286,10 @@ def test_branch_reuse_releases_clean_holder_with_absent_task_record(tmp_path, mo
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        original_cmd = cmd
+        cmd = _stub_git_command(cmd)
         if cmd[:2] == ["git", "ls-files"]:
-            return real_run(cmd, **kwargs)
+            return real_run(original_cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -9407,8 +9444,10 @@ def test_branch_reuse_resolves_owner_via_worktree_path_when_ids_diverge(tmp_path
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        original_cmd = cmd
+        cmd = _stub_git_command(cmd)
         if cmd[:2] == ["git", "ls-files"]:
-            return real_run(cmd, **kwargs)
+            return real_run(original_cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1
@@ -10354,7 +10393,7 @@ def _patch_worker_popen(monkeypatch):
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
-        if cmd and str(cmd[0]) == "git":
+        if cmd and Path(str(cmd[0])).name == "git":
             return real_popen(cmd, *a, **k)
         for fd in k.get("pass_fds") or ():
             os.write(fd, b"1")
@@ -14532,8 +14571,9 @@ def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_p
     real_run = subprocess.run
 
     def spy_run(cmd, *args, **kwargs):
-        if list(cmd[:3]) == ["git", "worktree", "remove"]:
-            removals.append((list(cmd), _worktree_lock_is_free(holder)))
+        normalized = _stub_git_command(cmd)
+        if list(normalized[:3]) == ["git", "worktree", "remove"]:
+            removals.append((list(normalized), _worktree_lock_is_free(holder)))
             return subprocess.CompletedProcess(cmd, 0, "", "")
         return real_run(cmd, *args, **kwargs)
 
@@ -17563,8 +17603,10 @@ def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monk
     removes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
+        original_cmd = cmd
+        cmd = _stub_git_command(cmd)
         if cmd[:2] == ["git", "ls-files"]:
-            return real_run(cmd, **kwargs)
+            return real_run(original_cmd, **kwargs)
         calls.append(list(cmd))
         if cmd[:3] == ["git", "worktree", "list"]:
             list_hits["n"] += 1

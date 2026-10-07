@@ -54,6 +54,8 @@ from scripts.common.acp_runtime_lock import (
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
+from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -184,6 +186,8 @@ def _run(
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
+    if args and args[0] == "git" and len(args) > 1 and args[1] in LOCAL_COMMANDS:
+        return safe_git(args[1:], cwd=cwd, capture_output=True, text=True, check=False, timeout=timeout, env=env)
     return subprocess.run(
         args,
         cwd=cwd,

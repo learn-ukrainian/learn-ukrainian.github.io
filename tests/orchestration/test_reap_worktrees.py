@@ -2765,6 +2765,7 @@ def test_gh_json_calls_drop_force_color(monkeypatch, tmp_path: Path) -> None:
         return subprocess.CompletedProcess(args, 0, "", "")
 
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
+    monkeypatch.setattr(rw, "safe_git", fake_run)
 
     git_proc = rw._run(["git", "status"], cwd=tmp_path)
     states, error = rw._query_pr_states_graphql(tmp_path, "grok/impl-9889")
@@ -4740,11 +4741,14 @@ def test_dispatch_husk_is_kept_when_git_hangs_under_the_lock(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" worktree list "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_age = rw._tree_newest_age_hours
@@ -4840,11 +4844,14 @@ def test_qualified_reap_skips_when_git_hangs_under_the_guard(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" worktree list "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_guard = rw._enter_dispatch_worktree_guard
@@ -4899,11 +4906,14 @@ def test_removed_then_branch_prune_timeout_reports_removed(
     fake_git = fake_bin / "git"
     fake_git.write_text(
         "#!/bin/sh\n"
-        f'if [ -e "{hang_marker}" ] && [ "$1" = branch ] && [ "$2" = -D ]; then exec sleep 5; fi\n'
+        f'if [ -e "{hang_marker}" ]; then case " $* " in *" branch -D "*) exec sleep 5;; esac; fi\n'
         f'exec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     real_guard = rw._enter_dispatch_worktree_guard
@@ -4973,10 +4983,13 @@ def test_qualified_reap_skips_when_the_region_deadline_expires(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        f'#!/bin/sh\nif [ -e "{hang_marker}" ] && [ "$1" = status ]; then exec sleep 5; fi\nexec "{real_git}" "$@"\n',
+        f'#!/bin/sh\nif [ -e "{hang_marker}" ]; then case " $* " in *" status "*) exec sleep 5;; esac; fi\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
     real_guard = rw._enter_dispatch_worktree_guard
 
@@ -5060,10 +5073,13 @@ def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
     fake_bin.mkdir()
     fake_git = fake_bin / "git"
     fake_git.write_text(
-        f'#!/bin/sh\nif [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\nexec "{real_git}" "$@"\n',
+        f'#!/bin/sh\ncase " $* " in *" worktree remove "*) sleep 0.4;; esac\nexec "{real_git}" "$@"\n',
         encoding="utf-8",
     )
     fake_git.chmod(0o755)
+    from scripts.orchestration import execution_safe_git
+
+    monkeypatch.setattr(execution_safe_git, "GIT", str(fake_git))
     monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
 
     result = result_for(
