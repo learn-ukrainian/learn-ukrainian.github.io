@@ -1690,8 +1690,10 @@ def _reap_runtime_tmp_lease(
     This is intentionally stricter than a generic ``rm -rf``. It only removes
     a non-symlink direct child of the dispatcher-created namespace and uses
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
-    cleanup into a deletion outside the lease. Any failure is state telemetry,
-    never a worker failure.
+    cleanup into a deletion outside the lease. A filesystem or validation
+    failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    ``ScratchScanRootError`` propagates: a misconfigured scan root is not
+    telemetry, and this function raises it before it deletes the lease.
     """
     result: dict[str, int | str | None] = {
         "tmp_bytes_freed": 0,

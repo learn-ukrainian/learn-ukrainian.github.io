@@ -45,14 +45,12 @@ DEFAULT_SCRATCH_ROOT = Path("/var/tmp/lu")
 FALLBACK_SCRATCH_DIRNAME = "lu-scratch"
 # Stable reason codes for ScratchScanRootError. The text is the contract tests
 # match; do not put a path, errno, or host detail next to them.
-SCAN_ROOT_REASON_UNSET = "unset"
 SCAN_ROOT_REASON_RELATIVE = "relative"
 SCAN_ROOT_REASON_OUTSIDE = "outside_allowed_root"
 SCAN_ROOT_REASON_SYMLINK = "symlink_escape"
 SCAN_ROOT_REASON_NOT_A_DIRECTORY = "not_a_directory"
 _SCAN_ROOT_REASONS = frozenset(
     {
-        SCAN_ROOT_REASON_UNSET,
         SCAN_ROOT_REASON_RELATIVE,
         SCAN_ROOT_REASON_OUTSIDE,
         SCAN_ROOT_REASON_SYMLINK,
@@ -65,14 +63,14 @@ class ScratchScanRootError(RuntimeError):
     """``LU_SCRATCH_SCAN_ROOT`` is misconfigured.
 
     Dispatch and review callers raise this at their own boundary. It is not a
-    filesystem error from path resolution. ``reason`` is one of ``unset``,
-    ``relative``, ``outside_allowed_root``, ``symlink_escape``, and
-    ``not_a_directory``. The message names the variable and that reason. It
-    never includes a path: an absolute path would reveal host layout.
+    filesystem error from path resolution. ``reason`` is one of ``relative``,
+    ``outside_allowed_root``, ``symlink_escape``, and ``not_a_directory``.
+    The message names the variable and that reason. It never includes a path:
+    an absolute path would reveal host layout.
 
-    ``unset`` applies only when a caller required the variable. Production
-    leaves it unset and does not require it, so an empty value keeps the
-    historical scan set.
+    An empty value is not an error. Production leaves the variable unset, and
+    :func:`resolve_confined_scan_root` returns ``None`` so the historical
+    scan set stays in place.
     """
 
     def __init__(self, reason: str) -> None:
@@ -178,12 +176,12 @@ def _dotdot_boundary(path: Path) -> Path | None:
     return Path(*prefix)
 
 
-def _symlink_escapes(path: Path, allowed_root: Path | None) -> bool:
-    """Return whether a symlink component resolves outside its allowed directory.
+def _symlink_escapes(path: Path) -> bool:
+    """Return whether a symlink component resolves outside its parent directory.
 
-    With no explicit allowed root, the allowed directory is the real parent
-    of that symlink. An ancestor such as a symlinked temp directory stays
-    inside its own parent and is not an escape.
+    The allowed directory is the real parent of that symlink. An ancestor
+    such as a symlinked temp directory stays inside its own parent and is
+    not an escape.
     """
     current = Path(path.anchor)
     for part in path.parts[1:]:
@@ -206,41 +204,33 @@ def _symlink_escapes(path: Path, allowed_root: Path | None) -> bool:
         except OSError:
             target = candidate.resolve(strict=False)
         # ``current`` is the directory that contains this symlink component.
-        boundary = allowed_root if allowed_root is not None else current
-        if not _within(target, boundary):
+        if not _within(target, current):
             return True
         current = target
     return False
 
 
-def resolve_confined_scan_root(
-    *,
-    required: bool = False,
-    allowed_root: Path | None = None,
-) -> Path | None:
+def resolve_confined_scan_root() -> Path | None:
     """Return the scan confine directory, or ``None`` when the variable is unset.
 
-    Production does not set ``LU_SCRATCH_SCAN_ROOT`` and callers leave
-    ``required`` false, which preserves the historical scan set. A set value
-    must be an absolute existing directory. ``..`` that leaves the named
-    directory, a path outside ``allowed_root``, and a symlink that resolves
-    outside that directory are misconfiguration. The raised
-    :class:`ScratchScanRootError` carries a reason code and no path.
+    Production does not set ``LU_SCRATCH_SCAN_ROOT``. A set value must be an
+    absolute existing directory. A ``..`` segment that leaves the named
+    directory, or a symlink that resolves outside its parent, is
+    misconfiguration. The raised :class:`ScratchScanRootError` carries a
+    reason code and no path.
 
     This does not decide which candidates inside a valid boundary are scanned.
     :func:`scratch_scan_roots` keeps that policy.
     """
     raw = os.environ.get(SCRATCH_SCAN_ROOT_ENV_VAR, "").strip()
     if not raw:
-        if required:
-            raise ScratchScanRootError(SCAN_ROOT_REASON_UNSET)
         return None
     path = Path(raw)
     if not path.is_absolute():
         raise ScratchScanRootError(SCAN_ROOT_REASON_RELATIVE)
-    if _symlink_escapes(path, allowed_root):
+    if _symlink_escapes(path):
         raise ScratchScanRootError(SCAN_ROOT_REASON_SYMLINK)
-    boundary = allowed_root if allowed_root is not None else _dotdot_boundary(path)
+    boundary = _dotdot_boundary(path)
     if boundary is not None and boundary != Path(path.anchor) and not _within(path, boundary):
         raise ScratchScanRootError(SCAN_ROOT_REASON_OUTSIDE)
     if boundary == Path(path.anchor) and ".." in path.parts:

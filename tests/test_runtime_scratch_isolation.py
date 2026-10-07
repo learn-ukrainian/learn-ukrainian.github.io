@@ -79,6 +79,14 @@ def _assert_scan_stays_inside(boundary: Path, found: list[Path]) -> list[Path]:
     return resolved
 
 
+def _assert_deletion_target_inside(boundary: Path, root: Path, *, deletions: int) -> None:
+    """Refuse, before any removal, when the resolved target leaves ``boundary``."""
+    resolved = _resolved(root)
+    assert resolved.is_relative_to(boundary), (
+        f"review-root deletion target left the per-test root before removal (deletions={deletions})"
+    )
+
+
 def test_orphan_sweep_scans_and_deletes_only_inside_the_per_test_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -200,13 +208,12 @@ def test_review_root_deletion_stays_inside_the_per_test_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Review-root deletion never sees a path outside this test's tmp dir.
+    """The deletion guard calls the real remove only after the target resolves inside tmp_path.
 
-    An aged review root under the per-test scan root is removed by the real
-    review sweep. The scan assertion runs before that deletion, and the
-    failure names zero deletions. With the confinement fixture disabled, the
-    host default scratch root is a candidate outside ``tmp_path`` and this
-    fails before anything is removed (#9953).
+    Confinement is on. The real review sweep reaps one aged review root that
+    lives under this test's directory. ``counting_remove`` resolves that
+    target and asserts it is inside ``tmp_path`` before the real remove.
+    The scan guard checks the scan result before that deletion.
     """
     from scripts.review import isolation
 
@@ -228,6 +235,7 @@ def test_review_root_deletion_stays_inside_the_per_test_root(
     seen: list[Path] = []
 
     def counting_remove(root: Path) -> None:
+        _assert_deletion_target_inside(boundary, root, deletions=removals["n"])
         removals["n"] += 1
         original_remove(root)
 
@@ -255,6 +263,70 @@ def test_review_root_deletion_stays_inside_the_per_test_root(
     assert host_temp not in seen
     assert _resolved(_HOST_DEFAULT_SCRATCH_ROOT) not in seen
     assert all(path.is_relative_to(boundary) for path in seen)
+
+
+def test_review_sweep_refuses_an_outside_review_root_before_deletion(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An outside review root offered to the sweep is refused before it is deleted.
+
+    Confinement stays on, so every scan root stays inside ``tmp_path``. The
+    sweep is then offered one aged review root that lives outside that
+    directory. The deletion guard raises on the resolved target, and the
+    sentinel directory is still there afterwards.
+    """
+    from scripts.review import isolation
+
+    boundary = _resolved(tmp_path)
+    sentinel = tmp_path.parent / f"lu-review-snap-outside-{tmp_path.name}"
+    sentinel.mkdir()
+    try:
+        (sentinel / "payload").write_text("keep", encoding="utf-8")
+        assert not _resolved(sentinel).is_relative_to(boundary)
+        now = time.time()
+        old = now - isolation.REVIEW_TEMP_ORPHAN_MAX_AGE_S - 5
+        os.utime(sentinel, (old, old))
+
+        removals = {"n": 0}
+        original_scan = scratch.scratch_scan_roots
+        original_remove = isolation._remove_review_temp_orphan
+        original_candidates = isolation._review_temp_orphan_candidates
+        seen: list[Path] = []
+
+        def counting_remove(root: Path) -> None:
+            _assert_deletion_target_inside(boundary, root, deletions=removals["n"])
+            removals["n"] += 1
+            original_remove(root)
+
+        def guarded_scan() -> list[Path]:
+            found = original_scan()
+            resolved = _assert_scan_stays_inside(boundary, found)
+            seen.extend(resolved)
+            return found
+
+        def offer_sentinel(base: Path) -> tuple[Path, ...]:
+            found = original_candidates(base)
+            if any(_resolved(path) == _resolved(sentinel) for path in found):
+                return found
+            return (*found, sentinel)
+
+        monkeypatch.setattr(scratch, "scratch_scan_roots", guarded_scan)
+        monkeypatch.setattr(isolation, "scratch_scan_roots", guarded_scan)
+        monkeypatch.setattr(isolation, "_remove_review_temp_orphan", counting_remove)
+        monkeypatch.setattr(isolation, "_review_temp_orphan_candidates", offer_sentinel)
+
+        with pytest.raises(AssertionError, match="left the per-test root before removal") as caught:
+            isolation.sweep_review_temp_orphans(now=now)
+        assert "deletions=0" in str(caught.value)
+        assert sentinel.is_dir()
+        assert (sentinel / "payload").read_text(encoding="utf-8") == "keep"
+        assert removals["n"] == 0
+        assert seen, "review sweep did not scan"
+        assert _resolved(sentinel) not in seen
+        assert all(path.is_relative_to(boundary) for path in seen)
+    finally:
+        shutil.rmtree(sentinel, ignore_errors=True)
 
 
 _CALLER_MISCONFIGURATIONS = (
@@ -390,36 +462,13 @@ def test_review_sweep_refuses_a_misconfigured_scan_root(
     assert review_root.is_dir()
 
 
-def test_required_scan_root_rejects_unset_and_blank(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Unset is an error only where a caller required the variable."""
+def test_unset_or_blank_scan_root_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
+    """An empty ``LU_SCRATCH_SCAN_ROOT`` keeps the historical scan; it is not an error."""
     monkeypatch.delenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, raising=False)
-    with pytest.raises(scratch.ScratchScanRootError) as unset:
-        scratch.resolve_confined_scan_root(required=True)
-    assert unset.value.reason == scratch.SCAN_ROOT_REASON_UNSET
-    assert str(unset.value) == "LU_SCRATCH_SCAN_ROOT is misconfigured: unset"
-    assert "/" not in str(unset.value)
+    assert scratch.resolve_confined_scan_root() is None
 
     monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, "   ")
     assert scratch.resolve_confined_scan_root() is None
-    with pytest.raises(scratch.ScratchScanRootError) as blank:
-        scratch.resolve_confined_scan_root(required=True)
-    assert blank.value.reason == scratch.SCAN_ROOT_REASON_UNSET
-
-
-def test_scan_root_outside_an_explicit_allowed_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """An absolute directory outside the caller's allowed root is its own reason."""
-    outside = tmp_path.parent / f"explicit-outside-{tmp_path.name}"
-    outside.mkdir()
-    try:
-        monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(outside))
-        with pytest.raises(scratch.ScratchScanRootError) as caught:
-            scratch.resolve_confined_scan_root(allowed_root=tmp_path)
-        assert caught.value.reason == scratch.SCAN_ROOT_REASON_OUTSIDE
-        assert str(caught.value) == "LU_SCRATCH_SCAN_ROOT is misconfigured: outside_allowed_root"
-        assert "/" not in str(caught.value)
-        assert outside.name not in str(caught.value)
-    finally:
-        shutil.rmtree(outside)
 
 
 def test_scan_root_symlink_inside_its_parent_remains_the_boundary(
