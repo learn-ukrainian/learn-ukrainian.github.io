@@ -67,6 +67,8 @@ class FakeGitHub:
         self.job_rows: list[dict[str, Any]] = []
         self.issue_rows: list[dict[str, Any]] = []
         self.squash: bool | None = False
+        self.file_rows: list[dict[str, Any]] = [{"filename": "scripts/example.py"}]
+        self.lookups: list[str] = []
 
     def squash_blocked(self, number: int, head: str) -> bool | None:
         self.actions.append(("squash-read", (number, head)))
@@ -94,6 +96,10 @@ class FakeGitHub:
 
     def current(self, number: int) -> dict[str, Any]:
         return self.fresh
+
+    def files(self, number: int) -> list[dict[str, Any]]:
+        self.lookups.append("files")
+        return self.file_rows
 
     def enqueue(self, number: int, head: str) -> None:
         self.actions.append(("enqueue", (number, head)))
@@ -655,3 +661,221 @@ def test_github_squash_blocked_is_unverified_without_a_matcher(tmp_path: Path, m
     gh = keeper.GitHub(Path("."), "unit/public")
     monkeypatch.setattr(gh, "json", lambda request: _squash_reply())
     assert gh.squash_blocked(42, HEAD_A) is None
+
+
+# --- Dependency-update PRs without Analyze runs (#8587, #9921) -----------------------------
+
+
+def codeql_only(head: str = HEAD_A, conclusion: str = "neutral", status: str = "completed") -> list[dict[str, Any]]:
+    """Check runs as GitHub reports them for a dependabot lockfile PR: CI Gate plus top-level CodeQL, no Analyze."""
+    return [
+        {
+            "name": "CI Gate",
+            "head_sha": head,
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"id": 15368, "slug": "github-actions"},
+        },
+        {
+            "name": "CodeQL",
+            "head_sha": head,
+            "status": status,
+            "conclusion": conclusion if status == "completed" else None,
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"id": keeper.CODEQL_APP_ID, "slug": "github-advanced-security"},
+        },
+    ]
+
+
+def test_dependabot_lockfile_pr_with_neutral_codeql_and_no_analyze_is_queueable(tmp_path: Path, monkeypatch) -> None:
+    """#9921: a dependabot npm bump changing only package-lock.json, CodeQL neutral, no Analyze run."""
+    fake = FakeGitHub(pr(title="build(deps-dev): Bump a package"))
+    fake.check_rows = codeql_only()
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": "package-lock.json"}],
+        [{"filename": "site/package.json"}, {"filename": "site/package-lock.json"}],
+        [{"filename": "requirements-dev.txt"}, {"filename": ".dagger/uv.lock"}],
+    ],
+)
+def test_lockfile_only_pr_with_passing_codeql_is_queueable(tmp_path: Path, monkeypatch, files) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion="success")
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": ".github/workflows/ci.yml"}],  # a dependabot github-actions bump
+        [{"filename": "package-lock.json"}, {"filename": "scripts/example.py"}],  # code pushed onto a bot branch
+        [{"filename": "scripts/example.py"}],
+        [{"filename": "package-lock.json"}, {"filename": "src/app.ts"}],
+        [{"filename": "package.json", "previous_filename": "scripts/build.js"}],
+        [{"filename": "pyproject.toml"}],  # not on the lockfile list
+        [{"filename": "requirements.in"}],
+        [],
+    ],
+)
+def test_pr_without_analyze_and_non_lockfile_changes_still_waits(tmp_path: Path, monkeypatch, files) -> None:
+    """Authorship never matters: only the changed files decide, so a dependabot title or author is no shortcut."""
+    fake = FakeGitHub(pr(title="build(deps): Bump something"))
+    fake.check_rows = codeql_only()
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("conclusion", ["failure", "action_required", "cancelled", "timed_out"])
+def test_failing_codeql_blocks_a_lockfile_pr(tmp_path: Path, monkeypatch, conclusion) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion=conclusion)
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CI-red-CodeQL" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def test_running_codeql_keeps_a_lockfile_pr_pending(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(status="in_progress")
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize(
+    "app",
+    [
+        {"id": 15368, "slug": "github-actions"},
+        {"id": 1, "slug": "github-advanced-security"},
+        {"slug": "github-advanced-security"},
+        None,
+    ],
+)
+def test_codeql_check_from_any_other_app_is_not_evidence(tmp_path: Path, monkeypatch, app) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+    fake.check_rows[1]["app"] = app
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert fake.lookups == []
+    assert "enqueue" not in mutations(fake)
+
+
+def test_pr_with_analyze_runs_never_reads_files(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=ready" in lines[0]
+    assert fake.lookups == []
+
+
+def test_file_lookup_failure_never_enqueues(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+
+    def broken(_number: int) -> list[dict[str, Any]]:
+        raise keeper.KeeperError("PR file list incomplete")
+
+    fake.files = broken  # type: ignore[method-assign]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    # A failed evidence read is handled like a failed check read: nothing is ready.
+    assert "reason=ready" not in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def _github_files(monkeypatch, *, changed: Any, rows: list[dict[str, Any]]) -> keeper.GitHub:
+    client = keeper.GitHub(Path("."), "o/r")
+    reads: list[str] = []
+
+    def fake_json(request: Any) -> Any:
+        reads.append(request.verb)
+        assert request.verb == "read-pull"
+        return {"number": 7, "changed_files": changed}
+
+    def fake_paged(request: Any) -> list[dict[str, Any]]:
+        reads.append(request.verb)
+        assert request.verb == "read-pr-files"
+        return rows
+
+    monkeypatch.setattr(client, "json", fake_json)
+    monkeypatch.setattr(client, "paged", fake_paged)
+    client.reads = reads  # type: ignore[attr-defined]
+    return client
+
+
+def test_github_files_returns_a_complete_list(monkeypatch) -> None:
+    rows = [{"filename": "package-lock.json"}, {"filename": "package.json"}]
+    client = _github_files(monkeypatch, changed=2, rows=rows)
+
+    assert client.files(7) == rows
+    assert client.reads == ["read-pull", "read-pr-files"]  # type: ignore[attr-defined]
+
+
+@pytest.mark.parametrize("changed", [3000, 3001, 10000])
+def test_github_files_fails_closed_at_the_files_api_cap(monkeypatch, changed) -> None:
+    rows = [{"filename": f"lock{i}/package-lock.json"} for i in range(3000)]
+    client = _github_files(monkeypatch, changed=changed, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="truncated"):
+        client.files(7)
+    assert client.reads == ["read-pull"]  # type: ignore[attr-defined]
+
+
+def test_github_files_fails_closed_when_the_listing_reaches_the_cap(monkeypatch) -> None:
+    rows = [{"filename": f"lock{i}/package-lock.json"} for i in range(3000)]
+    client = _github_files(monkeypatch, changed=2999, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="incomplete"):
+        client.files(7)
+
+
+@pytest.mark.parametrize(("changed", "listed"), [(3, 2), (1, 2), (5, 0)])
+def test_github_files_fails_closed_on_a_changed_files_mismatch(monkeypatch, changed, listed) -> None:
+    rows = [{"filename": "package-lock.json"}] * listed
+    client = _github_files(monkeypatch, changed=changed, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="incomplete"):
+        client.files(7)
+
+
+@pytest.mark.parametrize("changed", [None, "2", 2.0, True])
+def test_github_files_fails_closed_without_a_changed_files_count(monkeypatch, changed) -> None:
+    client = _github_files(monkeypatch, changed=changed, rows=[{"filename": "package-lock.json"}] * 2)
+
+    with pytest.raises(keeper.KeeperError, match="count unknown"):
+        client.files(7)
