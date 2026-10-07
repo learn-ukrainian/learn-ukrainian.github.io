@@ -212,7 +212,7 @@ jobs:
           # Shared conftest's adapter pre-import needs jsonschema; its process
           # guard uses psutil (#10030). Use declarations and their locked pins.
           sed -nE '/^(pytest|pyyaml|jsonschema|psutil)[<=>]/p' requirements.txt > "$RUNNER_TEMP/hygiene-requirements.txt"
-          sed -nE '/^(pytest|PyYAML|jsonschema|psutil)==/p' requirements-lock.txt > "$RUNNER_TEMP/hygiene-constraints.txt"
+          sed -nE '/^[A-Za-z0-9_.-]+==/p' requirements-lock.txt > "$RUNNER_TEMP/hygiene-constraints.txt"
           .venv/bin/python -m pip install -r "$RUNNER_TEMP/hygiene-requirements.txt" -c "$RUNNER_TEMP/hygiene-constraints.txt"
 
       - name: Verify agent extension deployment

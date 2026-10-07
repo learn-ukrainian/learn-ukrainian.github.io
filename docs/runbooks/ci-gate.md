@@ -9,13 +9,20 @@ Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
 The advisory Hygiene workflow keeps a separate slim environment. Its focused
 agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
-`requirements.txt`, constrained to the exact versions in `requirements-lock.txt`.
+`requirements.txt`, with direct and transitive dependencies constrained by all
+named `==` pins in `requirements-lock.txt` (local path requirements cannot be
+constraints).
 The shared conftest's Claude adapter pre-import needs jsonschema; its process
 guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
 Before executing the focused tests, a `--setup-only` guard collects the same
 test set and runs its fixtures: `--collect-only` alone cannot detect missing
 dependencies imported during autouse setup. The guard propagates import errors;
-`tests/test_hygiene_workflow.py` verifies failure with jsonschema unavailable.
+`tests/test_hygiene_workflow.py`, run by required CI Gate, also restricts fixture
+setup imports to the standard library, repository-local modules and Hygiene's
+installed dependency closure resolved through `importlib.metadata`. Other
+third-party imports fail even when installed in CI Gate's larger environment.
+Negative controls cover unavailable jsonschema and a fixture-time `requests`
+import in a scratch copy of the shared conftest.
 
 | Job | What it does |
 | --- | --- |
