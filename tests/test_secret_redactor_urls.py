@@ -1,19 +1,16 @@
 """URL credentials and ordinary-text compatibility for #9948.
 
 Every credential-shaped fixture is assembled from parts at runtime. Corpus
-inputs are public repository documents and synthetic messages, never stored
-message bodies. The reference executes the actual origin/main helper.
+inputs are public working-tree documents and frozen synthetic messages, never
+stored message bodies. No reference implementation or Git history is needed.
 """
 
-import io
 import subprocess
-import tarfile
-import types
 from pathlib import Path
 
 import pytest
 
-from scripts.secret_redactor import REDACTION, redact_text, redact_url_authority, redact_value
+from scripts.secret_redactor import REDACTION, iter_url_matches, redact_text, redact_url_authority, redact_value
 
 PASSWORDS = (
     "Ab3dE/fG",
@@ -193,32 +190,54 @@ def test_nonnumeric_colon_prefix_uses_round_a_fallback_across_nested_scheme():
     assert redact_text(expected) == expected
 
 
-def test_ordinary_repository_corpus_matches_actual_origin_main_redactor():
+FROZEN_NEGATIVES = (
+    *SAFE_URLS,
+    "Review complete; the tests passed. Please read scripts/api/lane_health.py.",
+    "Budget ~500K/1M, fraction ~2/3; codes ENOTFOUND EAI_AGAIN.",
+    "Retry GET " + SAFE_URLS[0] + " 404; next " + SAFE_URLS[1],
+    "token_verdicts = vesum_gate.check_tokens(sentence)",
+    "https://archive.invalid/20261007/https://source.invalid/path",
+    "https://outer.invalid?next=https://source.invalid:443/@scope/pkg",
+    "https://first.invalid,https://second.invalid;file:///root/@scope/pkg",
+    "https://archive.invalid/20261007/https://source.invalid:443/@scope/pkg",
+    "https://outer.invalid:443/@scope/pkg?next=https://source.invalid/a@b#user@other.invalid",
+    "https://outer.invalid/redirect?next=https://source.invalid/path?email=user@other.invalid",
+)
+
+
+def url_pass(text):
+    """Apply just the production URL iterator and authority redaction pass."""
+    parts = []
+    cursor = 0
+    for match in iter_url_matches(text):
+        parts.append(text[cursor:match.start()])
+        parts.extend(redact_url_authority(match.group()))
+        cursor = match.end()
+    parts.append(text[cursor:])
+    return "".join(parts)
+
+
+@pytest.mark.parametrize("raw", FROZEN_NEGATIVES)
+def test_frozen_ordinary_messages_stay_byte_identical(raw):
+    assert url_pass(raw).encode("utf-8") == raw.encode("utf-8")
+    assert redact_text(raw).encode("utf-8") == raw.encode("utf-8")
+
+
+@pytest.mark.repo_wide
+def test_ordinary_repository_corpus_is_unchanged_by_url_pass():
     repo = Path(__file__).resolve().parents[1]
-    base = subprocess.check_output(["git", "rev-parse", "origin/main"], cwd=repo, text=True, timeout=30).strip()
-    source = subprocess.check_output(["git", "show", base + ":scripts/secret_redactor.py"], cwd=repo, text=True, timeout=30)
-    baseline = types.ModuleType("baseline_secret_redactor")
-    exec(compile(source, "origin/main:scripts/secret_redactor.py", "exec"), baseline.__dict__)
-    archive = subprocess.check_output(
-        ["git", "archive", base, "docs", "agents_extensions/shared/rules", "AGENTS.md", "CLAUDE.md", "GEMINI.md"],
+    # The local index supplies names only; all bytes come from the working tree.
+    tracked = subprocess.check_output(
+        ["git", "ls-files", "-z", "docs", "agents_extensions/shared/rules", "AGENTS.md", "CLAUDE.md", "GEMINI.md"],
         cwd=repo,
         timeout=30,
-    )
-    documents = []
-    with tarfile.open(fileobj=io.BytesIO(archive)) as tree:
-        for member in tree:
-            if member.isfile() and member.name.endswith((".md", ".yaml", ".yml", ".txt")):
-                text = tree.extractfile(member).read().decode("utf-8")
-                documents.append(text)
-    messages = [
-        "Review complete; the tests passed. Please read scripts/api/lane_health.py.",
-        "Budget ~500K/1M, fraction ~2/3; codes ENOTFOUND EAI_AGAIN.",
-        *SAFE_URLS,
-        "Retry GET " + SAFE_URLS[0] + " 404; next " + SAFE_URLS[1],
-        "token_verdicts = vesum_gate.check_tokens(sentence)",
-    ]
+    ).decode("utf-8").split("\0")
+    documents = [name for name in tracked if name.endswith((".md", ".mdx", ".yaml", ".yml", ".txt", ".html"))]
     assert len(documents) >= 100
-    for text in documents + messages:
-        # Counts only on failure: no repository bodies or synthetic secrets.
-        assert redact_text(text) == baseline.redact_text(text), "corpus output differs"
-    print(f"corpus: {len(documents)} documents, {len(messages)} synthetic bodies, 0 excluded; differences=0; base={base}")
+    for name in documents:
+        original = (repo / name).read_bytes()
+        # Stronger than filtering out userinfo: the entire ordinary corpus must
+        # stay identical. Never let the redactor decide which inputs to exclude.
+        unchanged = url_pass(original.decode("utf-8")).encode("utf-8") == original
+        assert unchanged, f"URL pass changed document: {name}"
+    print(f"corpus: {len(documents)} working-tree documents, 0 excluded; differences=0")
