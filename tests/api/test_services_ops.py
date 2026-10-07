@@ -919,7 +919,7 @@ def test_delegate_rejects_injection_payload(
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
     env["LU_SERVICES_SSH_HOST"] = "fakehost"
 
-    payload = "api;touch /tmp/ssh_inject_test/PWNED"
+    payload = "api;touch /srv/ssh_inject_test/PWNED"
     result = subprocess.run(
         [str(script_path), "start", payload],
         capture_output=True,

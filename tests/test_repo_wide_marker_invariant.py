@@ -121,6 +121,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
     "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
     "tests/agent_runtime/test_claude_no_background.py::test_claude_code_harness_denominator_is_complete",
@@ -181,6 +182,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
     "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_secret_redactor_urls.py::test_ordinary_repository_corpus_is_unchanged_by_url_pass",
     "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
     "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
     "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",

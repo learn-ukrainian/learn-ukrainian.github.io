@@ -912,9 +912,17 @@ def _hermetic_dispatch_admission_host(monkeypatch):
 
     Admission reads this host's MemAvailable and load average; a busy CI runner
     or developer box must not refuse the write dispatches other tests make.
-    Admission tests monkeypatch ``probe_host`` themselves.
+    Admission tests monkeypatch ``probe_host`` themselves. The shared
+    ``lu.slice`` pool is not read unless a test sets ``LU_SLICE_CGROUP`` to a
+    fake cgroup (#9975).
     """
-    for name in ("DISPATCH_MAX_LIVE_WRITE_WORKERS", "DISPATCH_MIN_MEM_AVAILABLE_GIB", "DISPATCH_MAX_LOAD_PER_CPU"):
+    for name in (
+        "DISPATCH_MAX_LIVE_WRITE_WORKERS",
+        "DISPATCH_MIN_MEM_AVAILABLE_GIB",
+        "DISPATCH_MAX_LOAD_PER_CPU",
+        "DISPATCH_WORKER_MEM_RESERVE_GIB",
+        "LU_SLICE_CGROUP",
+    ):
         monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
 
