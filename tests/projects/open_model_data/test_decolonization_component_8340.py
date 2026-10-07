@@ -26,6 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     LinguisticNormalizer,
     _resolve_db_path,
@@ -344,15 +345,13 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
 
 def test_adversarial_probes_and_fail_closed(require_vesum_db, hermetic_source_cursor):
     """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment (CF-R6 Finding 1 & 3)."""
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         make_reviewer_confirmation,
         query_source_evidence,
         validate_ua_gec_phrase,
     )
 
-    v_conn = sqlite3.connect(f"{Path(require_vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(require_vesum_db)
     v_cur = v_conn.cursor()
     s_cur = hermetic_source_cursor
 
@@ -706,8 +705,6 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
     2. Blocker 2: Non-bypassable live SQL execution on s_cur and v_cur in query_source_evidence.
     3. Blocker 3: Reviewer whitelist enforcement via ACCREDITED_INDEPENDENT_REVIEWERS and signoff cross-reference.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         ACCREDITED_INDEPENDENT_REVIEWERS,
         make_reviewer_confirmation,
@@ -760,8 +757,8 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -850,8 +847,6 @@ def test_cf_r10_remediations_regression(require_local_databases, source_cursor_f
     3. Blocker 1: UA-GEC record validation on correction/error alignment fails closed on mismatch.
     4. Blocker 2: Accredited independent reviewer attribution across all dossiers and signoff.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         ACCREDITED_INDEPENDENT_REVIEWERS,
         query_source_evidence,
@@ -860,8 +855,8 @@ def test_cf_r10_remediations_regression(require_local_databases, source_cursor_f
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1031,7 +1026,6 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases, so
        e. invalid / missing signoff_date
     """
     import json
-    import sqlite3
 
     from scripts.projects.open_model_data.build_decolonization_cases import (
         make_reviewer_confirmation,
@@ -1041,8 +1035,8 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases, so
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1212,8 +1206,8 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases, so
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"{Path(sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -1336,11 +1330,9 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
     - Lookup and binding for Ponomariv, Antonenko, and inflected forms (e.g. 'тло')
       against a controlled fixture. This does not verify source authenticity.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
 
-    real_v_cur = sqlite3.connect(f"{Path(require_vesum_db).resolve().as_uri()}?mode=ro", uri=True).cursor()
+    real_v_cur = open_readonly(require_vesum_db).cursor()
     fixture_s_cur = hermetic_source_cursor
 
     # 1. TractorBookMockCursor: 'Книга про трактори' containing 'завдання' and 'граматика'
@@ -1486,8 +1478,6 @@ def test_cf_r15_phrase_attestation_regression(dictionary_probe):
 )
 def test_cf_r20_remediations_regression(decolonization_data, require_local_databases):
     """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
-    import sqlite3
-
     from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
     from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
@@ -1525,10 +1515,13 @@ def test_cf_r20_remediations_regression(decolonization_data, require_local_datab
     assert "М. Рильський" not in ev_074["supporting_passage"]
 
     # 5. Live query verification for all 3 remediated cases
-    v_conn = sqlite3.connect(f"{Path(VESUM_DB_PATH).resolve().as_uri()}?mode=ro", uri=True)
+    v_conn = open_readonly(VESUM_DB_PATH)
     v_cur = v_conn.cursor()
 
-    s_conn = sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True)
+    # ensure_reproducible_sum20_table writes a connection-local TEMP table.
+    # The open stays mode=ro, so the repository file is unchanged.
+    s_conn = open_readonly(DEFAULT_SOURCES_DB)
+    s_conn.execute("PRAGMA query_only=OFF")
     ensure_reproducible_sum20_table(s_conn)
     s_cur = s_conn.cursor()
 

@@ -8,12 +8,12 @@ from __future__ import annotations
 import glob
 import json
 import re
-import sqlite3
 from pathlib import Path
 
 import pytest
 from jsonschema import validate
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data import v6_mine_grammar_valency as miner
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
@@ -80,9 +80,7 @@ def test_vesum_database_resolution_and_attestation() -> None:
     vesum_db = miner.DEFAULT_VESUM_DB
     assert vesum_db.is_file(), f"VESUM database could not be resolved at {vesum_db}"
 
-    import sqlite3
-
-    conn = sqlite3.connect(f"{Path(vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(vesum_db)
     cur = conn.cursor()
 
     for verb, expected_min_forms in [
@@ -339,9 +337,7 @@ def test_vesum_query_fail_closed_when_cursor_none() -> None:
 )
 def test_negative_controls_filtering_rejects_defective_structures() -> None:
     """Verify that incomplete subordinate clauses, comma before predicate, and unclosed appositives are rejected."""
-    import sqlite3
-
-    conn = sqlite3.connect(f"{Path(miner.DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(miner.DEFAULT_VESUM_DB)
     cur = conn.cursor()
 
     # Defect 1: Incomplete subordinate clause lacking predicate
@@ -2202,9 +2198,7 @@ def test_n5_proekt_spelling_rejection() -> None:
 )
 def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
     """Verify Brown-UK negative controls reject pre-2019 'проект'."""
-    import sqlite3
-
-    conn = sqlite3.connect(f"{Path(miner.DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(miner.DEFAULT_VESUM_DB)
     cur = conn.cursor()
     assert not miner.is_pristine_eval_sentence("Ми ознайомилися з новим проектом постанови уряду на засіданні.", cur)
     assert miner.is_pristine_eval_sentence("Ми ознайомилися з новим проєктом постанови уряду на засіданні.", cur)
@@ -2311,7 +2305,7 @@ def test_check_has_predicate_reflexive_precision() -> None:
 )
 def test_grounding_token_non_pronoun_precision() -> None:
     """Verify that grounding tokens and samples reject pronouns and quantifiers (R7-3, R7-4, R8-1)."""
-    with sqlite3.connect(f"{Path(miner.DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
+    with open_readonly(miner.DEFAULT_VESUM_DB) as conn:
         cur = conn.cursor()
         text = "Ніхто більше в цілому світі не знав цієї таємниці."
         sample_str, primary_token = miner.extract_context_content_sample(text, cur_ves=cur)

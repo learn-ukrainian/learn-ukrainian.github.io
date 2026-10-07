@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import re
-import sqlite3
 from pathlib import Path
 
 import pytest
 import yaml
+
+from scripts.lib.readonly_sqlite import open_readonly
 
 REPO = Path(__file__).resolve().parents[2]
 CARDS = REPO / "docs" / "style-cards"
@@ -96,7 +97,7 @@ def test_card_exemplars_are_declared_with_record_ids_and_quoted_in_body(band: st
 def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_db: Path) -> None:
     """Each exemplar text is a whitespace-normalised substring of its corpus record (R-35)."""
     front, _, _ = read_card(band)
-    con = sqlite3.connect(f"{Path(requires_sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    con = open_readonly(requires_sources_db)
     try:
         for exemplar in front["exemplars"]:
             row = con.execute(f"select text from {exemplar['table']} where chunk_id = ?", (exemplar["chunk_id"],)).fetchone()

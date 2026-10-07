@@ -246,8 +246,10 @@ def _sources_has_grinchenko_table() -> bool:
         return False
     import sqlite3
 
+    from scripts.lib.readonly_sqlite import open_readonly
+
     try:
-        with sqlite3.connect(f"{Path(SOURCES_PATH).resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with open_readonly(SOURCES_PATH) as conn:
             row = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='grinchenko' LIMIT 1"
             ).fetchone()

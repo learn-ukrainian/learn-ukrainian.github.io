@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.v5_pretraining_contradiction_audit import (
     DEFAULT_DPO_DIR,
     DEFAULT_PROTECTION_SUITE,
@@ -147,8 +148,8 @@ def test_verify_replacement_attestation_real_databases() -> None:
         pytest.skip("Local data/sources.db or data/vesum.db not present (CI-normal)")
 
     with (
-        sqlite3.connect(f"{sources_p.resolve().as_uri()}?mode=ro", uri=True) as sources_conn,
-        sqlite3.connect(f"{vesum_p.resolve().as_uri()}?mode=ro", uri=True) as vesum_conn,
+        open_readonly(sources_p.resolve()) as sources_conn,
+        open_readonly(vesum_p.resolve()) as vesum_conn,
     ):
         # Attested Ukrainian words/phrases must return True
         assert verify_replacement_attestation("принаймні", vesum_conn, sources_conn) is True

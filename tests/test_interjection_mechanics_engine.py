@@ -13,12 +13,12 @@ Covers:
 """
 
 import json
-import sqlite3
 from collections import Counter
 from pathlib import Path
 
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.practice.interjection_mechanics_engine import (
     InterjectionCategory,
     InterjectionInterferenceKey,
@@ -387,7 +387,7 @@ def test_is_valid_vesum_token_rejections_and_compounds():
     if not db_path.exists():
         pytest.skip(f"VESUM db not available at {db_path}")
 
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(db_path)
     cursor = conn.cursor()
 
     # Rejection of malformed tokens

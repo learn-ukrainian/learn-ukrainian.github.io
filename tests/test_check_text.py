@@ -33,6 +33,7 @@ import pytest
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
@@ -768,7 +769,7 @@ def _load_textbook_fixture() -> tuple[str, str] | None:
     sources_path = _sources_path()
     if not sources_path.is_file() or not Path(VESUM_DB_PATH).is_file():
         return None
-    conn = sqlite3.connect(f"{Path(sources_path).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(sources_path)
     try:
         # Minor 7: Pin by chunk_id
         cur = conn.execute(
@@ -802,7 +803,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     assert res_clean.get("status") != "error"
 
     # Provenance check (Minor 6: canonical VESUM metadata digest)
-    conn_v = sqlite3.connect(f"{Path(requires_vesum_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn_v = open_readonly(requires_vesum_db)
     cur_v = conn_v.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
     expected_vesum_digest = cur_v.fetchone()[0]
     conn_v.close()
@@ -852,7 +853,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     planted_vesum_1, planted_vesum_2 = selected_absent
 
     # Deterministic multi-word UA-GEC row 3010 (F/Calque: 'написання постів')
-    conn = sqlite3.connect(f"{Path(requires_sources_db).resolve().as_uri()}?mode=ro", uri=True)
+    conn = open_readonly(requires_sources_db)
     conn.row_factory = sqlite3.Row
     try:
         cur = conn.execute("SELECT id, error, correct FROM ua_gec_errors WHERE id = 3010")

@@ -23,6 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
@@ -79,7 +80,7 @@ def requires_sources_db() -> Path:
     if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_SOURCES_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"{Path(DEFAULT_SOURCES_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with open_readonly(DEFAULT_SOURCES_DB) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"ua_gec_errors", "zno_tasks", "style_guide", "textbooks"}
             missing = sorted(required - tables)
@@ -96,7 +97,7 @@ def requires_vesum_db() -> Path:
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         pytest.skip(f"requires {DEFAULT_VESUM_DB} (not provisioned in CI)")
     try:
-        with sqlite3.connect(f"{Path(DEFAULT_VESUM_DB).resolve().as_uri()}?mode=ro", uri=True) as conn:
+        with open_readonly(DEFAULT_VESUM_DB) as conn:
             tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
             required = {"forms_all"}
             missing = sorted(required - tables)
@@ -197,7 +198,7 @@ def test_preserve_cases_verbatim_target_and_vesum_attestation(requires_vesum_db:
     preserve_cases = [c for c in cases if c["case_type"] == "PRESERVE"]
     assert len(preserve_cases) == 600
 
-    v_conn = sqlite3.connect(DEFAULT_VESUM_DB)
+    v_conn = open_readonly(DEFAULT_VESUM_DB)
     vc = v_conn.cursor()
 
     for c in preserve_cases:
@@ -251,8 +252,8 @@ def test_derivational_closure_independent_zero_leakage(requires_sources_db: Path
             unseen_roots.add(extract_root_family(c["expected_replacement"]))
 
     # Query train phenomena candidates directly from sources.db and vesum.db
-    s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
-    v_conn = sqlite3.connect(DEFAULT_VESUM_DB)
+    s_conn = open_readonly(DEFAULT_SOURCES_DB)
+    v_conn = open_readonly(DEFAULT_VESUM_DB)
     sc = s_conn.cursor()
     vc = v_conn.cursor()
 
@@ -299,7 +300,7 @@ def test_derivational_closure_independent_zero_leakage(requires_sources_db: Path
 @pytest.mark.usefixtures("_verified_partition_bundle")
 def test_ua_gec_test_split_strict_zero_leakage(requires_sources_db: Path) -> None:
     """Verify that official UA-GEC test split is 100% excluded from held-out suite and training partition."""
-    s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+    s_conn = open_readonly(DEFAULT_SOURCES_DB)
     sc = s_conn.cursor()
 
     test_rows = sc.execute(
@@ -360,7 +361,7 @@ def test_independent_minhash_cross_split_verification(requires_sources_db: Path)
         heldout_cases = [json.loads(line) for line in f if line.strip()]
 
     # Sample sentences from sources.db across all 4 training sources
-    s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+    s_conn = open_readonly(DEFAULT_SOURCES_DB)
     sc = s_conn.cursor()
     zno_stems = [r[0] for r in sc.execute("SELECT stem FROM zno_tasks WHERE stem IS NOT NULL LIMIT 100").fetchall()]
     sg_texts = [r[0] for r in sc.execute("SELECT text FROM style_guide WHERE text IS NOT NULL LIMIT 50").fetchall()]

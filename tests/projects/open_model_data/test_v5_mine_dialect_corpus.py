@@ -32,6 +32,7 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import ARTIFACT_RELEASE_DIR, REGISTRY_RELEASE_DIR
 from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     DEFAULT_VESUM_DB,
@@ -588,7 +589,7 @@ def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         return
 
-    con_ves = sqlite3.connect(DEFAULT_VESUM_DB)
+    con_ves = open_readonly(DEFAULT_VESUM_DB)
     cur_ves = con_ves.cursor()
 
     for t in sft_trajectories:
