@@ -543,7 +543,9 @@ def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, varia
     if variant == "two_creators":
         (tasks / "output-task.20261005T130000Z.archived.json").write_text(json.dumps(creator))
     for _ in range(2):  # Exercise both fresh and content-verified cached lookups.
-        if variant == "keep_both":
+        # Retention now requires a resolved branch shared by creator and successor.
+        # This uncommitted fixture intentionally has no such branch evidence.
+        if variant in {"keep_both", "keep_archive", "keep_current"}:
             with pytest.raises(ValueError, match="retention intent"):
                 output.resolve_worktree_record(repo, tasks, repo_root=primary)
             continue

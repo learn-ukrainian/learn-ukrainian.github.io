@@ -3059,6 +3059,54 @@ def _needs_finalize_claim_proven_settled(repo_root: Path, record: dict[str, Any]
     return None
 
 
+def _released_reuse_claim_proven_settled(
+    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]] | None:
+    """Prove a released creator via its exact-head merged successor, outside the lock."""
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if record.get("status") != "needs_finalize" or _needs_finalize_claim_identity(record) is None:
+            return None
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        _, creator = ignored_task_output.reused_worktree_creator(matches, worktree, repo_root=repo_root)
+        if creator != record or any(member.get("keep_worktree") for _, member in matches):
+            return None
+        receipt = record["preserved_artifacts"]
+        release = receipt["retention_release"]
+        finalized = release["finalized_by"]
+        if (
+            receipt.get("retention_disposition") not in {"released", "retrieved"}
+            or receipt.get("owner") != record["task_id"]
+            or receipt.get("task_id") != record["task_id"]
+            or receipt.get("run_nonce") != record["run_nonce"]
+            or release.get("owner") != record["task_id"]
+            or release.get("run_nonce") != record["run_nonce"]
+            or not receipt.get("retrieval_proof_sha256")
+            or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
+            or not all(_pid_proven_absent(member) for _, member in matches)
+        ):
+            return None
+        head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+        if head.returncode != 0 or head.stdout.strip() != finalized["head_sha"]:
+            return None
+        for _, successor in matches:
+            if (
+                successor.get("worktree_reused") is True
+                and successor.get("status") == "done"
+                and successor.get("task_id") == finalized["task_id"]
+                and successor.get("run_nonce") == finalized["run_nonce"]
+                and successor.get("final_branch_head_commit") == finalized["head_sha"]
+                and _needs_finalize_claim_proven_settled(repo_root, successor) is not None
+            ):
+                return matches
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        pass
+    return None
+
+
 def _enter_dispatch_worktree_guard(
     stack: contextlib.ExitStack,
     *,
@@ -3106,8 +3154,15 @@ def _enter_dispatch_worktree_guard(
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
     proven: set[_ClaimIdentity] = set()
+    reused_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
 
     def prove(record: dict[str, Any]) -> bool:
+        reuse = _released_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        if reuse is not None:
+            identity = _needs_finalize_claim_identity(record)
+            if identity is not None:
+                reused_proofs[identity] = reuse
+                return True
         identity = _needs_finalize_claim_proven_settled(primary, record)
         if identity is not None:
             proven.add(identity)
@@ -3125,6 +3180,23 @@ def _enter_dispatch_worktree_guard(
     def still_settled(record: dict[str, Any]) -> bool:
         # Under the lock: no network. The record must still be the one proven.
         identity = _needs_finalize_claim_identity(record)
+        if identity in reused_proofs:
+            from scripts.fleet import ignored_task_output
+
+            try:
+                current = ignored_task_output.matching_worktree_records(
+                    info.path, tasks_dir, repo_root=primary, publish_cache=False
+                )
+                head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                finalized = record["preserved_artifacts"]["retention_release"]["finalized_by"]
+                return bool(
+                    current == reused_proofs[identity]
+                    and head.returncode == 0
+                    and head.stdout.strip() == finalized["head_sha"]
+                    and all(_pid_proven_absent(member) for _, member in current)
+                )
+            except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+                return False
         return identity is not None and identity in proven and _pid_proven_absent(record)
 
     if owner_attempt is not None:

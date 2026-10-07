@@ -24,7 +24,15 @@ from scripts.orchestration.task_record_store import task_record_path
 # the complete source checkout survives rather than receiving a partial copy.
 MAX_PRESERVED_BYTES = 256 * 1024 * 1024
 
-_IDENTITY_KEYS = ("worktree_path", "cwd", "acp_runtime_paths", "keep_worktree", "worktree_reused")
+_IDENTITY_KEYS = (
+    "worktree_path",
+    "cwd",
+    "acp_runtime_paths",
+    "keep_worktree",
+    "worktree_reused",
+    "status",
+    "worktree_branch",
+)
 _IDENTITY_CACHE_SCHEMA = "worktree-record-identities.v1"
 
 
@@ -93,9 +101,9 @@ class _InventoryReadError(ValueError):
         self.missing = missing
 
 
-def resolve_worktree_record(
+def matching_worktree_records(
     worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
-) -> tuple[Path | None, dict[str, Any]]:
+) -> list[tuple[Path, dict[str, Any]]]:
     """Retry one complete inventory after a concurrent record move or rewrite.
 
     Atomic replacement at the same name does not expose partial JSON, but
@@ -105,10 +113,10 @@ def resolve_worktree_record(
     ``publish_cache=False`` suppresses publication on both inventory attempts.
     """
     try:
-        return _resolve_worktree_record_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
+        return _matching_worktree_records_once(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
     except _InventoryReadError as exc:
         print("Task identity inventory read failed; retrying complete inventory once", file=sys.stderr)
-        return _resolve_worktree_record_once(
+        return _matching_worktree_records_once(
             worktree,
             tasks_dir,
             repo_root=repo_root,
@@ -117,14 +125,14 @@ def resolve_worktree_record(
         )
 
 
-def _resolve_worktree_record_once(
+def _matching_worktree_records_once(
     worktree: Path,
     tasks_dir: Path,
     *,
     repo_root: Path,
     publish_cache: bool = True,
     missing_path: Path | None = None,
-) -> tuple[Path | None, dict[str, Any]]:
+) -> list[tuple[Path, dict[str, Any]]]:
     """Resolve identity from canonical records, never from a caller's hint.
 
     Inspect hot and archived records: a different filename, renamed tree, or
@@ -135,7 +143,6 @@ def _resolve_worktree_record_once(
     ``publish_cache=False`` keeps cache reads but never creates or updates it.
     """
     from scripts.orchestration.worktree_claims import (
-        is_superseded_record,
         record_may_claim_worktree,
         worktree_claim_needles,
     )
@@ -159,9 +166,7 @@ def _resolve_worktree_record_once(
         or (prefix == "archive/" and path.name == missing_path.name)
         or (
             prefix == ""
-            and re.fullmatch(
-                re.escape(missing_path.stem) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name
-            )
+            and re.fullmatch(re.escape(missing_path.stem) + r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json", path.name)
         )
         for prefix, path in inventory
     ):
@@ -217,12 +222,50 @@ def _resolve_worktree_record_once(
                 raise ValueError("ambiguous retention task binding")
     if publish_cache and (changed or cached.keys() != identities.keys()):
         _write_identity_cache(cache_path, identities)
+    return matches
+
+
+def reused_worktree_creator(
+    matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path
+) -> tuple[Path, dict[str, Any]]:
+    """Accept only one creator and settled successors of the same checkout/branch."""
+    from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, checked_out_branch, resolve_claim_path
+
+    creators = [match for match in matches if match[1].get("worktree_reused") is False]
+    branch = checked_out_branch(worktree)
+    if len(creators) != 1 or not branch:
+        raise ValueError("ambiguous worktree task attribution with retention intent")
+    target = worktree.resolve(strict=True)
+    for _, record in matches:
+        location = record.get("worktree_path") or record.get("cwd")
+        if (
+            not isinstance(location, str)
+            or resolve_claim_path(location, repo_root=repo_root) != target
+            or record.get("worktree_branch") != branch
+            or (
+                record is not creators[0][1]
+                and (
+                    record.get("worktree_reused") is not True
+                    or not isinstance(record.get("status"), str)
+                    or record["status"] not in RELEASED_TASK_STATUSES
+                )
+            )
+        ):
+            raise ValueError("ambiguous worktree task attribution with retention intent")
+    return creators[0]
+
+
+def resolve_worktree_record(
+    worktree: Path, tasks_dir: Path, *, repo_root: Path, publish_cache: bool = True
+) -> tuple[Path | None, dict[str, Any]]:
+    """Resolve the creator; multiple retention claims require a proven reuse cohort."""
+    from scripts.orchestration.worktree_claims import is_superseded_record
+
+    matches = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=publish_cache)
     if len(matches) > 1:
         kept = [match for match in matches if match[1].get("keep_worktree")]
-        if len(kept) == 1:
-            return kept[0]
         if kept:
-            raise ValueError("ambiguous worktree task attribution with retention intent")
+            return reused_worktree_creator(matches, worktree, repo_root=repo_root)
         # Finished references alone are not ownership. Without one creator,
         # output retains unknown attribution; empty trees remain removable.
         creators = [match for match in matches if match[1].get("worktree_reused") is False]
@@ -362,9 +405,7 @@ def _classified_inventory(
     if trusted:
         try:
             before = {entry["path"]: entry for entry in baseline["paths"]}
-            if len(before) != len(baseline["paths"]) or any(
-                not _baseline_entry_ok(entry) for entry in before.values()
-            ):
+            if len(before) != len(baseline["paths"]) or any(not _baseline_entry_ok(entry) for entry in before.values()):
                 trusted = False
         except (KeyError, TypeError):
             trusted = False
@@ -599,8 +640,11 @@ def preserve_worktree_artifacts(
             repo_root=repo_root,
             publish_cache=identity_cache_publication_allowed(worktree, tasks_dir),
         )
+        members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
+        kept = any(member.get("keep_worktree") for _, member in members)
+
         files = _ignored_output_files(worktree, primary, record, absent=absent)
-        if not files and not absent and not record.get("keep_worktree"):
+        if not files and not absent and not kept:
             return True, "", None
         identity = record.get("task_id")
         paths = _classified_inventory(worktree, files, record, absent=absent)
@@ -632,7 +676,7 @@ def preserve_worktree_artifacts(
         if total_bytes > MAX_PRESERVED_BYTES:
             metadata["next_condition"] = "owner retrieves output exceeding the preservation cap"
             raise ValueError(f"ignored output exceeds preservation cap ({total_bytes} > {MAX_PRESERVED_BYTES} bytes)")
-        if files or absent or record.get("keep_worktree"):
+        if files or absent or kept:
             parent = primary / "batch_state" / "preserved" / identity
             if parent.is_relative_to(worktree):
                 raise ValueError("preservation destination is inside the worktree")
@@ -687,7 +731,7 @@ def preserve_worktree_artifacts(
                 with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
                     json.dump(metadata, manifest, sort_keys=True)
                     manifest.write("\n")
-        if record.get("keep_worktree"):
+        if kept:
             metadata["next_condition"] = (
                 "existing owner releases retention after proven retrieval via post_task_reap --release-retention"
             )
@@ -705,7 +749,7 @@ def preserve_worktree_artifacts(
                 or current.get("run_nonce") != record.get("run_nonce")
             ):
                 raise ValueError("task attribution changed during preservation")
-            if current.get("keep_worktree"):
+            if current.get("keep_worktree") or kept:
                 metadata.update(
                     {
                         "retention_disposition": "retained",
