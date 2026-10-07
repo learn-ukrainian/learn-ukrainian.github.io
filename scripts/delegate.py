@@ -10399,13 +10399,15 @@ def _run_worker(
                         from scripts.agent_runtime import kimi_boundary
 
                         kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
+                    from scripts.review.model_catalog import is_cursor_auto_selector
+
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
                         model=(
                             model
-                            if agent == "cursor" and (model or "").strip().lower() == "auto"
+                            if agent == "cursor" and is_cursor_auto_selector(model)
                             else getattr(result, "model", None) or model or _lane_default_model(agent)
                         ),
                         branch=final_state.get("worktree_branch"),

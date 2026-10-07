@@ -18805,7 +18805,22 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
     )
 
 
-@pytest.mark.parametrize("requested,name", [("grok-4.7-high", "Claude"), ("auto", "LU Unknown")])
+@pytest.mark.parametrize(
+    "requested,name",
+    [("grok-4.7-high", "Claude")]
+    + [
+        (spelling, "LU Unknown")
+        for selector in (
+            "auto",
+            "default",
+            "cursor:auto",
+            "cursor/auto",
+            "cursor:default",
+            "cursor/default",
+        )
+        for spelling in (selector, selector.upper(), selector.title(), f" {selector} ")
+    ],
+)
 def test_cursor_auto_finalize_uses_completed_runner_model(tmp_tasks_dir, tmp_path, monkeypatch, requested, name):
     _sanitize_git_env_for_test(monkeypatch)
     worktree = _agy_dispatch_worktree(tmp_path, "cursor/identity-failover")
@@ -18832,8 +18847,15 @@ def test_cursor_auto_finalize_uses_completed_runner_model(tmp_tasks_dir, tmp_pat
     monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_args: 0)
     with patch("agent_runtime.runner.invoke", return_value=result):
         rc = delegate._run_worker(
-            task_id="identity-failover", agent="cursor", prompt="Worker output", mode="danger",
-            cwd_str=str(worktree), model=requested, hard_timeout=60, effort=None, keep_worktree=True,
+            task_id="identity-failover",
+            agent="cursor",
+            prompt="Worker output",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=requested,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
         )
     state = delegate._read_state(delegate._state_path("identity-failover"))
     assert state["auto_finalize"]["ok"] is True, state
