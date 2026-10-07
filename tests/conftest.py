@@ -1241,6 +1241,60 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     return isolated
 
 
+@pytest.fixture(autouse=True)
+def _isolate_runtime_scratch_root(
+    request: pytest.FixtureRequest,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> Path:
+    """Point fleet scratch at a per-test directory (#9927).
+
+    ``LU_SCRATCH_ROOT`` is the supported creation override in
+    ``scripts.common.scratch``. ``LU_RUNTIME_TMP_BASE_ROOT`` is not: the
+    dispatcher records it for nested cleanup, and honoring it would pull
+    worker scratch back onto tmpfs. Delegate leases are
+    ``ensure_scratch_root() / "learn-ukrainian" / <task-id>``, so an unset
+    override shares ``/var/tmp/lu/learn-ukrainian/<task-id>`` across cases.
+
+    ``LU_SCRATCH_SCAN_ROOT`` is the supported scan confinement. Every test,
+    including default-resolution tests, sets it to ``tmp_path``.
+    ``scratch_scan_roots`` then omits the host default and the legacy temp
+    directory, so an orphan sweep cannot delete leases outside this test.
+    The scan variable is not a creation override. A test that sets either
+    variable itself runs after this fixture, so that value wins.
+
+    The scratch directory is not created here. An autouse mkdir under
+    ``tmp_path`` breaks tests that require an empty tmp dir (see
+    ``_isolate_write_ownership_ledger``). ``ensure_scratch_root`` creates the
+    override when a lease is actually allocated.
+
+    Tests marked ``exercises_default_scratch_root`` keep the creation
+    override unset and resolve the built-in default. Their default is a
+    private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
+    Scans stay inside ``tmp_path`` for those tests too.
+    """
+    from scripts.common import scratch
+
+    monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
+
+    if request.node.get_closest_marker("exercises_default_scratch_root"):
+        fake_root = tmp_path / "fake-default-scratch"
+        fake_root.mkdir()
+        monkeypatch.delenv(scratch.SCRATCH_ROOT_ENV_VAR, raising=False)
+        real_default = scratch.DEFAULT_SCRATCH_ROOT
+        monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", fake_root)
+        for module in list(sys.modules.values()):
+            if module is None or module is scratch:
+                continue
+            if getattr(module, "DEFAULT_SCRATCH_ROOT", None) is real_default:
+                monkeypatch.setattr(module, "DEFAULT_SCRATCH_ROOT", fake_root)
+        return fake_root
+
+    root = tmp_path / "runtime-scratch"
+    monkeypatch.setenv(scratch.SCRATCH_ROOT_ENV_VAR, str(root))
+    return root
+
+
 class SocketBlockedError(RuntimeError):
     """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
 
@@ -1980,6 +2034,12 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "needs_artifact(group, rel): test requires data/<rel> from artifact group; "
         "skipped only when the artifact is absent",
+    )
+    config.addinivalue_line(
+        "markers",
+        "exercises_default_scratch_root: test resolves the built-in scratch root with "
+        "LU_SCRATCH_ROOT unset. The isolation fixture points that default at a private "
+        "directory under tmp_path instead of /var/tmp/lu (#9927)",
     )
     # The live app's request middleware defaults to 10s. Tests that drive
     # TestClient(api_main.app) and read the real decision/ADR tree have
