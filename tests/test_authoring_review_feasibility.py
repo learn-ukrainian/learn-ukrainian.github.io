@@ -1440,7 +1440,89 @@ class _Provisioned(Exception):
     """Raised by a stub ``_ensure_worktree``: the dispatch was admitted and reached provisioning."""
 
 
-def reused_worktree_behind_main(
+def reused_worktree_behind_main(repo: MiniRepo, github: FakeGitHub, *, main_trailer: str) -> tuple[Path, str, str]:
+    """A reused worktree whose PR targets an older release while ``main`` moved on with a ``main_trailer`` commit.
+
+    Returns the checkout, the release commit (the PR's review base) and the new ``main`` tip.
+    """
+    release = repo.publish("trunk", to="release")
+    repo.git("checkout", "-q", "trunk")
+    main = repo.commit(main_trailer, path="src/app.py", message="main moves on")
+    repo.publish("trunk", to="main")
+    checkout = delegate._auto_worktree_path("claude", "writer-1", repo_root=repo.root)
+    repo.git("worktree", "add", "-q", "-b", "claude/writer-1", str(checkout), release)
+    MiniRepo(checkout).commit(OPUS, message="feature work")
+    github.prs = [pr_row(42, "release", release, head="claude/writer-1")]
+    return checkout, release, main
+
+
+def test_an_auto_rebase_that_would_add_another_family_refuses_before_the_branch_is_touched(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """Round-6 probe 1 (#9739): admission saw Anthropic and xAI over the PR's release base and selected OpenAI; the
+    auto-rebase onto main then added an OpenAI commit the recorder enumerates. The planned rebase is now admitted
+    first and refused, with the rebase helpers never run and the branch untouched."""
+    checkout, release, main = reused_worktree_behind_main(repo, github, main_trailer=SOL)
+    head = MiniRepo(checkout).commit(GROK, message="more feature work")
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_NO_ROUTE, reused=True)
+    assert receipt["existing_families"] == ["anthropic", "xai"] and receipt["review_base_sha"] == release
+    assert (receipt["rebase_onto"], receipt["rebase_planned"]) == (main, True)
+    assert receipt["rebase_existing_families"] == ["anthropic", "openai", "xai"] and receipt["reviewer"] is None
+    assert MiniRepo(checkout).sha("HEAD") == head  # never rebased
+
+    # The recorder, run on the history the rebase would have produced, sees both families and qualifies no one.
+    MiniRepo(checkout).git("rebase", "-q", main)
+    rebased = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=release,
+        head_sha=MiniRepo(checkout).sha("HEAD"),
+        task_root=tasks,
+        incoming_agent="claude",
+        incoming_model="claude-opus-5-5",
+        owned_paths=("docs/a.md",),
+    )
+    assert rebased.existing_families == {"anthropic", "openai", "xai"} and selected(rebased, "critical") is None
+
+
+def test_an_auto_rebase_that_adds_only_same_family_commits_still_admits(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """Positive control: main moved on with an Anthropic commit only; the planned rebase keeps an OpenAI reviewer,
+    the rebase runs onto exactly the planned commit and the rebased head reaches provisioning."""
+    checkout, _release, main = reused_worktree_behind_main(repo, github, main_trailer=OPUS)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", REAL_RESOLVER)
+    monkeypatch.setattr(delegate, "_validate_existing_worktree", REAL_VALIDATOR)
+    planned_onto: list[str] = []
+    real_plan = delegate._authoring_rebase_plan
+
+    def plan(admission, *, base):
+        planned_onto.append(real_plan(admission, base=base))
+        # The canonical main then moves on with an OpenAI commit the plan never saw; the rebase must not use it.
+        repo.advance_remote("main", SOL, path="src/app.py")
+        return planned_onto[-1]
+
+    monkeypatch.setattr(delegate, "_authoring_rebase_plan", plan)
+    created: dict = {}
+
+    def ensure_worktree(**kwargs):
+        created.update(kwargs)
+        raise _Provisioned
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", ensure_worktree)
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch), pytest.raises(_Provisioned):
+        boundary("--worktree", "--owned-path", "docs/a.md")
+    rebased = MiniRepo(checkout).sha("HEAD")
+    assert planned_onto == [main] and created["resolved_base_sha"] == rebased
+    assert MiniRepo(checkout).git("rev-parse", "HEAD^") == main  # onto the planned commit, not the later tip
+    assert boundary.calls == []
+
+
+def reused_main_target_worktree_behind_main(
     repo: MiniRepo, github: FakeGitHub, *, main_trailer: str | None
 ) -> tuple[Path, str, str]:
     """A reused worktree whose main PR has an older frozen base while main gained a ``main_trailer`` commit.
@@ -1463,7 +1545,7 @@ def test_rebase_admits_only_branch_authors_and_pins_onto(
     boundary, github, capsys, repo, tasks, monkeypatch, main_trailer
 ):
     """#9988: unknown/multi-trailer main squashes and other families never become branch authors."""
-    checkout, release, main = reused_worktree_behind_main(repo, github, main_trailer=main_trailer)
+    checkout, release, main = reused_main_target_worktree_behind_main(repo, github, main_trailer=main_trailer)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", REAL_RESOLVER)
     monkeypatch.setattr(delegate, "_validate_existing_worktree", REAL_VALIDATOR)
     planned_onto: list[str] = []
@@ -1509,8 +1591,52 @@ def test_rebase_admits_only_branch_authors_and_pins_onto(
     assert boundary.calls == []
 
 
+@pytest.mark.parametrize(
+    ("main_trailer", "code"),
+    [
+        (SOL, delegate.AUTHORING_REVIEW_NO_ROUTE),
+        (None, delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
+        ("codex/impl-a\n\nX-Agent: codex/impl-b", delegate.AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN),
+    ],
+)
+def test_release_target_rebase_onto_main_keeps_imported_authors_and_refuses_untouched(
+    boundary, github, capsys, repo, tasks, monkeypatch, main_trailer, code
+):
+    """Real Git: main's commits belong to a release-target PR, including unknown squash authors."""
+    checkout, release, main = reused_worktree_behind_main(repo, github, main_trailer=main_trailer)
+    head = MiniRepo(checkout).commit(GROK, message="second branch author")
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--base", "main", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, code, reused=True)
+    assert receipt["review_base_sha"] == release
+    assert receipt["authorship_exclude_sha"] is None
+    assert receipt["rebase_onto"] == main and receipt["rebase_planned"] is True
+    if code == delegate.AUTHORING_REVIEW_NO_ROUTE:
+        assert receipt["rebase_existing_families"] == ["anthropic", "openai", "xai"]
+    assert MiniRepo(checkout).sha("HEAD") == head
+
+
+def test_main_target_rebase_onto_non_main_base_does_not_exclude_imported_authors(
+    boundary, github, capsys, repo, tasks, monkeypatch
+):
+    """The caller's stacked --base never replaces the frozen main-side exclusion."""
+    checkout, _, main = reused_main_target_worktree_behind_main(repo, github, main_trailer=OPUS)
+    stacked = repo.commit(SOL, path="src/app.py", message="stacked branch author")
+    repo.publish("trunk", to="stacked")
+    head = MiniRepo(checkout).commit(GROK, message="second branch author")
+    admitted_dispatch_cleanup(monkeypatch)
+    with _admitted_host(monkeypatch):
+        result = boundary("--worktree", "--base", "stacked", "--owned-path", "docs/a.md")
+    receipt = assert_refused(boundary, capsys, repo, tasks, result, delegate.AUTHORING_REVIEW_NO_ROUTE, reused=True)
+    assert receipt["authorship_exclude_sha"] == main
+    assert receipt["rebase_onto"] == stacked and receipt["rebase_planned"] is True
+    assert receipt["rebase_existing_families"] == ["anthropic", "openai", "xai"]
+    assert MiniRepo(checkout).sha("HEAD") == head
+
+
 def test_rebase_still_refuses_forbidden_branch_authors(boundary, github, capsys, repo, tasks, monkeypatch):
-    checkout, _, _ = reused_worktree_behind_main(repo, github, main_trailer=None)
+    checkout, _, _ = reused_main_target_worktree_behind_main(repo, github, main_trailer=None)
     MiniRepo(checkout).commit(SOL, message="other branch author")
     MiniRepo(checkout).commit(GROK, message="third branch author")
     admitted_dispatch_cleanup(monkeypatch)
@@ -1521,7 +1647,7 @@ def test_rebase_still_refuses_forbidden_branch_authors(boundary, github, capsys,
 
 
 def test_rebase_preserves_main_side_protected_scope(boundary, github, capsys, repo, tasks, monkeypatch):
-    checkout, _, _ = reused_worktree_behind_main(repo, github, main_trailer=SOL)
+    checkout, _, _ = reused_main_target_worktree_behind_main(repo, github, main_trailer=SOL)
     repo.commit(None, path=CODEX_ADAPTER, message="protected main change")
     main = repo.publish("trunk", to="main")
     MiniRepo(checkout).commit(GROK, message="second branch author")
@@ -1622,7 +1748,7 @@ def test_ahead_of_remote_continuation_is_bound_to_same_writer_and_remote(
     boundary, github, capsys, repo, tasks, monkeypatch, case
 ):
     """Real Git: retain finished local work only under #9988's continuation rule."""
-    checkout, release, _ = reused_worktree_behind_main(repo, github, main_trailer=None)
+    checkout, release, _ = reused_main_target_worktree_behind_main(repo, github, main_trailer=None)
     branch = "claude/writer-1"
     remote_head = repo.publish(branch)
     local_head = MiniRepo(checkout).commit(

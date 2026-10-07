@@ -14807,7 +14807,8 @@ def _authoring_review_admission(
 
     # A stale main PR base still determines scope, but main's newer commits
     # are not branch authors (#9988). Non-main target branches keep their
-    # existing enumeration; the rebase plan supplies its own frozen exclusion.
+    # existing enumeration. The rebase plan and result use this same exclusion,
+    # never the caller's --base or the rebase target.
     authorship_exclude = default_sha if review_base.branch == default_name else None
     record["authorship_exclude_sha"] = authorship_exclude
     if authorship_exclude is not None:
@@ -15073,10 +15074,11 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
 
     The auto-rebase replays the branch's own commits (``onto..head``) onto
     ``onto``. Rebasing keeps each commit's message and attribution.
-    A7 originally enumerated ``review_base..onto`` plus those replays to
-    anticipate the recorder's stale-base history and protected diff. Main-side
-    commits are not branch authors (#9988): retain that diff's scope, while
-    attributing only ``onto..head``. Both are checked under the admitted risk. ``onto`` is
+    Enumerate ``review_base..onto`` plus those replays, retaining the stale-base
+    diff's protected scope. Use admission's frozen main-side authorship
+    exclusion only for PRs targeting main (#9988); other targets keep every
+    imported author. The caller's ``base`` never changes that exclusion.
+    Both are checked under the admitted risk. ``onto`` is
     observed on the canonical remote and returned for the rebase to use as is,
     so the rebase can never move onto a later, unchecked tip. Read-only: it
     only fetches to make the observed commit local (M1). Raises
@@ -15102,8 +15104,8 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     if behind == 0:
         return onto
     planned = _authoring_merge_facts(
-        admission.collect(admission.review_base.sha, onto, authorship_exclude_sha=onto),
-        admission.collect(onto, admission.head_sha, authorship_exclude_sha=onto),
+        admission.collect(admission.review_base.sha, onto),
+        admission.collect(onto, admission.head_sha),
     )
     record["rebase_existing_families"] = sorted(planned.existing_families)
     _authoring_require_route(planned, planned_risk=admission.planned_risk, record=record, at=onto)
@@ -15164,7 +15166,7 @@ def _authoring_rebase_result_refusal(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc} after the rebase, so its authors are unknown; retry.", record
         )
     try:
-        actual = admission.collect(admission.review_base.sha, rebased, authorship_exclude_sha=onto) if on_plan else None
+        actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
         if actual is not None and actual.existing_families <= planned:
             _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
             # Enforcement already decided from ``actual``. The receipt records that
