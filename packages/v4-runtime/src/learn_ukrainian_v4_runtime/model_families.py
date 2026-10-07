@@ -149,7 +149,10 @@ def canonical_cursor_model(value: Any) -> str:
 
 
 def is_cursor_auto_selector(model: Any) -> bool:
-    """Whether the selector asks Cursor to choose a model, rather than pins one."""
+    """Recognize Auto/default, case-insensitively, with optional Cursor prefixes.
+
+    None and empty values are not selectors: the adapter uses a concrete default.
+    """
     text = str(model or "").strip().casefold()
     for prefix in ("cursor:", "cursor/"):
         if text.startswith(prefix):
@@ -205,7 +208,8 @@ def normalize_lineage_family(metadata: Any) -> Family:
 
     Walks the lineage-metadata fields. A pinned model overrides a coarse
     cursor seat, so ``{"family": "cursor", "pin": "grok-4"}`` resolves to
-    ``xai`` while ``{"family": "cursor"}`` (no pin) is ``CURSOR``. When two
+    ``xai`` while ``{"family": "cursor"}`` (no pin) is ``CURSOR``. An explicit
+    Auto selector retains Cursor even when runtime telemetry names a model. When two
     or more distinct concrete families appear (e.g. a ``google`` family with a
     ``deepseek`` pin) the signal is ambiguous and the result is ``UNKNOWN``
     (fail closed). Fixture-only metadata is ``FIXTURE``.
@@ -215,6 +219,12 @@ def normalize_lineage_family(metadata: Any) -> Family:
         return Family.UNKNOWN
     if isinstance(metadata, str):
         return normalize_family(metadata)
+    if isinstance(metadata, Mapping) and any(
+        is_cursor_auto_selector(metadata.get(field))
+        for field in ("pin", "pin_slug", "model", "model_id", "writer_model_id")
+    ):
+        # Auto is the author selector even when telemetry names a concrete model.
+        return Family.CURSOR
     concrete: set[Family] = set()
     saw_fixture: list[bool] = []
     _visit(metadata, concrete, saw_fixture)

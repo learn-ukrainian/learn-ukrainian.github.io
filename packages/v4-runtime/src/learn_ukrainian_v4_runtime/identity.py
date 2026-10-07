@@ -39,10 +39,8 @@ def resolve_family(seat_or_model: str) -> str:
 # model happens to collide with whatever the ladder picks.
 AMBIGUOUS_HARNESS_SEATS: frozenset[str] = frozenset({"cursor", "cursor-tools"})
 
-# Concrete model-vendor families a caller may assert via an explicit
-# ``author_family`` override. Deliberately excludes harness pseudo-families
-# (nothing routes to "cursor" as if it were a vendor) and the fail-closed
-# sentinels below — an override must name a real family or be rejected.
+# Concrete model families, plus Cursor Auto, accepted as an explicit
+# ``author_family`` override. Unresolved and fixture sentinels are excluded.
 _VALID_CONCRETE_FAMILIES: frozenset[str] = frozenset(
     family.value
     for family in model_families.Family

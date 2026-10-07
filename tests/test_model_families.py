@@ -310,3 +310,11 @@ def test_cursor_auto_selectors_share_canonical_family(selector):
     assert (
         model_families.normalize_lineage_family({"family": "cursor", "model": selector}) is model_families.Family.CURSOR
     )
+
+
+@pytest.mark.parametrize("field", ["pin", "pin_slug", "model", "model_id", "writer_model_id"])
+@pytest.mark.parametrize("selector", ["auto", "DEFAULT", "cursor:auto", "cursor/default"])
+@pytest.mark.parametrize("reported", ["Grok 4.7 256K High", "claude-opus-5-5", None])
+def test_explicit_auto_selector_keeps_cursor_despite_runtime_telemetry(field, selector, reported):
+    metadata = {"family": "cursor", field: selector, "resolved_model": reported}
+    assert model_families.normalize_lineage_family(metadata) is model_families.Family.CURSOR
