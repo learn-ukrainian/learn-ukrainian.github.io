@@ -1034,15 +1034,16 @@ per-lane models (`wave_models: null`), so dispatch admission enforces the allowl
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
-`danger` worker when any check fails. Read-only dispatches are exempt. The defaults live in
-`scripts/config.py`, and an environment variable with the same name overrides each one:
+`danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
+defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets
+them through the environment variable of the same name (see the private operations docs):
 
-| Check | Refused when | Default |
-| --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
-| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
-| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
-| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) | 2 GiB |
+| Check | Refused when |
+| --- | --- |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap |
+| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
+| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
+| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
