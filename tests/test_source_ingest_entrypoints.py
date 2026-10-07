@@ -20,6 +20,7 @@ import re
 import shlex
 import subprocess
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from importlib.util import resolve_name
@@ -88,6 +89,25 @@ import os
 import sys
 from pathlib import Path
 
+private_tmp = Path(os.environ['TMPDIR']).resolve()
+
+def private_path(path, dir_fd=None):
+    # Resolve symlinks and '..'. On Linux, resolve directory descriptors too:
+    # tempfile cleanup uses unlink/rmdir relative to an open directory fd.
+    # Missing descriptor telemetry fails closed on other platforms.
+    if not isinstance(path, (str, bytes, os.PathLike)):
+        return False
+    target = Path(os.fsdecode(path))
+    if dir_fd not in (None, -1):
+        try:
+            directory = Path('/proc/self/fd/' + str(dir_fd)).resolve(strict=True)
+        except (OSError, RuntimeError):
+            return False
+        if not directory.is_relative_to(private_tmp):
+            return False
+        target = directory / target
+    return target.resolve().is_relative_to(private_tmp)
+
 def offline(event, args):
     if event in {'socket.connect', 'socket.sendto', 'socket.getaddrinfo',
                  'socket.gethostbyname', 'socket.gethostbyaddr', 'socket.getnameinfo', 'socket.sendmsg'}:
@@ -104,14 +124,26 @@ def offline(event, args):
                 return
     if event in {'subprocess.Popen', 'os.system', 'os.posix_spawn', 'os.exec'}:
         raise RuntimeError('IMPORT_SMOKE_BLOCKED_SUBPROCESS: ' + event)
-    # Running __main__ must not let a CLI that ignores --help modify the tree.
+    # Only the fresh private probe directory is writable. This also permits
+    # tempfile.gettempdir() to validate it without hiding subsequent imports.
     if event == 'open' and args[2] & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC):
-        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
+        # The open audit event omits dir_fd: only absolute paths are safe to
+        # authorize, since a relative name may target another directory fd.
+        if not private_path(args[0]) or not os.path.isabs(args[0]):
+            raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
     if event in {'os.mkdir', 'os.remove', 'os.rename', 'os.rmdir', 'os.link',
                  'os.symlink', 'os.truncate', 'os.chmod', 'os.chown', 'os.utime'}:
-        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
+        path_fds = {
+            'os.mkdir': ((0, 2),), 'os.remove': ((0, 1),), 'os.rename': ((0, 2), (1, 3)),
+            'os.rmdir': ((0, 1),), 'os.link': ((0, 2), (1, 3)), 'os.symlink': ((0, None), (1, 2)),
+            'os.truncate': ((0, None),), 'os.chmod': ((0, 2),), 'os.chown': ((0, 3),),
+            'os.utime': ((0, 3),),
+        }[event]
+        if not all(private_path(args[p], args[fd] if fd is not None else None) for p, fd in path_fds):
+            raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
     if event == 'sqlite3.connect' and args[0] != ':memory:' and 'mode=ro' not in str(args[0]):
-        raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
+        if not private_path(args[0]):
+            raise RuntimeError('IMPORT_SMOKE_BLOCKED_WRITE: ' + event)
 
 sys.addaudithook(offline)
 """
@@ -149,13 +181,18 @@ def smoke_import(root: Path, path: str, style: str) -> str | None:
     env = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
     env["LEXICON_SLOVNYK_OFFLINE"] = "1"
     env["PYTHONDONTWRITEBYTECODE"] = "1"
-    try:
-        result = subprocess.run(
-            [sys.executable, "-c", IMPORT_PROBE, style, path],
-            cwd=root, env=env, capture_output=True, text=True, timeout=15, check=False,
-        )
-    except subprocess.TimeoutExpired as exc:
-        return f"{path} [{style}]: timeout after 15s\n{exc.stdout!r}\n{exc.stderr!r}"
+    temp_parent = Path(tempfile.gettempdir()).resolve()
+    if temp_parent.is_relative_to(root.resolve()):
+        raise ValueError("import smoke requires a temporary directory outside the checkout")
+    with tempfile.TemporaryDirectory(prefix="source-import-", dir=temp_parent) as private_tmp:
+        env.update(dict.fromkeys(("TMPDIR", "TEMP", "TMP"), private_tmp))
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", IMPORT_PROBE, style, path],
+                cwd=root, env=env, capture_output=True, text=True, timeout=15, check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            return f"{path} [{style}]: timeout after 15s\n{exc.stdout!r}\n{exc.stderr!r}"
     output = result.stdout + result.stderr
     if result.returncode != 0 or "Traceback (most recent call last)" in output or (
         "IMPORT_SMOKE_COMPLETE" not in result.stdout.splitlines()
@@ -418,6 +455,130 @@ else:
     (folder / "broken.py").write_text("from scripts.lib import dependency\n")
     failure = smoke_import(tmp_path, "scripts/tool/broken.py", "file")
     assert failure is not None and "No module named 'scripts'" in failure
+
+
+@pytest.mark.parametrize("style", STYLES)
+def test_probe_private_temp_is_fresh_writable_and_cleaned(tmp_path: Path, monkeypatch, style: str) -> None:
+    (tmp_path / "probe.py").write_text('''
+import os
+import sqlite3
+import tempfile
+from pathlib import Path
+directory = Path(tempfile.gettempdir())
+assert directory == Path(os.environ['TMPDIR']) == Path(os.environ['TEMP']) == Path(os.environ['TMP'])
+assert not directory.is_relative_to(Path.cwd())
+assert directory.stat().st_mode & 0o777 == 0o700
+assert not list(directory.iterdir())
+with tempfile.NamedTemporaryFile() as handle:
+    handle.write(b'private')
+with tempfile.TemporaryDirectory() as nested:
+    (Path(nested) / 'cleanup').write_text('private')
+folder = directory / 'folder'
+folder.mkdir()
+target = folder / 'write'
+target.write_text('private')
+target.rename(folder / 'renamed')
+(folder / 'renamed').unlink()
+folder.rmdir()
+sqlite3.connect(str(directory / 'private.db')).close()
+''')
+    original_run = subprocess.run
+    directories = []
+
+    def capture(*args, **kwargs):
+        directories.append(Path(kwargs["env"]["TMPDIR"]))
+        return original_run(*args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", capture)
+    for _ in range(2):
+        assert smoke_import(tmp_path, "probe.py", style) is None
+    assert directories[0] != directories[1]
+    assert all(not directory.exists() for directory in directories)
+
+
+@pytest.mark.parametrize("operation", [
+    "(private / 'escape' / 'write').write_text('blocked')",
+    "os.rename(outside / 'original', private / 'moved')",
+    "os.rename(private / 'original', outside / 'moved')",
+    "os.link(outside / 'original', private / 'linked')",
+    "os.symlink(outside / 'original', private / 'linked')",
+    "os.remove('original', dir_fd=os.open(outside, os.O_RDONLY))",
+    "os.chdir(private); os.open('original', os.O_WRONLY, dir_fd=os.open(outside, os.O_RDONLY))",
+    "(Path(str(private) + '-sibling') / 'write').write_text('blocked')",
+])
+def test_private_temp_guard_blocks_escape(tmp_path: Path, monkeypatch, operation: str) -> None:
+    (tmp_path / "original").write_text("unchanged")
+    (tmp_path / "probe.py").write_text(
+        "import os\nfrom pathlib import Path\n"
+        "outside = Path.cwd()\nprivate = Path(os.environ['TMPDIR'])\n"
+        "(private / 'original').write_text('private')\n" + operation + "\n"
+    )
+    original_run = subprocess.run
+
+    def with_escape(*args, **kwargs):
+        (Path(kwargs["env"]["TMPDIR"]) / "escape").symlink_to(tmp_path, target_is_directory=True)
+        return original_run(*args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "run", with_escape)
+    failure = smoke_import(tmp_path, "probe.py", "file")
+    assert failure is not None and "IMPORT_SMOKE_BLOCKED_WRITE" in failure
+    assert (tmp_path / "original").read_text() == "unchanged"
+    assert not (tmp_path / "moved").exists()
+    assert not (tmp_path / "write").exists()
+
+
+@pytest.mark.parametrize("timeout", [False, True])
+def test_private_temp_cleanup_on_failure(tmp_path: Path, monkeypatch, timeout: bool) -> None:
+    directories = []
+
+    def fail(argv, **kwargs):
+        directory = Path(kwargs["env"]["TMPDIR"])
+        directories.append(directory)
+        (directory / "scratch").write_text("temporary")
+        if timeout:
+            raise subprocess.TimeoutExpired(argv, 15)
+        return subprocess.CompletedProcess(argv, 1, "", "RuntimeError: failure")
+
+    monkeypatch.setattr(subprocess, "run", fail)
+    assert smoke_import(tmp_path, "probe.py", "file") is not None
+    assert all(not directory.exists() for directory in directories)
+
+
+def test_private_temp_parent_cannot_be_checkout(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: str(tmp_path))
+    with pytest.raises(ValueError, match="outside the checkout"):
+        smoke_import(tmp_path, "probe.py", "file")
+
+
+@pytest.mark.parametrize("help_only, gap", [(True, True), (False, True), (False, False)])
+def test_bio_lit_cli_help_and_default_audit(tmp_path: Path, help_only: bool, gap: bool) -> None:
+    # A miniature repo exercises the real file launch and audit output without
+    # touching the checkout. Invalid YAML proves --help never reads plans.
+    script = tmp_path / "scripts" / "audit" / "bio_lit_cross_reference.py"
+    script.parent.mkdir(parents=True)
+    script.write_text((ROOT / "scripts/audit/bio_lit_cross_reference.py").read_text())
+    plans = tmp_path / "curriculum" / "l2-uk-en" / "plans"
+    (plans / "lit").mkdir(parents=True)
+    (plans / "lit" / "sample.yaml").write_text("[invalid" if help_only else "title: Sample\n")
+    (plans / "bio").mkdir()
+    if not gap:
+        (plans / "bio" / "sample.yaml").write_text("slug: sample\n")
+    output = tmp_path / "docs" / "audits" / "bio-lit-cross-reference-gaps.md"
+    output.parent.mkdir(parents=True)
+    result = subprocess.run(
+        [sys.executable, str(script), *(["--help"] if help_only else [])],
+        cwd=tmp_path, capture_output=True, text=True, timeout=15, check=False,
+    )
+    assert result.returncode == (0 if help_only or not gap else 1), result.stdout + result.stderr
+    if help_only:
+        assert "usage:" in result.stdout and "--help" in result.stdout
+        assert not output.exists()
+    elif gap:
+        assert "Found 1 gaps" in result.stdout
+        assert "| plans/lit/sample.yaml | sample.yaml | |" in output.read_text()
+    else:
+        assert "All LIT plans are covered" in result.stdout
+        assert "No undocumented gaps found. All clear!" in output.read_text()
 
 
 if __name__ == "__main__":

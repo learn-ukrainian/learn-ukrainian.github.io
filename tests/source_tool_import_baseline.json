@@ -47,16 +47,6 @@
       "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/api/project_state_local.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/api/project_state_local.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
       "path": "scripts/atlas/fill_local.py",
       "form": "file",
       "failure_class": "module_not_found"
@@ -87,24 +77,9 @@
       "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/audit/bio_lit_cross_reference.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
       "path": "scripts/audit/check_ci_dependencies.py",
       "form": "file",
       "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/audit/check_research_registry_pilot.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/check_research_registry_pilot.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/audit/classify_grounding_failures.py",
@@ -120,11 +95,6 @@
       "path": "scripts/audit/freeze_benchmark.py",
       "form": "file",
       "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/freeze_benchmark.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/audit/generate_activity_quality_queue.py",
@@ -207,54 +177,14 @@
       "failure_class": "import_error"
     },
     {
-      "path": "scripts/audit/qg_corpus_report.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
       "path": "scripts/audit/qg_seat_decision.py",
       "form": "file",
       "failure_class": "import_error"
     },
     {
-      "path": "scripts/audit/qg_shadow_run.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/qg_shadow_run.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
       "path": "scripts/audit/qg_tier2_canary_check.py",
       "form": "file",
       "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/qg_tier2_canary_check.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/qg_tier2_disarm.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/qg_tier2_disarm.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/qg_workflow.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/audit/qg_workflow.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/audit/relation_residual_audit.py",
@@ -398,11 +328,6 @@
     },
     {
       "path": "scripts/delegate.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/delegate.py",
       "form": "module",
       "failure_class": "module_not_found"
     },
@@ -425,11 +350,6 @@
       "path": "scripts/fleet/capacity_pick.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/fleet/capacity_pick.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/fleet/driver_breadth_report.py",
@@ -584,12 +504,7 @@
     {
       "path": "scripts/lexicon/runner/ulif_forms.py",
       "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/lexicon/runner/ulif_forms.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/lexicon/runner/worker.py",
@@ -600,26 +515,6 @@
       "path": "scripts/lexicon/teacher_deck.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/maintenance/batch_state_retention.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/maintenance/batch_state_retention.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/maintenance/reclassify_dispatch_status.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/maintenance/reclassify_dispatch_status.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/migrate/rehash_module.py",
@@ -642,16 +537,6 @@
       "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/orchestration/curriculum_coordinator.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/orchestration/curriculum_coordinator.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
       "path": "scripts/orchestration/handoff_slot_registry.py",
       "form": "file",
       "failure_class": "module_not_found"
@@ -665,26 +550,6 @@
       "path": "scripts/orchestration/precompact_handoff_check.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/orchestration/reconcile_sweep.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/orchestration/reconcile_sweep.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/orchestration/stale_task_records.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/orchestration/stale_task_records.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/orchestration/task_family/cli.py",
@@ -715,11 +580,6 @@
       "path": "scripts/projects/open_model_data/foundry_cli.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/projects/open_model_data/language_contact_detector.py",
-      "form": "file",
-      "failure_class": "other_import_failure"
     },
     {
       "path": "scripts/projects/open_model_data/model_ready_view_production.py",
@@ -904,12 +764,7 @@
     {
       "path": "scripts/tools/consultation_cli.py",
       "form": "file",
-      "failure_class": "other_import_failure"
-    },
-    {
-      "path": "scripts/tools/consultation_cli.py",
-      "form": "module",
-      "failure_class": "other_import_failure"
+      "failure_class": "module_not_found"
     },
     {
       "path": "scripts/tools/source_images_direct.py",
