@@ -103,6 +103,8 @@ def test_exact_outgoing_push_paths(repository, monkeypatch, path, green):
     assert receipt["status"] == ("passed" if green else "validation_failed")
     assert receipt["selected_tests"] == ["tests/test_changed.py", "tests/test_invariant.py"]
     assert receipt["shadow"]["status"] == "unavailable"  # fixture has no shadow module; never blocks
+    assert receipt["shadow"]["full_fallback"]
+    assert receipt["shadow"]["selected_tests"] == ["tests/test_changed.py", "tests/test_invariant.py"]
     assert git(ctx.root, "rev-parse", "HEAD") == head  # refusals preserve branch
     published = git(ctx.root, "ls-remote", str(remote), "refs/heads/codex/packet")
     assert (published.startswith(head)) is green
@@ -474,6 +476,40 @@ def test_collection_error_keeps_actual_file_node_id(repository):
         gate.validate(ctx, git(ctx.root, "rev-parse", "origin/main"), git(ctx.root, "rev-parse", "HEAD"))
     assert failure.value.reason == "validation_failed"
     assert failure.value.receipt["failing_node_ids"] == ["tests/test_changed.py"]
+
+
+def test_registry_class_members_are_adapted_to_pytest_node_ids(repository):
+    ctx, _ = repository
+    path = ctx.root / gate.REGISTRY
+    registry = json.loads(path.read_text())
+    registry["node_ids"] = ["tests/test_class.py::TestInvariant.test_scan"]
+    path.write_text(json.dumps(registry))
+    (ctx.root / "tests/test_class.py").write_text("class TestInvariant:\n    def test_scan(self):\n        assert True\n")
+    git(ctx.root, "add", ".")
+    git(ctx.root, "commit", "-m", "class invariant")
+    targets, _ = gate.invariant_targets(ctx.root, [])
+    assert "tests/test_class.py::TestInvariant::test_scan" in targets
+    receipt = gate.validate(ctx, git(ctx.root, "rev-parse", "origin/main"), git(ctx.root, "rev-parse", "HEAD"))
+    assert receipt["status"] == "passed"
+
+
+def test_checks_do_not_inherit_outer_worktree_push_wrapper(repository, monkeypatch):
+    ctx, _ = repository
+    env = gate.install(ctx.root, dict(os.environ), interpreter=sys.executable)
+    monkeypatch.setenv("PATH", env["PATH"])
+    original = gate.run
+    environments = []
+
+    def runner(context, command, *args, **kwargs):
+        if "pre_commit" in command or "pytest" in command:
+            environments.append(kwargs["env"])
+        return original(context, command, *args, **kwargs)
+
+    monkeypatch.setattr(gate, "run", runner)
+    receipt = gate.validate(ctx, git(ctx.root, "rev-parse", "origin/main"), git(ctx.root, "rev-parse", "HEAD"))
+    assert receipt["status"] == "passed"
+    assert environments
+    assert all(str(ctx.state / "bin") not in env["PATH"].split(os.pathsep) for env in environments)
 
 
 def test_worker_launch_installs_gate_with_pinned_interpreter(repository, monkeypatch):

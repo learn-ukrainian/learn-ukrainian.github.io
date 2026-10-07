@@ -32,11 +32,16 @@ REPOSITORY_ENV = {"GIT_DIR", "GIT_COMMON_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"
                   "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES"}
 
 
-def unavailable_shadow() -> dict:
+def unavailable_shadow(ctx: Context) -> dict:
     """Unknown coverage is explicit and never a blocking selector verdict."""
+    try:
+        inventory = git(ctx, "ls-files", "-z", "--", "tests").split("\0")
+        tests = sorted(p for p in inventory if Path(p).name.startswith("test_") and p.endswith(".py"))
+    except (GateFailure, OSError, subprocess.SubprocessError):
+        tests = None
     return {"schema_version": 1, "mode": "shadow", "status": "unavailable", "closure_tests": [],
-            "selected_tests": [], "unresolved_dependencies": [{"reason": "shadow_unavailable"}],
-            "full_fallback": True}
+            "selected_tests": tests or [], "unresolved_dependencies": [{"reason": "shadow_unavailable"}],
+            "full_fallback": tests is not None}
 
 
 class GateFailure(RuntimeError):
@@ -136,7 +141,10 @@ def invariant_targets(root: Path, changed: list[str]) -> tuple[list[str], str]:
     modules = set(registry["modules"])
     modules.update(p for p in changed if p.startswith("tests/") and Path(p).name.startswith("test_")
                    and p.endswith(".py") and (root / p).is_file())
-    nodes = {n for n in registry["node_ids"] if n.split("::", 1)[0] not in modules}
+    # The established marker registry spells class members as Class.method;
+    # pytest's command-line node IDs use Class::method. Adapt the reader.
+    nodes = {path + "::" + member.replace(".", "::") for n in registry["node_ids"]
+             for path, _separator, member in [n.partition("::")] if path not in modules}
     targets = sorted(modules | nodes)
     if not targets or any(not p.startswith("tests/") or ".." in Path(p.split("::", 1)[0]).parts for p in targets):
         raise ValueError("invalid invariant registry")
@@ -260,6 +268,11 @@ def validate(ctx: Context, base: str, head: str, *, budget: float = MAX_SECONDS,
             # Ambient pytest/pre-commit skip options never weaken harness checks.
             for key in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "SKIP"):
                 env.pop(key, None)
+            # Tests own disposable repositories. Do not recursively apply this
+            # worktree's push wrapper to their Git commands; the actual outbound
+            # push still retains its harness scanner below.
+            env["PATH"] = os.pathsep.join(p for p in env.get("PATH", os.defpath).split(os.pathsep)
+                                         if not p.endswith("/push-gate/bin"))
             env["PRE_COMMIT_FROM_REF"] = base
             env["PRE_COMMIT_TO_REF"] = head
             # Serial execution: at most the test runner and one nested collector.
@@ -300,13 +313,15 @@ def validate(ctx: Context, base: str, head: str, *, budget: float = MAX_SECONDS,
         receipt["execution_seconds"] = time.monotonic() - start
         receipt.setdefault("admission_wait_seconds", receipt["execution_seconds"] if not admitted else 0)
         # Shadow failures, unresolved dependencies and timeouts never decide push eligibility.
+        shadow_deadline = time.monotonic() + SHADOW_SECONDS
+        fallback = unavailable_shadow(replace(ctx, deadline=shadow_deadline))
         try:
             code, output = run(ctx, [ctx.python, "-m", "scripts.ci.push_shadow"],
-                               time.monotonic() + SHADOW_SECONDS,
+                               shadow_deadline,
                                env=git_env(), input_text=json.dumps(receipt.get("changed_files", [])))
-            receipt["shadow"] = json.loads(output) if code == 0 else unavailable_shadow()
+            receipt["shadow"] = json.loads(output) if code == 0 else fallback
         except (OSError, ValueError, subprocess.SubprocessError):
-            receipt["shadow"] = unavailable_shadow()
+            receipt["shadow"] = fallback
         (ctx.state / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
         with (ctx.state / "attempts.jsonl").open("a") as ledger:
             ledger.write(json.dumps(receipt) + "\n")
