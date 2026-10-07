@@ -1242,6 +1242,165 @@ def report_price(selected: Sequence[str], manifest: dict, paths: Sequence[str], 
             'would_skip_unpriced_test_files': sorted(skipped & set(unpriced)), 'unresolved_edge_count': len(unresolved)}
 
 
+def report_r4_context(manifest: dict, paths: Sequence[str], sources: dict[str, bytes]) -> dict:
+    """Freeze terminal tests and global infrastructure before observing PR diffs.
+
+    Non-collected files under tests/ are helpers, hence production vertices.
+    Plugin declarations and hook implementations are global even in test files.
+    """
+    tests = {path for path in paths if path.startswith('tests/')
+             and PurePosixPath(path).name.startswith('test_') and path.endswith('.py')}
+    global_files = {path: 'conftest' for path in paths if PurePosixPath(path).name == 'conftest.py'}
+    plugin_targets = set()
+    sys_path_files = set()
+    for path, source in sources.items():
+        try:
+            tree = ast.parse(source, filename=path)
+        except (SyntaxError, ValueError):
+            continue  # The scanner's parse-error obligation remains authoritative.
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith('pytest_'):
+                global_files[path] = 'pytest-plugin'
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                if any(isinstance(target, ast.Name) and target.id == 'pytest_plugins' for target in targets):
+                    global_files[path] = 'pytest-plugin'
+                    try:
+                        value = ast.literal_eval(node.value)
+                    except (ValueError, TypeError):
+                        value = []
+                    if isinstance(value, str):
+                        value = [value]
+                    if isinstance(value, (list, tuple)):
+                        for module in value:
+                            if isinstance(module, str):
+                                base = module.replace('.', '/')
+                                plugin_targets.update(candidate for candidate in (base + '.py', base + '/__init__.py')
+                                                      if candidate in sources)
+            if isinstance(node, ast.Attribute) and call_name(node).startswith('sys.path'):
+                sys_path_files.add(path)
+    global_files.update(dict.fromkeys(plugin_targets, 'pytest-plugin'))
+    helpers = {path for path in paths if path.startswith('tests/') and path not in tests}
+    shared = manifest['components']['shared-core']
+    obligations = set(manifest.get('shared_integration_tests', [])) | set(shared['test_files'])
+    obligations.update(path for path in tests if shared['test_prefixes'] and path.startswith(tuple(shared['test_prefixes'])))
+    owners = {path: assign_path(path, manifest)[0] for path in paths}
+    return {'tests': tests, 'global_files': global_files, 'helpers': helpers,
+            'sys_path_files': sys_path_files, 'shared_obligations': obligations,
+            'owners': owners, 'by_component': {component: {path for path in set(paths) - tests if component in owners[path]}
+                                             for component in NODE_IDS}}
+
+
+def report_r4(changed: Sequence[str], manifest: dict, paths: Sequence[str], graph: dict,
+              unresolved: Sequence[dict], durations: dict, context: dict,
+              extra_edges: Sequence[tuple] = ()) -> dict:
+    """Hypothetical file propagation with terminal tests and unconditional readers.
+
+    Explicit runtime/artifact/schema contracts retain their component-level
+    producer/consumer meaning, expanding consumer production files conservatively.
+    No inferred component import edges or test ownership feeds back into closure.
+    """
+    from scripts.ci.component_shadow import dependency_input
+
+    tests = context['tests']
+    reverse = {}
+    for importer, target in list(graph['file_edges']) + list(extra_edges):
+        reverse.setdefault(target, set()).add(importer)
+    causes = {}
+
+    def cause(kind, path, *, full=False):
+        entry = causes.setdefault(kind, {'class': kind, 'paths': set(), 'forces_full_selection': False})
+        entry['paths'].add(path)
+        entry['forces_full_selection'] |= full
+
+    for path in changed:
+        owners, assignment = assign_path(path, manifest)
+        if path in context['global_files'] or PurePosixPath(path).name == 'conftest.py':
+            cause('changed-' + context['global_files'].get(path, 'conftest'), path, full=True)
+        if path in context['helpers'] or (path.startswith('tests/') and path not in tests):
+            cause('changed-shared-fixture-helper', path, full=True)
+        if path.startswith(('scripts/common/', 'scripts/storage/', 'scripts/sources/', 'scripts/wiki/')) or path == 'scripts/config.py':
+            cause('changed-shared-source-helper', path, full=True)
+        if dependency_input(path, []):
+            cause('changed-dependency', path, full=True)
+        if path.startswith(('.github/', 'scripts/ci/')):
+            cause('changed-workflow', path, full=True)
+        if path in context['sys_path_files'] or any(edge['path'] == path and edge['reason'] == 'sys-path' for edge in unresolved):
+            cause('changed-sys-path', path, full=True)
+        if assignment not in {'exact', 'prefix'}:
+            cause('changed-' + assignment, path, full=True)
+        elif 'shared-core' in owners:
+            cause('changed-plan-shared-core', path, full=True)
+
+    selected = (set(changed) & tests) | context['shared_obligations']
+    for path in sorted(context['shared_obligations']):
+        cause('shared-integration-obligation', path)
+    seeds = set(changed) - tests
+    for edge in unresolved:
+        path = edge['path']
+        if path in context['global_files'] or path in context['helpers'] or PurePosixPath(path).name == 'conftest.py':
+            cause('unresolved-global-fixture-plugin/' + edge['reason'], path, full=True)
+        elif path in tests:
+            selected.add(path)
+            cause('unresolved-test-obligation/' + edge['reason'], path)
+        else:
+            seeds.add(path)
+            cause('unresolved-production-source/' + edge['reason'], path)
+    for name in graph['missing_mandatory_edges']:
+        cause('missing-mandatory-edge', name, full=True)
+    for edge in manifest['edges']:
+        if not edge.get('resolved', False):
+            cause('unresolved-manifest-edge', edge['id'], full=True)
+
+    by_component = context['by_component']
+    contracts = {}
+    for edge in manifest['edges']:
+        if edge['kind'] not in {'import', 'dynamic'}:
+            contracts.setdefault(edge['producer'], set()).add(edge['consumer'])
+    visited = set(seeds)
+    pending = list(seeds)
+    expanded = set()
+    while pending:
+        path = pending.pop()
+        consumers = set(reverse.get(path, ()))
+        for owner in context['owners'].get(path) or assign_path(path, manifest)[0]:
+            if owner not in expanded:
+                expanded.add(owner)
+                for consumer in contracts.get(owner, ()):
+                    consumers.update(by_component[consumer])
+        for importer in consumers:
+            if importer in tests:
+                selected.add(importer)  # Terminal: never enqueue a collected test.
+            elif importer not in visited:
+                visited.add(importer)
+                pending.append(importer)
+    for path in sorted(visited & context['global_files'].keys()):
+        cause('affected-global-fixture-plugin', path, full=True)
+    full = any(entry['forces_full_selection'] for entry in causes.values())
+    if full:
+        selected.update(tests)
+    skipped = tests - selected
+    unpriced = tests - durations.keys()
+    # Reverse closure is a checkable absence certificate within the frozen R4
+    # graph. It is not a claim that the legacy scanner has no blind spots.
+    justifications = [{'test_file': path, 'reason': 'No path from the changed set or unconditional production readers through production files; not a shared or unresolved test obligation.',
+                       'direct_dependencies': sorted(target for importer, target in list(graph['file_edges']) + list(extra_edges) if importer == path),
+                       'changed_test': False, 'reachable_from_production_seeds': False,
+                       'always_run_obligation': False} for path in sorted(skipped)]
+    components = sorted(NODE_IDS) if full else sorted({owner for path in visited for owner in context['owners'].get(path, [])})
+    return {'components': components,
+            'narrowed': bool(skipped), 'full_selection': full,
+            'selected_test_files': sorted(selected), 'affected_production_files': sorted(visited),
+            'production_seed_files': sorted(seeds), 'skip_justifications': justifications,
+            'always_run_causes': [entry | {'paths': sorted(entry['paths']), 'count': len(entry['paths'])}
+                                  for _, entry in sorted(causes.items())],
+            'selected_seconds': round(sum(durations[path] for path in sorted(selected) if path in durations), 6),
+            'selected_unpriced_test_files': sorted(selected & unpriced),
+            'would_skip_seconds': round(sum(durations[path] for path in sorted(skipped) if path in durations), 6),
+            'would_skip_test_files': sorted(skipped), 'unpriced_test_files': sorted(unpriced),
+            'would_skip_unpriced_test_files': sorted(skipped & unpriced), 'unresolved_edge_count': len(unresolved)}
+
+
 def report_what_if(prs_file: Path, manifest: dict, root: Path = ROOT) -> dict:
     """Measure a fixed current-tree graph against commit diffs, never CI results."""
     raw = prs_file.read_bytes()
@@ -1255,8 +1414,10 @@ def report_what_if(prs_file: Path, manifest: dict, root: Path = ROOT) -> dict:
         raise ValueError('expected nonempty distinct PR records')
     records.sort()
     graph = import_graph(manifest, root)
-    folded = report_edge_folds(python_sources(root), graph['unresolved_edges'])
+    sources = python_sources(root)
+    folded = report_edge_folds(sources, graph['unresolved_edges'])
     paths = tracked_paths(root)
+    r4_context = report_r4_context(manifest, paths, sources)
     duration_bytes = (root / 'scripts/ci/pytest-file-durations.json').read_bytes()
     durations = json.loads(duration_bytes)
     if any(not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0 for value in durations.values()):
@@ -1299,6 +1460,7 @@ def report_what_if(prs_file: Path, manifest: dict, root: Path = ROOT) -> dict:
             if key not in price_cache:
                 price_cache[key] = report_price(selected, manifest, paths, graph, remaining, durations, additions)
             rules[rule] = {'components': selected, 'narrowed': len(selected) < len(NODE_IDS), **price_cache[key]}
+        rules['R4'] = report_r4(changed, manifest, paths, graph, r2, durations, r4_context, extra)
         rows.append({'pr': pr, 'supplied_merge_sha': supplied_sha, 'merge_sha': sha, 'first_parent': parent, 'merged_at': merged_at,
                      'changed_path_count': len(changed), 'changed_paths': changed, 'R0_equals_affected': True,
                      'sound_fold_count': len(sound), 'R2_blocking_edge_count': sum(edge['path'] in blockers for edge in r2), 'rules': rules})
@@ -1315,10 +1477,33 @@ def report_what_if(prs_file: Path, manifest: dict, root: Path = ROOT) -> dict:
         aggregate[rule] = {'narrowed_pr_count': count, 'pr_count': len(rows), 'share_narrowed': count / len(rows),
                            'total_would_skip_seconds': round(sum(value['would_skip_seconds'] for value in values), 6),
                            'median_would_skip_seconds': median(value['would_skip_seconds'] for value in values)}
-    return {'schema': 'component-what-if.v1', 'report_only': True, 'hypothetical': ['R1', 'R2', 'R3'],
+    r4_values = [row['rules']['R4'] for row in rows]
+    r4_count = sum(value['narrowed'] for value in r4_values)
+    cause_counts = {}
+    for value in r4_values:
+        for entry in value['always_run_causes']:
+            total = cause_counts.setdefault(entry['class'], {'class': entry['class'], 'pr_count': 0, 'occurrence_count': 0, 'full_selection_pr_count': 0})
+            total['pr_count'] += 1
+            total['occurrence_count'] += entry['count']
+            total['full_selection_pr_count'] += entry['forces_full_selection']
+    aggregate['R4'] = {'narrowed_pr_count': r4_count, 'pr_count': len(rows), 'share_narrowed': r4_count / len(rows),
+                       'prs_with_any_skip': r4_count, 'share_prs_with_any_skip': r4_count / len(rows),
+                       'total_would_skip_seconds': round(sum(value['would_skip_seconds'] for value in r4_values), 6),
+                       'median_would_skip_seconds': median(value['would_skip_seconds'] for value in r4_values),
+                       'selected_test_file_occurrences': sum(len(value['selected_test_files']) for value in r4_values),
+                       'would_skip_test_file_occurrences': sum(len(value['would_skip_test_files']) for value in r4_values),
+                       'selected_test_files': sorted({path for value in r4_values for path in value['selected_test_files']}),
+                       'would_skip_test_files': sorted({path for value in r4_values for path in value['would_skip_test_files']}),
+                       'total_selected_seconds': round(sum(value['selected_seconds'] for value in r4_values), 6),
+                       'unpriced_test_files': sorted({path for value in r4_values for path in value['unpriced_test_files']}),
+                       'would_skip_unpriced_test_files': sorted({path for value in r4_values for path in value['would_skip_unpriced_test_files']}),
+                       'top_always_run_causes': sorted(cause_counts.values(), key=lambda item: (-item['pr_count'], -item['occurrence_count'], item['class']))}
+    return {'schema': 'component-what-if.v1', 'report_only': True, 'hypothetical': ['R1', 'R2', 'R3', 'R4'],
             'rule_labels': {'R0': "Today's affected (equality asserted)", 'R1': 'HYPOTHETICAL unresolved readers as changes',
                             'R2': 'HYPOTHETICAL R1 with proven folds tracked in both commit trees',
-                            'R3': 'HYPOTHETICAL ABLATION: UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF'},
+                            'R3': 'HYPOTHETICAL ABLATION: UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF',
+                            'R4': 'HYPOTHETICAL R2 dependency facts with file-level production propagation and terminal test obligations'},
+            'R4_proof_scope': 'Current-tree scanner and sound R2 folds only; absence of a graph path is hypothetical, not independent soundness or net CI savings proof. No CI results read.',
             'prs_sha256': hashlib.sha256(raw).hexdigest(), 'pr_count': len(rows), 'folding_rules': REPORT_FOLDING_RULES,
             'graph_digest': digest(graph), 'pricing_basis': 'current indexed tracked pytest files; rule-specific unresolved obligations; no affected calls in pricing',
             'node_edges': graph['node_edges'], 'missing_mandatory_edges': graph['missing_mandatory_edges'],
@@ -1394,8 +1579,8 @@ def parser() -> argparse.ArgumentParser:
         "Folding: " + "\n".join(REPORT_FOLDING_RULES)
     )
     for operation in ("census", "what-if"):
-        sub = subs.add_parser(operation, help="Report-only edge measurement" if operation == "census" else "Hypothetical R0-R3 measurement, never CI selection",
-                              description="Report unresolved edges and legacy scanner blind spots.\nUse for stage-1 measurement only; R1-R3 are hypothetical, R3 is UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF.",
+        sub = subs.add_parser(operation, help="Report-only edge measurement" if operation == "census" else "Hypothetical R0-R4 measurement, never CI selection",
+                              description="Report unresolved edges and legacy scanner blind spots.\nUse for stage-1 measurement only; R1-R4 are hypothetical, R3 is UPPER BOUND, NOT ACHIEVABLE WITHOUT PROOF; R4 uses terminal test obligations and preserves all-node triggers.",
                               epilog=report_examples, formatter_class=argparse.RawDescriptionHelpFormatter)
         if operation == "what-if":
             sub.add_argument("--prs", type=Path, required=True,
