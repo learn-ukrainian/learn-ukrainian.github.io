@@ -15674,10 +15674,11 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
 
 
 def _lane_default_model(agent: str) -> str | None:
-    """Registry default for ``agent`` — the dispatch pin, not the seat identity."""
+    """Role-backed dispatch default, with registry-only lanes retained until PR 3c."""
     from agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import substitution_default_model
 
-    return _default_model_for(agent)
+    return substitution_default_model(agent) or _default_model_for(agent)
 
 
 def _credit_period_refusal(dispatch_agent: str, launch_model: str | None) -> str | None:

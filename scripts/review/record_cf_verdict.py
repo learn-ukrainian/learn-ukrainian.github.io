@@ -60,6 +60,7 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
+from scripts.review.role_resolution import resolve_routing_reference
 from scripts.review.security_paths import git_changed_paths, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion
 from scripts.review.target_resolution import TargetResolutionError
@@ -896,6 +897,13 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+def _native_grok_reviewer_identity() -> tuple[str, list[str]]:
+    """Resolve the native review holder and its own runtime attestations."""
+    catalog = load_model_catalog()
+    holder = resolve_routing_reference({"role": "legacy_reviewers", "seat": "xai_reviewer"}, catalog)
+    return holder, catalog["models"][holder].get("runtime_model_ids", [])
+
+
 def _require_formal_reviewer(
     *, cursor: bool, reported: object, model: str, family: str, native_grok: bool = False
 ) -> None:
@@ -912,7 +920,9 @@ def _require_formal_reviewer(
     if cursor:
         admitted = model in FORMAL_CURSOR_REVIEW_MODELS and reported != model
     else:
-        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (native_grok and model == "grok-4.7")
+        admitted = family not in NATIVE_NON_REVIEWER_FAMILIES or (
+            native_grok and model == _native_grok_reviewer_identity()[0]
+        )
     if not admitted:
         raise RecordError(f"reviewer model unknown: {model!r} is not a formal reviewer on this harness")
     # #9583: a model the catalog gives no review role never approves, on any harness.
@@ -948,10 +958,10 @@ def record(
     # Only Cursor's runtime reports display names; record its catalog id.
     model = canonical_cursor_model(reported) if cursor and isinstance(reported, str) else reported
     if native_grok:
-        admitted_runtime_ids = load_model_catalog()["models"]["grok-4.7"].get("runtime_model_ids", [])
+        holder, admitted_runtime_ids = _native_grok_reviewer_identity()
         if not isinstance(reported, str) or reported not in admitted_runtime_ids:
             raise RecordError("native Grok reviewer model unknown: runtime model is not admitted")
-        model = "grok-4.7"
+        model = holder
     if not isinstance(model, str) or not model or re.search(r"\s", model):
         raise RecordError("reviewer model unknown")
     family = resolve_family(model)

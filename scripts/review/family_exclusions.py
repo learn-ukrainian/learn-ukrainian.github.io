@@ -1,0 +1,51 @@
+"""One family-exclusion policy for routing roles and reviewer independence.
+
+Role eligibility and author independence are distinct checks. Both live here;
+no role resolver invents a second family policy or ranking engine.
+"""
+
+from __future__ import annotations
+
+
+def family_exclusion(
+    *,
+    family: str,
+    route: str,
+    transport: str,
+    author_family: str | None = None,
+    advisory_only_for_author_families: frozenset[str] = frozenset(),
+    union_family: str = "",
+    union_families: frozenset[str] = frozenset(),
+) -> tuple[str, str] | None:
+    """Return the unchanged role or author-family exclusion status and reason."""
+    if author_family is None:
+        if family in {"google", "moonshot", "deepseek"} or route == "agy":
+            return "excluded", "code-review family exclusions"
+        return None
+    reviewer_family = family
+    family = author_family
+    cursor_transport = transport == "cursor" or route == "cursor"
+    if family == union_family:
+        if reviewer_family in union_families:
+            return (
+                "excluded",
+                f"candidate family ({reviewer_family}) is within author union family "
+                f"{sorted(union_families)} — cross-family review requires a reviewer outside the union",
+            )
+        if cursor_transport:
+            return (
+                "excluded",
+                f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
+                f"for author union family {sorted(union_families)}",
+            )
+    if reviewer_family == family and family in advisory_only_for_author_families:
+        return ("advisory_only", f"same family as author ({family}) — advisory-only, not a formal cross-family gate")
+    if reviewer_family == family:
+        return ("excluded", f"same family as author ({family}) — cross-family review requires a different family")
+    if family in union_families and cursor_transport:
+        return (
+            "excluded",
+            f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
+            f"against {family!r} author (within allowlist union {sorted(union_families)})",
+        )
+    return None

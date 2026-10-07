@@ -38,6 +38,7 @@ PINNED_DIGESTS = {
 }
 
 
+@pytest.mark.repo_wide
 def test_frozen_artifacts_are_pinned_independently_of_manifest():
     assert PINNED_DIGESTS
     assert set(PINNED_DIGESTS) == {str(p.relative_to(FIXTURE)) for p in FIXTURE.rglob("*") if p.is_file()}
