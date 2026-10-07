@@ -695,7 +695,7 @@ def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
 ) -> None:
     environment, _project, fake_bin = writer_environment
     repository = "rclone:review.remote:/var/tmp/lu/nonexistent[review]"
-    password_file = "/tmp/secret[review].file"
+    password_file = "/nonexistent/secret[review].file"
     last_run = tmp_path / "last-run.json"
     fake_backup = tmp_path / "fake-backup-data.sh"
     _write_executable(

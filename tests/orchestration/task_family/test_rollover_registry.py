@@ -1195,7 +1195,7 @@ def test_registry_storage_rejects_symlink_escape(tmp_path: Path) -> None:
 
 def test_registry_record_rejects_absolute_evidence_path(tmp_path: Path) -> None:
     record = _sync(tmp_path, _lease(lineage="lineage-path-proof", rollover_id="rollover-path-proof"))
-    record["evidence_paths"] = ["/tmp/untrusted-proof.json"]
+    record["evidence_paths"] = ["/nonexistent/untrusted-proof.json"]
 
     with pytest.raises(ValueError, match="repository-relative"):
         registry.validate_record(record)
