@@ -215,6 +215,11 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
 - `equal`: `values` selectors must have equal source operands.
 - `literal`: one `values` selector must equal `expected` control metadata.
 - `same_row`: `values` citations share store, table and the real primary key.
+- `whole_field`: every selected primary value has no span and equals its entire
+  independently transformed source field. This refuses a correctly quoted
+  fragment substituted for a required complete paragraph.
+- `pattern_absent`: a nonempty reviewed regular expression must not match any
+  selected text operand (for example an unresolved printed line-end hyphen).
 - `one_group`: `values` operands are non-null and identify one group.
 - `example_list`: one `values` selector's span must equal a whole trimmed
   comma/semicolon-delimited item after an example-introducing colon. Regions end
@@ -249,12 +254,21 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   book row key and whose `sol_field`/`opus_field` are APPROVE. WP6 owns receipt
   authenticity and the source-specific adjudication contract and tests.
 
+Optional rule-level `citation_field` pins the actual citation field, and
+`locator_field` names the held row column that must equal each citation's
+locator. Both constraints quantify over every expanded witness.
+
 Supporting citations must connect to their own primary citation through
 exact-field equality/form agreement, or the contrast rule's independently checked
 book/form witnesses. Mentioning a supporting row or comparing it with itself is
 insufficient. Structural binding is mechanism proof; D3 supplies semantic judgment.
 
 ## Citation roles and splits
+
+SQL unit queries may call `omd_example_spans(text)`, the closed `example_list`
+binding grammar exposed as a deterministic JSON array of `[start,end]` spans.
+`json_each` can then enumerate primary citation identities independently of a
+component's candidate stream. It never accepts request-defined parsers.
 
 Each compatibility row requires `store`, `table`, `source_id`, `role` (one of
 `modern`, `sum11`, `ua_gec`, `textbook`, `forbidden`). All citation triples must
@@ -335,6 +349,71 @@ with a private payload, stable name, expected error code and gate probe. CLI
 success, a different refusal, duplicate names or an empty generator fail verification.
 Payloads and `component-results.json` stay under the guarded host-only output.
 Component-specific fixture definitions stay with WP1–WP6.
+
+`dehyphenate@2` permits exactly two evidence bases for changing a split:
+
+- `vesum_form`: the complete joined form is attested in the pinned VESUM
+  folded index and the hyphenated form is absent, the `@1` condition.
+- `hyphen_alternative`: an unambiguous stored alternative covers this position
+  in the cited paragraph's pinned `hyphen_alternatives`. The conservative reader
+  retains the hyphen only when VESUM attests that reading alone; the alternative
+  must match exactly one split, with no competing or duplicate metadata entries.
+  VESUM hyphenated attestation alone is a veto on joining, never permission to
+  delete line whitespace. No alternative cover means the split stays unresolved.
+  Inline printed hyphens are never treated as line-break splits and cannot
+  consume stored alternatives; unused alternatives remain unresolved.
+
+The policy adds `lookup_field`, `normalizer: vesum_fold`, and a
+`hyphen_metadata` mapping for the source-text/metadata association, source id,
+alternatives field and unresolved count. Word identity uses the canonical
+ASCII-apostrophe fold in `scripts/rag/word_identity.py`. Corpus-wide whole-word
+occurrence is never evidence. Both readings attested, neither reading attested,
+or unmatched/ambiguous metadata remain unresolved. Every changed split records
+raw offsets, resulting form and one of these two evidence classes in
+`join_evidence`; `joins` records only actual hyphen removals. The original text,
+metadata and their association are pinned in the source snapshot.
+
+The `transform_resolved` binding recomputes `dehyphenate@2` from the cited
+field and checks unresolved positions only where the value's visible span
+carries them, projecting original offsets through earlier resolved edits.
+Unlocated metadata fails closed. Whole-field responses carry every position.
+`source_text_defect` requires positive lost-boundary evidence in the cited
+original text; dictionary absence and possible splits into dictionary forms
+do not establish that a word printed by the source is defective. Detected
+boundary loss is withheld, never repaired. This check does not certify a PDF
+extraction: comparison with the printed source remains separate evidence.
+C5 retains raw printed example spans and quotes for identity and `example_list`
+binding; its catalog target is the complete paragraph with the resolved reading.
+Its boundary grammar preserves balanced quotes and grammatical/category
+parentheses. Editorial cross-reference parentheses (section markers or
+reference introductions) withhold the affected raw example span without
+stripping or rewriting source text. Neighboring supported examples retain their
+original boundaries and dispositions. Numbered or lettered items must be single orthographic
+items or wholly quoted examples; an explicit introduction cannot admit prose.
+Numbered comma groups consisting of multiple orthographic examples are withheld.
+Capitalized parenthetical labels can cite a larger printed example sentence;
+without typography establishing their role, the entire colon region is withheld,
+including earlier comma and semicolon parts. Commas split only groups whose parts are each a single orthographic
+example (with optional printed annotations); semicolons delimit groups. Printed
+line breaks inside an item remain verbatim, including wrapped hyphens. Unmarked
+multiword lists, prose continuations and unbalanced punctuation are counted as
+unresolved groups and withheld with `example_boundary_ambiguous`, never joined
+or emitted as fragments. A capitalized continuation after a dot does not prove
+a sentence boundary: it may follow an abbreviation. Later colon introductions
+also withhold the preceding unresolved group. The binding gate refuses promotion
+of such a group.
+The denominator remains 6,196 units across all 168 paragraphs, including
+unresolved groups and the withheld editorial spans; this repair preserves every
+frozen unit identity. The former generic comma/semicolon grammar counted 11,926
+fragments. These counts are different inventories, not a change in source bytes.
+Paragraph reasons are `paragraph_hyphenation_unresolved`, `source_text_defect`
+or unavailable metadata. Bibliographic attribution remains a separate gate.
+C5 uses register id `pravopys_2019` while its source-row keys retain
+`pravopys_2019_official`. Its adapter authenticates the register's edition
+statement against the held bibliography, file digest and pinned official-source
+document, and substitutes the cited paragraph number in the register placeholder.
+The catalog requires complete § responses, so an unresolved hyphen in any
+included example is also visible in every other record carrying that §.
 
 ## Exporting by source, licence or permission status
 

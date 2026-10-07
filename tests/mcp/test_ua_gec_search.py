@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # CI's sources.db doesn't ship the ua_gec_errors_fts table (the ingest is
@@ -19,7 +21,7 @@ def _ua_gec_table_present() -> bool:
     if not _DB_PATH.exists():
         return False
     try:
-        conn = sqlite3.connect(_DB_PATH)
+        conn = open_readonly(_DB_PATH)
         try:
             row = conn.execute(
                 "SELECT name FROM sqlite_master "

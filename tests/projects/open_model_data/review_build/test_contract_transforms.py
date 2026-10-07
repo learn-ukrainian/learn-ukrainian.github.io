@@ -116,7 +116,7 @@ def test_dehyphenation_requires_positive_join_and_negative_hyphen_witness(seed):
 
 
 def test_registry_is_closed_and_bad_policies_fail():
-    assert set(REGISTRY) == {"verbatim", "ulif_html_text@1", "line_excision@1", "dehyphenate@1"}
+    assert set(REGISTRY) == {"verbatim", "ulif_html_text@1", "line_excision@1", "dehyphenate@1", "dehyphenate@2"}
     with pytest.raises(TypeError):
         REGISTRY["SYNTHETIC paraphrase"] = lambda s: s
     for name, policy in (("paraphrase", {}), ("line_excision@1", {}), ("dehyphenate@1", {})):

@@ -349,6 +349,8 @@ execution_routing:
 
 models:
   gpt-6.1-sol:
+    routing_wire_ids:
+      native_codex: gpt-6.1-sol
     family: openai
     tier: frontier_authority
     lifecycle: active
@@ -381,6 +383,8 @@ models:
       - https://openai.com/index/introducing-gpt-6-1-sol/
       - https://developers.openai.com/api/docs/pricing
   gpt-6-luna:
+    routing_wire_ids:
+      native_codex: gpt-6-luna
     family: openai
     tier: economical
     lifecycle: active
@@ -508,6 +512,9 @@ models:
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
   claude-opus-5-5:
+    routing_wire_ids:
+      native_claude: claude-opus-5-5
+      cursor: claude-opus-5-5-high
     family: anthropic
     tier: frontier_authority
     lifecycle: active
@@ -563,6 +570,8 @@ models:
     sources:
       - https://www.anthropic.com/news/claude-opus-4-8
   claude-sonnet-5-5:
+    routing_wire_ids:
+      native_claude: claude-sonnet-5-5
     family: anthropic
     tier: frontier_practical
     lifecycle: active
@@ -595,6 +604,8 @@ models:
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
   gemini-3.8-flash-high:
+    routing_wire_ids:
+      agy: gemini-3.8-flash-high
     family: google
     tier: frontier_practical
     lifecycle: active
@@ -672,6 +683,9 @@ models:
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
   grok-4.7:
+    routing_wire_ids:
+      native_grok: grok-4.7
+      cursor: grok-4.7-high
     family: xai
     tier: frontier_practical
     lifecycle: active
@@ -826,6 +840,8 @@ models:
     sources:
       - https://moonshotai.github.io/kimi-code/en/guides/getting-started.html
   glm-5.3:
+    routing_wire_ids:
+      opencode: zai-coding-plan/glm-5.3
     family: zhipu
     tier: frontier_practical
     lifecycle: active
@@ -920,6 +936,8 @@ models:
   # API (poolside inference): poolside/laguna-s-2.1 · poolside/laguna-xs-2.1
   # opencode native path often: poolside/poolside/<id>
   poolside/laguna-s-2.1:
+    routing_wire_ids:
+      opencode: poolside/poolside/laguna-s-2.1
     family: poolside
     tier: frontier_practical
     lifecycle: active
@@ -932,6 +950,8 @@ models:
       - https://poolside.ai/models
       - https://poolside.ai/blog/introducing-laguna-s-2-1
   poolside/laguna-xs-2.1:
+    routing_wire_ids:
+      opencode: poolside/poolside/laguna-xs-2.1
     family: poolside
     tier: strong_efficient
     lifecycle: active
@@ -956,6 +976,8 @@ models:
       - https://poolside.ai/assets/laguna/laguna-m1-xs2-technical-report.pdf
       - https://poolside.ai/models
   composer-2.5:
+    routing_wire_ids:
+      cursor: composer-2.5
     family: moonshot
     lab: cursor
     tier: frontier_practical
@@ -1337,3 +1359,292 @@ budget_substitution_models:
     claude-fable-5-1: claude-fable-5-1-thinking-high
     grok-4.7: grok-4.7
     composer-2.5: composer-2.5
+
+# Additive #9302 PR 1 extension. Legacy consumers retain schema_version v1 and
+# every existing field. Wire identities belong to models, never predecessor seats.
+# Legacy labels below serialize frozen receipts; they are not moving aliases.
+routing_schema_version: model-catalog.v1.1
+seats:
+  openai_frontier:
+    model_id: gpt-6.1-sol
+    bindings:
+    - legacy_review_candidate
+    - design_approval
+    priority: 10
+    decision_reference: agents_extensions/shared/rules/operator-expectations.md#12
+    routes:
+      native:
+        legacy_name: openai_frontier
+        effort: high
+        route: codex
+        transport: native_codex
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+        advisory_only_for_author_families:
+        - openai
+  xai_reviewer:
+    model_id: grok-4.7
+    bindings:
+    - legacy_review_candidate
+    priority: 20
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: grok-4.7
+        effort: high
+        suitability_roles:
+        - critical_review
+        route: grok
+        transport: native_grok
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+      cursor_fallback:
+        legacy_name: grok-4.7-cursor-fallback
+        effort: high
+        suitability_roles:
+        - critical_review
+        transport_fallback_for: grok-4.7
+        route: cursor
+        transport: cursor
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+  local_reviewer:
+    model_id: glm-5.3
+    bindings:
+    - legacy_review_candidate
+    priority: 40
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: glm-5.3
+        effort: high
+        route: glm
+        transport: opencode
+        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-glm
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+        requires_data_egress_policy: local_interactive
+  anthropic_authority:
+    model_id: claude-opus-5-5
+    bindings:
+    - legacy_review_candidate
+    - design_approval
+    priority: 50
+    decision_reference: agents_extensions/shared/rules/operator-expectations.md#12
+    routes:
+      native:
+        legacy_name: claude-opus-5-5
+        effort: high
+        route: claude
+        transport: native_claude
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+      cursor_fallback:
+        legacy_name: claude-opus-5-5-cursor-fallback
+        effort: high
+        route: cursor
+        transport: cursor
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+  anthropic_practical:
+    model_id: claude-sonnet-5-5
+    bindings:
+    - legacy_review_candidate
+    priority: 70
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: claude-sonnet-5-5
+        effort: high
+        route: claude
+        transport: native_claude
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+        - isolation
+        - sealed_evidence
+  cursor_coder:
+    model_id: composer-2.5
+    bindings:
+    - legacy_review_candidate
+    priority: 80
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: composer-2.5
+        effort: high
+        route: cursor
+        transport: cursor
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+  volume_reviewer:
+    model_id: poolside/laguna-s-2.1
+    bindings:
+    - legacy_review_candidate
+    priority: 90
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: pool
+        effort: high
+        route: pool
+        transport: opencode
+        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+  light_reviewer:
+    model_id: poolside/laguna-xs-2.1
+    bindings:
+    - legacy_review_candidate
+    priority: 100
+    decision_reference: scripts/config/model_catalog.yaml#review_candidates
+    routes:
+      native:
+        legacy_name: pool-xs
+        effort: high
+        route: pool
+        transport: opencode
+        invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model {wire_id}
+        review_profiles:
+        - code
+        - infra
+        capabilities:
+        - code_review
+  bounded_worker:
+    model_id: gpt-6-luna
+    bindings:
+    - bounded_execution
+    priority: 100
+    decision_reference: scripts/config/model_catalog.yaml#execution_routing
+    routes:
+      native:
+        route: codex
+        transport: native_codex
+        effort: high
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model {wire_id} --effort high
+  google_bounded:
+    model_id: gemini-3.8-flash-high
+    bindings:
+    - bounded_fallback
+    priority: 100
+    decision_reference: scripts/config/model_catalog.yaml#execution_routing
+    routes:
+      native:
+        route: agy
+        transport: agy
+        effort: high
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model {wire_id} --effort high
+roles:
+  bounded_advisor:
+    seat: openai_frontier
+    required_model_roles:
+    - bounded_advisory_envelope
+  openai_frontier_coder:
+    seat: openai_frontier
+  anthropic_authority_reviewer:
+    seat: anthropic_authority
+    required_model_roles:
+    - critical_review
+  bounded_recon:
+    seat: bounded_worker
+    required_model_roles:
+    - bounded_investigation
+  bounded_fallback:
+    seat: google_bounded
+  autonomous_fallback:
+    role: openai_frontier_coder
+  designated_authorities:
+    select_binding: design_approval
+    cardinality: per_family
+    order_by: priority
+    required_model_roles:
+    - architecture
+  legacy_reviewers:
+    select_binding: legacy_review_candidate
+    cardinality: many
+    order_by: priority
+  code_review_low:
+    routes:
+    - openai_frontier/native
+    - anthropic_authority/native
+    - xai_reviewer/native
+    - xai_reviewer/cursor_fallback
+    - anthropic_authority/cursor_fallback
+    - anthropic_practical/native
+    - volume_reviewer/native
+    - light_reviewer/native
+    cardinality: many
+    risk: low
+  code_review_medium:
+    routes:
+    - openai_frontier/native
+    - anthropic_authority/native
+    - xai_reviewer/native
+    - xai_reviewer/cursor_fallback
+    - anthropic_authority/cursor_fallback
+    - anthropic_practical/native
+    - volume_reviewer/native
+    - light_reviewer/native
+    cardinality: many
+    risk: medium
+  code_review_high:
+    routes:
+    - openai_frontier/native
+    - anthropic_authority/native
+    - xai_reviewer/native
+    - xai_reviewer/cursor_fallback
+    - anthropic_authority/cursor_fallback
+    cardinality: many
+    risk: high
+  code_review_critical:
+    routes:
+    - openai_frontier/native
+    - anthropic_authority/native
+    - xai_reviewer/native
+    - xai_reviewer/cursor_fallback
+    - anthropic_authority/cursor_fallback
+    cardinality: many
+    risk: critical
+    required_model_roles:
+    - critical_review

@@ -10,22 +10,6 @@
     ]
   },
   {
-    "path": "scripts/agent_runtime/lane_probe.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing dynamic module import may expose SQLite constructors; resolve through the structural boundary in #9662.",
-    "calls": []
-  },
-  {
-    "path": "scripts/agent_runtime/runner.py",
-    "reference_count": 4,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing dynamic module import may expose SQLite constructors; resolve through the structural boundary in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/ai_agent_bridge/_broker.py",
     "reference_count": 4,
     "kind": "writer",
@@ -59,14 +43,6 @@
     ]
   },
   {
-    "path": "scripts/api/dashboard_comms.py",
-    "reference_count": 1,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Broker reads remain routed through MonitorContext for fixture-root enforcement and slow-query logging; migrate the context's file:{path}?mode=ro construction in the Monitor context slice of #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/api/hramatka_cache.py",
     "reference_count": 4,
     "kind": "writer",
@@ -77,14 +53,6 @@
     ]
   },
   {
-    "path": "scripts/api/preload.py",
-    "reference_count": 3,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "Existing reader or connection type reference; migrate through the shared read-only helper in #9662.",
-    "calls": []
-  },
-  {
     "path": "scripts/api/resilience.py",
     "reference_count": 3,
     "kind": "writer",
@@ -93,14 +61,6 @@
     "calls": [
       "sqlite3.connect(database, *args, **kwargs)"
     ]
-  },
-  {
-    "path": "scripts/api/runtime_router.py",
-    "reference_count": 2,
-    "kind": "reader_pending_migration_9662",
-    "target_db": null,
-    "reason": "SQLite reader and connection types migrated in #9662 S3B; two existing adapter-loader references remain under the dynamic-import inventory.",
-    "calls": []
   },
   {
     "path": "scripts/atlas/atlas_db.py",
@@ -126,25 +86,22 @@
   },
   {
     "path": "scripts/atlas/lexical_projection.py",
-    "reference_count": 4,
+    "reference_count": 2,
     "kind": "writer",
     "target_db": "temporary lexical projection DB",
     "reason": "builds projection before atomic replacement",
     "calls": [
-      "sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{vesum_db}?mode=ro', uri=True)",
       "sqlite3.connect(temp_path)"
     ]
   },
   {
     "path": "scripts/atlas/measure_fill_enrich_divergence.py",
-    "reference_count": 5,
+    "reference_count": 4,
     "kind": "writer",
     "target_db": "synthetic sources fixture DB",
     "reason": "builds hermetic benchmark input",
     "calls": [
-      "sqlite3.connect(path)",
-      "sqlite3.connect(f'file:{path.resolve().as_posix()}?mode=ro', uri=True)"
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -160,15 +117,13 @@
   },
   {
     "path": "scripts/audit/generate_practice_deck.py",
-    "reference_count": 8,
+    "reference_count": 6,
     "kind": "writer",
     "target_db": ":memory:; atlas.db",
     "reason": "builds hermetic query fixtures and reads Atlas",
     "calls": [
       "sqlite3.connect(':memory:')",
-      "sqlite3.connect(path)",
-      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{self.db_path}?mode=ro', uri=True)"
+      "sqlite3.connect(path)"
     ]
   },
   {
@@ -194,12 +149,11 @@
   },
   {
     "path": "scripts/benchmarks/generate_synthetic_atlas.py",
-    "reference_count": 3,
+    "reference_count": 2,
     "kind": "writer",
     "target_db": "synthetic atlas output DB",
     "reason": "builds benchmark fixture",
     "calls": [
-      "sqlite3.connect(f'file:{path}?mode=ro', uri=True)",
       "sqlite3.connect(out)"
     ]
   },
@@ -245,13 +199,12 @@
   },
   {
     "path": "scripts/entire_context/store.py",
-    "reference_count": 6,
+    "reference_count": 5,
     "kind": "writer",
     "target_db": "Entire projection DB",
     "reason": "persists rebuildable locator index",
     "calls": [
-      "sqlite3.connect(self.db_path)",
-      "sqlite3.connect(f'file:{self.db_path}?mode=ro', uri=True)"
+      "sqlite3.connect(self.db_path)"
     ]
   },
   {
@@ -947,13 +900,12 @@
   },
   {
     "path": "scripts/rag/vesum_reingest.py",
-    "reference_count": 6,
+    "reference_count": 5,
     "kind": "writer",
     "target_db": "VESUM shadow DB",
     "reason": "builds shadow store and refuses live VESUM target",
     "calls": [
-      "sqlite3.connect(temporary_path)",
-      "sqlite3.connect(f'file:{database_path}?mode=ro', uri=True)"
+      "sqlite3.connect(temporary_path)"
     ]
   },
   {
@@ -1086,13 +1038,11 @@
   },
   {
     "path": "scripts/wiki/diagnostics/retrieval_probe_9233.py",
-    "reference_count": 17,
+    "reference_count": 15,
     "kind": "writer",
     "target_db": "work-dir lemma index DB",
     "reason": "builds retrieval lemma index",
     "calls": [
-      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)",
-      "sqlite3.connect(f'file:{index_path.resolve().as_posix()}?mode=ro', uri=True)",
       "sqlite3.connect(index_path)"
     ]
   },

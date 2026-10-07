@@ -812,8 +812,10 @@ def _require_data_artifact(
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
     if required_sqlite_tables:
+        from scripts.lib.readonly_sqlite import open_readonly
+
         try:
-            with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
+            with open_readonly(artifact) as connection:
                 available_tables = {
                     row[0]
                     for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")

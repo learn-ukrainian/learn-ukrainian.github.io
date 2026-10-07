@@ -68,6 +68,44 @@ def artifact(checkout, name="batch_state/sub/report.bin", payload=b"proof\x00\xf
     return path
 
 
+@pytest.mark.parametrize("returncode", [0, 128])
+def test_git_path_inventory_uses_isolated_environment(checkout, monkeypatch, returncode):
+    calls = []
+
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        assert kwargs["check"] is True and kwargs["timeout"] == 30
+        if returncode:
+            raise subprocess.CalledProcessError(returncode, args, stderr="unavailable")
+        return subprocess.CompletedProcess(args, 0, "ignored/spaced файл.txt\0".encode(), b"")
+
+    monkeypatch.setattr(wa.subprocess, "run", runner)
+    if returncode:
+        with pytest.raises(subprocess.CalledProcessError):
+            wa._git_paths(checkout[0], "--cached")
+    else:
+        assert wa._git_paths(checkout[0], "--cached") == ["ignored/spaced файл.txt"]
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--cached"])]
+
+
+def test_named_artifact_inventory_uses_isolated_environment(checkout, monkeypatch):
+    name = "batch_state/sub/report.bin"
+    artifact(checkout, name)
+    calls = []
+
+    def runner(args, **kwargs):
+        calls.append((kwargs["cwd"], args))
+        assert kwargs["env"] == wa._safe_git_env()
+        return subprocess.CompletedProcess(args, 0, (name + "\0").encode(), b"")
+
+    monkeypatch.setattr(wa.subprocess, "run", runner)
+    assert wa._named_artifact_files(
+        checkout[0], {"response": f"Capture `{name}`."}, primary=checkout[1]
+    ) == {name}
+    assert calls == [(checkout[0], ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name])]
+
+
 def test_preserved_bytes_record_and_idempotency(checkout):
     source = artifact(checkout)
     record = {"status": "done", "response": "Capture `batch_state/sub/report.bin`."}
@@ -178,18 +216,21 @@ def test_source_symlink_is_preserved_as_link_record(checkout):
 
 
 def _swap_regular_file_for_outside_symlink(monkeypatch, source: Path, outside: Path) -> None:
-    """After a type check sees a regular file, replace it with a link to ``outside``."""
-    real_is_symlink = Path.is_symlink
+    """After ``fstat`` classifies a regular file, replace it with a link to ``outside``.
 
-    def raced(self: Path) -> bool:
-        if self == source:
-            if not real_is_symlink(self):
-                self.unlink()
-                self.symlink_to(outside)
-            return False
-        return real_is_symlink(self)
+    The type check is the ``O_PATH`` descriptor. The later read opens the name
+    again and must refuse that link instead of following it.
+    """
+    real_open = wa.open_leaf_descriptor
 
-    monkeypatch.setattr(Path, "is_symlink", raced)
+    def raced(dir_fd: int, name: str):
+        fd, info = real_open(dir_fd, name)
+        if name == source.name and source.is_file() and not source.is_symlink():
+            source.unlink()
+            source.symlink_to(outside)
+        return fd, info
+
+    monkeypatch.setattr(wa, "open_leaf_descriptor", raced)
 
 
 def test_copy_refuses_symlink_swapped_in_between_check_and_copy(tmp_path, monkeypatch):
@@ -2075,3 +2116,45 @@ def test_ignored_artifact_nested_repo_same_mtime_modified_bytes_rejected_without
     assert not ok and metadata["retention_disposition"] == "retained"
     assert "uncommitted tracked changes" in reason or "uncommitted or ignored changes" in reason
     assert "clear with: rm -rf" not in reason
+
+
+def _fd_count() -> int:
+    return len(os.listdir("/proc/self/fd"))
+
+
+def test_walk_reports_descriptor_type_not_a_byte_prefix(tmp_path):
+    payload = b"symlink\npretend-target"
+    note = tmp_path / "note.txt"
+    note.write_bytes(payload)
+    before = _fd_count()
+    walked = wa._read_preserved_bytes(note, root=tmp_path)
+    assert walked.file_type == "regular"
+    assert walked.target is None
+    assert walked.payload == payload
+    link = tmp_path / "link"
+    link.symlink_to("pretend-target")
+    walked = wa._read_preserved_bytes(link, root=tmp_path)
+    assert walked.file_type == "symlink"
+    assert walked.target == "pretend-target"
+    assert walked.payload == b"symlink\n" + os.fsencode("pretend-target")
+    assert _fd_count() == before
+
+
+def test_walk_refuses_a_target_longer_than_the_path_limit(tmp_path, monkeypatch):
+    target = "too-long-target"
+    (tmp_path / "link").symlink_to(target)
+    real = os.pathconf
+
+    def short_limit(path, name):
+        if name == "PC_PATH_MAX":
+            return 4
+        return real(path, name)
+
+    monkeypatch.setattr(os, "pathconf", short_limit)
+    before = _fd_count()
+    with pytest.raises(wa.SymlinkTargetRefusal) as caught:
+        wa._read_preserved_bytes(tmp_path / "link", root=tmp_path)
+    assert caught.value.kind == "target-too-long"
+    assert caught.value.args == ("target-too-long",)
+    assert target not in str(caught.value)
+    assert _fd_count() == before

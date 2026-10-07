@@ -1,14 +1,18 @@
-"""Open one directory component without following a symlink.
+"""Open one directory component, or one leaf, without following a symlink.
 
-Unit installation (#9875) and artifact preservation (#9889) share this step.
-:func:`open_directory_component` ``lstat``s one name, refuses a symlink or
-non-directory, opens it with ``O_NOFOLLOW`` relative to the previous
+Unit installation (#9875) and artifact preservation (#9889, #9910) share these
+steps. :func:`open_directory_component` ``lstat``s one name, refuses a symlink
+or non-directory, opens it with ``O_NOFOLLOW`` relative to the previous
 descriptor, and requires the opened inode to be the one just checked.
-Callers walk from a trusted descriptor and never open a multi-component path.
+:func:`open_leaf_descriptor` opens one leaf with ``O_PATH`` and ``O_NOFOLLOW``
+and returns ``fstat`` of that descriptor, so the type is the opened inode: a
+symlink stays a symlink. Callers walk from a trusted descriptor and never open
+a multi-component path.
 """
 
 from __future__ import annotations
 
+import errno
 import os
 import stat
 
@@ -48,3 +52,28 @@ def open_directory_component(dir_fd: int | None, name: str) -> int:
         os.close(fd)
         raise
     return fd
+
+
+def _leaf_flags() -> int:
+    """``O_PATH|O_NOFOLLOW|O_CLOEXEC``. ``O_PATH`` is what makes a symlink openable."""
+    path_flag = getattr(os, "O_PATH", 0)
+    if not path_flag:
+        raise OSError(errno.ENOTSUP, "O_PATH is required")
+    return path_flag | _NOFOLLOW
+
+
+def open_leaf_descriptor(dir_fd: int, name: str) -> tuple[int, os.stat_result]:
+    """Open one leaf relative to ``dir_fd`` and return ``fstat`` of that descriptor.
+
+    The open uses ``O_PATH`` and ``O_NOFOLLOW``. The descriptor refers to
+    ``name`` itself: a symlink is not followed, and ``fstat`` reports
+    ``S_IFLNK`` for the link rather than the target's type. The caller closes
+    the descriptor. ``FileNotFoundError`` propagates.
+    """
+    fd = os.open(name, _leaf_flags(), dir_fd=dir_fd)
+    try:
+        info = os.fstat(fd)
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd, info

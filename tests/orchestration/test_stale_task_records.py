@@ -303,7 +303,10 @@ def test_apply_settles_class_c_with_receipt_and_leaves_a_b_d_untouched(tasks_dir
     assert merged["settle_evidence"]["branch_on_origin"] is False
     no_commits = json.loads((tasks_dir / "no-commits.json").read_text())
     assert no_commits["status"] == "no_deliverable"
-    assert no_commits["no_deliverable_reason"] == no_commits["settle_reason"]
+    # #9878: a reason field is a public cause; the settle's free-text reason stays in settle_reason and the .diag.
+    assert no_commits["no_deliverable_reason"] == "unclassified_error"
+    assert no_commits["settle_reason"] == "orphaned: clean exit with no commits; worktree and branch gone"
+    assert no_commits["settle_reason"] in (tasks_dir / "no-commits.diag").read_text(encoding="utf-8")
     assert json.loads((tasks_dir / "crashed.json").read_text())["status"] == "failed"
     # Settled records release their claim: the worktree claim scan no longer honors them.
     assert all(
@@ -1489,7 +1492,11 @@ def _assert_rerun_settled(tasks_dir: Path, name: str, gate: str, failure: str = 
     record = json.loads((tasks_dir / f"{name}.json").read_text())
     assert (record["status"], record["failure_reason"], record["needs_finalize"]) == ("failed", failure, False)
     assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
-    assert failure in record["last_error"] and "re-run the task or finalize it by hand" in record["last_error"]
+    # #9878: last_error is a public cause; the settle's free-text reason stays in settle_reason and the .diag.
+    assert record["last_error"] == "unclassified_error"
+    reason = record["settle_reason"]
+    assert failure in reason and "re-run the task or finalize it by hand" in reason
+    assert reason in (tasks_dir / f"{name}.diag").read_text(encoding="utf-8")
     assert "merged_pr" not in record
     return record
 

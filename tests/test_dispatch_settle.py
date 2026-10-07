@@ -493,7 +493,12 @@ def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytes
     assert "released_ownership_claims" in report.actions
     healed = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
     assert healed["status"] == "failed"
-    assert "worktree is missing" in healed["last_error"]
+    assert healed["last_error"] == "unclassified_error"
+    diagnostics = [
+        json.loads(line)
+        for line in (task_dir / f"{task_id}.diag").read_text(encoding="utf-8").splitlines()
+    ]
+    assert any(entry["field"] == "last_error" and "worktree is missing" in entry["diagnostic"] for entry in diagnostics)
     assert _claim_count(ledger_path, task_id) == 0
     assert report.commits_ahead is None
     assert report.pr_url is None

@@ -16,6 +16,7 @@ from typing import Any
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import Request, request_run
+from scripts.publish.merge_guard import _is_advisory
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -169,7 +170,7 @@ def _check_row_kind(row: Mapping[str, Any]) -> str:
 
 
 def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CHECKS) -> list[str]:
-    """Block when any row that survives the shared collapse is red or pending.
+    """Block when any non-advisory row surviving the shared collapse is red or pending.
 
     A missing rollup or a non-check value is still ``CI unknown``. Timestamp
     ties and same-named jobs from different workflows are not collapsed to one
@@ -181,7 +182,9 @@ def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CH
     if any(not isinstance(check, Mapping) for check in checks):
         return ["CI unknown"]
     named, _other = group_collapsed_by_name(list(checks))
-    grouped = {name: rows for name, rows in named.items() if name != "fleet/cross-family-review"}
+    grouped = {
+        name: rows for name, rows in named.items() if name != "fleet/cross-family-review" and not _is_advisory(name)
+    }
     blockers = []
     for name in set(required) | set(grouped):
         versions = grouped.get(name, [])

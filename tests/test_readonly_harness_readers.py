@@ -13,7 +13,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from scripts.lib.readonly_sqlite import SQLiteConnection, open_readonly
+from scripts.lib.readonly_sqlite import SQLiteConnection, import_named_module, open_readonly
 
 ROOT = Path(__file__).resolve().parents[1]
 READERS = (
@@ -60,7 +60,10 @@ def test_helper_fallback_only_handles_missing_scripts(reader, missing):
             raise ModuleNotFoundError(name=missing)
         if name == "lib.readonly_sqlite":
             return SimpleNamespace(
-                SQLiteConnection=SQLiteConnection, open_readonly=open_readonly, is_sqlite_connection=object(),
+                SQLiteConnection=SQLiteConnection,
+                open_readonly=open_readonly,
+                import_named_module=import_named_module,
+                is_sqlite_connection=object(),
             )
         return builtins.__import__(name, *args, **kwargs)
 
@@ -111,21 +114,20 @@ def test_reader_opens_exact_file_and_refuses_writes_and_attach(tmp_path, reader,
     assert db.read_bytes() == before
 
 
-def test_dashboard_broker_is_excluded_from_helper_migration():
+def test_dashboard_broker_constructor_reference_is_migrated():
+    """Broker reads stay on MonitorContext; the connection annotation is not a constructor."""
     reader = "scripts/api/dashboard_comms.py"
     assert reader not in READERS
     tree = ast.parse((ROOT / reader).read_text())
     assert not any(
-        isinstance(node, ast.ImportFrom)
-        and node.module in {"scripts.lib.readonly_sqlite", "lib.readonly_sqlite"}
+        isinstance(node, ast.Attribute)
+        and isinstance(node.value, ast.Name)
+        and node.value.id == "sqlite3"
+        and node.attr == "Connection"
         for node in ast.walk(tree)
     )
     manifest = json.loads((ROOT / "scripts/hygiene/sqlite_reference_allowlist.json").read_text())
-    entries = [entry for entry in manifest if entry["path"] == reader]
-    assert len(entries) == 1
-    assert entries[0]["kind"] == "reader_pending_migration_9662"
-    assert entries[0]["reference_count"] == 1
-    assert entries[0]["calls"] == []
+    assert [entry for entry in manifest if entry["path"] == reader] == []
 
 
 def test_dashboard_broker_routes_through_monitor_context(tmp_path):

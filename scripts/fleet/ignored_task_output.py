@@ -298,23 +298,11 @@ def _baseline_entry_ok(entry: Mapping[str, Any]) -> bool:
     )
 
 
-# Same bytes ``_symlink_record_bytes`` returns for an empty target: the record is
-# this prefix plus the raw target. An empty target is still a link.
-_LINK_RECORD_PREFIX = artifacts._symlink_record_bytes("")
-
-
-def _link_target(payload: bytes) -> str | None:
-    """Return the raw target when ``payload`` is the descriptor-walk link record."""
-    if not payload.startswith(_LINK_RECORD_PREFIX):
-        return None
-    return os.fsdecode(payload[len(_LINK_RECORD_PREFIX) :])
-
-
 def _byte_identity(entries: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
     """Name, size and hash.
 
-    A preserved link is a regular file of the link record, so reading it again
-    parses as a link. The byte check does not compare that label.
+    Preservation and retrieval compare these fields only. The symlink label
+    and its target are not part of that decision.
     """
     return [{key: entry[key] for key in ("path", "size", "sha256")} for entry in entries]
 
@@ -322,17 +310,18 @@ def _byte_identity(entries: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
 def _path_inventory(
     root: Path, files: list[str], *, absent: list[dict[str, str]] | None = None
 ) -> list[dict[str, Any]]:
-    """Fingerprint each path from one descriptor-walk read.
+    """Fingerprint each path from one descriptor walk.
 
-    The link flag and the target both come from that read's record
-    (``b"symlink\\n"`` plus the raw target). This inventory does not stat the
-    path or read the link by path afterwards.
+    The file type is the walk's ``fstat`` result. A real symlink records that
+    type and its target. A regular file records neither, including when its
+    bytes begin with the link-record prefix. This inventory does not stat the
+    path or parse the prefix out of the bytes.
     """
     entries = []
     for name in files:
         path = root / name
         try:
-            payload = artifacts._read_preserved_bytes(path, root=root)
+            walked = artifacts._read_preserved_bytes(path, root=root)
         except FileNotFoundError:
             if absent is None:
                 raise
@@ -340,13 +329,16 @@ def _path_inventory(
             continue
         entry: dict[str, Any] = {
             "path": name,
-            "size": len(payload),
-            "sha256": hashlib.sha256(payload).hexdigest(),
+            "size": len(walked.payload),
+            "sha256": hashlib.sha256(walked.payload).hexdigest(),
         }
-        target = _link_target(payload)
-        if target is not None:
+        if walked.file_type == "symlink":
+            if not isinstance(walked.target, str):
+                raise ValueError("symlink target is missing")
             entry["type"] = "symlink"
-            entry["target"] = target
+            entry["target"] = walked.target
+        elif walked.file_type != "regular":
+            raise ValueError("artifact is not a regular file")
         entries.append(entry)
     return entries
 

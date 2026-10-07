@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
+from collections import deque
 from collections.abc import Sequence
 from functools import lru_cache
 from pathlib import Path, PurePosixPath
@@ -192,7 +193,96 @@ def call_name(node: ast.AST) -> str:
     return ""
 
 
-def scan_imports(sources: dict[str, bytes]) -> dict:
+def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, known_paths: set[str]) -> tuple[set, set]:
+    """Track file/subprocess dependencies; unprovable runtime edges stay all-node."""
+    edges, unresolved = set(), set()
+    aliases = {"sys": "sys", "subprocess": "subprocess", "os": "os", "asyncio": "asyncio"}
+    for node in nodes:
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                aliases[alias.asname or alias.name] = alias.name
+        elif isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                aliases[alias.asname or alias.name] = f"{node.module}.{alias.name}"
+
+    def canonical(node):
+        name = call_name(node)
+        first, _, rest = name.partition(".")
+        return aliases.get(first, first) + ("." + rest if rest else "")
+
+    def target(value, line, reason):
+        if value is not None and str(value) in known_paths:
+            edges.add((path, str(value)))
+        else:
+            unresolved.add((path, line, reason))
+
+    for node in nodes:
+        if isinstance(node, (ast.Attribute, ast.Name)) and canonical(node).startswith("sys.path"):
+            # Even a literal path can change precedence or expose an external tree.
+            unresolved.add((path, node.lineno, "sys-path"))
+        if not isinstance(node, ast.Call):
+            continue
+        name = canonical(node.func)
+        leaf = node.func.attr if isinstance(node.func, ast.Attribute) else name.split(".")[-1]
+        if leaf in {"open", "read_text", "read_bytes"}:
+            expression = (node.func.value if leaf in {"read_text", "read_bytes"}
+                          and isinstance(node.func, ast.Attribute) else
+                          node.args[0] if node.args else next(
+                              (kw.value for kw in node.keywords if kw.arg in {"file", "path"}), None))
+            # Path.open() reads its receiver; builtins.open() reads its argument.
+            if leaf == "open" and isinstance(node.func, ast.Attribute) and name not in {"builtins.open", "io.open", "codecs.open"}:
+                expression = node.func.value
+            target(literal_target(expression, bindings, path), node.lineno, "unresolved-file-read")
+        if name in {"subprocess.run", "subprocess.Popen", "subprocess.call", "subprocess.check_call",
+                    "subprocess.check_output", "subprocess.getoutput", "subprocess.getstatusoutput",
+                    "os.system", "os.popen", "asyncio.create_subprocess_exec", "asyncio.create_subprocess_shell"}:
+            expression = node.args[0] if node.args else next(
+                (kw.value for kw in node.keywords if kw.arg == "args"), None)
+            if isinstance(expression, ast.Name) and len(bindings.get(expression.id, [])) == 1:
+                expression = bindings[expression.id][0]
+            shell = any(kw.arg == "shell" and not (
+                isinstance(kw.value, ast.Constant) and kw.value.value is False) for kw in node.keywords)
+            if shell or not isinstance(expression, (ast.List, ast.Tuple)):
+                unresolved.add((path, node.lineno, "unresolved-subprocess"))
+                continue
+            values = [literal_target(arg, bindings, path) for arg in expression.elts]
+            # Recognize only a closed Python module/script invocation. Other
+            # executables and their input flags require explicit edge proof.
+            interpreter = bool(expression.elts) and (
+                canonical(expression.elts[0]) == "sys.executable"
+                or values[0] in {"python", "python3"})
+            if any(value is None for value in values[1:]):
+                unresolved.add((path, node.lineno, "unresolved-subprocess"))
+            if interpreter and len(values) > 2 and values[1] == "-m" and isinstance(values[2], str):
+                value = values[2].replace(".", "/") + ".py"
+            elif interpreter and len(values) > 1:
+                value = values[1]
+            else:
+                value = None
+            target(value, node.lineno, "unresolved-subprocess")
+    return edges, unresolved
+
+
+def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
+    """Keep dependency syntax in ast.walk order without walking terminal leaves.
+
+    Parsed constants, import aliases, operators and contexts cannot contain
+    dependencies. Retain every other subtree, including defaults and decorators.
+    """
+    relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
+                ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute, ast.Name}
+    pending = deque([tree])
+    nodes = []
+    while pending:
+        node = pending.popleft()
+        if type(node) in relevant:
+            nodes.append(node)
+        pending.extend(child for child in ast.iter_child_nodes(node)
+                       if child._fields and not isinstance(child, (ast.Constant, ast.alias)))
+    return nodes
+
+
+def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None) -> dict:
     """Compute local import/load edges, retaining each unprovable target."""
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in sources}
     packages = {".".join(name.split(".")[:index]) for name in modules
@@ -229,7 +319,7 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
             unresolved.add((path, 0, "parse-error"))
             continue
         bindings = {}
-        nodes = list(ast.walk(tree))
+        nodes = dependency_nodes(tree)
         has_specs = b"spec_from_file_location" in source
         loaders = {"__import__": ("module", 0)}
         wrappers = set()
@@ -253,6 +343,10 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
                 for child in ast.walk(node)
             )):
                 wrappers.add(node.name)
+        runtime_edges, runtime_unresolved = scan_runtime_edges(
+            path, nodes, bindings, known_paths if known_paths is not None else set(sources))
+        edges.update(runtime_edges)
+        unresolved.update(runtime_unresolved)
         for node in nodes:
             if isinstance(node, ast.Import):
                 for alias in node.names:
@@ -299,7 +393,7 @@ def scan_imports(sources: dict[str, bytes]) -> dict:
 def import_graph(manifest: dict, root: Path = ROOT) -> dict:
     """Lift discovered file dependencies to node edges; assert mandatory imports."""
     sources = python_sources(root)
-    graph = cached_import_scan(tuple(sources.items()))
+    graph = cached_import_scan(tuple(sources.items()), tuple(tracked_paths(root)))
     pairs = {(producer, consumer) for importer, target in graph["file_edges"]
              for producer in assign_path(target, manifest)[0]
              for consumer in assign_path(importer, manifest)[0]}
@@ -313,9 +407,9 @@ def import_graph(manifest: dict, root: Path = ROOT) -> dict:
 
 
 @lru_cache(maxsize=32)
-def cached_import_scan(sources: tuple) -> dict:
+def cached_import_scan(sources: tuple, known_paths: tuple = ()) -> dict:
     """Reuse an AST scan only when every indexed/current source byte is identical."""
-    return scan_imports(dict(sources))
+    return scan_imports(dict(sources), set(known_paths) if known_paths else None)
 
 
 def affected(paths: Sequence[str], manifest: dict, graph: dict | None = None) -> dict:

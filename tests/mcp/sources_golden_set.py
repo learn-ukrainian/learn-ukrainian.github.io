@@ -38,6 +38,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.lib.readonly_sqlite import open_readonly
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_SERVER_PATH = PROJECT_ROOT / ".mcp" / "servers" / "sources" / "server.py"
 EXPECTED_PATH = Path(__file__).with_name("sources_golden_set.json")
@@ -197,8 +199,7 @@ async def _capture(server: Any) -> dict[str, Any]:
         raise FileNotFoundError(SOURCES_DB_PATH)
     if not Path(VESUM_DB_PATH).is_file():
         raise FileNotFoundError(VESUM_DB_PATH)
-    uri = f"file:{SOURCES_DB_PATH}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
+    conn = open_readonly(SOURCES_DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA query_only = ON")
     words = list(GOLDEN_WORDS)

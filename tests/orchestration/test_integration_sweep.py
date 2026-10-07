@@ -227,6 +227,29 @@ def test_ci_red_pending_and_ready():
     assert sweep.classify_pr(pr(), approved, queued=False, observed_at=START).state == "ready"
 
 
+@pytest.mark.parametrize("name", ["Component shadow (advisory)", "ADVISORY smoke", "nightly advisory"])
+@pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
+def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
+    item = pr()
+    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion})
+    report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
+    assert report.state == "ready"
+    assert report.blockers == ()
+
+
+def test_advisory_failure_does_not_hide_other_blockers():
+    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE"}
+    assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
+    item = pr()
+    item["statusCheckRollup"].extend([
+        advisory,
+        {"name": "Build", "status": "COMPLETED", "conclusion": "FAILURE"},
+    ])
+    report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
+    assert report.state == "CI-red Build"
+    assert report.blockers == ("CI red Build",)
+
+
 def test_moved_head_between_observation_and_queue_lookup_reports_unknown():
     def runner(args):
         if isinstance(args, sweep.Request) and args.verb == "read-membership-head":

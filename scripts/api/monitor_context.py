@@ -233,7 +233,9 @@ class MonitorContext:
         if session_streams:
             return SessionStreamDatabase(path)
         if read_only:
-            return connect_sqlite(f"file:{path}?mode=ro", uri=True)
+            # Percent-encode the path. A raw file:{path} URI drops mode=ro when
+            # the path contains ? or #. connect_sqlite keeps slow-query logging.
+            return connect_sqlite(path.resolve().as_uri() + "?mode=ro", uri=True)
         return connect_sqlite(str(path))
 
 

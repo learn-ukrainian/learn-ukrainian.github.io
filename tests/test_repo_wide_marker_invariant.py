@@ -938,7 +938,15 @@ def _names_the_marker(source: str) -> bool:
 
 # Calls that load a module named by a string or a file path at run time.
 _DYNAMIC_LOADERS = frozenset(
-    {"import_module", "__import__", "spec_from_file_location", "SourceFileLoader", "run_path", "run_module"}
+    {
+        "import_module",
+        "import_named_module",
+        "__import__",
+        "spec_from_file_location",
+        "SourceFileLoader",
+        "run_path",
+        "run_module",
+    }
 )
 
 

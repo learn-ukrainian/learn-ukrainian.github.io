@@ -29,7 +29,6 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
-import importlib
 import json
 import logging
 import os
@@ -45,6 +44,13 @@ from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
 from ai_llm.fallback import (
     AttemptOutcome,
@@ -931,7 +937,7 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
         candidates.append(module_path.removeprefix("scripts."))
     for candidate in candidates:
         try:
-            module = importlib.import_module(candidate)
+            module = import_named_module(candidate)
             break
         except ImportError as exc:
             import_errors.append(f"{candidate!r}: {exc}")
@@ -2973,7 +2979,7 @@ def _load_worktree_containment():
         "guardrails.worktree_containment",
     ):
         try:
-            return importlib.import_module(candidate)
+            return import_named_module(candidate)
         except ImportError:
             continue
     return None
