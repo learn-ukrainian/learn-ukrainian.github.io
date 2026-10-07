@@ -301,6 +301,25 @@ def test_diagnostic_rule_itself_reuses_malformed_userinfo_redaction(password, us
     assert redact_lane_health_diagnostics(expected) == expected
 
 
+@pytest.mark.parametrize("delimiter", [":", "/", "?", "#", ",", ";"])
+@pytest.mark.parametrize("username", ["u", "", "bot%2Dname"])
+@pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
+def test_diagnostic_and_served_rules_resolve_userinfo_before_splitting(delimiter, username, joiner):
+    left, right = "beforeCanary", "afterCanary"
+    password = "".join((left, delimiter, "https", "://", right))
+    first = "".join(("https", "://", username, ":", password, "@host.invalid:443/api?part=2#tail"))
+    second = "".join(("postgres", "://", "u:", "nextCanary", "@next.invalid/api"))
+    expected = "".join((
+        "https", "://", username, ":", "[REDACTED_SECRET]", "@[redacted-host]/api?part=2#tail", joiner,
+        "postgres", "://", "u:", "[REDACTED_SECRET]", "@[redacted-host]/api",
+    ))
+    for redactor in (redact_lane_health_diagnostics, redact_lane_health_text):
+        redacted = redactor(first + joiner + second)
+        assert redacted == expected
+        assert left not in redacted and right not in redacted and "nextCanary" not in redacted
+        assert redactor(redacted) == redacted
+
+
 def _multi_url_shapes():
     cases = []
     for password in (

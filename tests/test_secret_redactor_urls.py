@@ -103,6 +103,46 @@ def test_multiple_urls_and_nested_values_redact_only_password_bytes():
     }
 
 
+@pytest.mark.parametrize("delimiter", [":", "/", "?", "#", ",", ";"])
+@pytest.mark.parametrize("username", ["u", "", "bot%2Dname"])
+@pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
+def test_embedded_scheme_cannot_split_an_unclosed_password(delimiter, username, joiner):
+    left, right = "beforeCanary", "afterCanary"
+    password = "".join((left, delimiter, "https", "://", right))
+    first = credential_url(password, username=username)
+    second = credential_url("nextCanary", scheme="postgres")
+    expected = credential_url(REDACTION, username=username) + joiner + credential_url(REDACTION, scheme="postgres")
+    raw = first + joiner + second
+    redacted = redact_text(raw)
+    assert redacted == expected
+    assert left not in redacted and right not in redacted and "nextCanary" not in redacted
+    assert redact_text(redacted) == redacted
+    assert redact_value({"body": [raw]}) == {"body": [expected]}
+
+
+@pytest.mark.parametrize("password", [
+    "".join(("https", "://", "afterCanary")),
+    "".join(("beforeCanary/https", "://", "nested/path?tail#afterCanary")),
+    "".join(("beforeCanary?https", "://", "nested;postgres", "://", "afterCanary")),
+    *("".join(("12345", delimiter, "https", "://", "afterCanary")) for delimiter in (",", ";")),
+])
+def test_entire_embedded_url_remains_password_until_userinfo_closes(password):
+    raw = credential_url(password)
+    expected = credential_url(REDACTION)
+    assert redact_text(raw) == expected
+    assert redact_text(expected) == expected
+
+
+@pytest.mark.parametrize("prefix", ["12345", ""])
+@pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
+def test_nested_url_does_not_turn_numeric_or_empty_port_into_userinfo(prefix, joiner):
+    outer = "".join(("https://outer.invalid:", prefix, "/api", joiner))
+    raw = outer + credential_url("nextCanary")
+    expected = outer + credential_url(REDACTION)
+    assert redact_text(raw) == expected
+    assert redact_text(expected) == expected
+
+
 @pytest.mark.parametrize("password", PASSWORDS)
 @pytest.mark.parametrize("joiner", [",", ";", "?next=", "/archive/", "#next="])
 @pytest.mark.parametrize("suffix", ["", "/api"])
@@ -139,10 +179,18 @@ def test_credentialless_outer_url_does_not_hide_inner_credentials(password, oute
     "https://archive.invalid/20261007/https://source.invalid/path",
     "https://outer.invalid?next=https://source.invalid:443/@scope/pkg",
     "https://first.invalid,https://second.invalid;file:///root/@scope/pkg",
-    "".join(("https://outer.invalid:", "opaque/path?next=https://source.invalid/a", "@", "b")),
 ])
 def test_credentialless_nested_and_joined_urls_stay_byte_identical(raw):
     assert redact_text(raw) == raw
+
+
+def test_nonnumeric_colon_prefix_uses_round_a_fallback_across_nested_scheme():
+    # This invalid port also has the round-a shape of malformed userinfo.
+    raw = "".join(("https://outer.invalid:", "opaque/path?next=https://source.invalid/a", "@", "b"))
+    expected = "".join(("https://outer.invalid:", REDACTION, "@", "b"))
+    assert redact_text(raw) == expected
+    assert "".join(redact_url_authority(raw)) == expected
+    assert redact_text(expected) == expected
 
 
 def test_ordinary_repository_corpus_matches_actual_origin_main_redactor():

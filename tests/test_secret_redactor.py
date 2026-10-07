@@ -322,10 +322,14 @@ def test_send_message_redacts_content_and_data(msg_db):
     assert "AIza" not in parsed["note"]
 
 
-def test_send_message_redacts_malformed_url_password_before_storage(msg_db):
+@pytest.mark.parametrize("password", [
+    "canary?tail#end",
+    *("".join(("beforeCanary", delimiter, "https", "://", "afterCanary")) for delimiter in (":", "/", "?", "#", ",", ";")),
+])
+def test_send_message_redacts_malformed_url_password_before_storage(msg_db, password):
     from scripts.ai_agent_bridge._messaging import send_message
 
-    raw = "".join(("https", "://", "u:", "canary?tail#end", "@", "host.invalid", "/api"))
+    raw = "".join(("https", "://", "u:", password, "@", "host.invalid", "/api"))
     expected = "".join(("https", "://", "u:", REDACTION, "@", "host.invalid", "/api"))
     with patch("subprocess.run"):
         send_message(raw, data=json.dumps({"detail": raw}), quiet=True)

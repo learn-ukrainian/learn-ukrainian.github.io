@@ -28,7 +28,7 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from itertools import pairwise
 from typing import Any
 
@@ -100,33 +100,15 @@ _OPAQUE_PUNCTUATED_TOKEN_MIN_ENTROPY = 4.5
 _OPAQUE_TOKEN_PUNCTUATION = frozenset("_+./~-")
 
 _URL_SCHEME = r"\b[A-Za-z][A-Za-z0-9+.-]*://"
-# Bound each URL at the next scheme, including query/path-nested URLs. Leave
-# comma/semicolon joiners outside the match so host redaction preserves them.
-URL_PATTERN = re.compile(rf"{_URL_SCHEME}[^\s<>\"`]*?(?=[,;]?{_URL_SCHEME}|[\s<>\"`]|$)")
+# First bound the whole token; URL boundaries within it depend on userinfo.
+URL_PATTERN = re.compile(rf"{_URL_SCHEME}[^\s<>\"`]*")
+_URL_BOUNDARY_PATTERN = re.compile(rf"[,;]?(?P<scheme>{_URL_SCHEME})")
 # RFC 3986 unreserved, sub-delims and pct-encoded, excluding the password colon.
 _URL_USERNAME_PATTERN = re.compile(r"(?:[A-Za-z0-9._~!$&'()*+,;=-]|%[0-9A-Fa-f]{2})*")
 
 
-def redact_url_authority(raw: str) -> tuple[str, str, str]:
-    """Split a scheme:// URL token into prefix, redacted authority and suffix.
-
-    RFC 3986 section 3.2 ends authority at the first /, ? or #. Only an @
-    within that authority normally identifies userinfo; replace everything
-    after its first colon up to @, preserving username, host and suffix bytes.
-
-    Diagnostics also contain malformed passwords with raw /, ? or #. If the
-    initial authority has no @, accept the first later @ in this same token
-    only when the initial authority starts with an RFC username and colon,
-    followed by a nonempty, nonnumeric password prefix. Extend authority to
-    the first /, ? or # after that @. Numeric and empty prefixes stay ports:
-    ordinary host:port URLs cannot trigger this fallback, even with @ in a
-    path, query or fragment. Bracketed IP hosts cannot match the username.
-
-    Deliberately leave ambiguous numeric/empty prefixes before a delimiter,
-    username-only userinfo, schemeless credentials and tokens without @ alone.
-    The caller bounds each URL at the next scheme or whitespace/text delimiter.
-    No decoding or normalization occurs.
-    """
+def _url_authority_bounds(raw: str) -> tuple[int, int]:
+    """Resolve authority, including the guarded malformed-userinfo fallback."""
     start = raw.index("://") + 3
     end = min(
         (index for delimiter in "/?#" if (index := raw.find(delimiter, start)) >= 0),
@@ -146,6 +128,50 @@ def redact_url_authority(raw: str) -> tuple[str, str, str]:
                     (index for delimiter in "/?#" if (index := raw.find(delimiter, userinfo_end + 1)) >= 0),
                     default=len(raw),
                 )
+    return start, end
+
+
+def iter_url_matches(text: str) -> Iterator[re.Match[str]]:
+    """Split token URLs only after resolving the current URL's userinfo.
+
+    A scheme inside a password cannot become a new URL. Comma/semicolon
+    joiners after resolved userinfo remain outside matches, as in round b.
+    """
+    for token in URL_PATTERN.finditer(text):
+        cursor = token.start()
+        while cursor < token.end():
+            raw = text[cursor:token.end()]
+            start, end = _url_authority_bounds(raw)
+            userinfo_end = raw.rfind("@", start, end)
+            boundary = _URL_BOUNDARY_PATTERN.search(text, cursor + max(start, userinfo_end + 1), token.end())
+            limit = boundary.start() if boundary else token.end()
+            yield URL_PATTERN.match(text, cursor, limit)
+            if boundary is None:
+                break
+            cursor = boundary.start("scheme")
+
+
+def redact_url_authority(raw: str) -> tuple[str, str, str]:
+    """Split a scheme:// URL token into prefix, redacted authority and suffix.
+
+    RFC 3986 section 3.2 ends authority at the first /, ? or #. Only an @
+    within that authority normally identifies userinfo; replace everything
+    after its first colon up to @, preserving username, host and suffix bytes.
+
+    Diagnostics also contain malformed passwords with raw /, ? or #. If the
+    initial authority has no @, accept the first later @ in this same token
+    only when the initial authority starts with an RFC username and colon,
+    followed by a nonempty, nonnumeric password prefix. Extend authority to
+    the first /, ? or # after that @. Numeric and empty prefixes stay ports:
+    ordinary host:port URLs cannot trigger this fallback, even with @ in a
+    path, query or fragment. Bracketed IP hosts cannot match the username.
+
+    Deliberately leave ambiguous numeric/empty prefixes before a delimiter,
+    username-only userinfo, schemeless credentials and tokens without @ alone.
+    The shared iterator resolves userinfo before bounding at a later scheme.
+    No decoding or normalization occurs.
+    """
+    start, end = _url_authority_bounds(raw)
     authority = raw[start:end]
     userinfo, separator, host = authority.rpartition("@")
     if separator:
@@ -161,7 +187,14 @@ def redact_text(value: str | None) -> str | None:
         return None
 
     text = str(value)
-    text = URL_PATTERN.sub(lambda match: "".join(redact_url_authority(match.group())), text)
+    parts = []
+    cursor = 0
+    for match in iter_url_matches(text):
+        parts.append(text[cursor:match.start()])
+        parts.extend(redact_url_authority(match.group()))
+        cursor = match.end()
+    parts.append(text[cursor:])
+    text = "".join(parts)
     for pattern in _BLOCK_PATTERNS:
         text = pattern.sub(REDACTION, text)
     for pattern in _ASSIGNMENT_PATTERNS:

@@ -10,9 +10,9 @@ import re
 from urllib.parse import unquote_plus
 
 try:
-    from secret_redactor import REDACTION, URL_PATTERN, redact_url_authority, redact_value
+    from secret_redactor import REDACTION, iter_url_matches, redact_url_authority, redact_value
 except ImportError:
-    from scripts.secret_redactor import REDACTION, URL_PATTERN, redact_url_authority, redact_value
+    from scripts.secret_redactor import REDACTION, iter_url_matches, redact_url_authority, redact_value
 
 try:
     from api.opsec_scan import scan_text
@@ -48,7 +48,7 @@ def redact_lane_health_diagnostics(text: str) -> str:
     """
     parts = []
     cursor = 0
-    for match in URL_PATTERN.finditer(text):
+    for match in iter_url_matches(text):
         parts.append(_redact_non_url_diagnostics(text[cursor : match.start()]))
         parts.append(_redact_url_match(match))
         cursor = match.end()
