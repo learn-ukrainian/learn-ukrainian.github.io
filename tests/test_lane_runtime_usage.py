@@ -559,3 +559,128 @@ def test_unlistable_usage_directory_counts_as_one_unreadable_file(tmp_path: Path
     assert summary["rate_limited"] == 0
     assert summary["models_rate_limited"] == []
     assert summary["unreadable"] == {"files": 1, "lines": 0, "records": 0, "total": 1}
+
+
+_EMPTY_BURN_COUNTS = {"ok": 0, "error": 0, "rate_limited": 0, "timeout": 0, "other": 0, "total": 0}
+_BURN_WINDOW_S = {"5h": 5 * 3600, "7d": 7 * 24 * 3600, "30d": 30 * 24 * 3600}
+_DIRECTORY_FAULT = {"files": 1, "lines": 0, "records": 0, "total": 1}
+
+
+def _assert_empty_burn(burn: dict, agent: str) -> None:
+    """All three burn windows exist and hold no rows."""
+    assert burn["source"] == "agent_runtime_jsonl"
+    assert burn["agent"] == agent
+    assert set(burn["windows"]) == set(_BURN_WINDOW_S)
+    for name, window in burn["windows"].items():
+        assert window["window_s"] == _BURN_WINDOW_S[name]
+        assert window["counts"] == _EMPTY_BURN_COUNTS
+        assert window["hours"] == 0.0
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads mode-000 directories")
+def test_unlistable_usage_directory_is_unreadable_burn_for_each_alias_and_codex(tmp_path: Path) -> None:
+    """Gemini, AGY, and Codex burn report one fault when the usage directory cannot be listed.
+
+    A missing directory stays empty. A readable directory keeps 5h, 7d, and 30d
+    counts, one copy of a hard-linked file, and the JSON line fault. An in-process
+    rate-limit cache does not hide the directory fault or invent burn rows.
+    """
+    usage_mod._reset_rate_limit_cache_for_tests()
+    now = time.time()
+    day = datetime.fromtimestamp(now, tz=UTC).strftime("%Y-%m-%d")
+    missing = tmp_path / "no-such-usage"
+    assert not missing.exists()
+    for agent in ("gemini", "agy", "codex"):
+        _assert_empty_burn(usage_mod.summarize_fleet_burn(agent, usage_dir=missing, now=now), agent)
+        runtime = usage_mod.summarize_lane_runtime(agent, window_s=300, usage_dir=missing, now=now)
+        assert runtime["total"] == 0
+        assert runtime["unreadable"] == {"files": 0, "lines": 0, "records": 0, "total": 0}
+
+    root = tmp_path / "api_usage"
+    root.mkdir()
+    agy = root / f"usage_agy-dispatch_{day}.jsonl"
+    gemini = root / f"usage_gemini-dispatch_{day}.jsonl"
+    _write_line(agy, {"ts": _stamp(now, 60), "outcome": "ok", "duration_s": 3600})
+    _write_line(
+        agy,
+        {"ts": _stamp(now, 20), "outcome": "rate_limited", "model": "gemini-3.8-flash-high"},
+    )
+    _write_line(gemini, {"ts": _stamp(now, 6 * 3600 + 60), "outcome": "error", "duration_s": 3600})
+    _write_line(gemini, {"ts": _stamp(now, 10 * 86400), "outcome": "timeout"})
+    with gemini.open("a", encoding="utf-8") as handle:
+        handle.write("{not-json\n")
+    os.link(gemini, root / f"usage_agy-alias_{day}.jsonl")
+    _write_line(
+        root / f"usage_codex-bridge_{day}.jsonl",
+        {"ts": _stamp(now, 30), "outcome": "ok", "duration_s": 1800},
+    )
+    listed = sorted(path.name for path in root.glob("usage_*.jsonl"))
+    assert len(listed) == 4
+
+    expected_5h = {"ok": 1, "error": 0, "rate_limited": 1, "timeout": 0, "other": 0, "total": 2}
+    expected_7d = {"ok": 1, "error": 1, "rate_limited": 1, "timeout": 0, "other": 0, "total": 3}
+    expected_30d = {"ok": 1, "error": 1, "rate_limited": 1, "timeout": 1, "other": 0, "total": 4}
+    line_fault = {"files": 0, "lines": 1, "records": 0, "total": 1}
+    gemini_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=root, now=now)
+    agy_burn = usage_mod.summarize_fleet_burn("agy", usage_dir=root, now=now)
+    assert gemini_burn["windows"]["5h"]["counts"] == expected_5h
+    assert gemini_burn["windows"]["5h"]["hours"] == 1.0
+    assert gemini_burn["windows"]["7d"]["counts"] == expected_7d
+    assert gemini_burn["windows"]["7d"]["hours"] == 2.0
+    assert gemini_burn["windows"]["30d"]["counts"] == expected_30d
+    assert gemini_burn["windows"]["30d"]["hours"] == 2.0
+    assert gemini_burn["windows"]["5h"]["window_s"] == _BURN_WINDOW_S["5h"]
+    assert gemini_burn["windows"]["7d"]["window_s"] == _BURN_WINDOW_S["7d"]
+    assert gemini_burn["windows"]["30d"]["window_s"] == _BURN_WINDOW_S["30d"]
+    assert gemini_burn["unreadable"] == line_fault
+    assert agy_burn["windows"] == gemini_burn["windows"]
+    assert agy_burn["unreadable"] == gemini_burn["unreadable"]
+    codex_burn = usage_mod.summarize_fleet_burn("codex", usage_dir=root, now=now)
+    assert codex_burn["windows"]["5h"]["counts"]["total"] == 1
+    assert codex_burn["windows"]["5h"]["hours"] == 0.5
+    assert codex_burn["windows"]["7d"]["counts"]["total"] == 1
+    assert codex_burn["windows"]["30d"]["counts"]["total"] == 1
+    assert codex_burn["unreadable"]["total"] == 0
+    claude_burn = usage_mod.summarize_fleet_burn("claude", usage_dir=root, now=now)
+    _assert_empty_burn(claude_burn, "claude")
+    assert claude_burn["unreadable"]["total"] == 0
+    gemini_runtime = usage_mod.summarize_lane_runtime("gemini", window_s=300, usage_dir=root, now=now)
+    assert gemini_runtime["ok"] == 1
+    assert gemini_runtime["rate_limited"] == 1
+    assert gemini_runtime["total"] == 2
+    assert gemini_runtime["models_rate_limited"] == ["gemini-3.8-flash-high"]
+    assert gemini_runtime["headroom_blocked"] is False
+    assert gemini_runtime["unreadable"] == line_fault
+
+    root.chmod(0)
+    try:
+        for agent in ("gemini", "agy", "codex"):
+            runtime = usage_mod.summarize_lane_runtime(agent, window_s=300, usage_dir=root, now=now)
+            burn = usage_mod.summarize_fleet_burn(agent, usage_dir=root, now=now)
+            assert runtime["total"] == 0
+            assert runtime["rate_limited"] == 0
+            assert runtime["unreadable"] == _DIRECTORY_FAULT
+            assert burn["unreadable"] == runtime["unreadable"], agent
+            _assert_empty_burn(burn, agent)
+        usage_mod._RATE_LIMIT_CACHE[("agy", "gemini-fresh")] = now - 12
+        usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] = now - 8
+        cached = usage_mod.summarize_lane_runtime("gemini", window_s=300, usage_dir=root, now=now)
+        assert cached["rate_limited"] == 1
+        assert cached["total"] == 1
+        assert cached["models_rate_limited"] == ["gemini-fresh"]
+        assert cached["headroom_blocked"] is False
+        assert cached["unreadable"] == _DIRECTORY_FAULT
+        cached_burn = usage_mod.summarize_fleet_burn("gemini", usage_dir=root, now=now)
+        assert cached_burn["unreadable"] == _DIRECTORY_FAULT
+        _assert_empty_burn(cached_burn, "gemini")
+        assert usage_mod._RATE_LIMIT_CACHE[("codex", "kept-model")] == now - 8
+        codex_runtime = usage_mod.summarize_lane_runtime("codex", window_s=300, usage_dir=root, now=now)
+        assert codex_runtime["rate_limited"] == 1
+        assert codex_runtime["models_rate_limited"] == ["kept-model"]
+        assert codex_runtime["unreadable"] == _DIRECTORY_FAULT
+        claude_hidden = usage_mod.summarize_fleet_burn("claude", usage_dir=root, now=now)
+        assert claude_hidden["unreadable"] == _DIRECTORY_FAULT
+        _assert_empty_burn(claude_hidden, "claude")
+    finally:
+        root.chmod(0o700)
+        usage_mod._reset_rate_limit_cache_for_tests()

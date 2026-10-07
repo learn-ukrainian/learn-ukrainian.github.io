@@ -442,7 +442,10 @@ def summarize_fleet_burn(
 
     Gemini and AGY share one read set, as in ``summarize_lane_runtime``.
     One malformed line or unreadable file is reported on ``unreadable``
-    and cannot drop durations parsed from the other rows.
+    and cannot drop durations parsed from the other rows. A missing
+    directory is the empty case. A directory the process cannot list is
+    one unreadable file, the same guard runtime uses, so every window
+    stays at zero instead of a clean reading.
     """
     now_ts = time.time() if now is None else now
     windows_s = {
@@ -457,6 +460,9 @@ def summarize_fleet_burn(
     unreadable = {"files": 0, "lines": 0, "records": 0}
     root = usage_dir if usage_dir is not None else _usage_dir()
     if root.is_dir():
+        # Path.glob yields nothing when this directory cannot be listed.
+        if not os.access(root, os.R_OK | os.X_OK):
+            unreadable["files"] += 1
         for file_path in _lane_usage_files(root, agent):
             for rec in _iter_usage_records(file_path, unreadable):
                 ts_str = rec.get("ts")
