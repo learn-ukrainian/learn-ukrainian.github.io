@@ -1,0 +1,3599 @@
+{
+  "schema": "store-access-baseline.v1",
+  "base_commit": "e467138966bff83cec3edaff87f103d5bda07b84",
+  "counts": {
+    "store_path": 465,
+    "raw_store_constructor": 12,
+    "test_import_access": 6
+  },
+  "file_counts": {
+    "scripts/analytics/vocab_progression.py": 2,
+    "scripts/api/monitor_context.py": 1,
+    "scripts/atlas/lexical_projection.py": 1,
+    "scripts/atlas/teacher_vesum_attest.py": 1,
+    "scripts/audit/_judge_eval_lib.py": 2,
+    "scripts/audit/atlas_source_census.py": 1,
+    "scripts/audit/check_plan.py": 1,
+    "scripts/audit/check_static_practice_assets.py": 1,
+    "scripts/audit/generate_practice_deck.py": 2,
+    "scripts/audit/generate_sentence_inventory.py": 2,
+    "scripts/audit/generate_tatoeba_cloze_candidates.py": 2,
+    "scripts/audit/hramatka_qg_rules.py": 1,
+    "scripts/audit/ingest_ua_gec_gold.py": 1,
+    "scripts/audit/lint_opsec_leaks.py": 2,
+    "scripts/audit/plan_references_audit.py": 1,
+    "scripts/audit/post_build_review.py": 1,
+    "scripts/audit/practice_quality_gate.py": 4,
+    "scripts/audit/resolve_fixture_rights.py": 2,
+    "scripts/audit/russianism_judge.py": 1,
+    "scripts/audit/validate_atlas_conformance.py": 2,
+    "scripts/audit/verbatim_overlap_gate.py": 1,
+    "scripts/benchmarks/generate_synthetic_atlas.py": 1,
+    "scripts/build/alignment_manifest.py": 2,
+    "scripts/build/enrich.py": 3,
+    "scripts/build/linear_pipeline.py": 1,
+    "scripts/build/module_memory.py": 2,
+    "scripts/build/phases/vocab_coverage.py": 1,
+    "scripts/build/textbook_refs.py": 2,
+    "scripts/build/v7_build.py": 2,
+    "scripts/curriculum/evidence/sources.py": 2,
+    "scripts/delegate.py": 8,
+    "scripts/etymology/build_data_manifest.py": 1,
+    "scripts/etymology/build_vesum_vocab_lemmas.py": 1,
+    "scripts/etymology/extract_cognate_forms.py": 1,
+    "scripts/etymology/recover_latin_cognates.py": 1,
+    "scripts/ingest/antonenko_full_book_ingest.py": 1,
+    "scripts/ingest/backfill_lesson_sections.py": 1,
+    "scripts/ingest/backfill_school_textbook_orphans.py": 1,
+    "scripts/ingest/dictionary_ingest.py": 2,
+    "scripts/ingest/esum_ingest.py": 1,
+    "scripts/ingest/esum_load.py": 3,
+    "scripts/ingest/goroh_etymology_ingest.py": 2,
+    "scripts/ingest/incremental_historical_source_ingest.py": 1,
+    "scripts/ingest/incremental_textbook_ingest.py": 3,
+    "scripts/ingest/ohoiko_books_ingest.py": 9,
+    "scripts/ingest/ohoiko_to_jsonl.py": 1,
+    "scripts/ingest/ohoiko_verbs_ingest.py": 3,
+    "scripts/ingest/slovnyk_me_ingest.py": 2,
+    "scripts/ingest/sum20_official_ingest.py": 2,
+    "scripts/ingest/sum20_quarantine_unverified.py": 1,
+    "scripts/ingest/ulp_lesson_notes_ingest.py": 1,
+    "scripts/ingest/ulp_to_jsonl.py": 1,
+    "scripts/ingest/wiktionary_etymology_ingest.py": 2,
+    "scripts/lexicon/admit_fmu_boosters.py": 1,
+    "scripts/lexicon/admit_stem_slice_2a.py": 1,
+    "scripts/lexicon/admit_teacher_table.py": 2,
+    "scripts/lexicon/admit_textbook_book_glossary.py": 10,
+    "scripts/lexicon/audit_sum11_relations.py": 2,
+    "scripts/lexicon/build_teacher_deck_cloze.py": 2,
+    "scripts/lexicon/census_atlas_6371_textbook_leftover.py": 8,
+    "scripts/lexicon/curated_seed_atlas_admission.py": 2,
+    "scripts/lexicon/curated_textbook_jsonl_repromote.py": 1,
+    "scripts/lexicon/curriculum_atlas_intake.py": 3,
+    "scripts/lexicon/enrich_heteronyms.py": 4,
+    "scripts/lexicon/enrich_manifest.py": 6,
+    "scripts/lexicon/fix_esum_garbled_etymologies.py": 2,
+    "scripts/lexicon/generate_antonym_candidates.py": 1,
+    "scripts/lexicon/generate_vesum_form_shards.py": 1,
+    "scripts/lexicon/heritage_calque_wave.py": 2,
+    "scripts/lexicon/heritage_classifier.py": 3,
+    "scripts/lexicon/load_relation_candidates.py": 1,
+    "scripts/lexicon/migrate_sum11_sovietization.py": 1,
+    "scripts/lexicon/mine_wikipedia_relations.py": 1,
+    "scripts/lexicon/ohoiko_quality_enrichment.py": 1,
+    "scripts/lexicon/reconcile_calque_clusters.py": 2,
+    "scripts/lexicon/repair_plural_noun_aliases.py": 1,
+    "scripts/lexicon/runner/enrich_offline_20k.py": 3,
+    "scripts/lexicon/runner/reduce_ulif_20k.py": 1,
+    "scripts/lexicon/runner/sources_guard.py": 1,
+    "scripts/lexicon/sum20_lookup.py": 2,
+    "scripts/lexicon/teacher_deck.py": 2,
+    "scripts/lexicon/teacher_deck_shard.py": 2,
+    "scripts/lexicon/thin_page_report.py": 4,
+    "scripts/lexicon/tools/import_ulif_dump.py": 1,
+    "scripts/lexicon/tools/migrate_ulif_raw.py": 1,
+    "scripts/lexicon/triage_needs_review.py": 2,
+    "scripts/lexicon/ulp_taught_pair_extractor.py": 1,
+    "scripts/lexicon/verify_manifest.py": 2,
+    "scripts/lexicon/verify_synonym_pairs.py": 2,
+    "scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py": 1,
+    "scripts/migrations/2026-07-06-add-subject-to-textbooks.py": 1,
+    "scripts/orchestration/worktree_artifacts.py": 2,
+    "scripts/practice/adjective_mechanics_engine.py": 3,
+    "scripts/practice/adverb_mechanics_engine.py": 3,
+    "scripts/practice/extract_textbook_error_corrections.py": 2,
+    "scripts/practice/interjection_mechanics_engine.py": 3,
+    "scripts/practice/numeral_mechanics_engine.py": 3,
+    "scripts/practice/pronoun_mechanics_engine.py": 4,
+    "scripts/practice/typesafe_distractor_validator.py": 2,
+    "scripts/practice/verb_mechanics_engine.py": 3,
+    "scripts/practice_deck/end_dictionaries.py": 2,
+    "scripts/practice_deck/publish.py": 2,
+    "scripts/practice_deck/recover_markup_osvita.py": 1,
+    "scripts/practice_deck/zno.py": 1,
+    "scripts/projects/open_model_data/audit_assistant_quality.py": 3,
+    "scripts/projects/open_model_data/build_decolonization_cases.py": 2,
+    "scripts/projects/open_model_data/build_grammar_component_8342.py": 3,
+    "scripts/projects/open_model_data/evidence_cache_canaries.py": 2,
+    "scripts/projects/open_model_data/grammar_linguistic_catalog.py": 1,
+    "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py": 4,
+    "scripts/projects/open_model_data/phase3_decolonization_partition.py": 2,
+    "scripts/projects/open_model_data/phase3_heldout_partition.py": 5,
+    "scripts/projects/open_model_data/phase3_lexical_coverage.py": 2,
+    "scripts/projects/open_model_data/phase3_vspu_db_cutover.py": 3,
+    "scripts/projects/open_model_data/review_build/request.py": 1,
+    "scripts/projects/open_model_data/silver_evidence_factory.py": 1,
+    "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py": 2,
+    "scripts/projects/open_model_data/typesafe_word_qualifier.py": 2,
+    "scripts/projects/open_model_data/v4_decolonization_reasoning.py": 2,
+    "scripts/projects/open_model_data/v4_differential_soviet_miner.py": 2,
+    "scripts/projects/open_model_data/v4_human_source_dataset.py": 3,
+    "scripts/projects/open_model_data/v4_mine_corpus_calques.py": 2,
+    "scripts/projects/open_model_data/v4_mine_gold_seeds.py": 2,
+    "scripts/projects/open_model_data/v4_mine_stem_controls.py": 4,
+    "scripts/projects/open_model_data/v4_mine_uagec_calques.py": 2,
+    "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py": 5,
+    "scripts/projects/open_model_data/v4_production_shards_assembly.py": 5,
+    "scripts/projects/open_model_data/v4_reproduce_deliverables.py": 3,
+    "scripts/projects/open_model_data/v4_source_custody_access.py": 1,
+    "scripts/projects/open_model_data/v4_verify_trajectory_claims.py": 3,
+    "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py": 9,
+    "scripts/projects/open_model_data/v5_mine_dialect_corpus.py": 2,
+    "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py": 3,
+    "scripts/projects/open_model_data/v5_mine_middle_ukrainian.py": 3,
+    "scripts/projects/open_model_data/v5_pretraining_contradiction_audit.py": 2,
+    "scripts/projects/open_model_data/v6_mine_grammar_valency.py": 2,
+    "scripts/rag/activate_vesum_db.py": 1,
+    "scripts/rag/benchmark_embeddings.py": 3,
+    "scripts/rag/config.py": 2,
+    "scripts/rag/migrate_add_literary_source_url.py": 1,
+    "scripts/rag/vesum_reingest.py": 2,
+    "scripts/readings/clean_text_resolver.py": 1,
+    "scripts/readings/generate_readings.py": 1,
+    "scripts/readings/textbook_curation.py": 1,
+    "scripts/storage/topology.py": 3,
+    "scripts/tools/build_pidruchnyk_mapping.py": 1,
+    "scripts/vocab/extract_vocab_baseline.py": 3,
+    "scripts/wiki/build_sources_db.py": 20,
+    "scripts/wiki/dense_rerank.py": 1,
+    "scripts/wiki/extract_sections.py": 1,
+    "scripts/wiki/fetch_wikipedia.py": 9,
+    "scripts/wiki/migrate_external_chunks.py": 1,
+    "scripts/wiki/restore_literary_metadata.py": 1,
+    "scripts/wiki/run_chunk_policy_bakeoff.py": 2,
+    "scripts/wiki/source_attribution.py": 3,
+    "scripts/wiki/sources_db.py": 10,
+    "scripts/wiki/ukrainian_wiki_corpus.py": 2,
+    "tests/agent_runtime/test_review_mcp.py": 2,
+    "tests/api/opsec_sweep/test_opsec_route_sweep.py": 3,
+    "tests/audit/test_antonenko_prose_narrowing.py": 1,
+    "tests/audit/test_secret_scan_local.py": 1,
+    "tests/conftest.py": 4,
+    "tests/curriculum/evidence/test_evidence_cli.py": 2,
+    "tests/curriculum/resolver/evidence_helpers.py": 2,
+    "tests/fixtures/build_heritage_sample.py": 1,
+    "tests/fixtures/build_vesum_sample.py": 2,
+    "tests/mcp/sources_side_effects_probe.py": 2,
+    "tests/mcp/test_ua_gec_search.py": 2,
+    "tests/orchestration/test_reap_worktrees.py": 3,
+    "tests/projects/open_model_data/test_a13_cleanup_recovery.py": 2,
+    "tests/projects/open_model_data/test_decolonization_component_8340.py": 5,
+    "tests/projects/open_model_data/test_v4_human_source_dataset.py": 3,
+    "tests/projects/open_model_data/test_v4_provenance_restoration.py": 2,
+    "tests/projects/open_model_data/test_v4_reproduce_deliverables.py": 3,
+    "tests/projects/open_model_data/test_v4_source_custody_access.py": 4,
+    "tests/projects/open_model_data/test_v5_dialect_historical_protection.py": 4,
+    "tests/test_activate_vesum_backup_ignored.py": 2,
+    "tests/test_adjective_mechanics_engine.py": 2,
+    "tests/test_adverb_mechanics_engine.py": 6,
+    "tests/test_atlas_conformance.py": 3,
+    "tests/test_checkout_corpus_db_guard.py": 4,
+    "tests/test_content_lexicon_reconciler.py": 2,
+    "tests/test_content_spelling_gate.py": 2,
+    "tests/test_curated_seed_to_lexical_jsonl.py": 1,
+    "tests/test_delegate_read_only_db_lookups.py": 1,
+    "tests/test_deploy_pages_workflow.py": 1,
+    "tests/test_docs_catalogue_coverage.py": 1,
+    "tests/test_esum_search.py": 2,
+    "tests/test_generate_practice_deck.py": 2,
+    "tests/test_interjection_mechanics_engine.py": 6,
+    "tests/test_kimi_coding_only_admission.py": 1,
+    "tests/test_mcp_sources_identity_integration.py": 2,
+    "tests/test_numeral_agreement_engine.py": 2,
+    "tests/test_numeral_mechanics_engine.py": 2,
+    "tests/test_open_model_language_contact_adjudication.py": 2,
+    "tests/test_open_model_language_contact_detector.py": 6,
+    "tests/test_open_model_phase3_heldout_partition.py": 3,
+    "tests/test_open_model_phase3_v3a_taxonomy_denominator_compatibility.py": 1,
+    "tests/test_phase3_cycle007_evidence_validator.py": 1,
+    "tests/test_practice_quality_gate.py": 1,
+    "tests/test_reattribute_ukrlib.py": 3,
+    "tests/test_source_db_presence_checks_readonly.py": 2,
+    "tests/test_source_db_write_guard.py": 1,
+    "tests/test_verb_mechanics_engine.py": 2,
+    "tests/test_vesum_heritage_attestation.py": 2
+  },
+  "entries": [
+    {
+      "path": "scripts/analytics/vocab_progression.py",
+      "kind": "store_path",
+      "scope": "ProjectPaths.from_root",
+      "fingerprint": "b665a692c07561135094b8bd2d8888a7e0da3cf2803696b4989571c45cc0321b",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/analytics/vocab_progression.py",
+      "kind": "store_path",
+      "scope": "ProjectPaths.from_root",
+      "fingerprint": "cc3e453c638d421bf17db61c8b14cd097c6ce59d077474893151334baae0d841",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/api/monitor_context.py",
+      "kind": "store_path",
+      "scope": "_roots",
+      "fingerprint": "bb89f38ede0322af7eeca0d0dd06cf764d6a7390f58fdc7b3fd8932a4799d2b3",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/atlas/lexical_projection.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/atlas/teacher_vesum_attest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/_judge_eval_lib.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/_judge_eval_lib.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/atlas_source_census.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/check_plan.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/check_static_practice_assets.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/generate_practice_deck.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/generate_practice_deck.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/audit/generate_sentence_inventory.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/generate_sentence_inventory.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/generate_tatoeba_cloze_candidates.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/generate_tatoeba_cloze_candidates.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8edd81c1b7a7cf2e77d27a23f9f88c3642b02406c0ecbf15e99089084341c1aa",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/hramatka_qg_rules.py",
+      "kind": "store_path",
+      "scope": "_sources_conn",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/ingest_ua_gec_gold.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/lint_opsec_leaks.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/lint_opsec_leaks.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/plan_references_audit.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/post_build_review.py",
+      "kind": "store_path",
+      "scope": "build_vocabulary_surface_candidates",
+      "fingerprint": "e77d4300163e364ecdba98d6683695127826a78840c4d12814239fbb861b5260",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/practice_quality_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/practice_quality_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/practice_quality_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/audit/practice_quality_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/resolve_fixture_rights.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/resolve_fixture_rights.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "270605899d22cc1c3d228ff2bd6ec7c7e199584cc2c70addbfc657e76c2362e9",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/russianism_judge.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/validate_atlas_conformance.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/validate_atlas_conformance.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/audit/verbatim_overlap_gate.py",
+      "kind": "store_path",
+      "scope": "build_argparser",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/benchmarks/generate_synthetic_atlas.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/alignment_manifest.py",
+      "kind": "store_path",
+      "scope": "_static_default_attr",
+      "fingerprint": "f060404e3b6295de5121cd618c1ac52954a982943047b5cf5a78df1aff84ba97",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/alignment_manifest.py",
+      "kind": "store_path",
+      "scope": "_resolve_attr",
+      "fingerprint": "e3efb2908317388d3b80c8eb8d03fcac1fcf73bd69daff8fe87d967c8cff452a",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/enrich.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a024fa6cadfff8a7a04b49376b334b546438a49cab8482bb775112b6f883b5a1",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/enrich.py",
+      "kind": "store_path",
+      "scope": "_resolve_textbook_url",
+      "fingerprint": "b9db7dec0f665e60150130e78767e7931d6bcedecffd6db1eea3f11869829398",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/enrich.py",
+      "kind": "store_path",
+      "scope": "_resolve_textbook_url",
+      "fingerprint": "ca1d1474b5bf28ec8390cb48a17d0523b4ecb24953caf77a5c4d7e14323e4e45",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/linear_pipeline.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/module_memory.py",
+      "kind": "store_path",
+      "scope": "compute_sources_manifest",
+      "fingerprint": "eeea48d7b0e163b4db6ff9da389ace72c9eb6301e2e9e7c192b4406b0f516897",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/module_memory.py",
+      "kind": "store_path",
+      "scope": "compute_sources_manifest",
+      "fingerprint": "bb89f38ede0322af7eeca0d0dd06cf764d6a7390f58fdc7b3fd8932a4799d2b3",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/phases/vocab_coverage.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/textbook_refs.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/textbook_refs.py",
+      "kind": "store_path",
+      "scope": "get_textbook_links",
+      "fingerprint": "ca1d1474b5bf28ec8390cb48a17d0523b4ecb24953caf77a5c4d7e14323e4e45",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/v7_build.py",
+      "kind": "store_path",
+      "scope": "_provision_data_symlinks",
+      "fingerprint": "155a8cce06ba3188f44a9a40c7b85b4480ca5337c6cde7c82d2a742925880ca5",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/build/v7_build.py",
+      "kind": "store_path",
+      "scope": "_provision_data_symlinks",
+      "fingerprint": "349066cc2e16a5564d1563d427b3ba0a4877334bac8cf43269ec32586e209390",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/curriculum/evidence/sources.py",
+      "kind": "store_path",
+      "scope": "_sources_path",
+      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/curriculum/evidence/sources.py",
+      "kind": "store_path",
+      "scope": "_sources_path",
+      "fingerprint": "16d935599bb3107975d6eacba35d82c4b4152c99c43cde9a1f10eb7096f42415",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_provision_data_symlinks",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_provision_data_symlinks",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_primary_database_path",
+      "fingerprint": "12931d41fca2cdd12e04644529e13200c97abd412daa334906be425226e4bc3f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_primary_database_path",
+      "fingerprint": "9d78871372484a05e7098c5d4f849497e0408d6bf5dc66976099a4db186e0097",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_primary_database_path",
+      "fingerprint": "26b3abf432bff0c90e02a12677b9332a5076230d3267f31836ab8daa4928d998",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_run_worker",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_run_worker",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/delegate.py",
+      "kind": "store_path",
+      "scope": "_run_worker",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/etymology/build_data_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/etymology/build_vesum_vocab_lemmas.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/etymology/extract_cognate_forms.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/etymology/recover_latin_cognates.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/antonenko_full_book_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/backfill_lesson_sections.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/backfill_school_textbook_orphans.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/dictionary_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/dictionary_ingest.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "4d467bbb70a7d0ccb4132a6ed2f61eb3551de46f932897494416b5aaf7289e72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/esum_ingest.py",
+      "kind": "store_path",
+      "scope": "_vesum_db_path",
+      "fingerprint": "3fde61d674c18ff41a4821a7181da8d4df26f19c5c93b978d5cf970b758f6835",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/esum_load.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/esum_load.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "8c86498c2f20f3a195d8c3aa918aaed785c8fe748fcb21e33e6550cf408a9693",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/esum_load.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "4d467bbb70a7d0ccb4132a6ed2f61eb3551de46f932897494416b5aaf7289e72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/goroh_etymology_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/goroh_etymology_ingest.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "4d467bbb70a7d0ccb4132a6ed2f61eb3551de46f932897494416b5aaf7289e72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/incremental_historical_source_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/incremental_textbook_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "d360509c3fa359a4c19aed40af4152295fe17bfa63dcb730cfa1b751db605c3e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/incremental_textbook_ingest.py",
+      "kind": "store_path",
+      "scope": "ingest",
+      "fingerprint": "f287baae8889b6c6d346319638932fdd5a94b1623ebb025f9a1607dea668a39f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/incremental_textbook_ingest.py",
+      "kind": "store_path",
+      "scope": "ingest",
+      "fingerprint": "a773ad8227b5761d0b2a26943c3b8641fd6608ad3558b62f15e8357ce7ecb273",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "33cb9cafdf000c87a70dbfbd0f3f4da9233573c4d40098cdf7f2c320f4d10097",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "e95f23f47b2648fd0b3b3ce8f69e8fe271c559f7de5552d5351428242fa80ef8",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "917ab766291f7adae6baa667a803ee0443f7ed2387cab01ca7fb2febf5bdf69c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8019952cbc10ff58feb277e2f2f9b09952b28728868fc1213cba0e82637708e9",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "f573cbe312c3915500442039bc84c7ce7a355a252f5bba0137175f40c449b420",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "98b17ec76240338d4b5b67c392d3cbd7d1e08a68516c19f71550ee00aa9b2076",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "raw_store_constructor",
+      "scope": "main",
+      "fingerprint": "fb67e91f232e8f512358299047825ce6be613d8d611df762984d4cf90ef1d188",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_books_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "b6b7f72591e711daa0c9318ef7ff175efb1d1e07454f50580b4a8abc846ace97",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_to_jsonl.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_verbs_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_verbs_ingest.py",
+      "kind": "raw_store_constructor",
+      "scope": "main",
+      "fingerprint": "fb67e91f232e8f512358299047825ce6be613d8d611df762984d4cf90ef1d188",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ohoiko_verbs_ingest.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "b6b7f72591e711daa0c9318ef7ff175efb1d1e07454f50580b4a8abc846ace97",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/slovnyk_me_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/slovnyk_me_ingest.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "4d467bbb70a7d0ccb4132a6ed2f61eb3551de46f932897494416b5aaf7289e72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/sum20_official_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/sum20_official_ingest.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "161a9fbf9f2f29125f4cf5b33cd4f27e5e3794c90286981434a4f6f7bb1a3453",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/sum20_quarantine_unverified.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ulp_lesson_notes_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/ulp_to_jsonl.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/wiktionary_etymology_ingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/ingest/wiktionary_etymology_ingest.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "4d467bbb70a7d0ccb4132a6ed2f61eb3551de46f932897494416b5aaf7289e72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_fmu_boosters.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_stem_slice_2a.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_teacher_table.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_teacher_table.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "12931d41fca2cdd12e04644529e13200c97abd412daa334906be425226e4bc3f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "8042aedbcdf6987ac71d54902be39efb5cc36773baf488a765e9197785b4c11c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "1ef5874b6cbf89d1c593c4c7ccafadbbb8a8c80d9ae668f1e5771eb143b782da",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "862f697430b60b3b9f3e172b00c6db49e2fc6c3d12c3a4fb84c43bcae1814e22",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "13a8575f878d8bacb02ae8132060989ef0aafb02ae2812e6d12b65546506d64d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "187bc461b36be16e832eb5091d1311464c8b53c83424964fc86cc72e13e090c8",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "578d9a466045a8841b588a70c67e9e79a49ae11c68ba428f48dce8e4e53a6044",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "8e9564d5afe832f66da1e0fa498c93381e6e1473496dd4ec491380b4cfb2f2a4",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "91f6c8cf39c155d8538270037327acc39751cd84726b926a3d30791a7fbc322e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/audit_sum11_relations.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "31b99cab9dd51c2131187aa3115b0ef5113ab121bfb1a73af369df18c0618da0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/audit_sum11_relations.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "122bdfc72a9626fd3d8a2c74c45f1300b2c4ab4819a73d1240e284569d010054",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/build_teacher_deck_cloze.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/build_teacher_deck_cloze.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "270605899d22cc1c3d228ff2bd6ec7c7e199584cc2c70addbfc657e76c2362e9",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "433e737d73eefd98ac2c96305231cd27a87250c436721a9fcb1fe253f6203263",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "3d387872ecfe1a0e2b2854d4df8736d205ef762621b7b4e85099f9cf1a3256c0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/lexicon/census_atlas_6371_textbook_leftover.py",
+      "kind": "store_path",
+      "scope": "build_census",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/lexicon/curated_seed_atlas_admission.py",
+      "kind": "store_path",
+      "scope": "_puls_cefr_level",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/curated_seed_atlas_admission.py",
+      "kind": "store_path",
+      "scope": "_puls_cefr_level",
+      "fingerprint": "da28811691da8a34cb55d2fa621850cca82ccf3c46a0ba1739c821279323b576",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/curriculum_atlas_intake.py",
+      "kind": "store_path",
+      "scope": "load_english_translation_dict",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/curriculum_atlas_intake.py",
+      "kind": "store_path",
+      "scope": "load_english_translation_dict",
+      "fingerprint": "535e59c24f1768fbbad32fb727aaacf6fb5757aa03582a066a075e3f7dec9bdc",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/curriculum_atlas_intake.py",
+      "kind": "store_path",
+      "scope": "default_english_lookup",
+      "fingerprint": "bb89f38ede0322af7eeca0d0dd06cf764d6a7390f58fdc7b3fd8932a4799d2b3",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_heteronyms.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_heteronyms.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db",
+      "fingerprint": "862f697430b60b3b9f3e172b00c6db49e2fc6c3d12c3a4fb84c43bcae1814e22",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_heteronyms.py",
+      "kind": "store_path",
+      "scope": "_resolve_vesum_db",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_heteronyms.py",
+      "kind": "store_path",
+      "scope": "_resolve_vesum_db",
+      "fingerprint": "83b8de5e7684af13352f824acf40d3f51e20293638c836548eb85b33fc685a98",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "6bea3cb7d29ca56d3acb338ccb8594f93ee4bb40ca0fe03330be668ebfef08a8",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "6bea3cb7d29ca56d3acb338ccb8594f93ee4bb40ca0fe03330be668ebfef08a8",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "5dcb372e2d7bdcf748c6b6e94e329662078c5a2d7a3678e22a693b315583ac1c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "enrich",
+      "fingerprint": "1366c89bc93011ff9bfe8a33e9e1b78f087d78ecbe580baf0dd3bf96a74a88fe",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/enrich_manifest.py",
+      "kind": "store_path",
+      "scope": "enrich",
+      "fingerprint": "4d5055bb0f60e456eb52488e38ebe761f102bee07fcbbccb31c9858ef09d45f7",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "8a7e2f82549b825d9cc9a5f6246266e1b8b885f9593518c69117d6bcc7b85949",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/generate_antonym_candidates.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/generate_vesum_form_shards.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/heritage_calque_wave.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/heritage_calque_wave.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/heritage_classifier.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/heritage_classifier.py",
+      "kind": "store_path",
+      "scope": "_source_db_path",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/heritage_classifier.py",
+      "kind": "store_path",
+      "scope": "_source_db_path",
+      "fingerprint": "842c2abdd2992e2153c8c87392bc1194aa5297f3b875a4dc3ea4f2999f1c8b30",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/load_relation_candidates.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/migrate_sum11_sovietization.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/mine_wikipedia_relations.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/reconcile_calque_clusters.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/reconcile_calque_clusters.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/repair_plural_noun_aliases.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/runner/enrich_offline_20k.py",
+      "kind": "store_path",
+      "scope": "dry_run_plan",
+      "fingerprint": "aee1899f5a4d7ebd5e250ea5f28a583662b2563df48fa011be9a41f73ff4db62",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/runner/enrich_offline_20k.py",
+      "kind": "store_path",
+      "scope": "dry_run_plan",
+      "fingerprint": "cff94eeb2fe6cbe110370c1bfbb596c4ef1694fcf542b127543c55a331a76880",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/runner/enrich_offline_20k.py",
+      "kind": "store_path",
+      "scope": "_run",
+      "fingerprint": "aee1899f5a4d7ebd5e250ea5f28a583662b2563df48fa011be9a41f73ff4db62",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/runner/reduce_ulif_20k.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "4ba07b542449b7bb0897dd560e7e86780699803b53eb08b6d7f537e7352b7a7b",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/runner/sources_guard.py",
+      "kind": "store_path",
+      "scope": "configured_sources_db_path",
+      "fingerprint": "b5277ba9cb48f42470dfc1e95a95953f7a071da9cdca39c0970e55be4872b5ef",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/sum20_lookup.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/sum20_lookup.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db",
+      "fingerprint": "862f697430b60b3b9f3e172b00c6db49e2fc6c3d12c3a4fb84c43bcae1814e22",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck.py",
+      "kind": "store_path",
+      "scope": "_parser",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck.py",
+      "kind": "store_path",
+      "scope": "_parser",
+      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck_shard.py",
+      "kind": "store_path",
+      "scope": "default_inputs",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck_shard.py",
+      "kind": "store_path",
+      "scope": "default_inputs",
+      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/thin_page_report.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/thin_page_report.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/lexicon/thin_page_report.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "5f2c9f0d5300840e8200f96fcbc73ce16f11166d2909e3b75c952c5466eb6e60",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/thin_page_report.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "436e6a5e980d382cca2e2b4b7bd2f407b3b9d42413d9092c318c41f937ed6b22",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/tools/import_ulif_dump.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "f02ea8aabb65f166aff5e1b550ecd48bd91ba52ed0571a74dfda1f4a206da0e7",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/triage_needs_review.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/triage_needs_review.py",
+      "kind": "store_path",
+      "scope": "build_parser",
+      "fingerprint": "318ec390ef91e207e65684759ba0878c04e9605e984f6bbfd4b060cc3592b664",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/verify_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/verify_manifest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/verify_synonym_pairs.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/lexicon/verify_synonym_pairs.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "537571815912988d97aff6b2647c20ba48611a9761eec448da03be2c8429bb94",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/migrations/2026-07-06-add-subject-to-textbooks.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/orchestration/worktree_artifacts.py",
+      "kind": "store_path",
+      "scope": "is_disposable_path",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/orchestration/worktree_artifacts.py",
+      "kind": "store_path",
+      "scope": "is_disposable_path",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/adjective_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/adjective_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/adjective_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/practice/adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/practice/extract_textbook_error_corrections.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/extract_textbook_error_corrections.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_deck_with_vesum",
+      "fingerprint": "c79766413f2ee30fe62827a4edbc2e71033efa7d411f7ed5b5d8d30a80e7cf3c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_deck_with_vesum",
+      "fingerprint": "364016b857011bc23d09f81739eae10ab4cebb162e19de0a856f538ae9a211bd",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_deck_with_vesum",
+      "fingerprint": "64c2cf8e8ebf4427867771d7ae0a62812792ad6f0b03090caea70a832759a4c1",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/numeral_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/numeral_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/numeral_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/practice/pronoun_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_deck_with_vesum",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/pronoun_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_deck_with_vesum",
+      "fingerprint": "f2527994704330cacf231079c8d13a05c0671a1e6928f40e18e7deaa292656af",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/pronoun_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_distractors_with_vesum",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/pronoun_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "verify_distractors_with_vesum",
+      "fingerprint": "f2527994704330cacf231079c8d13a05c0671a1e6928f40e18e7deaa292656af",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/typesafe_distractor_validator.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db_path",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/typesafe_distractor_validator.py",
+      "kind": "store_path",
+      "scope": "_resolve_sources_db_path",
+      "fingerprint": "cd9a6f301fe17127da8f609b54b5e0269a683f19e7846cedee42e75f55282f29",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/verb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/verb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice/verb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "find_vesum_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/practice_deck/end_dictionaries.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "4edb3da01bb9c583a33f5f891ff12e1ea36814a1d2b3271fd3ad4eaaba3d3f27",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice_deck/end_dictionaries.py",
+      "kind": "store_path",
+      "scope": "resolve_sources_db",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice_deck/publish.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice_deck/publish.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice_deck/recover_markup_osvita.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/practice_deck/zno.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/audit_assistant_quality.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/audit_assistant_quality.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/audit_assistant_quality.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "f9d770f13c69399181160d5a93681179b6c4ef54cc896e6662a7edfd5ec1a8e0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
+      "kind": "raw_store_constructor",
+      "scope": "build_all_cases",
+      "fingerprint": "5df83a4ec6bb75b5e8721c6248ae37728d419017d6ea4739f69772c39ff94139",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
+      "kind": "store_path",
+      "scope": "build_all_cases",
+      "fingerprint": "ba127b2a06e4ce9bc65537d12fe50f1ef1755caf59c8ef574c77019224684ca5",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/build_grammar_component_8342.py",
+      "kind": "store_path",
+      "scope": "_get_vesum_cur",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/build_grammar_component_8342.py",
+      "kind": "store_path",
+      "scope": "_build_grammar_dataset_direct",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/build_grammar_component_8342.py",
+      "kind": "store_path",
+      "scope": "_build_grammar_dataset_direct",
+      "fingerprint": "d3fc7db6a63c669c9c76387fb5dde46b154c2f566b321a2e59c372c6a473e559",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/evidence_cache_canaries.py",
+      "kind": "store_path",
+      "scope": "audit_database",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/evidence_cache_canaries.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/grammar_linguistic_catalog.py",
+      "kind": "store_path",
+      "scope": "_get_vesum_connection",
+      "fingerprint": "47f3245ecbbac72a2a7f868fd52005aa09eceb168c49dfec639ca151a62a5f43",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4746d00cffb36c687a0dcf18cb1cc15f19bd1a07f788dc0daf43a1948ea4b68e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
+      "kind": "store_path",
+      "scope": "_vesum_form_evidence",
+      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_cycle007_evidence_compiler.py",
+      "kind": "store_path",
+      "scope": "_vesum_form_evidence",
+      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_decolonization_partition.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_decolonization_partition.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "67a6e72f028cd22abc6f883e11fd47aa8948b1ff5b411d9de6576dc6500b39c9",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "build_input_bindings",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "build_input_bindings",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "581cb7dcf0cb426cd640e98b59987ba3b7d307d6b89369571d843d3653c02fc7",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "e0349249a244bfce686726fb786947b4af77b118fe9fb209e8dcf00aef65c941",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_lexical_coverage.py",
+      "kind": "store_path",
+      "scope": "_generic_lexical_use",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_lexical_coverage.py",
+      "kind": "store_path",
+      "scope": "_scan_release_value",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "493e95006651be347b18c97c2c9249dc3dba3f6909f9ef91d201ea57e9e72722",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+      "kind": "store_path",
+      "scope": "reconcile",
+      "fingerprint": "c3f5f15a7e4d71b8941515e5c9b15ae196d6f85c21081564253a798d0ef8fc46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+      "kind": "store_path",
+      "scope": "reconcile",
+      "fingerprint": "f4306aac2350714d6bb152e8f7371eff0927763c43f98c348a1c1e889edbcb7c",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/review_build/request.py",
+      "kind": "store_path",
+      "scope": "init_request",
+      "fingerprint": "bb8cfb0845ecbae0fa5f421509690bf91784fca3fc9589443b796368470fa1fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/silver_evidence_factory.py",
+      "kind": "store_path",
+      "scope": "build_silver",
+      "fingerprint": "27ab2de0a4ec15d41b3fbaa8604aee39a6b8d0f1edf77c9da5cce707053615a5",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
+      "kind": "store_path",
+      "scope": "_resolve_vesum_path",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/typesafe_homonym_disambiguator.py",
+      "kind": "store_path",
+      "scope": "_resolve_vesum_path",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
+      "kind": "store_path",
+      "scope": "TypeSafeWordQualifier.__init__",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/typesafe_word_qualifier.py",
+      "kind": "store_path",
+      "scope": "TypeSafeWordQualifier.__init__",
+      "fingerprint": "f6f792886e474ffc6f9306a9067be7826d3dfcac45daca1ead12f6cb1491d3c9",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_decolonization_reasoning.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_decolonization_reasoning.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_differential_soviet_miner.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_differential_soviet_miner.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "25adeda933fc555abf65a69b7a583502dbe325623023a90353f72e13df1e0586",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "2379c6a718363b14ac6c734c99453b732d4226ce9cddb6ef8334148a16f8e25f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_corpus_calques.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_corpus_calques.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_gold_seeds.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_gold_seeds.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_stem_controls.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "9c01635ed78cd3cf85495a59463be9ac477e60531360d659da414ed0e771a3bb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_stem_controls.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "6bb2f1b74f64bd008e95d7080ca3e07bf817cb79e578852546de7eef140fb277",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_stem_controls.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "b1738368b35b26bc01c8633a784c0ee2f8a3bd47239bbbd0f7b2007be380ce59",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_stem_controls.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "dd04ed3b7d510b1ce954c7e10a19fa5b0d2e016571d060d6d2f7ea27df921800",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_uagec_calques.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_mine_uagec_calques.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+      "kind": "store_path",
+      "scope": "get_vesum_forms_count",
+      "fingerprint": "0474785a9c991cd724a44477dac043d80482d0056ad55db0b981a8bb02b90d44",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+      "kind": "store_path",
+      "scope": "verify_pilot_canary",
+      "fingerprint": "1f15e008315bb4b350048c8714b0257cde9fe61ec9b22f00a5ac7b2daae4e922",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_pilot_canary_evaluation.py",
+      "kind": "store_path",
+      "scope": "verify_pilot_canary",
+      "fingerprint": "a55a224ea6d557286b0531a2bd114d0cb01906a48644675eba723a69912cf73f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "kind": "store_path",
+      "scope": "assemble_production_shards",
+      "fingerprint": "5c545dc54c0fff1c6ffa9ce2fffb22b4bb04c8259dbc39f6ce2d91f84f5fe1e0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "kind": "store_path",
+      "scope": "assemble_production_shards",
+      "fingerprint": "cbe62963eac14e921d554694511524f8d054daaf5c8dc38defe8e4723b24a95e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "25adeda933fc555abf65a69b7a583502dbe325623023a90353f72e13df1e0586",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "2379c6a718363b14ac6c734c99453b732d4226ce9cddb6ef8334148a16f8e25f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_get_sources_db_path",
+      "fingerprint": "36833506a0934c60aef72aca47700996974d7c852f63d65d9c62c0be20747a5d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_source_custody_access.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "1d283fedda6ab590c6de65835e61b3e2d61e5300ebcb3581c0b3025543e3c596",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "3ad60dffe426fc0986609374439ecbcf9b65733e5037153ae8bde8878492b95d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "fc0ba7628fb8ed51b390f3dc3db1a32e5852d8fe8bf00c67c8508ff90e2250e6",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "ab1510f298a6529bd35739b1b1a11d09eb9c8ef38621be028b00f05dddc71668",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "6856c583a6d96bf5eb45e894f38c03df2a996e5b69f3b67098490d1f7a541d02",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "bad172f7f405c7e4a3cad073c68c08e086009338098e58613a4e662b6ee7e686",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "c74c8c432851913a0d76ad7a2be0568e33410287c2ec89b2f9b71b78a780d297",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_build_dialect_historical_protection_suite.py",
+      "kind": "store_path",
+      "scope": "build_suite",
+      "fingerprint": "7f09b4e9d9af53d4a0a94997c73d0391329a6562f3656c6ef5bdc594a43329c5",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_dialect_corpus.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_dialect_corpus.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py",
+      "kind": "store_path",
+      "scope": "_primary_repo_root",
+      "fingerprint": "4edb3da01bb9c583a33f5f891ff12e1ea36814a1d2b3271fd3ad4eaaba3d3f27",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_kyivan_rus_epigraphy.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_middle_ukrainian.py",
+      "kind": "store_path",
+      "scope": "_primary_repo_root",
+      "fingerprint": "4edb3da01bb9c583a33f5f891ff12e1ea36814a1d2b3271fd3ad4eaaba3d3f27",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_middle_ukrainian.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_mine_middle_ukrainian.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_pretraining_contradiction_audit.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v5_pretraining_contradiction_audit.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v6_mine_grammar_valency.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/projects/open_model_data/v6_mine_grammar_valency.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/activate_vesum_db.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "ba5075a8d3fe7ca0dca83b3575569358df9ab097fe9cf5833d260e0abcfc6bc1",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/benchmark_embeddings.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/benchmark_embeddings.py",
+      "kind": "store_path",
+      "scope": "get_db_connection",
+      "fingerprint": "1817c7a21685c6d606916b5e3291ff8eaacd851db1b58673469ae06a69b0fe7d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/benchmark_embeddings.py",
+      "kind": "store_path",
+      "scope": "print_dry_run_plan",
+      "fingerprint": "fad2c9be3cfe061cea0f19bcec07c962ff41bf71b53099dd7acc6baccb0529b0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/config.py",
+      "kind": "store_path",
+      "scope": "_resolve_vesum_db_path",
+      "fingerprint": "8c71de487c9bddcece80f3685b19244792ce3f045d7452e879570bf2fdb94317",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/config.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "606b1566d5d2d0e5ae2e527dc524ebdc8bf6d38f814247a93e8569fa4e104658",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/migrate_add_literary_source_url.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/vesum_reingest.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/rag/vesum_reingest.py",
+      "kind": "store_path",
+      "scope": "build_shadow_database",
+      "fingerprint": "ed550ce9159867443cd08202ad266b157f4827ca904b61fd45e4a2c32df37418",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/readings/clean_text_resolver.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/readings/generate_readings.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/readings/textbook_curation.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/storage/topology.py",
+      "kind": "store_path",
+      "scope": "resolve_active_sources_db",
+      "fingerprint": "f854e67e719d917a4cb31d831c588d23d82ccf73afbf59d7db5722e2eecc3b54",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/storage/topology.py",
+      "kind": "store_path",
+      "scope": "resolve_active_sources_db",
+      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/storage/topology.py",
+      "kind": "store_path",
+      "scope": "resolve_active_sources_db",
+      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/tools/build_pidruchnyk_mapping.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/vocab/extract_vocab_baseline.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/vocab/extract_vocab_baseline.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "be8bec70f500c8860e1aed0ea668749de3afd1b0dc80247a2e4ae16108b68c9e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/vocab/extract_vocab_baseline.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "40d4330dbeb9d1ee51f9a68c65b761fa6d39d331ab4c0827fae2a017ec80d148",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "494b14a6356128c2bdf2cc4465e95be75d5738ed9bbfe77e364ea4b23694519b",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "585e6a6613d7efcb5e7720dc7afef3ff983686cce7e5fb522288bcc92cfd0666",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "1a7f6c752235b73035f5e129d0461bcc64896f094340553cec394fa8abde9519",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "e30d4730ff7d9847b9cb769358c68b772a40e226b232c232c3b9606159aa3505",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "f254e6e0d0d85ded6e1b5d933c232de548e059b2adaf57c79e44fb50f44b680e",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "a274e880abbb8c8ec852ebe3b34a51fea21f0a4e9f6f07b1ed2bf7839851c913",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "b01ce675d1fa63711e6b3739cedf553334789c1ac790dc13ead1fdbc6fe1d4cc",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "a2806e607a2666ff519ee1603daacef753b36e4ff941c8f855c068c189612a06",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "raw_store_constructor",
+      "scope": "build",
+      "fingerprint": "cc951e29760793c5f442a4828c76c407018062fc67cbd99fa875ada266ded8ae",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "0ecaedc0cbb4435d1cfbfb9a7581796099a13862f003ac3746a2c3160c75c930",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "7034dc285800f758a177daaf420c48cb25a664943b7a25bc4a43a3529a78b235",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "e50a12cd1b907deddc43b11229add4e6637d745b7a1b00947e3d5cbeb25cccbc",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "fe5a7b18bfe5b4bc67dcb92a274964c907be9cbf0093da0c8ab8f99afbd5ccd4",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "abfc288b8126dd018f1bf17d715009616430652b8c341406c1dbb7530f36ced0",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "6e80a4511edbdb01dbbfe6a09695b4ea776bc46ffdee70b66b81f996ab2b6191",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "2359bccc091a7d9c0bd728ce3d883421b155615a6193246b277ed5ee0e0f4bab",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "ea3cacdd8924eb2ebc5f87c4d31e4107f71f98b76c04d52970d06dbafabc1174",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "b6246513944cb7a815f73cfc985aca67276c4467a1887a34fe988456ecbed477",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/build_sources_db.py",
+      "kind": "store_path",
+      "scope": "build",
+      "fingerprint": "fbb17a31d96d3f9f0eb1668b17c03012a4a16396ebf33baf949e4e4e6749ee3d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/dense_rerank.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/extract_sections.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "raw_store_constructor",
+      "scope": "fetch_for_track",
+      "fingerprint": "588886214fe0937e24de535d57314b2d2a13f780fd3715454f49bb1c691483c2",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "fetch_for_track",
+      "fingerprint": "4d56d57aa692015f67b656661ece78f7010c244bbcd4716c272725e9e626ac7d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "fetch_for_track",
+      "fingerprint": "afa0101ce442258f50105449513adbc220dea39ddbaa98be856bd10a4ff1b0fa",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "fetch_for_track",
+      "fingerprint": "ba83eeb5499fb167300e79919bbb70c1fbcab1646e45660161fe4b6a36dc0390",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "raw_store_constructor",
+      "scope": "show_status",
+      "fingerprint": "588886214fe0937e24de535d57314b2d2a13f780fd3715454f49bb1c691483c2",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "show_status",
+      "fingerprint": "24cfbca487af51f139a435875d04a38ae81caa0a4b639d8ffc1e49bcf22afc43",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "show_status",
+      "fingerprint": "1a271799e753e104c01883d14638ce3cc0c3538665772e610a776d8fe2e514fb",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/fetch_wikipedia.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "49825983fdf6915751f269fa98d52eb222843633b5954ea6f75af272283ef219",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/migrate_external_chunks.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/restore_literary_metadata.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/run_chunk_policy_bakeoff.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/run_chunk_policy_bakeoff.py",
+      "kind": "store_path",
+      "scope": "get_db_connection",
+      "fingerprint": "1817c7a21685c6d606916b5e3291ff8eaacd851db1b58673469ae06a69b0fe7d",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/source_attribution.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/source_attribution.py",
+      "kind": "store_path",
+      "scope": "_effective_db_path",
+      "fingerprint": "fd59c40159fd488f9d0994998a238e874e3fe483ce894388f31f3c639fee8741",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/source_attribution.py",
+      "kind": "store_path",
+      "scope": "_effective_db_path",
+      "fingerprint": "816ce6846b89c0f39beca9b9de25a646d423005ec9e4d322ef3a6e93bcd66f47",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_derive_identity_from_raw",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_derive_identity_from_raw",
+      "fingerprint": "f59ad6fa9986afab7b69023e182a5ca36cb18c931ebd07f039333fde378663f4",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_derive_identity_from_raw",
+      "fingerprint": "f59ad6fa9986afab7b69023e182a5ca36cb18c931ebd07f039333fde378663f4",
+      "occurrence": 1
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_derive_identity_from_raw",
+      "fingerprint": "f59ad6fa9986afab7b69023e182a5ca36cb18c931ebd07f039333fde378663f4",
+      "occurrence": 2
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "resolve_ulif_dictua_raw_response",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "store_ulif_dictua_entry",
+      "fingerprint": "13b39958710e6b183cec8612307e5604fab9edb36805597ebd8ea4fa2b9b8d37",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_read_db_path",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_read_db_path",
+      "fingerprint": "5d3b9729e96091b691a6ab1f56869c4efa77d9d3e36956d4b108dff63efa3743",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "kind": "store_path",
+      "scope": "_read_db_path",
+      "fingerprint": "12931d41fca2cdd12e04644529e13200c97abd412daa334906be425226e4bc3f",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "kind": "store_path",
+      "scope": "_build_parser",
+      "fingerprint": "94d65e562d791929c545162fba36bef56430fdd3ca142bc9d0db7a2d996c6f37",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/agent_runtime/test_review_mcp.py",
+      "kind": "store_path",
+      "scope": "test_sources_server_stdio_integration",
+      "fingerprint": "3996672941039f7e9f691ce452aca7a3607d89ae2365248bb7ea33563c1e38fe",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/agent_runtime/test_review_mcp.py",
+      "kind": "store_path",
+      "scope": "test_sources_server_stdio_integration",
+      "fingerprint": "d8284774fecd7dc3dec2f2f4a31a3ba602de4f4d54aa86b983ad37bce561f642",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+      "kind": "store_path",
+      "scope": "test_isolated_fixture_denies_real_database_access",
+      "fingerprint": "a93e4ab1a5204f1fdf30b010058a96fe594f3ac15828117c0a55477c1d99fde0",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+      "kind": "store_path",
+      "scope": "test_isolated_fixture_denies_real_database_access",
+      "fingerprint": "e3193fdcf5fe1147ee2a1284ec157c5921674964001b320f41457b947543b8c3",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/api/opsec_sweep/test_opsec_route_sweep.py",
+      "kind": "store_path",
+      "scope": "test_isolated_fixture_denies_real_database_access",
+      "fingerprint": "8948631b4893bd338232bef163a54b0174aefd01451b33f8e6c89e3961382707",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/audit/test_antonenko_prose_narrowing.py",
+      "kind": "test_import_access",
+      "scope": "_antonenko_corpus_present",
+      "fingerprint": "855e855a846abbc5e1cc8600144e6cdf753afec0e5bc4ecb923c47f24052800c",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/audit/test_secret_scan_local.py",
+      "kind": "store_path",
+      "scope": "repo",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/conftest.py",
+      "kind": "store_path",
+      "scope": "_checkout_corpus_db_paths",
+      "fingerprint": "57700f94fd45c9080dc98a691b2995a4b79796f48ed63da6a34af81ac07d5cc2",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/conftest.py",
+      "kind": "store_path",
+      "scope": "_checkout_corpus_db_paths",
+      "fingerprint": "b9c1037922bc2533764560d3703a7b2179beba068c785be2adfdc50966c95382",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/conftest.py",
+      "kind": "store_path",
+      "scope": "requires_sources_db",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/conftest.py",
+      "kind": "store_path",
+      "scope": "requires_vesum_db",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/curriculum/evidence/test_evidence_cli.py",
+      "kind": "store_path",
+      "scope": "_real_sources_db",
+      "fingerprint": "2982faef50ddfdde8f1fe2308631493aa0783476381611cc3169e468f5860308",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/curriculum/evidence/test_evidence_cli.py",
+      "kind": "store_path",
+      "scope": "_real_sources_db",
+      "fingerprint": "16d935599bb3107975d6eacba35d82c4b4152c99c43cde9a1f10eb7096f42415",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/curriculum/resolver/evidence_helpers.py",
+      "kind": "raw_store_constructor",
+      "scope": "receipt_source_paths",
+      "fingerprint": "92f5efc1b766192936f4d52da7b78ceba9201559a7c497fb52517a170736b965",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/curriculum/resolver/evidence_helpers.py",
+      "kind": "raw_store_constructor",
+      "scope": "receipt_source_paths",
+      "fingerprint": "d00715f929e6bdd5e2d73419a020fc908e3995b31baff6a480946754de336159",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/fixtures/build_heritage_sample.py",
+      "kind": "test_import_access",
+      "scope": "build",
+      "fingerprint": "0d7cea74edb79173518b67787646818f97336392150abb52d0b54fee936a4ddb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/fixtures/build_vesum_sample.py",
+      "kind": "store_path",
+      "scope": "_default_source_db",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/fixtures/build_vesum_sample.py",
+      "kind": "store_path",
+      "scope": "_default_source_db",
+      "fingerprint": "5ace85388a51bb44b4a86e4300ba1a836aaf9e75d75cad30463d643912786510",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/mcp/sources_side_effects_probe.py",
+      "kind": "store_path",
+      "scope": "_inject_writer.lookup_then_write",
+      "fingerprint": "e11648154e217a6bef348611f5b97a9c8a222818ec0866f39bb7452c2704ce77",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/mcp/sources_side_effects_probe.py",
+      "kind": "store_path",
+      "scope": "main",
+      "fingerprint": "5586a258fb0987e254de7284126107b3d409920af532b8de5b8bb54b9a598867",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/mcp/test_ua_gec_search.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/mcp/test_ua_gec_search.py",
+      "kind": "test_import_access",
+      "scope": "_ua_gec_table_present",
+      "fingerprint": "ea368d74eaf763d72f11935c97623a0b66c23f2c6e0f385c78b68b21b76fa24b",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/orchestration/test_reap_worktrees.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/orchestration/test_reap_worktrees.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/orchestration/test_reap_worktrees.py",
+      "kind": "store_path",
+      "scope": "test_detached_clean_contained_reaps_provisioned_links_without_following_them",
+      "fingerprint": "37c909df5dc48390ab1e0e11a77aaa905f21508f641c23e94f8738340e739cba",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_a13_cleanup_recovery.py",
+      "kind": "store_path",
+      "scope": "test_a13_cleanup_policy_forbids_source_evidence_a3_heldout_and_a4_extraction",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_a13_cleanup_recovery.py",
+      "kind": "store_path",
+      "scope": "test_a13_refuses_a_weakened_cleanup_policy_dropping_a_forbidden_path",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_decolonization_component_8340.py",
+      "kind": "store_path",
+      "scope": "require_vesum_db",
+      "fingerprint": "bff15ffc1305408f693b01befe558e6248b70786f8a063117d6e1dd792e492f7",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_decolonization_component_8340.py",
+      "kind": "store_path",
+      "scope": "require_local_databases",
+      "fingerprint": "bff15ffc1305408f693b01befe558e6248b70786f8a063117d6e1dd792e492f7",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_decolonization_component_8340.py",
+      "kind": "store_path",
+      "scope": "require_local_databases",
+      "fingerprint": "beeb5923976faf78e19ef3eaa835484ab3a1705b7acb951d487e24957cb67af9",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_decolonization_component_8340.py",
+      "kind": "store_path",
+      "scope": "require_all_databases",
+      "fingerprint": "bff15ffc1305408f693b01befe558e6248b70786f8a063117d6e1dd792e492f7",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_decolonization_component_8340.py",
+      "kind": "store_path",
+      "scope": "require_all_databases",
+      "fingerprint": "beeb5923976faf78e19ef3eaa835484ab3a1705b7acb951d487e24957cb67af9",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "2379c6a718363b14ac6c734c99453b732d4226ce9cddb6ef8334148a16f8e25f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_human_source_dataset.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "42b5549885bb7e5cbe27707b77ac58c270ba6883b7c44021d17d84bd678265bb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_provenance_restoration.py",
+      "kind": "store_path",
+      "scope": "_database",
+      "fingerprint": "8f0244e912ff4dfe197396d901337a5f86c0474492531963c833f4553225e693",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_provenance_restoration.py",
+      "kind": "raw_store_constructor",
+      "scope": "_database",
+      "fingerprint": "f1056bd77596486aca881527c42415c7d50dd3eaed058c43fb1e9cf9c052a6fd",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "2379c6a718363b14ac6c734c99453b732d4226ce9cddb6ef8334148a16f8e25f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_reproduce_deliverables.py",
+      "kind": "store_path",
+      "scope": "_has_full_sources_db",
+      "fingerprint": "42b5549885bb7e5cbe27707b77ac58c270ba6883b7c44021d17d84bd678265bb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_source_custody_access.py",
+      "kind": "store_path",
+      "scope": "test_validate_and_resolve_paths_rejects_aliasing_collision_and_escaping",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_source_custody_access.py",
+      "kind": "store_path",
+      "scope": "test_validate_and_resolve_paths_rejects_aliasing_collision_and_escaping",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_source_custody_access.py",
+      "kind": "store_path",
+      "scope": "test_validate_and_resolve_paths_protects_config_and_schemas_from_aliases",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v4_source_custody_access.py",
+      "kind": "store_path",
+      "scope": "test_validate_and_resolve_paths_preserves_cwd_fallback",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v5_dialect_historical_protection.py",
+      "kind": "store_path",
+      "scope": "test_surzhyk_targets_zero_sum11_definitions_and_lemmas",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v5_dialect_historical_protection.py",
+      "kind": "store_path",
+      "scope": "test_surzhyk_targets_zero_sum11_definitions_and_lemmas",
+      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v5_dialect_historical_protection.py",
+      "kind": "store_path",
+      "scope": "test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/projects/open_model_data/test_v5_dialect_historical_protection.py",
+      "kind": "store_path",
+      "scope": "test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants",
+      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_activate_vesum_backup_ignored.py",
+      "kind": "store_path",
+      "scope": "test_backup_name_is_timestamped_beside_target",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_activate_vesum_backup_ignored.py",
+      "kind": "store_path",
+      "scope": "test_live_store_stays_ignored_and_tracked_data_is_not_swept",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_adjective_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_adjective_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_clean",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_clean",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_sanitization_and_malformed_token_detection",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_sanitization_and_malformed_token_detection",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_rejects_empty_and_punctuation_answers",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_adverb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_rejects_empty_and_punctuation_answers",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_atlas_conformance.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_atlas_conformance.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_atlas_conformance.py",
+      "kind": "test_import_access",
+      "scope": "_sources_has_grinchenko_table",
+      "fingerprint": "3e3fbc4ded44eb6980fb81bae3b61f79be40bc5c2b9239bfbfb09abbf99a6cd1",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_checkout_corpus_db_guard.py",
+      "kind": "store_path",
+      "scope": "test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_the_file",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_checkout_corpus_db_guard.py",
+      "kind": "store_path",
+      "scope": "test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_the_file",
+      "fingerprint": "03a7b45e62740081283512c3f3d75f70ef0509feda2cd48b908a348b446507fb",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_checkout_corpus_db_guard.py",
+      "kind": "raw_store_constructor",
+      "scope": "test_refusal_is_not_swallowed_by_a_broad_except.reader",
+      "fingerprint": "2878471786a5b8234ba59ce25fabbf95d511d92fa91eaf8bc9ef00097aa14db8",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_checkout_corpus_db_guard.py",
+      "kind": "store_path",
+      "scope": "test_refusal_is_not_swallowed_by_a_broad_except.reader",
+      "fingerprint": "12899d277db751ef50390109bf6b90fa749ae4ef56e8087e66fd905cc3f7779c",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_content_lexicon_reconciler.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_content_lexicon_reconciler.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_content_spelling_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_content_spelling_gate.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_curated_seed_to_lexical_jsonl.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "b66ac653403e103d46f5d3b6f7b64621dc84462f66c178036e5cf5aff5146a8f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_delegate_read_only_db_lookups.py",
+      "kind": "store_path",
+      "scope": "test_primary_database_path_resolution",
+      "fingerprint": "08fb8e648234569bbd18326b3d248170193cbf91c523bf5fcbfd364df47e98d0",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_deploy_pages_workflow.py",
+      "kind": "store_path",
+      "scope": "test_auto_deploy_dispositions_activity_kit_and_data_paths",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_docs_catalogue_coverage.py",
+      "kind": "store_path",
+      "scope": "test_a_store_asked_by_its_name_and_format_ranks_its_own_record",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_esum_search.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "96c651ad5f195d644ff44c794a1b6a639bead4ac2609eaad3138e01443d26799",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_esum_search.py",
+      "kind": "test_import_access",
+      "scope": "_esum_row_count",
+      "fingerprint": "cdc8a039f013328bd9f804fa6e6f6e55a76e138258588810394b1848ae520d5b",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_generate_practice_deck.py",
+      "kind": "store_path",
+      "scope": "_live_source_checkers",
+      "fingerprint": "4e88a94686b3f52611d8801114238ba6233ca01dd35b741e54249e3b891c0fc3",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_generate_practice_deck.py",
+      "kind": "store_path",
+      "scope": "_live_source_checkers",
+      "fingerprint": "5d8a9968639eb0fc00f062ef804f8edda4b8733dbd8738e9bb66871eac7b5f1a",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_100_percent",
+      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_100_percent",
+      "fingerprint": "02441f1feb61c5885001573ad06cd20bdde776351b06db973bc47f0580676c23",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_is_valid_vesum_token_rejections_and_compounds",
+      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_is_valid_vesum_token_rejections_and_compounds",
+      "fingerprint": "1a2a96dc06e7d49b90a448901196eb2b8a17957b8009dc8306268bfd90ab8872",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_cli_verify_vesum_present",
+      "fingerprint": "7c0d91af849dcdc37ccd6c7f3a9c259a3445954696bede45640f6dc52cc3f7af",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_interjection_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_cli_verify_vesum_present",
+      "fingerprint": "1a2a96dc06e7d49b90a448901196eb2b8a17957b8009dc8306268bfd90ab8872",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_kimi_coding_only_admission.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_mcp_sources_identity_integration.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "9ee9cc970c9e137b4d115fafa58d58a87ee2f41ce76ac525b3d1d8b82918f90f",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_mcp_sources_identity_integration.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "4857bde33714c0c8477e2741d9e9625cbe91418b1c6cc0e4d9250647e2a6c434",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_numeral_agreement_engine.py",
+      "kind": "store_path",
+      "scope": "test_zero_collision_guarantee_large_scale",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_numeral_agreement_engine.py",
+      "kind": "store_path",
+      "scope": "test_zero_collision_guarantee_large_scale",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_numeral_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_clean",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_numeral_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification_clean",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_open_model_language_contact_adjudication.py",
+      "kind": "store_path",
+      "scope": "_source_db",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_adjudication.py",
+      "kind": "raw_store_constructor",
+      "scope": "_source_db",
+      "fingerprint": "f1056bd77596486aca881527c42415c7d50dd3eaed058c43fb1e9cf9c052a6fd",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "store_path",
+      "scope": "_seed_vesum",
+      "fingerprint": "986e3a8f45593210b38aa3e8c0e047eb32c3df6722011b139021eb873a31de10",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "raw_store_constructor",
+      "scope": "_seed_vesum",
+      "fingerprint": "f1056bd77596486aca881527c42415c7d50dd3eaed058c43fb1e9cf9c052a6fd",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "store_path",
+      "scope": "_mini_config",
+      "fingerprint": "986e3a8f45593210b38aa3e8c0e047eb32c3df6722011b139021eb873a31de10",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "store_path",
+      "scope": "_mini_config",
+      "fingerprint": "9ae7dbb8b366635c1822a174637d847eb47b57f1da1d52a2643fe78aef5adf1c",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "store_path",
+      "scope": "test_missing_evidence_adapters_fail_closed",
+      "fingerprint": "986e3a8f45593210b38aa3e8c0e047eb32c3df6722011b139021eb873a31de10",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_language_contact_detector.py",
+      "kind": "store_path",
+      "scope": "test_missing_evidence_adapters_fail_closed",
+      "fingerprint": "986e3a8f45593210b38aa3e8c0e047eb32c3df6722011b139021eb873a31de10",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "_build_fixture_artifacts",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "_verify_fixture_artifacts",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_heldout_partition.py",
+      "kind": "store_path",
+      "scope": "test_private_seal_tamper_byte_locator_fingerprint_fail._expect_fail",
+      "fingerprint": "f1119cca7ef6905df0d808fab65ab92d440950d383c4b6fc363ae9ba6d918a44",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_open_model_phase3_v3a_taxonomy_denominator_compatibility.py",
+      "kind": "store_path",
+      "scope": "test_local_source_db_reproduces_content_blind_evidence_when_available",
+      "fingerprint": "a1cae57b31af5d080de26febfdeec1ee379dda5f31af194a5a63440ddc08a423",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_phase3_cycle007_evidence_validator.py",
+      "kind": "store_path",
+      "scope": "_vesum_record",
+      "fingerprint": "0e14dcaa521f7e31729782825b6c999ffd6c6b7f01d4913b93202707baf94438",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_practice_quality_gate.py",
+      "kind": "store_path",
+      "scope": "test_production_practice_shards_all_modes_gate_passes",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_reattribute_ukrlib.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "266965edaccebaaf532e08183b5e23109c5989023c66fac4a09bd721fb9e4e57",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_reattribute_ukrlib.py",
+      "kind": "test_import_access",
+      "scope": "_literary_corpus_available",
+      "fingerprint": "cdc8a039f013328bd9f804fa6e6f6e55a76e138258588810394b1848ae520d5b",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_reattribute_ukrlib.py",
+      "kind": "store_path",
+      "scope": "TestPostSearchQuality.test_post_author_chunks_in_sources_db",
+      "fingerprint": "1eaccc4ccfaa019a2afea19b19c74e36cdec09fa2653bd2c153fc556ab9b0ea2",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_source_db_presence_checks_readonly.py",
+      "kind": "store_path",
+      "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_source_db_presence_checks_readonly.py",
+      "kind": "store_path",
+      "scope": "test_presence_checks_open_readonly_copy_and_skip_when_absent",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_source_db_write_guard.py",
+      "kind": "store_path",
+      "scope": "test_unrelated_audit_events_pass",
+      "fingerprint": "15435eb35614fdb632843deb1d7952381587d28e8415baca35e0930158067f46",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_verb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_verb_mechanics_engine.py",
+      "kind": "store_path",
+      "scope": "test_vesum_verification",
+      "fingerprint": "8cb36b14135f5bd87bd3295693b72dc9edb4ccd31a7eadc456f3e9d6aa37a9db",
+      "occurrence": 1
+    },
+    {
+      "path": "tests/test_vesum_heritage_attestation.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 0
+    },
+    {
+      "path": "tests/test_vesum_heritage_attestation.py",
+      "kind": "store_path",
+      "scope": "<module>",
+      "fingerprint": "8b5557f0e1c925da42dc7880357ecdaada8ca6c24cddf2e8f44bde0116445b40",
+      "occurrence": 1
+    }
+  ]
+}

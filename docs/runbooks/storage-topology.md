@@ -69,7 +69,8 @@ Environment overrides (optional):
 | `LU_BULK_ROOT` | Force bulk root (must be marker-valid; invalid → unavailable) |
 | `LU_SMB_BULK_ROOT` | Preferred SMB bulk path candidate |
 | `LU_GDRIVE_DATA` | Force Drive bulk path when SMB is absent (must be marker-valid). Authoritative over auto/caller Drive candidates; **invalid values fail closed** (no silent fallback to other Drive roots). |
-| `LU_SOURCES_DB` | Override active DB path (**network paths are refused**) |
+| `LU_SOURCES_DB` | Explicit local sources store path; invalid or unknown locality returns a path-free refusal |
+| `LU_VESUM_DB` | Explicit local VESUM store path; same refusal semantics |
 
 Rebuild consumers (`scripts/wiki/config.py` → `GDRIVE_DATA`) use the same
 resolver: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
@@ -167,7 +168,8 @@ stay gitignored, and no consumer reads bulk data through them:
 | --- | --- |
 | SMB unmounted | Bulk resolver falls back to marker-valid Drive; repo work continues |
 | Drive + SMB both absent | Bulk root `unavailable`; rebuilds that need raw JSONL fail closed; Sources MCP still serves local `data/sources.db` |
-| Someone points `LU_SOURCES_DB` at SMB | Resolver **refuses**; active DB stays repository-local |
+| Someone points `LU_SOURCES_DB` or `LU_VESUM_DB` at SMB | `resolve_store` returns a path-free refusal; no fallback |
+| Legacy `resolve_active_sources_db` network override (pending migration) | Existing fallback object retained; new callers must use `resolve_store` |
 
 ## Managed artifact publication
 
@@ -231,3 +233,38 @@ file descriptors with per-component `O_NOFOLLOW` and
 - Corpus inventory architecture: `docs/corpus-inventory.md`
 - Data backup (restic): `docs/runbooks/data-backup.md`
 - Issue context: #6375 (Phase 3 recovery depends on durable bulk storage)
+
+## Logical read-store bindings (#9945)
+
+New callers use `scripts.storage.topology.resolve_store("sources")` or
+`resolve_store("vesum")` at call time. A `StoreBinding` contains `store`,
+`path`, `access_mode="read"`, and `provenance`; pass its path to
+`scripts.lib.readonly_sqlite.open_readonly`. A `StoreRefusal` contains only
+`store` and `reason`, with no path attribute and no silent fallback.
+
+Precedence is an injected test binding, then the explicit store environment
+override, then the primary checkout's `data/<store>.db` located by
+`main_checkout_root`. Empty, whitespace, relative, URI, nonexistent, directory,
+network, and unknown-locality inputs are refused. Symlinks to existing local
+files are validated at their resolved target. A linked worktree's own
+`data/<store>.db` file or symlink (including a dangling link) is refused.
+The resolver creates no files or connections and grants no write access.
+
+The legacy `resolve_active_sources_db` and `require_local_active_sources_db`
+retain their existing behavior pending caller migration. In particular, the
+legacy resolution object can carry a fallback path on network refusal; it is
+not the supported contract for new readers.
+
+The store-access ratchet covers `scripts/` and `tests/`. Reproduce its frozen
+baseline with the project interpreter:
+
+```bash
+<primary-checkout>/.venv/bin/python -m scripts.hygiene.lint_source_db_writable_connects --census <base-commit>
+```
+
+It reads tracked commit
+blobs, including sparse paths, and excludes untracked and ignored files from
+that census. Baseline identities use path, class, enclosing scope, normalized
+AST fingerprint, and occurrence; line movement does not grandfather new code.
+Resolved migrations remove their corresponding baseline entries; stale entries
+fail lint. Only declared resolver functions may build new repository store paths.
