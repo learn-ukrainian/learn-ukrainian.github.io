@@ -3827,8 +3827,14 @@ def _fetch_existing_branch(branch: str) -> None:
         raise RuntimeError(f"origin/{branch} was not found after fetch; --branch requires an existing remote branch")
 
 
-def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
-    """Return fetched origin SHA or refuse a local-only branch divergence."""
+def _require_local_branch_is_ancestor_of_origin(
+    branch: str, *, continuation_head_sha: str | None = None, continuation_remote_sha: str | None = None
+) -> str:
+    """Return fetched origin SHA, or an admitted same-writer local continuation.
+
+    Only an existing checkout admitted on its local-only commits can supply
+    ``continuation_head_sha`` (#9988). Never reset that head to the remote.
+    """
     origin_ref = f"origin/{branch}"
     local_ref = f"refs/heads/{branch}"
     origin_sha = _resolve_sha(_REPO_ROOT, origin_ref)
@@ -3858,6 +3864,12 @@ def _require_local_branch_is_ancestor_of_origin(branch: str) -> str:
         raise RuntimeError(
             f"could not compare local {branch!r} against {origin_ref}: {_format_process_failure(ancestry)}"
         )
+    if continuation_head_sha == local_sha and continuation_remote_sha == origin_sha:
+        try:
+            if _git_is_ancestor(origin_sha, local_sha):
+                return local_sha
+        except _AuthoringObservationUnknown as exc:
+            raise RuntimeError(f"could not verify continuation ancestry: {exc}") from exc
     raise WorktreeBranchDiverged(
         f"refusing --branch {branch!r}: local {local_ref} is not an ancestor of "
         f"{origin_ref}; local_sha={local_sha} origin_sha={origin_sha}. "
@@ -8661,6 +8673,8 @@ def _resolve_worktree_base_sha(
     detached: bool = False,
     validated_path: Path | None = None,
     review_dependencies: Sequence[tuple[str, Path]] = (),
+    continuation_head_sha: str | None = None,
+    continuation_remote_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -8703,7 +8717,11 @@ def _resolve_worktree_base_sha(
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
             _refuse_if_gate_head_moved(
-                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                _require_local_branch_is_ancestor_of_origin(
+                    requested_branch,
+                    continuation_head_sha=continuation_head_sha,
+                    continuation_remote_sha=continuation_remote_sha,
+                ),
                 pinned_head_sha,
             )
         resolved = _resolve_sha(worktree_path)
@@ -12572,6 +12590,16 @@ def _dispatch(
                     allow_rebase=allow_rebase,
                     rebase_onto=rebase_onto,
                     review_dependencies=review_dependencies,
+                    continuation_head_sha=(
+                        authoring_admission.head_sha
+                        if authoring_admission is not None and authoring_admission.record.get("local_continuation")
+                        else None
+                    ),
+                    continuation_remote_sha=(
+                        (authoring_admission.record.get("local_continuation") or {}).get("remote_head_sha")
+                        if authoring_admission is not None
+                        else None
+                    ),
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -14362,7 +14390,7 @@ class _AuthoringAdmission:
     creation_sha: str | None = None
     # This writer's facts over ``base..head`` (raises ``_AuthoringReviewRefused``),
     # and the planned risk, for the rebase plan and its result (A7).
-    collect: Callable[[str, str], Any] | None = dataclasses.field(default=None, compare=False, repr=False)
+    collect: Callable[..., Any] | None = dataclasses.field(default=None, compare=False, repr=False)
     planned_risk: str | None = None
 
 
@@ -14641,7 +14669,7 @@ def _authoring_review_admission(
 
     Applies to every write-capable dispatch: an attach to an existing branch or
     worktree, and a new branch whose proposed scope is protected. Complete
-    authorship (every commit in ``git rev-list <base>..<head>`` plus this
+    authorship (every branch-owned commit plus this
     writer, after substitution, aliases and ``--force-agent``) and protected
     scope come from ``record_cf_verdict.collect_branch_review_facts``, the
     calculation the verdict recorder uses. The check is structural (A2):
@@ -14650,7 +14678,8 @@ def _authoring_review_admission(
     ``review_base_sha..creation_sha`` for a new branch and
     ``review_base_sha..head_sha`` for an attach (A7): the review base is the
     one the recorder will read (:func:`_authoring_review_base`), never
-    ``--base``; every endpoint is observed on the canonical remote, frozen in
+    ``--base``; main-side commits are excluded from authorship while retaining
+    the stale-base diff's protected scope (#9988). Every endpoint is observed on the canonical remote, frozen in
     the receipt and never resolved from a ref again. Fetches only to mirror
     remote state (M1); runs before any task record, archival, forwarding,
     rebase, worktree or provider. Returns None for read-only dispatches and
@@ -14776,7 +14805,20 @@ def _authoring_review_admission(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc}, so the branch's authors are unknown; retry.", record
         ) from exc
 
-    def collect(base_sha: str, head_sha: str) -> Any:
+    # A stale main PR base still determines scope, but main's newer commits
+    # are not branch authors (#9988). Non-main target branches keep their
+    # existing enumeration; the rebase plan supplies its own frozen exclusion.
+    authorship_exclude = default_sha if review_base.branch == default_name else None
+    record["authorship_exclude_sha"] = authorship_exclude
+    if authorship_exclude is not None:
+        try:
+            _authoring_require_commit(
+                authorship_exclude, fetch=lambda: _fetch_base(default_name), what="the authorship exclusion commit"
+            )
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
+
+    def collect(base_sha: str, head_sha: str, *, authorship_exclude_sha: str | None = authorship_exclude) -> Any:
         """This writer's branch facts over ``base_sha..head_sha``; a fact that cannot be established refuses."""
         try:
             return collect_branch_review_facts(
@@ -14790,6 +14832,7 @@ def _authoring_review_admission(
                 owned_paths=declared,
                 subject_seats=tuple(getattr(args, "subject_seat", None) or ()),
                 subject_families=tuple(getattr(args, "subject_family", None) or ()),
+                authorship_exclude_sha=authorship_exclude_sha,
             )
         except BranchFactsError as exc:
             code = (
@@ -14801,6 +14844,26 @@ def _authoring_review_admission(
 
     facts = collect(review_base.sha, head)
     record.update(facts.receipt())
+    if kind == "existing-worktree" and requested_branch:
+        try:
+            remote_head = observed_branch_head or _ls_remote_branch_sha(remote, requested_branch, strict=True)
+            if not remote_head:
+                raise _AuthoringObservationUnknown("the continuation's remote head is unavailable")
+            _authoring_require_commit(
+                remote_head, fetch=lambda: _fetch_existing_branch(requested_branch), what="the remote branch head"
+            )
+            if remote_head != head and _git_is_ancestor(remote_head, head):
+                local = collect(remote_head, head, authorship_exclude_sha=remote_head)
+                if local.existing_families != {facts.incoming_family}:
+                    raise _AuthoringReviewRefused(
+                        AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN,
+                        "local-only commits are not all by the incoming writer family; "
+                        "reconcile the branch before continuation.",
+                        record,
+                    )
+                record["local_continuation"] = {"remote_head_sha": remote_head, "head_sha": head}
+        except _AuthoringObservationUnknown as exc:
+            raise _AuthoringReviewRefused(AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, str(exc), record) from exc
     protected = bool(
         facts.subject_seats
         or facts.subject_families
@@ -15009,9 +15072,11 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     """A7: the commit a reused worktree may be rebased onto, its result admitted before the branch is touched.
 
     The auto-rebase replays the branch's own commits (``onto..head``) onto
-    ``onto``. Rebasing keeps each commit's message, and so its attribution, so
-    the recorder then enumerates ``review_base..onto`` plus those replays. Both
-    are checked here under the admitted review base and risk. ``onto`` is
+    ``onto``. Rebasing keeps each commit's message and attribution.
+    A7 originally enumerated ``review_base..onto`` plus those replays to
+    anticipate the recorder's stale-base history and protected diff. Main-side
+    commits are not branch authors (#9988): retain that diff's scope, while
+    attributing only ``onto..head``. Both are checked under the admitted risk. ``onto`` is
     observed on the canonical remote and returned for the rebase to use as is,
     so the rebase can never move onto a later, unchecked tip. Read-only: it
     only fetches to make the observed commit local (M1). Raises
@@ -15037,7 +15102,8 @@ def _authoring_rebase_plan(admission: _AuthoringAdmission, *, base: str) -> str:
     if behind == 0:
         return onto
     planned = _authoring_merge_facts(
-        admission.collect(admission.review_base.sha, onto), admission.collect(onto, admission.head_sha)
+        admission.collect(admission.review_base.sha, onto, authorship_exclude_sha=onto),
+        admission.collect(onto, admission.head_sha, authorship_exclude_sha=onto),
     )
     record["rebase_existing_families"] = sorted(planned.existing_families)
     _authoring_require_route(planned, planned_risk=admission.planned_risk, record=record, at=onto)
@@ -15098,7 +15164,7 @@ def _authoring_rebase_result_refusal(
             AUTHORING_REVIEW_AUTHORSHIP_UNKNOWN, f"{exc} after the rebase, so its authors are unknown; retry.", record
         )
     try:
-        actual = admission.collect(admission.review_base.sha, rebased) if on_plan else None
+        actual = admission.collect(admission.review_base.sha, rebased, authorship_exclude_sha=onto) if on_plan else None
         if actual is not None and actual.existing_families <= planned:
             _authoring_require_route(actual, planned_risk=admission.planned_risk, record=record, at=rebased)
             # Enforcement already decided from ``actual``. The receipt records that

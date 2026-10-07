@@ -557,6 +557,7 @@ def collect_branch_review_facts(
     subject_seats: Iterable[str] = (),
     subject_families: Iterable[str] = (),
     timeout_s: float = BRANCH_FACTS_TIMEOUT_S,
+    authorship_exclude_sha: str | None = None,
 ) -> BranchReviewFacts:
     """Collect complete authorship and protected scope for ``base_tip_sha..head_sha``.
 
@@ -567,11 +568,17 @@ def collect_branch_review_facts(
     dispatched, after any substitution. Scope is the literal diff against the
     merge-base (both rename sides and deletions) plus ``owned_paths``, with the
     subject seats ``prepare_subject_exclusion`` derives from it. A fresh branch
-    passes ``head_sha == base_tip_sha``. Reads only; never fetches. Raises
+    passes ``head_sha == base_tip_sha``. Admission may exclude commits reachable
+    from a frozen main/rebase tip with ``authorship_exclude_sha`` (#9988); this
+    never narrows the diff or protected scope against the original base.
+    Reads only; never fetches. Raises
     ``BranchFactsError`` (``code`` = authorship, scope or target unknown).
     """
     deadline = time.monotonic() + timeout_s
-    for label, sha in (("base", base_tip_sha), ("head", head_sha)):
+    endpoints = [("base", base_tip_sha), ("head", head_sha)]
+    if authorship_exclude_sha is not None:
+        endpoints.append(("authorship exclusion", authorship_exclude_sha))
+    for label, sha in endpoints:
         if not isinstance(sha, str) or not SHA.fullmatch(sha):
             raise BranchFactsError(FACTS_TARGET_UNKNOWN, f"{label} SHA missing or invalid")
         try:
@@ -582,9 +589,10 @@ def collect_branch_review_facts(
             raise BranchFactsError(
                 FACTS_TARGET_UNKNOWN, f"{label} commit {sha[:12]} not available locally; fetch and retry"
             ) from exc
-    listed = _facts_git(
-        repo_root, ["rev-list", f"{base_tip_sha}..{head_sha}"], deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN
-    )
+    revisions = ["rev-list", f"{base_tip_sha}..{head_sha}"]
+    if authorship_exclude_sha is not None:
+        revisions.append(f"^{authorship_exclude_sha}")
+    listed = _facts_git(repo_root, revisions, deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN)
     shas = listed.decode("ascii", errors="strict").split()
     commits: list[CommitAttribution] = []
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
@@ -594,7 +602,9 @@ def collect_branch_review_facts(
                     entry,
                     repository=repository,
                     task_root=task_root,
-                    base_sha=lambda: base_tip_sha,
+                    # Clean main merges still need the existing object/tree
+                    # proof, bound to the frozen main tip rather than a stale base.
+                    base_sha=lambda: authorship_exclude_sha or base_tip_sha,
                     checkout=repo_root,
                 )
             )
@@ -611,7 +621,7 @@ def collect_branch_review_facts(
         incoming_family = incoming_writer_family(incoming_agent, incoming_model)
     merge_base = None
     changed: tuple[str, ...] = ()
-    if shas:
+    if base_tip_sha != head_sha:
         merge_base = (
             _facts_git(repo_root, ["merge-base", base_tip_sha, head_sha], deadline=deadline, code=FACTS_SCOPE_UNKNOWN)
             .decode("ascii")
