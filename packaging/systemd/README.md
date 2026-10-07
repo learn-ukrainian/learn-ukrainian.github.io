@@ -11,15 +11,11 @@ One slice for every detached worker `scripts/delegate.py` launches (#8645). The
 driver stays outside it. A runaway worker is killed inside the slice; the driver
 and the host services are not in that cgroup.
 
-`MemoryHigh=18G` is the throttling line and `MemoryMax=20G` is the last line of
-defense. `systemd.resource-control(5)` (this host's systemd 259 man page) says to
-use `MemoryHigh=` as the main control and `MemoryMax=` only as the last line of
-defense. The CX53 reports about 30GiB usable RAM. Reserving about 6GiB for
-OS/services/drivers and a 6GiB MemAvailable floor leaves about 18GiB for workers
-at the throttling line (`30 - 6 - 6 = 18`). The 20GiB emergency ceiling allows
-2GiB above that line. `MemoryMax=` does not cap swap, so the unit also sets
-`MemorySwapMax=1G`; swap used was 0GiB on 2026-09-29 after the host upgrade.
-The limits are the unit file. There is no environment override.
+`MemoryHigh=` is the throttling line and `MemoryMax=` is the last line of
+defense, as `systemd.resource-control(5)` recommends. `MemoryMax=` does not cap
+swap, so the unit also sets `MemorySwapMax=`. The values are set per
+deployment and sized for that host; see the private operations docs. The limits
+are the unit file. There is no environment override.
 
 Running without the slice is supported. Dispatch then prints one warning and
 starts the worker with plain `Popen`, and the task record's `launch_mode` is
@@ -37,17 +33,15 @@ All of these have to hold or dispatch will not use the slice:
   `/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.subtree_control`
   contains `memory`.
 - After install, `systemctl --user show -p MemoryHigh,MemoryMax,MemorySwapMax lu-dispatch.slice`
-  prints `MemoryHigh=19327352832`, `MemoryMax=21474836480`, and
-  `MemorySwapMax=1073741824` (18GiB, 20GiB, and 1GiB, base 1024). A slice name
-  systemd synthesized with `MemoryMax=infinity` does
-  not count.
+  prints the finite values from the installed unit. A slice name systemd
+  synthesized with `MemoryMax=infinity` does not count.
 
 ### Install
 
 Immediately after merge, the driver installs the new slice from the updated
 checkout and runs `systemctl --user daemon-reload`, before dispatching more
 workers. `dispatch_isolation.py` checks that the installed `MemoryMax` equals
-the configured 20 GiB value; until the reload applies the new unit, dispatch
+the configured value; until the reload applies the new unit, dispatch
 falls back to plain `Popen` without the slice memory cap.
 
 Do not commit a machine path. From a checkout:
