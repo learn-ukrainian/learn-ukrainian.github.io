@@ -230,20 +230,13 @@ def run_gh_json(arguments: Sequence[str], *, deadline: float, cwd: Path = ROOT) 
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         return None
-    process = subprocess.Popen(
-        ["gh", *arguments],
-        cwd=cwd,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        start_new_session=True,
-    )
+    from scripts.common.github_client import run
+
     try:
-        stdout, _ = process.communicate(timeout=max(0.0, deadline - time.monotonic()))
-    except subprocess.TimeoutExpired:
-        terminate_process_group(process)
+        process = run(["gh", *arguments], cwd=cwd, capture_output=True, text=True, timeout=remaining, fresh=True)
+    except (OSError, subprocess.TimeoutExpired):
         return None
+    stdout = process.stdout
     if process.returncode != 0 or time.monotonic() > deadline:
         return None
     try:

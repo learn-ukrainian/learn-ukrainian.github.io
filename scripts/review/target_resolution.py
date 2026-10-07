@@ -20,6 +20,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
 
 TEST_DIR_MARKERS = ("tests/", "__tests__/", "test/")
@@ -78,10 +79,11 @@ def _run_git(args: list[str], cwd: Path, *, timeout: float = 30.0) -> subprocess
 
 
 def _run_gh(args: list[str], cwd: Path, *, timeout: float = 30.0) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         ["gh", *args],
         cwd=str(cwd),
         check=False,
+        fresh=True,
         capture_output=True,
         text=True,
         timeout=timeout,

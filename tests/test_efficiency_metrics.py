@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 import sqlite3
-import subprocess
 from pathlib import Path
 
 from scripts.fleet_comms.efficiency_metrics import (
@@ -127,29 +125,17 @@ def test_legacy_collectors_stay_on_broker_when_authority_is_pg(tmp_path, monkeyp
     assert collect_efficiency_metrics(db)["deliveries"]["delivered"] == 1
 
 
-def test_merge_fact_query_uses_injected_github_runner() -> None:
-    calls: list[tuple[list[str], float]] = []
-    documents = []
+def test_merge_fact_query_uses_production_rest_transport(github_transport) -> None:
+    from scripts.common.github_client import Response
 
-    def fake_gh(args: list[str], *, timeout: float) -> subprocess.CompletedProcess[str]:
-        from pathlib import Path
-        documents.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
-        calls.append((args, timeout))
-        return subprocess.CompletedProcess(
-            args,
-            0,
-            json.dumps({"data": {"r0": {"p123": {"mergedAt": "2026-09-20T12:34:56Z"}}}}),
-            "",
-        )
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        return Response(200, {}, b'{"merged_at":"2026-09-20T12:34:56Z"}')
 
-    result = _fetch_merge_facts(
-        [("learn-ukrainian/learn-ukrainian.github.io", 123)],
-        gh_runner=fake_gh,
-        gh_bin="gh-test-double",
-    )
+    calls = github_transport(transport)
+    result = _fetch_merge_facts([("learn-ukrainian/learn-ukrainian.github.io", 123)])
 
     assert result[("learn-ukrainian/learn-ukrainian.github.io", 123)][0] is not None
     assert len(calls) == 1
-    assert calls[0][0][:5] == ["gh-test-double", "api", "--method", "POST", "graphql"]
-    assert documents[0]["variables"] == {}
-    assert documents[0]["query"] == 'query {r0:repository(owner:"learn-ukrainian",name:"learn-ukrainian.github.io"){p123:pullRequest(number:123){mergedAt}}}'
+    assert calls[0][1] == "repos/learn-ukrainian/learn-ukrainian.github.io/pulls/123"
+    assert calls[0][4] == 30

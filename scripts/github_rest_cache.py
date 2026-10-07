@@ -26,6 +26,8 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any
 
+from scripts.common import github_client
+
 # (path, request headers, timeout seconds) -> (status, response headers, body)
 RestTransport = Callable[[str, dict[str, str], float], tuple[int, dict[str, str], bytes]]
 
@@ -67,14 +69,18 @@ class RestResult:
     etag: str | None
     link_next: str | None
     not_modified: bool
+    stale: bool = False
+    age_seconds: float = 0
 
 
 class RestPage(list):
     """A REST collection. ``truncated`` means a later page was not read."""
 
-    def __init__(self, items: list[Any], *, truncated: bool) -> None:
+    def __init__(self, items: list[Any], *, truncated: bool, stale: bool = False, age_seconds: float = 0) -> None:
         super().__init__(items)
         self.truncated = truncated
+        self.stale = stale
+        self.age_seconds = age_seconds
 
 
 @dataclass
@@ -126,44 +132,24 @@ def _link_next(header: str | None) -> str | None:
     return None
 
 
-def _parse_http_message(raw: bytes) -> tuple[int, dict[str, str], bytes]:
-    separator = b"\r\n\r\n" if b"\r\n\r\n" in raw else b"\n\n"
-    head, _, body = raw.partition(separator)
-    lines = head.decode("utf-8", errors="replace").splitlines()
-    if not lines or not lines[0].startswith("HTTP/"):
-        raise GitHubRestError("gh api returned no HTTP status line")
-    status_parts = lines[0].split()
-    if len(status_parts) < 2 or not status_parts[1].isdigit():
-        raise GitHubRestError(f"gh api returned an unreadable status line: {lines[0]}")
-    headers: dict[str, str] = {}
-    for line in lines[1:]:
-        key, sep, value = line.partition(":")
-        if sep:
-            headers[key.strip().lower()] = value.strip()
-    return int(status_parts[1]), headers, body
-
-
 def _gh_api_transport(path: str, headers: dict[str, str], timeout: float) -> tuple[int, dict[str, str], bytes]:
-    """GET ``path`` via ``gh api -i``. HTTP 304 is a result, not a failure."""
-    cmd = ["gh", "api", "--method", "GET", "-i", path]
-    for key, value in headers.items():
-        cmd.extend(["-H", f"{key}: {value}"])
+    """Project a shared conditional GitHub read into the legacy cache transport."""
     try:
-        proc = subprocess.run(cmd, capture_output=True, timeout=timeout, check=False)
+        result = github_client.GitHubClient().request("GET", path, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise GitHubRestTimeout(timeout) from exc
-    except (FileNotFoundError, OSError) as exc:
-        raise GitHubRestError(f"{type(exc).__name__}: {exc}") from exc
-
-    raw = proc.stdout or b""
-    if not raw.startswith(b"HTTP/"):
-        err = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
-        raise GitHubRestError(err or f"gh api failed (exit {proc.returncode})")
-    status, resp_headers, body = _parse_http_message(raw)
-    if status in {200, 304, 404}:
-        return status, resp_headers, body
-    err = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
-    raise GitHubRestError(err or f"GitHub REST {status} for {path}", status=status)
+    except (OSError, RuntimeError) as exc:
+        raise GitHubRestError(str(exc)) from exc
+    if result.error == "github_rate_limited":
+        raise GitHubRestError(f"github_rate_limited reset_at={result.reset_at}", status=429)
+    if result.error and result.status != 404:
+        raise GitHubRestError(result.error, status=result.status)
+    response_headers = dict(result.headers)
+    if result.stale:
+        response_headers.update({"x-github-stale": "true", "x-github-age": str(result.age_seconds)})
+    # The shared disk cache already resolved 304; this compatibility layer
+    # consumes a complete body while retaining its own projection contract.
+    return 200 if result.status == 304 else result.status, response_headers, json.dumps(result.value).encode()
 
 
 class GitHubRestCache:
@@ -391,6 +377,8 @@ class GitHubRestCache:
             etag=new_etag,
             link_next=link_next,
             not_modified=False,
+            stale=resp_headers.get("x-github-stale") == "true",
+            age_seconds=float(resp_headers.get("x-github-age", "0")),
         )
 
 
@@ -424,7 +412,7 @@ def _collect_pages(
     Items rejected by ``keep`` (pull requests on the issues API) do not count
     toward ``limit`` and do not end the walk.
     """
-    rows: list[dict[str, Any]] = []
+    rows = RestPage([], truncated=False)
     url: str | None = path
     pages = 0
     while url:
@@ -436,12 +424,16 @@ def _collect_pages(
             raise GitHubRestError(f"GitHub REST 404 for {url}", status=404)
         if not isinstance(result.body, list):
             raise GitHubRestError(f"expected a JSON list from {url}")
+        rows.stale |= result.stale
+        rows.age_seconds = max(rows.age_seconds, result.age_seconds)
         page = result.body
         for index, item in enumerate(page):
             if not isinstance(item, dict):
                 continue
             if keep is not None and not keep(item):
                 continue
+            if result.stale:
+                item = {**item, "_github_stale": True, "_github_age_seconds": result.age_seconds}
             rows.append(item)
             if limit is not None and len(rows) >= limit:
                 more_on_page = False
@@ -470,6 +462,7 @@ def project_issue(raw: dict[str, Any]) -> dict[str, Any]:
     """REST issue → the fields Work and orient actually read."""
     state = raw.get("state")
     return {
+        **({"stale": True, "age_seconds": raw["_github_age_seconds"]} if raw.get("_github_stale") else {}),
         "number": raw.get("number"),
         "title": raw.get("title"),
         "labels": _names(raw.get("labels"), "name"),
@@ -673,7 +666,9 @@ def list_open_issues(
     path = f"repos/{repo}/issues?state=open&per_page=100&sort=created&direction=desc"
     deadline = time.monotonic() + timeout
     rows, truncated = _collect_pages(store, path, deadline=deadline, timeout=timeout, limit=limit, keep=_is_issue)
-    return RestPage([project_issue(item) for item in rows], truncated=truncated)
+    return RestPage(
+        [project_issue(item) for item in rows], truncated=truncated, stale=rows.stale, age_seconds=rows.age_seconds
+    )
 
 
 def _list_body(
@@ -685,7 +680,7 @@ def _list_body(
 ) -> tuple[list[dict[str, Any]], bool]:
     """Follow next links. The bool is completeness (False when the page cap hits)."""
     rows, truncated = _collect_pages(cache, path, deadline=deadline, timeout=timeout, limit=None)
-    return rows, not truncated
+    return rows, not truncated and not rows.stale
 
 
 def _check_runs(
@@ -712,6 +707,8 @@ def _check_runs(
         result = cache.get_json(url, timeout=_time_left(deadline, timeout))
         if result.status == 404 or not isinstance(result.body, dict):
             raise GitHubRestError(f"check runs unavailable for {sha}", status=result.status)
+        if result.stale:
+            return runs, False
         chunk = result.body.get("check_runs") or []
         if not isinstance(chunk, list):
             raise GitHubRestError(f"check runs payload was not a list for {sha}")
@@ -752,6 +749,8 @@ def _workflow_names_by_suite(
         except (GitHubRestError, GitHubRestTimeout):
             return None
         if result.status == 404 or not isinstance(result.body, dict):
+            return None
+        if result.stale:
             return None
         chunk = result.body.get("workflow_runs")
         if not isinstance(chunk, list):
@@ -798,6 +797,8 @@ def _detail_one(
     status = cache.get_json(f"repos/{repo}/commits/{sha}/status", timeout=_time_left(deadline, timeout))
     if status.status not in {200, 304} or not isinstance(status.body, dict):
         raise GitHubRestError(f"commit status unavailable for {sha}", status=status.status)
+    if status.stale:
+        checks_complete = False
     statuses = status.body.get("statuses") or []
     if not isinstance(statuses, list):
         raise GitHubRestError(f"commit status payload was not a list for {sha}")
@@ -811,6 +812,7 @@ def _detail_one(
         deadline=deadline,
         timeout=timeout,
     )
+    reviews_complete = reviews_complete and not any(r.get("_github_stale") for r in reviews)
     comments: list[dict[str, Any]] | None = None
     comments_complete = True
     if include_comments:
@@ -820,6 +822,7 @@ def _detail_one(
             deadline=deadline,
             timeout=timeout,
         )
+    comments_complete = comments_complete and not any(r.get("_github_stale") for r in comments or [])
     projected = project_pull_request(
         raw,
         pull=pull.body,
@@ -833,6 +836,10 @@ def _detail_one(
         workflow_names=workflow_names,
     )
     complete = checks_complete and reviews_complete and comments_complete and workflow_names is not None
+    stale = pull.stale or raw.get("_github_stale", False)
+    if stale:
+        projected.update(stale=True, age_seconds=max(pull.age_seconds, raw.get("_github_age_seconds", 0)))
+        complete = False
     projected["detailReadComplete"] = complete
     if not complete:
         projected.update(statusCheckRollup=None, reviewDecision=None, mergeStateStatus=None)
@@ -860,7 +867,7 @@ def list_open_prs(
     deadline = time.monotonic() + timeout
     raw, truncated = _collect_pages(store, path, deadline=deadline, timeout=timeout, limit=limit)
     if not raw:
-        return RestPage([], truncated=truncated)
+        return RestPage([], truncated=truncated, stale=raw.stale, age_seconds=raw.age_seconds)
     workers = max(1, min(_DETAIL_WORKERS, len(raw)))
 
     def _one(item: dict[str, Any]) -> dict[str, Any]:
@@ -890,7 +897,13 @@ def list_open_prs(
             return projected
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        return RestPage(list(pool.map(_one, raw)), truncated=truncated)
+        rows = list(pool.map(_one, raw))
+        return RestPage(
+            rows,
+            truncated=truncated,
+            stale=raw.stale or any(row.get("stale") for row in rows),
+            age_seconds=max(raw.age_seconds, max((row.get("age_seconds", 0) for row in rows), default=0)),
+        )
 
 
 def issue_states(
@@ -917,7 +930,7 @@ def issue_states(
             result = store.get_json(f"repos/{repo}/issues/{number}", timeout=left)
         except (GitHubRestTimeout, GitHubRestError):
             return None
-        if result.status == 404 or not isinstance(result.body, dict):
+        if result.stale or result.status == 404 or not isinstance(result.body, dict):
             return None
         state = str(result.body.get("state") or "").lower()
         if state in {"open", "closed"}:

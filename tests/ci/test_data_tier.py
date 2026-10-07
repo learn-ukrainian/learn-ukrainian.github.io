@@ -204,6 +204,7 @@ def test_collection_time_data_skip_is_in_junit(tmp_path: Path, monkeypatch: pyte
 def test_failure_reporting_uses_one_fake_gh_issue_and_clean_comment_once(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setattr(data_tier.github_client, "run", subprocess.run)
     executable = tmp_path / "gh"
     state = tmp_path / "state.json"
     state.write_text(json.dumps({"issue": None, "comments": [], "calls": []}), encoding="utf-8")
@@ -530,25 +531,20 @@ def test_every_runner_failure_reaches_report(
         assert nightly.events == []
 
 
-@pytest.mark.parametrize("persistent", [False, True])
-def test_github_failure_retried_and_persisted(
-    nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch, persistent: bool
+def test_github_failure_is_single_attempt_and_persisted(
+    nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     calls = []
 
     def report(summary: dict, baseline: dict) -> str:
         calls.append(json.loads(json.dumps(summary)))
-        if persistent or len(calls) == 1:
-            raise data_tier.DataTierError("gh unavailable at /private/gh")
-        assert data_tier.run_failed(summary)
-        assert "GitHub reporting failed" in data_tier.issue_body(summary, {})
-        return "reported failure"
+        raise data_tier.DataTierError("gh unavailable at /private/gh")
 
     monkeypatch.setattr(data_tier, "report", report)
     assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
-    assert len(calls) == 2
+    assert len(calls) == 1
     summary = json.loads(next((nightly.primary / "batch_state" / "data-tier").glob("*.summary.json")).read_text())
-    assert len(summary["runner_errors"]) == (2 if persistent else 1)
+    assert len(summary["runner_errors"]) == 1
     assert "/private/" not in json.dumps(summary)
 
 

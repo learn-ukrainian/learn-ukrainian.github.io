@@ -202,12 +202,15 @@ def test_gh_pr_list_success_with_fake_cli(tmp_path: Path, monkeypatch: pytest.Mo
     """A successful fake gh response is parsed as an available PR probe."""
     fake_gh = tmp_path / "gh"
     fake_gh.write_text(
-        '#!/bin/sh\nprintf \'%s\\n\' \'[{"number":8641,"title":"Guard fixes",'
-        '"headRefName":"codex/impl-8638","state":"OPEN"}]\'\n',
+        '#!/bin/sh\nprintf \'HTTP/2 200\\nX-RateLimit-Remaining: 1000\\n'
+        'X-RateLimit-Reset: 9999999999\\n\\n\'; printf \'%s\\n\' '
+        '\'[{"number":8641,"title":"Guard fixes",'
+        '"head":{"ref":"codex/impl-8638"},"state":"open"}]\'\n',
         encoding="utf-8",
     )
     fake_gh.chmod(0o755)
     monkeypatch.setenv("PATH", str(tmp_path))
+    monkeypatch.setenv("GH_REPO", "fixture/project")
 
     result = _probe_gh_pr_list()
 

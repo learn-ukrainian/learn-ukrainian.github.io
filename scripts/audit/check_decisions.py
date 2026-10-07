@@ -27,6 +27,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.common import github_client
 from scripts.opsec.prepublish import PublishBlocked, publication_cli
 from scripts.publish.github import Request, request_run
 
@@ -78,7 +79,7 @@ def check_budget(decisions: list[dict]) -> str | None:
 def _gh_issue_exists(dec_id: str) -> bool:
     """Check if a GH issue already exists for this stale decision."""
     try:
-        result = subprocess.run(
+        result = github_client.run(
             ["gh", "issue", "list", "--label", STALE_LABEL, "--search", dec_id, "--json", "number"],
             capture_output=True, text=True, timeout=15,
         )

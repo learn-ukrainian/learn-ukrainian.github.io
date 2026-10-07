@@ -9,6 +9,7 @@ import pytest
 from scripts.open_dataset.hydrate import OpenDatasetHydrationError, _download_with_gh, hydrate_open_dataset
 from scripts.open_dataset.publish import publish_open_dataset, write_pointer
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
 
 def _write_fixture_dataset(root: Path) -> None:
     (root / "dataset").mkdir(parents=True)

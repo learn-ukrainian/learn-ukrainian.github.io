@@ -12,6 +12,7 @@ from pathlib import Path
 
 import yaml
 
+from scripts.common import github_client
 from scripts.common.task_store_paths import tasks_dir
 
 from . import lock, registry, sources
@@ -678,7 +679,7 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                     import subprocess
 
                     try:
-                        pr = subprocess.run(
+                        pr = github_client.run(
                             ["gh", "pr", "view", str(args.pr), "--json", "title,body,comments"],
                             cwd=repo,
                             capture_output=True,

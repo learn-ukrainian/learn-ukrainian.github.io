@@ -121,6 +121,8 @@ THREAD_LEASE_SCHEMA_VERSION = 2
 # transient hook-launcher subshell is never mistaken for the long-lived owner.
 from learn_ukrainian_v4_runtime.identity import KNOWN_HARNESS_EXECUTABLES as KNOWN_HARNESS_EXECUTABLES
 
+from scripts.common import github_client
+
 MAX_HARNESS_ANCESTOR_HOPS = 10
 # Start times are compared at whole-second resolution, not a wider tolerance.
 # psutil reports sub-second precision; the `ps -o lstart=` fallback only has
@@ -391,7 +393,7 @@ def run_command(
     env: Mapping[str, str] | None = None,
 ) -> CommandResult:
     try:
-        completed = subprocess.run(
+        completed = github_client.run(
             args,
             cwd=str(cwd),
             capture_output=True,

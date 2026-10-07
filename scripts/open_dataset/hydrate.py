@@ -9,9 +9,15 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
-from urllib.request import Request, urlopen
+from urllib.request import Request
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
@@ -59,7 +65,7 @@ def _download_with_gh(pointer: dict[str, Any], repo: str) -> bytes | None:
     if not isinstance(release_tag, str) or not release_tag:
         return None
     try:
-        result = subprocess.run(
+        result = github_client.run(
             [
                 "gh",
                 "release",
@@ -79,6 +85,9 @@ def _download_with_gh(pointer: dict[str, Any], repo: str) -> bytes | None:
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
+    observation = getattr(result, "github_result", None)
+    if observation is not None and observation.error == "github_rate_limited":
+        raise github_client.GitHubRateLimited(observation.reset_at)
     if result.returncode != 0:
         return None
     return result.stdout
@@ -93,7 +102,7 @@ def download_asset(pointer: dict[str, Any], *, repo: str) -> bytes:
     if not isinstance(asset_url, str) or not asset_url:
         raise OpenDatasetHydrationError("open dataset pointer lacks asset_url")
     request = Request(asset_url, headers={"User-Agent": "learn-ukrainian-open-dataset-hydrate/1.0"})
-    with urlopen(request, timeout=60) as response:
+    with github_client.http_open(request, timeout=60) as response:
         return response.read()
 
 
@@ -195,12 +204,16 @@ def main() -> int:
     parser.add_argument("--package", type=Path, default=None, help="Read a local gzipped package instead of downloading")
     parser.add_argument("--repo", default="learn-ukrainian/learn-ukrainian.github.io")
     args = parser.parse_args()
-    result = hydrate_open_dataset(
-        pointer_path=args.pointer,
-        dataset_root=args.dataset_root,
-        package_path=args.package,
-        repo=args.repo,
-    )
+    try:
+        result = hydrate_open_dataset(
+            pointer_path=args.pointer,
+            dataset_root=args.dataset_root,
+            package_path=args.package,
+            repo=args.repo,
+        )
+    except github_client.GitHubRateLimited as exc:
+        print(json.dumps({"error": exc.code, "reset_at": exc.reset_at}))
+        return 75
     print(
         "✓ hydrated open dataset "
         f"{result['file_count']} files from manifest {result['manifest_version']} "

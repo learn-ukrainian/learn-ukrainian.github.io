@@ -156,20 +156,9 @@ def project_closeout_checks(rollup: list[Any]) -> list[Any]:
 class GhGitHubAdapter:
     """Authoritative GitHub reads and the three explicitly allowed mutations."""
 
-    def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
+    def __init__(self, repo_root: Path) -> None:
         self.repo_root = repo_root.resolve()
-        if runner is None:
-            self._run = _default_runner(self.repo_root)
-        else:
-
-            @publication_boundary(task_lifecycle.LifecycleError)
-            def checked(command, stdin=None):
-                def send(args, **kwargs):
-                    return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
-
-                return request_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
-
-            self._run = checked
+        self._run = _default_runner(self.repo_root)
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
         raw = self._run(args, stdin)
@@ -229,14 +218,6 @@ class GhGitHubAdapter:
             raise task_lifecycle.LifecycleError(
                 f"cannot run the issue-stream membership audit: {exc}"
             ) from exc
-
-    @staticmethod
-    def _owner_name(repository: str) -> tuple[str, str]:
-        try:
-            owner, name = repository.split("/", 1)
-        except ValueError as exc:
-            raise task_lifecycle.LifecycleError("repository must be owner/name") from exc
-        return owner, name
 
     def read_issue_parent(self, repository: str, issue_number: int) -> dict[str, Any] | None:
         """Read a typed, repository-qualified parent; refuse partial/unread data."""

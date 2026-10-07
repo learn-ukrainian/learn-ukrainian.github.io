@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common import github_client
 from scripts.lexicon.manifest_fingerprint import (
     DEFAULT_FINGERPRINT,
     build_fingerprint,
@@ -251,7 +252,7 @@ def upload_release_asset(
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
-    result = subprocess.run(
+    result = github_client.run(
         ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
         check=True,
         capture_output=True,
@@ -271,7 +272,7 @@ def _download_release_asset(
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
 ) -> bytes:
-    result = subprocess.run(
+    result = github_client.run(
         ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
         check=True,
         capture_output=True,

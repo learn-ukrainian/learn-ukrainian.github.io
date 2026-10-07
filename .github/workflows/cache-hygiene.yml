@@ -46,6 +46,12 @@ jobs:
           fetch-depth: 1
           sparse-checkout: |
             scripts/ci/cache_hygiene.py
+            scripts/__init__.py
+            scripts/common/__init__.py
+            scripts/common/github_client.py
+            scripts/opsec/__init__.py
+            scripts/opsec/gh_snapshot.py
+            scripts/opsec/prepublish.py
             requirements-lock.txt
             .python-version
           sparse-checkout-cone-mode: false

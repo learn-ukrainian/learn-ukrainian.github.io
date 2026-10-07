@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from typing import ClassVar
 from unittest.mock import patch
 
 import pytest
@@ -34,6 +35,9 @@ def test_app_identity_mints_a_repository_scoped_token(monkeypatch) -> None:
     captured: dict[str, object] = {}
 
     class FakeResponse:
+        status = 200
+        headers: ClassVar[dict[str, str]] = {}
+
         def read(self) -> bytes:
             return b'{"token":"ghs_app_token"}'
 
@@ -198,6 +202,9 @@ def test_restricted_mint_refuses_wider_scope_and_invalid_expiry(monkeypatch):
     from scripts.agent_runtime import agent_github_identity as module
 
     class Response:
+        status = 200
+        headers: ClassVar[dict[str, str]] = {}
+
         def __enter__(self):
             return self
 

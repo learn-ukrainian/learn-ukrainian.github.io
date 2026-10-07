@@ -14,6 +14,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from scripts.common import github_client
 from scripts.common.git_context import UnsafeBranchNameError, sanitized_git_env, validate_plain_branch_name
 from scripts.orchestration import reap_worktrees as reaper
 from scripts.orchestration.task_family.git_safety import remote_protected_branches
@@ -505,7 +506,7 @@ def _run_gh(repo: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
         env.pop(name, None)
     env["NO_COLOR"] = "1"
     env["GH_FORCE_TTY"] = "0"
-    return subprocess.run(
+    return github_client.run(
         ["gh", *args],
         cwd=repo,
         env=env,

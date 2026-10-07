@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 import tomllib
 from datetime import date
@@ -29,6 +28,8 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+
+from scripts.common import github_client
 
 SWEEP_DIR = _REPO_ROOT / "tests" / "api" / "opsec_sweep"
 TRACKING_PATH = SWEEP_DIR / "tracking_issues.toml"
@@ -58,7 +59,7 @@ def cited_issues() -> set[int]:
 
 
 def fetch_state(issue: int) -> str:
-    completed = subprocess.run(
+    completed = github_client.run(
         ["gh", "issue", "view", str(issue), "--json", "state"],
         capture_output=True,
         text=True,

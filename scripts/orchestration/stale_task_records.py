@@ -108,6 +108,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
         sys.path.insert(0, str(_path))
 
 from scripts import delegate, secret_redactor
+from scripts.common import github_client
 from scripts.common.git_context import sanitized_git_env
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
@@ -503,13 +504,17 @@ class PullIndex:
 def gh_pull_page(slug: str, page: int) -> list[dict[str, Any]]:
     """Fetch one page of closed pull requests through the REST API (``gh api``)."""
     endpoint = f"repos/{slug}/pulls?state=closed&sort=updated&direction=desc&per_page={PR_PAGE_SIZE}&page={page}"
-    proc = subprocess.run(
+    proc = github_client.run(
         ["gh", "api", endpoint],
         capture_output=True,
         text=True,
         check=False,
         timeout=delegate.DEFAULT_GH_CLI_TIMEOUT_S,
+        fresh=True,
     )
+    observation = getattr(proc, "github_result", None)
+    if observation is not None and observation.error == "github_rate_limited":
+        raise github_client.GitHubRateLimited(observation.reset_at)
     if proc.returncode != 0:
         raise RuntimeError(f"gh api {endpoint} failed: {_failure_detail(proc)}")
     loaded = json.loads(proc.stdout or "[]")
@@ -536,6 +541,8 @@ def build_pull_index(
     for page in range(1, max_pages + 1):
         try:
             pulls = pager(slug, page)
+        except github_client.GitHubRateLimited:
+            raise
         except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
             index.error = _scrub(f"{type(exc).__name__}: {exc}")[:300]
             return index
@@ -1612,6 +1619,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     tasks_dir: Path = args.tasks_dir or default_tasks_dir()

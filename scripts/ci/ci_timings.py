@@ -32,6 +32,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 DEFAULT_WORKFLOW = "CI"
 DEFAULT_WORKFLOW_FILE = "ci.yml"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -273,7 +278,7 @@ def gh_api_get(
     env = _gh_env(token)
     cmd = ["gh", "api", path]
     try:
-        completed = subprocess.run(
+        completed = github_client.run(
             cmd,
             capture_output=True,
             text=True,
@@ -298,7 +303,7 @@ def gh_api_get(
 
 def fetch_classifier_log(job_id: int, *, token: str | None = None) -> str:
     """Read the Changes job's historical classifier result, not current PR labels."""
-    completed = subprocess.run(
+    completed = github_client.run(
         ["gh", "run", "view", "--job", str(job_id), "--log"],
         capture_output=True,
         text=True,
