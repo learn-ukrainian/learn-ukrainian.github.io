@@ -315,7 +315,7 @@ def test_two_tasks_on_one_sha_each_get_a_comment(monkeypatch, tmp_path):
     assert calls["posts"] == 2
 
 
-def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
+def test_mixed_and_unknown_author_families_are_retained(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     tasks.mkdir()
 
@@ -327,8 +327,7 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
     )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai", "google"}
     monkeypatch.setattr(recorder, "_pages", lambda args: [commit("cursor/task-without-record")])
-    with pytest.raises(recorder.RecordError, match="provenance unavailable"):
-        recorder.author_families(REPOSITORY, 42, tasks)
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"unknown"}
 
 
 @pytest.mark.parametrize("trailer", ["", "X-Agent: acp/unknown", "X-Agent: cursor/unknown"])
@@ -336,8 +335,11 @@ def test_unknown_git_identity_cannot_self_certify_author(monkeypatch, tmp_path, 
     unknown = {"name": "LU Unknown", "email": "unknown@local.invalid"}
     entry = {"commit": {"message": f"work\n\n{trailer}", "author": unknown, "committer": unknown}}
     monkeypatch.setattr(recorder, "_pages", lambda args: [entry])
-    with pytest.raises(recorder.RecordError, match=r"unknown|provenance unavailable"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    if trailer:
+        assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
+    else:
+        with pytest.raises(recorder.RecordError, match="missing explicit X-Agent"):
+            recorder.author_families(REPOSITORY, 42, tmp_path)
     assert recorder.resolve_family(unknown["name"]) == "unknown"
     assert recorder.resolve_author_family(unknown["email"]) == "unknown"
 
@@ -514,7 +516,7 @@ def test_clean_merge_missing_or_invalid_sha_refuses(real_commit_set, tmp_path, s
         recorder.author_families(REPOSITORY, 42, tmp_path)
 
 
-@pytest.mark.parametrize("trailer", ["X-Agent:", "X-Agent: codex/unknown model", "X-Agent: codex/unknown-task"])
+@pytest.mark.parametrize("trailer", ["X-Agent:", "X-Agent: codex/unknown model"])
 def test_clean_merge_bad_attribution_is_not_exempted(real_commit_set, tmp_path, trailer):
     _, commits, _, _ = real_commit_set("clean_update_merge")
     commits[-1]["commit"]["message"] += f"\n{trailer}\n"
@@ -946,24 +948,22 @@ def test_author_family_resolves_model_with_harness_fallback(monkeypatch, tmp_pat
     assert recorder.author_families(REPOSITORY, 42, tmp_path) == expected
 
 
-def test_unknown_harness_model_is_refused(monkeypatch, tmp_path):
+def test_unknown_harness_model_is_retained(monkeypatch, tmp_path):
     monkeypatch.setattr(
         recorder,
         "_pages",
         lambda args: [{"commit": {"message": "work\n\nX-Agent: unknownharness/x"}}],
     )
-    with pytest.raises(recorder.RecordError):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
-def test_cursor_auto_union_family_is_refused(monkeypatch, tmp_path):
+def test_committed_cursor_auto_family_is_unknown(monkeypatch, tmp_path):
     monkeypatch.setattr(
         recorder,
         "_pages",
         lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/auto"}}],
     )
-    with pytest.raises(recorder.RecordError, match="mixed or unknown"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
 def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
@@ -1050,15 +1050,14 @@ def test_kimi_task_record_conflict_is_checked_before_single_family_fallback(monk
         recorder.author_families(REPOSITORY, 42, tasks)
 
 
-@pytest.mark.parametrize("harness", ["codex", "agy", "claude"])
-def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch, tmp_path, harness):
+@pytest.mark.parametrize("harness", ["codex", "agy", "claude", "cursor"])
+def test_missing_task_record_retains_unknown_for_multifamily_harnesses(monkeypatch, tmp_path, harness):
     monkeypatch.setattr(
         recorder,
         "_pages",
         lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {harness}/impl-missing-task"}}],
     )
-    with pytest.raises(recorder.RecordError, match="author task provenance unavailable"):
-        recorder.author_families(REPOSITORY, 42, tmp_path)
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"unknown"}
 
 
 @pytest.mark.parametrize(

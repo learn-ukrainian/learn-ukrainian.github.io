@@ -465,7 +465,12 @@ def _resolve_review_target(
             subject_evidence=subject.evidence,
         )
     author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
-    if trusted and author_model and author_family in UNRESOLVED_AUTHOR_FAMILIES:
+    if (
+        trusted
+        and author_model
+        and author_family in UNRESOLVED_AUTHOR_FAMILIES
+        and not (author_family == UNKNOWN_AUTHOR_FAMILY and facts is not None and facts.existing_families)
+    ):
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
     if facts is not None:
         # evaluate_candidate reads the complete set from ``inputs``.

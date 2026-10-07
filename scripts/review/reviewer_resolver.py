@@ -429,16 +429,25 @@ class ResolverInputs:
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
-    """The author families selection excludes, or None when the complete set holds an unresolved family.
+    """The author families selection excludes, or None for invalid/conflicting attribution.
 
     Without ``inputs.author_families`` this is just ``single_family``.
+    Unknown committed authors are reviewable by any known reviewer family (#9944).
     """
     if not inputs.author_families:
         return frozenset({single_family})
     members = set(inputs.author_families)
     if inputs.author_model or inputs.author_family:
+        # A declared Auto label cannot reintroduce the prospective writer union
+        # for a commit already attributed as Unknown. Incoming writers still
+        # carry their union explicitly in ``author_families``.
+        if single_family == CURSOR_AUTO_UNION_FAMILY and UNKNOWN_AUTHOR_FAMILY in members:
+            single_family = UNKNOWN_AUTHOR_FAMILY
         members.add(single_family)
-    if not all(member in _VALID_CONCRETE_FAMILIES or member == CURSOR_AUTO_UNION_FAMILY for member in members):
+    if not all(
+        member in _VALID_CONCRETE_FAMILIES or member in {CURSOR_AUTO_UNION_FAMILY, UNKNOWN_AUTHOR_FAMILY}
+        for member in members
+    ):
         return None
     return frozenset(members)
 
@@ -790,6 +799,8 @@ def evaluate_candidate(
     refusal = retired_model_refusal(candidate.concrete_model, _MODEL_CATALOG)
     model_id = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
     model_family = _MODEL_CATALOG["models"].get(model_id, {}).get("family")
+    if candidate.family not in _VALID_CONCRETE_FAMILIES:
+        refusal = "reviewer family unknown: a known concrete family is required"
     if candidate.family == "deepseek" or model_family == "deepseek" or candidate.route == "deepseek":
         refusal = "DeepSeek is excluded from dispatch and review by core.md P2"
     if inputs.risk.strip().casefold() == "critical" and (model_id or "").startswith("claude-sonnet-"):
