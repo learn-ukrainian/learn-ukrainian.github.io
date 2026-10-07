@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
 from scripts.maintenance import reclassify_dispatch_status as rds
+from scripts.orchestration import dead_worker_state
 
 
 def test_reclassify_walks_hot_then_archived_records(tmp_path, monkeypatch):
@@ -108,3 +110,60 @@ def test_reclassify_promotes_to_done_only_a_delivery_only_record_that_passes(
         # A repeated run leaves the settled record alone.
         assert (first[0], second) == ("changed", None)
         assert f"rate_limited -> {expected[0]}" in first[2]
+
+
+@pytest.mark.parametrize("gated", [False, True])
+def test_interrupted_reclassifier_replace_preserves_prior_record(tmp_path, monkeypatch, gated):
+    monkeypatch.setattr(rds, "_load_adapter", lambda _agent: _OkAdapter())
+    path = tmp_path / "task.json"
+    state = {
+        "task_id": "task",
+        "agent": "codex",
+        "status": "rate_limited",
+        "returncode": 0,
+        "mode": "danger",
+        "commits_ahead": 1,
+        "require_review_verdict": gated,
+    }
+    prior = (json.dumps(state, indent=4) + "\n").encode()
+    path.write_bytes(prior)
+    replacements = []
+
+    def interrupt(source, target):
+        assert Path(target) == path
+        pending = json.loads(Path(source).read_text(encoding="utf-8"))
+        assert pending["status"] == ("failed" if gated else "done")
+        replacements.append(target)
+        raise OSError("simulated interruption before replace")
+
+    monkeypatch.setattr(dead_worker_state.os, "replace", interrupt)
+    with pytest.raises(OSError, match="simulated interruption before replace"):
+        rds._reclassify_task(path, usage_by_task_id={}, dry_run=False)
+    assert replacements == [path]
+    assert path.read_bytes() == prior
+    assert path.with_suffix(".json.bak").read_bytes() == prior
+
+
+def test_reclassifier_maps_mutation_field_name_and_uses_public_sink(tmp_path, monkeypatch):
+    monkeypatch.setattr(rds, "_load_adapter", lambda _agent: _OkAdapter())
+    path = tmp_path / "task.json"
+    raw_reason = "synthetic diagnostic at private-worker.example.invalid"
+    state = {
+        "task_id": "task",
+        "agent": "codex",
+        "status": "rate_limited",
+        "returncode": 0,
+        "mode": "read-only",
+        "require_review_verdict": True,
+        "read_only_mutation_paths": ["example.txt"],
+        "last_error": raw_reason,
+    }
+    path.write_text(json.dumps(state), encoding="utf-8")
+
+    assert rds._reclassify_task(path, usage_by_task_id={}, dry_run=False)[0] == "changed"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    assert record["status"] == "failed"
+    assert record["failure_reason"] == "read_only_checkout_mutation"
+    assert record["last_error"] == "unclassified_error"
+    entries = [json.loads(line) for line in path.with_suffix(".diag").read_text(encoding="utf-8").splitlines()]
+    assert any(entry["field"] == "last_error" and entry["diagnostic"] == raw_reason for entry in entries)

@@ -86,14 +86,12 @@ def mark_dead_worker_terminal(
         raw_path = current.get("worktree_path")
         if isinstance(raw_path, str) and Path(raw_path).is_dir():
             current["final_branch_head_commit"] = resolve_head(Path(raw_path))
+        current["last_error"] = current.get("last_error") or "worker_process_dead"
         if terminal_status == "failed":
             current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
             current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
             if current.get("require_review_verdict"):
                 current["failure_reason"] = "worker_process_dead"
-            current["last_error"] = current.get("last_error") or (
-                "dispatch_settle: recorded PID is dead while status=running"
-            )
         else:
             current["stderr_excerpt"] = (
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
@@ -233,10 +231,7 @@ def mark_missing_worktree_failed(
             current["failure_reason"] = "worktree_missing_at_settle"
         current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
         current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
-        current["last_error"] = (
-            current.get("last_error")
-            or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
-        )
+        current["last_error"] = current.get("last_error") or "worktree_missing_at_settle"
         (write or _write_public_state_unlocked)(path, current)
         if ledger is not None:
             task_id = current.get("task_id") or path.stem
