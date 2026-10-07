@@ -253,7 +253,7 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
         max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
     )
     assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (
-        12,
+        16,
         6.0,
         1.5,
     )
@@ -268,20 +268,20 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
     assert overridden == adm.Thresholds(max_live_write_workers=0, min_mem_available_gib=6.0, max_load_per_cpu=0.75)
 
 
-def test_cx53_defaults_allow_twelve_slots_and_refuse_below_six_gib(tmp_path, probe):
+def test_cx53_defaults_allow_sixteen_slots_and_refuse_below_six_gib(tmp_path, probe):
     tasks = tmp_path / "tasks"
     defaults = adm.load_thresholds({})
-    for index in range(11):
+    for index in range(15):
         _record(tasks, f"writer-{index:02d}", pid=1000 + index)
 
     before_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
     assert before_cap.admitted
-    assert "live write workers 11/12" in before_cap.summary()
+    assert "live write workers 15/16" in before_cap.summary()
 
-    _record(tasks, "writer-11", pid=1011)
+    _record(tasks, "writer-15", pid=1015)
     at_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
     assert not at_cap.admitted
-    assert "live write workers 12/12 reached the cap" in at_cap.failures[0]
+    assert "live write workers 16/16 reached the cap" in at_cap.failures[0]
 
     probe["probe"] = adm.HostProbe(mem_available_bytes=int(5.9 * _GIB), load1=0.0, cpu_count=16, proc_available=True)
     below_floor = adm.evaluate("workspace-write", tmp_path / "empty", thresholds=defaults)
