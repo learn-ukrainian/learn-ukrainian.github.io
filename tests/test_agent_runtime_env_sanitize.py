@@ -394,7 +394,7 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
 @pytest.mark.parametrize(
     "provider,model,name",
-    [("codex", "gpt-6.1-sol", "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "LU Unknown")],
+    [("codex", "gpt-6.1-sol", "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "Cursor")],
 )
 def test_runner_passes_lane_identity_to_worker(tmp_path, provider, model, name):
     script = "import json, os; print(json.dumps([os.environ[k] for k in ('GIT_AUTHOR_NAME', 'GIT_COMMITTER_NAME')]))"

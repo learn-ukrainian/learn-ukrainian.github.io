@@ -31,6 +31,7 @@ import subprocess
 import urllib.request
 from pathlib import Path
 
+from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common import github_client
 from scripts.github_check_rollup import collapse_status_rollup
 
@@ -123,10 +124,15 @@ def _rollup_blocking(rollup: list) -> tuple[str, str]:
         return UNKNOWN, "no status checks found on the PR"
     failing = []
     pending = []
+    policy = load_advisory_checks()
+    blocking_count = 0
     for c in rollup:
         # Check-run vs status-context have different shapes; normalize.
         concl = (c.get("conclusion") or c.get("state") or "").upper()
         name = c.get("name") or c.get("context") or "check"
+        if is_advisory(name, workflow=c.get("workflowName") or c.get("workflow"), policy=policy):
+            continue
+        blocking_count += 1
         if concl in ("SUCCESS", "NEUTRAL", "SKIPPED"):
             continue
         if concl in ("", "PENDING", "IN_PROGRESS", "QUEUED", "EXPECTED"):
@@ -137,7 +143,7 @@ def _rollup_blocking(rollup: list) -> tuple[str, str]:
         return RED, f"failing checks: {', '.join(failing[:6])}"
     if pending:
         return RED, f"checks still pending: {', '.join(pending[:6])}"
-    return OK, f"all {len(rollup)} checks green"
+    return OK, f"all {blocking_count} blocking checks green"
 
 
 def _blocking_state(pr: int) -> tuple[str, str]:

@@ -38,7 +38,7 @@ def spy(calls):
         if (
             args[:3] == ["gh", "pr", "checks"]
             and "--json" in args
-            and args[args.index("--json") + 1] == "name,bucket,state"
+            and args[args.index("--json") + 1] == "name,bucket,state,workflow"
         ):
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if (

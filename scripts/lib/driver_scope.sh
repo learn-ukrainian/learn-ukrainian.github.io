@@ -132,6 +132,13 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   export LU_DRIVER_SCOPE_UNIT="$1" LU_DRIVER_SCOPE_PID="$$"
   entry="$2"; shift 2
   driver_scope_config && driver_scope_verify || exit 6
+  # #9624: pytest `-n auto`/`-n logical` inside a driver scope resolves to at
+  # most 8 workers (a 16-worker shard peaked at 7.18 GiB, above MemoryHigh;
+  # the 8-worker peak is posted on #9624). An inherited 0-8 is kept (0 means
+  # no xdist workers); CI never runs through this entry.
+  if ! [[ "${PYTEST_XDIST_AUTO_NUM_WORKERS:-}" =~ ^[0-8]$ ]]; then
+    export PYTEST_XDIST_AUTO_NUM_WORKERS=8
+  fi
   printf 'verified\n' > "$entry"
   exec bash "$@"
 fi

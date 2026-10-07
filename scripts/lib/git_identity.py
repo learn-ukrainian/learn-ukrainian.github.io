@@ -31,6 +31,7 @@ _GIT_FAMILY_NAMES = {
     Family.ZHIPU: "GLM",
     Family.DEEPSEEK: "DeepSeek",
     Family.XAI: "Grok",
+    Family.CURSOR: "Cursor",
 }
 
 
@@ -38,7 +39,7 @@ def git_identity_env(provider: str, model: str | None = None) -> dict[str, str]:
     """Return author and committer identity; unresolved lanes always use Unknown.
 
     Cursor inherits its effective concrete model's family using the canonical
-    runtime normalizer. Auto (even under a family-named parent) stays Unknown.
+    runtime normalizer. Auto (even under a family-named parent) uses the Cursor family.
     """
     provider = normalize_seat(provider.strip().lower().removesuffix("-tools")) or ""
     family = (

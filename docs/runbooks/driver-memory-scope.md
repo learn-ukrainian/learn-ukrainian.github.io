@@ -102,10 +102,42 @@ systemctl --user show lu-driver.slice -p LoadState -p FragmentPath
 ```
 
 No enable step is needed: transient scopes activate the slice. No system unit,
-linger setting, service unit or dispatch limit is changed. No `lu.slice` pool
-cap is included. The accountable driver installs after independent review.
+linger setting, service unit or dispatch limit is changed. The accountable
+driver installs after independent review.
 The read-back must show `LoadState=loaded` and a non-empty `FragmentPath`;
 `LoadState=loaded` alone does not prove that the unit file is installed.
+
+`lu.slice` is the shared pool (#9624): `MemoryHigh=24G`, `MemoryMax=26G`,
+`MemorySwapMax=4G` (read back as 25769803776, 27917287424 and 4294967296).
+`lu-dispatch.slice` keeps its own 20G cap. Install, check and undo it only
+through the helper, from the reviewed checkout:
+
+```bash
+scripts/ops/lu_slice_apply.sh check     # refuses (exit 4) if lu.slice memory.current > 26G; warns at >= 24G
+scripts/ops/lu_slice_apply.sh apply     # check, install the unit, daemon-reload, verify the cgroup files
+scripts/ops/lu_slice_apply.sh rollback  # lift the cap at once, remove the unit and control drop-ins, verify max
+systemctl --user show lu.slice -p LoadState -p FragmentPath -p MemoryHigh -p MemoryMax -p MemorySwapMax
+```
+
+`apply` runs `check` first. A slice limit change via `daemon-reload` updates the
+cgroup in place and does not restart or stop running scopes. If the reload does
+not reach the live cgroup, `apply` falls back to `systemctl --user set-property
+--runtime` with the same values.
+
+`rollback` runs `systemctl --user set-property --runtime lu.slice
+MemoryHigh=infinity MemoryMax=infinity MemorySwapMax=infinity` first, so the cap
+lifts immediately, then removes the installed `lu.slice` unit and the
+`lu.slice.d` control drop-ins under both `systemd/user.control` locations (the
+persistent one in the user config directory and the runtime one under
+`$XDG_RUNTIME_DIR`), runs `daemon-reload`, and verifies that `memory.high`,
+`memory.max` and `memory.swap.max` read `max`. Without removing the control
+drop-ins, a runtime override would keep the cap in force until reboot.
+
+Inside a driver scope, `scripts/lib/driver_scope.sh` exports
+`PYTEST_XDIST_AUTO_NUM_WORKERS=8` (an inherited 0–8 value is kept), so
+`pytest -n auto` and `-n logical` start at most 8 workers. An explicit
+`-n <number>` is not rewritten. CI does not enter a driver scope and keeps its
+own worker count.
 
 ## Death and admission behavior
 
@@ -158,3 +190,5 @@ References: [systemd-run](https://raw.githubusercontent.com/systemd/systemd/v259
 [memory controls](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.resource-control.xml),
 [scope OOM policy](https://raw.githubusercontent.com/systemd/systemd/v259/man/systemd.scope.xml),
 [kernel memory accounting](https://docs.kernel.org/admin-guide/cgroup-v2.html#memory-interface-files).
+
+<!-- CodeQL retrigger after 2026-10-07 GitHub outage; no content change. -->

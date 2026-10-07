@@ -59,6 +59,17 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    """Keep an inherited gh shim's cache out of miniature worker repositories.
+
+    Completion measures every worker change. A host CLI cache is test
+    infrastructure, and must not become an unowned content change or a
+    provider failure in those measurements.
+    """
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path / "github-client-cache"))
+
+
+@pytest.fixture(autouse=True)
 def _worktree_add_via_run(monkeypatch):
     """Route ``git worktree add`` through ``subprocess.run`` in this file.
 
@@ -12923,7 +12934,12 @@ def test_rescue_junk_cleanup_preserves_unrelated_staging_and_runs_no_worker_prog
     assert not junk.exists() and readme.read_bytes() == original
     with delegate._rescue_execution_context(repo) as context:
         assert context.checked("show", ":README", index=repo.admin_dir / "index") == "user's staged work"
-        assert context.run("ls-files", "--error-unmatch", "__pycache__/scratch.pyc", index=repo.admin_dir / "index").returncode != 0
+        assert (
+            context.run(
+                "ls-files", "--error-unmatch", "__pycache__/scratch.pyc", index=repo.admin_dir / "index"
+            ).returncode
+            != 0
+        )
     assert not marker.exists()
 
 
@@ -18778,7 +18794,7 @@ def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_
 
 @pytest.mark.parametrize(
     "agent,model,name",
-    [("codex", None, "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "LU Unknown")],
+    [("codex", None, "OpenAI"), ("cursor", "grok-4.7-high", "Grok"), ("cursor", "auto", "Cursor")],
 )
 def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch, agent, model, name):
     from scripts.lib.git_identity import git_identity_env
@@ -18809,7 +18825,7 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
     "requested,name",
     [("grok-4.7-high", "Claude")]
     + [
-        (spelling, "LU Unknown")
+        (spelling, "Cursor")
         for selector in (
             "auto",
             "default",
@@ -18821,7 +18837,9 @@ def test_auto_finalize_commit_replaces_parent_git_identity(tmp_path, monkeypatch
         for spelling in (selector, selector.upper(), selector.title(), f" {selector} ")
     ],
 )
-def test_cursor_auto_finalize_uses_completed_runner_model(tmp_tasks_dir, tmp_path, monkeypatch, requested, name):
+def test_cursor_finalize_preserves_auto_selector_and_concrete_runner_model(
+    tmp_tasks_dir, tmp_path, monkeypatch, requested, name
+):
     _sanitize_git_env_for_test(monkeypatch)
     worktree = _agy_dispatch_worktree(tmp_path, "cursor/identity-failover")
     (worktree / "result.txt").write_text("worker output\n")

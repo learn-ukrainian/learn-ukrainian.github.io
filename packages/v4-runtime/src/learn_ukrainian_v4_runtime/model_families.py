@@ -19,8 +19,8 @@ Routing decisions codified here (2026-07-17, issue #5385):
 
 * ``grok`` → ``xai`` — a family of its own, SEPARATE from cursor. The old
   Layer-B ``grok-cursor`` merge is gone.
-* ``cursor`` / ``composer`` / ``auto`` alone → ``UNKNOWN``. cursor-Auto is
-  never an acceptable formal-review identity
+* ``cursor`` / Auto selectors → ``cursor``. Auto is never an acceptable
+  formal-review model identity
   (``agents_extensions/shared/rules/model-assignment.md``); a cursor seat that
   records a pinned model inherits the pin's family.
 * ``agy`` / ``antigravity`` / ``gemma`` / ``gemini`` → ``google`` (restored in Layer-B, which
@@ -58,6 +58,7 @@ class Family(StrEnum):
     OPENAI = "openai"
     DEEPSEEK = "deepseek"
     XAI = "xai"
+    CURSOR = "cursor"
     MOONSHOT = "moonshot"
     ZHIPU = "zhipu"
     POOLSIDE = "poolside"
@@ -86,7 +87,7 @@ _LINEAGE_FIELDS: tuple[str, ...] = (
 
 # Marker words → family. Matched as whole words (casefolded) so e.g. ``gemmate``
 # is NOT mistaken for ``gemma``. cursor/composer/auto are handled separately
-# because cursor-Auto is UNKNOWN unless a concrete pin overrides it.
+# because Auto has its own family while concrete pins retain their family.
 _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("deepseek",), Family.DEEPSEEK),
     (("gemma", "gemini", "agy", "antigravity", "google"), Family.GOOGLE),
@@ -147,28 +148,41 @@ def canonical_cursor_model(value: Any) -> str:
     return text
 
 
+def is_cursor_auto_selector(model: Any) -> bool:
+    """Recognize Auto/default, case-insensitively, with optional Cursor prefixes.
+
+    None and empty values are not selectors: the adapter uses a concrete default.
+    """
+    text = str(model or "").strip().casefold()
+    for prefix in ("cursor:", "cursor/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+    return text in {"auto", "default"}
+
+
 def normalize_family(value: Any) -> Family:
     """Normalize a single token (string or stringifiable) to a ``Family``.
 
     The one token→family mapping the whole route-refusal chain consumes.
-    Returns ``Family.UNKNOWN`` for empty/unrecognized input and for bare
-    cursor/composer/auto markers (cursor-Auto). ``composer-2.5`` is an
+    Cursor Auto selectors and the Cursor family label resolve to CURSOR.
+    Empty/unrecognized input remains UNKNOWN. ``composer-2.5`` is an
     exception because it is a concrete model identity accepted by the formal
     review policy. Returns ``Family.FIXTURE`` for the fixture sentinels.
     """
 
     if value is None:
         return Family.UNKNOWN
+    if is_cursor_auto_selector(value):
+        return Family.CURSOR
     text = canonical_cursor_model(value).strip().casefold()
     if not text:
         return Family.UNKNOWN
+    if text == "cursor":
+        return Family.CURSOR
     if text in _FIXTURE_MARKERS:
         return Family.FIXTURE
     if _CURSOR_PATTERN.search(text) and not _CONCRETE_CURSOR_MODEL_PATTERN.search(text):
-        # cursor-Auto: identity not pinned, so it is not a usable formal-review
-        # family. A cursor seat that records a concrete pin resolves through
-        # the pin via ``normalize_lineage_family``. Composer without its 2.5
-        # model identity is equally insufficient.
+        # Unmapped Cursor/Composer labels do not attest a concrete model.
         return Family.UNKNOWN
     for pattern, family in _FAMILY_PATTERNS:
         if pattern.search(text):
@@ -194,7 +208,8 @@ def normalize_lineage_family(metadata: Any) -> Family:
 
     Walks the lineage-metadata fields. A pinned model overrides a coarse
     cursor seat, so ``{"family": "cursor", "pin": "grok-4"}`` resolves to
-    ``xai`` while ``{"family": "cursor"}`` (no pin) is ``UNKNOWN``. When two
+    ``xai`` while ``{"family": "cursor"}`` (no pin) is ``CURSOR``. An explicit
+    Auto selector retains Cursor even when runtime telemetry names a model. When two
     or more distinct concrete families appear (e.g. a ``google`` family with a
     ``deepseek`` pin) the signal is ambiguous and the result is ``UNKNOWN``
     (fail closed). Fixture-only metadata is ``FIXTURE``.
@@ -204,9 +219,17 @@ def normalize_lineage_family(metadata: Any) -> Family:
         return Family.UNKNOWN
     if isinstance(metadata, str):
         return normalize_family(metadata)
+    if isinstance(metadata, Mapping) and any(
+        is_cursor_auto_selector(metadata.get(field))
+        for field in ("pin", "pin_slug", "model", "model_id", "writer_model_id")
+    ):
+        # Auto is the author selector even when telemetry names a concrete model.
+        return Family.CURSOR
     concrete: set[Family] = set()
     saw_fixture: list[bool] = []
     _visit(metadata, concrete, saw_fixture)
+    if len(concrete) > 1:
+        concrete.discard(Family.CURSOR)  # A concrete model pin overrides the harness label.
     if len(concrete) == 1:
         return next(iter(concrete))
     if concrete:

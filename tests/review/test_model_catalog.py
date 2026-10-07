@@ -1,4 +1,4 @@
-"""Frozen base-code evidence for the additive #9302 routing migration."""
+"""Frozen routing evidence for #9302 with the approved #9951 Cursor revision."""
 
 from __future__ import annotations
 
@@ -36,8 +36,26 @@ def test_frozen_hashes_and_matrix_denominator():
     assert ledger and all(row["disposition"] and row["purpose"] and row["owner"] for row in ledger)
 
 
-def test_legacy_catalog_equals_untouched_base():
+def test_legacy_catalog_equals_approved_routing_baseline():
     assert expanded_legacy_view() == BASELINE["catalog"]
+
+
+@pytest.mark.parametrize("entrypoint,args", [
+    ("scripts/review/model_catalog.py", ["--resolve-role", "bounded_advisor"]),
+    ("scripts/lint/lint_model_catalog.py", ["--as-of", "2026-10-07"]),
+])
+def test_direct_catalog_callers_without_repository_pythonpath(entrypoint, args, tmp_path):
+    source = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "-I", str(source / entrypoint), *args],
+        cwd=tmp_path, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    if entrypoint.endswith("lint_model_catalog.py"):
+        assert payload["ok"] is True
+    else:
+        assert payload["candidates"][0]["model_id"] == "gpt-6.1-sol"
 
 
 @pytest.mark.parametrize("host_clis", ["absent", "present"])
