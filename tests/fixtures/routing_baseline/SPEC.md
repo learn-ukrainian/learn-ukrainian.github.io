@@ -1,13 +1,15 @@
 # Routing baseline v1 (#9302)
 
-The pinned source is `dae3d752426d6c11c5dc82260ec07ae8164e7730`.
-This fixture is committed before any production change. Its capture driver
+The pinned source-contract/occurrence census is
+`dae3d752426d6c11c5dc82260ec07ae8164e7730`. The host-independent executable
+capture was reproduced from `019dcde544fe93f5aecf6d0deb6b2fd7352f339b`, the
+original fixture commit before any production migration. Its capture driver
 imports that checkout's code in a fresh process. `SHA256SUMS` binds the compressed
 JSON output, the complete input matrix, and the occurrence ledger. Gzip has a
 zero modification time; JSON uses sorted object keys and retains array order.
 
-Reproduce from a scratch clone checked out at the pinned SHA, using the shared
-project interpreter and the committed `capture.py` (outside the clone):
+Reproduce from a scratch clone checked out at `019dcde544`, using the shared
+project interpreter and the corrected `capture.py` (outside the clone):
 
 ```text
 <project-python> capture.py --source-root <untouched-base-checkout> \
@@ -38,9 +40,10 @@ against a changed checkout to compare behavior, without updating expected data.
   registry agents retain argparse refusals. No worker process is started.
 - Adapters: every registered adapter, both read-only and workspace-write,
   default model, high effort, with/without review isolation; complete invocation
-  plans or construction refusals. No provider invocation is executed. Missing
-  binaries and unsupported isolation are observable refusals in the isolated
-  environment, not production health evidence.
+  plans or construction refusals. Real binary lookup and version gates run
+  against staged stub CLIs. Only version probes execute; every other stub
+  invocation fails. Unsupported isolation remains a construction refusal.
+  These fixed discovery inputs are not production health evidence.
 - Launchers: every public provider, interactive/driver defaults, environment
   overrides, CLI precedence, retired pins and help; real shell parse,
   normalization and certification helpers. Lease acquisition and provider
@@ -58,8 +61,13 @@ against a changed checkout to compare behavior, without updating expected data.
 
 ## Isolation and normalization
 
-The environment is replaced with a fixed system PATH and capture-local HOME,
-TMPDIR, logs and task roots. It contains no credentials or live provider config.
+The environment is replaced with a capture-local PATH, HOME, TMPDIR, logs and
+task roots, fixed locale/timezone and child hash seed. PATH contains only
+allowlisted system `bash`, `git` and `cat`, plus the stub CLIs enumerated in
+`capture.py`; system PATH is never appended. Claude reports `2.1.289` and AGY
+reports `1.2.10` as fixed version-probe inputs. Other stubs report `1.0.0`.
+The environment contains no credentials or live provider config. Fresh-capture
+tests vary ambient CLI presence, HOME, provider/launcher overrides and timezone.
 The capacity clock is `2026-10-06T12:00:00+00:00`; adapter UUID generation uses
 `00000000-0000-0000-0000-000000000001` as an input, not a post-capture rewrite.
 Only the explicitly supplied source checkout and capture scratch root become
@@ -68,6 +76,10 @@ paths (also in argv/metadata) become `<ADAPTER_OUTPUT_row>`; this enumerates
 random temporary capture filenames without changing any invocation flags.
 The exact AGY `AGY_RUNTIME_LOG_FILE` capture path becomes `<ADAPTER_LOG_row>`
 wherever that same path occurs; its PID suffix is not routing evidence.
+The exact Grok `metadata.write_guard_agent_file` path becomes
+`<ADAPTER_WRITE_GUARD_row>` wherever it occurs. Grok's URL-quoted scratch cwd
+becomes `<CAPTURE_ROOT_URLENCODED>` in its session-directory component. These
+enumerated path rewrites retain all invocation flags and refusal evidence.
 The scratch checkout must include `.mcp` alongside scripts, rules and tests.
 No model, family, order, health, reason,
 policy value, exit status or exception is normalized. Source-contract paths are

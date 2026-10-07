@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import runpy
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -39,13 +40,28 @@ def test_legacy_catalog_equals_untouched_base():
     assert expanded_legacy_view() == BASELINE["catalog"]
 
 
-def test_fresh_capture_equals_every_frozen_surface(tmp_path):
+@pytest.mark.parametrize("host_clis", ["absent", "present"])
+def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     source = Path(__file__).resolve().parents[2]
     output = tmp_path / "capture"
+    host_bin = tmp_path / "host-bin"
+    host_bin.mkdir()
+    for name in ("bash", "git", "cat"):
+        (host_bin / name).symlink_to(shutil.which(name, path="/usr/bin:/bin"))
+    if host_clis == "present":
+        for name in (*CAPTURE["CLI_VERSIONS"], "npx"):
+            stub = host_bin / name
+            stub.write_text("#!/bin/sh\nprintf 'ambient CLI must not run\\n' >&2\nexit 99\n")
+            stub.chmod(0o755)
+    host_home = tmp_path / "host-home"
+    host_home.mkdir()
     result = subprocess.run(
         [sys.executable, str(FIXTURE / "capture.py"), "--source-root", str(source),
          "--output", str(output), "--project-python", sys.executable],
-        cwd=tmp_path, env={"PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path)},
+        cwd=tmp_path, env={"PATH": str(host_bin), "TMPDIR": str(tmp_path), "HOME": str(host_home),
+                          "LAUNCHER_MODEL": "unregistered-model", "CODEX_HOME": str(host_home),
+                          "LEARN_UK_AGY_MODEL": "unregistered-model", "LU_ACPX_TRANSPORT": "shadow",
+                          "LEARN_UK_KIMI_BIN": str(host_bin / "kimi"), "TZ": "Pacific/Honolulu"},
         capture_output=True, text=True, timeout=180,
     )
     assert result.returncode == 0, result.stderr
@@ -56,6 +72,22 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path):
         assert actual[surface] == BASELINE[surface], f"frozen surface differs: {surface}"
     assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
+
+
+def test_capture_environment_controls_lookup_and_version_probes(tmp_path):
+    env = CAPTURE["capture_environment"](tmp_path)
+    assert env["PATH"] == str(tmp_path / "bin")
+    assert env["HOME"] == str(tmp_path / "home")
+    assert env["TZ"] == "UTC"
+    for name, version in CAPTURE["CLI_VERSIONS"].items():
+        binary = shutil.which(name, path=env["PATH"])
+        assert binary == str(tmp_path / "bin" / name)
+        probe = subprocess.run([binary, "--version"], env=env, capture_output=True, text=True, timeout=5)
+        assert (probe.returncode, probe.stdout, probe.stderr) == (0, version + "\n", "")
+        invoke = subprocess.run([binary, "-p", "fixture"], env=env, capture_output=True, text=True, timeout=5)
+        assert invoke.returncode == 97
+        assert invoke.stderr == "capture stub refuses provider execution\n"
+    assert shutil.which("npx", path=env["PATH"]) is None
 
 
 def test_capture_encodes_structures_without_reordering_arrays():

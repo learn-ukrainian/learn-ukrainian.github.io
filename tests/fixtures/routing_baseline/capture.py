@@ -15,6 +15,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -24,11 +25,42 @@ from datetime import UTC, datetime
 from functools import partial
 from pathlib import Path
 from unittest.mock import patch
+from urllib.parse import quote
 
 import yaml
 
 BASE_SHA = "dae3d752426d6c11c5dc82260ec07ae8164e7730"
 FIXED_NOW = datetime(2026, 10, 6, 12, tzinfo=UTC)
+CLI_VERSIONS = {
+    "claude": "2.1.289 (Claude Code)",
+    "agy": "1.2.10",
+    **dict.fromkeys(("codex", "gemini", "grok", "opencode", "hermes", "cursor-agent", "kimi"), "1.0.0"),
+}
+
+
+def capture_environment(scratch):
+    """Stage discovery/version inputs; never inherit installed agent binaries."""
+    binary_root = scratch / "bin"
+    binary_root.mkdir()
+    # Only the tools used by the capture itself are real. Do not append the
+    # system PATH: it may contain provider CLIs (including npx) on CI or locally.
+    for name in ("bash", "git", "cat"):
+        executable = shutil.which(name, path="/usr/bin:/bin")
+        if executable is None:
+            raise RuntimeError(f"capture requires system tool: {name}")
+        (binary_root / name).symlink_to(executable)
+    for name, version in CLI_VERSIONS.items():
+        stub = binary_root / name
+        stub.write_text(
+            "#!/bin/sh\n"
+            f"if [ \"$#\" = 1 ] && [ \"$1\" = --version ]; then printf '%s\\n' '{version}'; exit 0; fi\n"
+            "printf '%s\\n' 'capture stub refuses provider execution' >&2\nexit 97\n"
+        )
+        stub.chmod(0o755)
+    (scratch / "home").mkdir()
+    return {"PATH": str(binary_root), "HOME": str(scratch / "home"), "TMPDIR": str(scratch),
+            "LU_MCP_SOURCES_LOG_DIR": str(scratch / "logs"), "LU_TASKS_DIR": str(scratch / "tasks"),
+            "LC_ALL": "C.UTF-8", "TZ": "UTC", "PYTHONHASHSEED": "0"}
 
 
 def plain(value):
@@ -185,8 +217,8 @@ def capture(source, scratch, project_python):
                      patch.object(delegate, "_credit_period_refusal", return_value=None):
                     outputs["dispatch"].append(observed(admission))
 
-    # Adapter construction only: no invocation is executed. Missing binaries
-    # and unsupported isolation are refusals, retained as part of the contract.
+    # Adapter construction against staged CLIs: real lookup/version gates run,
+    # but no provider invocation is executed. Unsupported isolation is retained.
     outputs["adapters"] = []
     adapter_inputs = []
     for agent, entry in AGENTS.items():
@@ -272,10 +304,13 @@ printf '%s\\n' "$LC_MODEL" "$LC_EFFORT" "$LC_HARNESS" "$LC_ENDPOINT" "$LC_ISOLAT
                 "dispatch": dispatch_inputs, "adapters": adapter_inputs, "launchers": launcher_inputs}
     # Exactly enumerated capture roots; never model/reason/health normalization.
     serialized = encode(outputs).decode().replace(str(scratch), "<CAPTURE_ROOT>").replace(str(source), "<SOURCE_ROOT>")
+    # Grok's session directory encodes cwd as a single URL-quoted component.
+    serialized = serialized.replace(quote(str(scratch), safe=""), "<CAPTURE_ROOT_URLENCODED>")
     for index, row in enumerate(outputs["adapters"]):
         value = row.get("value", {})
         files = {"OUTPUT": value.get("output_file"),
-                 "LOG": value.get("env_overrides", {}).get("AGY_RUNTIME_LOG_FILE")}
+                 "LOG": value.get("env_overrides", {}).get("AGY_RUNTIME_LOG_FILE"),
+                 "WRITE_GUARD": value.get("metadata", {}).get("write_guard_agent_file")}
         for kind, filename in files.items():
             if filename:
                 normalized_file = filename.replace(str(scratch), "<CAPTURE_ROOT>").replace(str(source), "<SOURCE_ROOT>")
@@ -295,9 +330,7 @@ def main():
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="routing-9302-", dir=os.environ["TMPDIR"]) as temporary:
         scratch = Path(temporary)
-        safe_env = {"PATH": "/usr/bin:/bin", "HOME": str(scratch / "home"), "TMPDIR": str(scratch),
-                    "LU_MCP_SOURCES_LOG_DIR": str(scratch / "logs"), "LU_TASKS_DIR": str(scratch / "tasks")}
-        (scratch / "home").mkdir()
+        safe_env = capture_environment(scratch)
         with patch.dict(os.environ, safe_env, clear=True):
             baseline, manifest, ledger = capture(args.source_root.resolve(), scratch, args.project_python)
         args.output.mkdir(parents=True, exist_ok=True)
