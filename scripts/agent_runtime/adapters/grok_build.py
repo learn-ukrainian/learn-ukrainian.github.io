@@ -544,8 +544,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. Reviewers retain that Bash deny alongside a closed tool
-        # set and all-tool guard; literal shell execution remains unresolved.
+        # read tools can run. Reviewers deny Bash unconditionally and expose only
+        # tracked-file read tools through a closed tool set and all-tool guard.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
