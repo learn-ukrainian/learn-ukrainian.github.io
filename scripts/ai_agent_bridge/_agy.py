@@ -155,20 +155,20 @@ _CONTENT_PREFIXES = (
 )
 # build_arc_landing.py consumes these schema-supported core levels. Its
 # ARC_LANDING_LEVELS tracks landing ownership, not the accepted input levels.
-_CONTENT_ARC_PATHS = frozenset(
-    f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2")
-)
+_CONTENT_ARC_PATHS = frozenset(f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2"))
 # Track roots whose top level also carries code-imported manifests/data.
 _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
 # Data/code extensions that are never prose content anywhere under the roots.
 _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 # Exact code-imported files inside the content roots.
-_CONTENT_CODE_PATHS = frozenset({
-    "curriculum/l2-uk-direct/manifest.yaml",
-    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
-    "curriculum/l2-uk-en/module-mapping.json",
-    "curriculum/l2-uk-en/vocabulary.db",
-})
+_CONTENT_CODE_PATHS = frozenset(
+    {
+        "curriculum/l2-uk-direct/manifest.yaml",
+        "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+        "curriculum/l2-uk-en/module-mapping.json",
+        "curriculum/l2-uk-en/vocabulary.db",
+    }
+)
 
 
 def _is_code_load_bearing_content(path: str) -> bool:

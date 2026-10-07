@@ -1920,7 +1920,10 @@ def _cold_codex_version_probe():
 
 @pytest.mark.parametrize("stdout_delay_ticks", [0, 10], ids=["immediate-stdout", "late-stdout"])
 def test_invoke_early_reap_fires_and_recovers_response(
-    tmp_path, monkeypatch, stdout_delay_ticks, _cold_codex_version_probe,
+    tmp_path,
+    monkeypatch,
+    stdout_delay_ticks,
+    _cold_codex_version_probe,
 ):
     """Regression pin (2026-04-10, reworked for #9532): when Codex hangs after
     finishing its turn, the runner hands check_early_reap the captured

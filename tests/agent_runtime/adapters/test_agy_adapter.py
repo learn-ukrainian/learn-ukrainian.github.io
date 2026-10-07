@@ -43,14 +43,7 @@ def _plan(
 
 
 def _write_transcript(app_data: Path) -> None:
-    transcript = (
-        app_data
-        / "brain"
-        / CONVERSATION_ID
-        / ".system_generated"
-        / "logs"
-        / "transcript.jsonl"
-    )
+    transcript = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "logs" / "transcript.jsonl"
     transcript.parent.mkdir(parents=True)
     transcript.write_text(
         (FIXTURES / "verify_words_transcript.jsonl").read_text(encoding="utf-8"),
@@ -86,8 +79,8 @@ def test_parse_response_extracts_mcp_calls_from_real_agy_transcript(
             "arguments": {"words": ["стіл", "ранок"]},
             "output_summary": (
                 '[{"text": "Batch verification: 2 words\\n\\nFound: 2/2\\n\\n'
-                '- **стіл** — FOUND (2 match): стіл(noun), стіл(noun)\\n'
-                '- **ранок** — FOUND (3 match): ранка(noun), ранок(noun), '
+                "- **стіл** — FOUND (2 match): стіл(noun), стіл(noun)\\n"
+                "- **ранок** — FOUND (3 match): ранка(noun), ранок(noun), "
                 'ранок(noun)", "type": "text"}]'
             ),
             "timestamp": "2026-05-21T14:12:12Z",
@@ -110,7 +103,7 @@ def test_parse_response_accepts_stdout_marker_shape() -> None:
     stdout = "\n".join(
         [
             '● mcp_sources_search_text({"query":"Захарійчук 52","limit":3})',
-            "⎿ Found 1 results for: \"Захарійчук 52\"",
+            '⎿ Found 1 results for: "Захарійчук 52"',
             "",
             "Final response.",
         ]
@@ -128,14 +121,9 @@ def test_parse_response_accepts_stdout_marker_shape() -> None:
         {
             "name": "mcp__sources__search_text",
             "arguments": {"query": "Захарійчук 52", "limit": 3},
-            "output_summary": (
-                '[{"text": "Found 1 results for: \\"Захарійчук 52\\"", '
-                '"type": "text"}]'
-            ),
+            "output_summary": ('[{"text": "Found 1 results for: \\"Захарійчук 52\\"", "type": "text"}]'),
             "timestamp": "",
-            "result": [
-                {"type": "text", "text": 'Found 1 results for: "Захарійчук 52"'}
-            ],
+            "result": [{"type": "text", "text": 'Found 1 results for: "Захарійчук 52"'}],
         }
     ]
 
@@ -163,10 +151,7 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
                     '"ToolName":"\\"search_text\\"",'
                     '"Arguments":"{\\"query\\":\\"ранок\\"}"}}]}'
                 ),
-                (
-                    '{"type":"MCP_TOOL","content":"The output was large and was '
-                    f'saved to: {output_file.as_uri()}"}}'
-                ),
+                (f'{{"type":"MCP_TOOL","content":"The output was large and was saved to: {output_file.as_uri()}"}}'),
             ]
         ),
         encoding="utf-8",
@@ -180,12 +165,8 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
         plan=_plan(tmp_path, log_file=log_file, app_data=app_data),
     )
 
-    assert result.tool_calls[0]["result"] == [
-        {"type": "text", "text": "inline result from agy steps file"}
-    ]
-    assert result.tool_calls[0]["output_summary"] == (
-        '[{"text": "inline result from agy steps file", "type": "text"}]'
-    )
+    assert result.tool_calls[0]["result"] == [{"type": "text", "text": "inline result from agy steps file"}]
+    assert result.tool_calls[0]["output_summary"] == ('[{"text": "inline result from agy steps file", "type": "text"}]')
 
 
 @pytest.mark.parametrize("attempt", [False, True], ids=["ordinary", "attempt"])
@@ -193,7 +174,12 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
 @pytest.mark.parametrize("steps_dir", ["steps", ".system_generated/steps"])
 @pytest.mark.parametrize("swap", [False, True], ids=["regular", "swapped"])
 def test_saved_result_with_unresolved_app_data_ancestor(
-    tmp_path: Path, monkeypatch, attempt: bool, shape: str, steps_dir: str, swap: bool,
+    tmp_path: Path,
+    monkeypatch,
+    attempt: bool,
+    shape: str,
+    steps_dir: str,
+    swap: bool,
 ) -> None:
     real = tmp_path / "real"
     real.mkdir()
@@ -206,8 +192,13 @@ def test_saved_result_with_unresolved_app_data_ancestor(
     if attempt:
         config["review_write_root"] = str(real)
     plan = AgyAdapter().build_invocation(
-        prompt="prompt", mode="workspace-write", cwd=tmp_path,
-        model=None, task_id=None, session_id=None, tool_config=config,
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=config,
     )
     app_data = Path(plan.env_overrides["AGY_APP_DATA_DIR"])
     conversation = app_data / "brain" / CONVERSATION_ID
@@ -218,9 +209,18 @@ def test_saved_result_with_unresolved_app_data_ancestor(
     transcript.parent.mkdir(parents=True, exist_ok=True)
     pointer = f"The output was large and was saved to: {output.as_uri()}"
     events = [
-        {"tool_calls": [{"name": "call_mcp_tool", "args": {
-            "ServerName": "sources", "ToolName": "search_text", "Arguments": {},
-        }}]},
+        {
+            "tool_calls": [
+                {
+                    "name": "call_mcp_tool",
+                    "args": {
+                        "ServerName": "sources",
+                        "ToolName": "search_text",
+                        "Arguments": {},
+                    },
+                }
+            ]
+        },
         {"type": "GENERIC" if shape == "generic" else "MCP_TOOL", "content": pointer},
     ]
     if shape != "fifo":
@@ -228,7 +228,8 @@ def test_saved_result_with_unresolved_app_data_ancestor(
             event["step_index"] = index
     transcript.write_text("\n".join(json.dumps(event) for event in events) + "\n", encoding="utf-8")
     Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"]).write_text(
-        f"Created conversation {CONVERSATION_ID}\n", encoding="utf-8",
+        f"Created conversation {CONVERSATION_ID}\n",
+        encoding="utf-8",
     )
     original = agy_module._read_transcript_events
     forbidden = tmp_path / "forbidden"
@@ -264,14 +265,7 @@ def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
         f"I0521 printmode.go:130] Print mode: conversation={conversation_id}, sending message\n",
         encoding="utf-8",
     )
-    transcript = (
-        app_data
-        / "brain"
-        / conversation_id
-        / ".system_generated"
-        / "logs"
-        / "transcript.jsonl"
-    )
+    transcript = app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
     transcript.parent.mkdir(parents=True)
     transcript.write_text(
         (FIXTURES / "duplicate_intents_transcript.jsonl").read_text(encoding="utf-8"),
@@ -308,7 +302,9 @@ def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
 
 @pytest.mark.parametrize("truncated", [False, True])
 def test_saved_tool_result_logs_only_size_and_truncation(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
     truncated: bool,
 ) -> None:
     app_data = tmp_path / "app-data"
@@ -326,7 +322,9 @@ def test_saved_tool_result_logs_only_size_and_truncation(
     pointer = f"The output was large and was saved to: {(alias / relative_output).as_uri()}"
 
     result = agy_module._inline_saved_tool_result_pointer(
-        pointer, transcript_path=transcript, trusted_root=app_data,
+        pointer,
+        transcript_path=transcript,
+        trusted_root=app_data,
         app_data_alias=agy_module._agy_app_data(plan.env_overrides),
     )
 
@@ -339,7 +337,8 @@ def test_saved_tool_result_logs_only_size_and_truncation(
     record = records[0]
     assert record.levelname == ("WARNING" if truncated else "INFO")
     assert record.msg == (
-        "agy inlined truncated tool result pointer (%s bytes)" if truncated
+        "agy inlined truncated tool result pointer (%s bytes)"
+        if truncated
         else "agy inlined tool result pointer (%s bytes)"
     )
     assert record.args == (len(raw),)
@@ -378,9 +377,7 @@ def test_pairing_preserves_orphan_mcp_result_without_planner_intent(
         _mcp_result("out-A", step_index=2),
         _mcp_result("orphan-out", step_index=3),
     ]
-    calls = agy_module._pair_transcript_by_step_index(
-        events, transcript_path=tmp_path / "transcript.jsonl"
-    )
+    calls = agy_module._pair_transcript_by_step_index(events, transcript_path=tmp_path / "transcript.jsonl")
     assert [call["name"] for call in calls] == ["mcp__sources__query_wikipedia", ""]
     assert [call["result"][0]["text"] for call in calls] == ["out-A", "orphan-out"]
 
@@ -395,9 +392,7 @@ def test_pairing_keeps_genuine_repeat_calls_distinct(tmp_path: Path) -> None:
         _planner_intent("query_wikipedia", "Колядки", step_index=3),
         _mcp_result("out-2", step_index=4),
     ]
-    calls = agy_module._pair_transcript_by_step_index(
-        events, transcript_path=tmp_path / "transcript.jsonl"
-    )
+    calls = agy_module._pair_transcript_by_step_index(events, transcript_path=tmp_path / "transcript.jsonl")
     assert [call["name"] for call in calls] == [
         "mcp__sources__query_wikipedia",
         "mcp__sources__query_wikipedia",
@@ -413,9 +408,7 @@ def test_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
         _planner_intent("query_wikipedia", "Колядки", step_index=2),  # re-emit, still pending
         _mcp_result("out-1", step_index=3),
     ]
-    calls = agy_module._pair_transcript_by_step_index(
-        events, transcript_path=tmp_path / "transcript.jsonl"
-    )
+    calls = agy_module._pair_transcript_by_step_index(events, transcript_path=tmp_path / "transcript.jsonl")
     assert [call["name"] for call in calls] == ["mcp__sources__query_wikipedia"]
     assert [call["result"][0]["text"] for call in calls] == ["out-1"]
 
@@ -498,8 +491,13 @@ def test_build_invocation_sets_print_timeout(tmp_path: Path) -> None:
 def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path: Path, size: int) -> None:
     prompt = 'quoted "text"\n' + "x" * size
     plan = AgyAdapter().build_invocation(
-        prompt=prompt, mode="read-only", cwd=tmp_path, model=None,
-        task_id="large-prompt", session_id=None, tool_config=None,
+        prompt=prompt,
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="large-prompt",
+        session_id=None,
+        tool_config=None,
     )
 
     assert prompt not in plan.cmd
@@ -515,8 +513,13 @@ def test_build_invocation_sends_entire_prompt_as_one_stdin_user_message(tmp_path
 def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path) -> None:
     prompt = "before\ud800after"
     plan = AgyAdapter().build_invocation(
-        prompt=prompt, mode="read-only", cwd=tmp_path, model=None,
-        task_id="surrogate-prompt", session_id=None, tool_config=None,
+        prompt=prompt,
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="surrogate-prompt",
+        session_id=None,
+        tool_config=None,
     )
 
     assert plan.stdin_payload.isascii()
@@ -641,9 +644,7 @@ def _parse_generic(
         log_file.write_text(log_text, encoding="utf-8")
     _write_generic_transcript(app_data)
     plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=cmd)
-    return AgyAdapter().parse_response(
-        stdout="module text", stderr="", returncode=0, output_file=None, plan=plan
-    )
+    return AgyAdapter().parse_response(stdout="module text", stderr="", returncode=0, output_file=None, plan=plan)
 
 
 def test_parse_response_pairs_generic_results_with_sources_mcp_calls(tmp_path: Path) -> None:
@@ -734,9 +735,7 @@ def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> Non
         {"step_index": 5, "type": "GENERIC", "content": "out-2"},
         {"step_index": 6, "type": "GENERIC", "content": "not a tool result"},
     ]
-    calls = agy_module._pair_transcript_generic_results(
-        events, transcript_path=tmp_path / "transcript.jsonl"
-    )
+    calls = agy_module._pair_transcript_generic_results(events, transcript_path=tmp_path / "transcript.jsonl")
     assert [call["result"][0]["text"] for call in calls] == ["out-1", "out-2"]
 
 
@@ -792,9 +791,7 @@ def test_no_agy_home_override_leaves_home_and_app_data_alone(tmp_path: Path, too
     assert set(plan.env_overrides) == {"AGY_RUNTIME_LOG_FILE"}
 
 
-def test_transcript_path_follows_agy_app_data_dir_override(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_transcript_path_follows_agy_app_data_dir_override(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     real_home = tmp_path / "real-home"
     monkeypatch.setenv("HOME", str(real_home))
     monkeypatch.setattr(Path, "home", classmethod(lambda _cls: real_home))
@@ -961,9 +958,7 @@ def test_parse_response_never_borrows_earlier_same_prompt_run(tmp_path: Path) ->
     app_data = tmp_path / "antigravity-cli"
     earlier = agy_module._brain_transcript_path(app_data, _FINISHED_CONVERSATION_ID)
     earlier.parent.mkdir(parents=True)
-    earlier.write_text(
-        "\n".join(_fixture_lines("background_task_finished_transcript.jsonl")) + "\n", encoding="utf-8"
-    )
+    earlier.write_text("\n".join(_fixture_lines("background_task_finished_transcript.jsonl")) + "\n", encoding="utf-8")
     log_file = tmp_path / "agy.log"
     log_file.write_text(f"I0924 server.go:1185] Created conversation {_ABANDONED_CONVERSATION_ID}\n", encoding="utf-8")
     prompt = "Run this exact shell command: `sleep 45 && echo PROBE_DONE_7731`."
@@ -1098,7 +1093,9 @@ def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: P
 # redacted.
 _CANARY_CONVERSATION_ID = "01a753b2-d67a-4b03-99cc-358e6493e70b"
 _CANARY_FIXTURE = f"background_task_write_canary_{_CANARY_CONVERSATION_ID}.jsonl"
-_CANARY_STDOUT = "Waiting 60 seconds for the command to finish...\nb4d19d2 (HEAD -> main) canary 8502-r3\nCANARY_8502_R3_DONE"
+_CANARY_STDOUT = (
+    "Waiting 60 seconds for the command to finish...\nb4d19d2 (HEAD -> main) canary 8502-r3\nCANARY_8502_R3_DONE"
+)
 
 
 @pytest.mark.parametrize("stderr", [_IDLE_WAIT_STDERR, ""])
@@ -1227,10 +1224,17 @@ def _parse_resumed_run(
     log_file.write_text(f"I0924 server.go:1185] found conversation {_FINISHED_CONVERSATION_ID}\n", encoding="utf-8")
     try:
         return AgyAdapter().parse_response(
-            stdout=_stream_stdout({
-                "conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": stdout,
-            }),
-            stderr="", returncode=0, output_file=None, plan=plan,
+            stdout=_stream_stdout(
+                {
+                    "conversation_id": _FINISHED_CONVERSATION_ID,
+                    "status": "SUCCESS",
+                    "response": stdout,
+                }
+            ),
+            stderr="",
+            returncode=0,
+            output_file=None,
+            plan=plan,
         )
     finally:
         log_file.unlink(missing_ok=True)
@@ -1366,9 +1370,7 @@ def test_fresh_completed_run_is_accepted(tmp_path: Path) -> None:
         tmp_path, _FINISHED_CONVERSATION_ID, _fixture_lines("background_task_finished_transcript.jsonl")
     )
 
-    result = AgyAdapter().parse_response(
-        stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan
-    )
+    result = AgyAdapter().parse_response(stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan)
 
     assert result.ok is True
     assert result.response == "PROBE_DONE_7731"
@@ -1541,9 +1543,7 @@ def test_unreadable_line_in_the_slice_is_unconfirmed(tmp_path: Path, corrupt: st
     tail = "\n".join(lines[4:]) + "\n"
     transcript.write_bytes(body.encode() + corrupt.encode("latin-1") + b"\n" + tail.encode())
 
-    result = AgyAdapter().parse_response(
-        stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan
-    )
+    result = AgyAdapter().parse_response(stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan)
 
     assert result.ok is False
     assert result.response == ""
@@ -1675,7 +1675,9 @@ def test_structured_output_run_keeps_its_result_with_a_warning(tmp_path: Path) -
     reply = "VERDICT: APPROVE. PR awaiting CI."
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply(reply)])
     plan.metadata["output_schema"] = {
-        "type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"]
+        "type": "object",
+        "properties": {"verdict": {"type": "string"}},
+        "required": ["verdict"],
     }
     envelope = '{"status": "SUCCESS", "structured_output": {"verdict": "APPROVE"}}'
 
@@ -1788,13 +1790,19 @@ def test_stream_result_extracts_answer_session_usage_and_transcript_calls(tmp_pa
     log_file.write_text(f"Print mode: conversation={CONVERSATION_ID}, sending message\n", encoding="utf-8")
     _write_transcript(app_data)
     plan = _plan(
-        tmp_path, log_file=log_file, app_data=app_data,
+        tmp_path,
+        log_file=log_file,
+        app_data=app_data,
         cmd=["agy", "--input-format", "stream-json", "--output-format", "stream-json"],
     )
-    stdout = _stream_stdout({
-        "conversation_id": CONVERSATION_ID, "status": "SUCCESS",
-        "response": "READY\n", "usage": {"total_tokens": 27},
-    })
+    stdout = _stream_stdout(
+        {
+            "conversation_id": CONVERSATION_ID,
+            "status": "SUCCESS",
+            "response": "READY\n",
+            "usage": {"total_tokens": 27},
+        }
+    )
 
     result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
 
@@ -1809,12 +1817,19 @@ def test_stream_result_preserves_structured_output(tmp_path: Path) -> None:
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("APPROVE")])
     plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
     plan.metadata["output_schema"] = {
-        "type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"],
+        "type": "object",
+        "properties": {"verdict": {"type": "string"}},
+        "required": ["verdict"],
     }
-    stdout = _stream_stdout({
-        "conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": "",
-        "structured_output": {"verdict": "APPROVE"}, "usage": {"total_tokens": 42},
-    })
+    stdout = _stream_stdout(
+        {
+            "conversation_id": _FINISHED_CONVERSATION_ID,
+            "status": "SUCCESS",
+            "response": "",
+            "structured_output": {"verdict": "APPROVE"},
+            "usage": {"total_tokens": 42},
+        }
+    )
 
     result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
 
@@ -1826,10 +1841,13 @@ def test_stream_result_preserves_structured_output(tmp_path: Path) -> None:
 def test_stream_result_cannot_borrow_another_conversations_transcript(tmp_path: Path) -> None:
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply("READY")])
     plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
-    stdout = _stream_stdout({
-        "conversation_id": "c08e56d5-9374-48c1-900e-a17b875aa2f9",
-        "status": "SUCCESS", "response": "READY",
-    })
+    stdout = _stream_stdout(
+        {
+            "conversation_id": "c08e56d5-9374-48c1-900e-a17b875aa2f9",
+            "status": "SUCCESS",
+            "response": "READY",
+        }
+    )
 
     result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
 
@@ -1847,7 +1865,9 @@ def test_stream_result_cannot_borrow_another_conversations_transcript(tmp_path: 
     ids=["terminal-error", "background-cancel"],
 )
 def test_stream_result_preserves_error_and_cancel_signals(
-    tmp_path: Path, terminal: dict[str, object], expected: str,
+    tmp_path: Path,
+    terminal: dict[str, object],
+    expected: str,
 ) -> None:
     ended = _task_message(_TASK_2, f'Task id "{_TASK_2}" was canceled with result:\nTool execution was canceled')
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _start(_TASK_2), ended, _reply("interim")])
@@ -1855,8 +1875,11 @@ def test_stream_result_preserves_error_and_cancel_signals(
     stdout = _stream_stdout({"conversation_id": _FINISHED_CONVERSATION_ID, **terminal})
 
     result = AgyAdapter().parse_response(
-        stdout=stdout, stderr="", returncode=1 if terminal["status"] == "ERROR" else 0,
-        output_file=None, plan=plan,
+        stdout=stdout,
+        stderr="",
+        returncode=1 if terminal["status"] == "ERROR" else 0,
+        output_file=None,
+        plan=plan,
     )
 
     assert result.ok is False
@@ -1867,13 +1890,21 @@ def test_stream_result_preserves_error_and_cancel_signals(
 def test_incomplete_stream_result_keeps_rate_limit_error(tmp_path: Path) -> None:
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt()])
     plan.cmd.extend(["--input-format", "stream-json", "--output-format", "stream-json"])
-    stdout = _stream_stdout({
-        "conversation_id": _FINISHED_CONVERSATION_ID,
-        "status": "ERROR", "response": "", "error": "429 RESOURCE_EXHAUSTED",
-    })
+    stdout = _stream_stdout(
+        {
+            "conversation_id": _FINISHED_CONVERSATION_ID,
+            "status": "ERROR",
+            "response": "",
+            "error": "429 RESOURCE_EXHAUSTED",
+        }
+    )
 
     result = AgyAdapter().parse_response(
-        stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan,
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
     )
 
     assert result.ok is False
@@ -1885,10 +1916,13 @@ def test_incomplete_stream_result_keeps_rate_limit_error(tmp_path: Path) -> None
 @pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
 def test_stream_result_keeps_unicode_line_separators_inside_response(separator: str) -> None:
     response = f"before{separator}after"
-    stdout = json.dumps(
-        {"event": "result", "result": {"status": "SUCCESS", "response": response}},
-        ensure_ascii=False,
-    ) + "\n"
+    stdout = (
+        json.dumps(
+            {"event": "result", "result": {"status": "SUCCESS", "response": response}},
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
 
     result, problem = agy_module._stream_result(stdout)
 
@@ -1897,9 +1931,7 @@ def test_stream_result_keeps_unicode_line_separators_inside_response(separator: 
 
 
 def test_stream_result_requires_one_valid_terminal_event() -> None:
-    assert agy_module._stream_result('{"event":"init"}\n')[1] == (
-        "agy_stream_output_invalid: missing terminal result"
-    )
+    assert agy_module._stream_result('{"event":"init"}\n')[1] == ("agy_stream_output_invalid: missing terminal result")
     assert agy_module._stream_result('{"event":"result","result":{}}\nnot-json')[1] == (
         "agy_stream_output_invalid: malformed NDJSON event"
     )
@@ -2188,13 +2220,22 @@ def test_unrelated_task_named_with_pending_phrasing_is_only_a_warning(tmp_path: 
     assert result.stderr_excerpt.splitlines()[1].startswith("pending-work wording: ")
 
 
-@pytest.mark.parametrize("model", [
-    "gpt-oss-120b", "gpt-oss-120b-medium", "GPT-OSS 120B (Medium)",
-    "gemini-3.7-flash-high", "Gemini 3.7 Flash (High)",
-    "gemini-3.6-flash-medium", "Gemini 3.6 Flash (Low)",
-    "claude-sonnet-4-6", "Claude Sonnet 4.6 (Thinking)",
-    "claude-opus-4-6-thinking", "Claude Opus 4.6 (Thinking)",
-])
+@pytest.mark.parametrize(
+    "model",
+    [
+        "gpt-oss-120b",
+        "gpt-oss-120b-medium",
+        "GPT-OSS 120B (Medium)",
+        "gemini-3.7-flash-high",
+        "Gemini 3.7 Flash (High)",
+        "gemini-3.6-flash-medium",
+        "Gemini 3.6 Flash (Low)",
+        "claude-sonnet-4-6",
+        "Claude Sonnet 4.6 (Thinking)",
+        "claude-opus-4-6-thinking",
+        "Claude Opus 4.6 (Thinking)",
+    ],
+)
 def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model):
     with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
         _build(tmp_path, model=model)
@@ -2206,13 +2247,24 @@ def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model)
 def effort_cli(tmp_path, monkeypatch):
     binary = tmp_path / "agy-effort-fixture"
     binary.write_text("fixture binary; never executed", encoding="utf-8")
-    state = {"version": "1.2.9", "help": "  --effort string  Reasoning effort (low|medium|high|xhigh|max)\n",
-             "help_code": 0, "help_error": None, "help_stderr": "", "version_code": 0, "version_error": None}
+    state = {
+        "version": "1.2.9",
+        "help": "  --effort string  Reasoning effort (low|medium|high|xhigh|max)\n",
+        "help_code": 0,
+        "help_error": None,
+        "help_stderr": "",
+        "version_code": 0,
+        "version_error": None,
+    }
 
     def probe(cmd, **kwargs):
         assert cmd[0] == str(binary.resolve())
-        assert kwargs == {"capture_output": True, "text": True,
-                          "timeout": agy_module._AGY_VERSION_PROBE_TIMEOUT_S, "check": False}
+        assert kwargs == {
+            "capture_output": True,
+            "text": True,
+            "timeout": agy_module._AGY_VERSION_PROBE_TIMEOUT_S,
+            "check": False,
+        }
         if cmd[1] == "--version":
             if state["version_error"]:
                 raise state["version_error"]
@@ -2235,9 +2287,14 @@ def effort_cli(tmp_path, monkeypatch):
 
 def _effort_plan(tmp_path, effort, tool_config=None):
     return AgyAdapter().build_invocation(
-        prompt="offline effort regression", mode="read-only", cwd=tmp_path,
-        model="gemini-3.8-flash-high", task_id="effort-test", session_id=None,
-        tool_config=tool_config, effort=effort,
+        prompt="offline effort regression",
+        mode="read-only",
+        cwd=tmp_path,
+        model="gemini-3.8-flash-high",
+        task_id="effort-test",
+        session_id=None,
+        tool_config=tool_config,
+        effort=effort,
     )
 
 
@@ -2261,17 +2318,20 @@ def test_invalid_effort_is_refused_before_any_subprocess(tmp_path, effort_cli, e
     run.assert_not_called()
 
 
-@pytest.mark.parametrize("help_text,code,reason", [
-    ("Usage: agy\n --model string", 0, "unsupported"),
-    (" --effort string (low|medium)", 0, "unsupported"),
-    (" --effort string", 0, "unverified"),
-    (" --effort string (low, medium, high)", 0, "unverified"),
-    (" --effort string (low|high) (xhigh|max)", 0, "unverified"),
-    (" --effort (high)\n --effort (max)", 0, "unverified"),
-    ("", 0, "unverified"),
-    (None, 0, "unverified"),
-    (" --effort (low|medium|high|xhigh|max)", 1, "unverified"),
-])
+@pytest.mark.parametrize(
+    "help_text,code,reason",
+    [
+        ("Usage: agy\n --model string", 0, "unsupported"),
+        (" --effort string (low|medium)", 0, "unsupported"),
+        (" --effort string", 0, "unverified"),
+        (" --effort string (low, medium, high)", 0, "unverified"),
+        (" --effort string (low|high) (xhigh|max)", 0, "unverified"),
+        (" --effort (high)\n --effort (max)", 0, "unverified"),
+        ("", 0, "unverified"),
+        (None, 0, "unverified"),
+        (" --effort (low|medium|high|xhigh|max)", 1, "unverified"),
+    ],
+)
 def test_explicit_effort_refuses_unproven_help(tmp_path, effort_cli, help_text, code, reason):
     state, run, _ = effort_cli
     state.update(help=help_text, help_code=code)
@@ -2280,8 +2340,10 @@ def test_explicit_effort_refuses_unproven_help(tmp_path, effort_cli, help_text, 
     assert run.call_count == 2
 
 
-@pytest.mark.parametrize("error", [OSError("unreadable"), subprocess.TimeoutExpired("agy", 5),
-                                   UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")])
+@pytest.mark.parametrize(
+    "error",
+    [OSError("unreadable"), subprocess.TimeoutExpired("agy", 5), UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")],
+)
 def test_explicit_effort_refuses_unreadable_help(tmp_path, effort_cli, error):
     state, _, _ = effort_cli
     state["help_error"] = error
@@ -2292,7 +2354,12 @@ def test_explicit_effort_refuses_unreadable_help(tmp_path, effort_cli, error):
 @pytest.mark.parametrize("version,reason", [("1.1.9", "unsupported"), ("unknown", "unverified")])
 @pytest.mark.parametrize("full_review", [False, True])
 def test_explicit_effort_does_not_trust_old_or_unknown_version(
-    tmp_path, monkeypatch, effort_cli, version, reason, full_review,
+    tmp_path,
+    monkeypatch,
+    effort_cli,
+    version,
+    reason,
+    full_review,
 ):
     state, run, _ = effort_cli
     state["version"] = version
@@ -2334,8 +2401,7 @@ def test_effort_capability_cache_is_bound_to_resolved_binary(tmp_path, monkeypat
     assert run.call_args.args[0] == [str(other.resolve()), "--help"]
 
 
-@pytest.mark.parametrize("error", [None, OSError("missing CLI"),
-                                   UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")])
+@pytest.mark.parametrize("error", [None, OSError("missing CLI"), UnicodeDecodeError("utf-8", b"\xff", 0, 1, "invalid")])
 def test_explicit_effort_refuses_failed_version_probe(tmp_path, effort_cli, error):
     state, run, _ = effort_cli
     state.update(version_error=error, version_code=1)
