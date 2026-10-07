@@ -11,9 +11,6 @@ from shlex import split as shell_split
 from typing import TYPE_CHECKING, Any
 
 import yaml
-from learn_ukrainian_v4_runtime.model_families import (
-    is_cursor_auto_selector as is_cursor_auto_selector,
-)
 
 # Launchers invoke this file directly, without a repository PYTHONPATH.
 if __package__ in (None, ""):
@@ -1020,6 +1017,19 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
     if text not in pins:
         return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
     return None
+
+
+def is_cursor_auto_selector(model: Any) -> bool:
+    """Recognize Cursor selectors without depending on the installed runtime.
+
+    Catalog lint and shell launchers also load this module before runtime
+    installation. Keep this predicate aligned with runtime model_families.
+    """
+    text = str(model or "").strip().casefold()
+    for prefix in ("cursor:", "cursor/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+    return text in {"auto", "default"}
 
 
 def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:

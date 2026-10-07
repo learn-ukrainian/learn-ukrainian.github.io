@@ -59,6 +59,17 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _isolate_github_client_cache(tmp_path, monkeypatch):
+    """Keep an inherited gh shim's cache out of miniature worker repositories.
+
+    Completion measures every worker change. A host CLI cache is test
+    infrastructure, and must not become an unowned content change or a
+    provider failure in those measurements.
+    """
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path / "github-client-cache"))
+
+
+@pytest.fixture(autouse=True)
 def _worktree_add_via_run(monkeypatch):
     """Route ``git worktree add`` through ``subprocess.run`` in this file.
 
