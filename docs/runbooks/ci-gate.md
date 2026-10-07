@@ -7,6 +7,16 @@ jobs and the full non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
 Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
+The advisory Hygiene workflow keeps a separate slim environment. Its focused
+agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
+`requirements.txt`, constrained to the exact versions in `requirements-lock.txt`.
+The shared conftest's Claude adapter pre-import needs jsonschema; its process
+guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
+Before executing the focused tests, a `--setup-only` guard collects the same
+test set and runs its fixtures: `--collect-only` alone cannot detect missing
+dependencies imported during autouse setup. The guard propagates import errors;
+`tests/test_hygiene_workflow.py` verifies failure with jsonschema unavailable.
+
 | Job | What it does |
 | --- | --- |
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
