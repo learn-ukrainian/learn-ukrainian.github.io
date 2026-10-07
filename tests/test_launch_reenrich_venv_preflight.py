@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.restore_import_state import restore_import_state
+
 pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -171,18 +173,13 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
     import sys
     import types
 
-    missing = object()
-    stub_keys = ("bs4", "wiki", "wiki.slovnyk_me")
-    saved = {key: sys.modules.get(key, missing) for key in stub_keys}
-    source_query_keys = ("scripts.rag.source_query", "rag.source_query")
-    saved_source_query = {key: sys.modules[key] for key in source_query_keys if key in sys.modules}
-    # Importing a child also rebinds its parent attribute. Restoring only the
-    # cache leaves package imports and call-time imports on different objects.
-    saved_package_bindings = {
-        key: getattr(sys.modules.get(key), "source_query", missing)
-        for key in ("scripts.rag", "rag")
-    }
-    try:
+    with restore_import_state(
+        "bs4",
+        "wiki",
+        "wiki.slovnyk_me",
+        "scripts.rag.source_query",
+        "rag.source_query",
+    ):
         sys.modules["bs4"] = None  # type: ignore[assignment]
 
         slovnyk = types.ModuleType("wiki.slovnyk_me")
@@ -193,26 +190,9 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
         sys.modules["wiki"] = wiki_pkg
         sys.modules["wiki.slovnyk_me"] = slovnyk
 
-        for key in source_query_keys:
+        for key in ("scripts.rag.source_query", "rag.source_query"):
             sys.modules.pop(key, None)
 
         from scripts.rag.source_query import goroh_translate
 
         assert callable(goroh_translate)
-    finally:
-        for key, prior in saved.items():
-            if prior is missing:
-                sys.modules.pop(key, None)
-            else:
-                sys.modules[key] = prior
-        # Remove fresh imports too when no module was cached before the probe.
-        for key in source_query_keys:
-            sys.modules.pop(key, None)
-        sys.modules.update(saved_source_query)
-        for key, prior in saved_package_bindings.items():
-            package = sys.modules.get(key)
-            if package is not None:
-                if prior is missing:
-                    vars(package).pop("source_query", None)
-                else:
-                    package.source_query = prior
