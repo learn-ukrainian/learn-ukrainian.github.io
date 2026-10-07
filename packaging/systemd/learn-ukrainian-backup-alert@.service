@@ -1,0 +1,10 @@
+[Unit]
+Description=Learn Ukrainian backup failure alert for %i (change-only, Fleet Comms cto channel)
+# Started by OnFailure= in learn-ukrainian-backup.service and
+# learn-ukrainian-backup-retention.service; %i is the failed unit's name.
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+TimeoutStartSec=300
+ExecStart=/usr/bin/env @REPO_ROOT@/.venv/bin/python @REPO_ROOT@/scripts/orchestration/backup_failure_alert.py failed %i

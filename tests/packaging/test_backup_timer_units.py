@@ -16,7 +16,9 @@ UNITS = (
     "learn-ukrainian-backup.timer",
     "learn-ukrainian-backup-retention.service",
     "learn-ukrainian-backup-retention.timer",
+    "learn-ukrainian-backup-alert@.service",
 )
+ALERT_SCRIPT = "scripts/orchestration/backup_failure_alert.py"
 RENDERED_ROOT = "/srv/learn-ukrainian"
 
 
@@ -71,6 +73,33 @@ def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     assert timer.count("OnCalendar=") == 1
     assert "OnCalendar=Sun" in timer
     assert "Persistent=true" in timer
+
+
+@pytest.mark.parametrize("name", ["learn-ukrainian-backup.service", "learn-ukrainian-backup-retention.service"])
+def test_backup_services_alert_on_failure_and_report_recovery(name: str) -> None:
+    service = _render(name)
+    unit_section, service_section = service.split("[Service]", 1)
+    assert "OnFailure=learn-ukrainian-backup-alert@%n.service" in unit_section
+    assert (
+        f"ExecStartPost=-/usr/bin/env {RENDERED_ROOT}/.venv/bin/python {RENDERED_ROOT}/{ALERT_SCRIPT} recovered %n"
+        in service_section
+    )
+
+
+def test_alert_template_reports_the_failed_unit() -> None:
+    alert = _render("learn-ukrainian-backup-alert@.service")
+    assert "Type=oneshot" in alert
+    assert f"WorkingDirectory={RENDERED_ROOT}" in alert
+    assert f"ExecStart=/usr/bin/env {RENDERED_ROOT}/.venv/bin/python {RENDERED_ROOT}/{ALERT_SCRIPT} failed %i" in alert
+    assert not [line for line in alert.splitlines() if line.startswith("OnFailure=")]
+    assert "[Install]" not in alert
+    assert "learn-ukrainian-backup-alert@.service" in install_backup_timer.UNIT_NAMES
+
+
+def test_retention_service_gives_prune_two_backend_connections() -> None:
+    service = _render("learn-ukrainian-backup-retention.service")
+    assert "Environment=LU_BACKUP_RCLONE_CONNECTIONS=2" in service
+    assert "LU_BACKUP_RCLONE_CONNECTIONS" not in _render("learn-ukrainian-backup.service")
 
 
 def test_installer_accepts_primary_checkout_and_rejects_linked_worktree(
