@@ -103,6 +103,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
         "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
                               # advisor runs: a consistency checksum of the result as its worker wrote it
+        "routing_facts": object | absent,  # --force-agent with a budget check: the lane's routing_facts summary
+                                           # (quota, health, freshness). Missing telemetry is explicit unknown.
     }
 
     Reason fields (``PUBLIC_RECORD_REASON_FIELDS`` and ``auto_finalize.error``)
@@ -12748,6 +12750,8 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if routing.budget_diagnostics:
+                dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
             if not admission.exempt:
@@ -13212,6 +13216,8 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if routing.budget_diagnostics:
+            initial_state["routing_facts"] = routing.budget_diagnostics
         if cursor_auto_admission is not None:
             # The Cursor adapter runs Auto only with this admission (#9274).
             initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
@@ -15250,6 +15256,11 @@ class _DispatchRouting:
     alias_note: str | None = None
     substitution: dict[str, Any] | None = None
 
+    def __post_init__(self) -> None:
+        # Forced-lane routing_facts (#9673). Kept off the dataclass fields so the
+        # frozen dispatch surface stays the route decision; copied to the task record when set.
+        self.budget_diagnostics: dict[str, Any] | None = None
+
 
 class _DispatchRouteRefused(Exception):
     """The launch route refused the dispatch; the message says why."""
@@ -15265,8 +15276,9 @@ def _dispatch_route(
     """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
 
     A retired CLI resolves to its successor (a review attempt refuses that,
-    #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
-    may substitute a coding seat from ``dispatch_fallbacks``; its model is
+    #8517); with ``--check-budget`` the budget guard may substitute a coding
+    seat from ``dispatch_fallbacks`` unless ``--force-agent`` is set, which
+    keeps the requested seat and still records quota and health; its model is
     mapped or defaulted (``_resolve_substitution_model``). Review routes use
     ``request.review_select`` instead, retaining the resolver's exact model.
     Refusals raise
@@ -15282,7 +15294,7 @@ def _dispatch_route(
         # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
         # BEFORE the budget guard and unconditionally — a hot/cool budget reading
         # for a retired lane is not proof its binary still exists. --force-agent
-        # bypasses the budget guard, not this — there is no CLI left to force.
+        # disables budget substitution, not this — there is no CLI left to force.
         if retired_target:
             if review_attempt:
                 raise _DispatchRouteRefused(
@@ -15333,7 +15345,9 @@ def _dispatch_route(
             requested_agent = selected_agent
             original_model = selected_model
 
-        if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+        if _dispatch_check_budget_enabled(args):
+            force_agent = bool(getattr(args, "force_agent", False))
+            diagnostic_sink: dict[str, Any] = {}
             dispatch_agent = _resolve_agent_with_budget_guard(
                 requested_agent,
                 provider="openrouter" if getattr(args, "provider", None) == "openrouter" else None,
@@ -15346,7 +15360,11 @@ def _dispatch_route(
                 review_trusted_inputs=bool(
                     getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
                 ),
+                force_agent=force_agent,
+                diagnostic_sink=diagnostic_sink if force_agent else None,
             )
+            if diagnostic_sink:
+                routing.budget_diagnostics = diagnostic_sink
         else:
             dispatch_agent = requested_agent
 
@@ -15835,6 +15853,56 @@ def _merge_agent_substitution(prior: Any, runtime: Any) -> Any:
     return merged
 
 
+def _ranked_reports_lane_health(ranked: Any, lane: str) -> bool:
+    """True when the snapshot's ranked rows already carry a health record for ``lane``."""
+    if not isinstance(ranked, list):
+        return False
+    return any(isinstance(item, dict) and item.get("lane") == lane and item.get("health") for item in ranked)
+
+
+def _publish_forced_lane_diagnostics(
+    lane: str,
+    record: Mapping[str, Any] | None,
+    snapshot_metadata: Mapping[str, Any] | None,
+    *,
+    model: str | None,
+    sink: dict[str, Any] | None,
+    ranked: Any = None,
+) -> None:
+    """Print and retain one forced lane's quota and health (#9673).
+
+    The text reuses the guard's existing lines: the health-unknown sentence,
+    and ``⚠ ROUTING CHECK:`` around the owner's ``capacity_reason``. A known
+    remaining percent is added with the owner's ``% remaining`` phrase when
+    that reason does not already include it. ``sink`` receives
+    :meth:`credit_lane.RoutingFacts.summary`, whose missing quota, health and
+    freshness are explicit unknowns.
+    """
+    facts = credit_lane.routing_facts(
+        lane,
+        record if isinstance(record, Mapping) else None,
+        model=model or _lane_default_model(lane) or "",
+        snapshot_metadata=snapshot_metadata,
+    )
+    if facts.health == credit_lane.UNKNOWN and not _ranked_reports_lane_health(ranked, lane):
+        print(
+            f"⚠ lane {lane} health unknown ({facts.health_basis}); not counted as healthy",
+            file=sys.stderr,
+        )
+    quota = facts.capacity_reason
+    remaining = facts.plan_remaining_pct
+    if (
+        isinstance(remaining, (int, float))
+        and not isinstance(remaining, bool)
+        and f"{remaining:g}% remaining" not in quota
+    ):
+        quota = f"{quota} ({remaining:g}% remaining)"
+    print(f"⚠ ROUTING CHECK: lane {lane}: {quota}", file=sys.stderr)
+    if sink is not None:
+        sink.clear()
+        sink.update(facts.summary())
+
+
 def _resolve_agent_with_budget_guard(
     agent: str,
     *,
@@ -15846,6 +15914,8 @@ def _resolve_agent_with_budget_guard(
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
     review_trusted_inputs: bool = False,
+    force_agent: bool = False,
+    diagnostic_sink: dict[str, Any] | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -15853,7 +15923,9 @@ def _resolve_agent_with_budget_guard(
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError) unless caller used --force-agent before this call.
+    BudgetGuardRefuseError). ``force_agent`` disables that substitution and
+    the capacity refusal, and still prints and stores the lane's quota and
+    health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
     Review routes use ``review_select`` before either coding fallback path.
@@ -15868,11 +15940,19 @@ def _resolve_agent_with_budget_guard(
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
-        if requested == "deepseek" or provider == "openrouter":
+        if (requested == "deepseek" or provider == "openrouter") and not force_agent:
             raise BudgetGuardRefuseError(
                 "NOTE: ROUTING REFUSED: prepaid capacity NEED_PROBE; Monitor API unreachable."
             ) from None
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
     prepaid = "openrouter" if provider == "openrouter" else requested if requested == "deepseek" else None
@@ -15882,16 +15962,32 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if (
+        blocked = (
             status not in {"cool", "warm"}
             or account.get("is_available") is False
             or account.get("status") == "near_cap"
-        ):
+        )
+        if blocked and not force_agent:
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
                 f"freshness={account.get('freshness', 'unavailable')}. "
                 "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
+            )
+        if force_agent:
+            if blocked:
+                print(
+                    f"⚠ ROUTING CHECK: prepaid {prepaid} status={status}; "
+                    f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
+                    f"freshness={account.get('freshness', 'unavailable')}.",
+                    file=sys.stderr,
+                )
+            _publish_forced_lane_diagnostics(
+                requested,
+                account if isinstance(account, dict) else None,
+                payload.get("diagnostics") if isinstance(payload.get("diagnostics"), dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
             )
         return requested
 
@@ -15911,6 +16007,14 @@ def _resolve_agent_with_budget_guard(
             "usage snapshots; lanes may be in deficit; no hard sub.",
             file=sys.stderr,
         )
+        if force_agent:
+            _publish_forced_lane_diagnostics(
+                requested,
+                None,
+                diags if isinstance(diags, dict) else None,
+                model=requested_model,
+                sink=diagnostic_sink,
+            )
         return requested
 
     # Warn about demoted lanes and lanes whose health is unknown (#9740 F4: the owner's reading).
@@ -16014,6 +16118,16 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
+    if force_agent:
+        _publish_forced_lane_diagnostics(
+            requested,
+            agent_dict,
+            diags if isinstance(diags, dict) else None,
+            model=requested_model,
+            sink=diagnostic_sink,
+            ranked=payload.get("ranked_by_headroom"),
+        )
+        return requested
     if not needs_action:
         return requested
 
@@ -17292,8 +17406,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--force-agent",
         action="store_true",
         help=(
-            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent; "
-            "also overrides a live Cursor driver-lease refusal with a NOTE."
+            "Dispatch the requested agent with no budget substitution. "
+            "--check-budget / LU_DISPATCH_CHECK_BUDGET still prints and records that lane's "
+            "quota and health, using explicit unknowns when telemetry is missing. "
+            "Also overrides a live Cursor driver-lease refusal with a NOTE."
         ),
     )
     d.add_argument(

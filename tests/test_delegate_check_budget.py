@@ -252,20 +252,140 @@ def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
     assert "Rationale: fixture rationale" in captured.err
 
 
-def test_check_budget_skipped_when_force_agent(monkeypatch, tmp_path, capsys):
+def _force_dispatch(monkeypatch, tmp_path, budget):
+    """Spawn a forced budget-checked dispatch against ``budget`` and return ``(stderr, state)``."""
     _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeHealthResponse()))
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--force-agent"))
+    assert rc == 0
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    return state
 
-    def fail_on_budget_fetch(url, *_args, **_kwargs):
-        if "/api/health" in str(url):
-            return _FakeHealthResponse()
-        raise AssertionError("routing-budget urlopen should not be called with --force-agent")
 
-    monkeypatch.setattr(delegate.urllib.request, "urlopen", fail_on_budget_fetch)
+def test_force_agent_on_a_deficit_keeps_diagnostics_and_the_seat(monkeypatch, tmp_path, capsys):
+    """#9673: a deficit still prints and is stored; --force-agent does not substitute."""
+    claude = _fresh_lane(
+        status="near_cap",
+        codexbar={"weekly_remaining_pct": 80.0, "primary_remaining_pct": 3.0, "will_last_to_reset": True},
+    )
+    codex = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 90.0, "will_last_to_reset": True})
+    budget = {
+        "recommendation": {"primary_agent_for_code": "codex", "rationale": "fixture rationale", "warnings": []},
+        "agents": {"claude": claude, "codex": codex},
+        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
+    }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_args, **_kwargs: {})
+    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks={"claude": "codex"}) == "codex"
+    capsys.readouterr()
+
+    state = _force_dispatch(monkeypatch, tmp_path, budget)
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert "⚠ ROUTING CHECK: lane claude:" in err
+    assert "3% remaining" in err
+    assert state["agent"] == "claude"
+    assert state["substitution"] is None
+    facts = state["routing_facts"]
+    assert facts["health"] == "healthy"
+    assert facts["plan_remaining_pct"] == 3.0
+    assert facts["capacity"] == "avoid"
+
+
+def test_force_agent_on_a_healthy_lane_records_quota_and_health(monkeypatch, tmp_path, capsys):
+    """A cool lane still prints its quota and stores health, with no substitution."""
+    claude = _fresh_lane(status="cool", codexbar={"weekly_remaining_pct": 80.0, "will_last_to_reset": True})
+    budget = {
+        "recommendation": {"primary_agent_for_code": "claude", "rationale": "fixture rationale", "warnings": []},
+        "agents": {"claude": claude},
+        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
+    }
+    state = _force_dispatch(monkeypatch, tmp_path, budget)
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert "⚠ ROUTING CHECK: lane claude: plan status cool (80% remaining)" in err
+    assert state["agent"] == "claude"
+    assert state["substitution"] is None
+    facts = state["routing_facts"]
+    assert facts["health"] == "healthy"
+    assert facts["plan_remaining_pct"] == 80.0
+    assert facts["capacity"] == "verified"
+
+
+def test_force_agent_records_explicit_unknown_health(monkeypatch, tmp_path, capsys):
+    """Unknown lane health is printed with its basis and stored, next to a known quota."""
+    from scripts.api.lane_health import BASIS_SCAN_UNAVAILABLE
+
+    claude = _fresh_lane(
+        status="cool",
+        health={"healthy": None, "basis": BASIS_SCAN_UNAVAILABLE},
+        codexbar={"weekly_remaining_pct": 40.0, "will_last_to_reset": True},
+    )
+    budget = {
+        "recommendation": {"primary_agent_for_code": "claude", "rationale": "fixture rationale", "warnings": []},
+        "agents": {"claude": claude},
+        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
+    }
+    state = _force_dispatch(monkeypatch, tmp_path, budget)
+    err = capsys.readouterr().err
+    assert f"⚠ lane claude health unknown ({BASIS_SCAN_UNAVAILABLE}); not counted as healthy" in err
+    assert "40% remaining" in err
+    facts = state["routing_facts"]
+    assert facts["health"] == "unknown"
+    assert facts["health_basis"] == BASIS_SCAN_UNAVAILABLE
+    assert facts["plan_remaining_pct"] == 40.0
+    assert state["agent"] == "claude"
+    assert state["substitution"] is None
+
+
+def test_force_agent_records_unknown_when_telemetry_is_unavailable(monkeypatch, tmp_path, capsys):
+    """Monitor API failure stays an explicit unknown in stderr and the task record."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+
+    def unavailable():
+        raise delegate.MonitorApiUnavailable("down")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeHealthResponse()))
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget", "--force-agent"))
 
     assert rc == 0
-    assert "ROUTING WARNING" not in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "⚠ ROUTING CHECK SKIPPED: Monitor API unreachable" in err
+    assert "⚠ lane claude health unknown (lane health record missing); not counted as healthy" in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    facts = state["routing_facts"]
+    assert facts["health"] == "unknown"
+    assert facts["plan_remaining_pct"] is None
+    assert facts["observation_freshness"] == "unknown"
+    assert state["agent"] == "claude"
+    assert state["substitution"] is None
+
+
+def test_force_agent_records_unknown_on_an_empty_budget(monkeypatch, tmp_path, capsys):
+    """An empty ledger keeps the existing UNKNOWN line and stores an unknown health and quota."""
+    budget = {
+        "recommendation": {"primary_agent_for_code": None, "warnings": ["empty snapshot"]},
+        "agents": {},
+        "diagnostics": {"records_loaded": 0, "codexbar_data_available": False},
+    }
+    state = _force_dispatch(monkeypatch, tmp_path, budget)
+    err = capsys.readouterr().err
+    assert "⚠ ROUTING CHECK UNKNOWN: budget UNKNOWN" in err
+    assert "health unknown" in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    facts = state["routing_facts"]
+    assert facts["health"] == "unknown"
+    assert facts["plan_remaining_pct"] is None
+    assert facts["observation_freshness"] == "unknown"
+    assert state["agent"] == "claude"
+    assert state["substitution"] is None
 
 
 def test_check_budget_skipped_when_api_down(monkeypatch, tmp_path, capsys):
