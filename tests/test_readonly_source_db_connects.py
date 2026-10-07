@@ -44,7 +44,7 @@ def test_allowlisted_references_have_pinned_counts_and_declared_targets(entry):
         assert lint.writer_target_violations(source, entry) == []
     elif entry.kind == "store_resolver":
         assert entry.path == "scripts/storage/topology.py"
-        assert set(entry.functions) == {"resolve_store", "resolve_active_sources_db"}
+        assert set(entry.functions) == {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write"}
         assert entry.reference_count == 0
     else:
         assert entry.kind in {"reader_pending_migration_9662", "fixture_factory"}

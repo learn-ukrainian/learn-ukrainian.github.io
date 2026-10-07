@@ -508,6 +508,164 @@ class StoreRefusal:
     reason: str
 
 
+@dataclass(frozen=True)
+class ExplicitStoreWriteTarget:
+    """Unvalidated caller input; only the write resolver grants a binding."""
+
+    location: str | Path
+    role: Literal["active", "staging", "shadow"]
+
+
+@dataclass(frozen=True)
+class WriteStoreBinding:
+    """Validated write location, distinct from the read-binding contract."""
+
+    store: StoreId
+    path: Path
+    intent: Literal["update", "create"]
+    operation: Literal["sqlite", "replace"]
+    role: Literal["active", "staging", "shadow"]
+    provenance: str
+    sqlite_uri: str | None
+    access_mode: Literal["write"] = "write"
+
+
+def unresolved_store_placeholder(store: StoreId) -> Path:
+    """Import-compatible Path; no resolver may admit this absent location."""
+    if store not in {"sources", "vesum"}:
+        raise ValueError("unsupported logical store")
+    return Path(Path(__file__).anchor) / ".lu-unresolved-store" / f"{store}.unavailable"
+
+
+def _active_slot(path: Path, primary: Path, *, include_primary: bool = False) -> bool:
+    """Recognize lexical/resolved Git-root store slots without invoking Git."""
+    if path.name not in {"sources.db", "vesum.db"} or path.parent.name != "data":
+        return False
+    root = path.parent.parent
+    return (include_primary and root == primary) or (
+        root != primary and (root / ".git").exists()
+    )
+
+
+def _same_store(left: Path, right: Path) -> bool:
+    """Include hard-link aliases, while allowing absent create destinations."""
+    return left == right or (left.exists() and right.exists() and left.samefile(right))
+
+
+def resolve_store_for_write(
+    store: StoreId,
+    repository_root: Path | None = None,
+    *,
+    intent: Literal["update", "create"],
+    operation: Literal["sqlite", "replace"] = "sqlite",
+    target: ExplicitStoreWriteTarget | None = None,
+    env: Mapping[str, str] | None = None,
+) -> WriteStoreBinding | StoreRefusal:
+    """Resolve a write location at call time, without opening or creating it.
+
+    Active defaults are absolute; relative non-active targets anchor to the
+    caller's repository root. Invalid selected inputs never fall back. Shadow
+    also forbids either primary active slot, even before its file exists.
+    """
+    if store not in {"sources", "vesum"}:
+        raise ValueError("unsupported logical store")
+    if isinstance(target, (StoreBinding, WriteStoreBinding)):
+        return StoreRefusal(store, "invalid_binding")
+    if (intent not in {"update", "create"} or operation not in {"sqlite", "replace"}
+            or (target is not None and not isinstance(target, ExplicitStoreWriteTarget))):
+        return StoreRefusal(store, "invalid_target")
+    try:
+        root = default_repository_root(repository_root).resolve()
+        primary = main_checkout_root(root).resolve()
+        filename = "sources.db" if store == "sources" else "vesum.db"
+        own = root / "data" / filename
+        if root != primary and (own.exists() or own.is_symlink()):
+            return StoreRefusal(store, "worktree_local_store")
+        environ = os.environ if env is None else env
+        key = ENV_SOURCES_DB if store == "sources" else ENV_VESUM_DB
+        role = target.role if target is not None else "active"
+        if role not in {"active", "staging", "shadow"}:
+            return StoreRefusal(store, "invalid_target")
+        raw = target.location if target is not None else environ.get(key, primary / "data" / filename)
+        if not isinstance(raw, (str, Path)):
+            return StoreRefusal(store, "invalid_target")
+        if not str(raw).strip():
+            return StoreRefusal(store, "empty_override")
+        if str(raw).lower().startswith("file:"):
+            return StoreRefusal(store, "uri_override")
+        path = Path(raw)
+        if ".." in path.parts:
+            return StoreRefusal(store, "invalid_target")
+        if not path.is_absolute():
+            if role == "active":
+                return StoreRefusal(store, "relative_override")
+            path = root / path
+        if path == unresolved_store_placeholder(store):
+            return StoreRefusal(store, "invalid_target")
+        if _active_slot(path, primary):
+            return StoreRefusal(store, "worktree_local_store")
+        if role == "shadow" and _active_slot(path, primary, include_primary=True):
+            return StoreRefusal(store, "target_is_active_store")
+        if operation == "replace" and path.is_symlink():
+            return StoreRefusal(store, "symlink_replace_target")
+        # A dangling leaf is never a create destination.
+        if path.is_symlink() and not path.exists():
+            return StoreRefusal(store, "store_missing")
+        try:
+            parent = path.parent.resolve(strict=True)
+        except FileNotFoundError:
+            return StoreRefusal(store, "parent_missing")
+        if not parent.is_dir():
+            return StoreRefusal(store, "parent_missing")
+        resolved = path.resolve(strict=False)
+        if _active_slot(resolved, primary):
+            return StoreRefusal(store, "worktree_local_store")
+        if role == "shadow" and _active_slot(resolved, primary, include_primary=True):
+            return StoreRefusal(store, "target_is_active_store")
+        exists = resolved.exists()
+        if exists and not resolved.is_file():
+            return StoreRefusal(store, "not_a_file")
+        if not exists and intent != "create":
+            return StoreRefusal(store, "store_missing")
+        for probe in ([resolved, parent] if exists else [parent]):
+            locality = _store_locality(probe)
+            if locality != "local":
+                return StoreRefusal(store, f"locality_{locality}")
+        if role != "active":
+            # Validate all configured active comparisons, not just the selected
+            # store: a malformed live-location override cannot disable guards.
+            active_paths = [primary / "data" / "sources.db", primary / "data" / "vesum.db"]
+            for active_key in (ENV_SOURCES_DB, ENV_VESUM_DB):
+                if active_key not in environ:
+                    continue
+                value = environ[active_key]
+                if not isinstance(value, str) or not value.strip():
+                    return StoreRefusal(store, "empty_override")
+                if value.lower().startswith("file:"):
+                    return StoreRefusal(store, "uri_override")
+                configured = Path(value)
+                if not configured.is_absolute():
+                    return StoreRefusal(store, "relative_override")
+                configured = configured.resolve(strict=True)
+                if not configured.is_file():
+                    return StoreRefusal(store, "not_a_file")
+                locality = _store_locality(configured)
+                if locality != "local":
+                    return StoreRefusal(store, f"locality_{locality}")
+                active_paths.append(configured)
+            for active in active_paths:
+                if _same_store(resolved, active.resolve(strict=False)):
+                    return StoreRefusal(store, "target_is_active_store")
+        provenance = "injected" if target is not None else key if key in environ else "primary_checkout"
+        uri = resolved.as_uri() + ("?mode=rwc" if intent == "create" else "?mode=rw")
+        return WriteStoreBinding(store, resolved, intent, operation, role, provenance,
+                                 uri if operation == "sqlite" else None)
+    except FileNotFoundError:
+        return StoreRefusal(store, "store_missing")
+    except (OSError, RuntimeError, ValueError):
+        return StoreRefusal(store, "store_unavailable")
+
+
 def _store_locality(path: Path) -> Literal["local", "network", "unknown"]:
     """Require filesystem evidence; legacy best-effort detection is unchanged."""
     if _path_looks_like_network(path):

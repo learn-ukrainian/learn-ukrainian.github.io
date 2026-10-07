@@ -1160,10 +1160,11 @@
     "reference_count": 0,
     "kind": "store_resolver",
     "target_db": null,
-    "reason": "Only sanctioned store builders; legacy sources resolver pending caller migration (#9945).",
+    "reason": "Declared read and write store-location resolvers; no constructor exemption.",
     "functions": [
       "resolve_store",
-      "resolve_active_sources_db"
+      "resolve_active_sources_db",
+      "resolve_store_for_write"
     ]
   },
   {

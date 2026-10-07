@@ -386,13 +386,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/audit/practice_quality_gate.py",
-      "kind": "store_path",
-      "scope": "_source_binding_violations",
-      "fingerprint": "7d0788e473f068ba16ed0be2b629bcc4084ac1efcecdb108bd77e928e96a8acf",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/audit/resolve_fixture_rights.py",
       "kind": "store_path",
       "scope": "<module>",
@@ -481,13 +474,6 @@
       "kind": "store_path",
       "scope": "compute_sources_manifest",
       "fingerprint": "eeea48d7b0e163b4db6ff9da389ace72c9eb6301e2e9e7c192b4406b0f516897",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/build/module_memory.py",
-      "kind": "store_path",
-      "scope": "compute_sources_manifest",
-      "fingerprint": "4f333c26afef7d88f5e71fc7a4c5d85da10ff1554f642ca687619e527c477ad7",
       "occurrence": 0
     },
     {

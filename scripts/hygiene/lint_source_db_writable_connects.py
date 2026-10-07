@@ -60,7 +60,7 @@ def load_allowlist() -> tuple[AllowedReference, ...]:
         if entry.kind == "store_resolver":
             invalid = (entry.path != "scripts/storage/topology.py" or entry.reference_count != 0
                        or entry.target_db is not None or bool(entry.calls) or not entry.functions
-                       or not set(entry.functions) <= {"resolve_store", "resolve_active_sources_db"})
+                       or not set(entry.functions) <= {"resolve_store", "resolve_active_sources_db", "resolve_store_for_write"})
         elif entry.kind == "fixture_factory":
             invalid = (not entry.path.startswith("tests/") or entry.reference_count < 1
                        or entry.target_db is not None or not entry.calls or bool(entry.functions))
@@ -389,7 +389,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
     syntax = syntax if syntax is not None else _Syntax(source, rel_path)
     tree, nodes = syntax.tree, syntax.nodes
     access_names = SQLITE_MODULES | CONSTRUCTORS | {
-        "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"}
+        "open_readonly", "resolve_store", "resolve_store_for_write", "resolve_active_sources_db", "require_local_active_sources_db"}
     possible_import_access = rel_path.startswith("tests/") and bool(syntax.names & access_names)
     may_store = _may_fold_store(nodes, literals=syntax.strings)
     if not may_store and not possible_import_access:
@@ -541,7 +541,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
             if isinstance(node.value, (ast.Name, ast.Attribute)):
                 value = name(node.value)
                 if value in SQLITE_MODULES or value in constructor_names or value.split(".")[-1] in {
-                    "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"}:
+                    "open_readonly", "resolve_store", "resolve_store_for_write", "resolve_active_sources_db", "require_local_active_sources_db"}:
                     targets = node.targets if isinstance(node, ast.Assign) else [node.target]
                     for target in targets:
                         if isinstance(target, ast.Name) and aliases.get(target.id) != value:
@@ -564,6 +564,14 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
         key_value = fragments(env_key) if env_key is not None else None
         if env_reader and key_value in {"LU_SOURCES_DB", "LU_VESUM_DB"}:
             path_nodes.add(node)
+        if isinstance(node, ast.JoinedStr) and (
+            fragments(node).startswith("sqlite://")
+            or fragments(node).endswith(" is not in sources.db")
+        ):
+            # Logical SQLite cache keys and diagnostic prose are not paths.
+            # Their expressions stay unchanged; real filename builders below
+            # (including file: URIs) remain subject to the ratchet.
+            continue
         if isinstance(node, (ast.BinOp, ast.Call, ast.JoinedStr, ast.Constant)):
             root, target = fact(node)
             # A propagated store bit can reach log messages and other text.
@@ -613,7 +621,7 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
 
     def accessor(node):
         return isinstance(node, ast.Call) and (constructor(node) or name(node.func).split(".")[-1] in {
-            "open_readonly", "resolve_store", "resolve_active_sources_db", "require_local_active_sources_db"})
+            "open_readonly", "resolve_store", "resolve_store_for_write", "resolve_active_sources_db", "require_local_active_sources_db"})
 
     helpers = {n.name: n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))}
 
