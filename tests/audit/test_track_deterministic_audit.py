@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,7 +30,11 @@ def write_minimal_module(root: Path, slug: str, num: int, *, english_leak: bool 
     (root / "site" / "src" / "content" / "docs" / "b2").mkdir(parents=True, exist_ok=True)
     (root / "site" / "src" / "content" / "readings").mkdir(parents=True, exist_ok=True)
 
-    body = "This paragraph explains the entire grammar point in English before Ukrainian appears.\n" if english_leak else ""
+    body = (
+        "This paragraph explains the entire grammar point in English before Ukrainian appears.\n"
+        if english_leak
+        else ""
+    )
     (module_dir / "module.md").write_text(f"# Модуль {num}\n\n{body}**Я чекаю на автобус.**\n", encoding="utf-8")
     (module_dir / "activities.yaml").write_text(
         "- type: quiz\n"
@@ -42,8 +49,7 @@ def write_minimal_module(root: Path, slug: str, num: int, *, english_leak: bool 
         encoding="utf-8",
     )
     (module_dir / "vocabulary.yaml").write_text(
-        "- word: слово\n"
-        "  translation: word\n",
+        "- word: слово\n  translation: word\n",
         encoding="utf-8",
     )
     (curriculum / "plans" / "b2" / f"{slug}.yaml").write_text("title: Test\n", encoding="utf-8")
@@ -96,6 +102,66 @@ def base_config() -> dict:
 
 def test_parse_range() -> None:
     assert audit.parse_range("1-3") == (1, 3)
+
+
+def test_file_entrypoint_audits_real_module(tmp_path: Path) -> None:
+    """The post-build-review file entrypoint must import the shared config."""
+    root = Path(__file__).resolve().parents[2]
+    output = tmp_path / "audit.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/track_deterministic_audit.py",
+            "--track",
+            "bio",
+            "--slugs",
+            "oleksandr-bilash",
+            "--format",
+            "json",
+            "--fail-on",
+            "never",
+            "--output",
+            str(output),
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    report = json.loads(result.stdout)
+    assert json.loads(output.read_text(encoding="utf-8")) == report
+    assert report["track"] == "bio"
+    assert report["summary"]["modules_selected"] == 1
+    assert report["summary"]["modules_built"] == 1
+
+
+def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2]
+    output = tmp_path / "invalid-audit.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/track_deterministic_audit.py",
+            "--track",
+            "bio",
+            "--range",
+            "not-a-range",
+            "--output",
+            str(output),
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "Range must be N-M, got: not-a-range" in result.stderr
+    assert "ImportError" not in result.stderr
+    assert result.stdout == ""
+    assert not output.exists()
 
 
 def test_track_audit_json_contract_and_llm_qg_exclusion(tmp_path, monkeypatch) -> None:

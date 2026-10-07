@@ -6,8 +6,8 @@ and activity requirements for each CEFR level.
 """
 
 from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
-from config import get_immersion_range as shared_get_immersion_range
 from level_config import base_level
+from scripts.config import get_immersion_range as shared_get_immersion_range
 
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
@@ -15,38 +15,129 @@ from level_config import base_level
 # during builds, but additions land only through reviewer-approved PRs.
 PROPER_NAME_WHITELIST: set[str] = {
     # Common Ukrainian given names (+ common declined forms)
-    "Микола", "Олег", "Олена", "Тарас", "Іван", "Марія", "Андрій", "Петро",
-    "Богдан", "Василь", "Ганна", "Дмитро", "Катерина", "Леся", "Оксана",
-    "Степан", "Ярослав", "Григорій", "Софія", "Наталя", "Юрій", "Володимир",
-    "Максим", "Олександр", "Олександра", "Михайло", "Данило", "Роман", "Сергій",
-    "Оля", "Олю", "Аня", "Марта", "Тарасе", "Василько", "Кирилко",
-    "Соломійка", "Соломійко", "Мар'яна", "Дар'я", "Лук'ян",
+    "Микола",
+    "Олег",
+    "Олена",
+    "Тарас",
+    "Іван",
+    "Марія",
+    "Андрій",
+    "Петро",
+    "Богдан",
+    "Василь",
+    "Ганна",
+    "Дмитро",
+    "Катерина",
+    "Леся",
+    "Оксана",
+    "Степан",
+    "Ярослав",
+    "Григорій",
+    "Софія",
+    "Наталя",
+    "Юрій",
+    "Володимир",
+    "Максим",
+    "Олександр",
+    "Олександра",
+    "Михайло",
+    "Данило",
+    "Роман",
+    "Сергій",
+    "Оля",
+    "Олю",
+    "Аня",
+    "Марта",
+    "Тарасе",
+    "Василько",
+    "Кирилко",
+    "Соломійка",
+    "Соломійко",
+    "Мар'яна",
+    "Дар'я",
+    "Лук'ян",
     # Added 2026-04-26 (round 3.5, #1602): dialogue characters surfaced by
     # the A1/20 `my-morning` exemplar. `Ліна` / `Настя` are the speakers
     # in the morning-routine dialogue. Common declined forms included so the
     # writer can address them in vocative or use them in oblique cases
     # without re-tripping the VESUM gate (Gemini + Codex review on PR #1603).
-    "Ліна", "Ліни", "Ліні", "Ліну", "Ліною", "Ліно",
-    "Настя", "Насті", "Настю", "Настею", "Насте",
+    "Ліна",
+    "Ліни",
+    "Ліні",
+    "Ліну",
+    "Ліною",
+    "Ліно",
+    "Настя",
+    "Насті",
+    "Настю",
+    "Настею",
+    "Насте",
     # Ukrainian cities and regions (+ declined forms)
-    "Київ", "Львів", "Одеса", "Харків", "Дніпро", "Запоріжжя", "Полтава",
-    "Чернігів", "Суми", "Вінниця", "Тернопіль", "Луцьк", "Рівне", "Ужгород",
-    "Івано-Франківськ", "Чернівці", "Миколаїв", "Херсон", "Кропивницький",
-    "Києва", "Львова", "Одеси", "Харкова",
+    "Київ",
+    "Львів",
+    "Одеса",
+    "Харків",
+    "Дніпро",
+    "Запоріжжя",
+    "Полтава",
+    "Чернігів",
+    "Суми",
+    "Вінниця",
+    "Тернопіль",
+    "Луцьк",
+    "Рівне",
+    "Ужгород",
+    "Івано-Франківськ",
+    "Чернівці",
+    "Миколаїв",
+    "Херсон",
+    "Кропивницький",
+    "Києва",
+    "Львова",
+    "Одеси",
+    "Харкова",
     # Countries and regions (+ declined forms)
-    "Україна", "Галичина", "Волинь", "Поділля", "Слобожанщина", "Буковина",
-    "Закарпаття", "Крим", "Донбас",
-    "Канада", "Канади", "Австралії", "Британії", "Німеччини",
+    "Україна",
+    "Галичина",
+    "Волинь",
+    "Поділля",
+    "Слобожанщина",
+    "Буковина",
+    "Закарпаття",
+    "Крим",
+    "Донбас",
+    "Канада",
+    "Канади",
+    "Австралії",
+    "Британії",
+    "Німеччини",
     # Historical figures and textbook authors (surnames)
-    "Шевченко", "Франко", "Грушевський", "Хмельницький", "Мазепа", "Сковорода",
-    "Котляревський", "Леонтович", "Лисенко",
-    "Большакова", "Вашуленко", "Захарійчук", "Кравцова", "Авраменко",
-    "Заболотний", "Літвінова", "Білоус",
+    "Шевченко",
+    "Франко",
+    "Грушевський",
+    "Хмельницький",
+    "Мазепа",
+    "Сковорода",
+    "Котляревський",
+    "Леонтович",
+    "Лисенко",
+    "Большакова",
+    "Вашуленко",
+    "Захарійчук",
+    "Кравцова",
+    "Авраменко",
+    "Заболотний",
+    "Літвінова",
+    "Білоус",
     # Added 2026-04-26 (round 3.5, #1602): textbook author cited in the
     # A1/20 plan references (`Караман Grade 10, p.176`). Common declined
     # forms included so citations like "За Караманом" or "у Карамана"
     # don't re-trip the VESUM gate (PR #1603 review).
-    "Караман", "Карамана", "Караманом", "Караману", "Карамані",
+    "Караман",
+    "Карамана",
+    "Караманом",
+    "Караману",
+    "Карамані",
     # Added 2026-05-17: textbook character names + translator surname
     # surfaced by the A1/m20 (`my-morning`) rebuild after PR #2068's
     # citation-matcher fix unblocked textbook_grounding. The Захарійчук
@@ -55,9 +146,23 @@ PROPER_NAME_WHITELIST: set[str] = {
     # `Кнак` are dialogue characters in the same excerpt. All declined
     # forms included so the writer can address or reference them in
     # any case without re-tripping the VESUM gate.
-    "Лобел", "Лобела", "Лобеле", "Лобелу", "Лобелі", "Лобелем", "Лобелом",
-    "Квак", "Квака", "Кваку", "Кваком", "Кваче",
-    "Кнак", "Кнака", "Кнаку", "Кнаком", "Кначе",
+    "Лобел",
+    "Лобела",
+    "Лобеле",
+    "Лобелу",
+    "Лобелі",
+    "Лобелем",
+    "Лобелом",
+    "Квак",
+    "Квака",
+    "Кваку",
+    "Кваком",
+    "Кваче",
+    "Кнак",
+    "Кнака",
+    "Кнаку",
+    "Кнаком",
+    "Кначе",
     # Added 2026-05-17: hyphenated Ukrainian linguistic terminology that
     # VESUM does not contain because it's a compound term, not a single
     # lemma. The writer's reflexive-verb m20 build surfaced `я-форма`
@@ -66,7 +171,12 @@ PROPER_NAME_WHITELIST: set[str] = {
     # Заболотного, Авраменка). Sibling pronoun-form terms (`ти-форма`,
     # `він-форма`, `ми-форма`, `ви-форма`, `вони-форма`) will be added
     # as they surface; tonight only `я-форма` actually trips a build.
-    "я-форма", "я-форми", "я-формі", "я-форму", "я-формою", "я-формах",
+    "я-форма",
+    "я-форми",
+    "я-формі",
+    "я-форму",
+    "я-формою",
+    "я-формах",
     # Added 2026-05-17 as a SHIP-BLOCKER WORKAROUND, not an endorsement.
     # The knowledge_packet generator for a1/m20 emits `прийом їжі` as a
     # gloss for `снідати`/`сніданок`. VESUM correctly rejects `прийом`
@@ -76,8 +186,19 @@ PROPER_NAME_WHITELIST: set[str] = {
     # Whitelisting unblocks m20 ship; the real fix is to patch the
     # knowledge_packet generator. Tracked at the m20-ship follow-up issue.
     # Remove this whole block once upstream is fixed.
-    "прийом", "прийому", "прийомі", "прийомом", "прийоми", "прийомів",
-    "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
+    "прийом",
+    "прийому",
+    "прийомі",
+    "прийомом",
+    "прийоми",
+    "прийомів",
+    "ІТ",
+    "ЗНО",
+    "НМТ",
+    "ЄС",
+    "ООН",
+    "НАТО",
+    "ЗСУ",
     "МійКлас",
 }
 
@@ -91,14 +212,14 @@ VESUM_MIN_WORD_LENGTH = 3
 # read-only view derived from there so existing AUDIT_THRESHOLDS[...] call
 # sites keep working without duplicating numbers.
 AUDIT_THRESHOLDS = {
-    "word_count_fail_pct": 12,            # FAIL if more than this % below target
-    "immersion_tolerance_pct": 3,        # ±% tolerance before FAIL
+    "word_count_fail_pct": 12,  # FAIL if more than this % below target
+    "immersion_tolerance_pct": 3,  # ±% tolerance before FAIL
     "naturalness_min_score": {
         **{level: thr.naturalness_min for level, thr in LEVEL_THRESHOLDS.items()},
         "default": get_naturalness_min(None),
     },
-    "severity_update": 40,               # Severity score boundary: PASS → UPDATE
-    "severity_rewrite": 75,              # Severity score boundary: UPDATE → REWRITE
+    "severity_update": 40,  # Severity score boundary: PASS → UPDATE
+    "severity_rewrite": 75,  # Severity score boundary: UPDATE → REWRITE
 }
 
 
@@ -106,103 +227,144 @@ def get_naturalness_min_score(level_code: str | None) -> float:
     """Return the review-score threshold for the given level family."""
     return get_naturalness_min(level_code)
 
+
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {
-    'A1': {
-        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'dative', 'instrumental', 'vocative'],
-        'cases_forbidden': [],
-        'aspect': 'imperfective_only',
-        'participles': False,
-        'subordinate_clauses': False,
-        'max_words_per_sentence': 10,
-        'max_clauses': 1,
+    "A1": {
+        "cases_allowed": ["nominative", "accusative", "locative", "genitive", "dative", "instrumental", "vocative"],
+        "cases_forbidden": [],
+        "aspect": "imperfective_only",
+        "participles": False,
+        "subordinate_clauses": False,
+        "max_words_per_sentence": 10,
+        "max_clauses": 1,
     },
-    'A2': {
-        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'dative', 'instrumental', 'vocative'],
-        'cases_forbidden': [],
-        'aspect': 'pairs_introduced',
-        'participles': False,
-        'subordinate_clauses': 'simple',
-        'max_words_per_sentence': 15,
-        'max_clauses': 2,
+    "A2": {
+        "cases_allowed": ["nominative", "accusative", "locative", "genitive", "dative", "instrumental", "vocative"],
+        "cases_forbidden": [],
+        "aspect": "pairs_introduced",
+        "participles": False,
+        "subordinate_clauses": "simple",
+        "max_words_per_sentence": 15,
+        "max_clauses": 2,
     },
-    'B1': {
-        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'dative', 'instrumental', 'vocative'],
-        'cases_forbidden': [],
-        'aspect': 'full',
-        'participles': True,
-        'subordinate_clauses': 'complex',
-        'max_words_per_sentence': 30,
-        'max_clauses': 4,
+    "B1": {
+        "cases_allowed": ["nominative", "accusative", "locative", "genitive", "dative", "instrumental", "vocative"],
+        "cases_forbidden": [],
+        "aspect": "full",
+        "participles": True,
+        "subordinate_clauses": "complex",
+        "max_words_per_sentence": 30,
+        "max_clauses": 4,
     },
-    'B2': {
-        'cases_allowed': ['nominative', 'accusative', 'locative', 'genitive', 'dative', 'instrumental', 'vocative'],
-        'cases_forbidden': [],
-        'aspect': 'full',
-        'participles': True,
-        'adverbial_participles': True,
-        'subordinate_clauses': 'complex',
-        'max_words_per_sentence': 35,
-        'max_clauses': 6,
+    "B2": {
+        "cases_allowed": ["nominative", "accusative", "locative", "genitive", "dative", "instrumental", "vocative"],
+        "cases_forbidden": [],
+        "aspect": "full",
+        "participles": True,
+        "adverbial_participles": True,
+        "subordinate_clauses": "complex",
+        "max_words_per_sentence": 35,
+        "max_clauses": 6,
     },
-    'C1': {'max_words_per_sentence': 50, 'max_clauses': 10},
-    'C2': {'max_words_per_sentence': 100, 'max_clauses': 20},
+    "C1": {"max_words_per_sentence": 50, "max_clauses": 10},
+    "C2": {"max_words_per_sentence": 100, "max_clauses": 20},
 }
 
 # Ukrainian case ending patterns (simplified detection)
 CASE_PATTERNS = {
-    'dative': [
+    "dative": [
         # -ові/-еві/-єві endings are dative ONLY when NOT preceded by locative prepositions
         # в Києві, у Львові = LOCATIVE (allowed at A1 from M13)
         # дати братові = DATIVE (not allowed at A1)
         # Use negative lookbehind to exclude locative contexts
-        r'(?<![вуВУ]\s)\b\w+ові\b(?!\s*[,.])',  # Not after в/у
-        r'(?<![вуВУ]\s)\b\w+еві\b(?!\s*[,.])',  # Not after в/у
-        r'(?<![вуВУ]\s)\b\w+єві\b(?!\s*[,.])',  # Not after в/у
+        r"(?<![вуВУ]\s)\b\w+ові\b(?!\s*[,.])",  # Not after в/у
+        r"(?<![вуВУ]\s)\b\w+еві\b(?!\s*[,.])",  # Not after в/у
+        r"(?<![вуВУ]\s)\b\w+єві\b(?!\s*[,.])",  # Not after в/у
         # Dative pronouns - but NOT їм which is also verb "I eat" from їсти
         # їм is only dative in context like "подобається їм", "дати їм"
-        r'\bмені\b', r'\bтобі\b', r'\bйому\b', r'\bїй\b', r'\bнам\b', r'\bвам\b',
+        r"\bмені\b",
+        r"\bтобі\b",
+        r"\bйому\b",
+        r"\bїй\b",
+        r"\bнам\b",
+        r"\bвам\b",
         # їм as dative: only when preceded by dative-taking verbs
-        r'(?:подобається|дати|сказати|показати|допомогти)\s+їм\b',
+        r"(?:подобається|дати|сказати|показати|допомогти)\s+їм\b",
         # NOTE: Removed r'\b\w+і\b.*подобається' - too broad, catches nominative plurals
         # The specific dative pronouns above are sufficient for detection
     ],
-    'instrumental': [
-        r'\bз\s+\w+ом\b', r'\bз\s+\w+ем\b', r'\bз\s+\w+ям\b',
-        r'\bз\s+\w+ою\b', r'\bз\s+\w+ею\b',
-        r'\bмною\b', r'\bтобою\b', r'\bним\b', r'\bнею\b', r'\bнами\b', r'\bвами\b', r'\bними\b',
-        r'\bпід\s+\w+ом\b', r'\bнад\s+\w+ом\b', r'\bперед\s+\w+ом\b', r'\bза\s+\w+ом\b',
+    "instrumental": [
+        r"\bз\s+\w+ом\b",
+        r"\bз\s+\w+ем\b",
+        r"\bз\s+\w+ям\b",
+        r"\bз\s+\w+ою\b",
+        r"\bз\s+\w+ею\b",
+        r"\bмною\b",
+        r"\bтобою\b",
+        r"\bним\b",
+        r"\bнею\b",
+        r"\bнами\b",
+        r"\bвами\b",
+        r"\bними\b",
+        r"\bпід\s+\w+ом\b",
+        r"\bнад\s+\w+ом\b",
+        r"\bперед\s+\w+ом\b",
+        r"\bза\s+\w+ом\b",
     ],
-    'perfective_markers': [
-        r'\bпо\w+ив\b', r'\bпро\w+ав\b', r'\bз\w+ив\b', r'\bна\w+ав\b',
-        r'\bнаписав\b', r'\bпрочитав\b', r'\bзробив\b', r'\bсказав\b', r'\bвзяв\b',
-        r'\bпоїв\b', r'\bвипив\b', r'\bз\'їв\b', r'\bподивився\b',
+    "perfective_markers": [
+        r"\bпо\w+ив\b",
+        r"\bпро\w+ав\b",
+        r"\bз\w+ив\b",
+        r"\bна\w+ав\b",
+        r"\bнаписав\b",
+        r"\bпрочитав\b",
+        r"\bзробив\b",
+        r"\bсказав\b",
+        r"\bвзяв\b",
+        r"\bпоїв\b",
+        r"\bвипив\b",
+        r"\bз\'їв\b",
+        r"\bподивився\b",
     ],
-    'participles': [
+    "participles": [
         # Active participles (present)
-        r'\b\w+уючий\b', r'\b\w+ючий\b', r'\b\w+ачий\b',
+        r"\b\w+уючий\b",
+        r"\b\w+ючий\b",
+        r"\b\w+ачий\b",
         # Passive participles - BUT many common adjectives have same endings
         # These patterns will be filtered by PARTICIPLE_EXCLUSIONS below
-        r'\b\w+аний\b', r'\b\w+ений\b', r'\b\w+итий\b',
+        r"\b\w+аний\b",
+        r"\b\w+ений\b",
+        r"\b\w+итий\b",
         # Adverbial participles (gerunds)
-        r'\bчитаючи\b', r'\bговорячи\b', r'\bйдучи\b',
+        r"\bчитаючи\b",
+        r"\bговорячи\b",
+        r"\bйдучи\b",
     ],
-    'subordinate_markers': [
+    "subordinate_markers": [
         # Relative pronouns (який/яка/яке/які) - only flag when preceded by comma AND not followed by "це"
         # "книга, яка цікава" = relative clause (flag at A1)
         # "Скажіть, яке це тістечко?" = question (do NOT flag)
-        r',\s*який\s+(?!це\b)[а-яіїєґ]', r',\s*яка\s+(?!це\b)[а-яіїєґ]', r',\s*яке\s+(?!це\b)[а-яіїєґ]', r',\s*які\s+(?!це\b)[а-яіїєґ]',
+        r",\s*який\s+(?!це\b)[а-яіїєґ]",
+        r",\s*яка\s+(?!це\b)[а-яіїєґ]",
+        r",\s*яке\s+(?!це\b)[а-яіїєґ]",
+        r",\s*які\s+(?!це\b)[а-яіїєґ]",
         # "що" as subordinate - only when preceded by verb/clause (not sentence-initial questions)
         # Pattern: verb + що + word (subordinate) vs. Що + word? (question)
         # Exclude: "що це", "що тут", "що там", "що далі" (these are questions/phrases, not subordinate clauses)
-        r'[а-яіїєґ],?\s+що\s+(?!це\b|тут\b|там\b|далі\b)[а-яіїєґ]',
+        r"[а-яіїєґ],?\s+що\s+(?!це\b|тут\b|там\b|далі\b)[а-яіїєґ]",
         # Temporal/conditional conjunctions as subordinate (preceded by main clause)
         # коли/якщо at sentence start are questions/conditionals, not subordinate
-        r'[а-яіїєґ],?\s+коли\s+[а-яіїєґ]',
-        r'\bякщо\s+[а-яіїєґ]', r'\bтому що\s+[а-яіїєґ]',
+        r"[а-яіїєґ],?\s+коли\s+[а-яіїєґ]",
+        r"\bякщо\s+[а-яіїєґ]",
+        r"\bтому що\s+[а-яіїєґ]",
         # "бо" (because) - require following word, exclude accent marks breaking word boundary
-        r'(?<![а-яіїєґА-ЯІЇЄҐ\u0301])бо\s+[а-яіїєґ]',
-        r'\bхоча\s+[а-яіїєґ]', r'\bщоб\s+[а-яіїєґ]', r'\bпоки\s+[а-яіїєґ]', r'\bдоки\s+[а-яіїєґ]',
+        r"(?<![а-яіїєґА-ЯІЇЄҐ\u0301])бо\s+[а-яіїєґ]",
+        r"\bхоча\s+[а-яіїєґ]",
+        r"\bщоб\s+[а-яіїєґ]",
+        r"\bпоки\s+[а-яіїєґ]",
+        r"\bдоки\s+[а-яіїєґ]",
     ],
 }
 
@@ -210,474 +372,986 @@ CASE_PATTERNS = {
 # These are excluded from participle violations at A1-A2
 PARTICIPLE_EXCLUSIONS = {
     # Common adjectives ending in -аний (matches passive participle pattern)
-    'поганий', 'погана', 'погане', 'погані',
-    'останній', 'остання', 'останнє', 'останні',
-    'ранній', 'рання', 'раннє', 'ранні',
-    'крайній', 'крайня', 'крайнє', 'крайні',
+    "поганий",
+    "погана",
+    "погане",
+    "погані",
+    "останній",
+    "остання",
+    "останнє",
+    "останні",
+    "ранній",
+    "рання",
+    "раннє",
+    "ранні",
+    "крайній",
+    "крайня",
+    "крайнє",
+    "крайні",
     # Common adjectives ending in -ений (matches passive participle pattern)
-    'зелений', 'зелена', 'зелене', 'зелені',
-    'червоний', 'червона', 'червоне', 'червоні',  # -оний variant
-    'чорний', 'чорна', 'чорне', 'чорні',
-    'срібний', 'срібна', 'срібне', 'срібні',
-    'темний', 'темна', 'темне', 'темні',
-    'білий', 'біла', 'біле', 'білі',
-    'синій', 'синя', 'синє', 'сині',
-    'ціль', 'цільний', 'цільна', 'цільне', 'цільні',  # whole
-    'головний', 'головна', 'головне', 'головні',
-    'цікавий', 'цікава', 'цікаве', 'цікаві',
-    'корисний', 'корисна', 'корисне', 'корисні',
-    'важливий', 'важлива', 'важливе', 'важливі',
-    'відомий', 'відома', 'відоме', 'відомі',
+    "зелений",
+    "зелена",
+    "зелене",
+    "зелені",
+    "червоний",
+    "червона",
+    "червоне",
+    "червоні",  # -оний variant
+    "чорний",
+    "чорна",
+    "чорне",
+    "чорні",
+    "срібний",
+    "срібна",
+    "срібне",
+    "срібні",
+    "темний",
+    "темна",
+    "темне",
+    "темні",
+    "білий",
+    "біла",
+    "біле",
+    "білі",
+    "синій",
+    "синя",
+    "синє",
+    "сині",
+    "ціль",
+    "цільний",
+    "цільна",
+    "цільне",
+    "цільні",  # whole
+    "головний",
+    "головна",
+    "головне",
+    "головні",
+    "цікавий",
+    "цікава",
+    "цікаве",
+    "цікаві",
+    "корисний",
+    "корисна",
+    "корисне",
+    "корисні",
+    "важливий",
+    "важлива",
+    "важливе",
+    "важливі",
+    "відомий",
+    "відома",
+    "відоме",
+    "відомі",
     # Common adjectives ending in -ний/-на/-не (not participles)
-    'гарний', 'гарна', 'гарне', 'гарні',
-    'чудовий', 'чудова', 'чудове', 'чудові',
-    'смачний', 'смачна', 'смачне', 'смачні',
-    'сонячний', 'сонячна', 'сонячне', 'сонячні',
-    'щасливий', 'щаслива', 'щасливе', 'щасливі',
-    'радий', 'рада', 'раде', 'раді',
+    "гарний",
+    "гарна",
+    "гарне",
+    "гарні",
+    "чудовий",
+    "чудова",
+    "чудове",
+    "чудові",
+    "смачний",
+    "смачна",
+    "смачне",
+    "смачні",
+    "сонячний",
+    "сонячна",
+    "сонячне",
+    "сонячні",
+    "щасливий",
+    "щаслива",
+    "щасливе",
+    "щасливі",
+    "радий",
+    "рада",
+    "раде",
+    "раді",
     # Ordinal numbers (not participles)
-    'перший', 'перша', 'перше', 'перші',
-    'другий', 'друга', 'друге', 'другі',
-    'третій', 'третя', 'третє', 'треті',
+    "перший",
+    "перша",
+    "перше",
+    "перші",
+    "другий",
+    "друга",
+    "друге",
+    "другі",
+    "третій",
+    "третя",
+    "третє",
+    "треті",
     # Adjectives meaning "sure/confident" (not participles)
-    'впевнений', 'впевнена', 'впевнене', 'впевнені',
-    'певний', 'певна', 'певне', 'певні',
+    "впевнений",
+    "впевнена",
+    "впевнене",
+    "впевнені",
+    "певний",
+    "певна",
+    "певне",
+    "певні",
     # More adjectives that match -ений pattern
-    'здоровий', 'здорова', 'здорове', 'здорові',
-    'готовий', 'готова', 'готове', 'готові',
-    'потрібний', 'потрібна', 'потрібне', 'потрібні',
+    "здоровий",
+    "здорова",
+    "здорове",
+    "здорові",
+    "готовий",
+    "готова",
+    "готове",
+    "готові",
+    "потрібний",
+    "потрібна",
+    "потрібне",
+    "потрібні",
     # Marriage/relationship status adjectives (not participles)
-    'одружений', 'одружена', 'одружене', 'одружені',
-    'неодружений', 'неодружена', 'неодружене', 'неодружені',
-    'наречений', 'наречена',  # engaged (also used as noun: fiancé/fiancée)
-    'розлучений', 'розлучена', 'розлучене', 'розлучені',
+    "одружений",
+    "одружена",
+    "одружене",
+    "одружені",
+    "неодружений",
+    "неодружена",
+    "неодружене",
+    "неодружені",
+    "наречений",
+    "наречена",  # engaged (also used as noun: fiancé/fiancée)
+    "розлучений",
+    "розлучена",
+    "розлучене",
+    "розлучені",
     # Common service/postal/official terms (used as fixed terminology)
-    'рекомендований', 'рекомендована', 'рекомендоване', 'рекомендовані',  # registered (mail)
+    "рекомендований",
+    "рекомендована",
+    "рекомендоване",
+    "рекомендовані",  # registered (mail)
     # Grammar terminology for aspect (these look like participles but are grammar terms)
-    'недоконаний', 'недоконана', 'недоконане', 'недоконані',  # imperfective (aspect term)
-    'доконаний', 'доконана', 'доконане', 'доконані',  # perfective (aspect term)
-    'завершений', 'завершена', 'завершене', 'завершені',  # completed (aspect descriptor, A2+)
-    'закритий', 'закрита', 'закрите', 'закриті',  # closed (syllable type — A2 phonology)
-    'відкритий', 'відкрита', 'відкрите', 'відкриті',  # open (syllable type — A2 phonology)
+    "недоконаний",
+    "недоконана",
+    "недоконане",
+    "недоконані",  # imperfective (aspect term)
+    "доконаний",
+    "доконана",
+    "доконане",
+    "доконані",  # perfective (aspect term)
+    "завершений",
+    "завершена",
+    "завершене",
+    "завершені",  # completed (aspect descriptor, A2+)
+    "закритий",
+    "закрита",
+    "закрите",
+    "закриті",  # closed (syllable type — A2 phonology)
+    "відкритий",
+    "відкрита",
+    "відкрите",
+    "відкриті",  # open (syllable type — A2 phonology)
     # Emotional state adjectives (A2 Emotions vocabulary - NOT participles)
     # These describe emotional states and are taught as adjectives at A2
-    'задоволений', 'задоволена', 'задоволене', 'задоволені',  # satisfied
-    'розчарований', 'розчарована', 'розчароване', 'розчаровані',  # disappointed
-    'стурбований', 'стурбована', 'стурбоване', 'стурбовані',  # worried
-    'схвильований', 'схвильована', 'схвильоване', 'схвильовані',  # excited
-    'здивований', 'здивована', 'здивоване', 'здивовані',  # surprised
-    'втомлений', 'втомлена', 'втомлене', 'втомлені',  # tired
-    'зацікавлений', 'зацікавлена', 'зацікавлене', 'зацікавлені',  # interested
-    'засмучений', 'засмучена', 'засмучене', 'засмучені',  # upset
-    'збентежений', 'збентежена', 'збентежене', 'збентежені',  # confused
-    'налякаий', 'налякана', 'налякане', 'налякані',  # scared
+    "задоволений",
+    "задоволена",
+    "задоволене",
+    "задоволені",  # satisfied
+    "розчарований",
+    "розчарована",
+    "розчароване",
+    "розчаровані",  # disappointed
+    "стурбований",
+    "стурбована",
+    "стурбоване",
+    "стурбовані",  # worried
+    "схвильований",
+    "схвильована",
+    "схвильоване",
+    "схвильовані",  # excited
+    "здивований",
+    "здивована",
+    "здивоване",
+    "здивовані",  # surprised
+    "втомлений",
+    "втомлена",
+    "втомлене",
+    "втомлені",  # tired
+    "зацікавлений",
+    "зацікавлена",
+    "зацікавлене",
+    "зацікавлені",  # interested
+    "засмучений",
+    "засмучена",
+    "засмучене",
+    "засмучені",  # upset
+    "збентежений",
+    "збентежена",
+    "збентежене",
+    "збентежені",  # confused
+    "налякаий",
+    "налякана",
+    "налякане",
+    "налякані",  # scared
 }
 
 # Words ending in -і/-ові that are nominative plural (not dative)
 # Used to avoid false positives in dative detection
 NOMINATIVE_PLURAL_EXCLUSIONS = {
     # Common adjectives in nominative plural (-і endings)
-    'нові', 'старі', 'гарні', 'великі', 'малі', 'добрі', 'погані',
-    'червоні', 'зелені', 'сині', 'білі', 'чорні', 'жовті',
-    'українські', 'англійські', 'німецькі', 'французькі',
-    'цікаві', 'важливі', 'корисні', 'смачні', 'гарячі', 'холодні',
-    'готові', 'різні', 'головні', 'кращі', 'перші', 'останні',
+    "нові",
+    "старі",
+    "гарні",
+    "великі",
+    "малі",
+    "добрі",
+    "погані",
+    "червоні",
+    "зелені",
+    "сині",
+    "білі",
+    "чорні",
+    "жовті",
+    "українські",
+    "англійські",
+    "німецькі",
+    "французькі",
+    "цікаві",
+    "важливі",
+    "корисні",
+    "смачні",
+    "гарячі",
+    "холодні",
+    "готові",
+    "різні",
+    "головні",
+    "кращі",
+    "перші",
+    "останні",
     # Adjectives in nominative plural (-ові endings from -овий stems)
-    'часові', 'кольорові', 'святкові', 'вікові', 'рольові',
-    'безособові',  # impersonal (from безособовий) - common grammar term
-    'типові', 'фіолетові', 'рожеві', 'помаранчеві', 'службові',
-    'фахові', 'чергові', 'місцеві', 'ділові', 'життєві',
+    "часові",
+    "кольорові",
+    "святкові",
+    "вікові",
+    "рольові",
+    "безособові",  # impersonal (from безособовий) - common grammar term
+    "типові",
+    "фіолетові",
+    "рожеві",
+    "помаранчеві",
+    "службові",
+    "фахові",
+    "чергові",
+    "місцеві",
+    "ділові",
+    "життєві",
     # Common nouns in nominative plural
-    'люди', 'діти', 'студенти', 'друзі', 'учні', 'вчителі',
-    'хлопці', 'дівчата', 'речі', 'слова', 'книжки', 'столи',
+    "люди",
+    "діти",
+    "студенти",
+    "друзі",
+    "учні",
+    "вчителі",
+    "хлопці",
+    "дівчата",
+    "речі",
+    "слова",
+    "книжки",
+    "столи",
 }
 
 # Fixed phrases (formulaic chunks) taught at A1 before grammar is explained
 # These are memorized as whole units, so case violations should be ignored
 # Instrumental case greetings (З + Instrumental)
 FIXED_PHRASES_INSTRUMENTAL = {
-    'з новим роком', 'з різдвом', 'з великоднем', 'з днем народження',
-    'з днем', 'з весіллям', 'з народженням', 'з перемогою',
-    'з святом', 'з успіхом', 'з закінченням',
-    'з молоком', 'з лимоном', 'з цукром',  # Food phrases (M35)
+    "з новим роком",
+    "з різдвом",
+    "з великоднем",
+    "з днем народження",
+    "з днем",
+    "з весіллям",
+    "з народженням",
+    "з перемогою",
+    "з святом",
+    "з успіхом",
+    "з закінченням",
+    "з молоком",
+    "з лимоном",
+    "з цукром",  # Food phrases (M35)
 }
 
 # Dative case expressions taught as fixed phrases at A1
 FIXED_PHRASES_DATIVE = {
     # Primer vocabulary — taught as decodable words, not grammar (Bolshakova p.22)
-    'нам',  # M1 required vocab: "нам (to us)" — reading drill word
+    "нам",  # M1 required vocab: "нам (to us)" — reading drill word
     # Wishing expressions (Бажаю + dative)
-    'бажаю тобі', 'бажаю вам', 'бажаю щастя', 'бажаю здоров',
+    "бажаю тобі",
+    "бажаю вам",
+    "бажаю щастя",
+    "бажаю здоров",
     # Fixed dative in greetings
-    'миру', 'любові', 'щастя', 'здоров',  # Common in wishes
+    "миру",
+    "любові",
+    "щастя",
+    "здоров",  # Common in wishes
     # Impersonal health/feeling expressions (Мені + state)
-    'мені погано', 'мені добре', 'мені болить', 'мені холодно', 'мені тепло',
-    'мені потрібн', 'мені подобається', 'мені треба', 'мені здається',
+    "мені погано",
+    "мені добре",
+    "мені болить",
+    "мені холодно",
+    "мені тепло",
+    "мені потрібн",
+    "мені подобається",
+    "мені треба",
+    "мені здається",
     # Age expressions (Мені ... років)
-    'мені рок', 'мені років', 'мені два', 'мені три', 'мені п\'ят', 'мені шіст', 'мені сім',
+    "мені рок",
+    "мені років",
+    "мені два",
+    "мені три",
+    "мені п'ят",
+    "мені шіст",
+    "мені сім",
     # Tобі variants of impersonal expressions
-    'тобі погано', 'тобі добре', 'тобі болить', 'тобі холодно', 'тобі потрібн',
+    "тобі погано",
+    "тобі добре",
+    "тобі болить",
+    "тобі холодно",
+    "тобі потрібн",
     # Age expressions for other persons
-    'йому рок', 'їй рок', 'їм рок',
+    "йому рок",
+    "їй рок",
+    "їм рок",
     # Nominative plural falsely detected as dative (ending in -ові)
-    'чайові',
+    "чайові",
 }
 
 # Activity stage ordering for PPP, TTT, and CLIL/Narrative
 STAGE_ORDER = {
-    'PPP': ['presentation', 'recognition', 'discrimination', 'controlled-production', 'free-production'],
-    'TTT': ['diagnostic', 'recognition', 'presentation', 'controlled-production', 'free-production'],
-    'CLIL': ['pre-engagement', 'immersion', 'narrative', 'deep-dive', 'recognition', 'controlled-production', 'free-production'],
-    'NARRATIVE': ['pre-engagement', 'immersion', 'narrative', 'deep-dive', 'recognition', 'controlled-production', 'free-production'],
+    "PPP": ["presentation", "recognition", "discrimination", "controlled-production", "free-production"],
+    "TTT": ["diagnostic", "recognition", "presentation", "controlled-production", "free-production"],
+    "CLIL": [
+        "pre-engagement",
+        "immersion",
+        "narrative",
+        "deep-dive",
+        "recognition",
+        "controlled-production",
+        "free-production",
+    ],
+    "NARRATIVE": [
+        "pre-engagement",
+        "immersion",
+        "narrative",
+        "deep-dive",
+        "recognition",
+        "controlled-production",
+        "free-production",
+    ],
     # Seminar-style tracks (LIT, HIST, BIO)
     # reading is the INPUT (engage with source), analysis activities are the OUTPUT
-    'SEMINAR': ['reading', 'essay-response', 'critical-analysis', 'comparative-study'],
+    "SEMINAR": ["reading", "essay-response", "critical-analysis", "comparative-study"],
 }
 
 # Activity complexity rules by type and level
 # Enforced by check_activity_complexity()
 ACTIVITY_COMPLEXITY = {
-    'quiz': {
-        'A1': {'min_len': 1, 'max_len': 30, 'options': [3, 4], 'min_items': 6},  # Mar 2026: min 5→3→1 (single-word prompts valid for phonetics/syllable quizzes)
-        'A2': {'min_len': 5, 'max_len': 15, 'options': [4], 'min_items': 8},  # Lowered min_len to 5: short quiz prompts are valid
-        'B1': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len from 9→5: short quiz prompts are valid at B1
-        'B1-vocab': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
-        'B1-culture': {'min_len': 5, 'max_len': 18, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
-        'B2': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 8},  # Relaxed to 5 for factual questions (Issue #441)
-        'history': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
-        'B2-biography': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Lowered min_len to 5
-        'B2-skills': {'min_len': 5, 'max_len': 20, 'options': [4], 'min_items': 8},  # Skills: allow short factual questions (5+ words)
-        'C1': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
-        'C2': {'min_len': 5, 'max_len': 35, 'options': [4], 'min_items': 5},  # Lowered min_len to 5
+    "quiz": {
+        "A1": {
+            "min_len": 1,
+            "max_len": 30,
+            "options": [3, 4],
+            "min_items": 6,
+        },  # Mar 2026: min 5→3→1 (single-word prompts valid for phonetics/syllable quizzes)
+        "A2": {
+            "min_len": 5,
+            "max_len": 15,
+            "options": [4],
+            "min_items": 8,
+        },  # Lowered min_len to 5: short quiz prompts are valid
+        "B1": {
+            "min_len": 5,
+            "max_len": 20,
+            "options": [4],
+            "min_items": 8,
+        },  # Lowered min_len from 9→5: short quiz prompts are valid at B1
+        "B1-vocab": {"min_len": 5, "max_len": 18, "options": [4], "min_items": 8},  # Lowered min_len to 5
+        "B1-culture": {"min_len": 5, "max_len": 18, "options": [4], "min_items": 8},  # Lowered min_len to 5
+        "B2": {
+            "min_len": 5,
+            "max_len": 25,
+            "options": [4],
+            "min_items": 8,
+        },  # Relaxed to 5 for factual questions (Issue #441)
+        "history": {"min_len": 5, "max_len": 20, "options": [4], "min_items": 8},  # Lowered min_len to 5
+        "B2-biography": {"min_len": 5, "max_len": 20, "options": [4], "min_items": 8},  # Lowered min_len to 5
+        "B2-skills": {
+            "min_len": 5,
+            "max_len": 20,
+            "options": [4],
+            "min_items": 8,
+        },  # Skills: allow short factual questions (5+ words)
+        "C1": {"min_len": 5, "max_len": 30, "options": [4], "min_items": 5},  # Lowered min_len to 5
+        "C2": {"min_len": 5, "max_len": 35, "options": [4], "min_items": 5},  # Lowered min_len to 5
         # Seminar tracks - quiz is supplementary, focus is analytical work
-        'lit': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'hist': {'min_len': 5, 'max_len': 25, 'options': [4], 'min_items': 5},
-        'istorio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
-        'bio': {'min_len': 5, 'max_len': 30, 'options': [4], 'min_items': 5},
+        "lit": {"min_len": 5, "max_len": 30, "options": [4], "min_items": 5},
+        "hist": {"min_len": 5, "max_len": 25, "options": [4], "min_items": 5},
+        "istorio": {"min_len": 5, "max_len": 30, "options": [4], "min_items": 5},
+        "bio": {"min_len": 5, "max_len": 30, "options": [4], "min_items": 5},
     },
-    'match-up': {
-        'A1': {'pairs_min': 6, 'pairs_max': 20, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
-        'A2': {'pairs_min': 8, 'pairs_max': 14, 'min_items': 8},  # Feb 2026: relaxed from 10-12 — same floor as A1
-        'B1': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
-        'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
-        'C1': {'pairs_min': 8, 'pairs_max': 18, 'min_items': 6},
-        'C2': {'pairs_min': 10, 'pairs_max': 18, 'min_items': 6},
+    "match-up": {
+        "A1": {"pairs_min": 6, "pairs_max": 20, "min_items": 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
+        "A2": {"pairs_min": 8, "pairs_max": 14, "min_items": 8},  # Feb 2026: relaxed from 10-12 — same floor as A1
+        "B1": {"pairs_min": 12, "pairs_max": 16, "min_items": 8},
+        "B2": {"pairs_min": 12, "pairs_max": 16, "min_items": 8},
+        "C1": {"pairs_min": 8, "pairs_max": 18, "min_items": 6},
+        "C2": {"pairs_min": 10, "pairs_max": 18, "min_items": 6},
     },
-    'fill-in': {
-        'A1': {'sent_min': 3, 'sent_max': 5, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
-        'A2': {'sent_min': 6, 'sent_max': 8, 'min_items': 8},  # CEFR: smooth +3 from A1
-        'B1': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
-        'B1-vocab': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
-        'B1-culture': {'sent_min': 7, 'sent_max': 12, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
-        'B2': {'sent_min': 9, 'sent_max': 16, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
-        'history': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
-        'B2-biography': {'sent_min': 8, 'sent_max': 14, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
-        'C1': {'sent_min': 11, 'sent_max': 18, 'min_items': 6},  # CEFR: smooth +2 from B2 (was 8)
-        'C2': {'sent_min': 13, 'sent_max': 20, 'min_items': 6},  # CEFR: smooth +2 from C1 (was 10)
+    "fill-in": {
+        "A1": {"sent_min": 3, "sent_max": 5, "min_items": 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
+        "A2": {"sent_min": 6, "sent_max": 8, "min_items": 8},  # CEFR: smooth +3 from A1
+        "B1": {
+            "sent_min": 8,
+            "sent_max": 14,
+            "min_items": 8,
+        },  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        "B1-vocab": {"sent_min": 7, "sent_max": 12, "min_items": 8},  # Context-specific: -1 from standard (was 8)
+        "B1-culture": {"sent_min": 7, "sent_max": 12, "min_items": 8},  # Context-specific: -1 from standard (was 8)
+        "B2": {"sent_min": 9, "sent_max": 16, "min_items": 8},  # CEFR: smooth +1 from B1 (was 10)
+        "history": {"sent_min": 8, "sent_max": 14, "min_items": 8},  # Context-specific: -1 from standard (was 7)
+        "B2-biography": {"sent_min": 8, "sent_max": 14, "min_items": 8},  # Context-specific: -1 from standard (was 7)
+        "C1": {"sent_min": 11, "sent_max": 18, "min_items": 6},  # CEFR: smooth +2 from B2 (was 8)
+        "C2": {"sent_min": 13, "sent_max": 20, "min_items": 6},  # CEFR: smooth +2 from C1 (was 10)
     },
-    'true-false': {
-        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
-        'A2': {'min_len': 6, 'max_len': 12, 'min_items': 8},  # CEFR: smooth +2 from A1
-        'B1': {'min_len': 8, 'max_len': 18, 'min_items': 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
-        'B1-vocab': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
-        'B1-culture': {'min_len': 7, 'max_len': 16, 'min_items': 8},  # Context-specific: -1 from standard (was 8)
-        'B2': {'min_len': 9, 'max_len': 22, 'min_items': 8},  # CEFR: smooth +1 from B1 (was 10)
-        'history': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
-        'B2-biography': {'min_len': 8, 'max_len': 20, 'min_items': 8},  # Context-specific: -1 from standard (was 7)
-        'C1': {'min_len': 11, 'max_len': 25, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 8)
-        'C2': {'min_len': 13, 'max_len': 30, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 10)
+    "true-false": {
+        "A1": {"min_len": 4, "max_len": 8, "min_items": 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
+        "A2": {"min_len": 6, "max_len": 12, "min_items": 8},  # CEFR: smooth +2 from A1
+        "B1": {"min_len": 8, "max_len": 18, "min_items": 8},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        "B1-vocab": {"min_len": 7, "max_len": 16, "min_items": 8},  # Context-specific: -1 from standard (was 8)
+        "B1-culture": {"min_len": 7, "max_len": 16, "min_items": 8},  # Context-specific: -1 from standard (was 8)
+        "B2": {"min_len": 9, "max_len": 22, "min_items": 8},  # CEFR: smooth +1 from B1 (was 10)
+        "history": {"min_len": 8, "max_len": 20, "min_items": 8},  # Context-specific: -1 from standard (was 7)
+        "B2-biography": {"min_len": 8, "max_len": 20, "min_items": 8},  # Context-specific: -1 from standard (was 7)
+        "C1": {"min_len": 11, "max_len": 25, "min_items": 5},  # CEFR: smooth +2 from B2 (was 8)
+        "C2": {"min_len": 13, "max_len": 30, "min_items": 5},  # CEFR: smooth +2 from C1 (was 10)
     },
-    'group-sort': {
-        'A1': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},
-        'A2': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},  # Feb 2026: relaxed from 10 — same as A1
-        'B1': {'groups_min': 2, 'groups_max': 5, 'items_min': 12, 'items_max': 999},
-        'B2': {'groups_min': 3, 'groups_max': 5, 'items_min': 14, 'items_max': 999},
-        'C1': {'groups_min': 2, 'groups_max': 6, 'items_min': 10, 'items_max': 999},
-        'C2': {'groups_min': 3, 'groups_max': 6, 'items_min': 12, 'items_max': 999},
+    "group-sort": {
+        "A1": {"groups_min": 2, "groups_max": 4, "items_min": 8, "items_max": 999},
+        "A2": {
+            "groups_min": 2,
+            "groups_max": 4,
+            "items_min": 8,
+            "items_max": 999,
+        },  # Feb 2026: relaxed from 10 — same as A1
+        "B1": {"groups_min": 2, "groups_max": 5, "items_min": 12, "items_max": 999},
+        "B2": {"groups_min": 3, "groups_max": 5, "items_min": 14, "items_max": 999},
+        "C1": {"groups_min": 2, "groups_max": 6, "items_min": 10, "items_max": 999},
+        "C2": {"groups_min": 3, "groups_max": 6, "items_min": 12, "items_max": 999},
     },
-    'unjumble': {
-        'A1': {'words_min': 4, 'words_max': 6, 'min_items': 6},
-        'A2': {'words_min': 5, 'words_max': 10, 'min_items': 6},  # Feb 2026: relaxed from 7 — A2 sentences are still short (5-7 natural)
-        'B1': {'words_min': 9, 'words_max': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
-        'B1-vocab': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
-        'B1-culture': {'words_min': 8, 'words_max': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 10)
-        'B2': {'words_min': 6, 'words_max': 18, 'min_items': 6},  # Relaxed to 6 for natural formal phrases (Issue #441)
-        'history': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
-        'B2-biography': {'words_min': 6, 'words_max': 15, 'min_items': 6},  # Aligned with B2 base
-        'C1': {'words_min': 12, 'words_max': 20, 'min_items': 5},  # CEFR: smooth +2 from B2
-        'C2': {'words_min': 14, 'words_max': 22, 'min_items': 5},  # CEFR: smooth +2 from C1
+    "unjumble": {
+        "A1": {"words_min": 4, "words_max": 6, "min_items": 6},
+        "A2": {
+            "words_min": 5,
+            "words_max": 10,
+            "min_items": 6,
+        },  # Feb 2026: relaxed from 7 — A2 sentences are still short (5-7 natural)
+        "B1": {
+            "words_min": 9,
+            "words_max": 16,
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A2 (was 12, meets existing content)
+        "B1-vocab": {"words_min": 8, "words_max": 14, "min_items": 6},  # Context-specific: -1 from standard (was 10)
+        "B1-culture": {"words_min": 8, "words_max": 14, "min_items": 6},  # Context-specific: -1 from standard (was 10)
+        "B2": {"words_min": 6, "words_max": 18, "min_items": 6},  # Relaxed to 6 for natural formal phrases (Issue #441)
+        "history": {"words_min": 6, "words_max": 15, "min_items": 6},  # Aligned with B2 base
+        "B2-biography": {"words_min": 6, "words_max": 15, "min_items": 6},  # Aligned with B2 base
+        "C1": {"words_min": 12, "words_max": 20, "min_items": 5},  # CEFR: smooth +2 from B2
+        "C2": {"words_min": 14, "words_max": 22, "min_items": 5},  # CEFR: smooth +2 from C1
     },
-    'anagram': {
-        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
+    "anagram": {
+        "A1": {"min_len": 4, "max_len": 8, "min_items": 6},  # Aligned with LEVEL_CONFIG min_items_per_activity
         # Not allowed A2+
     },
     # Ukrainian pedagogy types (складоподіл, phonetics)
-    'divide-words': {
-        'A1': {'min_items': 6},
-        'A2': {'min_items': 6},
+    "divide-words": {
+        "A1": {"min_items": 6},
+        "A2": {"min_items": 6},
     },
-    'count-syllables': {
-        'A1': {'min_items': 6},
-        'A2': {'min_items': 6},
+    "count-syllables": {
+        "A1": {"min_items": 6},
+        "A2": {"min_items": 6},
     },
-    'pick-syllables': {
-        'A1': {'min_items': 4},  # Fewer items OK — selecting from a grid
-        'A2': {'min_items': 4},
+    "pick-syllables": {
+        "A1": {"min_items": 4},  # Fewer items OK — selecting from a grid
+        "A2": {"min_items": 4},
     },
-    'odd-one-out': {
-        'A1': {'min_items': 6},
-        'A2': {'min_items': 6},
-        'B1': {'min_items': 6},
-        'B2': {'min_items': 6},
+    "odd-one-out": {
+        "A1": {"min_items": 6},
+        "A2": {"min_items": 6},
+        "B1": {"min_items": 6},
+        "B2": {"min_items": 6},
     },
-    'order': {
-        'A1': {'min_items': 3},  # Dialogue ordering — 3+ lines minimum
-        'A2': {'min_items': 4},
-        'B1': {'min_items': 5},
+    "order": {
+        "A1": {"min_items": 3},  # Dialogue ordering — 3+ lines minimum
+        "A2": {"min_items": 4},
+        "B1": {"min_items": 5},
     },
-    'observe': {
-        'A1': {'min_items': 2},  # Pattern discovery — at least 2 examples
-        'A2': {'min_items': 3},
-        'B1': {'min_items': 4},
+    "observe": {
+        "A1": {"min_items": 2},  # Pattern discovery — at least 2 examples
+        "A2": {"min_items": 3},
+        "B1": {"min_items": 4},
     },
-    'error-correction': {
-        'A1': {'errors': 1, 'min_len': 3, 'max_len': 8, 'min_items': 6},  # Simple single-error sentences for A1
-        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},
-        'B1': {'errors': 2, 'min_len': 8, 'max_len': 16, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
-        'B1-vocab': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
-        'B1-culture': {'errors': 2, 'min_len': 7, 'max_len': 14, 'min_items': 6},  # Context-specific: -1 from standard (was 8)
-        'B2': {'errors': 2, 'min_len': 9, 'max_len': 20, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'history': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
-        'B2-biography': {'errors': 2, 'min_len': 8, 'max_len': 18, 'min_items': 6},  # Context-specific: -1 from standard (was 7)
-        'C1': {'errors': 2, 'min_len': 12, 'max_len': 24, 'min_items': 5},  # CEFR: smooth +3 from B2 (kept at 12)
-        'C2': {'errors': 2, 'min_len': 14, 'max_len': 28, 'min_items': 5},  # CEFR: smooth +2 from C1 (kept at 14)
+    "error-correction": {
+        "A1": {"errors": 1, "min_len": 3, "max_len": 8, "min_items": 6},  # Simple single-error sentences for A1
+        "A2": {"errors": 1, "min_len": 6, "max_len": 10, "min_items": 6},
+        "B1": {
+            "errors": 2,
+            "min_len": 8,
+            "max_len": 16,
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        "B1-vocab": {
+            "errors": 2,
+            "min_len": 7,
+            "max_len": 14,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 8)
+        "B1-culture": {
+            "errors": 2,
+            "min_len": 7,
+            "max_len": 14,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 8)
+        "B2": {"errors": 2, "min_len": 9, "max_len": 20, "min_items": 6},  # CEFR: smooth +1 from B1 (was 10)
+        "history": {
+            "errors": 2,
+            "min_len": 8,
+            "max_len": 18,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 7)
+        "B2-biography": {
+            "errors": 2,
+            "min_len": 8,
+            "max_len": 18,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 7)
+        "C1": {"errors": 2, "min_len": 12, "max_len": 24, "min_items": 5},  # CEFR: smooth +3 from B2 (kept at 12)
+        "C2": {"errors": 2, "min_len": 14, "max_len": 28, "min_items": 5},  # CEFR: smooth +2 from C1 (kept at 14)
     },
-    'cloze': {
-        'A2': {'sentences': [3, 4, 5], 'blanks': [3, 4], 'gap_freq': [8, 12]},
-        'B1': {'sentences': [5, 6, 7, 8], 'blanks': [4, 5, 6], 'gap_freq': [6, 10]},
-        'B2': {'sentences': [8, 9, 10, 11, 12], 'blanks': [6, 7, 8], 'gap_freq': [5, 8]},
-        'C1': {'sentences': [10, 15], 'blanks': [8, 10], 'gap_freq': [4, 7]},
-        'C2': {'sentences': [12, 18], 'blanks': [10, 12], 'gap_freq': [4, 6]},
+    "cloze": {
+        "A2": {"sentences": [3, 4, 5], "blanks": [3, 4], "gap_freq": [8, 12]},
+        "B1": {"sentences": [5, 6, 7, 8], "blanks": [4, 5, 6], "gap_freq": [6, 10]},
+        "B2": {"sentences": [8, 9, 10, 11, 12], "blanks": [6, 7, 8], "gap_freq": [5, 8]},
+        "C1": {"sentences": [10, 15], "blanks": [8, 10], "gap_freq": [4, 7]},
+        "C2": {"sentences": [12, 18], "blanks": [10, 12], "gap_freq": [4, 6]},
     },
-    'mark-the-words': {
-        'A2': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4], 'min_items': 6},  # CEFR: smooth +4 from A1 (not available A1)
-        'B1': {'min_len': 10, 'max_len': 18, 'marks': [3, 4, 5], 'min_items': 6},  # CEFR: smooth +2 from A2 (was 12, meets existing content)
-        'B1-vocab': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
-        'B1-culture': {'min_len': 9, 'max_len': 16, 'marks': [3, 4, 5], 'min_items': 6},  # Context-specific: -1 from standard (was 10)
-        'B2': {'min_len': 11, 'max_len': 22, 'marks': [4, 5, 6], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 12)
-        'history': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
-        'B2-biography': {'min_len': 10, 'max_len': 20, 'marks': [4, 5, 6], 'min_items': 6},  # Context-specific: -1 from standard (kept at 10)
-        'C1': {'min_len': 13, 'max_len': 25, 'marks': [5, 8], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 14)
-        'C2': {'min_len': 15, 'max_len': 30, 'marks': [6, 10], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 16)
+    "mark-the-words": {
+        "A2": {
+            "min_len": 8,
+            "max_len": 12,
+            "marks": [2, 3, 4],
+            "min_items": 6,
+        },  # CEFR: smooth +4 from A1 (not available A1)
+        "B1": {
+            "min_len": 10,
+            "max_len": 18,
+            "marks": [3, 4, 5],
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A2 (was 12, meets existing content)
+        "B1-vocab": {
+            "min_len": 9,
+            "max_len": 16,
+            "marks": [3, 4, 5],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 10)
+        "B1-culture": {
+            "min_len": 9,
+            "max_len": 16,
+            "marks": [3, 4, 5],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 10)
+        "B2": {"min_len": 11, "max_len": 22, "marks": [4, 5, 6], "min_items": 6},  # CEFR: smooth +1 from B1 (was 12)
+        "history": {
+            "min_len": 10,
+            "max_len": 20,
+            "marks": [4, 5, 6],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (kept at 10)
+        "B2-biography": {
+            "min_len": 10,
+            "max_len": 20,
+            "marks": [4, 5, 6],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (kept at 10)
+        "C1": {"min_len": 13, "max_len": 25, "marks": [5, 8], "min_items": 5},  # CEFR: smooth +2 from B2 (was 14)
+        "C2": {"min_len": 15, "max_len": 30, "marks": [6, 10], "min_items": 5},  # CEFR: smooth +2 from C1 (was 16)
     },
-    'select': {
-        'A2': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3], 'min_items': 6},  # CEFR: smooth +2 from A1 (not available A1)
-        'B1': {'min_len': 8, 'max_len': 14, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # CEFR: smooth +2 from A2 (was 10, meets existing content)
-        'B1-vocab': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
-        'B1-culture': {'min_len': 7, 'max_len': 12, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (was 8)
-        'B2': {'min_len': 9, 'max_len': 18, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'history': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
-        'B2-biography': {'min_len': 8, 'max_len': 16, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},  # Context-specific: -1 from standard (kept at 8)
-        'C1': {'min_len': 11, 'max_len': 20, 'options': [5, 7], 'correct': [2, 4], 'min_items': 5},  # CEFR: smooth +2 from B2 (was 10)
-        'C2': {'min_len': 13, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 5},  # CEFR: smooth +2 from C1 (was 12)
+    "select": {
+        "A2": {
+            "min_len": 6,
+            "max_len": 10,
+            "options": [4, 5],
+            "correct": [2, 3],
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A1 (not available A1)
+        "B1": {
+            "min_len": 8,
+            "max_len": 14,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A2 (was 10, meets existing content)
+        "B1-vocab": {
+            "min_len": 7,
+            "max_len": 12,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 8)
+        "B1-culture": {
+            "min_len": 7,
+            "max_len": 12,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 8)
+        "B2": {
+            "min_len": 9,
+            "max_len": 18,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # CEFR: smooth +1 from B1 (was 10)
+        "history": {
+            "min_len": 8,
+            "max_len": 16,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (kept at 8)
+        "B2-biography": {
+            "min_len": 8,
+            "max_len": 16,
+            "options": [5, 6],
+            "correct": [2, 4],
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (kept at 8)
+        "C1": {
+            "min_len": 11,
+            "max_len": 20,
+            "options": [5, 7],
+            "correct": [2, 4],
+            "min_items": 5,
+        },  # CEFR: smooth +2 from B2 (was 10)
+        "C2": {
+            "min_len": 13,
+            "max_len": 22,
+            "options": [6, 8],
+            "correct": [3, 5],
+            "min_items": 5,
+        },  # CEFR: smooth +2 from C1 (was 12)
     },
-    'translate': {
-        'A1': {'min_len': 1, 'max_len': 6, 'options': 3, 'min_items': 6},  # Single words or short phrases at A1
-        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},
-        'B1': {'min_len': 6, 'max_len': 14, 'options': 4, 'min_items': 6},  # CEFR: smooth +2 from A2 (was 8, meets existing content)
-        'B1-vocab': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
-        'B1-culture': {'min_len': 5, 'max_len': 12, 'options': 4, 'min_items': 6},  # Context-specific: -1 from standard (was 6)
-        'B2': {'min_len': 7, 'max_len': 18, 'options': 4, 'min_items': 6},  # CEFR: smooth +1 from B1 (was 10)
-        'history': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
-        'B2-biography': {'min_len': 7, 'max_len': 16, 'options': 4, 'min_items': 6},  # Context-specific: =0 from standard (kept at 7)
-        'C1': {'min_len': 9, 'max_len': 22, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from B2 (was 12)
-        'C2': {'min_len': 11, 'max_len': 28, 'options': 5, 'min_items': 5},  # CEFR: smooth +2 from C1 (was 14)
+    "translate": {
+        "A1": {"min_len": 1, "max_len": 6, "options": 3, "min_items": 6},  # Single words or short phrases at A1
+        "A2": {"min_len": 4, "max_len": 8, "options": 4, "min_items": 6},
+        "B1": {
+            "min_len": 6,
+            "max_len": 14,
+            "options": 4,
+            "min_items": 6,
+        },  # CEFR: smooth +2 from A2 (was 8, meets existing content)
+        "B1-vocab": {
+            "min_len": 5,
+            "max_len": 12,
+            "options": 4,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 6)
+        "B1-culture": {
+            "min_len": 5,
+            "max_len": 12,
+            "options": 4,
+            "min_items": 6,
+        },  # Context-specific: -1 from standard (was 6)
+        "B2": {"min_len": 7, "max_len": 18, "options": 4, "min_items": 6},  # CEFR: smooth +1 from B1 (was 10)
+        "history": {
+            "min_len": 7,
+            "max_len": 16,
+            "options": 4,
+            "min_items": 6,
+        },  # Context-specific: =0 from standard (kept at 7)
+        "B2-biography": {
+            "min_len": 7,
+            "max_len": 16,
+            "options": 4,
+            "min_items": 6,
+        },  # Context-specific: =0 from standard (kept at 7)
+        "C1": {"min_len": 9, "max_len": 22, "options": 5, "min_items": 5},  # CEFR: smooth +2 from B2 (was 12)
+        "C2": {"min_len": 11, "max_len": 28, "options": 5, "min_items": 5},  # CEFR: smooth +2 from C1 (was 14)
     },
-    'critical-analysis': {
-        'B1': {'min_items': 1},  # For skills modules with media literacy focus
-        'B2': {'min_items': 1},
-        'C1': {'min_items': 1},
-        'C2': {'min_items': 1},
+    "critical-analysis": {
+        "B1": {"min_items": 1},  # For skills modules with media literacy focus
+        "B2": {"min_items": 1},
+        "C1": {"min_items": 1},
+        "C2": {"min_items": 1},
     },
-    'comparative-study': {
-        'B2': {'min_items': 1},
-        'C1': {'min_items': 1},
-        'C2': {'min_items': 1},
-        'FOLK': {'min_items': 1},
+    "comparative-study": {
+        "B2": {"min_items": 1},
+        "C1": {"min_items": 1},
+        "C2": {"min_items": 1},
+        "FOLK": {"min_items": 1},
     },
-    'ritual-sequencing': {
-        'FOLK': {'min_items': 1},
+    "ritual-sequencing": {
+        "FOLK": {"min_items": 1},
     },
-    'variant-comparison': {
-        'FOLK': {'min_items': 1},
+    "variant-comparison": {
+        "FOLK": {"min_items": 1},
     },
-    'motif-formula': {
-        'FOLK': {'min_items': 1},
+    "motif-formula": {
+        "FOLK": {"min_items": 1},
     },
-    'performance': {
-        'FOLK': {'min_items': 1},
+    "performance": {
+        "FOLK": {"min_items": 1},
     },
-    'authorial-intent': {
-        'B2': {'min_items': 1},
-        'C1': {'min_items': 1},
-        'C2': {'min_items': 1},
+    "authorial-intent": {
+        "B2": {"min_items": 1},
+        "C1": {"min_items": 1},
+        "C2": {"min_items": 1},
     },
-    'reading': {
-        'A1': {'min_items': 2},
-        'A2': {'min_items': 2},
-        'B1': {'min_items': 3},
-        'B2': {'min_items': 3},
-        'history': {'min_items': 1},
-        'C1': {'min_items': 3},
-        'biography': {'min_items': 1},
-        'istorio': {'min_items': 1},
-        'LIT': {'min_items': 1},
-        'C2': {'min_items': 3},
+    "reading": {
+        "A1": {"min_items": 2},
+        "A2": {"min_items": 2},
+        "B1": {"min_items": 3},
+        "B2": {"min_items": 3},
+        "history": {"min_items": 1},
+        "C1": {"min_items": 3},
+        "biography": {"min_items": 1},
+        "istorio": {"min_items": 1},
+        "LIT": {"min_items": 1},
+        "C2": {"min_items": 3},
     },
-    'essay-response': {
-        'B2': {'min_words': 150, 'min_items': 1},
-        'C1': {'min_words': 400, 'min_items': 1},
-        'C2': {'min_words': 600, 'min_items': 1},
+    "essay-response": {
+        "B2": {"min_words": 150, "min_items": 1},
+        "C1": {"min_words": 400, "min_items": 1},
+        "C2": {"min_words": 600, "min_items": 1},
     },
     # =============================================================================
     # OES/RUTH HISTORICAL LINGUISTICS TYPES (ISSUE-502)
     # =============================================================================
-    'transcription': {
+    "transcription": {
         # Historical manuscript transcription
         # Each transcription is a single exercise (original → answer), so min_items: 1
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
-    'etymology-trace': {
+    "etymology-trace": {
         # Trace word evolution from OES/RUTH to modern Ukrainian
-        'OES': {'min_items': 2},
-        'RUTH': {'min_items': 2},
+        "OES": {"min_items": 2},
+        "RUTH": {"min_items": 2},
     },
-    'grammar-identify': {
+    "grammar-identify": {
         # Identify grammatical forms (Dual, Aorist, etc.)
-        'OES': {'min_items': 2},
-        'RUTH': {'min_items': 2},
+        "OES": {"min_items": 2},
+        "RUTH": {"min_items": 2},
     },
-    'phonology-lab': {
+    "phonology-lab": {
         # Step-by-step sound change reconstruction
-        'OES': {'min_items': 1},  # Labs are intensive, 1 is sufficient
+        "OES": {"min_items": 1},  # Labs are intensive, 1 is sufficient
     },
-    'grammar-lab': {
+    "grammar-lab": {
         # Structured morphological analysis (generic with focus field)
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
-    'parallel-text': {
+    "parallel-text": {
         # Compare passage across language stages/registers
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
-    'paleography-analysis': {
+    "paleography-analysis": {
         # Identify visual features of manuscripts
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
-    'historical-writing': {
+    "historical-writing": {
         # Composition in period-appropriate style
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
-    'register-identify': {
+    "register-identify": {
         # Identify register (Vernacular/Literary/Chancery/Prosta)
-        'OES': {'min_items': 2},
-        'RUTH': {'min_items': 2},
+        "OES": {"min_items": 2},
+        "RUTH": {"min_items": 2},
     },
-    'loanword-trace': {
+    "loanword-trace": {
         # Trace foreign borrowings
-        'OES': {'min_items': 2},
-        'RUTH': {'min_items': 2},
+        "OES": {"min_items": 2},
+        "RUTH": {"min_items": 2},
     },
-    'comparative-style': {
+    "comparative-style": {
         # Compare linguistic features across registers/periods
-        'OES': {'min_items': 1},
-        'RUTH': {'min_items': 1},
+        "OES": {"min_items": 1},
+        "RUTH": {"min_items": 1},
     },
     # =============================================================================
     # PRE-LITERACY / BUKVAR TYPES (A1 alphabet modules)
     # =============================================================================
-    'watch-and-repeat': {
-        'A1': {'min_items': 1},
+    "watch-and-repeat": {
+        "A1": {"min_items": 1},
     },
-    'classify': {
-        'A1': {'min_items': 1},
+    "classify": {
+        "A1": {"min_items": 1},
     },
-    'image-to-letter': {
-        'A1': {'min_items': 5},
+    "image-to-letter": {
+        "A1": {"min_items": 5},
     },
 }
 
 # Valid activity types
 VALID_ACTIVITY_TYPES = [
-    "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
-    "error-correction", "anagram", "select", "translate", "cloze",
+    "match-up",
+    "fill-in",
+    "quiz",
+    "true-false",
+    "group-sort",
+    "unjumble",
+    "error-correction",
+    "anagram",
+    "select",
+    "translate",
+    "cloze",
     "mark-the-words",
     # Seminar-style activities (LIT, HIST, BIO tracks)
-    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
-    "ritual-sequencing", "variant-comparison", "motif-formula", "performance",
+    "reading",
+    "essay-response",
+    "critical-analysis",
+    "comparative-study",
+    "authorial-intent",
+    "ritual-sequencing",
+    "variant-comparison",
+    "motif-formula",
+    "performance",
     "creative-writing",  # Imaginary letters, interpretations, creative exercises
     # OES/RUTH specific (ISSUE-502: Historical Linguistics Types)
-    "etymology-trace", "transcription", "grammar-identify",
-    "paleography-analysis", "dialect-comparison", "translation-critique",
+    "etymology-trace",
+    "transcription",
+    "grammar-identify",
+    "paleography-analysis",
+    "dialect-comparison",
+    "translation-critique",
     # New OES/RUTH types from ISSUE-502
-    "phonology-lab",      # Step-by-step sound change reconstruction
-    "grammar-lab",        # Structured morphological analysis (generic with focus field)
-    "parallel-text",      # Compare passage across language stages/registers
-    "historical-writing", # Composition in period-appropriate style
+    "phonology-lab",  # Step-by-step sound change reconstruction
+    "grammar-lab",  # Structured morphological analysis (generic with focus field)
+    "parallel-text",  # Compare passage across language stages/registers
+    "historical-writing",  # Composition in period-appropriate style
     "register-identify",  # Identify register (Vernacular/Literary/Chancery/Prosta)
-    "loanword-trace",     # Trace foreign borrowings (Greek, Polish, Latin, Turkic)
+    "loanword-trace",  # Trace foreign borrowings (Greek, Polish, Latin, Turkic)
     "comparative-style",  # Compare linguistic features across registers/periods
     # Pre-literacy / bukvar types (A1 alphabet modules)
-    "watch-and-repeat",   # Watch pronunciation video, repeat aloud
-    "classify",           # Sort items into categories (e.g., vowels vs consonants)
-    "image-to-letter",    # See image/emoji, identify starting letter
+    "watch-and-repeat",  # Watch pronunciation video, repeat aloud
+    "classify",  # Sort items into categories (e.g., vowels vs consonants)
+    "image-to-letter",  # See image/emoji, identify starting letter
     # Ukrainian pedagogy types (складоподіл, phonetics — A1.1+)
-    "divide-words",       # Interactive syllable division (поділи слова на склади)
-    "count-syllables",    # Count syllables in a word (порахуй склади)
-    "pick-syllables",     # Select syllables matching criteria (закриті/відкриті)
-    "odd-one-out",        # Pick the word that doesn't belong (четверте зайве)
-    "order",              # Put sentences/dialogue lines in correct order
-    "observe",            # Pattern discovery — see examples, identify the rule
-    "letter-grid",        # Letter reference grid (upper, lower, name, sound)
-    "phrase-table",       # Phrase groups for communication patterns
+    "divide-words",  # Interactive syllable division (поділи слова на склади)
+    "count-syllables",  # Count syllables in a word (порахуй склади)
+    "pick-syllables",  # Select syllables matching criteria (закриті/відкриті)
+    "odd-one-out",  # Pick the word that doesn't belong (четверте зайве)
+    "order",  # Put sentences/dialogue lines in correct order
+    "observe",  # Pattern discovery — see examples, identify the rule
+    "letter-grid",  # Letter reference grid (upper, lower, name, sound)
+    "phrase-table",  # Phrase groups for communication patterns
     "highlight-morphemes",  # Identify word parts (prefix, root, suffix, ending)
 ]
 
 # Activity keywords for detection
 ACTIVITY_KEYWORDS = [
-    "match-up", "gap-fill", "quiz", "true-false", "group-sort", "unjumble",
-    "fill-in", "error-correction", "anagram", "cloze",
-    "select", "translate", "mark-the-words",
+    "match-up",
+    "gap-fill",
+    "quiz",
+    "true-false",
+    "group-sort",
+    "unjumble",
+    "fill-in",
+    "error-correction",
+    "anagram",
+    "cloze",
+    "select",
+    "translate",
+    "mark-the-words",
     # Seminar-style activities
-    "reading", "essay-response", "critical-analysis", "comparative-study", "authorial-intent",
+    "reading",
+    "essay-response",
+    "critical-analysis",
+    "comparative-study",
+    "authorial-intent",
     "creative-writing",
     # OES/RUTH specific (ISSUE-502)
-    "etymology-trace", "transcription", "grammar-identify",
-    "paleography-analysis", "dialect-comparison", "translation-critique",
-    "phonology-lab", "grammar-lab", "parallel-text", "historical-writing",
-    "register-identify", "loanword-trace", "comparative-style",
+    "etymology-trace",
+    "transcription",
+    "grammar-identify",
+    "paleography-analysis",
+    "dialect-comparison",
+    "translation-critique",
+    "phonology-lab",
+    "grammar-lab",
+    "parallel-text",
+    "historical-writing",
+    "register-identify",
+    "loanword-trace",
+    "comparative-style",
     # Pre-literacy / bukvar types (A1 alphabet modules)
-    "watch-and-repeat", "classify", "image-to-letter",
+    "watch-and-repeat",
+    "classify",
+    "image-to-letter",
     # Ukrainian pedagogy types (складоподіл, phonetics — A1.1+)
-    "divide-words", "count-syllables", "pick-syllables", "odd-one-out",
-    "order", "observe", "letter-grid", "phrase-table", "highlight-morphemes",
+    "divide-words",
+    "count-syllables",
+    "pick-syllables",
+    "odd-one-out",
+    "order",
+    "observe",
+    "letter-grid",
+    "phrase-table",
+    "highlight-morphemes",
 ]
 
 # Core section keywords (not activities)
 CORE_KEYWORDS = [
-    "warm-up", "presentation", "introduction", "narrative", "context",
-    "diagnostic", "cultural", "culture", "story", "dialogue", "reading",
-    "deep dive", "riddle", "insight", "conversation", "review", "concept",
-    "core", "usage", "matters", "transformation", "memory", "tip",
-    "pattern", "summary",
+    "warm-up",
+    "presentation",
+    "introduction",
+    "narrative",
+    "context",
+    "diagnostic",
+    "cultural",
+    "culture",
+    "story",
+    "dialogue",
+    "reading",
+    "deep dive",
+    "riddle",
+    "insight",
+    "conversation",
+    "review",
+    "concept",
+    "core",
+    "usage",
+    "matters",
+    "transformation",
+    "memory",
+    "tip",
+    "pattern",
+    "summary",
     # Ukrainian equivalents for B1+ modules
-    "діагностика", "аналіз", "занурення", "глибоке", "помилки",
-    "частина", "культур", "розмова", "текст", "діалог", "читання", "підсумок",
-    "вступ", "джерела", "погляд", "хронологія", "висновки", "сьогодення"
+    "діагностика",
+    "аналіз",
+    "занурення",
+    "глибоке",
+    "помилки",
+    "частина",
+    "культур",
+    "розмова",
+    "текст",
+    "діалог",
+    "читання",
+    "підсумок",
+    "вступ",
+    "джерела",
+    "погляд",
+    "хронологія",
+    "висновки",
+    "сьогодення",
 ]
 
 # Section keywords to exclude from core word count
@@ -704,901 +1378,1343 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 #     Per-level audit floors can be raised in future units once we know they
 #     match field reality on existing passing modules.
 LEVEL_CONFIG = {
-    'A1': {
+    "A1": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (1200).
         # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting.
-        'target_words': LEVEL_THRESHOLDS['A1'].target_words,
-        'min_activities': 1,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
-        'min_items_per_activity': 6,  # Standard: 6 items minimum per activity
-        'min_types_unique': 4,  # Apr 2026: activity prompt needs a positive floor; A1 letter modules use 3-4 types
-        'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
-        'min_engagement': 0,  # Apr 2026: dropped — review judges callout quality, not mechanical count
-        'immersion_graduated': True,
-        'transliteration_allowed': True,
-        'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'image-to-letter'}
+        "target_words": LEVEL_THRESHOLDS["A1"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
+        "min_items_per_activity": 6,  # Standard: 6 items minimum per activity
+        "min_types_unique": 4,  # Apr 2026: activity prompt needs a positive floor; A1 letter modules use 3-4 types
+        "min_vocab": 1,  # Relaxed: focus on unique lemma introduction
+        "min_engagement": 0,  # Apr 2026: dropped — review judges callout quality, not mechanical count
+        "immersion_graduated": True,
+        "transliteration_allowed": True,
+        "priority_types": {"fill-in", "match-up", "anagram", "unjumble", "quiz", "watch-and-repeat", "image-to-letter"},
     },
-    'A2': {
+    "A2": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (2000).
         # Mar 2026: lowered from 3000 — prose should be concise at A2.
-        'target_words': LEVEL_THRESHOLDS['A2'].target_words,
-        'min_activities': 1,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
-        'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
-        'min_types_unique': 2,  # Mar 2026: dropped with min_activities
-        'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
-        'min_engagement': 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
-        'immersion_graduated': True,  # Easy Ukrainian ramp: early A2 75-85%+, mid/late A2 90-95%+
-        'transliteration_allowed': False,
+        "target_words": LEVEL_THRESHOLDS["A2"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
+        "min_items_per_activity": 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
+        "min_types_unique": 2,  # Mar 2026: dropped with min_activities
+        "min_vocab": 1,  # Relaxed: focus on unique lemma introduction
+        "min_engagement": 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
+        "immersion_graduated": True,  # Easy Ukrainian ramp: early A2 75-85%+, mid/late A2 90-95%+
+        "transliteration_allowed": False,
         # Mar 2026: expanded from 3 types → 15 — was causing narrow activity generation
         # #1550 U4: dropped 'select' and 'reading' (pipeline forbids them at A2)
         # to keep audit-priority ⊆ pipeline-allowed.
-        'priority_types': {
+        "priority_types": {
             # Core drill types (carried from A1)
-            'quiz', 'fill-in', 'match-up', 'unjumble', 'error-correction',
+            "quiz",
+            "fill-in",
+            "match-up",
+            "unjumble",
+            "error-correction",
             # Categorization & identification
-            'group-sort', 'true-false', 'odd-one-out',
+            "group-sort",
+            "true-false",
+            "odd-one-out",
             # New at A2 — text-level exercises
-            'cloze', 'mark-the-words', 'translate',
+            "cloze",
+            "mark-the-words",
+            "translate",
             # Sequencing & pattern discovery
-            'order', 'observe',
-        }
+            "order",
+            "observe",
+        },
     },
-    'A2-grammar': {
+    "A2-grammar": {
         # A2 grammar modules (aspect, cases, verbs) — same targets, grammar-appropriate types
-        'target_words': 2000,
-        'min_activities': 1,
-        'min_items_per_activity': 8,
-        'min_types_unique': 2,
-        'min_vocab': 1,
-        'min_engagement': 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
-        'immersion_graduated': True,
-        'transliteration_allowed': False,
+        "target_words": 2000,
+        "min_activities": 1,
+        "min_items_per_activity": 8,
+        "min_types_unique": 2,
+        "min_vocab": 1,
+        "min_engagement": 3,  # Mar 2026: lowered from 4→3 — callouts hard for grammar-heavy modules
+        "immersion_graduated": True,
+        "transliteration_allowed": False,
         # #1550 U4: dropped 'select' and 'reading' (pipeline forbids them at A2).
-        'priority_types': {
-            'quiz', 'fill-in', 'match-up', 'unjumble', 'error-correction',
-            'group-sort', 'true-false', 'odd-one-out',
-            'cloze', 'mark-the-words', 'translate',
-            'order', 'observe',
-        }
+        "priority_types": {
+            "quiz",
+            "fill-in",
+            "match-up",
+            "unjumble",
+            "error-correction",
+            "group-sort",
+            "true-false",
+            "odd-one-out",
+            "cloze",
+            "mark-the-words",
+            "translate",
+            "order",
+            "observe",
+        },
     },
-    'A1-checkpoint': {
-        'target_words': 1000,  # Mar 2026: proportional to A1 base (1200)
-        'min_activities': 1,   # Mar 2026: dropped — quality over quantity (#969)
-        'min_items_per_activity': 10,
-        'min_types_unique': 2,  # Mar 2026: dropped with min_activities
-        'min_vocab': 1,  # Relaxed: most vocab is review
-        'min_engagement': 2,
+    "A1-checkpoint": {
+        "target_words": 1000,  # Mar 2026: proportional to A1 base (1200)
+        "min_activities": 1,  # Mar 2026: dropped — quality over quantity (#969)
+        "min_items_per_activity": 10,
+        "min_types_unique": 2,  # Mar 2026: dropped with min_activities
+        "min_vocab": 1,  # Relaxed: most vocab is review
+        "min_engagement": 2,
         # NO immersion gate - comes naturally from practice
-        'transliteration_allowed': True,
-        'priority_types': {'quiz', 'fill-in', 'match-up'}
+        "transliteration_allowed": True,
+        "priority_types": {"quiz", "fill-in", "match-up"},
     },
-    'A2-checkpoint': {
-        'target_words': 1500,  # Mar 2026: proportional to A2 base (2000)
-        'min_activities': 1,   # Mar 2026: dropped — quality over quantity (#969)
-        'min_items_per_activity': 10,
-        'min_types_unique': 2,  # Mar 2026: dropped with min_activities
-        'min_vocab': 1,  # Relaxed: most vocab is review
-        'min_engagement': 3,
+    "A2-checkpoint": {
+        "target_words": 1500,  # Mar 2026: proportional to A2 base (2000)
+        "min_activities": 1,  # Mar 2026: dropped — quality over quantity (#969)
+        "min_items_per_activity": 10,
+        "min_types_unique": 2,  # Mar 2026: dropped with min_activities
+        "min_vocab": 1,  # Relaxed: most vocab is review
+        "min_engagement": 3,
         # NO immersion gate - comes naturally from practice
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'error-correction'}
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "error-correction"},
     },
     # B1-bridge REMOVED 2026-04-03: bridge moved to end of A2 (metalanguage modules).
     # B1 now starts with baselines, not bridge. All B1 uses B1-grammar config.
-    'B1-grammar': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
-        'min_items_per_activity': 8,   # Apr 2026: 6→8, aligned with b1-core ITEMS_MIN and rest of B1+ family
-        'min_types_unique': 5,         # Apr 2026: 3→5, prevent quiz-wall workbooks (B1 immersion crisis fix)
-        'min_vocab': 25,  # Increased for grammar terminology
-        'min_engagement': 5,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {
-            'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words',
-            'essay-response', 'grammar-identify',
-        }
+    "B1-grammar": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
+        "min_items_per_activity": 8,  # Apr 2026: 6→8, aligned with b1-core ITEMS_MIN and rest of B1+ family
+        "min_types_unique": 5,  # Apr 2026: 3→5, prevent quiz-wall workbooks (B1 immersion crisis fix)
+        "min_vocab": 25,  # Increased for grammar terminology
+        "min_engagement": 5,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {
+            "quiz",
+            "match-up",
+            "fill-in",
+            "error-correction",
+            "mark-the-words",
+            "essay-response",
+            "grammar-identify",
+        },
     },
-    'B1-vocab': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 35,
-        'min_engagement': 5,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz', 'group-sort'}
+    "B1-vocab": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 12,  # Reduced from 14 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 35,
+        "min_engagement": 5,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"match-up", "mark-the-words", "translate", "quiz", "group-sort"},
     },
-    'B1': {
+    "B1": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
-        'target_words': LEVEL_THRESHOLDS['B1'].target_words,
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 25,
-        'min_engagement': 5,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'unjumble', 'error-correction'}
+        "target_words": LEVEL_THRESHOLDS["B1"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 12,  # Reduced from 14 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 25,
+        "min_engagement": 5,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"fill-in", "unjumble", "error-correction"},
     },
-    'B1-culture': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 25,
-        'min_engagement': 5,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'essay-response', 'fill-in', 'match-up', 'quiz', 'true-false'}
+    "B1-culture": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 12,  # Reduced from 14 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 25,
+        "min_engagement": 5,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"essay-response", "fill-in", "match-up", "quiz", "true-false"},
     },
-    'B1-skills': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 15,
-        'min_engagement': 4,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'essay-response', 'cloze', 'fill-in', 'mark-the-words', 'error-correction'}
+    "B1-skills": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 15,
+        "min_engagement": 4,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"essay-response", "cloze", "fill-in", "mark-the-words", "error-correction"},
     },
-    'B1-checkpoint': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 10,
-        'min_engagement': 3,
+    "B1-checkpoint": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 10,
+        "min_engagement": 3,
         # NO immersion gate - comes naturally from practice
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'error-correction'}
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "error-correction"},
     },
-    'B1-capstone': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 10,
-        'min_engagement': 3,
-        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
+    "B1-capstone": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 12,  # Reduced from 14 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 10,
+        "min_engagement": 3,
+        "min_immersion": 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "cloze", "error-correction"},
     },
-    'B2-grammar': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 25,  # Increased for advanced grammar terminology
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'fill-in', 'cloze', 'grammar-identify'}
+    "B2-grammar": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 14,  # Reduced from 16 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 25,  # Increased for advanced grammar terminology
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"error-correction", "fill-in", "cloze", "grammar-identify"},
     },
-    'B2-vocab': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 35,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
+    "B2-vocab": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 14,  # Reduced from 16 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 35,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "match-up", "mark-the-words", "translate", "quiz"},  # Added reading
     },
-    'B2': {
+    "B2": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
-        'target_words': LEVEL_THRESHOLDS['B2'].target_words,
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 25,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'error-correction', 'grammar-identify'}
+        "target_words": LEVEL_THRESHOLDS["B2"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 14,  # Reduced from 16 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 25,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"fill-in", "error-correction", "grammar-identify"},
     },
-    'history': {
+    "history": {
         # HIST Track: History seminar style
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 20,
-        'min_engagement': 5,
-        'min_immersion': 90,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'fill-in', 'cloze', 'match-up', 'error-correction', 'unjumble', 'mark-the-words', 'group-sort', 'select', 'translate', 'anagram'},
-        'essay_min_words': 150,
-        'essay_max_words': 250
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 20,
+        "min_engagement": 5,
+        "min_immersion": 90,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {
+            "quiz",
+            "fill-in",
+            "cloze",
+            "match-up",
+            "error-correction",
+            "unjumble",
+            "mark-the-words",
+            "group-sort",
+            "select",
+            "translate",
+            "anagram",
+        },
+        "essay_min_words": 150,
+        "essay_max_words": 250,
     },
-    'B2-biography': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
-        'min_vocab': 20,
-        'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'cloze', 'fill-in'}  # Seminar hybrid
+    "B2-biography": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 14,
+        "min_types_unique": 4,
+        "min_vocab": 20,
+        "min_engagement": 5,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "cloze", "fill-in"},  # Seminar hybrid
     },
-    'B2-checkpoint': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
-        'min_vocab': 10,
-        'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
+    "B2-checkpoint": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 14,
+        "min_types_unique": 4,
+        "min_vocab": 10,
+        "min_engagement": 4,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "error-correction", "cloze"},
     },
-    'B2-skills': {
+    "B2-skills": {
         # Communication skills modules — seminar style at B2
-        'target_words': 4000,
-        'min_activities': 1,
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
-        'min_vocab': 20,
-        'min_engagement': 6,
-        'min_immersion': 90,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'translation-critique', 'cloze', 'fill-in'}  # Seminar + core
+        "target_words": 4000,
+        "min_activities": 1,
+        "min_items_per_activity": 14,
+        "min_types_unique": 4,
+        "min_vocab": 20,
+        "min_engagement": 6,
+        "min_immersion": 90,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "translation-critique", "cloze", "fill-in"},  # Seminar + core
     },
-    'B2-synthesis': {
+    "B2-synthesis": {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
         # Focus on cross-era analysis and historical argumentation, not recall
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
-        'min_items_per_activity': 14,  # Increased from 12 (Jan 2026) for consistency
-        'min_types_unique': 4,
-        'min_vocab': 20,  # Review vocabulary from covered modules
-        'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'translation-critique', 'essay-response', 'cloze'}  # Seminar
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan activity_hints guide count (#969)
+        "min_items_per_activity": 14,  # Increased from 12 (Jan 2026) for consistency
+        "min_types_unique": 4,
+        "min_vocab": 20,  # Review vocabulary from covered modules
+        "min_engagement": 4,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "translation-critique", "essay-response", "cloze"},  # Seminar
     },
-    'B2-capstone': {
-        'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 12 (Jan 2026) - quality over quantity
-        'min_items_per_activity': 14,  # Kept at 14 (Jan 2026)
-        'min_types_unique': 4,
-        'min_vocab': 10,
-        'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
+    "B2-capstone": {
+        "target_words": 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 12 (Jan 2026) - quality over quantity
+        "min_items_per_activity": 14,  # Kept at 14 (Jan 2026)
+        "min_types_unique": 4,
+        "min_vocab": 10,
+        "min_engagement": 4,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "cloze", "error-correction"},
     },
-    'C1': {
+    "C1": {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
         # Feb 2026: raised to 4000 minimum for all B1+.
-        'target_words': LEVEL_THRESHOLDS['C1'].target_words,
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 25,
-        'min_engagement': 7,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'fill-in', 'error-correction'}  # Seminar hybrid
+        "target_words": LEVEL_THRESHOLDS["C1"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 25,
+        "min_engagement": 7,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "fill-in", "error-correction"},  # Seminar hybrid
     },
-    'C1-academic': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 24,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'error-correction'}  # Seminar + grammar
+    "C1-academic": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 24,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "error-correction"},  # Seminar + grammar
     },
-    'C1-stylistics': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 24,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
+    "C1-stylistics": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 24,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},  # Seminar
     },
     # FOLK seminar (C1-register folk-culture track). Keyed by its level_code
     # 'FOLK' — the same track-name-is-the-key pattern as LIT/OES/RUTH — so
     # detect_level('/folk/...') -> 'FOLK' resolves here directly. Previously
     # keyed 'C1-folk', which was unreachable (folk plans carry level: FOLK,
     # never 'C1'), so folk modules silently audited against the A1 defaults.
-    'FOLK': {
-        'target_words': 4000,
-        'min_activities': 1,
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 24,
-        'min_engagement': 5,
-        'min_immersion': 90,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
+    "FOLK": {
+        "target_words": 4000,
+        "min_activities": 1,
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 24,
+        "min_engagement": 5,
+        "min_immersion": 90,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},  # Seminar
     },
-    'biography': {
+    "biography": {
         # BIO Track: Biography seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: biographical analysis, legacy evaluation, era context
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 3,
-        'min_vocab': 24,
-        'min_engagement': 5,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent', 'quiz'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'match-up', 'fill-in', 'cloze', 'group-sort', 'unjumble', 'anagram', 'mark-the-words'},
-        'essay_min_words': 250,
-        'essay_max_words': 400
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 3,
+        "min_vocab": 24,
+        "min_engagement": 5,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {
+            "reading",
+            "essay-response",
+            "critical-analysis",
+            "comparative-study",
+            "authorial-intent",
+            "quiz",
+        },
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"match-up", "fill-in", "cloze", "group-sort", "unjumble", "anagram", "mark-the-words"},
+        "essay_min_words": 250,
+        "essay_max_words": 400,
     },
-    'istorio': {
+    "istorio": {
         # ISTORIO Track: History seminar style (C1 level)
         # Structure: Advanced Analysis + Conceptual Quiz only
         # Focus: historical analysis, source criticism, historiographical debate
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 3,
-        'min_vocab': 25,
-        'min_engagement': 6,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'match-up', 'fill-in', 'cloze', 'group-sort', 'unjumble', 'anagram', 'mark-the-words'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 3,
+        "min_vocab": 25,
+        "min_engagement": 6,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"match-up", "fill-in", "cloze", "group-sort", "unjumble", "anagram", "mark-the-words"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-    'C1-literature': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 24,
-        'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
+    "C1-literature": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 24,
+        "min_engagement": 5,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},  # Seminar
     },
-    'C1-checkpoint': {
-        'target_words': 4000,
-        'min_activities': 1,
-        'min_items_per_activity': 14,
-        'min_types_unique': 4,
-        'min_vocab': 15,
-        'min_engagement': 4,
-        'min_immersion': 90,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'quiz', 'error-correction'}  # Seminar + core for assessment
+    "C1-checkpoint": {
+        "target_words": 4000,
+        "min_activities": 1,
+        "min_items_per_activity": 14,
+        "min_types_unique": 4,
+        "min_vocab": 15,
+        "min_engagement": 4,
+        "min_immersion": 90,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "quiz", "error-correction"},  # Seminar + core for assessment
     },
-    'C1-capstone': {
-        'target_words': 4000,
-        'min_activities': 1,
-        'min_items_per_activity': 12,
-        'min_types_unique': 4,
-        'min_vocab': 15,
-        'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'}  # Seminar
+    "C1-capstone": {
+        "target_words": 4000,
+        "min_activities": 1,
+        "min_items_per_activity": 12,
+        "min_types_unique": 4,
+        "min_vocab": 15,
+        "min_engagement": 4,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,  # FULL IMMERSION - no English in body text
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis"},  # Seminar
     },
-    'C2': {
+    "C2": {
         # C2 Track: Seminar style - production-focused
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (5000).
         # Feb 2026: seminars raised to 5000 minimum.
-        'target_words': LEVEL_THRESHOLDS['C2'].target_words,
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 25,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": LEVEL_THRESHOLDS["C2"].target_words,
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 25,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-    'C2-stylistic': {
+    "C2-stylistic": {
         # C2 Stylistic Track: Seminar style - style mastery
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 25,
-        'min_engagement': 6,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 25,
+        "min_engagement": 6,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-    'C2-literary': {
+    "C2-literary": {
         # C2 Literary Track: Seminar style - literary production
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 25,
-        'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 25,
+        "min_engagement": 5,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-    'C2-professional': {
+    "C2-professional": {
         # C2 Professional Track: Seminar style - professional mastery
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 25,
-        'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 25,
+        "min_engagement": 5,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-    'C2-checkpoint': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
-        'min_items_per_activity': 18,  # Increased from 14 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
-        'min_vocab': 15,
-        'min_engagement': 4,
+    "C2-checkpoint": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
+        "min_items_per_activity": 18,  # Increased from 14 (Jan 2026) - higher than C1
+        "min_types_unique": 4,
+        "min_vocab": 15,
+        "min_engagement": 4,
         # NO immersion gate - comes naturally from practice
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
+        "transliteration_allowed": False,
+        "priority_types": {"quiz", "fill-in", "error-correction", "cloze"},
     },
-    'C2-capstone': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
-        'min_items_per_activity': 18,  # Increased from 12 (Jan 2026) - higher than C1
-        'min_types_unique': 4,
-        'min_vocab': 15,
-        'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in'}
+    "C2-capstone": {
+        "target_words": 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)  # Reduced from 16 (Jan 2026) - quality over quantity
+        "min_items_per_activity": 18,  # Increased from 12 (Jan 2026) - higher than C1
+        "min_types_unique": 4,
+        "min_vocab": 15,
+        "min_engagement": 4,
+        "min_immersion": 90,  # Relaxed to 90% to allow necessary English context
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"cloze", "fill-in"},
     },
-    'LIT': {
+    "LIT": {
         # LIT Track: Pure seminar style (post-C1)
         # Activities: reading + essay-response + critical-analysis + comparative-study
         # NO traditional activities (quiz, match-up, fill-in)
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,  # Analytical tasks are deep, single-item responses are sufficient
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,  # Allow 5% for Latin/Greek scholarly terms
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},  # Must have all three
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,  # Analytical tasks are deep, single-item responses are sufficient
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,  # Allow 5% for Latin/Greek scholarly terms
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},  # Must have all three
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
     # --- Literature variant tracks (inherit LIT config with minor adjustments) ---
-    'LIT-ESSAY': {
+    "LIT-ESSAY": {
         # Essay/non-fiction track: longer analytical pieces
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-HIST-FIC': {
+    "LIT-HIST-FIC": {
         # Historical fiction: narrative analysis focus
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-FANTASTIKA': {
+    "LIT-FANTASTIKA": {
         # Sci-fi/fantasy: genre analysis
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-WAR': {
+    "LIT-WAR": {
         # War literature: urgent, contemporary focus
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-HUMOR': {
+    "LIT-HUMOR": {
         # Humor/satire
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-YOUTH': {
+    "LIT-YOUTH": {
         # Children's/YA lit
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-DOC': {
+    "LIT-DOC": {
         # Fact & Testimony
-        'target_words': 5000,
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-DRAMA': {
+    "LIT-DRAMA": {
         # Modern Stage
-        'target_words': 5000,
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'LIT-CRIMEA': {
+    "LIT-CRIMEA": {
         # Crimean Voices
-        'target_words': 5000,
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 0,
-        'min_engagement': 4,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'}
+        "target_words": 5000,
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 0,
+        "min_engagement": 4,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
     },
-    'OES': {
+    "OES": {
         # OES Track: Historical Linguistics (post-B2)
         # Source: Gemini Research ISSUE-490, ISSUE-491, ISSUE-492, ISSUE-501
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 3,
-        'min_vocab': 30,
-        'min_engagement': 4,
-        'min_immersion': 97,   # Allow 3% for IPA notation and scholarly terms
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {
-            'reading', 'essay-response', 'critical-analysis',
-            'comparative-study', 'etymology-trace', 'transcription',
-            'grammar-identify', 'paleography-analysis',
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 3,
+        "min_vocab": 30,
+        "min_engagement": 4,
+        "min_immersion": 97,  # Allow 3% for IPA notation and scholarly terms
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {
+            "reading",
+            "essay-response",
+            "critical-analysis",
+            "comparative-study",
+            "etymology-trace",
+            "transcription",
+            "grammar-identify",
+            "paleography-analysis",
         },
-        'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
+        "required_types": {"transcription", "etymology-trace", "grammar-identify"},
+        "forbidden_types": {
+            "quiz",
+            "match-up",
+            "fill-in",
+            "unjumble",
+            "anagram",
+            "cloze",
+            "mark-the-words",
+            "group-sort",
+            "select",
+            "translate",
+        },
     },
-    'RUTH': {
+    "RUTH": {
         # RUTH Track: Ruthenian/Middle Ukrainian (post-B2)
         # Source: Gemini Research ISSUE-493, ISSUE-494, ISSUE-495, ISSUE-496
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 3,
-        'min_vocab': 30,
-        'min_engagement': 4,
-        'min_immersion': 97,   # Allow 3% for IPA notation and scholarly terms
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {
-            'reading', 'essay-response', 'critical-analysis',
-            'comparative-study', 'transcription', 'etymology-trace',
-            'grammar-identify', 'paleography-analysis', 'dialect-comparison',
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 3,
+        "min_vocab": 30,
+        "min_engagement": 4,
+        "min_immersion": 97,  # Allow 3% for IPA notation and scholarly terms
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {
+            "reading",
+            "essay-response",
+            "critical-analysis",
+            "comparative-study",
+            "transcription",
+            "etymology-trace",
+            "grammar-identify",
+            "paleography-analysis",
+            "dialect-comparison",
         },
-        'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
+        "required_types": {"transcription", "etymology-trace", "grammar-identify"},
+        "forbidden_types": {
+            "quiz",
+            "match-up",
+            "fill-in",
+            "unjumble",
+            "anagram",
+            "cloze",
+            "mark-the-words",
+            "group-sort",
+            "select",
+            "translate",
+        },
     },
     # =============================================================================
     # SEMINAR-STYLE TRACKS (Quality over Quantity)
     # =============================================================================
-    'HIST-seminar': {
+    "HIST-seminar": {
         # HIST Track: Transitional seminar style (B2 level)
         # Activities: reading + essay-response (shorter) + critical-analysis + true-false (factual)
         # Easier than LIT: shorter essays, some factual checks allowed
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 20,
-        'min_engagement': 5,
-        'min_immersion': 90,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response'},  # Must have both
-        'allowed_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study', 'true-false'},
-        'essay_min_words': 150,  # Shorter than LIT (150-200 vs 300-500)
-        'essay_max_words': 250
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 20,
+        "min_engagement": 5,
+        "min_immersion": 90,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response"},  # Must have both
+        "allowed_types": {"reading", "essay-response", "critical-analysis", "comparative-study", "true-false"},
+        "essay_min_words": 150,  # Shorter than LIT (150-200 vs 300-500)
+        "essay_max_words": 250,
     },
-    'ISTORIO-seminar': {
+    "ISTORIO-seminar": {
         # ISTORIO Track: Academic seminar style (C1 level)
         # Activities: reading + essay-response (full) + critical-analysis + comparative-study
         # Academic rigor: longer essays, source criticism, historiographical analysis
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
-        'min_activities': 1,  # Mar 2026: dropped — plan guides count (#969)
-        'max_activities': 9,
-        'min_items_per_activity': 1,
-        'min_types_unique': 2,
-        'min_vocab': 25,
-        'min_engagement': 6,
-        'min_immersion': 95,
-        'max_immersion': 100,
-        'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'},
-        'required_types': {'reading', 'essay-response', 'critical-analysis'},
-        'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words'},
-        'essay_min_words': 300,
-        'essay_max_words': 500
+        "target_words": 5000,  # Feb 2026: seminars raised to 5000 minimum
+        "min_activities": 1,  # Mar 2026: dropped — plan guides count (#969)
+        "max_activities": 9,
+        "min_items_per_activity": 1,
+        "min_types_unique": 2,
+        "min_vocab": 25,
+        "min_engagement": 6,
+        "min_immersion": 95,
+        "max_immersion": 100,
+        "transliteration_allowed": False,
+        "priority_types": {"reading", "essay-response", "critical-analysis", "comparative-study"},
+        "required_types": {"reading", "essay-response", "critical-analysis"},
+        "forbidden_types": {"quiz", "match-up", "fill-in", "unjumble", "anagram", "cloze", "mark-the-words"},
+        "essay_min_words": 300,
+        "essay_max_words": 500,
     },
-
 }
 
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
-    'A1': {
-        'forbidden': [
-            'classify', 'mark-the-words', 'cloze', 'grammar-identify',
-            'highlight-morphemes', 'essay-response', 'reading',
-            'critical-analysis', 'translation-critique', 'comparative-study',
-            'source-evaluation', 'authorial-intent', 'debate',
-            'etymology-trace', 'paleography-analysis', 'dialect-comparison',
-            'transcription', 'select',
+    "A1": {
+        "forbidden": [
+            "classify",
+            "mark-the-words",
+            "cloze",
+            "grammar-identify",
+            "highlight-morphemes",
+            "essay-response",
+            "reading",
+            "critical-analysis",
+            "translation-critique",
+            "comparative-study",
+            "source-evaluation",
+            "authorial-intent",
+            "debate",
+            "etymology-trace",
+            "paleography-analysis",
+            "dialect-comparison",
+            "transcription",
+            "select",
         ],
-        'anagram_limit': 10
+        "anagram_limit": 10,
     },
-    'A2': {
-        'forbidden': [
-            'image-to-letter', 'letter-grid', 'watch-and-repeat',
-            'divide-words', 'count-syllables', 'pick-syllables', 'anagram',
-            'classify', 'grammar-identify', 'highlight-morphemes',
-            'essay-response', 'reading', 'critical-analysis',
-            'translation-critique', 'comparative-study', 'source-evaluation',
-            'authorial-intent', 'debate', 'etymology-trace',
-            'paleography-analysis', 'dialect-comparison', 'transcription',
-            'select',
+    "A2": {
+        "forbidden": [
+            "image-to-letter",
+            "letter-grid",
+            "watch-and-repeat",
+            "divide-words",
+            "count-syllables",
+            "pick-syllables",
+            "anagram",
+            "classify",
+            "grammar-identify",
+            "highlight-morphemes",
+            "essay-response",
+            "reading",
+            "critical-analysis",
+            "translation-critique",
+            "comparative-study",
+            "source-evaluation",
+            "authorial-intent",
+            "debate",
+            "etymology-trace",
+            "paleography-analysis",
+            "dialect-comparison",
+            "transcription",
+            "select",
         ],
-        'anagram_forbidden': True
+        "anagram_forbidden": True,
     },
-    'B1': {
-        'forbidden': [
-            'image-to-letter', 'letter-grid', 'watch-and-repeat',
-            'divide-words', 'count-syllables', 'pick-syllables', 'anagram',
-            'observe', 'phrase-table', 'classify', 'reading',
-            'critical-analysis', 'translation-critique', 'comparative-study',
-            'source-evaluation', 'authorial-intent', 'debate',
-            'etymology-trace', 'paleography-analysis', 'dialect-comparison',
-            'transcription', 'select',
+    "B1": {
+        "forbidden": [
+            "image-to-letter",
+            "letter-grid",
+            "watch-and-repeat",
+            "divide-words",
+            "count-syllables",
+            "pick-syllables",
+            "anagram",
+            "observe",
+            "phrase-table",
+            "classify",
+            "reading",
+            "critical-analysis",
+            "translation-critique",
+            "comparative-study",
+            "source-evaluation",
+            "authorial-intent",
+            "debate",
+            "etymology-trace",
+            "paleography-analysis",
+            "dialect-comparison",
+            "transcription",
+            "select",
         ],
-        'anagram_forbidden': True
+        "anagram_forbidden": True,
     },
-    'B2': {'forbidden': [], 'anagram_forbidden': True},
-    'C1': {'forbidden': [], 'anagram_forbidden': True},
-    'C2': {'forbidden': [], 'anagram_forbidden': True},
+    "B2": {"forbidden": [], "anagram_forbidden": True},
+    "C1": {"forbidden": [], "anagram_forbidden": True},
+    "C2": {"forbidden": [], "anagram_forbidden": True},
 }
 
 # Required advanced activities by module focus (C1/C2)
 REQUIRED_ADVANCED_TYPES = {
-    'biography': ['essay-response', 'comparative-study'],
-    'history': ['essay-response', 'comparative-study'],
-    'literature': ['essay-response', 'critical-analysis'],
-    'fine-arts': ['essay-response', 'critical-analysis'],
-    'folk-culture': ['essay-response', 'comparative-study'],
-    'academic': ['essay-response', 'authorial-intent'],
-    'checkpoint': ['essay-response', 'comparative-study'],
-    'skills': [],  # Skills modules focus on practical communication, not analytical writing
-    'default': ['essay-response']  # Fallback for grammar/vocab modules
+    "biography": ["essay-response", "comparative-study"],
+    "history": ["essay-response", "comparative-study"],
+    "literature": ["essay-response", "critical-analysis"],
+    "fine-arts": ["essay-response", "critical-analysis"],
+    "folk-culture": ["essay-response", "comparative-study"],
+    "academic": ["essay-response", "authorial-intent"],
+    "checkpoint": ["essay-response", "comparative-study"],
+    "skills": [],  # Skills modules focus on practical communication, not analytical writing
+    "default": ["essay-response"],  # Fallback for grammar/vocab modules
 }
 
 # Common words that don't need to be in vocabulary section
 # Includes pronouns, conjunctions, prepositions, basic verbs, and high-frequency words
 COMMON_WORDS = {
     # Pronouns
-    'я', 'ти', 'він', 'вона', 'воно', 'ми', 'ви', 'вони',
-    'мене', 'тебе', 'його', 'її', 'нас', 'вас', 'їх',
-    'мені', 'тобі', 'йому', 'їй', 'нам', 'вам', 'їм',
-    'мною', 'тобою', 'ним', 'нею', 'нами', 'вами', 'ними',
-    'себе', 'собі', 'собою',
+    "я",
+    "ти",
+    "він",
+    "вона",
+    "воно",
+    "ми",
+    "ви",
+    "вони",
+    "мене",
+    "тебе",
+    "його",
+    "її",
+    "нас",
+    "вас",
+    "їх",
+    "мені",
+    "тобі",
+    "йому",
+    "їй",
+    "нам",
+    "вам",
+    "їм",
+    "мною",
+    "тобою",
+    "ним",
+    "нею",
+    "нами",
+    "вами",
+    "ними",
+    "себе",
+    "собі",
+    "собою",
     # Demonstratives
-    'це', 'то', 'той', 'та', 'те', 'ті', 'цей', 'ця', 'ці',
-    'такий', 'така', 'таке', 'такі', 'сам', 'сама', 'само', 'самі',
+    "це",
+    "то",
+    "той",
+    "та",
+    "те",
+    "ті",
+    "цей",
+    "ця",
+    "ці",
+    "такий",
+    "така",
+    "таке",
+    "такі",
+    "сам",
+    "сама",
+    "само",
+    "самі",
     # Conjunctions
-    'і', 'й', 'або', 'чи', 'а', 'але', 'бо', 'проте', 'однак', 'тому',
-    'якщо', 'коли', 'поки', 'хоча', 'щоб', 'тому що', 'через те що',
+    "і",
+    "й",
+    "або",
+    "чи",
+    "а",
+    "але",
+    "бо",
+    "проте",
+    "однак",
+    "тому",
+    "якщо",
+    "коли",
+    "поки",
+    "хоча",
+    "щоб",
+    "тому що",
+    "через те що",
     # Prepositions
-    'в', 'у', 'на', 'з', 'із', 'зі', 'до', 'від', 'для', 'по', 'за', 'під', 'над',
-    'про', 'при', 'між', 'через', 'біля', 'коло', 'після', 'перед', 'без', 'крім',
+    "в",
+    "у",
+    "на",
+    "з",
+    "із",
+    "зі",
+    "до",
+    "від",
+    "для",
+    "по",
+    "за",
+    "під",
+    "над",
+    "про",
+    "при",
+    "між",
+    "через",
+    "біля",
+    "коло",
+    "після",
+    "перед",
+    "без",
+    "крім",
     # Verbs: бути (to be)
-    'є', 'був', 'була', 'було', 'були', 'буде', 'будуть', 'бути', 'будемо', 'будете',
+    "є",
+    "був",
+    "була",
+    "було",
+    "були",
+    "буде",
+    "будуть",
+    "бути",
+    "будемо",
+    "будете",
     # Verbs: мати (to have)
-    'має', 'мав', 'мала', 'мало', 'мали', 'мати', 'маю', 'маєш', 'маємо', 'маєте', 'мають',
+    "має",
+    "мав",
+    "мала",
+    "мало",
+    "мали",
+    "мати",
+    "маю",
+    "маєш",
+    "маємо",
+    "маєте",
+    "мають",
     # Verbs: робити (to do)
-    'робить', 'робив', 'робила', 'робили', 'робити', 'роблю', 'робиш', 'робимо', 'робите', 'роблять',
+    "робить",
+    "робив",
+    "робила",
+    "робили",
+    "робити",
+    "роблю",
+    "робиш",
+    "робимо",
+    "робите",
+    "роблять",
     # Verbs: знати, хотіти, могти, йти, іти
-    'знає', 'знав', 'знала', 'знати', 'знаю', 'знаєш', 'знаємо', 'знають',
-    'хоче', 'хотів', 'хотіла', 'хотіти', 'хочу', 'хочеш', 'хочемо', 'хочете', 'хочуть',
-    'може', 'міг', 'могла', 'могти', 'можу', 'можеш', 'можемо', 'можете', 'можуть',
-    'іде', 'йде', 'йшов', 'йшла', 'йти', 'іти', 'іду', 'ідеш', 'ідемо', 'ідете', 'ідуть',
+    "знає",
+    "знав",
+    "знала",
+    "знати",
+    "знаю",
+    "знаєш",
+    "знаємо",
+    "знають",
+    "хоче",
+    "хотів",
+    "хотіла",
+    "хотіти",
+    "хочу",
+    "хочеш",
+    "хочемо",
+    "хочете",
+    "хочуть",
+    "може",
+    "міг",
+    "могла",
+    "могти",
+    "можу",
+    "можеш",
+    "можемо",
+    "можете",
+    "можуть",
+    "іде",
+    "йде",
+    "йшов",
+    "йшла",
+    "йти",
+    "іти",
+    "іду",
+    "ідеш",
+    "ідемо",
+    "ідете",
+    "ідуть",
     # Verbs: говорити, казати, сказати
-    'говорить', 'говорив', 'говорила', 'говорити', 'говорю', 'говориш', 'говоримо', 'говорять',
-    'каже', 'казав', 'казала', 'казати', 'кажу', 'кажеш', 'кажемо', 'кажуть',
-    'сказав', 'сказала', 'сказати', 'скажу', 'скажеш', 'скажемо', 'скажуть',
+    "говорить",
+    "говорив",
+    "говорила",
+    "говорити",
+    "говорю",
+    "говориш",
+    "говоримо",
+    "говорять",
+    "каже",
+    "казав",
+    "казала",
+    "казати",
+    "кажу",
+    "кажеш",
+    "кажемо",
+    "кажуть",
+    "сказав",
+    "сказала",
+    "сказати",
+    "скажу",
+    "скажеш",
+    "скажемо",
+    "скажуть",
     # Verbs: бачити, чути, читати, писати
-    'бачить', 'бачив', 'бачила', 'бачити', 'бачу', 'бачиш', 'бачимо', 'бачать',
-    'чує', 'чув', 'чула', 'чути', 'чую', 'чуєш', 'чуємо', 'чують',
-    'читає', 'читав', 'читала', 'читати', 'читаю', 'читаєш', 'читаємо', 'читають',
-    'пише', 'писав', 'писала', 'писати', 'пишу', 'пишеш', 'пишемо', 'пишуть',
+    "бачить",
+    "бачив",
+    "бачила",
+    "бачити",
+    "бачу",
+    "бачиш",
+    "бачимо",
+    "бачать",
+    "чує",
+    "чув",
+    "чула",
+    "чути",
+    "чую",
+    "чуєш",
+    "чуємо",
+    "чують",
+    "читає",
+    "читав",
+    "читала",
+    "читати",
+    "читаю",
+    "читаєш",
+    "читаємо",
+    "читають",
+    "пише",
+    "писав",
+    "писала",
+    "писати",
+    "пишу",
+    "пишеш",
+    "пишемо",
+    "пишуть",
     # Particles & adverbs
-    'так', 'ні', 'не', 'ще', 'вже', 'теж', 'також', 'лише', 'тільки', 'навіть',
-    'дуже', 'тут', 'там', 'зараз', 'потім', 'завжди', 'ніколи', 'часто', 'рідко',
-    'добре', 'погано', 'швидко', 'повільно', 'багато', 'трохи',
+    "так",
+    "ні",
+    "не",
+    "ще",
+    "вже",
+    "теж",
+    "також",
+    "лише",
+    "тільки",
+    "навіть",
+    "дуже",
+    "тут",
+    "там",
+    "зараз",
+    "потім",
+    "завжди",
+    "ніколи",
+    "часто",
+    "рідко",
+    "добре",
+    "погано",
+    "швидко",
+    "повільно",
+    "багато",
+    "трохи",
     # Question words
-    'що', 'як', 'де', 'чому', 'хто', 'який', 'яка', 'яке', 'які',
-    'скільки', 'куди', 'звідки', 'чий', 'чия', 'чиє', 'чиї',
+    "що",
+    "як",
+    "де",
+    "чому",
+    "хто",
+    "який",
+    "яка",
+    "яке",
+    "які",
+    "скільки",
+    "куди",
+    "звідки",
+    "чий",
+    "чия",
+    "чиє",
+    "чиї",
     # Possessives
-    'мій', 'моя', 'моє', 'мої', 'твій', 'твоя', 'твоє', 'твої',
-    'наш', 'наша', 'наше', 'наші', 'ваш', 'ваша', 'ваше', 'ваші', 'їхній',
+    "мій",
+    "моя",
+    "моє",
+    "мої",
+    "твій",
+    "твоя",
+    "твоє",
+    "твої",
+    "наш",
+    "наша",
+    "наше",
+    "наші",
+    "ваш",
+    "ваша",
+    "ваше",
+    "ваші",
+    "їхній",
     # Numbers
-    'один', 'одна', 'одне', 'два', 'дві', 'три', 'чотири', 'п\'ять',
-    'перший', 'перша', 'перше', 'другий', 'друга', 'друге', 'третій', 'третя', 'третє',
+    "один",
+    "одна",
+    "одне",
+    "два",
+    "дві",
+    "три",
+    "чотири",
+    "п'ять",
+    "перший",
+    "перша",
+    "перше",
+    "другий",
+    "друга",
+    "друге",
+    "третій",
+    "третя",
+    "третє",
     # Common nouns
-    'людина', 'люди', 'людей', 'людям', 'людьми',
-    'час', 'часу', 'день', 'дня', 'рік', 'року', 'років',
-    'місце', 'місця', 'слово', 'слова', 'слів',
-    'річ', 'речі', 'справа', 'справи',
+    "людина",
+    "люди",
+    "людей",
+    "людям",
+    "людьми",
+    "час",
+    "часу",
+    "день",
+    "дня",
+    "рік",
+    "року",
+    "років",
+    "місце",
+    "місця",
+    "слово",
+    "слова",
+    "слів",
+    "річ",
+    "речі",
+    "справа",
+    "справи",
     # Common adjectives
-    'великий', 'велика', 'велике', 'великі', 'малий', 'мале', 'малі',
-    'новий', 'нова', 'нове', 'нові', 'старий', 'стара', 'старе', 'старі',
-    'добрий', 'добра', 'добрі', 'поганий', 'погана', 'погане', 'погані',
-    'інший', 'інша', 'інше', 'інші', 'весь', 'вся', 'все', 'всі',
-    'кожний', 'кожна', 'кожне', 'кожні', 'цілий', 'ціла', 'ціле', 'цілі',
+    "великий",
+    "велика",
+    "велике",
+    "великі",
+    "малий",
+    "мале",
+    "малі",
+    "новий",
+    "нова",
+    "нове",
+    "нові",
+    "старий",
+    "стара",
+    "старе",
+    "старі",
+    "добрий",
+    "добра",
+    "добрі",
+    "поганий",
+    "погана",
+    "погане",
+    "погані",
+    "інший",
+    "інша",
+    "інше",
+    "інші",
+    "весь",
+    "вся",
+    "все",
+    "всі",
+    "кожний",
+    "кожна",
+    "кожне",
+    "кожні",
+    "цілий",
+    "ціла",
+    "ціле",
+    "цілі",
     # Ukrainian-specific high-frequency
-    'українська', 'український', 'українське', 'українські', 'україна', 'україні', 'україни',
-    'мова', 'мови', 'мову', 'мовою', 'мовна', 'мовний', 'мовне',
+    "українська",
+    "український",
+    "українське",
+    "українські",
+    "україна",
+    "україні",
+    "україни",
+    "мова",
+    "мови",
+    "мову",
+    "мовою",
+    "мовна",
+    "мовний",
+    "мовне",
     # Common foods and household items (often used as examples)
-    'сіль', 'солі', 'сіллю', 'цукор', 'цукру',
+    "сіль",
+    "солі",
+    "сіллю",
+    "цукор",
+    "цукру",
     # Common names
-    'анна', 'ганна', 'іван', 'марія', 'петро', 'оксана', 'тарас',
+    "анна",
+    "ганна",
+    "іван",
+    "марія",
+    "петро",
+    "оксана",
+    "тарас",
     # Parsing artifact fragments (from Cyrillic letter splitting)
-    'вропа', 'мать',  # artifacts from "Європа", "(mother)"
+    "вропа",
+    "мать",  # artifacts from "Європа", "(mother)"
 }
 
 # Required frontmatter fields
 REQUIRED_METADATA = [
-    ('duration', r'duration:'),
-    ('transliteration', r'transliteration:'),
-    ('tags', r'tags:'),
-    ('objectives', r'objectives:'),
-    ('grammar', r'grammar:'),
-    ('pedagogy', r'pedagogy:')
+    ("duration", r"duration:"),
+    ("transliteration", r"transliteration:"),
+    ("tags", r"tags:"),
+    ("objectives", r"objectives:"),
+    ("grammar", r"grammar:"),
+    ("pedagogy", r"pedagogy:"),
 ]
 
 # AI contamination patterns to detect
@@ -1611,8 +2727,8 @@ AI_CONTAMINATION_PATTERNS = [
     r"Let's say",
     r"context suggests",
     r"Usually '.*' here",
-    r'\bAI:',
-    r'printed your printing',
+    r"\bAI:",
+    r"printed your printing",
     r"\bCorrection:",
     r"\bWait, actually",
     r"\bWait, no\b",
@@ -1666,15 +2782,15 @@ def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
         # Try focus as direct top-level key first (renamed seminar tracks: biography, history, istorio)
         if module_focus in LEVEL_CONFIG:
             config_key = module_focus
-        elif level_code in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2'):
+        elif level_code in ("A1", "A2", "B1", "B2", "C1", "C2"):
             # Legacy pattern: level-focus (e.g., B1-grammar, B2-professional)
             specific_key = f"{level_code}-{module_focus}"
             if specific_key in LEVEL_CONFIG:
                 config_key = specific_key
-    return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG['A1'])
+    return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG["A1"])
 
 
 def get_word_target(level_code: str, _module_num: int | None = None, module_focus: str | None = None) -> int:
     """Get word target for a level. Word targets are MINIMUMS."""
     config = get_level_config(level_code, module_focus)
-    return config['target_words']
+    return config["target_words"]
