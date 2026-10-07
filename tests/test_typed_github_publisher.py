@@ -1106,17 +1106,34 @@ def test_pr_creation_cannot_publish_implicit_branch_names(fields):
     assert not calls
 
 
-def test_9794_issue_parent_read_selects_typed_parent_repository():
-    calls = []
+def test_9794_issue_parent_read_selects_typed_parent_repository(github_transport):
+    from scripts.common.github_client import Response
 
-    def send(args, **kwargs):
-        calls.append(args)
-        value = {"state": "open", "html_url": "https://github.com/unit/public/issues/1"}
-        if args[-1].endswith("/parent"):
-            value = {"number": 7, "html_url": "https://github.com/other/stream/issues/7", "repository_url": "https://api.github.com/repos/other/stream"}
-        return subprocess.CompletedProcess(args, 0, json.dumps(value), "")
+    issue = {
+        "number": 1,
+        "state": "open",
+        "html_url": "https://github.com/unit/public/issues/1",
+        "repository_url": "https://api.github.com/repos/unit/public",
+    }
+    parent_document = {
+        "number": 7,
+        "html_url": "https://github.com/other/stream/issues/7",
+        "repository_url": "https://api.github.com/repos/other/stream",
+    }
 
-    result = pub.read("issue-parent", repo="unit/public", number=1, runner=send, capture_output=True, text=True)
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        payload = parent_document if endpoint.endswith("/parent") else issue
+        return Response(200, {}, json.dumps(payload).encode())
+
+    calls = github_transport(transport)
+    result = pub.read("issue-parent", repo="unit/public", number=1, capture_output=True, text=True)
+    assert result.returncode == 0
     parent = json.loads(result.stdout)["data"]["repository"]["issue"]["parent"]
+    assert parent["number"] == 7
+    assert parent["url"] == "https://github.com/other/stream/issues/7"
     assert parent["repository"]["nameWithOwner"] == "other/stream"
-    assert [args[-1] for args in calls] == ["repos/unit/public/issues/1", "repos/unit/public/issues/1/parent"]
+    assert [call[1] for call in calls] == [
+        "repos/unit/public/issues/1",
+        "repos/unit/public/issues/1/parent",
+    ]
