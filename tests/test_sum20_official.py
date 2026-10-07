@@ -9,6 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+import requests
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
@@ -19,6 +20,7 @@ from rag.source_query import query_sum20 as source_query_sum20
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from wiki import sources_db
 from wiki.sum20_official import (
+    DEFAULT_USER_AGENT,
     FetchOutcome,
     Sum20ParseError,
     ensure_sum20_official_schema,
@@ -278,3 +280,28 @@ def test_query_sum20_has_no_live_mirror_path() -> None:
     assert "slovnyk.me/dict/newsum" not in mcp_server
     assert "def query_sum20" in source_query
     assert "sdb.query_sum20" in mcp_server
+
+
+def test_fetch_sends_the_project_user_agent_not_the_requests_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    """sum20ua.com refuses ``python-requests/*`` with 403; the identifying agent must be sent (#5228)."""
+    session = requests.Session()
+    sent: dict[str, str] = {}
+
+    def fake_get(url: str, **_kwargs: object) -> _FakeResponse:
+        sent.update(session.headers)
+        return _FakeResponse(404)
+
+    monkeypatch.setattr(session, "get", fake_get)
+    fetch_sum20_wordid(1, session=session, retries=0)
+
+    assert sent["User-Agent"] == DEFAULT_USER_AGENT
+    assert sent["Accept"] == "text/html,application/xhtml+xml"
+
+
+def test_fetch_keeps_a_caller_supplied_user_agent(monkeypatch: pytest.MonkeyPatch) -> None:
+    session = requests.Session()
+    session.headers["User-Agent"] = "caller-agent/2.0"
+    monkeypatch.setattr(session, "get", lambda url, **_kwargs: _FakeResponse(404))
+    fetch_sum20_wordid(1, session=session, retries=0)
+
+    assert session.headers["User-Agent"] == "caller-agent/2.0"
