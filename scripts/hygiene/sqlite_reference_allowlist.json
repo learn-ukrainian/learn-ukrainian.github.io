@@ -204,6 +204,16 @@
     ]
   },
   {
+    "path": "scripts/common/github_client.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "GitHub client cache",
+    "reason": "persists conditional GET bodies and the rate-limit budget outside source databases",
+    "calls": [
+      "sqlite3.connect(path, timeout=5)"
+    ]
+  },
+  {
     "path": "scripts/ci/data_tier.py",
     "reference_count": 2,
     "kind": "writer",

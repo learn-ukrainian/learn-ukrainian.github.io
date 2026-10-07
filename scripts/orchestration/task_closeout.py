@@ -24,6 +24,7 @@ import argparse
 import json
 import subprocess
 import sys
+import tempfile
 from collections.abc import Callable, Mapping
 from copy import deepcopy
 from datetime import UTC, datetime
@@ -158,6 +159,7 @@ class GhGitHubAdapter:
 
     def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
         self.repo_root = repo_root.resolve()
+        self._injected_runner = runner
         if runner is None:
             self._run = _default_runner(self.repo_root)
         else:
@@ -238,9 +240,40 @@ class GhGitHubAdapter:
             raise task_lifecycle.LifecycleError("repository must be owner/name") from exc
         return owner, name
 
+    def _injected_parent_document(self, repository: str, issue_number: int) -> Any:
+        """Historical GraphQL document for an injected closeout runner.
+
+        Production reads use the shared REST client. The injected runner is the
+        adapter's command seam and still returns the GraphQL document it always
+        returned; REST reshaping would discard that document.
+        """
+        owner, name = self._owner_name(repository)
+        query = (
+            "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name)"
+            "{nameWithOwner issue(number:$number){number state url parent{number url repository{nameWithOwner}}}}}"
+        )
+        with tempfile.TemporaryDirectory(prefix="lu-parent-") as directory:
+            frozen = Path(directory) / "query.json"
+            frozen.write_bytes(
+                json.dumps(
+                    {"query": query, "variables": {"owner": owner, "name": name, "number": issue_number}}
+                ).encode("utf-8")
+            )
+            raw = self._injected_runner(
+                ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)],
+                None,
+            )
+        try:
+            return json.loads(raw or "null")
+        except json.JSONDecodeError as exc:
+            raise task_lifecycle.LifecycleError("GitHub parent read failed") from exc
+
     def read_issue_parent(self, repository: str, issue_number: int) -> dict[str, Any] | None:
         """Read a typed, repository-qualified parent; refuse partial/unread data."""
-        document = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
+        if self._injected_runner is not None:
+            document = self._injected_parent_document(repository, issue_number)
+        else:
+            document = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
         if not isinstance(document, dict) or document.get("errors"):
             raise task_lifecycle.LifecycleError("GitHub parent read failed")
         data = document.get("data")

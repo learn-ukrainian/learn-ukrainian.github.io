@@ -176,13 +176,30 @@ def bypasses(source: str, path: str) -> list[str]:
     return sorted(set(violations))
 
 
+_SCAN_MARKERS = (
+    "subprocess",
+    "requests",
+    "urllib",
+    "httpx",
+    "http.client",
+    "api.github.com",
+    "uploads.github.com",
+    "github.com/",
+)
+
+
 def inventory_violations(root):
     violations = []
     for path in (root / "scripts").rglob("*.py"):
         relative = path.relative_to(root).as_posix()
         if relative == CLIENT:
             continue
-        found = bypasses(path.read_text(encoding="utf-8"), relative)
+        source = path.read_text(encoding="utf-8")
+        # The walker only matches these modules and URL literals. Skipping the
+        # rest keeps one full parse per candidate instead of a second walk.
+        if not any(marker in source for marker in _SCAN_MARKERS):
+            continue
+        found = bypasses(source, relative)
         if relative in EXCLUSIONS:
             count, owner = EXCLUSIONS[relative]
             if len(found) != count:
@@ -194,7 +211,8 @@ def inventory_violations(root):
 
 @pytest.mark.repo_wide
 def test_scripts_have_one_github_client():
-    assert not inventory_violations(ROOT), "\n".join(inventory_violations(ROOT))
+    found = inventory_violations(ROOT)
+    assert not found, "\n".join(found)
 
 
 @pytest.mark.parametrize(

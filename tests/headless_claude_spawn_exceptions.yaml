@@ -68,8 +68,6 @@ exceptions:
   - {module: scripts/agent_runtime/telemetry.py, function: "<module>", program: "<reference>", category: non-claude, reason: "keeps a reference to the original Popen to recognise it; spawns nothing"}
   # scripts/agent_runtime/tool_config.py
   - {module: scripts/agent_runtime/tool_config.py, function: "_run_agy_mcp", program: "cmd", category: non-claude, reason: "`agy mcp ...` configuration command"}
-  # scripts/ai_agent_bridge/_agy.py
-  - {module: scripts/ai_agent_bridge/_agy.py, function: "_run_changed_path_command", program: "command", category: generic-runner, reason: "in-module callers pass gh/git changed-path listings only"}
   # scripts/ai_agent_bridge/_ask_lifecycle.py
   - {module: scripts/ai_agent_bridge/_ask_lifecycle.py, function: "launch_background_ask", program: "str(project_interpreter())", category: non-claude, reason: "runs the ai_agent_bridge entry point; the bridge's own spawns are checked by this rule"}
   # scripts/ai_agent_bridge/_broker.py
@@ -81,13 +79,10 @@ exceptions:
   - {module: scripts/ai_agent_bridge/_channels_cli.py, function: "_handle_channel_context", program: "*editor_argv", category: non-claude, reason: "opens $EDITOR (default vi) on a context file"}
   # scripts/ai_agent_bridge/_claude.py
   - {module: scripts/ai_agent_bridge/_claude.py, function: "_launch_claude_background", program: "bridge_cmd", category: non-claude, reason: "runs the bridge's `process-claude` entry point under the project interpreter; that path's Claude run is the runtime plan"}
-  # scripts/ai_agent_bridge/_cli.py
-  - {module: scripts/ai_agent_bridge/_cli.py, function: "_resolve_same_repo_pr_head", program: "cmd", category: non-claude, reason: "`gh pr view` lookup"}
   # scripts/ai_agent_bridge/_cursor.py
   - {module: scripts/ai_agent_bridge/_cursor.py, function: "_invoke_cursor", program: "argv", category: non-claude, reason: "runs cursor-agent (`agent -p`), not Claude Code"}
   # scripts/ai_agent_bridge/_dispatch_wrappers.py
   - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_dispatch", program: "command", category: generic-runner, reason: "runs a scripts/delegate.py dispatch command built in this module"}
-  - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_json_command", program: "cmd", category: generic-runner, reason: "in-module callers pass `gh issue view` / `gh pr view` only"}
   - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "_run_text_command", program: "cmd", category: generic-runner, reason: "helper for gh/delegate text commands; no in-module caller passes a Claude argv"}
   - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "run_ask_review_dispatch", program: "dispatch_command", category: non-claude, reason: "runs scripts/delegate.py dispatch (build_ask_review_dispatch_command)"}
   - {module: scripts/ai_agent_bridge/_dispatch_wrappers.py, function: "run_ask_review_dispatch", program: "wait_command", category: non-claude, reason: "runs scripts/delegate.py wait (build_ask_review_wait_command)"}
@@ -104,7 +99,6 @@ exceptions:
   - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_base_blob_bytes", program: "*common", category: non-claude, reason: "runs git"}
   - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_changed_line_numbers_for_snapshot", program: "str(git_bin)", category: non-claude, reason: "runs git"}
   - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_changed_lines_between_bytes", program: "str(git_bin)", category: non-claude, reason: "runs git"}
-  - {module: scripts/ai_agent_bridge/_review_worktree.py, function: "_run_command", program: "command", category: generic-runner, reason: "in-module callers pass gh/git commands only"}
   # scripts/ai_agent_bridge/_ui_codex.py
   - {module: scripts/ai_agent_bridge/_ui_codex.py, function: "send", program: "codex", category: non-claude, reason: "runs the Codex CLI"}
   # scripts/ai_agent_bridge/openai_proxy.py
@@ -235,8 +229,6 @@ exceptions:
   # scripts/orchestration/scheduled_worktree_cleanup.py
   - {module: scripts/orchestration/scheduled_worktree_cleanup.py, function: "_repo_result_unlocked", program: "sys.executable", category: non-claude, reason: "runs a repository Python script; its own spawns are checked where it lives"}
   - {module: scripts/orchestration/scheduled_worktree_cleanup.py, function: "_run_git", program: "git", category: non-claude, reason: "runs git"}
-  # scripts/orchestration/thread_handoff.py
-  - {module: scripts/orchestration/thread_handoff.py, function: "run_command", program: "args", category: generic-runner, reason: "in-module callers pass git, gh, ps, ioreg and the claudex supervisor under the project interpreter"}
   # scripts/orchestration/worker_leftovers.py
   - {module: scripts/orchestration/worker_leftovers.py, function: "_systemctl_stop", program: "systemctl", category: non-claude, reason: "stops a systemd user scope"}
   # scripts/pipeline/core.py

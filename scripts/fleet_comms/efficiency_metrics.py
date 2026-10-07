@@ -12,6 +12,7 @@ import os
 import re
 import sqlite3
 import subprocess
+import tempfile
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -734,6 +735,32 @@ def _parse_merge_fact_payload(
     return parsed
 
 
+def _legacy_merge_facts_query(batch, *, gh_runner, gh_bin, timeout):
+    """One grouped GraphQL document for an injected gh runner.
+
+    Production (``_run_gh``) uses the shared client's REST read. Injected
+    runners keep the historical single ``gh api graphql`` call they assert.
+    """
+    grouped: dict[str, list[int]] = {}
+    for slug, number in batch:
+        grouped.setdefault(slug, []).append(number)
+    selections = []
+    for index, (slug, numbers) in enumerate(grouped.items()):
+        owner, name = slug.split("/", 1)
+        pulls = " ".join(f"p{number}:pullRequest(number:{number}){{mergedAt}}" for number in numbers)
+        selections.append(
+            f"r{index}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{{pulls}}}"
+        )
+    document = {"query": "query {" + " ".join(selections) + "}", "variables": {}}
+    with tempfile.TemporaryDirectory(prefix="lu-merge-facts-") as directory:
+        frozen = Path(directory) / "query.json"
+        frozen.write_text(json.dumps(document), encoding="utf-8")
+        return gh_runner(
+            [gh_bin, "api", "--method", "POST", "graphql", "--input", str(frozen)],
+            timeout=timeout,
+        )
+
+
 def _fetch_merge_facts(
     missing: list[tuple[str, int]],
     *,
@@ -757,11 +784,20 @@ def _fetch_merge_facts(
     for start in range(0, len(valid), _GRAPHQL_BATCH_SIZE):
         batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
         try:
-            from scripts.publish.github import read
-            def transport(args, **kwargs):
-                return gh_runner([gh_bin, *args[1:]], timeout=kwargs["timeout"])
-            proc = read("merge-facts", batch=batch, runner=transport if gh_runner is not _run_gh else None,
-                        timeout=_GH_TIMEOUT_S, capture_output=True, text=True)
+            if gh_runner is _run_gh:
+                from scripts.publish.github import read
+
+                proc = read(
+                    "merge-facts",
+                    batch=batch,
+                    timeout=_GH_TIMEOUT_S,
+                    capture_output=True,
+                    text=True,
+                )
+            else:
+                proc = _legacy_merge_facts_query(
+                    batch, gh_runner=gh_runner, gh_bin=gh_bin, timeout=_GH_TIMEOUT_S
+                )
             stdout = proc.stdout or ""
             if isinstance(stdout, bytes):
                 stdout = stdout.decode("utf-8", errors="replace")

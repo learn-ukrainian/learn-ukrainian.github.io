@@ -199,6 +199,9 @@ def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_pat
     monkeypatch.setenv("PATH", str(shim.parent) + os.pathsep + os.environ["PATH"])
     monkeypatch.setenv("AGENT_REAL_GH", str(spy))
     monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    # delegate anchors its checker at the primary checkout. From a worktree that
+    # file is not this branch; CI checks out the branch, so use this tree.
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ROOT)
     error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="unit/public")
     assert record["issues"] == [1]
     assert bool(record["warnings"]) == (verdict == "WARN")

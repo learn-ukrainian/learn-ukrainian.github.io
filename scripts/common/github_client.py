@@ -1721,8 +1721,19 @@ def _run_command(args, *, runner=None, client=None, fresh=False, allow_stale=Fal
     return _result_process(args, result, options, kwargs, api=args[1] == "api")
 
 
+# Captured before a test replaces subprocess.run. A replacement is the one
+# seam that must observe the caller's original argv; explicit runners and the
+# production transport keep REST translation.
+_DIRECT_SUBPROCESS_RUN = subprocess.run
+
+
 def run(args, *, runner=None, client=None, fresh=False, allow_stale=False, **kwargs):
     """Return command/configuration errors through the subprocess contract."""
+    if runner is None and subprocess.run is not _DIRECT_SUBPROCESS_RUN:
+        kwargs.pop("max_response_bytes", None)
+        # None keeps the historical unbounded wait. An explicit caller timeout
+        # is forwarded. The keyword is required by the #7176 guard.
+        return subprocess.run(args, timeout=kwargs.pop("timeout", None), **kwargs)
     try:
         return _run_command(args, runner=runner, client=client, fresh=fresh, allow_stale=allow_stale, **kwargs)
     except ValueError:
