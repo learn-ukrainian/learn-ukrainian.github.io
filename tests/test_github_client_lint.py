@@ -16,30 +16,75 @@ EXCLUSIONS = {
 CLIENT = "scripts/common/github_client.py"
 # Exact API and upload hosts, compared as parsed hostnames.
 _GITHUB_API_HOSTS = frozenset({"api.github.com", "uploads.github.com"})
+# Shell text is split on whitespace and on quotes so each URL is its own token.
+_TOKEN_SEPARATOR = re.compile(r"""[\s'"]+""")
 
 
-def _is_github_http_literal(value: str) -> bool:
-    """True when a string literal is a GitHub API, upload, or https web URL.
+def _exact_host(value: str | None) -> str | None:
+    """Hostname for an exact compare: lower case, trailing DNS dots removed."""
+    if not value:
+        return None
+    host = value.rstrip(".").lower()
+    return host or None
 
-    ``urlsplit`` supplies the host. Scheme-less ``host`` and ``host/path``
-    tokens are compared exactly, because they do not land in ``hostname``.
-    A look-alike host, or a path or query that only contains the name, does not match.
+
+def _host_before_path_slash(token: str) -> str:
+    """Authority text used when ``urlsplit`` raises.
+
+    Choice: do not search the token for a GitHub name. Take the text before
+    the first path ``/`` (a ``scheme://`` separator is not a path slash), drop
+    userinfo, one unmatched leading ``[``, and a numeric port, then compare
+    that hostname exactly. ``https://[api.github.com/...`` is therefore
+    ``api.github.com``. A name that appears only after the slash is not.
     """
+    _, separator, remainder = token.partition("://")
+    authority = remainder if separator else token
+    if not separator and authority.startswith("//"):
+        authority = authority[2:]
+    authority = authority.split("/", 1)[0]
+    if "@" in authority:
+        authority = authority.rsplit("@", 1)[1]
+    if authority.startswith("[") and not authority.endswith("]"):
+        authority = authority[1:]
+    elif authority.startswith("[") and authority.endswith("]"):
+        authority = authority[1:-1]
+    if authority.count(":") == 1:
+        host_text, _, port = authority.rpartition(":")
+        if port.isdigit():
+            authority = host_text
+    return authority
+
+
+def _token_is_github_http(token: str) -> bool:
+    """True when this token's parsed hostname is a GitHub API, upload, or web host."""
+    if token.startswith("://"):
+        # f"{scheme}://host/..." leaves the authority in this piece.
+        token = "//" + token[3:]
     try:
-        parts = urlsplit(value)
+        parts = urlsplit(token)
     except ValueError:
-        return False
-    host = parts.hostname
-    if host is None and "://" not in value and not any(char.isspace() for char in value):
+        return _exact_host(_host_before_path_slash(token)) in _GITHUB_API_HOSTS
+    host = _exact_host(parts.hostname)
+    if host is None and "://" not in token and not any(char.isspace() for char in token):
         # ``api.github.com:443/x`` is parsed with the host in the scheme.
         if parts.scheme in _GITHUB_API_HOSTS and not parts.netloc:
             host = parts.scheme
-        elif not parts.scheme and parts.path.split("/", 1)[0] in _GITHUB_API_HOSTS:
-            host = parts.path.split("/", 1)[0]
-    if host in _GITHUB_API_HOSTS:
-        return True
-    # Web links stay the https://github.com/<path> form this lint already required.
-    return host == "github.com" and parts.scheme == "https" and parts.path.startswith("/")
+        elif not parts.scheme:
+            host = _exact_host(parts.path.split("/", 1)[0])
+    return host in _GITHUB_API_HOSTS or (
+        host == "github.com" and parts.scheme == "https" and parts.path.startswith("/")
+    )
+
+
+def _is_github_http_literal(value: str) -> bool:
+    """True when a whitespace- or quote-separated token is a GitHub URL.
+
+    ``urlsplit`` supplies the host. A shell command is split so a URL inside
+    it is parsed on its own. Scheme-less ``host`` and ``host/path`` tokens are
+    compared exactly, because they do not land in ``hostname``. A look-alike
+    host, or a path or query that only contains the name, does not match.
+    """
+    return any(_token_is_github_http(token) for token in _TOKEN_SEPARATOR.split(value) if token)
 
 
 def bypasses(source: str, path: str) -> list[str]:
@@ -266,6 +311,12 @@ def test_scripts_have_one_github_client():
         'import requests\ndef probe():\n return requests.get("api.github.com/user")',
         'import requests\ndef probe():\n return requests.get("https://token@api.github.com/user")',
         'import urllib.request\ndef probe():\n return urllib.request.urlopen("uploads.github.com/repos/o/r")',
+        'import subprocess\ndef probe():\n return subprocess.run("curl -s https://api.github.com/user", shell=True)',
+        'import subprocess\ndef probe(repo):\n return subprocess.run(f"curl -s https://api.github.com/repos/{repo}", shell=True)',
+        'import urllib.request\ndef probe(scheme):\n return urllib.request.urlopen(f"{scheme}://api.github.com/user")',
+        'import requests\ndef probe():\n return requests.get("https://api.github.com./user")',
+        'import requests\ndef probe():\n return requests.get("API.GITHUB.COM/user")',
+        'import requests\ndef probe():\n return requests.get("https://[api.github.com/user")',
     ],
 )
 def test_mutation_is_rejected(source, tmp_path):
@@ -285,6 +336,17 @@ def test_mutation_is_rejected(source, tmp_path):
         'import requests\ndef probe():\n return requests.get("https://example.invalid/a?next=https://api.github.com/user")',
         'import requests\ndef probe():\n return requests.get("https://example.invalid/a?next=https://github.com/o/r")',
         'import requests\ndef probe():\n return requests.get("https://github.com.example.invalid/o/r")',
+        'import subprocess\ndef probe():\n return subprocess.run("curl -s https://api.github.com.example.invalid/repos/o/r", shell=True)',
+        'import subprocess\ndef probe():\n return subprocess.run("curl -s https://example.invalid/api.github.com/repos/o/r", shell=True)',
+        'import subprocess\ndef probe():\n return subprocess.run("curl -s \\"https://example.invalid/a?next=https://api.github.com/user\\"", shell=True)',
+        'import urllib.request\ndef probe(scheme):\n return urllib.request.urlopen(f"{scheme}://notapi.github.com/user")',
+        'import urllib.request\ndef probe(scheme):\n return urllib.request.urlopen(f"{scheme}://api.github.com.example.invalid/repos/o/r")',
+        'import requests\ndef probe():\n return requests.get("https://notapi.github.com./user")',
+        'import requests\ndef probe():\n return requests.get("https://api.github.com.example.invalid./user")',
+        'import requests\ndef probe():\n return requests.get("NOTAPI.GITHUB.COM/user")',
+        'import requests\ndef probe():\n return requests.get("API.GITHUB.COM.EXAMPLE.INVALID/user")',
+        'import requests\ndef probe():\n return requests.get("https://[notapi.github.com/user")',
+        'import requests\ndef probe():\n return requests.get("https://[evil.example]/api.github.com")',
     ],
 )
 def test_lookalike_host_is_not_treated_as_github(source, tmp_path):
