@@ -23,7 +23,7 @@ from scripts.guardrails.worktree_containment import (
     resolve_main_root,
 )
 from scripts.orchestration import worktree_claims
-from scripts.orchestration.execution_safe_git import LOCAL_COMMANDS
+from scripts.orchestration.execution_safe_git import REMOTE_COMMANDS
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 
@@ -70,19 +70,10 @@ class BundleReceipt:
 def run_git(
     args: list[str], cwd: Path, *, timeout: float = 30.0, env: dict[str, str] | None = None
 ) -> subprocess.CompletedProcess[str]:
-    if args and args[0] not in LOCAL_COMMANDS:
-        return subprocess.run(
-            ["git", *args],
-            cwd=cwd,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            env=env if env is not None else sanitized_git_env(),
-        )
     return safe_git(
         args,
-        cwd=str(cwd),
+        cwd=cwd,
+        profile="remote" if args and args[0] in REMOTE_COMMANDS else "local",
         check=False,
         capture_output=True,
         text=True,

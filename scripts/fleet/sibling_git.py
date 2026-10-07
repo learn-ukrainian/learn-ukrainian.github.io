@@ -205,6 +205,9 @@ class Git:
                 timeout=120,
                 check=False,
             )
+        git_dir, common = _git_dir(path)
+        if git_dir != common:
+            raise Refusal("non-local sibling commands require the independent primary checkout")
         return subprocess.run(
             [_GIT, *self.options, "-C", str(path), *args],
             env=self.env,
@@ -221,6 +224,9 @@ class Git:
         return result.stdout if "-z" in args else result.stdout.strip()
 
     def fetch(self, repo: Repository) -> None:
+        git_dir, common = _git_dir(repo.checkout)
+        if git_dir != common:
+            raise Refusal("sibling fetch requires the independent primary checkout")
         args = [
             "-c",
             f"remote.{_FETCH_REMOTE}.url={repo.remote}",
@@ -336,21 +342,27 @@ class Git:
             # silently dropping required filters or attribute transformations.
             env.pop("GIT_CONFIG_GLOBAL")
             env.pop("GIT_CONFIG_NOSYSTEM")
-        result = subprocess.run(
-            [_GIT, "-C", str(path), "config", "--null", "--list", "--show-scope"],
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            check=False,
-        )
+        git_dir, common = _git_dir(path)
+        if git_dir != common:
+            result = safe_git(
+                ["config", "--null", "--list", "--show-scope"], cwd=path,
+                runner=SafeGitRunner(_GIT), env=env, capture_output=True, text=True,
+                timeout=30, check=False,
+            )
+        else:
+            result = subprocess.run(
+                [_GIT, "--no-pager", "-C", str(path), "config", "--null", "--list", "--show-scope"],
+                env=env, capture_output=True, text=True, timeout=30, check=False,
+            )
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
         fields = result.stdout.split("\0")
         return [
             (scope, *item.split("\n", 1))
             for scope, item in zip(fields[::2], fields[1::2], strict=False)
-            if "\n" in item
+            # The shared runner strips inherited command config. These rows
+            # are therefore its own controls, not installed repository data.
+            if "\n" in item and (git_dir == common or scope != "command")
         ]
 
 
@@ -490,8 +502,10 @@ def _checkout_safe(git: Git, checkout: Path, commit: str) -> None:
         if not entry.is_relative_to(checkout) or (entry.is_file() and entry.stat().st_nlink > 1):
             raise Refusal("checkout paths are redirected or shared")
     for source in ([f"--source={commit}"], ["--cached"], []):
-        result = subprocess.run(
-            [_GIT, *git.options, "-C", str(checkout), "check-attr", *source, "-z", "--stdin", "filter"],
+        result = safe_git(
+            ["check-attr", *source, "-z", "--stdin", "filter"],
+            cwd=checkout,
+            runner=SafeGitRunner(_GIT),
             input=paths,
             env=git.env,
             capture_output=True,

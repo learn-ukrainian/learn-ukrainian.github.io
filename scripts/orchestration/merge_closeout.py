@@ -232,6 +232,7 @@ def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, st
     refs. A failed fetch or unreadable fetched commit is never deletion proof.
     """
     ref = f"refs/pull/{pr_number}/head"
+    repo_root = rw.primary_checkout_root(repo_root)
     try:
         fetch = rw._run(
             ["git", "fetch", "--no-tags", "origin", ref],
