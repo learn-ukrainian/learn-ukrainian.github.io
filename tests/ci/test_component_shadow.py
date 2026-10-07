@@ -231,6 +231,7 @@ def test_window_without_any_skipped_files_cannot_pass(registration, window, mode
     assert result["narrowed_red_case_count"] == result["narrowed_injected_case_count"] == 0
     assert "narrowed-cases:0/1" in result["unresolved"]
     assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--registration-sha256", hashlib.sha256(s.canonical_registration_bytes(registration)).hexdigest(),
                    "--receipts", str(window)]) == 1
 
 
@@ -242,6 +243,7 @@ def test_narrowing_below_registered_minimum_cannot_pass(registration, window):
     assert result["minimum_narrowed_cases"] == 44
     assert "narrowed-cases:43/44" in result["unresolved"]
     assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--registration-sha256", hashlib.sha256(s.canonical_registration_bytes(registration)).hexdigest(),
                    "--receipts", str(window)]) == 1
     registration["minimum_narrowed_cases"] = 43
     assert s.check(registration, window)["status"] == "pass"
@@ -288,12 +290,13 @@ def test_every_skipped_failure_is_counted(registration, window):
     result = s.check(registration, window)
     assert result["missed_failure_count"] == 2
     assert result["status"] == "fail"
-    assert s.main(["check", "--registration", str(_registration_file(window, registration)), "--receipts", str(window)]) == 1
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--registration-sha256", hashlib.sha256(s.canonical_registration_bytes(registration)).hexdigest(), "--receipts", str(window)]) == 1
 
 
 def _registration_file(root, registration):
     path = root / "registration.input"
-    path.write_text(json.dumps(registration))
+    path.write_bytes(s.canonical_registration_bytes(registration))
     return path
 
 
@@ -328,7 +331,8 @@ def test_unresolved_historical_cases_block_success(registration, window, problem
     result = s.check(registration, window, now="2026-11-07T00:00:00Z")
     assert result["status"] == "inconclusive"
     assert result["unresolved_count"] == 1
-    assert s.main(["check", "--registration", str(_registration_file(window, registration)), "--receipts", str(window)]) == 1
+    assert s.main(["check", "--registration", str(_registration_file(window, registration)),
+                   "--registration-sha256", hashlib.sha256(s.canonical_registration_bytes(registration)).hexdigest(), "--receipts", str(window)]) == 1
 
 
 def test_registration_after_live_results_is_refused_but_historical_is_allowed(registration, window):
@@ -448,31 +452,128 @@ def test_register_binds_historical_ids_hashes_rules_and_stop(repo, static_graph)
         {"run_id": "42", "event": "pull_request", "pytest_red": True},
         {"run_id": "43", "event": "merge_group", "pytest_red": True},
         {"run_id": "44", "event": "pull_request", "pytest_red": False}]}
-    result = s.register(baseline, repo)
+    result = s.register(baseline, repo, minimum_narrowed_cases=30)
     assert result["historical_run_ids"] == ["42", "43"]
     assert set(result["identities"]["tool_hashes"]) == set(s.TOOLS)
     assert s.instant(result["stop_at"]) - s.instant(result["registered_at"]) == s.timedelta(days=30)
     assert result["injections_frozen"] is False
-    assert result["minimum_narrowed_cases"] == 1
+    assert result["minimum_narrowed_cases"] == 30
     assert s.register(baseline, repo, minimum_narrowed_cases=44)["minimum_narrowed_cases"] == 44
     with pytest.raises(ValueError, match="positive integer"):
         s.register(baseline, repo, minimum_narrowed_cases=0)
     with pytest.raises(ValueError, match="complete baseline"):
-        s.register({**baseline, "complete": False}, repo)
+        s.register({**baseline, "complete": False}, repo, minimum_narrowed_cases=30)
 
 
-def test_registration_cli_refuses_overwrite(repo, static_graph, tmp_path):
+def test_registration_cli_refuses_overwrite(repo, static_graph, tmp_path, capsys, registration):
     baseline = tmp_path / "baseline.json"
     baseline.write_text(json.dumps({"complete": True, "created_window": s.BASELINE, "runs": [
         {"run_id": "42", "event": "pull_request", "pytest_red": True}]}))
     output = tmp_path / "registration.json"
+    controls = tmp_path / "controls.json"
+    controls.write_text(json.dumps(registration["injected_cases"]))
     args = ["register", "--root", str(repo), "--baseline", str(baseline), "--output", str(output),
-            "--minimum-narrowed-cases", "44"]
+            "--minimum-narrowed-cases", "44", "--injections", str(controls)]
     assert s.main(args) == 0
+    printed = json.loads(capsys.readouterr().out)
     assert json.loads(output.read_text())["minimum_narrowed_cases"] == 44
     before = output.read_bytes()
+    assert before == s.canonical_registration_bytes(json.loads(before))
+    assert printed["registration_sha256"] == hashlib.sha256(before).hexdigest()
+    assert printed["injections_frozen"] is True
+    assert len(printed["injected_cases"]) == len(registration["injected_cases"])
+    assert all(case["registered_at"] == printed["registered_at"] for case in printed["injected_cases"])
+    assert printed["injected_cases"][0]["expected_failure_ids"] == registration["injected_cases"][0]["expected_failure_ids"]
     assert s.main(args) == 2
     assert output.read_bytes() == before
+
+
+def test_register_cli_requires_minimum(tmp_path, capsys):
+    with pytest.raises(SystemExit) as error:
+        s.main(["register", "--baseline", str(tmp_path / "baseline.json"),
+                "--output", str(tmp_path / "registration.json")])
+    assert error.value.code == 2
+    assert "--minimum-narrowed-cases" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("minimum", [0, -1])
+def test_register_cli_refuses_non_positive_minimum(tmp_path, capsys, minimum):
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps({"complete": True, "created_window": s.BASELINE}))
+    output = tmp_path / "registration.json"
+    assert s.main(["register", "--baseline", str(baseline), "--output", str(output),
+                   "--minimum-narrowed-cases", str(minimum)]) == 2
+    assert json.loads(capsys.readouterr().out)["error"] == "minimum narrowed cases must be a positive integer"
+    assert not output.exists()
+
+
+def test_canonical_registration_bytes_and_digest(tmp_path):
+    value = {"z": "caf\u00e9", "a": {"y": 2, "b": 1}}
+    expected = b'{"a":{"b":1,"y":2},"z":"caf\xc3\xa9"}\n'
+    path = tmp_path / "registration.json"
+    assert s.canonical_registration_bytes(value) == expected
+    sha256 = s.write_registration(path, value)
+    assert path.read_bytes() == expected
+    assert sha256 == hashlib.sha256(expected).hexdigest()
+    assert s.verified_registration(path, sha256.upper()) == value
+
+
+def test_check_cli_accepts_published_registration(registration, window, capsys):
+    path = window / "registration.json"
+    sha256 = s.write_registration(path, registration)
+    assert s.main(["check", "--registration", str(path), "--registration-sha256", sha256,
+                   "--receipts", str(window)]) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "pass"
+
+
+@pytest.mark.parametrize("supplied, reason", [
+    (None, "registration-sha256-required"),
+    ("0" * 64, "registration-sha256-mismatch"),
+    ("not-hex", "registration-sha256-invalid"),
+    ("g" * 64, "registration-sha256-invalid"),
+])
+def test_check_cli_refuses_missing_wrong_or_invalid_hash(tmp_path, registration, monkeypatch, capsys, supplied, reason):
+    path = tmp_path / "registration.json"
+    s.write_registration(path, registration)
+    monkeypatch.setattr(s, "check", lambda *args: pytest.fail("unverified registration reached scorer"))
+    args = ["check", "--registration", str(path), "--receipts", str(tmp_path)]
+    if supplied is not None:
+        args += ["--registration-sha256", supplied]
+    assert s.main(args) == 2
+    assert json.loads(capsys.readouterr().out) == {"status": "unresolved", "error": reason}
+
+
+@pytest.mark.parametrize("mutation, reason", [
+    ("minimum", "registration-sha256-mismatch"),
+    ("controls", "registration-sha256-mismatch"),
+    ("whitespace", "registration-not-canonical"),
+    ("missing-newline", "registration-not-canonical"),
+    ("duplicate-key", "registration-not-canonical"),
+    ("invalid-json", "registration-invalid-json"),
+    ("not-object", "registration-invalid-json"),
+])
+def test_check_cli_refuses_modified_registration(tmp_path, registration, monkeypatch, capsys, mutation, reason):
+    path = tmp_path / "registration.json"
+    sha256 = s.write_registration(path, registration)
+    if mutation in {"minimum", "controls"}:
+        if mutation == "minimum":
+            registration["minimum_narrowed_cases"] += 1
+        else:
+            registration["injected_cases"][0]["expected_failure_ids"] = ["tests/test_other.py::test_fault"]
+        path.write_bytes(s.canonical_registration_bytes(registration))
+    else:
+        raw = path.read_bytes()
+        path.write_bytes({
+            "whitespace": b" " + raw,
+            "missing-newline": raw.rstrip(b"\n"),
+            "duplicate-key": b'{"schema":"modified",' + raw[1:],
+            "invalid-json": b"{",
+            "not-object": b"[]\n",
+        }[mutation])
+    monkeypatch.setattr(s, "check", lambda *args: pytest.fail("modified registration reached scorer"))
+    assert s.main(["check", "--registration", str(path), "--registration-sha256", sha256,
+                   "--receipts", str(tmp_path)]) == 2
+    assert json.loads(capsys.readouterr().out) == {"status": "unresolved", "error": reason}
 
 
 def test_gh_pages_refuses_incomplete_census(monkeypatch):

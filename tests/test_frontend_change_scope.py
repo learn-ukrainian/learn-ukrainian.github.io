@@ -458,12 +458,20 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.
 
 
-def test_component_map_covers_full_index_frontend_denominator() -> None:
-    """Cross-check the existing cheap-exit denominator, including sparse files."""
+@pytest.fixture(scope="session")
+def component_map():
+    """Compute the repository scan once for the component-map assertions."""
     from scripts.ci import components
 
     manifest = components.load_manifest()
-    graph = components.import_graph(manifest)
+    return manifest, components.import_graph(manifest)
+
+
+def test_component_map_covers_full_index_frontend_denominator(component_map) -> None:
+    """Cross-check the existing cheap-exit denominator, including sparse files."""
+    from scripts.ci import components
+
+    manifest, graph = component_map
     patterns = scope.load_denominator()["paths"]
     paths = components.tracked_paths()
     included = [path for path in paths if scope.path_in_denominator(path, patterns)]
@@ -472,11 +480,11 @@ def test_component_map_covers_full_index_frontend_denominator() -> None:
     assert all(fronts <= set(components.affected([path], manifest, graph)["components"]) for path in included)
 
 
-def test_component_ownership_does_not_expand_frontend_cheap_exit() -> None:
+def test_component_ownership_does_not_expand_frontend_cheap_exit(component_map) -> None:
     """Shared/all-node obligations must not replace today's cheap-exit policy."""
     from scripts.ci import components
 
-    manifest = components.load_manifest()
-    assert set(components.affected(["scripts/config.py"], manifest)["components"]) == set(components.NODE_IDS)
+    manifest, graph = component_map
+    assert set(components.affected(["scripts/config.py"], manifest, graph)["components"]) == set(components.NODE_IDS)
     run, _, matched = scope.decide_from_changed(["scripts/config.py", "docs/a.md"])
     assert run is False and matched == []

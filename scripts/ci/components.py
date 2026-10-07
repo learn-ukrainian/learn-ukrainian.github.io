@@ -263,22 +263,38 @@ def scan_runtime_edges(path: str, nodes: Sequence[ast.AST], bindings: dict, know
     return edges, unresolved
 
 
+DEPENDENCY_NODE_TYPES = frozenset({
+    ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
+    ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute, ast.Name,
+})
+
+
 def dependency_nodes(tree: ast.AST) -> list[ast.AST]:
     """Keep dependency syntax in ast.walk order without walking terminal leaves.
 
     Parsed constants, import aliases, operators and contexts cannot contain
-    dependencies. Retain every other subtree, including defaults and decorators.
+    dependencies. Names and imports have only context/alias children. Retain
+    every other subtree, including defaults and decorators.
+
+    The node-type contract is asserted against scan_imports/scan_runtime_edges
+    by test_dependency_node_types_cover_consumers.
     """
-    relevant = {ast.Assign, ast.AnnAssign, ast.Import, ast.ImportFrom,
-                ast.FunctionDef, ast.AsyncFunctionDef, ast.Call, ast.Attribute, ast.Name}
     pending = deque([tree])
     nodes = []
     while pending:
         node = pending.popleft()
-        if type(node) in relevant:
+        if type(node) in DEPENDENCY_NODE_TYPES:
             nodes.append(node)
-        pending.extend(child for child in ast.iter_child_nodes(node)
-                       if child._fields and not isinstance(child, (ast.Constant, ast.alias)))
+        if isinstance(node, (ast.Name, ast.Import, ast.ImportFrom)):
+            continue
+        # Expand fields directly: avoid two nested generators per AST node.
+        for field in node._fields:
+            value = getattr(node, field, None)
+            children = value if isinstance(value, list) else (value,)
+            for child in children:
+                if (isinstance(child, ast.AST) and child._fields
+                    and not isinstance(child, (ast.Constant, ast.alias))):
+                    pending.append(child)
     return nodes
 
 

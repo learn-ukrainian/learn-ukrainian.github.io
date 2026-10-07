@@ -283,15 +283,33 @@ Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`
 # Run/job metadata census only, before observing candidate selection/results.
 "$P" -m scripts.ci.component_shadow inventory --output "$R/baseline.json"
 "$P" -m scripts.ci.component_shadow register --baseline "$R/baseline.json" \
-  --minimum-narrowed-cases 1 --output "$R/registration.json"
+  --minimum-narrowed-cases 30 --injections "$R/controls.json" --output "$R/registration.json"
+# Before observing results, publish the printed registration_sha256 on #9721.
+# Use that published value, never a hash recomputed from a later local file.
+REGISTRATION_SHA256='<published-64-hex>'
 # After registration, acquire the complete live census through the stop date.
 "$P" -m scripts.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
   --output "$R/receipts/runs.json"
 "$P" -m scripts.ci.component_shadow check --registration "$R/registration.json" \
-  --receipts "$R/receipts"
+  --registration-sha256 "$REGISTRATION_SHA256" --receipts "$R/receipts"
 ```
 
-Registration refuses overwriting an existing file. It freezes the graph, source
+Registration refuses overwriting an existing file. Its canonical bytes are JSON
+with recursively sorted keys, fixed separators `(',', ':')`, unescaped UTF-8
+(`ensure_ascii=False`), no non-finite numbers, and exactly one trailing LF.
+`register` prints `registration_sha256`, the SHA-256 of those file bytes, alongside
+the registration. At registration, before collecting any candidate results, the
+driver publishes this hash on #9721 with the registered minimum and frozen
+identities. `check` requires that published hash, recomputes it over the canonical
+bytes, and refuses changed content or any noncanonical file bytes (including
+whitespace, duplicate keys or a removed newline). Missing, invalid and mismatched
+hashes return exit 2 with JSON `status=unresolved` and a typed `error` reason:
+`registration-sha256-required`, `registration-sha256-invalid`, or
+`registration-sha256-mismatch`; altered formatting returns
+`registration-not-canonical`, and malformed JSON returns `registration-invalid-json`.
+Do not edit the registration after publishing its hash.
+
+It freezes the graph, source
 and tool hashes; all pytest-red PR/merge-group run IDs in the plan's baseline
 window (2026-10-03 through 2026-10-06 11:14:28 UTC); and the next 150 completed
 PR runs whose first attempt completes after registration, with at least
@@ -303,8 +321,12 @@ run and job metadata, so later reruns cannot erase first-attempt red cases.
 Choose `$START` early enough to include PR runs already in flight at
 registration; they count when their first attempt completes afterward. Metadata
 acquisition reads job conclusions, never candidate test IDs or artifacts.
-Registration also freezes a positive `minimum_narrowed_cases` (default 1;
-raise it with `register --minimum-narrowed-cases` before observing results).
+Registration also requires an explicit positive `minimum_narrowed_cases`; there
+is no default. The driver-fixed registered value for this window is **30**:
+with zero misses over 30 independent narrowed cases, the rule of three bounds
+the miss rate below 10% at 95% confidence. This matches the plan's minimum of
+30 pytest-red runs. The code accepts any explicit positive minimum; the driver
+fixes it before results exist.
 The checker reports narrowed red and injected case counts separately and their
 sum. Only valid, oracle-verified registered historical red cases, live pytest-red
 cases and injected controls in `selected` mode with a non-empty would-skip set
@@ -331,9 +353,12 @@ re-reads and hashes those files independently and refuses a disagreement with
 the receipt. The shadow artifact retains the receipt and original shard
 artifacts for 45 days, covering the 30-day live window.
 
-The driver supplies and freezes `injected_cases` separately, recording an ID,
-`coverage` labels, `expected_failure_ids` and a `registered_at` timestamp for
-each before observing its results. At least twelve distinct controls cover all eight nodes and the
+Before registration, the driver supplies `controls.json` as a JSON array with
+an `id`, `coverage` labels and `expected_failure_ids` for each held-out control.
+`register --injections` freezes these as `injected_cases`, stamps each with the
+registration's `registered_at`, and sets `injections_frozen` before writing and
+hashing. Omitting controls leaves the checker unresolved; adding them afterward
+invalidates the published hash. At least twelve distinct controls cover all eight nodes and the
 shared-fixture, dynamic-load, subprocess and stale-artifact classes. The author
 must not supply those held-out faults. The checker cannot pass until these
 controls, every historical replay and the live denominators are complete with

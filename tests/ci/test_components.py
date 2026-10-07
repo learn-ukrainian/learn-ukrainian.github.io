@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import inspect
 import json
 import sqlite3
 import subprocess
@@ -186,6 +187,68 @@ outside()
     assert {node.lineno for node in nodes if isinstance(node, c.ast.Call)} == {3, 4, 6, 7, 8}
 
 
+def test_dependency_node_types_cover_consumers():
+    """A new isinstance(node, ast.X) consumer must also admit X in the walk."""
+    consumed = set()
+    for consumer in (c.scan_imports, c.scan_runtime_edges):
+        tree = c.ast.parse(inspect.getsource(consumer))
+        for check in c.ast.walk(tree):
+            if (not isinstance(check, c.ast.Call)
+                or not isinstance(check.func, c.ast.Name) or check.func.id != "isinstance"
+                or not isinstance(check.args[0], c.ast.Name) or check.args[0].id != "node"):
+                continue
+            types = check.args[1].elts if isinstance(check.args[1], c.ast.Tuple) else [check.args[1]]
+            for kind in types:
+                assert isinstance(kind, c.ast.Attribute) and isinstance(kind.value, c.ast.Name)
+                assert kind.value.id == "ast", "consumer node predicates must name explicit AST types"
+                consumed.add(getattr(c.ast, kind.attr))
+    assert consumed == c.DEPENDENCY_NODE_TYPES, "dependency walk prunes a consumer node type"
+
+
+def test_pruned_walk_matches_full_walk_on_fixture_corpus(monkeypatch):
+    sources = {
+        "scripts/__init__.py": b"",
+        "scripts/fixture.py": b"VALUE = 1",
+        "tests/test_reader.py": b'''
+from pathlib import Path
+from importlib.util import spec_from_file_location as spec
+from runpy import run_module
+from scripts.fixture import VALUE
+import subprocess as process
+import sys as runtime
+INPUT: str = "schemas/input.json"
+@decorate(Path(INPUT).read_text())
+async def reader(default=Path(INPUT).read_bytes()):
+    def load(name, location):
+        return spec(name, location)
+    load("fixture", "scripts/fixture.py")
+    return [open(INPUT) for item in iterable if predicate(item)]
+run_module("scripts.fixture")
+process.run([runtime.executable, "-m", "scripts.fixture"])
+runtime.path.insert(0, "scripts")
+__import__(unknown)
+payload = {"numbers": [1, 2, 3], "text": "literal"}
+''',
+        "scripts/broken.py": b"def broken(\n",
+    }
+    known = set(sources) | {"schemas/input.json"}
+    pruned = c.scan_imports(sources, known)
+    monkeypatch.setattr(c, "dependency_nodes", lambda tree: list(c.ast.walk(tree)))
+    assert c.scan_imports(sources, known) == pruned
+    assert pruned["file_edges"] and pruned["unresolved_edges"]
+
+
+def test_pruned_walk_matches_full_walk_on_real_repository_graph(monkeypatch, manifest):
+    sources = c.python_sources()
+    known = c.tracked_paths()
+    pruned = c.import_graph(manifest)
+    # Bypass the scan cache for the reference walk; keep the exact same inputs.
+    monkeypatch.setattr(c, "dependency_nodes", lambda tree: list(c.ast.walk(tree)))
+    full = c.scan_imports(sources, set(known))
+    monkeypatch.setattr(c, "cached_import_scan", lambda *args: full)
+    assert c.import_graph(manifest) == pruned
+
+
 def test_large_literal_payload_preserves_edges_without_expanding_walk(monkeypatch):
     template = '''from pathlib import Path
 import sys as runtime
@@ -198,13 +261,14 @@ process.run(["python3", "-m", "scripts.fixture"])
 '''
     known = {"tests/test_reader.py", "scripts/fixture.py", "schemas/input.json"}
     visited = []
-    original = c.ast.iter_child_nodes
 
-    def counted(node):
-        visited.append(node)
-        return original(node)
+    class CountedDeque(c.deque):
+        def popleft(self):
+            node = super().popleft()
+            visited.append(node)
+            return node
 
-    monkeypatch.setattr(c.ast, "iter_child_nodes", counted)
+    monkeypatch.setattr(c, "deque", CountedDeque)
 
     def scan(payload):
         return c.scan_imports({"tests/test_reader.py": template.format(payload=payload).encode(),

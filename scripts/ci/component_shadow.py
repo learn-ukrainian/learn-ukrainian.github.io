@@ -55,11 +55,47 @@ def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def write_json(path: Path, value: dict, *, exclusive: bool = False) -> None:
+def write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x" if exclusive else "w", encoding="utf-8") as stream:
+    with path.open("w", encoding="utf-8") as stream:
         json.dump(value, stream, indent=2, sort_keys=True)
         stream.write("\n")
+
+
+def canonical_registration_bytes(value: dict) -> bytes:
+    """Sorted keys, compact separators, unescaped UTF-8, one trailing LF."""
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"),
+                       ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8")
+
+
+def write_registration(path: Path, value: dict) -> str:
+    """Write once and return the digest the driver must publish before results."""
+    raw = canonical_registration_bytes(value)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("xb") as stream:
+        stream.write(raw)
+    return hashlib.sha256(raw).hexdigest()
+
+
+def verified_registration(path: Path, expected_sha256: str | None) -> dict:
+    """Require the published digest and exact canonical bytes before scoring."""
+    if not expected_sha256:
+        raise ValueError("registration-sha256-required")
+    if len(expected_sha256) != 64 or any(char not in "0123456789abcdefABCDEF" for char in expected_sha256):
+        raise ValueError("registration-sha256-invalid")
+    raw = path.read_bytes()
+    try:
+        value = json.loads(raw)
+        if not isinstance(value, dict):
+            raise ValueError("expected object")
+        canonical = canonical_registration_bytes(value)
+    except (ValueError, UnicodeError) as exc:
+        raise ValueError("registration-invalid-json") from exc
+    if raw != canonical:
+        raise ValueError("registration-not-canonical")
+    if hashlib.sha256(canonical).hexdigest() != expected_sha256.lower():
+        raise ValueError("registration-sha256-mismatch")
+    return value
 
 
 def identities(root: Path, graph: dict) -> dict:
@@ -286,7 +322,8 @@ def inventory(repository: str, created: str, *, first_attempts: bool = False) ->
             "acquired_at": utc_now(), "runs": rows}
 
 
-def register(baseline: dict, root: Path, *, minimum_narrowed_cases: int = 1) -> dict:
+def register(baseline: dict, root: Path, *, minimum_narrowed_cases: int,
+             injected_cases: list[dict] | None = None) -> dict:
     """Freeze the complete historical inventory and rules before any receipts."""
     if baseline.get("complete") is not True or baseline.get("created_window") != BASELINE:
         raise ValueError("registration requires a complete baseline-window census")
@@ -298,6 +335,7 @@ def register(baseline: dict, root: Path, *, minimum_narrowed_cases: int = 1) -> 
                          if row["event"] in {"pull_request", "merge_group"} and row["pytest_red"]})
     if not historical:
         raise ValueError("baseline contains no pytest-red run IDs")
+    frozen_cases = [case | {"registered_at": now} for case in (injected_cases or [])]
     return {"schema": SCHEMA, "registered_at": now, "stop_at": (instant(now) + timedelta(days=30)).isoformat(),
             "identities": identities(root, graph), "baseline_hash": digest(baseline),
             "baseline_window": BASELINE, "historical_run_ids": historical,
@@ -305,7 +343,8 @@ def register(baseline: dict, root: Path, *, minimum_narrowed_cases: int = 1) -> 
             "live_window": {"completed_first_attempt_pr_runs": 150, "minimum_pytest_red_runs": 30,
                             "ordering": "completed_at, run_id; all conclusions; completed after registration"},
             "flaky_classification_rule": FLAKE_RULE, "base_commit_rerun_rule": BASE_RULE,
-            "injected_cases": [], "injections_owner": "driver", "injections_frozen": False}
+            "injected_cases": frozen_cases, "injections_owner": "driver",
+            "injections_frozen": injected_cases is not None}
 
 
 def check(registration: dict, directory: Path, *, now: str | None = None) -> dict:
@@ -449,8 +488,8 @@ def main(argv: list[str] | None = None) -> int:
         description="Compute advisory selection and score full-run failures.\nUse before PR narrowing; this tool never executes tests.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  $P -m scripts.ci.component_shadow select --base origin/main --head HEAD\n"
-               "  $P -m scripts.ci.component_shadow register --baseline baseline.json --output registration.json\n"
-               "  $P -m scripts.ci.component_shadow check --registration registration.json --receipts shadow/\n"
+               "  $P -m scripts.ci.component_shadow register --baseline baseline.json --minimum-narrowed-cases 30 --injections controls.json --output registration.json\n"
+               "  $P -m scripts.ci.component_shadow check --registration registration.json --registration-sha256 <published-64-hex> --receipts shadow/\n"
                "Outputs: ignored JSON registration/census/receipts; no test or Git mutations.\n"
                "Exit codes: 0 report-only or complete zero-miss check; 1 incomplete/missed; 2 invalid input.\n"
                "Related: #9721 slice 6; docs/runbooks/ci-gate.md. $P is the prescribed project interpreter.")
@@ -479,14 +518,18 @@ def main(argv: list[str] | None = None) -> int:
                              help="receipt reason when --cost is absent (default: matched-pr-queue-cost-inputs-not-supplied)")
         if command == "register":
             sub.add_argument("--baseline", type=Path, required=True, help="complete historical inventory JSON, acquired before replay")
-            sub.add_argument("--minimum-narrowed-cases", type=int, default=1,
-                             help="positive minimum of narrowed red/injected cases, frozen before results (default: 1)")
+            sub.add_argument("--minimum-narrowed-cases", type=int, required=True,
+                             help="required positive minimum of narrowed red/injected cases, frozen before results; no default")
+            sub.add_argument("--injections", type=Path,
+                             help="driver-owned held-out controls JSON array, frozen before hashing (default: absent; check remains unresolved)")
         if command == "inventory":
             sub.add_argument("--repository", default="learn-ukrainian/learn-ukrainian.github.io", help="GitHub owner/repo (default: project repository)")
             sub.add_argument("--created", default=BASELINE, help="inclusive API created range (default: plan baseline window)")
             sub.add_argument("--first-attempts", action="store_true", help="read attempt-1 run/jobs even after reruns (default: latest attempt; required for live census)")
         if command == "check":
             sub.add_argument("--registration", type=Path, required=True, help="pre-result registration JSON")
+            sub.add_argument("--registration-sha256",
+                             help="required published SHA-256 (64 hex digits); omission fails before scoring")
             sub.add_argument("--receipts", type=Path, required=True, help="receipt directory including complete live runs.json census")
     args = parser.parse_args(argv)
     try:
@@ -499,10 +542,12 @@ def main(argv: list[str] | None = None) -> int:
             write_json(args.output, result)
         elif args.command == "register":
             result = register(json.loads(args.baseline.read_text()), args.root,
-                              minimum_narrowed_cases=args.minimum_narrowed_cases)
-            write_json(args.output, result, exclusive=True)
+                              minimum_narrowed_cases=args.minimum_narrowed_cases,
+                              injected_cases=json.loads(args.injections.read_text()) if args.injections else None)
+            registration_sha256 = write_registration(args.output, result)
+            result = result | {"registration_sha256": registration_sha256}
         else:
-            result = check(json.loads(args.registration.read_text()), args.receipts)
+            result = check(verified_registration(args.registration, args.registration_sha256), args.receipts)
             print(json.dumps(result, sort_keys=True))
             return int(result["unresolved_count"] > 0 or result["missed_failure_count"] > 0)
         print(json.dumps(result, sort_keys=True))
