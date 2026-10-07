@@ -13,9 +13,11 @@ and the host services are not in that cgroup.
 
 `MemoryHigh=` is the throttling line and `MemoryMax=` is the last line of
 defense, as `systemd.resource-control(5)` recommends. `MemoryMax=` does not cap
-swap, so the unit also sets `MemorySwapMax=`. The values are set per
-deployment and sized for that host; see the private operations docs. The limits
-are the unit file. There is no environment override.
+swap, so `MemorySwapMax=` is set as well. The unit file in this directory
+carries no values: all three are set per deployment, sized for that host, in a
+limits drop-in installed next to the unit
+(`~/.config/systemd/user/lu-dispatch.slice.d/10-limits.conf`). The same holds
+for `lu.slice`. There is no environment override.
 
 Running without the slice is supported. Dispatch then prints one warning and
 starts the worker with plain `Popen`, and the task record's `launch_mode` is
@@ -32,17 +34,20 @@ All of these have to hold or dispatch will not use the slice:
 - The user manager has the memory controller:
   `/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.subtree_control`
   contains `memory`.
-- After install, `systemctl --user show -p MemoryHigh,MemoryMax,MemorySwapMax lu-dispatch.slice`
-  prints the finite values from the installed unit. A slice name systemd
-  synthesized with `MemoryMax=infinity` does not count.
+- After install, `systemctl --user show -p MemoryHigh,MemoryMax,MemorySwapMax,DropInPaths lu-dispatch.slice`
+  prints finite values and lists the limits drop-in. A slice without the
+  drop-in, or a slice name systemd synthesized, reports `MemoryMax=infinity`
+  and does not count.
 
 ### Install
 
-Immediately after merge, the driver installs the new slice from the updated
-checkout and runs `systemctl --user daemon-reload`, before dispatching more
-workers. `dispatch_isolation.py` checks that the installed `MemoryMax` equals
-the configured value; until the reload applies the new unit, dispatch
-falls back to plain `Popen` without the slice memory cap.
+Order matters, so the limits never lapse: first the deployment installs the
+limits drop-in and verifies with `systemctl --user show` that the effective
+values are the intended ones; only then is the value-free unit installed from
+the updated checkout, followed by `systemctl --user daemon-reload` before more
+workers are dispatched. `dispatch_isolation.py` reads the effective `MemoryMax`
+and `MemorySwapMax` at runtime and uses the slice only when both are finite;
+otherwise dispatch falls back to plain `Popen` without the slice memory cap.
 
 Do not commit a machine path. From a checkout:
 

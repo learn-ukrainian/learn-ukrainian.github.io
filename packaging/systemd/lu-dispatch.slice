@@ -1,14 +1,15 @@
 # User slice for every detached delegate worker (#8645).
 # The driver stays outside this slice. Install steps and the supported
 # plain-Popen fallback are in packaging/systemd/README.md.
+#
+# systemd.resource-control(5): MemoryHigh= is the throttling control;
+# MemoryMax= is the last line of defense and does not cap swap. All three
+# limits are set per deployment in a drop-in next to this unit
+# (lu-dispatch.slice.d/10-limits.conf). dispatch_isolation.py refuses the
+# slice unless the effective MemoryMax= and MemorySwapMax= are finite.
+# Admission still checks MemAvailable.
 [Unit]
 Description=Learn Ukrainian dispatch workers
 
 [Slice]
-# systemd.resource-control(5): MemoryHigh= is the throttling control;
-# MemoryMax= is the last line of defense and does not cap swap. Values are
-# set per deployment; see the private operations docs. Admission still
-# checks MemAvailable.
-MemoryHigh=18G
-MemoryMax=20G
-MemorySwapMax=1G
+MemoryAccounting=yes

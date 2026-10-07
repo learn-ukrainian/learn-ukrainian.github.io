@@ -28,8 +28,9 @@ from scripts.orchestration import dispatch_isolation as iso
 pytestmark = pytest.mark.host_dispatch_probe
 
 _PY = sys.executable
-_MEMORY_MAX = str(iso.MEMORY_MAX_BYTES)
-_MEMORY_SWAP = str(iso.MEMORY_SWAP_MAX_BYTES)
+# Synthetic effective limits, as a deployment drop-in would supply them.
+_MEMORY_MAX = str(4 * 1024**3)
+_MEMORY_SWAP = str(512 * 1024**2)
 
 
 def _write_exe(path: Path, body: str) -> None:
@@ -179,13 +180,42 @@ def test_scope_argv_names_the_slice_unit_and_collect():
     _hex_token(unit, prefix)
     assert "/" not in unit and " " not in unit
     assert len(unit) + len(".scope") <= 255
-    assert iso.MEMORY_MAX_BYTES == 20 * 1024**3
-    assert iso.MEMORY_SWAP_MAX_BYTES == 1 * 1024**3
-    assert iso.MEMORY_HIGH_BYTES == 18 * 1024**3
+
+
+def test_slice_unit_has_structure_and_leaves_limits_to_a_dropin():
     unit_file = Path("packaging/systemd/lu-dispatch.slice").read_text(encoding="utf-8")
-    assert "MemoryMax=20G" in unit_file
-    assert "MemoryHigh=18G" in unit_file
-    assert "MemorySwapMax=1G" in unit_file
+    assert "[Unit]" in unit_file
+    section = unit_file.split("[Slice]", 1)[1]
+    keys = {line.split("=", 1)[0] for line in section.splitlines() if "=" in line and not line.startswith("#")}
+    assert keys == {"MemoryAccounting"}
+    assert iso.LIMITS_DROPIN.startswith(f"{iso.SLICE_UNIT}.d/")
+    assert iso.LIMITS_DROPIN.split("/", 1)[1] in unit_file
+    assert iso.slice_cgroup_path() == "lu.slice/lu-dispatch.slice"
+
+
+@pytest.mark.parametrize(
+    ("memory_max", "memory_swap", "check"),
+    [
+        (str(3 * 1024**3), "0", None),
+        (str(7 * 1024**3 + 4096), str(1024**3), None),
+        ("infinity", _MEMORY_SWAP, "memory-max"),
+        (None, _MEMORY_SWAP, "memory-max"),
+        ("0", _MEMORY_SWAP, "memory-max"),
+        ("", _MEMORY_SWAP, "memory-max"),
+        (_MEMORY_MAX, "infinity", "memory-swap-max"),
+        (_MEMORY_MAX, None, "memory-swap-max"),
+    ],
+)
+def test_memory_limits_require_finite_effective_values(memory_max, memory_swap, check):
+    props = {
+        key: value for key, value in (("MemoryMax", memory_max), ("MemorySwapMax", memory_swap)) if value is not None
+    }
+    reason = iso._memory_limits(props)
+    if check is None:
+        assert reason is None
+    else:
+        assert reason is not None and reason.startswith(f"{check}:")
+        assert iso.LIMITS_DROPIN in reason
 
 
 def test_probe_is_ready_when_every_check_holds(tmp_path: Path):
@@ -1115,10 +1145,10 @@ def test_launch_fields_remain_beside_peak_rss(monkeypatch: pytest.MonkeyPatch):
     [
         ("ActiveState=inactive\nMemoryCurrent=10\nMemoryMax=20\n", None),
         ("LoadState=not-found\nActiveState=inactive\n", None),
-        ("ActiveState=active\nMemoryCurrent=[not set]\nMemoryMax=21474836480\n", None),
+        ("ActiveState=active\nMemoryCurrent=[not set]\nMemoryMax=8589934592\n", None),
         (
-            "ActiveState=active\nMemoryCurrent=4294967296\nMemoryMax=21474836480\n",
-            "lu-dispatch.slice 4.0/20.0 GiB",
+            "ActiveState=active\nMemoryCurrent=4294967296\nMemoryMax=8589934592\n",
+            "lu-dispatch.slice 4.0/8.0 GiB",
         ),
         (
             "ActiveState=active\nMemoryCurrent=1073741824\nMemoryMax=infinity\n",
@@ -1596,9 +1626,9 @@ def test_slice_usage_reads_live_memory_and_swap(monkeypatch):
     )
     samples = {
         "memory.current": str(2 * 1024**3),
-        "memory.max": str(20 * 1024**3),
+        "memory.max": str(8 * 1024**3),
         "memory.swap.current": str(512 * 1024**2),
-        "memory.swap.max": str(1024**3),
+        "memory.swap.max": str(2 * 1024**3),
     }
     original = Path.read_text
 
@@ -1608,11 +1638,11 @@ def test_slice_usage_reads_live_memory_and_swap(monkeypatch):
         return original(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, "read_text", read)
-    assert iso.slice_usage_clause() == "lu-dispatch.slice 2.0/20.0 GiB; swap 0.5/1.0 GiB"
+    assert iso.slice_usage_clause() == "lu-dispatch.slice 2.0/8.0 GiB; swap 0.5/2.0 GiB"
     # Persistent charges change independently of worker reservations/status.
     samples["memory.current"] = str(3 * 1024**3)
     samples["memory.swap.current"] = str(1024**3)
-    assert iso.slice_usage_clause() == "lu-dispatch.slice 3.0/20.0 GiB; swap 1.0/1.0 GiB"
+    assert iso.slice_usage_clause() == "lu-dispatch.slice 3.0/8.0 GiB; swap 1.0/2.0 GiB"
 
 
 @pytest.mark.parametrize(
