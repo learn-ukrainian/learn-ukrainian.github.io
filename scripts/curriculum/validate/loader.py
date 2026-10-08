@@ -15,6 +15,7 @@ can build a fixture tree anywhere.
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 
 import yaml
@@ -43,6 +44,85 @@ class PlanError(Exception):
         super().__init__(f"{code}: {message}")
         self.code = code
         self.message = message
+
+
+def retirement_record(level_dir: Path) -> dict:
+    """Read the strict append-only retirement inventory, or an empty inventory.
+
+    Retirement is an exact-byte exclusion, never a waiver for an arc mismatch.
+    Replacements with different bytes must pass every ordinary plan gate.
+    """
+    path = level_dir / "_retired.yaml"
+    if not path.exists():
+        return {"retirement_schema": 1, "plans": [], "routes": []}
+
+    class UniqueLoader(yaml.SafeLoader):
+        pass
+
+    def unique_mapping(loader, node):
+        pairs = loader.construct_pairs(node)
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate key {key!r}")
+            result[key] = value
+        return result
+
+    UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, unique_mapping)
+    try:
+        record = yaml.load(path.read_text(encoding="utf-8"), Loader=UniqueLoader)
+        if not isinstance(record, dict) or set(record) != {"retirement_schema", "plans", "routes"}:
+            raise ValueError("expected exactly retirement_schema, plans and routes")
+        if type(record["retirement_schema"]) is not int or record["retirement_schema"] != 1:
+            raise ValueError("retirement_schema must be 1")
+        for kind in ("plans", "routes"):
+            entries = record[kind]
+            if not isinstance(entries, list):
+                raise ValueError(f"{kind} must be a list")
+            seen = set()
+            keys = {"slug", "old_position", "sha256"} if kind == "plans" else {"slug", "old_position"}
+            for entry in entries:
+                if not isinstance(entry, dict) or set(entry) != keys:
+                    raise ValueError(f"{kind} entries require exactly {sorted(keys)}")
+                slug = entry["slug"]
+                if not isinstance(slug, str) or re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) is None:
+                    raise ValueError("slug must be a plain route slug")
+                position = entry["old_position"]
+                if type(position) is not int or position < 1:
+                    raise ValueError("old_position must be a positive integer")
+                if kind == "plans":
+                    digest = entry["sha256"]
+                    if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                        raise ValueError("sha256 must be 64 lowercase hexadecimal characters")
+                    identity = (slug, digest)
+                else:
+                    identity = slug
+                if identity in seen:
+                    raise ValueError(f"duplicate {kind} retirement entry for {slug}")
+                seen.add(identity)
+        return record
+    except (OSError, UnicodeError, yaml.YAMLError, ValueError, TypeError) as error:
+        raise PlanError(codes.RETIREMENT_RECORD_INVALID, f"{path}: {error}") from error
+
+
+def _retired_bytes(plan_path: Path, raw: bytes, record: dict) -> bool:
+    digest = hashlib.sha256(raw).hexdigest()
+    return any(entry["slug"] == plan_path.stem and entry["sha256"] == digest for entry in record["plans"])
+
+
+def active_plan_paths(level_dir: Path) -> list[Path]:
+    """List ordinary plans, excluding only explicitly retired exact bytes."""
+    record = retirement_record(level_dir)
+    return [
+        path for path in sorted(level_dir.glob("*.yaml"))
+        if not path.name.startswith("_") and not _retired_bytes(path, path.read_bytes(), record)
+    ]
+
+
+def retired_plan_paths(level_dir: Path) -> list[Path]:
+    """Name the current exact-byte exclusions for honest whole-level reports."""
+    active = set(active_plan_paths(level_dir))
+    return [path for path in sorted(level_dir.glob("*.yaml")) if not path.name.startswith("_") and path not in active]
 
 
 def _path_parts(path: Path) -> tuple[str, ...]:
@@ -104,11 +184,17 @@ def load_plan(plan_path: Path, *, text: str | None = None) -> dict:
     read (plan-promote validates the bytes it is about to publish in memory);
     plan_path still names where the plan lives.
     """
+    record = retirement_record(plan_path.parent)
+    if plan_path.name.startswith("_"):
+        raise PlanError(codes.NOT_A_PLAN, f"{plan_path.name} begins with _; not a plan")
     if text is None and not plan_path.is_file():
         raise PlanError(codes.PLAN_NOT_FOUND, f"plan file {plan_path} does not exist")
+    raw = plan_path.read_bytes() if text is None else text.encode("utf-8")
+    if _retired_bytes(plan_path, raw, record):
+        raise PlanError(codes.PLAN_RETIRED, f"{plan_path.stem} is explicitly retired at its exact SHA-256")
     try:
-        data = yaml.safe_load(plan_path.read_text(encoding="utf-8") if text is None else text)
-    except yaml.YAMLError as error:
+        data = yaml.safe_load(raw.decode("utf-8"))
+    except (yaml.YAMLError, UnicodeError) as error:
         raise PlanError(codes.PLAN_YAML_INVALID, f"{plan_path} is not valid YAML: {error}") from error
     if not isinstance(data, dict):
         raise PlanError(codes.PLAN_YAML_INVALID, f"{plan_path} does not hold a mapping at the top level")

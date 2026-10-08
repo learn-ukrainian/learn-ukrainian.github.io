@@ -76,11 +76,12 @@ def test_every_level_carries_its_arc_sections_and_the_shared_ones() -> None:
     headings = [s["heading"] for s in a1["sources"]]
     assert headings[0] == "## 2. Decisions"
     assert headings[1].startswith("## 6. Decisions on the six open questions")
-    assert len(headings) == 5
+    assert headings[2] == "## 8. Revision r4 (#10108)"
+    assert len(headings) == 6
     for level in ("a2", "b1", "b2"):
         record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
         assert record["sources"][1]["heading"].startswith("## 8. Decisions on the five open questions")
-        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][2:]]
+        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][3:]]
 
 
 # ---- section boundaries on fixture documents ------------------------------------------
@@ -241,3 +242,21 @@ def test_generated_output_validates_against_the_schema(tmp_path: Path) -> None:
         Draft202012Validator(schema).validate(record)
         record["sources"][0]["extra"] = 1
         assert not Draft202012Validator(schema).is_valid(record)
+
+
+HISTORICAL_DECISION_FINGERPRINTS = {'a1': ['a79567a8566da45fadebde07910bca80b07ef0a81c8c16e6a055c89a28f68b2f', '554a5273e017037992ce6420bb312ca5fff36212b100b839afb6c4473969eabf', '4c99a23c7b9c2cbf8311cb2d78a62bbd066304b2789ce8bdfbd82bb73f735288', '121cb31144b358f196c89f133953051b1fe60be4b17c3088b274f2b96b1bebd4', '90cb697a77b3d09efbf04a7ded7526eb3eec6e99380a00457266abb6f9bf8da6'], 'a2': ['10837479e21806aea2a4dc7ffb241b26d7fbc4fef2b832e23f12c7288c2a8c1b', '81391cf5326e3ec9bb2b2240d730f0b26fdb548464b0e594cf3f2accb78cb366', '4c99a23c7b9c2cbf8311cb2d78a62bbd066304b2789ce8bdfbd82bb73f735288', '121cb31144b358f196c89f133953051b1fe60be4b17c3088b274f2b96b1bebd4', '90cb697a77b3d09efbf04a7ded7526eb3eec6e99380a00457266abb6f9bf8da6'], 'b1': ['e6b6ce23fc13899a932529edc94ae1f2d59a35afc4798ff18af848a436a2dbf5', 'eaecdf557f588f834a3405993320aca1b556365b9a0317267719d403b04a802e', '4c99a23c7b9c2cbf8311cb2d78a62bbd066304b2789ce8bdfbd82bb73f735288', '121cb31144b358f196c89f133953051b1fe60be4b17c3088b274f2b96b1bebd4', '90cb697a77b3d09efbf04a7ded7526eb3eec6e99380a00457266abb6f9bf8da6'], 'b2': ['da8ba8ffcc36ba98e205b0794fa3d393cd43a56f13bb1b7374830e4e55c4540e', '84818067a0627df48cfe43f557c4291784dbbe1810fc40ccaa59e6268c2616c5', '4c99a23c7b9c2cbf8311cb2d78a62bbd066304b2789ce8bdfbd82bb73f735288', '121cb31144b358f196c89f133953051b1fe60be4b17c3088b274f2b96b1bebd4', '90cb697a77b3d09efbf04a7ded7526eb3eec6e99380a00457266abb6f9bf8da6']}
+
+def test_historical_accepted_sections_and_non_a1_semantics_stay_identical():
+    import json
+
+    for level, expected in HISTORICAL_DECISION_FINGERPRINTS.items():
+        record = yaml.safe_load(_committed(level).read_text())
+        sources = record["sources"]
+        if level == "a1":
+            revision = sources[2]
+            assert revision["accepted"] == "2026-10-08"
+            assert revision["accepted_evidence"]["line"] == "Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
+            assert revision["text"].count(revision["accepted_evidence"]["line"]) == 1
+            sources = sources[:2] + sources[3:]
+        actual = [hashlib.sha256(json.dumps({k: v for k, v in entry.items() if k != "doc_sha256"}, ensure_ascii=False, sort_keys=True).encode()).hexdigest() for entry in sources]
+        assert actual == expected, level

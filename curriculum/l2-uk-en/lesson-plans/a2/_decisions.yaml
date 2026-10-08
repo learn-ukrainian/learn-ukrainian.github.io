@@ -1,7 +1,7 @@
 schema: 1
 generator:
   path: scripts/curriculum/arc/generate_decisions.py
-  sha256: 5c10305349443115497cc5c8bf769cdeba8c2f71bce322cada3a95e40322ce28
+  sha256: b48053a80913771d97dd1158b5579a0a9ea0627f21cd87b455408a79aca76db3
 level: a2
 sources:
 - doc: docs/epics/fresh-build-a2-arc.md
@@ -128,7 +128,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-plan-schema.md
     line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
-  doc_sha256: d49181ae4f5f2711312c0385e342e0bb0e3cb73e66a3b1cc5cf472a55af06af2
+  doc_sha256: 8bd223a8d6f5bd3ae4c83ee9c577138ab0011bbc7bf806bf5d23ee21d150ca52
   section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
   text: |
     ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)

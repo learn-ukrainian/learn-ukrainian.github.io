@@ -20,6 +20,7 @@ import yaml
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.path_guard import checked_path
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.validate.loader import load_plan
 from scripts.curriculum.validate.validate import validate_plan
 
 
@@ -51,6 +52,8 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
     promoted bytes fail strict validation.
     """
     root = repo_root.resolve()
+    plan_path = checked_path(root, f"{pm.TREE}/lesson-plans/{level}/{slug}.yaml", f"{pm.TREE}/lesson-plans")
+    load_plan(plan_path)
     review = pm.read_review(root, level, slug)
     manifest, digest = _current_manifest(root, level, slug)
     if review["manifest_sha256"] != digest:
@@ -73,7 +76,6 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
             list(freshness.stale),
         )
 
-    plan_path = checked_path(root, f"{pm.TREE}/lesson-plans/{level}/{slug}.yaml", f"{pm.TREE}/lesson-plans")
     pack_path = root / pm.TREE / "evidence" / level / f"{slug}.yaml"
     reviewed_bytes = plan_path.read_bytes()
     pack_sha = pm.file_sha256(pack_path)

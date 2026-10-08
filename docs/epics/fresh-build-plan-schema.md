@@ -57,6 +57,24 @@ Sequence exists in exactly one place (the plan). Facts exist in exactly one plac
 is the structural answer to the Module 1 failure, where plan, derived lesson map and content each
 carried their own version of "what this module teaches".
 
+### Explicit exact-byte retirement (#10108)
+
+A level may have `_retired.yaml`, an append-only record with exactly
+`retirement_schema: 1`, `plans` and `routes`. Each plan entry has `slug`,
+`sha256` (64 lowercase hexadecimal characters) and `old_position` (positive
+integer). Each route entry has `slug` and `old_position`. Unknown or duplicate
+keys, invalid values or duplicate entries fail as `retirement_record_invalid`.
+
+Only the exact recorded plan bytes are excluded by shared `active_plan_paths`
+and refused by `load_plan` as `plan_retired`, before builders read other inputs.
+A changed replacement file is ordinary, including arc, evidence, review and
+promotion gates. Arc mismatch alone never retires or hides a plan. Whole-level
+validation names current exclusions; zero active plans exits 0 and proves no
+plan's quality. Retired plans, scope and state/receipt/evidence bytes remain
+preserved. Recorded routes generate empty retired MDX stubs outside arc order;
+intersection with the active arc fails. Landing scope requires an active plan,
+and reviewed badges require `plan_review_status` freshness, never a bare verdict.
+
 ## 2. Module plan v2
 
 Top-level fields kept from v1: `module`, `level`, `sequence`, `slug`, `version`, `title`,

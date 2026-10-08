@@ -41,15 +41,14 @@ except ModuleNotFoundError:  # running as a bare script: repo root not on sys.pa
         sys.path.insert(0, str(REPO_ROOT))
     from scripts.config import IMMERSION_POLICIES, _immersion_track_key
 
-LITERACY_HEADER = ["Pos", "Slug", "Job", "Inventory (letters / signs)", "Est. lessons"]
+LITERACY_HEADER = ["Pos", "Slug", "Phase", "Job", "Inventory (letters / signs)", "Skills duty", "Est. lessons"]
 MAIN_HEADER = ["Pos", "Slug", "Phase", "One-sentence job", "Skills duty", "L"]
 BAND_TABLE_HEADER = ["Positions", "Band key", "Advisory Ukrainian share"]
 
 SKILL_CODES = ("W", "Li", "R")
 # Skill-code vocabulary per level, after each document's own §5 legend
-# (B2's legend adds S speaking; A1/A2/B1 know only W writing, Li listening,
-# R real-world reading, so their "all" expands to three codes).
-LEVEL_SKILL_CODES: dict[str, tuple[str, ...]] = {"b2": ("W", "Li", "R", "S")}
+# (A1 and B2 add S speaking; A2/B1 use W writing, Li listening, R reading).
+LEVEL_SKILL_CODES: dict[str, tuple[str, ...]] = {"a1": ("W", "Li", "R", "S"), "b2": ("W", "Li", "R", "S")}
 SKILLS_NONE = "—"
 SKILLS_ALL = "all"
 
@@ -176,7 +175,7 @@ def _position_int(cell: str, raw_row: str) -> int:
     if POSITION_INT_RE.match(cell):
         return int(cell)
     if POSITION_RANGE_RE.match(cell):
-        _fail(raw_row, f"position cell {cell!r} is a range; only the first row of the main table may be a range")
+        _fail(raw_row, f"position cell {cell!r} is a range; position rows must be individual integers")
     _fail(raw_row, f"position cell {cell!r} is not an integer")
 
 
@@ -273,7 +272,7 @@ def _parse_letters(inventory_cell: str, raw_row: str) -> list[str]:
 
 
 def parse_positions(doc_text: str, level: str = "a1") -> list[dict]:
-    """Parse the arc document into one record per position (roll-up excluded)."""
+    """Parse each row into its own phase and skills duties; no roll-up rows."""
     tables = _find_position_tables(doc_text, level)
     literacy_rows = tables.get("literacy", [])
     main_rows = tables["main"]
@@ -284,50 +283,26 @@ def parse_positions(doc_text: str, level: str = "a1") -> list[dict]:
         raise ArcGenerationError("main position table has no data rows")
 
     records: list[dict] = []
-    if level == "a1":
-        roll_raw, roll_cells = main_rows[0]
-        roll_match = POSITION_RANGE_RE.match(roll_cells[0])
-        if not roll_match:
-            _fail(roll_raw, f"first row of the main table must be the literacy roll-up range row, got {roll_cells[0]!r}")
-        roll_start, roll_end = int(roll_match.group(1)), int(roll_match.group(2))
-        if roll_start != 1 or roll_end != len(literacy_rows):
-            _fail(
-                roll_raw,
-                f"roll-up range {roll_cells[0]!r} does not span 1..{len(literacy_rows)} (the literacy table rows)",
-            )
-        roll_phase = roll_cells[2]
-        roll_skills_text = roll_cells[4]
-        roll_skills = _parse_skills(roll_skills_text, roll_raw, skill_codes)
-        roll_total = _int_cell(roll_cells[5], roll_raw, "roll-up lesson total")
-        _standard_line_refs(roll_raw)
-
-        for raw, cells in literacy_rows:
-            records.append(
-                {
-                    "position": _position_int(cells[0], raw),
-                    "slug": _slug(cells[1], raw),
-                    "est_lessons": _int_cell(cells[4], raw, "Est. lessons"),
-                    "job": cells[2],
-                    "inventory_text": cells[3],
-                    "phase": roll_phase,
-                    "skills_text": roll_skills_text,
-                    "skills": list(roll_skills),
-                    "standard_line_refs": _standard_line_refs(raw),
-                    "letters": _parse_letters(cells[3], raw),
-                }
-            )
-
-        literacy_sum = sum(record["est_lessons"] for record in records)
-        if literacy_sum != roll_total:
-            raise ArcGenerationError(
-                f"sum of literacy est_lessons is {literacy_sum}, but the roll-up row says {roll_total}\n"
-                f"  row: {roll_raw.strip()}"
-            )
-        data_rows = main_rows[1:]
-    else:
-        data_rows = main_rows
+    for raw, cells in literacy_rows:
+        if len(cells) != len(LITERACY_HEADER):
+            _fail(raw, f"literacy row has {len(cells)} cells, expected {len(LITERACY_HEADER)}")
+        records.append({
+            "position": _position_int(cells[0], raw),
+            "slug": _slug(cells[1], raw),
+            "est_lessons": _int_cell(cells[6], raw, "Est. lessons"),
+            "job": cells[3],
+            "inventory_text": cells[4],
+            "phase": cells[2],
+            "skills_text": cells[5],
+            "skills": _parse_skills(cells[5], raw, skill_codes),
+            "standard_line_refs": _standard_line_refs(raw),
+            "letters": _parse_letters(cells[4], raw),
+        })
+    data_rows = main_rows
 
     for raw, cells in data_rows:
+        if len(cells) != len(MAIN_HEADER):
+            _fail(raw, f"main row has {len(cells)} cells, expected {len(MAIN_HEADER)}")
         if level != "a1":
             if POSITION_RANGE_RE.match(cells[0]):
                 _fail(raw, f"position cell {cells[0]!r} is a range; level {level!r} has no literacy roll-up row")

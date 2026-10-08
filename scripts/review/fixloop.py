@@ -210,8 +210,10 @@ def state_dir(root: Path, level: str, slug: str) -> Path:
 def plan_lessons(root: Path, level: str, slug: str) -> list[dict[str, Any]]:
     """The module's lessons (``n`` and ``kind``) as its plan lists them."""
     path = Path(root).resolve() / TREE / "lesson-plans" / level / f"{slug}.yaml"
+    from scripts.curriculum.validate.loader import load_plan
+
+    plan = load_plan(path)
     try:
-        plan = yaml.safe_load(path.read_bytes())
         lessons = plan["lessons"]
         return [{"n": int(item["n"]), "kind": "recap" if item.get("kind") == "recap" else "lesson"} for item in lessons]
     except (OSError, yaml.YAMLError, KeyError, TypeError, ValueError) as error:

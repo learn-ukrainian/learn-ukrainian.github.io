@@ -56,6 +56,7 @@ from .loader import (
     load_plan,
     read_plan_text,
     resolve_plan_path,
+    retired_plan_paths,
     sha256_of,
 )
 from .mechanical import check_mechanical
@@ -1470,6 +1471,12 @@ def main(argv: list[str] | None = None) -> int:
 
     vesum_declared_unavailable = "vesum" in args.not_checked_when_unavailable
     if args.all:
+        level_dir = args.level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{args.level}"
+        try:
+            exclusions = [path.stem for path in retired_plan_paths(level_dir)]
+        except PlanError as error:
+            print(str(error), file=sys.stderr)
+            return 1
         reports = validate_level(
             args.level,
             level_dir=args.level_dir,
@@ -1483,6 +1490,7 @@ def main(argv: list[str] | None = None) -> int:
                 "level": args.level,
                 "status": "pass",
                 "plans": [report.to_json() for report in reports],
+                "retired_exclusions": exclusions,
             }
             if any(report.failures for report in reports):
                 payload["status"] = "fail"
@@ -1490,8 +1498,10 @@ def main(argv: list[str] | None = None) -> int:
                 payload["status"] = "waived"
             print(json.dumps(payload, ensure_ascii=False, indent=2))
         else:
+            if exclusions:
+                print(f"level {args.level}: retired exclusions: {', '.join(exclusions)}")
             if not reports:
-                print(f"level {args.level}: no plans under lesson-plans/{args.level}/")
+                print(f"level {args.level}: zero active plans under lesson-plans/{args.level}/; no plan-state proof")
             for report in reports:
                 summary = report.status
                 if report.failures:

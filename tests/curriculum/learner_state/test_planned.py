@@ -222,6 +222,33 @@ def test_core_id_known_in_lesson_2_and_next_position(tmp_path: Path) -> None:
     assert s2_1.cumulative_core_count == 2
 
 
+def test_retired_prior_plan_never_supplies_letters_grammar_or_core_ids(tmp_path):
+    import hashlib
+
+    plans, evidence = _setup_synthetic_curriculum(tmp_path)
+    path = plans / "module-one.yaml"
+    record = {"retirement_schema": 1, "plans": [{"slug": "module-one", "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "old_position": 1}], "routes": []}
+    _write_yaml(plans / "_retired.yaml", record)
+    with pytest.raises(PlannedStateError, match="plan_not_found"):
+        planned_state("a1", 1, 1, plans_dir=plans, evidence_dir=evidence)
+    with pytest.raises(PlannedStateError, match="prior_plans_missing"):
+        planned_state("a1", 2, 1, plans_dir=plans, evidence_dir=evidence)
+    state = planned_state("a1", 2, 1, plans_dir=plans, evidence_dir=evidence, allow_missing_prior=True)
+    assert "W-CORE-01" not in state.core_ids and "W-CORE-02" not in state.core_ids
+    assert state.letters == [] or state.letters == {}
+    path.write_bytes(path.read_bytes() + b"\n")
+    restored = planned_state("a1", 2, 1, plans_dir=plans, evidence_dir=evidence)
+    assert "W-CORE-01" in restored.core_ids
+
+
+def test_malformed_retirement_record_precedes_base_layer_read(tmp_path):
+    plans = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
+    plans.mkdir(parents=True)
+    (plans / "_retired.yaml").write_text("invalid: true")
+    with pytest.raises(PlannedStateError, match="retirement_record_invalid"):
+        planned_state("a1", 1, 1, plans_dir=plans, evidence_dir=tmp_path / "absent")
+
+
 def test_incidental_id_never_enters_state(tmp_path: Path) -> None:
     """Rule 2: incidental never enters state, in the lesson that lists it or later."""
     plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)

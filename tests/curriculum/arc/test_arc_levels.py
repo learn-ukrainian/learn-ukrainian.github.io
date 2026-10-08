@@ -38,7 +38,7 @@ A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 # Updated for the one-sentence-one-language fix (position 1 job rewritten to drop
 # a Ukrainian/English mix; positions 5, 24, 34, 39, 45 jobs lose a leaked source line
 # reference, moved into their skills-duty cell).
-A1_POSITIONS_BLOCK_SHA256 = "4b4125226de168b4befea8f0115f955983411c4d13dc2096b998627141ddb90b"
+A1_POSITIONS_BLOCK_SHA256 = "da425d882220c8f5b8fb5a311e443bf5a58ad7c3fb42f5d83dd00a14f3aeff59"
 
 
 def _doc(level: str) -> Path:
@@ -175,9 +175,9 @@ def test_mutation_letters_at_a2_fail(tmp_path: Path) -> None:
 def test_literacy_table_at_a2_fails(tmp_path: Path) -> None:
     header = "| Pos | Slug | Phase | One-sentence job | Skills duty | L |"
     literacy_table = (
-        "| Pos | Slug | Job | Inventory (letters / signs) | Est. lessons |\n"
+        "| Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |\n"
         "| --- | --- | --- | --- | --- |\n"
-        "| 1 | `letters` | Letters | **1 letters** А | 1 |\n\n"
+        "| 1 | `letters` | A1.1 | Letters | **1 letters** А | Li | 1 |\n\n"
     )
     mutated = _mutated_doc("a2", tmp_path, header, literacy_table + header)
     with pytest.raises(generate_arc.ArcGenerationError, match="no literacy phase"):

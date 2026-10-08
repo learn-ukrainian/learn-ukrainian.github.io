@@ -197,7 +197,7 @@
               ]
             },
             "uniqueItems": true,
-            "description": "Parsed skills duty codes: W writing, Li listening, R real-world reading, S speaking (S only at B2, per each document's own §5 legend)"
+            "description": "Parsed skills duty codes: W writing, Li listening, R real-world reading, S speaking (S at A1 and B2, per each document's own §5 legend)"
           },
           "standard_line_refs": {
             "type": "array",

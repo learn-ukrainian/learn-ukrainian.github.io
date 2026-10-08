@@ -1,7 +1,7 @@
 schema: 1
 generator:
   path: scripts/curriculum/arc/generate_decisions.py
-  sha256: 5c10305349443115497cc5c8bf769cdeba8c2f71bce322cada3a95e40322ce28
+  sha256: b48053a80913771d97dd1158b5579a0a9ea0627f21cd87b455408a79aca76db3
 level: a1
 sources:
 - doc: docs/epics/fresh-build-a1-arc.md
@@ -10,7 +10,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
+  doc_sha256: f786582cd33488348828d9f3a864b7e7144a462e14b16873773d8a9908fb643a
   section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
@@ -75,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
+  doc_sha256: f786582cd33488348828d9f3a864b7e7144a462e14b16873773d8a9908fb643a
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
@@ -89,13 +89,69 @@ sources:
     6. **Letter order authority is Захарійчук,** the primer ingested page by page. It is not reopened for
        A1 if another primer is ingested later.
 
+- doc: docs/epics/fresh-build-a1-arc.md
+  heading: '## 8. Revision r4 (#10108)'
+  accepted: '2026-10-08'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-a1-arc.md
+    line: 'Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)'
+  doc_sha256: f786582cd33488348828d9f3a864b7e7144a462e14b16873773d8a9908fb643a
+  section_sha256: d9453690736f2a5e4fb2aedf69023da6aae6cc0c6ddfb543f60c9cf413dec2b5
+  text: |
+    ## 8. Revision r4 (#10108)
+
+    Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)
+
+    Sol 6.1, the implementation author in Codex at high reasoning, confirms agreement with
+    Opus 5.5's round-two design and the revised ten positions before implementation. Opus's
+    design approval binds prompt SHA-256
+    `bf161c91e6a484c363b25ed7b4f44757ec34364e8fbe4e1d4e47fad2b53073a6`;
+    the round-two result has SHA-256
+    `4fd205f682149cbd3fbee4081537082f8966f777f9c76fe6aa69688e8ff1b507`.
+    This records current designated revision approval under the standing execution order,
+    not a direct operator review of this revision and not formal implementation review.
+    The original acceptance criteria remain unchanged.
+
+    This revision supersedes D1's slug clause, D5's first-four-modules wording, §4,
+    the first ten position rows of §5, and §6 item 6. Historical accepted §2 and §6
+    remain verbatim, with their original acceptance dates; those dates do not accept
+    this revision. The 55-position arc and 162 estimated lessons remain. Positions
+    11–55 retain their semantic identities; position 55's `all` now includes speaking.
+
+    Three promoted plans are explicitly retired by their exact bytes in `_retired.yaml`:
+    `sounds-letters-and-hello` (old position 1), `reading-ukrainian` (2), and
+    `special-signs` (3). Their scopes, state folders, receipts and evidence packs remain
+    unchanged. Only matching bytes are retired; a replacement is an ordinary plan
+    requiring all normal gates and fresh review. The old `special-signs` (3) and
+    `stress-and-melody` (4) routes become generated retired notices, outside arc order.
+    No lesson prose or replacement plan is authorized by this revision.
+
+    Listening and speaking begin at position 2, with stress and intonation. Hard/soft
+    contrast belongs to 3; the apostrophe to 4; дж and дз, alphabet order, letter names,
+    capital/small letters and recognising handwritten letters to 5. Line breaking
+    (`:588`) remains owned by the writing strand at position 20, outside the tables.
+    Prosody and useful exchanges recycle through 6–10. Printed words follow the
+    introduction of their constituent letters; supported oral chunks may precede decoding.
+
+    Sources verification for this revision: VESUM `verify_words` attested 28/28 forms
+    from the preparation inventory plus дзвоник and дзеркало. This verifies morphology,
+    not unrestricted A1 vocabulary admission. Правопис 2019 §7 grounds the apostrophe.
+    Stress is left to the source-backed deterministic annotator. Private pedagogy remains
+    grounding-only. State Standard 2024 evaluation is independent driver evidence.
+
+    Position 1 declares the `a1-orientation` band through the existing `band_key`
+    mechanism supplied by #10105. Ordinary positions carry no declared band key and
+    retain vocabulary-count selection. Final integration follows #10105 and #10103;
+    this revision changes no band configuration or core-word store. Grammar locators
+    G-a1-001 to G-a1-011 receive append-only supersession at the first replacement plan,
+    owned by curriculum-upgrade; no blind refresh is authorized here.
 - doc: docs/epics/fresh-build-plan-schema.md
   heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
   accepted: '2026-09-21'
   accepted_evidence:
     doc: docs/epics/fresh-build-plan-schema.md
     line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
-  doc_sha256: d49181ae4f5f2711312c0385e342e0bb0e3cb73e66a3b1cc5cf472a55af06af2
+  doc_sha256: 8bd223a8d6f5bd3ae4c83ee9c577138ab0011bbc7bf806bf5d23ee21d150ca52
   section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
   text: |
     ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)

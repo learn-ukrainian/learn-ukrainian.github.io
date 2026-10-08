@@ -13,6 +13,8 @@ A1_REFERENCE_CLOSED_CLASS_A1 = "closed_class_a1"
 
 # --- input and loader failures -------------------------------------------
 PLAN_NOT_FOUND = "plan_not_found"
+PLAN_RETIRED = "plan_retired"
+RETIREMENT_RECORD_INVALID = "retirement_record_invalid"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
 PLAN_OUTSIDE_LESSON_PLANS = "plan_outside_lesson_plans"
 NOT_A_PLAN = "not_a_plan"
@@ -232,6 +234,8 @@ DESCRIPTIONS = {
     A1_REFERENCE_INVALID: "C29 (#9582): invalid reference input or enforcement configuration (failure)",
     A1_REFERENCE_CLOSED_CLASS_A1: "C29 (#9582): inventory-absent closed-class word has a class-specific A1 attestation (note)",
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
+    PLAN_RETIRED: "failure: this exact plan digest is explicitly retired",
+    RETIREMENT_RECORD_INVALID: "failure: malformed explicit retirement inventory",
     PLAN_YAML_INVALID: "failure: the plan file is not valid YAML",
     PLAN_OUTSIDE_LESSON_PLANS: "failure: plans live under curriculum/l2-uk-en/lesson-plans/<level>/, nowhere else",
     NOT_A_PLAN: "failure: a name beginning with _ is not a plan (§2a)",
