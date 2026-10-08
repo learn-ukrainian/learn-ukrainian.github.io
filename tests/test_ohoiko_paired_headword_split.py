@@ -315,8 +315,7 @@ def test_live_curated_unit_a_leftovers_census_invariants(requires_vesum_db) -> N
     manifest_path = paired_split.DEFAULT_MANIFEST
     inventory_path = paired_split.DEFAULT_INVENTORY
     atlas_db_path = paired_split.DEFAULT_ATLAS_DB
-    if not manifest_path.exists() or not inventory_path.exists():
-        pytest.skip("requires live manifest and inventory")
+    assert manifest_path.exists() and inventory_path.exists(), "Live manifest and inventory must be provisioned"
 
     res = paired_split.analyze_all_curated_leftovers(
         inventory_path=inventory_path,
@@ -383,8 +382,7 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
     manifest_path = paired_split.DEFAULT_MANIFEST
     inventory_path = paired_split.DEFAULT_INVENTORY
     atlas_db_path = paired_split.DEFAULT_ATLAS_DB
-    if not manifest_path.exists() or not inventory_path.exists():
-        pytest.skip("requires live manifest and inventory")
+    assert manifest_path.exists() and inventory_path.exists(), "Live manifest and inventory must be provisioned"
 
     census = paired_split.analyze_taught_residual_census(
         inventory_path=inventory_path,

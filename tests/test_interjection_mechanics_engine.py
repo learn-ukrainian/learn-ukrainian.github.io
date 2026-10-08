@@ -326,14 +326,13 @@ def test_syntax_punctuation_particle_vs_interjection():
     )
 
 
-def test_vesum_verification_100_percent():
+def test_vesum_verification_100_percent(requires_vesum_db):
     """Verify 100% VESUM coverage for all 60 canonical cards."""
     cards = build_canonical_interjection_cards()
-    db_path = Path(__file__).resolve().parents[1] / "data/vesum.db"
+    db_path = requires_vesum_db
 
     res = verify_deck_with_vesum(cards, db_path)
-    if res.get("status") == "skipped":
-        pytest.skip(f"VESUM db not available: {res.get('message')}")
+    assert res.get("status") != "skipped", "Validated VESUM input must be executed"
 
     assert res["status"] == "passed"
     assert res["vesum_verified"] is True
@@ -381,11 +380,9 @@ def test_interjection_deck_json_export_and_file_parity(tmp_path: Path):
         assert c["options"] == comm_card["options"]
 
 
-def test_is_valid_vesum_token_rejections_and_compounds():
+def test_is_valid_vesum_token_rejections_and_compounds(requires_vesum_db):
     """Verify is_valid_vesum_token rejects malformed tokens/bad tags and validates compounds."""
-    db_path = Path(__file__).resolve().parents[1] / "data/vesum.db"
-    if not db_path.exists():
-        pytest.skip(f"VESUM db not available at {db_path}")
+    db_path = requires_vesum_db
 
     conn = open_readonly(db_path)
     cursor = conn.cursor()
@@ -461,17 +458,18 @@ def test_cli_export_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.Capture
     assert Path(export_target).exists()
 
 
-def test_cli_verify_vesum_present(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path):
+def test_cli_verify_vesum_present(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path, requires_vesum_db):
     """Verify CLI --verify-vesum and --export succeed when VESUM db is present."""
-    db_path = Path(__file__).resolve().parents[1] / "data/vesum.db"
-    if not db_path.exists():
-        pytest.skip(f"VESUM db not available at {db_path}")
+    db_path = requires_vesum_db
 
     export_target = str(tmp_path / "cli_deck_present.json")
     monkeypatch.setattr(
         "sys.argv",
         ["interjection_mechanics_engine.py", "--verify-vesum", "--export", "--output", export_target],
     )
+    from scripts.practice import interjection_mechanics_engine as engine
+    original = engine.verify_deck_with_vesum
+    monkeypatch.setattr(engine, "verify_deck_with_vesum", lambda cards: original(cards, db_path))
     main()
     out = capsys.readouterr().out
     assert "Cards: 60" in out

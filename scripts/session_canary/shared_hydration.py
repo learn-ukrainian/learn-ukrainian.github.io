@@ -31,7 +31,7 @@ from agents_extensions.shared.session_streams.model import parse_timestamp, vali
 from scripts.session_supervisor.remote import RemoteEpicClient, monitor_url
 
 ROOT = Path(__file__).resolve().parents[2]
-HYDRATION_DEADLINE_SECONDS = 0.100
+HYDRATION_DEADLINE_SECONDS = 0.500
 _MAX_STREAM_RESPONSE_BYTES = 262_144
 _STREAM_READ_CHUNK_BYTES = 4_096
 CRITICAL_FIELDS = (
@@ -66,7 +66,7 @@ _FORBIDDEN_KEYS = frozenset(
 
 HYDRATION_CAPSULE_V1_SCHEMA: dict[str, Any] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://learn-ukrainian.local/schemas/HydrationCapsuleV1-1.2.json",
+    "$id": "https://learn-ukrainian.local/schemas/HydrationCapsuleV1-1.3.json",
     "type": "object",
     "additionalProperties": False,
     "required": [
@@ -82,9 +82,9 @@ HYDRATION_CAPSULE_V1_SCHEMA: dict[str, Any] = {
     ],
     "properties": {
         "schema_name": {"const": "HydrationCapsuleV1"},
-        "schema_version": {"const": "1.2"},
+        "schema_version": {"const": "1.3"},
         "generated_at": {"type": "string", "format": "date-time"},
-        "deadline_ms": {"type": "number", "const": 100.0},
+        "deadline_ms": {"type": "number", "const": 500.0},
         "elapsed_ms": {"type": "number", "minimum": 0},
         "state": {"enum": ["ready", "degraded", "blocked"]},
         "blocked": {"type": "boolean"},
@@ -393,7 +393,7 @@ def _validate_capsule(capsule: dict[str, Any]) -> None:
 
 
 def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
-    """Build and validate a v1.2 capsule within one global monotonic deadline."""
+    """Build and validate a v1.3 capsule within one global monotonic deadline."""
     start = time.monotonic()
     deadline = start + HYDRATION_DEADLINE_SECONDS
     fields: dict[str, dict[str, Any]] = {field: _unavailable("not-collected") for field in CRITICAL_FIELDS}
@@ -432,7 +432,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
     blocked = any(fields[field]["status"] != "ok" for field in CRITICAL_FIELDS)
     capsule: dict[str, Any] = {
         "schema_name": "HydrationCapsuleV1",
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "generated_at": _utc_now(),
         "deadline_ms": HYDRATION_DEADLINE_SECONDS * 1000,
         "elapsed_ms": elapsed_ms,

@@ -18,8 +18,8 @@ To exercise the data-content tests locally:
 
 from __future__ import annotations
 
-import sqlite3
 import sys
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -27,46 +27,17 @@ import pytest
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 
-from scripts.lib.readonly_sqlite import open_readonly
 from wiki.sources_db import search_esum
 
-_SOURCES_DB = REPO / "data" / "sources.db"
+needs_esum_data = pytest.mark.data_tier("sources", tables=("esum_etymology",))
 
 
-def _esum_row_count() -> int:
-    """Return the number of rows in the live ``esum_etymology`` table.
+@pytest.fixture(autouse=True)
+def bound_esum_reader(request, monkeypatch):
+    if request.node.get_closest_marker("data_tier"):
+        path = request.getfixturevalue("data_store_factory")("sources", required_sqlite_tables=("esum_etymology",))
+        monkeypatch.setitem(globals(), "search_esum", partial(search_esum, db_path=path))
 
-    Returns 0 if the DB or table is missing — those cases are valid
-    skip-conditions for the data-content tests.
-    """
-    db_path = _SOURCES_DB
-    if not db_path.exists() or db_path.stat().st_size == 0:
-        return 0
-    try:
-        conn = open_readonly(db_path)
-        try:
-            cur = conn.execute(
-                "SELECT name FROM sqlite_master "
-                "WHERE type='table' AND name='esum_etymology'"
-            )
-            if cur.fetchone() is None:
-                return 0
-            cur = conn.execute("SELECT COUNT(*) FROM esum_etymology")
-            return cur.fetchone()[0]
-        finally:
-            conn.close()
-    except sqlite3.Error:
-        return 0
-
-
-needs_esum_data = pytest.mark.skipif(
-    _esum_row_count() == 0,
-    reason=(
-        "esum_etymology table empty or missing — populate it via "
-        "migrations/add_esum_table.sql + scripts/ingest/esum_load.py "
-        "to run data-content tests."
-    ),
-)
 
 
 def _joined_text(query: str, limit: int = 5) -> str:
@@ -74,7 +45,7 @@ def _joined_text(query: str, limit: int = 5) -> str:
     return "\n".join(str(hit["etymology_text"]) for hit in hits)
 
 
-# --- Schema / registration tests (always run) -------------------------
+# --- Registration (no data) and real-store query contracts ----------------
 
 
 def test_search_esum_function_is_importable() -> None:
@@ -85,11 +56,13 @@ def test_search_esum_function_is_importable() -> None:
     assert callable(_search_esum)
 
 
+@needs_esum_data
 def test_search_esum_nonexistent_word_returns_empty_list() -> None:
     """A made-up word never matches anything regardless of data state."""
     assert search_esum("хххх", volume=1, limit=3) == []
 
 
+@needs_esum_data
 def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
     """The volume=1 filter excludes ``сибір`` (a vol. 5 entry).
 
@@ -99,6 +72,7 @@ def test_search_esum_sibir_is_outside_volume_one_scope() -> None:
     assert search_esum("сибір", volume=1, limit=3) == []
 
 
+@needs_esum_data
 def test_search_esum_maty_is_outside_volume_one_scope() -> None:
     """The volume=1 filter excludes ``мати`` (a vol. 3 entry).
 
