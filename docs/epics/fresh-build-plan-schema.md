@@ -244,7 +244,9 @@ passes silently and never invents a value.
   found in the title and subtitle, and the cross-family plan review checks stated quantities,
   digits or words, against the `scope` sidecar. There is no separate "attention" status: the
   validator's outcomes are failure, `not_checked` and `waived`, nothing else.
-- **`minutes` is not a plan field.** Decision 7.3 stands: it is computed. Until the constants it
+- **`minutes` is not a plan field.** Decision 7.3 stands: it is computed. Since #10104
+  (2026-10-08), the reading time it uses comes from the actual content; `word_target` is
+  deprecated and ignored. Until the constants it
   needs exist (reading speed, per-type activity time), it is not computed either, and the
   validator reports `not_checked: minutes_constants_undefined`. A `minutes` key in a plan fails.
 - **`word_target`** is optional deprecated legacy metadata. If present, it is a positive integer;
@@ -538,7 +540,7 @@ the only place built content is an input, and only within the module being built
    packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
    id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
    lists the modules whose plans cite the changed records so they can be re-verified.
-3. **`minutes` is kept and computed**, not typed: reading time from the actual content, a per-type time
+3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
    per activity, and the video durations from the pack. The arc review uses it to spot overloaded
    lessons; no gate fails on it.
 4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and
