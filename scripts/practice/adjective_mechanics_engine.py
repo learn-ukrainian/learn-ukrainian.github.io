@@ -1897,23 +1897,37 @@ def resolve_derivational_suffix_mutation_rule(stem_consonant_group: str) -> tupl
     )
 
 
+
+def _primary_checkout_vesum_db() -> Path | None:
+    """Return the primary checkout's VESUM database, or None when unavailable.
+
+    Uses the sanctioned store resolver, which follows a linked worktree's Git
+    directory back to the primary checkout (and honours its documented
+    override). Nothing is opened or created.
+    """
+    from scripts.storage.topology import StoreBinding, resolve_store
+
+    binding = resolve_store("vesum", PROJECT_ROOT)
+    return binding.path if isinstance(binding, StoreBinding) else None
+
 def find_vesum_db(specified: Path | None = None) -> Path:
     """Return the VESUM database path.
 
     An explicitly specified path is returned as given, even when it does not
     exist, so the caller reports it as missing instead of silently using a
-    different database. Without one, the local tree is searched.
+    different database. Without one, the local tree is searched, then the
+    primary checkout that owns this worktree.
     """
     if specified is not None:
         return Path(specified)
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-    ]
+    candidates = [PROJECT_ROOT / "data" / "vesum.db"]
+    primary = _primary_checkout_vesum_db()
+    if primary is not None and primary not in candidates:
+        candidates.append(primary)
     for c in candidates:
         if c.exists():
             return c
-    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+    return PROJECT_ROOT / "data" / "vesum.db"
 
 
 def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | None = None) -> dict[str, Any]:
@@ -2073,7 +2087,13 @@ def main() -> int:
     if args.verify_vesum:
         report = verify_deck_with_vesum(cards, find_vesum_db(args.vesum_db))
         if not report["verified"]:
-            print(f"VESUM verification FAILED: missing forms: {report.get('missing_forms', [])}")
+            detail = report.get("error") or report.get("message") or report.get("reason")
+            if detail:
+                print(f"VESUM verification FAILED: {detail}")
+            else:
+                print(
+                    f"VESUM verification FAILED: missing forms: {report.get('missing_forms', [])}"
+                )
             return 1
         print(f"VESUM verification PASSED: {report['checked_word_count']} words verified.")
 
