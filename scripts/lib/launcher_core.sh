@@ -698,10 +698,23 @@ launcher_validate_mode() {
 # Gemini drives epics only through start-gemini-driver.sh on the two certified
 # AGY pins (2026-10-08 approval). Any other Gemini model id, and a Gemini model
 # id on another provider's driver, is refused before scope entry or startup.
+# A provider --model forwarded after `--` would put a second, uncertified model
+# on the agy exec line, so the Gemini driver refuses it as well.
 LC_GEMINI_DRIVER_MODELS='gemini-3.1-pro-high, gemini-3.8-flash-high'
 
 launcher_refuse_uncertified_gemini_driver() {
+  local arg
   [ "$LC_MODE" = driver ] || return 0
+  if [ "$LC_PROVIDER" = gemini ]; then
+    for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
+      case "$arg" in
+        --model|--model=*)
+          launcher_error "the gemini driver takes its model from the launcher --model, not from forwarded '$arg' (certified: $LC_GEMINI_DRIVER_MODELS)."
+          exit 4
+          ;;
+      esac
+    done
+  fi
   case "$LC_PROVIDER:$LC_MODEL" in
     gemini:gemini-3.1-pro-high|gemini:gemini-3.8-flash-high)
       return 0

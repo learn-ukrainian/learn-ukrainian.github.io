@@ -74,11 +74,34 @@ def test_gemini_driver_refuses_other_gemini_models_before_lifecycle(model: str, 
     assert result.stdout == ""
 
 
+@pytest.mark.parametrize("dry_run", (True, False))
+@pytest.mark.parametrize(
+    "forwarded",
+    (
+        ("--model", "gemini-unknown"),
+        ("--model=gemini-unknown",),
+        ("--model", "gemini-3.8-flash-high"),
+        ("--model=gemini-3.1-pro-high",),
+        ("--sandbox", "read-only", "--model", "k3-256k"),
+    ),
+)
+def test_gemini_driver_refuses_forwarded_model_before_lifecycle(forwarded: tuple[str, ...], dry_run: bool) -> None:
+    """A provider --model after `--` would put a second model on the agy exec line."""
+    result = run_launcher("start-gemini-driver.sh", "--epic", "infra", "--", *forwarded, dry_run=dry_run)
+    assert result.returncode == 4, result.stderr
+    flag = next(arg for arg in forwarded if arg.startswith("--model"))
+    assert f"the gemini driver takes its model from the launcher --model, not from forwarded '{flag}' ({CERTIFIED})." in result.stderr
+    assert result.stdout == ""
+    assert "would exec" not in result.stdout
+
+
 @pytest.mark.parametrize(
     ("provider", "arguments", "message"),
     (
         ("gemini", ("--epic", "devops", "--model", "gemini-unknown"), "is not certified for the gemini driver"),
         ("gemini", ("--epic", "devops", "--model", "k3-256k"), "is not certified for the gemini driver"),
+        ("gemini", ("--epic", "devops", "--", "--model", "gemini-unknown"), "not from forwarded '--model'"),
+        ("gemini", ("--epic", "devops", "--", "--model=glm-5"), "not from forwarded '--model=glm-5'"),
         ("codex", ("--governor", "AUTO", "--model", "gemini-3.8-flash-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini-3.1-pro-high"), "is a Gemini model"),
         ("claude", ("--epic", "devops", "--model", "gemini:gemini-3.1-pro-high"), "is a Gemini model"),
