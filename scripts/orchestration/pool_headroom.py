@@ -1,13 +1,14 @@
 """Shared ``lu.slice`` pool headroom from cgroup v2 counters (#9975).
 
 ``lu.slice`` is the capped memory pool that drivers and dispatch workers share
-(``packaging/systemd/lu.slice``: ``MemoryHigh=24G``, ``MemoryMax=26G``, #9624).
-``lu-dispatch.slice`` can show several GiB free while drivers hold the same
+(``packaging/systemd/lu.slice``, #9624; its limits are set per deployment in
+a drop-in and read here from the live cgroup). ``lu-dispatch.slice`` can show
+plenty of free memory while drivers hold the same
 pool, so dispatch admission and the nightly data tier also check the pool.
 
 Raw ``memory.current`` counts page cache, which the kernel reclaims before it
-throttles at ``memory.high``; on an idle host that overstates use by several
-GiB. Use here is non-reclaimable: ``memory.current`` minus ``active_file`` and
+throttles at ``memory.high``; on an idle host that overstates use
+considerably. Use here is non-reclaimable: ``memory.current`` minus ``active_file`` and
 ``inactive_file`` from ``memory.stat``. Shared memory (tmpfs, shm) sits on the
 anon LRU lists, so it stays counted.
 

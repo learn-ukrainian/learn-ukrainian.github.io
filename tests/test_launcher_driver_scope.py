@@ -49,9 +49,9 @@ printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver
     exe = bindir / "cat"
     exe.write_text("""#!/usr/bin/env bash
 case "$1" in
- */memory.high) printf '%s\\n' "${LU_DRIVER_MEMORY_HIGH:-6442450944}" ;;
- */memory.max) printf '%s\\n' "${LU_DRIVER_MEMORY_MAX:-9663676416}" ;;
- */memory.swap.max) printf '%s\\n' "${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}" ;;
+ */memory.high) printf '%s\\n' "${FAKE_MEMORY_HIGH:-${LU_DRIVER_MEMORY_HIGH:-2147483648}}" ;;
+ */memory.max) printf '%s\\n' "${FAKE_MEMORY_MAX:-${LU_DRIVER_MEMORY_MAX:-3221225472}}" ;;
+ */memory.swap.max) printf '%s\\n' "${FAKE_MEMORY_SWAP_MAX:-${LU_DRIVER_MEMORY_SWAP_MAX:-536870912}}" ;;
  */memory.current) printf '123456\\n' ;;
  */memory.swap.current) printf '654321\\n' ;;
  *) exec /bin/cat "$@" ;;
@@ -64,6 +64,8 @@ esac
         "PATH": f"{bindir}:{os.environ['PATH']}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
+        # Hermetic: never read a deployment config from the runner's home.
+        "LU_DRIVER_SCOPE_CONFIG": str(tmp_path / "no-driver-scope.env"),
     }
 
 
@@ -154,7 +156,8 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     assert result.stdout.count("PREPARED\n") == 1
     assert "PROVIDER:stdin survives" in result.stdout
     assert "GIT_IDENTITY:Claude|claude@local.invalid|Claude|claude@local.invalid" in result.stdout
-    assert "high=6442450944 max=9663676416 swap=1073741824 oom=continue" in result.stderr
+    # Generic fallbacks when neither the environment nor a config file sets limits.
+    assert "high=2147483648 max=3221225472 swap=536870912 oom=continue" in result.stderr
     assert "DRIVER_SCOPE_VERIFIED" in result.stderr
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr
 
@@ -217,9 +220,10 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "5", "LU_DRIVER_MEMORY_MAX": "5"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_HIGH": "6442450945"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_MAX": "9663676417"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_SWAP_MAX": "1073741825"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_HIGH": "3221225473"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_MAX": "999999999999999"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_SWAP_MAX": "3221225473"}, "invalid-limits"),
+        ({"LU_DRIVER_PYTEST_MAX_WORKERS": "auto"}, "invalid-limits"),
     ],
 )
 def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason: str) -> None:
@@ -231,18 +235,44 @@ def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason
     assert "LEASE" not in result.stdout
 
 
-def test_lower_test_limits_are_preserved(tmp_path: Path) -> None:
+def test_deployment_limits_from_environment_are_used(tmp_path: Path) -> None:
+    # Deployment values may sit above the generic fallbacks, up to MemTotal.
     launcher, env = _launcher(tmp_path)
     result = _run(
         launcher,
         env,
         LU_DRIVER_MEMORY_HIGH="3221225472",
-        LU_DRIVER_MEMORY_MAX="5368709120",
+        LU_DRIVER_MEMORY_MAX="3758096384",
         LU_DRIVER_MEMORY_SWAP_MAX="0",
     )
     assert result.returncode == 0, result.stderr
-    assert "high=3221225472 max=5368709120 swap=0 oom=continue" in result.stderr
+    assert "high=3221225472 max=3758096384 swap=0 oom=continue" in result.stderr
     assert "PROVIDER:stdin survives" in result.stdout
+
+
+def test_deployment_config_file_is_parsed_and_environment_wins(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    config = Path(env["LU_DRIVER_SCOPE_CONFIG"])
+    config.write_text(
+        "# deployment limits\n"
+        "LU_DRIVER_MEMORY_HIGH=2684354560\n"
+        "LU_DRIVER_MEMORY_MAX=3758096384\n"
+        "LU_DRIVER_MEMORY_SWAP_MAX=268435456\n"
+        "LU_DRIVER_PYTEST_MAX_WORKERS=6\n"
+        "LU_DRIVER_MEMORY_SWAP_MAX=$(touch pwned)\n"
+        "UNRELATED=1\n"
+    )
+    result = _run(
+        launcher,
+        env,
+        LU_DRIVER_MEMORY_HIGH="3221225472",
+        FAKE_MEMORY_MAX="3758096384",
+        FAKE_MEMORY_SWAP_MAX="268435456",
+    )
+    assert result.returncode == 0, result.stderr
+    assert "high=3221225472 max=3758096384 swap=268435456 oom=continue" in result.stderr
+    assert "XDIST_AUTO:6" in result.stdout
+    assert not (launcher.parent / "pwned").exists()
 
 
 def test_inherited_identity_is_not_reentry(tmp_path: Path) -> None:
@@ -466,10 +496,26 @@ while True:
         keeper.communicate(timeout=10)
 
 
-@pytest.mark.parametrize(("inherited", "expected"), [(None, "8"), ("16", "8"), ("abc", "8"), ("4", "4"), ("0", "0")])
-def test_driver_scope_caps_pytest_auto_workers(tmp_path: Path, inherited: str | None, expected: str) -> None:
+@pytest.mark.parametrize(
+    ("cap", "inherited", "expected"),
+    [
+        (None, None, "2"),
+        (None, "3", "2"),
+        (None, "1", "1"),
+        ("5", None, "5"),
+        ("5", "64", "5"),
+        ("5", "abc", "5"),
+        ("5", "4", "4"),
+        ("5", "0", "0"),
+    ],
+)
+def test_driver_scope_caps_pytest_auto_workers(
+    tmp_path: Path, cap: str | None, inherited: str | None, expected: str
+) -> None:
     launcher, env = _launcher(tmp_path)
     extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
+    if cap is not None:
+        extra["LU_DRIVER_PYTEST_MAX_WORKERS"] = cap
     base = {k: v for k, v in os.environ.items() if k != "PYTEST_XDIST_AUTO_NUM_WORKERS"}
     result = subprocess.run(
         ["bash", str(launcher)],
@@ -484,10 +530,20 @@ def test_driver_scope_caps_pytest_auto_workers(tmp_path: Path, inherited: str | 
     assert f"XDIST_AUTO:{expected}" in result.stdout
 
 
-def test_lu_pool_slice_caps() -> None:
-    body = (REPO / "packaging/systemd/lu.slice").read_text()
+@pytest.mark.parametrize(
+    ("unit", "parent"), [("lu.slice", None), ("lu-dispatch.slice", "lu.slice"), ("lu-driver.slice", "lu.slice")]
+)
+def test_slice_units_are_structure_only(unit: str, parent: str | None) -> None:
+    """Slices carry accounting only; memory and swap limits come from a deployment drop-in."""
+    body = (REPO / "packaging/systemd" / unit).read_text()
+    assert "[Unit]" in body and "[Slice]" in body
     section = body.split("[Slice]", 1)[1]
     keys = dict(line.split("=", 1) for line in section.splitlines() if "=" in line and not line.startswith("#"))
-    assert keys == {"MemoryAccounting": "yes", "MemoryHigh": "24G", "MemoryMax": "26G", "MemorySwapMax": "4G"}
-    dispatch = (REPO / "packaging/systemd/lu-dispatch.slice").read_text()
-    assert "MemoryMax=20G" in dispatch
+    assert keys == {"MemoryAccounting": "yes"}
+    assert not any(key.startswith(("Memory", "CPU", "Tasks")) and key != "MemoryAccounting" for key in keys)
+    if unit != "lu-driver.slice":
+        assert f"{unit}.d/10-limits.conf" in body
+    # systemd.slice(5): the name encodes the parent, so no Slice= line is needed.
+    assert "Slice=" not in section
+    if parent is not None:
+        assert unit.startswith(parent.removesuffix(".slice") + "-")
