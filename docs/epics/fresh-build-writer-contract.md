@@ -156,7 +156,7 @@ One versioned, hashed document per band (A1, A2, B1+ — operator decision 3); i
 | The presentation practices of `docs/best-practices/ulp-presentation-pattern.md`, stated as rules for our own voice: Ukrainian first with the gloss after; side-by-side support for A1 passages of three or more sentences; dialogue in Ukrainian only with the translation after it; comprehension questions in Ukrainian; translation tasks only in the workbook | which steps, which evidence, which activities, which words |
 | **Voice:** no named narrator, no self-introduction, no imitation of another author's persona; named people only inside dialogues; a quotation is marked, attributed and listed in Ресурси | the dialogue's situation, setting, speakers, register |
 | **Conversational rules (r3):** what a natural exchange does at this level — question and answer adjacent, elliptical answers where Ukrainian allows them, reciprocal questions, confirmation turns, memorised phrases used as they stand, `ти`/`ви` consistent with the speakers' relationship, agreement with the speaker's gender — stated as rules, with the reviewer's dimension named for each | the exchange's purpose and participants |
-| The textbook lesson shape (R-27): a small theory step, then its practice, then the larger block | the `job`, the `rationale`, the word target |
+| The textbook lesson shape (R-27): a small theory step, then its practice, then the larger block | the `job`, the `rationale`, content adequacy |
 | Activity writing rules (R-19): one defensible answer for single-answer types; plausible distractors; an instruction in the language the immersion rule gives; no answer leaking from a neighbouring item; an `explanation` for every item | each activity's `type`, `focus`, `model` |
 | Ukrainian on its own terms: no explanation through Russian or "Slavic" comparison; Ukrainian grammatical terms (звук / літера, відмінок, наголос) | — |
 | The language rule of §6 (narration language, quoted-term spans) | the immersion rule itself (from learner state) |
@@ -174,6 +174,9 @@ Change the inventory; add, drop, merge or reorder a step or an activity; raise t
 
 Mixed sentences outside the quoted-term span of rule 2 fail.
 
+Fresh lessons are sized by job and content, with about 45 minutes of total learner work as
+guidance. No word, activity, item or time quota applies; legacy `word_target` is ignored by gates.
+
 ## 7. After the draft — the verification pass (R-26), in order (r3: every cheap check before anything paid; each check labelled by what it proves)
 | # | Check | Proves | Failure goes to |
 | --- | --- | --- | --- |
@@ -183,7 +186,7 @@ Mixed sentences outside the quoted-term span of rule 2 fail.
 | 3 | structure (§2) and evidence-use set arithmetic (§1a) | shape | writer |
 | 4 | activities, deterministic part: the key index exists and is in range; multi-select sets are subsets of the options; every error item's `error_ref` resolves and its `incorrect` is in `sentence`, its `correct` is the correction; for fresh A1 apply #8889's pre-resolution alias, key, unit and choice-structure checks (§1e) | shape | writer |
 | 5 | **assembly to the expanded document** (engine prints refs, glosses, paradigms, cards, resources) — from here on every check reads the expanded learner-facing text, not the writer's strings | — | engine |
-| 6 | word target and immersion for the position — **measured on the expanded document by one counting contract** (below) | counts | writer |
+| 6 | descriptive token counts and immersion share for the position — **measured on the expanded document by one counting contract** (below) | counts | pack (gloss record) |
 | 7 | **words, deterministic part:** every token classified (§3) and narrowed to allowlist candidates; every `core` item and `recycled` id appears; each taught `forms` entry appears in a teaching position; used forms' stress not `pending`; tokens with no allowlist candidate fail | allowlist | writer; a word or form the lesson needs → **plan**; a form without a record → word store |
 | 8 | **constrained questions** for the remaining ambiguities (§3 ii and iii), batched, answered by a language-lane seat, stored as resolution receipts — **a model's judgement, recorded, not a proof** | resolution | writer, if the answers show the text needs a sense outside the allowlist |
 | 8a | **A1 post-resolution choice and group-sort admission** (§1e): use every analysis of each bound form with the recorded complete `requires`; no inference of agreement or government by the resolver; ambiguous sorting entries abstain pending a receipt or replacement | unique form answer / recorded ambiguity | writer or language lane |

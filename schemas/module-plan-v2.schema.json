@@ -196,7 +196,7 @@
     },
     "lesson": {
       "type": "object",
-      "required": ["n", "slug", "title", "kind", "job", "rationale", "word_target", "inventory", "steps"],
+      "required": ["n", "slug", "title", "kind", "job", "rationale", "inventory", "steps"],
       "additionalProperties": false,
       "properties": {
         "n": {
@@ -233,7 +233,7 @@
         "word_target": {
           "type": "integer",
           "minimum": 1,
-          "description": "Per-lesson minimum word target (R-04); calibration is not_checked until the first pilot"
+          "description": "Deprecated legacy metadata; ignored by all gates; not a minimum (R-04)"
         },
         "inventory": {
           "type": "object",
