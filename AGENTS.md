@@ -26,7 +26,7 @@ Missing telemetry is unknown; applicable hard gates still bind.
 
 The binding wording is in
 `agents_extensions/shared/rules/operator-expectations.md` (served first by
-`/api/rules`). Its items decide conflicts. This inline digest is intentionally
+`/api/rules?scope=full`). Its items decide conflicts. This inline digest is intentionally
 non-skippable:
 
 1. Quality: no shortcuts, threshold-lowering, or “for now”.

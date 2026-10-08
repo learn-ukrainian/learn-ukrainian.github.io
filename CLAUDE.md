@@ -25,7 +25,7 @@
 ## Operator Contract (binding — loads without tools)
 
 The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
-(served FIRST at `GET /api/rules`; digests also in `AGENTS.md` and `GEMINI.md` § Operator
+(served FIRST at `GET /api/rules?scope=full`; digests also in `AGENTS.md` and `GEMINI.md` § Operator
 Contract). Headless `claude -p` runs may not fetch the API — this digest keeps the contract
 in-context regardless: quality over shortcuts · root-cause fixes · git/PR hygiene +
 layout A (primary non-bare on main; agents under `.worktrees/dispatch/…`; bare=bug) ·
