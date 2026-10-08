@@ -605,6 +605,11 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    # Custom ladders and pins cannot fabricate review authority for a
+    # mechanical-only catalog model, even by supplying reviewer metadata.
+    identity = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
+    if identity and "mechanical_only" in _MODEL_CATALOG["models"][identity]["roles"]:
+        return "mechanical-only catalog seats never perform review or approval (#9996)"
     if (
         inputs.review_profile.strip().casefold() in {"code", "infra"}
         and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)

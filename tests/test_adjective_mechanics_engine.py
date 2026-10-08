@@ -29,8 +29,6 @@ import json
 from collections import Counter
 from pathlib import Path
 
-import pytest
-
 from scripts.practice.adjective_mechanics_engine import (
     AdjectiveCategory,
     build_canonical_adjective_cards,
@@ -199,20 +197,16 @@ def test_deck_export_and_file_parity(tmp_path: Path):
     assert data == committed_data, "Committed deck differs from fresh generator export"
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason="Requires full local data/vesum.db (>1MB); CI omits it",
-)
-def test_vesum_verification():
+def test_vesum_verification(requires_vesum_db):
     """Verify that VESUM database confirms all target words and validates corruption distractors."""
     cards = build_canonical_adjective_cards()
-    report = verify_deck_with_vesum(cards)
+    report = verify_deck_with_vesum(cards, requires_vesum_db)
     assert report["verified"] is True, f"VESUM verification failed: {report.get('missing_forms', [])}"
     assert report["checked_word_count"] >= 70
 
     # Extended distractor verification: ensure phonological/morphological corruption
     # distractors are not valid standard words in VESUM.
-    dist_report = verify_distractors_with_vesum(cards)
+    dist_report = verify_distractors_with_vesum(cards, requires_vesum_db)
     assert dist_report["verified"] is True, (
         f"Corruption distractors matched valid standard words in VESUM: {dist_report.get('invalid_distractors', [])}"
     )

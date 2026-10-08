@@ -2,7 +2,7 @@
 """Gemini / AGY long-horizon session canary: mint, score, hydrate, hand back.
 
 The operational canary remains the shared 8/10 recall test.  Gemini adds the
-v1.2 hydration gate after PASS and closes its exact lease after FAIL-HANDOFF.
+v1.3 hydration gate after PASS and closes its exact lease after FAIL-HANDOFF.
 """
 
 from __future__ import annotations
@@ -143,7 +143,7 @@ def cmd_hydrate(args: argparse.Namespace) -> int:
 
 def cmd_score(args: argparse.Namespace) -> int:
     """Score shared canary, then route PASS and FAIL-HANDOFF through their paths."""
-    args.no_hydrate = True  # Gemini hydrates with the v1.2 capsule, not diary text.
+    args.no_hydrate = True  # Gemini hydrates with the v1.3 capsule, not diary text.
     score_rc = _with_gemini_handoffs(_gl.cmd_score, args)
     if score_rc == 0:
         hydrate_rc = cmd_hydrate(args)
@@ -201,7 +201,7 @@ Stream: **{stream}**
 
 1. Mint 10 durable anchors.
 2. Score from memory (8/10 PASS threshold).
-3. PASS → emit and validate HydrationCapsuleV1 v1.2, then continue only if allowed.
+3. PASS → emit and validate HydrationCapsuleV1 v1.3, then continue only if allowed.
 4. FAIL-HANDOFF → shared handback, exact lease close, and exit.
 """
     )
@@ -258,7 +258,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--worktrees", default="")
     score.set_defaults(func=cmd_score)
 
-    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.2 hydration capsule")
+    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.3 hydration capsule")
     hydrate.add_argument("--epic", required=True)
     hydrate.add_argument("--stream", default=None)
     hydrate.set_defaults(func=cmd_hydrate)

@@ -396,7 +396,7 @@ def test_fixture_bytes_remain_frozen():
 def test_frozen_cursor_revision_has_independent_routes_at_every_risk():
     """The approved eight-row change permits native Grok and refuses Cursor."""
     indices = {index for index, case in enumerate(INPUTS["reviewer"]) if case["author_model"] == "cursor:auto"}
-    assert indices == {21, 205, 389, 573, 757, 941, 1125, 1309}
+    assert indices == {22, 207, 392, 577, 762, 947, 1132, 1317}
     assert {(INPUTS["reviewer"][index]["review_profile"], INPUTS["reviewer"][index]["risk"]) for index in indices} == {
         (profile, risk) for profile in ("code", "infra") for risk in ("low", "medium", "high", "critical")
     }

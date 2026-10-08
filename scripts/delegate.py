@@ -5243,9 +5243,11 @@ def _format_process_failure(proc: subprocess.CompletedProcess[str]) -> str:
 
 
 def _worktree_is_dirty(worktree: Path) -> bool | None:
+    from scripts.orchestration.execution_safe_git import run_git as safe_git
+
     try:
-        status_proc = subprocess.run(
-            ["git", "status", "--porcelain"],
+        status_proc = safe_git(
+            ["status", "--porcelain"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -5842,6 +5844,7 @@ _PUBLIC_REASON_PHRASES = frozenset(
         "task state changed",
         "unreadable task state",
         "worktree active",
+        "worktree already removed",
         "worktree branch differs from task record",
         "worktree ownership unknown or reused",
         "unpushed work - needs rescue",
@@ -7531,6 +7534,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
     worktree = Path(raw_worktree).resolve()
     dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
     if not worktree.is_relative_to(dispatch_root):
+        row["reason"] = "not a registered dispatch worktree"
+        return row
+    # A reaped or hand-removed worktree has nothing left to preserve. Before
+    # #9878 the registration check skipped it; reading its git files now would
+    # raise FileNotFoundError and fail every scheduled rescue run.
+    if not worktree.is_dir():
+        row["reason"] = "worktree already removed"
+        return row
+    if not (worktree / ".git").exists():
         row["reason"] = "not a registered dispatch worktree"
         return row
     if state.get("worktree_reused") is not False:
@@ -9913,6 +9925,8 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if state.get("mechanical_task"):
+                tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
                 and mode == "read-only"
@@ -12818,6 +12832,8 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if mechanical_task := _mechanical_task_scope(args):
+                dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
@@ -13307,6 +13323,8 @@ def _dispatch(
             initial_state["review_contract"] = review_contract
             initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
+        if mechanical_task := _mechanical_task_scope(args):
+            initial_state["mechanical_task"] = mechanical_task
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -15660,6 +15678,7 @@ def _admit_dispatch_target(
     ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.target_resolution import TargetResolutionError
 
@@ -15723,10 +15742,31 @@ def _admit_dispatch_target(
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
             trees=trees,
+            task_family=getattr(args, "research_task_family", None),
+            task_role=getattr(args, "research_role", None),
+            task_prompt=getattr(args, "prompt", None),
         )
-    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
+
+
+def _mechanical_task_scope(args: argparse.Namespace) -> dict[str, Any]:
+    """Persist the admission inputs the execution adapter must recheck (#9996)."""
+    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES
+
+    family = getattr(args, "research_task_family", None)
+    if family not in MECHANICAL_FAMILIES:
+        return {}
+    return {
+        "family": family,
+        "role": getattr(args, "research_role", None),
+        "track": getattr(args, "research_track", None),
+        "language_lane": _dispatch_is_language_lane(args),
+        "review": _dispatch_is_review_typed(args),
+        "paths": list(dict.fromkeys((getattr(args, "owned_path", None) or []) +
+                                    (getattr(args, "research_owned_path", None) or []))),
+    }
 
 
 def _discard_model_probe_output(plan: object) -> None:
@@ -17603,7 +17643,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-task-family",
         default=None,
         metavar="FAMILY",
-        help="ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate).",
+        help=("ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
+              "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
+              "declare narrow safe owned paths. Classification and recon use read-only mode."),
     )
     d.add_argument(
         "--research-track",

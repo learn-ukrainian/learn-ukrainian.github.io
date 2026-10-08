@@ -590,7 +590,7 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert set(seats) >= {"claude", "grok", "agy", "codex", "cursor"}
     # codex was dropped as a DRIVER 2026-07-22 (272K window not worth session rollover
     # overhead), then re-added 2026-07-23 as the named harness/infra/devops alternate:
-    # HydrationCapsuleV1's score-from-memory + ~100ms capsule hydrate changed that
+    # HydrationCapsuleV1's score-from-memory + bounded capsule hydration changed that
     # calculus. It remains a formal-CF review seat + coding lane too.
     assert seats["codex"]["model_id"] == "gpt-6.1-sol"
     assert seats["codex"]["effort"] == "high"
