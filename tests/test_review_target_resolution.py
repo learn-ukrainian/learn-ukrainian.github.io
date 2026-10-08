@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.common.git_context import sanitized_git_env
@@ -282,12 +284,13 @@ def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
         resolve_pr_target(repo, 1)
 
 
-def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch):
+@pytest.mark.parametrize("base_name", ["  ", ["main"], None, 1])
+def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_name):
     repo = _init_repo(tmp_path)
     sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
     import scripts.review.target_resolution as tr
 
-    payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": "  "}
+    payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": base_name}
 
     def fake_run_gh(args, cwd, timeout=30.0):
         return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")

@@ -1963,13 +1963,18 @@ def test_github_sha_filter_uses_one_bounded_enumeration(repo, monkeypatch):
     assert refused.value.timed_out
 
 
-def test_authorship_exclude_sha_is_the_default_tip_only(repo):
+@pytest.mark.parametrize(
+    "spelling",
+    ["main", "origin/main", "remotes/origin/main", "refs/remotes/origin/main", "refs/heads/main"],
+)
+def test_authorship_exclude_sha_is_the_default_tip_only(repo, spelling):
     assert recorder.authorship_exclude_sha(repo.root, base_branch="origin/main") is None
     repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
     tip = repo.sha("origin/main")
-    assert recorder.authorship_exclude_sha(repo.root, base_branch="origin/main") == tip
-    assert recorder.authorship_exclude_sha(repo.root, base_branch="main") == tip
+    assert recorder.authorship_exclude_sha(repo.root, base_branch=spelling) == tip
     assert recorder.authorship_exclude_sha(repo.root, base_branch="release") is None
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="refs/remotes/origin/release") is None
+    assert recorder.authorship_exclude_sha(repo.root, base_branch="refs/heads/release") is None
     assert recorder.authorship_exclude_sha(repo.root, base_branch=None) is None
 
 

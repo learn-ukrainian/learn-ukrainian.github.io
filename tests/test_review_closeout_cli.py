@@ -892,7 +892,11 @@ def _point_origin_head(repo) -> None:
     repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
 
 
-def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_path, monkeypatch):
+@pytest.mark.parametrize(
+    "base_name",
+    ["origin/main", "remotes/origin/main", "refs/remotes/origin/main"],
+)
+def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_path, monkeypatch, base_name):
     """A stale frozen base plus a later main merge must not inherit main's authors (#10009)."""
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
 
@@ -909,7 +913,7 @@ def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_pa
         "--branch",
         "feature",
         "--base",
-        "origin/main",
+        base_name,
         "--repo-root",
         str(repo.root),
     )

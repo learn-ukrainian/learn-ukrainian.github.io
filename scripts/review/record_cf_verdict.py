@@ -669,6 +669,20 @@ def structural_review_route(facts: BranchReviewFacts, *, risk: str, review_profi
     return resolve_reviewer(facts.resolver_inputs(risk=risk, review_profile=review_profile))
 
 
+def _canonical_base_branch_name(base_branch: str) -> str:
+    """Branch name behind the spellings target resolution already accepts.
+
+    ``main``, ``origin/main``, ``remotes/origin/main``,
+    ``refs/remotes/origin/main`` and ``refs/heads/main`` name one branch.
+    A non-default ref keeps its own name, including a slash that is part of it.
+    """
+    name = base_branch.strip()
+    for prefix in ("refs/remotes/origin/", "remotes/origin/", "refs/heads/", "origin/"):
+        if name.startswith(prefix):
+            return name[len(prefix) :]
+    return name
+
+
 def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str | None:
     """Current default-branch tip when ``base_branch`` names that branch.
 
@@ -677,10 +691,11 @@ def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str |
     Any other base keeps the full enumeration. The tip is the local
     ``refs/remotes/origin/HEAD``. A checkout that has not recorded it returns
     None, so callers keep the previous enumeration rather than guessing a tip.
+    Qualified spellings of that ref are reduced to the branch name first.
     """
     if not isinstance(base_branch, str) or not base_branch.strip():
         return None
-    name = base_branch.strip().removeprefix("origin/")
+    name = _canonical_base_branch_name(base_branch)
     try:
         ref = _facts_git(
             repo_root,

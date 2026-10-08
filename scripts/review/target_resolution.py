@@ -283,12 +283,13 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
 
     base_tip_sha = str(payload.get("baseRefOid") or "").strip()
     head_sha = str(payload.get("headRefOid") or "").strip()
-    base_ref_name = str(payload.get("baseRefName") or "").strip()
+    raw_base_name = payload.get("baseRefName")
     head_ref_name = str(payload.get("headRefName") or "").strip()
+    if not isinstance(raw_base_name, str) or not raw_base_name.strip():
+        raise TargetResolutionError(f"PR #{pr_number} payload missing base ref name")
+    base_ref_name = raw_base_name.strip()
     if not base_tip_sha or not head_sha:
         raise TargetResolutionError(f"PR #{pr_number} payload missing base/head SHA")
-    if not base_ref_name:
-        raise TargetResolutionError(f"PR #{pr_number} payload missing base ref name")
 
     _ensure_commit_available(repo_root, base_tip_sha)
     _ensure_commit_available(repo_root, head_sha)
