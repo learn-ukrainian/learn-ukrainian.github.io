@@ -889,7 +889,7 @@ _CHILD_ENV_DROP = frozenset(
     }
 )
 _COLLECT_TIMEOUT_S = 90
-# Collecting the whole suite took 178s on a loaded 16-core host (2026-10-03).
+# Collecting the whole suite took 178s on a loaded host (2026-10-03).
 # One child must collect it all: a modifyitems hook sees only its own run's items.
 _EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"

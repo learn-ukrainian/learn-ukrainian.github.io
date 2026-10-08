@@ -1,6 +1,6 @@
 """Host admission for write-capable delegate dispatches (#8645 part A).
 
-On 2026-09-24 a global OOM on the 15 GB / 8-core host killed the infra driver
+On 2026-09-24 a global OOM on the dispatch host killed the infra driver
 and eight workers; nothing read memory or CPU before admitting a worker
 (``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``). ``delegate.py
 dispatch`` and ``scripts.fleet.capacity_pick`` both call :func:`evaluate`, so

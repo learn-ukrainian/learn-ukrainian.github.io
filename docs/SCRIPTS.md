@@ -1064,7 +1064,7 @@ process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to
 thresholds.
 
 **Worker isolation (#8645 part C):** the detached worker runs in the user slice
-`lu-dispatch.slice` (`MemoryMax=20G`, `MemoryHigh=18G`, `MemorySwapMax=1G`) via
+`lu-dispatch.slice` (memory, high-water and swap limits set by the deployment) via
 `systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
