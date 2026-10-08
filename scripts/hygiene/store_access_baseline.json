@@ -260,20 +260,6 @@
       "occurrence": 0
     },
     {
-      "path": "scripts/audit/_judge_eval_lib.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "a5e72d52cd45061758338c2e2a8dbc8b121cfdd915406951f9786cc01b3c5257",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/audit/_judge_eval_lib.py",
-      "kind": "store_path",
-      "scope": "<module>",
-      "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
-      "occurrence": 0
-    },
-    {
       "path": "scripts/audit/atlas_source_census.py",
       "kind": "store_path",
       "scope": "<module>",
