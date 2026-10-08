@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
+import ast
 import contextlib
 import json
 import subprocess
 import sys
 from itertools import pairwise
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 import requests
 
+from scripts.hygiene import lint_source_db_writable_connects as sqlite_lint
 from scripts.ingest import dictionary_acquisition as acquisition
 
 SLOVNYK_HTML = '<html><section id="dictionary-article"><article><p>synthetic article</p></article></section></html>'
@@ -19,6 +22,94 @@ OFFICIAL_HTML = (
     '<article><div class="ENTRY"><span class="WORD">SAMPLE</span>'
     '<div class="INTF"><span class="FORMULA">Synthetic definition</span></div></div></article>'
 )
+
+
+@pytest.fixture
+def acquisition_writer_entry():
+    return next(
+        entry for entry in sqlite_lint.load_allowlist() if entry.path == "scripts/ingest/dictionary_acquisition.py"
+    )
+
+
+@pytest.fixture
+def acquisition_admission_scan(tmp_path, monkeypatch, acquisition_writer_entry):
+    """Feed in-memory source controls through the unchanged repository lint API."""
+    path = tmp_path / acquisition_writer_entry.path
+    read_bytes = Path.read_bytes
+    monkeypatch.setattr(sqlite_lint, "iter_scan_paths", lambda root: [path])
+
+    def scan(source):
+        monkeypatch.setattr(Path, "read_bytes", lambda self: source.encode() if self == path else read_bytes(self))
+        return sqlite_lint.find_violations(tmp_path, (acquisition_writer_entry,))
+
+    return scan
+
+
+def test_acquisition_writer_admission_entry_is_exact(acquisition_writer_entry):
+    entries = [entry for entry in sqlite_lint.load_allowlist() if entry.path == acquisition_writer_entry.path]
+    assert entries == [
+        sqlite_lint.AllowedReference(
+            path="scripts/ingest/dictionary_acquisition.py",
+            reference_count=9,
+            kind="writer",
+            target_db="per-dictionary acquisition staging.sqlite3",
+            reason="Persists isolated acquisition job specification, results and events; no canonical source-store admission.",
+            calls=("sqlite3.connect(directory / 'staging.sqlite3', timeout=1)",),
+        )
+    ]
+
+
+def test_acquisition_writer_source_pins(acquisition_writer_entry, acquisition_admission_scan):
+    source = (sqlite_lint.REPO_ROOT / acquisition_writer_entry.path).read_text()
+    assert len(sqlite_lint.classify_source(source, acquisition_writer_entry.path)) == 9
+    calls = [
+        ast.unparse(node)
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Call) and ast.unparse(node.func) == "sqlite3.connect"
+    ]
+    assert calls == list(acquisition_writer_entry.calls)
+    assert sqlite_lint.writer_target_violations(source, acquisition_writer_entry) == []
+    assert acquisition_admission_scan(source) == ([], [])
+
+
+@pytest.mark.parametrize("mutation", ["retarget", "extra_annotation", "escape"])
+def test_acquisition_writer_mutations_rejected(mutation, acquisition_writer_entry, acquisition_admission_scan):
+    source = (sqlite_lint.REPO_ROOT / acquisition_writer_entry.path).read_text()
+    if mutation == "retarget":
+        changed = source.replace('directory / "staging.sqlite3"', 'directory / "other.sqlite3"')
+        expected = "opens differ from declared target sites"
+        assert len(sqlite_lint.classify_source(changed, acquisition_writer_entry.path)) == 9
+    elif mutation == "extra_annotation":
+        changed = source + "\nextra_annotation: sqlite3.Connection\n"
+        expected = "pinned 9 references, found 10"
+        assert len(sqlite_lint.classify_source(changed, acquisition_writer_entry.path)) == 10
+        assert sqlite_lint.writer_target_violations(changed, acquisition_writer_entry) == []
+    else:
+        changed = source + "\nescaped = sqlite3.connect\n"
+        expected = "constructor escapes the declared writer sites"
+        assert sqlite_lint.writer_target_violations(changed, acquisition_writer_entry) == [
+            f"{acquisition_writer_entry.path}: {expected}"
+        ]
+    assert changed != source
+    violations, unreadable = acquisition_admission_scan(changed)
+    assert not unreadable
+    assert any(expected in violation for violation in violations), violations
+
+
+def test_acquisition_writer_has_no_protected_store_eligibility(acquisition_writer_entry):
+    protected = {
+        entry.path
+        for entry in sqlite_lint.load_allowlist()
+        if entry.kind == "writer" and any(name in entry.target_db for name in ("sources.db", "vesum.db"))
+    }
+    assert acquisition_writer_entry.path not in protected
+
+
+@pytest.mark.parametrize("path", ["scripts/ingest/dictionary_acquisition.py", "tests/test_dictionary_acquisition.py"])
+def test_acquisition_admission_has_no_store_census_growth(path):
+    source = (sqlite_lint.REPO_ROOT / path).read_text()
+    assert sqlite_lint.classify_store_source(source, path) == []
+    assert {entry for entry in sqlite_lint.baseline_entries() if entry.path == path} == set()
 
 
 class Clock:
