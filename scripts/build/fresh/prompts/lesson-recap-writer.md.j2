@@ -13,6 +13,8 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 
 ---
 
+Size the lesson to its job and content. About 45 minutes of total learner work, including the workbook, is guidance; do not reject or pad to word, activity, item or time quotas.
+
 ## 1. Plan Entry (Recap Lesson)
 
 - **Module**: {{ plan_entry.lesson.module }} (Level: {{ level }}, Lesson: {{ plan_entry.lesson.n }})
@@ -21,7 +23,6 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 - **Kind**: {{ plan_entry.kind }}
 - **Job**: {{ plan_entry.job }}
 - **Rationale**: {{ plan_entry.rationale }}
-- **Word Target**: {{ plan_entry.word_target }}
 
 ### Steps (Binding Order)
 {% for step in plan_entry.steps %}

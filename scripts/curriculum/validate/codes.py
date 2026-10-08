@@ -204,8 +204,6 @@ COMPREHENSION_TARGET_UNVERIFIED = "comprehension_target_unverified"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
-WORD_TARGET_NOT_CALIBRATED = "word_target_not_calibrated"
-LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED = "lesson_activity_minimums_not_calibrated"
 ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY = "arc_has_no_structured_grammar_or_vocabulary"
 TITLE_QUANTITIES_NOT_PARSED = "title_quantities_not_parsed"
 INTRODUCED_EARLIER_UNVERIFIED = "introduced_earlier_unverified"
@@ -373,8 +371,6 @@ DESCRIPTIONS = {
     SCOPE_SIDECAR_STALE: "failure (§2a): the scope sidecar differs byte for byte from a fresh generation; the diff is quoted",
     TITLE_LETTER_ENUMERATION_MISMATCH: "failure (§2a): a run of enumerated single letters in the module title/subtitle differs from the scope letter list",
     MINUTES_CONSTANTS_UNDEFINED: "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
-    WORD_TARGET_NOT_CALIBRATED: "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
-    LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED: "not_checked: per-lesson inline/workbook activity minimums are not calibrated (§2a)",
     ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY: "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
     TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
@@ -428,8 +424,6 @@ NOTE_CODES = frozenset(
 NOT_CHECKED_CODES = frozenset(
     {
         MINUTES_CONSTANTS_UNDEFINED,
-        WORD_TARGET_NOT_CALIBRATED,
-        LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED,
         ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
         TITLE_QUANTITIES_NOT_PARSED,
         INTRODUCED_EARLIER_UNVERIFIED,
