@@ -194,6 +194,7 @@ def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
         ("scripts/validate_plan_config.py", ["--help"], 0, "usage: validate_plan_config.py"),
     ],
 )
+@pytest.mark.repo_wide
 def test_config_consumer_file_launches_without_pythonpath(
     tmp_path: Path, monkeypatch, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
 ) -> None:
