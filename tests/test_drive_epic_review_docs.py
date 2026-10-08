@@ -6,7 +6,10 @@ tests/test_delegate.py::test_dispatch_generates_and_persists_run_nonce.
 
 from __future__ import annotations
 
+import io
 import json
+import re
+import shlex
 from pathlib import Path
 
 import pytest
@@ -21,6 +24,41 @@ REFERENCE = (
 )
 HEAD = "a" * 40
 NONCE = "run-nonce-fixture"
+
+
+def _canonical_review_asks():
+    """Extract executable ask recipes across the original shared instruction scope."""
+    shared = REFERENCE.parents[3]
+    recipes = []
+    for root in (shared / "skills", shared / "rules"):
+        for path in sorted(root.rglob("*.md")):
+            body = path.read_text(encoding="utf-8")
+            for block in re.findall(r"^```[^\n]*\n(.*?)^```", body, re.M | re.S):
+                for line in block.replace("\\\n", " ").splitlines():
+                    if "scripts/ai_agent_bridge/__main__.py ask-" not in line:
+                        continue
+                    command = line.split("scripts/ai_agent_bridge/__main__.py ", 1)[1]
+                    argv = shlex.split(command.replace("ask-<lane>", "ask-claude"))
+                    if "--review" in argv or ("--type" in argv and argv[argv.index("--type") + 1] == "review"):
+                        recipes.append(pytest.param(argv, id=str(path.relative_to(shared))))
+    assert recipes, "canonical formal-review launch inventory must not be empty"
+    return recipes
+
+
+@pytest.mark.parametrize("argv", _canonical_review_asks())
+def test_canonical_review_ask_recipes_forward_pushed_branch_target(argv, monkeypatch):
+    """Run the documented argv through the real parser and handler, without inference."""
+    args = _cli._build_parser().parse_args(argv)
+    assert args.branch, "pre-PR formal review must target the pushed author branch"
+    assert args.pr is None
+    monkeypatch.setattr(_cli, "require_core_or_exit", lambda _name: None)
+    monkeypatch.setattr(_cli.sys, "stdin", io.StringIO("Review the pushed branch."))
+    dispatched = []
+    monkeypatch.setattr(_cli, "_dispatch_headless_review", lambda *a, **kw: dispatched.append(kw))
+    _cli._handle_acp_compat(args, "claude")
+    assert len(dispatched) == 1
+    assert dispatched[0]["branch"] == args.branch
+    assert dispatched[0]["pr_number"] is None
 
 
 def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeypatch, tmp_path, capsys):
