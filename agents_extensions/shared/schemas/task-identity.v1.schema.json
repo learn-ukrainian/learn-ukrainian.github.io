@@ -15,14 +15,34 @@
     "visible_title",
     "task_family",
     "role",
-    "predecessor_task_id",
-    "replacement_task_id",
-    "lineage_id",
-    "generation",
     "terminal_goal",
     "lifecycle_state",
     "carriers",
     "migration"
+  ],
+  "oneOf": [
+    {
+      "required": ["origin", "task_id"],
+      "properties": {
+        "origin": {"const": "fresh"},
+        "lifecycle_state": {"const": "active"},
+        "terminal_goal": {"enum": ["merge", "deploy", "certify"]},
+        "migration": {"properties": {"legacy_fallback": {"const": false}}}
+      },
+      "not": {"anyOf": [
+        {"required": ["predecessor_task_id"]},
+        {"required": ["replacement_task_id"]},
+        {"required": ["lineage_id"]},
+        {"required": ["generation"]}
+      ]}
+    },
+    {
+      "required": ["predecessor_task_id", "replacement_task_id", "lineage_id", "generation"],
+      "properties": {
+        "lifecycle_state": {"enum": ["prepared", "replacement_bound", "title_ready", "title_failed", "resumed", "confirmed"]}
+      },
+      "not": {"anyOf": [{"required": ["origin"]}, {"required": ["task_id"]}]}
+    }
   ],
   "properties": {
     "schema_version": {"const": "task-identity.v1"},
@@ -39,13 +59,15 @@
     "visible_title": {"type": "string", "minLength": 1, "maxLength": 60},
     "task_family": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
     "role": {"type": "string", "minLength": 1, "maxLength": 100},
+    "origin": {"const": "fresh"},
+    "task_id": {"type": "string", "minLength": 1, "maxLength": 256, "not": {"pattern": "[\\s\\u0000-\\u001f\\u007f]"}},
     "predecessor_task_id": {"type": "string", "minLength": 1, "maxLength": 256},
     "replacement_task_id": {"type": ["string", "null"], "minLength": 1, "maxLength": 256},
     "lineage_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
     "generation": {"type": "integer", "minimum": 1},
     "terminal_goal": {"enum": ["merge", "deploy", "certify", "unknown"]},
     "lifecycle_state": {
-      "enum": ["prepared", "replacement_bound", "title_ready", "title_failed", "resumed", "confirmed"]
+      "enum": ["active", "prepared", "replacement_bound", "title_ready", "title_failed", "resumed", "confirmed"]
     },
     "carriers": {
       "type": "object",
