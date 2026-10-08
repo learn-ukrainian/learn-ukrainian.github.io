@@ -338,8 +338,8 @@ def main(argv: list[str] | None = None) -> int:
         description='Inventory tracked documentation deterministically from Git index blobs.\n'
                     'Use for docs-knowledge evidence; not for live state or OpenWiki generation.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog='Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python scripts/docs/docs_inventory.py\n'
-               '  /home/ops/learn-ukrainian/.venv/bin/python scripts/docs/docs_inventory.py --output audit/docs-inventory/run\n'
+        epilog='Examples:\n  .venv/bin/python scripts/docs/docs_inventory.py\n'
+               '  .venv/bin/python scripts/docs/docs_inventory.py --output audit/docs-inventory/run\n'
                'Outputs: manifest.json, references.json, summary.md, digest.sha256; overwrites generated output only.\n'
                'Exit codes: 0 success; 1 invalid Git/input/output; 2 invalid CLI arguments.\n'
                'Related: #5536, #5535; docs/knowledge/inventory/README.md; ADR-013.')

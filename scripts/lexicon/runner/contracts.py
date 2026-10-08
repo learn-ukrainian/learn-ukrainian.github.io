@@ -21,8 +21,9 @@ PARSED_SCHEMA_VERSION = "parsed-schema-v1"
 PACKET_SCHEMA_VERSION = "packet-v1"
 BUNDLE_SCHEMA_VERSION = "bundle-v1"
 
-# Host memory policy (16 GiB local host). Platform/VPS ceilings are selected
-# below physical RAM with explicit OS headroom — never copy 8/10 onto a smaller host.
+# Default memory policy for a local run. Deployment ceilings are selected below
+# the host's physical memory with explicit OS headroom; never copy these onto a
+# smaller host.
 DEFAULT_MEMORY_HIGH_BYTES = 8 * 1024**3
 DEFAULT_MEMORY_MAX_BYTES = 10 * 1024**3
 

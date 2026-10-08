@@ -8,8 +8,8 @@ Eleven card instances live in [`examples/`](examples/) as JSON validated against
 
 Run:
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python docs/atlas/word-cards/examples/build_examples.py
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/validate/test_word_card_examples.py -q
+.venv/bin/python docs/atlas/word-cards/examples/build_examples.py
+.venv/bin/python -m pytest tests/validate/test_word_card_examples.py -q
 ```
 
 ## 1. Homograph: `замок` → three cards, plus the legacy article as a `split` card

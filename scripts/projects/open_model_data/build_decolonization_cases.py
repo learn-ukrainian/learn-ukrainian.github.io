@@ -1129,8 +1129,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir /tmp/decolonization-export\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir decolonization-export\n"
             "Outputs: managed A payloads and K companions as one transaction, or an explicit external directory.\n"
             "Exit codes: 0 = success; nonzero = validation or publication failed.\n"
             "Related: issues #8340 and #8809."

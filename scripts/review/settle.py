@@ -817,8 +817,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.review.settle prepare 1 --db batch_state/review-findings/a1.sqlite --document site/src/content/docs/a1/module/2.mdx --prior-ledger batch_state/review-receipts/R/A.jsonl --review-id settle-R --attempt-id A1 --manifest settle.manifest.yaml --prompt settle.prompt.md\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.review.settle record reply.yaml --db batch_state/review-findings/a1.sqlite --manifest settle.manifest.yaml --ledger settle.jsonl --decided-by language-seat\n"
+            "  .venv/bin/python -m scripts.review.settle prepare 1 --db batch_state/review-findings/a1.sqlite --document site/src/content/docs/a1/module/2.mdx --prior-ledger batch_state/review-receipts/R/A.jsonl --review-id settle-R --attempt-id A1 --manifest settle.manifest.yaml --prompt settle.prompt.md\n"
+            "  .venv/bin/python -m scripts.review.settle record reply.yaml --db batch_state/review-findings/a1.sqlite --manifest settle.manifest.yaml --ledger settle.jsonl --decided-by language-seat\n"
             "Outputs: prepare writes a manifest, prompt and render sidecars; record writes a saved reply and updates settle_items.\n"
             "Exit codes: 0 accepted; 1 malformed task, reply or filesystem error.\n"
             "Related: scripts/review/prompts/settle.md.j2; docs/epics/fresh-build-review-contracts.md The settle step."

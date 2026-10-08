@@ -114,7 +114,7 @@ def _verified_set(repo: Path, group: str) -> storage_paths.ArtifactSet:
     except (FileNotFoundError, ValueError) as exc:
         raise ValueError(
             f"Cannot verify {group}: {exc}; hydrate with "
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+            f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
         ) from exc
 
 

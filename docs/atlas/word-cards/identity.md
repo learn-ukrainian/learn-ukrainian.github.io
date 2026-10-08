@@ -164,8 +164,8 @@ Two cards, one `aspect_pair` link with roles, evidence cited on the link. Source
 Reproduction of the stress comparison (read-only):
 ```python
 import sqlite3, json, unicodedata, re
-a = sqlite3.connect("file:/home/ops/learn-ukrainian/data/atlas.db?mode=ro", uri=True)
-s = sqlite3.connect("file:/home/ops/learn-ukrainian/data/sources.db?mode=ro", uri=True)
+a = sqlite3.connect("file:data/atlas.db?mode=ro", uri=True)
+s = sqlite3.connect("file:data/sources.db?mode=ro", uri=True)
 V = set("аеєиіїоуюя"); syl = lambda w: sum(ch in V for ch in w.lower())
 atlas = {slug: unicodedata.normalize("NFC", json.loads(p)["form"]) for slug, p in a.execute("select slug,payload_json from enrichment where section='stress'") if json.loads(p).get("form")}
 ulif, multi = {}, set()

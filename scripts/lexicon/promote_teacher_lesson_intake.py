@@ -920,7 +920,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/lexicon/promote_teacher_lesson_intake.py "
             "--vesum-db /tmp/vesum-shadow.db --apply --report\n"
             "Outputs: candidate and decision files; --write also updates the manifest and fingerprint.\n"

@@ -852,8 +852,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base origin/main --output registry/artifacts/classification-v1.tsv\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base HEAD > /tmp/classification.tsv\n"
+            "  .venv/bin/python scripts/storage/build_classification_table.py --base origin/main --output registry/artifacts/classification-v1.tsv\n"
+            "  .venv/bin/python scripts/storage/build_classification_table.py --base HEAD > classification.tsv\n"
             "\nOutputs: TSV to stdout or --output; with --output also writes the sibling .meta.json.\n"
             "Counts and byte totals go to stderr. No network use.\n"
             "Exit codes: 0 = table generated; 1 = unmatched path or Git/IO error; 2 = invalid arguments.\n"

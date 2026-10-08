@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Detached, idempotent launcher for #5230 offline reduce (ULIF cache → candidate).
-# Mirrors run-20k/launch.sh resume pattern under MemoryHigh=1.5G MemoryMax=2.0G.
+# Mirrors run-20k/launch.sh resume pattern under the default job memory caps.
 set -euo pipefail
 
 if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then

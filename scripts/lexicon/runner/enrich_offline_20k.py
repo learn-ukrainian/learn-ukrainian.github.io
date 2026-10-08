@@ -23,7 +23,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-# VPS defaults (MemoryHigh=1.5G MemoryMax=2.0G); local tests override.
+# Default job memory caps (MiB); local tests override.
 DEFAULT_MEMORY_HIGH_MIB = 1536
 DEFAULT_MEMORY_MAX_MIB = 2048
 DEFAULT_CHUNK_SIZE = 25

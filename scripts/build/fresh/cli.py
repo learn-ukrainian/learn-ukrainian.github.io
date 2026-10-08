@@ -338,7 +338,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     for name in ("requires-questions", "requires-record"):
-        example = f"  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.fresh.cli {name} a1 sounds-letters-and-hello --lesson 1"
+        example = f"  .venv/bin/python -m scripts.build.fresh.cli {name} a1 sounds-letters-and-hello --lesson 1"
         if name == "requires-record":
             example += " --answers ./answers.yaml --seat claude@sonnet --family anthropic --writer-seat codex@sol --writer-family openai"
         p_requires = subparsers.add_parser(

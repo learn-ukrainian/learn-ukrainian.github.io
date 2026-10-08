@@ -56,7 +56,7 @@ Assumes fetch + reduce already completed under `$ATLAS_RUN_ROOT/run-20k`:
   --work-dir "$ATLAS_RUN_ROOT/run-20k/offline_enrich" \
   --candidate "$ATLAS_RUN_ROOT/run-20k/candidate-ulif-reduce.json"
 
-# Detached under MemoryHigh=1.5G MemoryMax=2.0G (idempotent)
+# Detached under the default job memory caps (idempotent)
 scripts/lexicon/runner/launch_enrich.sh
 
 # Resume after kill / reboot (same work-dir; ledger resumes)
@@ -130,7 +130,7 @@ is the "scp the script from the PR branch" fallback).
 
 ```bash
 # From the Mac worktree — syncs residual slugs + driver + launcher, starts
-# the job detached under MemoryHigh=1.5G/MemoryMax=2.0G, polls until done
+# the job detached under the default job memory caps, polls until done
 # (bounded, default 900s), then pulls manifest.json + reenrich.log +
 # reenrich-summary.json back into batch_state/class-b-reenrich-pulled/.
 scripts/lexicon/runner/launch_reenrich_class_b_remote.sh

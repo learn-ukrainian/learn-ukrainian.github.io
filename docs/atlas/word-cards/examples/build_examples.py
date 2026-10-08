@@ -24,7 +24,7 @@ Round 5 (Astra REVISE r4, 2026-09-28): correspondence sorts evidence into proven
 before any narrowing; an unproven register position never narrows a candidate set (not to one row, not to an
 ambiguous subset), so a hold always covers the full candidate set remaining after proven evidence.
 
-Run:  /home/ops/learn-ukrainian/.venv/bin/python docs/atlas/word-cards/examples/build_examples.py
+Run:  .venv/bin/python docs/atlas/word-cards/examples/build_examples.py
 """
 
 from __future__ import annotations

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Detached, idempotent launcher for #6369 Class-B residual EN re-enrich.
-# Mirrors launch_enrich.sh under MemoryHigh=1.5G MemoryMax=2.0G.
+# Mirrors launch_enrich.sh under the default job memory caps.
 #
 # Runs entirely against the remote-host *work-dir* — it never mutates the
 # VPS repo checkout at $REPO. This matters because the checkout there is

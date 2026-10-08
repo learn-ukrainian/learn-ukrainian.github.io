@@ -97,10 +97,10 @@ quality claim. Passing it neither authorizes nor satisfies the frozen Stage 1
 requirement for an A100 or H100.
 
 The validation uses a [Hugging Face Job](https://huggingface.co/docs/huggingface_hub/guides/jobs)
-with the `l40sx1` flavor. Hugging Face documents this flavor as one 48 GB
-NVIDIA L40S with 8 vCPUs, 62 GB RAM, and 380 GB ephemeral storage at USD
-0.03/minute; `timeout=3600` is mandatory and exact. Its maximum provider
-compute charge is therefore USD 1.80, within the operator's EUR 3 ceiling.
+with the `l40sx1` flavor; its hardware and per-minute price are listed in
+the Hugging Face Jobs documentation linked below. `timeout=3600` is mandatory
+and exact, which bounds the maximum provider compute charge at USD 1.80,
+within the operator's EUR 3 ceiling.
 Hugging Face is selected for this narrow probe because its Job timeout stops
 the running job and its billing; this is a bounded-provider-control choice,
 not a comparison of provider quality. See the official [Jobs pricing and
@@ -201,7 +201,7 @@ model, or evaluation artifacts and must not be committed.
 Google documents that tuning needs substantially more compute and memory than
 inference and recommends parameter-efficient methods such as LoRA when
 resources are constrained. The Gemma 4 31B load itself is roughly 69.9 GB in
-BF16 and 17.5 GB at 4-bit before tuning overhead, so the local 16 GB M4 is not a
+BF16 and 17.5 GB at 4-bit before tuning overhead, so the local workstation is not a
 training target. See the official [tuning guidance](https://ai.google.dev/gemma/docs/tune?hl=en),
 [Gemma 4 overview](https://ai.google.dev/gemma/docs/core), and
 [model card](https://huggingface.co/google/gemma-4-31B-it).

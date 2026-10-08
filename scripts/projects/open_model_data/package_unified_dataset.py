@@ -91,7 +91,7 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     "*",
-                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    f".venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     str(exc),
                 ) from exc
             prefix = "projects/open_model_data/release/"
@@ -127,7 +127,7 @@ class ReleaseInputs:
                 raise storage_paths.MissingArtifactError(
                     RELEASE_GROUP,
                     f"projects/open_model_data/release/{pattern}",
-                    f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
+                    f".venv/bin/python -m scripts.storage.artifacts hydrate --group {RELEASE_GROUP}",
                     "no committed members match required selector; inspect manifest membership",
                 )
 
@@ -459,7 +459,7 @@ def main() -> int:
             "Use for an external export after hydrating the release artifacts."
         ),
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/package_unified_dataset.py --output-dir /tmp/uldr-v02\n"
             "Outputs: train.jsonl, dpo.jsonl, eval.jsonl, manifest.json, hash sidecar, and README.md.\n"
             "Exit codes: 0 on success; nonzero for invalid paths or missing/corrupt inputs.\n"

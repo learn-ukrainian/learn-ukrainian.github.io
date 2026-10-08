@@ -8,7 +8,7 @@ export + aggregate divergence summary.  Stops before publish/pin-flip.
 
 Does not open ``sources.db`` unless ``--with-offline-enrich`` is passed (then
 delegates to :func:`scripts.lexicon.runner.offline_engine.enrich_offline_slice`
-for sealed CEFR/relations — memory-heavy; prefer VPS under 1.5/2.0 GiB caps).
+for sealed CEFR/relations — memory-heavy; prefer the runner host under its default job memory caps).
 """
 
 from __future__ import annotations

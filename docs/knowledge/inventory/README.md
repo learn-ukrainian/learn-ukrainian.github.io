@@ -8,7 +8,7 @@ This is evidence tooling, not a classifier that changes source documents.
 From a dispatch worktree, run:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python scripts/docs/docs_inventory.py
+.venv/bin/python scripts/docs/docs_inventory.py
 ```
 
 Stage intended documentation changes before running: the source is **Git's

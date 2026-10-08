@@ -1042,8 +1042,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --since 24h --event all --json\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/ci/ci_timings.py --fixture runs.json --event merge_group\n"
+            "  .venv/bin/python scripts/ci/ci_timings.py --since 24h --event all --json\n"
+            "  .venv/bin/python scripts/ci/ci_timings.py --fixture runs.json --event merge_group\n"
             "Outputs: Report on stdout; no files or database updates.\n"
             "Exit codes: 0 = report produced; 1 = fetch or data error; 2 = invalid arguments.\n"
             "Related: issue #9058; GitHub Actions CI workflow (ci.yml)."

@@ -23,7 +23,7 @@ The withdrawal transform can be reproduced from the pinned source with this invo
 mkdir -p batch_state/synonym-withdrawal-8714
 git show 4dc85e230c75ca2f7e4d28032461d16fe31382c4^:site/src/data/lexicon-practice-deck.pointer.json > batch_state/synonym-withdrawal-8714/source-pointer.json
 gh release download atlas-practice-deck -R learn-ukrainian/learn-ukrainian.github.io -p lexicon-practice-deck-atlas-practice-v1-c0c3f3242b5134b6.json.gz -D batch_state/synonym-withdrawal-8714
-/home/ops/learn-ukrainian/.venv/bin/python - <<'PY'
+.venv/bin/python - <<'PY'
 import json
 from pathlib import Path
 from scripts.practice_deck.publish import withdraw_synonyms_from_pinned_package

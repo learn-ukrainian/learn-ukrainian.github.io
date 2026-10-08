@@ -968,8 +968,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/end_dictionaries.py --out-dir data/lexicon/textbook-end-dictionaries\n"
+            "  .venv/bin/python scripts/practice_deck/end_dictionaries.py\n"
+            "  .venv/bin/python scripts/practice_deck/end_dictionaries.py --out-dir data/lexicon/textbook-end-dictionaries\n"
             "Outputs: inventory.json and sections.json in --out-dir; declared artifacts publish through their manifest.\n"
             "Exit codes: 0 = success; 1 = missing sources.db or extraction failure; 2 = invalid arguments.\n"
             "Related: issue #8809 P2 and docs/practice/textbook-end-dictionaries.md."

@@ -341,7 +341,7 @@ Q1 content-addressed assertion ids + separately versioned normaliser + stable so
 
 ## 17. Evidence (queries run 2026-09-28, read-only)
 
-All with `/home/ops/learn-ukrainian/.venv/bin/python` and `sqlite3.connect("file:…?mode=ro", uri=True)`.
+All with `.venv/bin/python` and `sqlite3.connect("file:…?mode=ro", uri=True)`.
 
 ```sql
 -- atlas.db

@@ -120,7 +120,7 @@ def main() -> None:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/lexicon/curated_membership_evidence.py "
             "--registry registry/lexicon/curated-membership-reconciliation-9151.json "
             "--sources-db data/sources.db\n"

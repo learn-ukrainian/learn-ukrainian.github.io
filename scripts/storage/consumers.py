@@ -344,8 +344,8 @@ def build_parser() -> argparse.ArgumentParser:
         description="Scan tracked code for literal phase paths and known dynamic path bases.\nUse before each migration phase to enumerate consumers for review and executed checks.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.consumers scan --phase P1
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.consumers scan --phase P2 --repo-root /path/to/checkout
+  .venv/bin/python -m scripts.storage.consumers scan --phase P1
+  .venv/bin/python -m scripts.storage.consumers scan --phase P2 --repo-root /path/to/checkout
 
 Outputs: registry/artifacts/consumers-<phase>.tsv with artifact, consumer, and empty check columns.
 Exit codes: 0 means the scan completed; 1 means Git or classification input failed.

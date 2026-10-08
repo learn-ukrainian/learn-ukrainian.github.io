@@ -5400,8 +5400,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342 --output-dir /tmp/grammar-export\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342\n"
+            "  .venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342 --output-dir grammar-export\n"
             "Outputs: managed A shards and K companions as one transaction, or an explicit external directory.\n"
             "Exit codes: 0 = success; nonzero = input, validation, or publication failure.\n"
             "Related: issues #8342 and #8809."

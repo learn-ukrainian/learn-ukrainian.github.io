@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Detached, idempotent launcher for #5230 offline enrich (reduce candidate → enriched).
-# Mirrors launch_reduce.sh under MemoryHigh=1.5G MemoryMax=2.0G.
+# Mirrors launch_reduce.sh under the default job memory caps.
 #
 # Prerequisites (on VPS run-20k):
 #   - network-cache.sqlite populated (fetch done)

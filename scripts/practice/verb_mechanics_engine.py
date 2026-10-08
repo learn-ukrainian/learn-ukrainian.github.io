@@ -2841,7 +2841,7 @@ def find_vesum_db(specified: Path | None = None) -> Path:
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-        Path("/home/ops/learn-ukrainian/data/vesum.db"),
+        Path.home() / "learn-ukrainian" / "data" / "vesum.db",
     ]
     for c in candidates:
         if c.exists() and c.stat().st_size > 1000:

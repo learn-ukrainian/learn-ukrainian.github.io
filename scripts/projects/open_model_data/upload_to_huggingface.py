@@ -58,7 +58,7 @@ def main() -> int:
             "Use only after checking the external package and its intended repository."
         ),
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/upload_to_huggingface.py "
             "--dataset-dir /tmp/uldr-v02 --repo-id owner/uldr --private\n"
             "Outputs: a dataset repository commit on Hugging Face; no local package files.\n"

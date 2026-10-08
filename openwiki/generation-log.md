@@ -5,7 +5,7 @@
 **Generation Invocation:** Local dispatch worktree execution pass (`agy/impl-5541-openwiki-pilot`)
 **Source Digest (Git HEAD at generation):** `ca23735203f5acd1ce3fa2bd8b0a1471dab48f47`
 **Date:** 2026-09-17T21:15:00Z (updated 2026-09-17T21:30:00Z)
-**Venue:** Local dispatch worktree (`/home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot`)
+**Venue:** Local dispatch worktree (`.worktrees/dispatch/agy/impl-5541-openwiki-pilot`)
 
 ---
 

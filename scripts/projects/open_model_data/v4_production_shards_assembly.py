@@ -159,14 +159,14 @@ def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, Artifa
         except (FileNotFoundError, ValueError) as exc:
             raise RuntimeError(
                 f"Managed artifact group {group} is unavailable; hydrate with "
-                f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+                f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
             ) from exc
     try:
         return snapshots[group].artifacts[rel]
     except KeyError as exc:
         raise RuntimeError(
             f"{path} is not a committed member of {group}; check the requested path or hydrate with "
-            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+            f".venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
         ) from exc
 
 
@@ -1805,7 +1805,7 @@ def main() -> None:
         description="Verify the archived ULDR Phase 3.7 release. Regeneration is deferred to P3b (#8809).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/projects/open_model_data/v4_production_shards_assembly.py --verify-only\n"
             "Outputs: none in verify mode; generation refuses before writing.\n"
             "Exit codes: 0 for a valid release, nonzero for invalid inputs or deferred generation.\n"

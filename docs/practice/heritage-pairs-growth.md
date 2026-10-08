@@ -51,7 +51,7 @@ exact `normativeSupport.passage` as input and once with the exact
 and `sentenceSha256`:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -c 'import hashlib, sys; from scripts.audit.generate_practice_deck import _normalize_source_text; print(hashlib.sha256(_normalize_source_text(sys.stdin.read()).encode("utf-8")).hexdigest())' < reviewed-text.txt
+.venv/bin/python -c 'import hashlib, sys; from scripts.audit.generate_practice_deck import _normalize_source_text; print(hashlib.sha256(_normalize_source_text(sys.stdin.read()).encode("utf-8")).hexdigest())' < reviewed-text.txt
 ```
 
 ### Measured effect (2026-09-28)
