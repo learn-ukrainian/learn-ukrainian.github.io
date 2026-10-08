@@ -20,7 +20,7 @@ from typing import Any
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.dual_write import resolve_handoff_path
-from agents_extensions.shared.session_streams.handoff import diagnose_handoff
+from agents_extensions.shared.session_streams.handoff import diagnose_handoff, remote_lease_reason
 from agents_extensions.shared.session_streams.hooks import clean_exit_hook, lease_from_environment
 from agents_extensions.shared.session_streams.inventory import epic_handoff_map
 from agents_extensions.shared.session_streams.model import (
@@ -300,7 +300,14 @@ class SessionSupervisor:
         """
         self._require_driver(role)
         if self.remote is not None:
-            raise SupervisorError("remote recovery requires Monitor TTL/CAS claim; local PID recovery refused")
+            lease = self.remote.stream(stream_id).get("lease") or {}
+            remote_holder = lease.get("holder") or {}
+            reason = remote_lease_reason(
+                holder_agent=str(remote_holder.get("agent") or ""),
+                holder_harness=str(remote_holder.get("harness") or ""),
+                expires_at=str(lease.get("expires_at") or ""),
+            )
+            raise SupervisorError(f"remote recovery: {reason}")
         status = diagnose_handoff(self._require_store(), stream_id)
         if not status.session_id or status.session_state not in {"open", "rolling"}:
             return False

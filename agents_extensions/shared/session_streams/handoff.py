@@ -71,6 +71,20 @@ def _process_alive(pid: int) -> bool:
     return True
 
 
+def remote_lease_reason(
+    *, holder_agent: str, holder_harness: str, expires_at: str, now: datetime | None = None,
+) -> str:
+    """Describe Monitor recovery without treating local process state as authority."""
+    if not expires_at:
+        return "remote lease expiry is unknown — inspect Monitor before claiming; local PID recovery refused"
+    if (now or utc_now()) >= parse_timestamp(expires_at):
+        return "remote lease expired — claim through Monitor TTL/CAS now; local PID recovery refused"
+    return (
+        f"remote lease held by {holder_agent or '?'}/{holder_harness or '?'} until {expires_at} — "
+        f"retry the Monitor claim after {expires_at}; local PID recovery refused"
+    )
+
+
 def diagnose_handoff(
     store: SessionStreamStore,
     stream_id: str,
@@ -142,7 +156,12 @@ def diagnose_handoff(
     # full launcher TTL (often 6h). Live holders remain untouchable.
     claimable = not remote_ttl and lease_state == "active" and holder_kind == "process" and not alive
     if remote_ttl:
-        reason = "remote lease requires Monitor TTL/CAS recovery; local PID recovery refused"
+        reason = remote_lease_reason(
+            holder_agent=str(lease.get("holder_agent") or ""),
+            holder_harness=str(lease.get("holder_harness") or ""),
+            expires_at=expires_at,
+            now=current,
+        )
     elif lease_state == "active" and holder_kind != "process":
         reason = "app-thread holder requires verified GUI lifecycle recovery; PID handoff refused"
     elif lease_state == "active" and alive and not expired:

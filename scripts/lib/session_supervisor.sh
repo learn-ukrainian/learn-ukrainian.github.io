@@ -190,13 +190,11 @@ claim_session_supervisor_env() {
       echo "Error: session supervisor failed to claim ${stream}" >&2
       sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
       if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
-        echo "  hint: another process still holds this epic stream." >&2
+        echo "  hint: Monitor still holds a live lease for this epic stream." >&2
         echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
+        echo "  follow the holder and expiry diagnosis; retry the Monitor claim after expiry." >&2
         if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
           echo "  supervisory successor launches cannot --force; the operator flag is one-shot." >&2
-        else
-          echo "  takeover: ./${launcher} --epic ${epic} --force" >&2
-          echo "  or: .venv/bin/python -m scripts.session_supervisor release --role driver --force --stream ${stream} --actor-agent ${agent} --actor-host-id \"\$LU_MONITOR_HOST_ID\" --reason 'operator force takeover'" >&2
         fi
       fi
       return 1
