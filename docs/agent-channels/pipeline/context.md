@@ -41,7 +41,7 @@ check → research → skeleton → write → activities → enrich → verify �
 
 1. **Plans are the source of truth.** Never silently modify a plan — increment `version:` and record the rationale in the plan. Prior versions live in git history, not `.yaml.bak` files.
 2. **Audit gates must ALL be green.** No "good enough" if one gate is failing.
-3. **Word targets are minimums.** Expand content, never lower the target.
+3. **Word targets are minimums.** Expand content, never lower the target. Legacy module workflows use the targets in `scripts/audit/config.py`; core fresh-build lessons use their own contracts (`agents_extensions/shared/rules/non-negotiable-rules.md` rules 1 and 4). Every workflow meets any word target only with source-backed necessary pedagogy, never by repeating exposition or auto-padding.
 4. **Reviewer is not the writer.** Enforced by `SELF_REVIEW_DETECTED` audit gate.
 
 ## Common commands

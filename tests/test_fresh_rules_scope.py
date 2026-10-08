@@ -7,6 +7,7 @@ they do not claim that an LLM follows those instructions or that a lesson passes
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -100,6 +101,11 @@ def test_content_seat_keeps_universal_duties_beyond_sizing(api_client, surface):
     assert "non-negotiable-rules.md` rule 1 scope" in targets
     assert "Core fresh-build lessons are sized by their own contracts (rule 4)" in targets
     assert "only sizing is scoped" in targets
+    assert (
+        "Rule 1's anti-padding duty binds every workflow: content meets any word target only "
+        "with source-backed necessary pedagogy, never by repeating exposition or auto-padding."
+    ) in targets
+    assert targets.endswith("<!-- ca-targets: N02 -->")
     for duty in ("plan-file", "source-backed pedagogy", "naturalness", "still bind every workflow"):
         assert duty in targets
     for duty in ("Never silently modify plan files", "Content outlines, objectives and word targets remain immutable"):
@@ -114,6 +120,31 @@ def test_content_seat_keeps_universal_duties_beyond_sizing(api_client, surface):
     assert "source-backed" in targets
     assert "verify every vocabulary word through VESUM" in text
     assert "<!-- ca-targets:" not in rules_core.core_text("core", root=ROOT)
+
+
+def test_pipeline_channel_context_injects_sizing_scope_and_anti_padding(monkeypatch):
+    from scripts.ai_agent_bridge import _channels
+
+    monkeypatch.setattr(_channels, "CONTEXT_ROOT", ROOT / "docs/agent-channels")
+    monkeypatch.setattr(_channels, "get_channel", lambda channel: {"include": []})
+    context = _channels.load_channel_context("pipeline")
+
+    body = context["body"]
+    assert "--- context: pipeline (sha256:" in body
+    rule = next(line for line in body.splitlines() if line.startswith("3. **Word targets"))
+    assert "Expand content, never lower the target." in rule
+    assert "Legacy module workflows use the targets in `scripts/audit/config.py`" in rule
+    assert (
+        "core fresh-build lessons use their own contracts "
+        "(`agents_extensions/shared/rules/non-negotiable-rules.md` rules 1 and 4)."
+    ) in rule
+    assert (
+        "Every workflow meets any word target only with source-backed necessary pedagogy, "
+        "never by repeating exposition or auto-padding."
+    ) in rule
+    path = ROOT / "docs/agent-channels/pipeline/context.md"
+    assert context["revs"]["pipeline"] == hashlib.sha256(path.read_bytes()).hexdigest()
+    assert context["missing"] == []
 
 
 def test_fresh_task_selector_leads_to_its_own_contracts(api_client):
