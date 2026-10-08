@@ -623,7 +623,7 @@ def test_min_free_disk_bytes_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB", raising=False)
     monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB", raising=False)
     assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
-    assert atlas_job.min_free_disk_bytes() == 5 * 1024 * 1024 * 1024
+    assert atlas_job.min_free_disk_bytes() == 14 * 1024 * 1024 * 1024
 
     monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "10737418240")
     assert atlas_job.min_free_disk_bytes() == 10 * 1024 * 1024 * 1024
