@@ -259,6 +259,21 @@ def _author_model_family(harness: str, model: str) -> str:
     return resolve_author_family(f"cursor:{model}" if cursor else model)
 
 
+def _is_catalog_model_trailer(model: str) -> bool:
+    """Accept explicit model forms, never arbitrary task-id suffixes."""
+    catalog = load_model_catalog()
+    model_id = resolve_catalog_model_id(model, catalog)
+    if model_id is None:
+        return False
+    aliases = (model_id, *catalog["models"][model_id].get("aliases", []))
+    pattern = (
+        "(?:" + "|".join(re.escape(alias) for alias in aliases) + ")"
+        r"(?:-(?:low|medium|high|xhigh|max))?(?:\[[^\[\]\s]+\])?"
+    )
+    candidates = [model, *(model[index + 1:] for index, char in enumerate(model) if char in "/:")]
+    return any(re.fullmatch(pattern, candidate, flags=re.IGNORECASE) for candidate in candidates)
+
+
 def _attribute_commit(
     entry: dict[str, Any],
     *,
@@ -320,11 +335,11 @@ def _attribute_commit(
         family = _author_model_family(harness, str(author_model or ""))
         source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
     else:
-        # Only catalog models and Cursor selectors prove a model identity;
-        # substring family matching cannot distinguish a missing task record.
+        # Require a complete model form; routing's catalog-prefix matching can
+        # mistake task ids for models when their task records are missing.
         family = (
             _author_model_family(harness, model)
-            if resolve_catalog_model_id(model) is not None or is_cursor_auto_selector(model)
+            if _is_catalog_model_trailer(model) or is_cursor_auto_selector(model)
             else UNKNOWN_AUTHOR_FAMILY
         )
         source = "trailer-model"
