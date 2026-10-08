@@ -21,6 +21,7 @@ if str(_local_repo_root) not in sys.path:
 
 from scripts.common import github_client
 from scripts.common.repo_root import resolve_repo_root
+from scripts.review.verdict_parser import ACCEPTED_VERDICT_TOKENS
 
 if TYPE_CHECKING:
     from agent_runtime.target_admission import AdmittedTarget
@@ -509,6 +510,12 @@ def build_ask_review_wait_command(task_id: str, *, timeout: int) -> list[str]:
 
 _ASK_REVIEW_DEFAULT_TIMEOUT_S = 1800
 
+_REVIEW_VERDICT_OUTPUT = (
+    "Review completion requires your own plain, unfenced verdict line: "
+    "the label VERDICT, a colon, then one accepted token. "
+    f"Accepted tokens: {', '.join(ACCEPTED_VERDICT_TOKENS)}."
+)
+
 _NATIVE_CODE_REVIEW_OUTPUT = """## Existing code-review output and exact-target evidence contract
 
 In your first completed reply, include a plain, unfenced verdict line using
@@ -580,7 +587,7 @@ def run_ask_review_dispatch(
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
-        prompt = content
+        prompt = _REVIEW_VERDICT_OUTPUT + "\n\n" + content
         if review_profile in {"code", "infra"} or re.search(r"\bcode-review-findings\.v1\b", content):
             prompt += "\n\n" + _NATIVE_CODE_REVIEW_OUTPUT
         if data:
@@ -673,6 +680,15 @@ def run_ask_review_dispatch(
             if completed:
                 state["status"] = "failed"
                 state["failure_reason"] = verdict_failure
+            # A native dispatch may already have failed this same verdict gate.
+            # Reuse its safe diagnostic for legacy and current wait results,
+            # without replacing other terminal failures or promoting them.
+            if (
+                gate_failure is not None
+                and verdict_failure == _delegate._REVIEW_UNSUPPORTED_VERDICT_REASON
+                and (completed or state.get("failure_reason") == verdict_failure)
+            ):
+                state["stderr_excerpt"] = gate_failure.detail
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

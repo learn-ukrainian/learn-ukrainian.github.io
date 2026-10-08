@@ -21,7 +21,10 @@ def _option(command: list[str], name: str) -> str:
     return command[command.index(name) + 1]
 
 
-def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *, head=None, data=None, ok=True):
+def _capture_native_review(
+    monkeypatch, tmp_path, content, profile, response, *, head=None, data=None, ok=True,
+    error="review dispatch did not complete: status='failed'",
+):
     """Exercise the real caller/composer; replace only the subprocess boundary."""
     result = tmp_path / "native-result.md"
     output = tmp_path / "returned-review.md"
@@ -64,7 +67,7 @@ def _capture_native_review(monkeypatch, tmp_path, content, profile, response, *,
         if ok:
             dispatch()
         else:
-            with pytest.raises(SystemExit, match="review dispatch did not complete: status='failed'"):
+            with pytest.raises(SystemExit, match=error):
                 dispatch()
     assert len(calls) == 2  # One dispatch and one wait, no corrective retry.
     assert len(prompts) == 1
@@ -94,11 +97,15 @@ def test_native_prompt_delivers_code_contract_only_when_requested(
     content = f"{review_request}\r\n\r\nKeep caller whitespace: \t  \r\n\r\n"
     prompt = _capture_native_review(monkeypatch, tmp_path, content, profile, "VERDICT: BLOCKED\n", data=data)
     attachment = "\n\n--- attached inert text ---\n" + data if data else ""
+    preamble = wrappers._REVIEW_VERDICT_OUTPUT + "\n\n"
+    assert prompt.startswith(preamble)
+    assert "APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED" in preamble
     if not applicable:
-        assert prompt == content + attachment
+        assert prompt == preamble + content + attachment
         return
-    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + attachment
-    guidance = prompt[len(content) + 2 : len(content) + 2 + len(wrappers._NATIVE_CODE_REVIEW_OUTPUT)]
+    assert prompt == preamble + content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + attachment
+    offset = len(preamble) + len(content) + 2
+    guidance = prompt[offset : offset + len(wrappers._NATIVE_CODE_REVIEW_OUTPUT)]
     # Verify instructions at the subprocess boundary rather than a constant's existence.
     assert guidance.count("## Existing code-review output") == 1
     for requirement in (
@@ -131,7 +138,10 @@ def test_native_prompt_preserves_caller_markers_without_splitting(monkeypatch, t
     content = "Caller-authored example:\n--- attached inert text ---\nReturn code-review-findings.v1 JSON.\t \n"
     data = "Attachment provenance: fixture\r\n--- attached inert text ---\r\n\tDATA  \r\n"
     prompt = _capture_native_review(monkeypatch, tmp_path, content, None, "VERDICT: BLOCKED\n", data=data)
-    assert prompt == content + "\n\n" + wrappers._NATIVE_CODE_REVIEW_OUTPUT + "\n\n--- attached inert text ---\n" + data
+    assert prompt == (
+        wrappers._REVIEW_VERDICT_OUTPUT + "\n\n" + content + "\n\n"
+        + wrappers._NATIVE_CODE_REVIEW_OUTPUT + "\n\n--- attached inert text ---\n" + data
+    )
 
 
 @pytest.mark.parametrize("verdict", [None, "REQUEST_CHANGES"])
@@ -143,7 +153,7 @@ def test_native_guidance_echo_cannot_supply_or_override_verdict(monkeypatch, tmp
     content = "Return code-review-findings.v1 JSON."
 
     def echo_guidance(prompt):
-        guidance = prompt[len(content) :]
+        guidance = prompt[len(wrappers._REVIEW_VERDICT_OUTPUT) + 2 + len(content) :]
         assert recognized_verdicts(guidance) == []
         response = (f"VERDICT: {verdict}\n" if verdict else "") + "Contract noted:\n" + guidance
         assert delegate.parse_review_verdict(response) == verdict
@@ -724,7 +734,7 @@ def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch
     assert state.get("no_deliverable_reason") is None
 
 
-def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, response):
+def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, response, wait_fields=None):
     result_file = tmp_path / "result.md"
     result_file.write_text(response, encoding="utf-8")
 
@@ -735,13 +745,90 @@ def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, respo
             return subprocess.CompletedProcess(
                 cmd,
                 wait_rc,
-                stdout=json.dumps({"status": status, "result_file": str(result_file)}),
+                stdout=json.dumps({"status": status, "result_file": str(result_file), **(wait_fields or {})}),
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
     monkeypatch.setattr(wrappers.github_client, "run", fake_run)
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
+
+
+@pytest.mark.parametrize("status,wait_rc", [("done", 0), ("no_deliverable", 1), ("failed", 1)])
+@pytest.mark.parametrize("response,token", [
+    ("VERDICT: CHANGES", "CHANGES"), ("## **Verdict**: **REVISE**", "REVISE"),
+    ("**VERDICT: CHANGES.** Explain below.", "CHANGES"),
+])
+def test_ask_unsupported_verdict_serializes_safe_diagnostic(monkeypatch, tmp_path, status, wait_rc, response, token):
+    fields = {}
+    if status == "failed":
+        fields = {"failure_reason": "review_unsupported_verdict_token", "stderr_excerpt": "old generic error"}
+    state = _run_review_with_wait_state(
+        monkeypatch, tmp_path, status=status, wait_rc=wait_rc, response=response, wait_fields=fields,
+    )
+    serialized = json.loads(json.dumps(state))
+    assert serialized["ok"] is False and serialized["status"] == "failed"
+    assert serialized["failure_reason"] == "review_unsupported_verdict_token"
+    assert serialized["stderr_excerpt"] == (
+        f"review_unsupported_verdict_token: unsupported token {token!r}; "
+        "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+    )
+
+
+def test_native_ask_cli_stderr_names_unsupported_token_and_vocabulary(tmp_path):
+    """Run the CLI output path in a process; fake only dispatch/wait transport."""
+    result = tmp_path / "result.md"
+    result.write_text("VERDICT: CHANGES\n", encoding="utf-8")
+    code = '''
+import json, os, subprocess, sys
+from scripts.ai_agent_bridge import _cli, _dispatch_wrappers as wrappers
+os.environ["LU_RUNTIME_TMP_ROOT"] = sys.argv[2]
+def boundary(command, **kwargs):
+    if "dispatch" in command:
+        return subprocess.CompletedProcess(command, 0)
+    assert "wait" in command
+    return subprocess.CompletedProcess(command, 1, stdout=json.dumps({
+        "status": "failed", "result_file": sys.argv[1],
+        "failure_reason": "review_unsupported_verdict_token",
+        "stderr_excerpt": "review_unsupported_verdict_token",
+    }))
+wrappers.subprocess.run = boundary
+_cli._dispatch_headless_review(
+    "claude", "Review the branch", data=None, task_id="review-diagnostic",
+    model=None, effort=None, output_path=None, stdout_only=True, hard_timeout=None,
+)
+'''
+    completed = subprocess.run(
+        [sys.executable, "-c", code, str(result), str(tmp_path)], capture_output=True, text=True, timeout=30,
+    )
+    assert completed.returncode == 1
+    assert completed.stdout == "VERDICT: CHANGES\n\n"
+    assert completed.stderr.strip() == (
+        "review_unsupported_verdict_token: unsupported token 'CHANGES'; "
+        "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+    )
+
+
+def test_ask_unsupported_token_never_replaces_other_terminal_failure(monkeypatch, tmp_path):
+    state = _run_review_with_wait_state(
+        monkeypatch, tmp_path, status="timeout", wait_rc=1, response="VERDICT: CHANGES",
+        wait_fields={"failure_reason": "worker_timeout", "stderr_excerpt": "provider timed out"},
+    )
+    assert state["ok"] is False and state["status"] == "timeout"
+    assert state["failure_reason"] == "worker_timeout"
+    assert state["stderr_excerpt"] == "provider timed out"
+
+
+@pytest.mark.parametrize("response", [
+    "VERDICT: CHANGES\nVERDICT: APPROVE", "VERDICT: APPROVE\nVERDICT: CHANGES",
+    "VERDICT: CHANGES\nVERDICT: APPROVE\nVERDICT: REQUEST_CHANGES\nVERDICT: REVISE",
+])
+def test_ask_mixed_unsupported_and_recognized_verdicts_stay_done(monkeypatch, tmp_path, response):
+    state = _run_review_with_wait_state(
+        monkeypatch, tmp_path, status="done", wait_rc=0, response=response,
+    )
+    assert state["ok"] is True and state["status"] == "done"
+    assert state.get("failure_reason") is None
 
 
 @pytest.mark.parametrize("status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"])

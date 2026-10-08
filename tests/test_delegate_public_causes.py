@@ -120,6 +120,35 @@ def test_every_registered_cause_is_fixed_text():
             assert marker not in cause, (cause, marker)
 
 
+def test_unsupported_verdict_cause_survives_public_persistence_without_free_text():
+    cause = "review_unsupported_verdict_token"
+    assert cause in delegate.public_causes()
+    task_id = "unsupported-verdict-public"
+    diagnostic = (
+        f"{cause}: unsupported token 'CHANGES'; "
+        "accepted tokens: APPROVE, APPROVED, CHANGES_REQUESTED, REQUEST_CHANGES, BLOCKED"
+    )
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {
+            "task_id": task_id,
+            "status": "failed",
+            "require_review_verdict": True,
+            "review_verdict_failure": cause,
+            "last_error": cause,
+            "stderr_excerpt": diagnostic,
+        },
+    )
+    state = json.loads(delegate._state_path(task_id).read_text())
+    _assert_public(state)
+    assert state["failure_reason"] == state["review_verdict_failure"] == state["last_error"] == cause
+    assert state["stderr_excerpt"] == diagnostic
+    # Details remain in the existing diagnostic channel, never admitted as
+    # arbitrary parameters on a public reason.
+    public, local = delegate.public_cause(f"{cause}, unsupported token {HOSTILE}")
+    assert public == delegate.UNCLASSIFIED_CAUSE and local is not None
+
+
 @pytest.mark.parametrize(
     "value",
     [
