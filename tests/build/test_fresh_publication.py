@@ -1,8 +1,11 @@
 """Rendered quote rights, verbatim excerpt, and visible attribution regressions."""
 
 import html
+import json
+import subprocess
 
 import pytest
+import yaml
 
 from scripts.build.fresh.assemble import (
     AssemblerError,
@@ -16,6 +19,94 @@ from scripts.curriculum.resolver.classify import classify_unit
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument
 
 BOOK = "1-klas-bukvar-zaharijchuk-2025-1"
+
+
+@pytest.fixture
+def publication_course(tmp_path, monkeypatch):
+    """Real tracked synthetic publication inputs; no held-out oracle access."""
+    from tests.curriculum.evidence.test_publication import owned_entries
+
+    for path, content in {
+        "docs/l2-uk-direct/textbook-selection.yaml": yaml.safe_dump({"sources": owned_entries()}),
+        "site/src/data/lexicon-sentence-inventory.json": json.dumps({"rows": []}),
+    }.items():
+        target = tmp_path / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content)
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "docs/l2-uk-direct/textbook-selection.yaml")
+    monkeypatch.setattr(publication, "REPO_ROOT", tmp_path)
+    return tmp_path
+
+
+@pytest.mark.parametrize("surface", ["quote", "activity", "example", "grounding"])
+@pytest.mark.parametrize("file", ["unregistered", "owned-oho-a1-transcripts-v2", BOOK])
+def test_tracked_publication_checks_rights_before_named_accounting(publication_course, surface, file):
+    from tests.curriculum.evidence.test_publication import owned_occurrence
+
+    rec = owned_occurrence(file="owned-oho-a1-transcripts")["record"]
+    rec["source"].update(file=file, page=1)
+    step = {"id": "s1"}
+    lesson = {"n": 1, "steps": [step]}
+    pack = {"texts": [rec]}
+    if surface == "quote":
+        step.update(needs=["quote"], ref=rec["id"])
+    elif surface == "activity":
+        step["practice"] = ["a1"]
+        lesson["activities"] = [{"id": "a1", "focus": "host: {kind: quote, ref: T-001}"}]
+    elif surface == "example":
+        rec = {**rec, "id": "EX-001", "text": rec["quote"]}
+        del rec["quote"]
+        pack = {"examples": [rec]}
+        step.update(needs=["example"], ref=rec["id"])
+    else:
+        step["explains"] = [rec["id"]]
+    plan = {"lessons": [lesson]}
+    for category, document in (("lesson-plans", plan), ("evidence", pack)):
+        path = publication_course / f"curriculum/l2-uk-en/{category}/a1/synthetic.yaml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(yaml.safe_dump(document))
+    subprocess.run(["git", "add", "."], cwd=publication_course, check=True, timeout=30)
+    report = publication.course_report(publication_course)
+    if surface == "grounding":
+        assert report["status"] == "ok" and report["errors"] == []
+        assert publication.enforce_publication(plan, pack) == []
+    else:
+        code = "quote_mismatch" if file == BOOK else "publication_right"
+        assert report["status"] == "blocked"
+        assert any(error.startswith(code + ":") for error in report["errors"])
+        with pytest.raises(ValueError, match="^" + code + ":"):
+            publication.quote_attribution(publication.excerpt_record(rec))
+
+
+@pytest.mark.parametrize(
+    "allowed,size,code",
+    [(True, 800, None), (True, 801, "publication_limit"), (False, 20, "publication_right")],
+)
+def test_course_report_preserves_registry_permitted_textbook_quotes(publication_course, allowed, size, code):
+    registry_path = publication.REGISTRY_PATH
+    registry = yaml.safe_load(registry_path.read_text())
+    registry["sources"][BOOK]["publish"]["allowed"] = allowed
+    registry_path.write_text(yaml.safe_dump(registry))
+    rec = {
+        "id": "T-001", "quote": "x" * size,
+        "source": {"kind": "textbook", "file": BOOK, "page": 1, "chunk_id": BOOK + "_s0001"},
+    }
+    lesson = {"n": 1, "steps": [{"id": "s1", "needs": ["quote"], "ref": "T-001"}]}
+    for category, document in (("lesson-plans", {"lessons": [lesson]}), ("evidence", {"texts": [rec]})):
+        path = publication_course / f"curriculum/l2-uk-en/{category}/a1/synthetic.yaml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(yaml.safe_dump(document))
+    subprocess.run(["git", "add", "."], cwd=publication_course, check=True, timeout=30)
+    report = publication.course_report(publication_course)
+    assert all(total["lesson"] == 0 for total in report["sources"].values())
+    if code:
+        assert report["status"] == "blocked"
+        assert any(error.startswith(code + ":") for error in report["errors"])
+    else:
+        assert report["status"] == "ok" and report["errors"] == []
+        assert publication.enforce_publication({"lessons": [lesson]}, {"texts": [rec]}) == []
+        assert render_quote(file=BOOK, quote=rec["quote"], page=1)[0]
 
 
 def render_quote(file=BOOK, quote="Synthetic exact excerpt", page=39):

@@ -237,6 +237,11 @@ def quote_attribution(record: dict, registry: dict | None = None) -> str:
     quote = record.get("quote")
     if type(limit) is not int or limit < 1 or not isinstance(quote, str) or not quote:
         raise ValueError(f"{codes.PUBLICATION_RIGHT}: {record.get('id')} invalid excerpt or publication limit")
+    chunk_id = source.get("chunk_id")
+    if isinstance(chunk_id, str) and any(
+        chunk_id.startswith(file + "_") for file in NAMED_EXCERPTS if file != source.get("file")
+    ):
+        raise ValueError(f"{codes.QUOTE_MISMATCH}: chunk belongs to another source")
     if source.get("file") in NAMED_EXCERPTS:
         validate_owned_policy(source.get("file"), entry)
         size = nfc_chars(quote)
@@ -299,8 +304,9 @@ def validate_owned_policy(file: str, entry: dict, api=None) -> dict:
         }
         or type(metadata.get("canonical_chars")) is not int
         or type(metadata.get("unit_count")) is not int
+        or metadata["canonical_chars"] < 1
+        or metadata["unit_count"] < 1
         or not units
-        or metadata["unit_count"] != len(units)
         or any(
             not isinstance(unit, dict)
             or type(unit.get("chars")) is not int
@@ -310,10 +316,13 @@ def validate_owned_policy(file: str, entry: dict, api=None) -> dict:
             or not re.fullmatch(r"[0-9a-f]{64}", unit["sha256"])
             for unit in units.values()
         )
-        or metadata["canonical_chars"] != sum(unit["chars"] for unit in units.values())
         or len({unit["number"] for unit in units.values()}) != len(units)
     ):
         raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: invalid canonical publication policy")
+    if metadata["unit_count"] != len(units) or metadata["canonical_chars"] != sum(
+        unit["chars"] for unit in units.values()
+    ):
+        raise ValueError(f"{codes.PUBLICATION_DENOMINATOR_DRIFT}: {file} canonical totals disagree with units")
     if api is not None and api.publication_metadata(file) != metadata:
         raise ValueError(f"{codes.PUBLICATION_DENOMINATOR_DRIFT}: {file} canonical sections changed")
     return metadata
@@ -344,8 +353,15 @@ def publication_unit(record: dict, entry: dict, api=None) -> str:
     """Exact parent section, or ULP lesson-number fallback; never a window denominator."""
     source = record.get("source") or {}
     file, chunk_id = source.get("file"), source.get("chunk_id")
-    if not isinstance(chunk_id, str) or not chunk_id.startswith(str(file) + "_"):
-        raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: chunk belongs to another source")
+    if not isinstance(chunk_id, str) or not chunk_id:
+        raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: chunk identity missing")
+    if not chunk_id.startswith(str(file) + "_"):
+        code = (
+            codes.QUOTE_MISMATCH
+            if any(chunk_id.startswith(named + "_") for named in NAMED_EXCERPTS)
+            else codes.PUBLICATION_SCOPE_INCOMPLETE
+        )
+        raise ValueError(f"{code}: chunk belongs to another source")
     metadata = validate_owned_policy(file, entry)
     units = metadata["units"]
     section_id = source.get("parent_section_id")
@@ -354,8 +370,10 @@ def publication_unit(record: dict, entry: dict, api=None) -> str:
     chunk = None
     if api is not None:
         chunk = api.get_textbook_chunk(chunk_id)
-        if chunk is None or chunk.get("source_file") != file:
+        if chunk is None:
             raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: cited source identity unresolved")
+        if chunk.get("source_file") != file:
+            raise ValueError(f"{codes.QUOTE_MISMATCH}: cited chunk belongs to another source")
         parent = chunk.get("parent_section_id")
         if parent is not None:
             if section_id is not None and str(section_id) != str(parent):
@@ -388,8 +406,14 @@ def publication_unit(record: dict, entry: dict, api=None) -> str:
     return key
 
 
-def excerpt_occurrences(plan: dict, pack: dict, *, level="unknown", module="unknown", draft=None) -> list[dict]:
-    """Preserve lesson/step/ref uses while deduplicating generated representations."""
+def excerpt_occurrences(
+    plan: dict, pack: dict, *, level="unknown", module="unknown", draft=None, registry=None
+) -> list[dict]:
+    """Collect named uses; a supplied course registry also checks other printed rights.
+
+    Normal preflight/verification and rendering already check quote permission.
+    The course report supplies its own registry to check before filtering, too.
+    """
     from scripts.curriculum.validate.quote_bytes import quote_host_refs
 
     records = {row["id"]: row for group in ("texts", "examples") for row in (pack or {}).get(group, [])}
@@ -417,9 +441,21 @@ def excerpt_occurrences(plan: dict, pack: dict, *, level="unknown", module="unkn
                 ]
             for ref in refs:
                 if ref not in records:
-                    raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: printed record missing")
+                    code = codes.PUBLICATION_SCOPE_INCOMPLETE
+                    if draft is not None and isinstance(ref, str):
+                        # Preserve the renderer's existing missing-record diagnostics.
+                        code = {"T": "text_not_found", "EX": "example_not_found"}.get(ref.split("-")[0], code)
+                    raise ValueError(f"{code}: printed record missing")
                 rec = records[ref]
                 if (rec.get("source") or {}).get("file") not in NAMED_EXCERPTS:
+                    chunk_id = (rec.get("source") or {}).get("chunk_id")
+                    if registry is not None and (
+                        ref.startswith("T-")
+                        or (isinstance(chunk_id, str) and any(
+                            chunk_id.startswith(file + "_") for file in NAMED_EXCERPTS
+                        ))
+                    ):
+                        quote_attribution(excerpt_record(rec), registry)
                     continue
                 key = ("l2-uk-en", level, module, lesson_id, step.get("id"), ref)
                 if draft is not None:
@@ -430,9 +466,16 @@ def excerpt_occurrences(plan: dict, pack: dict, *, level="unknown", module="unkn
                     raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: occurrence step missing")
                 result[key] = {"key": key, "record": excerpt_record(rec), "column": "lesson"}
         for activity in lesson.get("activities", []):
+            hosts = quote_host_refs(activity.get("focus") or "")
+            for ref in hosts:
+                if (
+                    registry is not None
+                    and ref in records
+                    and (records[ref].get("source") or {}).get("file") not in NAMED_EXCERPTS
+                ):
+                    quote_attribution(excerpt_record(records[ref]), registry)
             hosts = [
-                ref
-                for ref in quote_host_refs(activity.get("focus") or "")
+                ref for ref in hosts
                 if ref not in records or (records[ref].get("source") or {}).get("file") in NAMED_EXCERPTS
             ]
             host_steps = [
@@ -567,7 +610,7 @@ def course_report(root: Path | None = None, *, api=None, proposed: list[dict] | 
                 errors.append(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: demanded pack missing")
             continue
         try:
-            occurrences += excerpt_occurrences(plan, pack, level=level, module=module)
+            occurrences += excerpt_occurrences(plan, pack, level=level, module=module, registry=registry)
         except ValueError as exc:
             errors.append(str(exc))
     for pack in packs.values():

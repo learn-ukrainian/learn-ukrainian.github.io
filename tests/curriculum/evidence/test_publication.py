@@ -578,7 +578,8 @@ def test_owned_excerpt_denominator_and_alias_tampering_fails(mutation):
         entry["publish"]["limit_chars"] = 999
     elif mutation == "alias":
         entry["file"] = "invented-alias"
-    with pytest.raises(ValueError, match="publication_scope_incomplete"):
+    code = "publication_denominator_drift" if mutation in {"chars", "count"} else "publication_scope_incomplete"
+    with pytest.raises(ValueError, match=code):
         publication.validate_owned_policy(file, entry)
 
 
@@ -657,7 +658,7 @@ def test_owned_excerpt_full_sections_metadata_and_substring_proof():
             publication.publication_unit(rec, entry, api)
         rec["source"]["section_id"] = 1
         conn.execute("UPDATE textbooks SET source_file='unregistered'")
-        with pytest.raises(ValueError, match="cited source identity unresolved"):
+        with pytest.raises(ValueError, match="quote_mismatch: cited chunk belongs to another source"):
             publication.publication_unit(rec, entry, api)
         conn.execute("INSERT INTO textbook_sections VALUES (2, ?, '1', 'x', 2)", (file,))
         with pytest.raises(ValueError, match="ambiguous canonical sections"):
@@ -675,7 +676,7 @@ def test_owned_excerpt_unknown_unit_registered_relabel_and_right_withdrawal():
     occurrence = owned_occurrence()
     occurrence["record"]["source"]["file"] = "ulp-2-00-lesson-notes"
     assert any(
-        e.startswith("publication_scope_incomplete:")
+        e.startswith("quote_mismatch:")
         for e in publication.check_occurrences([occurrence], entries)["errors"]
     )
     occurrence = owned_occurrence(unit=99)
@@ -684,6 +685,80 @@ def test_owned_excerpt_unknown_unit_registered_relabel_and_right_withdrawal():
     entries[file]["publish"]["allowed"] = False
     with pytest.raises(ValueError, match="publication_right"):
         publication.quote_attribution(record(file), entries)
+
+
+@pytest.mark.parametrize("with_api", [False, True])
+def test_owned_source_relabel_is_a_quote_mismatch(with_api):
+    from types import SimpleNamespace
+
+    entries = owned_entries()
+    original = "owned-oho-a1-transcripts"
+    claimed = "owned-oho-a1-workbook"
+    rec = owned_occurrence(file=original)["record"]
+    rec["source"]["file"] = claimed
+    api = SimpleNamespace(get_textbook_chunk=lambda _: {"source_file": original}) if with_api else None
+    with pytest.raises(ValueError, match=r"^quote_mismatch:"):
+        publication.publication_unit(rec, entries[claimed], api)
+    # Even a locator relabeled to the claimed prefix cannot change the DB identity.
+    if with_api:
+        rec["source"]["chunk_id"] = claimed + "_l0001_w001"
+        with pytest.raises(ValueError, match=r"^quote_mismatch:"):
+            publication.publication_unit(rec, entries[claimed], api)
+
+
+@pytest.mark.parametrize("chunk_id", [None, "", 123])
+def test_missing_or_malformed_publication_locator_remains_scope_incomplete(chunk_id):
+    from types import SimpleNamespace
+
+    entries = owned_entries()
+    rec = owned_occurrence()["record"]
+    file = rec["source"]["file"]
+    rec["source"]["chunk_id"] = chunk_id
+    with pytest.raises(ValueError, match=r"^publication_scope_incomplete:"):
+        publication.publication_unit(rec, entries[file])
+    rec["source"]["chunk_id"] = file + "_l0001_w001"
+    api = SimpleNamespace(get_textbook_chunk=lambda _: None)
+    with pytest.raises(ValueError, match=r"^publication_scope_incomplete:"):
+        publication.publication_unit(rec, entries[file], api)
+
+
+@pytest.mark.parametrize("field", ["canonical_chars", "unit_count"])
+@pytest.mark.parametrize("value", [None, "20000", True, 0, -1])
+def test_malformed_denominator_stays_distinct_from_drift(field, value):
+    entries = owned_entries()
+    file = "ulp-1-00-lesson-notes"
+    entries[file]["canonical"][field] = value
+    with pytest.raises(ValueError, match=r"^publication_scope_incomplete:"):
+        publication.validate_owned_policy(file, entries[file])
+
+
+@pytest.mark.parametrize("field", ["canonical_chars", "unit_count"])
+def test_internally_inconsistent_denominator_reports_drift_without_db(field):
+    entries = owned_entries()
+    file = "ulp-1-00-lesson-notes"
+    entries[file]["canonical"][field] *= 2
+    report = publication.check_occurrences([owned_occurrence()], entries)
+    assert report["status"] == "blocked"
+    assert report["errors"] == [f"publication_denominator_drift: {file} canonical totals disagree with units"]
+
+
+@pytest.mark.parametrize("kind,ref", [("quote", "T-001"), ("example", "EX-001")])
+def test_draft_printed_alias_cannot_skip_rights(kind, ref):
+    rec = owned_occurrence(file="owned-oho-a1-transcripts")["record"]
+    rec["source"]["file"] += "-v2"
+    rec["id"] = ref
+    if kind == "example":
+        rec["text"] = rec.pop("quote")
+    pack = {"texts" if kind == "quote" else "examples": [rec]}
+    draft = {"steps": [{"id": "s1", "blocks": [{"kind": kind, "ref": ref}]}]}
+    with pytest.raises(ValueError, match=r"^publication_right:"):
+        publication.excerpt_occurrences({"steps": []}, pack, draft=draft, registry=owned_entries())
+
+
+def test_nontextbook_example_retains_existing_admission():
+    rec = {"id": "EX-001", "text": "Synthetic example", "source": {"kind": "literary", "file": "synthetic"}}
+    plan = {"steps": [{"id": "s1", "needs": ["example"], "ref": "EX-001"}]}
+    assert publication.excerpt_occurrences(plan, {"examples": [rec]}, registry=owned_entries()) == []
 
 
 @pytest.mark.parametrize(
