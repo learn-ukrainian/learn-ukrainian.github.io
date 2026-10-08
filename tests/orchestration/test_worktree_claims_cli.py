@@ -384,16 +384,16 @@ def test_never_forces_a_dirty_worktree(tmp_path, capsys):
 def test_a_timed_out_removal_is_an_error_never_removed(tmp_path, capsys, monkeypatch):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-8")
-    real_run = subprocess.run
+    real_run = worktree_claims.safe_git
     timeouts: list[object] = []
 
     def fake_run(argv, *args, **kwargs):
-        if list(argv[1:3]) == ["worktree", "remove"]:
+        if list(argv[:2]) == ["worktree", "remove"]:
             timeouts.append(kwargs.get("timeout"))
             raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
         return real_run(argv, *args, **kwargs)
 
-    monkeypatch.setattr(worktree_claims.subprocess, "run", fake_run)
+    monkeypatch.setattr(worktree_claims, "safe_git", fake_run)
     code, out, _err = _remove(capsys, str(worktree), "--json")
 
     assert timeouts == [worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S]

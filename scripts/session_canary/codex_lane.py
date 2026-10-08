@@ -218,7 +218,7 @@ Stream: **{stream}**
 
 1. Mint 10 durable anchors.
 2. Score from memory (8/10 PASS threshold).
-3. PASS → emit and validate HydrationCapsuleV1 v1.2, then continue only if allowed.
+3. PASS → emit and validate HydrationCapsuleV1 v1.3, then continue only if allowed.
 4. FAIL-HANDOFF → shared handback, exact lease close, and exit.
 """
     )
@@ -275,7 +275,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--worktrees", default="")
     score.set_defaults(func=cmd_score)
 
-    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.2 hydration capsule")
+    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.3 hydration capsule")
     hydrate.add_argument("--epic", required=True)
     hydrate.add_argument("--stream", default=None)
     hydrate.set_defaults(func=cmd_hydrate)

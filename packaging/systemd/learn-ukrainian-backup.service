@@ -1,5 +1,7 @@
 [Unit]
 Description=Learn Ukrainian data backup (restic via rclone remote)
+# Change-only failure report to the Fleet Comms cto channel.
+OnFailure=learn-ukrainian-backup-alert@%n.service
 
 [Service]
 Type=oneshot
@@ -16,3 +18,6 @@ TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
 ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
+# Change-only recovery notice; runs only after a successful ExecStart=. A
+# failed notice never fails the run (leading '-').
+ExecStartPost=-/usr/bin/env @REPO_ROOT@/.venv/bin/python @REPO_ROOT@/scripts/orchestration/backup_failure_alert.py recovered %n

@@ -33,9 +33,10 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, TypeGuard
 
-from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
 from scripts.guardrails import worktree_containment
+from scripts.orchestration.execution_safe_git import SafeGitRunner
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
@@ -494,13 +495,12 @@ class WorktreeRemoval:
 def _git_probe(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str] | None:
     """Run a read-only git command; ``None`` when it could not run at all."""
     try:
-        return subprocess.run(
-            ["git", *args],
+        return safe_git(
+            args,
             cwd=cwd,
             capture_output=True,
             text=True,
             check=False,
-            env=sanitized_git_env(),
             timeout=_GIT_PROBE_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -609,7 +609,7 @@ def git_worktree_remove(
     force: bool,
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
     control_root: Path | None = None,
     tasks_dir: Path | None = None,
     task_id: str | None = None,
@@ -630,8 +630,8 @@ def git_worktree_remove(
     The reaper does not pass a timeout: removal keeps that 120s bound and is
     not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
-    A caller may supply ``git_runner`` to preserve its fixed executable,
-    environment and execution-safe configuration inside this chokepoint.
+    A caller may supply ``SafeGitRunner`` to pin an executable; mandatory
+    execution controls cannot be replaced by a callback.
     Ignored non-cache output is verified and preserved here for every caller
     (#9645). Failure returns a refusal without invoking destructive Git.
     The gate resolves canonical worktree-bound records itself and honors
@@ -672,18 +672,9 @@ def git_worktree_remove(
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = (
-            git_runner(repo_root, argv[1:])
-            if git_runner is not None
-            else subprocess.run(
-                argv,
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=sanitized_git_env(),
-                timeout=bound,
-            )
+        proc = safe_git(
+            argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
+            text=True, check=False, timeout=bound,
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"
@@ -714,7 +705,7 @@ def remove_unclaimed_worktree(
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
     task_record: Mapping[str, Any] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
@@ -743,8 +734,8 @@ def remove_unclaimed_worktree(
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
     caller's purpose, recorded on success. This never raises.
-    ``git_runner`` supplies the branch probe and raw removal runner for
-    closed maintenance callers; it does not bypass locks or the claim scan.
+    ``git_runner`` may pin a fixed executable for closed maintenance callers;
+    it cannot bypass execution controls, locks or the claim scan.
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -781,7 +772,10 @@ def remove_unclaimed_worktree(
             if git_runner is None:
                 branch = checked_out_branch(worktree)
             else:
-                probe = git_runner(worktree, ["symbolic-ref", "--quiet", "--short", "HEAD"])
+                probe = safe_git(
+                    ["symbolic-ref", "--quiet", "--short", "HEAD"], cwd=worktree,
+                    runner=git_runner, text=True, capture_output=True, check=False,
+                )
                 branch = probe.stdout.strip() if probe.returncode == 0 else None
             if force:
                 dirty = (dirty_probe if dirty_probe is not None else worktree_is_dirty)(worktree)

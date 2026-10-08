@@ -271,7 +271,7 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
         subprocess.run(["git", "read-tree", "--empty"], cwd=repo, check=True, timeout=30)
     record = {"task_id": "output-task", "worktree_path": str(repo), "response": f"Saved `{name}`."}
     (tasks / "output-task.json").write_text(json.dumps(record))
-    run = subprocess.run
+    run = output.artifacts.safe_git
     calls = []
 
     def runner(args, **kwargs):
@@ -281,7 +281,7 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
             raise subprocess.CalledProcessError(returncode, args, stderr="inventory unavailable")
         return run(args, **kwargs)
 
-    monkeypatch.setattr(output.artifacts.subprocess, "run", runner)
+    monkeypatch.setattr(output.artifacts, "safe_git", runner)
     ok, reason, receipt = output.preserve_worktree_artifacts(
         repo, primary=primary, task_id="output-task", tasks_dir=tasks
     )
@@ -293,7 +293,7 @@ def test_preservation_uses_isolated_environment_for_all_inventory(checkout, monk
     else:
         assert ok and not reason
         assert (primary / receipt["location"] / name).read_bytes() == payload
-        named_probe = ["git", "ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name]
+        named_probe = ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", name]
         assert sum(args == named_probe for _, args in calls) == 2  # Initial inventory and post-copy recheck.
         if empty_index:
             assert (primary / receipt["location"] / ".gitignore").read_bytes() == (repo / ".gitignore").read_bytes()

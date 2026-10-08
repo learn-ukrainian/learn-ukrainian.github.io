@@ -26,7 +26,7 @@ Each cell carries:
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 | --- | --- | --- | --- | --- |
-| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (selectable Claude model; no advisory, approval or review role, #9583), Sonnet 5.5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice, designated approval jointly with Sol, and Ukrainian judgment; Sonnet handles routine Claude-lane work. |
+| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (selectable Claude model; no advisory, approval or review role, #9583), Sonnet 5.5 (strong practical), Haiku 5.5 (routine mechanical, classification and read-only recon) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice, designated approval jointly with Sol, and Ukrainian judgment; Haiku 5.5 handles routine lockfile/pointer/smoke work first (Sonnet fallback), mechanical classification/triage and read-only recon/search. It never handles Ukrainian content, review, design/approval, security, bounded code or driver work; resolve the catalog task roles. |
 | **Codex** ⭐ | GPT-6.1 Sol (coding and review @ high; hard advisory @ high), Luna (routine bounded work and scout @ high) | Native Codex CLI | Metered | GPT-6.1 Sol handles advanced coding and adversarial review and handles advice and designated approval with Opus 5.5 (the non-author's approval completes the other's proposal; any other author needs both); Luna handles bounded routine implementation and scouting, always under a complete Sol advisory envelope (`--advisory-task`; operator decision 2026-09-30, #9275). |
 | **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. A Flash dispatch not classified Ukrainian authoring or review is the bounded fallback and needs a Sol advisory envelope (#9275). Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
 | **DeepSeek** | `deepseek-v4.1-flash` catalog identity only | Historical transport evidence | Not an eligible route | Excluded from dispatch and review. |
@@ -40,7 +40,7 @@ Each cell carries:
 | **Qwen** | — | — | — | ❌ **EXCLUDED** — too expensive (user 2026-05-29). Adapter exists but **do not route to it.** |
 
 **Sub-agents (children of the orchestrator session, not separate dispatches):**
-- `Explore` (Haiku) — grep/file-read across the codebase.
+- `Explore` (Haiku 5.5; read-only, non-Ukrainian scope) — grep/file-read across the codebase.
 - `Plan` — architectural plan drafting.
 - `curriculum-writer` (Opus, single-module Ukrainian content writing) — proxy for V7 writer when claude-tools is unavailable post-June-15.
 - `curriculum-orchestrator` (Opus) — full-tool orchestration sub-session.

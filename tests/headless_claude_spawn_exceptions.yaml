@@ -205,7 +205,8 @@ exceptions:
   - {module: scripts/delegate.py, function: "_worktree_diff_read", program: "add_command", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_diff_read", program: "diff_command", category: non-claude, reason: "runs git"}
   - {module: scripts/delegate.py, function: "_worktree_is_clean", program: "git", category: non-claude, reason: "runs git"}
-  - {module: scripts/delegate.py, function: "_worktree_is_dirty", program: "git", category: non-claude, reason: "runs git"}
+  # _worktree_is_dirty now calls execution_safe_git.run_git (runs git).
+  # The runner has no Claude references, so it has no spawn in this inventory.
   - {module: scripts/delegate.py, function: "_worktree_registration", program: "git", category: non-claude, reason: "runs git"}
   # scripts/eval/zno_nmt/adapters.py
   - {module: scripts/eval/zno_nmt/adapters.py, function: "_claude_capabilities", program: "binary", category: claude-probe, reason: "literal `<binary> --help` and `<binary> --version` capability probes"}

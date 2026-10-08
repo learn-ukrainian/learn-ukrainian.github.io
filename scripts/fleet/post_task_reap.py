@@ -29,6 +29,7 @@ from scripts.common.repo_root import main_checkout_root
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import ignored_task_output, pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _DISPATCH_WORKTREES_ROOT = ROOT / ".worktrees" / "dispatch"
@@ -77,8 +78,8 @@ def _run_git(
     timeout: int | None = 30,
     check: bool = False,
 ) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
+    return safe_git(
+        args,
         cwd=cwd,
         capture_output=True,
         text=True,

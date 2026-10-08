@@ -250,12 +250,9 @@ def test_receipts_detect_mutation_without_rehash() -> None:
         v3a.validate(value, _matrix())
 
 
-def test_local_source_db_reproduces_content_blind_evidence_when_available() -> None:
-    source_db = v3a.ROOT / "data/sources.db"
-    if not source_db.is_file():
-        pytest.skip("local source DB is not installed")
-    if not _source_db_has_textbooks_schema(source_db):
-        pytest.skip("local source DB does not contain the textbook corpus")
+def test_local_source_db_reproduces_content_blind_evidence_when_available(data_store_factory) -> None:
+    source_db = data_store_factory("sources", required_sqlite_tables=("textbooks",))
+    assert _source_db_has_textbooks_schema(source_db), "textbook corpus schema is incomplete"
     v3a.verify_source_db(source_db)
 
 

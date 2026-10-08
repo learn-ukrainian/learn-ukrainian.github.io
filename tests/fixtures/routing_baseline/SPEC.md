@@ -37,6 +37,28 @@ normalizer. Compare all three hashes, not just the catalog or selected reviewer.
 Future regeneration must explain every difference against the approved outcome;
 an unexplained difference fails the capture comparison.
 
+## Haiku 5.5 adoption (#9996)
+
+The executable revision adds eight author cases for `claude-haiku-5-5`: code
+and infra across low, medium, high and critical risk. This is author-family
+resolution evidence; Haiku never becomes a reviewer candidate. All 1,472
+pre-existing reviewer cases remain byte-equivalent when joined by input identity.
+Current Cursor Auto indices are 22, 207, 392, 577, 762, 947, 1132 and 1317;
+their verdicts and traces are unchanged.
+
+The catalog changes are exactly the new Haiku model metadata and the
+`routine_mechanical` role added to Sonnet for the task fallback. The additive
+mechanical seat/task roles are excluded by the legacy catalog projection and
+included by the PR 2 role-holder and role-resolution surfaces.
+Fallback configuration adds one routine mechanical substitution description.
+Registry, capacity, dispatch, adapters, launchers and source-contract surfaces
+remain identical. The occurrence ledger remains byte-identical and pinned to
+its historical source census; it does not claim to census the new model. The
+reviewer input matrix changes only by those eight author cases. The role matrix
+adds the three approved mechanical roles; approval-contract rows add Haiku as
+an author, without granting it review or designated-approval authority. `SHA256SUMS` binds the
+new executable fixture and inputs, and the unchanged occurrence ledger.
+
 ## Inputs and captured evidence
 
 - Reviewer: every catalog identity and alias plus ambiguous harness identities,
@@ -176,3 +198,37 @@ A subsequent merge includes `04de11ad89ba25fed59e37be34256e1e518538b9`
 (#9968), which anchors the GitHub client cache to its module checkout.
 Fresh captures on that final merge must reproduce both configurations exactly;
 this cache fix has no attributed routing-row changes.
+
+
+## Haiku merge revision (#9996, round b)
+
+The approved Haiku head `ee15773294e5b8964c2979b229bf95d7edf033ef` is
+merged with `d286629c33e6ddd787802237958f77732fe8706d` from main, including
+the PR 2 role-based consumers (#9971). Both configurations are regenerated
+against that merged checkout with the procedure above; use `--configuration
+no-cli` for the independent no-CLI artifact. Independent digest pins in
+`tests/review/test_model_catalog.py` bind this ordered revision.
+
+Comparison with main joins rows by complete input identity, preserving repeated
+inputs. Both configurations have the same attribution:
+
+| Surface | Existing rows unchanged | Added rows | Attribution |
+| --- | ---: | ---: | --- |
+| Reviewer | 1,472 | 8 | Haiku author, code/infra across all four risks |
+| Role resolution | 672 | 168 | 56 cases each for routine mechanical, mechanical classification and read-only recon |
+| Approval contract | 378 | 9 | Haiku author across the existing two-holder vote matrix |
+| Dispatch | 992 | 0 | Identical |
+| Adapters | 112 | 0 | Identical |
+| Capacity | 42 | 0 | Identical |
+| Launchers | 70 | 0 | Identical |
+
+No existing row changes or disappears. Catalog differences are exactly the
+Haiku model and Sonnet's routine mechanical eligibility. Holder evidence adds
+only the mechanical worker seat and its three approved task roles. Fallbacks
+add only the routine mechanical substitution description. Registry, source
+contracts and the historical occurrence bytes are unchanged. Main's role-based
+consumers resolve Haiku's existing mechanical seat/roles. Mechanical role
+constants live in the catalog module so standalone catalog consumers retain
+their runtime-independent validation and resolution; admission imports those
+same constants. This import fix changes no captured result. Any other difference
+blocks regeneration.

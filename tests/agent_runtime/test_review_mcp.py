@@ -869,11 +869,7 @@ def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path)
             )
 
 
-def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path) -> None:
-    primary_root = resolve_repo_root(Path(__file__), 2)
-    sources_db = primary_root / "data" / "sources.db"
-    if not sources_db.is_file():
-        pytest.skip(f"data/sources.db is absent at {sources_db}")
+def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path, requires_sources_db) -> None:
 
     plan = prepare_review_attempt(
         review_id="rev-integration-001",
@@ -911,7 +907,7 @@ def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path) -
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
-        cwd=str(primary_root),
+        cwd=Path(__file__).resolve().parents[2],
     )
     try:
         stdout_bytes, stderr_bytes = proc.communicate(input=init_request, timeout=20)
