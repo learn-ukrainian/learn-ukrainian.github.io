@@ -6,6 +6,7 @@ const entries = [
   ['кричачи', 'bare'], ['найактивніше', 'bare'], ['самолікуватися', 'bare'],
   ['абак', 'thin'], ['абака', 'thin'], ['аби-то', 'thin'],
   ['а', 'rich'], ['абажур', 'rich'], ['абат', 'rich'],
+  ['виникати', 'heteronym'],
 ] as const;
 
 for (const [slug, tier] of entries) {
@@ -28,7 +29,7 @@ for (const [slug, tier] of entries) {
           const note = article.locator('.atlas-enrichment-note');
           if (tier === 'rich') {
             await expect(note).toHaveCount(0);
-          } else {
+          } else if (tier !== 'heteronym') {
             await expect(note).toHaveAttribute('data-atlas-tier', tier);
             await expect(note.locator(`p [data-loc="${locale}"]`)).toBeVisible();
             await expect(note.locator(`p [data-loc="${locale === 'en' ? 'uk' : 'en'}"]`)).toBeHidden();
@@ -58,6 +59,73 @@ for (const [slug, tier] of entries) {
             await page.keyboard.press('Space');
             await expect(details).not.toHaveAttribute('open', '');
           }
+          if (tier === 'heteronym') {
+            const tabs = article.getByRole('tab');
+            expect(await tabs.count()).toBeGreaterThan(1);
+            const assertSelectedTab = async (index: number) => {
+              const selected = tabs.nth(index);
+              await expect(selected).toHaveAttribute('aria-selected', 'true');
+              await expect(selected).toHaveAttribute('tabindex', '0');
+              await expect(selected).toBeFocused();
+              const panelId = await selected.getAttribute('aria-controls');
+              expect(panelId).toBeTruthy();
+              await expect(article.locator(`#${panelId}`)).toBeVisible();
+              await expect(article.locator('[role="tabpanel"]:visible')).toHaveCount(1);
+              await selected.evaluate(async (tab) => {
+                await Promise.all(tab.getAnimations().map((animation) => animation.finished));
+              });
+              // Measure actual rendered text/background, including the smaller hint.
+              const contrast = await selected.evaluate((tab) => {
+                const channels = (color: string) => color.match(/[\d.]+/g)!.map(Number);
+                const luminance = (rgb: number[]) => {
+                  const linear = rgb.map((v) => {
+                    const s = v / 255;
+                    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+                  });
+                  return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
+                };
+                const background = getComputedStyle(tab).backgroundColor;
+                return Array.from(tab.querySelectorAll('strong, span')).map((node) => {
+                  const foreground = getComputedStyle(node).color;
+                  const fg = channels(foreground);
+                  const bg = channels(background).slice(0, 3);
+                  const alpha = fg[3] ?? 1;
+                  const rendered = fg.slice(0, 3).map((v, i) => v * alpha + bg[i] * (1 - alpha));
+                  const values = [luminance(rendered), luminance(bg)].sort((a, b) => b - a);
+                  return { foreground, background, ratio: (values[0] + 0.05) / (values[1] + 0.05) };
+                });
+              });
+              expect(contrast.length).toBeGreaterThan(0);
+              await testInfo.attach(`tab-${index}-contrast`, {
+                body: JSON.stringify(contrast, null, 2), contentType: 'application/json',
+              });
+              for (const text of contrast) expect(text.ratio).toBeGreaterThanOrEqual(4.5);
+              const tabAxe = await new AxeBuilder({ page }).analyze();
+              await testInfo.attach(`tab-${index}-axe`, {
+                body: JSON.stringify(tabAxe, null, 2), contentType: 'application/json',
+              });
+              expect(tabAxe.violations.filter((v) => ['serious', 'critical'].includes(v.impact ?? ''))).toEqual([]);
+            };
+            await tabs.first().focus();
+            await assertSelectedTab(0);
+            await page.keyboard.press('ArrowRight');
+            await assertSelectedTab(1);
+            await page.keyboard.press('Home');
+            await assertSelectedTab(0);
+            await page.keyboard.press('End');
+            await assertSelectedTab(await tabs.count() - 1);
+            await page.keyboard.press('ArrowRight');
+            await assertSelectedTab(0);
+          }
+          const atlasButton = article.locator('a.atlas-button');
+          await expect(atlasButton).toHaveCSS('text-decoration-line', 'none');
+          await expect(atlasButton).toHaveAttribute('href', '/lexicon/');
+          await atlasButton.focus();
+          await expect(atlasButton).toBeFocused();
+          const inTextLinks = article.locator('.atlas-section p a').filter({ visible: true });
+          for (const link of await inTextLinks.all()) {
+            await expect(link).toHaveCSS('text-decoration-line', 'underline');
+          }
           await expect(article.locator('[data-testid="atlas-practice-cta"], [data-testid="atlas-practice-cta-unavailable"]')).toHaveCount(1);
           const emptySections = await article.locator('section.atlas-section').evaluateAll((sections) =>
             sections.filter((section) => {
@@ -74,6 +142,9 @@ for (const [slug, tier] of entries) {
           await page.screenshot({ path: testInfo.outputPath('entry.png'), fullPage: true });
           await testInfo.attach('entry', { path: testInfo.outputPath('entry.png'), contentType: 'image/png' });
           expect(axe.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact ?? ''))).toEqual([]);
+          await atlasButton.focus();
+          await page.keyboard.press('Enter');
+          await expect(page).toHaveURL(/\/lexicon\/$/);
         });
       }
     }

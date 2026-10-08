@@ -412,7 +412,7 @@ const en = {
   'atlas.enrichmentPending': 'This entry is being enriched.',
   'atlas.sourceWaiting': 'Layers awaiting sources',
   'atlas.layer.meaning': 'Meaning',
-  'atlas.layer.etymology': 'Origin',
+  'atlas.layer.etymology': 'Etymology',
   'atlas.layer.morphology': 'Morphology',
   'atlas.layer.formNotes': 'Spelling and pronunciation',
   'atlas.layer.style': 'Style',
@@ -425,7 +425,7 @@ const en = {
   'atlas.layer.literary': 'Literary attestations',
   'atlas.layer.course': 'Course',
   'atlas.layer.translation': 'Translation',
-  'atlas.layer.wiki': 'Wikimedia',
+  'atlas.layer.wiki': 'Wikipedia',
   'atlas.layer.external': 'External materials',
 
   // Fresh-arc landing / module pages (#8397). The `planned` and `reviewed`
