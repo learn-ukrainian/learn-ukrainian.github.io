@@ -1518,7 +1518,7 @@ def subscription_facts(
         if (
             lane in {"codex", "claude"}
             and source in {"windows.primary", "windows.secondary"}
-            and (entry["scope"] != "shared" or not entry["required"])
+            and (entry["scope"] != "shared" or (entry["applicable"] and not entry["required"]))
         ):
             return unknown
         parent, leaf = source.split(".")
@@ -1559,7 +1559,7 @@ def subscription_facts(
         ):
             return unknown
     if lane in {"codex", "claude"} and any(
-        source not in declared or not declared[source][1] for source in ("windows.primary", "windows.secondary")
+        source not in declared for source in ("windows.primary", "windows.secondary")
     ):
         return unknown
     # Cursor's included pool is separate from paid API/on-demand; never cross it

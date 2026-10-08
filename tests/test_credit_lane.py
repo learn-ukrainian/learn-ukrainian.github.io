@@ -2264,3 +2264,17 @@ def test_subscription_foreign_model_pool_cannot_affect_cursor_claude():
     metadata["windows"][-1].update(applicable=True, required=True)
     record["codexbar"]["provider_windows"]["auto"] = dict(record["codexbar"]["claude_gpt_windows"]["weekly"])
     assert credit_lane.routing_facts("cursor", record, **args).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+@pytest.mark.parametrize("not_applicable", ["primary", "secondary"])
+def test_subscription_declared_nonapplicable_shared_window_is_distinct_from_missing(not_applicable):
+    record, metadata = _subscription_fixture()
+    entry = next(entry for entry in metadata["windows"] if entry["source"] == f"windows.{not_applicable}")
+    entry.update(applicable=False, required=False)
+    del record["codexbar"]["windows"][not_applicable]
+    facts = _subscription_facts(record, metadata)
+    assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+    assert facts.buckets == (("codex.secondary",) if not_applicable == "primary" else ("codex.primary",))
+    # Absence without a producer declaration remains unknown.
+    metadata["windows"].remove(entry)
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
