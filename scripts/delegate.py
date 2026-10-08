@@ -6638,7 +6638,8 @@ def _advisory_ceiling_check(
 ) -> dict[str, Any]:
     """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
 
-    Changes run from the merge base with the base branch to the working tree:
+    Changes run from the round-start head when supplied, otherwise from the
+    merge base with the base branch, to the working tree:
     the worker's commits plus its uncommitted and untracked files. When the base
     branch was deleted after merging, falls back to the recorded ``base_sha``
     and then the default branch (#9489).
@@ -6671,7 +6672,8 @@ def _advisory_worker_diff(
 ) -> tuple[str | None, str | None]:
     """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
 
-    Changes run from the merge base with the base branch to the working tree:
+    Changes run from the round-start head when supplied, otherwise from the
+    merge base with the base branch, to the working tree:
     the worker's commits plus its uncommitted and untracked files; with
     ``committed_only``, to ``HEAD``: its commits alone. When the base branch was
     deleted after merging, falls back to the recorded ``base_sha`` and then the
@@ -6692,6 +6694,9 @@ def _advisory_worker_diff(
             )
         except subprocess.CalledProcessError:
             return None, f"round-start head {round_start_head} is missing"
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            # Class only: exception messages can contain private host paths (#9878).
+            return None, f"round-start head could not be read ({type(exc).__name__})"
         merge_base = round_start_head
     else:
         base_ref = _commit_count_base_ref(worktree, base_branch)
@@ -6745,6 +6750,14 @@ def _advisory_completion_gate(
     base_sha = _recorded_base_sha(record)
     round_start_head = record.get("pinned_head")
     round_start_head = str(round_start_head).strip() if isinstance(round_start_head, str) else None
+    admission = record.get(AUTHORING_REVIEW_STATE_KEY)
+    if not round_start_head and (
+        record.get("worktree_reused")
+        or (isinstance(admission, dict) and admission.get("target") == "existing-branch")
+    ):
+        # A plain --branch attach has no pin; its recorded base is the round's
+        # starting head. A fresh branch keeps the merge-base measurement.
+        round_start_head = base_sha
 
     envelope = record.get("advisory_envelope")
     if isinstance(envelope, dict):
