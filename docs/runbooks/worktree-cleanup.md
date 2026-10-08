@@ -756,7 +756,7 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
-under 15 GiB. Live and liveness-unknown paths are skipped (see below for the proof).
+below the configured pressure floor. Live and liveness-unknown paths are skipped (see below for the proof).
 
 ### Atlas/QA legacy residue (#8738)
 
@@ -938,7 +938,7 @@ A lease is reclaimed only when **all** of the following hold:
    **and** no process left in the recorded group. Any surviving member, a reused
    numeric group id, or an unreadable `/proc` preserves;
 5. the newest modification anywhere in the lease is at least 2 h old, or 30 min when
-   the scratch volume has under 15 GiB free. Pressure shortens the age gate only.
+   the scratch volume is below the configured pressure floor. Pressure shortens the age gate only.
 
 Recovery never signals a process. Deletion (both the owning wrapper's and recovery's)
 is fd-relative with `O_NOFOLLOW` and proves containment on every destructive step:
