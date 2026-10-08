@@ -62,7 +62,8 @@ driver_scope_bus() {
   # Headless tool shells can lack the bus environment. Derive only this user's
   # owned logind directory, never another session's address.
   if [ -z "${XDG_RUNTIME_DIR+x}" ]; then
-    local runtime="/run/user/$(id -u)"
+    local runtime
+    runtime="/run/user/$(id -u)"
     if [ -d "$runtime" ] && [ ! -L "$runtime" ] && [ -O "$runtime" ] && [ -S "$runtime/bus" ]; then
       export XDG_RUNTIME_DIR="$runtime"
     fi
@@ -127,6 +128,7 @@ launcher_enter_driver_scope() {
   # another scope. No environment variable alone is evidence of containment.
   if [ "${LU_DRIVER_SCOPE_PID:-}" = "$$" ]; then
     driver_scope_verify || return 6
+    unset LC_SUPERVISORY_PREDECESSOR_GENERATION
     return 0
   fi
   local token unit entry rc=0 child pending=""
@@ -134,6 +136,14 @@ launcher_enter_driver_scope() {
   [[ "$LC_EPIC" =~ ^[A-Za-z0-9_.:-]+$ ]] || { driver_scope_refuse invalid-lane; return 6; }
   unit="lu-driver-${LC_PROVIDER}-${LC_EPIC}-${token}.scope"
   entry="$(mktemp)" || { driver_scope_refuse entry-marker-unavailable; return 6; }
+  # The waiting launcher owns the marker. Distinct read/write offsets and
+  # inherited descriptors preserve verified entry across unlink or namespaces.
+  if ! { exec 218<"$entry" 219>"/proc/self/fd/218"; }; then
+    exec 218<&- 219>&-
+    rm -f "$entry"
+    driver_scope_refuse entry-marker-unavailable; return 6
+  fi
+  rm -f "$entry"
   printf 'DRIVER_SCOPE_START unit=%s high=%s max=%s swap=%s oom=continue\n' "$unit" "$DS_HIGH" "$DS_MAX" "$DS_SWAP" >&2
   # The outside shell only waits. All preparation/leases run after verified
   # entry. Keep stdin/TTY and the existing session/process group unchanged.
@@ -142,24 +152,40 @@ launcher_enter_driver_scope() {
   trap 'pending=HUP; [ -z "${child:-}" ] || kill -HUP "$child" 2>/dev/null || true' HUP
   (
     trap - INT TERM HUP
+    exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
     --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
-    --entry "$unit" "$entry" "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
+    --entry "$unit" 219 "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
   ) 0<&0 &
   child=$!
+  exec 219>&-
   [ -z "$pending" ] || kill -"$pending" "$child" 2>/dev/null || true
   while :; do
     wait "$child" && rc=0 || rc=$?
     kill -0 "$child" 2>/dev/null || break
   done
   trap - INT TERM HUP
-  if [ ! -s "$entry" ]; then
-    rm -f "$entry"
-    driver_scope_refuse scope-start-failed
+  local verified=""
+  IFS= read -r verified <&218 || true
+  exec 218<&-
+  # The entry helper already reported a typed configuration/verification
+  # refusal. Preserve it; only failure to start an entry is scope-start-failed.
+  [ "$verified" != refused ] || exit 6
+  if [ "$verified" != verified ]; then
+    driver_scope_refuse scope-start-failed || true
+    # Only a supervisory successor carries a captured predecessor generation.
+    # This path has never claimed a lease and must never close one.
+    if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ] \
+        && [ -n "${LC_SUPERVISORY_PREDECESSOR_GENERATION:-}" ]; then
+      # shellcheck source=scripts/lib/session_supervisor.sh
+      if source "$LC_ROOT/scripts/lib/session_supervisor.sh"; then
+        session_supervisor_publish_start_failure "${SESSION_SUPERVISOR_WAKE_STREAM:-}" \
+          "$LC_SUPERVISORY_PREDECESSOR_GENERATION" scope-start-failed
+      fi
+    fi
     exit 6
   fi
-  rm -f "$entry"
   case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
   exit "$rc"
 }
@@ -168,7 +194,11 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   shift
   export LU_DRIVER_SCOPE_UNIT="$1" LU_DRIVER_SCOPE_PID="$$"
   entry="$2"; shift 2
-  driver_scope_config && driver_scope_verify || exit 6
+  if ! { driver_scope_config && driver_scope_verify; }; then
+    printf 'refused\n' >&"$entry" || true
+    exec 219>&-
+    exit 6
+  fi
   # #9624: pytest `-n auto`/`-n logical` inside a driver scope resolves to at
   # most the deployment's worker cap, sized with the scope's MemoryHigh. An
   # inherited value from 0 (no xdist workers) up to the cap is kept; CI never
@@ -177,6 +207,7 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   if ! [[ "$inherited" =~ ^[0-9]{1,4}$ ]] || (( 10#$inherited > DS_PYTEST_WORKERS )); then
     export PYTEST_XDIST_AUTO_NUM_WORKERS="$DS_PYTEST_WORKERS"
   fi
-  printf 'verified\n' > "$entry"
+  printf 'verified\n' >&"$entry"
+  exec 219>&-
   exec bash "$@"
 fi

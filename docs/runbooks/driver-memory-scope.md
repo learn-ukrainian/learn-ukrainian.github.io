@@ -30,6 +30,23 @@ scope wrapper as a background job without job control. INT, TERM and HUP are
 forwarded; when trapped, their conventional statuses (130, 143 and 129) replace
 the inner status. An ordinary unsignalled exit preserves the provider's status.
 
+## Entry marker ownership
+
+The waiting launcher opens separate read and write descriptors for the entry
+marker and immediately unlinks its temporary name. The entry helper inherits
+the write descriptor, writes `verified` after successful verification, closes
+it, then replaces itself with the launcher. The waiting owner reads that exact
+marker through its retained descriptor when the child exits. It preserves the
+child's status even if a sibling removed or hid the former pathname.
+
+Configuration or containment verification failures write a refusal marker and
+exit 6; the waiting launcher preserves that refusal without publishing a
+successor-start failure. An absent verified/refusal marker is
+`scope-start-failed`. Only a supervisory successor with a captured predecessor
+generation publishes that status, after refusal and before exit 6. This path
+never prepares a provider, claims a lease, closes a lease, or retries entry.
+See [supervisory wake status](session-supervisor.md#supervisory-wake-ownership-and-failure-status).
+
 ## Limits are set per deployment
 
 The public tree carries no host sizing. Each deployment sets its own limits,
