@@ -22,7 +22,7 @@ import tempfile
 import uuid
 from dataclasses import asdict, is_dataclass
 from datetime import UTC, datetime
-from functools import partial
+from functools import lru_cache, partial
 from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import quote
@@ -244,6 +244,16 @@ def approval_contract_rows(source, catalog):
 
 def capture(source, scratch, project_python):
     sys.path[:0] = [str(source), str(source / "scripts"), str(source / "packages/v4-runtime/src")]
+    from scripts.fleet import credit_lane
+
+    # Every row reads the same unchanged policy. Validate it with the real
+    # reader once per argument set, without retaining it between captures or
+    # bypassing any routing decision. Restore the reader even on failure.
+    with patch.object(credit_lane, "load_policy", lru_cache(maxsize=None)(credit_lane.load_policy)):
+        return _capture_surfaces(source, scratch, project_python)
+
+
+def _capture_surfaces(source, scratch, project_python):
     from scripts.agent_runtime.registry import AGENTS
     from scripts.fleet import credit_lane
     from scripts.review.model_catalog import load_model_catalog

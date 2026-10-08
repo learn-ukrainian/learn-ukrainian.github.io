@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.common.git_context import sanitized_git_env
@@ -207,6 +209,7 @@ def test_resolve_pr_target_uses_actual_pr_base_not_assumed_default(tmp_path, mon
     target = resolve_pr_target(repo, 5283)
     assert target.mode == "pr"
     assert target.base_sha == base_sha
+    assert target.base_ref_name == "release/whatever"
     assert target.head_sha == head_sha
     assert "release/whatever" in target.description
     assert target.changed_paths == ("pr_change.py",)
@@ -278,6 +281,22 @@ def test_resolve_pr_target_missing_sha_raises(tmp_path, monkeypatch):
 
     monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
     with __import__("pytest").raises(TargetResolutionError):
+        resolve_pr_target(repo, 1)
+
+
+@pytest.mark.parametrize("base_name", ["  ", ["main"], None, 1])
+def test_resolve_pr_target_missing_base_name_raises(tmp_path, monkeypatch, base_name):
+    repo = _init_repo(tmp_path)
+    sha = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    import scripts.review.target_resolution as tr
+
+    payload = {"number": 1, "baseRefOid": sha, "headRefOid": sha, "baseRefName": base_name}
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(tr, "_run_gh", fake_run_gh)
+    with __import__("pytest").raises(TargetResolutionError, match="base ref name"):
         resolve_pr_target(repo, 1)
 
 
