@@ -86,8 +86,14 @@ jobs:
           python-version-file: '.python-version'
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
-      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
+      # `version` is the scanner image tag. The uses SHA pins this action's
+      # script only; omitting version pulls :latest. Bump: set both TruffleHog
+      # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
+      # newer — never an older tag to clear a finding) and re-scan with
+      # scripts/audit/secret_scan_local.py tree.
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # action v3.97.9
         with:
+          version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
           extra_args: --results=verified,unknown --exclude-detectors=Lob
@@ -130,8 +136,12 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
+      # Same scanner pin as the queue-metadata step. Bump both together:
+      # newest trufflesecurity/trufflehog release, never an older tag to clear
+      # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # action v3.97.9
         with:
+          version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
