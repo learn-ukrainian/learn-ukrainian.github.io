@@ -49,10 +49,9 @@ DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
 REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
 # GitHub's PR-files endpoint stops at this many files without saying so.
 PR_FILES_LIMIT = 3000
-# Opt-in requeue gate: when set, a head the merge queue ejected is re-enqueued
-# at most once, and only with a ``grant`` decision for ``"<pr>:<head>"`` in
-# this JSON file (written by the operator's flake prover). Unset keeps the
-# legacy re-enqueue-until-third-drop behaviour.
+# A head the merge queue ejected is re-enqueued at most once, and only with
+# a ``grant`` decision for ``"<pr>:<head>"`` in this JSON file (written by
+# the operator's flake prover). Without a configured file, no grant exists.
 REQUEUE_GATE_ENV = "MQ_KEEPER_REQUEUE_GATE"
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.
@@ -408,10 +407,10 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
 
 
 def _requeue_grants(path: Path | None) -> dict[str, dict[str, Any]] | None:
-    """Requeue decisions keyed ``"<pr>:<head>"``, or None when the gate is off.
+    """Requeue decisions keyed ``"<pr>:<head>"``, or None when no file is configured.
 
     A missing, unreadable or malformed decision file grants nothing, so a
-    gated keeper holds every ejected head instead of guessing.
+    keeper holds every ejected head instead of guessing.
     """
     if path is None:
         return None
@@ -428,8 +427,10 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
-    if grants is None or drops < 1:
+    if drops < 1:
         return None
+    if grants is None:
+        return "requeue-pending"
     if drop_key in previous.get("requeued", {}):
         return "requeue-spent" if drops >= 2 else None
     decision = grants.get(drop_key, {}).get("decision")
@@ -447,10 +448,12 @@ def _gate_hold(
     previous: Mapping[str, Any],
 ) -> str | None:
     """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
-    if grants is None:
-        return None
     drop_key = f"{number}:{head}"
-    if drop_key in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
+    if (
+        grants is not None
+        and drop_key in previous.get("squash_revoked", {})
+        and gh.squash_blocked(number, head) is not False
+    ):
         return "squash-text-blocked"
     return _requeue_hold(drop_key, drops, grants, previous)
 
@@ -789,7 +792,7 @@ def run(
                 and (_ever_approved(comments, login) or dropped)
             ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
-            elif dropped and detail and comment_safe:
+            elif reason != "ready" and dropped and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
                 previous.setdefault("failures", []).append({"job": job, "pr": number, "at": observed})

@@ -521,7 +521,7 @@ def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: p
         json.dumps({"queued": {"42": HEAD_A}, "drops": {f"42:{HEAD_A}": 2}, "observed": "2026-09-23T00:00:00Z"})
     )
     run(fake, path, monkeypatch)
-    assert "enqueue" in mutations(fake)
+    assert mutations(fake) == ["enqueue"]
     state = json.loads(path.read_text())
     assert state["drops"][f"42:{HEAD_A}"] == 3
     assert f"42:{HEAD_B}" not in state["drops"]
@@ -558,7 +558,10 @@ def test_recent_rejection_overrides_approval_in_keeper(tmp_path: Path, monkeypat
     assert "CF-changes_requested" in lines[0]
 
 
-def test_queue_drop_comment_names_failing_run_and_job(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("granted", [False, True])
+def test_red_merge_group_drop_with_green_branch_checks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, granted: bool
+) -> None:
     fake = FakeGitHub()
     fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     fake.run_rows = [
@@ -574,12 +577,29 @@ def test_queue_drop_comment_names_failing_run_and_job(tmp_path: Path, monkeypatc
     fake.job_rows = [{"name": "pytest", "conclusion": "failure"}, {"name": "ruff", "conclusion": "success"}]
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
-    run(fake, path, monkeypatch)
+    if granted:
+        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    else:
+        lines, failed = run(fake, path, monkeypatch)
+    assert not failed
     comments = [body for action, body in fake.actions if action == "comment"]
-    assert len(comments) == 1
-    assert "https://github.com/example/runs/123" in comments[0]
-    assert "failing jobs: pytest" in comments[0]
-    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+    state = json.loads(path.read_text())
+    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert state["failures"][0]["job"] == "pytest"
+    if granted:
+        assert mutations(fake) == ["enqueue"]
+        assert comments == []
+        assert f"42:{HEAD_A}" in state["requeued"]
+    else:
+        assert mutations(fake) == ["comment"]
+        assert "reason=requeue-pending" in lines[0]
+        assert "https://github.com/example/runs/123" in comments[0]
+        assert "failing jobs: pytest" in comments[0]
+        # The persisted drop still holds after the observation cycle ends.
+        again = FakeGitHub()
+        lines, failed = run(again, path, monkeypatch)
+        assert not failed and "reason=requeue-pending" in lines[0]
+        assert mutations(again) == []
 
 
 def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -905,12 +925,17 @@ def _dropped_state(path: Path, **extra: Any) -> None:
     path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 1}, **extra}))
 
 
-def test_without_gate_a_dropped_head_is_re_enqueued(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("drops", [1, 2])
+def test_without_gate_a_dropped_head_is_held(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, apply: bool, drops: int
+) -> None:
     path = tmp_path / "state.json"
-    _dropped_state(path)
+    _dropped_state(path, drops={f"42:{HEAD_A}": drops})
     fake = FakeGitHub()
-    run(fake, path, monkeypatch)
-    assert ("enqueue", (42, HEAD_A)) in fake.actions
+    lines, failed = run(fake, path, monkeypatch, apply=apply)
+    assert not failed and "reason=requeue-pending" in lines[0]
+    assert mutations(fake) == []
 
 
 @pytest.mark.parametrize(
