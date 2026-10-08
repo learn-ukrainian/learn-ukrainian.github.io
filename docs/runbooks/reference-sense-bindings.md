@@ -301,14 +301,43 @@ commitments, checks reviewed provenance and formula bindings, scans for leaks,
 requires a clean HEAD, derives the expected payload from current inputs and
 verifies the HMAC. Changed HEAD, binding bytes, private input, matcher, key id or
 scan scope cannot reuse an old seal. The manifest preparation command performs
-this verification afresh even if an older report claims success; its report
-records only the receipt contract's nonsecret identity and commitments, and the
-manifest hashes that report. Credential paths are never manifest inputs.
+this verification afresh even if an older report claims success. Tracked reports
+retain only the stable selection identity: binding-file digest, keyed private-input
+commitment, key id and matcher version. HEAD and leak-scan scope remain mandatory
+in the authenticated seal; they are excluded from tracked reports because
+committing reports or review metadata changes HEAD. The report separately pins
+the current binding file, and the manifest hashes that report. Changing bindings
+invalidates the reviewed report even after a valid new receipt is issued.
+Credential paths are never manifest inputs.
+
+The supported lifecycle is: issue the receipt on clean H0, generate and commit
+artifacts as H1, then reissue externally on H1. The old receipt refuses both
+dirty replay and replay on H1. For unchanged selection inputs, regeneration
+after reissue writes byte-identical artifacts and leaves the tree clean. A
+review-metadata commit also invalidates the preceding receipt; external reissue
+must preserve the reviewed manifest. Consumers never issue or refresh receipts.
+
+Persisted private-proof admission performs full live verification, independent of
+stored `status: ok` or a serialized `verified` field. Supply the same explicit
+runtime inputs to the read-only status command:
+
+```bash
+.venv/bin/python -m scripts.build.fresh.cli plan-review-status a1 special-signs \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+```
+
+The `plan_review_freshness` and `plan_review_status` APIs accept explicit
+`receipt_inputs` and an optional source instance. Proof need comes from current
+bindings and word-store provenance; deleting a report field cannot make a
+private input public. Missing runtime inputs refuse private admission. Callers
+that do not pass these inputs also refuse private admission; promotion and
+review-consumer plumbing belongs to their existing lanes. This procedure does
+not provide implicit credentials or a cached-success fallback.
 
 Authenticated coverage removes only the covered private-commitment warnings.
 Unrelated public errors, reviewed-provenance notices and other warnings remain,
 and status is recomputed normally. Without explicit local inputs, private proof
-remains unchecked and manifest admission still requires `status: ok`; public-only
+remains unchecked and private manifest admission refuses; public-only
 verification needs no private credentials. Synthetic fixtures demonstrate this
 mechanism only. Authentic host-local replay and independent exact-head evaluation
 remain required for product acceptance.

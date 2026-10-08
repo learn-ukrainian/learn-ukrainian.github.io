@@ -567,6 +567,31 @@ def receipt_inputs(args: argparse.Namespace) -> LocalReceiptInputs | None:
     return None
 
 
+def receipt_semantic_identity(payload: dict) -> dict:
+    """Stable selection identity, never an authentication substitute.
+
+    HEAD and scan counts remain mandatory in the live seal, but change when
+    generated reports or review metadata are committed. Only selection inputs
+    belong in tracked reports. Use an allowlist to exclude runtime diagnostics.
+    """
+    return {name: payload[name] for name in ("bindings_sha256", "private_input_commitment", "key_id", "matcher")}
+
+
+def private_proof_required(level: str, evidence: Path) -> bool:
+    """Derive proof need from current bindings and stored selection provenance."""
+    entries = bindings.load(evidence / bindings.BINDINGS, level)
+    store = yaml.safe_load((evidence / "_words.yaml").read_text(encoding="utf-8"))
+    if not isinstance(store, dict) or not isinstance(store.get("words"), list):
+        raise ValueError("sense_bindings_invalid")
+    for word in store["words"]:
+        basis = word.get("gloss_basis") or {}
+        if bindings.local_proof(basis) == "private_commitment":
+            return True
+        if basis.get("method") == "formula_row.v1" and word["id"] not in entries:
+            raise ValueError("formula_binding_invalid")
+    return any(bindings.local_proof(entry) == "private_commitment" for entry in entries.values())
+
+
 def verify_local_receipt(
     level: str,
     evidence: Path,
@@ -610,7 +635,7 @@ def verify_local_receipt(
         covered = frozenset(
             wid for wid, binding in context.entries.items() if bindings.local_proof(binding) == "private_commitment"
         )
-        return covered, {"status": "verified", **payload}
+        return covered, {"status": "verified", **receipt_semantic_identity(payload)}
     except Exception as error:
         return frozenset(), {"status": "failed", "reason": safe_error_reason(error)}
 

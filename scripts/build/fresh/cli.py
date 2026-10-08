@@ -493,6 +493,7 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Exit 1 unless the plan is promoted (a pending promotion is not enough)",
     )
+    sense_cli.add_receipt_arguments(p_plan_status)
 
     return parser
 
@@ -730,7 +731,11 @@ def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
             receipt = plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root)
             print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
             return 0
-        status = plan_manifest.plan_review_status(args.level, args.slug, repo_root=repo_root)
+        from scripts.curriculum.evidence import sense_cli
+
+        status = plan_manifest.plan_review_status(
+            args.level, args.slug, repo_root=repo_root, receipt_inputs=sense_cli.receipt_inputs(args)
+        )
         print(json.dumps(status, ensure_ascii=False, sort_keys=True))
         reviewed = {"reviewed_promoted"}
         if not args.require_promoted:

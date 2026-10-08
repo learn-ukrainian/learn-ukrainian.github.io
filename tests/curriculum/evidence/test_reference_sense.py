@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 from scripts.build.fresh import assemble, runner
-from scripts.curriculum.evidence import pack, sense_cli, sources, verify, words
+from scripts.curriculum.evidence import lock, pack, sense_cli, sources, verify, words
 from scripts.curriculum.evidence import reference_sense_v1 as matcher
 from scripts.curriculum.evidence import sense_bindings as bindings
 from scripts.curriculum.validate import a1_reference
@@ -1730,7 +1730,11 @@ def test_consumers_replay_authenticated_entire_set(authenticated_replay, consume
     assert unchecked["status"] == "warning" and unchecked["not_checked"] == ["W-001:private_commitment"]
     checked = call(**kwargs, receipt_inputs=inputs)
     assert checked["status"] == "ok" and checked["not_checked"] == [] and checked["errors"] == []
-    assert checked["local_receipt"]["head"] == bindings.git(repo, "rev-parse", "HEAD").decode().strip()
+    assert "head" not in checked["local_receipt"] and "leak_scan_scope" not in checked["local_receipt"]
+    assert (
+        checked["local_receipt"]["bindings_sha256"]
+        == hashlib.sha256((evidence / bindings.BINDINGS).read_bytes()).hexdigest()
+    )
     if consumer == "words":
         assert checked["private_commitments"]["status"] == "verified"
     # CLI plumbing must reach the same real replay, without publishing runtime paths.
@@ -1902,6 +1906,340 @@ def test_authenticated_replay_does_not_discharge_unrelated_public_errors(authent
     )
     assert result["local_receipt"]["status"] == "verified" and result["status"] == "failed"
     assert result["not_checked"] == [] and result["errors"]
+
+
+@pytest.fixture
+def reviewed_receipt_lifecycle(authenticated_replay, monkeypatch, capsys):
+    """Five-step synthetic source sequence; no genuine private or review proof.
+
+    Selection, HMAC, leak scanning, pack verification, manifest generation and
+    freshness run through their supported APIs. The plan-validation and review
+    records are synthetic fixture inputs, not pedagogical acceptance evidence.
+    """
+    from scripts.build.fresh import plan_manifest as pm
+
+    repo, evidence, plans, api, inputs = authenticated_replay
+    monkeypatch.chdir(repo)
+    monkeypatch.setattr(sources, "Sources", lambda **kwargs: api)
+    slug = "synthetic"
+    plan_path = plans / f"{slug}.yaml"
+    plan = {
+        "plan_schema": 2,
+        "slug": slug,
+        "arc_ref": {"level": "a1", "position": 1},
+        "evidence_ref": {"path": f"{pm.TREE}/evidence/a1/{slug}.yaml", "sha256": "0" * 64},
+        "lessons": [{"n": 1, "inventory": {"vocabulary": {"core": [{"evidence": "W-001"}]}}}],
+    }
+    plan_path.write_text(yaml.safe_dump(plan))
+    arc_doc = repo / "docs/epics/synthetic-arc.md"
+    arc_doc.parent.mkdir(parents=True)
+    arc_doc.write_text("Synthetic source sequence fixture.\n")
+    (repo / pm.REQUIREMENTS_REL).write_text("Synthetic requirements fixture.\n")
+    (plans / "_arc.yaml").write_text(yaml.safe_dump({"source": {"path": "docs/epics/synthetic-arc.md"}}))
+    (plans / "_decisions.yaml").write_text("decisions: []\n")
+    (plans / "_grammar.yaml").write_text("[]\n")
+    (plans / "_scope").mkdir()
+    (plans / "_scope" / f"{slug}.yaml").write_text("{}\n")
+    (evidence / "_base.request.yaml").write_text(yaml.safe_dump({"words": [{"lemma": "synthetic", "pos": "noun"}]}))
+    directory = pm.state_dir(repo, "a1", slug)
+    directory.mkdir(parents=True)
+    paths = [
+        plan_path,
+        evidence / f"{slug}.yaml",
+        evidence / f"{slug}.yaml.lock",
+        evidence / "_words.yaml",
+        evidence / "_words.yaml.lock",
+        plans / "_arc.yaml",
+        plans / "_grammar.yaml",
+        plans / "_scope" / f"{slug}.yaml",
+    ]
+    (directory / pm.VALIDATE_REPORT_NAME).write_bytes(
+        pm.json_bytes(
+            {
+                "level": "a1",
+                "slug": slug,
+                "mode": "provisional",
+                "status": "pass",
+                "failures": [],
+                "waivers": [],
+                "inputs": {
+                    path.relative_to(repo).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
+                },
+            }
+        )
+    )
+    # H0 already tracks a report; authentic regeneration must modify it, not
+    # merely create untracked files. The existing public-only check is warning.
+    initial = verify.verify_pack("a1", slug, evidence_dir=evidence, plans_dir=plans, sources_instance=api, strict=True)
+    assert initial["status"] == "warning" and initial["not_checked"] == ["W-001:private_commitment"]
+
+    def entry(path):
+        return {"path": path.relative_to(repo).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+    (directory / pm.PACK_VERIFY_REPORT_NAME).write_bytes(
+        pm.json_bytes(
+            pm.pack_verify_report(
+                "a1",
+                slug,
+                initial,
+                entry(evidence / f"{slug}.yaml"),
+                entry(evidence / f"{slug}.yaml.lock"),
+                entry(evidence / bindings.BINDINGS),
+            )
+        )
+    )
+    bindings.git(repo, "add", ".")
+    bindings.git(repo, "commit", "-qm", "Synthetic lifecycle inputs")
+
+    def reissue():
+        # Existing external issuance procedure, never a consumer-side refresh.
+        assert (
+            sense_cli.main(
+                [
+                    "a1",
+                    "--evidence-dir",
+                    str(evidence),
+                    "--private-input",
+                    str(inputs.private_input),
+                    "--key-file",
+                    str(inputs.key_file),
+                    "--key-id",
+                    inputs.key_id,
+                    "--receipt",
+                    str(inputs.receipt),
+                    "--base",
+                    inputs.base,
+                    "--check",
+                ]
+            )
+            == 0
+        ), capsys.readouterr().out
+        capsys.readouterr()
+
+    def replay():
+        return sense_cli.verify_local_receipt("a1", evidence, api, inputs, repo=repo)[1]
+
+    def generate():
+        return pm.write_plan_manifest("a1", slug, repo_root=repo, sources_instance=api, receipt_inputs=inputs)
+
+    # 1. R0 authentic on clean H0; generation dirties tracked inputs and refuses replay.
+    reissue()
+    h0 = bindings.git(repo, "rev-parse", "HEAD")
+    assert replay()["status"] == "verified"
+    manifest, digest = generate()
+    artifacts = {p.relative_to(repo): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+    assert bindings.git(repo, "status", "--porcelain").strip()
+    assert (directory / pm.PACK_VERIFY_REPORT_NAME).relative_to(repo).as_posix() in bindings.git(
+        repo, "diff", "--name-only"
+    ).decode().splitlines()
+    assert replay() == {"status": "failed", "reason": "receipt_requires_clean_head"}
+    assert (
+        pm.plan_review_freshness(repo, manifest, digest, sources_instance=api, receipt_inputs=inputs).state == "stale"
+    )
+
+    # 2. H1 commits artifacts: R0 cannot authenticate the changed exact HEAD.
+    bindings.git(repo, "add", ".")
+    bindings.git(repo, "commit", "-qm", "Synthetic generated artifacts")
+    assert bindings.git(repo, "rev-parse", "HEAD") != h0
+    assert replay() == {"status": "failed", "reason": "local_receipt_stale_or_invalid"}
+
+    # 3. External R1 reissue; regenerated artifacts are byte-identical and clean.
+    reissue()
+    assert replay()["status"] == "verified"
+    assert generate() == (manifest, digest)
+    assert all((repo / path).read_bytes() == data for path, data in artifacts.items())
+    assert not bindings.git(repo, "status", "--porcelain").strip()
+    assert (
+        pm.plan_review_freshness(repo, manifest, digest, sources_instance=api, receipt_inputs=inputs).state == "fresh"
+    )
+
+    # 4. Synthetic review metadata commit preserves the manifest but invalidates R1.
+    lock.write(
+        directory / pm.REVIEW_NAME,
+        lock.yaml_bytes(
+            {
+                "verdict": "APPROVE",
+                "manifest_sha256": digest,
+                "attempt_id": "synthetic-review",
+            }
+        ),
+    )
+    bindings.git(repo, "add", ".")
+    bindings.git(repo, "commit", "-qm", "Synthetic review metadata")
+    assert replay() == {"status": "failed", "reason": "local_receipt_stale_or_invalid"}
+    reissue()
+    assert replay()["status"] == "verified"
+    assert generate() == (manifest, digest)
+    assert all((repo / path).read_bytes() == data for path, data in artifacts.items())
+    assert not bindings.git(repo, "status", "--porcelain").strip()
+    assert (
+        pm.plan_review_status("a1", slug, repo_root=repo, sources_instance=api, receipt_inputs=inputs)["state"]
+        == "reviewed_pending_promotion"
+    )
+    return repo, evidence, plans, api, inputs, manifest, digest, reissue
+
+
+def test_supported_clean_head_report_and_review_lifecycle(reviewed_receipt_lifecycle, capsys):
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh.cli import main as fresh_main
+
+    repo, evidence, _plans, _api, inputs, _manifest, digest, _ = reviewed_receipt_lifecycle
+    report = json.loads((pm.state_dir(repo, "a1", "synthetic") / pm.PACK_VERIFY_REPORT_NAME).read_bytes())
+    assert report["bindings"]["sha256"] == hashlib.sha256((evidence / bindings.BINDINGS).read_bytes()).hexdigest()
+    assert "head" not in report["local_receipt"] and "leak_scan_scope" not in report["local_receipt"]
+    assert (
+        fresh_main(
+            [
+                "plan-review-status",
+                "a1",
+                "synthetic",
+                "--repo-root",
+                str(repo),
+                "--private-input",
+                str(inputs.private_input),
+                "--key-file",
+                str(inputs.key_file),
+                "--key-id",
+                inputs.key_id,
+                "--receipt",
+                str(inputs.receipt),
+                "--receipt-base",
+                inputs.base,
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert json.loads(output)["manifest_sha256"] == digest
+    assert str(inputs.private_input) not in output and str(inputs.key_file) not in output
+    assert fresh_main(["plan-review-status", "a1", "synthetic", "--repo-root", str(repo)]) == 1
+    assert "local_receipt_required" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "head",
+        "bindings",
+        "private_input",
+        "matcher",
+        "scope",
+        "missing_runtime",
+        "forged_report",
+        "deleted_bindings",
+        "reissued_changed_bindings",
+        "public_error",
+        "unexpected_error",
+        "invalid_store",
+        "missing_receipt",
+        "wrong_key",
+        "wrong_key_id",
+        "tampered_seal",
+        "reissued_private_identity",
+    ],
+)
+def test_persisted_private_admission_never_uses_old_success(reviewed_receipt_lifecycle, monkeypatch, change):
+    from dataclasses import replace
+
+    from scripts.build.fresh import plan_manifest as pm
+
+    repo, evidence, _plans, api, inputs, manifest, digest, reissue = reviewed_receipt_lifecycle
+    report_path = pm.state_dir(repo, "a1", "synthetic") / pm.PACK_VERIFY_REPORT_NAME
+    if change == "head":
+        bindings.git(repo, "commit", "--allow-empty", "-qm", "Synthetic later head")
+    elif change in {"bindings", "reissued_changed_bindings"}:
+        path = evidence / bindings.BINDINGS
+        lock.write(path, path.read_bytes() + b"# synthetic binding drift\n")
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Synthetic binding drift")
+        if change == "reissued_changed_bindings":
+            reissue()
+            assert sense_cli.verify_local_receipt("a1", evidence, api, inputs, repo=repo)[1]["status"] == "verified"
+    elif change == "private_input":
+        inputs.private_input.write_text(
+            json.dumps({**FIXTURE["private"], "meaning": "synthetic different meaning"}) + "\n"
+        )
+    elif change == "matcher":
+        monkeypatch.setattr(matcher, "VERSION", "synthetic-drift")
+    elif change == "scope":
+        inputs = replace(inputs, base="HEAD")
+    elif change == "missing_runtime":
+        inputs = None
+        with pytest.raises(pm.PlanReviewError, match=pm.PACK_VERIFY_REFUSED):
+            pm.write_plan_manifest("a1", "synthetic", repo_root=repo, sources_instance=api)
+        assert json.loads(report_path.read_bytes())["status"] == "failed"
+    elif change == "missing_receipt":
+        inputs.receipt.unlink()
+    elif change == "wrong_key":
+        inputs.key_file.write_bytes(b"x" * 32)
+    elif change == "wrong_key_id":
+        inputs = replace(inputs, key_id="different-key-id")
+    elif change == "tampered_seal":
+        receipt = json.loads(inputs.receipt.read_bytes())
+        receipt["seal"] = "0" * 64
+        inputs.receipt.write_text(json.dumps(receipt))
+    elif change == "reissued_private_identity":
+        # The complete private input includes inventory entries not selected by
+        # any binding. Their change can pass reselection yet must stale the old
+        # report's complete-input commitment.
+        inventory = copy.deepcopy(FIXTURE["inventory"])
+        inventory["sources"][0]["headwords"].append(
+            {
+                "lemma": "other-synthetic",
+                "stressed": "other-synthetic",
+                "pos": "noun",
+                "kind": "word",
+                "locator": "p201 synthetic",
+            }
+        )
+        a1_reference.INVENTORY_PATH.write_text(yaml.safe_dump(inventory))
+        extra = {"locator": "p201 synthetic#2", "printed_label": "other-synthetic", "meaning": "unused-synthetic"}
+        inputs.private_input.write_text(json.dumps(FIXTURE["private"]) + "\n" + json.dumps(extra) + "\n")
+        reissue()
+        assert sense_cli.verify_local_receipt("a1", evidence, api, inputs, repo=repo)[1]["status"] == "verified"
+    elif change == "invalid_store":
+        (evidence / "_words.yaml").write_text("[]\n")
+    elif change == "unexpected_error":
+
+        def unavailable(*args, **kwargs):
+            raise ValueError("synthetic private body PRIVATE_PATH")
+
+        monkeypatch.setattr(pm, "verify_pack_strict", unavailable)
+    elif change == "forged_report":
+        report = json.loads(report_path.read_bytes())
+        report["local_receipt"] = {"status": "verified"}
+        report.pop("bindings")
+        report_path.write_bytes(pm.json_bytes(report))
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Synthetic forged success")
+    elif change == "deleted_bindings":
+        # Removing binding provenance cannot make the actual private store public.
+        (evidence / bindings.BINDINGS).unlink()
+        (evidence / f"{bindings.BINDINGS}.lock").unlink()
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Synthetic missing bindings")
+        inputs = None
+        assert sense_cli.private_proof_required("a1", evidence)
+    elif change == "public_error":
+        original = pm.verify_pack_strict
+
+        def with_public_error(*args, **kwargs):
+            result = original(*args, **kwargs)
+            assert result["local_receipt"]["status"] == "verified"
+            return {**result, "status": "failed", "errors": ["synthetic unrelated public error"]}
+
+        monkeypatch.setattr(pm, "verify_pack_strict", with_public_error)
+    freshness = pm.plan_review_freshness(repo, manifest, digest, sources_instance=api, receipt_inputs=inputs)
+    assert freshness.state == "stale"
+    serialized = json.dumps(freshness.stale)
+    assert "synthetic private body" not in serialized and "PRIVATE_PATH" not in serialized
+    if inputs is not None:
+        assert str(inputs.private_input) not in serialized and str(inputs.key_file) not in serialized
+    if change == "reissued_changed_bindings":
+        assert f"{pm.TREE}/evidence/a1/{bindings.BINDINGS}" in freshness.stale
+        assert "differs from the reviewed report" in serialized
+    if change == "reissued_private_identity":
+        assert "differs from the reviewed report" in serialized
 
 
 @pytest.mark.parametrize("change", ["none", "stale", "missing_word", "unapproved"])

@@ -50,7 +50,6 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import sqlite3
 import subprocess
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
@@ -63,7 +62,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.manifest import _input, learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.manifest import sha256 as file_sha256
 from scripts.build.fresh.path_guard import checked_path, validate_module
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import lock, sense_bindings, sense_cli
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.validate.activity_report import v1_placements, v1_totals
 from scripts.curriculum.validate.loader import PlanError, load_plan
@@ -241,9 +240,17 @@ def verify_pack_strict(level: str, slug: str, **kwargs: Any) -> dict[str, Any]:
 
 
 def pack_verify_report(
-    level: str, slug: str, result: dict[str, Any], pack: dict[str, str], pack_lock: dict[str, str]
+    level: str,
+    slug: str,
+    result: dict[str, Any],
+    pack: dict[str, str],
+    pack_lock: dict[str, str],
+    bindings: dict[str, str] | None = None,
 ) -> dict:
     """The stored pack-verify report: the verified pack and lock hashes, the status and every finding."""
+    proof = result.get("local_receipt")
+    if proof is not None and proof.get("status") == "verified":
+        proof = {"status": "verified", **sense_cli.receipt_semantic_identity(proof)}
     return {
         "report_schema": 1,
         "kind": "pack-verify",
@@ -259,7 +266,8 @@ def pack_verify_report(
         "chunk_id_moved": list(result.get("chunk_id_moved", [])),
         "not_checked": list(result.get("not_checked", [])),
         "counts": {key: value for key, value in sorted(result.items()) if key.endswith("_count")},
-        **({"local_receipt": result["local_receipt"]} if "local_receipt" in result else {}),
+        **({"local_receipt": proof} if proof is not None else {}),
+        **({"bindings": bindings} if bindings is not None else {}),
     }
 
 
@@ -269,7 +277,7 @@ def json_bytes(document: dict) -> bytes:
 
 
 def pack_verify_problems(root: Path, level: str, slug: str, report_path: Path) -> dict[str, str]:
-    """Why the stored pack-verify report is not a strict pass over the current pack and lock ({path: why})."""
+    """Stored input consistency only; private admission additionally needs live replay."""
     pack_rel = f"{TREE}/evidence/{level}/{slug}.yaml"
     report_rel = _relative(root, report_path)
     report = _read_json(report_path)
@@ -287,7 +295,64 @@ def pack_verify_problems(root: Path, level: str, slug: str, report_path: Path) -
             problems[rel] = f"differs from the {key} the pack-verify report verified"
     if not lock.check(root / pack_rel):
         problems[pack_rel] = "the pack bytes disagree with their lock"
+    bindings_rel = f"{TREE}/evidence/{level}/{sense_bindings.BINDINGS}"
+    try:
+        required = sense_cli.private_proof_required(level, root / TREE / "evidence" / level)
+    except Exception as error:
+        problems[bindings_rel] = f"current proof inputs unverifiable ({sense_cli.safe_error_reason(error)})"
+    else:
+        if required or "bindings" in report or (root / bindings_rel).exists():
+            pinned = report.get("bindings")
+            actual = current_sha(root, bindings_rel)
+            if (
+                not isinstance(pinned, dict)
+                or pinned.get("path") != bindings_rel
+                or actual is None
+                or pinned.get("sha256") != actual
+            ):
+                problems[bindings_rel] = "differs from the bindings the pack-verify report verified"
     return problems
+
+
+def _private_admission_problems(
+    root: Path,
+    level: str,
+    slug: str,
+    report_path: Path,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None,
+    sources_instance: Any,
+) -> dict[str, str]:
+    """Authenticate current private inputs afresh, independently of the stored report."""
+    report_rel = _relative(root, report_path)
+    try:
+        evidence = root / TREE / "evidence" / level
+        required = sense_cli.private_proof_required(level, evidence)
+        if not required and receipt_inputs is None:
+            return {}
+        if receipt_inputs is None:
+            return {report_rel: "current private proof unverifiable (local_receipt_required)"}
+        result = verify_pack_strict(
+            level,
+            slug,
+            evidence_dir=evidence,
+            plans_dir=root / TREE / "lesson-plans" / level,
+            sources_instance=sources_instance,
+            receipt_inputs=receipt_inputs,
+            repo_root=root,
+        )
+        proof = result.get("local_receipt", {})
+        if proof.get("status") != "verified":
+            # The checker supplies controlled codes; never echo report bodies.
+            reason = sense_cli.safe_error_reason(ValueError(str(proof.get("reason", "local_receipt_required"))))
+            return {report_rel: f"current private proof unverifiable ({reason})"}
+        if result.get("status") != "ok" or result.get("errors") or result.get("not_checked"):
+            return {report_rel: "current strict pack verification is not a complete pass"}
+        report = _read_json(report_path) or {}
+        if report.get("local_receipt") != {"status": "verified", **sense_cli.receipt_semantic_identity(proof)}:
+            return {report_rel: "current authenticated selection differs from the reviewed report"}
+    except Exception as error:
+        return {report_rel: f"current private proof unverifiable ({sense_cli.safe_error_reason(error)})"}
+    return {}
 
 
 def validate_report_problems(
@@ -589,15 +654,34 @@ def _write_plan_manifest(
         )
 
     runtime = {"receipt_inputs": receipt_inputs, "repo_root": root} if receipt_inputs is not None else {}
+    bindings_path = evidence / sense_bindings.BINDINGS
+    bindings_before = _entry(root, bindings_path) if bindings_path.is_file() else None
     pack_before = (file_sha256(pack_path), file_sha256(files["pack_lock"]))
     try:
         result = verify_pack_strict(
             level, slug, evidence_dir=evidence, plans_dir=plans, sources_instance=sources_instance, **runtime
         )
-    except (OSError, sqlite3.Error) as error:
-        raise PlanReviewError(PACK_VERIFY_REFUSED, f"pack-verify --strict could not run: {error}") from error
+    except Exception as error:
+        raise PlanReviewError(
+            PACK_VERIFY_REFUSED, f"pack-verify --strict could not run: {sense_cli.safe_error_reason(error)}"
+        ) from error
     if (file_sha256(pack_path), file_sha256(files["pack_lock"])) != pack_before:
         raise PlanReviewError(PACK_CHANGED_DURING_VERIFY, f"{_relative(root, pack_path)} changed while pack-verify ran")
+    bindings_after = _entry(root, bindings_path) if bindings_path.is_file() else None
+    if bindings_after != bindings_before:
+        raise PlanReviewError(PACK_VERIFY_REFUSED, "bindings changed while pack-verify ran")
+    try:
+        required = sense_cli.private_proof_required(level, evidence)
+    except Exception as error:
+        raise PlanReviewError(
+            PACK_VERIFY_REFUSED, f"current proof inputs unverifiable ({sense_cli.safe_error_reason(error)})"
+        ) from error
+    if required and result.get("local_receipt", {}).get("status") != "verified":
+        result = {
+            **result,
+            "status": "failed",
+            "errors": [*result.get("errors", []), "current private proof unverifiable (local_receipt_required)"],
+        }
     report_path = _guarded(root, directory / PACK_VERIFY_REPORT_NAME)
     document = pack_verify_report(
         level,
@@ -605,6 +689,7 @@ def _write_plan_manifest(
         result,
         {"path": _relative(root, pack_path), "sha256": pack_before[0]},
         {"path": _relative(root, files["pack_lock"]), "sha256": pack_before[1]},
+        bindings_before,
     )
     lock.atomic_write(report_path, json_bytes(document), mode=0o600)
     files["pack_verify_report"] = report_path
@@ -832,7 +917,14 @@ def _earlier_plan_proof(root: Path, level: str, slug: str, recorded: str, live_p
     return not why, why
 
 
-def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Freshness:
+def plan_review_freshness(
+    root: Path,
+    manifest: dict,
+    manifest_sha: str,
+    *,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> Freshness:
     """Re-check every manifest input, both reports' recorded inputs, the pack and words
     against their locks, the planned learner-state hash, and the v1 source the v1
     totals document records.
@@ -882,6 +974,10 @@ def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Fres
     ).items():
         stale.setdefault(path, reason)
     for path, reason in pack_verify_problems(root, level, slug, directory / PACK_VERIFY_REPORT_NAME).items():
+        stale.setdefault(path, reason)
+    for path, reason in _private_admission_problems(
+        root, level, slug, directory / PACK_VERIFY_REPORT_NAME, receipt_inputs, sources_instance
+    ).items():
         stale.setdefault(path, reason)
 
     try:
@@ -956,7 +1052,14 @@ def read_review(root: Path, level: str, slug: str) -> dict:
     return review
 
 
-def plan_review_status(level: str, slug: str, *, repo_root: Path) -> dict[str, Any]:
+def plan_review_status(
+    level: str,
+    slug: str,
+    *,
+    repo_root: Path,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> dict[str, Any]:
     """The state of the plan review of record.
 
     ``unreviewed`` (no review file), ``not_approved``, ``reviewed_pending_promotion``
@@ -979,7 +1082,9 @@ def plan_review_status(level: str, slug: str, *, repo_root: Path) -> dict[str, A
             "reason": error.message,
             "stale": {path: "manifest of record unavailable" for path in error.paths},
         }
-    freshness = plan_review_freshness(root, manifest, digest)
+    freshness = plan_review_freshness(
+        root, manifest, digest, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+    )
     if freshness.state == "stale":
         return {"state": "stale", "manifest_sha256": digest, "stale": dict(sorted(freshness.stale.items()))}
     state = "reviewed_promoted" if freshness.state == "promoted" else "reviewed_pending_promotion"

@@ -889,7 +889,8 @@ def test_manifest_threads_local_runtime_to_fresh_verification_without_recording_
     manifest, digest = plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root, receipt_inputs=inputs)
     assert calls[-1]["receipt_inputs"] == inputs and calls[-1]["repo_root"] == env.root.resolve()
     report = json.loads((env.state_dir / plan_manifest.PACK_VERIFY_REPORT_NAME).read_text())
-    assert report["local_receipt"] == proof
+    assert report["local_receipt"] == {"status": "verified", **sense_cli.receipt_semantic_identity(proof)}
+    assert "head" not in report["local_receipt"] and "leak_scan_scope" not in report["local_receipt"]
     text = json.dumps(report) + yaml.safe_dump(manifest)
     assert "PRIVATE_INPUT" not in text and "PRIVATE_KEY" not in text and "PRIVATE_RECEIPT" not in text
     assert digest
@@ -942,3 +943,34 @@ def test_manifest_replays_instead_of_trusting_edited_passing_report(env, capsys,
     assert calls[-1]["receipt_inputs"] == inputs
     assert json.loads(report_path.read_text())["status"] == "failed"
     assert not (env.state_dir / plan_manifest.MANIFEST_NAME).exists()
+
+
+def test_manifest_sanitizes_verifier_exceptions(env, monkeypatch):
+    assert validate_provisional(env) == 0
+
+    def unavailable(*args, **kwargs):
+        raise ValueError("PRIVATE_PATH synthetic private body")
+
+    monkeypatch.setattr(plan_manifest, "verify_pack_strict", unavailable)
+    with pytest.raises(plan_manifest.PlanReviewError) as caught:
+        plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root)
+    assert caught.value.code == plan_manifest.PACK_VERIFY_REFUSED
+    assert "ValueError" in caught.value.message
+    assert "PRIVATE_PATH" not in str(caught.value) and "synthetic private body" not in str(caught.value)
+
+
+def test_manifest_refuses_binding_race_during_verification(env, monkeypatch):
+    assert validate_provisional(env) == 0
+    path = env.evidence_dir / "_sense_bindings.yaml"
+    path.write_text("synthetic pre-verification bytes\n")
+    original = fake_verify()
+
+    def mutation(*args, **kwargs):
+        path.write_text("synthetic changed binding bytes\n")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(plan_manifest, "verify_pack_strict", mutation)
+    with pytest.raises(plan_manifest.PlanReviewError) as caught:
+        plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root)
+    assert caught.value.code == plan_manifest.PACK_VERIFY_REFUSED
+    assert caught.value.message == "bindings changed while pack-verify ran"
