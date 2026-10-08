@@ -271,6 +271,25 @@ def load_and_rank_candidates(
     return [LoadedCandidate(path=path, text=texts.get(path)) for path in ranked]
 
 
+def load_codex_candidates(repo: Path, epic: str) -> list[LoadedCandidate]:
+    """Shared Codex ranking for the canary and the bounded PostCompact hook.
+
+    Keep selection independent of lane CLI and hydration runtime imports so
+    unrelated startup work cannot consume the hook's selection deadline.
+    """
+    return load_and_rank_candidates(
+        repo,
+        epic,
+        (
+            "CODEX-DRIVER-HANDOFF.md",
+            "INTERIM-DRIVER-HANDOFF.md",
+            "CLAUDE-DRIVER-HANDOFF.md",
+            "GEMINI-DRIVER-HANDOFF.md",
+        ),
+        preferred=("CODEX-DRIVER-HANDOFF.md",),
+    )
+
+
 def lane_handoff_candidates(
     repo: Path,
     epic: str,
