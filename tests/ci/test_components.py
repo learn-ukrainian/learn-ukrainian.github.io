@@ -231,6 +231,41 @@ def test_indexed_imports_survive_sparse_checkout_and_invalidate_on_edits(repo, m
     assert any(e["path"] == "scripts/config.py" for e in c.import_graph(manifest, repo)["unresolved_edges"])
 
 
+def test_import_graph_reuse_tracks_manifest_content(repo, manifest, monkeypatch):
+    (repo / "scripts/config.py").write_text("from scripts.ci import components\n")
+    manifest["exact_paths"]["scripts/config.py"] = ["atlas-data"]
+    manifest["exact_paths"]["scripts/ci/components.py"] = ["harness"]
+    manifest["edges"] = [{"id": "required", "kind": "import", "producer": "harness",
+                          "consumer": "atlas-data", "resolved": True}]
+    scans = []
+    scan = c.cached_import_scan
+
+    def counted_scan(*args):
+        scans.append(args)
+        return scan(*args)
+
+    monkeypatch.setattr(c, "cached_import_scan", counted_scan)
+    first = c.import_graph(manifest, repo)
+    assert first["node_edges"] == [("harness", "atlas-data")]
+    assert first["missing_mandatory_edges"] == []
+    # Equivalent content reuses the lifting, but callers cannot corrupt it.
+    first["node_edges"].clear()
+    assert c.import_graph(copy.deepcopy(manifest), repo)["node_edges"] == [("harness", "atlas-data")]
+    assert len(scans) == 1
+
+    # Mutate the same dictionary after its first query: an identity-keyed
+    # cache would retain the old consumer and hide the missing required edge.
+    manifest["exact_paths"]["scripts/config.py"][:] = ["practice-frontend"]
+    changed = c.import_graph(manifest, repo)
+    assert changed["node_edges"] == [("harness", "practice-frontend")]
+    assert changed["missing_mandatory_edges"] == ["required"]
+    assert len(scans) == 2
+
+    manifest["edges"][0]["consumer"] = "practice-frontend"
+    assert c.import_graph(manifest, repo)["missing_mandatory_edges"] == []
+    assert len(scans) == 3
+
+
 def test_complete_node_test_set_ownership_importers_and_integration(repo, manifest):
     manifest["shared_integration_tests"] = ["tests/test_fixture.py"]
     manifest["components"]["atlas-data"]["test_files"] = []
