@@ -23,6 +23,8 @@ the backstop.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
@@ -66,6 +68,43 @@ class SubstituteUnavailable(Exception):
 
 class ReviewAdmissionRefused(Exception):
     """A review cannot retain its requested identity or resolve an eligible substitute."""
+
+
+def mechanical_scope_digest(scope: Mapping[str, Any]) -> str:
+    """Bind the persisted worker inputs to the dispatch's mechanical scope (#10079)."""
+    inputs = {key: value for key, value in scope.items() if key != "sha256"}
+    return hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def mechanical_worker_scope(record: Mapping[str, Any], *, mode: str) -> dict[str, Any]:
+    """Read the dispatched scope without granting authority from worker defaults."""
+    from .mechanical_admission import MechanicalAdmissionRefused
+
+    scope = record.get("mechanical_task")
+    if scope is None:
+        return {}  # The mechanical gate refuses an unclassified mechanical model.
+    try:
+        if not isinstance(scope, dict) or scope.get("sha256") != mechanical_scope_digest(scope):
+            raise ValueError("scope changed")
+        if scope["mode"] != mode or record["mode"] != mode:
+            raise ValueError("mode changed")
+        prompt_file = scope["prompt_file"]
+        if prompt_file and hashlib.sha256(Path(prompt_file).read_bytes()).hexdigest() != scope["prompt_file_sha256"]:
+            raise ValueError("prompt file changed")
+        return {
+            "task_family": scope["family"],
+            "task_role": scope["role"],
+            "paths": scope["paths"],
+            "language_lane": scope["language_lane"],
+            "research_track": scope["track"],
+            "review": scope["review"],
+            "task_prompt": scope["task_prompt"],
+            "prompt_file": prompt_file,
+        }
+    except (KeyError, TypeError, ValueError, OSError) as exc:
+        raise MechanicalAdmissionRefused(
+            "MECHANICAL_TASK_REFUSED: persisted admission inputs changed or are unavailable (#10079)"
+        ) from exc
 
 
 ReviewSelector = Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]]

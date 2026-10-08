@@ -5760,6 +5760,7 @@ TYPED_CAUSE_CODES = frozenset(
         "kimi_admission_refused",
         "kimi_worktree_mismatch",
         "review_admission_refused",
+        "mechanical_admission_refused",
         "boundary_remove_failed",
         "boundary_install_failed",
         # The worker's own outcome.
@@ -6462,9 +6463,10 @@ def _kimi_worker_refusal(
     The worker's seat and model are resolved and admitted in one step
     (``resolve_and_admit``); the worker invokes the admitted target.
 
-    The refusal is a public cause only (#9878). A tree reader's error and the
-    boundary's errors go to the task's local diagnostic file; a policy refusal
-    writes nothing, its text being the fixed policy the dispatch-time gate prints.
+    The refusal is a public cause only (#9878). Non-Kimi admission refusals
+    settle an existing task record as failed with the typed cause and local
+    reason. A refused Kimi worker preserves its zero-write policy boundary;
+    tree reader and boundary errors go to the task's local diagnostic file.
 
     A Kimi seat is refused unless its mode and review flags are admitted (read
     first, from the argv alone), the task's owned paths pass admission read in
@@ -6480,7 +6482,12 @@ def _kimi_worker_refusal(
         KimiAdmissionRefused,
         is_kimi_seat,
     )
-    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
+    from scripts.agent_runtime.target_admission import (
+        ReviewAdmissionRefused,
+        mechanical_worker_scope,
+        resolve_and_admit,
+    )
 
     boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
     if not is_kimi_seat(agent, model=model):
@@ -6490,11 +6497,29 @@ def _kimi_worker_refusal(
             except boundary_errors as exc:
                 return _publish_cause(task_id, _exception_cause("boundary_remove_failed", exc), source="worker"), None
         try:
-            (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
-        except ReviewAdmissionRefused as exc:  # #9583: a review model without a catalog review role
-            return _publish_cause(
-                task_id, _TypedCause("review_admission_refused", diagnostic=str(exc)), source="worker"
-            ), None
+            launch = _read_state_json(_state_path_no_create(task_id)) or {}
+            scope = mechanical_worker_scope(launch, mode=mode)
+            scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
+            (target,) = resolve_and_admit(
+                (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
+                trees=lambda: _kimi_worktree_trees(cwd), **scope,
+            )
+        except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
+            code = (
+                "mechanical_admission_refused" if isinstance(exc, MechanicalAdmissionRefused)
+                else "review_admission_refused" if isinstance(exc, ReviewAdmissionRefused)
+                else "kimi_admission_refused"
+            )
+            cause = _publish_cause(task_id, _TypedCause(code, diagnostic=str(exc)), source="worker")
+            if launch:
+                launch.update({
+                    "status": "failed", "finished_at": datetime.now(UTC).isoformat(),
+                    "failure_reason": cause, "last_error": cause,
+                    "returncode_reason": cause, "returncode": None, "exit_code": 1,
+                    "stderr_excerpt": str(exc),
+                })
+                _write_state_atomic(_state_path_no_create(task_id), launch)
+            return cause, None
         return None, target
     try:
         if mode != ADMITTED_MODE or review:
@@ -9742,6 +9767,10 @@ def _run_worker(
     if kimi_refusal:
         from scripts.agent_runtime import kimi_admission
 
+        record = _read_state_json(_state_path_no_create(task_id))
+        if record and record.get("status") == "failed" and record.get("failure_reason") == kimi_refusal:
+            record.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _write_state_atomic(_state_path_no_create(task_id), record)
         # A fixed prefix and the typed cause only (#9878).
         policy = f"{kimi_admission.POLICY_NAME}: " if kimi_admission.is_kimi_seat(agent, model=model) else ""
         print(f"❌ ROUTING REFUSED: {policy}{kimi_refusal}", file=sys.stderr)
@@ -12834,7 +12863,7 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
-            if mechanical_task := _mechanical_task_scope(args):
+            if mechanical_task := _mechanical_task_scope(args, admitted=True):
                 dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
@@ -13325,7 +13354,7 @@ def _dispatch(
             initial_state["review_contract"] = review_contract
             initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
-        if mechanical_task := _mechanical_task_scope(args):
+        if mechanical_task := _mechanical_task_scope(args, admitted=True):
             initial_state["mechanical_task"] = mechanical_task
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
@@ -15713,6 +15742,7 @@ def _admit_dispatch_target(
             raise ReviewAdmissionRefused(f"REVIEW_TARGET_UNRESOLVED: {exc}") from exc
 
     try:
+        mechanical_task = _mechanical_task_scope(args)
         (target,) = resolve_and_admit(
             (agent,),
             model=getattr(args, "model", None),
@@ -15752,27 +15782,47 @@ def _admit_dispatch_target(
             task_role=getattr(args, "research_role", None),
             task_prompt=getattr(args, "prompt", None),
         )
+        if mechanical_task != _mechanical_task_scope(args):
+            raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
+        args._mechanical_admitted_scope = mechanical_task
     except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
 
 
-def _mechanical_task_scope(args: argparse.Namespace) -> dict[str, Any]:
+def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) -> dict[str, Any]:
     """Persist the admission inputs the execution adapter must recheck (#9996)."""
-    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES
+    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES, MechanicalAdmissionRefused
+    from scripts.agent_runtime.target_admission import mechanical_scope_digest
 
+    if admitted:
+        # Persist the inputs captured at admission, even if argv or the prompt file changed since then.
+        return dict(getattr(args, "_mechanical_admitted_scope", {}))
     family = getattr(args, "research_task_family", None)
     if family not in MECHANICAL_FAMILIES:
         return {}
-    return {
+    prompt_file = getattr(args, "prompt_file", None)
+    try:
+        prompt_file_sha256 = hashlib.sha256(Path(prompt_file).read_bytes()).hexdigest() if prompt_file else None
+    except OSError as exc:
+        raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: task input unavailable at prompt file (#10079)") from exc
+    paths = []
+    for value in (getattr(args, "owned_path", None), getattr(args, "research_owned_path", None)):
+        paths.extend([value] if isinstance(value, str) else value or [])
+    scope = {
         "family": family,
         "role": getattr(args, "research_role", None),
         "track": getattr(args, "research_track", None),
         "language_lane": _dispatch_is_language_lane(args),
         "review": _dispatch_is_review_typed(args),
-        "paths": list(dict.fromkeys((getattr(args, "owned_path", None) or []) +
-                                    (getattr(args, "research_owned_path", None) or []))),
+        "paths": paths,
+        "mode": getattr(args, "mode", None),
+        "task_prompt": getattr(args, "prompt", None),
+        "prompt_file": str(Path(prompt_file).resolve()) if prompt_file else None,
+        "prompt_file_sha256": prompt_file_sha256,
     }
+    scope["sha256"] = mechanical_scope_digest(scope)
+    return scope
 
 
 def _discard_model_probe_output(plan: object) -> None:
