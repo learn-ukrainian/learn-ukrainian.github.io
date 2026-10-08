@@ -134,12 +134,14 @@ No prior built lessons provided.
 
 ### Immersion Payload
 - **Band Key**: {{ immersion.band_key }}
-- **Advisory Ukrainian Share**: {{ immersion.advisory_uk_share[0] }}-{{ immersion.advisory_uk_share[1] }}%
-- **Module Structural Minimums**:
+{% if immersion.advisory_uk_share %}- **Advisory Ukrainian Share**: {{ immersion.advisory_uk_share[0] }}-{{ immersion.advisory_uk_share[1] }}%
+{% else %}- **English orientation**: no advisory-share target; overview exemplars only; zero new core words.
+{% endif %}{% if level != "a1" %}- **Module Structural Minimums**:
   - min_uk_dialogue_lines: {{ immersion.structural_targets.min_uk_dialogue_lines }}
   - min_uk_example_sentences: {{ immersion.structural_targets.min_uk_example_sentences }}
   - min_vocab_entries: {{ immersion.structural_targets.min_vocab_entries }}
-- **Permitted Languages Per Field Role**:
+{% endif %}{% if level == "a1" %}- **Not checked**: lesson_structural_minimums_not_calibrated
+{% endif %}- **Permitted Languages Per Field Role**:
 {% for role, langs in immersion.permitted_languages.items() %}
   - {{ role }}: {{ langs | join(', ') }}
 {% endfor %}
@@ -245,3 +247,20 @@ gaps: []
 - When `status: ok`, `gaps: []` and no step has empty blocks.
 - Inline markup: only `{% raw %}{{gloss:W-...}}{% endraw %}` (for incidental words) and `{% raw %}{{uk:...}}{% endraw %}` (for quoted terms in English).
 - No combining accents (U+0300, U+0301).
+{%- if level == "a1" %}
+
+### Approved practical recap task (#10105)
+For a recap, checkpoint or embedded closing recap, the plan step's `task` is authoritative.
+The assembler prints its English context, instruction, response mode, observable success
+criteria and permitted print directly, after the supporting blocks of the closing step.
+Do not echo or rewrite those fields, add a task block, or invent a decision field in the draft.
+Supply only the declared support blocks and activities, preserving step order.
+Early A1 means activity_instruction allows only [en] in the immersion payload/table.
+Early closing recaps use practical application, not story comprehension questions.
+A story is optional support; copying alone cannot accomplish the task. The learner must
+process taught Ukrainian and make a contextual choice, personalize or recombine it.
+For an embedded recap, earlier teaching steps in this same lesson count as taught;
+nothing introduced at or after the closing step is available to it.
+English orientation is an explicit exception: English practical orientation recap,
+no Ukrainian production requirement, no new core words, Ukrainian overview exemplars only.
+{% endif %}

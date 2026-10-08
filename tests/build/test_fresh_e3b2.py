@@ -1372,3 +1372,16 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     error = yaml.safe_load((state_dir / "lesson-2.manifest-error.yaml").read_text(encoding="utf-8"))
     assert error["layer"] == "engine" and error["reason"] == report["reason"]
     assert not (state_dir / "lesson-2.manifest.yaml").exists()
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))

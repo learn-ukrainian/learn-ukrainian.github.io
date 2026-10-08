@@ -24,37 +24,20 @@ pytestmark = pytest.mark.reads_content
 
 @pytest.mark.parametrize(
     ("count", "expected_key"),
-    [
-        (0, "a1-m01-03"),
-        (139, "a1-m01-03"),
-        (140, "a1-m04-06"),
-        (241, "a1-m04-06"),
-        (242, "a1-m07-14"),
-        (572, "a1-m07-14"),
-        (573, "a1-m15-24"),
-        (592, "a1-m15-24"),
-        (593, "a1-m25-34"),
-        (620, "a1-m25-34"),
-        (621, "a1-m35-54"),
-        (646, "a1-m35-54"),
-        (647, "a1-m55+"),
-        (1000, "a1-m55+"),
-    ],
+    [(0, 'a1-m01-03'), (24, 'a1-m01-03'), (25, 'a1-m04-06'), (59, 'a1-m04-06'), (60, 'a1-m07-14'), (139, 'a1-m07-14'), (140, 'a1-m15-24'), (241, 'a1-m15-24'), (242, 'a1-m25-34'), (399, 'a1-m25-34'), (400, 'a1-m35-54'), (599, 'a1-m35-54'), (600, 'a1-m55+'), (1000, 'a1-m55+')],
 )
 def test_a1_band_parametrised_seven_knees(count: int, expected_key: str) -> None:
-    """A1 band derives from cumulative count using the seven ULP knees, matching compute_immersion_band."""
+    """A1 band derives from cumulative count using the seven editorial vocabulary thresholds, matching compute_immersion_band."""
     band = compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=count)
     assert band.band_key == expected_key
     assert band.source == "ulp_vocab"
     assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in band.not_checked
 
+    assert band.module_structural == {}
     # Byte/value identical to existing config.compute_immersion_band
     config_band = cfg.compute_immersion_band("a1", 1, {"cumulative_vocabulary": count})
     assert band.band_key == config_band["key"]
     assert band.advisory_uk_share == (int(config_band["advisory_pct_min"]), int(config_band["advisory_pct_max"]))
-    assert band.module_structural["min_uk_dialogue_lines"] == int(config_band["min_uk_dialogue_lines"])
-    assert band.module_structural["min_uk_example_sentences"] == int(config_band["min_uk_example_sentences"])
-    assert band.module_structural["min_vocab_entries"] == int(config_band["min_vocab_entries"])
 
 
 def test_a2_band_equals_arc_band_key() -> None:
@@ -202,3 +185,16 @@ def test_a2_band_does_not_require_cumulative_core_count() -> None:
     band = compute_lesson_immersion_band("a2", arc_position=1, lesson_n=1)
     assert band.band_key == "a2-bridge"
     assert band.source == "arc_table"
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))

@@ -373,7 +373,7 @@ def _copy_template(root: Path, template: tuple[Path, Path, dict, str]) -> tuple[
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _reuse_built_prompt_fixtures(tmp_path_factory: pytest.TempPathFactory):
+def _reuse_built_prompt_fixtures(tmp_path_factory: pytest.TempPathFactory, _current_a1_arc_for_contract_tests):
     """Build each deterministic lesson and plan tree once and copy it per test.
 
     The bytes do not depend on the directory they are written in. A test that
@@ -2458,6 +2458,13 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     anchor = f"## {4 if kind == 'rereview' else 3}. Review Tools and Receipts\n\n"
     assert expected.count(anchor) == 1
     expected = expected.replace(anchor, anchor + AGY_TOOL_GUIDANCE, 1)
+    # #10105 approved R1-R12 changes only this A1 recap judgment and A1 recap wording.
+    # The frozen fixture stays untouched; compare its bytes plus the explicit contract delta.
+    expected = expected.replace(
+        "and follows ULP review shape (R-03).",
+        "and performs the approved practical plan task (R-03, #10105).",
+    )
+    expected += ("\n\n" if kind == "plan" else "\n") + "### A1 practical recap judgment (#10105)\nUnder `activities` (plan review) or `job` and `activity` (lesson review), assess every\nrecap/checkpoint/embedded closing step's approved plan task, including embedded recaps\nwhen the manifest is not marked recap. The module digest and earlier teaching steps\nprovide the taught context; declare an evidence gap if the applicable built context is absent.\nJudge usefulness, Ukrainian processing and a real contextual choice/personalization/\nrecombination. Reject disguised copying, Ukrainian bypass, wholesale model copying,\nor an untaught construction even when every lemma is available. Cite the actual task.\nEarly A1 is defined by activity_instruction: [en] in immersion_table.yaml, not position.\nRequire English context/instructions/observable criteria and no story-question closure\nin early A1. A story is optional support. Later A1 may use supported comprehension.\nOrientation requires explicit a1-orientation: English narration, Ukrainian overview\nexemplars only, no advisory share or core additions; English practical orientation recap\nrequires no Ukrainian production. A1 has no module structural minimums in fresh payloads;\nlesson_structural_minimums_not_calibrated remains. A2+ contracts are unchanged.\n"
     assert isolated.prompt.encode() == expected.encode()
     assert "search_resources" not in isolated.prompt
     assert "Full access and evidence duty" not in isolated.prompt
@@ -2466,3 +2473,16 @@ def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kin
     ).passed
     full = render(path, **{**kw, "review_access": "full"})
     assert "search_resources" in full.prompt and "Full access and evidence duty" in full.prompt
+
+
+@pytest.fixture(scope="module")
+def _current_a1_arc_for_contract_tests(tmp_path_factory):
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    positions = generated_a1_arc(tmp_path_factory.mktemp("current-a1-arc"))
+    original = selector.load_arc
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(selector, "load_arc", lambda track, **kwargs:
+                      positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                      else original(track, **kwargs))
+        yield

@@ -952,6 +952,9 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    planned_tasks = {step["id"]: step["task"] for step in lesson_entry.get("steps", []) if "task" in step} if level == "a1" else {}
+    if planned_tasks and [step.get("id") for step in draft.get("steps", [])] != [step["id"] for step in lesson_entry["steps"]]:
+        raise AssemblerError("recap_task_order", "draft must preserve approved recap step order")
     literacy = bool((lesson_entry.get("inventory", {}).get("phonetics") or {}).get("letters"))
     include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
@@ -1240,6 +1243,24 @@ def assemble_expanded_document(
                         str(line),
                         source="writer_prose",
                     )
+
+        task = planned_tasks.get(step_id)
+        if task:
+            for key, text in [("context_en", task["context_en"]), ("instruction_en", task["instruction_en"]),
+                              ("response_mode", "Response: " + task["response_mode"].replace("_", " ")),
+                              *[(f"criterion_{i}", value) for i, value in enumerate(task["success_criteria_en"])]]:
+                add_unit("urok", step_id, None, None, f"recap_{key}", "instruction", page_text(text), source="writer_prose")
+            for i, selection in enumerate(task["learner_reads"]):
+                ref = selection if isinstance(selection, str) else selection["ref"]
+                records = {r["id"]: r for section in ("texts", "examples", "exercises") for r in pack.get(section, [])}
+                rec = records.get(ref, {})
+                printable = [rec.get(key) for key in ("quote", "text")]
+                printable += rec.get("items_sample") if isinstance(rec.get("items_sample"), list) else []
+                text = "\n".join(value for value in printable if isinstance(value, str))
+                if not text or ref not in next(st for st in lesson_entry["steps"] if st["id"] == step_id).get("evidence", []):
+                    raise AssemblerError("recap_task_print", "recap print must be cited printable evidence")
+                selected = text if isinstance(selection, str) else " / ".join(selection["words"])
+                add_unit("urok", step_id, None, None, f"recap_print_{i}", "record_print", page_text(selected), source="record", ref=ref)
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
@@ -2476,6 +2497,11 @@ def _render_urok_markdown(
                 if ref_id:
                     w.line(f"<!-- INJECT_ACTIVITY: {ref_id} -->")
                     w.blank()
+
+        for key, indices in unit_indices_by_block.items():
+            if key[0] == "urok" and key[1] == step_id and isinstance(key[2], str) and key[2].startswith("recap_"):
+                w.line(*unit_fragments(indices))
+                w.blank()
 
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:

@@ -2395,3 +2395,16 @@ def test_proper_name_with_gloss_remains_in_flashcard_deck():
         {"lemma": "Name", "translation": "a name", "pos": "propn", "atlas_href": None},
     ])
     assert '"front":"Name","back":"a name"' in mdx
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))

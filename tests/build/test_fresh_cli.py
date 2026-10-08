@@ -908,3 +908,16 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
 
     assert echoed == reviewed == manifest["learner_state"]["sha256"]
     assert echoed != hashlib.sha256(lock.yaml_bytes(state.to_dict())).hexdigest()  # not the YAML-bytes hash
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))

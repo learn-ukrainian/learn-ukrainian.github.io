@@ -267,7 +267,9 @@ def test_writer_prompts_have_no_quota(sample_plan_entry, sample_learner_state, s
     assert "word target is a minimum" not in prompt
     assert "45 minutes" in prompt and "guidance" in prompt
     # R-30's existing structural immersion payload is explicitly excluded from sizing quotas.
-    assert "Module Structural Minimums" in prompt
+    assert ("Module Structural Minimums" in prompt) is (level != "a1")
+    if level == "a1":
+        assert all(key not in prompt for key in ("min_uk_dialogue_lines", "min_uk_example_sentences", "min_vocab_entries"))
 
 
 @pytest.mark.parametrize("level", ["a2", "b1", "b2"])
@@ -285,7 +287,7 @@ def test_non_a1_rendered_prompts_keep_main_candidate_wording(
         cited_records=sample_cited_records,
         learner_state=sample_learner_state,
         word_store=SAMPLE_WORD_STORE,
-        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        immersion=compute_immersion_payload(level, arc_position=1, lesson_n=1, cumulative_core_count=0),
         level=level,
         slug="sounds-intro",
         lesson_n=2 if recap else 1,
@@ -1381,3 +1383,33 @@ def test_structured_citation_discovery_preserves_existing_sources_and_ignores_pr
         "G-a1-001",
         "V-1",
     }
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))
+
+
+@pytest.mark.parametrize("level,recap,pin", [
+    ("a2", False, "7b0b6e68c5255ca1529a48f6560043949a5b291e8949d9930627430028f9756d"),
+    ("a2", True, "6cfa05410218130b9e60970bcbc30d50e580220d2c197458911bb99b8673268a"),
+    ("b1", False, "7967052035a78642555229c7222e0b5dde4a4eba45fbcdc17a7142186e0e3ed9"),
+    ("b1", True, "31952e84fcc63ab7d6319349d42d91501fe6cb2a6a3ebcca53e90b85039242ab"),
+    ("b2", False, "437a8846c6c4d9f31f5737f3a2ee92b00ab8403cf7af9f04ca47cc5021eb629a"),
+    ("b2", True, "4f2bce2d003884811c6254ee92630eb68c8e34ee9e2e9e2d6eb7e56f927eefd1"),
+])
+def test_non_a1_writer_bytes_match_10104_base(sample_plan_entry, sample_learner_state, sample_cited_records, level, recap, pin):
+    # Rendered from base 23ecf8c4620f06cec6f3bc402a8934f4c30be6f3 before #10105.
+    kwargs = dict(plan_entry=sample_plan_entry, learner_state=sample_learner_state, cited_records=sample_cited_records, word_store=SAMPLE_WORD_STORE, immersion=compute_immersion_payload(level,1,1,0), level=level, slug="sounds-intro", lesson_n=1)
+    render = render_recap_prompt if recap else render_lesson_prompt
+    if recap:
+        kwargs["built_lessons"] = []
+    assert hashlib.sha256(render(**kwargs).encode()).hexdigest() == pin

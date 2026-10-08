@@ -99,7 +99,7 @@ def test_a1_immersion_payload_early():
     payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=10)
     assert isinstance(payload, ImmersionPayload)
     assert payload.band_key == "a1-m01-03"
-    assert payload.advisory_uk_share == (40, 55)
+    assert payload.advisory_uk_share == (0, 15)
 
     roles = payload.permitted_languages
     for role in FIELD_ROLES:
@@ -114,9 +114,7 @@ def test_a1_immersion_payload_early():
     assert roles["resource_line"] == ("en", "uk")
 
     targets = payload.structural_targets
-    assert "min_uk_dialogue_lines" in targets
-    assert "min_uk_example_sentences" in targets
-    assert "min_vocab_entries" in targets
+    assert targets == {}
 
 
 def test_a1_immersion_payload_late_band():
@@ -220,4 +218,17 @@ def test_payload_pin_consumed_by_both():
     d = res.to_dict()
     assert d["band_key"] == "a1-m01-03"
     assert d["advisory_uk_share"] == [20, 40]
-    assert d["structural_targets"]["min_uk_dialogue_lines"] == 5
+    assert d["structural_targets"] == {}
+
+
+@pytest.fixture(autouse=True)
+def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
+    # D4 changed under #10105; #10108 owns tracked arc regeneration.
+    # Tests generate a current isolated arc without weakening source-hash checks.
+    from scripts.curriculum.learner_state import immersion as selector
+    from tests.build.test_fresh_recap_contract import generated_a1_arc
+    original = selector.load_arc
+    positions = generated_a1_arc(tmp_path)
+    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
+                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
+                        else original(track, **kwargs))

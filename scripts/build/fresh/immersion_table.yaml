@@ -3,7 +3,7 @@
 # Keys are immersion band keys from scripts.config.IMMERSION_POLICIES.
 
 a1-m01-03:
-  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 early scaffolding; theory Ukrainian-first with brief English support)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 English scaffolding; taught Ukrainian exemplars)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -152,6 +152,17 @@ b2+:
     dialogue_line: [uk]
     activity_instruction: [uk]
     activity_item: [uk]
+    gloss: [en]
+    quote: [uk]
+    resource_line: [en, uk]
+
+a1-orientation:
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (#10105 explicit English orientation; overview exemplars only)"
+  roles:
+    narration: [en]
+    dialogue_line: [uk]
+    activity_instruction: [en]
+    activity_item: [en, uk]
     gloss: [en]
     quote: [uk]
     resource_line: [en, uk]

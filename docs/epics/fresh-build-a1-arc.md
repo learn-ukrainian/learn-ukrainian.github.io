@@ -47,10 +47,18 @@ home theme (D6).
 memorised chunk before its grammar is taught, if and only if the plan marks it `chunk` and the
 lesson does not analyse it. §3 is the single table of what is a system and what is a chunk at A1.
 
-**D4 — Every module ends with a recap lesson in the ULP review shape** (R-03): a short
-first-person story side by side in Ukrainian and English, Ukrainian-only questions about it, one
-production task. Checkpoint modules are made of such lessons plus a self-check and introduce
-nothing new.
+**D4 — A1 closes with a practical recap using taught inventory** (R-03, #10105).
+Every recap/checkpoint lesson and embedded closing recap declares an approved plan-step
+`task`: action, English context/instruction, response mode, observable English criteria,
+permitted learner print, and the step's existing uses/evidence. A story is optional support,
+not a required first-person story → Ukrainian-only questions → production sequence.
+Early A1 is data-defined by `activity_instruction: [en]` in `immersion_table.yaml`;
+its closure is practical application rather than comprehension questions or copying alone.
+Inventory is available before the recap step; earlier teaching in that lesson counts.
+Recaps introduce nothing. Explicit `a1-orientation` has an English practical orientation
+recap, no Ukrainian production requirement and no new core words. Scripts check structure;
+qualified independent review judges usefulness, Ukrainian processing and decisions.
+Old A1 plans fail `a1_recap_migration_required`; #10108 owns disposition, without rewriting here.
 
 **D0 — The Standard is the minimum; ULP is the schedule (operator, 2026-09-21).** Everything the
 Standard lists for A1 must be owned by a position. Teaching something *earlier* than the Standard

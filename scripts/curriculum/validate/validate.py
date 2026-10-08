@@ -105,6 +105,8 @@ def _cyrillic_allowed(path: tuple) -> bool:
         return True
     if len(rest) >= 2 and rest[0] == "activities" and rest[2:] == ("focus",):
         return True
+    if len(rest) == 7 and rest[0] == "steps" and rest[2:4] == ("task", "learner_reads") and rest[5] == "words":
+        return True
     if rest[0] == "activities" and (
         (len(rest) == 4 and rest[2] == "options")
         or (len(rest) == 6 and rest[2] == "learner_reads" and rest[4] == "words")

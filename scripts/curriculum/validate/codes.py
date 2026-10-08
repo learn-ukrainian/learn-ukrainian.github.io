@@ -224,7 +224,20 @@ OPTIONS_FORBIDDEN = "options_forbidden"
 LEARNER_READ_REF_NOT_PRINTABLE = "learner_read_ref_not_printable"
 LEARNER_READ_WORD_NOT_IN_PRINT = "learner_read_word_not_in_print"
 
+A1_RECAP_MIGRATION_REQUIRED = "a1_recap_migration_required"
+RECAP_TASK_INVALID = "recap_task_invalid"
+RECAP_TASK_INVENTORY = "recap_task_inventory"
+RECAP_TASK_ORDER = "recap_task_order"
+RECAP_TASK_PRINT = "recap_task_print"
+ORIENTATION_CORE_WORDS = "orientation_core_words"
+
 DESCRIPTIONS = {
+    A1_RECAP_MIGRATION_REQUIRED: "legacy A1 recap requires retirement/migration by #10108",
+    RECAP_TASK_INVALID: "practical recap task violates its structural contract",
+    RECAP_TASK_INVENTORY: "recap uses unknown or unavailable inventory",
+    RECAP_TASK_ORDER: "recap task is duplicated or placed outside its closing step",
+    RECAP_TASK_PRINT: "recap print is undeclared, unprintable or undecodable",
+    ORIENTATION_CORE_WORDS: "orientation introduces core vocabulary",
     A1_REFERENCE_WORD_MISSING: "C29 (#9582): A1 introduced vocabulary missing from the reference; advisory until #9541 PR2",
     A1_REFERENCE_EXCEPTION_INVALID: "C29 (#9582): invalid typed reference exception; never exempts other gates",
     A1_REFERENCE_INVALID: "C29 (#9582): invalid reference input or enforcement configuration (failure)",
