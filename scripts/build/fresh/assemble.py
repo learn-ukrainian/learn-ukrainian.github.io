@@ -814,6 +814,7 @@ class CheckResult:
     reason: str | None = None
     layer: str | None = None
     artifacts: dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         result: dict[str, Any] = {"check": self.check, "passed": self.passed}
@@ -827,6 +828,8 @@ class CheckResult:
             result["reason"] = self.reason
         if self.layer is not None:
             result["layer"] = self.layer
+        if self.details:
+            result["details"] = self.details
         return result
 
 
@@ -1859,15 +1862,24 @@ def check_5_assembly(
     lesson_n: int,
     *,
     output_dir: Path | None = None,
+    expected_inputs: dict[str, str] | None = None,
 ) -> CheckResult:
-    """Check 5: Assemble draft to expanded document, validate schema and accent ban."""
+    """Check 5: require bound writer-time Sources coverage before publishing."""
+    from scripts.build.fresh.source_coverage import check_coverage
+
     try:
         expanded_doc, provenance_doc = assemble_expanded_document(draft, plan, pack, words_store, level, slug, lesson_n)
+        coverage = check_coverage(
+            draft, plan, pack, words_store, level, slug, lesson_n,
+            state_dir=output_dir, expected_inputs=expected_inputs, provenance=provenance_doc,
+        )
     except AssemblerError as exc:
         return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
-    except Exception as exc:
-        return CheckResult(check=5, passed=False, reason=f"assembly raised: {exc}", layer="writer")
-
+    except (OSError, ValueError, KeyError, TypeError):
+        return CheckResult(check=5, passed=False, reason="writer_sources_evidence_uncovered", layer="engine")
+    if coverage["code"]:
+        return CheckResult(check=5, passed=False, reason=coverage["code"], layer="engine",
+                           details={"writer_sources": coverage})
     validator = get_expanded_validator()
     errors = sorted(validator.iter_errors(expanded_doc), key=lambda e: e.path)
     if errors:
@@ -1875,6 +1887,7 @@ def check_5_assembly(
         return CheckResult(
             check=5,
             passed=False,
+            details={"writer_sources": coverage},
             reason=f"expanded document schema validation failed at {list(err.path)}: {err.message}",
             layer="writer",
         )
@@ -1886,6 +1899,7 @@ def check_5_assembly(
         return CheckResult(
             check=5,
             passed=False,
+            details={"writer_sources": coverage},
             reason=f"provenance document schema validation failed at {list(err.path)}: {err.message}",
             layer="writer",
         )
@@ -1896,7 +1910,7 @@ def check_5_assembly(
         if findings:
             finding = findings[0]
             return CheckResult(
-                check=5, passed=False, layer="writer",
+                check=5, passed=False, layer="writer", details={"writer_sources": coverage},
                 step=u.get("step"), activity=u.get("activity"), token=finding.value,
                 reason=f"internal_learner_term: {finding.kind}: {finding.value}",
             )
@@ -1914,7 +1928,8 @@ def check_5_assembly(
     try:
         ExpandedDocument.from_data(expanded_doc)
     except ResolverError as err:
-        return CheckResult(check=5, passed=False, reason=f"ExpandedDocument rejected: {err.message}", layer="writer")
+        return CheckResult(check=5, passed=False, reason=f"ExpandedDocument rejected: {err.message}", layer="writer",
+                           details={"writer_sources": coverage})
 
     if output_dir is not None:
         write_expanded_document(expanded_doc, provenance_doc, output_dir, lesson_n)
@@ -1923,6 +1938,7 @@ def check_5_assembly(
         check=5,
         passed=True,
         artifacts={"expanded_doc": expanded_doc, "provenance": provenance_doc},
+        details={"writer_sources": coverage},
     )
 
 
@@ -3135,7 +3151,18 @@ def assemble_lesson(
         }
 
     # Check 5: Assembly
-    c5 = check_5_assembly(draft, plan, pack, words_store, level, slug, lesson_n, output_dir=state_dir)
+    expected_inputs = {
+        key: hashlib.sha256(paths[name].read_bytes()).hexdigest()
+        for key, name, supplied in (
+            ("plan_sha256", "plan", plan_dict), ("pack_lock", "pack", pack_dict),
+            ("words_lock", "words", words_dict),
+        )
+        if supplied is None
+    }
+    c5 = check_5_assembly(
+        draft, plan, pack, words_store, level, slug, lesson_n,
+        output_dir=state_dir, expected_inputs=expected_inputs,
+    )
     if not c5.passed:
         return {"ok": False, "failure": c5.to_dict()}
 

@@ -2176,10 +2176,11 @@ async def handle_search_resources(args: dict):
             error_code="resource_catalogue_missing",
         )
         return [TextContent(type="text", text=prose)], envelope
-    lines = [f"Found {len(hits)} catalogue resources (returned ranking order):"] if hits else []
+    lines = [f'Found {len(hits)} catalogue resources for: "{query["query"]}" (returned ranking order):'] if hits else []
     for rank, hit in enumerate(hits[:5], 1):
         title = " ".join(hit["title"].split())[:80]
         lines.append(f"{rank}. {hit['id']} — {title} (access: {hit['access']})")
+        lines.append(f"- **URL**: `{hit['url']}`")
     if len(hits) > 5:
         lines.append(f"{len(hits) - 5} more resources in structured hits.")
     prose = "\n".join(lines) if hits else "No catalogue resources found."
@@ -2253,6 +2254,7 @@ async def handle_search_ua_gec_errors(args: dict) -> list[TextContent]:
     for i, hit in enumerate(hits, 1):
         native_flag = " (native author)" if hit.get("is_native") else ""
         lines.append(f"### Result {i}{native_flag}")
+        lines.append(f"- **Row ID**: `{hit.get('id')}`")
         lines.append(f"- **Error**: {hit.get('error')}")
         lines.append(f"- **Correction**: {hit.get('correct')}")
         lines.append(f"- **Type**: {hit.get('error_type')}")
@@ -3811,6 +3813,8 @@ async def handle_dict_search(args: dict, collection: str, label: str):
         hits = [{**hit, "verification_authority": False, "notice": SUM11_AUTHORITY_NOTICE} for hit in hits]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
+        if collection == "style_guide":
+            lines.append(f"- **ID**: `{hit.get('id')}`")
         if collection == "sum11":
             lines.append(f"- verification_authority: false. {SUM11_AUTHORITY_NOTICE}")
         word = hit.get("word", hit.get("words", ""))

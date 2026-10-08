@@ -5,7 +5,15 @@
 Parent: #8397 (epic #7994). **Design draft r3 by the curriculum-upgrade driver, 2026-09-22. Two eligible independent seats have critiqued it:** AGY `gemini-3.8-flash-high` on r1 (task `design-critique-8431-r1-agy`: SOUND WITH CHANGES, 6 MUST + 5 SHOULD — folded into r2) and Codex `gpt-6-astra` on r2 (task `design-critique-8431-r2-codex`, comment below: SOUND WITH CHANGES, 8 MUST + 2 SHOULD — all folded into r3; its Ukrainian evidence is read-only database output, quoted in its comment). **The operator's decisions of 2026-09-21 (at the end) are unchanged.** r3 is the version the design seat hands over; what remains is the operator's acceptance and the docs PR that makes it §5 of `docs/epics/fresh-build-plan-schema.md` ("What the lesson writer receives **and returns**"). (An earlier ask to Kimi was a routing error by the driver — Kimi is excluded from language-related work — and was stopped before it replied; nothing here comes from it.) Sibling of the review contracts (#8430). The original planning text of this issue is kept at the end.
 
 ## What is already decided (plan schema §5 and §7.1, R-26, R-12, R-22, R-35)
-The writer receives exactly four things: the lesson's plan entry; the evidence records that entry cites; the learner state for that position with its immersion rule; the fixed style card. One call per lesson. It does not search. Steps, their order, their evidence and their activities are binding; only the wording inside a step is the writer's. The recap writer also receives the built lessons 1…N−1 of its module.
+The writer receives exactly four things: the lesson's plan entry; the evidence records that entry cites; the learner state for that position with its immersion rule; the fixed style card. One writer call per lesson. During drafting it must use read-only Sources MCP tools to verify
+all writer-authored learner-facing Ukrainian forms (a conservative superset of new forms),
+in batches of at most 50, and retrieve every applicable cited Sources identity. Successful
+per-item analyses may cover part of a verification batch; remaining forms still block assembly.
+Coverage comes from actual paired non-error results, never queries, hit counts or self-report.
+Search results must echo the query and identify the cited chunk, UA-GEC row, style entry or URL.
+W-records are covered by form verification; S-records remain engine-pinned with verified digest
+and line range; U-records remain report-only. Existing phonetic and sourced intentional-error
+exceptions remain unchanged. Engine-only record expansions retain check 7. Steps, their order, their evidence and their activities are binding; only the wording inside a step is the writer's. The recap writer also receives the built lessons 1…N−1 of its module.
 
 ## Principles
 1. **The writer returns data, not a page.** One structured document per call, validated by a schema before anything else looks at it. The engine assembles the four tabs from it; nobody interprets prose to find a step, an activity or a citation.
@@ -174,7 +182,7 @@ Change the inventory; add, drop, merge or reorder a step or an activity; raise t
 
 Mixed sentences outside the quoted-term span of rule 2 fail.
 
-## 7. After the draft — the verification pass (R-26), in order (r3: every cheap check before anything paid; each check labelled by what it proves)
+## 7. After the draft — the verification pass, in order (r3: every cheap check before anything paid; each check labelled by what it proves)
 | # | Check | Proves | Failure goes to |
 | --- | --- | --- | --- |
 | 0 | **before the call:** evidence preflight (§4), cited forms' stress not `pending`, rendered-prompt check (§8) | availability | pack builder, word store or prompt — no call is made |
@@ -182,7 +190,7 @@ Mixed sentences outside the quoted-term span of rule 2 fail.
 | 2 | status: `evidence_gap` → stop | declared gaps | pack builder or plan |
 | 3 | structure (§2) and evidence-use set arithmetic (§1a) | shape | writer |
 | 4 | activities, deterministic part: the key index exists and is in range; multi-select sets are subsets of the options; every error item's `error_ref` resolves and its `incorrect` is in `sentence`, its `correct` is the correction; for fresh A1 apply #8889's pre-resolution alias, key, unit and choice-structure checks (§1e) | shape | writer |
-| 5 | **assembly to the expanded document** (engine prints refs, glosses, paradigms, cards, resources) — from here on every check reads the expanded learner-facing text, not the writer's strings | — | engine |
+| 5 | bound writer-time Sources coverage for all required forms and applicable identities, including cached/standalone/injected drafts; missing, stale or partial evidence refuses before output; **assembly to the expanded document** (engine prints refs, glosses, paradigms, cards, resources) — from here on every check reads the expanded learner-facing text, not the writer's strings | — | engine |
 | 6 | word target and immersion for the position — **measured on the expanded document by one counting contract** (below) | counts | writer |
 | 7 | **words, deterministic part:** every token classified (§3) and narrowed to allowlist candidates; every `core` item and `recycled` id appears; each taught `forms` entry appears in a teaching position; used forms' stress not `pending`; tokens with no allowlist candidate fail | allowlist | writer; a word or form the lesson needs → **plan**; a form without a record → word store |
 | 8 | **constrained questions** for the remaining ambiguities (§3 ii and iii), batched, answered by a language-lane seat, stored as resolution receipts — **a model's judgement, recorded, not a proof** | resolution | writer, if the answers show the text needs a sense outside the allowlist |
@@ -213,3 +221,12 @@ Question 1 he answered himself; on the others he said **"i accept the defaults"*
 
 ## Deliverables (for implementing agents, after acceptance — briefed in the build program, `docs/epics/fresh-build-build-program.md`)
 (a) this contract as §5 of the plan-schema document, with the §1b additions as plan-schema revision 9; (b) `schemas/lesson-draft-v1.schema.json` referencing the per-type activity item definitions, and the two additions to `schemas/activities-<level>.schema.json` (`explanation` everywhere, `error_ref` on error items); (c) the tokeniser-resolver with classification, deterministic narrowing, the constrained-question step, resolution receipts, and the oracle's word boundary — shared with the pack builder and the inventory gate (#8414); (c2) the word store holding full paradigms with stress for every allowed lemma (decision 1; #8413 A1); (d) the three style cards, each with its hash, written by a language lane from the card contents above and the ULP pattern document, with attested exemplars only; (e) the prompt template, the immersion payload function and the rendered-prompt check; (f) the assembler from a draft to the expanded document and the four tabs, the lesson frontmatter (#8413 Brief C) and the resolution/observed state files; (g) the contract fixtures of §8.3; (h) the source publication-right field and its `pack-verify` check (corpus lane). (c) depends on #8413; (f) on #8414.
+
+The engine harvests a metadata-only `lesson-n.writer_tool_calls.json`, bound to lesson,
+task, attempt, writer/model/effort, the full existing INPUT_KEYS digest, actual prompt hash,
+exact draft-byte hash and ignored full-result sidecar hash. It recomputes coverage at check 5;
+a saved verdict has no authority. Full results remain in ignored task state and are never
+staged. Public metadata contains only tool names, credited identities and result hashes,
+never queries, excerpts or private grounding bodies. Coverage proves source interaction and
+identity matching; semantic review still judges support, naturalness and pedagogy. Sources
+lookups never permit copying `ulp_private` grounding into learner content or card fields.

@@ -88,6 +88,8 @@ def test_parse_response_extracts_mcp_calls_from_real_agy_transcript(
                 'ранок(noun)", "type": "text"}]'
             ),
             "timestamp": "2026-05-21T14:12:12Z",
+            "paired": True,
+            "is_error": False,
             "result": [
                 {
                     "type": "text",
@@ -2197,3 +2199,17 @@ def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model)
         _build(tmp_path, model=model)
     with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
         AgyAdapter.resolve_model_slug(model)
+
+
+@pytest.mark.parametrize("pairing", ["fifo", "by_step_index", "generic_results"])
+@pytest.mark.parametrize("status,error", [("DONE", None), ("ERROR", "synthetic"), ("RUNNING", None), ("DONE", "synthetic")])
+def test_sources_pairing_preserves_all_completion_paths(tmp_path, pairing, status, error):
+    events = [{"step_index": 1, "type": "PLANNER_RESPONSE", "source": "MODEL", "status": "DONE",
+        "tool_calls": [{"name": "call_mcp_tool", "args": {"ServerName": '"sources"',
+            "ToolName": '"verify_words"', "Arguments": '{"words":["synthetic"]}'}}]},
+        {"step_index": 2, "type": "GENERIC" if pairing == "generic_results" else "MCP_TOOL",
+         "status": status, "error": error, "content": "synthetic result"}]
+    parse = getattr(agy_module, "_pair_transcript_" + pairing)
+    calls = parse(events, transcript_path=tmp_path / "transcript.jsonl")
+    assert calls[0]["paired"] is True
+    assert calls[0]["is_error"] is (status != "DONE" or bool(error))

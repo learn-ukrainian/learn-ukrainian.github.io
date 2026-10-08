@@ -904,3 +904,41 @@ def test_nothing_typed_no_cyrillic_in_engine_code():
         assert len(cyrillic_matches) == 0, (
             f"{fpath.name} contains {len(cyrillic_matches)} Cyrillic characters: {cyrillic_matches[:5]}"
         )
+
+
+@pytest.mark.parametrize("forged_digest", [False, True])
+def test_writer_harvests_bound_metadata_without_result_bodies(tmp_path, a1_valid_fixture, passing_preflight, forged_digest):
+    from scripts.build.fresh.source_coverage import inputs_digest as full_digest
+    from scripts.build.fresh.writer import WriterHarnessError
+    from scripts.curriculum.evidence import lock
+    draft, types = a1_valid_fixture
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("Synthetic prompt")
+    prompt_sha = hashlib.sha256(prompt.read_bytes()).hexdigest()
+    inputs = _inputs(prompt_sha)
+    output = tmp_path / "output"
+
+    def fake(task_id, prompt_file, result_file):
+        result_file.write_bytes(lock.yaml_bytes(draft))
+        calls = [{"name": "mcp__sources__search_text", "arguments": {"query": "synthetic private query"},
+                  "paired": True, "is_error": False, "result": "synthetic private body"}]
+        sidecar = result_file.with_suffix(".tool_calls.json")
+        sidecar.write_text(json.dumps({"tool_calls": calls}))
+        record = {"status": "done", "model": "synthetic-model", "effort": "high",
+                  "tool_calls_file": str(sidecar),
+                  "tool_calls_sha256": "0" * 64 if forged_digest else hashlib.sha256(sidecar.read_bytes()).hexdigest()}
+        result_file.with_suffix(".json").write_text(json.dumps(record))
+    kwargs = dict(writer="codex", level="a1", slug="sample", lesson_n=1, prompt_file=prompt,
+                  prompt_sha256=prompt_sha, inputs=inputs, output_dir=output, preflight_result=passing_preflight,
+                  fake_seat=fake, repo_root=tmp_path, plan_activity_types=types)
+    if forged_digest:
+        with pytest.raises(WriterHarnessError, match="capture_incomplete"):
+            dispatch_writer(**kwargs)
+        assert not (output / "lesson-1.writer_tool_calls.json").exists()
+    else:
+        result = dispatch_writer(**kwargs)
+        receipt = json.loads((output / "lesson-1.writer_tool_calls.json").read_text())
+        assert receipt["inputs_sha256"] == full_digest(inputs)
+        assert receipt["draft_sha256"] == hashlib.sha256(result["draft_file"].read_bytes()).hexdigest()
+        assert receipt["credited_calls"] == []
+        assert "private" not in json.dumps(receipt)

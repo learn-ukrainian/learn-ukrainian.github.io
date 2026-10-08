@@ -1555,20 +1555,21 @@ def run_lesson(
     if level == "a1":
         row["details"] = {"draft_report": draft_report(plan, [draft])}
     rows.append(row)
-    assembled = check_5_assembly(draft, plan, pack, words, level, slug, n, output_dir=state_dir)
+    assembled = check_5_assembly(draft, plan, pack, words, level, slug, n, output_dir=state_dir, expected_inputs=inputs)
     if not assembled.passed:
-        return finish(
-            failure(
-                5,
-                assembled.reason or "assembly_failed",
-                assembled.layer or "engine",
-                step=assembled.step,
-                activity=assembled.activity,
-                token=assembled.token,
-            )
+        row = failure(
+            5,
+            assembled.reason or "assembly_failed",
+            assembled.layer or "engine",
+            step=assembled.step,
+            activity=assembled.activity,
+            token=assembled.token,
+            code=assembled.reason if assembled.reason and assembled.reason.startswith("writer_sources_") else None,
         )
+        row["details"] = assembled.details
+        return finish(row)
     expanded = assembled.artifacts["expanded_doc"]
-    rows.append(_pass(5))
+    rows.append(_pass(5, assembled.details))
     row = check_6_count(expanded, lesson["word_target"], words)
     if row["status"] == "failed":
         return finish(row)

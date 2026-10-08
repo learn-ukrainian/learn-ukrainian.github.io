@@ -252,3 +252,15 @@ def test_normalize_tool_calls_correlates_codex_mcp_output_by_call_id() -> None:
     assert shell_calls[0]["name"] == "exec_command"
     assert shell_calls[0]["result"] == "."
     assert "." in shell_calls[0]["output_summary"]
+
+
+def test_paired_results_preserve_explicit_claude_errors():
+    for error in (False, True):
+        calls = normalize_tool_calls([
+            {"type": "tool_use", "id": "call-1", "name": "mcp__sources__verify_words", "input": {}},
+            {"type": "tool_result", "tool_use_id": "call-1", "is_error": error, "content": "synthetic"},
+        ])
+        assert calls[0]["paired"] is True
+        assert calls[0]["is_error"] is error
+    orphan = normalize_tool_calls([{"type": "tool_result", "tool_use_id": "missing", "content": "synthetic"}])
+    assert orphan == []

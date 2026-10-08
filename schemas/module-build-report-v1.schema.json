@@ -1,18 +1,215 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Fresh module build report",
-  "type": "object", "additionalProperties": false,
-  "required": ["level", "slug", "complete", "lessons"],
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "level",
+    "slug",
+    "complete",
+    "lessons"
+  ],
   "properties": {
-    "level": {"type": "string"}, "slug": {"type": "string"}, "complete": {"type": "boolean"},
-    "lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
-      "required": ["n", "passed", "passed_through", "manifest_sha256", "stopping_check", "reason", "regenerations", "terminal_layer", "layer"],
-      "properties": {"n": {"type": "integer", "minimum": 1}, "passed": {"type": "boolean"},
-        "passed_through": {"type": "integer", "minimum": 0, "maximum": 12},
-        "manifest_sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]},
-        "stopping_check": {"type": ["integer", "null"]}, "reason": {"type": ["string", "null"]},
-        "regenerations": {"type": "integer", "minimum": 0},
-        "terminal_layer": {"enum": [null, "plan", "pack", "word_store", "engine", "driver"]},
-        "layer": {"enum": [null, "writer", "plan", "pack", "word_store", "engine", "driver", "harness"]}}}}
+    "level": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "n",
+          "passed",
+          "passed_through",
+          "manifest_sha256",
+          "stopping_check",
+          "reason",
+          "regenerations",
+          "terminal_layer",
+          "layer",
+          "writer_sources"
+        ],
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "passed_through": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 12
+          },
+          "manifest_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stopping_check": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "regenerations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "terminal_layer": {
+            "enum": [
+              null,
+              "plan",
+              "pack",
+              "word_store",
+              "engine",
+              "driver"
+            ]
+          },
+          "layer": {
+            "enum": [
+              null,
+              "writer",
+              "plan",
+              "pack",
+              "word_store",
+              "engine",
+              "driver",
+              "harness"
+            ]
+          },
+          "writer_sources": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "contract_version",
+              "code",
+              "forms",
+              "evidence",
+              "noncredited_calls",
+              "engine_pinned",
+              "report_only"
+            ],
+            "properties": {
+              "contract_version": {
+                "const": "fresh-writer-sources.v1"
+              },
+              "code": {
+                "enum": [
+                  null,
+                  "writer_sources_missing",
+                  "writer_sources_capture_incomplete",
+                  "writer_sources_binding_mismatch",
+                  "writer_sources_forms_uncovered",
+                  "writer_sources_evidence_uncovered"
+                ]
+              },
+              "forms": {
+                "$ref": "#/$defs/coverage_counts"
+              },
+              "evidence": {
+                "$ref": "#/$defs/coverage_counts"
+              },
+              "noncredited_calls": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "engine_pinned": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "file_sha256",
+                    "lines",
+                    "fingerprint"
+                  ],
+                  "properties": {
+                    "file_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "lines": {
+                      "type": "string",
+                      "pattern": "^[0-9]+-[0-9]+$"
+                    },
+                    "fingerprint": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              },
+              "report_only": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "coverage_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "covered",
+        "missing",
+        "required_sha256",
+        "covered_sha256",
+        "missing_sha256"
+      ],
+      "properties": {
+        "required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "covered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "covered_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "missing_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
   }
 }

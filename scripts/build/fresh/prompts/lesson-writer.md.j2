@@ -11,6 +11,23 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 4. **Nothing about yourself.** No commentary, no self-assessment, no notes to the reviewer.
 5. **Plain text only.** A combining accent anywhere in the draft fails the schema gate.
 
+## Required writer-time Sources verification
+
+Use read-only Sources MCP tools while drafting. Verify every unique normalized
+learner-facing Ukrainian form you author with `verify_word` or `verify_words`,
+including activity options and explanations. Batch at most 50 words per call.
+Retrieve every applicable cited Sources identity: chunk ID, UA-GEC row ID,
+style-guide ID or canonical resource URL. W-records use form verification;
+S-records are verified by the engine's file digest and line range; U-records
+remain report-only. Engine-only word-store expansions retain check 7.
+Only actual paired non-error results with matching identities earn coverage.
+Successful items of a partial batch may count, but any uncovered form or cited
+identity blocks assembly. Empty/error/unparseable results and hit counts do not
+prove coverage. Existing isolated phonetic and sourced intentional-error
+exceptions remain unchanged. Missing support is an evidence gap; never change
+the plan, inventory or pack. Do not quote or copy `ulp_private` grounding.
+The engine captures proof; do not add verification fields to your draft.
+
 ---
 
 ## 1. Plan Entry

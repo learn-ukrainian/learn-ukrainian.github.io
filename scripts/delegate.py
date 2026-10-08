@@ -9714,6 +9714,19 @@ def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness:
     return flags
 
 
+def _persist_sources_tool_calls(state_path: Path, calls: list[dict[str, Any]]) -> dict[str, str]:
+    """Seal full Sources results locally before publishing terminal task evidence."""
+    from scripts.curriculum.evidence.lock import atomic_write
+
+    if not isinstance(calls, list) or not all(isinstance(call, dict) for call in calls):
+        raise ValueError("writer_sources_capture_incomplete")
+    records = [call for call in calls if str(call.get("name", "")).startswith("mcp__sources__")]
+    raw = (json.dumps({"tool_calls": records}, ensure_ascii=False, sort_keys=True) + "\n").encode("utf-8")
+    path = state_path.with_suffix(".tool_calls.json")
+    atomic_write(path, raw, mode=0o600)
+    return {"tool_calls_file": str(path), "tool_calls_sha256": hashlib.sha256(raw).hexdigest()}
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -9872,6 +9885,7 @@ def _run_worker(
         _write_state_atomic(state_path, state)
     start = time.monotonic()
     ok_outcome = False
+    sources_tool_calls = None
     stderr_excerpt = None
     response = ""
     returncode: int | None = None
@@ -10116,6 +10130,7 @@ def _run_worker(
             )
             ok_outcome = result.ok
             response = result.response
+            sources_tool_calls = getattr(result, "tool_calls", [])
             stderr_excerpt = result.stderr_excerpt
             returncode = result.returncode
             rate_limited = result.rate_limited
@@ -10342,6 +10357,22 @@ def _run_worker(
             if read_only_mutation_paths or task_records_snapshot_error:
                 final_status = "failed"
                 ok_outcome = False
+
+        # Engine-owned receipt persistence happens after the read-only snapshot.
+        # A failed write is a failed capture, never a done task with dropped evidence.
+        final_state.pop("tool_calls_file", None)
+        final_state.pop("tool_calls_sha256", None)
+        final_state.pop("tool_calls_error", None)
+        if sources_tool_calls is not None:
+            try:
+                final_state.update(_persist_sources_tool_calls(state_path, sources_tool_calls))
+            except (OSError, ValueError, TypeError) as exc:
+                final_state["tool_calls_error"] = "writer_sources_capture_incomplete"
+                if final_status == "done":
+                    final_status = "failed"
+                    ok_outcome = False
+                    worker_exception = _exception_cause("worker_unexpected_error", exc)
+                    stderr_excerpt = "writer_sources_capture_incomplete: persistence failed"
 
         # Write the full response to a result file (may be large).
         if response:

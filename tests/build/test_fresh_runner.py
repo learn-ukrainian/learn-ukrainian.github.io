@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+from contextlib import suppress
 from pathlib import Path
 
 import pytest
@@ -575,6 +576,7 @@ def _run_contract(
     gloss_ids=frozenset(),
     question_dispatch=None,
     n=1,
+    sources_receipt=True,
 ):
     lvl = level or plan.get("level") or "a1"
     if lvl == "a1":
@@ -605,6 +607,11 @@ def _run_contract(
     state.mkdir(exist_ok=True)
     (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
+    if sources_receipt:
+        from tests.build.test_fresh_source_coverage import seal_writer
+        # An invalid draft remains an invalid assembly fixture.
+        with suppress(assemble.AssemblerError):
+            seal_writer(state, monkeypatch, draft, plan, pack, words, n=n, expected_inputs=expected_inputs)
     monkeypatch.setattr(runner, "write_manifest", manifest_writer or (lambda *a, **kw: ({"recap": False}, "a" * 64)))
     report = runner.run_lesson(
         lvl,
@@ -1178,3 +1185,12 @@ def test_check_11_two_lesson_build_scopes_each_number_and_keeps_module_gate_stri
         ).passed
         is True
     )
+
+
+def test_runner_missing_writer_sources_stops_at_shared_check_5(tmp_path, monkeypatch):
+    fixture = _fixture()
+    report, state, _ = _run_contract(tmp_path, monkeypatch, *fixture, sources_receipt=False)
+    failed = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (failed["check"], failed["code"], failed["layer"]) == (5, "writer_sources_missing", "engine")
+    assert failed["details"]["writer_sources"]["forms"]["missing"] > 0
+    assert not (state / "lesson-1.expanded.yaml").exists()

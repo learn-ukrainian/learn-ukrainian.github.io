@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from ..jsonl import jsonl_lines
-from ..tool_calls import tool_call_record
+from ..tool_calls import summarize_tool_output, tool_call_record
 
 _SESSION_ID_VALUE_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -245,7 +245,14 @@ def tool_calls_from_items(items: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             if not (isinstance(server, str) and server and isinstance(tool, str) and tool):
                 continue
             record = tool_call_record(
-                name=f"mcp__{server}__{tool}", arguments=item.get("arguments"), output=_mcp_output(item)
+                name=f"mcp__{server}__{tool}", arguments=item.get("arguments"), output=item.get("result")
+            )
+            record["output_summary"] = summarize_tool_output(_mcp_output(item))
+            result = item.get("result")
+            record["paired"] = isinstance(result, Mapping)
+            record["is_error"] = bool(
+                item.get("status") != "completed" or item.get("error")
+                or (isinstance(result, Mapping) and result.get("isError", False))
             )
         elif item_type == "command_execution":
             record = tool_call_record(
