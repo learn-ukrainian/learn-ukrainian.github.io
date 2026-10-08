@@ -22,6 +22,12 @@ from scripts.review.isolation import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _generic_review_temp_floor(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Pressure tests use the module floor, never a deployment's env value."""
+    monkeypatch.delenv("LU_REVIEW_TEMP_MIN_FREE_GB", raising=False)
+
+
 def _make_review_temp_root(dir: Path, prefix: str = "lu-review-snap-", context: dict | None = None) -> Path:
     root = Path(tempfile.mkdtemp(prefix=prefix, dir=dir))
     isolation._write_review_temp_root_marker(root, prefix=prefix, context=context)
@@ -41,7 +47,7 @@ def test_sweep_reaps_dead_owner_root_immediately(tmp_path: Path, monkeypatch: py
     manifest_path.chmod(0o600)
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 1
     assert not root.exists()
 
@@ -58,7 +64,7 @@ def test_sweep_preserves_live_owner_root(tmp_path: Path, monkeypatch: pytest.Mon
     manifest_path.chmod(0o600)
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 0
     assert root.exists()
 
@@ -77,13 +83,13 @@ def test_sweep_reaps_recycled_pid_root(tmp_path: Path, monkeypatch: pytest.Monke
     manifest_path.chmod(0o600)
     manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 1
     assert not root.exists()
 
 
 def test_disk_pressure_escalates_sweeper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Guard 4 (Disk Pressure Escalation): Free space < 10GB lowers unmanifested cutoff to 1h."""
+    """Guard 4 (Disk Pressure Escalation): free space below the configured floor lowers the unmanifested cutoff to 1h."""
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 10000.0
 
@@ -94,10 +100,10 @@ def test_disk_pressure_escalates_sweeper(tmp_path: Path, monkeypatch: pytest.Mon
     marker.write_bytes(f"lu-review-root-v1:{'0' * 64}\n".encode("ascii"))
     os.utime(root, (now - 7200.0, now - 7200.0))  # 2 hours old
 
-    # Mock free space = 1GB (< 10GB threshold)
+    # Mock free space below the configured floor
     monkeypatch.setattr(isolation, "_is_disk_pressure_active", lambda *args, **kwargs: True)
 
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["disk_pressure"] is True
     assert res["roots_reaped"] == 1
     assert not root.exists()
@@ -274,13 +280,13 @@ def test_sweep_preserves_non_esrch_dead_owner_during_grace_window(
 
     # In normal mode (not disk pressure), non-ESRCH dead owner under 60s grace is preserved
     monkeypatch.setattr(isolation, "_is_disk_pressure_active", lambda *args, **kwargs: False)
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 0
     assert root.exists()
 
     # Under disk pressure, grace is bypassed for all dead owners
     monkeypatch.setattr(isolation, "_is_disk_pressure_active", lambda *args, **kwargs: True)
-    res_pressure = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res_pressure = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res_pressure["roots_reaped"] == 1
     assert not root.exists()
 
@@ -309,7 +315,7 @@ def test_sweep_toctou_recheck_skips_on_uncheckable(tmp_path: Path, monkeypatch: 
 
     monkeypatch.setattr(isolation, "_evaluate_root_owner_liveness", mock_eval)
 
-    res = sweep_review_temp_orphans(now=now, min_free_gb=10.0)
+    res = sweep_review_temp_orphans(now=now, min_free_gb=isolation.LU_REVIEW_TEMP_MIN_FREE_GB)
     assert res["roots_reaped"] == 0
     assert root.exists()
 
@@ -319,11 +325,11 @@ def test_disk_pressure_threshold_reads_yaml_config(tmp_path: Path, monkeypatch: 
     monkeypatch.setattr(
         isolation,
         "_load_hygiene_yaml_min_free_gb",
-        lambda: 15.0,
+        lambda: 19.0,
     )
 
     mock_usage = MagicMock()
-    mock_usage.free = 12 * (1024**3)
+    mock_usage.free = 17 * (1024**3)
     monkeypatch.setattr(isolation.shutil, "disk_usage", lambda p: mock_usage)
 
     assert isolation._is_disk_pressure_active(tmp_path) is True
