@@ -295,7 +295,7 @@ def test_idle_settle_covered_deficit(reserve_case):
 
 @pytest.mark.parametrize("grok_status", [None, "healthy", "unhealthy"])
 def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
-    info, covered, _ = reserve_case
+    info, _covered, _ = reserve_case
     agents = {"codex": info, "cursor": {"status": "unhealthy"}}
     if grok_status is not None:
         agents["grok"] = {"status": grok_status}
@@ -308,20 +308,9 @@ def test_reviewer_resolver_covered_deficit(reserve_case, grok_status):
         )
     )
     sol = next(candidate for candidate in result.trace if candidate.name == "openai_frontier")
-    assert sol.status == ("selected" if covered else "excluded")
-    if covered:
-        # An eligible Sol still precedes native Grok, even with credit relief.
-        assert result.selected.concrete_model == "gpt-6.1-sol"
-    else:
-        # #9769 admits native Grok after Sol's uncovered deficit excludes it.
-        # Same-family Opus cannot review this author; Cursor is unavailable.
-        assert "quota bucket is near cap" in sol.reason
-        if grok_status == "unhealthy":
-            assert result.selected is None
-        else:
-            assert result.selected.name == "grok-4.7"
-            assert result.selected.transport == "native_grok"
-            assert result.selected.health == grok_status
+    # Reviews do not require pace coverage while allowance remains above reserve.
+    assert sol.status == "selected"
+    assert result.selected.concrete_model == "gpt-6.1-sol"
 
 
 @pytest.mark.parametrize("native_only", [False, True])
@@ -372,8 +361,7 @@ def test_credit_relief_is_model_specific(reserve_case, monkeypatch):
             routing_snapshot={"agents": {"codex": info}},
         ),
     )
-    assert result.status == "excluded"
-    assert "quota bucket is near cap" in result.reason
+    assert result.status == "eligible" and result.credit is None
 
 
 @pytest.mark.parametrize("failure", ["reader_raises", "unreadable_records", "policy", "headroom", "future_fetch"])
@@ -450,7 +438,7 @@ def test_cover_never_relaxes_hot_from_other_sources(reserve_case, source):
         OPENAI_FRONTIER,
         ResolverInputs(author_model="claude-opus-5-5", routing_snapshot={"agents": {"codex": info}}),
     )
-    assert result.status == "excluded"
+    assert result.status == "eligible" and result.credit is None
 
 
 @pytest.mark.parametrize(

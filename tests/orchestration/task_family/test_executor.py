@@ -375,6 +375,7 @@ def test_github_queries_use_valid_commands_and_normalize_merge_commit(
 def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_mutation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo = init_repo(tmp_path)
     target_branch, unrelated_branch = "cleanup/remove", "cleanup/keep"
     remove_worktree, keep_worktree = add_worktree(repo, target_branch), add_worktree(repo, unrelated_branch)
@@ -422,6 +423,7 @@ def test_finish_cleanup_preserves_unrelated_worktree_and_rechecks_pr_before_muta
 def test_branch_delete_crash_resumes_from_verified_bundle_when_branch_is_already_absent(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/resume", add_worktree(repo, "cleanup/resume")
     task_id = str(uuid4())
@@ -482,6 +484,7 @@ def test_remote_lookup_failure_blocks_branch_delete(tmp_path: Path, monkeypatch:
 def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/runtime", add_worktree(repo, "cleanup/runtime")
     task_id = str(uuid4())
@@ -524,6 +527,7 @@ def test_runtime_without_eligibility_or_proof_is_preserved_and_blocks(
 def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unavailable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo = init_repo(tmp_path)
     branch, worktree = "cleanup/runtime-deferred", add_worktree(repo, "cleanup/runtime-deferred")
     task_id = str(uuid4())
@@ -563,8 +567,11 @@ def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unav
     assert saved["actual"]["preserved"] is True
 
 
-def test_remove_unclaimed_worktree_refuses_while_a_dispatch_task_claims_it(tmp_path: Path) -> None:
+def test_remove_unclaimed_worktree_refuses_while_a_dispatch_task_claims_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """#8610: family cleanup takes delegate's worktree lock and honours an unfinished task claim."""
+    monkeypatch.delenv("TMPDIR", raising=False)
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/claimed")
     tasks = repo / "batch_state" / "tasks"

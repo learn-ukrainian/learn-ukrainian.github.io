@@ -1102,6 +1102,7 @@ launcher_exec_command() {
   LC_DRIVER_RENEW_PID=""
   LC_DRIVER_PENDING_SIGNAL=""
   LC_DRIVER_PENDING_EXIT=0
+  LC_SUPERVISORY_FAILURE_REASON=""
   trap 'exec 213>&-; session_supervisor_stop_inbox_watch; launcher_close_driver_lease || true' EXIT
   # Bash may deliver a trap between an asynchronous spawn and its $! capture.
   # Defer shutdown until every child has an owned PID, or cleanup can orphan
@@ -1197,6 +1198,10 @@ launcher_exec_command() {
   launcher_close_driver_lease || close_rc=$?
   trap - EXIT INT TERM HUP
 
+  if [ -n "${LC_SUPERVISORY_FAILURE_REASON:-}" ]; then
+    session_supervisor_publish_start_failure "${SESSION_STREAM_ID:-}" \
+      "${SESSION_STREAM_GENERATION:-}" "$LC_SUPERVISORY_FAILURE_REASON"
+  fi
   if [ "$close_rc" -ne 0 ] && [ "$provider_rc" -eq 0 ]; then
     return "$close_rc"
   fi

@@ -32,7 +32,7 @@ def _plan(tmp_path: Path, config: dict | None):
         )
 
 
-def test_reviewer_opt_in_adds_bash_and_all_tracked_guards(tmp_path: Path) -> None:
+def test_reviewer_opt_in_denies_bash_and_guards_all_tracked_reads(tmp_path: Path) -> None:
     adapter = GrokBuildAdapter()
     baseline = _plan(tmp_path, None)
     reviewer = _plan(tmp_path, {"reviewer_tools": True})

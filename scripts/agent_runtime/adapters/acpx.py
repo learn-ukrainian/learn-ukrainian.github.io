@@ -49,6 +49,11 @@ Contract captured empirically from the local ``acpx@0.13.0`` install
   ``params.update.content == {"type": "text", "text": "..."}``; the terminal
   ``session/prompt`` response carries ``result.stopReason`` in
   ``{"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"}``.
+  Chunks of one assistant message are concatenated. A new ``messageId`` on
+  the update, or a new ``params._meta.streamStartMs`` when ``messageId`` is
+  absent, starts another message and is separated by a newline (#10005).
+  ``chunkId`` is not a message boundary. Grok 1.0.46 ACP chunks omit
+  ``messageId`` and carry the boundary on ``streamStartMs``.
 - Auth method selection under ``--auth-policy fail`` is explicit via non-secret
   per-process selectors such as ``ACPX_AUTH_CHAT_GPT=1`` (Codex ChatGPT login)
   and ``ACPX_AUTH_CACHED_TOKEN=1`` (Grok cached native login). Never invent
@@ -1938,6 +1943,60 @@ def _build_text_agent_command(
     return command, provider_binary, observed_version
 
 
+class _AgentMessageAssembler:
+    """Join ACP text chunks on the provider's own message boundary.
+
+    Chunks with the same id, or with no id, concatenate. A changed
+    ``messageId`` or ``streamStartMs`` starts a message. Empty messages are
+    omitted so a tool-only update does not insert a blank line.
+    """
+
+    def __init__(self) -> None:
+        self._parts: list[str] = []
+        self._chunks: list[str] = []
+        self._current_id: str | None = None
+
+    def add(self, text: str, message_id: str | None) -> None:
+        if message_id is not None and self._current_id is not None and message_id != self._current_id:
+            self._flush()
+        if message_id is not None:
+            self._current_id = message_id
+        self._chunks.append(text)
+
+    def _flush(self) -> None:
+        if not self._chunks:
+            return
+        self._parts.append("".join(self._chunks))
+        self._chunks = []
+
+    def finish(self) -> str:
+        self._flush()
+        return "\n".join(part for part in self._parts if part)
+
+
+def _acp_chunk_message_id(update: dict[str, Any], params: dict[str, Any]) -> str | None:
+    """Return the provider message id for one ``agent_message_chunk``.
+
+    ``messageId`` wins when it is a non-empty string. Otherwise Grok 1.0.46
+    stamps the model-response boundary on ``params._meta.streamStartMs``.
+    A missing id continues the current message. ``chunkId`` is not an id.
+    """
+    raw = update.get("messageId")
+    if isinstance(raw, str) and raw:
+        return raw
+    meta = params.get("_meta")
+    if not isinstance(meta, dict):
+        return None
+    start = meta.get("streamStartMs")
+    if isinstance(start, bool):
+        return None
+    if isinstance(start, int):
+        return f"stream:{start}"
+    if isinstance(start, str) and start:
+        return f"stream:{start}"
+    return None
+
+
 class AcpxAdapter:
     """Adapter for one read-only, stateless ``acpx codex exec`` request.
 
@@ -2149,7 +2208,7 @@ class AcpxAdapter:
         terminal_generations: set[Any] = set()
         request_method_by_id: dict[Any, str] = {}
         duplicate_id: object | None = None
-        message_chunks: list[str] = []
+        messages = _AgentMessageAssembler()
         final_error: dict[str, Any] | None = None
         provider_failure = False
         final_stop_reason: object = _MISSING_STOP_REASON
@@ -2177,7 +2236,7 @@ class AcpxAdapter:
                         return self._closed("unrecognized agent_message_chunk content schema", stderr)
                     text = content.get("text")
                     if isinstance(text, str):
-                        message_chunks.append(text)
+                        messages.add(text, _acp_chunk_message_id(update, params))
                 elif update.get("sessionUpdate") == "usage_update":
                     usage_total, usage_error = _usage_total_from_update(update)
                     if usage_error is not None:
@@ -2354,7 +2413,7 @@ class AcpxAdapter:
                 failure_code="transport_error",
             )
 
-        response = "".join(message_chunks)
+        response = messages.finish()
         response_bytes = len(response.encode("utf-8"))
         if response_bytes > ACPX_PARSED_RESPONSE_LIMIT_BYTES:
             return self._closed(

@@ -2,7 +2,7 @@
 
 Selectors: {area: slots|context|response, slot: name, citation: 0,
             field: optional DB column}; absent field selects exact value text.
-Rules: equal, same_row, one_group, example_list, contiguous_pages, contrast_pair,
+Rules: equal, same_row, one_group, example_list, contiguous_pages, span_equal,
        form_agreement, literal, set_query_equal. Unknown rules fail closed. A component owns the
 reviewed spec, not a callable validation hook.
 """
@@ -263,16 +263,6 @@ def example_items(text: str) -> list[tuple[int, int]]:
     return [span for span, _ in example_boundaries(text)]
 
 
-def whole_token(form: str, witness: str) -> bool:
-    # Apostrophes and combining marks belong to the token, even where Python's
-    # Unicode \w alone would split them. No stored/source bytes are changed.
-    for match in re.finditer(re.escape(form), witness):
-        neighbors = witness[max(0, match.start() - 1) : match.start()] + witness[match.end() : match.end() + 1]
-        if not any(c.isalnum() or c == "_" or c in "'’ʼ" or unicodedata.category(c).startswith("M") for c in neighbors):
-            return True
-    return False
-
-
 def _unstress(text: str) -> str:
     return unicodedata.normalize("NFC", unicodedata.normalize("NFD", text).replace("\u0301", ""))
 
@@ -313,6 +303,10 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
             operands = [operand(candidate, s, reader) for s in selectors]
             require(len(operands) >= 2 and all(o == operands[0] for o in operands), "binding_equal")
             agreements.append(selectors)
+        elif op == "span_equal":
+            value = select(candidate, rule["value"])
+            expected = operand(candidate, rule["receipt"], reader)
+            require(value.span is not None and tuple(expected) == value.span, "binding_span")
         elif op == "literal":
             require(
                 bool(selectors) and all(operand(candidate, ref, reader) == rule["expected"] for ref in selectors),
@@ -405,67 +399,12 @@ def check(candidate: Candidate, spec: dict, reader: SnapshotReader, policies: di
                 operand(candidate, rule["left_tags"], reader) == operand(candidate, rule["right_tags"], reader),
                 "binding_agreement",
             )
-        elif op == "contrast_pair":
-            rejected, recommended, response = (
-                select(candidate, rule[key]) for key in ("rejected", "recommended", "response")
-            )
-            require(
-                rejected in candidate.context and recommended in candidate.context and response in candidate.response,
-                "binding_contrast",
-            )
-            require(rejected.text != recommended.text and response.text == recommended.text, "binding_contrast")
-            book_left = citation_for(candidate, rule["book_rejected"])
-            book_right = citation_for(candidate, rule["book_recommended"])
-            require(
-                book_left.source_id == book_right.source_id
-                and book_left.table == book_right.table
-                and book_left.row_key == book_right.row_key
-                and book_left.store == book_right.store,
-                "binding_contrast",
-            )
-            require(book_left.source_id == rule["book_source"], "binding_contrast")
-            # Both model-visible members must quote the shared book row as one of their citations.
-            require(book_left in rejected.citations and book_right in recommended.citations, "binding_contrast")
-            for selector_name, book in (("rejected", book_left), ("recommended", book_right)):
-                ref = rule[selector_name]
-                member = select(candidate, ref)
-                confirmed = []
-                for index, citation in enumerate(member.citations):
-                    _, witness = reader.field(citation)
-                    if citation == book:
-                        require(isinstance(witness, str) and whole_token(member.text, witness), "binding_contrast")
-                    elif (selector_name == "rejected" and citation.source_id == rule["sum11_source"]) or (
-                        selector_name == "recommended"
-                        and citation.source_id in {rule["ulif_source"], rule["vesum_source"]}
-                    ):
-                        require(
-                            isinstance(witness, str) and _unstress(witness) == _unstress(member.text),
-                            "binding_contrast",
-                        )
-                    else:
-                        continue
-                    confirmed.append({**ref, "citation": index})
-                agreements.append(confirmed)
-            for key, value in (("rejected_key", rejected), ("recommended_key", recommended)):
-                require(operand(candidate, rule[key], reader) == _unstress(value.text), "binding_contrast")
-            require(
-                {rule["ulif_source"], rule["vesum_source"]} <= {c.source_id for c in recommended.citations},
-                "binding_contrast",
-            )
-            require(rule["sum11_source"] in {c.source_id for c in rejected.citations}, "binding_contrast")
-            receipt = reader.row(citation_for(candidate, rule["receipt"]))
-            require(
-                receipt[rule["pair_field"]] == book_left.row_key
-                and receipt[rule["sol_field"]] == "APPROVE"
-                and receipt[rule["opus_field"]] == "APPROVE",
-                "binding_adjudication",
-            )
         else:
             raise BuildError("unknown_binding")
         passed.add(op)
     # A mere mention of a supporting row is insufficient: exact-field
     # agreement must connect it to this value's primary citation (possibly
-    # transitively), or the contrast rule must have authenticated its form.
+    # transitively).
     graph: dict[tuple, set] = {}
     for refs in agreements:
         nodes = []

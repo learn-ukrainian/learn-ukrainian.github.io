@@ -6,6 +6,10 @@
 `claude-fable-5-1` holds no review role (#9583). Operator decision 2026-10-05 (#9769):
 Grok 4.7 is a regular code/infra reviewer at every risk, including critical, through native
 `--agent grok --model grok-4.7` and Cursor `--agent cursor --model grok-4.7-high`.
+Operator decision 2026-10-07 (#9987): Grok reviewers have no sandbox and are
+read-only: tracked-file reads only, with no shell, tests or scripts. Route
+execution-dependent reviews to Opus 5.5 or Sol 6.1. Grok review briefs supply
+the diff and CI evidence and never ask for execution. Risk admission is unchanged.
 Grok never ranks ahead of an eligible, healthy Sol 6.1 or Opus 5.5; native Grok ranks before
 the Cursor Grok transport fallback. The resolver chooses an eligible, healthy Sol 6.1 first at low,
 medium and high risk; Sonnet is chosen at medium and low risk only when Sol is excluded (for example a

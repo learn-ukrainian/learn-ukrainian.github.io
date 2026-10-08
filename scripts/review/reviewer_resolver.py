@@ -7,9 +7,9 @@ cross-family requirement by switching harness. Domain and data-egress
 exclusions are fail-closed: an unspecified or non-matching policy excludes
 a gated candidate, it does not admit it. Missing lane-health data is fail-open
 (no signal ≠ unhealthy, matching ``scripts/api/lane_health.py``'s convention),
-but an explicitly unhealthy route is unavailable. Degraded and near-capacity
-signals only break ties among candidates in the same quality rung; they never
-demote a model into a lower-quality rung.
+but an explicitly unhealthy route is unavailable. Weekly pace only orders
+otherwise equal fits. Fresh allowance at the reserve excludes new assignments
+unless existing verified credit relief applies; stale allowance is advisory.
 
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
@@ -41,6 +41,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
+from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
@@ -50,7 +51,7 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     risk_reviewer_refusal,
 )
-from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
+from scripts.review.reviewer_scheduler import _route_record, circuit_exclusion_reason, selection_key
 from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
@@ -332,8 +333,7 @@ _HEALTH_ALIASES: dict[str, str | None] = {
 
 
 def _health_rank(status: str | None) -> int:
-    # Fail-open: no signal for this lane is read as healthy, not unhealthy —
-    # matches scripts/api/lane_health.py's fail-open convention.
+    # Unknown is eligible without attesting health; this rank is ordering only.
     if status is None:
         return 0
     return _HEALTH_RANK[status]
@@ -475,6 +475,7 @@ class CandidateResult:
     status: CandidateStatus
     reason: str | None
     health: str | None
+    capacity: ReviewCapacity | None = None
     suitability_rank: int | None = None
     # Pure deterministic balancing receipt for eligible candidates. The tuple
     # is deliberately opaque-but-stable so ledger callers can persist the
@@ -585,7 +586,7 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     the current shared runtime rate-limit records.
     """
     agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
-    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
+    record = _route_record(candidate, snapshot, prefer_route=True) if isinstance(agents, Mapping) else None
     if not isinstance(record, Mapping):
         return None
     diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
@@ -740,7 +741,6 @@ def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: 
     return result(*exclusion) if exclusion else None
 
 
-
 def evaluate_candidate(
     candidate: ReviewerCandidate,
     inputs: ResolverInputs,
@@ -772,32 +772,23 @@ def evaluate_candidate(
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
     snapshot = inputs.routing_snapshot
-    agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
-    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
-    if (
-        isinstance(record, dict)
-        and (record.get("status") == "hot" or isinstance(record.get("pace_deficit"), dict))
-        and health
-        in {
-            "healthy",
-            "degraded",
-            "near_cap",
-            None,
-        }
-    ):
-        # The owner's pace and hot-label reading (#9740): a weekly-pace hot label it
-        # clears (#9040) is cleared here too; one it keeps stays near cap.
-        diagnostics = snapshot.get("diagnostics")
-        facts = credit_lane.routing_facts(
-            candidate.route,
-            record,
-            model=candidate.concrete_model,
-            snapshot_metadata=diagnostics if isinstance(diagnostics, Mapping) else None,
-        )
-        if facts.uncovered is True:
+    record = _route_record(candidate, snapshot, prefer_route=True)
+    diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
+    capacity = review_capacity(record or {}, diagnostics if isinstance(diagnostics, Mapping) else None)
+    usage_status = str(record.get("status") or "").strip().lower()
+    if health not in {"unhealthy", "degraded_telemetry"}:
+        if capacity.near_cap:
             health = "near_cap"
-        elif facts.status in {"cool", "warm"}:
-            health = _normalize_health_status(facts.status, label=candidate.route)
+        elif usage_status in {"cool", "warm", "hot", "near_cap"}:
+            # Usage labels are not route-health attestations. Keep the public
+            # normalizer's writer aliases; only review evaluation applies AC-01.
+            observed_health = credit_lane.health_fact(record)[0]
+            if observed_health != credit_lane.HEALTHY:
+                health = None
+            elif capacity.remaining_pct is None or capacity.freshness != credit_lane.FRESH:
+                health = "healthy"
+            else:
+                health = "degraded" if usage_status in {"warm", "hot"} else "healthy"
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.
@@ -823,6 +814,7 @@ def evaluate_candidate(
             status="excluded",
             reason=refusal,
             health=health,
+            capacity=capacity,
         )
 
     if is_ukrainian_content_change(inputs) and candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
@@ -838,6 +830,7 @@ def evaluate_candidate(
             status="excluded",
             reason="Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini",
             health=health,
+            capacity=capacity,
         )
     if inputs.subject_seats or inputs.subject_families:
         # The Grok model governs both admitted transports (#9769).
@@ -863,6 +856,7 @@ def evaluate_candidate(
                 status="excluded",
                 reason=subject_reason,
                 health=health,
+                capacity=capacity,
             )
 
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
@@ -880,6 +874,7 @@ def evaluate_candidate(
             status="excluded",
             reason="operator 2026-09-25: Gemini reviews Ukrainian only, never code — model-assignment.md",
             health=health,
+            capacity=capacity,
         )
 
     retired_target = _retired_alias_target(candidate)
@@ -896,6 +891,7 @@ def evaluate_candidate(
             status="excluded",
             reason=f"retired→{retired_target}",
             health=health,
+            capacity=capacity,
         )
 
     authors = complete_author_families(inputs, family)
@@ -912,6 +908,7 @@ def evaluate_candidate(
             status="excluded",
             reason="complete author family set holds an unresolved family — independence cannot be proven",
             health=health,
+            capacity=capacity,
         )
     advisory: CandidateResult | None = None
     for author in sorted(authors):
@@ -921,10 +918,10 @@ def evaluate_candidate(
             continue
         result = _author_family_exclusion(candidate, author, health)
         if result is not None and result.status == "excluded":
-            return result
+            return replace(result, capacity=capacity)
         advisory = advisory or result
     if advisory is not None:
-        return advisory
+        return replace(advisory, capacity=capacity)
 
     reason = _hard_exclusion_reason(candidate, inputs)
     if not reason and inputs.formal_review:
@@ -944,6 +941,7 @@ def evaluate_candidate(
             status="excluded",
             reason=reason,
             health=health,
+            capacity=capacity,
         )
     circuit_reason = circuit_exclusion_reason(candidate, inputs.routing_snapshot)
     if circuit_reason:
@@ -959,6 +957,7 @@ def evaluate_candidate(
             status="excluded",
             reason=circuit_reason,
             health=health,
+            capacity=capacity,
         )
     if health == "degraded_telemetry":
         return CandidateResult(
@@ -973,8 +972,9 @@ def evaluate_candidate(
             status="excluded",
             reason=f"degraded_telemetry: seat snapshot for {candidate.name!r} is self-contradictory (healthy=true, status=unavailable)",
             health=health,
+            capacity=capacity,
         )
-    if health == "unhealthy":
+    if health == "unhealthy" or capacity.hard_reason:
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,
@@ -985,8 +985,9 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason="lane health is unhealthy — route is operationally unavailable",
+            reason=capacity.hard_reason or "lane health is unhealthy — route is operationally unavailable",
             health=health,
+            capacity=capacity,
         )
     credit: dict[str, object] | None = None
     if health == "near_cap" and inputs.pinned_candidate != candidate.name:
@@ -1014,6 +1015,7 @@ def evaluate_candidate(
                 status="excluded",
                 reason=reason,
                 health=health,
+                capacity=capacity,
                 credit=credit,
             )
 
@@ -1037,6 +1039,7 @@ def evaluate_candidate(
             status="excluded",
             reason=f"missing required review role suitability: {requested}",
             health=health,
+            capacity=capacity,
             credit=credit,
         )
 
@@ -1052,6 +1055,7 @@ def evaluate_candidate(
         status="eligible",
         reason=None,
         health=health,
+        capacity=capacity,
         suitability_rank=suitability_rank,
         credit=credit,
     )
@@ -1282,9 +1286,7 @@ def resolve_reviewer(
     # Dispatch supplies the existing budget guard's per-model decisions.
     # They only remove candidates; hard eligibility and ranking remain here.
     capacity_exclusions = (
-        (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {})
-        if excluded_quota_buckets
-        else {}
+        (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}) if excluded_quota_buckets else {}
     )
     pace_retention_available = False
     eligible_quota_buckets: set[str] = set()
@@ -1307,17 +1309,17 @@ def resolve_reviewer(
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
             if result.status == "eligible":
                 eligible_quota_buckets.add(candidate.quota_bucket)
-            if capacity_exclusions and result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
+            if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
                 # Preserve the existing sole-reviewer pace-only retention
                 # contract. Admission can recheck all hard gates without
                 # dispatch capacity exclusions only for the sole eligible lane.
                 agents = (inputs.routing_snapshot or {}).get("agents", {})
                 info = agents.get(candidate.route, {})
-                status = (info.get("interactive") or {}).get("status") if candidate.route == "claude" else None
-                status = status or info.get("status")
-                pace_retention_available |= status in {"cool", "warm"} and not (
-                    info.get("runtime") or {}
-                ).get("headroom_blocked")
+                diagnostics = (inputs.routing_snapshot or {}).get("diagnostics")
+                capacity = review_capacity(info, diagnostics)
+                pace_retention_available |= (
+                    not capacity.near_cap and not capacity.hard_reason and not capacity_exclusions.get(candidate.name)
+                )
             capacity_reason = capacity_exclusions.get(candidate.name)
             if result.status == "eligible" and capacity_reason:
                 result = replace(result, status="excluded", reason=f"dispatch capacity: {capacity_reason}")
@@ -1433,6 +1435,7 @@ def resolve_reviewer(
             status="selected",
             reason=None,
             health=best.health,
+            capacity=best.capacity,
             suitability_rank=best.suitability_rank,
             selection_score=best.selection_score,
             credit=best.credit,
@@ -1499,9 +1502,7 @@ def resolve_reviewer(
                 if candidate.name not in reasons:
                     excluded = evaluate_candidate(candidate, inputs, author_family=author_family)
                     reasons[candidate.name] = excluded.reason or "excluded from dispatch review ladder"
-        failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(
-            f"{name}: {reason}" for name, reason in reasons.items()
-        )
+        failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(f"{name}: {reason}" for name, reason in reasons.items())
     elif (
         selected is None
         and not pace_retention_available

@@ -614,8 +614,8 @@ def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypat
     fake_json = recorder._run_json
 
     def with_base(args, **kwargs):
-        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]:
-            return {"baseRefOid": base, "headRefOid": head}
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
+            return {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
         return fake_json(args, **kwargs)
 
     monkeypatch.setattr(recorder, "_run_json", with_base)
@@ -674,8 +674,8 @@ def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeyp
         recorder,
         "_run_json",
         lambda args, **kwargs: (
-            {"baseRefOid": base, "headRefOid": head}
-            if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]
+            {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
+            if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]
             else fake_json(args, **kwargs)
         ),
     )
@@ -1885,10 +1885,32 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
 
 
+@pytest.mark.parametrize(
+    "base_name",
+    [None, "", "  ", ["main"]],
+    ids=["absent", "blank", "blank-whitespace", "malformed"],
+)
+def test_pr_review_facts_refuses_a_bad_base_name_before_collecting(monkeypatch, tmp_path, base_name):
+    payload = {"baseRefOid": SHA, "headRefOid": OTHER}
+    if base_name is not None:
+        payload["baseRefName"] = base_name
+    monkeypatch.setattr(recorder, "_run_json", lambda *_args, **_kwargs: payload)
+    monkeypatch.setattr(
+        recorder,
+        "collect_branch_review_facts",
+        lambda **_kwargs: pytest.fail("facts collected before the base name was validated"),
+    )
+
+    with pytest.raises(recorder.RecordError, match="base ref name missing or malformed"):
+        recorder.pr_review_facts(REPOSITORY, 42, head_sha=OTHER, task_root=tmp_path, repo_root=tmp_path)
+
+
 @pytest.mark.parametrize("case", ["all_trailered", "clean_update_merge"])
 def test_pr_review_facts_bind_the_github_listing_to_rev_list(real_commit_set, monkeypatch, tmp_path, case):
     _, commits, head, base = real_commit_set(case)
-    monkeypatch.setattr(recorder, "_run_json", lambda args, **kwargs: {"baseRefOid": base, "headRefOid": head})
+    monkeypatch.setattr(
+        recorder, "_run_json", lambda args, **kwargs: {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
+    )
 
     facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tmp_path, repo_root=Path.cwd())
     assert facts.existing_families == {"openai"}
@@ -2072,3 +2094,25 @@ def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
 @pytest.mark.parametrize("selector", ["auto", "default", "cursor:auto", "cursor/default"])
 def test_cursor_auto_harness_aliases_keep_cursor_family(harness, selector):
     assert recorder._author_model_family(harness, selector) == "cursor"
+
+
+@pytest.mark.parametrize("remaining", [54, 5])
+@pytest.mark.parametrize("head", [SHA, OTHER])
+def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatch, tmp_path, remaining, head):
+    from scripts.fleet import credit_lane
+
+    reads = []
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: reads.append(True) or {
+        "agents": {"codex": {"remaining_pct": remaining}}, "diagnostics": {"stale": False},
+    })
+    facts = facts_for({"google"})
+    route = recorder.structural_review_route(facts, risk="critical")
+    assert route.selected is not None and route.selected.capacity.remaining_pct is None
+    tasks, _, _ = setup_record(monkeypatch, tmp_path, head=head)
+    if head == SHA:
+        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert result["head"] == SHA
+    else:
+        with pytest.raises(recorder.RecordError, match="head moved"):
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert reads == []

@@ -1,0 +1,206 @@
+# WP6: dual book-row span selection (private review only)
+
+The CLI-independent helpers `batches`, `write_packets`, `validate_receipts`,
+`attestation_for` and `write_reconciliation_packets` live in `antonenko.py`.
+The driver runs the seats. Extractors never call a model or write Ukrainian text.
+
+The frozen source census is 342 `style_guide` rows. Only rows with a positive
+printed page or nonempty section enter packets; unlocated rows remain withheld
+`locator_unavailable`. Packet batches contain at most 20 located rows, ordered
+by row id. Each row includes its id, locator, complete verbatim text and UTF-8
+text SHA-256. `batch_sha256` hashes canonical JSON excluding that member.
+The output guard requires a private directory outside every Git checkout.
+
+## Selection receipts and dispatch attestation
+
+Each seat returns a separate JSON file named `<batch>.sol.json` or
+`<batch>.opus.json` in the driver's `antonenko_receipts` directory. The receipt
+contains exactly:
+
+```json
+{
+  "schema": "antonenko-span-receipt.v1",
+  "model": "gpt-6.1-sol",
+  "task_id": "unique-driver-seat-task",
+  "batch_sha256": "<batch digest>",
+  "rows": [
+    {
+      "row_id": 1,
+      "row_text_sha256": "<row digest>",
+      "pairs": [
+        {
+          "rejected": {"start": 10, "end": 15},
+          "recommended": {"start": 16, "end": 21}
+        }
+      ]
+    }
+  ]
+}
+```
+
+The other seat's model is `claude-opus-5-5`. Every batch row must appear exactly
+once per seat. Offsets count Unicode characters, start inclusive and end
+exclusive, into that row's text. Select only a form that the row itself names
+as wrong and its named replacement. Return `pairs: []` otherwise. No text,
+paraphrase, verdict or extra field is accepted. Both receipts must carry distinct
+nonempty task ids.
+
+Each receipt requires `<batch>.<seat>.attestation.json`, with exactly:
+
+```json
+{
+  "task_id": "unique-driver-seat-task",
+  "model": "gpt-6.1-sol",
+  "status": "done",
+  "result_sha256": "<SHA-256 of original dispatch result bytes>",
+  "finished_at": "<dispatch completion timestamp>"
+}
+```
+
+The driver's extractor obtains these fields from the canonical
+`batch_state/tasks/<task_id>.json` and `.result` files, using
+`attestation_for(receipt, task, result)`. The digest covers the original result,
+including any JSON fence or surrounding text, rather than the extracted JSON
+file. Results may be a JSON document or contain multiple `json` fenced blocks.
+Exactly one fenced block must match the receipt's `batch_sha256`; zero or
+multiple matches refuse `adjudication_receipt`. The extracted receipt must equal
+that selected block's canonical JSON, without field normalization.
+The driver runs `pin_dispatch_files(receipt_root)` once to copy the original
+dispatch records and results beneath `dispatch/` in the request's receipt
+directory, with `dispatch/hashes.json`. Existing copies are verified, never
+refreshed from live tasks. The receipt store reads only these pinned copies;
+reaping the original tasks cannot invalidate reproduction. It verifies the
+sidecar against the pinned dispatch record and result: exact task/model, `done`,
+completion timestamp, result digest and
+byte-derived JSON payload equality. It refuses missing sidecars or dispatch
+files, incomplete execution and mismatches. Receipt, sidecar, dispatch-record
+and result bytes are pinned and revalidated on pair reads. These are trusted
+host execution records, not cryptographic proof of the provider's internal work.
+
+## Pair admission and reconciliation
+
+The accounting unit is a candidate pair: the union of both seats' selected
+ordered `(rejected, recommended)` offsets, keyed by row id and both spans.
+Order within a receipt is immaterial. Identically selected pairs are admitted
+individually as `agreed`. A pair selected by only one seat remains withheld
+`adjudication_disagreement`; agreed siblings in that row remain eligible.
+Two empty lists produce one `no_pair_named` placeholder. No receipts produce
+one `adjudication_pending` placeholder. Each unlocated row contributes one
+`locator_unavailable` placeholder. A single selection seat, wrong model,
+malformed JSON or offsets, duplicate rows/pairs, incomplete coverage or an
+incorrect digest on a loaded receipt refuses the build. A receipt filed under
+an obsolete batch name is ignored; its current rows stay pending.
+
+`write_reconciliation_packets(rows, receipt_root, root)` writes host-only
+`<batch>.json` packets for disputed pairs. Each item includes the complete
+source row, locator, text hash, ordered offsets and their exact span texts.
+It does not include agreed pairs or invoke either seat.
+
+Each reconciliation seat returns `<batch>.reconcile.<seat>.json`:
+
+```json
+{
+  "schema": "antonenko-reconcile-receipt.v1",
+  "model": "gpt-6.1-sol",
+  "task_id": "unique-reconciliation-seat-task",
+  "batch_sha256": "<original selection batch digest>",
+  "pairs": [
+    {
+      "row_id": 1,
+      "rejected": {"start": 10, "end": 15},
+      "recommended": {"start": 16, "end": 21},
+      "decision": "accept"
+    }
+  ]
+}
+```
+
+The other decision is `reject`. Each receipt must cover exactly the disputed
+pair set, without duplicates or invented pairs, and both seats are required.
+Reconciliation requires the same dispatch provenance through
+`<batch>.reconcile.<seat>.attestation.json`. Only two explicit accepts admit a
+pair as `reconciled_accepted`. Either rejection keeps it withheld as
+`reconciled_rejected`; it is no longer an unresolved disagreement. Malformed, stale, partial or
+unattested reconciliation refuses the build. Absence of reconciliation leaves
+the original disagreements withheld.
+
+## Records and accounting
+
+C6b emits one `book_calque_replacement` record per admitted pair, with the
+rejected expression in its slot and the recommended expression as response.
+Its model-visible context is empty: the answer-bearing book passage remains
+in citation provenance only. Both quoted spans use the same row and locator.
+The binding checks the selected offsets and the accounting-unit receipt.
+The redundant derived `sol`/`opus` APPROVE fields and literal checks are removed;
+authority remains validation of the actual selection/reconciliation receipts.
+A single `eligible` policy field is recomputed and checked on receipt reads;
+the binding requires it to be true, so a candidate cannot promote a withheld
+receipt merely by changing its outcome or accounting reason.
+There is no additional inferred calque label.
+
+Before emission, row-local filters cover the complete candidate union, including
+reconciliation-rejected pairs. Precedence is `inverse_pair_in_row`, then
+`duplicate_in_row`, then `recommended_unattested`, then `subsumed_span`:
+
+- Withhold both directions whenever the exact inverse text pair exists in the
+  row's union, or source-backed lexeme identity establishes a reverse pair
+  across inflection or case. Compare all VESUM lemma witnesses for both sides,
+  including reconciliation-rejected candidates. For one-word sides the two
+  sides' known lemma sets must differ; overlapping but unequal sets remain
+  eligible for inverse comparison. For multi-word sides remove lemmas shared
+  by both sides before comparing. Each cross-direction comparison is shared
+  (nonempty intersection), different (disjoint nonempty complete identities),
+  or unknown (missing witnesses or empty distinctive identity). A shared/shared
+  or shared/unknown inverse withholds both units; unknown/unknown does not.
+  Missing rejected witnesses alone never withhold an ordinary correction.
+  No sense context is added and no intended meaning is inferred.
+- Identical ordered text pairs keep only the first offset occurrence; later
+  occurrences remain counted as `duplicate_in_row`. Selection authority is
+  never transferred to an earlier rejected occurrence.
+- Every recommended word token requires a cited VESUM `forms_all` lookup.
+  Case, stress and apostrophe folding affect lookup identity only; source and
+  output text stay verbatim. Internal hyphens remain part of the token.
+  Missing recommended tokens withhold the unit as `recommended_unattested`;
+  absence is not a linguistic verdict. `C6b/recommended-lookups.json` retains
+  both rejected and recommended tokens, all `forms_all` form and lemma
+  citations, sorted lemma sets, and empty witness lists for missing tokens.
+  Lookup queries never select an arbitrary first analysis. Both cited fields
+  are fingerprinted in the read-only snapshot; the artifact pins the complete
+  lookup results, including absence. Receipt reads revalidate every sibling's
+  pinned lookup before recomputing admission, and offline verification refuses
+  changed, added or removed lookup evidence. Source/export forms and offsets
+  remain verbatim. The request must locate `vesum.db`.
+- If both spans of a shorter pair are contained in a longer eligible pair,
+  withhold the shorter as `subsumed_span`, regardless of its reconciliation
+  disposition. All original units remain in accounting.
+
+Receipt reads recompute these reasons from source rows and validated decisions,
+so relabelling a withheld unit as admitted fails the gate. C6b verify probes
+unsafe admission for each observed filter reason and removes an entire source
+row from both derived domains to prove that census coverage still refuses.
+
+Every pair or placeholder has one accounting unit and one candidate. Therefore
+accepted counts equal emitted records, including a row with both an accepted
+and an unattested pair. `operation_accounting.records_counted` and
+`record_reasons` use the same units. This is a selected-pair denominator, not
+a complete semantic census of the book. The receipt store independently
+reconstructs these units; the gate checks coverage and uniqueness against it.
+The generic optional `census_query` freezes the underlying row count separately
+from the derived unit count. Its required `census_id` selector maps every
+candidate to its cited source-row identity; the gate requires those identities
+to equal the census, proving at least one unit per source row even when the
+extractor and independent derived query omit the same row. Other components
+retain their existing accounting.
+
+C6b owns its reviewed compatibility and citation-role mappings in COMPONENT.
+The location-only v2 request may name the private `antonenko_receipts` directory.
+Russification contrast is a word-card projection (#8982/#8989), not a dataset
+component; its predecessor extractor is preserved on the C7 input branch.
+An all-withheld build reports `missing_coverage`; accepted records are required
+for real generic mutation verification. Structural tests do not establish
+semantic completeness.
+
+The book adapter maps the amended registered citation form to the held positive
+page or nonempty section. The edition stays explicitly unverified. Receipt
+citations resolve their `book_id` back to that source row and require the same
+source identity; they never require or invent an edition-specific bibliography.

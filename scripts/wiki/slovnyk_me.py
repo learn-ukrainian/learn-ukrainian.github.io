@@ -18,6 +18,12 @@ from urllib.parse import quote
 
 import requests
 
+# Package entrypoints also need scripts/ first: the repository's audit/ tree
+# otherwise resolves as a namespace package instead of scripts/audit/.
+_scripts_dir = Path(__file__).resolve().parents[1]
+if str(_scripts_dir) not in sys.path:
+    sys.path.insert(0, str(_scripts_dir))
+
 try:
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
@@ -26,12 +32,6 @@ except ModuleNotFoundError as exc:
     # import failure must propagate.
     if exc.name != "scripts":
         raise
-    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
-    if str(_scripts_dir) not in sys.path:
-        sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 try:

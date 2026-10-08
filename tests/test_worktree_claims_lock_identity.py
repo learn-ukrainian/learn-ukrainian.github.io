@@ -275,6 +275,7 @@ def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable
 def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, registered_trees, monkeypatch):
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary
 
+    monkeypatch.delenv("TMPDIR", raising=False)
     primary = _primary(tmp_path)
     tasks = tmp_path / "tasks"
     tasks.mkdir()
