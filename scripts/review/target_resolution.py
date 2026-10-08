@@ -53,6 +53,9 @@ class ReviewTarget:
     non_test_loc: int
     clean_tree: bool
     description: str
+    # The PR base ref name. Closeout stores it so a later resolve-reviewer can
+    # exclude the default branch. Absent for local, commit, and branch targets.
+    base_ref_name: str | None = None
 
 
 def is_test_path(path: str) -> bool:
@@ -257,7 +260,8 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
     advance after the feature diverged. Diffing straight against that tip
     would pull in every commit the base gained since divergence as if the PR
     introduced them. The merge-base is the fork point and is what a diff
-    must be computed against; the base tip is retained only in
+    must be computed against. The base ref name is kept on the target so a
+    later review can exclude the default branch; the base tip stays in
     ``description`` for provenance.
     """
     proc = _run_gh(
@@ -279,8 +283,11 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
 
     base_tip_sha = str(payload.get("baseRefOid") or "").strip()
     head_sha = str(payload.get("headRefOid") or "").strip()
-    base_ref_name = str(payload.get("baseRefName") or "").strip()
+    raw_base_name = payload.get("baseRefName")
     head_ref_name = str(payload.get("headRefName") or "").strip()
+    if not isinstance(raw_base_name, str) or not raw_base_name.strip():
+        raise TargetResolutionError(f"PR #{pr_number} payload missing base ref name")
+    base_ref_name = raw_base_name.strip()
     if not base_tip_sha or not head_sha:
         raise TargetResolutionError(f"PR #{pr_number} payload missing base/head SHA")
 
@@ -305,6 +312,7 @@ def resolve_pr_target(repo_root: Path, pr_number: int) -> ReviewTarget:
             f"PR #{pr_number}: {head_ref_name}@{head_sha[:12]} vs merge-base {merge_base_sha[:12]} "
             f"(base tip {base_ref_name}@{base_tip_sha[:12]})"
         ),
+        base_ref_name=base_ref_name,
     )
 
 

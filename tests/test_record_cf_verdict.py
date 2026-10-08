@@ -614,8 +614,8 @@ def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypat
     fake_json = recorder._run_json
 
     def with_base(args, **kwargs):
-        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]:
-            return {"baseRefOid": base, "headRefOid": head}
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
+            return {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
         return fake_json(args, **kwargs)
 
     monkeypatch.setattr(recorder, "_run_json", with_base)
@@ -674,8 +674,8 @@ def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeyp
         recorder,
         "_run_json",
         lambda args, **kwargs: (
-            {"baseRefOid": base, "headRefOid": head}
-            if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]
+            {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
+            if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]
             else fake_json(args, **kwargs)
         ),
     )
@@ -1885,10 +1885,32 @@ def test_missing_path_rule_refuses_even_when_all_lines_normalize(monkeypatch, tm
 # --- #9739 A1: GitHub's listing must equal the local base..head enumeration ----------------------
 
 
+@pytest.mark.parametrize(
+    "base_name",
+    [None, "", "  ", ["main"]],
+    ids=["absent", "blank", "blank-whitespace", "malformed"],
+)
+def test_pr_review_facts_refuses_a_bad_base_name_before_collecting(monkeypatch, tmp_path, base_name):
+    payload = {"baseRefOid": SHA, "headRefOid": OTHER}
+    if base_name is not None:
+        payload["baseRefName"] = base_name
+    monkeypatch.setattr(recorder, "_run_json", lambda *_args, **_kwargs: payload)
+    monkeypatch.setattr(
+        recorder,
+        "collect_branch_review_facts",
+        lambda **_kwargs: pytest.fail("facts collected before the base name was validated"),
+    )
+
+    with pytest.raises(recorder.RecordError, match="base ref name missing or malformed"):
+        recorder.pr_review_facts(REPOSITORY, 42, head_sha=OTHER, task_root=tmp_path, repo_root=tmp_path)
+
+
 @pytest.mark.parametrize("case", ["all_trailered", "clean_update_merge"])
 def test_pr_review_facts_bind_the_github_listing_to_rev_list(real_commit_set, monkeypatch, tmp_path, case):
     _, commits, head, base = real_commit_set(case)
-    monkeypatch.setattr(recorder, "_run_json", lambda args, **kwargs: {"baseRefOid": base, "headRefOid": head})
+    monkeypatch.setattr(
+        recorder, "_run_json", lambda args, **kwargs: {"baseRefName": "base", "baseRefOid": base, "headRefOid": head}
+    )
 
     facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tmp_path, repo_root=Path.cwd())
     assert facts.existing_families == {"openai"}

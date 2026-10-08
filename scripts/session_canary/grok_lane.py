@@ -112,7 +112,17 @@ done
     return dict(line.split("\t", 1) for line in result.stdout.splitlines())
 
 
-EPIC_STREAM_DEFAULTS: dict[str, str] = _epic_stream_defaults()
+def __getattr__(name: str) -> dict[str, str]:
+    """Load the Kimi compatibility table on first use, not at import.
+
+    Post-compact hydration is killed when the whole process overruns its
+    deadline. Importing a lane must not spend that budget on this scan.
+    """
+    if name != "EPIC_STREAM_DEFAULTS":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    defaults = _epic_stream_defaults()
+    globals()["EPIC_STREAM_DEFAULTS"] = defaults
+    return defaults
 
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75
