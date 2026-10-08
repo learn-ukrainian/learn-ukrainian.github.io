@@ -481,19 +481,23 @@ def summarize_runtime_usage(
     entrypoint: str | None = None,
     usage_dir: Path | None = None,
     ctx: MonitorContext | None = None,
+    unreadable: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Aggregate usage records over the window.
 
     ``unreadable`` reports the strict reader's fault counts in the #9868 shape:
     lines that were not strict UTF-8, not JSON, or not JSON objects never count
-    toward ``records_total`` and are never silently dropped (#9924).
+    toward ``records_total`` and are never silently dropped (#9924). A caller
+    that passes its own counter (the orient collector aggregating several
+    reads) receives this read's faults on that counter; the response field
+    then reflects the shared counter, not this read alone.
     """
     window_days = min(max(1, int(days)), 30)
     by_agent: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     by_entrypoint: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     total = 0
 
-    records = _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir, ctx=ctx))
+    records = _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir, ctx=ctx), unreadable)
     for record in records:
         record_agent = record.get("agent")
         record_entrypoint = record.get("entrypoint")

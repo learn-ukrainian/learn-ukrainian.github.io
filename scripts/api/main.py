@@ -974,9 +974,14 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
 def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved = resolve_context(ctx)
     _maybe_run_worktree_gc_sweep(ctx=resolved)
-    agents = runtime_api.list_runtime_agents(ctx=resolved)
-    usage = runtime_api.summarize_runtime_usage(days=1, ctx=resolved)
-    recent = runtime_api.runtime_recent_outcomes_today(ctx=resolved)
+    # One shared counter across every usage read this section makes — agent
+    # inventory (last-used models), the day usage summary, today's outcome
+    # counts, and the per-agent headroom scan — so corrupt usage evidence is
+    # surfaced on the runtime section instead of discarded (#9924).
+    unreadable: dict[str, int] = {"files": 0, "lines": 0, "records": 0}
+    agents = runtime_api.list_runtime_agents(ctx=resolved, unreadable=unreadable)
+    usage = runtime_api.summarize_runtime_usage(days=1, ctx=resolved, unreadable=unreadable)
+    recent = runtime_api.runtime_recent_outcomes_today(ctx=resolved, unreadable=unreadable)
     headroom = {}
     for agent_info in agents:
         name = agent_info.get("name")
@@ -984,7 +989,7 @@ def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
         if not name or not model:
             continue
         try:
-            ok, _ = runtime_api.has_headroom(str(name), str(model))
+            ok, _ = runtime_api.has_headroom(str(name), str(model), unreadable=unreadable)
         except Exception:
             ok = False
         headroom[str(name)] = ok
@@ -996,6 +1001,7 @@ def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
         "recent_outcomes": recent,
         "by_agent": by_agent,
         "headroom": headroom,
+        "unreadable": runtime_api._unreadable_summary(unreadable),
     }
     if _last_gc_sweep_summary is not None:
         res["worktree_gc"] = _last_gc_sweep_summary
