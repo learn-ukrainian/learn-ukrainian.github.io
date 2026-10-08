@@ -105,7 +105,10 @@ def test_review_admission_preserves_anchor_manifest_and_dynamic_digest():
     assert "native CLI and Cursor with runtime model attestation" in sentence
     assert "never for xAI authors or its own subject seat" in sentence
     assert "operator decision 2026-10-05, #9769" in sentence
-    assert "Gemini/AGY never reviews code" in sentence
+    assert "Gemini/AGY never reviews code, infra, tooling, CI, tests, hooks or skills, in any role" in sentence
+    assert "Apply hard filters before quality; execute the returned invocation" in sentence
+    assert "Grok reviews: no sandbox, shell, tests or scripts; tracked-file reads only (#9987)." in sentence
+    assert "Execution-dependent reviews use Opus 5.5/Sol 6.1; Grok briefs: diff/CI evidence, no execution requests." in sentence
     assert _manifest()["core"]["M30"] == "p2-review"
     block = rules_core.core_block("core")
     assert f'sha256="{hashlib.sha256(rules_core.core_text("core").encode()).hexdigest()}"' in block
