@@ -132,6 +132,61 @@ def test_edited_or_unparseable_marker_makes_sha_unknown(bad):
     assert sweep.lookup_verdict([item], SHA, "fleet").state == "unknown"
 
 
+def test_keeper_format_approve_token_reads_as_approved():
+    item = comment(verdict="APPROVE")
+    assert item["body"].endswith("verdict=APPROVE model=gpt-6.1-sol family=openai -->")
+    assert sweep.parse_marker(item["body"])["verdict"] == "APPROVED"
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "APPROVED"
+    later = "2026-09-23T12:00:01.000001+00:00"
+    rows = [comment(verdict="APPROVE"), comment(task="later", started=later, verdict="BLOCKED")]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
+    assert sweep.lookup_verdict([comment(verdict="APPROVE", edited=True)], SHA, "fleet").state == "unknown"
+
+
+PR_10095_SHA = "b5a18af03c961fa4b228a3ea6669f2c11ef5f532"
+PR_10095_TRAILER = (
+    f"<!-- cf-verdict v1 sha={PR_10095_SHA} task=pravopys-9638-cf-basefix "
+    "started=2026-10-08T08:24:21.755967+00:00 verdict=APPROVE model=claude-opus-5-5 family=anthropic -->"
+)
+
+
+def unformatted(trailer=PR_10095_TRAILER, edited=False):
+    return {
+        "id": 6055900811,
+        "body": f"Exact-head review of the base fix.\n\nNo blocking findings.\n\n{trailer}",
+        "user": {"login": "fleet"},
+        "author_association": "MEMBER",
+        "created_at": "2026-10-08T08:40:00Z",
+        "updated_at": "2026-10-08T08:41:00Z" if edited else "2026-10-08T08:40:00Z",
+    }
+
+
+def test_unformatted_approve_trailer_neither_poisons_nor_approves():
+    assert sweep.parse_marker(unformatted()["body"]) is None
+    readable = comment(sha=PR_10095_SHA, task="later-review", started="2026-10-08T09:00:00.000001+00:00")
+    assert sweep.lookup_verdict([unformatted(), readable], PR_10095_SHA, "fleet").state == "APPROVED"
+    assert sweep.lookup_verdict([unformatted()], PR_10095_SHA, "fleet").state == "needs-CF"
+    with_prose = unformatted()
+    with_prose["body"] = "VERDICT: APPROVE\n" + with_prose["body"]
+    assert sweep.lookup_verdict([with_prose], PR_10095_SHA, "fleet").state == "CF-unrecorded"
+    assert sweep.lookup_verdict([unformatted(edited=True), readable], PR_10095_SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE", "BLOCKED", "CHANGES_REQUESTED"])
+def test_unformatted_non_approve_trailer_still_poisons_the_head(token):
+    item = unformatted(PR_10095_TRAILER.replace("verdict=APPROVE", f"verdict={token}"))
+    readable = comment(sha=PR_10095_SHA, task="later-review", started="2026-10-08T09:00:00.000001+00:00")
+    assert sweep.lookup_verdict([item], PR_10095_SHA, "fleet").state == "unknown"
+    assert sweep.lookup_verdict([item, readable], PR_10095_SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE"])
+def test_keeper_format_unknown_token_stays_unreadable(token):
+    keeper = comment(verdict=token)
+    assert sweep.parse_marker(keeper["body"]) is None
+    assert sweep.lookup_verdict([keeper, comment(task="other")], SHA, "fleet").state == "unknown"
+
+
 def test_lookup_failure_and_partial_data_unknown():
     assert sweep.lookup_verdict(None, SHA, "fleet").state == "unknown"
     assert sweep.lookup_verdict([comment()], SHA, "fleet", complete=False).state == "unknown"
