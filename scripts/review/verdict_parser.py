@@ -6,6 +6,15 @@ Extracted from dispatch's proven scanner; consumer decision policies stay local.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
+
+ACCEPTED_VERDICT_TOKENS = (
+    "APPROVE",
+    "APPROVED",
+    "CHANGES_REQUESTED",
+    "REQUEST_CHANGES",
+    "BLOCKED",
+)
 
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
@@ -32,10 +41,17 @@ import re
 # and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
 # has no space, which CommonMark does not treat as a heading, and
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
+_VERDICT_LINE_PREFIX = r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
-    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    _VERDICT_LINE_PREFIX + r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
+    re.IGNORECASE,
+)
+# Diagnostics echo only bounded ASCII identifier tokens, never paths, URLs or
+# arbitrary verdict-line text. Trailing underscores may be Markdown emphasis.
+_UNSUPPORTED_VERDICT_LINE_RE = re.compile(
+    _VERDICT_LINE_PREFIX + r"(?a:([A-Za-z][A-Za-z0-9]*(?:[_-]+[A-Za-z0-9]+)*))"
+    r"(?=$|[*_`]*(?:\s|[.,;:!?][*_`]*(?:\s|$)|$))",
     re.IGNORECASE,
 )
 # A CommonMark fence line: at most three leading spaces, then three or more
@@ -72,13 +88,8 @@ def _closes_code_fence(line: str, opener: str) -> bool:
     return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
 
 
-def recognized_verdicts(response: str) -> list[str]:
-    """Return recognized verdict tokens in order, excluding code and examples.
-
-    Selection and normalization belong to consumers. An unclosed CommonMark
-    fence suppresses the rest of the response.
-    """
-    verdicts: list[str] = []
+def _own_verdict_lines(response: str) -> Iterator[str]:
+    """Yield non-code lines for both token readers using the same exclusions."""
     open_fence: str | None = None
     for line in response.splitlines():
         if open_fence is not None:
@@ -88,7 +99,33 @@ def recognized_verdicts(response: str) -> list[str]:
         open_fence = _code_fence_opener(line)
         if open_fence is not None:
             continue
-        match = _REVIEW_VERDICT_LINE_RE.match(line)
-        if match:
-            verdicts.append(match.group(1).upper())
-    return verdicts
+        yield line
+
+
+def recognized_verdicts(response: str) -> list[str]:
+    """Return recognized verdict tokens in order, excluding code and examples.
+
+    Selection and normalization belong to consumers. An unclosed CommonMark
+    fence suppresses the rest of the response.
+    """
+    return [
+        match.group(1).upper()
+        for line in _own_verdict_lines(response)
+        if (match := _REVIEW_VERDICT_LINE_RE.match(line))
+    ]
+
+
+def unsupported_verdict_tokens(response: str) -> list[str]:
+    """Return safe unsupported own tokens verbatim, for diagnostics only.
+
+    Recognized lines keep their existing boundary policy; this reader never
+    admits a review or changes a consumer's recognized-token precedence.
+    """
+    tokens: list[str] = []
+    for line in _own_verdict_lines(response):
+        if _REVIEW_VERDICT_LINE_RE.match(line):
+            continue
+        match = _UNSUPPORTED_VERDICT_LINE_RE.match(line)
+        if match and len(match.group(1)) <= 64:
+            tokens.append(match.group(1))
+    return tokens
