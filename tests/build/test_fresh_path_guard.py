@@ -49,6 +49,7 @@ def test_a1_reference_exact_bytes_and_optional_absence(reference_repo):
         checked_path(reference_repo, path.relative_to(reference_repo), "curriculum/l2-uk-en/a1-v1")
 
 
+@pytest.mark.repo_wide
 def test_baseline_ledger_reproduces_all_exact_git_blobs_and_loader_identities(reference_repo):
     """Actual historical Git proof, separate from synthetic reader fixtures."""
     ledger = json.loads((REPO_ROOT / LEDGER_PATH).read_bytes())
