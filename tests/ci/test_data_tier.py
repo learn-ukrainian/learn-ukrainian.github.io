@@ -1086,7 +1086,9 @@ def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monke
 
     def snapshot(primary, checkout, snapshots_dir, *, only):
         snapshots.append(snapshots_dir)
-        path = snapshots_dir / "sources.db"
+        # Generic synthetic bytes witness; real store filenames and bindings
+        # are covered by test_nightly_exports_snapshot_bindings_and_reaps_them.
+        path = snapshots_dir / "retention-witness.db"
         with sqlite3.connect(path) as connection:
             connection.execute("CREATE TABLE witness (value TEXT)")
             connection.execute("INSERT INTO witness VALUES ('retained')")
@@ -1103,8 +1105,8 @@ def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monke
 
     assert len(snapshots) == 1
     assert snapshots[0].is_dir()
-    source_uri = (snapshots[0] / "sources.db").as_uri() + "?mode=ro"
-    with sqlite3.connect(source_uri, uri=True) as connection:
+    witness_uri = (snapshots[0] / "retention-witness.db").as_uri() + "?mode=ro"
+    with sqlite3.connect(witness_uri, uri=True) as connection:
         assert connection.execute("SELECT value FROM witness").fetchone() == ("retained",)
     assert nightly.events == ["stop"]
     assert external_sentinel.read_text(encoding="utf-8") == "keep"
