@@ -250,7 +250,6 @@ function WordAtlasArticleBody({
     markedFormGroups,
     isFullyMarked,
     isExpressionLikeEntry,
-    suppressMorphology,
     entryTypeLabel,
     posLabel,
     headwordIpa,
@@ -267,6 +266,9 @@ function WordAtlasArticleBody({
     styleNotes,
     statusBadges,
     articleOverview,
+    renderable,
+    renderedTier,
+    sourceWaitingLayers,
     sourceList,
     translationSource,
     verbPedagogy,
@@ -445,19 +447,34 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          <section className="atlas-section atlas-overview-section" aria-label="Склад сторінки Атласу">
-            <h2>Дані Атласу</h2>
-            <div className="atlas-overview-grid">
-              {articleOverview.map((item) => (
-                <div key={item.label} className={`atlas-overview-card ${item.ready ? "ready" : "pending"}`}>
-                  <span className="overview-state" aria-hidden="true">{item.ready ? "✓" : "○"}</span>
-                  <span className="sr-only">{item.ready ? "готово" : "очікує"}</span>
-                  <span className="overview-label">{item.label}</span>
-                  <span className="overview-detail">{item.detail}</span>
-                </div>
-              ))}
+          {renderedTier.tier !== "rich" && (
+            <div className="atlas-section atlas-enrichment-note" data-atlas-tier={renderedTier.tier}>
+              <p><ChromeText k="atlas.enrichmentPending" /></p>
+              {sourceWaitingLayers.length > 0 && (
+                <details className="marked-forms atlas-source-waiting">
+                  <summary><ChromeText k="atlas.sourceWaiting" /></summary>
+                  <ul>{sourceWaitingLayers.map((item) => (
+                    <li key={item.id}><ChromeText k={`atlas.layer.${item.id}`} /></li>
+                  ))}</ul>
+                </details>
+              )}
             </div>
-          </section>
+          )}
+          {articleOverview.some((item) => item.ready) && (
+            <section className="atlas-section atlas-overview-section" aria-label="Склад сторінки Атласу">
+              <h2>Дані Атласу</h2>
+              <div className="atlas-overview-grid">
+                {articleOverview.filter((item) => renderedTier.tier === "rich" || item.ready).map((item) => (
+                  <div key={item.label} className={`atlas-overview-card ${item.ready ? "ready" : "pending"}`}>
+                    <span className="overview-state" aria-hidden="true">{item.ready ? "✓" : "○"}</span>
+                    <span className="sr-only">{item.ready ? "готово" : "очікує"}</span>
+                    <span className="overview-label">{item.label}</span>
+                    <span className="overview-detail">{item.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {isExpressionLikeEntry && (componentLinks?.length ?? 0) > 0 && (
             <section className="atlas-section expression-detail" data-expression-detail={entry.entry_type}>
@@ -476,10 +493,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(definitionCards.length > 0 ||
-            enrichment?.meaning ||
-            phraseHasGloss ||
-            entry.soviet_colonization_context) && (
+          {renderable.meaning && (
             <section className="atlas-section">
               <h2>Значення</h2>
               {definitionCards.map((card) => (
@@ -509,7 +523,7 @@ function WordAtlasArticleBody({
                   )}
                 </div>
               ))}
-              {entry.soviet_colonization_context && (
+              {entry.soviet_colonization_context?.definition?.trim() && (
                 <div className="def-card sum11-flagged soviet-colonization-box">
                   <div className="def-source">
                     <span className="src-pill">Радянський окупаційний контекст</span>
@@ -526,7 +540,7 @@ function WordAtlasArticleBody({
                   </div>
                 </div>
               )}
-              {!definitionCards.some(isModernDefinitionCard) && enrichment?.meaning && (
+              {!definitionCards.some(isModernDefinitionCard) && renderable.enrichedMeaning && enrichment?.meaning && (
                 <div className="def-card sum20">
                   <div className="def-source">
                     <span className="src-pill">{enrichment.meaning.source || "СУМ-20"}</span>
@@ -540,7 +554,7 @@ function WordAtlasArticleBody({
                   {enrichment.meaning.note && <div className="def-flag-inline">{enrichment.meaning.note}</div>}
                 </div>
               )}
-              {!definitionCards.some(isModernDefinitionCard) && !enrichment?.meaning && phraseHasGloss && (
+              {!definitionCards.some(isModernDefinitionCard) && !renderable.enrichedMeaning && phraseHasGloss && (
                 <div className="def-card sum20">
                   <div className="def-source">
                     <span className="src-pill">Курс</span>
@@ -554,7 +568,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {enrichment?.etymology ? (
+          {renderable.etymology && enrichment?.etymology ? (
             <section className="atlas-section" id="etymology">
               <h2>Етимологія</h2>
               <div className="ety-timeline">
@@ -616,7 +630,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {enrichment?.morphology && !suppressMorphology && (
+          {renderable.morphology && enrichment?.morphology && (
             <section className="atlas-section">
               <h2>Морфологія</h2>
               <p className="atlas-muted">
@@ -1007,7 +1021,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.form_notes?.items?.length ?? 0) > 0 && (
+          {renderable.formNotes && (
             <section className="atlas-section">
               <h2>Написання і вимова</h2>
               <dl className="form-notes-strip">
@@ -1043,7 +1057,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {((sections?.synonyms?.items?.length ?? 0) > 0 || (sections?.antonyms?.items?.length ?? 0) > 0) && (
+          {renderable.synonyms && (
             <section className="atlas-section">
               <h2>Синоніми та антоніми</h2>
               {(sections?.synonyms?.items?.length ?? 0) > 0 && (
@@ -1147,7 +1161,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.homonyms?.items?.length ?? 0) > 0 && (
+          {renderable.homonyms && (
             <section className="atlas-section">
               <h2>Омоніми</h2>
               <div className="chip-row">
@@ -1179,7 +1193,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.paronyms?.items?.length ?? 0) > 0 && (
+          {renderable.paronyms && (
             <section className="atlas-section">
               <h2>Пароніми</h2>
               <div className="chip-row">
@@ -1222,7 +1236,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.idioms?.items?.length ?? 0) > 0 && (
+          {renderable.idioms && (
             <section className="atlas-section">
               <h2>Фразеологізми та сталі вирази</h2>
               {sections!.idioms!.items.map((idiom) => (
@@ -1241,7 +1255,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.proverbs?.items?.length ?? 0) > 0 && (
+          {renderable.proverbs && (
             <section className="atlas-section">
               <h2>Приповідки</h2>
               {sections!.proverbs!.items.map((proverb) => (
@@ -1260,7 +1274,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(sections?.usage_notes?.items?.length ?? 0) > 0 && (
+          {renderable.usageNotes && (
             <section className="atlas-section">
               <h2>Стиль і норма</h2>
               {sections!.usage_notes!.items.map((note, index) => {
@@ -1291,7 +1305,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {enrichment?.literary_attestation && (
+          {renderable.literary && enrichment?.literary_attestation && (
             <section className="atlas-section">
               <h2>Літературні засвідчення</h2>
               <div className="source-box">
@@ -1330,7 +1344,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {externalGroups.length > 0 && (
+          {renderable.external && (
             <section className="atlas-section">
               <h2>Зовнішні матеріали</h2>
               {externalGroups.map((group) => (
@@ -1357,7 +1371,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {courseUsage.length > 0 && (
+          {renderable.course && (
             <section className="atlas-section">
               <h2>У курсі — модулі, де зустрічається це слово</h2>
               {courseUsage.map((usage) => (
@@ -1372,7 +1386,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(enrichment?.translation?.en?.length ?? 0) > 0 && enrichment?.translation && (
+          {renderable.translation && enrichment?.translation && (
             <section className="atlas-section">
               <h2>Переклад</h2>
               <div className="translation-block">
@@ -1401,7 +1415,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {entry.wiki_reference && (
+          {renderable.wiki && entry.wiki_reference && (
             <section className="atlas-section">
               <h2>Вікіпедія</h2>
               <div className="wiki-card">

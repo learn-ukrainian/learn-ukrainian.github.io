@@ -1586,3 +1586,20 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   border-left-color: var(--teal, #2dd4bf);
   color: var(--lu-text, #f1f5f9);
 }
+
+/* Thin entries show available layers first; disclosure reuses marked-forms. */
+.word-atlas .atlas-enrichment-note {
+  overflow-wrap: anywhere;
+}
+.word-atlas .atlas-enrichment-note > p {
+  color: var(--lu-text-muted);
+  margin: 0 0 0.75rem;
+}
+.word-atlas .atlas-source-waiting ul {
+  margin: 0.75rem 0;
+  padding-inline-start: 1.5rem;
+}
+
+.word-atlas .atlas-source-waiting > summary {
+  color: var(--lu-text);
+}

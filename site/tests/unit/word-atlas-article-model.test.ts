@@ -5,6 +5,7 @@ import {
   buildAtlasLinkCatalogFromSearchRows,
   buildFutureTenseNumbers,
   buildWordAtlasArticleView,
+  classifyRenderedArticleTier,
   formatConditionalForm,
   formatKhayImperative,
   formatPos,
@@ -2292,5 +2293,190 @@ describe("usage-label scope on entry pages (#9603)", () => {
     expect(html).not.toMatch(/[Пп]итома/u);
     expect(html).toContain("Засвідчена українська форма");
     expect(html).toContain("VESUM (морфологічна фіксація форми)");
+  });
+});
+
+
+describe("thin rendered-state presentation (#8327)", () => {
+  const emptyEntry = {
+    lemma: "entry", url_slug: "entry", gloss: null, entry_type: "lemma",
+    pos: null, ipa: null, primary_source: "test", course_usage: [],
+  };
+  function view(overrides: Partial<Parameters<typeof articleProps>[0]> = {}) {
+    const props = articleProps({ ...emptyEntry, ...overrides });
+    return { model: buildWordAtlasArticleView(props.record, "test", "test"),
+      doc: new DOMParser().parseFromString(renderWordAtlasArticle(props), "text/html") };
+  }
+
+  test("no ready layer means no overview heading/grid, only enrichment disclosure", () => {
+    const { model, doc } = view();
+    expect(model.renderedTier).toEqual({ tier: "bare", richBuckets: 0 });
+    expect(model.articleOverview.every((card) => !card.ready)).toBe(true);
+    expect(doc.querySelector(".atlas-overview-section")).toBeNull();
+    expect(doc.querySelector(".atlas-enrichment-note [data-loc=en]")?.textContent)
+      .toBe("This entry is being enriched.");
+    expect(doc.querySelector("details.marked-forms summary")).not.toBeNull();
+    expect(doc.querySelector(".atlas-enrichment-note [aria-live], .atlas-enrichment-note [role=status]")).toBeNull();
+    expect(model.sourceWaitingLayers.map((card) => card.id)).not.toEqual(
+      expect.arrayContaining(["course", "style", "external"]));
+    expect(model.sourceWaitingLayers).toHaveLength(13);
+    expect(doc.querySelector("[data-testid=atlas-practice-cta-unavailable]")).not.toBeNull();
+  });
+
+  test("headword gloss supplies meaning and reaches rich at exactly five report buckets", () => {
+    const { model, doc } = view({ gloss: "Gloss", enrichment: {
+      morphology: { pos: "noun", form_count: 0, forms: [], source: "VESUM" },
+      etymology: { text: "Origin", source: "test" },
+      literary_attestation: { text: "Quotation", source: "test" },
+      translation: { en: ["Translation"], source: "test" },
+    } });
+    expect(model.renderedTier).toEqual({ tier: "rich", richBuckets: 5 });
+    expect(doc.querySelector(".atlas-enrichment-note")).toBeNull();
+    expect(model.articleOverview.find((card) => card.id === "meaning")?.ready).toBe(true);
+    expect(Array.from(doc.querySelectorAll("h2")).map((h) => h.textContent)).toContain("Значення");
+    expect(doc.querySelector(".def-text")?.textContent).toContain("Gloss");
+    // Removing origin crosses the threshold without hiding any remaining layer.
+    const thin = view({ gloss: "Gloss", enrichment: {
+      morphology: { pos: "noun", form_count: 0, forms: [], source: "VESUM" },
+      literary_attestation: { text: "Quotation", source: "test" },
+      translation: { en: ["Translation"], source: "test" },
+    } });
+    expect(thin.model.renderedTier).toEqual({ tier: "thin", richBuckets: 4 });
+    expect(thin.doc.querySelectorAll(".atlas-overview-card.pending")).toHaveLength(0);
+    expect(thin.doc.body.textContent).toContain("Quotation");
+    expect(thin.doc.body.textContent).toContain("Translation");
+  });
+
+  test("empty objects, whitespace, source labels and counts never create readiness or headings", () => {
+    const { model, doc } = view({ gloss: " ", enrichment: {
+      meaning: { definitions: [" "], source: "test" },
+      definition_cards: [{ id: "empty", source: "test", definitions: [" "] }],
+      etymology: { text: " ", source: "test", stages: [] },
+      morphology: { pos: "", form_count: 5, forms: [], source: "VESUM", paradigm: { kind: "other" } },
+      literary_attestation: { text: " ", source: "test" },
+      translation: { en: [" "], source: "test" },
+    }, wiki_reference: { attribution: "test" }, sections: {
+      form_notes: { items: [], source: "test" }, synonyms: { items: [" "], source: "test" },
+      antonyms: { items: [], source: "test" }, homonyms: { items: [], source: "test" },
+      paronyms: { items: [], source: "test" }, idioms: { items: [], source: "test" },
+      proverbs: { items: [], source: "test" }, usage_notes: { items: [], source: "test" },
+    } });
+    expect(model.renderedTier).toEqual({ tier: "bare", richBuckets: 0 });
+    expect(model.articleOverview.every((card) => !card.ready)).toBe(true);
+    expect(doc.querySelectorAll(".atlas-section h2")).toHaveLength(0);
+    expect(doc.querySelector(".atlas-overview-grid")).toBeNull();
+  });
+
+  test("empty meaning object cannot suppress available headword gloss", () => {
+    const { model, doc } = view({ gloss: "Available gloss", enrichment: {
+      meaning: { source: "test", definitions: [] },
+    } });
+    expect(model.phraseHasGloss).toBe(true);
+    expect(model.renderedTier.tier).toBe("thin");
+    expect(doc.querySelector(".def-text")?.textContent).toBe("Available gloss");
+  });
+
+  test.each([
+    { paradigm: { kind: "noun", cases: { nom: { singular: "form", plural: "" } } } },
+    { paradigm: { kind: "verb", infinitive: "form" } },
+    { paradigm: { kind: "verb", impersonal: "form" } },
+    { paradigm: { kind: "verb", tenses: { present: { singular: { "1": "form" } } } } },
+    { paradigm: { kind: "verb", imperative: { singular: { "2": "form" } } } },
+    { paradigm: { kind: "verb", past: { masculine: "form" } } },
+    { paradigm: { kind: "participle", voice: "passive", aspect: "perfective", verb: "form" } },
+    { forms: [{ form: "form", label: "test" }] },
+    { marked_forms: [{ form: "form", label: "test", marker: "arch", marker_label: "test" }] },
+  ])("morphology readiness admits available forms: %j", (content) => {
+    const { model, doc } = view({ enrichment: { morphology: {
+      pos: "", form_count: 0, forms: [], source: "VESUM", ...content,
+    } as NonNullable<Enrichment["morphology"]> } });
+    expect(model.renderable.morphology).toBe(true);
+    expect(model.articleOverview.find((card) => card.id === "morphology")?.ready).toBe(true);
+    expect(Array.from(doc.querySelectorAll("h2")).some((h) => h.textContent === "Морфологія")).toBe(true);
+  });
+
+  test("a sourced meaning note survives even without definition paragraphs", () => {
+    const { model, doc } = view({ enrichment: { meaning: {
+      definitions: [], source: "test", note: "Available source note",
+    } } });
+    expect(model.renderable.enrichedMeaning).toBe(true);
+    expect(model.sourceWaitingLayers.find((card) => card.id === "meaning")).toBeUndefined();
+    expect(doc.querySelector(".def-flag-inline")?.textContent).toBe("Available source note");
+  });
+
+  test("available definition-card notes survive when its definitions are empty", () => {
+    const { model, doc } = view({ enrichment: { definition_cards: [{
+      id: "source-note", source: "test", definitions: [], note: "Available card note",
+      flag_note: "Available flag note",
+    }] } });
+    expect(model.renderedTier.tier).toBe("thin");
+    expect(model.definitionCards).toHaveLength(1);
+    expect(doc.querySelector(".def-source")?.textContent).toContain("Available card note");
+    expect(doc.querySelector(".def-flag-inline")?.textContent).toBe("Available flag note");
+  });
+
+  test("all source layers use the same overview and actual section gates", () => {
+    const { model, doc } = view({ enrichment: {
+      meaning: { definitions: ["Definition"], source: "test" },
+      etymology: { text: "", source: "test", stages: [{ period: "test", word: "form" }] },
+      morphology: { pos: "noun", form_count: 0, forms: [], source: "VESUM" },
+      literary_attestation: { text: "Attestation", source: "test" },
+      translation: { en: ["Translation"], source: "test" },
+      external_materials: [{ title: "Resource", description: "Description" }],
+    }, sections: {
+      synonyms: { items: ["synonym"], source: "test" }, antonyms: { items: ["antonym"], source: "test" },
+      homonyms: { items: [{ word: "homonym", gloss: "Gloss" }], source: "test" },
+      paronyms: { items: [{ word: "paronym", distinction: "Distinction" }], source: "test" },
+      idioms: { items: [{ phrase: "Idiom", definition: "Definition", source: "test" }], source: "test" },
+      proverbs: { items: [{ text: "Proverb", source: "test" }], source: "test" },
+      usage_notes: { items: [{ text: "Usage note", source: "test" }], source: "test" },
+      form_notes: { items: [{ dictionary: "orthography", text: "Spelling note", source: "test" }], source: "test" },
+    }, wiki_reference: { wiktionary_url: "https://uk.wiktionary.org/wiki/test", attribution: "test" },
+      course_usage: [{ track: "a1", module_num: 1, slug: "test", context: "test" }] });
+    expect(model.renderedTier).toEqual({ tier: "rich", richBuckets: 8 });
+    expect(model.sourceWaitingLayers).toEqual([]);
+    for (const card of model.articleOverview) {
+      expect(card.ready, card.id).toBe(card.id !== "style");
+    }
+    const headings = Array.from(doc.querySelectorAll(".atlas-section h2")).map((h) => h.textContent);
+    for (const heading of ["Значення", "Етимологія", "Морфологія", "Написання і вимова",
+      "Синоніми та антоніми", "Омоніми", "Пароніми", "Фразеологізми та сталі вирази", "Приповідки",
+      "Стиль і норма", "Літературні засвідчення", "Переклад", "Вікіпедія", "Зовнішні матеріали"]) {
+      expect(headings).toContain(heading);
+    }
+  });
+
+  test.each([
+    { kind: "noun", cases: {} },
+    { kind: "noun", cases: { nom: { singular: " ", plural: " " } } },
+    { kind: "verb", tenses: { present: { singular: { "1": " " } } }, imperative: { singular: { "2": " " } }, past: { masculine: " " } },
+  ])("empty paradigms do not create a morphology section: %j", (paradigm) => {
+    const { model, doc } = view({ enrichment: { morphology: {
+      pos: "", form_count: 0, forms: [], source: "VESUM", paradigm,
+    } } });
+    expect(model.renderable.morphology).toBe(false);
+    expect(doc.querySelectorAll(".atlas-overview-card.ready")).toHaveLength(0);
+    expect(doc.querySelectorAll(".atlas-section h2")).toHaveLength(0);
+  });
+
+  test("expression morphology stays suppressed in both overview and disclosure", () => {
+    const { model, doc } = view({ entry_type: "expression", enrichment: { morphology: {
+      pos: "noun", form_count: 0, forms: [], source: "VESUM",
+    } } });
+    expect(model.renderable.morphology).toBe(false);
+    expect(model.articleOverview.find((card) => card.id === "morphology")).toBeUndefined();
+    expect(model.sourceWaitingLayers.find((card) => card.id === "morphology")).toBeUndefined();
+    expect(Array.from(doc.querySelectorAll("h2")).some((h) => h.textContent === "Морфологія")).toBe(false);
+  });
+
+  test("bare wins even with six non-meaning/non-translation buckets; translation alone is thin", () => {
+    const { model } = view();
+    expect(classifyRenderedArticleTier({ ...model.renderable,
+      etymology: true, morphology: true, synonyms: true, idioms: true, literary: true, wiki: true,
+    })).toEqual({ tier: "bare", richBuckets: 6 });
+    expect(classifyRenderedArticleTier({ ...model.renderable, translation: true }))
+      .toEqual({ tier: "thin", richBuckets: 1 });
+    expect(classifyRenderedArticleTier({ ...model.renderable, meaning: true }))
+      .toEqual({ tier: "thin", richBuckets: 1 });
   });
 });
