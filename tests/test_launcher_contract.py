@@ -128,11 +128,6 @@ def test_root_launcher_allowlist_is_exact() -> None:
 @pytest.mark.parametrize("name", PUBLIC)
 def test_help_is_machine_usable(name: str) -> None:
     result = run_launcher(name, "--help")
-    if name == "start-gemini-driver.sh":
-        assert result.returncode == 4
-        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-        assert result.stdout == ""
-        return
     assert result.returncode == 0, result.stderr
     assert "Usage:" in result.stdout
     assert "EXIT CODES:" in result.stdout
@@ -142,11 +137,6 @@ def test_help_is_machine_usable(name: str) -> None:
 @pytest.mark.parametrize("name", PUBLIC)
 def test_unknown_launcher_flag_exits_usage_error(name: str) -> None:
     result = run_launcher(name, "--does-not-exist")
-    if name == "start-gemini-driver.sh":
-        assert result.returncode == 4
-        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-        assert result.stdout == ""
-        return
     assert result.returncode == 2
     assert "run --help" in result.stderr
 
@@ -201,11 +191,6 @@ def test_interactive_launchers_reject_force(name: str) -> None:
 )
 def test_driver_help_lists_force(name: str) -> None:
     result = run_launcher(name, "--help")
-    if name == "start-gemini-driver.sh":
-        assert result.returncode == 4
-        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-        assert result.stdout == ""
-        return
     assert result.returncode == 0, result.stderr
     assert "--force" in result.stdout
     assert "Attributed operator release" in result.stdout

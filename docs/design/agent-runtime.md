@@ -320,7 +320,7 @@ Two complementary signals feed one `last_activity` clock:
 | --- | --- | --- |
 | Gemini | `~/.gemini/tmp/learn-ukrainian/chats/session-<ts>-<hash>.json` | mtime bumps per message + tool call |
 | Codex | `~/.codex/logs_1.sqlite` and the `-o <file>` passed on the command line | continuous during `codex exec` |
-| Claude | `~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/<session>.jsonl` | one line appended per tool call / message |
+| Claude | `$HOME/.claude/projects/<encoded-checkout>/<session>.jsonl` | one line appended per tool call / message |
 
 **Runner loop:**
 ```

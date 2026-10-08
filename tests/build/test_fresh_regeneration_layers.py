@@ -247,7 +247,7 @@ def test_fresh_writer_check_still_regenerates(context):
     def runner(*a, **kw):
         calls.append(1)
         if len(calls) == 1:
-            failure = {"check": 6, "status": "failed", "layer": "writer", "reason": "word_target_below_minimum"}
+            failure = {"check": 3, "status": "failed", "layer": "writer", "reason": "step_ids_or_order"}
             regeneration.record_failure(
                 kw["state_dir"] / "lesson-1.regeneration.yaml", context.slug, 1, failure, _inputs(kw)
             )

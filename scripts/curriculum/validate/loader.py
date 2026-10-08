@@ -28,7 +28,7 @@ PLAN_SCHEMA_PATH = "schemas/module-plan-v2.schema.json"
 #: Removed v1 top-level fields and where each moved (§2, §2a). `content_outline`
 #: is absent here on purpose: its presence makes the file a v1 plan (V1_PLAN).
 REMOVED_V1_FIELDS = {
-    "word_target": "word_target is per lesson now (§2), not a module-level field",
+    "word_target": "word_target is deprecated per-lesson metadata (§2), not a module-level field",
     "references": "references moved to the evidence pack (§2)",
     "vocabulary_hints": "vocabulary_hints moved to the evidence pack (§2)",
     "pedagogy": "pedagogy: PPP as a module-wide label was replaced by the lesson shape (§2)",

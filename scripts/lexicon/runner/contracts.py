@@ -38,8 +38,8 @@ GENERIC_JOB_MEMORY_MAX_MIB = 1792
 
 
 def env_mib(name: str, default: int, environ: Mapping[str, str] | None = None) -> int:
-    """A positive whole number of MiB from ``name``, or ``default`` when unset or blank."""
-    raw = (os.environ if environ is None else environ).get(name, "").strip()
+    """A positive whole number of MiB from ``name``, or ``default`` when unset or blank (ASCII whitespace)."""
+    raw = (os.environ if environ is None else environ).get(name, "").strip(" \t\n\r\v\f")
     if not raw:
         return default
     if not (raw.isascii() and raw.isdigit()) or len(raw) > 18 or int(raw) <= 0:

@@ -245,9 +245,46 @@ def consume_supervisory_event(
 
 def wake_driver_once(
     service: AuthorityService, remote: RemoteEpicClient, *, stream_id: str, launcher: Path, epic: str, run=None,
+    inbox_events: list[InboxEvent] | None = None,
 ) -> bool:
-    """Bridge one durable event to the existing launcher, without claiming a lease."""
+    """Resume a live Codex inbox turn, or launch a fenced offline supervisor event."""
     require_supervisory_api(service)
+    if inbox_events:
+        from . import _ui_codex
+
+        current = remote.stream(stream_id).get("lease")
+        if (
+            launcher.name != "start-codex-driver.sh"
+            or not current or current.get("state") != "active"
+            or current.get("holder", {}).get("agent") != "codex"
+        ):
+            return False
+        live = _ui_codex.find_live_session(current)
+        if live is None:
+            raise RuntimeError("live Codex thread unavailable for codex exec resume; wake refused")
+        # Thread discovery may race a rollover. Reconcile remote authority before
+        # sending; neither discovery nor resume may claim or modify this lease.
+        latest = remote.stream(stream_id).get("lease")
+        identity = ("session_id", "lease_id", "generation", "fencing_token", "holder")
+        if not latest or latest.get("state") != "active" or any(
+            latest.get(key) != current.get(key) for key in identity
+        ):
+            return False
+        message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
+            f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
+            for event in inbox_events
+        )
+        result = _ui_codex.send(
+            thread_id=live.thread_id, message=message, cwd=live.cwd,
+            environment=live.environment,
+            bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
+        )
+        event_types = {event.get("type") for event in result["events"]}
+        if result["exit_code"] != 0 or not {"turn.started", "turn.completed"} <= event_types or (
+            event_types & {"turn.failed", "error"}
+        ):
+            raise RuntimeError("live Codex resume failed; inbox retained for reconciliation")
+        return True
     # Old-generation events remain unacknowledged until a live driver reconciles
     # them. They must not hide a newer actionable wake while the driver is offline.
     rows = service.store.connection.execute(
@@ -320,7 +357,7 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
 
 
 def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> None:
-    """Run inbox-watch's host-resident wake bridge in its existing process slot."""
+    """Resume unread Codex inbox turns and bridge offline supervisory events."""
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor.remote import RemoteEpicClient
 
@@ -334,16 +371,28 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
     supervisory_recipient(stream_id)
     launcher = repo_root / f"start-{provider}-driver.sh"
     lock = acquire_watcher_lock(agent)
+    conn: SQLiteConnection | None = None
+    last_seen = 0
     try:
+        if provider == "codex":
+            conn = open_readonly_db(_config.DB_PATH)
         with AuthorityService() as service:
             remote = RemoteEpicClient()
             require_supervisory_api(service)
             while True:
-                wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                events = poll_once(conn, agent, last_seen) if conn is not None else []
+                if events and wake_driver_once(
+                    service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
+                ):
+                    last_seen = events[-1].message_id
+                else:
+                    wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
                 if once:
                     return
                 time.sleep(interval_seconds)
     finally:
+        if conn is not None:
+            conn.close()
         lock.release()
 
 
@@ -604,7 +653,7 @@ def build_parser() -> argparse.ArgumentParser:
   scripts/ai_agent_bridge/inbox_watch.sh grok-infra --wake-driver grok --epic infra
 
 Outputs: bounded notifications; supervisory modes consume Fleet Comms events,
-prepare durable handoffs, or invoke existing driver launchers.
+prepare durable handoffs, resume live Codex threads, or invoke offline driver launchers.
 Exit codes: 0 success; 2 refusal/error; 75 launcher-owned restart prepared;
 76 transient Monitor failure (launcher may restart the live watcher).
 Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
@@ -621,7 +670,7 @@ Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--stop", action="store_true", help="request a clean stop for this slot's watcher")
     modes.add_argument("--wake-driver", choices=("grok", "gemini", "claude", "codex"),
-                       help="bridge durable events to this existing driver launcher (default: notifications only)")
+                       help="resume a live Codex inbox or bridge offline supervisory events (default: notifications only)")
     modes.add_argument("--live-supervisory", action="store_true",
                        help="launcher-owned consumption under the inherited live lease (default: off)")
     parser.add_argument("--notify-parent", action="store_true", help=argparse.SUPPRESS)

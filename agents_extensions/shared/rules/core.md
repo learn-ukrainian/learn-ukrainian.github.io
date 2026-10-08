@@ -33,7 +33,7 @@ Policy here; facts: `scripts/config/model_catalog.yaml`; changes need `model-ass
 
 | Task | First | Fallback |
 | --- | --- | --- |
-| Drive a stream | `gpt-6.1-sol` · `claude-opus-5-5` | `grok-4.7` |
+| Drive a stream | `gpt-6.1-sol` · `claude-opus-5-5` | `grok-4.7` · `gemini-3.1-pro-high` |
 | Advice, new design | `claude-opus-5-5` · `gpt-6.1-sol` | — |
 | Hard or accountable code | `gpt-6.1-sol` · `claude-opus-5-5` | Cursor `grok-4.7` · Kimi |
 | Bounded code, recon (Sol envelope first) | `gpt-6-luna` | `gemini-3.8-flash-high` |
@@ -50,7 +50,7 @@ bound to it (`--advisory-task`). `start-claude-driver.sh`: `claude-opus-5-5[1m]`
 
 - Resolve qualified code/infra reviewers with `closeout_cli resolve-reviewer`: exclude affected seats, keep the route receipt, pass exact `--author-model`, `--review-profile code`, `--risk`. For seat adapters/reviewer hooks pass `--owned-path` or `--subject-seat`/`--subject-family`; ambiguous paths need an explicit argument. Apply hard filters before quality; execute the returned invocation; keep concrete model, family, route, transport, health trace and `requires_silence_timeout`. Order: hard filters, primary before last resort, profile/risk suitability, quality tier, resources; never skip a higher eligible candidate. Gemini/AGY never reviews code, infra, tooling, CI, tests, hooks or skills, in any role; Grok 4.7 reviews code and infra at every risk, including critical, through native CLI and Cursor with runtime model attestation, never for xAI authors or its own subject seat (operator decision 2026-10-05, #9769); Grok, driving, delegates implementation. Grok reviews: no sandbox, shell, tests or scripts; tracked-file reads only (#9987). Execution-dependent reviews use Opus 5.5/Sol 6.1; Grok briefs: diff/CI evidence, no execution requests. <!-- p2-review: M30 -->
 - Ukrainian language, culture and heritage seats (authoring, review, judging, CEFR, Russianisms): Claude, GPT or Gemini only. Content review requiring VESUM verification uses Claude, GPT or Gemini with the `sources` MCP and runs `verify_words`, `query_cefr_level` and `check_russian_shadow`. <!-- p2-lang: M31 -->
-- Gemini only via AGY (no Gemini CLI, Code Assist or direct keys); Flash by default, Pro on explicit request. <!-- p2-agy: C04 -->
+- Gemini only via AGY (no Gemini CLI, Code Assist or direct keys). Bounded workers default to Flash, Pro on explicit request; `start-gemini-driver.sh` defaults to `gemini-3.1-pro-high` and also certifies `gemini-3.8-flash-high`, no other Gemini id. <!-- p2-agy: C04 -->
 - Kimi: web, UI and backend coding only (no Ukrainian-language content, reviews, consults, ACP discussions, design sign-off or rules), via the native Kimi CLI; fast model routine, full K3 when consequential. Kimi and Cursor Composer are one family for review independence. <!-- p2-kimi: M26 -->
 - Kimi, AGY and GLM never via OpenRouter. GLM is local-only (no CI, no sensitive data); Flash by default, full GLM by explicit choice. <!-- p2-glm: M08 -->
 - No DeepSeek for any dispatch or review. Pool: `laguna-s-2.1` default, `laguna-xs-2.1` on explicit request, `laguna-m.1` fallback only; no invented ids. <!-- p2-others: M18 -->

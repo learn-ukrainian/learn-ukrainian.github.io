@@ -1166,13 +1166,16 @@ def test_dependent_identity_rejects_unknown_evidence_class() -> None:
 
 
 def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:
+    # Fictional macOS and Linux checkouts; only their shape matters to the matcher.
+    macos_checkout = "/".join(("", "Users", "fixture-user", "projects", "learn-ukrainian"))
+    linux_checkout = "/".join(("", "home", "fixture-user", "learn-ukrainian"))
     baked_script = (
-        "Run `.venv/bin/python /Users/krisztiankoos/projects/"
-        "learn-ukrainian/scripts/audit/check_dossier_wordcount.py "
+        f"Run `.venv/bin/python {macos_checkout}/"
+        "scripts/audit/check_dossier_wordcount.py "
         "--changed`.\n"
     )
     baked_venv = (
-        "- [ ] `/Users/krisztiankoos/projects/learn-ukrainian/"
+        f"- [ ] `{macos_checkout}/"
         ".venv/bin/python scripts/audit/lint_bio_dossier_xref.py "
         "--paths docs/research/bio/pavlo-pavliuk-but.md`\n"
     )
@@ -1187,9 +1190,14 @@ def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:
     assert readiness.is_host_path_only_text_change(baked_script, scrubbed_script)
     assert readiness.is_host_path_only_text_change(baked_venv, scrubbed_venv)
     assert readiness.is_host_path_only_text_change(
-        "Run `.venv/bin/python /home/"
-        "ops/learn-ukrainian/"
-        "scripts/audit/check_dossier_wordcount.py --changed`.\n",
+        f"Run `.venv/bin/python {linux_checkout}/scripts/audit/check_dossier_wordcount.py --changed`.\n",
+        scrubbed_script,
+    )
+    # Another repository under the same home is a real change, not a baked checkout.
+    assert not readiness.is_host_path_only_text_change(
+        "Run `.venv/bin/python "
+        + "/".join(("", "home", "fixture-user", "other-repo"))
+        + "/scripts/audit/check_dossier_wordcount.py --changed`.\n",
         scrubbed_script,
     )
     assert not readiness.is_host_path_only_text_change(

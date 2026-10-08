@@ -10,8 +10,36 @@ if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -
 fi
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-CANONICAL_ROOT="${CODEX_CANONICAL_REPO_ROOT:-$PROJECT_DIR}"
-BOUNDED_PYTHON="${THREAD_ROLLOVER_PYTHON:-$CANONICAL_ROOT/.venv/bin/python}"
+
+# Resolve the primary checkout before choosing an interpreter, exactly as
+# session-setup.sh does: it owns the shared venv and the Claude memory
+# directory, and a linked worktree has neither. This must not depend on
+# run_bounded, whose interpreter is chosen from the result.
+_HOOK_TIMEOUT_BIN="$(command -v timeout 2>/dev/null || command -v gtimeout 2>/dev/null || true)"
+git_common_dir() {
+  if [ -n "$_HOOK_TIMEOUT_BIN" ]; then
+    "$_HOOK_TIMEOUT_BIN" -s KILL 2 git -C "$PROJECT_DIR" rev-parse --path-format=absolute \
+      --git-common-dir 2>/dev/null
+  else
+    git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null
+  fi
+}
+GIT_COMMON_DIR=$(git_common_dir) || GIT_COMMON_DIR=""
+PRIMARY_ROOT=""
+if [ -n "$GIT_COMMON_DIR" ] && [ "$(basename "$GIT_COMMON_DIR")" = ".git" ]; then
+  PRIMARY_ROOT=$(dirname "$GIT_COMMON_DIR")
+fi
+if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+  CANONICAL_ROOT="$CODEX_CANONICAL_REPO_ROOT"
+else
+  CANONICAL_ROOT="${PRIMARY_ROOT:-$PROJECT_DIR}"
+fi
+SHARED_VENV_ROOT="$CANONICAL_ROOT"
+if [ ! -x "$SHARED_VENV_ROOT/.venv/bin/python" ] && [ -n "$PRIMARY_ROOT" ]; then
+  SHARED_VENV_ROOT="$PRIMARY_ROOT"
+fi
+SHARED_PYTHON="$SHARED_VENV_ROOT/.venv/bin/python"
+BOUNDED_PYTHON="${THREAD_ROLLOVER_PYTHON:-$SHARED_PYTHON}"
 BOUNDED_RUNNER="${SESSION_BOUNDED_RUNNER:-$PROJECT_DIR/scripts/agent_runtime/bounded_command.py}"
 run_bounded() {
   local timeout_seconds="$1"
@@ -148,12 +176,17 @@ if [ -z "$HANDOFF_AGENT" ]; then
     HANDOFF_AGENT="claude"
   fi
 fi
-ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
+ROLLOVER_PYTHON="${THREAD_ROLLOVER_PYTHON:-$SHARED_PYTHON}"  # worktrees carry no venv
 ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/thread_handoff.py}"
 ROLLOVER_HEALTH=$(run_bounded 2 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" 2>&1) || true
 
-# 3. Key reminders
+# 3. Key reminders. Claude keys its per-project directory by the checkout
+# path with every character outside [A-Za-z0-9-] replaced by '-'. The memory
+# directory belongs to the primary checkout, resolved exactly as
+# session-setup.sh resolves it (CANONICAL_ROOT, above), so a worktree session
+# names the same directory.
+CLAUDE_PROJECT_KEY=$(printf '%s' "$CANONICAL_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
 CONTEXT="$CONTEXT
 KEY REMINDERS:
   - Thread rollover health (read-only): $ROLLOVER_HEALTH
@@ -163,7 +196,7 @@ KEY REMINDERS:
   - .venv/bin/python only
   - Pre-commit: ruff + /simplify + cross-family code review (non-Gemini seat)
   - Read audit/ and review/ files before fixing modules
-  - MEMORY: ~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory/MEMORY.md"
+  - MEMORY: \$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory/MEMORY.md"
 
 emit_context "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT"
 exit 0

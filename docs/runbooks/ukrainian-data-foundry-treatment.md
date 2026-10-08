@@ -97,10 +97,10 @@ quality claim. Passing it neither authorizes nor satisfies the frozen Stage 1
 requirement for an A100 or H100.
 
 The validation uses a [Hugging Face Job](https://huggingface.co/docs/huggingface_hub/guides/jobs)
-with the `l40sx1` flavor; its hardware and per-minute price are listed in
-the Hugging Face Jobs documentation linked below. `timeout=3600` is mandatory
-and exact, which bounds the maximum provider compute charge at USD 1.80,
-within the operator's EUR 3 ceiling.
+on a single-GPU flavor that Hugging Face lists at USD 0.03/minute (the exact
+flavor is pinned in the probe plan and its schema, not repeated here);
+`timeout=3600` is mandatory and exact. Its maximum provider
+compute charge is therefore USD 1.80, within the operator's EUR 3 ceiling.
 Hugging Face is selected for this narrow probe because its Job timeout stops
 the running job and its billing; this is a bounded-provider-control choice,
 not a comparison of provider quality. See the official [Jobs pricing and
@@ -246,7 +246,7 @@ of the paired arms is exactly correct. The normal planning approximation for
 For F0.5, the existing baseline and cross-model scale checks put the practical
 sensitivity around 3–5 F0.5 points unless the two treatment arms are very
 highly correlated. This is a planning bound, not a new acceptance threshold.
-The L40S hardware validation is unaffected because it makes no efficacy claim.
+The single-GPU hardware validation is unaffected because it makes no efficacy claim.
 Before any multi-seed paid efficacy program, the preregistration still needs a
 seed-level aggregation rule and an explicit practical-effect interpretation so
 seeds cannot be selected after scores are visible.

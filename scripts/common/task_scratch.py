@@ -84,7 +84,7 @@ FAULT_ENV_VAR = "LU_TASK_SCRATCH_FAULT"
 FAULT_KILL_BEFORE_RELEASE = "kill-before-release"
 
 # Orphan age gates (#8738): 2h after the newest directory/metadata change
-# normally; 30m when the scratch volume has under 15 GiB free. Pressure only
+# normally; 30m when the scratch volume is below DEFAULT_MIN_FREE_GB. Pressure only
 # ever shortens the age gate — identity and liveness proofs are unchanged.
 DEFAULT_MIN_AGE_S = 2 * 60 * 60
 DEFAULT_PRESSURE_MIN_AGE_S = 30 * 60

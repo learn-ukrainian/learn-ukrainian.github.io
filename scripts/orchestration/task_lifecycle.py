@@ -1104,15 +1104,30 @@ def observe_local_git(
             base = _run_git(root, ["merge-base", "origin/main", head_sha])
             changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
             changed_paths = [line for line in changed_raw.splitlines() if line]
-            log = _run_git(root, ["log", "--format=%H%x1f%B%x1e", f"{base}..{head_sha}"])
+            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", f"{base}..{head_sha}"])
             for record in log.split("\x1e"):
                 if not record.strip() or "\x1f" not in record:
                     continue
-                sha, message = record.strip().split("\x1f", 1)
+                sha, subject, parent_shas, message = record.strip().split("\x1f", 3)
+                parents = parent_shas.split()
                 trailers = [
                     line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")
                 ]
-                commits.append({"sha": sha, "x_agent_trailers": trailers})
+                second_parent_on_main = False
+                if len(parents) == 2:
+                    try:
+                        _run_git(root, ["merge-base", "--is-ancestor", parents[1], "origin/main"])
+                        second_parent_on_main = True
+                    except LifecycleError:
+                        # Unproven ancestry must not waive commit attribution.
+                        pass
+                commits.append({
+                    "sha": sha,
+                    "subject": subject,
+                    "parents": parents,
+                    "second_parent_on_main": second_parent_on_main,
+                    "x_agent_trailers": trailers,
+                })
         except LifecycleError:
             # The immutable pre-merge receipt remains the authority for hygiene
             # when squash merge/branch deletion makes the old comparison absent.
@@ -1333,6 +1348,13 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
         blockers.append("no task commits were available for X-Agent validation")
     for commit in commits:
         trailers = commit.get("x_agent_trailers") or []
+        if (
+            not trailers
+            and re.fullmatch(r"Merge branch 'main' into \S+", commit.get("subject") or "")
+            and len(commit.get("parents") or []) == 2
+            and commit.get("second_parent_on_main") is True
+        ):
+            continue
         if len(trailers) != 1 or not str(trailers[0]).split(":", 1)[-1].strip():
             blockers.append(f"commit {commit.get('sha', 'unknown')} lacks exactly one valid X-Agent trailer")
     forbidden = local.get("forbidden_paths") or []

@@ -25,7 +25,7 @@ ENV_NAMES = (
     contracts.ENV_JOB_MEMORY_MAX_MIB,
 )
 BASH = shutil.which("bash") or "bash"
-INVALID = ("0", "-1", "1.5", "1G", "lots", "007x", "000", "1" * 19)
+INVALID = ("0", "-1", "2.25", "1G", "lots", "007x", "000", "1" * 19, "\x1c777", "\u00a0777")
 
 
 def _clean_env() -> dict[str, str]:
@@ -35,6 +35,7 @@ def _clean_env() -> dict[str, str]:
 def test_env_mib_reads_a_positive_whole_number_or_the_default() -> None:
     assert contracts.env_mib("X", 7, {}) == 7
     assert contracts.env_mib("X", 7, {"X": "  "}) == 7
+    assert contracts.env_mib("X", 7, {"X": " \t\n"}) == 7
     assert contracts.env_mib("X", 7, {"X": " 640 "}) == 640
     assert contracts.env_mib("X", 7, {"X": "0640"}) == 640
     for bad in (*INVALID, "\u0661\u0662"):
@@ -91,7 +92,7 @@ def test_launchers_carry_no_fixed_caps_and_forward_the_environment(launcher: str
     assert re.search(r"--property=MemoryMax=\d", text) is None
     assert 'Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}"' in text
     assert 'Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}"' in text
-    defaults = re.findall(r'"\$\{LU_LEXICON_JOB_MEMORY_(HIGH|MAX)_MIB:-(\d+)\}"', text)
+    defaults = re.findall(r"\|\| JOB_MEMORY_(HIGH|MAX)_MIB=(\d+)\n", text)
     assert dict(defaults) == {
         "HIGH": str(contracts.GENERIC_JOB_MEMORY_HIGH_MIB),
         "MAX": str(contracts.GENERIC_JOB_MEMORY_MAX_MIB),
@@ -154,6 +155,10 @@ def _launcher_env(tmp_path: Path, bin_dir: Path, **extra: str) -> dict[str, str]
         ({}, (contracts.GENERIC_JOB_MEMORY_HIGH_MIB, contracts.GENERIC_JOB_MEMORY_MAX_MIB)),
         ({contracts.ENV_JOB_MEMORY_HIGH_MIB: " 900 ", contracts.ENV_JOB_MEMORY_MAX_MIB: "1100"}, (900, 1100)),
         ({contracts.ENV_JOB_MEMORY_HIGH_MIB: "0900", contracts.ENV_JOB_MEMORY_MAX_MIB: "01100"}, (900, 1100)),
+        (
+            {contracts.ENV_JOB_MEMORY_HIGH_MIB: "   ", contracts.ENV_JOB_MEMORY_MAX_MIB: "\t"},
+            (contracts.GENERIC_JOB_MEMORY_HIGH_MIB, contracts.GENERIC_JOB_MEMORY_MAX_MIB),
+        ),
     ],
 )
 def test_launcher_forwards_resolved_caps_across_the_service_boundary(
@@ -270,3 +275,50 @@ def test_runner_code_carries_no_fixed_cap_literals() -> None:
         path = RUNNER / name
         text = path.read_text(encoding="utf-8")
         assert re.search(r"MemoryPolicy\(high_bytes=\d", text) is None, path.name
+
+
+@pytest.mark.parametrize("launcher", ("launch_enrich.sh", "launch_reduce.sh"))
+@pytest.mark.parametrize(
+    "flag",
+    [
+        ["--memory-high-mib", "777"],
+        ["--memory-max-mib=777"],
+        ["--memory-h", "777"],
+        ["--mem=777"],
+    ],
+)
+def test_launcher_refuses_caller_memory_flags_before_side_effects(
+    launcher: str, flag: list[str], tmp_path: Path
+) -> None:
+    bin_dir, record = _fake_systemd(tmp_path)
+    out = subprocess.run(
+        ["bash", str(RUNNER / launcher), *flag],
+        env=_launcher_env(tmp_path, bin_dir),
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert out.returncode == 2
+    assert "is not accepted" in out.stderr
+    assert not (tmp_path / "work").exists()
+    assert not record.exists()
+
+
+@pytest.mark.parametrize("launcher", LAUNCHERS)
+@pytest.mark.parametrize("raw", ["", "   ", "\t\n", "\x1c777", "\u00a0777", "\u0661\u0662", "+777", " 0777 "])
+def test_launcher_and_python_agree_on_each_raw_value(launcher: str, raw: str) -> None:
+    text = (RUNNER / launcher).read_text(encoding="utf-8")
+    start = text.index("_trim_mib() {")
+    end = text.index("export LU_LEXICON_JOB_MEMORY_HIGH_MIB=")
+    end = text.index("\n", end) + 1
+    script = text[start:end] + 'printf "%s" "$LU_LEXICON_JOB_MEMORY_HIGH_MIB"'
+    env = {**_clean_env(), contracts.ENV_JOB_MEMORY_HIGH_MIB: raw}
+    out = subprocess.run(["bash", "-c", script], env=env, capture_output=True, text=True, timeout=10, check=False)
+    try:
+        expected = str(contracts.env_mib(contracts.ENV_JOB_MEMORY_HIGH_MIB, contracts.GENERIC_JOB_MEMORY_HIGH_MIB, env))
+    except ValueError:
+        assert out.returncode == 2
+    else:
+        assert out.returncode == 0, out.stderr
+        assert out.stdout == expected

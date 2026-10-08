@@ -1579,24 +1579,13 @@ entries:
   - id: registry-artifacts
     kind: registry
     paths: [registry/artifacts/**]
-    purpose: Group manifests that bind content-addressed payloads in the local artifact store, the frozen storage classification table, consumer lists, test baselines and the tracked-data allowlist.
-    keywords: [artifact manifest, artifact store, classification table, tracked-data allowlist, test baseline]
+    purpose: Group manifests that bind content-addressed payloads in the local artifact store, the frozen storage classification table and the tracked-data allowlist.
+    keywords: [artifact manifest, artifact store, classification table, tracked-data allowlist]
     lifecycle: active
     owner: infra-harness
     query:
       - {surface: cli, how: ".venv/bin/python -m scripts.storage.artifacts status"}
       - {surface: git_grep, how: "git grep -n -F '<group>' -- registry/artifacts"}
-    content_searchable: true
-
-  - id: registry-storage-migration-notes
-    kind: evidence
-    paths: [registry/artifacts/notes-P*.md, registry/artifacts/host-run-p*.junit.xml]
-    purpose: Storage-migration phase notes and host-run JUnit receipts.
-    keywords: [storage migration notes, host run junit]
-    lifecycle: archive
-    owner: infra-harness
-    query:
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- 'registry/artifacts/notes-P*.md'"}
     content_searchable: true
 
   - id: registry-corpus-audit
