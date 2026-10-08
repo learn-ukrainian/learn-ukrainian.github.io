@@ -3835,7 +3835,7 @@ def _omit_writer_plan_blocks(plan_content: str) -> str:
     boundaries: list[tuple[int, str | None]] = []
     scalar_lines: set[int] = set()
     key_line: int | None = None
-    for token in yaml.scan(plan_content):
+    for token in yaml.scan(plan_content, Loader=yaml.BaseLoader):
         if isinstance(token, yaml.tokens.KeyToken):
             key_line = token.start_mark.line if token.start_mark.column == 0 else None
         elif isinstance(token, yaml.tokens.ScalarToken):

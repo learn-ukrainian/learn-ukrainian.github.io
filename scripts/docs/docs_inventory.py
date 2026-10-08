@@ -139,7 +139,7 @@ def metadata(text: str) -> tuple[dict, list[str]]:
         return facts, ['frontmatter_too_large']
     try:
         depth = 0
-        for count, token in enumerate(yaml.scan(raw)):
+        for count, token in enumerate(yaml.scan(raw, Loader=yaml.BaseLoader)):
             if isinstance(token, (yaml.tokens.AliasToken, yaml.tokens.AnchorToken)):
                 return facts, ['frontmatter_alias_forbidden']
             if isinstance(token, (yaml.tokens.BlockMappingStartToken, yaml.tokens.BlockSequenceStartToken,
