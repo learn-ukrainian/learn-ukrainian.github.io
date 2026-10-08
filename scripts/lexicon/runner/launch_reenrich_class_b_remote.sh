@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Mac-side orchestrator for #6369 Class-B residual EN re-enrich. Runs the job
+# Orchestrator for #6369 Class-B residual EN re-enrich. Runs the job
 # on the remote Atlas host from operator env (ATLAS_RUNNER_HOST),
-# never on this laptop.
+# never locally.
 #
-# The VPS repo checkout is routinely stale (large data/ dirs deliberately
+# The runner host's repo checkout is routinely stale (large data/ dirs deliberately
 # deleted for disk headroom, uncommitted local diffs) — this script never
 # runs `git pull`/`checkout`/`reset` there. Instead it scp's the current
-# worktree's driver + launcher into the *work-dir* only, leaving the VPS repo
+# worktree's driver + launcher into the *work-dir* only, leaving the runner host repo
 # checkout untouched. This is the "OR scp the script from PR branch" fallback
 # from the #6369 dispatch brief.
 #
@@ -68,15 +68,15 @@ LOCAL_RESIDUAL="${ATLAS_RE_ENRICH_RESIDUAL:-$WORKTREE/batch_state/atlas-6369-cla
 LOCAL_OUT_DIR="${ATLAS_RE_ENRICH_OUT_DIR:-$WORKTREE/batch_state/class-b-reenrich-pulled}"
 LOCAL_DRIVER="$WORKTREE/scripts/lexicon/reenrich_thin_manifest_entries.py"
 LOCAL_LAUNCHER="$WORKTREE/scripts/lexicon/runner/launch_reenrich_class_b.sh"
-# Full-catalog runs must begin from the Mac's live catalog, not the stale
-# manifest retained in the VPS checkout. Prefer the dispatched worktree when
+# Full-catalog runs must begin from the orchestrator's live catalog, not the stale
+# manifest retained in the runner host checkout. Prefer the dispatched worktree when
 # it contains the large catalog; sparse worktrees normally fall back to the
 # operator's primary checkout.
 LOCAL_LIVE_MANIFEST_CANDIDATE="$WORKTREE/site/src/data/lexicon-manifest.json"
 PRIMARY_LIVE_MANIFEST="$PRIMARY_ROOT/site/src/data/lexicon-manifest.json"
 MIN_LIVE_MANIFEST_BYTES=1048576
 # The driver imports ``scripts.lexicon.enrich_manifest`` and its supporting
-# modules. The VPS checkout is deliberately allowed to stay stale, so deploy
+# modules. The runner host's checkout is deliberately allowed to stay stale, so deploy
 # the current scripts package tree into the work-dir instead of trying to
 # maintain a brittle transitive-import allowlist against $REMOTE_REPO.
 LOCAL_SCRIPTS_PACKAGE="$WORKTREE/scripts"
@@ -125,18 +125,18 @@ fi
 # Materialize the configured run root before any scp/rsync writes into it.
 ssh_q "mkdir -p $(printf '%q' "$RUN_ROOT")"
 
-# HARD GATE — sources.db on VPS must match local Mac (operator 2026-08-06).
-# Stale VPS DBs silently underfill EN residual. Compare byte size; rsync if
+# HARD GATE — sources.db on the runner must match the orchestrator's copy (operator 2026-08-06).
+# Stale runner DBs silently underfill EN residual. Compare byte size; rsync if
 # mismatched; fail closed if still mismatched after sync.
 #
 # LOCAL_SOURCES_DB is resolved to its real target below (data/sources.db is a
-# symlink into the primary checkout in worktree layouts) — `stat` on macOS
+# symlink into the primary checkout in worktree layouts) — BSD `stat`
 # does NOT dereference symlinks by default, and neither does `rsync -a`
 # (which preserves them as symlinks, i.e. -l). Without resolving first, a
 # size mismatch against the symlink's own tiny size (the length of its
 # target path, not the file it points to) causes rsync to overwrite the
 # remote's real multi-GB file with a dangling symlink pointing at a
-# Mac-only path — a real data-loss incident hit exactly this on 2026-08-06,
+# orchestrator-only path — a real data-loss incident hit exactly this on 2026-08-06,
 # recovered from a remote sources.db backup copy.
 # Always resolve to a real regular-file path before comparing or syncing.
 LOCAL_SOURCES_DB_CANDIDATE="${ATLAS_LOCAL_SOURCES_DB:-$WORKTREE/data/sources.db}"
@@ -157,7 +157,7 @@ if [[ ! -f "$LOCAL_SOURCES_DB" ]]; then
 fi
 
 # Current enrichment also needs VESUM for morphology and to verify dictionary
-# content before learner-facing sections are admitted. The VPS intentionally
+# content before learner-facing sections are admitted. The runner host intentionally
 # keeps only sources.db in its stale repo checkout, so materialize VESUM in the
 # disposable work-dir overlay rather than changing that checkout.
 LOCAL_VESUM_DB_CANDIDATE="${ATLAS_LOCAL_VESUM_DB:-$WORKTREE/data/vesum.db}"
@@ -195,7 +195,7 @@ local_sz="$(_local_sz "$LOCAL_SOURCES_DB")"
 remote_sz="$(ssh_q "if test -f $(printf '%q' "$REMOTE_SOURCES_DB"); then stat -L -c '%s' $(printf '%q' "$REMOTE_SOURCES_DB"); else echo 0; fi")"
 echo "sources.db preflight local=$local_sz remote=$remote_sz path=$REMOTE_SOURCES_DB"
 if [[ "$local_sz" != "$remote_sz" ]]; then
-  echo "sources.db STALE on $HOST — rsync local -> remote (this is network I/O, not Mac CPU burn)"
+  echo "sources.db STALE on $HOST — rsync local -> remote (this is network I/O, not local CPU burn)"
   # Checkpoint WAL when possible so single-file rsync is consistent
   if command -v sqlite3 >/dev/null 2>&1 && [[ -f "${LOCAL_SOURCES_DB}-wal" ]]; then
     sqlite3 "$LOCAL_SOURCES_DB" 'PRAGMA wal_checkpoint(TRUNCATE);' >/dev/null 2>&1 || true
@@ -238,7 +238,7 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
 
   echo "syncing driver + current enrichment package -> $HOST:$REMOTE_WORK_DIR (target=$TARGET)"
   ssh_q "mkdir -p $(printf '%q' "$REMOTE_WORK_DIR/scripts")"
-  # Always replace the work-dir input before launch. The VPS checkout's
+  # Always replace the work-dir input before launch. The runner host checkout's
   # catalog is deliberately allowed to be stale, but the local launcher uses
   # this work-dir path as its --manifest input for every target.
   local_manifest_sz="$(_local_sz "$LOCAL_LIVE_MANIFEST")"
@@ -257,9 +257,9 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
   # overlay. Legacy workdirs may still have data -> $REMOTE_REPO/data; convert
   # that symlink the same way. Refuse only unexpected non-directory paths.
   ssh_q "data_path=$(printf '%q' "$REMOTE_WORK_DIR/data"); repo_data=$(printf '%q' "$REMOTE_REPO/data"); if test -L \"\$data_path\"; then data_target=\$(readlink -f \"\$data_path\"); if test \"\$data_target\" != \"\$repo_data\"; then echo 'refusing to replace unexpected work-dir data symlink' >&2; exit 1; fi; rm \"\$data_path\"; elif test -e \"\$data_path\" && test ! -d \"\$data_path\"; then echo 'work-dir data path is not a directory' >&2; exit 1; fi; if test ! -d \"\$data_path\"; then mkdir -p \"\$data_path\"; ln -s \"\$repo_data/sources.db\" \"\$data_path/sources.db\"; ln -s \"\$repo_data/lexicon\" \"\$data_path/lexicon\"; fi"
-  # Slovnyk is deliberately offline during VPS runs. Materialize only its
+  # Slovnyk is deliberately offline during runner runs. Materialize only its
   # cache directory locally in the overlay, while all other lexicon artifacts
-  # remain linked to the hydrated VPS repo data.
+  # remain linked to the hydrated runner repo data.
   ssh_q "lexicon_path=$(printf '%q' "$REMOTE_WORK_DIR/data/lexicon"); repo_lexicon=$(printf '%q' "$REMOTE_REPO/data/lexicon"); if test -L \"\$lexicon_path\"; then lexicon_target=\$(readlink -f \"\$lexicon_path\"); if test \"\$lexicon_target\" != \"\$repo_lexicon\"; then echo 'refusing to replace unexpected work-dir lexicon symlink' >&2; exit 1; fi; rm \"\$lexicon_path\"; elif test -e \"\$lexicon_path\" && test ! -d \"\$lexicon_path\"; then echo 'work-dir lexicon path is not a directory' >&2; exit 1; fi; if test ! -d \"\$lexicon_path\"; then mkdir -p \"\$lexicon_path\"; for source_path in \"\$repo_lexicon\"/*; do name=\$(basename \"\$source_path\"); if test \"\$name\" != slovnyk_cache; then ln -s \"\$source_path\" \"\$lexicon_path\"/\"\$name\"; fi; done; fi"
   echo "syncing Slovnyk cache into work-dir overlay"
   rsync_q "$LOCAL_SLOVNYK_CACHE/" "$HOST:$REMOTE_WORK_DIR/data/lexicon/slovnyk_cache/"
@@ -284,13 +284,13 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
   scp_q "$LOCAL_LAUNCHER" "$HOST:$REMOTE_WORK_DIR/launch_reenrich_class_b.sh"
   # Keep every direct and lazy transitive import current.  The package is
   # small enough to sync cheaply, and this avoids rerunning a new driver
-  # against a mixture of Mac-current and VPS-stale helper modules.
+  # against a mixture of orchestrator-current and runner-stale helper modules.
   rsync_q "$LOCAL_SCRIPTS_PACKAGE/" "$HOST:$REMOTE_WORK_DIR/scripts/"
   ssh_q "chmod +x $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
 
   echo "launching on $HOST"
   # ATLAS_RE_ENRICH_DRIVER pins the work-dir copy explicitly so a stale
-  # in-repo checkout on the VPS can never win the launcher's auto-detection.
+  # in-repo checkout on the runner host can never win the launcher's auto-detection.
   remote_cmd="ATLAS_RUN_ROOT=$(printf '%q' "$RUN_ROOT") ATLAS_REPO=$(printf '%q' "$REMOTE_REPO") ATLAS_RE_ENRICH_WORK_DIR=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_CODE_ROOT=$(printf '%q' "$REMOTE_WORK_DIR") ATLAS_RE_ENRICH_DRIVER=$(printf '%q' "$REMOTE_WORK_DIR/reenrich_thin_manifest_entries.py")"
   if [[ -n "${ATLAS_RE_ENRICH_UNIT:-}" ]]; then
     remote_cmd+=" ATLAS_RE_ENRICH_UNIT=$(printf '%q' "$ATLAS_RE_ENRICH_UNIT")"
@@ -307,7 +307,7 @@ if [[ "$do_sync_and_launch" == "1" ]]; then
     remote_cmd+=" ATLAS_RE_ENRICH_RESTART=$(printf '%q' "$ATLAS_RE_ENRICH_RESTART")"
   fi
   remote_cmd+=" bash $(printf '%q' "$REMOTE_WORK_DIR/launch_reenrich_class_b.sh")"
-  # macOS ships bash 3.2, where "${arr[@]}" on a zero-element array throws
+  # Some systems ship bash 3.2, where "${arr[@]}" on a zero-element array throws
   # "unbound variable" under `set -u` (fixed upstream in bash 4.4+) — guard
   # the iteration instead of relying on the expansion alone.
   if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then

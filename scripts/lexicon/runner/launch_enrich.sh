@@ -2,7 +2,7 @@
 # Detached, idempotent launcher for #5230 offline enrich (reduce candidate → enriched).
 # Mirrors launch_reduce.sh under the default job memory caps.
 #
-# Prerequisites (on VPS run-20k):
+# Prerequisites (on the runner host, run-20k):
 #   - network-cache.sqlite populated (fetch done)
 #   - candidate-ulif-reduce.json present (reduce complete)
 #   - data/sources.db + data/lexicon/kaikki_uk_lookup.json available in $REPO

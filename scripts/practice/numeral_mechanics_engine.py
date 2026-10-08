@@ -2685,13 +2685,12 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
 
 
 def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking specified path, local tree, or primary checkout."""
+    """Finds vesum.db checking the specified path, then the local tree."""
     if specified and specified.exists() and specified.stat().st_size > 0:
         return specified
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-        Path.home() / "learn-ukrainian" / "data" / "vesum.db",
     ]
     for c in candidates:
         if c.exists() and c.stat().st_size > 0:

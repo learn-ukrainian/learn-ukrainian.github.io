@@ -1341,13 +1341,6 @@
       "path": "scripts/practice/adjective_mechanics_engine.py",
       "kind": "store_path",
       "scope": "find_vesum_db",
-      "fingerprint": "00c8b3dd149afbb23944d98a46765a4bcb08a33ee77c8de8a62a01dfa3700712",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/practice/adjective_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "find_vesum_db",
       "fingerprint": "51bad12aacbdc18b3836266d3e8e993ffedfbca89868c284c34ba89c26260947",
       "occurrence": 1
     },
@@ -1363,13 +1356,6 @@
       "kind": "store_path",
       "scope": "find_vesum_db",
       "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/practice/adverb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "find_vesum_db",
-      "fingerprint": "00c8b3dd149afbb23944d98a46765a4bcb08a33ee77c8de8a62a01dfa3700712",
       "occurrence": 0
     },
     {
@@ -1412,13 +1398,6 @@
       "kind": "store_path",
       "scope": "find_vesum_db",
       "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/practice/numeral_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "find_vesum_db",
-      "fingerprint": "00c8b3dd149afbb23944d98a46765a4bcb08a33ee77c8de8a62a01dfa3700712",
       "occurrence": 0
     },
     {
@@ -1468,13 +1447,6 @@
       "kind": "store_path",
       "scope": "find_vesum_db",
       "fingerprint": "9bad3581296971efac5fdc06ccd40bac834446b4d0ed883658b56d1b5811ea72",
-      "occurrence": 0
-    },
-    {
-      "path": "scripts/practice/verb_mechanics_engine.py",
-      "kind": "store_path",
-      "scope": "find_vesum_db",
-      "fingerprint": "00c8b3dd149afbb23944d98a46765a4bcb08a33ee77c8de8a62a01dfa3700712",
       "occurrence": 0
     },
     {

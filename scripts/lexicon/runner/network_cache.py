@@ -1,4 +1,4 @@
-"""VPS/network host durable write-through cache (#5230 PR3).
+"""Runner/network host durable write-through cache (#5230 PR3).
 
 Independent of the local run ledger (spec §6): exclusive OS lock, request-level
 fenced claims reusing PR2 CAS/generation machinery, and atomic raw cache rows
@@ -225,7 +225,7 @@ def compute_parsed_key(
 
 
 class NetworkCache:
-    """Single-writer durable network cache (VPS-side, independent of local ledger)."""
+    """Single-writer durable network cache (runner-side, independent of local ledger)."""
 
     def __init__(
         self,
@@ -812,4 +812,3 @@ def open_network_cache(path: Path, **kwargs: Any) -> NetworkCache:
         cache = NetworkCache(path, **kwargs)
         cache.open()
         return cache
-

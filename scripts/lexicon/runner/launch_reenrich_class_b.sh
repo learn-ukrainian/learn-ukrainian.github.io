@@ -3,29 +3,29 @@
 # Mirrors launch_enrich.sh under the default job memory caps.
 #
 # Runs entirely against the remote-host *work-dir* — it never mutates the
-# VPS repo checkout at $REPO. This matters because the checkout there is
+# runner host repo checkout at $REPO. This matters because the checkout there is
 # routinely stale/dirty (large data/ dirs deliberately deleted for disk
 # headroom); this launcher only ever reads from it (sources.db, kaikki
 # lookup, the live hydrated manifest) and writes into $ATLAS_RE_ENRICH_WORK_DIR.
 #
 # Prerequisites (in the work-dir, deployed by
-# launch_reenrich_class_b_remote.sh from the Mac side):
+# launch_reenrich_class_b_remote.sh from the orchestrating side):
 #   - class-b-no-en.json   residual slug allowlist (#6369 class_b_detail dump)
 #   - reenrich_thin_manifest_entries.py   driver copy with --slugs-file
 #     support, IF the in-repo checkout at $REPO is still stale (no
 #     --slugs-file flag). The in-repo driver is preferred once it catches up.
-#   - scripts/lexicon/... and its supporting imports, synced from the Mac
+#   - scripts/lexicon/... and its supporting imports, synced from the orchestrator
 #     worktree so the driver never imports stale enrichment code from $REPO.
 #
 # Does NOT finalize, publish, or pin-flip. This mutates a *work-dir copy* of
-# the manifest only. The Mac-side wrapper refreshes that copy from its live
+# the manifest only. The orchestrating wrapper refreshes that copy from its live
 # catalog before each normal launch; this script retains a live-checkout
-# snapshot fallback only for direct VPS invocation. It never mutates
+# snapshot fallback only for direct runner invocation. It never mutates
 # $REPO/site/src/data/lexicon-manifest.json. Pulling the result back for the
 # PR / publish gate is
-# launch_reenrich_class_b_remote.sh's job, run from the Mac-side worktree.
+# launch_reenrich_class_b_remote.sh's job, run from the orchestrating worktree.
 #
-# Usage (on the VPS):
+# Usage (on the runner host):
 #   scripts/lexicon/runner/launch_reenrich_class_b.sh
 #   scripts/lexicon/runner/launch_reenrich_class_b.sh --limit 5   # smoke
 #
@@ -93,7 +93,7 @@ if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" 2>/dev/null; then
 fi
 
 # Prefer the in-repo driver once it has caught up (post-#6398 merge); fall
-# back to the work-dir copy scp'd over by the Mac-side orchestrator.
+# back to the work-dir copy scp'd over by the orchestrator.
 DRIVER="${ATLAS_RE_ENRICH_DRIVER:-}"
 if [[ -z "$DRIVER" ]]; then
   if [[ -f "$IN_REPO_DRIVER" ]] && grep -q -- '--slugs-file' "$IN_REPO_DRIVER" 2>/dev/null; then
@@ -121,7 +121,7 @@ fi
 # missing-translation target — see the guarded COMMON_ARGS block below for
 # why stacking it onto full-catalog would be wrong, not just redundant.
 if [[ "$TARGET" == "missing-translation" && ! -f "$SLUGS_FILE" ]]; then
-  echo "residual slugs file not found: $SLUGS_FILE (sync it from the Mac worktree first)" >&2
+  echo "residual slugs file not found: $SLUGS_FILE (sync it from the orchestrating worktree first)" >&2
   exit 1
 fi
 if [[ ! -f "$SOURCES_DB" ]]; then
@@ -150,9 +150,9 @@ if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
   exit 1
 fi
 
-# Direct VPS invocation snapshots the live hydrated manifest into the work-dir
-# only when the Mac-side wrapper did not already sync one. Normal remote runs
-# receive a fresh Mac live-manifest sync before this launcher starts.
+# Direct runner invocation snapshots the live hydrated manifest into the work-dir
+# only when the orchestrating wrapper did not already sync one. Normal remote runs
+# receive a fresh live-manifest sync from the orchestrator before this launcher starts.
 if [[ ! -f "$WORK_MANIFEST" ]]; then
   if [[ ! -f "$LIVE_MANIFEST" ]]; then
     echo "live manifest not found: $LIVE_MANIFEST (nothing to snapshot)" >&2
@@ -192,15 +192,15 @@ COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
 # into its own artifact without fighting systemd-run's StandardOutput
 # property. stderr still folds into the shared log.
 #
-# PYTHONPATH puts the synced work-dir package before the stale VPS checkout.
-# The driver then imports the exact enrichment code deployed by the Mac-side
+# PYTHONPATH puts the synced work-dir package before the stale runner checkout.
+# The driver then imports the exact enrichment code deployed by the orchestrating side's
 # wrapper, while $REPO remains available for its hydrated data files and venv.
 # systemd-run --user starts units with a fresh environment (it does not
 # inherit the launching shell's exports), so this must be set inside the
 # wrapped command, not via `export` before systemd-run.
 run_cmd() {
   printf '%q ' "$RUNNER_PYTHON" "$DRIVER" "${COMMON_ARGS[@]}"
-  # Bash <4.4 (e.g. macOS's stock /bin/bash 3.2) throws "unbound variable"
+  # Bash <4.4 (e.g. a stock bash 3.2) throws "unbound variable"
   # on "${arr[@]}" for a zero-element array under `set -u` — guard rather
   # than rely on the expansion, in case this script is ever invoked there.
   if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then

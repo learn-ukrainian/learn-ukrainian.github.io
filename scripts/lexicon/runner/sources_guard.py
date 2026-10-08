@@ -1,6 +1,6 @@
 """Hard guard: network workers cannot open ``sources.db`` (#5230 PR3).
 
-Spec §Phase 5: the VPS runner cannot construct or open sources.db. This module
+Spec §Phase 5: the runner cannot construct or open sources.db. This module
 provides a process-local flag plus path refusal used by network-side entry points.
 
 Hardening (PR #5365 review delta):

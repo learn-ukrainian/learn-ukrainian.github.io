@@ -4,7 +4,7 @@ Packets and return bundles are immutable ``.tar.zst`` objects named by SHA-256
 (spec §9). Writes are rsync-resumable: content is staged to a ``.partial`` file
 and atomically renamed only after the outer content hash verifies.
 
-Host-agnostic: no VPS provisioning. Compression uses the ``zstandard`` module
+Host-agnostic: no runner provisioning. Compression uses the ``zstandard`` module
 when installed, otherwise the ``zstd`` CLI (same framing either way).
 """
 

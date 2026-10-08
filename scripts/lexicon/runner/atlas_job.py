@@ -1,4 +1,4 @@
-"""Atlas VPS job protocol: plan → submit → status → close (always a result).
+"""Atlas runner job protocol: plan → submit → status → close (always a result).
 
 **systemd on the host is truth; the local registry is a journal/mirror.**
 

@@ -187,7 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--require-memory-cap",
         action="store_true",
-        help="Fail if OS cannot enforce MemoryPolicy (default on Linux VPS launch)",
+        help="Fail if OS cannot enforce MemoryPolicy (default on Linux runner launch)",
     )
     parser.add_argument(
         "--in-process",

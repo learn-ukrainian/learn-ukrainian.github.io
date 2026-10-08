@@ -430,7 +430,7 @@ def require_durable(mirror_dir: Path, *, max_age_hours: float = DEFAULT_MAX_AGE_
     """Fail closed unless ``mirror_dir`` holds a fresh, internally-consistent manifest.
 
     Returns the manifest on success. Callers about to clean up runner state
-    (VPS work-dir wipe, local cache purge) must call this first and abort on
+    (runner work-dir wipe, local cache purge) must call this first and abort on
     :class:`DurableMirrorError`.
     """
     if not math.isfinite(max_age_hours) or max_age_hours < 0:

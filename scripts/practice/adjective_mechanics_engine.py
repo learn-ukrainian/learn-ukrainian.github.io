@@ -1898,13 +1898,12 @@ def resolve_derivational_suffix_mutation_rule(stem_consonant_group: str) -> tupl
 
 
 def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking specified path, local tree, or primary checkout."""
+    """Finds vesum.db checking the specified path, then the local tree."""
     if specified and specified.exists():
         return specified
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-        Path.home() / "learn-ukrainian" / "data" / "vesum.db",
     ]
     for c in candidates:
         if c.exists():

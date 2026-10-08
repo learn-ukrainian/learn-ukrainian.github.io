@@ -36,7 +36,7 @@ phases (CEFR → relations → leaf chunks) with a resumable ledger.
 
 Bare invocation and `--help` never start a multi-hour run (#5393 class).
 
-## VPS recipe (run-20k, post-reduce)
+## Runner recipe (run-20k, post-reduce)
 
 Assumes fetch + reduce already completed under `$ATLAS_RUN_ROOT/run-20k`:
 
@@ -74,7 +74,7 @@ tail -f "$ATLAS_RUN_ROOT/run-20k/enrich.log" | grep --line-buffered '"event"'
 
 ## Durability (#5884)
 
-`$WORK_DIR` on the VPS has no backup of its own — a runner wipe or local
+`$WORK_DIR` on the runner host has no backup of its own — a runner wipe or local
 cleanup means a full ULIF refetch. After every fetch/reduce/enrich phase
 (and always before touching/cleaning `$WORK_DIR`), sync it into this repo's
 `data/` so the existing restic backup (`scripts/backup-data.sh`, #6014)
@@ -114,22 +114,22 @@ Full recipe, restore drill, and coordination with #6014's restic bus:
 Separate, much smaller job: fills sourced English translation cards for the
 Class-B residual — old-gate manifest entries with no learner English gloss
 (`scripts/lexicon/reenrich_thin_manifest_entries.py --target
-missing-translation`, scoped with `--slugs-file`). Runs on the same VPS
+missing-translation`, scoped with `--slugs-file`). Runs on the same runner host
 under the same memory discipline, in its own work-dir
 (`run-class-b-reenrich`) so it never collides with a live 20k run.
 
-**Do not run this on the Mac.** Orchestration is driven from a
-[layout-A](../../../AGENTS.md) worktree, execution happens on the VPS.
+**Do not run this on the orchestrating workstation.** Orchestration is driven from a
+[layout-A](../../../AGENTS.md) worktree, execution happens on the runner host.
 
-The VPS repo checkout at `$REPO` is treated as read-only for this job (it is
+The runner host's repo checkout at `$REPO` is treated as read-only for this job (it is
 routinely stale/dirty — large `data/` dirs are deliberately deleted there for
-disk headroom). The Mac-side orchestrator never runs `git pull`/`checkout`/
+disk headroom). The orchestrator never runs `git pull`/`checkout`/
 `reset` against it; it scp's the driver + launcher into the work-dir instead
 (the `--slugs-file` flag lands via #6398 — if that PR hasn't merged yet, this
 is the "scp the script from the PR branch" fallback).
 
 ```bash
-# From the Mac worktree — syncs residual slugs + driver + launcher, starts
+# From the orchestrating worktree — syncs residual slugs + driver + launcher, starts
 # the job detached under the default job memory caps, polls until done
 # (bounded, default 900s), then pulls manifest.json + reenrich.log +
 # reenrich-summary.json back into batch_state/class-b-reenrich-pulled/.

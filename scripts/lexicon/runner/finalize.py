@@ -75,7 +75,7 @@ def _safe_rss_bytes() -> int | None:
     Used to compute assembly *delta* (sample − baseline at finalize start), not
     as an absolute ceiling. Avoids the Darwin ctypes ``getrusage`` path in
     ``memory.current_rss_bytes`` (incorrect timeval layout → SIGSEGV under
-    load). Linux reports KiB; macOS/BSD report bytes.
+    load). Linux reports KiB; BSD-family systems report bytes.
     """
     import platform
     import resource
@@ -87,7 +87,7 @@ def _safe_rss_bytes() -> int | None:
         return None
     if rss <= 0:
         return None
-    # Linux reports KiB; macOS/BSD report bytes.
+    # Linux reports KiB; BSD-family systems report bytes.
     if platform.system() == "Linux":
         return rss * 1024
     return rss

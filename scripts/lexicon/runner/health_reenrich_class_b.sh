@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Thin remote health probe for the #6369 Class-B re-enrich job. Read-only:
-# never syncs, launches, or mutates anything on the VPS (mirrors
+# never syncs, launches, or mutates anything on the runner host (mirrors
 # health_20k_runner.sh's fail-closed reporting shape).
 #
 # Required env:
