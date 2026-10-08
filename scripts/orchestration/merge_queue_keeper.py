@@ -427,12 +427,14 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if drop_key in previous.get("requeued", {}):
+        return "requeue-spent"
+    if drop_key in previous.get("undiagnosed", {}):
+        return "requeue-unknown"
     if drops < 1:
         return None
     if grants is None:
         return "requeue-pending"
-    if drop_key in previous.get("requeued", {}):
-        return "requeue-spent" if drops >= 2 else None
     decision = grants.get(drop_key, {}).get("decision")
     if decision == "grant":
         return None
@@ -500,6 +502,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("drops"), dict)
         or not isinstance(data.get("approved", {}), dict)
         or not isinstance(data.get("requeued", {}), dict)
+        or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
@@ -644,14 +647,21 @@ def run(
         detail = ""
         failed_jobs: list[str] = []
         if dropped:
+            dropped_head = previous["queued"][key]
+            previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
+        else:
+            dropped_head = head
+        prior_drop_key = f"{number}:{dropped_head}"
+        if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs = _drop_detail(gh, number, head, previous.get("observed", ""))
+                detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
-                    dropped_head = previous["queued"][key]
-                    prior_drop_key = f"{number}:{dropped_head}"
+                    previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
                     if dropped_head == head:
                         drops = previous["drops"][drop_key]
+                else:
+                    detail = " Queue removal diagnosis unknown."
             except KeeperError:
                 detail = " Queue removal diagnosis unknown."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
@@ -804,7 +814,7 @@ def run(
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("requeued", "squash_revoked"):
+        for name in ("requeued", "squash_revoked", "undiagnosed"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers

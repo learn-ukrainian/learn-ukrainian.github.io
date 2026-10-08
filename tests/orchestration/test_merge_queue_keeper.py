@@ -973,6 +973,73 @@ def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.M
     assert "reason=requeue-spent" in lines[0]
 
 
+@pytest.mark.parametrize("drops", [0, 1, 2])
+@pytest.mark.parametrize("configured", [False, True])
+def test_used_grant_holds_even_without_another_recorded_drop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drops: int, configured: bool
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path, drops={f"42:{HEAD_A}": drops}, requeued={f"42:{HEAD_A}": "used"})
+    fake = FakeGitHub()
+    if configured:
+        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    else:
+        lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=requeue-spent" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("diagnosis", ["KeeperError", "empty-timeline"])
+@pytest.mark.parametrize("granted", [False, True])
+@pytest.mark.parametrize("apply", [False, True])
+def test_undiagnosed_removal_holds_unchanged_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, diagnosis: str, granted: bool, apply: bool
+) -> None:
+    path = tmp_path / "state.json"
+    since = "2026-09-23T00:00:00Z"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": since}))
+    fake = FakeGitHub()
+    if diagnosis == "KeeperError":
+
+        def unavailable(number: int) -> list[dict[str, Any]]:
+            raise keeper.KeeperError("timeline unavailable")
+
+        monkeypatch.setattr(fake, "timeline", unavailable)
+    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}} if granted else {})
+    lines, failed = gated(fake, path, monkeypatch, gate, apply=apply)
+    assert not failed and "reason=requeue-unknown" in lines[0]
+    assert "enqueue" not in mutations(fake)
+    if not apply:
+        assert mutations(fake) == []
+        assert json.loads(path.read_text())["queued"] == {"42": HEAD_A}
+        return
+
+    assert json.loads(path.read_text())["undiagnosed"][f"42:{HEAD_A}"] == since
+    again = FakeGitHub()
+    lines, failed = gated(again, path, monkeypatch, gate)
+    assert not failed and "reason=requeue-unknown" in lines[0]
+    assert "enqueue" not in mutations(again)
+
+    # A later diagnosis uses the original observation window and restores the normal grant gate.
+    diagnosed = FakeGitHub()
+    diagnosed.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    lines, failed = gated(diagnosed, path, monkeypatch, gate)
+    assert not failed
+    assert ("enqueue" in mutations(diagnosed)) is granted
+    if granted:
+        assert mutations(diagnosed) == ["enqueue"]
+    assert f"42:{HEAD_A}" not in json.loads(path.read_text())["undiagnosed"]
+
+
+def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+    fake = FakeGitHub(pr(headRefOid=HEAD_B))
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
 def test_gate_denial_holds_and_comments_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = tmp_path / "state.json"
     _dropped_state(path)
