@@ -42,6 +42,7 @@ from safetensors import safe_open
 from scipy.stats import beta
 
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import refuse_quarantined, resolve_open_model_path
 
 try:
@@ -139,10 +140,13 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
 
+_PRIVATE_HOME_RE = re.compile(home_dir_pattern(load_needles()))
+
+
 def validate_no_private_host_paths(data: Any) -> None:
     """Recursively verify that no private host paths leak into datasets or receipts."""
     forbidden_patterns = [
-        re.compile(r"/home/ops\b"),
+        _PRIVATE_HOME_RE,
         re.compile(r"/Users/\w+"),
         re.compile(r"/var/tmp/lu/"),
         re.compile(r"\b192\.168\.\d+\.\d+\b"),

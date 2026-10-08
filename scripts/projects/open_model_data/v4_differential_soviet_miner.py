@@ -27,6 +27,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
@@ -65,7 +66,9 @@ RECEIPT_SCHEMA = resolve_open_model_path(
 TOTAL_SUM11_RISK_POOL = 7152
 
 # Security regex: forbid private developer environments in public artifacts
-PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
+PRIVATE_HOST_RE = re.compile(
+    rf"(?:{home_dir_pattern(load_needles())}|/Users/|[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}})"
+)
 
 
 class R2ULookupStatus(enum.StrEnum):

@@ -33,6 +33,7 @@ import numpy as np
 
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import Needles, load_needles, run_user_alias_pattern
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
@@ -83,14 +84,22 @@ DIGIT_RUN_RE = re.compile(r"(?:\b\d+\b\s+){3,}\b\d+\b")
 REPEATED_WORD_RE = re.compile(r"\b([А-Яа-яІіЇїЄєҐґ]{2,})\s+\1\b", re.IGNORECASE)
 FIGURE_CAPTION_RE = re.compile(r"\b(?:Рис|Мал|Табл)\.\s*$")
 ISOLATED_MULT_RE = re.compile(r"\b[хx]\b")
-_HOME_ROOT = "/home/"
-_OPS_USER = "ops"
-SSH_OR_HOST_RE = re.compile(
-    rf"{re.escape(_HOME_ROOT + _OPS_USER)}|{re.escape(_HOME_ROOT)}[A-Za-z0-9_.-]+|"
-    r"/Users/[A-Za-z0-9_.-]+|"
-    r"\bHost\s+" + _OPS_USER + r"\b|" + _OPS_USER + r"@|[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
-    re.IGNORECASE,
-)
+
+
+def ssh_or_host_re(needles: Needles) -> re.Pattern[str]:
+    """Home paths, SSH ``<user>@<host>:`` remotes, and the deployment's run-user aliases."""
+    parts = [
+        r"(?:/home|/Users)/[A-Za-z0-9_.-]+",
+        *(re.escape(home) for home in needles.home_dirs),
+        r"[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
+    ]
+    alias = run_user_alias_pattern(needles)
+    if alias:
+        parts.append(alias)
+    return re.compile("|".join(parts), re.IGNORECASE)
+
+
+SSH_OR_HOST_RE = ssh_or_host_re(load_needles())
 
 FUNCTION_WORDS: frozenset[str] = frozenset(
     {

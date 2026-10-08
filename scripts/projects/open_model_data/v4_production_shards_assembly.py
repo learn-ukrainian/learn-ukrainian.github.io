@@ -34,6 +34,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
@@ -111,7 +112,7 @@ DPO_SHARDS_COUNT = 6
 DPO_RECORDS_PER_SHARD = 500
 
 PRIVATE_HOST_RE = re.compile(
-    r"(?:/home/(?:ops|ubuntu)|/Users/|127\.0\.0\.1|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})"
+    rf"(?:{home_dir_pattern(load_needles())}|/Users/|127\.0\.0\.1|[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}})"
 )
 
 

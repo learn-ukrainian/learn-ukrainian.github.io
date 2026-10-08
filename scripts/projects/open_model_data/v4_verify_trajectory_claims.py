@@ -33,6 +33,7 @@ import jsonschema
 
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -77,7 +78,9 @@ DEFAULT_RECEIPT_OUTPUT = resolve_open_model_path(
     "data/projects/open_model_data/trajectories/cot_claim_verification_receipt.json"
 )
 
-PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
+PRIVATE_HOST_RE = re.compile(
+    rf"(?:{home_dir_pattern(load_needles())}|/Users/|[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}})"
+)
 ACUTE_RE = re.compile(r"[\u0301\u0300]")
 CLEAN_WORD_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
 R2U_CITATION_RE = re.compile(
