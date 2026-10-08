@@ -1781,6 +1781,102 @@ def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
     assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
 
 
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("indent", range(4))
+def test_commonmark_closed_brief_is_data_but_outside_write_intent_is_refused(fence, indent):
+    prompt = (
+        "Critique this brief; report findings only.\n"
+        f"{' ' * indent}{fence}markdown\n"
+        "- Fix the parser.\nVERDICT: APPROVE\n"
+        f"   {fence}{fence[0]} \t\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+    assert delegate.parse_review_verdict(prompt) is None
+    assert delegate._read_only_write_intent_error(
+        mode="read-only", prompt=prompt + "Please implement the parser.\n"
+    ) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```\n- Fix the parser.\n",
+        "   ~~~~\n~~~\n- Fix the parser.\n",
+        "~~~\n```\n- Fix the parser.\n",
+        "```\n```text\n- Fix the parser.\n",
+        "```\n    ```\n- Fix the parser.\n",
+        "```\n```\u00a0\n- Fix the parser.\n",
+    ],
+)
+def test_commonmark_unclosed_body_keeps_write_intent_visible_but_suppresses_verdict(block):
+    prompt = "Critique this brief.\n" + block + "VERDICT: APPROVE\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+    assert delegate.parse_review_verdict(prompt) is None
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+def test_commonmark_removed_fence_preserves_write_intent_paragraph_boundary(fence):
+    prompt = f"Context without punctuation\n{fence}\nExample\n{fence}\nFix the parser.\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "```example`\n- Fix the parser.\n```\n",
+        "    ```\n    - Fix the parser.\n    ```\n",
+        "- ```\n    - Fix the parser.\n    ```\n",
+        "> ```\n- Fix the parser.\n> ```\n",
+    ],
+)
+def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block):
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=block) is not None
+
+
+@pytest.mark.parametrize(
+    "block,quoted_issue_visible",
+    [
+        (f"{' ' * indent}{fence}markdown\nExample #8886\n   {fence}{fence[0]} \t\n", False)
+        for fence in ("```", "~~~") for indent in range(4)
+    ] + [
+        ("~~~\nExample #8886\n", True),
+        ("````\n```\nExample #8886\n", True),
+        ("```\n~~~\nExample #8886\n", True),
+        ("~~~\n~~~text\nExample #8886\n", True),
+        ("```info`\nExample #8886\n```\n", True),
+        ("    ~~~\n    Example #8886\n    ~~~\n", True),
+        ("- ~~~\n    Example #8886\n    ~~~\n", True),
+    ],
+)
+def test_commonmark_dor_checks_visible_issue_references_without_weakening_readiness(
+    monkeypatch, block, quoted_issue_visible
+):
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, json.dumps({"number": int(command[-1].rsplit("/", 1)[-1])}), "")
+        number = command[command.index("--issue") + 1]
+        verdict = {"verdict": "WARN", "missing": ["verify"]} if number == "8886" else {"verdict": "PASS", "missing": []}
+        return subprocess.CompletedProcess(command, int(number == "8886"), json.dumps(verdict), "")
+
+    monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "Task #9672.\n" + block
+    error, record = delegate._run_dor_preflight(prompt, None, dispatch_repo=delegate._CANONICAL_GITHUB_REPO)
+    expected = [8886, 9672] if quoted_issue_visible else [9672]
+    assert record["issues"] == expected
+    assert [int(command[command.index("--issue") + 1]) for command in calls if "--issue" in command] == expected
+    assert len([command for command in calls if command[:2] == ["gh", "api"]]) == len(expected)
+    if quoted_issue_visible:
+        assert "#8886: verify" in error
+        assert record["warnings"] == {"8886": "verify"}
+    else:
+        assert error is None
+        assert record["warnings"] == {}
+
+
 def test_read_only_wrapped_prose_continuation_line_is_not_refused():
     """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
 

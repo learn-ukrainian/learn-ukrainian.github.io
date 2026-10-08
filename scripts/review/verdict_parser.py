@@ -6,6 +6,7 @@ Extracted from dispatch's proven scanner; consumer decision policies stay local.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
@@ -72,6 +73,48 @@ def _closes_code_fence(line: str, opener: str) -> bool:
     return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
 
 
+def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
+    """Yield (start, exclusive end, closed) line spans using CommonMark §4.5.
+
+    https://spec.commonmark.org/0.31.2/#fenced-code-blocks
+    Only top-level fences with 0–3 leading spaces are recognized, preserving
+    the existing scanner's behavior for indented code and nested containers.
+    The explicit closed flag lets callers choose their unclosed-body policy.
+    """
+    open_fence: str | None = None
+    start = 0
+    for index, line in enumerate(lines):
+        if open_fence is not None:
+            if _closes_code_fence(line, open_fence):
+                yield start, index + 1, True
+                open_fence = None
+            continue
+        open_fence = _code_fence_opener(line)
+        if open_fence is not None:
+            start = index
+    if open_fence is not None:
+        yield start, len(lines), False
+
+
+def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
+    """Remove fenced spans, retaining unterminated bodies when requested.
+
+    Keep non-fenced text verbatim and leave a paragraph boundary where a block
+    was removed so adjacent prose cannot hide a subsequent write directive.
+    """
+    raw_lines = text.splitlines(keepends=True)
+    parts: list[str] = []
+    cursor = 0
+    for start, end, closed in _code_fence_spans(text.splitlines()):
+        if keep_unclosed and not closed:
+            continue
+        parts.extend(raw_lines[cursor:start])
+        parts.append("\n")
+        cursor = end
+    parts.extend(raw_lines[cursor:])
+    return "".join(parts)
+
+
 def recognized_verdicts(response: str) -> list[str]:
     """Return recognized verdict tokens in order, excluding code and examples.
 
@@ -79,15 +122,7 @@ def recognized_verdicts(response: str) -> list[str]:
     fence suppresses the rest of the response.
     """
     verdicts: list[str] = []
-    open_fence: str | None = None
-    for line in response.splitlines():
-        if open_fence is not None:
-            if _closes_code_fence(line, open_fence):
-                open_fence = None
-            continue
-        open_fence = _code_fence_opener(line)
-        if open_fence is not None:
-            continue
+    for line in _without_code_fences(response, keep_unclosed=False).splitlines():
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:
             verdicts.append(match.group(1).upper())
