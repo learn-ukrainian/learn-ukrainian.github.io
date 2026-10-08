@@ -1,4 +1,4 @@
-"""Frozen routing evidence for #9302 with the approved #9951 Cursor revision."""
+"""Frozen routing evidence with the approved #10016 review-capacity revision."""
 
 from __future__ import annotations
 
@@ -23,13 +23,65 @@ INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
 
+CAPACITY_FIXTURE = Path(__file__).parent / "fixtures"
+
+
+def approved_review_baseline(baseline):
+    """AC-01 updates reviewer receipts only; retain all other frozen surfaces."""
+    overlay = json.loads(gzip.decompress((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()))
+    assert set(overlay) == {"reviewer"}
+    return {**baseline, **overlay}
+
+
+REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
+
+
+def test_review_capacity_fixture_is_pinned_and_scope_bounded():
+    assert hashlib.sha256((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()).hexdigest() == (
+        "7446be4dfbedb928fa3760bdb508785cc82b95995fc09d4662a67d6a2c6b1b1a"
+    )
+
+    def original_receipt(value):
+        if isinstance(value, list):
+            return [original_receipt(row) for row in value]
+        if isinstance(value, dict):
+            return {
+                key: row[:1] + row[2:] if key == "selection_score" and row is not None else original_receipt(row)
+                for key, row in value.items()
+                if key != "capacity"
+            }
+        return value
+
+    before = BASELINE["reviewer"]
+    after = REVIEW_CAPACITY_BASELINE["reviewer"]
+    assert len(before) == len(after) == len(INPUTS["reviewer"]) == 1480
+    semantic_changes = selection_changes = 0
+    approved_labels = (
+        {"claude": "near_cap", "codex": "near_cap"},
+        {"agents": {"codex": {"health": {"healthy": True}, "status": "near_cap"}}, "diagnostics": {"stale": False}},
+        {"agents": {"codex": {"health": {"healthy": True}, "status": "hot"}}, "diagnostics": {"stale": True}},
+    )
+    for old, new, inputs in zip(before, after, INPUTS["reviewer"], strict=True):
+        if original_receipt(new) != old:
+            semantic_changes += 1
+            assert inputs["routing_snapshot"] in approved_labels
+        old_pick = (old["value"]["selected"] or {}).get("name")
+        new_pick = (new["value"]["selected"] or {}).get("name")
+        if old_pick != new_pick:
+            selection_changes += 1
+            assert inputs["routing_snapshot"] == approved_labels[0]
+            assert old_pick == "grok-4.7"
+            assert new_pick == ("claude-sonnet-5-5" if inputs["risk"] in {"low", "medium"} else "claude-opus-5-5")
+    assert (semantic_changes, selection_changes) == (24, 8)
+
+
 # Literal digests bind the #10005 host-CLI adapter argv revision; see SPEC.md.
 # no-cli bytes remain the #9996 Haiku merge revision.
 PINNED_DIGESTS = {
     "SHA256SUMS": "4aa193c0e4ff57e6e1b497ca260c6ce1a632817fb5766caeccb6c2afd561886c",
     "SPEC.md": "8a4f1083d8e732efca2d47d7752088663e62b211d3fd8cbb3b89a9ae14fb046d",
     "baseline.json.gz": "514d93440ebe7dc1d2a840a1c7356d70e26c2b34e9b68d5f1e94c734a4c02138",
-    "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
+    "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "0d28bb5a15f9f7734f4cec1e62951dd0e51e6c05c325c14445b14d4336a62459",
     "no-cli/baseline.json.gz": "4b7e5572b9417a3477843f64a480983d576a1d734ac27ae7a62597f2ef434ec4",
@@ -129,7 +181,7 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert actual.keys() == BASELINE.keys()
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
     for surface in BASELINE:
-        assert actual[surface] == BASELINE[surface], f"frozen surface differs: {surface}"
+        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
     assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
@@ -148,6 +200,36 @@ def test_capture_environment_controls_lookup_and_version_probes(tmp_path):
         assert invoke.returncode == 97
         assert invoke.stderr == "capture stub refuses provider execution\n"
     assert shutil.which("npx", path=env["PATH"]) is None
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatch, mocker, fail):
+    from scripts.fleet import credit_lane
+
+    policy_path = tmp_path / "policy.yaml"
+    policy_text = credit_lane.POLICY_PATH.read_text()
+    reader = mocker.Mock(wraps=credit_lane.load_policy)
+    monkeypatch.setattr(credit_lane, "load_policy", reader)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+
+    def surfaces(source, scratch, project_python):
+        policy = credit_lane.load_policy(policy_path)
+        assert credit_lane.load_policy(policy_path) is policy
+        if fail:
+            raise RuntimeError("capture failed")
+        return policy.near_cap_remaining_pct
+
+    monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
+    for calls, threshold in enumerate((11.0, 12.0), start=1):
+        policy_path.write_text(policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}"))
+        if fail:
+            with pytest.raises(RuntimeError, match="capture failed"):
+                CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable))
+        else:
+            assert CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable)) == threshold
+        assert reader.call_count == calls
+        reader.assert_called_with(policy_path)
+        assert credit_lane.load_policy is reader
 
 
 def test_capture_encodes_structures_without_reordering_arrays():
@@ -213,9 +295,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    for name in ("baseline.json.gz", "inputs.json", "occurrences.json.gz", "SHA256SUMS"):
+    for name in ("inputs.json", "occurrences.json.gz"):
         assert (output / name).read_bytes() == (expected / name).read_bytes(), name
+    for row in (output / "SHA256SUMS").read_text().splitlines():
+        digest, name = row.split()
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
+    original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
+    assert actual == approved_review_baseline(original)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

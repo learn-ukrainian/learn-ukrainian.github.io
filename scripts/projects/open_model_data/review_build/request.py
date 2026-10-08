@@ -35,7 +35,11 @@ def read_request(path: Path) -> tuple[bytes, dict]:
     require(request["ua_gec"].keys() <= {"root"}, "request_policy_key")
     require(
         "antonenko_receipts" not in request
-        or (isinstance(request["antonenko_receipts"], str) and bool(request["antonenko_receipts"].strip())),
+        or (
+            isinstance(request["antonenko_receipts"], str)
+            and bool(request["antonenko_receipts"].strip())
+            and Path(request["antonenko_receipts"]).is_absolute()
+        ),
         "request_locations",
     )
     require(isinstance(request["ua_gec"].get("root"), str) and bool(request["ua_gec"]["root"]), "request_locations")

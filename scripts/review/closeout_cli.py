@@ -22,10 +22,16 @@ from dataclasses import asdict
 from pathlib import Path
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.fleet import credit_lane
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
-from scripts.review.record_cf_verdict import BranchFactsError, collect_branch_review_facts
+from scripts.review.record_cf_verdict import (
+    BranchFactsError,
+    authorship_exclude_sha,
+    collect_branch_review_facts,
+    refuse_excluded_only_range,
+)
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.scope_baseline import (
     ScopeBaseline,
@@ -85,6 +91,7 @@ def _target_from_dict(data: object) -> ReviewTarget:
     non_test_loc = data.get("non_test_loc")
     clean_tree = data.get("clean_tree")
     description = data.get("description")
+    base_ref_name = data.get("base_ref_name")
     if mode not in {"local", "commit", "branch", "pr"}:
         raise CloseoutStateError("target_mode_invalid")
     if not all(
@@ -100,6 +107,8 @@ def _target_from_dict(data: object) -> ReviewTarget:
         raise CloseoutStateError("target_clean_tree_invalid")
     if not isinstance(description, str) or not description.strip():
         raise CloseoutStateError("target_description_invalid")
+    if base_ref_name is not None and (not isinstance(base_ref_name, str) or not base_ref_name.strip()):
+        raise CloseoutStateError("target_base_ref_invalid")
     return ReviewTarget(
         mode=mode,
         base_sha=base_sha,
@@ -108,6 +117,7 @@ def _target_from_dict(data: object) -> ReviewTarget:
         non_test_loc=non_test_loc,
         clean_tree=clean_tree,
         description=description,
+        base_ref_name=base_ref_name,
     )
 
 
@@ -153,12 +163,15 @@ def _cmd_target(args: argparse.Namespace) -> int:
         return 1
 
     state["target"] = asdict(target)
+    # PR mode has no --base. Keep the ref GitHub named, or a frozen target
+    # that later merges the default branch cannot exclude those authors.
+    stored_base = target.base_ref_name if args.mode == "pr" else args.base
     state["target_args"] = {
         "repo_root": str(Path(args.repo_root).resolve()),
         "mode": args.mode,
         "commit": args.commit,
         "branch": args.branch,
-        "base": args.base,
+        "base": stored_base,
         "pr": args.pr,
     }
     _save_state(args.state_file, state)
@@ -396,9 +409,21 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             )
         )
         return 1
-    routing_snapshot = None
     if args.routing_snapshot_file:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))
+        snapshot_source = "file"
+    else:
+        routing_snapshot = credit_lane.read_routing_budget(timeout=8.0)
+        snapshot_source = "live"
+    diagnostics = routing_snapshot.get("diagnostics") if isinstance(routing_snapshot, dict) else None
+    freshness, fallback_reason = credit_lane.snapshot_freshness(diagnostics)
+    if routing_snapshot is None:
+        fallback_reason = "live routing snapshot unavailable"
+    snapshot_receipt = {
+        "source": snapshot_source,
+        "freshness": freshness,
+        "fallback_reason": fallback_reason or None,
+    }
     state = _load_state(args.state_file)
     target = _target_from_dict(state["target"]) if state.get("target") is not None else None
     if args.review_profile == "code" and target is None and not args.owned_path:
@@ -425,6 +450,8 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             # same facts the verdict recorder accepts (#9739). --author-model is
             # added to them, never substituted for them.
             try:
+                raw_base = target_args.get("base")
+                exclude = authorship_exclude_sha(repo_root, base_branch=raw_base if isinstance(raw_base, str) else None)
                 facts = collect_branch_review_facts(
                     repository=args.repository or _checkout_repository(repo_root),
                     repo_root=repo_root,
@@ -434,7 +461,9 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
                     owned_paths=tuple(args.owned_path or []),
                     subject_seats=tuple(args.subject_seat or []),
                     subject_families=tuple(args.subject_family or []),
+                    authorship_exclude_sha=exclude,
                 )
+                refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
             except (BranchFactsError, CloseoutStateError) as exc:
                 payload = {"selected": None, "fail_closed_reason": f"branch review facts unavailable: {exc}"}
                 state["resolved_reviewer"] = payload
@@ -466,6 +495,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     resolution = resolve_reviewer(inputs)
     payload = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
+        "routing_snapshot": snapshot_receipt,
         "branch_facts": facts.receipt() if facts is not None else None,
         "quorum": [asdict(q) for q in resolution.quorum],
         "quorum_rule": resolution.quorum_rule,
@@ -834,7 +864,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--routing-snapshot-file",
         help=(
             "JSON file of route health (flat map or /api/state/routing-budget). "
-            "Default: unset (health is fail-open). Example: /tmp/routing-snapshot.json"
+            "Default: one bounded live snapshot; a file overrides it. Example: routing-snapshot.json"
         ),
     )
     p_reviewer.add_argument(

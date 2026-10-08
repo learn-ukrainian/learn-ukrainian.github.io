@@ -668,19 +668,17 @@ def test_catalog_disallowed_route_is_refused_before_any_provider_call(snapshot):
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
 def test_resolver_agrees_with_owner_route_facts(snapshot):
-    _case, budget = snapshot
-    facts = owner(budget, model=OPENAI_FRONTIER.concrete_model)
+    case, budget = snapshot
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
     )
-    if facts.capacity == credit_lane.CAPACITY_AVOID:
-        assert result.status == "excluded", result.reason
-    elif facts.capacity == credit_lane.CAPACITY_UNKNOWN_STALE:
-        # Legitimate stricter restriction (A2): the resolver's near-cap exclusion of an uncovered
-        # deficit is unchanged on a stale snapshot.
-        assert result.status == "excluded" and "near" in str(result.reason)
-    elif facts.capacity == credit_lane.CAPACITY_VERIFIED:
-        assert result.status != "excluded", result.reason
+    # AC-01 separates review eligibility from writer pace forecasts. These
+    # fixtures retain real window exhaustion, runtime and contradicted fresh credit gates.
+    excludes = case.name in {
+        "f1_conflicting_windows", "f3_hidden_pace_runtime_blocked",
+        "f6_relief_raw_balance_zero", "f6_relief_runtime_blocked",
+    }
+    assert (result.status == "excluded") is excludes, result.reason
 
 
 @pytest.mark.parametrize("snapshot", CASE_PARAMS, indirect=True)
@@ -866,8 +864,12 @@ def test_contradicted_credit_relief_is_avoided_by_every_consumer(snapshot, monke
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
     )
-    assert result.status == "excluded", result.reason
-    assert result.credit is not None and result.credit["state"] == facts.credit["state"]
+    if case.mutate == "probe_relabelled_stale_after_publication":
+        assert result.status == "eligible" and result.credit is None
+    else:
+        assert result.status == "excluded", result.reason
+        if result.credit is not None:
+            assert result.credit["state"] == facts.credit["state"]
 
     passed, assessment = coordinator._health_assessment(budget, coordinator.load_config()["health"], now=NOW)
     group = next(g for g in assessment["groups"] if g["id"] == "curriculum-build")
@@ -936,7 +938,7 @@ def test_weekly_pace_hot_label_is_decided_by_the_owner_for_every_consumer(snapsh
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
     )
-    assert (result.status != "excluded") is clears, result.reason
+    assert result.status == "eligible", result.reason
 
     # The wave reads the owner's status; counting it is the wave's own acceptable-statuses rule
     # (the shipped config accepts ``hot``, a legitimate wave-local restriction).
@@ -981,7 +983,7 @@ def test_weekly_pace_hot_label_without_verified_freshness_stays_hot_for_every_co
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
     )
-    assert result.status == "excluded", result.reason
+    assert result.status == "eligible", result.reason
 
     config = coordinator.load_config()["health"]
     _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)
@@ -1033,7 +1035,7 @@ def test_reset_covered_deficit_is_decided_by_the_owner_for_every_consumer(snapsh
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", routing_snapshot=budget)
     )
-    assert (result.status != "excluded") is covered, result.reason
+    assert result.status == "eligible", result.reason
 
     config = coordinator.load_config()["health"]
     _passed, assessment = coordinator._health_assessment(budget, config, now=NOW)

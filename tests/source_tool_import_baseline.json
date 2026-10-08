@@ -1076,36 +1076,6 @@
       "failure_class": "import_error"
     },
     {
-      "path": "scripts/session_canary/codex_lane.py",
-      "form": "file",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/session_canary/codex_lane.py",
-      "form": "module",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/session_canary/gemini_lane.py",
-      "form": "file",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/session_canary/gemini_lane.py",
-      "form": "module",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/session_canary/glm_lane.py",
-      "form": "file",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
-      "path": "scripts/session_canary/glm_lane.py",
-      "form": "module",
-      "failure_class": "environment_blocked_subprocess"
-    },
-    {
       "path": "scripts/session_supervisor/__init__.py",
       "form": "file",
       "failure_class": "module_not_found"

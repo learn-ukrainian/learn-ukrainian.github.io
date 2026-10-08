@@ -22,6 +22,11 @@ from scripts.review.target_resolution import TargetResolutionError
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+
+
 def _git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30)
 
