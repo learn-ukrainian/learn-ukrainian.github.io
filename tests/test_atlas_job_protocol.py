@@ -646,7 +646,9 @@ def test_submit_refuses_when_host_free_disk_below_floor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
 ) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    # 1 GiB free disk is below the 5 GiB default floor.
+    for name in ("ATLAS_MIN_FREE_DISK_BYTES", "ATLAS_MIN_FREE_DISK_GIB", "ATLAS_MIN_FREE_DISK_GB"):
+        monkeypatch.delenv(name, raising=False)
+    # 1 GiB free disk is below the configured floor.
     _isolate_host.free_disk_bytes_value = 1 * 1024 * 1024 * 1024
 
     plan = _plan(id="low-disk-job")
