@@ -953,6 +953,49 @@ def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_pa
     assert squash != head
 
 
+def test_resolve_reviewer_refuses_an_empty_review_range(tmp_path, monkeypatch):
+    """A branch whose frozen base and head are the same commit has nothing of its own to review."""
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == saved["target"]["head_sha"]
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+        "--risk",
+        "medium",
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "empty review range" in payload["fail_closed_reason"]
+    assert "no commits of its own" in payload["fail_closed_reason"]
+
+
 def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_main(tmp_path, monkeypatch):
     from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
 

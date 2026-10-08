@@ -759,12 +759,17 @@ def refuse_excluded_only_range(facts: BranchReviewFacts, *, repo_root: Path, exc
 
     Fact collection stays quiet. Dispatch admits a known incoming writer onto
     a branch that has not authored a commit yet, including after a clean merge
-    of the excluded tip. The recorder and the resolver still refuse that
-    range: every remaining commit is reachable from the excluded tip, or the
-    only commits left are proven clean merges of it. The reason is the one an
-    unattributable commit already produces.
+    of the excluded tip, and a rebase plan still enumerates that range. The
+    recorder and the resolver still refuse it: the frozen base and head are
+    the same commit, every remaining commit is reachable from the excluded
+    tip, or the only commits left are proven clean merges of it.
     """
-    if exclude_sha is None or facts.existing_families or facts.base_tip_sha == facts.head_sha:
+    if facts.base_tip_sha == facts.head_sha:
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "empty review range: the branch has no commits of its own",
+        )
+    if exclude_sha is None or facts.existing_families:
         return
     if any(commit.family is not None for commit in facts.commits):
         return
