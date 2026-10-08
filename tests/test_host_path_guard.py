@@ -35,7 +35,7 @@ def test_generic_mode_ignores_non_home_text(text: str) -> None:
     assert guard.host_path_lines(text, needles=GENERIC) == []
 
 
-def test_generic_mode_matches_after_an_escape_sequence() -> None:
+def test_generic_mode_extra_samples() -> None:
     assert guard.host_path_lines(f'"first\\n{guard.FIXTURE_HOME}/x"', needles=GENERIC) == [1]
 
 

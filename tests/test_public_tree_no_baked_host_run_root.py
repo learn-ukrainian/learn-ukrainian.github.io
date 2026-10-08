@@ -92,8 +92,6 @@ def test_public_tree_has_no_baked_host_checkout_or_venv() -> None:
         except (UnicodeDecodeError, OSError):
             continue
         rel = str(path.relative_to(ROOT))
-        # macOS-style checkouts only for now; checkouts under other home roots
-        # join this scan once the remaining public examples are generalised.
         lines = checkout_path_lines(text, home_root="/Users")
         if lines:
             leaked.append(f"{rel}: checkout under a home directory at line(s) {', '.join(map(str, lines))}")
