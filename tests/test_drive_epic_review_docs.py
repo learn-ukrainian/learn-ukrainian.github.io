@@ -410,3 +410,188 @@ raise SystemExit(args.func(args))
         assert json.loads(result.stdout)["status"] == "timeout"
     elif scenario in ("stale_nonce", "nonce_drift_after_expiry"):
         assert "stale_run_nonce" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "scenario,expected_rc,recovery_waits",
+    [
+        ("running", 0, 2),
+        ("spawning", 0, 2),
+        ("done", 0, 1),
+        ("drift_after_lookup", 1, 1),
+        ("drift_after_expiry", 1, 1),
+        ("missing_record", 1, 0),
+        ("empty_nonce", 1, 0),
+        ("non_string_nonce", 1, 0),
+        ("wrong_task_id", 1, 0),
+    ],
+)
+def test_ask_expiry_lookup_and_documented_same_task_continuation(
+    monkeypatch, tmp_path, scenario, expected_rc, recovery_waits
+):
+    """Real ask parsing/expiry → documented status lookup → nonce-bound wait, offline."""
+    from contextlib import redirect_stderr, redirect_stdout
+
+    task_path = tmp_path / "review-fixture.json"
+    call_file = tmp_path / "calls.json"
+    calls = []
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path)
+    # Test-owned records have no native worker; only its liveness boundary is replaced.
+    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_a, **_kw: None)
+    clock = [0.0]
+    monkeypatch.setattr(delegate.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
+
+    @contextmanager
+    def prompt_directory():
+        yield tmp_path
+
+    monkeypatch.setattr(wrappers, "_prompt_directory", prompt_directory)
+
+    def native_boundary(command, **kwargs):
+        assert "scripts/delegate.py" in command
+        args = delegate.build_parser().parse_args(command[2:])
+        calls.append(command[2:])
+        if args.command == "dispatch":
+            task_path.write_text(
+                json.dumps({"task_id": args.task_id, "run_nonce": NONCE, "status": "running"}),
+                encoding="utf-8",
+            )
+            return subprocess.CompletedProcess(command, 0, f"{args.task_id}\n{NONCE}\n", "")
+        assert args.command == "wait" and args.run_nonce is None
+        monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, args.timeout + 1))
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            rc = args.func(args)
+        assert rc == 124 and stdout.getvalue() == ""
+        assert json.loads(stderr.getvalue())["last_known_status"] == "running"
+        return subprocess.CompletedProcess(command, rc, stdout.getvalue(), stderr.getvalue())
+
+    observed = []
+    real_ask = wrappers.run_ask_review_dispatch
+
+    def observe_ask(*args, **kwargs):
+        result = real_ask(*args, **kwargs)
+        observed.append(result)
+        return result
+
+    # Limit these patches to the initial synchronous ask; shell recovery runs real subprocesses.
+    with monkeypatch.context() as initial:
+        initial.setattr(wrappers.subprocess, "run", native_boundary)
+        initial.setattr(wrappers, "run_ask_review_dispatch", observe_ask)
+        initial.setattr(_cli, "require_core_or_exit", lambda _name: None)
+        initial.setattr(_cli.sys, "stdin", io.StringIO("Review the pushed branch."))
+        args = _cli._build_parser().parse_args(
+            ["ask-codex", "-", "--review", "--task-id", "review-fixture", "--branch", "codex/author"]
+        )
+        with pytest.raises(SystemExit) as expiry:
+            _cli._handle_acp_compat(args, "codex")
+    signal = "ask-codex review dispatch did not complete: status=None"
+    assert expiry.value.code == signal  # ask exposes a failure message, not wait's rc 124
+    assert observed == [{"response": "", "ok": False, "stderr_excerpt": signal}]
+    assert json.loads(task_path.read_text())["run_nonce"] == NONCE
+    assert [command[0] for command in calls] == ["dispatch", "wait"]
+    call_file.write_text(json.dumps(calls), encoding="utf-8")
+
+    state = json.loads(task_path.read_text())
+    if scenario in ("spawning", "done"):
+        state["status"] = scenario
+    elif scenario == "empty_nonce":
+        state["run_nonce"] = ""
+    elif scenario == "non_string_nonce":
+        state["run_nonce"] = 7
+    elif scenario == "wrong_task_id":
+        state["task_id"] = "unrelated-task"
+    task_path.write_text(json.dumps(state), encoding="utf-8")
+    if scenario == "missing_record":
+        task_path.rename(tmp_path / "unavailable.json")
+
+    helper = tmp_path / "recovery_boundary.py"
+    helper.write_text(
+        """import json, os, subprocess, sys
+from pathlib import Path
+sys.path.insert(0, os.environ['RECIPE_REPO'])
+from scripts import delegate
+argv = sys.argv[1:]
+if argv[0] == '-c':
+    raise SystemExit(subprocess.run([sys.executable, *argv], check=False).returncode)
+assert argv.pop(0) == 'scripts/delegate.py'
+args = delegate.build_parser().parse_args(argv)
+assert args.command in ('status', 'wait'), 'recovery must never dispatch'
+root = Path(os.environ['RECIPE_ROOT'])
+path = root / 'review-fixture.json'
+call_file = root / 'calls.json'
+calls = json.loads(call_file.read_text())
+calls.append(argv)
+call_file.write_text(json.dumps(calls))
+delegate.tasks_dir = lambda: root
+# Offline native worker liveness boundary only; record reading/status/wait stay real.
+delegate._heal_dead_task = lambda *a, **kw: None
+scenario = os.environ['RECIPE_SCENARIO']
+waits = sum(command[0] == 'wait' for command in calls) - 1
+if args.command == 'wait':
+    assert args.task_id == 'review-fixture' and args.run_nonce == 'run-nonce-fixture'
+    state = json.loads(path.read_text())
+    if scenario == 'drift_after_lookup':
+        state['run_nonce'] = 'another-run'
+    elif waits > 1:
+        state['status'] = 'done'  # settlement only, never an approval/reply fixture
+    path.write_text(json.dumps(state))
+elif args.run_nonce is not None and scenario == 'drift_after_expiry':
+    state = json.loads(path.read_text())
+    state['run_nonce'] = 'another-run'
+    path.write_text(json.dumps(state))
+clock = [0.0]
+delegate.time.monotonic = lambda: clock[0]
+delegate.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
+raise SystemExit(args.func(args))
+""",
+        encoding="utf-8",
+    )
+    executable = tmp_path / "fixture-python"
+    executable.write_text(
+        f'#!/bin/bash\nexec {shlex.quote(sys.executable)} {shlex.quote(str(helper))} "$@"\n',
+        encoding="utf-8",
+    )
+    executable.chmod(0o700)
+    blocks = re.findall(r"^```bash\n(.*?)^```", REFERENCE.read_text(), re.M | re.S)
+    launch = next(block for block in blocks if "dispatch_result=" in block)
+    lookup = next(block for block in blocks if 'status "$REVIEW_TASK")' in block)
+    # Execute the documented initialization, recovery fence and existing loop verbatim;
+    # substitute only the interpreter boundary, never initialize REVIEW_NONCE in the test.
+    initialization = launch.split("# If requires_silence_timeout", 1)[0]
+    initialization = initialization.replace('PY="$PRIMARY_REPO/.venv/bin/python"', 'PY="$RECIPE_PY"')
+    loop = "while true; do" + launch.split("while true; do", 1)[1]
+    env = {key: value for key, value in os.environ.items() if key != "REVIEW_NONCE"}
+    result = subprocess.run(
+        ["bash", "-c", initialization + lookup + loop],
+        cwd=REFERENCE.parents[5],
+        capture_output=True,
+        text=True,
+        timeout=45,
+        env={
+            **env,
+            "RECIPE_PY": str(executable),
+            "RECIPE_REPO": str(REFERENCE.parents[5]),
+            "RECIPE_ROOT": str(tmp_path),
+            "RECIPE_SCENARIO": scenario,
+            "REVIEW_TASK": "review-fixture",
+        },
+    )
+    assert result.returncode == expected_rc, result.stderr
+    calls = json.loads(call_file.read_text())
+    assert sum(command[0] == "dispatch" for command in calls) == 1
+    assert calls[2] == ["status", "review-fixture"]  # live lookup before any continuation
+    waits = [command for command in calls[2:] if command[0] == "wait"]
+    assert len(waits) == recovery_waits
+    assert all(command[command.index("--run-nonce") + 1] == NONCE for command in waits)
+    if expected_rc == 0:
+        settled = json.loads(result.stdout)
+        assert settled == {"task_id": "review-fixture", "run_nonce": NONCE, "status": "done"}
+    elif scenario.startswith("drift_"):
+        assert "stale_run_nonce" in result.stderr
+        assert json.loads(task_path.read_text())["run_nonce"] == "another-run"
+    elif scenario == "missing_record":
+        assert result.stdout == ""
+    else:
+        assert "invalid task identity/nonce" in result.stderr

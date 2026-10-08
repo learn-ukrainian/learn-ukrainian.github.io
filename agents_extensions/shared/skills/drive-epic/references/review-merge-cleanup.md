@@ -33,26 +33,20 @@ in §7 is the same.
 
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
 `review-pr` / sealed `lu-review-*` / `shielded-reviews` clones. A review
-`ask-<lane> --review` / `--type review` uses a toolful native CLI, but that
-wrapper runs dispatch and wait synchronously; it does not let the driver
-continue while the review runs. Its legacy `--background` flag is rejected.
-ACP remains for ordinary, non-review `ask-*` only. For a review that can
-settle separately, use the existing detached native dispatch and wait path
-below. Ask stdout is reply text, not SHA evidence. Code/infra delegate
-admission resolves the existing remote-tracking target and sets `pinned_head`
-before routing; checkout preparation fetches and refuses a different head.
-After settlement compare task `pinned_head` and actual `worktree_base_sha`
-with the current pushed branch tip. The recorder uses `worktree_base_sha`.
-The synchronous ask wait omits `--run-nonce`; after client expiry recover the
-same task's nonce and resume at the wait loop below, never rerun the launch block.
+`ask-<lane> --review` / `--type review` uses a toolful native CLI with synchronous
+dispatch/wait; the driver cannot continue meanwhile. Its legacy `--background` flag is rejected.
+ACP is only for ordinary non-review `ask-*`; use detached dispatch/wait below to settle separately.
+Ask stdout is reply text, not SHA evidence. Code/infra admission resolves the existing
+remote-tracking target and sets `pinned_head` before routing; checkout preparation fetches
+and refuses a different head. After settlement compare task `pinned_head` and actual
+`worktree_base_sha` with the current pushed branch tip; the recorder uses `worktree_base_sha`.
 
-Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author
-model, and risk. `requires_silence_timeout` is boolean; if true, use documented
-seat/runtime seconds, pass `--silence-timeout <seconds>` explicitly (default
-3600), and confirm `silence_timeout` in the task record. Never infer duration
-or reuse stale routing. `REVIEW_BRIEF` names branch/SHA and requests toolful
-code/infra review with findings under `_dispatch_wrappers.py` and
-`schemas/code-review-findings.v1.schema.json`.
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk.
+`requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
+pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
+in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
+and requests toolful code/infra review with findings under `_dispatch_wrappers.py`
+and `schemas/code-review-findings.v1.schema.json`.
 
 ```bash
 set -euo pipefail
@@ -71,7 +65,6 @@ dispatch_result="$("$PY" scripts/delegate.py dispatch \
 mapfile -t dispatch_lines <<<"$dispatch_result"
 REVIEW_TASK="${dispatch_lines[0]}"
 REVIEW_NONCE="${dispatch_lines[1]}"
-
 # Arm in a yielding tool session. Re-arm ONLY wait on client expiry.
 while true; do
   wait_rc=0
@@ -90,13 +83,25 @@ while true; do
 done
 ```
 
-Keep task ID and nonce. Exit 124 with status `running`/`spawning` means wait
-expired (stderr diagnostic, no stdout record); re-arm that wait, never dispatch
-again. The status check rejects nonce drift; `done` racing expiry gets one
-settlement read. Only terminal task-record `timeout` (stdout record) is settled
-failure. After settlement require `done`, matching
-identity, attested model/family, unchanged branch/SHA, and a complete reply;
-failure, missing/malformed evidence, unknown identity, or moved head is not approval.
+**Synchronous ask expiry:** its wait omits `--run-nonce`; wait rc 124 with empty stdout
+becomes wrapper `ok=false`, empty `response`, and `ask-<lane> review dispatch did not complete: status=None`.
+Ask itself does not expose rc 124 or the dispatch nonce. Set `REVIEW_TASK` to the original ask's task ID
+and `PRIMARY_REPO`/`PY` as above; query the live task record via `delegate.py status`:
+
+```bash
+set -euo pipefail
+state="$("$PY" scripts/delegate.py status "$REVIEW_TASK")"
+REVIEW_NONCE="$("$PY" -c 'import json,sys; s=json.load(sys.stdin); n=s.get("run_nonce"); (s.get("task_id")==sys.argv[1] and isinstance(n,str) and n.strip()) or sys.exit("invalid task identity/nonce"); print(n)' "$REVIEW_TASK" <<<"$state")"
+```
+
+Resume **only** the `while true` wait loop above, even for `done`; never rerun dispatch.
+Missing/invalid lookup or nonce drift refuses continuation, not a new review.
+
+Keep task ID and nonce. Wait rc 124 with `running`/`spawning` (stderr diagnostic, no stdout record)
+means client expiry: re-arm only wait. Status rejects nonce drift; `done` racing expiry gets one settlement read.
+Only terminal task-record `timeout` (stdout record) is settled failure. Settlement requires `done`, matching
+identity, attested model/family, unchanged branch/SHA, and complete reply; failure, missing/malformed
+evidence, unknown identity, or moved head is not approval.
 
 Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then bind it:
 
