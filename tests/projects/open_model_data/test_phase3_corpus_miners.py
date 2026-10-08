@@ -47,6 +47,7 @@ from scripts.projects.open_model_data.v4_mine_uagec_calques import (
     resolve_uagec_sentence_context,
 )
 from scripts.storage.paths import artifact_path
+from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 MINED_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined"
@@ -503,7 +504,7 @@ def test_f4_verify_only_hashes_and_schema_reject_unconstrained_filenames(manifes
     """F4/F5: --verify-only is hash+record contract, not line-count; absolute paths fail."""
     result = verify_mined_manifest(MINED_DIR, MANIFEST_SCHEMA_PATH)
     assert result["ok"] is True
-    assert not is_constrained_mined_filename("/home/ops/corpus_contrast_tables.jsonl")
+    assert not is_constrained_mined_filename(f"{FIXTURE_HOME}/corpus_contrast_tables.jsonl")
     assert not is_constrained_mined_filename("nested/uagec_mined_calques.jsonl")
     assert is_constrained_mined_filename("uagec_mined_calques.jsonl")
 

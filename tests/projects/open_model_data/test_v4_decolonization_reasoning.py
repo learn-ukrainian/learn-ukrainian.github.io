@@ -25,7 +25,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     strip_accents,
     synthesize_trajectory_and_dpo,
 )
-from tests._host_path_guard import host_path_hits
+from tests._host_path_guard import FIXTURE_HOME, host_path_hits
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
@@ -216,7 +216,7 @@ def test_scan_generated_files_detects_violations(tmp_path: Path) -> None:
 
     # Leak test 1: Private host path
     leak_path_file = tmp_path / "leak_path.jsonl"
-    leak_path_file.write_text('{"path": "/home/ops/secret/data.txt"}\n', encoding="utf-8")
+    leak_path_file.write_text(f'{{"path": "{FIXTURE_HOME}/secret/data.txt"}}\n', encoding="utf-8")
 
     zero_p, zero_r, viols = scan_generated_files([leak_path_file])
     assert zero_p is False

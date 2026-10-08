@@ -11,6 +11,7 @@ import pytest
 
 import scripts.projects.open_model_data.v4_human_source_pilot as pilot_mod
 from scripts.projects.open_model_data.paths import resolve_open_model_path
+from tests._host_path_guard import FIXTURE_HOME
 
 MANIFEST_PATH = resolve_open_model_path("data/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json")
 _RECEIPT = "data/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json"
@@ -126,7 +127,7 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path) -> None:
     out_rec.write_text(orig_records_path.read_text(encoding="utf-8"), encoding="utf-8")
 
     tampered_rcpt = copy.deepcopy(orig_receipt)
-    tampered_rcpt["notes"] = "Emitted from /home/ops/cluster"
+    tampered_rcpt["notes"] = f"Emitted from {FIXTURE_HOME}/cluster"
     out_rcpt = resolve_open_model_path(_RECEIPT, repo=tampered_out)
     out_rcpt.parent.mkdir(parents=True, exist_ok=True)
     out_rcpt.write_text(json.dumps(tampered_rcpt, indent=2), encoding="utf-8")

@@ -22,6 +22,7 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import v4_source_custody_access as custody
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
+from tests._host_path_guard import FIXTURE_HOME, FIXTURE_USER, checkout_path_hits, host_path_hits
 
 ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_CUSTODY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "custody"
@@ -184,10 +185,6 @@ def test_verify_passes_on_committed_artifacts(
     assert custody.verify(CONFIG_PATH, input_root=hydrated_root, output_root=output_root, require_database=True) is True
 
 
-# Reject-sample needle: production scripts/docs must not bake this host checkout path.
-_BAKED_RUN_ROOT_REJECT = "/home/ops/learn-ukrainian"
-
-
 def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
     production_paths = (
         Path("scripts/projects/open_model_data/v4_source_custody_access.py"),
@@ -200,8 +197,8 @@ def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
     )
     for path in production_paths:
         text = path.read_text(encoding="utf-8")
-        assert _BAKED_RUN_ROOT_REJECT not in text, f"{path} still bakes a host run-root"
-        assert "/home/ops/<" not in text, f"{path} still documents a host path template"
+        assert not checkout_path_hits(text), f"{path} still bakes a host run-root"
+        assert not re.search(r"/home/<", text), f"{path} still documents a host path template"
 
 
 def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
@@ -221,9 +218,7 @@ def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
     )
     for path in narrative_docs:
         text = path.read_text(encoding="utf-8")
-        assert "/home/ops" not in text, f"{path} still documents a host run-root"
-        assert "/home/ubuntu" not in text, f"{path} still documents a host run-root"
-        assert "/Users/krisztiankoos" not in text, f"{path} still documents a host checkout path"
+        assert not host_path_hits(text), f"{path} still documents a host run-root or checkout path"
 
 
 def test_primary_repo_root_uses_env_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -652,9 +647,9 @@ def test_is_private_or_absolute_host_path() -> None:
 
     # Unix absolute paths and home expansion
     assert custody._is_private_or_absolute_host_path("/opt/data/book.pdf")
-    assert custody._is_private_or_absolute_host_path("/home/ops/book.pdf")
+    assert custody._is_private_or_absolute_host_path(f"{FIXTURE_HOME}/book.pdf")
     assert custody._is_private_or_absolute_host_path("~/data.txt")
-    assert custody._is_private_or_absolute_host_path("~ops/data.txt")
+    assert custody._is_private_or_absolute_host_path(f"~{FIXTURE_USER}/data.txt")
 
     # Windows drive paths
     assert custody._is_private_or_absolute_host_path(r"C:\Users\alice\private\book.pdf")
@@ -689,7 +684,7 @@ def test_is_private_or_absolute_host_path() -> None:
 @pytest.mark.parametrize(
     "bad_path",
     [
-        "/home/ops/private/book.pdf",
+        pytest.param(f"{FIXTURE_HOME}/books/reader.pdf", id="fixture-home-book"),
         r"C:\Users\alice\private\book.pdf",
         r"\\server\share\private\book.pdf",
         "relative/path/appdata/secrets.txt",
@@ -734,11 +729,15 @@ def test_verify_detects_evidence_ref_private_host_path(
 @pytest.mark.parametrize(
     ("field_path", "bad_val"),
     [
-        (("unmounted_archive_locator",), "/home/ops/secret_archive"),
+        pytest.param(
+            ("unmounted_archive_locator",), f"{FIXTURE_HOME}/secret_archive", id="field_path0-fixture-home-archive"
+        ),
         (("owner",), "alice at /home/alice"),
         (("scope",), r"processing C:\Users\alice\data"),
         (("accessible_eligible_sources_permitted_to_proceed", "description"), r"Proceed using \\server\share\data.pdf"),
-        (("missing_inputs", 0, "reason"), "unmounted at /home/ops/gdrive"),
+        pytest.param(
+            ("missing_inputs", 0, "reason"), f"unmounted at {FIXTURE_HOME}/gdrive", id="field_path4-fixture-home-mount"
+        ),
         (("missing_inputs", 0, "blocks"), r"blocked by C:\private\job"),
         (("missing_inputs", 0, "owner"), "/root/admin"),
         (("unmounted_archive_locator",), "location=/opt/private-corpus"),

@@ -28,10 +28,11 @@ from scripts.api.lane_health import (
 from scripts.api.lane_health_redaction import redact_lane_health_diagnostics
 from scripts.api.monitor_context import fixture_context
 from scripts.api.opsec_sanitize import opsec_path_sanitizer_middleware
+from tests._host_path_guard import FIXTURE_HOME
 
 _HOST_USER = "deploy-bot@prod-bastion-7"
 _HOST_PORT = "db-primary-9.internal:5432"
-_PRIVATE_PATH = "/home/ops/learn-ukrainian/data/vesum.db"
+_PRIVATE_PATH = f"{FIXTURE_HOME}/learn-ukrainian/data/vesum.db"
 _IPV4 = "203.0.113.7"
 _IPV6 = "2001:db8::1"
 _CRED_PASSWORD = "Sup3rSecret9"
@@ -57,7 +58,7 @@ def _write_task(tasks_dir: Path, task_id: str, agent: str, started_at: datetime,
     [
         ("ssh deploy-bot@prod-bastion-7 exit 255", [_HOST_USER], "[redacted-host]"),
         ("dial db-primary-9.internal:5432 refused", ["db-primary-9.internal"], "[redacted-host]"),
-        ("open /home/ops/learn-ukrainian/data/vesum.db: permission denied", [_PRIVATE_PATH], "[redacted-path]"),
+        (f"open {_PRIVATE_PATH}: permission denied", [_PRIVATE_PATH], "[redacted-path]"),
         ("connect to 203.0.113.7:443 timed out", [_IPV4], "[redacted-ip]"),
         ("reach [2001:db8::1]:8443 failed", [_IPV6], "[redacted-ip]"),
         (
@@ -105,7 +106,7 @@ def test_lane_health_redacts_adjacent_markdown_paths():
 
 def test_sanitize_error_excerpt_redacts_before_truncating():
     # A marker straddling the 200-char excerpt cap must not leak through it.
-    served = sanitize_error_excerpt("x" * 190 + " /home/ops/secret-token.pem unreadable")
+    served = sanitize_error_excerpt("x" * 190 + f" {FIXTURE_HOME}/secret-token.pem unreadable")
     assert served is not None
     assert served == "x" * 190
 
@@ -140,10 +141,10 @@ def test_sanitize_error_excerpt_keeps_plain_truncation_and_literal_brackets():
 
 
 def test_health_for_redacts_the_served_scan_error_field():
-    scan = LaneHealthScan(observed=False, error="scan failed: /home/ops/tasks on 203.0.113.7")
+    scan = LaneHealthScan(observed=False, error=f"scan failed: {FIXTURE_HOME}/tasks on {_IPV4}")
     served = scan.health_for("codex")
     assert served["basis"] == BASIS_SCAN_UNAVAILABLE
-    assert "/home/ops" not in served["error"]
+    assert FIXTURE_HOME not in served["error"]
     assert _IPV4 not in served["error"]
 
 
