@@ -3122,9 +3122,71 @@ def _imperative_display(form: str, number: str, *, mood: str = "Imp") -> str | N
     return display if _plain(display) == _plain(form) else None
 
 
+def _imperative_source_slots(lemma: str) -> dict[str, set[str]] | None:
+    """Read the current ULIF paradigms; only agreement across homonyms is safe.
+
+    Atlas sense ids are not ULIF homonym ids. Without a source identity join,
+    choosing one homonym from an English gloss would guess. A paradigm shared
+    by every verified homonym needs no such guess. Reuse the raw-table parser:
+    derived forms can be stale even when the current source table is verified.
+    """
+    from scripts.lexicon.runner.ulif_dictua_parse import parse_ulif_entry
+    from scripts.wiki.sources_db import get_ulif_word_records, resolve_ulif_dictua_raw_response
+
+    try:
+        record = get_ulif_word_records(lemma)[0]
+    except (OSError, sqlite3.Error, RuntimeError):
+        return None
+    if not record.get("verified") or record.get("status") != "ok" or not record.get("entries"):
+        return None
+    common: dict[str, set[str]] | None = None
+    for entry in record["entries"]:
+        identity = entry.get("identity_from_raw") or {}
+        sections = entry.get("sections", {}).get("paradigm", [])
+        if (
+            not entry.get("verified")
+            or identity.get("stored_matches_raw") is not True
+            or _plain(entry.get("canonical_headword", "")) != lemma
+            or entry.get("sections_state") != "complete"
+            or len(sections) != 1
+        ):
+            return None
+        section = sections[0]
+        raw_ref = section.get("raw_response_ref")
+        if not raw_ref or raw_ref != f"sha256:{identity.get('source_page_sha256')}":
+            return None
+        try:
+            raw = resolve_ulif_dictua_raw_response(raw_ref)
+            if raw is None:
+                return None
+            parsed = parse_ulif_entry(raw.decode("utf-8"), homonym_index=entry["homonym_index"])
+        except (OSError, sqlite3.Error, ValueError, RuntimeError):
+            return None
+        if (
+            parsed["canonical_headword"] != entry["canonical_headword"]
+            or parsed["grammatical_label"] != entry["grammatical_label"]
+            or parsed["sense_gloss"] != entry["sense_gloss"]
+        ):
+            return None
+        slots: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
+        for form in parsed["forms"]:
+            tokens = set(form["grammatical_tags"])
+            if "impr" not in tokens:
+                continue
+            if form["unmapped_labels"] or form["marked_asterisk"]:
+                return None
+            for slot, (number, person, _uk, _en) in IMPERATIVE_SLOTS.items():
+                if {number, person} <= tokens:
+                    slots[slot].add(form["form_unstressed"])
+        common = slots if common is None else {slot: common[slot] & slots[slot] for slot in IMPERATIVE_SLOTS}
+    return common
+
+
 def _imperative_forms(
     lemma: str,
     vesum_conn: sqlite3.Connection,
+    *,
+    quarantine_reasons: list[str] | None = None,
 ) -> tuple[dict[str, list[str]], dict[str, list[str]], str | None]:
     slots: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
     present: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
@@ -3149,11 +3211,37 @@ def _imperative_forms(
             "SELECT word_form, tags FROM forms WHERE lemma = ? AND pos = 'verb' ORDER BY word_form, tags",
             (lemma,),
         ).fetchall()
-    for form, tags in rows:
-        tokens = set(tags.split(":"))
-        if tokens & _IMPERATIVE_EXCLUDED_TAGS:
-            continue
+    rows = [(form, set(tags.split(":"))) for form, tags in rows if not set(tags.split(":")) & _IMPERATIVE_EXCLUDED_TAGS]
+    paradigms: dict[str, dict[str, set[str]]] = {}
+    for form, tokens in rows:
         aspects.update(tokens & {"perf", "imperf"})
+        for paradigm in tokens:
+            if re.fullmatch(r"xp\d+", paradigm):
+                group = paradigms.setdefault(paradigm, {slot: set() for slot in IMPERATIVE_SLOTS})
+                for slot, (number, person, _uk, _en) in IMPERATIVE_SLOTS.items():
+                    if {"impr", number, person} <= tokens:
+                        group[slot].add(form)
+    if len(paradigms) > 1:
+        source_slots = _imperative_source_slots(lemma)
+        # Each retained paradigm must have a source witness in every slot it
+        # supplies. Other attested forms within that same paradigm (e.g. -ім)
+        # remain accepted. Unlabelled rows cannot bridge different paradigms.
+        allowed = {
+            paradigm
+            for paradigm, group in paradigms.items()
+            if source_slots is not None
+            and any(group.values())
+            and all(forms & source_slots[slot] for slot, forms in group.items() if forms)
+        }
+        if not allowed:
+            if quarantine_reasons is not None:
+                quarantine_reasons.append(
+                    "unresolved_source_paradigm" if source_slots is None else "homonymous_paradigm_conflict"
+                )
+            rows = []
+        else:
+            rows = [(form, tokens) for form, tokens in rows if tokens & allowed]
+    for form, tokens in rows:
         for slot, (number, person, _uk, _en) in IMPERATIVE_SLOTS.items():
             if {number, person} <= tokens:
                 if "impr" in tokens:

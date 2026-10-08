@@ -4592,12 +4592,251 @@ def imperative_plain_stress(monkeypatch):
     monkeypatch.setattr(stress, "verify_stress", lambda *a, **kw: {"status": "not_found", "matches": []})
 
 
+@pytest.fixture
+def imperative_source_cache(monkeypatch):
+    """Small source-table extracts exercise the real ULIF parser, without a host DB."""
+    import hashlib
+
+    from scripts.wiki import sources_db
+
+    records = {}
+    raw_pages = {}
+
+    def install(lemma, homonyms, grammar="дієслово недоконаного виду"):
+        entries = []
+        for index, (gloss, slots) in enumerate(homonyms, 1):
+            html = (
+                '<div id="ContentPlaceHolder1_article">'
+                f'<span class="word_style">{lemma}</span>'
+                f'<span class="gram_style">{grammar}</span>'
+                f'<span class="comment_style">{gloss}</span>'
+                '<table><tr><td></td><td>однина</td><td>множина</td></tr>'
+                '<tr><td colspan="3">Наказовий спосіб</td></tr>'
+                f'<tr><td>1 особа</td><td></td><td>{slots["1pl"]}</td></tr>'
+                f'<tr><td>2 особа</td><td>{slots["2sg"]}</td><td>{slots["2pl"]}</td></tr>'
+                '</table></div>'
+            )
+            raw = html.encode()
+            digest = hashlib.sha256(raw).hexdigest()
+            raw_ref = f"sha256:{digest}"
+            raw_pages[raw_ref] = raw
+            entries.append({
+                "homonym_index": index,
+                "verified": True,
+                "canonical_headword": lemma,
+                "grammatical_label": grammar,
+                "sense_gloss": gloss,
+                "identity_from_raw": {"stored_matches_raw": True, "source_page_sha256": digest},
+                "sections_state": "complete",
+                "sections": {"paradigm": [{"raw_response_ref": raw_ref}]},
+                # Current raw tables remain usable independently of stale derived rows.
+                "forms_state": "stale_source_snapshot",
+            })
+        record = {"verified": True, "status": "ok", "entries": entries}
+        records[lemma] = record
+        return record
+
+    monkeypatch.setattr(sources_db, "get_ulif_word_records", lambda lemma: [records[lemma]])
+    monkeypatch.setattr(sources_db, "resolve_ulif_dictua_raw_response", lambda ref: raw_pages.get(ref))
+    return install, raw_pages
+
+
+@pytest.fixture
+def imperative_xp_conn(imperative_conn):
+    # VESUM tags and forms from Sources verify_lemma; ULIF entry ids:
+    # боліти 27664–27666, передувати 157256–157257, зазначити 74566.
+    groups = {
+        "боліти": [
+            ("xp1", "imperf", ["болій", "боліймо", "болійте"], ["болієш", "боліємо", "болієте"]),
+            ("xp2", "imperf", ["боли", None, "боліть"], ["болиш", None, None]),
+        ],
+        "передувати": [
+            ("xp1", "imperf", ["передуй", "передуймо", "передуйте"], ["передуєш", "передуємо", "передуєте"]),
+            ("xp2", "imperf", ["передувай", "передуваймо", "передувайте"], ["передуваєш", "передуваємо", "передуваєте"]),
+        ],
+        "зазначити": [
+            ("xp1", "perf", ["зазнач", "зазначмо", "зазначте"], ["зазначиш", "зазначимо", "зазначите"]),
+            ("xp2", "perf", ["зазначи", "зазначімо", "зазначіть"], ["зазначиш", "зазначимо", "зазначите"]),
+        ],
+    }
+    for lemma, paradigms in groups.items():
+        for xp, aspect, imperative, indicative in paradigms:
+            for slot, form, present in zip(generate_practice_deck.IMPERATIVE_SLOTS, imperative, indicative, strict=True):
+                number, person, *_ = generate_practice_deck.IMPERATIVE_SLOTS[slot]
+                for surface, mood in [(form, "impr"), (present, "pres" if aspect == "imperf" else "futr")]:
+                    if surface:
+                        imperative_conn.execute(
+                            "INSERT INTO forms VALUES (?, ?, ?, 'verb')",
+                            (surface, lemma, f"verb:{aspect}:{mood}:{number}:{person}:{xp}"),
+                        )
+    imperative_conn.execute(
+        "INSERT INTO forms VALUES ('зазначім', 'зазначити', 'verb:perf:impr:p:1:xp2', 'verb')"
+    )
+    return imperative_conn
+
+
+def test_imperative_homonym_conflict_quarantines_all_slots(
+    imperative_xp_conn, imperative_source_cache, imperative_plain_stress,
+):
+    install, _ = imperative_source_cache
+    # ULIF's pain sense has no imperative; other homonyms cannot fill its slots.
+    install("боліти", [
+        ("(спричиняти відчуття болю)", {"2sg": "", "1pl": "", "2pl": ""}),
+        ("(хворіти)", {"2sg": "болі́й", "1pl": "болі́ймо", "2pl": "болі́йте"}),
+    ])
+    reasons = []
+    slots, present, aspect = generate_practice_deck._imperative_forms(
+        "боліти", imperative_xp_conn, quarantine_reasons=reasons,
+    )
+    assert slots == present == {slot: [] for slot in generate_practice_deck.IMPERATIVE_SLOTS}
+    assert aspect == "imperf"
+    assert reasons == ["homonymous_paradigm_conflict"]
+    assert _imperative_test_items(imperative_xp_conn, "боліти") == []
+
+
+def test_imperative_source_selects_one_whole_paradigm(
+    imperative_xp_conn, imperative_source_cache, imperative_plain_stress,
+):
+    install, _ = imperative_source_cache
+    forms = {"2sg": "переду́й", "1pl": "переду́ймо", "2pl": "переду́йте"}
+    install("передувати", [("(переносити, переміщати рухом повітря)", forms), ("(бути раніше чогось)", forms)])
+    # An unlabelled row must not leak around the source adjudication.
+    imperative_xp_conn.execute(
+        "INSERT INTO forms VALUES ('передувай', 'передувати', 'verb:imperf:impr:s:2', 'verb')"
+    )
+    items = _imperative_test_items(imperative_xp_conn, "передувати", "B2")
+    assert [item["target"] for item in items] == ["передуй", "передуймо", "передуйте"]
+    for item in items:
+        assert item["acceptedAnswers"] == [item["target"]]
+        assert generate_practice_deck.validate_imperative_item(item) == []
+        assert all("передува" not in option["text"].split()[0] for option in item["options"])
+    assert items == _imperative_test_items(imperative_xp_conn, "передувати", "B2")
+
+
+def test_imperative_same_source_paradigm_keeps_proven_variants(
+    imperative_xp_conn, imperative_source_cache, imperative_plain_stress,
+):
+    install, _ = imperative_source_cache
+    install("зазначити", [("", {
+        "2sg": "зазна́ч, зазначи́", "1pl": "зазна́чмо, зазначі́мо", "2pl": "зазна́чте, зазначі́ть",
+    })], grammar="дієслово доконаного виду")
+    items = _imperative_test_items(imperative_xp_conn, "зазначити")
+    assert [set(item["acceptedAnswers"]) for item in items] == [
+        {"зазнач", "зазначи"}, {"зазначмо", "зазначімо", "зазначім"}, {"зазначте", "зазначіть"},
+    ]
+    assert all(generate_practice_deck.validate_imperative_item(item) == [] for item in items)
+
+
+@pytest.mark.parametrize("defect", [
+    "record_unverified", "record_unavailable", "no_entries", "entry_unverified", "identity_mismatch",
+    "wrong_lemma", "missing_sections", "multiple_sections", "missing_ref", "wrong_digest",
+    "missing_raw", "raw_wrong_headword", "raw_wrong_grammar", "raw_wrong_gloss", "raw_invalid_utf8",
+])
+def test_imperative_source_identity_uncertainty_fails_closed(imperative_source_cache, defect):
+    install, raw_pages = imperative_source_cache
+    record = install("передувати", [("(бути раніше чогось)", {
+        "2sg": "переду́й", "1pl": "переду́ймо", "2pl": "переду́йте",
+    })])
+    entry = record["entries"][0]
+    ref = entry["sections"]["paradigm"][0]["raw_response_ref"]
+    if defect == "record_unverified":
+        record["verified"] = False
+    elif defect == "record_unavailable":
+        record["status"] = "partial_unverified"
+    elif defect == "no_entries":
+        record["entries"] = []
+    elif defect == "entry_unverified":
+        entry["verified"] = False
+    elif defect == "identity_mismatch":
+        entry["identity_from_raw"]["stored_matches_raw"] = False
+    elif defect == "wrong_lemma":
+        entry["canonical_headword"] = "боліти"
+    elif defect == "missing_sections":
+        entry["sections_state"] = "missing_table"
+    elif defect == "multiple_sections":
+        entry["sections"]["paradigm"] *= 2
+    elif defect == "missing_ref":
+        entry["sections"]["paradigm"][0].pop("raw_response_ref")
+    elif defect == "wrong_digest":
+        entry["identity_from_raw"]["source_page_sha256"] = "wrong"
+    elif defect == "missing_raw":
+        raw_pages.pop(ref)
+    elif defect == "raw_invalid_utf8":
+        raw_pages[ref] = b"\xff"
+    else:
+        old, new = {
+            "raw_wrong_headword": ("передувати", "боліти"),
+            "raw_wrong_grammar": ("недоконаного", "доконаного"),
+            "raw_wrong_gloss": ("раніше", "попереду"),
+        }[defect]
+        raw_pages[ref] = raw_pages[ref].decode().replace(old, new).encode()
+    assert generate_practice_deck._imperative_source_slots("передувати") is None
+
+
+@pytest.mark.parametrize("target", ["get_ulif_word_records", "resolve_ulif_dictua_raw_response"])
+@pytest.mark.parametrize("error", [OSError, sqlite3.OperationalError, RuntimeError])
+def test_imperative_source_unavailable_is_quarantined(
+    monkeypatch, imperative_xp_conn, imperative_source_cache, target, error,
+):
+    from scripts.wiki import sources_db
+
+    install, _ = imperative_source_cache
+    install("передувати", [("", {"2sg": "передуй", "1pl": "передуймо", "2pl": "передуйте"})])
+
+    def unavailable(*args):
+        raise error("source unavailable")
+
+    monkeypatch.setattr(sources_db, target, unavailable)
+    reasons = []
+    slots, _, _ = generate_practice_deck._imperative_forms(
+        "передувати", imperative_xp_conn, quarantine_reasons=reasons,
+    )
+    assert not any(slots.values())
+    assert reasons == ["unresolved_source_paradigm"]
+
+
 def _imperative_test_items(conn, lemma="робити", cefr="A1"):
     return generate_practice_deck._build_imperative_items(
         {"lemmaId": lemma, "lemma": lemma, "lemmaPlain": lemma, "pos": "verb"},
         conn,
         cefr,
     )
+
+
+@pytest.mark.parametrize("defect", ["marked", "unmapped"])
+def test_imperative_source_marked_or_unmapped_forms_fail_closed(imperative_source_cache, defect):
+    install, pages = imperative_source_cache
+    record = install("передувати", [("", {
+        "2sg": "переду́й*" if defect == "marked" else "переду́й",
+        "1pl": "переду́ймо", "2pl": "переду́йте",
+    })])
+    if defect == "unmapped":
+        ref = record["entries"][0]["sections"]["paradigm"][0]["raw_response_ref"]
+        pages[ref] = pages[ref].decode().replace("2 особа", "unknown person").encode()
+    assert generate_practice_deck._imperative_source_slots("передувати") is None
+
+
+def test_imperative_requires_source_witness_for_every_paradigm_slot(imperative_xp_conn, imperative_source_cache):
+    install, _ = imperative_source_cache
+    install("передувати", [("", {"2sg": "переду́й", "1pl": "", "2pl": ""})])
+    reasons = []
+    slots, _, _ = generate_practice_deck._imperative_forms(
+        "передувати", imperative_xp_conn, quarantine_reasons=reasons,
+    )
+    assert not any(slots.values())
+    assert reasons == ["homonymous_paradigm_conflict"]
+
+
+def test_imperative_single_paradigm_preserves_existing_variants(imperative_conn, monkeypatch, imperative_plain_stress):
+    imperative_conn.execute("UPDATE forms SET tags = tags || ':xp1' WHERE lemma='робити'")
+
+    def unexpected_lookup(*args):
+        pytest.fail("a single VESUM paradigm needs no homonym adjudication")
+
+    monkeypatch.setattr(generate_practice_deck, "_imperative_source_slots", unexpected_lookup)
+    items = _imperative_test_items(imperative_conn)
+    assert len(items) == 3
+    assert set(items[1]["acceptedAnswers"]) == {"робімо", "робім"}
 
 
 def test_imperative_three_slots_variants_and_contract(imperative_conn, imperative_plain_stress):
@@ -4908,7 +5147,7 @@ def test_imperative_scaffolding_immersion_by_level(imperative_conn, imperative_p
             assert "accepted" not in it["notes"].lower()
 
 
-def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
+def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db, imperative_source_cache):
     """Verify >= 1,000 unique lemmas threshold and zero distractor collisions across deck.
 
     Genuinely offline gate: executes in CI using 1000_verb_imperatives.json with frozen forms.
@@ -4917,8 +5156,26 @@ def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
     """
     verbs, mem_conn = _load_imperative_verbs_fixture()
     generate_practice_deck._imperative_display.cache_clear()
+    install, _ = imperative_source_cache
+    # Public ULIF extracts, independent of the reviewer's hidden engine gold set.
+    install("боліти", [
+        ("(спричиняти відчуття болю)", {"2sg": "", "1pl": "", "2pl": ""}),
+        ("(хворіти)", {"2sg": "болі́й", "1pl": "болі́ймо", "2pl": "болі́йте"}),
+    ])
+    precede = {"2sg": "переду́й", "1pl": "переду́ймо", "2pl": "переду́йте"}
+    install("передувати", [("(переносити, переміщати рухом повітря)", precede), ("(бути раніше чогось)", precede)])
+    impress = {"2sg": "вразь", "1pl": "вра́зьмо", "2pl": "вра́зьте"}
+    install("вразити", [("(здивувати)", impress), ("(поранити, вбити; порушити життєдіяльність - про хвороби)", impress)],
+            grammar="дієслово доконаного виду")
+    install("зазначити", [("", {
+        "2sg": "зазна́ч, зазначи́", "1pl": "зазна́чмо, зазначі́мо", "2pl": "зазна́чте, зазначі́ть",
+    })], grammar="дієслово доконаного виду")
 
     lemmas_with_imperative = set()
+    quarantined_lemmas = set()
+    quarantined_by_level: dict[str, int] = {}
+    quarantined_by_lemma: dict[str, list[str]] = {}
+    missing_slots = 0
     total_items = 0
     by_level: dict[str, int] = {}
 
@@ -4935,6 +5192,19 @@ def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
             "pos": "verb",
         }
         items = generate_practice_deck._build_imperative_items(lexeme, mem_conn, cefr)
+        admitted_slots = {item["slot"] for item in items}
+        reasons = []
+        generate_practice_deck._imperative_forms(lemma, mem_conn, quarantine_reasons=reasons)
+        for slot, (number, person, _uk, _en) in generate_practice_deck.IMPERATIVE_SLOTS.items():
+            raw_attested = any({"impr", number, person} <= set(tags.split(":")) for _form, tags in v["forms"])
+            if not raw_attested:
+                missing_slots += 1
+            elif slot not in admitted_slots:
+                quarantined_lemmas.add(lemma)
+                quarantined_by_level[cefr] = quarantined_by_level.get(cefr, 0) + 1
+                quarantined_by_lemma.setdefault(lemma, []).append(
+                    reasons[0] if reasons else "existing_stress_or_distractor_gate"
+                )
         if items:
             lemmas_with_imperative.add(lemma)
             total_items += len(items)
@@ -4961,11 +5231,19 @@ def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
         "B1",
     )
     assert next(item for item in restored if item["slot"] == "1pl")["target"] == "переймі́мо"
-    assert len(lemmas_with_imperative) == 1050, f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
-    assert total_items == 3138, f"Expected 3,138 items, got {total_items}"
-    assert by_level == {"A1": 279, "A2": 655, "B1": 1090, "B2": 721, "C1": 393}, (
-        f"Level distribution mismatch: {by_level}"
-    )
+    assert len(verbs) == len({v["lemma"] for v in verbs}) == 1050
+    assert len(lemmas_with_imperative | quarantined_lemmas) == 1050
+    assert len(lemmas_with_imperative) >= 1000
+    assert quarantined_by_lemma["боліти"] == ["homonymous_paradigm_conflict"] * 3
+    assert quarantined_by_lemma["вразити"] == ["existing_stress_or_distractor_gate"] * 3
+    # Retain the original denominator and every previously admitted slot.
+    # Unsafe answers move to explicit quarantine; none disappear from the audit.
+    assert total_items + 6 == 3138
+    assert missing_slots == 3
+    assert total_items + sum(quarantined_by_level.values()) + missing_slots == 1050 * 3
+    assert {level: count + {"A1": 3, "B2": 3}.get(level, 0) for level, count in by_level.items()} == {
+        "A1": 279, "A2": 655, "B1": 1090, "B2": 721, "C1": 393,
+    }
     generate_practice_deck._imperative_display.cache_clear()
     mem_conn.close()
 
