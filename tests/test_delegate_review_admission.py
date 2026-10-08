@@ -1890,7 +1890,7 @@ def test_pr_pinned_review_admits_independent_routes_for_cursor_author(tmp_path, 
         target_resolution,
         "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess(
-            [], 0, json.dumps({"baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
         ),
     )
     args = _args(
@@ -1919,7 +1919,7 @@ def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, 
         target_resolution,
         "_run_gh",
         lambda *_args, **_kwargs: subprocess.CompletedProcess(
-            [], 0, json.dumps({"baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
         ),
     )
     args = _args(
