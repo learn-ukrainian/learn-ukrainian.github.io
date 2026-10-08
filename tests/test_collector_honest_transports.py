@@ -1031,6 +1031,88 @@ def test_shared_iterator_replays_html_labelled_two_mib_pdf(monkeypatch, tmp_path
     assert response.closed and not list(tmp_path.glob("*.part"))
 
 
+@pytest.mark.parametrize("chunk_size", [1, 4096, 16384])
+@pytest.mark.parametrize("confirmation", [False, True])
+def test_drive_html_labelled_two_mib_pdf_uses_one_stream(
+    monkeypatch, tmp_path, isolate_policy, chunk_size, confirmation,
+):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    # Confirmation-looking PDF bytes must never cause a second request.
+    prefix = b'%PDF-1.7\n<form><input name="confirm" value="spurious"></form>\n'
+    payload = prefix + b"x" * (2 * 1024 * 1024 - len(prefix))
+    incoming = tmp_path / "incoming.bin"
+    incoming.write_bytes(payload)
+    incoming_before = hashlib.sha256(incoming.read_bytes()).hexdigest()
+    response = Response(incoming.read_bytes(), headers={"Content-Type": "text/html"})
+    del response.content, response.text  # No eager body hydration on the PDF path.
+    calls, consumed = [], []
+    def stream(chunk_size):
+        calls.append(chunk_size)
+        for offset in range(0, len(payload), block_size):
+            consumed.append(offset)
+            yield payload[offset:offset + block_size]
+    block_size = chunk_size
+    response.iter_content = stream
+    warning = Response(b'<form><input name="confirm" value="yes"></form>', headers={"Content-Type": "text/html"})
+    srv.responses["https://docs.google.com/uc"] = ([warning] if confirmation else []) + [response]
+    old = tmp_path / "retained.pdf"
+    old.write_bytes(b"%PDF-1.7\nretained fixture")
+    before = hashlib.sha256(old.read_bytes()).hexdigest()
+    destination = tmp_path / "new.pdf"
+    assert textbook.download_from_gdrive("ID", destination, retained_store=tmp_path)
+    assert len(payload) == 2 * 1024 * 1024 and destination.read_bytes() == payload
+    assert calls == [8192] and consumed == list(range(0, len(payload), block_size))
+    assert len(srv.source_calls()) == (2 if confirmation else 1)
+    assert old.exists() and hashlib.sha256(old.read_bytes()).hexdigest() == before
+    assert hashlib.sha256(incoming.read_bytes()).hexdigest() == incoming_before
+    assert response.closed and not list(tmp_path.glob(".*.part"))
+    if confirmation:
+        assert warning.closed and srv.source_calls()[1][4]["params"]["confirm"] == "yes"
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"drive-f3-{block_size}-{confirmation}.json").write_text(json.dumps({
+            "size": len(payload), "payload_sha256": hashlib.sha256(payload).hexdigest(),
+            "retained_sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
+            "old_before": before, "old_after": hashlib.sha256(old.read_bytes()).hexdigest(),
+            "incoming_path": str(incoming), "incoming_before": incoming_before,
+            "incoming_after": hashlib.sha256(incoming.read_bytes()).hexdigest(),
+            "iterator_calls": calls, "consumed_chunks": len(consumed), "requests": srv.calls,
+            "closed": response.closed, "part_files": [str(p) for p in tmp_path.glob(".*.part")],
+            "not_held_out": True,
+        }, indent=2))
+
+
+@pytest.mark.parametrize("failure", ["declared-size", "streamed-size", "stream-error"])
+def test_drive_mislabeled_pdf_retention_failure_conserves_old_files(
+    monkeypatch, tmp_path, isolate_policy, failure,
+):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    payload = b"%PDF-1.7\n" + b"x" * 16000
+    headers = {"Content-Type": "text/html"}
+    if failure == "declared-size":
+        headers["Content-Length"] = str(len(payload))
+    response = Response(payload, headers=headers)
+    calls = []
+    def stream(chunk_size):
+        calls.append(chunk_size)
+        yield payload[:8192]
+        if failure == "stream-error":
+            raise OSError("interrupted PDF stream")
+        yield payload[8192:]
+    response.iter_content = stream
+    srv.responses["https://docs.google.com/uc"] = [response]
+    old = tmp_path / "retained.pdf"
+    old.write_bytes(b"%PDF-1.7\nretained fixture")
+    before = hashlib.sha256(old.read_bytes()).hexdigest()
+    error = OSError if failure == "stream-error" else textbook.DownloadValidationError
+    message = "interrupted PDF stream" if failure == "stream-error" else "response size"
+    with pytest.raises(error, match=message):
+        textbook.download_from_gdrive("ID", tmp_path / "new.pdf", retained_store=tmp_path, max_size_bytes=9000)
+    assert calls == [8192] and len(srv.source_calls()) == 1
+    assert hashlib.sha256(old.read_bytes()).hexdigest() == before
+    assert response.closed and not (tmp_path / "new.pdf").exists() and not list(tmp_path.glob(".*.part"))
+
+
 def test_zno_content_strict_utf8_and_robots_raw_bytes(monkeypatch, tmp_path, isolate_policy):
     server = Server(monkeypatch, zno, tmp_path, isolate_policy)
     server.responses["https://source.test/bad"] = [Response(b"\xff")]

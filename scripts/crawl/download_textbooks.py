@@ -350,8 +350,11 @@ def _request(url: str, *, session=None, method: str = "get", robots: bool = True
                     size += len(chunk)
                     if size >= 8000:
                         break
-                _check_access(status, getattr(response, "headers", {}), b"".join(prefix)[:8000].decode("utf-8", errors="replace"))
-                response.iter_content = lambda chunk_size, saved=prefix, rest=stream: chain(saved, rest)
+                saved_prefix = b"".join(prefix)
+                _check_access(status, getattr(response, "headers", {}), saved_prefix[:8000].decode("utf-8", errors="replace"))
+                # Replay the prefix together so PDF magic split across transport
+                # chunks is still visible to the existing retention validator.
+                response.iter_content = lambda chunk_size, saved=saved_prefix, rest=stream: chain((saved,), rest)
             if robots:
                 response.raise_for_status()
             location = _header(response, "Location")
@@ -1050,9 +1053,25 @@ def download_from_gdrive(
         # The first 8 KiB is sufficient for the established challenge markers.
         html_bytes = bytearray()
         try:
-            for chunk in resp.iter_content(chunk_size=8192):
+            stream = resp.iter_content(chunk_size=8192)
+            for chunk in stream:
                 html_bytes.extend(chunk)
                 _check_access(resp.status_code, resp.headers, html_bytes[:8000].decode("utf-8", errors="replace"))
+                if html_bytes.startswith(PDF_SIGNATURE):
+                    # Content-Type can label a valid PDF as HTML. Identify it
+                    # before applying the confirmation-only cap, then retain
+                    # the inspected bytes and this same remaining iterator.
+                    resp.iter_content = lambda chunk_size, saved=bytes(html_bytes), rest=stream: chain((saved,), rest)
+                    try:
+                        return _retain_response(
+                            resp,
+                            dest,
+                            retained_store=retained_store or retained_root,
+                            max_size_bytes=max_size_bytes,
+                            invalid_detail=_invalid_pdf_title,
+                        )
+                    finally:
+                        _safe_close(resp)
                 limit = min(DOWNLOAD_CHUNK_SIZE, max_size_bytes or DOWNLOAD_CHUNK_SIZE)
                 if len(html_bytes) > limit:
                     raise DownloadValidationError("confirmation HTML exceeds response limit")
