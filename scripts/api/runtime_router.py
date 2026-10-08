@@ -52,6 +52,7 @@ from agent_runtime.adapters.acpx import (
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
@@ -295,23 +296,20 @@ def _today_usage_files(ctx: MonitorContext | None = None) -> list[Path]:
     return _usage_files(days=1, ctx=ctx)
 
 
-def _iter_usage_records(paths: list[Path]) -> list[dict[str, Any]]:
+def _iter_usage_records(paths: list[Path], unreadable: dict[str, int] | None = None) -> list[dict[str, Any]]:
+    """Parse usage JSONL records through the shared strict line reader.
+
+    Every usage-file reader shares ``agent_runtime.usage._iter_usage_records``
+    (#9924): a line that is not strict UTF-8, not JSON, or not a JSON object is
+    skipped and counted on ``unreadable`` — the ``{"files", "lines", "records"}``
+    counter the usage summaries expose — never raised, never silently dropped.
+    Valid rows from the same file and from later files still count. When the
+    caller passes no counter the counts are still computed but not surfaced.
+    """
+    sink: dict[str, int] = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
     records: list[dict[str, Any]] = []
     for path in paths:
-        try:
-            with open(path, encoding="utf-8") as handle:
-                for raw in handle:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        data = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue
-                    if isinstance(data, dict):
-                        records.append(data)
-        except OSError:
-            continue
+        records.extend(_iter_usage_file_records(path, sink))
     return records
 
 
