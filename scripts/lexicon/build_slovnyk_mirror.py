@@ -91,6 +91,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
     lemmas = []
     completed = {}
     resolved = {}
+    accounted = {}
     attempted = scanned = 0
     denominator = 0
     fingerprint = None
@@ -119,6 +120,12 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
         lemmas = _manifest_lemmas(args.manifest)
         denominator = len(lemmas) * len(_SLOVNYK_LOOKUP_SLUGS)
         counts["pending"] = denominator
+        identities = {}
+        for lemma in lemmas:
+            path, identity = _slovnyk_cache_path(lemma), _slovnyk_lookup_word(lemma)
+            if path in identities and identities[path] != identity:
+                raise ValueError("cache filename collision between distinct lookup identities")
+            identities[path] = identity
         selected = lemmas if args.limit is None else lemmas[: args.limit]
         fingerprint = hashlib.sha256(
             json.dumps(
@@ -133,6 +140,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
             resolved[lemma] = rows
             counts["reused"] += len(rows)
             counts["pending"] -= len(rows)
+            accounted.update({(lemma, slug): "reused" for slug in rows})
             if digest is not None:
                 completed[lemma] = digest
             if lemma in previous and previous[lemma] != digest:
@@ -160,6 +168,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                 if unpublished:
                     key = "errors"
                 counts[key] += 1
+                accounted[lemma, slug] = key
                 counts["pending"] -= 1
                 if outcome.status in {"blocked", "parse_error", "error"} or unpublished:
                     terminal = True
@@ -189,6 +198,25 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
         # Never publish a partly scanned completion map over an existing checkpoint.
         if fingerprint is not None and scanned == len(lemmas) and phase == "fetch":
             try:
+                completed.clear()
+                for lemma in lemmas:
+                    rows, digest = _cache_state(lemma)
+                    for slug in rows - resolved[lemma]:
+                        if (lemma, slug) not in accounted:
+                            counts["pending"] -= 1
+                            counts["reused"] += 1
+                    for slug in resolved[lemma] - rows:
+                        key = accounted[lemma, slug]
+                        if key != "errors":
+                            counts[key] -= 1
+                            counts["errors"] += 1
+                    resolved[lemma] = rows
+                    if digest is not None:
+                        completed[lemma] = digest
+                if status == "complete" and (len(completed) != len(lemmas) or counts["errors"]):
+                    status = "incomplete"
+                elif status in {"incomplete", "limited"} and len(completed) == len(lemmas) and not counts["errors"]:
+                    status = "complete"
                 save()
             except (OSError, ValueError, TypeError):
                 emit("ERROR checkpoint publication failed; published cache remains resumable")
@@ -210,8 +238,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="""Examples:
   .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror --manifest manifest.json --limit 5
   .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror --manifest manifest.json
-Outputs: per-lemma JSON and .mirror-checkpoint.json in LEXICON_SLOVNYK_CACHE;
-flushed stdout plus batch_state/slovnyk-mirror/<target-digest>.log (default).
+Outputs: per-lookup JSON and non-JSON-named .mirror-checkpoint in LEXICON_SLOVNYK_CACHE;
+flushed stdout plus repo-root batch_state/slovnyk-mirror/<target-digest>.log (default).
 Exit codes: 0 verified complete (including empty); 1 incomplete/limited/storage/access/parse failure;
 2 usage error; 130 interrupted. First access or parse stop preserves partial results.
 Legacy nulls are retried; observed 404 evidence and current validated positives resume durably.
@@ -229,20 +257,22 @@ Related: docs/runbooks/slovnyk-mirror.md; scripts.ingest.dictionary_acquisition;
         "--progress-every", type=int, default=25, help="Validation/fetch log cadence in lemmas (default: 25), e.g. 10."
     )
     parser.add_argument(
-        "--checkpoint", type=Path, help="State JSON, e.g. state.json (default: cache/.mirror-checkpoint.json)."
+        "--checkpoint",
+        type=Path,
+        help="State JSON, e.g. state.json (default: cache/.mirror-checkpoint, outside *.json glob).",
     )
     parser.add_argument(
         "--log-file",
         type=Path,
-        help="Append progress log, e.g. mirror.log (default: batch_state/slovnyk-mirror/<target-digest>.log).",
+        help="Append progress log, e.g. mirror.log (default: repo-root batch_state/slovnyk-mirror/<target-digest>.log).",
     )
     args = parser.parse_args(argv)
     if args.progress_every < 1 or (args.limit is not None and args.limit < 0):
         parser.error("limit must be nonnegative and progress-every positive")
     cache_dir = _slovnyk_cache_path("mirror-target").parent.resolve()
-    checkpoint = (args.checkpoint or cache_dir / ".mirror-checkpoint.json").resolve()
+    checkpoint = (args.checkpoint or cache_dir / ".mirror-checkpoint").resolve()
     target = hashlib.sha256(str(cache_dir).encode()).hexdigest()[:16]
-    log_path = args.log_file or Path("batch_state/slovnyk-mirror") / f"{target}.log"
+    log_path = args.log_file or enrichment.ROOT / "batch_state/slovnyk-mirror" / f"{target}.log"
     lock_paths = {cache_dir / ".mirror.lock", checkpoint.with_suffix(checkpoint.suffix + ".lock")}
     if log_path.resolve() in {args.manifest.resolve(), checkpoint, *lock_paths} or checkpoint in {
         args.manifest.resolve(),

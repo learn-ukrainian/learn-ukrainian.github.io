@@ -9,9 +9,12 @@ owns live measurement, reviewed-code restart and retained-work verification.
 ```
 
 Keep stdout attached to the pane. The builder also appends the same progress to
-`batch_state/slovnyk-mirror/<target-digest>.log`; redirecting stdout hides pane
+`batch_state/slovnyk-mirror/<target-digest>.log` under the repository root,
+independent of the launch directory; redirecting stdout hides pane
 progress. `--log-file` overrides the log location, and `--checkpoint` overrides
-the default `LEXICON_SLOVNYK_CACHE/.mirror-checkpoint.json` state file.
+the default `LEXICON_SLOVNYK_CACHE/.mirror-checkpoint` JSON state file. Its name
+and lock suffix stay outside cache consumers' `*.json` glob. Explicit checkpoint
+paths remain supported; keep JSON-named state outside the cache directory.
 
 Startup announces validation before scanning caches and reports scan counts,
 verified complete lemmas, attempted fetch lemmas, partial lemmas, lookup counts,
@@ -22,7 +25,7 @@ distinct lemmas in the selected manifest and the currently configured dictionary
 Errors are unresolved work even though they are counted separately from pending.
 Only `verified_complete` proves fully resolved lemmas; attempted is never completion.
 
-Every startup checks the actual cache schema, lemma, normalized lookup identity,
+Every startup checks the actual cache schema, normalized lookup identity, filename,
 provenance timestamp and dictionary rows. Current valid positives are adopted
 without a checkpoint. Legacy nulls have no transport evidence and remain retryable.
 Newly observed 404s are stored with identity-bound `not_found` evidence. A lemma
@@ -31,6 +34,10 @@ Missing slugs alone are fetched; transient failures are not published as misses.
 Input/configuration changes trigger validation, and changed, missing or stale cache
 rows cannot inherit checkpoint completion. Invalid checkpoint JSON or unsupported
 checkpoint versions stop the run; preserve the state for diagnosis before retrying.
+Same-lookup lemma aliases share validated rows without replacing completed cache
+bytes or repeating requests. Distinct lookup identities sharing a filename fail
+closed before overwrite. Final completion and checkpoint digests are revalidated
+against the current durable cache; earlier scan results cannot prove completion.
 
 Cache results are written to unique sibling temporary files, flushed and fsynced,
 then atomically replaced and the directory fsynced. Checkpoints use the same

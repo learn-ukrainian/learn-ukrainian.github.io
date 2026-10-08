@@ -1852,11 +1852,13 @@ def _slovnyk_cache(
 
 
 def _reusable_slovnyk_cache(cache: Any, lemma: str, lookup_word: str) -> bool:
-    """Require current schema, lookup identity and an aware provenance timestamp."""
+    """Reuse same-lookup aliases only when their cache filenames also agree."""
     if (
         not isinstance(cache, dict)
         or cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION
-        or cache.get("lemma") != lemma
+        or not isinstance(cache.get("lemma"), str)
+        or _slovnyk_lookup_word(cache["lemma"]) != lookup_word
+        or _slovnyk_cache_path(cache["lemma"]) != _slovnyk_cache_path(lemma)
         or cache.get("lookup_word") != lookup_word
         or not isinstance(cache.get("lookups"), dict)
     ):
@@ -1875,7 +1877,9 @@ def _strict_slovnyk_cache(lemma: str, outcomes: dict[str, _SlovnykOutcome], slug
     """
     lookup_word = _slovnyk_lookup_word(lemma)
     path = _slovnyk_cache_path(lemma)
-    cache = _load_current_slovnyk_cache_file(path)
+    cache = _load_slovnyk_cache_file(path)
+    if cache and isinstance(cache.get("lookup_word"), str) and cache["lookup_word"] != lookup_word:
+        raise ValueError("cache filename collision between distinct lookup identities")
     if not _reusable_slovnyk_cache(cache, lemma, lookup_word):
         cache = _new_slovnyk_cache(lemma, lookup_word)
     for slug in slugs:

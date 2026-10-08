@@ -68,6 +68,7 @@ def mirror_fixture(tmp_path, monkeypatch):
 
     monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "ROOT", tmp_path / "repo")
     monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path / "cache")
     monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_MAX_RETRIES", 0)
     monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
@@ -204,7 +205,7 @@ def test_mirror_storage_failure_is_error(mirror_fixture, monkeypatch, capsys):
     replace = enrich_manifest_module.os.replace
 
     def fail_cache(source, destination):
-        if destination.name == ".mirror-checkpoint.json":
+        if destination.name == ".mirror-checkpoint":
             return replace(source, destination)
         raise OSError("private")
 
@@ -218,7 +219,7 @@ def test_resume_adopts_complete_cache_without_checkpoint(mirror_fixture, capsys)
     manifest, calls, queue = mirror_fixture
     queue(200, 404, 200, 404)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint.json"
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
     checkpoint.unlink()
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
     assert len(calls) == 4
@@ -263,7 +264,7 @@ def test_partial_transient_only_retries_missing_slug(mirror_fixture, capsys):
     output = capsys.readouterr().out
     assert "status=incomplete verified_complete=1/2" in output
     assert "partial=1" in output and "errors=1" in output
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint.json"
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
     assert set(json.loads(checkpoint.read_text())["completed"]) == {"later"}
     queue(200)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
@@ -305,7 +306,7 @@ def test_interrupted_run_is_truthful_and_resumable(mirror_fixture, monkeypatch, 
 @pytest.mark.parametrize("state", ["{", "[]", '{"version":2,"completed":{}}'])
 def test_corrupt_checkpoint_refuses_without_mutation(mirror_fixture, capsys, state):
     manifest, calls, _queue = mirror_fixture
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint.json"
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
     checkpoint.parent.mkdir(parents=True)
     checkpoint.write_text(state)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
@@ -332,7 +333,7 @@ def test_checkpoint_publication_failure_keeps_previous_state(mirror_fixture, mon
     with monkeypatch.context() as patch:
         patch.setattr(build_slovnyk_mirror, "_atomic_slovnyk_json", fail_checkpoint)
         assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint.json"
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
     assert checkpoint.read_bytes() == previous
     assert "status=error" in capsys.readouterr().out
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
@@ -349,7 +350,8 @@ def test_empty_and_zero_limit_stdout_matches_default_log(mirror_fixture, capsys,
     assert build_slovnyk_mirror.main(argv) == code
     output = capsys.readouterr().out
     assert f"status={status}" in output and "phase=startup [0/" in output and "ETA=" in output
-    logs = list(Path("batch_state/slovnyk-mirror").glob("*.log"))
+    logs = list((manifest.parent / "repo/batch_state/slovnyk-mirror").glob("*.log"))
+    assert not Path("batch_state/slovnyk-mirror").exists()
     assert len(logs) == 1 and logs[0].read_text() == output and not calls
 
 
@@ -415,7 +417,7 @@ def test_sigterm_restores_handler_and_keeps_checkpoint_retryable(mirror_fixture,
     monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", interrupted)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 130
     assert signal.getsignal(signal.SIGTERM) == previous_handler
-    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint.json"
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
     assert json.loads(checkpoint.read_text())["completed"] == {} and not calls
     assert "status=interrupted verified_complete=0/2" in capsys.readouterr().out
 
@@ -431,3 +433,101 @@ def test_mirror_help_usage_and_manifest_failure(mirror_fixture, capsys):
     assert invalid_exit.value.code == 2
     manifest.write_text("{")
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
+
+
+def test_same_lookup_aliases_converge_without_replacing_complete_bytes(mirror_fixture, capsys):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": "abc"}]}))
+    queue(200, 404)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    path = enrich_manifest_module._slovnyk_cache_path("abc")
+    original = path.read_bytes()
+    manifest.write_text(json.dumps({"entries": [{"lemma": "abc / abd"}, {"lemma": "abc"}]}))
+    queue(200, 404, 200, 404)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert path.read_bytes() == original and len(calls) == 2
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert path.read_bytes() == original and len(calls) == 2
+    assert "verified_complete=2/2 attempted=0" in capsys.readouterr().out
+
+
+def test_default_checkpoint_is_ignored_by_real_cache_consumers(mirror_fixture):
+    from scripts.ingest.slovnyk_me_ingest import ingest_cache
+    from scripts.lexicon.migrate_slovnyk_cache_v4 import migrate, scan
+
+    manifest, calls, queue = mirror_fixture
+    queue(200, 404, 200, 404)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    cache_dir = enrich_manifest_module.SLOVNYK_CACHE
+    before = {path: path.read_bytes() for path in cache_dir.iterdir()}
+    db = manifest.parent / "must-not-create.db"
+    assert ingest_cache(db, cache_dir, words=[], dictionaries=["vts"], dry_run=True, max_text_chars=1000) == 2
+    assert not db.exists()
+    assert scan(cache_dir) == {"total": 2, "already_current": 2}
+    assert migrate(cache_dir, dry_run=False) == {"total": 2, "already_current": 2}
+    assert {path: path.read_bytes() for path in cache_dir.iterdir()} == before
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0 and len(calls) == 4
+
+
+@pytest.mark.parametrize("limit", [None, 1])
+def test_fresh_alias_pair_resolves_one_upstream_lookup(mirror_fixture, capsys, limit):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": "abc"}, {"lemma": "abc / abd"}]}))
+    queue(200, 404)
+    args = ["--manifest", str(manifest)] + ([] if limit is None else ["--limit", str(limit)])
+    assert build_slovnyk_mirror.main(args) == 0 and len(calls) == 2
+    assert "fetched=1 reused=2 misses=1 errors=0 pending=0 denominator=4" in capsys.readouterr().out
+    before = enrich_manifest_module._slovnyk_cache_path("abc").read_bytes()
+    assert build_slovnyk_mirror.main(args) == 0 and len(calls) == 2
+    assert enrich_manifest_module._slovnyk_cache_path("abc").read_bytes() == before
+
+
+def test_distinct_lookup_filename_collision_refuses_before_fetch(mirror_fixture, capsys):
+    manifest, calls, queue = mirror_fixture
+    # Sanitization shares the filename, but these are distinct upstream words.
+    manifest.write_text(json.dumps({"entries": [{"lemma": "abc:def"}, {"lemma": "abc-def"}]}))
+    assert enrich_manifest_module._slovnyk_cache_path("abc:def") == enrich_manifest_module._slovnyk_cache_path(
+        "abc-def"
+    )
+    queue(200, 404, 200, 404)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1 and not calls
+    assert not enrich_manifest_module._slovnyk_cache_path("abc:def").exists()
+    assert "status=error verified_complete=0/2" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("change", ["remove", "revise"])
+def test_final_completion_revalidates_durable_cache(mirror_fixture, monkeypatch, capsys, change):
+    import hashlib
+
+    manifest, _calls, queue = mirror_fixture
+    queue(200, 200, 200, 200)
+    original = build_slovnyk_mirror._slovnyk_cache
+    path = enrich_manifest_module._slovnyk_cache_path("sample")
+
+    def mutate_previous(lemma, **kwargs):
+        cache = original(lemma, **kwargs)
+        if lemma == "later":
+            if change == "remove":
+                path.unlink()
+            else:
+                data = json.loads(path.read_text())
+                data["lookups"]["vts"]["text"] = "revised synthetic article"
+                path.write_text(json.dumps(data))
+        return cache
+
+    monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", mutate_previous)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == (1 if change == "remove" else 0)
+    state = json.loads((enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint").read_text())
+    output = capsys.readouterr().out
+    if change == "remove":
+        assert set(state["completed"]) == {"later"}
+        assert (
+            "fetched=2 reused=0 misses=0 errors=2 pending=0 denominator=4 status=incomplete verified_complete=1/2"
+            in output
+        )
+    else:
+        expected = hashlib.sha256(
+            json.dumps(json.loads(path.read_text()), sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        assert state["completed"]["sample"] == expected
+        assert "status=complete verified_complete=2/2" in output

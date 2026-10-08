@@ -59,7 +59,7 @@
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
-        "sha256": "df6b80698cdf035d1cbbad17254d5bdeb9f730b9ab1eb0f1a97ab75d17327242"
+        "sha256": "04fe00f07fa008f1ce9caa12f1dfbba61c57cbe1888192d99e9e415e22a6555d"
       },
       {
         "path": "scripts/lexicon/build_synonym_verdicts_yaml.py",
@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "0b043a722088520f4fd95db93ddecf271ff4f078083efb87be2e7a7f722a61f8"
+        "sha256": "9806dc7e9bdf0ca300157753f1719d58c2a7dbcb745a9772526859b22140034f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",

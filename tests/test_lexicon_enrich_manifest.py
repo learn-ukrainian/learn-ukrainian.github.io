@@ -7210,6 +7210,29 @@ def test_strict_cache_reuse_requires_provenance(cache):
 
 
 @pytest.mark.parametrize(
+    "stored_lemma,expected", [("sample", True), ("sample / alias", True), ("other", False), (None, False)]
+)
+def test_strict_cache_reuse_matches_lookup_and_filename(stored_lemma, expected):
+    cache = enrich_manifest_module._new_slovnyk_cache("sample", "sample") | {"lemma": stored_lemma}
+    assert enrich_manifest_module._reusable_slovnyk_cache(cache, "sample / sibling", "sample") is expected
+
+
+@pytest.mark.parametrize("version", [2, 4])
+def test_strict_cache_distinct_lookup_collision_preserves_bytes(monkeypatch, tmp_path, version):
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    cache = enrich_manifest_module._new_slovnyk_cache("abc:def", "abc:def") | {"schema_version": version}
+    path = enrich_manifest_module._slovnyk_cache_path("abc:def")
+    path.write_text(json.dumps(cache))
+    before = path.read_bytes()
+    calls = []
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_outcome", lambda *_args: calls.append(1))
+    outcomes = {}
+    with pytest.raises(ValueError, match="cache filename collision"):
+        enrich_manifest_module._strict_slovnyk_cache("abc-def", outcomes, ("vts",))
+    assert path.read_bytes() == before and not calls and not outcomes
+
+
+@pytest.mark.parametrize(
     "change",
     [
         {"dictionary_slug": "other"},
