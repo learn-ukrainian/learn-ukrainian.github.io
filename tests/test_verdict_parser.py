@@ -51,3 +51,40 @@ def test_commonmark_preserves_non_fenced_crlf_text_and_eof_closer():
     assert recognized_verdicts(text) == ["BLOCKED"]
     assert recognized_verdicts("~~~\nVERDICT: APPROVE\n~~~") == []
     assert list(_code_fence_spans([])) == []
+
+
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+def test_commonmark_indented_top_level_fence_allows_unindented_data(fence, indent):
+    text = (
+        "Review this example.\n"
+        f"{' ' * indent}{fence}text\n"
+        "Fix the parser. #8886\nVERDICT: APPROVE\n"
+        f"{' ' * indent}{fence}\n"
+        "VERDICT: BLOCKED\n"
+    )
+    assert _without_code_fences(text, keep_unclosed=True) == "Review this example.\n\nVERDICT: BLOCKED\n"
+    assert recognized_verdicts(text) == ["BLOCKED"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "1. Old example:\n   ```py\n   x = 1\n2. Fix #8886.\n3. New example:\n   ```\n",
+        "- Old example:\n  ~~~py\n  x = 1\n- Fix #8886.\n- New example:\n  ~~~\n",
+        "- Old example:\n\n  ```py\n  x = 1\nFix #8886.\n  ```\n",
+        "1. Old example:\n\n   ```py\n   x = 1\n\n2. Fix #8886.\n\n3. New example:\n   ```\n",
+        "- Old example:\n  ```py\n  Fix #8886.\n  ```\n",
+    ],
+)
+def test_commonmark_container_fences_stay_visible_to_safety_consumers(text):
+    assert _without_code_fences(text, keep_unclosed=True) == text
+    # Verdict extraction retains its conservative lexical suppression policy.
+    assert recognized_verdicts(text.replace("Fix #8886.", "VERDICT: APPROVE")) == []
+
+
+def test_commonmark_container_span_does_not_prevent_later_top_level_data_removal():
+    text = "- Example:\n  ```\n  x = 1\n  ```\n\n```\nFix #8886.\n```\nOutside #9672.\n"
+    assert _without_code_fences(text, keep_unclosed=True) == (
+        "- Example:\n  ```\n  x = 1\n  ```\n\n\nOutside #9672.\n"
+    )
