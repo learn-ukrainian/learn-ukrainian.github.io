@@ -32,11 +32,17 @@ def _git(repo: Path, *arguments: str) -> str:
     )
     return subprocess.run(
         [
-            "git", "-C", str(repo),
-            "-c", "user.name=Freeze Fixture",
-            "-c", "user.email=fixture@example.invalid",
-            "-c", "commit.gpgsign=false",
-            "-c", f"core.hooksPath={os.devnull}",
+            "git",
+            "-C",
+            str(repo),
+            "-c",
+            "user.name=Freeze Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "-c",
+            "commit.gpgsign=false",
+            "-c",
+            f"core.hooksPath={os.devnull}",
             *arguments,
         ],
         check=True,
@@ -278,7 +284,9 @@ def test_synthetic_freeze_without_checkout_origin_main(tmp_path: Path, monkeypat
     assert _validate(evidence_dir)["integrity_verified"] is True
 
 
-def test_synthetic_freeze_stable_when_checkout_origin_main_moves(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_synthetic_freeze_stable_when_checkout_origin_main_moves(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     checkout = tmp_path / "checkout"
     original_sha, _ = _script_binding(checkout)
     monkeypatch.setattr(verifier, "ROOT", checkout)
