@@ -132,7 +132,7 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "root") -> None:
     serialized = json.dumps(data, ensure_ascii=False)
     match = PRIVATE_HOST_RE.search(serialized)
     if match:
-        raise ValueError(f"OPSEC violation at {path_prefix}: private host path detected: {match.group(0)}")
+        raise ValueError(f"OPSEC violation at {path_prefix}: private host path detected at offset {match.start()}")
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:

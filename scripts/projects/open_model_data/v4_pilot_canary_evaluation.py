@@ -154,10 +154,15 @@ def validate_no_private_host_paths(data: Any) -> None:
         re.compile(r"\b172\.(1[6-9]|2[0-9]|3[0-1])\.\d+\.\d+\b"),
     ]
 
+    # Diagnostics name only the rule number and offset: a pattern may carry
+    # deployment-configured values, and the match is the leaked value itself.
     def _check_string(s: str) -> None:
-        for pat in forbidden_patterns:
-            if pat.search(s):
-                raise ValueError(f"OPSEC VIOLATION: Private host pattern detected: {pat.pattern} in {s[:80]}")
+        for number, pat in enumerate(forbidden_patterns, 1):
+            match = pat.search(s)
+            if match:
+                raise ValueError(
+                    f"OPSEC VIOLATION: Private host pattern detected: rule {number} at offset {match.start()}"
+                )
 
     if isinstance(data, str):
         _check_string(data)

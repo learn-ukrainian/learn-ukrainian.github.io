@@ -707,7 +707,7 @@ def validate_no_private_host_paths(data: Any) -> None:
     serialized = json.dumps(data, ensure_ascii=False)
     match = PRIVATE_HOST_RE.search(serialized)
     if match:
-        raise ValueError(f"OPSEC violation: private path detected in data: {match.group(0)}")
+        raise ValueError(f"OPSEC violation: private path detected in data at offset {match.start()}")
 
 
 def build_differential_receipt(

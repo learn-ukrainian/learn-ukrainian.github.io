@@ -48,6 +48,8 @@ def test_valid_file_loads_users_and_homes(tmp_path: Path) -> None:
         "not json",
         [],
         {"schema_version": 2, "run_users": [], "home_dirs": []},
+        {"schema_version": True, "run_users": [], "home_dirs": []},
+        {"schema_version": 1.0, "run_users": [], "home_dirs": []},
         {"schema_version": 1, "run_users": "fixture-runner", "home_dirs": []},
         {"schema_version": 1, "run_users": ["Not A User"], "home_dirs": []},
         {"schema_version": 1, "run_users": [], "home_dirs": ["relative/home"]},
@@ -62,6 +64,38 @@ def test_malformed_file_fails_closed(tmp_path: Path, payload: object) -> None:
         _write(path, payload)
     with pytest.raises(nd.NeedlesError):
         nd.load_needles(path)
+
+
+def test_directory_at_the_location_is_rejected(tmp_path: Path) -> None:
+    target = tmp_path / "n.json"
+    target.mkdir()
+    with pytest.raises(nd.NeedlesError):
+        nd.load_needles(target)
+    with pytest.raises(nd.NeedlesError):
+        nd.load_needles(environ={nd.ENV_NEEDLES_FILE: str(target)})
+    (tmp_path / "learn-ukrainian" / nd.NEEDLES_FILE_NAME).mkdir(parents=True)
+    with pytest.raises(nd.NeedlesError):
+        nd.load_needles(environ={"XDG_CONFIG_HOME": str(tmp_path)})
+
+
+def test_dangling_link_at_the_location_is_rejected(tmp_path: Path) -> None:
+    target = tmp_path / "n.json"
+    target.symlink_to(tmp_path / "gone.json")
+    with pytest.raises(nd.NeedlesError):
+        nd.load_needles(target)
+
+
+def test_errors_do_not_repeat_the_location_or_contents(tmp_path: Path) -> None:
+    broken = tmp_path / "n.json"
+    broken.write_text(json.dumps({"schema_version": 1, "run_users": ["Bad User"], "home_dirs": [FIXTURE_HOME]}))
+    directory = tmp_path / "d.json"
+    directory.mkdir()
+    for target in (broken, directory):
+        with pytest.raises(nd.NeedlesError) as caught:
+            nd.load_needles(target)
+        message = str(caught.value)
+        assert str(tmp_path) not in message
+        assert "fixture" not in message and "Bad User" not in message
 
 
 def test_generic_home_pattern_is_the_fallback_and_skips_url_paths() -> None:
@@ -90,3 +124,26 @@ def test_run_user_aliases_only_come_from_the_deployment_file() -> None:
         assert not without.search(text)
     for text in ("user@bastion:repo.git", f"{OTHER_HOME}/x"):
         assert without.search(text) and with_users.search(text)
+
+
+@pytest.mark.parametrize(
+    ("module_name", "attribute", "function_name"),
+    [
+        ("v4_differential_soviet_miner", "PRIVATE_HOST_RE", "validate_no_private_host_paths"),
+        ("v4_production_shards_assembly", "PRIVATE_HOST_RE", "assert_no_private_host_paths"),
+        ("v4_verify_trajectory_claims", "PRIVATE_HOST_RE", "validate_no_private_host_paths"),
+        ("v4_pilot_canary_evaluation", "_PRIVATE_HOME_RE", "validate_no_private_host_paths"),
+    ],
+)
+def test_violation_messages_do_not_repeat_configured_values(
+    monkeypatch: pytest.MonkeyPatch, module_name: str, attribute: str, function_name: str
+) -> None:
+    module = pytest.importorskip(f"scripts.projects.open_model_data.{module_name}")
+    configured = re.compile(nd.home_dir_pattern(nd.Needles(home_dirs=(FIXTURE_HOME,))))
+    monkeypatch.setattr(module, attribute, configured)
+    for leaked in (f"{FIXTURE_HOME}/data", f"{OTHER_HOME}/data"):
+        with pytest.raises(ValueError) as caught:
+            getattr(module, function_name)({"field": leaked})
+        message = str(caught.value)
+        assert "fixture" not in message
+        assert "someone" not in message
