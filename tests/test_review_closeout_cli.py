@@ -991,3 +991,67 @@ def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_ma
     assert payload["selected"] is None
     assert "branch review facts unavailable" in payload["fail_closed_reason"]
     assert "missing explicit X-Agent" in payload["fail_closed_reason"]
+
+
+@pytest.mark.parametrize("base_name,excluded", [("main", True), ("release", False)])
+def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, monkeypatch, base_name, excluded):
+    """A frozen PR target must exclude default-branch authors, and only those."""
+    from scripts.review import target_resolution as resolution
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="branch author")
+    payload = {
+        "number": 10028,
+        "baseRefName": base_name,
+        "baseRefOid": repo.sha("origin/main"),
+        "headRefName": "feature",
+        "headRefOid": repo.sha("feature"),
+    }
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(resolution, "_run_gh", fake_run_gh)
+    state = tmp_path / "state.json"
+    target = _run_cli(state, "target", "--mode", "pr", "--pr", "10028", "--repo-root", str(repo.root))
+    assert target.returncode == 0, target.stderr
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target_args"]["base"] == base_name
+    assert saved["target"]["base_ref_name"] == base_name
+    frozen_base = saved["target"]["base_sha"]
+
+    repo.git("checkout", "-q", "trunk")
+    repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == frozen_base
+    assert saved["target_args"]["base"] == base_name
+    saved["target"]["head_sha"] = repo.sha("HEAD")
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tasks),
+        "--risk",
+        "medium",
+    )
+    body = json.loads(result.stdout)
+    if excluded:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert body["branch_facts"]["existing_families"] == ["anthropic"]
+        assert body["selected"]["name"] == "grok-4.7"
+    else:
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert body["selected"] is None
+        assert "missing explicit X-Agent" in body["fail_closed_reason"]

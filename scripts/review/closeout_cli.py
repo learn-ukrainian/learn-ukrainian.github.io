@@ -90,6 +90,7 @@ def _target_from_dict(data: object) -> ReviewTarget:
     non_test_loc = data.get("non_test_loc")
     clean_tree = data.get("clean_tree")
     description = data.get("description")
+    base_ref_name = data.get("base_ref_name")
     if mode not in {"local", "commit", "branch", "pr"}:
         raise CloseoutStateError("target_mode_invalid")
     if not all(
@@ -105,6 +106,8 @@ def _target_from_dict(data: object) -> ReviewTarget:
         raise CloseoutStateError("target_clean_tree_invalid")
     if not isinstance(description, str) or not description.strip():
         raise CloseoutStateError("target_description_invalid")
+    if base_ref_name is not None and (not isinstance(base_ref_name, str) or not base_ref_name.strip()):
+        raise CloseoutStateError("target_base_ref_invalid")
     return ReviewTarget(
         mode=mode,
         base_sha=base_sha,
@@ -113,6 +116,7 @@ def _target_from_dict(data: object) -> ReviewTarget:
         non_test_loc=non_test_loc,
         clean_tree=clean_tree,
         description=description,
+        base_ref_name=base_ref_name,
     )
 
 
@@ -158,12 +162,15 @@ def _cmd_target(args: argparse.Namespace) -> int:
         return 1
 
     state["target"] = asdict(target)
+    # PR mode has no --base. Keep the ref GitHub named, or a frozen target
+    # that later merges the default branch cannot exclude those authors.
+    stored_base = target.base_ref_name if args.mode == "pr" else args.base
     state["target_args"] = {
         "repo_root": str(Path(args.repo_root).resolve()),
         "mode": args.mode,
         "commit": args.commit,
         "branch": args.branch,
-        "base": args.base,
+        "base": stored_base,
         "pr": args.pr,
     }
     _save_state(args.state_file, state)
