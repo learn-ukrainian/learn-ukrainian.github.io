@@ -1136,6 +1136,23 @@ def test_complete_plan_has_no_word_quota(tmp_path: Path, target: int | None) -> 
     assert {item.code for item in report.not_checked} == NOT_CHECKED
 
 
+@pytest.mark.parametrize("target", [0, -1, "550", True, 5.5])
+def test_invalid_legacy_word_target_fails_strict_schema(tmp_path: Path, target: object) -> None:
+    plan, pack, words = build_base()
+    plan["lessons"][0]["word_target"] = target
+    world = _strict_quota_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
+    assert not report.ok
+    assert {item.code for item in report.failures} == {codes.SCHEMA_VIOLATION}, report.render_text()
+    assert all("lessons/0/word_target" in item.message for item in report.failures), report.render_text()
+
+
+def test_module_word_target_error_names_deprecated_metadata(tmp_path: Path) -> None:
+    report = run_case(tmp_path, case_by_name("module_word_target_fails"))
+    assert {item.code for item in report.failures} == {codes.REMOVED_V1_FIELD}
+    assert "deprecated per-lesson metadata" in report.failures[0].message
+
+
 def test_quota_free_plan_still_requires_teaching_practice(tmp_path: Path) -> None:
     plan, pack, words = build_base()
     for lesson in plan["lessons"]:

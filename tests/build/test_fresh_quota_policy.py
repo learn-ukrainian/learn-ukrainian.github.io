@@ -135,3 +135,14 @@ def test_review_sizing_is_job_adequacy(name):
     text = (REPO / "scripts/review/prompts" / f"{name}.md.j2").read_text()
     assert "no word or activity target" in text
     assert "job adequacy" in text and "45 minutes" in text and "counts are descriptive" in text
+
+
+@pytest.mark.parametrize("path", [
+    "scripts/review/prompts/plan-review.md.j2",
+    "docs/epics/fresh-build-review-contracts.md",
+    "docs/epics/fresh-build-a1-arc.md",
+])
+def test_plan_review_sizing_anchor_is_guidance(path):
+    text = " ".join((REPO / path).read_text().split())
+    assert "too much new inventory for an hour" not in text
+    assert "too much new inventory for about 45 minutes of total learner work; guidance, not a quota" in text

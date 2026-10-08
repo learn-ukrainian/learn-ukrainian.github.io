@@ -195,7 +195,8 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 **Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
 orientation only and total 162. A module gets the lessons its content needs — not compressed to hit
 a number, not stretched to fill one. The module plan decides the count; the plan review checks two
-things in both directions: no lesson that crams (too much new inventory for an hour) and no lesson
+things in both directions: no lesson that crams (too much new inventory for about 45 minutes of
+total learner work; guidance, not a quota) and no lesson
 that drags (a lesson whose job could be a step inside its neighbour). The reviewer's note that
 recap and checkpoint lessons are a large share of the total is a drag risk to watch: a short module
 may close with a recap *section* of its last lesson rather than a separate recap lesson, if the
