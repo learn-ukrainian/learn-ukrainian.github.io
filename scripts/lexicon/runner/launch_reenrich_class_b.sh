@@ -44,11 +44,13 @@ RUN_ROOT="$ATLAS_RUN_ROOT"
 
 # Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
 # a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
-# Strip surrounding whitespace and refuse non-positive values before any launch.
+# Strip surrounding ASCII whitespace; unset or blank uses the default, like
+# contracts.env_mib(). Refuse non-positive values before any launch.
 _trim_mib() {
   local s="$1"
-  s="${s#"${s%%[![:space:]]*}"}"
-  s="${s%"${s##*[![:space:]]}"}"
+  local ws=$' \t\n\r\v\f'
+  s="${s#"${s%%[!$ws]*}"}"
+  s="${s%"${s##*[!$ws]}"}"
   printf '%s' "$s"
 }
 _require_positive_mib() {
@@ -58,8 +60,10 @@ _require_positive_mib() {
     exit 2
   fi
 }
-JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}")"
-JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}")"
+JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB-}")"
+[[ -n "$JOB_MEMORY_HIGH_MIB" ]] || JOB_MEMORY_HIGH_MIB=1280
+JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB-}")"
+[[ -n "$JOB_MEMORY_MAX_MIB" ]] || JOB_MEMORY_MAX_MIB=1792
 _require_positive_mib LU_LEXICON_JOB_MEMORY_HIGH_MIB "$JOB_MEMORY_HIGH_MIB"
 _require_positive_mib LU_LEXICON_JOB_MEMORY_MAX_MIB "$JOB_MEMORY_MAX_MIB"
 JOB_MEMORY_HIGH_MIB="$((10#$JOB_MEMORY_HIGH_MIB))"

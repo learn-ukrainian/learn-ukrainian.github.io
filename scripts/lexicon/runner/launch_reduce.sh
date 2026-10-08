@@ -11,11 +11,13 @@ RUN_ROOT="$ATLAS_RUN_ROOT"
 
 # Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
 # a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
-# Strip surrounding whitespace and refuse non-positive values before any launch.
+# Strip surrounding ASCII whitespace; unset or blank uses the default, like
+# contracts.env_mib(). Refuse non-positive values before any launch.
 _trim_mib() {
   local s="$1"
-  s="${s#"${s%%[![:space:]]*}"}"
-  s="${s%"${s##*[![:space:]]}"}"
+  local ws=$' \t\n\r\v\f'
+  s="${s#"${s%%[!$ws]*}"}"
+  s="${s%"${s##*[!$ws]}"}"
   printf '%s' "$s"
 }
 _require_positive_mib() {
@@ -25,14 +27,25 @@ _require_positive_mib() {
     exit 2
   fi
 }
-JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}")"
-JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}")"
+JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB-}")"
+[[ -n "$JOB_MEMORY_HIGH_MIB" ]] || JOB_MEMORY_HIGH_MIB=1280
+JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB-}")"
+[[ -n "$JOB_MEMORY_MAX_MIB" ]] || JOB_MEMORY_MAX_MIB=1792
 _require_positive_mib LU_LEXICON_JOB_MEMORY_HIGH_MIB "$JOB_MEMORY_HIGH_MIB"
 _require_positive_mib LU_LEXICON_JOB_MEMORY_MAX_MIB "$JOB_MEMORY_MAX_MIB"
 JOB_MEMORY_HIGH_MIB="$((10#$JOB_MEMORY_HIGH_MIB))"
 JOB_MEMORY_MAX_MIB="$((10#$JOB_MEMORY_MAX_MIB))"
 # Children started without the service manager inherit the resolved values.
 export LU_LEXICON_JOB_MEMORY_HIGH_MIB="$JOB_MEMORY_HIGH_MIB" LU_LEXICON_JOB_MEMORY_MAX_MIB="$JOB_MEMORY_MAX_MIB"
+# The caps come only from this configuration, so the unit and the runner
+# always agree; refuse caller-supplied memory flags (including abbreviations).
+for _arg in "$@"; do
+  _opt="${_arg%%=*}"
+  if [[ ${#_opt} -ge 3 && ( "--memory-high-mib" == "$_opt"* || "--memory-max-mib" == "$_opt"* ) ]]; then
+    printf '%s is not accepted; set LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB instead\n' "$_arg" >&2
+    exit 2
+  fi
+done
 
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
