@@ -22,12 +22,16 @@ class ReviewCapacity:
 def review_capacity(record: Mapping[str, object], diagnostics: Mapping[str, object] | None = None) -> ReviewCapacity:
     """Keep stale allowance advisory and pace ordering-only; runtime blocks always bind."""
     remaining = credit_lane.plan_remaining_pct(record)
-    freshness, reason = credit_lane.observation_freshness(record, diagnostics, credit_lane.probe_max_age_s())
     try:
-        threshold = credit_lane.load_policy().near_cap_remaining_pct
+        policy = credit_lane.load_policy()
     except ValueError:
         # Same retained reserve as the owner's unreadable-policy fallback.
         threshold = credit_lane._NEAR_CAP_REMAINING_PCT
+        max_age_s = credit_lane.UNREADABLE_POLICY_MAX_AGE_S
+    else:
+        threshold = policy.near_cap_remaining_pct
+        max_age_s = credit_lane.probe_max_age_s(policy)
+    freshness, reason = credit_lane.observation_freshness(record, diagnostics, max_age_s)
     pace = record.get("codexbar") or record.get("pace") or record
     delta = pace.get("weekly_pace_delta_pct") if isinstance(pace, Mapping) else None
     pressure = (

@@ -86,6 +86,28 @@ def test_policy_threshold_is_used(monkeypatch):
     assert resolve_reviewer(inputs(snapshot())).selected is None
 
 
+def test_capacity_reads_one_fresh_policy_per_call(monkeypatch):
+    policy = credit_lane.load_policy()
+    policies = iter([
+        replace(policy, near_cap_remaining_pct=10, credit_max_age_s=30),
+        replace(policy, near_cap_remaining_pct=20, credit_max_age_s=60),
+    ])
+    reads = []
+
+    def load_policy():
+        value = next(policies)
+        reads.append(value)
+        return value
+
+    monkeypatch.setattr(credit_lane, "load_policy", load_policy)
+    record = {"remaining_pct": 15, "codexbar": {"freshness": "fresh", "age_s": 45}}
+    first = review_capacity(record, {"stale": False})
+    second = review_capacity(record, {"stale": False})
+    assert len(reads) == 2
+    assert first.freshness == credit_lane.STALE and not first.near_cap
+    assert second.freshness == credit_lane.FRESH and second.near_cap
+
+
 @pytest.mark.parametrize("data", [snapshot(stale=True, remaining=0), {"agents": {"claude": {"status": "near_cap"}}}])
 def test_stale_or_missing_allowance_is_advisory_and_recorded(data):
     result = resolve_reviewer(inputs(data))
