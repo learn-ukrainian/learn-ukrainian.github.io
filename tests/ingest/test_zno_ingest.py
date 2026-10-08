@@ -31,6 +31,9 @@ from scripts.ingest.zno_ingest import (
 def isolate_transport(monkeypatch):
     monkeypatch.setattr(zno_ingest, "_access_stopped", False)
     monkeypatch.setattr(zno_ingest, "_robots_delays", {"https://example.invalid": 0.0})
+    monkeypatch.setattr(zno_ingest, "_robots_states", {
+        "https://example.invalid": zno_ingest._robots_parse(b"", zno_ingest.USER_AGENT)
+    })
     monkeypatch.setattr(zno_ingest, "_request_times", {})
 
 

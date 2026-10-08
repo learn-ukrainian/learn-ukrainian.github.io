@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import urllib.error
+from itertools import pairwise
 from pathlib import Path
 from types import SimpleNamespace
 from urllib.parse import urlparse
@@ -24,7 +25,7 @@ CHALLENGE = b"<title>Just a moment...</title><script>cf_chl_opt={}</script>"
 
 class Response:
     def __init__(self, body=b"source", status=200, headers=None):
-        self.body = body
+        self.body = self.content = body
         self.status = self.status_code = self.code = status
         self.headers = headers or {}
         self.closed = False
@@ -69,6 +70,7 @@ def isolate_policy(monkeypatch):
     for module in MODULES:
         monkeypatch.setattr(module, "_access_stopped", False)
         monkeypatch.setattr(module, "_robots_delays", {})
+        monkeypatch.setattr(module, "_robots_states", {})
         monkeypatch.setattr(module, "_request_times", {})
     monkeypatch.setattr(textbook.time, "monotonic", lambda: clock.now)
     monkeypatch.setattr(textbook.time, "sleep", clock.sleep)
@@ -430,6 +432,7 @@ def test_urllib_redirect_handler_prevents_implicit_followup(monkeypatch, tmp_pat
     opener = urllib.request.build_opener(zno._NoRedirect(), FakeHTTP())
     monkeypatch.setattr(zno, "_open", lambda request: opener.open(request, timeout=30))
     monkeypatch.setattr(zno, "_robots_delays", {"http://source.test": 0.0})
+    monkeypatch.setattr(zno, "_robots_states", {"http://source.test": zno._robots_parse(b"", zno.USER_AGENT)})
     with pytest.raises(zno.AccessStopped):
         zno.fetch_page_with_rate_limit("http://source.test/first", tmp_path / "page")
     assert calls == ["http://source.test/first"]
@@ -443,3 +446,830 @@ def test_drive_html_content_type_cannot_truncate_a_valid_pdf(monkeypatch, tmp_pa
     assert textbook.download_from_gdrive("ID", dest, retained_store=tmp_path)
     assert dest.read_bytes() == payload
     assert len(srv.source_calls()) == 1
+
+
+# Disclosed controls, handwritten here. They are regression evidence, never
+# independent held-outs. None imports an adviser/reference implementation.
+def group(*lines):
+    return b"User-agent: *\n" + b"\n".join(lines) + b"\n"
+
+
+RFC_GROUPS = (b"User-Agent: *\nDisallow: *.gif$\nDisallow: /example/\nAllow: /publications/\n\n"
+              b"User-Agent: foobot\nDisallow:/\nAllow:/example/page.html\nAllow:/example/allowed.gif\n\n"
+              b"User-Agent: barbot\nUser-Agent: bazbot\nDisallow: /example/page.html\n\nUser-Agent: quxbot\n\nEOF\n")
+RFC_PREFIX = b"User-Agent: foobot\nAllow: /example/page/\nDisallow: /example/page/disallowed.gif\n"
+ALLOW = "allow"
+DENY = "robots_disallowed"
+AMBIGUOUS = "robots_ambiguous"
+UNRESOLVED = "robots_unresolved"
+SUM_HEADER = "learn-ukrainian-sum20/1.0"
+# id, raw body, exact target, decision; optional header replaces the D header.
+LEGACY_CONTROLS = [
+    ("F4.1", group(b"Disallow: /foo/bar?baz=quz"), "/foo/bar?baz=quz", DENY),
+    ("F4.2a", group(b"Disallow: /foo/bar?baz=https%3A%2F%2Ffoo.bar"), "/foo/bar?baz=https%3A%2F%2Ffoo.bar", DENY),
+    ("F4.2b", group(b"Disallow: /foo/bar?baz=https%3a%2f%2ffoo.bar"), "/foo/bar?baz=https%3A%2F%2Ffoo.bar", DENY),
+    ("F4.2c", group(b"Disallow: /foo/bar?baz=https%3A%2F%2Ffoo.bar"), "/foo/bar?baz=https://foo.bar", AMBIGUOUS),
+    ("F4.3a", group(b"Disallow: /foo/bar/\xe3\x83\x84"), "/foo/bar/%E3%83%84", DENY),
+    ("F4.3b", group(b"Disallow: /foo/bar/\xe3\x83\x84"), "/foo/bar/" + b"\xe3\x83\x84".decode(), DENY),
+    ("F4.3c", group(b"Disallow: /foo/bar/%e3%83%84"), "/foo/bar/" + b"\xe3\x83\x84".decode(), DENY),
+    ("F4.4", group(b"Disallow: /foo/bar/%E3%83%84"), "/foo/bar/%e3%83%84", DENY),
+    ("F4.5a", group(b"Disallow: /foo/bar/baz"), "/foo/bar/%62%61%7A", DENY),
+    ("F4.5b", group(b"Disallow: /foo/bar/%62%61%7A"), "/foo/bar/baz", DENY),
+    ("F4.5c", group(b"Disallow: /foo/bar/%62%61%7a"), "/foo/bar/%62%61%7A", DENY),
+    ("F4.5d", group(b"Disallow: /foo/bar/%62%61%7A$"), "/foo/bar/baz", DENY),
+    ("U.tilde", group(b"Disallow: /~user"), "/%7Euser/x", DENY),
+    ("U.mixed", group(b"Disallow: /a-b_c.d"), "/a%2Db%5Fc%2Ed", DENY),
+    ("F6.1a", group(b"Disallow: /path/file-with-a-%2A.html"), "/path/file-with-a-*.html", DENY),
+    ("F6.1b", group(b"Disallow: /path/file-with-a-%2a.html"), "/path/file-with-a-%2A.html", DENY),
+    ("F6.1c", group(b"Disallow: /path/file-with-a-%2A.html"), "/path/file-with-a-x.html", ALLOW),
+    ("F6.2a", group(b"Disallow: /path/foo-%24"), "/path/foo-$", DENY),
+    ("F6.2b", group(b"Disallow: /path/foo-%24"), "/path/foo-%24", DENY),
+    ("F6.2c", group(b"Disallow: /path/foo-%24"), "/path/foo-", ALLOW),
+    ("F6.2d", group(b"Disallow: /path/foo-%24$"), "/path/foo-$x", ALLOW),
+    ("OP.star", group(b"Disallow: /this/*/exactly"), "/this/a/b/exactly", DENY),
+    ("OP.star0", group(b"Disallow: /this/*/exactly"), "/this//exactly", DENY),
+    ("OP.dollar", group(b"Allow: /", b"Disallow: /this/path/exactly$"), "/this/path/exactly", DENY),
+    ("OP.dollar2", group(b"Disallow: /this/path/exactly$"), "/this/path/exactly/more", ALLOW),
+    ("OP.dollarq", group(b"Disallow: /*.pdf$"), "/x/y.pdf?a=1", ALLOW),
+    ("OP.midDollar", group(b"Disallow: /a$b"), "/a$b", DENY),
+    ("OP.midDollarEnc", group(b"Disallow: /a$b"), "/a%24b", DENY),
+    ("OP.dollarDollar", group(b"Disallow: /a$$"), "/a$", DENY),
+    ("OP.dollarDollar2", group(b"Disallow: /a$$"), "/a$b", ALLOW),
+    ("OP.starLiteralUri", group(b"Disallow: /a*c"), "/a*c", DENY),
+    ("OP.starStar", group(b"Disallow: /a**b"), "/aXXb", DENY),
+    ("OP.starOnly", group(b"Disallow: *"), "/anything", DENY),
+    ("OP.starTie", group(b"Disallow: *", b"Allow: /"), "/anything", AMBIGUOUS),
+    ("OP.starDollar", group(b"Disallow: /*$"), "/x?y", DENY),
+    ("OP.noLeadingSlash", group(b"Disallow: private"), "/private", UNRESOLVED),
+    ("OP.escapeAtomic", group(b"Disallow: /*2F"), "/a%2F", AMBIGUOUS),
+    ("OP.escapeAtomic2", group(b"Disallow: /*%2F"), "/a%2F", DENY),
+    ("OP.escapePrefix", group(b"Disallow: /a%"), "/a%2F", UNRESOLVED),
+    ("R.slash", group(b"Disallow: /a%2Fb"), "/a/b", AMBIGUOUS),
+    ("R.slash2", group(b"Disallow: /a/b"), "/a%2Fb", AMBIGUOUS),
+    ("R.slash3", group(b"Disallow: /a%2fb"), "/a%2Fb", DENY),
+    ("R.eq", group(b"Disallow: /s?q=a%3Db"), "/s?q=a=b", AMBIGUOUS),
+    ("R.amp", group(b"Disallow: /s?a=1&b"), "/s?a=1%26b", AMBIGUOUS),
+    ("R.qmark", group(b"Disallow: /a?"), "/a%3F", AMBIGUOUS),
+    ("R.semicolon", group(b"Disallow: /a;p"), "/a;p=1", DENY),
+    ("R.colonRaw", group(b"Disallow: /a:b"), "/a:b", DENY),
+    ("E.stray", group(b"Disallow: /a%zz"), "/a%zz", UNRESOLVED),
+    ("E.strayEq25", group(b"Disallow: /a%zz"), "/a%25zz", UNRESOLVED),
+    ("E.trailing", group(b"Disallow: /a%"), "/a%", UNRESOLVED),
+    ("E.half", group(b"Disallow: /a%4"), "/a%4", UNRESOLVED),
+    ("E.halfNotA", group(b"Disallow: /a%4"), "/aA", UNRESOLVED),
+    ("E.pct25", group(b"Disallow: /100%25"), "/100%25", DENY),
+    ("N.cyr", group(b"Disallow: /\xd0\xba\xd0\xbd\xd0\xb8\xd0\xb3\xd0\xb0"), "/%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0/1", DENY),
+    ("N.cyrRawUri", group(b"Disallow: /%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0"), "/" + b"\xd0\xba\xd0\xbd\xd0\xb8\xd0\xb3\xd0\xb0".decode(), DENY),
+    ("N.badUtf8", group(b"Disallow: /\xff\xfe"), "/%FF%FE/x", UNRESOLVED),
+    ("N.badUtf8Other", group(b"Disallow: /\xff", b"Disallow: /private"), "/private/x", UNRESOLVED),
+    ("N.fffdNotBad", group(b"Disallow: /\xff"), "/%EF%BF%BD", UNRESOLVED),
+    ("C.space", group(b"Disallow: /a b"), "/a%20b", UNRESOLVED),
+    ("C.tabTrim", b"User-agent: *\nDisallow:\t/a\t\n", "/a", DENY),
+    ("C.nul", group(b"Disallow: /a\x00b"), "/a%00b", UNRESOLVED),
+    ("C.ffInValue", group(b"Disallow: /a\x0cb"), "/a%0Cb", UNRESOLVED),
+    ("C.pipe", group(b"Disallow: /a|b"), "/a%7Cb", DENY),
+    ("C.caseSensitive", group(b"Disallow: /Admin"), "/admin", ALLOW),
+    ("L.inlineComment", group(b"Disallow: /foo/quz#qux", b"Allow: /"), "/foo/quz", DENY),
+    ("L.commentOnly", b"# Disallow: /\nUser-agent: *\nAllow: /\n", "/x", ALLOW),
+    ("L.commentedRule", group(b"# Disallow: /x"), "/x", ALLOW),
+    ("L.cr", b"User-agent: *\rDisallow: /a\r", "/a", DENY),
+    ("L.crlf", b"User-agent: *\r\nDisallow: /a\r\n", "/a", DENY),
+    ("L.bom", b"\xef\xbb\xbfUser-agent: *\nDisallow: /a\n", "/a", DENY),
+    ("L.keyCase", b"USER-AGENT: *\nDISALLOW: /a\n", "/a", DENY),
+    ("L.noColon", b"User-agent: *\nDisallow /a\n", "/a", UNRESOLVED),
+    ("L.blankInGroup", b"User-agent: *\n\nDisallow: /a\n", "/a", DENY),
+    ("G.exact", b"User-agent: bot\nDisallow: /\nUser-agent: *\nAllow: /\n", "/x", UNRESOLVED),
+    ("G.version", b"User-agent: LearnUkrainianBot/1.0\nDisallow: /\n", "/x", UNRESOLVED),
+    ("G.merge", b"User-agent: learnukrainianbot\nDisallow: /a\nUser-agent: LEARNUKRAINIANBOT\nDisallow: /b\n", "/b", DENY),
+    ("G.replacesStar", b"User-agent: *\nDisallow: /\nUser-agent: LearnUkrainianBot\nDisallow: /private\n", "/public", ALLOW),
+    ("G.multiUA", b"User-agent: a\nUser-agent: learnukrainianbot\nDisallow: /\n", "/x", UNRESOLVED),
+    ("G.sitemap", b"User-agent: a\nSitemap: https://h.test/s.xml\nUser-agent: learnukrainianbot\nDisallow: /\n", "/x", UNRESOLVED),
+    ("G.beforeGroup", b"Disallow: /\nUser-agent: *\nAllow: /\n", "/x", ALLOW),
+    ("G.noMatchNoStar", b"User-agent: otherbot\nDisallow: /\n", "/x", ALLOW),
+    ("G.noGroups", b"", "/x", ALLOW),
+    ("G.starWord", b"User-agent: *bot\nDisallow: /\n", "/x", UNRESOLVED),
+    ("G.starComment", b"User-agent: * # all\nDisallow: /\n", "/x", DENY),
+    ("G.hyphenToken", b"User-agent: learn\nDisallow: /\nUser-agent: learn-ukrainian-sum20\nAllow: /\n", "/x", UNRESOLVED, SUM_HEADER),
+    ("G.hyphenToken2", b"User-agent: learn\nDisallow: /\n", "/x", UNRESOLVED, SUM_HEADER),
+    ("G.emptyRuleSplits", b"User-agent: a\nDisallow:\nUser-agent: learnukrainianbot\nDisallow: /x\n", "/x", UNRESOLVED),
+    ("G.emptyDisallow", group(b"Disallow:"), "/x", ALLOW),
+    ("S.longest", group(b"Disallow: /a", b"Allow: /a/b"), "/a/b", ALLOW),
+    ("S.tie", group(b"Disallow: /p", b"Allow: /p"), "/p", ALLOW),
+    ("S.equivSpelling", group(b"Disallow: /foo/bar/%62%61%7A", b"Allow: /foo/bar/baz"), "/foo/bar/baz", ALLOW),
+    ("S.escapeCounts3", group(b"Allow: /a%2F", b"Disallow: /a%2Fb"), "/a%2Fb", DENY),
+    ("S.escapeCounts3b", group(b"Allow: /a%2Fb", b"Disallow: /a%2F*"), "/a%2Fb", AMBIGUOUS),
+    ("S.nonAsciiCounts", group(b"Allow: /\xd0\xb6", b"Disallow: /%D0%B6x"), "/" + b"\xd0\xb6".decode() + "x", DENY),
+    ("RFC5.1a", RFC_GROUPS, "/a/b.gif", DENY),
+    ("RFC5.1b", RFC_GROUPS, "/publications/x", ALLOW),
+    ("RFC5.1c", RFC_GROUPS, "/example/x", DENY),
+    ("RFC5.1d", RFC_GROUPS, "/example/page.html", ALLOW, "foobot/1.0"),
+    ("RFC5.1e", RFC_GROUPS, "/example/allowed.gif", ALLOW, "foobot/1.0"),
+    ("RFC5.1f", RFC_GROUPS, "/x", DENY, "foobot/1.0"),
+    ("RFC5.1g", RFC_GROUPS, "/example/page.html", DENY, "bazbot/1.0"),
+    ("RFC5.1h", RFC_GROUPS, "/x.gif", ALLOW, "quxbot/1.0"),
+    ("RFC5.2a", RFC_PREFIX, "/example/page/disallowed.gif", DENY, "foobot/1.0"),
+    ("RFC5.2b", RFC_PREFIX, "/example/page/x", ALLOW, "foobot/1.0"),
+    ("T.query", group(b"Disallow: /books/author.php?id="), "/books/author.php?id=7&page=1", DENY),
+    ("T.fragment", group(b"Disallow: /a$"), "https://h.test/a#frag", DENY),
+    ("T.emptyPath", group(b"Disallow: /$"), "https://h.test", DENY),
+    ("T.queryOnly", group(b"Disallow: /?x"), "https://h.test?x=1", DENY),
+    ("T.robots", group(b"Disallow: /"), "/robots.txt", ALLOW),
+    ("T.robotsCase", group(b"Disallow: /"), "/ROBOTS.TXT", DENY),
+    ("T.trailingQ", group(b"Disallow: /a?$"), "/a?", DENY),
+    ("T.robotsEnc", group(b"Disallow: /"), "/robots%2Etxt", ALLOW),
+    ("T.robotsQuery", group(b"Disallow: /"), "/robots.txt?x=1", ALLOW),
+]
+
+DECISION_CONTROLS = [
+    ("P1", group(b"Disallow: /admin/", b"Disallow: /search", b"Allow: /"), "/books/printit.php?tid=1234", ALLOW),
+    ("P2", group(b"Disallow: /admin/", b"Disallow: /search", b"Allow: /"), "/%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8/1.pdf", ALLOW),
+    ("P3", group(b"Disallow: /*?sort=", b"Disallow: /*.php$"), "/books/printit.php?tid=1", ALLOW),
+    ("P4", group(b"Disallow: /a", b"Allow: /a/b"), "/a/b/c", ALLOW),
+    ("P5", b"User-agent: *\nDisallow: /\nUser-agent: LearnUkrainianBot\nDisallow: /private\n", "/public?id=7", ALLOW),
+    ("P6", b"User-agent: learn-ukrainian-sum\nAllow: /\nUser-agent: *\nDisallow: /\n", "/?word=%D0%BA%D1%96%D1%82&page=0", ALLOW, SUM_HEADER),
+    ("P7", group(b"Disallow: /foo/bar?baz=https%3A%2F%2Ffoo.bar"), "/foo/bar?baz=quz", ALLOW),
+    ("P8", group(b"Disallow: /caf%C3%A9"), "/cafe", ALLOW),
+    ("P9", group(b"Disallow: /*/print/"), "/a/%D0%BA/", ALLOW),
+    ("P10", group(b"Disallow: /private", b"Allow: /", b"Allow: /pub\xff"), "/public", ALLOW),
+    ("P11", b"User-agent: Googlebot\nDisallow: /\nUser-agent: *\nAllow: /\n", "/x", ALLOW),
+    ("P12", b"Allow: /x\nUser-agent: *\nDisallow: /y\n", "/x", ALLOW),
+    ("P13", group(b"Disallow: /"), "/robots.txt?x=1", ALLOW),
+    ("P14", group(b"Disallow: /p", b"Allow: /p"), "/p", ALLOW),
+    # P15 is a robots transport status, tested separately on every D helper.
+    ("B1a", b"User-agent: learn-ukrainian-sum20\nDisallow: /word\nUser-agent: *\nAllow: /\n", "/word/x", UNRESOLVED, SUM_HEADER),
+    ("B1b", b"User-agent: learn\nDisallow: /\nUser-agent: *\nAllow: /\n", "/x", UNRESOLVED),
+    ("B1c", b"User-agent: LearnUkrainianBot/1.0\nAllow: /\nUser-agent: *\nDisallow: /\n", "/x", UNRESOLVED),
+    ("B1d", b"User-agent: learn-ukrainian-sum\nDisallow: /word\n", "/word/x", DENY, SUM_HEADER),
+    ("B1e", b"User-agent: *bot\nDisallow: /\n", "/x", UNRESOLVED),
+    ("B1f", b"User-agent:\nDisallow: /\n", "/x", UNRESOLVED),
+    ("B2a", group(b"Disallow: /foo/bar?baz=https%3A%2F%2Ffoo.bar"), "/foo/bar?baz=https://foo.bar", AMBIGUOUS),
+    ("B2b", group(b"Disallow: /a/b"), "/a%2Fb", AMBIGUOUS),
+    ("B2c", group(b"Disallow: /a%2Fb"), "/a/b", AMBIGUOUS),
+    ("B2d", group(b"Disallow: /s?q=a%3Db"), "/s?q=a=b", AMBIGUOUS),
+    ("B2e", group(b"Disallow: /a%2Fb"), "/a%2fb", DENY),
+    ("B3a", group(b"Disallow: /private", b"Allow: /private/\xff"), "/private/%FF", DENY),
+    ("B3b", group(b"Disallow: /private/\xff"), "/public", UNRESOLVED),
+    ("B3c", group(b"Disallow: /\xea\xed\xe8\xe3\xe8"), "/%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8", UNRESOLVED),
+    ("B3d", group(b"Disallow: /\xff"), "/%EF%BF%BD", UNRESOLVED),
+    ("B3e", b"User-agent: *\nDisallow /a\n", "/a", UNRESOLVED),
+    ("B3f", group(b"Disallow: private"), "/private", UNRESOLVED),
+    ("B3g", group(b"Disallow: /a%"), "/a%2F", UNRESOLVED),
+    ("B4a", group(b"Disallow: /*2F"), "/a%2F", AMBIGUOUS),
+    ("B4b", group(b"Disallow: /*84"), "/x/%E3%83%84", AMBIGUOUS),
+    ("B4c", group(b"Disallow: /*%2F"), "/a%2F", DENY),
+    ("T1", group(b"Disallow: *", b"Allow: /"), "/x", AMBIGUOUS),
+    ("X1", b"#" + b"x" * 512000, "/x", UNRESOLVED),
+    ("X2", b"\xff\xfeU\x00s\x00e\x00r\x00", "/x", UNRESOLVED),
+]
+DISCLOSED_SEVEN = [
+    ("prior1", group(b"Disallow: /foo/bar/baz"), "/foo/bar/%62%61%7A", DENY),
+    ("prior2", group(b"Disallow: /foo/bar/%62%61%7A"), "/foo/bar/baz", DENY),
+    ("prior3", group(b"Disallow: /path/file-with-a-%2A.html"), "/path/file-with-a-*.html", DENY),
+    ("prior4", group(b"Disallow: /path/foo-%24"), "/path/foo-$", DENY),
+    ("prior5", group(b"Disallow: /a%2Fb"), "/a/b", AMBIGUOUS),
+    ("prior6", group(b"Disallow: /path/*.html"), "/path/file.html", DENY),
+    ("prior7", group(b"Disallow: /caf%C3%A9"), "/caf%c3%a9", DENY),
+]
+ADMISSION_CONTROLS = [
+    ("orphan-deny", b"Disallow: /private\nUser-agent: other\nAllow: /\n", "/private", DENY),
+    ("orphan-malformed", b"Disallow /private\nUser-agent: other\nAllow: /\n", "/public", UNRESOLVED),
+    ("ignored-malformed", b"User-agent: Googlebot\nDisallow: /bad%\nUser-agent: *\nAllow: /\n", "/public", ALLOW),
+    ("missing-agent-colon", b"User-agent LearnUkrainianBot\nAllow: /\n", "/robots.txt", UNRESOLVED),
+    ("utf32be", b"\x00\x00\xfe\xff", "/robots.txt", UNRESOLVED),
+    ("utf16be", b"\xfe\xff", "/robots.txt", UNRESOLVED),
+    ("malformed-allow-slash", group(b"Disallow: /", b"Allow: public"), "/public", DENY),
+    ("malformed-allow-percent", group(b"Disallow: /", b"Allow: /public%"), "/public%25", DENY),
+    ("malformed-allow-dollar", group(b"Disallow: /", b"Allow: /public$x"), "/public$x", DENY),
+    ("malformed-allow-colon", b"User-agent: *\nDisallow: /\nAllow /public\n", "/public", DENY),
+    ("malformed-allow-ctl", group(b"Disallow: /", b"Allow: /public\x7f"), "/public%7F", DENY),
+    ("misspelled-record", b"Usr-agent: *\nDisalow: /\n", "/public", ALLOW),
+    ("all-equivalent-ties", group(b"Disallow: /p", b"Disallow: /%70", b"Allow: /p"), "/p", ALLOW),
+    ("mixed-ties", group(b"Disallow: *", b"Disallow: /", b"Allow: /"), "/p", AMBIGUOUS),
+    ("top-allow-only", group(b"Allow: /p", b"Disallow: /"), "/p", ALLOW),
+    ("anchor-non-equivalent", group(b"Allow: /a$", b"Disallow: /a*"), "/a", AMBIGUOUS),
+]
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("case", LEGACY_CONTROLS + DECISION_CONTROLS + DISCLOSED_SEVEN + ADMISSION_CONTROLS, ids=lambda row: row[0])
+def test_complete_permission_contract(module, case, monkeypatch):
+    _id, body, target, expected, *headers = case
+    header = headers[0] if headers else module.USER_AGENT
+    monkeypatch.setattr(module, "USER_AGENT", header)
+    url = target if target.startswith(("http://", "https://")) else "https://h.test" + target
+    origin = "https://h.test"
+    state = module._robots_parse(body, header)
+    module._robots_states[origin] = state
+    if expected == ALLOW:
+        module._robots_check_target(url)
+        assert module._access_stopped is False
+    else:
+        with pytest.raises(module.AccessStopped, match=expected):
+            module._robots_check_target(url)
+        assert module._access_stopped is True
+        with pytest.raises(module.AccessStopped):
+            module._robots_check_target("https://other.test/robots.txt")
+
+
+def test_disclosed_control_denominators():
+    assert len(LEGACY_CONTROLS) == 113
+    assert len(DISCLOSED_SEVEN) == 7
+    assert len([row for row in DECISION_CONTROLS if row[0].startswith("P")]) == 14
+    assert len([row for row in DECISION_CONTROLS if not row[0].startswith("P")]) == 24
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("header,token", [
+    ("LearnUkrainianBot/1.0", b"learnukrainianbot"),
+    ("learn-ukrainian-word-atlas/1.0", b"learn-ukrainian-word-atlas"),
+    ("learn-ukrainian-ulp/1.0", b"learn-ukrainian-ulp"),
+    (SUM_HEADER, b"learn-ukrainian-sum"),
+    ("learn-ukrainian-sum20-ingest/1.0", b"learn-ukrainian-sum"),
+    ("_BOT-name123/1.0", b"_bot-name"),
+])
+def test_header_derived_product_and_exact_group_use_same_token(module, header, token):
+    assert module._robots_token(header) == token
+    assert token in header.lower().encode()
+    body = b"User-agent: " + token + b"\nCrawl-delay: .75\nDisallow: /private\nUser-agent: *\nCrawl-delay: 99\nDisallow: /\n"
+    state = module._robots_parse(body, header)
+    assert state == {"unresolved": False, "delay": .75, "rules": [(False, b"/private")]}
+
+
+@pytest.mark.parametrize("header", ["", "123Bot/1", "/Bot", " Bot"])
+def test_empty_token_stops_before_any_transport(server, monkeypatch, header):
+    monkeypatch.setattr(server.module, "USER_AGENT", header)
+    if server.module is textbook:
+        monkeypatch.setitem(textbook.HEADERS, "User-Agent", header)
+    with pytest.raises(server.module.AccessStopped, match="robots_configuration"):
+        server.fetch("https://source.test/page")
+    assert server.calls == []
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("state", [None, {"unresolved": True, "rules": [], "delay": 0}])
+def test_missing_and_unresolved_state_precede_robots_exception(module, state):
+    module._robots_states["https://source.test"] = state
+    with pytest.raises(module.AccessStopped, match=UNRESOLVED):
+        module._robots_check_target("https://source.test/robots.txt?x=1")
+
+
+def position_set_match(raw, target, reading):
+    """Seeded independent matcher mechanics, deliberately not a normative oracle."""
+    unreserved = set(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
+    reserved = set(b":/?#[]@!&'()+,;=")
+    def units(data, is_rule):
+        result = []
+        anchor = is_rule and data.endswith(b"$")
+        if anchor:
+            data = data[:-1]
+        i = 0
+        while i < len(data):
+            b = data[i]
+            if b == 37 and i + 2 < len(data) and all(c in b"0123456789abcdefABCDEF" for c in data[i + 1:i + 3]):
+                b = int(data[i + 1:i + 3], 16)
+                encoded = b not in unreserved
+                i += 3
+            else:
+                i += 1
+                if is_rule and b == 42:
+                    result.append(None)
+                    continue
+                encoded = b not in unreserved and (reading == 2 or b not in reserved)
+            if encoded:
+                result.extend(list(f"%{b:02X}") if reading == 2 else [("octet", b)])
+            else:
+                result.append(chr(b))
+        return result, anchor
+    pattern, anchored = units(raw, True)
+    text, _anchor = units(target, False)
+    positions = {0}
+    for atom in pattern:
+        if atom is None:
+            positions = {p for start in positions for p in range(start, len(text) + 1)}
+        else:
+            positions = {p + 1 for p in positions if p < len(text) and text[p] == atom}
+        if not positions:
+            return False
+    return len(text) in positions if anchored else bool(positions)
+
+
+@pytest.mark.parametrize("module", MODULES)
+def test_seeded_two_reading_greedy_vs_position_set_mechanics(module):
+    import random
+    rng = random.Random(8999)
+    alphabet = [b"a", b"b", b"/", b"%2F", b"%61", b"*", b"$", b"\xd0\xb6", b"%2A", b"?", b"%zz", b"%84"]
+    for _ in range(20000):
+        rule = b"/" + b"".join(rng.choices(alphabet, k=rng.randrange(8)))
+        target = b"/" + b"".join(rng.choices(alphabet, k=rng.randrange(10)))
+        for reading in (1, 2):
+            pattern, anchor, _weight = module._robots_canonical(rule, rule=True, reading=reading)
+            canonical = module._robots_canonical(target, rule=False, reading=reading)[0]
+            assert module._robots_match(pattern, anchor, canonical) == position_set_match(rule, target, reading), (rule, target, reading)
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("shape", ["many-rules", "many-wildcards", "long-needles", "escape-flood", "over-limit"])
+def test_both_readings_each_hostile_shape_under_five_seconds(module, shape):
+    import time
+    bodies = {
+        "many-rules": b"User-agent: *\n" + b"Disallow: /*a*a*a*a*b\n" * (512000 // 22),
+        "many-wildcards": group(b"Disallow: /" + b"*a" * ((512000 - 40) // 2) + b"b"),
+        "long-needles": b"User-agent: *\n" + (b"Disallow: /*" + b"a" * 98 + b"b\n") * (512000 // 103),
+        "escape-flood": group(b"Disallow: /" + b"%zz%E3" * (512000 // 7)),
+        "over-limit": group(b"Disallow: /" + b"x" * (2 * 512000)),
+    }
+    start = time.perf_counter()
+    state = module._robots_parse(bodies[shape], module.USER_AGENT)
+    module._robots_states["https://h.test"] = state
+    if shape in {"escape-flood", "over-limit", "long-needles"}:
+        with pytest.raises(module.AccessStopped, match=UNRESOLVED):
+            module._robots_check_target("https://h.test/" + "a" * 8000)
+    else:
+        module._robots_check_target("https://h.test/" + "a" * 8000)
+    elapsed = time.perf_counter() - start
+    assert elapsed < 5, (shape, elapsed)
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"hostile-{module.__name__}-{shape}.json").write_text(json.dumps({"shape": shape, "seconds": elapsed, "both_readings": True, "under_five_seconds": elapsed < 5}))
+
+
+@pytest.mark.parametrize("status", [200, 201, 204, 206, 400, 401, 404, 410, 418, 451, 499])
+def test_robots_2xx_parse_and_other_4xx_allow_all_P15(server, status):
+    body = group(b"Disallow: /private", b"Crawl-delay: 3.25")
+    server.responses["https://source.test/robots.txt"] = [Response(body, status)]
+    server.fetch("https://source.test/public")
+    if status < 300:
+        assert server.module._robots_states["https://source.test"]["rules"] == [(False, b"/private")]
+        assert server.calls[-1][2] - server.calls[0][2] >= 3.25
+    else:
+        assert server.module._robots_states["https://source.test"] == {"unresolved": False, "rules": [], "delay": 0}
+    assert len(server.source_calls()) == 1
+
+
+@pytest.mark.parametrize("status,headers,body,reason", [
+    (403, {}, b"Forbidden", None), (429, {}, b"Rate limit", None),
+    (200, {"Cf-Mitigated": "challenge"}, b"", None),
+    (503, {}, CHALLENGE, None),
+    (500, {}, b"Ordinary failure", "robots_unreachable"),
+    (503, {}, b"Ordinary failure", "robots_unreachable"),
+    (599, {}, b"Ordinary failure", "robots_unreachable"),
+    (301, {}, b"", "robots_unreachable"),
+    (302, {}, b"", "robots_unreachable"),
+    (304, {"Location": "/later"}, b"", "robots_unreachable"),
+    (0, {}, b"", "robots_unreachable"),
+    (200, {}, group(b"Disallow: /"), DENY),
+    (200, {}, group(b"Disallow: /bad\xff"), UNRESOLVED),
+    (200, {}, group(b"Disallow: *", b"Allow: /"), AMBIGUOUS),
+])
+def test_robots_failure_latches_with_no_source_or_within_run_retry(server, status, headers, body, reason):
+    server.responses["https://source.test/robots.txt"] = [Response(body, status, headers)]
+    with pytest.raises(server.module.AccessStopped, match=reason):
+        server.fetch("https://source.test/page")
+    assert len(server.calls) == 1 and not server.source_calls()
+    for url in ("https://source.test/page2", "https://other.test/page", "https://source.test/robots.txt"):
+        with pytest.raises(server.module.AccessStopped):
+            server.fetch(url)
+    assert len(server.calls) == 1
+
+
+def test_robots_network_error_installs_unresolved_state_before_fetch(server, monkeypatch):
+    def fail(*_args, **_kwargs):
+        assert server.module._robots_states["https://source.test"] is None
+        server.calls.append(("get", "https://source.test/robots.txt", 0, {}, {}))
+        if server.module is textbook:
+            raise requests.ConnectionError("fixture")
+        if server.module is zno:
+            raise urllib.error.URLError("fixture")
+        raise RuntimeError("curl fixture timeout")
+    if server.module is textbook:
+        monkeypatch.setattr(textbook.requests, "get", fail)
+    elif server.module is zno:
+        monkeypatch.setattr(zno, "_open", fail)
+    else:
+        monkeypatch.setattr(ukrlib, "_curl_response", fail)
+    with pytest.raises(server.module.AccessStopped, match="robots_unreachable"):
+        server.fetch("https://source.test/page")
+    with pytest.raises(server.module.AccessStopped):
+        server.fetch("https://source.test/page2")
+    assert len(server.calls) == 1 and server.source_calls() == []
+
+
+def test_robots_curl_nonzero_is_unreachable(monkeypatch, tmp_path, isolate_policy):
+    server = Server(monkeypatch, ukrlib, tmp_path, isolate_policy)
+    def failed(url):
+        server.calls.append(("get", url, 0, {}, {}))
+        return 200, {}, b"User-agent: *\nAllow: /", 7
+    monkeypatch.setattr(ukrlib, "_curl_response", failed)
+    with pytest.raises(ukrlib.AccessStopped, match="robots_unreachable"):
+        server.fetch("https://source.test/page")
+    assert len(server.calls) == 1
+
+
+@pytest.mark.parametrize("hops", [0, 1, 10, 11])
+def test_robots_redirect_hops_and_initial_origin_binding(server, hops):
+    start = "https://source.test/robots.txt"
+    urls = [start] + [f"https://robots.test/redirect-{i}" for i in range(hops)]
+    for url, following in pairwise(urls):
+        server.responses[url] = [Response(b"", 302, {"Location": following})]
+    server.responses[urls[-1]] = [Response(group(b"Disallow: /private", b"Crawl-delay: 4.25"))]
+    if hops > 10:
+        with pytest.raises(server.module.AccessStopped, match="robots_unreachable"):
+            server.fetch("https://source.test/public")
+        assert not any(c[1] == "https://source.test/public" for c in server.calls)
+        assert [c[1] for c in server.calls] == urls[:-1]
+    else:
+        server.fetch("https://source.test/public")
+        assert [c[1] for c in server.calls] == [*urls, "https://source.test/public"]
+        assert set(server.module._robots_states) == {"https://source.test"}
+        assert server.module._robots_delays["https://source.test"] == 4.25
+        with pytest.raises(server.module.AccessStopped, match=DENY):
+            server.fetch("https://source.test/private")
+        assert len(server.calls) == len(urls) + 1
+
+
+@pytest.mark.parametrize("cross_origin", [False, True])
+@pytest.mark.parametrize("hops", [8, 9])
+def test_content_redirect_limit_is_eight_hops(server, hops, cross_origin):
+    urls = ["https://source.test/start"] + [f"https://{'other' if cross_origin else 'source'}.test/hop-{i}" for i in range(hops)]
+    for url, following in pairwise(urls):
+        server.responses[url] = [Response(b"", 307, {"Location": following})]
+    if hops == 8:
+        server.fetch(urls[0])
+    else:
+        with pytest.raises((requests.TooManyRedirects, urllib.error.URLError, RuntimeError)):
+            server.fetch(urls[0])
+    assert [c[1] for c in server.source_calls()] == urls[:9]
+    assert server.module._access_stopped is False
+
+
+@pytest.mark.parametrize("cross_origin", [False, True])
+def test_content_redirect_permission_stops_before_denied_destination(server, cross_origin):
+    denied = f"https://{'other' if cross_origin else 'source'}.test/private"
+    server.robots = group(b"Disallow: /private")
+    server.responses["https://source.test/start"] = [Response(b"", 302, {"Location": denied})]
+    with pytest.raises(server.module.AccessStopped, match=DENY):
+        server.fetch("https://source.test/start")
+    assert [c[1] for c in server.source_calls()] == ["https://source.test/start"]
+    assert len(server.calls) == (3 if cross_origin else 2)
+
+
+@pytest.mark.parametrize("params,target", [
+    ({"word": "a/b", "page": 0}, b"/?word=a%2Fb&page=0"),
+    ({"confirm": "yes", "id": "ID"}, b"/?confirm=yes&id=ID"),
+])
+def test_textbook_permission_uses_exact_prepared_query(monkeypatch, tmp_path, isolate_policy, params, target):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    srv.robots = group(b"Disallow: " + target)
+    with pytest.raises(textbook.AccessStopped, match=DENY):
+        textbook._request("https://source.test", params=params)
+    assert [c[1] for c in srv.calls] == ["https://source.test/robots.txt"]
+
+
+def test_actual_textbook_header_controls_token_not_module_constant(monkeypatch, tmp_path, isolate_policy):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    header = "SpecificBot/1.0 (+" + CONTACT + ")"
+    monkeypatch.setitem(textbook.HEADERS, "User-Agent", header)
+    srv.robots = b"User-agent: specificbot\nDisallow: /private\nUser-agent: *\nDisallow: /\n"
+    srv.fetch("https://source.test/public")
+    assert all(c[3]["User-Agent"] == header for c in srv.calls)
+    with pytest.raises(textbook.AccessStopped, match=DENY):
+        srv.fetch("https://source.test/private")
+    assert len(srv.source_calls()) == 1
+
+
+@pytest.mark.parametrize("floor", [.3, .5, 2.0])
+def test_fractional_max_delay_fake_clock(server, floor):
+    server.robots = group(b"Crawl-delay: .75", b"Crawl-delay: 1.25")
+    server.fetch("https://source.test/first")
+    origin = "https://source.test"
+    before = server.clock.now
+    server.module._wait_for_request(origin + "/second", floor)
+    assert server.clock.now - before == max(floor, 1.25)
+
+
+@pytest.mark.parametrize("site", ["listing", "shkola-get", "shkola-post", "pdf", "drive-initial", "drive-confirmation", "zno", "ukrlib"])
+@pytest.mark.parametrize("denied", [False, True])
+def test_all_eight_actual_request_sites_permission_ledger(monkeypatch, tmp_path, isolate_policy, site, denied):
+    module = zno if site == "zno" else ukrlib if site == "ukrlib" else textbook
+    srv = Server(monkeypatch, module, tmp_path, isolate_policy)
+    page = b'<title>Author 6 \xd0\xba\xd0\xbb\xd0\xb0\xd1\x81</title><form action="/download"><button name="vslink" value="A">PDF</button></form>'
+    payload = b"%PDF-1.7\nfixture"
+    expected_before = []
+    if site == "listing":
+        url = f"{textbook.BASE_URL}/book.html"
+        srv.responses[url] = [Response(page)]
+        def call():
+            return textbook.extract_pdf_links("book", author="Author", grade=6)
+    elif site in {"shkola-get", "shkola-post"}:
+        url = "https://shkola.in.ua/book" if site == "shkola-get" else "https://shkola.in.ua/download"
+        srv.responses["https://shkola.in.ua/book"] = [Response(page)]
+        srv.responses["https://shkola.in.ua/download"] = [Response(b"", 303, {"Location": "/book.pdf"})]
+        srv.responses["https://shkola.in.ua/book.pdf"] = [Response(payload)]
+        def call():
+            return textbook.extract_shkola_pdf_links("https://shkola.in.ua/book", author="Author", grade=6)
+        if site == "shkola-post":
+            expected_before = ["https://shkola.in.ua/book"]
+    elif site == "pdf":
+        url = "https://source.test/book.pdf"
+        srv.responses[url] = [Response(payload)]
+        def call():
+            return textbook.download_pdf(url, tmp_path / "new.pdf", retained_store=tmp_path)
+    elif site.startswith("drive"):
+        url = "https://docs.google.com/uc"
+        srv.responses[url] = [Response(payload)]
+        if site == "drive-confirmation":
+            srv.responses[url] = [Response(b'<form><input name="confirm" value="yes"></form>', headers={"Content-Type": "text/html"}), Response(payload)]
+            expected_before = [url]
+        def call():
+            return textbook.download_from_gdrive("ID", tmp_path / "new.pdf", retained_store=tmp_path)
+    else:
+        url = "https://source.test/page"
+        def call():
+            return srv.fetch(url)
+    if denied:
+        rule = (b"/uc?export=download&id=ID&confirm=yes" if site == "drive-confirmation" else urlparse(url).path.encode())
+        srv.robots = group(b"Disallow: " + rule)
+        with pytest.raises(module.AccessStopped, match=DENY):
+            call()
+        assert [c[1] for c in srv.source_calls()] == expected_before
+        count = len(srv.calls)
+        with pytest.raises(module.AccessStopped):
+            srv.fetch("https://later.test/page")
+        assert len(srv.calls) == count
+        assert not list(tmp_path.rglob("*.part")) and not (tmp_path / "new.pdf").exists()
+    else:
+        call()
+        assert url in [c[1] for c in srv.source_calls()]
+        if site == "shkola-post":
+            assert [c[0] for c in srv.source_calls()] == ["get", "post"]
+        if site == "drive-confirmation":
+            assert len(srv.source_calls()) == 2
+    import os
+    root = os.environ.get("LU_PERMISSION_EVIDENCE_DIR")
+    if root:
+        Path(root, f"request-{site}-{denied}.json").write_text(json.dumps({"site": site, "denied": denied, "requests": srv.calls}, indent=2))
+
+
+def test_shared_iterator_replays_html_labelled_two_mib_pdf(monkeypatch, tmp_path, isolate_policy):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    payload = b"%PDF-1.7\n" + b"x" * (2 * 1024 * 1024 - 9)
+    response = Response(payload, headers={"Content-Type": "text/html"})
+    calls = []
+    consumed = []
+    def stream(chunk_size):
+        calls.append(chunk_size)
+        for offset in range(0, len(payload), 4096):
+            consumed.append(offset)
+            yield payload[offset:offset + 4096]
+    response.iter_content = stream
+    srv.responses["https://source.test/book.pdf"] = [response]
+    destination = tmp_path / "new.pdf"
+    assert textbook.download_pdf("https://source.test/book.pdf", destination, retained_store=tmp_path)
+    assert destination.read_bytes() == payload and len(payload) == 2 * 1024 * 1024
+    assert calls == [8192]
+    assert consumed == list(range(0, len(payload), 4096))
+    assert response.closed and not list(tmp_path.glob("*.part"))
+
+
+def test_zno_content_strict_utf8_and_robots_raw_bytes(monkeypatch, tmp_path, isolate_policy):
+    server = Server(monkeypatch, zno, tmp_path, isolate_policy)
+    server.responses["https://source.test/bad"] = [Response(b"\xff")]
+    with pytest.raises(UnicodeDecodeError):
+        server.fetch("https://source.test/bad")
+    assert not server.module._access_stopped
+    server.fetch("https://source.test/good")
+    assert len(server.source_calls()) == 2
+
+
+def test_three_retained_synthetic_inputs_fresh_conservation(monkeypatch, tmp_path, isolate_policy):
+    import os
+    cache, pdf, jsonl = tmp_path / "cache.html", tmp_path / "retained.pdf", tmp_path / "ukrlib-test.jsonl"
+    cache.write_bytes(NORMAL)
+    pdf.write_bytes(b"%PDF-1.7\nretained fixture")
+    row = {"chunk_id": "kept", "text": "retained", "source_url": "https://source.test/old", "work": "kept", "author": "kept", "year": 1900, "genre": "prose", "language_period": "modern"}
+    jsonl.write_text(json.dumps(row) + "\n")
+    paths = [cache, pdf, jsonl]
+    def snapshot():
+        return [{"path": str(p), "size": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
+    before = snapshot()
+    srv = Server(monkeypatch, ukrlib, tmp_path, isolate_policy)
+    assert zno.fetch_page_with_rate_limit("https://source.test/cache", cache) == NORMAL.decode()
+    assert not textbook.download_pdf("https://source.test/pdf", pdf)
+    assert not srv.calls
+    monkeypatch.setattr(ukrlib, "LITERARY_DIR", tmp_path)
+    monkeypatch.setattr(ukrlib, "PROGRESS_DIR", tmp_path / "progress")
+    monkeypatch.setattr(ukrlib, "get_author_works", lambda _id: ([{"tid": 1, "title": "first"}, {"tid": 2, "title": "second"}], []))
+    srv.robots = group(b"Disallow: /books/printit.php?tid=1")
+    with pytest.raises(ukrlib.AccessStopped, match=DENY):
+        ukrlib.scrape_author("test", {"id": 999, "name": "Fixture", "full_name": "Fixture", "years": "1900-1950", "genre_default": "prose", "period": "modern"})
+    after = snapshot()
+    assert before == after
+    assert not list(tmp_path.glob("*.building")) and not list(tmp_path.glob("*.part"))
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, "synthetic-conservation.json").write_text(json.dumps({"before": before, "after": after, "equal": before == after, "requests": srv.calls}, indent=2))
+
+
+@pytest.mark.parametrize("module", MODULES)
+def test_target_path_without_authority_and_orphan_delay(module):
+    assert module._robots_target("/a;p?x=%2F#fragment") == b"/a;p?x=%2F"
+    assert module._robots_parse(b"Crawl-delay: 99\nUser-agent: *\nCrawl-delay 90\n", module.USER_AGENT)["delay"] == 0
+
+
+@pytest.mark.parametrize("status", [301, 302, 303, 307, 308])
+def test_post_redirect_method_and_query_are_checked_per_hop(monkeypatch, tmp_path, isolate_policy, status):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    start, final = "https://source.test/form", "https://other.test/result?confirmed=1"
+    srv.responses[start] = [Response(b"", status, {"Location": final})]
+    response = textbook._request(start, session=srv, method="post", data={"token": "fixture"}, params={"initial": "yes"})
+    response.close()
+    assert [c[1] for c in srv.source_calls()] == [start, final]
+    following = srv.source_calls()[-1]
+    assert following[0] == ("post" if status in {307, 308} else "get")
+    assert "params" not in following[4]
+    assert ("data" in following[4]) == (status in {307, 308})
+
+
+def test_urllib_real_loopback_redirect_handler_checks_before_followup(monkeypatch, tmp_path):
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    seen = []
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *_args):
+            pass
+        def do_GET(self):
+            seen.append((self.path, self.headers["User-Agent"]))
+            if self.path == "/robots.txt":
+                body = group(b"Disallow: /private")
+                status, location = 200, None
+            elif self.path == "/start":
+                body, status, location = b"", 302, "/private"
+            else:
+                body, status, location = NORMAL, 200, None
+            self.send_response(status)
+            if location:
+                self.send_header("Location", location)
+            self.end_headers()
+            self.wfile.write(body)
+    with HTTPServer(("localhost", 0), Handler) as httpd:
+        worker = threading.Thread(target=httpd.serve_forever)
+        worker.start()
+        try:
+            url = f"http://localhost:{httpd.server_port}"
+            with pytest.raises(zno.AccessStopped, match=DENY):
+                zno.fetch_page_with_rate_limit(url + "/start", tmp_path / "page")
+            with pytest.raises(zno.AccessStopped):
+                zno.fetch_page_with_rate_limit(url + "/later", tmp_path / "later")
+            assert [path for path, _header in seen] == ["/robots.txt", "/start"]
+            assert all(header == zno.USER_AGENT for _path, header in seen)
+            assert not (tmp_path / "page").exists()
+        finally:
+            httpd.shutdown()
+            worker.join(timeout=5)
+            assert not worker.is_alive()
+
+
+@pytest.mark.parametrize("links,expected", [
+    (["/book-2020.pdf", "/book-2024.pdf", "book.pdf"], ["book-2024.pdf"]),
+    (["book.pdf"], ["book.pdf"]),
+    (["https://source.test/book-2025.pdf"], ["book-2025.pdf"]),
+])
+def test_listing_year_selection_and_relative_links(monkeypatch, tmp_path, isolate_policy, links, expected):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    title = b'<title>Author 6 \xd0\xba\xd0\xbb\xd0\xb0\xd1\x81</title>'
+    body = title + "".join(f'<a href="{link}">PDF</a>' for link in links).encode()
+    srv.responses[f"{textbook.BASE_URL}/book.html"] = [Response(body)]
+    result = textbook.extract_pdf_links("book", author="Author", grade=6, target_year=2025)
+    assert [row["filename"] for row in result] == expected
+    assert all(row["url"].startswith("https://") for row in result)
+
+
+@pytest.mark.parametrize("scenario", ["invalid-host", "invalid-title", "missing-value", "no-location", "duplicate"])
+def test_shkola_resolver_invalid_inputs_and_duplicate_forms(monkeypatch, tmp_path, isolate_policy, scenario):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    url = "https://shkola.in.ua/book"
+    title = b'<title>Author 6 \xd0\xba\xd0\xbb\xd0\xb0\xd1\x81</title>'
+    form = b'<form action="/download"><button name="vslink" value="A">PDF</button></form>'
+    body = title + form
+    if scenario == "invalid-host":
+        with pytest.raises(ValueError, match="requires"):
+            textbook.extract_shkola_pdf_links("https://other.test/book", author="Author", grade=6)
+        assert not srv.calls
+        return
+    if scenario == "invalid-title":
+        body = b"<title>Wrong</title>"
+    if scenario == "missing-value":
+        body = title + b'<form></form><form><input name="vslink"></form>'
+    if scenario == "duplicate":
+        body += form
+    srv.responses[url] = [Response(body)]
+    srv.responses["https://shkola.in.ua/download"] = [Response(b"", 302, {} if scenario == "no-location" else {"Location": "/book.pdf"})] * 2
+    if scenario == "invalid-title":
+        with pytest.raises(textbook.TitleGuardError):
+            textbook.extract_shkola_pdf_links(url, author="Author", grade=6)
+    else:
+        result = textbook.extract_shkola_pdf_links(url, author="Author", grade=6)
+        assert len(result) == (1 if scenario == "duplicate" else 0)
+        if result:
+            assert result[0]["url"] == "https://shkola.in.ua/book.pdf"
+
+
+@pytest.mark.parametrize("html,cookies,confirm,uuid", [
+    (b'<a href="https://source.test/download?confirm=yes&amp;uuid=uuid">download</a>', {}, "yes", "uuid"),
+    (b'<form action="https://source.test/download"><input name="other" value="x"></form><a href="https://source.test/download?confirm=yes">download</a>', {}, "yes", None),
+    (b'<span data="confirm=yes&uuid=uuid">source</span>', {}, "yes", "uuid"),
+    (b'<p>ordinary</p>', {"other": "ignored", "download_warning_fixture": "cookie"}, "cookie", None),
+])
+def test_drive_confirmation_links_regex_and_cookie_backups(monkeypatch, tmp_path, isolate_policy, html, cookies, confirm, uuid):
+    srv = Server(monkeypatch, textbook, tmp_path, isolate_policy)
+    srv.cookies = cookies
+    payload = b"%PDF-1.7\nfixture"
+    srv.responses["https://docs.google.com/uc"] = [Response(html, headers={"Content-Type": "text/html"}), Response(payload)]
+    srv.responses["https://source.test/download?confirm=yes&uuid=uuid"] = [Response(payload)]
+    srv.responses["https://source.test/download?confirm=yes"] = [Response(payload)]
+    srv.responses["https://source.test/download"] = [Response(payload)]
+    destination = tmp_path / "new.pdf"
+    assert textbook.download_from_gdrive("ID", destination, retained_store=tmp_path)
+    assert destination.read_bytes() == payload
+    params = srv.source_calls()[-1][4]["params"]
+    assert params["confirm"] == confirm
+    assert params.get("uuid") == uuid
+    assert len(srv.source_calls()) == 2
+
+
+@pytest.mark.parametrize("scenario", [
+    "retained", "missing-source", "manual", "override", "registry", "fallback-registry", "no-pdfs",
+    "success", "skipped", "alternate-fails", "fallback-pdf", "fallback-drive", "all-fail", "title-mismatch", "fallback-page-fails",
+])
+def test_textbook_main_retention_and_ordinary_completion_routes(monkeypatch, tmp_path, capsys, scenario):
+    book = {"id": "book", "grade": 6, "slug": "book", "author": "Author", "year": 2025,
+            "subject": "ukrmova", "canonical_source": "fixture", "fallback_page_urls": []}
+    pdf = {"url": "https://source.test/book.pdf", "filename": "book.pdf"}
+    listing = [pdf]
+    calls = []
+    if scenario == "missing-source":
+        book["canonical_source"] = ""
+    if scenario in {"manual", "registry"}:
+        book["slug"] = ""
+    if scenario == "manual":
+        book["status"] = "needs_manual_pdf"
+    if scenario == "override":
+        book["override_pdfs"] = ["https://source.test/book.pdf"]
+    if scenario in {"registry", "fallback-registry"}:
+        book["gdrive_id"] = "ID"
+    if scenario in {"no-pdfs", "fallback-registry"}:
+        listing = []
+    if scenario == "alternate-fails":
+        pdf["alternate_downloads"] = [{"url": "https://other.test/book.pdf", "label": "mirror"}]
+    if scenario in {"fallback-pdf", "fallback-drive", "all-fail", "fallback-page-fails"}:
+        book["fallback_page_urls"] = ["https://shkola.in.ua/book"]
+    def extract(*_args, **_kwargs):
+        if scenario == "title-mismatch":
+            raise textbook.TitleGuardError("fixture")
+        return listing
+    def fallback(*_args, **_kwargs):
+        if scenario == "fallback-page-fails":
+            raise ValueError("ordinary fixture")
+        return [{"url": "https://fallback.test/book.pdf", "filename": "book.pdf", **({"gdrive_id": "F"} if scenario == "fallback-drive" else {})}]
+    def download(url, destination, **_kwargs):
+        calls.append((url, str(destination)))
+        if scenario in {"alternate-fails", "fallback-pdf", "fallback-drive", "all-fail", "fallback-page-fails"} and "fallback" not in url:
+            raise textbook.DownloadValidationError("ordinary fixture")
+        if scenario == "all-fail":
+            raise textbook.DownloadValidationError("ordinary fallback fixture")
+        return scenario != "skipped"
+    def drive(drive_id, destination, **_kwargs):
+        calls.append((drive_id, str(destination)))
+        return True
+    monkeypatch.setattr(textbook, "load_selection", lambda: [book])
+    monkeypatch.setattr(textbook, "find_retained_book_pdfs", lambda *_args: [tmp_path / "old.pdf"] if scenario == "retained" else [])
+    monkeypatch.setattr(textbook, "extract_pdf_links", extract)
+    monkeypatch.setattr(textbook, "extract_shkola_pdf_links", fallback)
+    monkeypatch.setattr(textbook, "download_pdf", download)
+    monkeypatch.setattr(textbook, "download_from_gdrive", drive)
+    monkeypatch.setattr(textbook.sys, "argv", ["download_textbooks", "--retained-store", str(tmp_path), "--only", "6", "--ids", "book", "--all-editions"])
+    textbook.main()
+    output = capsys.readouterr().out
+    assert "SUMMARY" in output
+    skipped = scenario in {"retained", "manual", "skipped"}
+    failed = scenario in {"missing-source", "no-pdfs", "alternate-fails", "all-fail", "title-mismatch", "fallback-page-fails"}
+    assert f"Downloaded: {int(not skipped and not failed)}" in output
+    assert f"Skipped (exist): {int(skipped)}" in output
+    assert f"Failed: {int(failed)}" in output
+    if calls:
+        assert all(destination.endswith("grade-06/fixture.pdf") for _url, destination in calls)
+    assert not list(tmp_path.rglob("*.part"))
+
+
+@pytest.mark.parametrize("default,arguments", [(None, []), ("valid", []), ("valid", ["--ids", "missing"]), ("valid", ["--only", "1"])])
+def test_textbook_main_default_store_and_argument_validation(monkeypatch, tmp_path, capsys, default, arguments):
+    monkeypatch.setattr(textbook, "default_retained_store", lambda: tmp_path if default else None)
+    monkeypatch.setattr(textbook, "load_selection", lambda: [])
+    monkeypatch.setattr(textbook.sys, "argv", ["download_textbooks", *arguments])
+    if default is None or arguments == ["--ids", "missing"]:
+        with pytest.raises(SystemExit) as exc:
+            textbook.main()
+        assert exc.value.code == 2
+        assert "error:" in capsys.readouterr().err
+    else:
+        textbook.main()
+        assert "Selected 0 books" in capsys.readouterr().out

@@ -31,6 +31,9 @@ def isolate_transport(monkeypatch):
         "https://docs.google.com": 0.0, "https://drive.google.com": 0.0,
         "https://drive.usercontent.google.com": 0.0, "https://example.test": 0.0,
     })
+    monkeypatch.setattr(transport, "_robots_states", {
+        origin: transport._robots_parse(b"", transport.USER_AGENT) for origin in transport._robots_delays
+    })
     monkeypatch.setattr(transport, "_request_times", {})
     monkeypatch.setattr(transport.time, "sleep", lambda _seconds: None)
 
