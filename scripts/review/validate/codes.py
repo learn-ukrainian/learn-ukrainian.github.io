@@ -48,7 +48,7 @@ DESCRIPTIONS: dict[str, str] = {
     LEDGER_UNREADABLE: "failure: the ledger or its sha256 sidecar is missing, mismatched, or malformed",
     LEDGER_HASH_STALE_LAST_LINE: "failure: the ledger hash file is stale by exactly one trailing line (crash recovery state)",
     EXPECTED_NOT_IN_RESULT: "failure: expected is not a substring of any cited receipt's stored result",
-    EVIDENCE_RECEIPT_INVALID: "failure: positive evidence requires a receipt with status: ok from a tool in the review tool list",
+    EVIDENCE_RECEIPT_INVALID: "failure: positive evidence requires a non-error outcome with status: ok from a tool in the review tool list",
     QUOTE_EMPTY: "failure: a location quote is empty after NFC and stress-stripping",
     QUOTE_NOT_IN_UNIT: "failure: the quote does not occur inside the named tab, activity, and item",
     LOCATION_NOT_IN_LESSON: "failure: the named tab, activity, or item is not in the expanded lesson",
