@@ -20,6 +20,22 @@ BUILD_OUTPUTS = [
     "site/dist/b2/unit/lesson/index.html",
     "site/dist/api/lexicon/search/00.json",
     "site/dist/lexicon/example/index.html",
+    "site/public/lexicon/practice-deck.teacher.json",
+    "site/public/lexicon/practice-cloze.teacher.json",
+    *[f"site/public/api/lexicon/practice-{kind}.C1.json" for kind in ("index", "lexemes", "cloze")],
+    "site/public/lexicon/search/00.json",
+    "site/public/atlas/current.json",
+    "site/public/atlas/.current-123-abcdef12.json",
+    "site/public/atlas/versions/v1/manifest.json",
+    "site/public/atlas/versions/.export-123-abcdef12/manifest.json",
+    "site/public/atlas/versions/v1/entries/00.json.gz",
+    "site/public/atlas/versions/v1/search/articles/00.json.gz",
+    "site/public/atlas/versions/v1/search/aliases/00.json.gz",
+    *[f"site/public/atlas/versions/v1/decks/A1/{kind}.json.gz" for kind in ("index", "lexemes", "cloze")],
+    "site/public/audio/pronunciation/manifest.json",
+]
+
+UNPUBLISHED_SITE_OUTPUTS = [
     "site/src/data/lexicon-manifest.json",
     "site/src/data/lexicon-manifest.json.tmp",
     *[
@@ -40,19 +56,6 @@ BUILD_OUTPUTS = [
         )
     ],
     "site/public/lexicon/practice-index.A1.json.tmp",
-    "site/public/lexicon/practice-deck.teacher.json",
-    "site/public/lexicon/practice-cloze.teacher.json",
-    *[f"site/public/api/lexicon/practice-{kind}.C1.json" for kind in ("index", "lexemes", "cloze")],
-    "site/public/lexicon/search/00.json",
-    "site/public/atlas/current.json",
-    "site/public/atlas/.current-123-abcdef12.json",
-    "site/public/atlas/versions/v1/manifest.json",
-    "site/public/atlas/versions/.export-123-abcdef12/manifest.json",
-    "site/public/atlas/versions/v1/entries/00.json.gz",
-    "site/public/atlas/versions/v1/search/articles/00.json.gz",
-    "site/public/atlas/versions/v1/search/aliases/00.json.gz",
-    *[f"site/public/atlas/versions/v1/decks/A1/{kind}.json.gz" for kind in ("index", "lexemes", "cloze")],
-    "site/public/audio/pronunciation/manifest.json",
 ]
 
 
@@ -76,6 +79,7 @@ def test_build_output_skips_preservation_and_cap(checkout, monkeypatch, name):
 @pytest.mark.parametrize(
     "name",
     [
+        *UNPUBLISHED_SITE_OUTPUTS,
         "ignored/large.bin",
         "site/public/unlisted.json",
         "site/public/api/lexicon/private.json",
@@ -110,7 +114,22 @@ def test_unlisted_ignored_output_still_blocks(checkout, monkeypatch, name):
     assert path.exists()
 
 
-@pytest.mark.parametrize("name", BUILD_OUTPUTS)
+@pytest.mark.parametrize("name", UNPUBLISHED_SITE_OUTPUTS)
+def test_unpublished_site_output_is_preserved_byte_for_byte(checkout, monkeypatch, name):
+    repo, primary, _ = checkout
+    ignore_site(repo)
+    payload = b'{"entries": ["unpublished"]}'
+    path = fixtures.artifact(checkout, name, payload)
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload))
+    ok, reason, receipt = fixtures.guard(checkout)
+    assert ok and not reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert [entry["path"] for entry in receipt["paths"]] == [name]
+    assert (primary / receipt["location"] / name).read_bytes() == payload
+    assert path.read_bytes() == payload
+
+
+@pytest.mark.parametrize("name", [*BUILD_OUTPUTS, *UNPUBLISHED_SITE_OUTPUTS])
 def test_tracked_build_path_is_never_regenerable(checkout, name):
     repo, primary, _ = checkout
     ignore_site(repo)
@@ -184,7 +203,16 @@ def test_site_outputs_do_not_change_delegate_auto_finalize():
 
 
 @pytest.mark.parametrize(
-    "remaining", [None, "data/atlas.db", "site/public/unlisted.json", "site/src/data/unlisted.json"]
+    "remaining",
+    [
+        None,
+        "data/atlas.db",
+        "site/public/unlisted.json",
+        "site/src/data/unlisted.json",
+        "site/src/data/lexicon-manifest.json",
+        "site/public/lexicon/practice-index.A1.json",
+        "site/public/lexicon/practice-imperative.A1.json",
+    ],
 )
 def test_common_reaper_removes_only_regenerable_build_output(hermetic_reap, monkeypatch, remaining):
     repo, tasks = hermetic_reap

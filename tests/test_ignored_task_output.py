@@ -69,9 +69,7 @@ def test_mixed_regenerable_paths_preserve_only_output(checkout, monkeypatch):
     ["clean", "modified", "staged", "staged-restored", "untracked", "absent", "symlink", "invalid-json"],
 )
 @pytest.mark.parametrize("named", [False, True], ids=["unnamed", "named-in-report"])
-def test_build_written_lexicon_manifest_skips_preservation_regardless_of_pointer(
-    checkout, monkeypatch, payload, pointer_kind, named
-):
+def test_lexicon_manifest_is_counted_and_preserved_as_ignored_output(checkout, monkeypatch, payload, pointer_kind, named):
     repo, primary, _ = checkout
     name = "site/src/data/lexicon-manifest.json"
     pointer_name = "site/src/data/lexicon-manifest.pointer.json"
@@ -105,16 +103,19 @@ def test_build_written_lexicon_manifest_skips_preservation_regardless_of_pointer
         pointer.write_bytes(b"{")
 
     record = {"response": f"Output `{name}`."} if named else {}
-    # #10061: npm --prefix site run hydrate:manifest writes this ignored file
-    # (hydrate-manifest.mjs), independent of pointer state or manifest contents.
-    assert output._ignored_output_files(repo, primary, record) == []
+    assert output._ignored_output_files(repo, primary, record) == [name]
     monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload) - 1)
-    monkeypatch.setattr(
-        output.artifacts, "_fingerprint", lambda _path, **_kwargs: pytest.fail("build-written manifest bytes read")
-    )
-    assert preserve(checkout, record) == (True, "", None)
-    assert not (primary / "batch_state/preserved").exists()
+    ok, reason, receipt = preserve(checkout, record)
+    assert not ok and "cap" in reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert receipt["retention_disposition"] == "retained"
     assert manifest.read_bytes() == payload
+    monkeypatch.setattr(output, "MAX_PRESERVED_BYTES", len(payload))
+    ok, reason, receipt = preserve(checkout, record)
+    assert ok and not reason
+    assert receipt["count"] == 1 and receipt["bytes"] == len(payload)
+    assert [entry["path"] for entry in receipt["paths"]] == [name]
+    assert (primary / receipt["location"] / name).read_bytes() == payload
 
 
 @pytest.mark.parametrize("lock_kind", ["absent", "untracked", "symlink", "vanished"])

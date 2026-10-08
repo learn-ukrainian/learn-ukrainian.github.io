@@ -368,17 +368,21 @@ def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, t
         assert copied.is_file() and not copied.is_symlink()
         assert b"unique outside output" not in copied.read_bytes()
         return
-    if contents == "oversized_output":
+    if contents in {"oversized_output", "oversized_manifest"}:
         assert row["action"] == "skipped" and worktree.exists(), row
         assert "exceeds preservation cap" in row["reason"]
         assert not (repo / "batch_state/preserved").exists()
     else:
         assert row["action"] == "removed" and not worktree.exists(), row
-        # #10061: hydrate:manifest writes the ignored manifest, so neither
-        # unpublished bytes nor bytes above the cap require preservation.
-        if contents in {"regenerable_only", "unpublished_manifest", "oversized_manifest"}:
+        if contents == "regenerable_only":
             assert not row.get("preserved_artifacts")
             assert not (repo / "batch_state/preserved").exists()
+        elif contents == "unpublished_manifest":
+            receipt = row["preserved_artifacts"]
+            assert receipt["count"] == 1 and receipt["bytes"] == len(unpublished)
+            manifest = "site/src/data/lexicon-manifest.json"
+            assert [entry["path"] for entry in receipt["paths"]] == [manifest]
+            assert (repo / receipt["location"] / manifest).read_bytes() == unpublished
         else:
             receipt = row["preserved_artifacts"]
             assert receipt["count"] == 1 and receipt["bytes"] == 6

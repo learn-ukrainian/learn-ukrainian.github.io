@@ -22,13 +22,8 @@ DEPENDENCY_DIRECTORY = "node_modules"  # npm ci recreates dependencies from the 
 SITE_BUILD_OUTPUT_PATTERNS = (
     # npm run build / build:shell / build:full: Astro emits every route tree.
     r"site/dist/.+",
-    # npm run hydrate:manifest: hydrate-manifest.mjs writes then renames .tmp.
-    r"site/src/data/lexicon-manifest\.json(?:\.tmp)?",
-    # npm run hydrate:practice: hydrate-practice-deck.mjs stages .json.tmp.
-    r"site/public/lexicon/practice-(?:index|lexemes|cloze|stress|classify|paradigm|synonym|heritage|paronym|antonym|homonym)\.(?:A1|A2|B1|B2|C1)\.json(?:\.tmp)?",
-    # Repository root: scripts/audit/generate_practice_deck.py writes imperative
-    # shards directly (write_shards), without a temporary sibling.
-    r"site/public/lexicon/practice-imperative\.(?:A1|A2|B1|B2|C1)\.json",
+    # Manifest and practice shards can contain unpublished work: hydration
+    # refuses to clobber richer local data (#4917). Preserve them and .tmp files.
     # npm run hydrate:teacher: only these two SERVED_FILES are written.
     r"site/public/lexicon/practice-(?:deck|cloze)\.teacher\.json",
     # npm run hydrate: hydrate-lexicon-api-shards.ts calls copyPracticeApiShards.
