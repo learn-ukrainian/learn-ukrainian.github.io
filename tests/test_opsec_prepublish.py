@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import statistics
 import subprocess
 import sys
@@ -47,6 +48,93 @@ def fake_catalog(monkeypatch):
 )
 def test_repository_normalization_validates_host_at_resolution(value, host, expected):
     assert gate.normalize_repository(value, host) == expected
+
+
+REPOSITORY_FORMS = [
+    "{repo}",
+    "github.com/{repo}",
+    "https://github.com/{repo}",
+    "https://github.com/{repo}.git",
+    "git@github.com:{repo}",
+    "git@github.com:{repo}.git",
+]
+
+
+@pytest.mark.parametrize("form", REPOSITORY_FORMS)
+@pytest.mark.parametrize("uppercase", [False, True])
+@pytest.mark.parametrize("key,private", [("infra-private", True), ("public", False)])
+def test_repository_forms_share_private_classification(form, uppercase, key, private, synthetic_opsec):
+    repo = CATALOG[key]["github"]
+    reference = form.format(repo=repo)
+    if uppercase:
+        reference = reference.upper()
+    assert gate.normalize_repository(reference) == f"github.com/{repo}"
+    assert gate.normalize_repository(gate.normalize_repository(reference)) == f"github.com/{repo}"
+    assert gate.is_private(reference) is private
+    if private:
+        gate.check_texts(reference, [TOKEN], environment={})
+    else:
+        with pytest.raises(gate.PublishBlocked, match="OPSEC blocked"):
+            gate.check_texts(reference, [TOKEN], environment={})
+
+
+@pytest.mark.parametrize("form", REPOSITORY_FORMS)
+def test_catalog_reference_uses_same_normalization(form, monkeypatch):
+    private = {**CATALOG["infra-private"], "github": form.format(repo=CATALOG["infra-private"]["github"]).upper()}
+    monkeypatch.setattr(gate, "catalog", lambda: {"fixture": private})
+    assert gate.is_private(CATALOG["infra-private"]["github"])
+
+
+@pytest.mark.parametrize("form", REPOSITORY_FORMS)
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_private_reference_in_public_text_still_blocks(form, uppercase, synthetic_opsec):
+    from scripts.publish import github as publisher
+
+    reference = form.format(repo=CATALOG["infra-private"]["github"])
+    if uppercase:
+        reference = reference.upper()
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(pattern=re.escape(reference))))
+    with pytest.raises(gate.PublishBlocked, match="OPSEC blocked") as error:
+        gate.check_texts(CATALOG["public"]["github"], [f"Review details: {reference}"], environment={})
+    assert reference not in str(error.value)
+    with pytest.raises(gate.PublishBlocked, match="OPSEC blocked"):
+        publisher.publish(
+            "pr-comment",
+            repo=CATALOG["public"]["github"],
+            number=1,
+            body=f"Review details: {reference}",
+            env={},
+            runner=lambda *args, **kwargs: pytest.fail("public transport must not run"),
+        )
+
+
+@pytest.mark.parametrize(
+    "reference",
+    [
+        "unknown",
+        "https://github.com.evil.example/{repo}",
+        "https://github.com@evil.example/{repo}",
+        "https://github.com/{repo}/extra",
+        "https://github.com/{repo}?query=1",
+        "https://github.com/{repo}#fragment",
+        "https://github.com/{repo}.git.git",
+        "git@github.com:{repo}.GIT.GIT",
+        "https://gіthub.com/{repo}",
+        "https://github.com/{repo}\u200b",
+    ],
+)
+def test_unrecognized_or_wrong_host_reference_is_not_private(reference, synthetic_opsec):
+    reference = reference.format(repo=CATALOG["infra-private"]["github"])
+    assert not gate.is_private(reference)
+    with pytest.raises(gate.PublishBlocked, match="OPSEC blocked"):
+        gate.check_texts(reference, [TOKEN], environment={})
+
+
+def test_invalid_catalog_reference_never_grants_private_exemption(monkeypatch):
+    monkeypatch.setattr(
+        gate, "catalog", lambda: {"fixture": {"github": "unknown", "default": False, "role": "private-infra"}}
+    )
+    assert not gate.is_private("unknown")
 
 
 @pytest.mark.parametrize("level", range(1, 6))
