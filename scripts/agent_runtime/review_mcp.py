@@ -593,9 +593,11 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
-def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any]:
-    """Grant the review contract and explicitly deny the other Sources tools.
+def agy_review_settings(review_access: str | None = "isolated", *, checkout: Path | None = None) -> dict[str, Any]:
+    """Grant checkout reads and the review contract; deny other Sources tools.
 
+    Before the attempt workspace exists, ``.`` scopes reads to the CLI's
+    workspace. Launch homes bind the grant to the actual attempt checkout.
     Non-receipt Ukrainian reviews use REVIEW_TOOLS too. Full attempts retain
     their existing contract's search_resources grant. Read the launched server
     afresh so an unavailable inventory cannot yield a partial deny profile.
@@ -604,9 +606,15 @@ def agy_review_settings(review_access: str | None = "isolated") -> dict[str, Any
     tools = review_tools(review_access or "isolated")
     if not set(readers) >= tools:
         raise ValueError("review_contract_contains_non_read_only_sources_tool")
+    target = "."
+    if checkout is not None:
+        root = checkout.resolve(strict=True)
+        if not root.is_dir() or root == Path(root.anchor) or any(c in str(root) for c in "()\r\n\x00"):
+            raise ValueError("agy_review_permissions_invalid_checkout")
+        target = str(root)
     return {
         "permissions": {
-            "allow": [f"mcp(sources/{name})" for name in sorted(tools)],
+            "allow": [f"read_file({target})", *[f"mcp(sources/{name})" for name in sorted(tools)]],
             "deny": [
                 "command(*)",
                 "write_file(*)",
@@ -666,7 +674,9 @@ def _real_agy_token() -> Path:
     return Path(app_data) / _AGY_TOKEN_NAME
 
 
-def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: bytes) -> None:
+def _populate_agy_review_home(
+    home_fd: int, real_token: Path, config_bytes: bytes, *, checkout: Path | None = None
+) -> None:
     """Fill a freshly created scoped AGY home (open as ``home_fd``): the sources-only MCP config and a linked token.
 
     Only the OAuth token is linked (never copied): the #8617 spike proved it is the
@@ -685,7 +695,7 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
         app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
         _create_file(config_parts[2], config_fd, config_bytes)
         access = json.loads(config_bytes)["mcpServers"]["sources"].get("env", {}).get("LU_REVIEW_ACCESS")
-        _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access)).encode())
+        _create_file("settings.json", app_data_fd, json.dumps(agy_review_settings(access, checkout=checkout)).encode())
         # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
         # token) must land in the real token file. A refreshed copy would leave the real
         # token stale or invalidated and break every other AGY lane. "Nothing written to the
@@ -697,7 +707,7 @@ def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: byte
                 os.close(fd)
 
 
-def prepare_agy_permission_home(root: Path) -> Path:
+def prepare_agy_permission_home(root: Path, *, checkout: Path | None = None) -> Path:
     """Use the review-attempt home provisioner for a trusted non-receipt review.
 
     The caller supplies its existing runtime scratch lease. No receipt attempt
@@ -713,7 +723,7 @@ def prepare_agy_permission_home(root: Path) -> Path:
     try:
         os.mkdir("agy-review-home", 0o700, dir_fd=parent)
         home_fd = _open_owned_dir("agy-review-home", dir_fd=parent)
-        _populate_agy_review_home(home_fd, token, json.dumps(config).encode())
+        _populate_agy_review_home(home_fd, token, json.dumps(config).encode(), checkout=checkout or Path.cwd())
     finally:
         if home_fd is not None:
             os.close(home_fd)
@@ -840,6 +850,7 @@ def prepare_review_attempt(
     receipts_root: Path | None = None,
     review_contract: Mapping[str, Any] | None = None,
     review_access: str = "isolated",
+    checkout: Path | None = None,
 ) -> ReviewMcpPlan:
     """Prepare the per-attempt stdio sources MCP config, empty ledger, and sidecar.
 
@@ -850,6 +861,7 @@ def prepare_review_attempt(
         harness: Agent harness name (e.g. 'claude', 'cursor').
         receipts_root: Optional override for the receipts base directory (used in tests).
         review_access: Tool contract for this attempt; defaults to the original isolated set.
+        checkout: Known launch workspace, if provisioned without an attempt boundary.
         review_contract: What admission checked (``check_review_contract``). When given, the sources server is
             digested again from the checkout and interpreter this config launches, and a difference refuses
             before any file is written (#9163).
@@ -1001,7 +1013,7 @@ def prepare_review_attempt(
             created.append(agy_home.name)
             home_fd = _open_owned_dir(agy_home.name, dir_fd=review_fd)
             try:
-                _populate_agy_review_home(home_fd, real_agy_token, config_bytes)
+                _populate_agy_review_home(home_fd, real_agy_token, config_bytes, checkout=checkout)
             finally:
                 os.close(home_fd)
     except FileExistsError as exc:
@@ -1305,7 +1317,7 @@ def verify_agy_review_effective_mcp(
         )
     except (OSError, ValueError):
         raise refuse("AGY review requires the scoped permission rules") from None
-    if permissions != agy_review_settings(access):
+    if permissions != agy_review_settings(access, checkout=boundary.workspace if boundary else cwd):
         raise refuse("AGY review requires exactly the sources review tool and command permission rules")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")

@@ -6662,6 +6662,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
         manifest_path=manifest,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout=tmp_path,
     )
     expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     rows = [("sources", "stdio", "enabled", " ".join([expected["command"], *expected["args"]])), *extra_rows]

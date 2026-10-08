@@ -229,7 +229,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     assert runtime.call_args.kwargs["tool_config"].get("review_profile") == expected_profile
     if expected_profile:
         assert runtime.call_args.kwargs["tool_config"]["agy_home_override"] == str(repo / "lease-home")
-        provision.assert_called_once()
+        provision.assert_called_once_with(lease, checkout=repo)
     else:
         provision.assert_not_called()
         assert "agy_home_override" not in runtime.call_args.kwargs["tool_config"]

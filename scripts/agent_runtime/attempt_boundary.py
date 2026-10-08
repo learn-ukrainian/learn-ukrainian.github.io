@@ -356,7 +356,7 @@ class AttemptBoundary:
                 settings = target.parent / "settings.json"
                 fd = os.open(settings, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
                 with os.fdopen(fd, "w") as handle:
-                    handle.write(json.dumps(agy_review_settings(access)))
+                    handle.write(json.dumps(agy_review_settings(access, checkout=self.workspace)))
                 self.tool_config["agy_home_override"] = str(home)
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:

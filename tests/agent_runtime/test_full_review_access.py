@@ -55,7 +55,7 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
 
         assert json.loads(agy_review_mcp_config_path(plan.agy_home).read_bytes())["mcpServers"]["sources"] == server
         assert agy_full_review_settings()["permissions"]["allow"] == [
-            f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
+            "read_file(.)", *[f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)]
         ]
         assert agy_full_review_settings()["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
         assert "mcp(sources/search_resources)" not in agy_full_review_settings()["permissions"]["deny"]
@@ -293,6 +293,9 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
     boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     try:
+        settings = Path(boundary.env["AGY_APP_DATA_DIR"]) / "settings.json"
+        # AC-04: the home already has its checkout grant before adapter launch.
+        assert json.loads(settings.read_bytes()) == agy_review_settings(access, checkout=boundary.workspace)
         plan = AgyAdapter().build_invocation(
             prompt="probe",
             mode="read-only",
@@ -303,7 +306,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
             tool_config=boundary.tool_config,
         )
         settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
-        assert json.loads(settings.read_bytes()) == agy_review_settings(access)
+        assert json.loads(settings.read_bytes()) == agy_review_settings(access, checkout=boundary.workspace)
         assert settings.stat().st_mode & 0o777 == 0o600
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd

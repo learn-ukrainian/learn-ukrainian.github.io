@@ -49,6 +49,7 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert json.loads(settings.read_text()) == {
         "permissions": {
             "allow": [
+                f"read_file({tmp_path.resolve()})",
                 *[f"mcp(sources/{name})" for name in sorted(tools)],
             ],
             "deny": [
@@ -76,6 +77,12 @@ def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route):
     plan = build(tmp_path, config)
     assert plan.cwd == tmp_path
     rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
+    assert rules["allow"] == [
+        f"read_file({tmp_path.resolve()})",
+        *[f"mcp(sources/{name})" for name in sorted(review_tools("full" if route == "full" else "isolated"))],
+    ]
+    assert "read_file(*)" not in rules["allow"]
+    assert not any(rule.startswith(("command(", "write_file(")) for rule in rules["allow"])
     assert not any(rule.startswith("read_file(") for rule in rules["deny"])
     assert evidence.read_text() == "workspace evidence"
 
@@ -88,7 +95,7 @@ def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_pa
     monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
-    home = prepare_agy_permission_home(tmp_path)
+    home = prepare_agy_permission_home(tmp_path, checkout=tmp_path)
     settings = home / ".gemini" / "antigravity-cli" / "settings.json"
     before = settings.read_bytes()
     plan = build(
@@ -187,7 +194,10 @@ def test_receipt_marker_prevents_permission_only_widening(tmp_path, scoped, mark
 
 
 @pytest.mark.parametrize(
-    "required", ["command(rm)", "command(*)", "mcp(sources/query_ulif)", "mcp(other/verify_words)", "read_url(*)"]
+    "required", [
+        "command(rm)", "command(*)", "write_file(*)", "read_file(*)", "read_file(/)",
+        "mcp(sources/query_ulif)", "mcp(other/verify_words)", "read_url(*)",
+    ]
 )
 def test_outside_requirements_refused_before_probe(tmp_path, scoped, monkeypatch, required):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
@@ -211,6 +221,9 @@ def test_review_missing_scoped_home_refused_before_probe(tmp_path, monkeypatch, 
     [
         {},
         {"permissions": {"allow": ["mcp(*)"]}},
+        {"permissions": {"allow": ["read_file(*)"]}},
+        {"permissions": {"allow": ["command(cat)"]}},
+        {"permissions": {"allow": ["write_file(*)"]}},
         {"permissions": {"allow": [], "ask": ["mcp(*)"]}},
         {"toolPermission": "always-proceed"},
     ],
@@ -237,6 +250,21 @@ def test_review_skip_permissions_refused_before_probe(tmp_path, scoped, monkeypa
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
     with pytest.raises(ValueError, match="agy_review_permission_outside_allow_set"):
         build(tmp_path, {"review_access": "isolated", "agy_home_override": str(scoped), "agy_skip_permissions": True})
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_checkout_grant_is_exact_and_cannot_be_reused_for_another_checkout(tmp_path, scoped, monkeypatch, access):
+    config = {
+        "review_access": access,
+        "agy_home_override": str(scoped),
+        "agy_required_permissions": [f"read_file({tmp_path.resolve()})"],
+    }
+    build(tmp_path, config)
+    other = tmp_path / "other-checkout"
+    other.mkdir()
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permissions_config_mismatch"):
+        build(other, {**config, "agy_required_permissions": []})
 
 
 @pytest.mark.parametrize("access", ["full", "isolated"])
