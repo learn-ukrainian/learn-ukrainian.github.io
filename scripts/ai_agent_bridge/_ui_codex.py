@@ -54,6 +54,7 @@ import json
 import subprocess
 import sys
 import uuid
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -64,6 +65,64 @@ from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 CODEX_SESSIONS_ROOT = Path.home() / ".codex" / "sessions"
 DEFAULT_TIMEOUT_S = 1800  # 30 min — covers most multi-turn dispatches
+
+
+@dataclass(frozen=True)
+class LiveSession:
+    """An exact thread and execution context from the lease owner's child."""
+
+    thread_id: str
+    cwd: Path
+    environment: dict[str, str] = field(repr=False)
+
+
+def find_live_session(lease: dict) -> LiveSession | None:
+    """Read only the matching local Codex process's open rollout metadata.
+
+    Supervisor session IDs are not native thread UUIDs. Never select a rollout
+    by recency, or use a PID without checking its inherited lease envelope.
+    """
+    import psutil
+
+    pid = lease.get("holder", {}).get("process_id")
+    if type(pid) is not int or pid <= 0:
+        return None
+    expected = {
+        "SESSION_STREAM_SESSION_ID": str(lease["session_id"]),
+        "SESSION_STREAM_LEASE_ID": str(lease["lease_id"]),
+        "SESSION_STREAM_GENERATION": str(lease["generation"]),
+        "SESSION_STREAM_FENCING_TOKEN": str(lease["fencing_token"]),
+    }
+    matches: dict[str, LiveSession] = {}
+    try:
+        root = psutil.Process(pid)
+        processes = [root, *root.children(recursive=True)]
+        for process in processes:
+            try:
+                if process.name() != "codex":
+                    continue
+                environment = process.environ()
+                if any(environment.get(key) != value for key, value in expected.items()):
+                    continue
+                for opened in process.open_files():
+                    path = Path(opened.path)
+                    if not path.name.startswith("rollout-") or path.suffix != ".jsonl":
+                        continue
+                    with path.open(encoding="utf-8") as handle:
+                        metadata = json.loads(handle.readline())
+                    if metadata.get("type") != "session_meta":
+                        continue
+                    payload = metadata["payload"]
+                    thread_id = str(uuid.UUID(payload["id"]))
+                    cwd = Path(payload["cwd"])
+                    if not cwd.is_absolute():
+                        continue
+                    matches[thread_id] = LiveSession(thread_id, cwd, environment)
+            except (psutil.Error, OSError, ValueError, KeyError, TypeError):
+                continue
+    except psutil.Error:
+        return None
+    return next(iter(matches.values())) if len(matches) == 1 else None
 
 
 def find_session_file(thread_id: str) -> Path | None:
@@ -111,6 +170,7 @@ def send(
     bridge_id: str | None = None,
     cwd: Path | None = None,
     timeout_s: int = DEFAULT_TIMEOUT_S,
+    environment: dict[str, str] | None = None,
 ) -> dict:
     """Send a prompt to a running Codex Desktop UI session via `codex exec resume`.
 
@@ -126,6 +186,7 @@ def send(
             the caller's cwd. Codex will run shell commands against this
             directory's git state — important when targeting a worktree.
         timeout_s: max wall-clock for the codex subprocess (default 30 min).
+        environment: inherited driver environment when resuming a leased thread.
 
     Returns:
         dict with:
@@ -145,6 +206,7 @@ def send(
             ["codex", "exec", "resume", "--json", "--disable", "apps", thread_id, "-"],
             input=framed_message,
             cwd=str(cwd) if cwd else None,
+            env=environment,
             capture_output=True,
             text=True,
             timeout=timeout_s,
