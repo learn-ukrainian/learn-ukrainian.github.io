@@ -1309,6 +1309,12 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
         ("ordinary", "X-Agent: codex/42-closeout", True),
         ("publisher", "X-Agent: codex/42-closeout", True),
         ("ordinary", "", False),
+        ("local-agent", "", False),
+        ("name-only", "", False),
+        ("header-only", "", False),
+        ("extra-tree", "", False),
+        ("wrong-branch", "", False),
+        ("merge-unavailable", "", False),
         ("one-parent", "", False),
         ("off-main", "", False),
         ("ancestry-unavailable", "", False),
@@ -1371,18 +1377,41 @@ def test_local_git_commit_attribution(
         subject = "Merge branch 'main' into "
     elif shape == "three-parents":
         parents = [topic, main_parent, side]
+    elif shape == "wrong-branch":
+        subject = "Merge branch 'main' into codex/other-task"
+    elif shape == "extra-tree":
+        (repo / "agent-added.txt").write_text("unattributed addition\n", encoding="utf-8")
+        git("add", "agent-added.txt")
+        tree = git("write-tree")
+    elif shape == "name-only":
+        git("config", "user.name", "GitHub")
+        git("config", "user.email", "noreply@github.com")
     head = commit(subject + ("\n\n" + trailers if trailers else ""), *parents)
+    if shape == "header-only":
+        raw = git("cat-file", "commit", head)
+        headers, _, body = raw.partition("\n\n")
+        raw = headers + "\ngpgsig -----BEGIN PGP SIGNATURE-----\n invalid\n -----END PGP SIGNATURE-----\n\n" + body
+        head = git("hash-object", "-w", "-t", "commit", "--stdin", message=raw + "\n")
+    # Keep the fixture's primary checkout clean after constructing an extra tree.
+    git("reset", "--hard", base)
     worktree = repo / ".worktrees" / "dispatch" / "codex" / "42-closeout"
     git("worktree", "add", "-qb", "codex/42-closeout", str(worktree), head)
-    if shape == "ancestry-unavailable":
-        run_git = task_lifecycle._run_git
+    run_git = task_lifecycle._run_git
 
-        def unavailable_ancestry(root: Path, args: list[str]) -> str:
-            if args[:2] == ["merge-base", "--is-ancestor"]:
-                raise task_lifecycle.LifecycleError("ancestry unavailable")
-            return run_git(root, args)
+    def publisher_verification(root: Path, args: list[str]) -> str:
+        if shape == "ancestry-unavailable" and args[:2] == ["merge-base", "--is-ancestor"]:
+            raise task_lifecycle.LifecycleError("ancestry unavailable")
+        if shape == "merge-unavailable" and args[0] == "merge-tree":
+            raise task_lifecycle.LifecycleError("merge proof unavailable")
+        if (
+            shape in {"publisher", "extra-tree", "merge-unavailable"}
+            and args == ["show", "-s", "--format=%G?%x1f%GF", head]
+        ):
+            # Only the crypto boundary is mocked; trees and ancestry use real Git.
+            return f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}"
+        return run_git(root, args)
 
-        monkeypatch.setattr(task_lifecycle, "_run_git", unavailable_ancestry)
+    monkeypatch.setattr(task_lifecycle, "_run_git", publisher_verification)
 
     observed = task_lifecycle.observe_local_git(
         worktree, head_sha=head, branch="codex/42-closeout", worktree=str(worktree),
@@ -1396,6 +1425,7 @@ def test_local_git_commit_attribution(
         "second_parent_on_main": (
             len(parents) == 2 and parents[1] == main_parent and shape != "ancestry-unavailable"
         ),
+        "verified_publisher_merge": shape == "publisher" and not trailers,
         "x_agent_trailers": trailers.splitlines(),
     }
     blockers = task_lifecycle._local_readiness(observed)
@@ -1403,6 +1433,51 @@ def test_local_git_commit_attribution(
         assert blockers == []
     else:
         assert blockers == [f"commit {head} lacks exactly one valid X-Agent trailer"]
+
+
+@pytest.mark.parametrize(
+    ("signature", "accepted"),
+    [
+        (f"G\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", True),
+        (f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", True),
+        *[(f"{status}\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", False) for status in "BXYREN"],
+        ("G\x1f" + "a" * 40, False),
+        ("G\x1f", False),
+        ("GitHub", False),
+    ],
+)
+def test_publisher_merge_requires_verified_pinned_signature(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, signature: str, accepted: bool,
+) -> None:
+    calls = []
+
+    def run_git(root: Path, args: list[str]) -> str:
+        calls.append(args)
+        return signature if args[0] == "show" and "%G?" in args[2] else "tree"
+
+    monkeypatch.setattr(task_lifecycle, "_run_git", run_git)
+    assert task_lifecycle._verified_publisher_merge(tmp_path, HEAD, [HEAD, MERGE]) is accepted
+    assert any(args[0] == "merge-tree" for args in calls) is accepted
+
+
+@pytest.mark.parametrize("failure", ["signature", "merge-tree", "commit-tree", "parents"])
+def test_publisher_merge_proof_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str,
+) -> None:
+    def run_git(root: Path, args: list[str]) -> str:
+        if args[0] == "merge-tree":
+            if failure == "merge-tree":
+                raise task_lifecycle.LifecycleError("conflicting or unavailable merge")
+            return "tree"
+        if "%G?" in args[2]:
+            if failure == "signature":
+                raise task_lifecycle.LifecycleError("verification unavailable")
+            return f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}"
+        raise task_lifecycle.LifecycleError("commit tree unavailable")
+
+    monkeypatch.setattr(task_lifecycle, "_run_git", run_git)
+    parents = [HEAD] if failure == "parents" else [HEAD, MERGE]
+    assert task_lifecycle._verified_publisher_merge(tmp_path, HEAD, parents) is False
 
 
 def test_reconcile_accepts_publisher_merge_without_adding_evidence() -> None:
@@ -1414,6 +1489,7 @@ def test_reconcile_accepts_publisher_merge_without_adding_evidence() -> None:
         "subject": "Merge branch 'main' into codex/42-closeout",
         "parents": [HEAD, "c" * 40],
         "second_parent_on_main": True,
+        "verified_publisher_merge": True,
         "x_agent_trailers": [],
     })
 
@@ -1422,6 +1498,27 @@ def test_reconcile_accepts_publisher_merge_without_adding_evidence() -> None:
     assert receipt["state"] == "CI_PASSED"
     assert receipt["hard_blockers"] == []
     assert reconciled["evidence"] == evidence
+
+
+@pytest.mark.parametrize("missing_proof", ["branch", "signature-and-tree"])
+def test_readiness_rejects_unproven_publisher_merge(missing_proof: str) -> None:
+    local = _observation(_body())["local"]
+    commit = {
+        "sha": MERGE,
+        "subject": "Merge branch 'main' into codex/42-closeout",
+        "parents": [HEAD, "c" * 40],
+        "second_parent_on_main": True,
+        "verified_publisher_merge": True,
+        "x_agent_trailers": [],
+    }
+    if missing_proof == "branch":
+        commit["subject"] = "Merge branch 'main' into codex/another-task"
+    else:
+        del commit["verified_publisher_merge"]
+    local["commits"].append(commit)
+    assert task_lifecycle._local_readiness(local) == [
+        f"commit {MERGE} lacks exactly one valid X-Agent trailer",
+    ]
 
 
 def test_legacy_migration_preserves_proof_lists() -> None:

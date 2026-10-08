@@ -33,6 +33,9 @@ AC_SCHEMA_VERSION = "acceptance-criteria.v1"
 OBSERVATION_SCHEMA_VERSION = "task-closeout-observation.v1"
 TERMINAL_GOALS = frozenset({"merge", "deploy", "certify"})
 DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
+# GitHub's web-flow signing key, published at https://github.com/web-flow.gpg.
+# Pin the full fingerprint: signer names and unverified gpgsig headers are not proof.
+GITHUB_WEB_FLOW_FINGERPRINT = "968479A1AFF927E37D1A566BB5690EEEBB952194"
 
 STATES = (
     "ISSUE_LINKED",
@@ -1041,6 +1044,26 @@ def protected_paths(paths: list[str]) -> list[str]:
     )
 
 
+def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> bool:
+    """Prove a clean two-parent merge signed by the pinned GitHub publisher key."""
+    if len(parents) != 2:
+        return False
+    try:
+        signature = _run_git(repo_root, ["show", "-s", "--format=%G?%x1f%GF", sha])
+        # U is cryptographically valid with unknown key trust. The fingerprint
+        # pin supplies identity trust; missing, bad, expired and revoked fail.
+        if signature not in {
+            f"G\x1f{GITHUB_WEB_FLOW_FINGERPRINT}",
+            f"U\x1f{GITHUB_WEB_FLOW_FINGERPRINT}",
+        }:
+            return False
+        clean_tree = _run_git(repo_root, ["merge-tree", "--write-tree", "--no-messages", *parents])
+        return clean_tree == _run_git(repo_root, ["show", "-s", "--format=%T", sha])
+    except LifecycleError:
+        # Conflicts, unavailable objects/keys and unsupported Git prove no exemption.
+        return False
+
+
 def observe_local_git(
     repo_root: Path,
     *,
@@ -1121,11 +1144,19 @@ def observe_local_git(
                     except LifecycleError:
                         # Unproven ancestry must not waive commit attribution.
                         pass
+                verified_publisher_merge = bool(
+                    not trailers
+                    and branch
+                    and subject == f"Merge branch 'main' into {branch}"
+                    and second_parent_on_main
+                    and _verified_publisher_merge(root, sha, parents)
+                )
                 commits.append({
                     "sha": sha,
                     "subject": subject,
                     "parents": parents,
                     "second_parent_on_main": second_parent_on_main,
+                    "verified_publisher_merge": verified_publisher_merge,
                     "x_agent_trailers": trailers,
                 })
         except LifecycleError:
@@ -1350,9 +1381,11 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
         trailers = commit.get("x_agent_trailers") or []
         if (
             not trailers
-            and re.fullmatch(r"Merge branch 'main' into \S+", commit.get("subject") or "")
+            and local.get("branch")
+            and commit.get("subject") == f"Merge branch 'main' into {local['branch']}"
             and len(commit.get("parents") or []) == 2
             and commit.get("second_parent_on_main") is True
+            and commit.get("verified_publisher_merge") is True
         ):
             continue
         if len(trailers) != 1 or not str(trailers[0]).split(":", 1)[-1].strip():
