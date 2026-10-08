@@ -67,11 +67,16 @@ assignments:
       - cursor-atlas
   core:
     driver_agent_type: curriculum-orchestrator
-    # Empty-roster recipient is <provider>-core. Selector curriculum-upgrade
+    # Dedicated recipient is <provider>-core. Selector curriculum-upgrade
     # mints that slot (launcher_stream_aliases.tsv, lane core, stream epic 7994).
     # Its file handoff stays .claude/curriculum-upgrade-epic/. core-quality
     # (epic 4274) is still a taxonomy alias and does not mint this slot.
-    slots: []
+    slots:
+      - claude-core
+      - codex-core
+      - gemini-core
+      - grok-core
+      - cursor-core
   seminars:
     driver_agent_type: curriculum-orchestrator
     # Operator order 2026-09-27: "only claude, gpt and gemini should be involved

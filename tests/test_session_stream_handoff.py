@@ -2,17 +2,57 @@
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-from agents_extensions.shared.session_streams.handoff import claim_stream, diagnose_handoff
+from agents_extensions.shared.session_streams.handoff import claim_stream, diagnose_handoff, remote_lease_reason
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 NOW = datetime(2026, 7, 20, 12, 0, tzinfo=UTC)
+
+
+@pytest.mark.parametrize("expired", [False, True])
+def test_remote_diagnosis_is_actionable_without_local_recovery(tmp_path: Path, expired: bool) -> None:
+    def forbidden_probe(_process_id: int) -> bool:
+        pytest.fail("remote diagnosis must not probe the holder process")
+
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "remote.sqlite3"), _process_probe=forbidden_probe)
+    holder = LeaseHolder("codex", "codex-cli", "remote-predecessor", process_id=os.getpid())
+    lease, _ = store.claim_remote_session(
+        stream_id="epic:999991",  # allow-hardcoded-epic: synthetic remote diagnosis fixture
+        holder=holder,
+        lineage_id="remote-diagnosis",
+        ttl_seconds=30,
+        session_id="predecessor-session",
+        lease_id="predecessor-lease",
+        now=NOW,
+    )
+    observed = NOW + timedelta(seconds=30 if expired else 29)
+    before = store.dump_stream(lease.stream_id)
+    status = diagnose_handoff(store, lease.stream_id, now=observed)
+    assert status.claimable_force_close is False
+    assert status.holder_process_alive is None
+    assert status.lease_expired is expired
+    assert "local PID recovery refused" in status.reason
+    if expired:
+        assert "claim through Monitor TTL/CAS now" in status.reason
+        assert "retry" not in status.reason
+    else:
+        assert f"{holder.agent}/{holder.harness}" in status.reason
+        assert f"retry the Monitor claim after {lease.expires_at}" in status.reason
+    assert store.dump_stream(lease.stream_id) == before
+
+
+def test_remote_diagnosis_without_expiry_does_not_infer_claimability() -> None:
+    reason = remote_lease_reason(holder_agent="codex", holder_harness="codex-cli", expires_at="", now=NOW)
+    assert "expiry is unknown" in reason
+    assert "local PID recovery refused" in reason
+    assert "claim through Monitor TTL/CAS now" not in reason
 
 
 def _store(tmp_path: Path, process_state: dict[int, bool] | None = None) -> SessionStreamStore:

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import replace
 from datetime import timedelta
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -21,6 +23,52 @@ def _store(tmp_path: Path) -> SessionStreamStore:
     return SessionStreamStore(SessionStreamDatabase(tmp_path / "remote.sqlite3"))
 
 
+def test_monitor_ttl_successor_fences_predecessor_heartbeat_and_write(tmp_path: Path, monkeypatch) -> None:
+    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteLeaseLostError, RemoteSupervisorError
+    from tests.epics_monitor_stub import epics_monitor_stub
+
+    store = _store(tmp_path)
+    clock = utc_now()
+    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: clock)
+    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: clock)
+
+    def forbidden_probe(_process_id: int) -> bool:
+        pytest.fail("Monitor TTL/CAS recovery must not probe the holder process")
+
+    store._process_probe = forbidden_probe
+    first = LeaseHolder("codex", "codex-cli", "predecessor", process_id=os.getpid())
+    second = replace(first, agent="claude", harness="claude-code", instance_id="successor")
+    with epics_monitor_stub(store) as base:
+        monitor = RemoteEpicClient(base=base)
+        predecessor, _ = monitor.claim(
+            stream_id="epic:999992",  # allow-hardcoded-epic: synthetic Monitor TTL/CAS fixture
+            holder=first, lineage_id="ttl-predecessor", ttl_seconds=30,
+            session_id="predecessor-session", lease_id="predecessor-lease",
+        )
+        # Stop renewing: before TTL, a different successor still cannot claim.
+        clock += timedelta(seconds=29)
+        with pytest.raises(RemoteSupervisorError, match="already has live session"):
+            monitor.claim(
+                stream_id=predecessor.stream_id, holder=second, lineage_id="ttl-successor", ttl_seconds=30,
+                session_id="successor-session", lease_id="successor-lease",
+            )
+        clock += timedelta(seconds=2)
+        successor, receipt = monitor.claim(
+            stream_id=predecessor.stream_id, holder=second, lineage_id="ttl-successor", ttl_seconds=30,
+            session_id="successor-session", lease_id="successor-lease",
+        )
+        assert receipt["outcome"] == "recovered"
+        assert successor.generation == predecessor.generation + 1
+        assert successor.fencing_token == predecessor.fencing_token + 1
+        monitor.handoff(successor, entry_type="state", body="Successor holds write authority.", idempotency_key="current")
+        before = store.dump_stream(successor.stream_id)
+        with pytest.raises(RemoteLeaseLostError):
+            monitor.heartbeat(predecessor)
+        with pytest.raises(RemoteLeaseLostError):
+            monitor.handoff(predecessor, entry_type="note", body="Stale write.", idempotency_key="stale")
+        assert store.dump_stream(successor.stream_id) == before
+
+
 def _holder(agent: str, instance: str, host: str) -> LeaseHolder:
     return LeaseHolder(
         agent=agent,
@@ -29,6 +77,42 @@ def _holder(agent: str, instance: str, host: str) -> LeaseHolder:
         process_id=1234,
         host_id=host,
     )
+
+
+@pytest.mark.parametrize("expired", [False, True])
+def test_remote_supervisor_recovery_reports_monitor_expiry(tmp_path: Path, monkeypatch, expired: bool) -> None:
+    from scripts.session_supervisor import SessionSupervisor, SupervisorError
+
+    store = _store(tmp_path)
+    now = utc_now()
+    holder = LeaseHolder("codex", "codex-cli", "remote-holder", process_id=os.getpid())
+    lease, _ = store.claim_remote_session(
+        stream_id="epic:999993",  # allow-hardcoded-epic: synthetic supervisor diagnosis fixture
+        holder=holder, lineage_id="diagnosis", ttl_seconds=30,
+        session_id="diagnosis-session", lease_id="diagnosis-lease", now=now,
+    )
+    observed = now + timedelta(seconds=30 if expired else 29)
+    monkeypatch.setattr("agents_extensions.shared.session_streams.handoff.utc_now", lambda: observed)
+    reads = []
+
+    def read_stream(stream_id):
+        reads.append(stream_id)
+        return {"lease": {"holder": {"agent": holder.agent, "harness": holder.harness}, "expires_at": lease.expires_at}}
+
+    # Only the read capability is supplied; no claim, release or process probe.
+    supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=SimpleNamespace(stream=read_stream))
+    before = store.dump_stream(lease.stream_id)
+    with pytest.raises(SupervisorError) as error:
+        supervisor.recover_expired_driver(role="driver", stream_id=lease.stream_id, holder=holder)
+    reason = str(error.value)
+    assert "local PID recovery refused" in reason
+    if expired:
+        assert "claim through Monitor TTL/CAS now" in reason
+    else:
+        assert f"{holder.agent}/{holder.harness}" in reason
+        assert f"retry the Monitor claim after {lease.expires_at}" in reason
+    assert reads == [lease.stream_id]
+    assert store.dump_stream(lease.stream_id) == before
 
 
 def test_claim_heartbeat_handoff_release_replay_conflict_and_fencing(tmp_path: Path) -> None:

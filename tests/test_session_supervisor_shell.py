@@ -363,7 +363,7 @@ exit 1
 """
 
 
-def test_claim_without_force_prints_takeover_hint(tmp_path: Path) -> None:
+def test_claim_without_force_prints_monitor_expiry_hint(tmp_path: Path) -> None:
     project, _capture = _build_fake_project(tmp_path)
     capture = tmp_path / "live_capture.txt"
     counter = tmp_path / "open_count.txt"
@@ -383,9 +383,12 @@ claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task"
     )
     assert result.returncode == 1, result.stderr + result.stdout
     assert "already has live session" in result.stderr
-    assert "./start-grok-driver.sh --epic infra --force" in result.stderr
-    assert "scripts.session_supervisor release --role driver --force" in result.stderr
-    assert "CMD:release" not in capture.read_text(encoding="utf-8")
+    assert "handoff-status --stream epic:9999" in result.stderr
+    assert "retry the Monitor claim after expiry" in result.stderr
+    assert "--force" not in result.stderr
+    log = capture.read_text(encoding="utf-8")
+    assert "CMD:release" not in log
+    assert log.count("CMD:open") == 1
 
 
 def test_claim_with_force_releases_then_opens(tmp_path: Path) -> None:
