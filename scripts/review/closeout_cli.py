@@ -22,6 +22,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.fleet import credit_lane
 from scripts.review.evidence import compute_target_input_fingerprint
 from scripts.review.findings import FindingEvent, FindingsLedger, FindingsLedgerError
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS
@@ -396,9 +397,21 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
             )
         )
         return 1
-    routing_snapshot = None
     if args.routing_snapshot_file:
         routing_snapshot = json.loads(Path(args.routing_snapshot_file).read_text(encoding="utf-8"))
+        snapshot_source = "file"
+    else:
+        routing_snapshot = credit_lane.read_routing_budget(timeout=8.0)
+        snapshot_source = "live"
+    diagnostics = routing_snapshot.get("diagnostics") if isinstance(routing_snapshot, dict) else None
+    freshness, fallback_reason = credit_lane.snapshot_freshness(diagnostics)
+    if routing_snapshot is None:
+        fallback_reason = "live routing snapshot unavailable"
+    snapshot_receipt = {
+        "source": snapshot_source,
+        "freshness": freshness,
+        "fallback_reason": fallback_reason or None,
+    }
     state = _load_state(args.state_file)
     target = _target_from_dict(state["target"]) if state.get("target") is not None else None
     if args.review_profile == "code" and target is None and not args.owned_path:
@@ -466,6 +479,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
     resolution = resolve_reviewer(inputs)
     payload = {
         "selected": asdict(resolution.selected) if resolution.selected else None,
+        "routing_snapshot": snapshot_receipt,
         "branch_facts": facts.receipt() if facts is not None else None,
         "quorum": [asdict(q) for q in resolution.quorum],
         "quorum_rule": resolution.quorum_rule,
@@ -834,7 +848,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--routing-snapshot-file",
         help=(
             "JSON file of route health (flat map or /api/state/routing-budget). "
-            "Default: unset (health is fail-open). Example: /tmp/routing-snapshot.json"
+            "Default: one bounded live snapshot; a file overrides it. Example: routing-snapshot.json"
         ),
     )
     p_reviewer.add_argument(

@@ -1,4 +1,4 @@
-"""Frozen routing evidence for #9302 with the approved #9951 Cursor revision."""
+"""Frozen routing evidence with the approved #10016 review-capacity revision."""
 
 from __future__ import annotations
 
@@ -21,6 +21,58 @@ FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
 INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
+
+
+CAPACITY_FIXTURE = Path(__file__).parent / "fixtures"
+
+
+def approved_review_baseline(baseline):
+    """AC-01 updates reviewer receipts only; retain all other frozen surfaces."""
+    overlay = json.loads(gzip.decompress((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()))
+    assert set(overlay) == {"reviewer"}
+    return {**baseline, **overlay}
+
+
+REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
+
+
+def test_review_capacity_fixture_is_pinned_and_scope_bounded():
+    assert hashlib.sha256((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()).hexdigest() == (
+        "9f68e53592b40e2b7cad525513b5595bb2bc60fa28b258f5330f7203b4773860"
+    )
+
+    def original_receipt(value):
+        if isinstance(value, list):
+            return [original_receipt(row) for row in value]
+        if isinstance(value, dict):
+            return {
+                key: row[1:] if key == "selection_score" and row is not None else original_receipt(row)
+                for key, row in value.items()
+                if key != "capacity"
+            }
+        return value
+
+    before = BASELINE["reviewer"]
+    after = REVIEW_CAPACITY_BASELINE["reviewer"]
+    assert len(before) == len(after) == len(INPUTS["reviewer"]) == 1480
+    semantic_changes = selection_changes = 0
+    approved_labels = (
+        {"claude": "near_cap", "codex": "near_cap"},
+        {"agents": {"codex": {"health": {"healthy": True}, "status": "near_cap"}}, "diagnostics": {"stale": False}},
+        {"agents": {"codex": {"health": {"healthy": True}, "status": "hot"}}, "diagnostics": {"stale": True}},
+    )
+    for old, new, inputs in zip(before, after, INPUTS["reviewer"], strict=True):
+        if original_receipt(new) != old:
+            semantic_changes += 1
+            assert inputs["routing_snapshot"] in approved_labels
+        old_pick = (old["value"]["selected"] or {}).get("name")
+        new_pick = (new["value"]["selected"] or {}).get("name")
+        if old_pick != new_pick:
+            selection_changes += 1
+            assert inputs["routing_snapshot"] == approved_labels[0]
+            assert old_pick == "grok-4.7"
+            assert new_pick == ("claude-sonnet-5-5" if inputs["risk"] in {"low", "medium"} else "claude-opus-5-5")
+    assert (semantic_changes, selection_changes) == (24, 8)
 
 
 # Literal digests bind the explicitly ordered #9996 Haiku merge revision; see SPEC.md.
@@ -128,7 +180,7 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert actual.keys() == BASELINE.keys()
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
     for surface in BASELINE:
-        assert actual[surface] == BASELINE[surface], f"frozen surface differs: {surface}"
+        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
     assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
@@ -212,9 +264,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    for name in ("baseline.json.gz", "inputs.json", "occurrences.json.gz", "SHA256SUMS"):
+    for name in ("inputs.json", "occurrences.json.gz"):
         assert (output / name).read_bytes() == (expected / name).read_bytes(), name
+    for row in (output / "SHA256SUMS").read_text().splitlines():
+        digest, name = row.split()
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
+    original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
+    assert actual == approved_review_baseline(original)
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
