@@ -5,6 +5,7 @@ never lexical equivalence. Changed snapshots need later correspondence.
 """
 
 import argparse
+import copy
 import fcntl
 import hashlib
 import json
@@ -14,6 +15,7 @@ import sqlite3
 import sys
 import unicodedata
 from contextlib import ExitStack, contextmanager
+from functools import lru_cache
 from pathlib import Path
 
 import jsonschema
@@ -111,6 +113,17 @@ def parse(value):
 
 def load(path):
     return parse(path.read_bytes())
+
+
+@lru_cache(maxsize=2)
+def _parse_register_bytes(content):
+    """Reuse YAML parsing only; exceptions and validation are never cached."""
+    return yaml.safe_load(content)
+
+
+def load_register(path):
+    """Read fresh bytes and isolate every caller, including the first miss."""
+    return copy.deepcopy(_parse_register_bytes(path.read_bytes()))
 
 
 def write(path, value):
@@ -498,7 +511,7 @@ def manifest_check(manifest, manifest_path=None):
             "Changed manifest bytes/content; restore admitted freeze")
     require(manifest["rules_version"] == "rules-v1-draft" and manifest["normaliser_version"] == "norm-v1",
             "Unapproved rules or normaliser version")
-    register = yaml.safe_load(REGISTER.read_bytes())
+    register = load_register(REGISTER)
     schema(register, "permissions-register.schema.json")
     require(digest(manifest["selection"]) == manifest["selection_content_sha256"], "Selection content fingerprint mismatch")
     original = (json.dumps(manifest["selection"], ensure_ascii=False, indent=2) + "\n").encode()
@@ -544,7 +557,7 @@ def freeze(args):
     receipt = load(receipts[0])
     require(file_digest(Path(receipt["review_report_path"])) == receipt["review_report_sha256"],
             "Admission report fingerprint mismatch")
-    register = yaml.safe_load(args.source_register.read_bytes())
+    register = load_register(args.source_register)
     schema(register, "permissions-register.schema.json")
     require(file_digest(args.source_register) == selection["source_register_sha256"], "Source register fingerprint mismatch")
     counts = selection_check(selection, {s["id"] for s in register["sources"]})

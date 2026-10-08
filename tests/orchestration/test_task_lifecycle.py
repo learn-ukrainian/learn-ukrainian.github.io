@@ -1302,6 +1302,128 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
     assert wrong["worktree_branch_matches"] is False
 
 
+@pytest.mark.parametrize(
+    ("shape", "trailers", "accepted"),
+    [
+        ("publisher", "", True),
+        ("ordinary", "X-Agent: codex/42-closeout", True),
+        ("publisher", "X-Agent: codex/42-closeout", True),
+        ("ordinary", "", False),
+        ("one-parent", "", False),
+        ("off-main", "", False),
+        ("ancestry-unavailable", "", False),
+        ("other-subject", "", False),
+        ("multiple-branches", "", False),
+        ("no-branch", "", False),
+        ("three-parents", "", False),
+        ("publisher", "X-Agent:", False),
+        ("publisher", "X-Agent: codex/42-closeout\nX-Agent: codex/other", False),
+    ],
+)
+def test_local_git_commit_attribution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shape: str, trailers: str, accepted: bool,
+) -> None:
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    def git(*args: str, message: str | None = None) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=repo, input=message, capture_output=True, text=True,
+            check=True, timeout=30,
+        ).stdout.strip()
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.name", "Test")
+    git("config", "user.email", "test@example.com")
+    git("config", "commit.gpgsign", "false")
+    (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    git("add", ".gitignore")
+    tree = git("write-tree")
+
+    def commit(message: str, *parents: str) -> str:
+        args = ["commit-tree", tree]
+        for parent in parents:
+            args.extend(["-p", parent])
+        return git(*args, message=message + "\n")
+
+    base = commit("base")
+    git("update-ref", "refs/heads/main", base)
+    main_parent = commit("main update", base)
+    main_tip = commit("later main update", main_parent)
+    git("update-ref", "refs/remotes/origin/main", main_tip)
+    topic = commit("implementation\n\nX-Agent: codex/42-closeout", base)
+    side = commit("side branch\n\nX-Agent: codex/side", base)
+    subject = "Merge branch 'main' into codex/42-closeout"
+    parents = [topic, main_parent]
+    if shape == "ordinary":
+        subject, parents = "implementation update", [topic]
+    elif shape == "one-parent":
+        parents = [topic]
+    elif shape == "off-main":
+        parents = [topic, side]
+    elif shape == "other-subject":
+        subject = "Merge branch 'topic' into codex/42-closeout"
+    elif shape == "multiple-branches":
+        subject += " another-branch"
+    elif shape == "no-branch":
+        subject = "Merge branch 'main' into "
+    elif shape == "three-parents":
+        parents = [topic, main_parent, side]
+    head = commit(subject + ("\n\n" + trailers if trailers else ""), *parents)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "42-closeout"
+    git("worktree", "add", "-qb", "codex/42-closeout", str(worktree), head)
+    if shape == "ancestry-unavailable":
+        run_git = task_lifecycle._run_git
+
+        def unavailable_ancestry(root: Path, args: list[str]) -> str:
+            if args[:2] == ["merge-base", "--is-ancestor"]:
+                raise task_lifecycle.LifecycleError("ancestry unavailable")
+            return run_git(root, args)
+
+        monkeypatch.setattr(task_lifecycle, "_run_git", unavailable_ancestry)
+
+    observed = task_lifecycle.observe_local_git(
+        worktree, head_sha=head, branch="codex/42-closeout", worktree=str(worktree),
+    )
+
+    observed_commit = next(item for item in observed["commits"] if item["sha"] == head)
+    assert observed_commit == {
+        "sha": head,
+        "subject": subject.rstrip(),
+        "parents": parents,
+        "second_parent_on_main": (
+            len(parents) == 2 and parents[1] == main_parent and shape != "ancestry-unavailable"
+        ),
+        "x_agent_trailers": trailers.splitlines(),
+    }
+    blockers = task_lifecycle._local_readiness(observed)
+    if accepted:
+        assert blockers == []
+    else:
+        assert blockers == [f"commit {head} lacks exactly one valid X-Agent trailer"]
+
+
+def test_reconcile_accepts_publisher_merge_without_adding_evidence() -> None:
+    ledger = _ready_evidence(_ledger())
+    evidence = deepcopy(ledger["evidence"])
+    observation = _observation(_body())
+    observation["local"]["commits"].append({
+        "sha": MERGE,
+        "subject": "Merge branch 'main' into codex/42-closeout",
+        "parents": [HEAD, "c" * 40],
+        "second_parent_on_main": True,
+        "x_agent_trailers": [],
+    })
+
+    reconciled, receipt, _ = task_lifecycle.reconcile(ledger, observation, now=NOW)
+
+    assert receipt["state"] == "CI_PASSED"
+    assert receipt["hard_blockers"] == []
+    assert reconciled["evidence"] == evidence
+
+
 def test_legacy_migration_preserves_proof_lists() -> None:
     ledger = _ready_evidence(_ledger())
     legacy = {

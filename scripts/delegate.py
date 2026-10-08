@@ -6634,11 +6634,12 @@ def _kimi_changes_refusal(agent: str, read: Callable[[], Any]) -> tuple[str | No
 
 
 def _advisory_ceiling_check(
-    worktree: Path | None, base_branch: str, envelope: Mapping[str, Any], *, base_sha: str | None = None
+    worktree: Path | None, base_branch: str, envelope: Mapping[str, Any], *, base_sha: str | None = None, round_start_head: str | None = None
 ) -> dict[str, Any]:
     """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
 
-    Changes run from the merge base with the base branch to the working tree:
+    Changes run from the round-start head when supplied, otherwise from the
+    merge base with the base branch, to the working tree:
     the worker's commits plus its uncommitted and untracked files. When the base
     branch was deleted after merging, falls back to the recorded ``base_sha``
     and then the default branch (#9489).
@@ -6649,7 +6650,7 @@ def _advisory_ceiling_check(
     except (KeyError, TypeError, ValueError):
         return {"measured": False, "error": "the task record's envelope has no ceilings"}
     numstat, error = _advisory_worker_diff(
-        worktree, base_branch, ["--numstat", "-z", "--no-renames"], base_sha=base_sha
+        worktree, base_branch, ["--numstat", "-z", "--no-renames"], base_sha=base_sha, round_start_head=round_start_head
     )
     if numstat is None:
         return {"measured": False, "error": error}
@@ -6667,10 +6668,12 @@ def _advisory_worker_diff(
     *,
     committed_only: bool = False,
     base_sha: str | None = None,
+    round_start_head: str | None = None,
 ) -> tuple[str | None, str | None]:
     """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
 
-    Changes run from the merge base with the base branch to the working tree:
+    Changes run from the round-start head when supplied, otherwise from the
+    merge base with the base branch, to the working tree:
     the worker's commits plus its uncommitted and untracked files; with
     ``committed_only``, to ``HEAD``: its commits alone. When the base branch was
     deleted after merging, falls back to the recorded ``base_sha`` and then the
@@ -6678,29 +6681,55 @@ def _advisory_worker_diff(
     """
     if worktree is None or not worktree.is_dir():
         return None, "no worktree to measure"
-    base_ref = _commit_count_base_ref(worktree, base_branch)
-    merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
-    if not merge_base:
-        return None, "merge-base with the base branch is unknown"
-    if committed_only:
+    if round_start_head:
         try:
-            proc = subprocess.run(
-                ["git", "diff", *diff_args, merge_base, "HEAD", "--"],
+            subprocess.run(
+                ["git", "rev-parse", "--verify", f"{round_start_head}^{{commit}}"],
                 cwd=worktree,
                 capture_output=True,
+                check=True,
                 text=True,
-                check=False,
                 env=_sanitized_git_env(),
                 timeout=DEFAULT_GIT_TIMEOUT_S,
             )
+        except subprocess.CalledProcessError:
+            return None, f"round-start head {round_start_head} is missing"
         except (OSError, subprocess.TimeoutExpired) as exc:
-            # The class only: the measurement is recorded and shown; the message can hold host paths (#9878).
-            return None, f"the worker's committed diff could not be read ({type(exc).__name__})"
-        return (proc.stdout, None) if proc.returncode == 0 else (None, "the worker's committed diff could not be read")
-    output = _worktree_diff_output(worktree, [*diff_args, merge_base, "--"])
-    if output is None:
-        return None, "the worker's diff could not be read"
-    return output, None
+            # Class only: exception messages can contain private host paths (#9878).
+            return None, f"round-start head could not be read ({type(exc).__name__})"
+        merge_base = round_start_head
+    else:
+        base_ref = _commit_count_base_ref(worktree, base_branch)
+        merge_base = _resolve_merge_base(worktree, base_ref, base_sha=base_sha)
+        if not merge_base:
+            return None, "merge-base with the base branch is unknown"
+
+    error_detail = "the worker's diff could not be read"
+    for _attempt in range(2):
+        if committed_only:
+            try:
+                proc = subprocess.run(
+                    ["git", "diff", *diff_args, merge_base, "HEAD", "--"],
+                    cwd=worktree,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    env=_sanitized_git_env(),
+                    timeout=DEFAULT_GIT_TIMEOUT_S,
+                )
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                # The class only: the measurement is recorded and shown; the message can hold host paths (#9878).
+                error_detail = f"the worker's committed diff could not be read ({type(exc).__name__})"
+            else:
+                if proc.returncode == 0:
+                    return proc.stdout, None
+                error_detail = f"the worker's committed diff could not be read (return code {proc.returncode})"
+        else:
+            output, why = _worktree_diff_read(worktree, [*diff_args, merge_base, "--"])
+            if output is not None:
+                return output, None
+            error_detail = f"the worker's diff could not be read ({why.public()})" if why else "the worker's diff could not be read"
+    return None, error_detail
 
 
 # #9275: the record keys the completion gates write their measurement to.
@@ -6719,9 +6748,22 @@ def _advisory_completion_gate(
     """
     base_branch = str(record.get("worktree_base") or "main")
     base_sha = _recorded_base_sha(record)
+    round_start_head = record.get("pinned_head")
+    round_start_head = str(round_start_head).strip() if isinstance(round_start_head, str) else None
+    admission = record.get(AUTHORING_REVIEW_STATE_KEY)
+    if not round_start_head and (
+        record.get("worktree_reused")
+        or (isinstance(admission, dict) and admission.get("target") == "existing-branch")
+    ):
+        # A plain --branch attach has no pin; its recorded base is the round's
+        # starting head. A fresh branch keeps the merge-base measurement.
+        round_start_head = base_sha
+
     envelope = record.get("advisory_envelope")
     if isinstance(envelope, dict):
-        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope, base_sha=base_sha)
+        ceiling = _advisory_ceiling_check(
+            worktree, base_branch, envelope, base_sha=base_sha, round_start_head=round_start_head
+        )
         failure = (
             bounded_advisory.CEILING_UNMEASURED
             if not ceiling.get("measured")
@@ -6730,7 +6772,9 @@ def _advisory_completion_gate(
         detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
         return "advisory_ceiling_check", ceiling, failure, detail
     if isinstance(record.get("advisory_exemption"), dict):
-        check = _exempt_change_check(worktree, base_branch, base_sha=base_sha)
+        check = _exempt_change_check(
+            worktree, base_branch, base_sha=base_sha, round_start_head=round_start_head
+        )
         failure = (
             bounded_advisory.EXEMPT_CHANGES_UNMEASURED
             if not check.get("measured")
@@ -6938,7 +6982,9 @@ def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -
     return gate is not None and gate[2] is not None
 
 
-def _exempt_change_check(worktree: Path | None, base_branch: str, *, base_sha: str | None = None) -> dict[str, Any]:
+def _exempt_change_check(
+    worktree: Path | None, base_branch: str, *, base_sha: str | None = None, round_start_head: str | None = None
+) -> dict[str, Any]:
     """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
 
     Every committed path is classified, and every uncommitted one except the
@@ -6948,9 +6994,11 @@ def _exempt_change_check(worktree: Path | None, base_branch: str, *, base_sha: s
     branch (#9489).
     """
     name_args = ["--name-only", "-z", "--no-renames"]
-    names, error = _advisory_worker_diff(worktree, base_branch, name_args, base_sha=base_sha)
+    names, error = _advisory_worker_diff(
+        worktree, base_branch, name_args, base_sha=base_sha, round_start_head=round_start_head
+    )
     committed, committed_error = _advisory_worker_diff(
-        worktree, base_branch, name_args, committed_only=True, base_sha=base_sha
+        worktree, base_branch, name_args, committed_only=True, base_sha=base_sha, round_start_head=round_start_head
     )
     if names is None or committed is None:
         return {"measured": False, "error": error or committed_error}

@@ -279,6 +279,7 @@ LAUNCHER_ROWS = (
     ("codex-claude-code", "start-codex.sh", ("--harness", "claude-code"), None, "--append-system-prompt", "core"),
     ("codex-hermes", "start-codex.sh", ("--harness", "hermes"), "hermes", "--query", "core"),
     ("gemini-agy-interactive", "start-gemini.sh", (), None, "-i", "core"),
+    ("gemini-agy-driver", "start-gemini-driver.sh", ("--epic", "infra"), None, "-i", "core"),
     ("cursor-driver", "start-cursor-driver.sh", ("--epic", "infra"), None, "positional", "core"),
     ("grok-interactive", "start-grok.sh", (), None, "--rules", "core"),
     ("grok-driver", "start-grok-driver.sh", ("--epic", "infra"), None, "--rules", "core"),
@@ -362,14 +363,13 @@ def test_launcher_seat_env_makes_an_interactive_seat_content(tmp_path: Path, cor
     _assert_core(_carrier(argv, "--append-system-prompt"), "content", "claude-interactive-content-env")
 
 
-def test_gemini_driver_is_refused_before_core_or_provider_loading(tmp_path: Path, core_root: Path) -> None:
-    result, argv = _launch(
-        core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None, expect_launch=False
-    )
-    assert result.returncode == 4
-    assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-    assert result.stdout == ""
-    assert argv == []
+def test_gemini_driver_core_leads_the_drive_epic_binding(tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None)
+    assert argv[:3] == ["agy", "--model", "gemini-3.1-pro-high"]
+    assert argv.count("-i") == 1
+    prompt = argv[argv.index("-i") + 1]
+    assert prompt.startswith(rules_core.core_block("core") + "\n\n")
+    assert "agents_extensions/shared/skills/drive-epic/SKILL.md" in prompt
 
 
 def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_root: Path) -> None:

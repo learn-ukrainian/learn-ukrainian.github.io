@@ -181,7 +181,7 @@ These are the gaps we observed that no changelog entry covers:
 
 - Token analysis script: `scripts/token_usage.py` (parses `~/.claude/projects/` JSONL)
 - Visual dashboard: `npx cc-lens` (localhost:3000)
-- Raw session data: `~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/*.jsonl`
+- Raw session data: `$HOME/.claude/projects/<encoded-checkout>/*.jsonl`
 
 ## Reproduction
 

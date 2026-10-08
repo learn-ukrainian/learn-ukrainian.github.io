@@ -326,12 +326,13 @@ def test_counting_contract_urok_only_with_quoted_term_and_english():
         {"tab": "urok", "role": "narration", "text": "слово"},
         {"tab": "slovnyk", "role": "record_print", "text": "слово слово"},
     ]
-    row = runner.check_6_count({"units": units}, 4)
+    row = runner.check_6_count({"units": units})
     assert row["status"] == "passed"
     assert row["details"]["urok_tokens"] == 4
     assert row["details"]["ukrainian_tokens"] == 2
     assert row["details"]["ukrainian_share"] == 0.5
-    assert "word_target_not_calibrated" in row["details"]["not_checked"]
+    assert "word_target" not in row["details"]
+    assert row["details"]["not_checked"] == ["lesson_structural_minimums_not_calibrated"]
 
 
 def test_counting_contract_inline_gloss_uses_record_lemma_and_english_gloss():
@@ -343,7 +344,6 @@ def test_counting_contract_inline_gloss_uses_record_lemma_and_english_gloss():
                 {"tab": "slovnyk", "role": "record_print", "text": "слово"},
             ]
         },
-        4,
         make_words_store(words=[word]),
     )
     assert row["details"]["urok_tokens"] == 4
@@ -910,11 +910,20 @@ def test_runner_check_5_missing_record(tmp_path, monkeypatch):
     assert (bad["check"], bad["layer"]) == (5, "pack")
 
 
-def test_runner_check_6_target_is_lesson_minimum(tmp_path, monkeypatch):
+@pytest.mark.parametrize("target", [None, 550])
+def test_runner_short_complete_lesson_has_no_size_gate(tmp_path, monkeypatch, target):
     draft, plan, pack, words = _fixture(text="слово")
+    lesson = plan["lessons"][0]
+    if target is None:
+        lesson.pop("word_target")
+    else:
+        lesson["word_target"] = target
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    bad = next(row for row in report["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["layer"], bad["details"]["urok_tokens"]) == (6, "writer", 1)
+    assert report["passed"] is True, report
+    counted = next(row for row in report["checks"] if row["check"] == 6)
+    assert counted["status"] == "passed"
+    assert counted["details"]["urok_tokens"] == 1
+    assert "word_target" not in counted["details"]
 
 
 def test_runner_check_7_source_unavailable_has_gate_report(tmp_path, monkeypatch):
