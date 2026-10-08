@@ -32,7 +32,7 @@ from tests._host_path_guard import FIXTURE_HOME
 
 _HOST_USER = "deploy-bot@prod-bastion-7"
 _HOST_PORT = "db-primary-9.internal:5432"
-_PRIVATE_PATH = f"{FIXTURE_HOME}/learn-ukrainian/data/vesum.db"
+_PRIVATE_PATH = f"{FIXTURE_HOME}/learn-ukrainian/state/lane.sqlite"
 _IPV4 = "203.0.113.7"
 _IPV6 = "2001:db8::1"
 _CRED_PASSWORD = "Sup3rSecret9"
