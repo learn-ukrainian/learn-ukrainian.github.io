@@ -77,8 +77,8 @@ def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
     """Yield (start, exclusive end, closed) line spans using CommonMark §4.5.
 
     https://spec.commonmark.org/0.31.2/#fenced-code-blocks
-    Only top-level fences with 0–3 leading spaces are recognized, preserving
-    the existing scanner's behavior for indented code and nested containers.
+    This is a lexical scan of fence lines with 0–3 leading spaces, not a
+    container parser. Safety consumers validate container context separately.
     The explicit closed flag lets callers choose their unclosed-body policy.
     """
     open_fence: str | None = None
@@ -99,14 +99,27 @@ def _code_fence_spans(lines: list[str]) -> Iterator[tuple[int, int, bool]]:
 def _without_code_fences(text: str, *, keep_unclosed: bool) -> str:
     """Remove fenced spans, retaining unterminated bodies when requested.
 
-    Keep non-fenced text verbatim and leave a paragraph boundary where a block
-    was removed so adjacent prose cannot hide a subsequent write directive.
+    Keep non-fenced text verbatim and leave a paragraph boundary for LF/CRLF
+    input where a block was removed. Dispatch/DoR retain container spans:
+    a list item can end its fence before a later item's apparent closer.
     """
     raw_lines = text.splitlines(keepends=True)
+    lines = text.splitlines()
+    container_spans: list[list[int]] = []
+    if keep_unclosed:
+        # Existing CommonMark dependency supplies container boundaries only;
+        # the shared lexical scanner and verdict policy remain unchanged.
+        # Import locally so verdict-only consumers stay lightweight.
+        from markdown_it import MarkdownIt
+
+        container_spans = [
+            token.map for token in MarkdownIt("commonmark").parse("\n".join(lines))
+            if token.type in {"list_item_open", "blockquote_open"} and token.map is not None
+        ]
     parts: list[str] = []
     cursor = 0
-    for start, end, closed in _code_fence_spans(text.splitlines()):
-        if keep_unclosed and not closed:
+    for start, end, closed in _code_fence_spans(lines):
+        if keep_unclosed and (not closed or any(lo <= start < hi for lo, hi in container_spans)):
             continue
         parts.extend(raw_lines[cursor:start])
         parts.append("\n")

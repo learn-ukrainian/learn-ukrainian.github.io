@@ -2682,7 +2682,8 @@ def _strip_quoted_content(prompt: str) -> str:
     brief legitimately contains write-shaped lines ("Add a CLI …").  Quoted
     content is data for the worker to critique, not a directive to mutate the
     repository, so it must not trip the read-only gate (#7814 item 6).
-    Unterminated fence bodies remain visible to both safety checks (#9672).
+    Unterminated bodies and nested-container fences remain visible to both
+    safety checks; only closed top-level fences are removed (#9672).
     """
     without_fences = _without_code_fences(prompt, keep_unclosed=True)
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)

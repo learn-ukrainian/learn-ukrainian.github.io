@@ -1833,6 +1833,22 @@ def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block
     assert delegate._read_only_write_intent_error(mode="read-only", prompt=block) is not None
 
 
+@pytest.mark.parametrize("fence", ["```", "~~~"])
+@pytest.mark.parametrize("items,indent", [(('1.', '2.', '3.'), 3), (('-', '-', '-'), 2)])
+def test_commonmark_list_item_escape_does_not_hide_visible_write_intent(fence, items, indent):
+    prompt = (
+        "Review only; report findings.\n"
+        f"{items[0]} Old example:\n"
+        f"{' ' * indent}{fence}py\n"
+        f"{' ' * indent}x = 1\n"
+        f"{items[1]} Fix the parser.\n"
+        f"{items[2]} New example:\n"
+        f"{' ' * indent}{fence}\n"
+    )
+    assert "Fix the parser." in delegate._strip_quoted_content(prompt)
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is not None
+
+
 @pytest.mark.parametrize(
     "block,quoted_issue_visible",
     [
@@ -1846,6 +1862,9 @@ def test_commonmark_invalid_opener_and_containers_do_not_hide_write_intent(block
         ("```info`\nExample #8886\n```\n", True),
         ("    ~~~\n    Example #8886\n    ~~~\n", True),
         ("- ~~~\n    Example #8886\n    ~~~\n", True),
+        ("1. Old example:\n   ```py\n   x = 1\n2. Fix fixture issue #8886 too.\n3. New example:\n   ```\n", True),
+        ("- Old example:\n  ~~~py\n  x = 1\n- Fix fixture issue #8886 too.\n- New example:\n  ~~~\n", True),
+        ("- Old example:\n\n  ```py\n  x = 1\nFix fixture issue #8886 too.\n  ```\n", True),
     ],
 )
 def test_commonmark_dor_checks_visible_issue_references_without_weakening_readiness(
