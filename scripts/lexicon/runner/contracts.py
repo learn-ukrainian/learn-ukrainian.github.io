@@ -42,7 +42,7 @@ def env_mib(name: str, default: int, environ: Mapping[str, str] | None = None) -
     raw = (os.environ if environ is None else environ).get(name, "").strip()
     if not raw:
         return default
-    if not raw.isdigit() or int(raw) <= 0:
+    if not (raw.isascii() and raw.isdigit()) or len(raw) > 18 or int(raw) <= 0:
         raise ValueError(f"{name} must be a positive whole number of MiB, got {raw!r}")
     return int(raw)
 

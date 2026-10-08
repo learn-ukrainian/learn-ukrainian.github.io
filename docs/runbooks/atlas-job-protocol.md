@@ -30,7 +30,11 @@ The class-B launcher (`launch_reenrich_class_b.sh`) sets per-job
 cannot starve co-resident services. The caps come from
 `LU_LEXICON_JOB_MEMORY_HIGH_MIB` / `LU_LEXICON_JOB_MEMORY_MAX_MIB`; the public
 defaults are generic and conservative, and each deployment sets its own
-privately. Do not raise them without checking headroom.
+privately. Do not raise them without checking headroom. The class-B, enrich
+and reduce launchers refuse a value that is not a positive whole number of MiB
+before touching anything, and hand the resolved caps to the job as unit
+environment (and, for enrich and reduce, as `--memory-*-mib` flags), so the
+Python runner and its worker scopes use the same values as the unit.
 
 SSH aliases live in operator env / SSH config, not git. Occupancy/load on the
 Monitor host itself uses `ATLAS_JOB_SELF_HOST` (local collection, no

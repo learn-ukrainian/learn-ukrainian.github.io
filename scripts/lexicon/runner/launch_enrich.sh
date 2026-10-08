@@ -25,6 +25,32 @@ if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
   exit 2
 fi
 RUN_ROOT="$ATLAS_RUN_ROOT"
+
+# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
+# a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
+# Strip surrounding whitespace and refuse non-positive values before any launch.
+_trim_mib() {
+  local s="$1"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "$s"
+}
+_require_positive_mib() {
+  local name="$1" value="$2"
+  if [[ ! "$value" =~ ^[0-9]{1,18}$ ]] || (( 10#$value == 0 )); then
+    printf '%s must be a positive whole number of MiB, got %q\n' "$name" "$value" >&2
+    exit 2
+  fi
+}
+JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}")"
+JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}")"
+_require_positive_mib LU_LEXICON_JOB_MEMORY_HIGH_MIB "$JOB_MEMORY_HIGH_MIB"
+_require_positive_mib LU_LEXICON_JOB_MEMORY_MAX_MIB "$JOB_MEMORY_MAX_MIB"
+JOB_MEMORY_HIGH_MIB="$((10#$JOB_MEMORY_HIGH_MIB))"
+JOB_MEMORY_MAX_MIB="$((10#$JOB_MEMORY_MAX_MIB))"
+# Children started without the service manager inherit the resolved values.
+export LU_LEXICON_JOB_MEMORY_HIGH_MIB="$JOB_MEMORY_HIGH_MIB" LU_LEXICON_JOB_MEMORY_MAX_MIB="$JOB_MEMORY_MAX_MIB"
+
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_WORK_DIR:-$RUN_ROOT/run-20k}"
 UNIT="${ATLAS_ENRICH_UNIT:-atlas-20k-enrich.service}"
@@ -82,22 +108,21 @@ COMMON_ARGS=(
   --require-memory-cap
 )
 
-# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
-# a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
-JOB_MEMORY_HIGH_MIB="${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}"
-JOB_MEMORY_MAX_MIB="${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}"
-
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
     --working-directory="$REPO" \
     --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M" \
     --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M" \
+    --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}" \
+    --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}" \
     --property=StandardOutput="append:$LOG" \
     --property=StandardError="append:$LOG" \
     /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \
     "$DRIVER" \
     "${COMMON_ARGS[@]}" \
+    --memory-high-mib "$JOB_MEMORY_HIGH_MIB" \
+    --memory-max-mib "$JOB_MEMORY_MAX_MIB" \
     "${EXTRA_ARGS[@]}" >> "$LOG" 2>&1 &
   wrapper_pid=$!
   printf '%s\n' "$wrapper_pid" > "$WRAPPER_PID_FILE"
@@ -122,6 +147,8 @@ rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
 nohup /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \
   "$DRIVER" \
   "${COMMON_ARGS[@]}" \
+  --memory-high-mib "$JOB_MEMORY_HIGH_MIB" \
+  --memory-max-mib "$JOB_MEMORY_MAX_MIB" \
   "${EXTRA_ARGS[@]}" >> "$LOG" 2>&1 &
 printf '%s\n' "$!" > "$PID_FILE"
 printf 'pid=%s log=%s\n' "$(cat "$PID_FILE")" "$LOG"
