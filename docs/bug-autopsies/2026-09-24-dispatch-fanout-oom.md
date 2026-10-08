@@ -7,8 +7,8 @@ Issue: #8645 (2026-09-24).
 On 2026-09-24 at 09:13:56Z the kernel OOM killer fired on the dispatch
 host (`global_oom`). The victim was in the infra driver's tmux pane scope
 (`tmux-spawn-b8ae538c-….scope`). systemd then failed the whole scope
-(`Failed with result 'oom-kill'`). At its peak the scope held most of the
-host's memory and several GB of swap.
+(`Failed with result 'oom-kill'`). At its peak the scope held more memory
+than the host could spare, and it had spilled into swap.
 
 Everything in that scope died at once: the infra driver session and all
 eight dispatch workers (`impl-8638-r5`, `impl-8514-deepseek-start`,
@@ -20,17 +20,15 @@ uncommitted work in their worktrees.
 
 Kernel report, largest resident sets at kill time:
 
-- one cluster of 9 contiguous `python` pids (486666–486687), one
-  pytest-xdist run: 1957 + 782 + 720 + 649 + 617 + 614 + 583 + 473 MB
-  ≈ 6.4 GB
-- two more pytest pairs (837524/837567, 842874/842881): ≈ 2.2 GB
-- agent CLIs (claude, agy, kimi-code, codex): 100–240 MB each
+- one cluster of contiguous `python` processes from a single pytest-xdist
+  run, by far the largest consumer
+- two more, smaller pytest process pairs
+- agent CLIs (claude, agy, kimi-code, codex), each small by comparison
 
 A contributing cause was in the driver's own brief:
 `.claude/infra-epic/briefs/impl-8638-r5.md` step 4 told the worker to run
 the whole suite once (`-n auto` is fine). Worker `impl-8638-r5` (pid
-473252) started just before the 486666–486687 xdist cluster that held
-about 6.4 GB.
+473252) started just before that xdist cluster, the largest consumer.
 
 ## Root cause
 
@@ -38,22 +36,21 @@ Three gaps, all present at the same time:
 
 1. **No memory admission.** `delegate.py dispatch`, `capacity_pick`, and
    the §2c admission codes check quota, disk, and WIP, but nothing reads
-   `MemAvailable`. The driver's "~8 concurrent" estimate was based on core
-   count, not memory. A `MemAvailable` snapshot alone is also TOCTOU:
+   `MemAvailable`. The driver's concurrency estimate was not based on
+   memory. A `MemAvailable` snapshot alone is also TOCTOU:
    workers admitted one after another can each pass the floor and then
    balloon together.
 2. **Unbounded xdist fan-out.** Each worker picks its own `pytest -n`
-   (`auto` or 8 is common). N workers × 8 xdist processes × 0.5–2 GB each
-   exhausts the host's memory well before N = 8. One `-n auto` full run was the
-   ≈6.4 GB cluster above, prompted by that driver brief.
+   (often `auto`). A few workers, each fanning out to many xdist processes,
+   exhaust memory quickly. One `-n auto` full run was the largest cluster
+   above, prompted by that driver brief.
 3. **Workers share the driver cgroup.** `start_new_session=True` detaches
    the process group but not the cgroup. One runaway pytest takes down the
    driver session and every sibling worker. Other lanes' workers in other
    panes survived.
 
 Measured the same morning (2026-09-24 10:00–11:00Z): 5–7 concurrent workers,
-all using targeted tests with `-n 2`, left most of the host's memory
-available. The OOM needed full-suite `-n auto` runs.
+all using targeted tests with `-n 2`, left ample memory available. The OOM needed full-suite `-n auto` runs.
 
 ## Prevention
 
@@ -96,7 +93,7 @@ seats. Three PRs, in this order:
 Driver operational rule: targeted tests only, `-n 2` at most; full suite runs belong in CI.
 
 Open prevention work:
-- Re-sizing the configured caps for the host's memory is tracked in open issue #8860.
+- Re-sizing the configured caps is tracked in open issue #8860.
 - Tracking issue #8645 remains open under parent epic #8647.
 
 ## Detection and lessons
@@ -105,7 +102,7 @@ The workers stayed `running` for 40 minutes because nothing probed pid
 liveness on a sweep interval; a status probe was the first thing that
 marked them `crashed`. A worker limit cannot prevent every global or
 ancestor-cgroup OOM, and `MemoryMax` does not cap swap — the scope used
-several GB of swap — so isolation has to set `MemorySwapMax` as well.
+swap as well — so isolation has to set `MemorySwapMax` too.
 
 Briefs that say "run the whole suite once (`-n auto` is fine)" are enough
 to start the cluster. The cap has to hold when a brief gets that wrong:

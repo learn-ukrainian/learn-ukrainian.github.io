@@ -141,8 +141,8 @@ def _slice_show(monkeypatch: pytest.MonkeyPatch, *, current: int, maximum: int, 
 def test_dispatch_slice_headroom_excludes_file_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     gib = 1024**3
     monkeypatch.setattr(data_tier.pool_headroom, "CGROUP_ROOT", tmp_path / "cgroup")
-    _fake_slice(tmp_path / "cgroup" / "lu.slice" / "lu-dispatch.slice", current=9 * gib, file_cache=3 * gib)
-    _slice_show(monkeypatch, current=9 * gib, maximum=11 * gib, control_group="/lu.slice/lu-dispatch.slice")
+    _fake_slice(tmp_path / "cgroup" / "lu.slice" / "lu-dispatch.slice", current=14 * gib, file_cache=12 * gib)
+    _slice_show(monkeypatch, current=14 * gib, maximum=17 * gib, control_group="/lu.slice/lu-dispatch.slice")
 
     data_tier.require_memory()
 
@@ -152,7 +152,7 @@ def test_dispatch_slice_without_memory_stat_uses_raw_current(
 ) -> None:
     gib = 1024**3
     monkeypatch.setattr(data_tier.pool_headroom, "CGROUP_ROOT", tmp_path / "cgroup")
-    _slice_show(monkeypatch, current=9 * gib, maximum=11 * gib, control_group="/lu.slice/lu-dispatch.slice")
+    _slice_show(monkeypatch, current=14 * gib, maximum=17 * gib, control_group="/lu.slice/lu-dispatch.slice")
 
     with pytest.raises(data_tier.DataTierError, match="less than 4 GiB headroom"):
         data_tier.require_memory()
@@ -161,19 +161,19 @@ def test_dispatch_slice_without_memory_stat_uses_raw_current(
 
 def test_full_shared_pool_is_a_stop_condition(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     gib = 1024**3
-    pool = _fake_slice(tmp_path / "lu.slice", current=10 * gib, file_cache=gib, high=str(12 * gib))
+    pool = _fake_slice(tmp_path / "lu.slice", current=28 * gib, file_cache=gib, high=str(28 * gib))
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    _slice_show(monkeypatch, current=gib, maximum=11 * gib)
+    _slice_show(monkeypatch, current=gib, maximum=17 * gib)
 
-    with pytest.raises(data_tier.DataTierError, match=r"lu\.slice non-cache use 9\.0 GiB plus a 4 GiB"):
+    with pytest.raises(data_tier.DataTierError, match=r"lu\.slice non-cache use 27\.0 GiB plus a 4 GiB"):
         data_tier.require_memory()
 
 
 def test_shared_pool_with_cache_only_pressure_passes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     gib = 1024**3
-    pool = _fake_slice(tmp_path / "lu.slice", current=11 * gib, file_cache=6 * gib, high=str(12 * gib))
+    pool = _fake_slice(tmp_path / "lu.slice", current=28 * gib, file_cache=14 * gib, high=str(28 * gib))
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    _slice_show(monkeypatch, current=gib, maximum=11 * gib)
+    _slice_show(monkeypatch, current=gib, maximum=17 * gib)
 
     data_tier.require_memory()
 
@@ -894,10 +894,10 @@ def test_malformed_pool_memory_high_skips_with_a_stderr_reason(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     gib = 1024**3
-    pool = _fake_slice(tmp_path / "lu.slice", current=30 * gib, file_cache=0, high="24G")
-    (pool / "memory.max").write_text(f"{40 * gib}\n", encoding="ascii")
+    pool = _fake_slice(tmp_path / "lu.slice", current=25 * gib, file_cache=0, high="28G")
+    (pool / "memory.max").write_text(f"{29 * gib}\n", encoding="ascii")
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
-    _slice_show(monkeypatch, current=gib, maximum=11 * gib)
+    _slice_show(monkeypatch, current=gib, maximum=17 * gib)
 
     data_tier.require_memory()
 
