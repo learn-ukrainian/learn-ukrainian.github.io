@@ -43,6 +43,9 @@ from scripts.review.prompts.render import ManifestReader, _learner_state_context
 pytestmark = pytest.mark.reads_content
 
 SAMPLE_WORD_STORE = {"words": [{"id": "W-base-1", "lemma": "і"}]}
+REPO_ROOT = Path(__file__).resolve().parents[2]
+BASELINE_COMMIT = "18e6b86bae29d586ca0e230b7450037c2e4c1c6d"
+LEDGER_PATH = "curriculum/l2-uk-en/a1-v1/baseline-v1.sha256.json"
 
 SHA = "0" * 64
 
@@ -1365,17 +1368,25 @@ def a1_reference_world(tmp_path, sample_plan_entry, sample_learner_state, sample
         ["git", "-C", str(tmp_path), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
          "commit", "-q", "--allow-empty", "-m", "fixture"], check=True, capture_output=True, timeout=30,
     )
+    ledger = tmp_path / LEDGER_PATH
+    ledger.parent.mkdir(parents=True)
+    ledger.write_bytes((REPO_ROOT / LEDGER_PATH).read_bytes())
+    sample_plan_entry["lesson"]["module"] = "a1/reading-ukrainian"
     card = CARDS_DIR / "a1.md"
     args = dict(
         plan_entry=sample_plan_entry, cited_records=sample_cited_records,
         learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE,
         immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
-        level="a1", slug="sounds-intro", lesson_n=1, style_card_path=card, repo_root=tmp_path,
+        level="a1", slug="reading-ukrainian", lesson_n=1, style_card_path=card, repo_root=tmp_path,
     )
-    checks = dict(level="a1", slug="sounds-intro", repo_root=tmp_path,
+    checks = dict(level="a1", slug="reading-ukrainian", repo_root=tmp_path,
                   learner_state=sample_learner_state, word_store=SAMPLE_WORD_STORE)
-    path = tmp_path / "curriculum/l2-uk-en/a1-v1/sounds-intro/module.md"
+    relative = "curriculum/l2-uk-en/a1-v1/reading-ukrainian/module.md"
+    path = tmp_path / relative
     path.parent.mkdir(parents=True)
+    exact = subprocess.check_output(["git", "show", f"{BASELINE_COMMIT}:{relative}"], cwd=REPO_ROOT, timeout=30)
+    assert exact == (REPO_ROOT / relative).read_bytes()
+    path.write_bytes(exact)
     return args, checks, path
 
 
@@ -1399,55 +1410,98 @@ def _expected_a1_reference(path, root):
 
 
 @pytest.mark.parametrize("recap", [False, True])
-@pytest.mark.parametrize("source", [
-    b"Exact\r\nbytes without final LF",
-    b"```````````\n{% hostile %} {{ unknown }} TODO: a: None\n"
-    b"curriculum/l2-uk-en/a2-v1/wrong/module.md W-999 Lesson 99\n"
-    b"<!-- BEGIN A1_REFERENCE -->\n<!-- END A1_REFERENCE -->\n"
-    b"## A1-v1 module reference (reference-only)\n<!-- BEGIN LEARNER_STATE -->",
-])
-def test_a1_reference_exact_literal_appendix(a1_reference_world, recap, source):
+def test_a1_reference_exact_literal_appendix(a1_reference_world, recap):
     args, checks, path = a1_reference_world
     renderer = render_recap_prompt if recap else render_lesson_prompt
     if recap:
         args = {**args, "built_lessons": []}
-    base = renderer(**args)
-    assert check_rendered_prompt(base, args["plan_entry"], args["style_card_path"], is_recap=recap, **checks).passed
-    path.write_bytes(source)
     rendered = renderer(**args)
-    assert rendered == base + _expected_a1_reference(path, args["repo_root"])
+    appendix = _expected_a1_reference(path, args["repo_root"])
+    assert rendered.endswith(appendix)
+    base = rendered[:-len(appendix)]
+    unreferenced_checks = {k: v for k, v in checks.items() if k not in ("level", "slug")}
+    assert check_rendered_prompt(
+        base, args["plan_entry"], args["style_card_path"], is_recap=recap, **unreferenced_checks
+    ).passed
     checked = check_rendered_prompt(rendered, args["plan_entry"], args["style_card_path"], is_recap=recap, **checks)
     assert checked.passed, checked.errors
     assert checked.prompt_sha256 == hashlib.sha256(rendered.encode()).hexdigest()
     assert checked.prompt_sha256 != hashlib.sha256(base.encode()).hexdigest()
 
 
+@pytest.mark.parametrize("recap", [False, True])
+@pytest.mark.parametrize("source", [
+    b"Exact\r\nbytes without final LF",
+    "Exact українські\r\nbytes without final LF".encode(),
+    b"```````````\n{% hostile %} {{ unknown }} TODO: a: None\n"
+    b"curriculum/l2-uk-en/a2-v1/wrong/module.md W-999 Lesson 99\n"
+    b"<!-- BEGIN A1_REFERENCE -->\n<!-- END A1_REFERENCE -->\n"
+    b"## A1-v1 module reference (reference-only)\n<!-- BEGIN LEARNER_STATE -->",
+])
+def test_a1_reference_hostile_literal_bytes_remain_unauthorized(a1_reference_world, recap, source):
+    from scripts.build.fresh.path_guard import _read_a1_file
+    from scripts.build.fresh.prompt import _fenced
+
+    args, checks, registered = a1_reference_world
+    # Synthetic bytes exercise only the safe-reader/literal-formatting boundary.
+    # They cannot acquire production provenance by being well formatted.
+    path = registered.parent.parent / "unregistered" / "module.md"
+    path.parent.mkdir()
+    path.write_bytes(source)
+    relative = path.relative_to(args["repo_root"]).as_posix()
+    data = _read_a1_file(args["repo_root"], relative)
+    assert data == source
+    text = data.decode("utf-8")
+    fence = "`" * max(3, max((len(run) for run in re.findall(r"`+", text)), default=0) + 1)
+    assert _fenced(text).encode() == f"{fence}text\n{text}\n{fence}".encode()
+
+    renderer = render_recap_prompt if recap else render_lesson_prompt
+    if recap:
+        args = {**args, "built_lessons": []}
+    rendered = renderer(**args)
+    base = rendered.removesuffix(_expected_a1_reference(registered, args["repo_root"]))
+    hostile_prompt = base + _expected_a1_reference(path, args["repo_root"])
+    result = check_rendered_prompt(hostile_prompt, args["plan_entry"], args["style_card_path"], is_recap=recap, **checks)
+    assert not result.passed
+    assert any("a1_reference_mismatch" in error for error in result.errors)
+    # Matching the hostile slug still cannot authorize these unregistered bytes.
+    with pytest.raises(ValueError, match="a1_reference_provenance_unknown_module"):
+        renderer(**{**args, "slug": "unregistered"})
+    with pytest.raises(ValueError, match="a1_reference_provenance_unknown_module"):
+        check_rendered_prompt(
+            hostile_prompt, args["plan_entry"], args["style_card_path"], is_recap=recap,
+            **{**checks, "slug": "unregistered"},
+        )
+
+
 @pytest.mark.parametrize("tamper", ["missing", "byte", "duplicate", "move", "outside-path", "outside-todo", "wrong-slug", "wrong-edition"])
 def test_a1_reference_prompt_tampering_refuses(a1_reference_world, tamper):
     args, checks, path = a1_reference_world
-    base = render_lesson_prompt(**args)
-    path.write_bytes(b"Background data")
     rendered = render_lesson_prompt(**args)
     assert check_rendered_prompt(rendered, args["plan_entry"], args["style_card_path"], **checks).passed
-    appendix = rendered[len(base):]
+    appendix = _expected_a1_reference(path, args["repo_root"])
+    assert rendered.endswith(appendix)
+    base = rendered[:-len(appendix)]
+    data = path.read_bytes()
+    changed = bytes([data[0] ^ 1]) + data[1:]
     altered = {
         "missing": base,
-        "byte": rendered.replace("Background data", "Background datA"),
+        "byte": base + appendix.replace(data.decode("utf-8"), changed.decode("utf-8"), 1),
         "duplicate": rendered + appendix,
         "move": rendered + "\nextra",
         "outside-path": "a2-v1/wrong/module.md\n" + rendered,
         "outside-todo": "TODO: a: None\n" + rendered,
-        "wrong-slug": rendered.replace("a1-v1/sounds-intro/", "a1-v1/other/"),
-        "wrong-edition": rendered.replace("a1-v1/sounds-intro/", "a2-v1/sounds-intro/"),
+        "wrong-slug": rendered.replace("a1-v1/reading-ukrainian/", "a1-v1/other/"),
+        "wrong-edition": rendered.replace("a1-v1/reading-ukrainian/", "a2-v1/reading-ukrainian/"),
     }[tamper]
     checked = check_rendered_prompt(altered, args["plan_entry"], args["style_card_path"], **checks)
+    assert altered != rendered, tamper
     assert not checked.passed, tamper
 
 
-@pytest.mark.parametrize("context", [{}, {"level": "a2", "slug": "sounds-intro"}, {"level": "a1", "slug": "other"}])
+@pytest.mark.parametrize("context", [{}, {"level": "a2", "slug": "reading-ukrainian"}, {"level": "a1", "slug": "other"}])
 def test_a1_reference_refuses_unverified_context(a1_reference_world, context):
-    args, checks, path = a1_reference_world
-    path.write_bytes(b"Background")
+    args, checks, _path = a1_reference_world
     rendered = render_lesson_prompt(**args)
     assert check_rendered_prompt(rendered, args["plan_entry"], args["style_card_path"], **checks).passed
     checks = {k: v for k, v in checks.items() if k not in ("level", "slug")}
@@ -1456,13 +1510,18 @@ def test_a1_reference_refuses_unverified_context(a1_reference_world, context):
     assert any("a1_reference_unverified" in error for error in result.errors)
 
 
-def test_a1_reference_source_drift_invalidates_prompt(a1_reference_world):
+@pytest.mark.parametrize("recap", [False, True])
+def test_a1_reference_source_drift_invalidates_prompt(a1_reference_world, recap):
     args, checks, path = a1_reference_world
-    path.write_bytes(b"Original")
-    old = render_lesson_prompt(**args)
-    assert check_rendered_prompt(old, args["plan_entry"], args["style_card_path"], **checks).passed
-    path.write_bytes(b"Changed")
-    assert not check_rendered_prompt(old, args["plan_entry"], args["style_card_path"], **checks).passed
-    new = render_lesson_prompt(**args)
-    assert check_rendered_prompt(new, args["plan_entry"], args["style_card_path"], **checks).passed
-    assert hashlib.sha256(new.encode()).digest() != hashlib.sha256(old.encode()).digest()
+    renderer = render_recap_prompt if recap else render_lesson_prompt
+    if recap:
+        args = {**args, "built_lessons": []}
+    old = renderer(**args)
+    assert check_rendered_prompt(old, args["plan_entry"], args["style_card_path"], is_recap=recap, **checks).passed
+    original = path.read_bytes()
+    path.write_bytes(original + b"\nChanged")
+    assert hashlib.sha256(path.read_bytes()).digest() != hashlib.sha256(original).digest()
+    with pytest.raises(ValueError, match="a1_reference_provenance_byte_drift"):
+        check_rendered_prompt(old, args["plan_entry"], args["style_card_path"], is_recap=recap, **checks)
+    with pytest.raises(ValueError, match="a1_reference_provenance_byte_drift"):
+        renderer(**args)

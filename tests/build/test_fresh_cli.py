@@ -31,6 +31,8 @@ from tests.build.test_fresh_draft_schema import load_fixture
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+BASELINE_COMMIT = "18e6b86bae29d586ca0e230b7450037c2e4c1c6d"
+LEDGER_PATH = "curriculum/l2-uk-en/a1-v1/baseline-v1.sha256.json"
 
 
 def test_cli_parser_help_standard_compliance():
@@ -88,7 +90,7 @@ def test_main_module_forwarding():
     assert "Fresh build engine E2" in proc.stdout
 
 
-def _build_synthetic_tree(root: Path) -> dict[str, Path]:
+def _build_synthetic_tree(root: Path, *, slug: str = "synthetic-mod") -> dict[str, Path]:
     """Helper to build a complete synthetic level tree with plans, locked pack, locked word store, and locks."""
     plans_dir = root / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
     plans_dir.mkdir(parents=True, exist_ok=True)
@@ -101,11 +103,15 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
         ["git", "-C", str(root), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
          "commit", "-q", "--allow-empty", "-m", "fixture"], check=True, capture_output=True, timeout=30,
     )
+    # Even optional reference absence requires the authentic immutable ledger.
+    ledger = root / LEDGER_PATH
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_bytes((REPO_ROOT / LEDGER_PATH).read_bytes())
 
     # 1. Plan v2
     plan_data = {
         "plan_schema": 2,
-        "slug": "synthetic-mod",
+        "slug": slug,
         "title": "Synthetic Module",
         "level": "a1",
         "arc_ref": {"level": "a1", "position": 1},
@@ -196,13 +202,13 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
             },
         ],
     }
-    plan_path = plans_dir / "synthetic-mod.yaml"
+    plan_path = plans_dir / f"{slug}.yaml"
     plan_path.write_text(yaml.safe_dump(plan_data, allow_unicode=True), encoding="utf-8")
 
     # 2. Pack
     pack_data = {
         "evidence_schema": 1,
-        "module": "a1/synthetic-mod",
+        "module": f"a1/{slug}",
         "built_with": {
             "mcp_commit": "0" * 40,
             "sources_db": "0" * 64,
@@ -246,7 +252,7 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
             }
         ],
     }
-    pack_path = ev_dir / "synthetic-mod.yaml"
+    pack_path = ev_dir / f"{slug}.yaml"
     lock.write(pack_path, lock.yaml_bytes(pack_data))
 
     # 3. Word store
@@ -287,7 +293,7 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
     )
 
     # 5. Lesson lock
-    lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=root)
+    lesson_lock.write_lesson_lock("a1", slug, repo_root=root)
 
     return {
         "plan": plan_path,
@@ -919,11 +925,21 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
 
 @pytest.mark.parametrize("caller", ["render-prompt", "write", "build_module"])
 @pytest.mark.parametrize("lesson_n", [1, 2])
-def test_a1_reference_all_production_callers(tmp_path, monkeypatch, caller, lesson_n):
-    paths = _build_synthetic_tree(tmp_path)
-    source = tmp_path / "curriculum/l2-uk-en/a1-v1/synthetic-mod/module.md"
+@pytest.mark.parametrize("source_kind", ["registered", "unknown", "drift"])
+def test_a1_reference_all_production_callers(tmp_path, monkeypatch, caller, lesson_n, source_kind):
+    slug = "synthetic-mod" if source_kind == "unknown" else "reading-ukrainian"
+    paths = _build_synthetic_tree(tmp_path, slug=slug)
+    relative = f"curriculum/l2-uk-en/a1-v1/{slug}/module.md"
+    if source_kind == "unknown":
+        exact = b"June reference: {{ literal }} TODO: value: None W-999 Lesson 99\n````\n"
+    else:
+        exact = subprocess.check_output(["git", "show", f"{BASELINE_COMMIT}:{relative}"], cwd=REPO_ROOT, timeout=30)
+        assert exact == (REPO_ROOT / relative).read_bytes()
+    source = tmp_path / relative
     source.parent.mkdir(parents=True)
-    source.write_bytes(b"June reference: {{ literal }} TODO: value: None W-999 Lesson 99\n````\n")
+    source.write_bytes(exact)
+    if source_kind == "drift":
+        source.write_bytes(exact + b"\nChanged")
     # A lesson slug also has an archive; it must never be selected.
     other = source.parent.parent / f"lesson-{lesson_n}" / "module.md"
     other.parent.mkdir()
@@ -931,10 +947,10 @@ def test_a1_reference_all_production_callers(tmp_path, monkeypatch, caller, less
     cards = tmp_path / "docs/style-cards"
     cards.mkdir(parents=True)
     (cards / "a1.md").write_bytes((REPO_ROOT / "docs/style-cards/a1.md").read_bytes())
-    state_dir = paths["state_dir"] / "synthetic-mod"
+    state_dir = paths["state_dir"] / slug
     state_dir.mkdir(parents=True, exist_ok=True)
     if lesson_n == 2:
-        page = tmp_path / "site/src/content/docs/a1/synthetic-mod/1.mdx"
+        page = tmp_path / f"site/src/content/docs/a1/{slug}/1.mdx"
         page.parent.mkdir(parents=True)
         page.write_text("# Built lesson 1\n")
         (state_dir / "lesson-1.gates.yaml").write_text("passed: true\n")
@@ -951,33 +967,52 @@ def test_a1_reference_all_production_callers(tmp_path, monkeypatch, caller, less
 
     monkeypatch.setattr("scripts.build.fresh.cli.dispatch_writer", dispatch)
     output = tmp_path / "rendered.md"
+    reason = {
+        "unknown": "a1_reference_provenance_unknown_module",
+        "drift": "a1_reference_provenance_byte_drift",
+    }.get(source_kind)
     if caller == "build_module":
-        result = build_module("a1", "synthetic-mod", repo_root=tmp_path, lesson_n=lesson_n)
-        assert result["lessons"][0]["reason"] == "writer_seat_required", result
+        result = build_module("a1", slug, repo_root=tmp_path, lesson_n=lesson_n)
         output = state_dir / f"lesson-{lesson_n}.prompt.md"
+        if reason:
+            assert not result["complete"]
+            assert not result["lessons"][0]["passed"]
+            assert result["lessons"][0]["reason"] == f"{reason}: {relative}", result
+        else:
+            assert result["lessons"][0]["reason"] == "writer_seat_required", result
     else:
-        args = [caller, "a1", "synthetic-mod", "--lesson", str(lesson_n), "--repo-root", str(tmp_path)]
+        args = [caller, "a1", slug, "--lesson", str(lesson_n), "--repo-root", str(tmp_path)]
         args += ["-o", str(output)] if caller == "render-prompt" else ["--writer", "codex"]
-        assert main(args) == 0
+        if reason:
+            with pytest.raises(ValueError, match=f"^{reason}: {re.escape(relative)}$"):
+                main(args)
+        else:
+            assert main(args) == 0
         if caller == "write":
             output = state_dir / f"lesson-{lesson_n}.prompt.md"
+        if caller == "write" and not reason:
             assert captured == [output.read_text()]
+    if reason:
+        assert captured == []
+        assert not output.exists()
+        assert not (state_dir / f"lesson-{lesson_n}.prompt.sha256").exists()
+        return
     prompt = output.read_text()
     assert "WRONG LESSON SLUG" not in prompt
-    assert "Source: `curriculum/l2-uk-en/a1-v1/synthetic-mod/module.md`" in prompt
+    assert f"Source: `{relative}`" in prompt
     assert hashlib.sha256(source.read_bytes()).hexdigest() in prompt
     assert source.read_text() in prompt
     assert prompt.endswith("<!-- END A1_REFERENCE -->\n")
 
 
 @pytest.mark.parametrize("field,value", [("level", "a2"), ("slug", "wrong-module")])
-def test_a1_reference_refuses_wrong_plan_identity(tmp_path, monkeypatch, field, value):
+def test_a1_reference_refuses_wrong_plan_identity(tmp_path, field, value):
     from scripts.build.fresh.cli import _load_lesson_data
     from scripts.curriculum.validate.loader import load_plan
 
     paths = _build_synthetic_tree(tmp_path)
     plan = load_plan(paths["plan"])
     plan[field] = value
-    monkeypatch.setattr("scripts.build.fresh.cli.load_plan", lambda _: plan)
+    paths["plan"].write_text(yaml.safe_dump(plan, allow_unicode=True), encoding="utf-8")
     with pytest.raises(ValueError, match="plan_module_identity_mismatch"):
         _load_lesson_data("a1", "synthetic-mod", 1, repo_root=tmp_path)
