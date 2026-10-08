@@ -5,20 +5,21 @@ Contains grammar constraints, case patterns, level configurations,
 and activity requirements for each CEFR level.
 """
 
-import importlib.util
+import sys as _sys
 from pathlib import Path
 
 from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from level_config import base_level
 
 # File entrypoints may expose only scripts/ or put audit/ first on sys.path.
-# Resolve the shared policy by path so neither package availability nor a bare
-# config import can redirect this load to audit/config.py itself.
-_shared_config_spec = importlib.util.spec_from_file_location(
-    "_audit_shared_config", Path(__file__).resolve().parents[1] / "config.py"
-)
-_shared_config = importlib.util.module_from_spec(_shared_config_spec)
-_shared_config_spec.loader.exec_module(_shared_config)
+# Add the repository root so the qualified import resolves the one shared
+# policy module without consulting a shadowable top-level ``config`` name.
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_PROJECT_ROOT))
+
+from scripts import config as _shared_config
+
 shared_get_immersion_range = _shared_config.get_immersion_range
 
 # Proper names and abbreviations whitelisted from VESUM verification.
