@@ -18,6 +18,7 @@ import hashlib
 import json
 import os
 import re
+import runpy
 import shlex
 import subprocess
 import sys
@@ -29,7 +30,7 @@ from pathlib import Path
 
 import pytest
 
-# Collection computes the repository graph, including for the harness controls.
+# The import probes compute the repository graph during fixture setup.
 pytestmark = pytest.mark.repo_wide
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,12 +42,17 @@ URGENT_CLIS = {"scripts/ingest/grac_frequency_ingest.py", "scripts/ingest/slovny
 STYLES = ("module", "file")
 
 
-def source_tool_clis(root: Path) -> list[str]:
-    """Return tracked __main__ files reaching either helper in the import graph."""
-    paths = subprocess.run(
+def tracked_script_paths(root: Path) -> list[str]:
+    """List candidates without reading or parsing any script bodies."""
+    return subprocess.run(
         ["git", "ls-files", "-z", "scripts/**/*.py", "scripts/*.py"],
         cwd=root, capture_output=True, text=True, check=True, timeout=30,
     ).stdout.rstrip("\0").split("\0")
+
+
+def source_tool_clis(root: Path) -> list[str]:
+    """Return tracked __main__ files reaching either helper in the import graph."""
+    paths = tracked_script_paths(root)
     modules = {path[:-3].replace("/", ".").removesuffix(".__init__"): path for path in paths}
     reverse: dict[str, set[str]] = defaultdict(set)
     mains = set()
@@ -202,12 +208,94 @@ def smoke_import(root: Path, path: str, style: str) -> str | None:
     return None
 
 
-CLIS = source_tool_clis(ROOT)
-assert CLIS, "source-tool CLI denominator must not be empty"
 BASELINE = json.loads(BASELINE_PATH.read_text())
 KNOWN_FAILURES = {
     (row["path"], row["form"], row["failure_class"]) for row in BASELINE["failures"]
 }
+
+
+@pytest.fixture(scope="module")
+def source_clis() -> list[str]:
+    """Scan once per worker at execution time, never during collection."""
+    clis = source_tool_clis(ROOT)
+    assert clis, "source-tool CLI denominator must not be empty"
+    return clis
+
+
+def pytest_generate_tests(metafunc) -> None:
+    if metafunc.function.__name__ == "test_source_tool_cli_imports":
+        # Candidates are a superset of the live graph, so growth is covered
+        # without parsing scripts during collection or enlarging probe batches.
+        paths = tracked_script_paths(ROOT)
+        metafunc.parametrize(
+            "batch", [paths[i:i + BATCH_SIZE] for i in range(0, len(paths), BATCH_SIZE)],
+            indirect=True, ids=lambda batch: batch[0],
+        )
+
+
+@pytest.fixture
+def batch(request, source_clis: list[str]) -> list[str]:
+    return [path for path in request.param if path in source_clis]
+
+
+def test_module_import_does_not_scan_scripts(monkeypatch) -> None:
+    def reject_scan(*args, **kwargs):
+        pytest.fail("module import must not enumerate or parse repository scripts")
+
+    monkeypatch.setattr(subprocess, "run", reject_scan)
+    monkeypatch.setattr(ast, "parse", reject_scan)
+    runpy.run_path(__file__)
+
+
+def test_source_clis_fixture_scans_at_setup_and_rejects_empty(monkeypatch) -> None:
+    calls = []
+
+    def scan(root):
+        calls.append(root)
+        return ["scripts/new.py"]
+
+    monkeypatch.setattr(sys.modules[__name__], "source_tool_clis", scan)
+    assert source_clis.__wrapped__() == ["scripts/new.py"]
+    assert calls == [ROOT]
+    monkeypatch.setattr(sys.modules[__name__], "source_tool_clis", lambda root: [])
+    with pytest.raises(AssertionError, match="denominator must not be empty"):
+        source_clis.__wrapped__()
+
+
+def test_collection_batches_cover_new_candidates_without_parsing(monkeypatch) -> None:
+    paths = [f"scripts/candidate_{i}.py" for i in range(BATCH_SIZE + 2)]
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: subprocess.CompletedProcess(
+        args[0], 0, stdout="\0".join(paths) + "\0",
+    ))
+
+    def reject_parse(*args, **kwargs):
+        pytest.fail("collection must not parse repository scripts")
+
+    monkeypatch.setattr(ast, "parse", reject_parse)
+    collected = []
+
+    class Metafunc:
+        function = test_source_tool_cli_imports
+
+        def parametrize(self, name, values, *, indirect, ids):
+            assert name == "batch" and indirect
+            assert [ids(value) for value in values] == [value[0] for value in values]
+            collected.extend(values)
+
+    pytest_generate_tests(Metafunc())
+    assert [path for group in collected for path in group] == paths
+    assert all(0 < len(group) <= BATCH_SIZE for group in collected)
+    # A new live CLI need not be in the saved baseline to receive both probes.
+    live = [paths[0], paths[-1]]
+    selected = []
+    for group in collected:
+        request = type("Request", (), {"param": group})()
+        selected.extend(batch.__wrapped__(request, live))
+    assert selected == live
+    Metafunc.function = test_module_import_does_not_scan_scripts
+    collected.clear()
+    pytest_generate_tests(Metafunc())
+    assert collected == []
 
 
 def denominator_snapshot(clis: list[str]) -> dict:
@@ -265,13 +353,13 @@ def assert_failure_ratchet(observed: set[tuple[str, str, str]],
 
 
 @pytest.mark.repo_invariant
-def test_source_tool_baseline_is_fresh() -> None:
+def test_source_tool_baseline_is_fresh(source_clis: list[str]) -> None:
     assert BASELINE["schema"] == "source-tool-import-baseline.v1"
-    assert_denominator_fresh(CLIS, BASELINE["denominator"])
+    assert_denominator_fresh(source_clis, BASELINE["denominator"])
     assert len(KNOWN_FAILURES) == len(BASELINE["failures"]), "duplicate baseline rows"
-    assert set(CLIS) >= URGENT_CLIS, "urgent ingest CLIs must stay in the denominator"
+    assert set(source_clis) >= URGENT_CLIS, "urgent ingest CLIs must stay in the denominator"
     for path, form, kind in KNOWN_FAILURES:
-        assert path in CLIS and form in STYLES, f"obsolete baseline probe: {(path, form)}"
+        assert path in source_clis and form in STYLES, f"obsolete baseline probe: {(path, form)}"
         assert path not in URGENT_CLIS, "urgent ingest imports must be clean, never baselined"
         assert kind in {"import_error", "module_not_found", "environment_blocked_subprocess",
                         "environment_blocked_network",
@@ -279,8 +367,6 @@ def test_source_tool_baseline_is_fresh() -> None:
 
 
 @pytest.mark.repo_invariant
-@pytest.mark.parametrize("batch", [CLIS[i:i + BATCH_SIZE] for i in range(0, len(CLIS), BATCH_SIZE)],
-                         ids=lambda batch: batch[0])
 def test_source_tool_cli_imports(batch: list[str]) -> None:
     started = time.monotonic()
     failures = {(path, style, failure_class(failure)): failure for path in batch for style in STYLES
@@ -404,7 +490,7 @@ def test_refresh_denominator_preserves_failure_rows(tmp_path: Path, monkeypatch,
 def test_freshness_failure_names_refresh_command(monkeypatch) -> None:
     monkeypatch.setattr(sys.modules[__name__], "BASELINE", {**BASELINE, "denominator": {}})
     with pytest.raises(AssertionError, match=re.escape(REFRESH_COMMAND)):
-        test_source_tool_baseline_is_fresh()
+        test_source_tool_baseline_is_fresh(BASELINE["denominator"].get("cli_paths", []))
 
 
 @pytest.mark.parametrize("observed, expected, message", [
