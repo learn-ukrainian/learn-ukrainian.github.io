@@ -26,9 +26,7 @@ FIXTURE_HOME = "/".join(("", "home", FIXTURE_USER))
 # list instead of spelling the names again.
 HOST_ALIASES: tuple[str, ...] = tuple(sorted(_CANONICAL_ALIASES))
 
-# A token boundary that also accepts a preceding backslash escape (``\n``,
-# ``\x1b``, ``\u001b``), so escaped text (JSON dumps, source literals) cannot
-# hide a value that starts a new line or field.
+# Token boundary shared by the patterns below.
 _ESCAPED_BOUNDARY = r"(?<=\\[A-Za-z])|(?<=\\x[0-9A-Fa-f]{2})|(?<=\\u[0-9A-Fa-f]{4})"
 
 # Generic host facts: non-loopback dotted IPv4 literals, SSH ``HostName``

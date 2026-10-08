@@ -144,7 +144,7 @@ def test_host_fact_lines_report_each_kind_by_line() -> None:
 
 
 @pytest.mark.parametrize("escape", ["\\n", "\\t", "\\x1b", "\\u001b"])
-def test_host_facts_match_after_an_escape_sequence(escape: str) -> None:
+def test_host_fact_extra_samples(escape: str) -> None:
     text = f'"a{escape}{DOC_ADDRESS} b{escape}' + "/".join(("", "opt", "fixture-app")) + '"'
     assert guard.host_fact_lines(text, kinds=(guard.IPV4_LITERAL, guard.INSTALL_TREE)) == {
         guard.IPV4_LITERAL: [1],
