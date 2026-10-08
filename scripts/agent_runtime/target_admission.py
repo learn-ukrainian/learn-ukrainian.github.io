@@ -76,9 +76,23 @@ def mechanical_scope_digest(scope: Mapping[str, Any]) -> str:
     return hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
-def mechanical_worker_scope(record: Mapping[str, Any], *, mode: str) -> dict[str, Any]:
-    """Read the dispatched scope without granting authority from worker defaults."""
+def mechanical_worker_scope(
+    record: Mapping[str, Any], *, mode: str, model: str | None, prompt: str,
+) -> dict[str, Any]:
+    """Recheck mechanical-only scope against the stdin prompt, never the source file."""
+    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+
     from .mechanical_admission import MechanicalAdmissionRefused
+
+    catalog = load_model_catalog()
+    substitution = record.get("substitution") or {}
+    models = (model, record.get("model"), substitution.get("requested_model"), substitution.get("actual_model"))
+    if not any(
+        (identity := canonical_model_id(pin, catalog))
+        and "mechanical_only" in catalog["models"][identity]["roles"]
+        for pin in models
+    ):
+        return {}
 
     scope = record.get("mechanical_task")
     if scope is None:
@@ -88,9 +102,12 @@ def mechanical_worker_scope(record: Mapping[str, Any], *, mode: str) -> dict[str
             raise ValueError("scope changed")
         if scope["mode"] != mode or record["mode"] != mode:
             raise ValueError("mode changed")
-        prompt_file = scope["prompt_file"]
-        if prompt_file and hashlib.sha256(Path(prompt_file).read_bytes()).hexdigest() != scope["prompt_file_sha256"]:
-            raise ValueError("prompt file changed")
+        if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != record["effective_prompt_sha256"]:
+            raise ValueError("executed prompt changed")
+        # Keep the admitted source fields required, but the file is no longer an
+        # execution input. The effective digest includes dispatcher-added blocks.
+        for key in ("task_prompt", "prompt_file", "prompt_file_sha256"):
+            scope[key]
         return {
             "task_family": scope["family"],
             "task_role": scope["role"],
@@ -98,8 +115,8 @@ def mechanical_worker_scope(record: Mapping[str, Any], *, mode: str) -> dict[str
             "language_lane": scope["language_lane"],
             "research_track": scope["track"],
             "review": scope["review"],
-            "task_prompt": scope["task_prompt"],
-            "prompt_file": prompt_file,
+            "task_prompt": prompt,
+            "prompt_file": None,
         }
     except (KeyError, TypeError, ValueError, OSError) as exc:
         raise MechanicalAdmissionRefused(

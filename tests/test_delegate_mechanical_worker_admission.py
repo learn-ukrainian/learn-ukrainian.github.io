@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -51,7 +52,8 @@ def dispatched(tmp_path, monkeypatch):
     )
     assert refusal is None and target.model == HAIKU
     record = {"task_id": TASK, "status": "spawning", "mode": args.mode,
-              "mechanical_task": delegate._mechanical_task_scope(args, admitted=True)}
+              "mechanical_task": delegate._mechanical_task_scope(args, admitted=True),
+              "effective_prompt_sha256": hashlib.sha256(args.prompt.encode("utf-8")).hexdigest()}
     state_path = delegate._state_path(TASK)
     delegate._write_state_atomic(state_path, record)
     return repo, args, state_path
@@ -95,9 +97,10 @@ def test_prompt_file_dispatch_reaches_worker_from_persisted_reference(dispatched
     assert scope["paths"] == [OWNED, OWNED]  # Preserve both dispatcher ownership inputs.
     saved = json.loads(state_path.read_text())
     saved["mechanical_task"] = scope
+    saved["effective_prompt_sha256"] = hashlib.sha256(prompt.read_bytes()).hexdigest()
     delegate._write_state_atomic(state_path, saved)
     refusal, target = delegate._kimi_worker_refusal(
-        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False,
+        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False, prompt=prompt.read_text(),
     )
     assert refusal is None and target.model == HAIKU
     args.prompt_file = str(repo / "missing.md")
@@ -118,7 +121,7 @@ def test_eligible_dispatch_and_worker_receive_identical_inputs(dispatched, monke
 
     monkeypatch.setattr(target_admission, "resolve_and_admit", capture)
     refusal, target = delegate._kimi_worker_refusal(
-        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False,
+        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False, prompt=args.prompt,
     )
     assert refusal is None and target.model == HAIKU
     assert {key: seen[0][key] for key in (
@@ -132,7 +135,7 @@ def test_eligible_dispatch_and_worker_receive_identical_inputs(dispatched, monke
 
 @pytest.mark.parametrize("change", ["missing-family", "classification-write", "tampered-family", "tampered-mode"])
 def test_worker_refuses_invalid_or_tampered_record_with_typed_terminal_cause(dispatched, monkeypatch, change):
-    repo, _args, state_path = dispatched
+    repo, args, state_path = dispatched
     record = json.loads(state_path.read_text())
     mode = "read-only"
     if change == "missing-family":
@@ -153,7 +156,7 @@ def test_worker_refuses_invalid_or_tampered_record_with_typed_terminal_cause(dis
     monkeypatch.setattr(delegate.signal, "signal", never_started)
     monkeypatch.setattr(delegate, "_advisory_worker_refusal", never_started)
     assert delegate._run_worker(
-        TASK, "claude", "worker argv is not task authority", mode, str(repo), HAIKU, 30,
+        TASK, "claude", args.prompt, mode, str(repo), HAIKU, 30,
     ) == 1
     terminal = json.loads(state_path.read_text())
     assert terminal["status"] == "failed"
@@ -169,14 +172,14 @@ def test_worker_refuses_invalid_or_tampered_record_with_typed_terminal_cause(dis
     (KimiAdmissionRefused("Kimi policy refused"), "kimi_admission_refused"),
 ])
 def test_other_typed_admission_refusals_are_terminal(dispatched, monkeypatch, exception, code):
-    repo, _args, state_path = dispatched
+    repo, args, state_path = dispatched
 
     def refuse(*_args, **_kwargs):
         raise exception
 
     monkeypatch.setattr(target_admission, "resolve_and_admit", refuse)
     refusal, target = delegate._kimi_worker_refusal(
-        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False,
+        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False, prompt=args.prompt,
     )
     assert target is None and refusal == code
     record = json.loads(state_path.read_text())
@@ -195,10 +198,83 @@ def test_refusal_without_record_does_not_create_one(tmp_path, monkeypatch):
 
 
 def test_worker_rechecks_owned_content_after_dispatch(dispatched):
-    repo, _args, state_path = dispatched
+    repo, args, state_path = dispatched
     (repo / OWNED).write_bytes(b"\xff")
     refusal, target = delegate._kimi_worker_refusal(
-        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False,
+        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo, review=False, prompt=args.prompt,
     )
     assert refusal == "mechanical_admission_refused" and target is None
     assert "owned content" in json.loads(state_path.read_text())["stderr_excerpt"]
+
+
+@pytest.mark.parametrize("model,family,agent", [
+    ("claude-sonnet-5-5", "routine_mechanical", "claude"),
+    ("gpt-6-luna", "readonly_recon", "codex"),
+])
+@pytest.mark.parametrize("file_state", ["changed", "deleted"])
+def test_non_mechanical_worker_admits_mechanical_family_after_file_change(dispatched, model, family, agent, file_state):
+    repo, args, state_path = dispatched
+    prompt = repo / "prompt.md"
+    prompt.write_text("Inspect this test.")
+    args.model, args.research_task_family, args.prompt_file = model, family, str(prompt)
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=agent, trees=lambda: delegate._kimi_worktree_trees(repo),
+    )
+    assert refusal is None and target.model == model
+    saved = json.loads(state_path.read_text())
+    saved["mechanical_task"] = delegate._mechanical_task_scope(args, admitted=True)
+    saved["model"] = model
+    delegate._write_state_atomic(state_path, saved)
+    if file_state == "changed":
+        prompt.write_text("Changed prompt")
+    else:
+        prompt.unlink()
+    refusal, target = delegate._kimi_worker_refusal(
+        TASK, agent=agent, model=model, mode="read-only", cwd=repo,
+        review=False, prompt="Inspect this test.",
+    )
+    assert refusal is None and target.model == model
+
+
+@pytest.mark.parametrize("file_state", ["changed", "deleted"])
+def test_mechanical_worker_admits_composed_stdin_after_file_change(dispatched, file_state):
+    repo, args, state_path = dispatched
+    prompt = repo / "prompt.md"
+    prompt.write_text(args.prompt)
+    args.prompt_file = str(prompt)
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent="claude", trees=lambda: delegate._kimi_worktree_trees(repo),
+    )
+    assert refusal is None and target.model == HAIKU
+    executed = delegate._compose_dispatch_prompt(
+        prompt.read_text(), worktree_path=repo, mode="read-only", sparse_telemetry=None,
+        delegate_commits=False, research_block="", advisory_block="",
+        advisory_block_kind=None, rules_seat="core",
+    )
+    saved = json.loads(state_path.read_text())
+    saved.update(mechanical_task=delegate._mechanical_task_scope(args, admitted=True),
+                 effective_prompt_sha256=hashlib.sha256(executed.encode("utf-8")).hexdigest())
+    delegate._write_state_atomic(state_path, saved)
+    if file_state == "changed":
+        prompt.write_text("Changed prompt")
+    else:
+        prompt.unlink()
+    refusal, target = delegate._kimi_worker_refusal(
+        TASK, agent="claude", model=HAIKU, mode="read-only", cwd=repo,
+        review=False, prompt=executed,
+    )
+    assert refusal is None and target.model == HAIKU
+
+
+def test_changed_stdin_prompt_settles_as_typed_refusal_before_runtime(dispatched, monkeypatch):
+    repo, _args, state_path = dispatched
+
+    def never_started(*_args, **_kwargs):
+        pytest.fail("changed stdin reached runtime setup")
+
+    monkeypatch.setattr(delegate, "_advisory_worker_refusal", never_started)
+    assert delegate._run_worker(TASK, "claude", "Changed prompt", "read-only", str(repo), HAIKU, 30) == 1
+    saved = json.loads(state_path.read_text())
+    assert saved["status"] == "failed"
+    assert saved["failure_reason"] == saved["returncode_reason"] == "mechanical_admission_refused"
+    assert saved["stderr_excerpt"].startswith("MECHANICAL_TASK_REFUSED:")

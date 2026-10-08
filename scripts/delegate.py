@@ -6457,6 +6457,7 @@ def _kimi_worker_refusal(
     mode: str,
     cwd: Path,
     review: bool,
+    prompt: str = "",
 ) -> tuple[str | None, Any]:
     """The worker-side gate: ``(refusal, admitted target)``; installs the Kimi worktree boundary when it admits.
 
@@ -6498,7 +6499,7 @@ def _kimi_worker_refusal(
                 return _publish_cause(task_id, _exception_cause("boundary_remove_failed", exc), source="worker"), None
         try:
             launch = _read_state_json(_state_path_no_create(task_id)) or {}
-            scope = mechanical_worker_scope(launch, mode=mode)
+            scope = mechanical_worker_scope(launch, mode=mode, model=model, prompt=prompt)
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
             (target,) = resolve_and_admit(
                 (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
@@ -9763,6 +9764,7 @@ def _run_worker(
         mode=mode,
         cwd=Path(cwd_str),
         review=require_review_verdict or review_id is not None,
+        prompt=prompt,
     )
     if kimi_refusal:
         from scripts.agent_runtime import kimi_admission
