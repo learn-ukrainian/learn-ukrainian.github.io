@@ -381,6 +381,66 @@ def test_interrupted_alias_publication_is_counted_once_and_resumes(
     assert "reused=4 misses=0" in capsys.readouterr().out
 
 
+@pytest.mark.parametrize(
+    ("sibling_status", "expected_first"),
+    [
+        (200, "fetched=1 reused=1 misses=0 errors=1 pending=1"),
+        (404, "fetched=0 reused=1 misses=1 errors=1 pending=1"),
+    ],
+)
+def test_interrupted_later_alias_preserves_sibling_publication_provenance(
+    mirror_fixture, monkeypatch, capsys, sibling_status, expected_first
+):
+    from types import SimpleNamespace
+
+    manifest, calls, _queue = mirror_fixture
+    aliases = ["sample / variant", "sample"]
+    manifest.write_text(json.dumps({"entries": [{"lemma": lemma} for lemma in aliases]}))
+    responses = iter((503, sibling_status, KeyboardInterrupt()))
+
+    def get(url, **kwargs):
+        calls.append(url)
+        response = next(responses)
+        if isinstance(response, BaseException):
+            raise response
+        return SimpleNamespace(
+            status_code=response,
+            headers={},
+            text=(
+                '<section id="dictionary-article"><article><p>synthetic article</p></article></section>'
+                if response == 200
+                else ""
+            ),
+        )
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", get)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 130
+    output = capsys.readouterr().out
+    assert f"RESULT {expected_first} denominator=4 status=interrupted" in output
+    assert "RESULT " in output and len(calls) == 3
+
+    cache_path = enrich_manifest_module._slovnyk_cache_path("sample")
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
+    retained = cache_path.read_bytes()
+    def resume_get(url, **kwargs):
+        calls.append(url)
+        return SimpleNamespace(
+            status_code=200,
+            headers={},
+            text='<section id="dictionary-article"><article><p>synthetic article</p></article></section>',
+        )
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", resume_get)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    resumed = capsys.readouterr().out
+    assert "RESULT fetched=1 reused=3 misses=0 errors=0 pending=0 denominator=4" in resumed
+    assert len(calls) == 4 and calls[-1].endswith("/vts/sample") and cache_path.read_bytes() != retained
+    before = {path: path.read_bytes() for path in (cache_path, checkpoint)}
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 4 and {path: path.read_bytes() for path in before} == before
+    assert "RESULT fetched=0 reused=4 misses=0 errors=0 pending=0 denominator=4" in capsys.readouterr().out
+
+
 def test_interruption_after_all_outcomes_stays_interrupted(mirror_fixture, monkeypatch, capsys):
     manifest, calls, queue = mirror_fixture
     manifest.write_text(json.dumps({"entries": [{"lemma": "sample"}]}))

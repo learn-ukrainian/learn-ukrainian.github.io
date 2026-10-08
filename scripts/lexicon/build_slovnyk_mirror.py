@@ -159,6 +159,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
             attempted += 1
             outcomes = {}
             missing = [slug for slug in _SLOVNYK_LOOKUP_SLUGS if slug not in resolved[lemma]]
+            pre_call_rows, _ = _cache_state(lemma)
             in_flight_lemma = lemma
             _slovnyk_cache(lemma, outcomes=outcomes, slugs=missing)
             rows, digest = _cache_state(lemma)
@@ -219,6 +220,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                                 outcome_status is None
                                 and lemma == interrupted_lemma
                                 and slug in missing
+                                and slug not in pre_call_rows
                             ):
                                 cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
                                 lookup_word = _slovnyk_lookup_word(lemma)
