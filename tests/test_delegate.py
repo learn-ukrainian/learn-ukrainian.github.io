@@ -19413,3 +19413,128 @@ def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dis
             recorder.normalize_verdict(reply)
     else:
         assert recorder.normalize_verdict(reply) == recorded
+
+
+@pytest.fixture
+def advisory_continuation(tmp_path, monkeypatch):
+    """An earlier round exceeds the envelope; this round adds only one line."""
+    _sanitize_git_env_for_test(monkeypatch)
+    _main, worktree = _init_repo_with_worktree(tmp_path)
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args], cwd=worktree, check=True, capture_output=True, text=True,
+            env=delegate._sanitized_git_env(), timeout=30,
+        ).stdout.strip()
+
+    for index in range(3):
+        (worktree / f"earlier-{index}.txt").write_text("earlier round\n" * 5)
+    git("add", "--", "earlier-0.txt", "earlier-1.txt", "earlier-2.txt")
+    git("commit", "-m", "Earlier round")
+    round_start = git("rev-parse", "HEAD")
+    (worktree / "current.txt").write_text("current round\n")
+    git("add", "--", "current.txt")
+    git("commit", "-m", "Current round")
+    return worktree, {
+        "task_id": "advisory-continuation",
+        "mode": "workspace-write",
+        "worktree_path": str(worktree),
+        "worktree_branch": "codex/task-1",
+        "worktree_base": "main",
+        "pinned_head": round_start,
+        "advisory_envelope": {"max_changed_files": 2, "max_non_test_loc": 10},
+    }
+
+
+def _run_advisory_completion_worker(advisory_continuation, monkeypatch):
+    """Exercise completion independently of bounded-model admission and remote delivery."""
+    worktree, record = advisory_continuation
+    state_path = delegate._state_path(record["task_id"])
+    delegate._write_state_atomic(state_path, record)
+    result = _finalize_mock_result()
+    result.model = "gpt-6.1-sol"
+    monkeypatch.setattr("agent_runtime.runner.invoke", lambda *_a, **_k: result)
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a, **_k: 0)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_k: None)
+    rc = delegate._run_worker(
+        task_id=record["task_id"], agent="codex", prompt="complete this round",
+        mode="workspace-write", cwd_str=str(worktree), model="gpt-6.1-sol",
+        hard_timeout=60, keep_worktree=True,
+    )
+    return rc, delegate._read_state(state_path)
+
+
+def test_advisory_continuation_within_envelope_passes_without_base(
+    tmp_tasks_dir, advisory_continuation, monkeypatch,
+):
+    """#9747: earlier commits cannot consume the continuation round's ceiling."""
+    worktree, record = advisory_continuation
+    assert "worktree_base_sha" not in record  # No explicit --base override.
+    cumulative = delegate._advisory_ceiling_check(worktree, "main", record["advisory_envelope"])
+    assert cumulative["changed_files"] == 4
+    assert cumulative["non_test_loc"] == 16
+    assert cumulative["exceeded"]
+
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert rc == 0
+    assert state["status"] == "done", state.get("last_error")
+    check = state["advisory_ceiling_check"]
+    assert check["measured"] is True
+    assert (check["changed_files"], check["non_test_loc"], check["exceeded"]) == (1, 1, [])
+
+
+@pytest.mark.parametrize("recovers", [True, False], ids=["transient", "persistent"])
+def test_advisory_diff_read_retries_once_before_unmeasured_failure(
+    tmp_tasks_dir, advisory_continuation, monkeypatch, recovers,
+):
+    """#9747: one retry can recover; two failed reads persist the error and fail."""
+    worktree, record = advisory_continuation
+    real_read = delegate._worktree_diff_read
+    real_write = delegate._write_record_unlocked
+    calls = []
+    failed_writes = []
+    cause = delegate._TypedCause("diff_command_failed", command="diff", exit_status=128)
+    detail = "the worker's diff could not be read (diff_command_failed, git diff, exit 128)"
+
+    def write(path, state):
+        if state.get("status") == "failed":
+            assert len(calls) == 2
+            assert state["advisory_ceiling_check"] == {"measured": False, "error": detail}
+            failed_writes.append(path)
+        return real_write(path, state)
+
+    def read(tree, args, **kwargs):
+        # Other completion checks also read diffs; inject only at the advisory numstat.
+        if "--numstat" not in args:
+            return real_read(tree, args, **kwargs)
+        assert tree == worktree
+        assert record["pinned_head"] in args
+        assert delegate._read_state(delegate._state_path(record["task_id"]))["status"] != "failed"
+        calls.append(tuple(args))
+        if recovers and len(calls) == 2:
+            return real_read(tree, args, **kwargs)
+        return None, cause
+
+    monkeypatch.setattr(delegate, "_worktree_diff_read", read)
+    monkeypatch.setattr(delegate, "_write_record_unlocked", write)
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert len(calls) == 2
+    assert calls[0] == calls[1]
+    check = state["advisory_ceiling_check"]
+    if recovers:
+        assert failed_writes == []
+        assert rc == 0
+        assert state["status"] == "done", state.get("last_error")
+        assert check["measured"] is True
+        assert check["exceeded"] == []
+        assert "failure_reason" not in state
+    else:
+        assert failed_writes
+        assert rc == 1
+        assert state["status"] == "failed"
+        assert state["failure_reason"] == delegate.bounded_advisory.CEILING_UNMEASURED
+        assert check == {"measured": False, "error": detail}
+        assert detail in state["stderr_excerpt"]
