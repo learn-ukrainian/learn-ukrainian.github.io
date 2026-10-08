@@ -7670,6 +7670,11 @@
       "risk": "low"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "low"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "low"
@@ -8882,6 +8887,11 @@
       "risk": "low"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "low"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "low"
@@ -10094,6 +10104,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "medium"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "medium"
@@ -11306,6 +11321,11 @@
       "risk": "medium"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "medium"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "medium"
@@ -12518,6 +12538,11 @@
       "risk": "high"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "high"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "high"
@@ -13730,6 +13755,11 @@
       "risk": "high"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "infra",
+      "risk": "high"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "infra",
       "risk": "high"
@@ -14942,6 +14972,11 @@
       "risk": "critical"
     },
     {
+      "author_model": "claude-haiku-5-5",
+      "review_profile": "code",
+      "risk": "critical"
+    },
+    {
       "author_model": "claude-opus-4-6-thinking",
       "review_profile": "code",
       "risk": "critical"
@@ -16150,6 +16185,11 @@
     },
     {
       "author_model": "claude-fable-5-1-thinking-high",
+      "review_profile": "infra",
+      "risk": "critical"
+    },
+    {
+      "author_model": "claude-haiku-5-5",
       "review_profile": "infra",
       "risk": "critical"
     },
@@ -17327,6 +17367,1779 @@
     }
   ],
   "roles": [
+    {
+      "context": {},
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "anthropic"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "deepseek"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "google"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "moonshot"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "openai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "poolside"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "qwen"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "xai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "zhipu"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "openai_frontier"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "gpt-6.1-sol"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "grok-4.7"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "glm-5.3"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "glm-5.3"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-opus-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-sonnet-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-sonnet-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "composer-2.5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "composer-2.5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-s-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool-xs"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "isolation_required": true
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "sealed_evidence"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "unsupported"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {
+        "data_egress_policy": "local_interactive"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unknown",
+        "codex": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unavailable",
+        "codex": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "stale",
+        "codex": "stale"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "stale"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "healthy",
+        "codex": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded",
+        "codex": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded_telemetry",
+        "codex": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "near_cap",
+        "codex": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unhealthy",
+        "codex": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "unavailable"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": false
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "hot"
+          }
+        },
+        "diagnostics": {
+          "stale": true
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": null,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 0,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 1,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "routine_mechanical"
+    },
+    {
+      "context": {},
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "anthropic"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "deepseek"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "google"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "moonshot"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "openai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "poolside"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "qwen"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "xai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "zhipu"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "openai_frontier"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "gpt-6.1-sol"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "grok-4.7"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "glm-5.3"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "glm-5.3"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-opus-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-sonnet-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-sonnet-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "composer-2.5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "composer-2.5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-s-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool-xs"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "isolation_required": true
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "sealed_evidence"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "unsupported"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {
+        "data_egress_policy": "local_interactive"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unknown",
+        "codex": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unavailable",
+        "codex": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "stale",
+        "codex": "stale"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "stale"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "healthy",
+        "codex": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded",
+        "codex": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded_telemetry",
+        "codex": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "near_cap",
+        "codex": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unhealthy",
+        "codex": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "unavailable"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": false
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "hot"
+          }
+        },
+        "diagnostics": {
+          "stale": true
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": null,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 0,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 1,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "mechanical_classification"
+    },
+    {
+      "context": {},
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "anthropic"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "deepseek"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "google"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "moonshot"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "openai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "poolside"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "qwen"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "xai"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_families": [
+          "zhipu"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "openai_frontier"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "gpt-6.1-sol"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "grok-4.7"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "grok-4.7-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "glm-5.3"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "glm-5.3"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-opus-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-opus-5-5-cursor-fallback"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "claude-sonnet-5-5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "claude-sonnet-5-5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "composer-2.5"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "composer-2.5"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-s-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "excluded_seats": [
+          "pool-xs"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "pinned_model": "poolside/laguna-xs-2.1"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "isolation_required": true
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "sealed_evidence"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "required_capabilities": [
+          "unsupported"
+        ]
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {
+        "data_egress_policy": "local_interactive"
+      },
+      "health": null,
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unknown",
+        "codex": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unknown"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unavailable",
+        "codex": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unavailable"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "stale",
+        "codex": "stale"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "stale"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "healthy",
+        "codex": "healthy"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded",
+        "codex": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "degraded_telemetry",
+        "codex": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "degraded_telemetry"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "near_cap",
+        "codex": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "near_cap"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "claude": "unhealthy",
+        "codex": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "missing-key": "unhealthy"
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "unavailable"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": false
+            },
+            "status": "cool"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "health": {
+              "healthy": true
+            },
+            "status": "hot"
+          }
+        },
+        "diagnostics": {
+          "stale": true
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": null,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 0,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
+    {
+      "context": {},
+      "health": {
+        "agents": {
+          "codex": {
+            "age_s": 0,
+            "credit_balance": 1,
+            "fetched_at": "2026-10-06T12:00:00+00:00",
+            "freshness": "fresh",
+            "health": {
+              "healthy": true
+            },
+            "remaining_pct": 1,
+            "status": "near_cap"
+          }
+        },
+        "diagnostics": {
+          "stale": false
+        }
+      },
+      "purpose": "inspect",
+      "role": "readonly_recon"
+    },
     {
       "context": {},
       "health": null,

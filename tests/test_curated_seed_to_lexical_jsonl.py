@@ -6,14 +6,12 @@ import json
 import sqlite3
 from pathlib import Path
 
-import pytest
-
 from scripts.atlas import curated_seed_to_lexical_jsonl as convert
 from scripts.atlas import lexical_projection as projection
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "atlas" / "curated_v5_sample.jsonl"
 ROOT = Path(__file__).resolve().parents[1]
-REAL_VESUM = ROOT / "data" / "vesum.db"
+
 
 
 def test_entry_slug_is_stable_for_ukrainian() -> None:
@@ -81,8 +79,7 @@ def test_convert_seed_keeps_distinct_titled_works_from_one_corpus_file(tmp_path:
     assert {source["source_work"] for source in sources} == {"Лісова пісня", "Кассандра"}
 
 
-@pytest.mark.skipif(not REAL_VESUM.is_file(), reason="vesum.db not available in worktree")
-def test_sample_seed_round_trips_through_projection(tmp_path: Path) -> None:
+def test_sample_seed_round_trips_through_projection(tmp_path: Path, requires_vesum_db) -> None:
     """End-to-end: Curated private teacher-lesson sample → ADR JSONL → SQLite projection with FKs ON."""
     lexical_path = tmp_path / "lexical.jsonl"
     db_path = tmp_path / "atlas-v2.db"
@@ -91,7 +88,7 @@ def test_sample_seed_round_trips_through_projection(tmp_path: Path) -> None:
     records = convert.convert_seed_file(FIXTURE)
     convert.write_jsonl(lexical_path, records)
 
-    result = projection.build_projection(lexical_path, db_path, vesum_db=REAL_VESUM)
+    result = projection.build_projection(lexical_path, db_path, vesum_db=requires_vesum_db)
     projection.export_projection(db_path, export_path)
 
     assert result.accepted_records >= 1

@@ -33,6 +33,8 @@ SUPPORTED_SCHEMA_VERSIONS = frozenset(CATALOG_SCHEMA_VERSIONS.values())
 VALID_LIFECYCLES = frozenset({"active", "fallback", "hold", "retired"})
 VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
+MECHANICAL_FAMILIES = frozenset({"routine_mechanical", "mechanical_classification", "readonly_recon"})
+MECHANICAL_ROLES = MECHANICAL_FAMILIES | {"mechanical_only"}
 # ``review_scheduler.activity_roles`` keys (#9583): ``review`` admits a review,
 # critique or approval of record; ``consult`` admits an ACP ask, consult or
 # discussion together with the ``review`` roles.
@@ -308,6 +310,10 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any], catalog: dict
     for seat_name, raw_seat in seats.items():
         _require_string(seat_name, "orchestrator seat name")
         seat = _require_mapping(raw_seat, f"orchestrator_seats.{seat_name}")
+        for key in ("model_id", "escalate_model_id", "fallback_model_id"):
+            pin = seat.get(key)
+            if isinstance(pin, str) and "mechanical_only" in models.get(pin, {}).get("roles", []):
+                raise ModelCatalogError("mechanical-only models never hold driver seats")
         for field in ("model_id", "effort", "escalate_model_id", "escalate_effort"):
             _require_string(seat.get(field), f"orchestrator_seats.{seat_name}.{field}")
         esc_model = seat["escalate_model_id"]
@@ -690,6 +696,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
+        if "mechanical_only" in model["roles"] and not set(model["roles"]) <= MECHANICAL_ROLES:
+            raise ModelCatalogError(f"models.{model_id}: mechanical-only seats cannot hold code, language, review, design or driver roles")
         if lifecycle == "retired" and model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
@@ -1312,7 +1320,7 @@ def _main() -> int:
             "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
             "  .venv/bin/python -m scripts.review.model_catalog --resolve-role bounded_advisor\n"
             "Outputs: model id, tab-separated alias route fields, or role-resolution JSON on stdout; no writes.\n"
-            "Exit codes: 0 resolved or not retired; 2 retired model, invalid arguments or unknown route.\n"
+            "Exit codes: 0 resolved or launcher-admitted; 2 refused model, invalid arguments or unknown route.\n"
             "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
         ),
     )
@@ -1322,7 +1330,7 @@ def _main() -> int:
     group.add_argument("--resolve-role", metavar="ROLE", help="Stable routing role to inspect as JSON, e.g. bounded_advisor")
     group.add_argument(
         "--check-retired-model", metavar="MODEL",
-        help="Refuse a retired catalog identity, including aliases and context suffixes; e.g. claude-fable-5",
+        help="Launcher gate: refuse retired identities and mechanical-only pins; aliases/context suffixes resolve through the catalog",
     )
     parser.add_argument(
         "--format", choices=("native", "kimicc", "glmcc"), default="native",
@@ -1350,6 +1358,9 @@ def _main() -> int:
     elif args.check_retired_model:
         try:
             refusal = retired_model_refusal(args.check_retired_model)
+            identity = canonical_model_id(args.check_retired_model)
+            if identity and "mechanical_only" in load_model_catalog()["models"][identity]["roles"]:
+                refusal = "MECHANICAL_TASK_REFUSED: mechanical-only models cannot launch driver/interactive seats; use a typed dispatch (#9996)"
         except ModelCatalogError as exc:
             parser.error(str(exc))
         if refusal:

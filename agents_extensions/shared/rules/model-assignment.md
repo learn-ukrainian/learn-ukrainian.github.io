@@ -39,6 +39,34 @@ inferring eligibility or priority from rung position or from this text.
 
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 
+## Haiku mechanical placement (#9996)
+
+Claude Haiku 5.5 (`claude-haiku-5-5`, existing `economical` tier, native Claude,
+`high` fleet effort) handles routine lockfile/pointer/smoke work first, with
+Sonnet 5.5 fallback; mechanical classification, extraction and triage
+(TypeSafe/Jev pre-LLM triage, CI failure classification and issue/DoR card checks);
+and read-only recon/search as a peer of Luna. Deterministic checks still precede
+model calls. Resolve catalog roles `routine_mechanical`, `mechanical_classification`
+and `readonly_recon`; never pin model IDs in routing consumers.
+
+Haiku dispatches declare the matching `--research-task-family` and narrow
+`--owned-path` scopes. Classification and recon require `--mode read-only`.
+Admission checks original and resolved pins, owned descendants and input content;
+missing typing or unreadable input fails closed. Mechanical-only inputs are plain
+UTF-8 without Cyrillic. Never route Ukrainian authoring/review/content, formal
+review of record, design/advice/designated approval, security-sensitive code or
+driver seats to Haiku. Claude's Ukrainian seat stays Opus 5.5.
+
+Haiku is **not** a bounded implementation worker, even with a Sol envelope:
+Anthropic's cited guidance qualifies classification/extraction/routing, not this
+fleet's code authoring. Luna/Flash bounded admission and the Sol envelope remain
+unchanged. Broader investigation stays with those existing routes. Haiku is not
+a blanket budget substitute for stronger seats. Its API base prices are
+$0.10/$0.50 per MTok input/output and $0.01 cache read through 100,000 prompt
+tokens; above that, $0.50/$2.50 and $0.05 cache read. Native CLI subscription
+usage never invents a blended token price. Sources: [Anthropic model overview](https://platform.claude.com/docs/en/models/overview)
+and [pricing](https://platform.claude.com/docs/en/about-claude/pricing).
+
 ## Canonical model catalog and refresh contract
 
 The machine-readable inventory and reviewer ladders live in
@@ -646,7 +674,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol | **high:** only `gpt-6.1-sol` or `claude-opus-5-5`, per the #9538 review admission rule at the top of this file · **medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: only claude, codex (GPT), agy (Gemini); every other model family excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; Grok is excluded from every Ukrainian review and judge seat; FOLK stays cross-family GPT↔Claude per the folk rubric |
-| **Research / recon / triage** | **Luna @ `high`** under a complete Sol advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
+| **Research / recon / triage** | **Haiku 5.5 read-only recon/search** alongside **Luna @ `high`** under a complete Sol advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible opencode models — pool (FREE) · glm (LOCAL); DeepSeek is excluded from dispatch and review (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
 **Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` with no review-typing flag is an implementation dispatch and is not gated; a code-profile review-typed dispatch to agy is refused at reviewer admission. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.

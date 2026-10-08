@@ -569,13 +569,34 @@ models:
     weaknesses: [frontier_quota_cost, superseded_by_claude-opus-5]
     sources:
       - https://www.anthropic.com/news/claude-opus-4-8
+  claude-haiku-5-5:
+    routing_wire_ids:
+      native_claude: claude-haiku-5-5
+    family: anthropic
+    tier: economical
+    lifecycle: active
+    roles: [mechanical_only, routine_mechanical, mechanical_classification, readonly_recon]
+    transports: [native_claude]
+    strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
+    weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver, no_bounded_implementation]
+    notes: >-
+      #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
+      CI failure and issue/DoR classification; read-only recon alongside Luna.
+      Mechanical-only admission requires a matching task family, narrow safe
+      owned paths and non-Ukrainian inputs. No bounded code, even with an envelope:
+      the cited workload evidence qualifies classification/extraction/routing,
+      not fleet code authoring. Existing Luna/Flash envelope admission stays intact.
+    sources:
+      - https://platform.claude.com/docs/en/models/overview
+      - https://platform.claude.com/docs/en/models/haiku-5-5/overview
+      - https://platform.claude.com/docs/en/about-claude/pricing
   claude-sonnet-5-5:
     routing_wire_ids:
       native_claude: claude-sonnet-5-5
     family: anthropic
     tier: frontier_practical
     lifecycle: active
-    roles: [implementation, agentic_coding, strong_review, document_authoring]
+    roles: [implementation, agentic_coding, strong_review, document_authoring, routine_mechanical]
     transports: [native_claude, cursor]
     strengths: [well_scoped_everyday_tasks, bug_fixes, faster_than_sonnet_5, fewer_tokens_per_task, polished_english_documents_slides_spreadsheets, design_eye]
     weaknesses: [weaker_than_opus_on_complex_open_ended_work, provisional_until_measured, not_for_security_sensitive_code, not_for_ukrainian_curriculum_content]
@@ -1476,6 +1497,17 @@ seats:
         - infra
         capabilities:
         - code_review
+  mechanical_worker:
+    model_id: claude-haiku-5-5
+    bindings: [mechanical_work]
+    priority: 100
+    decision_reference: issue:#9996
+    routes:
+      native:
+        route: claude
+        transport: native_claude
+        effort: high
+        invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model {wire_id} --effort high
   bounded_worker:
     model_id: gpt-6-luna
     bindings:
@@ -1501,6 +1533,14 @@ seats:
         effort: high
         invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model {wire_id} --effort high
 roles:
+  routine_mechanical:
+    routes: [mechanical_worker/native, anthropic_practical/native]
+    required_model_roles: [routine_mechanical]
+  mechanical_classification:
+    seat: mechanical_worker
+    required_model_roles: [mechanical_classification]
+  readonly_recon:
+    routes: [mechanical_worker/native, bounded_worker/native]
   bounded_advisor:
     seat: openai_frontier
     required_model_roles:
