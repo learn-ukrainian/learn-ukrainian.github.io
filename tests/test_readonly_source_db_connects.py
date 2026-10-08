@@ -384,11 +384,12 @@ def test_import_access_forms_and_helper_calls(source):
 
 
 def test_live_collection_helpers_in_base_census():
-    import json
-    baseline = json.loads(lint.BASELINE.read_text())
-    entries = lint.census(baseline['base_commit'])['entries']
-    paths = {e['path'] for e in entries if e['kind'] == 'test_import_access'}
-    assert {'tests/test_esum_search.py', 'tests/audit/test_antonenko_prose_narrowing.py'} <= paths
+    # Classify the current tree, as the ratchet does when a shallow clone lacks
+    # the frozen base. Migrated helpers must leave the committed baseline too.
+    entries = lint.census('HEAD')['entries']
+    actual = {lint.StoreFinding(**e) for e in entries if e['kind'] == 'test_import_access'}
+    expected = {e for e in lint.baseline_entries() if e.kind == 'test_import_access'}
+    assert actual == expected
 
 
 def test_baseline_identity_survives_lines_but_counts_occurrences():
