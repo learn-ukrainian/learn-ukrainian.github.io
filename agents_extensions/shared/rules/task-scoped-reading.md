@@ -1,5 +1,10 @@
 # Task-scoped instruction reading
 
+Every seat loads [`core.md`](core.md), the short binding rule set, through
+`/api/rules?scope=core&format=markdown` or the same offline loader. Curriculum
+seats use `scope=content`, which adds `core-curriculum.md`. The unscoped API is
+the complete compatibility reference, not the cold-start bundle.
+
 The root `AGENTS.md` digest and operator contract remain binding. Read
 `agents_extensions/shared/rules/operator-expectations.md` before consequential
 work. Then load only the canonical sources applicable to the task and current

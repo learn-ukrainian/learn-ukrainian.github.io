@@ -20,8 +20,8 @@ marathons are not.
 **Escape:** The operator, or Opus 5.5 and Sol 6.1 agreeing (designated approval; when one authored the proposal, the other's approval completes it; any other author needs both), may waive breadth for one named
 session with a written NOTE on the issue/handoff. Cannot become the default.
 
-**Sunset review:** 2026-09-06 or when breadth report shows median driver
-breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
+**Review trigger:** when breadth report shows median driver breadth ≥3 agents
+and ≥2 tiers for 14 consecutive days. A review does not expire the standing rule.
 
 ---
 

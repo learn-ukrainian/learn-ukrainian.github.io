@@ -98,27 +98,16 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Opus 5.5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
 | Claude Haiku recon | **`medium`** default; never sole authority |
 
-#### Fable 5.1 `/effort` decision topology (operator 2026-09-09)
+#### Former Fable effort guidance
 
-Canonical short form of the bundled Claude API Fable 5.1 effort guidance (Claude Code `/effort` picker). Level names do **not** map to the same thinking depth across models.
+[Historical effort notes](../decisions/agent-rules-routing-history.md) are
+archived evidence, not a current driver, advisor, approval or review route.
+Current effort and model identities come from the catalog and live profiles.
 
-These effort settings apply only when Fable 5.1 is explicitly selected; they do not change
-the Opus 5.5 / Sol 6.1 routing defaults or the designated approval boundary.
-
-| Level | When |
-|---|---|
-| **`high`** | **Default.** Orchestration, epic driving, first-pass **code** review, dispatch briefs, day-to-day coding. Also the starting point for **long deliverables** (long docs/code rewrites): stay at `high` unless a measured quality gain justifies more. |
-| **`medium` / `low`** | Routine / quick interactive turns. Fable 5.1 at `low` often beats prior-gen `xhigh`/`max`; `medium` roughly matches Fable 5 cheaper. Prefer these for quick edits and questions. |
-| **`xhigh`** | Capability-sensitive only: hard debugging, large multi-file refactors, long autonomous runs — and the standing floor for **curriculum/linguistic review skills** (see exceptions). Expect multi-minute turns. At `xhigh`/`max`, leave room for the final answer (provider: long outputs can exhaust the turn if thinking fills the budget). |
-| **`max`** | Almost never — extremely hard, latency-insensitive problems after measured headroom at `xhigh`. Same long-output budget caution. |
-
-**Standing exceptions (do not “step down” these):** skills whose frontmatter pins `effort: xhigh` — `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — stay at `xhigh`. They judge Ukrainian learner content; a miss is a durable error. This topology does **not** override those pins. Routine **code** CF may still use a cheaper first pass via dispatch routing.
-
-Quirks that change the choice:
-
-- **Higher effort on routine work over-gathers.** At `high+` on a simple task it deliberates too long and may tidy/refactor unasked code — **lower effort**, do not prompt around it.
-- **`low` searches less.** Answers from memory more; bump effort when the turn needs retrieval for named products/libraries with stale knowledge.
-- **Effort ≠ response length.** Over-long replies are a prompting fix (see Concise by default), not an effort dial. Separately: for long *deliverables*, prefer `high` first; only raise to `xhigh`/`max` with a measured benefit and output-budget headroom.
+**Standing exceptions (do not step down):** skills whose frontmatter pins
+`effort: xhigh` — `content-review`, `plan-review`, `plan-review-seminar`,
+`batch-review`, `prompt-review` — retain their pinned effort. Historical model
+notes never override these Ukrainian learner-content review floors.
 
 #### Opus 5.5 `/effort` decision topology (operator 2026-09-22)
 

@@ -35,15 +35,10 @@ tie-breakers.
    auto-merge, but the accountable orchestrator must ensure approved PRs land in `main` —
    once required CI and independent cross-family exact-head review both pass, the orchestrator
    merges (or enqueues via `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged.
-   **After merge, cleanup is mandatory before the next large
-   dispatch** (operator 2026-08-07; ENOSPC is the known failure): (1) confirm MERGED,
-   (2) `git worktree remove --force` for that PR's dispatch worktree **before**
-   deleting the local branch, (3) delete local + remote branch + `git fetch --prune`
-   + `git worktree prune`, (4) bulk reap:
-   `.venv/bin/python scripts/orchestration/reap_worktrees.py --apply` (also sweeps
-   any leftover `$TMPDIR` / `shielded-reviews` temps from the retired formal path),
-   (5) prove with `df -h /` and `git worktree list` (no zombie path for that PR). A
-   squash-merge alone is not done. Full checklist: `drive-epic` skill §7a. **Do not
+   **Landing and cleanup:** follow `workflow.md` § Merge policy and its
+   Post-merge cleanup recipe. Cleanup is mandatory before the next large
+   dispatch; non-zero or SKIPPED receipts block closeout, never use `--force`.
+   A squash-merge alone is not done. **Do not
    create sealed `lu-review-*` trees** — shielded formal CF is retired. Close issues
    when acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on
    every commit. Session start/end: sweep worktrees, branches, open PRs — a dangling

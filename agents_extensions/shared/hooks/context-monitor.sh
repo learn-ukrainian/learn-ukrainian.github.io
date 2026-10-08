@@ -181,8 +181,7 @@ CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW
 # Announce each tier once per session, the first time it is crossed. Re-injecting
 # the same rollover instruction on every tool call is the trap the Codex/Grok
 # guards above describe, and a running context-budget countdown makes the model
-# wrap up early (claude-api skill, model-migration.md -> Claude Fable 5.1
-# "context anxiety"). Tiers are monotonic: a usage estimate that dips and rises
+# wrap up early. Tiers are monotonic: a usage estimate that dips and rises
 # around a boundary does not re-announce. Only a compaction-scale drop - usage
 # below 60% of the level at the last announcement - re-arms the tiers, so a fresh
 # climb after compaction is announced again. State lives in gitignored runtime

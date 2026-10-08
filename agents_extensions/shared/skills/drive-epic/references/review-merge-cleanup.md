@@ -130,42 +130,14 @@ Reviewers do not re-run test suites that the PR's CI runs: review the diff, run 
 most the specific tests that reproduce a finding you are checking, and cite CI run
 ids for suite results.
 
-## §7. Merge discipline
+## §7. Landing order
 
-PRs only — never commit or merge to `main` directly.
-
-**Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03; CF-before-CI clarified 2026-09-18):** The
-forge does not enforce independent review, so the driver verifies both gates
-itself. Auto-merge / enqueue is **not** review; PRs have reached `main` that
-way with empty reviews. Drivers follow this order:
-
-0. **CF review-fix before CI (binding).** Push the branch. Use §6's toolful
-   launch and settlement; fix → re-CF until qualified `VERDICT: APPROVE` on
-   the tip. **Do not open any PR** (draft or ready) while CF is open or findings
-   are being fixed — draft PRs also start CI.
-1. **Independent cross-family exact-head CF** — attested reviewer model,
-   outside the author's family, `done`, APPROVE, and task SHA matches the tip (§6).
-2. **Open the PR** → bind the completed review with
-   `scripts/review/record_cf_verdict.py --task-id <review-id> --pr <N>` →
-   **CI Gate green** on that **same** head.
-3. **Merge queue only after both.** Enqueue then; never before.
-
-**Never auto-merge or enqueue first.** Never treat `.venv/bin/python -m scripts.publish pr-merge --auto` as a
-substitute for CF. Do **not** arm `--auto` and wait for Gate. Never enqueue a
-**draft**. Blocking CI red → never `--admin`-bypass.
-
-```bash
-# Only after §7 steps 1 and 2 on this exact head. Never --auto.
-.venv/bin/python -m scripts.publish pr-merge --number <N>
-
-# Check merge-queue status / position / ETA after enqueue (#7814 item 13):
-.venv/bin/python -m scripts.gh_merge_queue_status <pr>
-```
-
-**Never pass `--delete-branch` to `.venv/bin/python -m scripts.publish pr-merge --number <N>` while this repo uses a merge queue** —
-deleting the head ref mid-queue can close the PR without landing (known failure mode).
-The remote branch is deleted only after `gh pr view` shows `MERGED`, by §7a closeout.
+The sole ordered landing and cleanup recipe is
+`agents_extensions/shared/rules/workflow.md` § Merge policy. Follow it after
+§6's toolful exact-head cross-family settlement: approval before opening any
+PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
+or `--admin`, confirm MERGED, then common-reaper cleanup. A moved head voids
+both gates; missing evidence never grants approval.
 
 **Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
@@ -244,40 +216,14 @@ Missing local proof on a user-visible API/UI change is incomplete closeout. Issu
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
 cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
-## §7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
+## §7a. Post-merge cleanup is mandatory
 
-**A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
-promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
-after merge is a process defect (ENOSPC / disk full is the known failure mode).
-
-**Order after `gh pr view <N>` shows `MERGED`:**
-
-1. **Confirm** merge SHA.
-2. **`merge_closeout` first** — after all processes have left the target worktree(s), run:
-   ```bash
-   .venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
-   ```
-   This one command proves the PR is `MERGED`, finds every worktree tied to it (by
-   branch or exact merged head SHA — detached review-checkout siblings included),
-   reaps each through the P0 reaper (`--merged`/`merged_pr_only`, exact `--worktree`,
-   no second deletion hand, no `--force`), and proves the remote and local branch are
-   both gone. It exits non-zero on any residual — treat that exit as a blocker, not
-   permission to retry with `--force`.
-3. **Manual fallback only** — if `merge_closeout` cannot run, follow
-   [`worktree-cleanup.md`](../../../../../docs/runbooks/worktree-cleanup.md) for the
-   kill switch, rescue restore, and allowlisted dual paths before using
-   `git worktree remove`.
-4. **Issues** — close every issue the PR names with evidence, or post a comment after
-   the merge naming exactly what remains and what it waits on (core Definition of done).
-5. **Branches** — `merge_closeout --apply` deletes the pull request's remote and
-   local branch. A squash merge still counts: the old tip is the PR head, not a
-   commit on `main`. Agent scratch refs (`*/review-*`, `rescue/*`, `pr-*`) are not
-   a pull request head; the hygiene sweep deletes them when they have no open PR,
-   and a later review round deletes the earlier round's branch. Do not leave those
-   refs behind. Run `.venv/bin/python -m scripts.hygiene.branch_sweep --json` for the
-   session branch sweep; add `--apply` only after reviewing its receipts. Then run
-   `git fetch --prune`.
-6. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
+Follow `agents_extensions/shared/rules/workflow.md` § Merge policy /
+Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper
+exit 0 and residue-free receipts are required before the next large dispatch.
+Non-zero or SKIPPED receipts block closeout; never use `--force`. The only
+manual fallback is the one in `docs/runbooks/worktree-cleanup.md` when the
+common reaper cannot run. A squash-merge alone is not done.
 
 **After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
 (offline); triage only through its `show-keys` and `count` subcommands (never `jq`, `cat` or

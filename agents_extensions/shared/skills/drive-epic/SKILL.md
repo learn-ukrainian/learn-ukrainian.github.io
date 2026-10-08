@@ -34,7 +34,8 @@ A dispatch, a branch, an open PR, green CI, or "Next:" is **not** done. The driv
 its own lane's PRs; never ask the operator to merge. Source: `/api/rules` →
 `operator-expectations.md` §3a.
 
-Per PR, in this order:
+The sole ordered recipe is `agents_extensions/shared/rules/workflow.md` § Merge
+policy. This checklist summarizes its evidence gates. Per PR, in this order:
 
 - [ ] Exact-head cross-family `VERDICT: APPROVE` (attested `resolved_model` and SHA)
       posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).

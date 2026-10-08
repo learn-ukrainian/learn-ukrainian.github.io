@@ -166,18 +166,13 @@ Every epic driver session (any harness) MUST:
      (do not invent `<model>_lane`).
 7. Provider drivers inject the **`drive-epic`** binding after their lease and
    provider canary. Interactive launchers never claim a driver lease.
-8. **Post-merge cleanup is mandatory** (operator 2026-08-07). A squash-merge is not
-   done until worktree + branch + any temp residue for that PR are reaped and
-   `df -h /` + `git worktree list` prove no zombie. Prefer
-   `scripts/orchestration/reap_worktrees.py --apply` (also sweeps review temps
-   under `$TMPDIR` and `$TMPDIR/shielded-reviews`). Do not create formal sealed
-   review trees. Session chat promises do not bind; this rule and §7a do.
-   The P0 automatic reaper is live: for a merged exact head, use
-   `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged`;
-   `LU_REAPER_DISABLED=1` is its immediate kill switch.
-   `post_task_reap` delegates regular dispatch cleanup to that same reaper, so do not invent a
-   second deletion path. If it cannot run, follow `docs/runbooks/worktree-cleanup.md` for
-   rescue restore and the narrowly allowlisted manual fallback.
+8. **Post-merge cleanup is mandatory.** Follow the single recipe in
+   `agents_extensions/shared/rules/workflow.md` § Merge policy / Post-merge
+   cleanup: MERGED, worker exit, common-reaper exit 0 and residue-free receipts.
+   Never create formal sealed review trees, force removal or invent a second
+   deletion path. `LU_REAPER_DISABLED=1` remains the reaper's immediate kill switch.
+   If it cannot run, use only the rescue restore and narrowly allowlisted manual
+   fallback in `docs/runbooks/worktree-cleanup.md`.
 
 ## Operator launch surface (#5632)
 
