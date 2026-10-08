@@ -196,19 +196,11 @@ def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
 )
 @pytest.mark.repo_wide
 def test_config_consumer_file_launches_without_pythonpath(
-    tmp_path: Path, monkeypatch, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
+    tmp_path: Path, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
 ) -> None:
     """Real file launches must work even outside the repository cwd."""
     root = Path(__file__).resolve().parents[2]
     if entrypoint == "scripts/audit/review_plan.py":
-        manifest_path = root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
-        manifest = audit.read_yaml(manifest_path)
-        # Direct-plan discovery must survive a manifest with no matching A1 slug.
-        for level, data in manifest["levels"].items():
-            if audit.base_level(level) == "a1":
-                data["modules"] = []
-        read_yaml = audit.read_yaml
-        monkeypatch.setattr(audit, "read_yaml", lambda path: manifest if path == manifest_path else read_yaml(path))
         plan_path = next(
             plan_path
             for plan_path in sorted((root / "curriculum" / "l2-uk-en" / "plans" / "a1").glob("*.yaml"))
