@@ -2835,9 +2835,14 @@ def export_verb_mechanics_deck(
 
 
 def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking the specified path, then the local tree."""
-    if specified and specified.exists():
-        return specified
+    """Return the VESUM database path.
+
+    An explicitly specified path is returned as given, even when it does not
+    exist, so the caller reports it as missing instead of silently using a
+    different database. Without one, the local tree is searched.
+    """
+    if specified is not None:
+        return Path(specified)
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
@@ -2984,6 +2989,12 @@ def main() -> None:
         action="store_true",
         help="Verify inflected targets against VESUM sqlite database",
     )
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=None,
+        help="Path to vesum.db (default: data/vesum.db found in the local tree)",
+    )
     args = parser.parse_args()
 
     cards = build_canonical_verb_cards()
@@ -2993,9 +3004,9 @@ def main() -> None:
     print(f"Exported deck to {args.export}")
 
     if args.verify_vesum:
-        report = verify_deck_with_vesum(cards)
+        report = verify_deck_with_vesum(cards, db_path=find_vesum_db(args.vesum_db))
         print(f"VESUM verification: {report}")
-        dist_report = verify_distractors_with_vesum(cards)
+        dist_report = verify_distractors_with_vesum(cards, db_path=find_vesum_db(args.vesum_db))
         print(f"VESUM distractor verification: {dist_report}")
         if report.get("verified") is False or dist_report.get("verified") is False:
             print("ERROR: VESUM verification failed!", file=sys.stderr)

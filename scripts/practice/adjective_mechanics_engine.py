@@ -1898,9 +1898,14 @@ def resolve_derivational_suffix_mutation_rule(stem_consonant_group: str) -> tupl
 
 
 def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking the specified path, then the local tree."""
-    if specified and specified.exists():
-        return specified
+    """Return the VESUM database path.
+
+    An explicitly specified path is returned as given, even when it does not
+    exist, so the caller reports it as missing instead of silently using a
+    different database. Without one, the local tree is searched.
+    """
+    if specified is not None:
+        return Path(specified)
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
@@ -2057,7 +2062,7 @@ def main() -> int:
         "--vesum-db",
         type=Path,
         default=None,
-        help="Path to vesum.db (defaults to auto-discovered location)",
+        help="Path to vesum.db (default: data/vesum.db found in the local tree)",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for option ordering")
     args = parser.parse_args()
@@ -2066,7 +2071,7 @@ def main() -> int:
     print(f"Generated {len(cards)} canonical adjective mechanics cards.")
 
     if args.verify_vesum:
-        report = verify_deck_with_vesum(cards, args.vesum_db)
+        report = verify_deck_with_vesum(cards, find_vesum_db(args.vesum_db))
         if not report["verified"]:
             print(f"VESUM verification FAILED: missing forms: {report.get('missing_forms', [])}")
             return 1
