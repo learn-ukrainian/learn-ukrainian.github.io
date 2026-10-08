@@ -17,6 +17,7 @@ import yaml
 from scripts.review import record
 from scripts.review.validate import codes
 from scripts.review.validate.validate import ReviewReturnError, _peek_kind, extract_review_yaml
+from tests.build.test_a1_activity_rubric import install_synthetic_approval
 from tests.build.test_fresh_plan_review import fake_verify, make_manifest
 from tests.helpers.plan_review_world import build_env
 from tests.review.test_plan_review_validator import Case
@@ -182,6 +183,7 @@ def test_matching_fence_markers_and_line_endings(data):
 @pytest.fixture
 def plan_case(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr("scripts.build.fresh.plan_manifest.verify_pack_strict", fake_verify())
+    install_synthetic_approval(tmp_path / "tree")
     env = build_env(tmp_path / "tree")
     digest = make_manifest(env, capsys)
     out = tmp_path / "out"
@@ -197,6 +199,8 @@ def test_real_plan_shapes_record_from_bound_saved_result(plan_case, name, wrappe
     review = yaml.safe_load((FIXTURES / f"{name}.yaml").read_bytes())
     review["attempt"]["manifest_sha256"] = case.digest
     review["reviewer"]["prompt_sha256"] = "a" * 64
+    # This is an explicitly rebound test return, not approval of the historical artifact.
+    review["activity_rubric"] = {row["activity"]: "clean" for row in case.activity_rows}
     bare = yaml.safe_dump(review, sort_keys=False).encode()
     case.review.write_bytes(bare)
     bare_code, bare_payload = case.validate()

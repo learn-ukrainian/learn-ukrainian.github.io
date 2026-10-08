@@ -50,6 +50,9 @@ def _give_pack(env: Env, slug: str, plan: dict) -> dict:
 
 
 def three_position_env(root: Path) -> Env:
+    from tests.build.test_a1_activity_rubric import install_synthetic_approval
+
+    install_synthetic_approval(root)
     env = build_env(root, git_repo=False)
     prior = yaml.safe_load((env.plans_dir / f"{PRIOR_SLUG}.yaml").read_bytes())
     middle = {**prior, "slug": MIDDLE_SLUG, "arc_ref": {"level": LEVEL, "position": 2}}

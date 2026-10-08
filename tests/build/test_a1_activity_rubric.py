@@ -44,12 +44,24 @@ def rubric():
 def test_complete_inventory_alias_and_placement(rubric):
     assert len(rubric["rows"]) == 20
     assert sum(row["verdict"] != "forbidden" for row in rubric["rows"]) == 19
+    assert [row["id"] for row in rubric["rows"]] == [f"A1-ACT-{n:03d}" for n in range(1, 21)]
     plan = {"lessons": [{"n": 1, "activities": [{"id": "x", "type": "multiple-choice"}]}]}
     assert ar.activity_table(plan, rubric)[0]["row"] == "A1-ACT-016"
     assert ar.activity_table(plan, rubric, 1)[0]["type"] == "multiple-choice"
     assert ar.is_a1("a1") and ar.is_a1("a1-bridge") and not ar.is_a1("a2")
     with pytest.raises(ar.ActivityRubricError, match="no requested lesson"):
         ar.activity_table(plan, rubric, 2)
+
+
+@pytest.mark.parametrize("typ", ["letter-grid", "observe", "phrase-table", "watch-and-repeat"])
+def test_unscored_support_applicability_is_preserved_in_actual_table(rubric, typ):
+    row = next(row for row in rubric["rows"] if row["type"] == typ)
+    assert row["verdict"] in {"scaffold", "unscored_support"}
+    plan = {"lessons": [{"n": 1, "activities": [{"id": "support", "type": typ}]}]}
+    (entry,) = ar.activity_table(plan, rubric)
+    assert "A1-C01" in entry["clauses"] and "A1-B05" in entry["clauses"]
+    assert "A1-C04" not in entry["clauses"] and "A1-B06" not in entry["clauses"]
+    assert row["applicability"]["A1-B05"]["reason"]
 
 
 @pytest.mark.parametrize(

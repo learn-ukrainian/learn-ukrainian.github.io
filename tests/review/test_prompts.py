@@ -351,6 +351,9 @@ def _build_lesson_fixture(root: Path, lesson_n: int) -> tuple[Path, dict, str]:
 def _build_plan_fixture(root: Path, *, v1_module: bool = False) -> tuple[Path, dict, str]:
     # git_repo stays on: validate_provisional runs check_append_only, which
     # needs `git merge-base HEAD origin/main`. A gitless tree fails that check.
+    from tests.build.test_a1_activity_rubric import install_synthetic_approval
+
+    install_synthetic_approval(root)
     env = build_env(root)
     assert validate_provisional(env) == 0
     if v1_module:
@@ -1520,7 +1523,7 @@ def test_every_legitimate_manifest_kind_from_the_real_engine_fixtures_is_eligibl
     }
     assert pin_refusals(rereview, tmp_path / "rereview") == []
     _, plan, _ = _setup_plan_fixture(tmp_path / "plan", monkeypatch)
-    assert len(list(manifest.pinned_entries(plan))) == 15  # the 14 required inputs and v1_totals (#9166)
+    assert len(list(manifest.pinned_entries(plan))) == 17  # prior 15 plus both mandatory A1 rubric pins
     assert pin_refusals(plan, tmp_path / "plan") == []
 
 
@@ -2354,7 +2357,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     from scripts.review.receipts.ledger import create_empty_ledger
     from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _record, _review
 
-    path, _, digest = _setup_plan_fixture(tmp_path, monkeypatch)
+    path, plan_doc, digest = _setup_plan_fixture(tmp_path, monkeypatch)
     events = []
     original_attested_return = record.attested_return
     original_validate = review_validator.validate_review
@@ -2385,6 +2388,10 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
             review_id="canary-9625",
             attempt_id="plan-template",
         )
+        plan = yaml.safe_load((tmp_path / plan_doc["inputs"]["plan"]["path"]).read_bytes())
+        reply["activity_rubric"] = {
+            activity["id"]: "clean" for lesson in plan["lessons"] for activity in lesson["activities"]
+        }
         reply["reviewer"]["prompt_sha256"] = "PLACEHOLDER" if reply_kind != "wrong-hash" else "00" * 32
         if reply_kind == "invalid-return":
             del reply["checks"]
@@ -2430,7 +2437,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
 
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
-    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance."""
+    """Frozen 1a0207b784 bytes plus #10104/#10109 deltas and explicit #9625 AGY guidance."""
     from scripts.review.prompts.render import render
 
     if kind == "plan":

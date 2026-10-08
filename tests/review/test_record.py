@@ -28,6 +28,7 @@ from scripts.review import findings_db, fixloop, record, second_seat
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate import codes
+from tests.build.test_a1_activity_rubric import install_synthetic_approval
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
 from tests.review.test_r1_schema_ledger import LESSON_CHECKS, PLAN_CHECKS, _dump, _record, _review
 
@@ -46,6 +47,13 @@ class World:
         monkeypatch.setattr(fresh_manifest, "planned_state", lambda *a, **kw: _fake_state({"a": 1}))
         if seed is None:
             _, _, self.plan_dir, self.evidence_dir, self.state_dir, self.page_dir = _fixture(root)
+            plan_path = self.plan_dir / f"{SLUG}.yaml"
+            plan = yaml.safe_load(plan_path.read_bytes())
+            for lesson in plan["lessons"]:
+                lesson["activities"] = [
+                    {"id": "act-1", "type": "quiz", "placement": "inline", "focus": "Synthetic response"}
+                ]
+            plan_path.write_bytes(lock.yaml_bytes(plan))
         else:
             shutil.copytree(seed, root, dirs_exist_ok=True)
             self.plan_dir = root / "curriculum/l2-uk-en/lesson-plans/a1"
@@ -128,6 +136,13 @@ class World:
         built = []
         for finding in findings or []:
             finding = json.loads(json.dumps(finding))
+            locations = finding.get("locations", [])
+            if finding.get("scope"):
+                locations = [*locations, finding["scope"]]
+            if any(loc.get("activity") == "act-1" for loc in locations):
+                finding["rubric"] = {"row": "A1-ACT-016", "clause": "A1-C03"}
+                if finding["severity"] == "MINOR":
+                    finding["severity"] = "MAJOR"
             self._cite(finding, ledger, digest, review_id, attempt_id)
             built.append(finding)
             checks[finding["dimension"]] = [
@@ -135,18 +150,24 @@ class World:
                 finding["id"],
             ]
         path = self.out / f"{review_id}-{attempt_id}.return.yaml"
-        _dump(
-            path,
-            _review(
-                kind="lesson",
-                manifest_hash=digest,
-                checks=checks,
-                findings=built,
-                attempt_id=attempt_id,
-                review_id=review_id,
-                previous=previous,
-            ),
+        review = _review(
+            kind="lesson",
+            manifest_hash=digest,
+            checks=checks,
+            findings=built,
+            attempt_id=attempt_id,
+            review_id=review_id,
+            previous=previous,
         )
+        activity_findings = []
+        for item in built:
+            locations = item.get("locations", [])
+            if item.get("scope"):
+                locations = [*locations, item["scope"]]
+            if any(loc.get("activity") == "act-1" for loc in locations):
+                activity_findings.append(item["id"])
+        review["activity_rubric"] = {"act-1": activity_findings or "clean"}
+        _dump(path, review)
         return {
             "review": path,
             "ledger": ledger,
@@ -1239,6 +1260,7 @@ def test_a_plan_verdict_written_by_record_is_accepted_by_plan_promote(
     from tests.helpers.plan_review_world import build_env
 
     monkeypatch.setattr("scripts.build.fresh.plan_manifest.verify_pack_strict", fake_verify())
+    install_synthetic_approval(tmp_path / "tree")
     env = build_env(tmp_path / "tree")
     digest = make_manifest(env, capsys)
     tasks = tmp_path / "tasks"
@@ -1262,6 +1284,12 @@ def test_a_plan_verdict_written_by_record_is_accepted_by_plan_promote(
     )
     assert pm.plan_review_status(PLAN_LEVEL, PLAN_SLUG, repo_root=env.root)["state"] == "unreviewed"
 
+    document = yaml.safe_load(review.read_bytes())
+    plan = yaml.safe_load(env.plan_path.read_bytes())
+    document["activity_rubric"] = {
+        activity["id"]: "clean" for lesson in plan["lessons"] for activity in lesson["activities"]
+    }
+    _dump(review, document)
     outcome = record.record_return(
         review,
         manifest_path=env.state_dir / "plan-review.manifest.yaml",
@@ -1303,6 +1331,7 @@ def test_a_plan_revise_is_written_and_promote_refuses_it(
     from tests.helpers.plan_review_world import build_env
 
     monkeypatch.setattr("scripts.build.fresh.plan_manifest.verify_pack_strict", fake_verify())
+    install_synthetic_approval(tmp_path / "tree")
     env = build_env(tmp_path / "tree")
     digest = make_manifest(env, capsys)
     tasks = tmp_path / "tasks"
@@ -1336,6 +1365,12 @@ def test_a_plan_revise_is_written_and_promote_refuses_it(
             review_id="review-p",
         ),
     )
+    document = yaml.safe_load(review.read_bytes())
+    plan = yaml.safe_load(env.plan_path.read_bytes())
+    document["activity_rubric"] = {
+        activity["id"]: "clean" for lesson in plan["lessons"] for activity in lesson["activities"]
+    }
+    _dump(review, document)
     outcome = record.record_return(
         review,
         manifest_path=env.state_dir / "plan-review.manifest.yaml",

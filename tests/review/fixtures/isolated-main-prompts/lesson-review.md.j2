@@ -10,6 +10,47 @@ You evaluate whether the built lesson achieves its educational job and upholds U
 
 ---
 
+
+{% if activity_rubric_text %}
+## A1 Activity Rubric (exact adopted bytes)
+
+{{ activity_rubric_text | fence('yaml') }}
+{{ activity_rubric_approval_text | fence('yaml') }}
+
+The fixed activity inventory below comes from the pinned plan, never your return.
+Use the row's fixed applicability; you cannot declare a clause inapplicable.
+
+{% filter fence('markdown') %}
+| Actual activity ID | Lesson | Actual type | Rubric row | Applicable clauses |
+|---|---|---|---|---|
+{% for row in activity_rubric_table %}
+| {{ row.activity }} | {{ row.lesson }} | {{ row.type }} | {{ row.row }} | {{ row.clauses | join(', ') }} |
+{% endfor %}
+{% endfilter %}
+
+Return top-level `activity_rubric: {<actual activity ID>: clean | [F-ids]}` with exactly
+these IDs. Every finding located/scoped at an activity, in any dimension, requires
+`rubric: {row: A1-ACT-nnn, clause: A1-Cnn | A1-Bnn}` matching that activity's row and
+an applicable clause. An `activity` dimension finding must name the actual activity
+in its location or scope; report cross-activity defects against each affected activity.
+A clean entry cannot coexist with a finding at that activity. List every such finding
+ID in its activity entry as well as its existing taxonomy check.
+
+A ban or unmet necessary condition requires at least MAJOR; the existing verdict
+rule blocks active/persisting MAJOR or BLOCKER findings. An unverified approval-critical
+activity claim uses the existing `unsupported_by_source` branch at MAJOR, with ledgered
+search receipts; it cannot force an invented correction. The A1 activity rule overrides
+the general unsupported-claim MINOR cap only for these bound activity findings.
+Judge whether the task requires an actual Ukrainian decision, taught targets, readable
+print, contextual defensible keys and honest feedback. Verify required media. Preserve
+A1's intentional English support and supported incidental formulas. Reference exposure
+and copying alone do not prove comprehension or production. Semantic judgments belong
+to source-capable reviewers, never keyword checks. Verify forms with `verify_words`,
+learner scope with `query_cefr_level`, and suspicious interference with
+`check_russian_shadow` plus the facet-specific sources and heritage checks.
+
+{% endif %}
+
 ## 1. Principles and Binding Rules
 
 1. **A reviewer judges only what a script cannot.**
@@ -78,7 +119,7 @@ The core lesson checks are evaluated and recorded in the checks object as clean 
 
 3. `learner_fit`: Learner fit beyond vocabulary. Each word used in the sense and part of speech its word record authorises; no grammar explained before the arc teaches it; cognitive burden (sentence length, clause depth, share of not-yet-taught forms).
 
-4. `activity`: Single-answer types (quiz, true-false, fill-in, match-up pairs, order): exactly one defensible answer per item, plausible distractors not accidentally correct, key right; multiple-selection types: accepted set right and complete; production types: rubric or accepted answers right. Instruction in immersion language; no answer leaks from a neighbouring item or example; error-correction contains a real error from an E- record applicable in this context, never an invented one.
+4. `activity`: Single-answer types (quiz, true-false, fill-in, match-up pairs, order): exactly one defensible answer per item, plausible distractors not accidentally correct, key right; multiple-selection types: accepted set right and complete; production types: production answer criteria or accepted answers right. Instruction in immersion language; no answer leaks from a neighbouring item or example; error-correction contains a real error from an E- record applicable in this context, never an invented one.
 
 5. `evidence_use`: Faithful use of evidence. Pinned quotes used in their sense, not bent to fit.
 
@@ -151,7 +192,7 @@ A return that breaks these rules is refused before recording or recorded as REJE
 - A finding with `dimension: language` carries a `sub_dimension`, and no other finding does.
 - `sub_dimension` is one of `russianism`, `surzhyk`, `calque`, `paronym`, `government`, `agreement`, `orthography`, `register`, `euphony` or `stress`.
 - Each finding carries exactly one evidence branch (`evidence`, `unsupported_by_source` or `source_conflict`), never two and never none.
-- An `unsupported_by_source` finding has severity MINOR; MAJOR and BLOCKER are rejected for it.
+- An `unsupported_by_source` finding has severity MINOR, except a bound A1 approval-critical activity claim, which requires MAJOR. BLOCKER is rejected for it.
 - `unsupported_by_source` lists at least one search.
 - Each search `outcome` is the value printed beside its receipt (`receipt: <id> (outcome: <value>)`); copy it exactly, and cite only receipts whose line prints an outcome.
 - Every receipt a finding cites (its `evidence` receipt, both sides of a `source_conflict`, each search of `unsupported_by_source`) is in this attempt's ledger, issued for this review, attempt and manifest. A receipt of a previous attempt is accepted only when `attempt.previous_attempt_id` names that attempt and the finding's `status` is `resolved` or `persisting`; this prompt's return template sets `previous_attempt_id: null`, so here every cited receipt must be in this attempt's ledger.

@@ -20,6 +20,7 @@ from scripts.build.fresh.regeneration import load_ledger, record_failure, record
 from scripts.curriculum.evidence import lock
 from scripts.review.digest.generator import GENERATOR_VERSION, check_digest
 from scripts.review.receipts import ledger as receipts_ledger
+from tests.build.test_a1_activity_rubric import install_synthetic_approval
 
 pytestmark = pytest.mark.reads_content
 
@@ -27,6 +28,7 @@ pytestmark = pytest.mark.reads_content
 def _fixture(root: Path):
     from tests.build.test_fresh_runner import _fixture as lesson_fixture
 
+    install_synthetic_approval(root)
     level, slug = "a1", "fixture-module"
     plan_dir = root / "curriculum/l2-uk-en/lesson-plans/a1"
     evidence_dir = root / "curriculum/l2-uk-en/evidence/a1"
@@ -186,7 +188,18 @@ def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
         assert len(calls) == 1  # one planned_state result feeds the identity hash and the materialized file
         Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(doc)
         inputs = doc["inputs"]
-        for name in ("plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "lesson", "provenance"):
+        for name in (
+            "plan",
+            "pack",
+            "pack_lock",
+            "words",
+            "words_lock",
+            "learner_state",
+            "lesson",
+            "provenance",
+            "activity_rubric",
+            "activity_rubric_approval",
+        ):
             assert inputs[name]["sha256"] == hashlib.sha256((tmp_path / inputs[name]["path"]).read_bytes()).hexdigest()
         assert inputs["provenance"]["path"] == (
             f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{n}.provenance.yaml"

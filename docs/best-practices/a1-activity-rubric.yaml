@@ -13,9 +13,12 @@ support: A1 English scaffolding follows the existing immersion payload intention
   support/scaffold labels alter placement, counts or immersion.
 source_gaps:
 - 'Drive-held university foreign-student books: unavailable, not consulted; no ingestion/recovery under #10109.'
-- Error-correction and watch-and-repeat exact adult-L2 method locators remain unresolved; keyword hits do not count.
+- Correction and repetition use retrieved method witnesses with the limited adaptations below; no witness establishes
+  causal effectiveness or automatic learner success.
 - Primer section metadata and printed pages differ as recorded; do not silently substitute physical-page citations.
 - DF 12.1 task 5 is a grammatical-discrimination comparator, not a verified direct bin-sorting task.
+- Remote media metadata and publisher embeds establish availability evidence, not playback, target fidelity or learner
+  pronunciation. Each actual required clip still needs those content checks before use.
 clauses:
 - id: A1-C01
   text: The task requires Ukrainian comprehension, discrimination or purposeful production; language-mechanics practice
@@ -76,8 +79,9 @@ rows:
   type: anagram
   verdict: conditional
   placement: workbook
-  conditions: Reconstruct a meaningful, introduced word; use taught letters and a contextual clue; retain existing
-    multiset/store-form checks.
+  conditions: 'Reconstruct a meaningful, introduced word with taught letters and a contextual clue; preserve multiset/store-form
+    checks. Check other introduced, attested reconstructions: the clue must exclude them. Feedback explains the
+    spelling reconstruction and why the word fits the clue.'
   bans: Arbitrary letter manipulation, spelling not yet readable, visible answer copying.
   references:
   - PR-1
@@ -132,14 +136,16 @@ rows:
   verdict: forbidden
   placement: forbidden
   conditions: Retain the row for complete schema coverage and an explicit rejection.
-  bans: Treating schema admission as fresh-plan permission.
+  bans: Schema admission does not grant fresh-plan permission. Unconstrained category strings do not bind items
+    to taught grammatical features and can permit terminology recall or non-linguistic sorting; use the existing
+    record-bound group-sort contract for that decision.
   references:
   - POLICY
   applicability:
     A1-C01:
       applies: true
-      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
-        production; language-mechanics practice is valid.'
+      reason: No classify operation is permitted in fresh A1 plans. This row records exclusion rather than attesting
+        a valid Ukrainian decision; the forbidden-type gate applies first.
     A1-C02:
       applies: true
       reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
@@ -149,9 +155,8 @@ rows:
       reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
         follow the current immersion payload.'
     A1-C04:
-      applies: true
-      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
-        the actual decision.'
+      applies: false
+      reason: No key or feedback can be admitted because fresh A1 authoring of this type is forbidden.
     A1-C05:
       applies: true
       reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
@@ -169,8 +174,8 @@ rows:
       applies: true
       reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
     A1-B05:
-      applies: true
-      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+      applies: false
+      reason: No scored classify item is admitted; the forbidden-type gate rejects it before key/feedback review.
     A1-B06:
       applies: true
       reason: 'Applies to this operation: Answer leakage that removes the intended decision'
@@ -184,8 +189,9 @@ rows:
   type: count-syllables
   verdict: conditional
   placement: both
-  conditions: Perform a purposeful phonological decision on sourced, introduced words; preserve existing key and
-    target-variety checks.
+  conditions: Make a purposeful phonological decision on sourced, introduced words; preserve existing key and target-variety
+    checks. Feedback demonstrates the sourced spoken grouping supporting the count and explains the relevant counting
+    mistake; line-transfer rules cannot justify an oral count.
   bans: Repeated identical keys, counting presented as comprehension, confusing syllables with line-breaking.
   references:
   - PR-2
@@ -240,9 +246,12 @@ rows:
   type: divide-words
   verdict: conditional
   placement: both
-  conditions: Segment introduced words according to a verified model; distinguish spoken syllables from orthographic
-    line-breaking.
-  bans: Arbitrary splitting or claiming the gate’s delimiter check establishes the full phonological judgment.
+  conditions: The instruction identifies oral syllable segmentation or orthographic line transfer and the sourced
+    convention used. Use introduced words and a verified model. Because the response shape represents one division,
+    exclude competing valid divisions under that convention before admission; otherwise withhold the item. Feedback
+    explains each boundary, not merely the model.
+  bans: Arbitrary splitting, conflating spoken grouping with line transfer, unresolved alternative divisions, or
+    treating a delimiter check as full phonological proof.
   references:
   - PR-2
   - ORTH-63
@@ -296,11 +305,16 @@ rows:
   type: error-correction
   verdict: conditional
   placement: workbook
-  conditions: Use an applicable E-record, one identifiable error and a taught correction; preserve item-specific
-    explanations.
-  bans: Invented learner errors, untaught corrections, multiple unexplained repairs.
+  conditions: Bind one applicable E-record and one already taught contrast. Identify the error span for correction
+    selection or supply; the carrier sentence uses taught vocabulary and grammar. Options mode has one defensible
+    offered repair; supply mode requires an already practised repair, with context excluding competing repairs because
+    the schema key holds one correction. Independently finding an error in an unmarked sentence adds a separate
+    detection demand and is not admitted by this adaptation. Preserve item-specific feedback explaining the recorded
+    cause and why the repair resolves it in context.
+  bans: Invented learner errors, untaught corrections or carrier structures, errors inside unanalyzed incidental
+    formulas, unaided whole-sentence error detection, or competing defensible repairs rejected by an exclusive key.
   references:
-  - UNRESOLVED
+  - OHO-CORR
   - POLICY
   applicability:
     A1-C01:
@@ -347,6 +361,10 @@ rows:
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'A: Adapt the retrieved adult-A1 form-choice comparator to replacing an identified, E-record-bound
+    erroneous span. Selection retains its taught contrast; supply adds only recall of a previously practised repair,
+    not open-ended diagnosis. The E-record binds the error and correction, not method effectiveness. This narrow
+    adaptation does not establish the effectiveness of independent error detection or of correction practice generally.'
 - id: A1-ACT-006
   type: fill-in
   verdict: conditional
@@ -403,6 +421,8 @@ rows:
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'S: DF-1 tasks 3–4 and the final dialogue-completion test witness contextual completion; OHO-2
+    is the separately retrieved completion witness. Neither source licenses an untaught target.'
 - id: A1-ACT-007
   type: group-sort
   verdict: conditional
@@ -463,9 +483,11 @@ rows:
   type: image-to-letter
   verdict: conditional
   placement: inline
-  conditions: Establish the intended Ukrainian picture name and taught sound–letter association; remove plausible
-    alternative naming ambiguity.
-  bans: Inferring a letter from an English picture name; ambiguous emoji; answer-bearing labels.
+  conditions: Inspect the actual displayed picture or pictograph and record its intended Ukrainian name and plausible
+    alternative naming/recognition judgments. Establish the taught sound–letter mapping; withhold an ambiguous asset
+    or replace it with an inspected available image under existing asset contracts. The primer text does not verify
+    any displayed image.
+  bans: Inferring a letter from an English picture name; unresolved image or emoji ambiguity; answer-bearing labels.
   references:
   - PR-3
   - POLICY
@@ -526,7 +548,8 @@ rows:
   applicability:
     A1-C01:
       applies: true
-      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+      reason: This unscored support must connect to an identified subsequent Ukrainian decision; exposure, consultation
+        or imitation alone is not scored response proof.
     A1-C02:
       applies: true
       reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
@@ -557,19 +580,21 @@ rows:
       reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
     A1-B05:
       applies: true
-      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+      reason: No scored key or accepted-answer set exists in this support. This ban applies only to misleading instructional
+        notes, target guidance or explanations; content accuracy is checked under C05.
     A1-B06:
       applies: false
-      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
-        activity.
+      reason: The model intentionally exposes language. Check whether it supplies the answer in the identified subsequent
+        response activity; this support has no independent answer key.
     A1-B07:
       applies: true
       reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
-  grounding_reason: Alphabet-reference schema operation; primer initial-sound discrimination motivates linking the
-    reference to a later adult L2 reading decision. No verified grid-specific effectiveness claim.
+  grounding_reason: 'P: The schema supplies an unscored letter reference, not a scored interaction. A: PR-3 motivates
+    connecting this reference to a later initial-sound or reading decision; it does not attest the grid format or
+    grid-specific effectiveness.'
 - id: A1-ACT-010
   type: match-up
   verdict: conditional
@@ -579,7 +604,8 @@ rows:
   bans: Fact matching, duplicate plausible partners, visual matching that bypasses Ukrainian.
   references:
   - OHO-1
-  - DF-1
+  - DF-MATCH
+  - DF-QA
   - POLICY
   applicability:
     A1-C01:
@@ -626,6 +652,10 @@ rows:
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'S: OHO-1 witnesses word-to-picture matching; DF-MATCH task 5 witnesses relationship-to-definition
+    pairing. A: Pairing a taught form with its sourced gloss adapts those meaning relationships to text; question/answer
+    pairing adapts DF-QA response selection to two columns. These presentation changes do not establish learning
+    effectiveness; reject duplicate plausible partners in each actual set.'
 - id: A1-ACT-011
   type: observe
   verdict: scaffold
@@ -639,7 +669,8 @@ rows:
   applicability:
     A1-C01:
       applies: true
-      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+      reason: This unscored support must connect to an identified subsequent Ukrainian decision; exposure, consultation
+        or imitation alone is not scored response proof.
     A1-C02:
       applies: true
       reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
@@ -670,17 +701,21 @@ rows:
       reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
     A1-B05:
       applies: true
-      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+      reason: No scored key or accepted-answer set exists in this support. This ban applies only to misleading instructional
+        notes, target guidance or explanations; content accuracy is checked under C05.
     A1-B06:
       applies: false
-      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
-        activity.
+      reason: The model intentionally exposes language. Check whether it supplies the answer in the identified subsequent
+        response activity; this support has no independent answer key.
     A1-B07:
       applies: true
       reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'S: DF-1 task 1 and DF-2 task 1 supply models for noticing, followed by DF-1 tasks 3 and 5 and
+    DF-2 task 6 contextual application. P: The examples/prompt container is unscored; the later activity supplies
+    response evidence.'
 - id: A1-ACT-012
   type: odd-one-out
   verdict: conditional
@@ -741,9 +776,12 @@ rows:
   type: order
   verdict: conditional
   placement: both
-  conditions: Sequence meaningful utterances or actions using information conveyed in Ukrainian; preserve the complete
-    permutation and explanation.
-  bans: World-knowledge chronology, arbitrary ordering or English cues supplying the answer.
+  conditions: Sequence meaningful utterances or actions using Ukrainian textual or discourse constraints that force
+    the complete sequence. Inspect plausible competing sequences and withhold an item if any relative order remains
+    undetermined; the schema accepts one complete permutation. Feedback explains the decisive constraints, while
+    preserving the existing permutation check.
+  bans: World-knowledge chronology, interchangeable actions with undetermined relative order, arbitrary ordering
+    or English cues supplying the answer.
   references:
   - DF-3
   - POLICY
@@ -800,12 +838,13 @@ rows:
   bans: Claiming editable substitution cells or scored responses that the schema does not provide; copying-only
     assessment.
   references:
-  - DF-1
+  - DF-PHRASES
   - POLICY
   applicability:
     A1-C01:
       applies: true
-      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+      reason: This unscored support must connect to an identified subsequent Ukrainian decision; exposure, consultation
+        or imitation alone is not scored response proof.
     A1-C02:
       applies: true
       reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
@@ -836,26 +875,34 @@ rows:
       reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
     A1-B05:
       applies: true
-      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+      reason: No scored key or accepted-answer set exists in this support. This ban applies only to misleading instructional
+        notes, target guidance or explanations; content accuracy is checked under C05.
     A1-B06:
       applies: false
-      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
-        activity.
+      reason: The model intentionally exposes language. Check whether it supplies the answer in the identified subsequent
+        response activity; this support has no independent answer key.
     A1-B07:
       applies: true
       reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'A: Adapt the contextual dialogue models in DF-PHRASES into grouped phrases for consulting before
+    an identified subsequent response-selection or use activity. Grouping changes the presentation, not the target
+    construction; require context and support for each taught expression or intact approved formula. P: The schema
+    is an unscored display container, not editable substitution cells. No direct phrase-bank effectiveness claim.'
 - id: A1-ACT-015
   type: pick-syllables
   verdict: conditional
   placement: both
-  conditions: Use the actual category/multiple-index operation; teach the criterion and verify the complete accepted
-    set.
+  conditions: Use the actual category and multiple-index operation. Input units must be familiar or explicitly modelled
+    before selection; use one already taught sound or reading discrimination criterion. Support separates recognizing
+    each input from classifying it. Verify the complete accepted set; feedback explains why every selected and excluded
+    candidate does or does not satisfy the criterion.
   bans: Invented word-completion behavior; category trivia; treating multiple selection as a single key.
   references:
   - PR-2
+  - OHO-MULTI
   - POLICY
   applicability:
     A1-C01:
@@ -902,15 +949,21 @@ rows:
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
-  grounding_reason: Adapt primer segmentation/discrimination to the actual category and multiple-index selection
-    operation; taught criterion and full accepted set, not invented completion behavior.
+  grounding_reason: 'A: PR-2 supplies segmentation/discrimination; OHO-MULTI supplies adult-A1 selection of all
+    items satisfying a taught letters/sounds criterion. Adapt to the displayed unit inventory to practise recognizing
+    taught sound or letter patterns, with explicit input modelling before classification. Multiple-index selection
+    records all matches, not word completion. Neither this presentation adaptation nor the primer establishes adult-A1
+    causal effectiveness.'
 - id: A1-ACT-016
   type: quiz
   verdict: conditional
   placement: both
   conditions: Choose a meaning, appropriate response, taught form or heard target; bind the relevant host/records
-    and explain each option.
-  bans: Questions about rules as facts, outside knowledge, grammatical labels replacing application.
+    and explain each option. For listening, retain readable choices and required A1 English support but inspect
+    whether visible captions/transcripts supply the target. Such assistance is supported reading/listening, not
+    independent listening proof.
+  bans: Rule facts, outside knowledge or grammatical labels replacing application; ambiguous distractors or multiple
+    defensible offered answers; claiming independent listening when visible target text supplies the answer.
   references:
   - DF-1
   - POLICY
@@ -959,12 +1012,16 @@ rows:
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'S: DF-1 task 2 witnesses heard contextual completion and task 5 heard-question response selection.
+    Printed support and captions must be assessed in the actual presentation.'
 - id: A1-ACT-017
   type: translate
   verdict: conditional
   placement: workbook
-  conditions: Supported EN→UK use of taught expressions; acknowledge acceptable production alternatives or preserve
-    single-answer options mode.
+  conditions: Supported EN→UK workbook use of taught expressions. State before the response every contextual distinction
+    used to exclude a variant. In production mode include all verified, contextually acceptable responses in the
+    schema accepted-answer set; mentioning an alternative in feedback does not make it accepted. Options mode requires
+    exactly one defensible offered answer. Feedback explains accepted responses and contextual exclusions.
   bans: Translation in the main lesson, copying a visible equivalent, an unjustifiably exclusive key.
   references:
   - ULP-1
@@ -1018,9 +1075,12 @@ rows:
   type: true-false
   verdict: conditional
   placement: both
-  conditions: Judge a statement against its Ukrainian host; preserve comprehension kind, two feedback entries and
-    the existing four-item cap.
-  bans: General facts, rule propositions, negative wording beyond learner scope.
+  conditions: 'Judge each statement against its Ukrainian host: true is supported and false is contradicted by identifiable
+    host evidence. Withhold statements the host leaves undetermined or that combine independently uncertain claims.
+    Preserve comprehension kind, two feedback entries and the four-item cap; both entries explain the decisive host
+    evidence.'
+  bans: General facts or rule propositions; unstated assumptions, unsupported equating of absence with falsity,
+    independently uncertain combined claims, or negative wording beyond learner scope.
   references:
   - DF-6
   - POLICY
@@ -1073,8 +1133,13 @@ rows:
   type: unjumble
   verdict: conditional
   placement: both
-  conditions: Reconstruct a meaningful utterance from taught words; context must justify the intended order.
-  bans: Fragment-splicing busywork or rejecting other natural orders without evidence.
+  conditions: Reconstruct a meaningful utterance from taught words and a taught utterance pattern. Keep approved
+    incidental formulas intact as supported chunks until their construction is taught. State contextual constraints
+    before the response and inspect competing natural orders. Because the schema accepts one order, withhold an
+    item if another defensible order remains. Feedback explains the contextual decision without claiming a preferred
+    order is universally obligatory.
+  bans: Fragment-splicing busywork, untaught constructions, splitting unanalyzed formulas, or rejecting other natural
+    orders without decisive contextual evidence.
   references:
   - DF-4
   - POLICY
@@ -1125,20 +1190,27 @@ rows:
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
 - id: A1-ACT-020
   type: watch-and-repeat
-  verdict: conditional
+  verdict: scaffold
   placement: inline
-  conditions: A working, verified recording models the identified target; repetition has a specific listening/pronunciation
-    purpose.
-  bans: Passive viewing counted as response proof; unavailable video; automatic pronunciation-success claims without
-    assessment.
+  conditions: 'An unscored model: use a verified, playable recording of a taught sound/letter, introduced word or
+    intact approved formula of manageable length. Guidance identifies the recording target and what to hear, monitor
+    or adjust during supported imitation. No grammatical variation of unanalyzed formulas or sentences with untaught
+    inflections. Connect the scaffold to an identified subsequent assessed Ukrainian discrimination or use activity;
+    check answer leakage in that response activity. Bind the actual remote video and target to existing evidence/asset
+    contracts, inspect the target segment and playback, and record availability and content checks. HTTP/oEmbed
+    success alone is insufficient. A missing or unverified required recording withholds the activity.'
+  bans: Echoing or passive viewing counted as comprehension, independent production or scored response proof; unavailable
+    or uninspected required video; untaught transformations; automatic pronunciation-success claims.
   references:
-  - UNRESOLVED
+  - ULP-VIDEO
+  - OHO-REPEAT
+  - MEDIA-POLICY
   - POLICY
   applicability:
     A1-C01:
       applies: true
-      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
-        production; language-mechanics practice is valid.'
+      reason: This unscored support must connect to an identified subsequent Ukrainian decision; exposure, consultation
+        or imitation alone is not scored response proof.
     A1-C02:
       applies: true
       reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
@@ -1169,17 +1241,23 @@ rows:
       reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
     A1-B05:
       applies: true
-      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+      reason: No scored key or accepted-answer set exists in this support. This ban applies only to misleading instructional
+        notes, target guidance or explanations; content accuracy is checked under C05.
     A1-B06:
       applies: false
-      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
-        activity.
+      reason: The model intentionally exposes language. Check whether it supplies the answer in the identified subsequent
+        response activity; this support has no independent answer key.
     A1-B07:
       applies: true
       reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
     A1-B08:
       applies: true
       reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: 'S: ULP-VIDEO is a public video-listening/repetition method witness, not an effectiveness study.
+    A: OHO-REPEAT supplies a retrieved adult-A1 listening/repetition comparator; adding the visual model and target-specific
+    monitoring is a limited scaffold adaptation. Written or visual support may aid imitation and is not independent
+    listening or pronunciation proof. Actual target suitability and downstream assessment remain reviewer judgments;
+    causal effectiveness and automatic success remain unverified.'
 sources:
   POLICY:
     role: P
@@ -1192,8 +1270,9 @@ sources:
     title: Dobra Forma, University of Kansas Ukrainian Language Program
     locator: docs/references/dobra-forma/chapters/1.2.md tasks 1–5 and final test
     url: https://opentext.ku.edu/dobraforma/chapter/1-2/
-    limit: Beginner adult English-speaker L2 noticing, completion, response selection and matching methods; individual
-      grammar is not admitted before its taught step.
+    limit: Retrieved adult English-speaker L2 noticing (task 1), heard completion/selection (tasks 2 and 5) and
+      contextual completion (tasks 3–4 and final test). No matching or phrase-bank witness; no permission for untaught
+      grammar or causal effectiveness claim.
   DF-2:
     role: S
     title: Dobra Forma
@@ -1276,9 +1355,61 @@ sources:
     url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
     limit: Normative line-transfer restrictions; line transfer and oral syllable segmentation must not be equated.
       Not L2 method evidence.
-  UNRESOLVED:
-    role: U
-    title: Unresolved type-specific method evidence
-    locator: '#10109 source-ledger residual'
-    limit: Keyword hits alone do not establish an actual task. No claim of direct adult-L2 method or learning effectiveness
-      until source-capable independent grading resolves it.
+  DF-MATCH:
+    role: S
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/7.3.md task 5
+    url: https://opentext.ku.edu/dobraforma/chapter/7-3/
+    limit: Retrieved relationship-to-definition matching instruction; its grammar must be taught before use. Not
+      an effectiveness study or direct witness for every matching relation.
+  DF-QA:
+    role: A
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/1.2.md task 5
+    url: https://opentext.ku.edu/dobraforma/chapter/1-2/
+    limit: Retrieved heard-question response selection. Adapting selection to question/answer pairing in columns
+      requires independent judgment; not a direct matching task.
+  DF-PHRASES:
+    role: A
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/1.2.md tasks 1 and 3
+    url: https://opentext.ku.edu/dobraforma/chapter/1-2/
+    limit: Contextual dialogue models followed by completion; adapt models to grouped phrases supporting later selection
+      or use. No retrieved direct phrase-table task or phrase-bank effectiveness evidence.
+  OHO-CORR:
+    role: A
+    rights: owned_cite_only
+    title: Oho! Ukrainian Grammar & Workbook A1
+    locator: owned-oho-a1-workbook_f1_p0096_c0001
+    limit: Retrieved method comparator; title and locator only, no excerpts. Row-specific adaptation and limits
+      stated in grounding_reason; no causal effectiveness claim.
+  OHO-REPEAT:
+    role: A
+    rights: owned_cite_only
+    title: Oho! Ukrainian Grammar & Workbook A1
+    locator: owned-oho-a1-workbook_f1_p0024_c0001; owned-oho-a1-workbook_f1_p0028_c0001
+    limit: Retrieved method comparator; title and locator only, no excerpts. Row-specific adaptation and limits
+      stated in grounding_reason; no causal effectiveness claim.
+  OHO-MULTI:
+    role: S
+    rights: owned_cite_only
+    title: Oho! Ukrainian Grammar & Workbook A1
+    locator: owned-oho-a1-workbook_f1_p0035_c0001
+    limit: Retrieved method comparator; title and locator only, no excerpts. Row-specific adaptation and limits
+      stated in grounding_reason; no causal effectiveness claim.
+  ULP-VIDEO:
+    role: S
+    title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation — Ukrainian Lessons'
+    locator: 'Introduction before the individual-letter sections: video listening/repetition instruction; individual-letter
+      publisher embeds'
+    url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    limit: Public video repetition instruction, not experimental effectiveness evidence. Publisher embed and HTTP
+      200 oEmbed metadata were retrieved for existing clip 7UsFBgSL91E; this does not verify playback or any particular
+      lesson target. No source phonetic explanation is adopted as normative proof.
+  MEDIA-POLICY:
+    role: P
+    title: Existing fresh-build remote-video contracts
+    locator: schemas/activities-a1.schema.json#/definitions/watch-and-repeat-a1; docs/epics/fresh-build-writer-contract.md
+      §1b and §4; scripts/curriculum/evidence/verify.py remote video URL checks
+    limit: Existing URL/identifier and bound-record operations, not a requirement to host or copy media. URL availability
+      checks do not establish target fidelity, playback or learning effectiveness.

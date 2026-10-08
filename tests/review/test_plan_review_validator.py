@@ -14,10 +14,12 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.build.fresh.activity_rubric import activity_table, validate_rubric
 from scripts.curriculum.evidence import lock
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.validate import codes
 from scripts.review.validate.validate import build_parser, main, validate_review
+from tests.build.test_a1_activity_rubric import ROOT, install_synthetic_approval
 from tests.build.test_fresh_plan_review import append_comment, fake_verify, make_manifest, run
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import Env, build_env
@@ -33,6 +35,10 @@ class Case:
         self.review = out / "review.yaml"
         self.ledger = out / "attempt-1.jsonl"
         create_empty_ledger(self.ledger)
+        self.activity_rows = activity_table(
+            yaml.safe_load(env.plan_path.read_bytes()),
+            validate_rubric((ROOT / "docs/best-practices/a1-activity-rubric.yaml").read_bytes()),
+        )
 
     def finding(self, **overrides) -> dict:
         receipt = _record(self.ledger, manifest=self.digest, result="attested result")
@@ -47,13 +53,43 @@ class Case:
             "expected": "attested",
         }
         finding.update(overrides)
+        locations = finding.get("locations", [])
+        scope = finding.get("scope")
+        if scope:
+            locations = [*locations, scope]
+        for location in locations:
+            if "activity" in location:
+                row = next(
+                    (
+                        row
+                        for row in self.activity_rows
+                        if row["activity"] == location["activity"] and row["lesson"] == location.get("lesson")
+                    ),
+                    None,
+                )
+                if row is not None:
+                    finding["rubric"] = {"row": row["row"], "clause": "A1-C03"}
+                    if finding["severity"] == "MINOR":
+                        finding["severity"] = "MAJOR"
         return finding
 
     def write_review(self, findings: list[dict], *, kind: str = "plan") -> None:
         checks = {name: "clean" for name in PLAN_CHECKS}
         if findings:
             checks["sequencing"] = [item["id"] for item in findings]
-        _dump(self.review, _review(kind=kind, manifest_hash=self.digest, checks=checks, findings=findings))
+        review = _review(kind=kind, manifest_hash=self.digest, checks=checks, findings=findings)
+        review["activity_rubric"] = {row["activity"]: "clean" for row in self.activity_rows}
+        for finding in findings:
+            locations = finding.get("locations", [])
+            if finding.get("scope"):
+                locations = [*locations, finding["scope"]]
+            for location in locations:
+                if location.get("activity") in review["activity_rubric"]:
+                    aid = location["activity"]
+                    if review["activity_rubric"][aid] == "clean":
+                        review["activity_rubric"][aid] = []
+                    review["activity_rubric"][aid].append(finding["id"])
+        _dump(self.review, review)
 
     def validate(self, *extra: str) -> tuple[int, dict]:
         argv = [str(self.review), "--manifest", str(self.manifest), "--ledger", str(self.ledger), *extra]
@@ -78,6 +114,7 @@ def rejected(payload: dict) -> set[str]:
 @pytest.fixture
 def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> Case:
     monkeypatch.setattr("scripts.build.fresh.plan_manifest.verify_pack_strict", fake_verify())
+    install_synthetic_approval(tmp_path / "tree")
     env = build_env(tmp_path / "tree")
     digest = make_manifest(env, capsys)
     out = tmp_path / "out"
@@ -137,7 +174,10 @@ def test_a_quote_outside_the_named_unit_is_rejected(case: Case) -> None:
 def test_a_location_the_plan_does_not_have_is_rejected(case: Case, location: dict) -> None:
     case.write_review([case.finding(locations=[location])])
     code, payload = case.validate()
-    assert code == 1 and rejected(payload) == {codes.LOCATION_NOT_IN_PLAN}
+    expected = {codes.LOCATION_NOT_IN_PLAN}
+    if "activity" in location:
+        expected.add(codes.SCHEMA_INVALID)  # The rubric independently refuses the unknown activity.
+    assert code == 1 and rejected(payload) == expected
 
 
 def test_an_absence_finding_uses_a_plan_scope(case: Case) -> None:
@@ -148,7 +188,10 @@ def test_an_absence_finding_uses_a_plan_scope(case: Case) -> None:
     for scope in ({"lesson": 9}, {"lesson": 1, "step": "s404"}, {"lesson": 1, "activity": "a404"}):
         case.write_review([case.finding(locations=[], scope=scope)])
         code, payload = case.validate()
-        assert code == 1 and rejected(payload) == {codes.LOCATION_NOT_IN_PLAN}, scope
+        expected = {codes.LOCATION_NOT_IN_PLAN}
+        if "activity" in scope:
+            expected.add(codes.SCHEMA_INVALID)
+        assert code == 1 and rejected(payload) == expected, scope
 
 
 @pytest.mark.parametrize(

@@ -22,6 +22,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh import plan_manifest
 from scripts.build.fresh.cli import main as cli_main
 from scripts.curriculum.evidence import codes, lock, sources
+from tests.build.test_a1_activity_rubric import install_synthetic_approval
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import STALE_SHA, Env, build_env, git, sha, validate_provisional
 
@@ -67,6 +68,7 @@ def fake_verify(status: str = "ok", errors: tuple[str, ...] = (), calls: list | 
 @pytest.fixture
 def env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Env:
     monkeypatch.setattr(plan_manifest, "verify_pack_strict", fake_verify())
+    install_synthetic_approval(tmp_path)
     return build_env(tmp_path)
 
 
@@ -142,6 +144,8 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
         "validate_report": f"{STATE}/plan-validate.report.json",
         "pack_verify_report": f"{STATE}/pack-verify.report.json",
         "v1_totals": f"{STATE}/plan-review.v1-totals.yaml",
+        "activity_rubric": "docs/best-practices/a1-activity-rubric.yaml",
+        "activity_rubric_approval": "docs/best-practices/a1-activity-rubric.approval.yaml",
     }
     for entry in manifest["inputs"].values():
         assert entry["sha256"] == sha(env.root / entry["path"])
@@ -841,9 +845,13 @@ def test_a_manifest_written_before_v1_totals_existed_stays_fresh_and_promotable(
 
 
 @pytest.mark.repo_wide
-def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> None:
-    """The schema change is compatible: every committed manifest of record (none of which pins v1 totals
-    before #9166) still validates, so no promoted review is invalidated by the new input."""
+def test_every_plan_manifest_of_record_in_the_repository_still_validates(tmp_path: Path) -> None:
+    """Keep all historical fields checked; A1 now needs explicit synthetic test pins (#10109).
+
+    Historical records without rubric pins fail the current gate. Only the in-memory
+    test projection receives synthetic pins; no saved record is refreshed or approved.
+    """
+    synthetic_pins = install_synthetic_approval(tmp_path)
     repo = Path(__file__).resolve().parents[2]
     # Enumerate and read the records from git, not the working tree, so a sparse checkout cannot hide them.
     listed = subprocess.run(
@@ -859,4 +867,9 @@ def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> No
         content = subprocess.run(
             ["git", "-C", str(repo), "cat-file", "blob", f":{record}"], capture_output=True, check=True, timeout=30
         ).stdout
-        plan_manifest.validate_manifest_document(yaml.safe_load(content))
+        document = yaml.safe_load(content)
+        if document["level"] == "a1" and not set(synthetic_pins) <= document["inputs"].keys():
+            with pytest.raises(plan_manifest.PlanReviewError, match="activity_rubric"):
+                plan_manifest.validate_manifest_document(document)
+            document["inputs"].update(synthetic_pins)
+        plan_manifest.validate_manifest_document(document)
