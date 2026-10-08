@@ -548,6 +548,78 @@ def test_transient_alias_recovery_reconciles_errors_and_resumes(mirror_fixture, 
     )
 
 
+@pytest.mark.parametrize("aliases", [("sample", "sample / variant"), ("SAMPLE", "sample / variant", "sample")])
+@pytest.mark.parametrize("recovery", [200, 404])
+def test_terminal_stop_accounts_durable_alias_rows_and_resumes(mirror_fixture, capsys, aliases, recovery):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": lemma} for lemma in aliases]}))
+    denominator = 2 * len(aliases)
+    queue(500, 200, 403)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
+    output = capsys.readouterr().out
+    assert (
+        f"RESULT fetched=1 reused={len(aliases) - 1} misses=0 errors=2 pending={len(aliases) - 2} "
+        f"denominator={denominator} status=incomplete verified_complete=0/{len(aliases)} attempted=2" in output
+    )
+    assert "STOP blocked HTTP=403" in output and len(calls) == 3
+    cache_path = enrich_manifest_module._slovnyk_cache_path("sample")
+    cache = json.loads(cache_path.read_text())
+    assert set(cache["lookups"]) == {"newsum"} and not cache.get("not_found")
+    assert enrich_manifest_module._resolved_slovnyk_lookup(cache, "newsum", "sample")
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
+    assert json.loads(checkpoint.read_text())["completed"] == {}
+    retained_positive = cache["lookups"]["newsum"]
+
+    queue(recovery)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    output = capsys.readouterr().out
+    assert (
+        f"RESULT fetched={int(recovery == 200)} reused={denominator - 1} misses={int(recovery == 404)} "
+        f"errors=0 pending=0 denominator={denominator} status=complete verified_complete={len(aliases)}/{len(aliases)}"
+        in output
+    )
+    assert len(calls) == 4 and calls[-1].endswith("/vts/sample")
+    assert json.loads(cache_path.read_text())["lookups"]["newsum"] == retained_positive
+    completed = json.loads(checkpoint.read_text())["completed"]
+    assert set(completed) == set(aliases) and len(set(completed.values())) == 1
+    before = {path: path.read_bytes() for path in (cache_path, checkpoint)}
+
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 4 and {path: path.read_bytes() for path in before} == before
+    assert (
+        f"RESULT fetched=0 reused={denominator} misses=0 errors=0 pending=0 denominator={denominator} "
+        f"status=complete verified_complete={len(aliases)}/{len(aliases)} attempted=0" in capsys.readouterr().out
+    )
+
+
+def test_final_revalidation_handles_lost_unaccounted_alias_row(mirror_fixture, monkeypatch, capsys):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": "sample"}, {"lemma": "sample / variant"}]}))
+    queue(500, 200, 403)
+    original_atomic = build_slovnyk_mirror._atomic_slovnyk_json
+    writes = 0
+
+    def remove_before_final_validation(path, value):
+        nonlocal writes
+        writes += 1
+        original_atomic(path, value)
+        if writes == 2:
+            cache_path = enrich_manifest_module._slovnyk_cache_path("sample")
+            cache = json.loads(cache_path.read_text())
+            cache["lookups"].pop("newsum")
+            cache_path.write_text(json.dumps(cache))
+
+    monkeypatch.setattr(build_slovnyk_mirror, "_atomic_slovnyk_json", remove_before_final_validation)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
+    assert len(calls) == 3
+    assert (
+        "RESULT fetched=0 reused=0 misses=0 errors=4 pending=0 denominator=4 "
+        "status=incomplete verified_complete=0/2" in capsys.readouterr().out
+    )
+    checkpoint = enrich_manifest_module.SLOVNYK_CACHE / ".mirror-checkpoint"
+    assert json.loads(checkpoint.read_text())["completed"] == {}
+
+
 def test_unresolved_alias_errors_remain_retryable_without_double_count(mirror_fixture, capsys):
     manifest, calls, queue = mirror_fixture
     manifest.write_text(

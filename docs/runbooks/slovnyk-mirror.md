@@ -23,9 +23,9 @@ distinct lemmas in the selected manifest and the currently configured dictionary
 `--limit` caps the initial manifest selection but does not shrink that denominator.
 `fetched`, `reused`, `misses`, `errors` and `pending` partition lookup accounting.
 Errors are unresolved work even though they are counted separately from pending.
-If another alias durably resolves an earlier failed lookup during the run, final
-accounting moves that alias lookup from `errors` to `reused`. It does not count
-the shared publication as another fetch or miss.
+If another alias durably resolves an earlier failed or unaccounted lookup during
+the run, final accounting moves that alias lookup from `errors` or `pending` to
+`reused`. It does not count the shared publication as another fetch or miss.
 Only `verified_complete` proves fully resolved lemmas; attempted is never completion.
 
 Every startup checks the actual cache schema, normalized lookup identity, filename,

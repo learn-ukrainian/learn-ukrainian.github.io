@@ -205,17 +205,18 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                 completed.clear()
                 for lemma in lemmas:
                     rows, digest = _cache_state(lemma)
-                    for slug in rows - resolved[lemma]:
+                    for slug in rows:
                         key = accounted.get((lemma, slug), "pending")
                         if key in {"pending", "errors"}:
                             counts[key] -= 1
                             counts["reused"] += 1
                             accounted[lemma, slug] = "reused"
                     for slug in resolved[lemma] - rows:
-                        key = accounted[lemma, slug]
+                        key = accounted.get((lemma, slug), "pending")
                         if key != "errors":
                             counts[key] -= 1
                             counts["errors"] += 1
+                            accounted[lemma, slug] = "errors"
                     resolved[lemma] = rows
                     if digest is not None:
                         completed[lemma] = digest
