@@ -418,7 +418,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-family/activities.yaml",
-      "sha256": "9e9bf9b808d9eb6c745b69f7ff5ebbe69958f9716a1f46e7bfe976fb293f0f3b"
+      "sha256": "1e8a1822b887c5756618c6b66e9642e9270d10179cd9d14694d07daa8b864a14"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/my-family/module.md",
@@ -578,11 +578,11 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml",
-      "sha256": "b5fbcae8267d178d97ea5a2351a1f514ad6c3401491a06a1bdbd49e3961c21a6"
+      "sha256": "65439f22132528bfe66ea60a974d385cc83c3da7b9c3672001e1c5d08a62ae44"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/module.md",
-      "sha256": "23db02cba647be8ae2364fce18dabb11cf66c5123b0bcfd707b208f6f6bab67e"
+      "sha256": "55fc9e717c775caa7e32cbd4ab4c80cbcf125f2cdf159e64f7cad44458b5a0d1"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/special-signs/resources.yaml",
@@ -610,7 +610,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/things-have-gender/activities.yaml",
-      "sha256": "83d7423ecd1f014a0b8240c2287961af58782b2433f80ea83b4e5e610671e300"
+      "sha256": "0477b01f2299d315e38c79f7e7ddc9125eccaf14fde1435d0d87a80b5fccbd1e"
     },
     {
       "path": "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md",
