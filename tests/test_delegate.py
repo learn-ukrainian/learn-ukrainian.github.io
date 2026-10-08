@@ -19413,3 +19413,227 @@ def test_parse_review_verdict_shared_lines_preserve_consumer_policies(reply, dis
             recorder.normalize_verdict(reply)
     else:
         assert recorder.normalize_verdict(reply) == recorded
+
+
+@pytest.fixture
+def advisory_continuation(tmp_path, monkeypatch):
+    """An earlier round exceeds the envelope; this round adds only one line."""
+    _sanitize_git_env_for_test(monkeypatch)
+    _main, worktree = _init_repo_with_worktree(tmp_path)
+
+    def git(*args):
+        return subprocess.run(
+            ["git", *args], cwd=worktree, check=True, capture_output=True, text=True,
+            env=delegate._sanitized_git_env(), timeout=30,
+        ).stdout.strip()
+
+    for index in range(3):
+        (worktree / f"earlier-{index}.txt").write_text("earlier round\n" * 5)
+    git("add", "--", "earlier-0.txt", "earlier-1.txt", "earlier-2.txt")
+    git("commit", "-m", "Earlier round")
+    round_start = git("rev-parse", "HEAD")
+    (worktree / "docs").mkdir()
+    (worktree / "docs/current.md").write_text("current round\n")
+    git("add", "--", "docs/current.md")
+    git("commit", "-m", "Current round")
+    return worktree, {
+        "task_id": "advisory-continuation",
+        "mode": "workspace-write",
+        "worktree_path": str(worktree),
+        "worktree_branch": "codex/task-1",
+        "worktree_base": "main",
+        "worktree_base_sha": round_start,
+        "pinned_head": None,
+        "worktree_reused": True,
+        delegate.AUTHORING_REVIEW_STATE_KEY: {
+            "target": "existing-worktree", "branch": "codex/task-1",
+        },
+        "advisory_envelope": {"max_changed_files": 2, "max_non_test_loc": 10},
+    }
+
+
+def _run_advisory_completion_worker(advisory_continuation, monkeypatch):
+    """Exercise completion independently of bounded-model admission and remote delivery."""
+    worktree, record = advisory_continuation
+    state_path = delegate._state_path(record["task_id"])
+    delegate._write_state_atomic(state_path, record)
+    result = _finalize_mock_result()
+    result.model = "gpt-6.1-sol"
+    monkeypatch.setattr("agent_runtime.runner.invoke", lambda *_a, **_k: result)
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a, **_k: 0)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_k: None)
+    rc = delegate._run_worker(
+        task_id=record["task_id"], agent="codex", prompt="complete this round",
+        mode="workspace-write", cwd_str=str(worktree), model="gpt-6.1-sol",
+        hard_timeout=60, keep_worktree=True,
+    )
+    return rc, delegate._read_state(state_path)
+
+
+@pytest.mark.parametrize("reused", [True, False], ids=["existing-tree", "new-attachment"])
+def test_advisory_continuation_within_envelope_passes_without_pin(
+    tmp_tasks_dir, advisory_continuation, monkeypatch, reused,
+):
+    """#9747: earlier commits cannot consume the continuation round's ceiling."""
+    worktree, record = advisory_continuation
+    assert record["pinned_head"] is None  # A plain --branch dispatch has no pin.
+    record["worktree_reused"] = reused
+    record[delegate.AUTHORING_REVIEW_STATE_KEY]["target"] = "existing-worktree" if reused else "existing-branch"
+    cumulative = delegate._advisory_ceiling_check(worktree, "main", record["advisory_envelope"])
+    assert cumulative["changed_files"] == 4
+    assert cumulative["non_test_loc"] == 16
+    assert cumulative["exceeded"]
+
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert rc == 0
+    assert state["status"] == "done", state.get("last_error")
+    check = state["advisory_ceiling_check"]
+    assert check["measured"] is True
+    assert (check["changed_files"], check["non_test_loc"], check["exceeded"]) == (1, 1, [])
+
+
+@pytest.mark.parametrize("recovers", [True, False], ids=["transient", "persistent"])
+def test_advisory_diff_read_retries_once_before_unmeasured_failure(
+    tmp_tasks_dir, advisory_continuation, monkeypatch, recovers,
+):
+    """#9747: one retry can recover; two failed reads persist the error and fail."""
+    worktree, record = advisory_continuation
+    real_read = delegate._worktree_diff_read
+    real_write = delegate._write_record_unlocked
+    calls = []
+    failed_writes = []
+    cause = delegate._TypedCause("diff_command_failed", command="diff", exit_status=128)
+    detail = "the worker's diff could not be read (diff_command_failed, git diff, exit 128)"
+
+    def write(path, state):
+        if state.get("status") == "failed":
+            assert len(calls) == 2
+            assert state["advisory_ceiling_check"] == {"measured": False, "error": detail}
+            failed_writes.append(path)
+        return real_write(path, state)
+
+    def read(tree, args, **kwargs):
+        # Other completion checks also read diffs; inject only at the advisory numstat.
+        if "--numstat" not in args:
+            return real_read(tree, args, **kwargs)
+        assert tree == worktree
+        assert record["worktree_base_sha"] in args
+        assert delegate._read_state(delegate._state_path(record["task_id"]))["status"] != "failed"
+        calls.append(tuple(args))
+        if recovers and len(calls) == 2:
+            return real_read(tree, args, **kwargs)
+        return None, cause
+
+    monkeypatch.setattr(delegate, "_worktree_diff_read", read)
+    monkeypatch.setattr(delegate, "_write_record_unlocked", write)
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert len(calls) == 2
+    assert calls[0] == calls[1]
+    check = state["advisory_ceiling_check"]
+    if recovers:
+        assert failed_writes == []
+        assert rc == 0
+        assert state["status"] == "done", state.get("last_error")
+        assert check["measured"] is True
+        assert check["exceeded"] == []
+        assert "failure_reason" not in state
+    else:
+        assert failed_writes
+        assert rc == 1
+        assert state["status"] == "failed"
+        assert state["failure_reason"] == delegate.bounded_advisory.CEILING_UNMEASURED
+        assert check == {"measured": False, "error": detail}
+        assert detail in state["stderr_excerpt"]
+
+
+@pytest.mark.parametrize("reused", [True, False], ids=["existing-tree", "new-attachment"])
+def test_advisory_exempt_continuation_ignores_earlier_code_changes(
+    tmp_tasks_dir, advisory_continuation, monkeypatch, reused,
+):
+    worktree, record = advisory_continuation
+    record.pop("advisory_envelope")
+    record["advisory_exemption"] = {"review_profile": "ukrainian"}
+    record["worktree_reused"] = reused
+    record[delegate.AUTHORING_REVIEW_STATE_KEY]["target"] = "existing-worktree" if reused else "existing-branch"
+    cumulative = delegate._exempt_change_check(worktree, "main")
+    assert cumulative["problems"]  # Earlier changes are outside the content roots.
+
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert rc == 0
+    assert state["status"] == "done", state.get("last_error")
+    assert state["advisory_exempt_change_check"] == {
+        "measured": True, "changed_paths": ["docs/current.md"], "ignored_residue": [], "problems": [],
+    }
+
+
+def test_advisory_continuation_pin_takes_precedence_over_recorded_base(advisory_continuation):
+    worktree, record = advisory_continuation
+    record["pinned_head"] = record["worktree_base_sha"]
+    record["worktree_base_sha"] = delegate._resolve_sha(worktree, "main")
+
+    _key, check, failure, _detail = delegate._advisory_completion_gate(record, worktree)
+
+    assert failure is None
+    assert (check["changed_files"], check["non_test_loc"]) == (1, 1)
+
+
+def test_advisory_fresh_worktree_keeps_merge_base_measurement(advisory_continuation, monkeypatch):
+    worktree, record = advisory_continuation
+    record["worktree_reused"] = False
+    record["worktree_base_sha"] = delegate._resolve_sha(worktree, "main")
+    record[delegate.AUTHORING_REVIEW_STATE_KEY] = {"target": "new-branch", "branch": None}
+    real_diff = delegate._advisory_worker_diff
+    calls = []
+
+    def diff(*args, **kwargs):
+        calls.append(kwargs)
+        return real_diff(*args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_advisory_worker_diff", diff)
+    _key, check, failure, _detail = delegate._advisory_completion_gate(record, worktree)
+
+    assert failure == delegate.bounded_advisory.CEILING_EXCEEDED
+    assert (check["changed_files"], check["non_test_loc"]) == (4, 16)
+    assert len(calls) == 1
+    assert calls[0]["round_start_head"] is None
+
+
+@pytest.mark.parametrize("gate", ["ceiling", "exempt"])
+@pytest.mark.parametrize("error_class", [OSError, PermissionError, subprocess.TimeoutExpired])
+def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
+    tmp_tasks_dir, advisory_continuation, monkeypatch, gate, error_class,
+):
+    worktree, record = advisory_continuation
+    # A pin reaches the lookup on both the old and fixed implementations.
+    record["pinned_head"] = record["worktree_base_sha"]
+    if gate == "exempt":
+        record.pop("advisory_envelope")
+        record["advisory_exemption"] = {"review_profile": "ukrainian"}
+    real_run = subprocess.run
+    lookup = ["git", "rev-parse", "--verify", f"{record['worktree_base_sha']}^{{commit}}"]
+
+    def run(args, **kwargs):
+        if args == lookup and kwargs.get("cwd") == worktree:
+            private_detail = "private lookup detail that must not be recorded"
+            if error_class is subprocess.TimeoutExpired:
+                raise error_class(private_detail, 1)
+            raise error_class(private_detail)
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    rc, state = _run_advisory_completion_worker(advisory_continuation, monkeypatch)
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    failure = (delegate.bounded_advisory.CEILING_UNMEASURED if gate == "ceiling"
+               else delegate.bounded_advisory.EXEMPT_CHANGES_UNMEASURED)
+    assert state["failure_reason"] == failure
+    key = "advisory_ceiling_check" if gate == "ceiling" else "advisory_exempt_change_check"
+    detail = f"round-start head could not be read ({error_class.__name__})"
+    assert state[key] == {"measured": False, "error": detail}
+    assert detail in state["stderr_excerpt"]
+    assert "private lookup detail" not in str(state)

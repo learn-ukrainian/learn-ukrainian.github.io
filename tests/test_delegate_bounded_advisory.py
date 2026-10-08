@@ -1059,7 +1059,7 @@ def test_m12_exceeding_either_ceiling_alone_is_a_typed_failure(tmp_path, monkeyp
 
 
 def test_m12_unmeasurable_ceilings_fail_closed(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
     state = _run_bounded_worker(tmp_path, monkeypatch, {"src/a.py": "x = 1\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.CEILING_UNMEASURED
@@ -2111,7 +2111,7 @@ def test_b3_code_by_attributes_symlink_or_location_fails_the_exempt_completion_g
 
 
 def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
     state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.EXEMPT_CHANGES_UNMEASURED
@@ -2155,7 +2155,7 @@ def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_clas
 
 
 def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_path, monkeypatch, capsys):
-    original = delegate._worktree_diff_output
+    original = delegate._worktree_diff_read
 
     def with_residue(worktree, *args, **kwargs):
         cache = Path(worktree) / "docs" / "new-lessons" / "__pycache__"
@@ -2163,7 +2163,7 @@ def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_pa
         (cache / "gen.cpython-312.pyc").write_bytes(b"\0")
         return original(worktree, *args, **kwargs)
 
-    monkeypatch.setattr(delegate, "_worktree_diff_output", with_residue)
+    monkeypatch.setattr(delegate, "_worktree_diff_read", with_residue)
     state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
     check = state["advisory_exempt_change_check"]
     assert check["ignored_residue"] == ["docs/new-lessons/__pycache__/gen.cpython-312.pyc"]
@@ -2201,7 +2201,7 @@ _STALE_PASS = {
 def _gate_run(gate: str, verdict: str, env, tmp_path, monkeypatch, capsys, *, seed: dict | None = _STALE_PASS) -> dict:
     files, _code = _GATE_INPUTS[gate][verdict]
     if verdict == "unmeasurable":
-        monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+        monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
     if gate == "ceiling":
         return _run_bounded_worker(tmp_path, monkeypatch, files, seed=seed)
     return _exempt_writer_run(env, tmp_path, monkeypatch, capsys, files, seed=seed)
