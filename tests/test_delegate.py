@@ -20,6 +20,7 @@ import io
 import json
 import os
 import signal
+import sqlite3
 import subprocess
 import sys
 import threading
@@ -4361,6 +4362,154 @@ def _write_entire_harness_telemetry(repo: Path) -> None:
         target = repo / relative_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text("harness telemetry\n", encoding="utf-8")
+
+
+@pytest.mark.parametrize("name", ["sources.db", "vesum.db"])
+def test_read_only_checkout_snapshot_detects_linked_database_wal_write(tmp_path, name):
+    """#9421: a committed WAL write can leave both porcelain and the DB bytes unchanged."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / name
+    database.parent.mkdir()
+    connection = sqlite3.connect(database)
+    try:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("CREATE TABLE fixture (value TEXT)")
+        connection.execute("INSERT INTO fixture VALUES ('before')")
+        connection.commit()
+        connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        delegate._provision_data_symlinks(worktree, primary)
+        database_before = database.read_bytes()
+        before, error = delegate._read_only_checkout_snapshot(worktree)
+        assert error is None
+        unchanged, error = delegate._read_only_checkout_snapshot(worktree)
+        assert error is None
+        assert delegate._read_only_mutation_paths(before, unchanged) == []
+
+        with sqlite3.connect(worktree / "data" / name) as writer:
+            writer.execute("UPDATE fixture SET value = 'after'")
+        writer.close()
+
+        assert database.read_bytes() == database_before
+        assert connection.execute("SELECT value FROM fixture").fetchone() == ("after",)
+        after, error = delegate._read_only_checkout_snapshot(worktree)
+        assert error is None
+        assert delegate._read_only_mutation_paths(before, after) == [f"data/{name}"]
+    finally:
+        connection.close()
+
+
+@pytest.mark.parametrize("suffix", ["", "-journal", "-wal"])
+def test_read_only_checkout_snapshot_hashes_linked_database_contents(tmp_path, suffix):
+    """Same-size writes still count when the writer restores the file's mtime."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / "sources.db"
+    database.parent.mkdir()
+    database.write_bytes(b"database fixture")
+    changed = Path(f"{database}{suffix}")
+    changed.write_bytes(b"before")
+    delegate._provision_data_symlinks(worktree, primary)
+    before, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    original = changed.stat()
+
+    changed.write_bytes(b"after!")
+    os.utime(changed, ns=(original.st_atime_ns, original.st_mtime_ns))
+
+    after, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert delegate._read_only_mutation_paths(before, after) == ["data/sources.db"]
+
+
+@pytest.mark.parametrize("change", ["link-text", "resolved-path"])
+def test_read_only_checkout_snapshot_detects_database_link_target_changes(tmp_path, change):
+    """Link identity changes count even when the database contents stay identical."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / "sources.db"
+    database.parent.mkdir()
+    database.write_bytes(b"database fixture")
+    alias = primary / "database-alias.db"
+    alias.symlink_to(database)
+    link = worktree / "data" / "sources.db"
+    link.parent.mkdir()
+    link.symlink_to(alias)
+    before, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    original_link_text = os.readlink(link)
+    original_target = link.resolve()
+
+    if change == "link-text":
+        link.unlink()
+        link.symlink_to(os.path.relpath(alias, link.parent))
+        assert os.readlink(link) != original_link_text
+        assert link.resolve() == original_target
+    else:
+        copy = primary / "database-copy.db"
+        copy.write_bytes(database.read_bytes())
+        alias.unlink()
+        alias.symlink_to(copy)
+        assert os.readlink(link) == original_link_text
+        assert link.resolve() != original_target
+
+    assert link.read_bytes() == database.read_bytes()
+    after, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert delegate._read_only_mutation_paths(before, after) == ["data/sources.db"]
+
+
+def test_read_only_worktree_database_links_share_snapshot_coverage(tmp_path):
+    """Additional database links must automatically receive snapshot coverage."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    relative_path = "data/extra.db"
+    database = primary / relative_path
+    database.parent.mkdir()
+    database.write_bytes(b"before")
+
+    delegate._provision_data_symlinks(worktree, primary)
+    (worktree / "data").mkdir(exist_ok=True)
+    (worktree / relative_path).symlink_to(database)
+
+    assert (worktree / relative_path).is_symlink()
+    before, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert relative_path in before
+    database.write_bytes(b"after!")
+    after, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert delegate._read_only_mutation_paths(before, after) == [relative_path]
+
+
+def test_read_only_checkout_snapshot_refuses_broken_database_link(tmp_path):
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    link = worktree / "data" / "sources.db"
+    link.parent.mkdir()
+    link.symlink_to(primary / "missing.db")
+
+    snapshot, error = delegate._read_only_checkout_snapshot(worktree)
+
+    assert snapshot is None
+    assert error == "linked database snapshot failed: data/sources.db: FileNotFoundError"
+    assert not (primary / "missing.db").exists()
+
+
+def test_read_only_checkout_snapshot_refuses_unreadable_database_directory(tmp_path, monkeypatch):
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / "sources.db"
+    database.parent.mkdir()
+    database.write_bytes(b"database fixture")
+    delegate._provision_data_symlinks(worktree, primary)
+    original_scandir = os.scandir
+
+    def unreadable(path):
+        if path == worktree / "data":
+            raise PermissionError("fixture directory unreadable")
+        return original_scandir(path)
+
+    monkeypatch.setattr(os, "scandir", unreadable)
+
+    snapshot, error = delegate._read_only_checkout_snapshot(worktree)
+
+    assert snapshot is None
+    assert error == "linked database snapshot failed: data: PermissionError"
 
 
 def test_read_only_runtime_telemetry_path_classification():

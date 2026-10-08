@@ -1594,6 +1594,10 @@ def _parse_slovnyk_entry(
     return row
 
 
+class _SlovnykCacheCollision(ValueError):
+    """Distinct lookup identities share a cache filename; refuse publication."""
+
+
 class _SlovnykTransientError(Exception):
     """Retryable slovnyk.me lookup failure that must not be cached as a miss."""
 
@@ -1879,7 +1883,7 @@ def _strict_slovnyk_cache(lemma: str, outcomes: dict[str, _SlovnykOutcome], slug
     path = _slovnyk_cache_path(lemma)
     cache = _load_slovnyk_cache_file(path)
     if cache and isinstance(cache.get("lookup_word"), str) and cache["lookup_word"] != lookup_word:
-        raise ValueError("cache filename collision between distinct lookup identities")
+        raise _SlovnykCacheCollision("cache filename collision between distinct lookup identities")
     if not _reusable_slovnyk_cache(cache, lemma, lookup_word):
         cache = _new_slovnyk_cache(lemma, lookup_word)
     for slug in slugs:
