@@ -413,6 +413,50 @@ def test_guard_accepts_unchanged_run_in_fixture_repo(tmp_path: Path) -> None:
     assert guard.check() == []
 
 
+@pytest.mark.parametrize("rel", [".coverage", ".coverage.worker.12345.67890"])
+@pytest.mark.parametrize("change", ["create", "rewrite", "delete"])
+def test_guard_accepts_untracked_coverage_data(tmp_path: Path, rel: str, change: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / rel
+    if change != "create":
+        output.write_bytes(b"baseline coverage")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "delete":
+        output.unlink()
+    else:
+        output.write_bytes(b"updated coverage")
+    assert guard.check() == []
+    guard.verify()
+
+
+@pytest.mark.parametrize("rel", [".coverage", ".coverage.worker.12345.67890"])
+def test_guard_still_detects_tracked_coverage_changes(tmp_path: Path, rel: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / rel
+    output.write_bytes(b"baseline coverage")
+    subprocess.run(["git", "add", rel], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tracked coverage"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    output.write_bytes(b"updated coverage")
+    with pytest.raises(CheckoutWriteError, match="tracked file modified"):
+        guard.verify()
+
+
+@pytest.mark.parametrize("rel", [
+    "new_source.py", ".coveragerc", ".coverage-report.py",
+    ".coverage.worker/new_source.py", "nested/.coverage",
+])
+def test_guard_still_detects_unrelated_untracked_files(tmp_path: Path, rel: str) -> None:
+    _init_git_repo(tmp_path)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("unexpected checkout write", encoding="utf-8")
+    assert guard.check() == [f"untracked checkout file created: {rel}"]
+    with pytest.raises(CheckoutWriteError, match="untracked checkout file created"):
+        guard.verify()
+
+
 def test_guard_accounts_for_preexisting_changes_and_sparse_files(tmp_path: Path) -> None:
     _init_git_repo(tmp_path)
     dirty = tmp_path / "dirty.txt"
