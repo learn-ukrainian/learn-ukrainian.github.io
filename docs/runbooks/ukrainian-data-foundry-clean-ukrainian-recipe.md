@@ -260,10 +260,10 @@ masking will change the denominator, and literary/historical genres may
 tokenize differently.
 
 Using Hugging Face Jobs list prices retrieved on 2026-08-02 of USD 2.50/hour
-for one A100 80 GB and USD 1.80/hour for one L40S 48 GB, a one-GPU, one-epoch
+for one A100 80 GB and USD 1.80/hour for one mid-range single GPU, a one-GPU, one-epoch
 sensitivity table is:
 
-| Measured throughput | Wall time | A100 list compute | L40S list compute |
+| Measured throughput | Wall time | A100 list compute | Mid-range GPU list compute |
 | ---: | ---: | ---: | ---: |
 | 50 tokens/s | 774 hours | USD 1,935 | USD 1,394 |
 | 100 tokens/s | 387 hours | USD 968 | USD 697 |

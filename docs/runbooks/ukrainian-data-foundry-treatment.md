@@ -246,7 +246,7 @@ of the paired arms is exactly correct. The normal planning approximation for
 For F0.5, the existing baseline and cross-model scale checks put the practical
 sensitivity around 3–5 F0.5 points unless the two treatment arms are very
 highly correlated. This is a planning bound, not a new acceptance threshold.
-The L40S hardware validation is unaffected because it makes no efficacy claim.
+The single-GPU hardware validation is unaffected because it makes no efficacy claim.
 Before any multi-seed paid efficacy program, the preregistration still needs a
 seed-level aggregation rule and an explicit practical-effect interpretation so
 seeds cannot be selected after scores are visible.

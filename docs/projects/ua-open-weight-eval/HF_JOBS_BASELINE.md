@@ -25,7 +25,7 @@ fine-tune, optimize, or publish a model. The attempt is closed as invalid.
 | Tokenizer | `google/gemma-4-31B-it-qat-q4_0-unquantized` at `1e4d8beecacb8b7590c1d8bedd7335f687bf311f` |
 | Backend | vLLM `0.26.0` plus `vllm-gguf-plugin==0.0.4` |
 | Container | `vllm/vllm-openai@sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b` (Linux amd64) |
-| Hardware | one HF Jobs `l40sx1`: Nvidia L40S, 48 GB GPU memory; no exposed ports or SSH |
+| Hardware | one single-GPU HF Jobs flavor; no exposed ports or SSH |
 | Decoding | temperature `0`, seed `0`, maximum 160 generated tokens, two parse retries |
 | Context | text-only; maximum model length 8,192 tokens; no multimodal projector |
 | Cost | USD 1.80/hour, retrieved 2026-08-02 from the [official Jobs price table](https://huggingface.co/docs/hub/jobs-pricing); USD 6.00 total ceiling |
@@ -67,19 +67,19 @@ hash. Its later deterministic worker-default failure occurred after those
 facts and was fixed, tested, independently reviewed, and merged in PR #6294.
 The operator explicitly superseded the receipt-upload requirement and prohibited
 another CPU preflight. The accepted CPU charge is USD 0.000167 and is included
-in the phase total. The first authorized L40S canary
+in the phase total. The first authorized GPU canary
 `6a6fcc80a00abefd4b28dfb6` reached `RUNNING` but exited before model work because
 the pinned image exposes `python3` without a `python` alias. Its two billed
 minutes cost USD 0.060000. The replacement bootstrap invokes `python3` directly,
 but job `6a6fd2686b79c09949c1fb57` then found the same missing alias in the
 transport-to-worker handoff after verifying the bundle and installing the
-plugin. Its one billed minute cost USD 0.030000. Every L40S interpreter handoff
+plugin. Its one billed minute cost USD 0.030000. Every GPU-job interpreter handoff
 now invokes `python3` directly, and the cumulative USD 0.090167 is bound into
 the next operator gate. Job `6a6fd445a00abefd4b28e088` then proved that the
 provider reserves the generic `ACCELERATOR` environment name: the provider
-inspection reported the authorized `l40sx1` flavor, but the runtime value was
+inspection reported the authorized flavor, but the runtime value was
 overwritten before the worker gate. The launch now uses the collision-resistant
-`UA_EVAL_HARDWARE_FLAVOR=l40sx1` binding while provider reconciliation remains
+`UA_EVAL_HARDWARE_FLAVOR` binding while provider reconciliation remains
 the source of truth for actual hardware. That attempt's one billed minute cost
 USD 0.030000, so the cumulative USD 0.120167 remains
 in every subsequent aggregate budget calculation. Job
@@ -106,7 +106,7 @@ model loading, recording the compatibility alias in its version provenance.
 The pinned plugin and checkpoint bytes remain unchanged. Four billed minutes
 cost USD 0.120000, raising cumulative cost to USD 0.420167.
 Job `6a6fe1ba6b79c09949c1fe21` then verified the complete bundle, loaded the
-official GGUF as `Gemma4ForCausalLM` on the L40S, and reached generation. Its
+official GGUF as `Gemma4ForCausalLM` on the GPU, and reached generation. Its
 first case exhausted the prompt-only JSON parse retries without producing one
 valid response object. The worker now uses the pinned vLLM 0.26.0 structured
 output interface with an exact JSON schema for `action` and `output_text`, while
