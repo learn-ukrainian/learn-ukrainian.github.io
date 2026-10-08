@@ -213,15 +213,15 @@ def test_without_proc_memory_and_cpu_are_unknown_and_only_the_cap_applies(tmp_pa
 def test_probe_host_reads_meminfo_and_loadavg(tmp_path):
     proc = tmp_path / "proc"
     proc.mkdir()
-    (proc / "meminfo").write_text("MemTotal:       15728640 kB\nMemAvailable:    3670016 kB\n", encoding="ascii")
+    (proc / "meminfo").write_text("MemTotal:       12582912 kB\nMemAvailable:    2621440 kB\n", encoding="ascii")
     (proc / "loadavg").write_text("3.25 2.00 1.00 2/900 12345\n", encoding="ascii")
     (proc / "stat").write_text("cpu  100 2 30 400 5 6 7 8 9 10\ncpu0 10 0 3 40 0 0 0 0 0 0\n", encoding="ascii")
 
     probe = adm.read_host(proc)
 
     assert probe.proc_available
-    assert probe.mem_available_bytes == 3670016 * 1024
-    assert probe.mem_available_gib == pytest.approx(3.5)
+    assert probe.mem_available_bytes == 2621440 * 1024
+    assert probe.mem_available_gib == pytest.approx(2.5)
     assert probe.load1 == 3.25
     assert probe.cpu_steal_ticks == 8
     assert probe.cpu_total_ticks == 558
@@ -476,7 +476,7 @@ def test_missing_pool_cgroup_skips_the_check_and_logs_why(tmp_path, probe, monke
 
 def test_malformed_memory_high_skips_with_reason_in_the_admitted_line(tmp_path, probe, monkeypatch, caplog):
     pool = _fake_pool(tmp_path / "lu.slice", current=25 * _GIB, file_cache=0)
-    (pool / "memory.high").write_text("24G\n", encoding="ascii")
+    (pool / "memory.high").write_text("28G\n", encoding="ascii")
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
 
     with caplog.at_level("WARNING", logger=adm.__name__):
