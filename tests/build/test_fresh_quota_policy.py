@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -140,9 +141,18 @@ def test_review_sizing_is_job_adequacy(name):
 @pytest.mark.parametrize("path", [
     "scripts/review/prompts/plan-review.md.j2",
     "docs/epics/fresh-build-review-contracts.md",
-    "docs/epics/fresh-build-a1-arc.md",
 ])
 def test_plan_review_sizing_anchor_is_guidance(path):
     text = " ".join((REPO / path).read_text().split())
     assert "too much new inventory for an hour" not in text
     assert "too much new inventory for about 45 minutes of total learner work; guidance, not a quota" in text
+
+
+def test_historical_arc_sizing_is_not_restamped_as_current_guidance():
+    text = (REPO / "docs/epics/fresh-build-a1-arc.md").read_text()
+    # #10108 may retire or replace this paragraph. While its old attribution
+    # remains, current guidance must not be presented as that historical decision.
+    for paragraph in re.findall(r"\*\*Sizing \(operator, 2026-09-21\):.*?(?=\n\s*\n|\Z)", text, re.DOTALL):
+        historical = " ".join(paragraph.split())
+        assert "too much new inventory for an hour" in historical
+        assert "45 minutes" not in historical
