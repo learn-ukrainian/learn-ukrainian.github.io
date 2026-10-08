@@ -151,7 +151,7 @@ Every epic driver session (any harness) MUST:
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Review of record = ONE cross-family round on the pushed branch before the PR;
+4. Review of record = one round of direct cross-family review on the pushed branch before the PR;
    after opening the PR, `record_cf_verdict` binds the completed review to its
    head and author qualification. **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
