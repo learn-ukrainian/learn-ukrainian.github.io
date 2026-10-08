@@ -351,7 +351,10 @@ fi
 unset ROOT_GUARD_RC ROOT_GUARD_JSON
 
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
-MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
+# Claude keys its per-project directory by the checkout path with every
+# character outside [A-Za-z0-9-] replaced by '-'.
+CLAUDE_PROJECT_KEY=$(printf '%s' "$CANONICAL_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
+MEMORY_DIR="$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory"
 MEMORY_FILE="$MEMORY_DIR/MEMORY.md"
 if [ "$IS_CODEX_SESSION" = "0" ] && [ -f "$MEMORY_FILE" ]; then
   MEMORY_LINES=$(wc -l < "$MEMORY_FILE" | tr -d ' ')

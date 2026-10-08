@@ -153,7 +153,9 @@ ROLLOVER_SCRIPT="${THREAD_ROLLOVER_SCRIPT:-$PROJECT_DIR/scripts/orchestration/th
 ROLLOVER_HEALTH=$(run_bounded 2 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" 2>&1) || true
 
-# 3. Key reminders
+# 3. Key reminders. Claude keys its per-project directory by the checkout
+# path with every character outside [A-Za-z0-9-] replaced by '-'.
+CLAUDE_PROJECT_KEY=$(printf '%s' "$CANONICAL_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
 CONTEXT="$CONTEXT
 KEY REMINDERS:
   - Thread rollover health (read-only): $ROLLOVER_HEALTH
@@ -163,7 +165,7 @@ KEY REMINDERS:
   - .venv/bin/python only
   - Pre-commit: ruff + /simplify + cross-family code review (non-Gemini seat)
   - Read audit/ and review/ files before fixing modules
-  - MEMORY: ~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory/MEMORY.md"
+  - MEMORY: \$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory/MEMORY.md"
 
 emit_context "CONTEXT RESTORED AFTER COMPACTION:$CONTEXT"
 exit 0

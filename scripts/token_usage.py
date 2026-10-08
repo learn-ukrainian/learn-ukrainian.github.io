@@ -12,6 +12,7 @@ Usage:
 
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
@@ -20,11 +21,11 @@ from pathlib import Path
 PROJECTS_DIR = Path.home() / ".claude" / "projects"
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "token-usage"
 
-# Map directory prefixes to readable project names
-PROJECT_MAP = {
-    "-Users-krisztiankoos-projects-learn-ukrainian": "learn-ukrainian",
-    "-Users-krisztiankoos-projects-kubedojo": "kubedojo",
-}
+# Readable project names, matched against Claude's encoded checkout directory
+# names: the checkout itself (``...-<name>``) or one of its worktrees
+# (``...-<name>--worktrees-...``), wherever the checkout lives.
+PROJECT_NAMES = ("learn-ukrainian", "kubedojo")
+PROJECT_DIR_RE = re.compile(r"-(" + "|".join(map(re.escape, PROJECT_NAMES)) + r")(?:--.*)?$")
 
 # Filter: only include sessions within the last N days (None = all time)
 SINCE_DAYS = int(os.environ.get("SINCE_DAYS", "0")) or None
@@ -159,10 +160,8 @@ def parse_session(jsonl_path, is_subagent=False):
 
 def resolve_project_name(dir_name):
     """Map directory name to readable project name, or None to skip."""
-    for prefix, name in PROJECT_MAP.items():
-        if dir_name.startswith(prefix):
-            return name
-    return None
+    match = PROJECT_DIR_RE.search(dir_name)
+    return match.group(1) if match else None
 
 
 def get_cutoff():
