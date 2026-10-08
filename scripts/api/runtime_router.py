@@ -52,6 +52,7 @@ from agent_runtime.adapters.acpx import (
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
+from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
@@ -295,24 +296,43 @@ def _today_usage_files(ctx: MonitorContext | None = None) -> list[Path]:
     return _usage_files(days=1, ctx=ctx)
 
 
-def _iter_usage_records(paths: list[Path]) -> list[dict[str, Any]]:
+def _unreadable_summary(unreadable: dict[str, int]) -> dict[str, int]:
+    """The #9868 unreadable-evidence shape: ``files``/``lines``/``records`` plus their total."""
+    return {**unreadable, "total": sum(unreadable.values())}
+
+
+class UsageRecords(list[dict[str, Any]]):
+    """Usage JSONL records plus the strict reader's fault counts for that read (#9924).
+
+    ``unreadable`` carries the #9868 summary shape so every caller can surface
+    the counts in its response, including callers whose
+    ``_iter_usage_records(paths)`` call shape stays frozen at one argument.
+    """
+
+    unreadable: dict[str, int]
+
+    def __init__(self, records: list[dict[str, Any]], unreadable: dict[str, int]) -> None:
+        super().__init__(records)
+        self.unreadable = _unreadable_summary(unreadable)
+
+
+def _iter_usage_records(paths: list[Path], unreadable: dict[str, int] | None = None) -> UsageRecords:
+    """Parse usage JSONL records through the shared strict line reader.
+
+    Every usage-file reader shares ``agent_runtime.usage._iter_usage_records``
+    (#9924): a line that is not strict UTF-8, not JSON, or not a JSON object is
+    skipped and counted on ``unreadable`` — the ``{"files", "lines", "records"}``
+    counter the usage summaries expose — never raised, never silently dropped.
+    Valid rows from the same file and from later files still count. The returned
+    list always carries the read's counts on its ``unreadable`` attribute in the
+    #9868 summary shape, even when the caller passes no counter, so production
+    callers surface them in API responses instead of discarding them.
+    """
+    sink: dict[str, int] = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
     records: list[dict[str, Any]] = []
     for path in paths:
-        try:
-            with open(path, encoding="utf-8") as handle:
-                for raw in handle:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        data = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue
-                    if isinstance(data, dict):
-                        records.append(data)
-        except OSError:
-            continue
-    return records
+        records.extend(_iter_usage_file_records(path, sink))
+    return UsageRecords(records, sink)
 
 
 def _new_outcome_bucket() -> dict[str, Any]:
@@ -357,10 +377,17 @@ def _update_comparison_side(
         side["total_tokens"] += tokens
 
 
-def _last_used_agent_models(*, days: int = 7, ctx: MonitorContext | None = None) -> dict[str, str]:
-    """Extract the most recently used model per agent from runtime usage records."""
+def _last_used_agent_models(
+    *, days: int = 7, ctx: MonitorContext | None = None, unreadable: dict[str, int] | None = None
+) -> dict[str, str]:
+    """Extract the most recently used model per agent from runtime usage records.
+
+    ``unreadable`` receives the strict reader's fault counts (#9924) the same
+    way ``agent_runtime.usage.has_headroom`` exposes them; omitted means the
+    counts are computed but not surfaced to the caller.
+    """
     latest_by_agent: dict[str, tuple[datetime, str]] = {}
-    for record in _iter_usage_records(_usage_files(days=days, ctx=ctx)):
+    for record in _iter_usage_records(_usage_files(days=days, ctx=ctx), unreadable):
         agent = record.get("agent")
         model = record.get("model")
         if not isinstance(agent, str) or not isinstance(model, str):
@@ -387,9 +414,9 @@ def _adapters_dir(ctx: MonitorContext) -> Path:
     return ctx.roots.project_root / "scripts" / "agent_runtime" / "adapters"
 
 
-def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
+def list_runtime_agents(ctx: MonitorContext, unreadable: dict[str, int] | None = None) -> list[dict[str, Any]]:
     _refresh_agent_registry_if_changed()
-    last_used = _last_used_agent_models(ctx=ctx)
+    last_used = _last_used_agent_models(ctx=ctx, unreadable=unreadable)
     adapters_dir = _adapters_dir(ctx)
     agents: list[dict[str, Any]] = []
     for path in sorted(adapters_dir.glob("*.py")):
@@ -454,13 +481,24 @@ def summarize_runtime_usage(
     entrypoint: str | None = None,
     usage_dir: Path | None = None,
     ctx: MonitorContext | None = None,
+    unreadable: dict[str, int] | None = None,
 ) -> dict[str, Any]:
+    """Aggregate usage records over the window.
+
+    ``unreadable`` reports the strict reader's fault counts in the #9868 shape:
+    lines that were not strict UTF-8, not JSON, or not JSON objects never count
+    toward ``records_total`` and are never silently dropped (#9924). A caller
+    that passes its own counter (the orient collector aggregating several
+    reads) receives this read's faults on that counter; the response field
+    then reflects the shared counter, not this read alone.
+    """
     window_days = min(max(1, int(days)), 30)
     by_agent: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     by_entrypoint: dict[str, dict[str, Any]] = defaultdict(_new_outcome_bucket)
     total = 0
 
-    for record in _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir, ctx=ctx)):
+    records = _iter_usage_records(_usage_files(days=window_days, usage_dir=usage_dir, ctx=ctx), unreadable)
+    for record in records:
         record_agent = record.get("agent")
         record_entrypoint = record.get("entrypoint")
         if agent and record_agent != agent:
@@ -478,6 +516,7 @@ def summarize_runtime_usage(
         "records_total": total,
         "by_agent": dict(by_agent),
         "by_entrypoint": dict(by_entrypoint),
+        "unreadable": records.unreadable,
     }
 
 
@@ -559,6 +598,7 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
 
     return {
         "generated_at": _isoformat_z(datetime.now(UTC)),
+        "unreadable": records.unreadable,
         "transport": {
             "mode": mode,
             "scope": "monitor_process",
@@ -619,7 +659,8 @@ def acpx_shadow_overview(*, days: int = 7, ctx: MonitorContext | None = None) ->
 def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None) -> dict[str, Any]:
     record_limit = min(max(1, int(limit)), 500)
     summaries: list[dict[str, Any]] = []
-    for record in _iter_usage_records(_today_usage_files(ctx)):
+    records = _iter_usage_records(_today_usage_files(ctx))
+    for record in records:
         ts = _parse_iso_datetime(record.get("ts"))
         initiator = record.get("initiator")
         if not isinstance(initiator, str) or not _RUNTIME_ATTRIBUTION_ID.fullmatch(initiator):
@@ -653,7 +694,7 @@ def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None
             "duration_s": record.get("duration_s"),
         })
     summaries.sort(key=lambda item: _parse_iso_datetime(item.get("ts")) or datetime.min.replace(tzinfo=UTC), reverse=True)
-    return {"records": summaries[:record_limit]}
+    return {"records": summaries[:record_limit], "unreadable": records.unreadable}
 
 
 def _routing_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -1056,9 +1097,15 @@ def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = N
     }
 
 
-def runtime_recent_outcomes_today(ctx: MonitorContext | None = None) -> dict[str, int]:
+def runtime_recent_outcomes_today(ctx: MonitorContext | None = None, *, unreadable: dict[str, int] | None = None) -> dict[str, int]:
+    """Today's per-outcome counts.
+
+    ``unreadable`` receives the strict reader's fault counts (#9924) the same
+    way ``agent_runtime.usage.has_headroom`` exposes them; omitted means the
+    counts are computed but not surfaced to the caller.
+    """
     counts = {key: 0 for key in _KNOWN_OUTCOMES}
-    for record in _iter_usage_records(_today_usage_files(ctx)):
+    for record in _iter_usage_records(_today_usage_files(ctx), unreadable):
         outcome = str(record.get("outcome") or "")
         if outcome in counts:
             counts[outcome] += 1
@@ -1594,8 +1641,9 @@ def get_acp_conversation_transcript(conversation_id: str, *, ctx: MonitorContext
 
 @router.get("/agents")
 async def runtime_agents(ctx: MonitorContext = Depends(get_ctx)):
-    agents = await asyncio.to_thread(list_runtime_agents, ctx)
-    return {"agents": agents}
+    unreadable: dict[str, int] = {"files": 0, "lines": 0, "records": 0}
+    agents = await asyncio.to_thread(list_runtime_agents, ctx, unreadable)
+    return {"agents": agents, "unreadable": _unreadable_summary(unreadable)}
 
 
 @router.get("/usage")
@@ -1664,8 +1712,15 @@ async def runtime_headroom(
 ):
     if not agent or not model:
         raise HTTPException(status_code=400, detail="Both 'agent' and 'model' query params are required")
-    ok, reason = await asyncio.to_thread(has_headroom, agent, model)
-    return {"agent": agent, "model": model, "has_headroom": ok, "reason": reason}
+    unreadable: dict[str, int] = {"files": 0, "lines": 0, "records": 0}
+    ok, reason = await asyncio.to_thread(has_headroom, agent, model, unreadable=unreadable)
+    return {
+        "agent": agent,
+        "model": model,
+        "has_headroom": ok,
+        "reason": reason,
+        "unreadable": _unreadable_summary(unreadable),
+    }
 
 
 @router.get("/recent")
