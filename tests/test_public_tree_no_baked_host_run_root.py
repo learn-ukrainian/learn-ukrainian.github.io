@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from tests._host_path_guard import checkout_path_hits
+from tests._host_path_guard import checkout_path_lines
 
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
@@ -94,7 +94,7 @@ def test_public_tree_has_no_baked_host_checkout_or_venv() -> None:
         rel = str(path.relative_to(ROOT))
         # macOS-style checkouts only for now; checkouts under other home roots
         # join this scan once the remaining public examples are generalised.
-        for hit in checkout_path_hits(text):
-            if hit.startswith("/Users"):
-                leaked.append(f"{rel} contains {hit}")
+        lines = checkout_path_lines(text, home_root="/Users")
+        if lines:
+            leaked.append(f"{rel}: checkout under a home directory at line(s) {', '.join(map(str, lines))}")
     assert not leaked, "baked host run-root still present:\n" + "\n".join(leaked)

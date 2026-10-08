@@ -108,6 +108,13 @@ def test_generic_home_pattern_is_the_fallback_and_skips_url_paths() -> None:
     assert not generic.search(FIXTURE_HOME)
 
 
+@pytest.mark.parametrize("escape", ["\\n", "\\r", "\\t", "\\x1b", "\\u001b"])
+def test_generic_home_pattern_matches_after_an_escape_sequence(escape: str) -> None:
+    generic = re.compile(nd.home_dir_pattern(nd.Needles()))
+    assert generic.search(f"first line{escape}{OTHER_HOME}/x")
+    assert not generic.search("https://example.org/home/page")
+
+
 def test_deployment_homes_extend_the_generic_pattern() -> None:
     pattern = re.compile(nd.home_dir_pattern(nd.Needles(home_dirs=(FIXTURE_HOME,))))
     assert pattern.search(f"{FIXTURE_HOME}/data")
@@ -147,3 +154,28 @@ def test_violation_messages_do_not_repeat_configured_values(
         message = str(caught.value)
         assert "fixture" not in message
         assert "someone" not in message
+
+
+@pytest.mark.parametrize(
+    ("module_name", "function_name"),
+    [
+        ("v4_differential_soviet_miner", "validate_no_private_host_paths"),
+        ("v4_production_shards_assembly", "assert_no_private_host_paths"),
+        ("v4_verify_trajectory_claims", "validate_no_private_host_paths"),
+        ("v4_pilot_canary_evaluation", "validate_no_private_host_paths"),
+        ("v4_mine_stem_controls", "assert_no_private_host_paths"),
+    ],
+)
+@pytest.mark.parametrize("separator", ["\n", "\r\n", "\t", "\x1b"])
+def test_validators_reject_home_paths_inside_multiline_values(
+    module_name: str, function_name: str, separator: str
+) -> None:
+    module = pytest.importorskip(f"scripts.projects.open_model_data.{module_name}")
+    validate = getattr(module, function_name)
+    for payload in (
+        {"field": f"first line{separator}{OTHER_HOME}/data"},
+        [f"first line{separator}{OTHER_HOME}/data"],
+        f"first line{separator}{OTHER_HOME}/data",
+    ):
+        with pytest.raises(ValueError):
+            validate(payload)

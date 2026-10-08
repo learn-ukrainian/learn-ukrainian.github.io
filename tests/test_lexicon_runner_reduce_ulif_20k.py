@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner.network_cache import NetworkCache, compute_request_key
-from tests._host_path_guard import host_path_hits
+from tests._host_path_guard import assert_no_host_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "ulif_dictua"
@@ -123,7 +123,7 @@ def test_in_process_reduce_never_applies_worker_memory_limit_to_coordinator(
 
 
 def test_source_has_no_baked_home_defaults() -> None:
-    assert not host_path_hits(
+    assert_no_host_paths(
         (ROOT / "scripts" / "lexicon" / "runner" / "reduce_ulif_20k.py").read_text(encoding="utf-8")
     )
 

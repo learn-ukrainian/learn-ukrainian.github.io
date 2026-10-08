@@ -12,7 +12,7 @@ import pytest
 
 from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.orchestration import job_host_exec as jh
-from tests._host_path_guard import host_path_hits
+from tests._host_path_guard import assert_no_host_paths
 
 pytestmark = pytest.mark.reads_content
 
@@ -86,7 +86,7 @@ def test_build_ssh_argv_is_batchmode() -> None:
 
 def test_source_has_no_baked_home_defaults() -> None:
     text = Path(jh.__file__).read_text(encoding="utf-8")
-    assert not host_path_hits(text)
+    assert_no_host_paths(text)
 
 
 def test_fails_closed_when_env_unset(monkeypatch: pytest.MonkeyPatch) -> None:
