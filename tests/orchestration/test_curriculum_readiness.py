@@ -1166,13 +1166,15 @@ def test_dependent_identity_rejects_unknown_evidence_class() -> None:
 
 
 def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:
+    # A fictional macOS checkout; only its shape matters to the matcher.
+    macos_checkout = "/".join(("", "Users", "fixture-user", "projects", "learn-ukrainian"))
     baked_script = (
-        "Run `.venv/bin/python /Users/krisztiankoos/projects/"
-        "learn-ukrainian/scripts/audit/check_dossier_wordcount.py "
+        f"Run `.venv/bin/python {macos_checkout}/"
+        "scripts/audit/check_dossier_wordcount.py "
         "--changed`.\n"
     )
     baked_venv = (
-        "- [ ] `/Users/krisztiankoos/projects/learn-ukrainian/"
+        f"- [ ] `{macos_checkout}/"
         ".venv/bin/python scripts/audit/lint_bio_dossier_xref.py "
         "--paths docs/research/bio/pavlo-pavliuk-but.md`\n"
     )

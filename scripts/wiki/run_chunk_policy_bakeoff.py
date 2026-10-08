@@ -691,7 +691,7 @@ def run_cell(
             # Free the encoded sub-chunk array before the next period
             # to keep peak RSS down on the M-series Mac. Release MPS
             # workspace explicitly — gc alone leaves it allocated and
-            # the next period's encode tips a 16 GB Mac into OOM.
+            # the next period's encode tips the workstation into OOM.
             # (Empirical: post-#1562 OOM-reboot 2026-04-25 on cell B
             # middle_ukrainian after a successful OES.)
             del sub_dense, sub_texts, sub_chunks
