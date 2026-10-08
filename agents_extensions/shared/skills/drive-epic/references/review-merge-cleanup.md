@@ -32,22 +32,72 @@ use the existing `ask-<lane>` / `delegate.py` review path below; the landing ord
 in §7 is the same.
 
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
-`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
-closed. Use lightweight direct review:
+`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones. A review
+`ask-<lane> --review` / `--type review` uses a toolful native CLI, but that
+wrapper runs dispatch and wait synchronously; it does not let the driver
+continue while the review runs. Its legacy `--background` flag is rejected.
+ACP remains for ordinary, non-review `ask-*` only. For a review that can
+settle separately, use the existing detached native dispatch and wait path
+below. This keeps the same toolful reviewer and exact-head gate.
+
+Resolve the reviewer from the current target with
+`scripts.review.closeout_cli ... resolve-reviewer` as described in
+`model-assignment.md`. Use the returned invocation and route receipt: set the
+concrete reviewer seat/model, author model, risk, and any required silence
+timeout from that receipt. Do not hand-pick a seat or copy a stale route.
+`REVIEW_BRIEF` must identify the author branch and exact SHA, request an
+independent toolful code/infra review with findings, and include the current
+code-review output contract from `scripts/ai_agent_bridge/_dispatch_wrappers.py`
+and `schemas/code-review-findings.v1.schema.json` (one plain verdict plus the
+schema-conforming findings object and exact-target evidence).
 
 ```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
-# Do not enqueue or auto-merge here — landing order is §7.
+set -euo pipefail
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+PY="$PRIMARY_REPO/.venv/bin/python"
+
+# These values come from the current reviewer-resolver receipt and the target.
+# If that receipt requires a silence timeout, pass its exact value with
+# --silence-timeout on dispatch.
+dispatch_result="$("$PY" scripts/delegate.py dispatch \
+  --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
+  --mode read-only --worktree --task-id "$REVIEW_TASK" \
+  --prompt-file "$REVIEW_BRIEF" --branch "$AUTHOR_BRANCH" \
+  --pinned-head "$HEAD_SHA" --require-review-verdict \
+  --review-profile code --review-author-model "$AUTHOR_MODEL" \
+  --review-risk "$REVIEW_RISK")"
+mapfile -t dispatch_lines <<<"$dispatch_result"
+REVIEW_TASK="${dispatch_lines[0]}"
+REVIEW_NONCE="${dispatch_lines[1]}"
+
+# Arm this foreground wait in a yielding tool session; it returns when this
+# exact run settles, so independent work can continue in another session.
+"$PY" scripts/delegate.py wait "$REVIEW_TASK" \
+  --run-nonce "$REVIEW_NONCE" --timeout 1800
 ```
 
-This command line is unchanged, but the transport underneath it is not ACP
-(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
-route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
---worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
---no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+Dispatch returns the task ID and run nonce before the worker finishes. Keep
+both; do not start a second dispatch or build a task-file polling loop. The
+existing `delegate.py wait` command blocks and checks task state internally.
+After it settles, read the actual task record and result file. Require terminal
+`done`, the expected task/run identity, attested reviewer model/family, the
+branch and SHA still matching the current author target, and a complete
+well-formed verdict/findings reply. `failed`, `timeout`, `cancelled`,
+`crashed`, `rate_limited`, `no_deliverable`, missing or malformed evidence,
+unknown reviewer identity, or a moved head is not approval; resolve findings
+and repeat review on the current head as needed.
+
+Only exact-head cross-family `VERDICT: APPROVE` permits opening the PR. After
+the PR exists, publish and bind that completed review with:
+
+```bash
+"$PY" scripts/review/record_cf_verdict.py --task-id "$REVIEW_TASK" --pr "$PR_NUMBER"
+```
+
+Then require CI Gate green on the same SHA before driver-owned merge. The
+publisher rechecks the completed branch-pinned task, reviewer qualification,
+PR branch, and PR head; a moved head must be reviewed again. Do not enqueue or
+auto-merge from this sequence — landing order is §7.
 
 **Read-only review asks can be refused on brief wording (#8703).** The write-shape check
 in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
