@@ -26,6 +26,9 @@ Errors are unresolved work even though they are counted separately from pending.
 If another alias durably resolves an earlier failed or unaccounted lookup during
 the run, final accounting moves that alias lookup from `errors` or `pending` to
 `reused`. It does not count the shared publication as another fetch or miss.
+Interrupted outcomes stay tied to their lookup. After a publication-boundary
+interrupt, only its active lookup's validated row is classified; aliases count as
+reused. Invalid rows stay errors, and final reconciliation makes no HTTP requests.
 Only `verified_complete` proves fully resolved lemmas; attempted is never completion.
 
 Every startup checks the actual cache schema, normalized lookup identity, filename,

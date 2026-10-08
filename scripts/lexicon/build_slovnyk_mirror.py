@@ -98,6 +98,8 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
     fingerprint = None
     status = "error"
     phase = "startup"
+    in_flight_lemma = None
+    interrupted_lemma = None
     start = time.monotonic()
 
     def progress(done, total):
@@ -157,6 +159,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
             attempted += 1
             outcomes = {}
             missing = [slug for slug in _SLOVNYK_LOOKUP_SLUGS if slug not in resolved[lemma]]
+            in_flight_lemma = lemma
             _slovnyk_cache(lemma, outcomes=outcomes, slugs=missing)
             rows, digest = _cache_state(lemma)
             terminal = False
@@ -181,6 +184,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                 # Data is already durable; absent checkpoint entries are safely adopted.
                 save()
                 progress(attempted, len(todo))
+            in_flight_lemma = None
             if terminal:
                 break
         status = (
@@ -191,6 +195,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
         if status == "incomplete" and args.limit is not None and len(selected) < len(lemmas):
             status = "limited"
     except KeyboardInterrupt:
+        interrupted_lemma = in_flight_lemma
         status = "interrupted"
     except _SlovnykCacheCollision:
         emit("ERROR reason=cache-filename-collision action=resolve-distinct-lookup-identities-before-retry")
@@ -208,9 +213,28 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                     for slug in rows:
                         key = accounted.get((lemma, slug), "pending")
                         if key in {"pending", "errors"}:
-                            counts[key] -= 1
-                            counts["reused"] += 1
-                            accounted[lemma, slug] = "reused"
+                            outcome = outcomes.get(slug) if lemma == interrupted_lemma else None
+                            outcome_status = getattr(outcome, "status", None)
+                            if (
+                                outcome_status is None
+                                and lemma == interrupted_lemma
+                                and slug in missing
+                            ):
+                                cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+                                lookup_word = _slovnyk_lookup_word(lemma)
+                                if _reusable_slovnyk_cache(cache, lemma, lookup_word) and _resolved_slovnyk_lookup(
+                                    cache, slug, lookup_word
+                                ):
+                                    outcome_status = "not_found" if slug in cache.get("not_found", {}) else "positive"
+                            key = {
+                                "positive": "fetched",
+                                "reused": "reused",
+                                "not_found": "misses",
+                            }.get(outcome_status, "reused")
+                            accounted_key = accounted.get((lemma, slug), "pending")
+                            counts[accounted_key] -= 1
+                            counts[key] += 1
+                            accounted[lemma, slug] = key
                     for slug in resolved[lemma] - rows:
                         key = accounted.get((lemma, slug), "pending")
                         if key != "errors":

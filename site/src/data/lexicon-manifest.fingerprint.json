@@ -59,7 +59,7 @@
       },
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
-        "sha256": "d7d869da1791cde744660816c57d9f0a43cabd79662d712017226765b1d97237"
+        "sha256": "1a8cce5ed4341daf61440c0691395bfcf1dda39a2c5826a2bf790e560369ad7b"
       },
       {
         "path": "scripts/lexicon/build_synonym_verdicts_yaml.py",

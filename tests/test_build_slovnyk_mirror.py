@@ -303,6 +303,106 @@ def test_interrupted_run_is_truthful_and_resumable(mirror_fixture, monkeypatch, 
     assert len(calls) == 4
 
 
+@pytest.mark.parametrize(
+    ("http_status", "expected", "retained"),
+    [(200, "fetched=1 reused=0 misses=0", "lookups"), (404, "fetched=0 reused=0 misses=1", "not_found")],
+)
+def test_interruption_after_publication_keeps_outcome_provenance(
+    mirror_fixture, monkeypatch, capsys, http_status, expected, retained
+):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": "sample"}]}))
+    queue(http_status)
+    original = enrich_manifest_module._atomic_slovnyk_json
+    interrupted = False
+    cache_path = enrich_manifest_module._slovnyk_cache_path("sample")
+
+    def publish_then_interrupt(path, value):
+        nonlocal interrupted
+        original(path, value)
+        if path == cache_path and not interrupted:
+            interrupted = True
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(enrich_manifest_module, "_atomic_slovnyk_json", publish_then_interrupt)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 130
+    output = capsys.readouterr().out
+    assert f"RESULT {expected} errors=0 pending=1 denominator=2 status=interrupted" in output
+    assert len(calls) == 1
+    cache = json.loads(enrich_manifest_module._slovnyk_cache_path("sample").read_text())
+    assert set(cache[retained]) == {"vts"}
+
+    monkeypatch.setattr(enrich_manifest_module, "_atomic_slovnyk_json", original)
+    queue(200)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 2
+    assert "status=complete verified_complete=1/1" in capsys.readouterr().out
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize(
+    ("http_status", "expected_first", "expected_resume"),
+    [
+        (200, "fetched=1 reused=1 misses=0", "fetched=0 reused=3 misses=1"),
+        (404, "fetched=0 reused=1 misses=1", "fetched=1 reused=3 misses=0"),
+    ],
+)
+def test_interrupted_alias_publication_is_counted_once_and_resumes(
+    mirror_fixture, monkeypatch, capsys, http_status, expected_first, expected_resume
+):
+    manifest, calls, queue = mirror_fixture
+    aliases = ["sample / variant", "sample"]
+    manifest.write_text(json.dumps({"entries": [{"lemma": lemma} for lemma in aliases]}))
+    queue(http_status)
+    original = build_slovnyk_mirror._slovnyk_cache
+
+    def publish_then_interrupt(lemma, *, outcomes, slugs):
+        original(lemma, outcomes=outcomes, slugs=slugs[:1])
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", publish_then_interrupt)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 130
+    assert (
+        f"RESULT {expected_first} errors=0 pending=2 denominator=4 status=interrupted" in capsys.readouterr().out
+    )
+    assert len(calls) == 1
+
+    monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", original)
+    queue(404 if http_status == 200 else 200)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 2
+    assert (
+        f"RESULT {expected_resume} errors=0 pending=0 denominator=4 status=complete verified_complete=2/2"
+        in capsys.readouterr().out
+    )
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 2
+    assert "reused=4 misses=0" in capsys.readouterr().out
+
+
+def test_interruption_after_all_outcomes_stays_interrupted(mirror_fixture, monkeypatch, capsys):
+    manifest, calls, queue = mirror_fixture
+    manifest.write_text(json.dumps({"entries": [{"lemma": "sample"}]}))
+    queue(200, 404)
+    original = build_slovnyk_mirror._slovnyk_cache
+
+    def publish_all_then_interrupt(lemma, *, outcomes, slugs):
+        original(lemma, outcomes=outcomes, slugs=slugs)
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", publish_all_then_interrupt)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 130
+    assert (
+        "RESULT fetched=1 reused=0 misses=1 errors=0 pending=0 denominator=2 status=interrupted "
+        "verified_complete=1/1" in capsys.readouterr().out
+    )
+    assert len(calls) == 2
+    monkeypatch.setattr(build_slovnyk_mirror, "_slovnyk_cache", original)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
+    assert len(calls) == 2
+
+
 @pytest.mark.parametrize("state", ["{", "[]", '{"version":2,"completed":{}}'])
 def test_corrupt_checkpoint_refuses_without_mutation(mirror_fixture, capsys, state):
     manifest, calls, _queue = mirror_fixture
