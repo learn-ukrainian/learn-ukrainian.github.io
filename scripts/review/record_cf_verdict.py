@@ -595,22 +595,6 @@ def collect_branch_review_facts(
         revisions.append(f"^{authorship_exclude_sha}")
     listed = _facts_git(repo_root, revisions, deadline=deadline, code=FACTS_AUTHORSHIP_UNKNOWN)
     shas = listed.decode("ascii", errors="strict").split()
-    # A range that contains only commits reachable from the excluded tip has
-    # no branch commit of its own. Keep the refusal those commits already
-    # produced when they were attributed (a multi-trailer squash has no
-    # single X-Agent model).
-    if authorship_exclude_sha is not None and not shas:
-        full = _facts_git(
-            repo_root,
-            ["rev-list", f"{base_tip_sha}..{head_sha}"],
-            deadline=deadline,
-            code=FACTS_AUTHORSHIP_UNKNOWN,
-        )
-        if full.strip():
-            raise BranchFactsError(
-                FACTS_AUTHORSHIP_UNKNOWN,
-                "author model unknown: missing explicit X-Agent model trailer",
-            )
     commits: list[CommitAttribution] = []
     for entry in _read_commit_entries(repo_root, shas, deadline=deadline):
         try:
@@ -631,8 +615,8 @@ def collect_branch_review_facts(
             raise BranchFactsError(
                 FACTS_AUTHORSHIP_UNKNOWN, "branch fact collection timed out; refusing a partial history"
             )
-    # Only clean merges of the excluded tip remain: the branch has no author
-    # commit of its own, so the same refusal stands.
+    # A clean merge of the excluded tip is not an author. When that is all
+    # that remains, the branch has no commit of its own.
     if authorship_exclude_sha is not None and commits and all(commit.family is None for commit in commits):
         raise BranchFactsError(
             FACTS_AUTHORSHIP_UNKNOWN,
@@ -753,6 +737,30 @@ def _shas_not_reachable_from(repo_root: Path, shas: list[str], exclude_sha: str 
     return kept
 
 
+def refuse_excluded_only_range(facts: BranchReviewFacts, *, repo_root: Path, exclude_sha: str | None) -> None:
+    """Refuse a branch review whose commits are all reachable from the excluded tip.
+
+    Fact collection itself stays quiet for an empty range. The rebase plan
+    enumerates that tip on purpose, and an empty author set there is the
+    result. The recorder and the resolver still refuse: the branch has no
+    commit of its own, and the reason is the one an unattributable commit
+    already produces.
+    """
+    if exclude_sha is None or facts.commits or facts.existing_families or facts.base_tip_sha == facts.head_sha:
+        return
+    full = _facts_git(
+        repo_root,
+        ["rev-list", f"{facts.base_tip_sha}..{facts.head_sha}"],
+        deadline=time.monotonic() + 30,
+        code=FACTS_AUTHORSHIP_UNKNOWN,
+    )
+    if full.strip():
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "author model unknown: missing explicit X-Agent model trailer",
+        )
+
+
 def pr_review_facts(
     repository: str,
     pr_number: int,
@@ -795,6 +803,7 @@ def pr_review_facts(
         subject_families=subject_families,
         authorship_exclude_sha=exclude,
     )
+    refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
     github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
     if sorted(github_own) != sorted(commit.sha or "" for commit in facts.commits):
         raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")

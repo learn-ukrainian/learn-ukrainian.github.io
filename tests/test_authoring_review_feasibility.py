@@ -285,7 +285,7 @@ def record_verdict(
             if args.verb == "read-comment":
                 return comments[-1]
             raise AssertionError(args.verb)
-        if args[-2:] == ["--json", "baseRefOid,headRefOid"]:
+        if args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
             return {"baseRefOid": base, "headRefOid": head}
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": "feature", "state": "OPEN"}

@@ -614,7 +614,7 @@ def test_clean_update_merge_records_exact_head_review(real_commit_set, monkeypat
     fake_json = recorder._run_json
 
     def with_base(args, **kwargs):
-        if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]:
+        if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
             return {"baseRefOid": base, "headRefOid": head}
         return fake_json(args, **kwargs)
 
@@ -675,7 +675,7 @@ def test_clean_merge_still_refuses_same_family_reviewer(real_commit_set, monkeyp
         "_run_json",
         lambda args, **kwargs: (
             {"baseRefOid": base, "headRefOid": head}
-            if isinstance(args, list) and args[-2:] == ["--json", "baseRefOid,headRefOid"]
+            if isinstance(args, list) and args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]
             else fake_json(args, **kwargs)
         ),
     )
