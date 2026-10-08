@@ -167,8 +167,8 @@ def selection_key(
     headroom = -(metrics.quota_remaining_pct or 0.0)
     capacity = review_capacity(_route_record(candidate, snapshot, prefer_route=True), (snapshot or {}).get("diagnostics"))
     return (
-        capacity.pressure,
         capacity_evidence_rank,
+        capacity.pressure,
         load_unknown,
         normalized_load,
         headroom,

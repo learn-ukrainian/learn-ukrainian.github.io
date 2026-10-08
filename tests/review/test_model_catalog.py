@@ -38,7 +38,7 @@ REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
 
 def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert hashlib.sha256((CAPACITY_FIXTURE / "routing-10016.json.gz").read_bytes()).hexdigest() == (
-        "9f68e53592b40e2b7cad525513b5595bb2bc60fa28b258f5330f7203b4773860"
+        "7446be4dfbedb928fa3760bdb508785cc82b95995fc09d4662a67d6a2c6b1b1a"
     )
 
     def original_receipt(value):
@@ -46,7 +46,7 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
             return [original_receipt(row) for row in value]
         if isinstance(value, dict):
             return {
-                key: row[1:] if key == "selection_score" and row is not None else original_receipt(row)
+                key: row[:1] + row[2:] if key == "selection_score" and row is not None else original_receipt(row)
                 for key, row in value.items()
                 if key != "capacity"
             }

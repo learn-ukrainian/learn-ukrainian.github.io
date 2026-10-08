@@ -10,7 +10,7 @@ and no-CLI configurations, without permitting provider execution. All other
 surfaces, including writer routing and dispatch, matched the original fixtures.
 
 The denominator remains 1,480 reviewer cases. Of those, 1,136 receipts change:
-capacity evidence and the leading pace-ordering score account for all but 24
+capacity evidence and the pace-ordering score account for all but 24
 semantic differences. Those 24 have a legacy `near_cap` or `hot` label with no
 numeric allowance. Eight change selection from Grok to the appropriate Claude
 reviewer because the label alone no longer proves exhaustion. The other 16
@@ -21,3 +21,8 @@ the overlay digest and limits semantic differences to those inputs. Fresh
 captures and every parametrized reviewer case still compare complete receipts
 exactly. Dedicated capacity tests cover numeric reserve boundaries, fresh and
 stale observations, pace ordering, live/file equivalence and admission limits.
+
+The review-fix capture ranks capacity evidence before pace pressure, so missing
+allowance does not appear more available than observed allowance. Recapturing
+all 1,480 cases changed only the first two selection-score fields; selections
+and all other receipt fields matched the previous capacity overlay.

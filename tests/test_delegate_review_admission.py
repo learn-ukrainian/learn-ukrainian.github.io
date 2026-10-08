@@ -2189,3 +2189,52 @@ def test_10016_pace_never_removes_a_better_fit_before_ranking(monkeypatch):
     (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
     assert routing.substitution is None
+
+
+@pytest.mark.parametrize("requested_remaining", [60, 5])
+def test_10016_substituted_pace_only_reviewer_uses_its_own_capacity(monkeypatch, capsys, requested_remaining):
+    budget = _budget(codex="cool")
+    budget["agents"]["codex"]["remaining_pct"] = requested_remaining
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 80}
+    args = _9959_review_args("codex", "gpt-6.1-sol", "gpt-6.1-sol", "--check-budget")
+
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution["actual_model"] == "claude-opus-5-5"
+    output = capsys.readouterr().err
+    assert "REVIEW_BUDGET_RETAINED" in output
+    assert "HARD AUTO-SUBSTITUTE" not in output
+
+
+def test_10016_substituted_reviewer_credit_uses_admitted_model(monkeypatch):
+    from scripts.fleet import credit_lane
+
+    checked_models = []
+
+    def credit_relief(lane, published, model, **kwargs):
+        if lane != "codex":
+            return None
+        checked_models.append(model)
+        return {
+            "state": credit_lane.CREDIT_BALANCE_PRESENT,
+            "model_allowed": model == "gpt-6.1-sol",
+            "allowed_models": ["gpt-6.1-sol"],
+            "draw": credit_lane.DRAW_NOT_VERIFIED,
+        }
+
+    monkeypatch.setattr(credit_lane, "published_credit_relief", credit_relief)
+    budget = _budget(codex="near_cap")
+    args = _9959_review_args("claude", "claude-opus-5-5", "claude-opus-5-5", "--check-budget")
+
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert checked_models and set(checked_models) == {"gpt-6.1-sol"}

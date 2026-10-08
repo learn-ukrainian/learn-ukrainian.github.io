@@ -42,7 +42,7 @@ def test_c6b_pace_only_selects_opus_without_attesting_missing_health():
     assert result.selected.concrete_model == "claude-opus-5-5"
     # Known allowance does not manufacture verified route health.
     assert result.selected.health != "healthy"
-    assert result.selected.selection_score[0] == 9
+    assert result.selected.selection_score[:2] == (0, 9)
 
 
 @pytest.mark.parametrize("key", ["claude", "claude-opus-5-5", "anthropic"])
@@ -61,7 +61,7 @@ def test_capacity_uses_the_same_supported_aliases_as_health(key, status, remaini
     else:
         assert result.selected.name == "claude-opus-5-5"
         assert result.selected.health is None
-        assert result.selected.capacity.pressure == result.selected.selection_score[0] == 9
+        assert result.selected.capacity.pressure == result.selected.selection_score[1] == 9
 
 
 def test_model_health_alias_cannot_hide_canonical_seat_exhaustion():
@@ -104,6 +104,20 @@ def test_pace_pressure_orders_only_equal_fits():
     assert result.selected.concrete_model == "gpt-6.1-sol"
     # Suitability/tier remains ahead of pressure: Sonnet cannot replace Opus at critical.
     assert resolve_reviewer(inputs(data)).selected.concrete_model == "claude-opus-5-5"
+
+
+def test_10016_known_capacity_with_pace_pressure_precedes_unknown_capacity():
+    data = snapshot(remaining=80, status="cool", health={"healthy": True})
+    data["agents"]["claude"]["codexbar"]["weekly_pace_delta_pct"] = 1
+    result = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=data))
+
+    assert result.selected.concrete_model == "claude-opus-5-5"
+    assert result.selected.health == "healthy"
+    sol = next(item for item in result.trace if item.name == "openai_frontier")
+    assert sol.status == "eligible"
+    assert sol.capacity.remaining_pct is None
+    assert sol.capacity.freshness == credit_lane.UNKNOWN
+    assert result.selected.selection_score < sol.selection_score
 
 
 @pytest.mark.parametrize(

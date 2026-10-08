@@ -260,6 +260,7 @@ def resolve_and_admit(
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
         approved_review_targets: set[tuple[str, str | None]] = set()
+        admitted_review_models: dict[str, str | None] = {}
         review_seat = name
         retired_model_resolution = None
         if review_dispatch:
@@ -289,6 +290,7 @@ def resolve_and_admit(
             requested_seat: str = review_seat,
             requested_model: str | None = review_model,
             approved: set[tuple[str, str | None]] = approved_review_targets,
+            admitted_models: dict[str, str | None] = admitted_review_models,
         ) -> tuple[str, str | None]:
             selected = _resolve_review_target(
                 requested_seat,
@@ -299,6 +301,7 @@ def resolve_and_admit(
                 attempt=review_attempt,
                 snapshot=snapshot,
                 budget_seat=budget_seat,
+                budget_model=admitted_models.get(budget_seat),
                 budget_substitute=fallbacks.get(budget_seat),
                 owned_paths=review_owned_paths,
                 changed_paths=review_changed_paths,
@@ -307,6 +310,7 @@ def resolve_and_admit(
                 facts=review_facts,
             )
             approved.add(selected)
+            admitted_models[selected[0]] = selected[1]
             return selected
 
         if review_dispatch:
@@ -377,6 +381,7 @@ def _resolve_review_target(
     attempt: bool,
     snapshot: Mapping[str, Any] | None,
     budget_seat: str,
+    budget_model: str | None = None,
     budget_substitute: str | None = None,
     owned_paths: tuple[str, ...] = (),
     changed_paths: tuple[str, ...] = (),
@@ -539,10 +544,18 @@ def _resolve_review_target(
         tuple(candidate for candidate in rung if candidate.family not in forbidden)
         for rung in REVIEW_LADDERS[inputs.risk]
     )
+    # The budget guard may be checking a reviewer already substituted during
+    # initial admission. Its allowance and credit allowlist belong to that
+    # admitted seat/model, independently of the original request.
+    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
+    budget_model = budget_model or (requested_model if budget_seat == seat else _default_model_for(budget_seat))
+    budget_blocked, _ = review_capacity_action(
+        budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
+    )
     resolution = resolve_reviewer(
         inputs,
         ladder=ladder,
-        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and blocked else frozenset(),
+        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
     )
     if resolution.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
@@ -551,9 +564,7 @@ def _resolve_review_target(
     # bucket leaves no eligible substitute, retain the already cross-family,
     # snapshot-validated reviewer only when its lane still has capacity.
     # Health, circuit, subject, suitability and near-cap gates remain binding.
-    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
-    blocked, _ = review_capacity_action(budget_seat, lane_info, (snapshot or {}).get("diagnostics"), requested_model)
-    if selected is None and snapshot is not None and not blocked:
+    if selected is None and snapshot is not None and not budget_blocked:
         if eligible and seat == budget_seat:
             return seat, model
         # The initial admission may already have replaced a same-family request.
