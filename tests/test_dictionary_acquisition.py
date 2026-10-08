@@ -437,9 +437,123 @@ def test_supervisor_crash_launch_budget_persists(tmp_path):
     assert result["terminal_reason"] == "supervisor_budget"
     assert result["request_attempts"] == 0
     assert result["retry"]["supervisor_launches"] == 2
+    assert result["retry"]["no_progress_launches"] == 2
+    assert result["retry"]["max_no_progress_launches"] == 2
     assert clock.sleeps == [2, 2]
     assert invoke("supervise", argv, HTTP([], clock), clock, launch=crash) == 5
     assert len(launches) == 2
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+def test_scattered_recovered_errors_outlive_launch_cap(tmp_path, dictionary):
+    clock = Clock()
+    argv = arguments(tmp_path, dictionary, tuple(f"sample{i}" for i in range(6)), "--max-restarts", "1")
+    if dictionary == "sum20_official":
+        argv += ["--end-wordid", "10"]
+    article = OFFICIAL_HTML if dictionary == "sum20_official" else SLOVNYK_HTML
+    # Every target first fails, then resolves; a miss is progress too.
+    http = HTTP([item for i in range(6) for item in (response(503), response(404 if i % 2 else 200, article))], clock)
+    launches = []
+
+    def launch(command, **_kwargs):
+        launches.append(command)
+        return SimpleNamespace(returncode=invoke("run", command[4:], http, clock))
+
+    assert invoke("supervise", argv, http, clock, launch=launch) == 0
+    result = status(tmp_path, dictionary)
+    assert result["state"] == "complete"
+    assert result["denominator"] == result["checkpoint"] == 6
+    assert result["counts"] == {"positive": 3, "miss": 3, "pending": 0, "error": 0, "reused": 0}
+    assert result["request_attempts"] == result["current_attempt_budget_used"] == 12
+    assert result["retry"]["supervisor_launches"] == len(launches) == 7
+    assert result["retry"]["supervisor_restarts"] == 6
+    assert result["retry"]["no_progress_launches"] == 0
+    assert result["retry"]["max_no_progress_launches"] == 2
+    assert all(b[0] - a[0] >= 2 for a, b in pairwise(http.calls))
+    with database(tmp_path, dictionary) as conn:
+        assert [row[0] for row in conn.execute("SELECT attempts FROM results")] == [2] * 6
+        assert conn.execute("SELECT COUNT(*) FROM events WHERE kind='supervisor_launch'").fetchone()[0] == 7
+    log = json.loads((tmp_path / "staging" / dictionary / "job.log").read_text().splitlines()[-1])
+    assert log["retry"] == result["retry"]
+    assert log["request_attempts"] == 12
+
+
+def test_repeated_503_on_one_target_consumes_no_progress_cap(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("sample",), "--max-attempts", "10", "--max-restarts", "1")
+    http = HTTP([response(503, headers={"Retry-After": "9"}), response(503)], clock)
+
+    def launch(command, **_kwargs):
+        return SimpleNamespace(returncode=invoke("run", command[4:], http, clock))
+
+    assert invoke("supervise", argv, http, clock, launch=launch) == 5
+    result = status(tmp_path)
+    assert result["terminal_reason"] == "supervisor_budget"
+    assert result["checkpoint"] == 0
+    assert result["counts"]["miss"] == 0
+    assert result["retry"]["attempts"] == result["retry"]["no_progress_launches"] == 2
+    assert result["request_attempts"] == 2
+    assert http.calls[1][0] - http.calls[0][0] >= 9
+    assert invoke("supervise", argv, http, clock, launch=lambda *_a, **_k: pytest.fail("exhausted launched")) == 5
+    # Only explicit operator resume resets current budgets; lifetime history survives it.
+    assert invoke("resume", argv, HTTP([], clock), clock) == 0
+    resumed = status(tmp_path)
+    assert resumed["retry"]["no_progress_launches"] == resumed["retry"]["attempts"] == 0
+    assert resumed["retry"]["supervisor_launches"] == resumed["request_attempts"] == 2
+    assert resumed["current_attempt_budget_used"] == 0
+    http = HTTP([response()], clock)
+    assert invoke("supervise", argv, http, clock, launch=launch) == 0
+    assert status(tmp_path)["retry"]["supervisor_launches"] == 3
+    assert status(tmp_path)["request_attempts"] == 3
+
+
+def test_restart_after_progress_then_crashes_retains_no_progress_cap(tmp_path):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("sample", "other"), "--max-restarts", "1")
+    http = HTTP([response(), KeyboardInterrupt()], clock)
+
+    def progress_then_interrupt(command, **_kwargs):
+        invoke("run", command[4:], http, clock)
+
+    with pytest.raises(KeyboardInterrupt):
+        invoke("supervise", argv, http, clock, launch=progress_then_interrupt)
+    assert status(tmp_path)["checkpoint"] == 1
+    assert status(tmp_path)["retry"]["supervisor_launches"] == 1
+    assert status(tmp_path)["retry"]["no_progress_launches"] == 0
+
+    # Separate supervisor invocations die after reserving each next child.
+    def interrupt(*_args, **_kwargs):
+        raise KeyboardInterrupt
+
+    for used in (1, 2):
+        with pytest.raises(KeyboardInterrupt):
+            invoke("supervise", argv, HTTP([], clock), clock, launch=interrupt)
+        assert status(tmp_path)["retry"]["no_progress_launches"] == used
+        assert status(tmp_path)["retry"]["supervisor_launches"] == used + 1
+    assert invoke("supervise", argv, HTTP([], clock), clock, launch=lambda *_a, **_k: pytest.fail("cap reset")) == 5
+    assert status(tmp_path)["checkpoint"] == 1
+    assert status(tmp_path)["request_attempts"] == 2
+    assert status(tmp_path)["retry"]["attempts"] == 1
+
+
+@pytest.mark.parametrize("last_code,expected", [(401, 3), (403, 3), (200, 4), (503, 5), (404, 0)])
+def test_terminal_state_after_progress_and_child_crash_stays_latched(tmp_path, last_code, expected):
+    clock = Clock()
+    argv = arguments(tmp_path, "vts", ("sample", "other"), "--max-attempts", "1", "--max-restarts", "0")
+    http = HTTP([response(), response(last_code, "<article></article>")], clock)
+    launches = []
+
+    def terminal_then_crash(command, **_kwargs):
+        launches.append(command)
+        assert invoke("run", command[4:], http, clock) == expected
+        return SimpleNamespace(returncode=-9)
+
+    assert invoke("supervise", argv, http, clock, launch=terminal_then_crash) == expected
+    assert len(launches) == 1
+    assert status(tmp_path)["checkpoint"] == (2 if expected == 0 else 1)
+    assert status(tmp_path)["retry"]["no_progress_launches"] == 0
+    assert invoke("supervise", argv, http, clock, launch=lambda *_a, **_k: pytest.fail("terminal launched")) == expected
+    assert status(tmp_path)["request_attempts"] == 2
 
 
 def test_supervisor_restart_after_own_crash_does_not_reset_budget(tmp_path):
@@ -454,11 +568,14 @@ def test_supervisor_restart_after_own_crash_does_not_reset_budget(tmp_path):
     assert invoke("supervise", argv, HTTP([], clock), clock, launch=lambda *_a, **_k: pytest.fail("budget reset")) == 5
 
 
-def test_supervise_command_with_real_children_and_fake_http(tmp_path):
+@pytest.mark.parametrize("scenario", ["blocked", "scattered"])
+def test_supervise_command_with_real_children_and_fake_http(tmp_path, scenario):
     """Exercise the actual CLI supervisor offline, not a shell-loop model."""
-    argv = arguments(tmp_path)
+    argv = arguments(tmp_path, "vts", tuple(f"sample{i}" for i in range(6)) if scenario == "scattered" else ("sample",))
     runner = tmp_path / "offline_cli.py"
-    runner.write_text("""
+    runner.write_text(
+        f"scenario = {scenario!r}\n"
+        + """
 import json
 import subprocess
 import sys
@@ -481,7 +598,7 @@ class HTTP:
     def get(self, *args, **kwargs):
         counter = root / "fake_requests.json"
         requests = json.loads(counter.read_text()) if counter.exists() else []
-        code = 503 if len(requests) < 2 else 403
+        code = (503 if len(requests) % 2 == 0 else 404) if scenario == "scattered" else (503 if len(requests) < 2 else 403)
         requests.append({"time": timer[0], "status": code})
         counter.write_text(json.dumps(requests))
         return SimpleNamespace(status_code=code, text="unused private body", headers={})
@@ -492,20 +609,26 @@ def launch(command, **kwargs):
     return subprocess.run([sys.executable, __file__, *command[3:]], **kwargs)
 raise SystemExit(main(sys.argv[1:], session_factory=HTTP,
                      launch=launch, clock=lambda: timer[0], sleep=sleep))
-""")
+"""
+    )
     command = [sys.executable, str(runner), "supervise", *argv]
     first = subprocess.run(command, capture_output=True, text=True, timeout=30)
-    assert first.returncode == 3, first.stderr
+    expected = 0 if scenario == "scattered" else 3
+    assert first.returncode == expected, first.stderr
     root = tmp_path / "staging"
     attempts = json.loads((root / "fake_requests.json").read_text())
-    assert [row["status"] for row in attempts] == [503, 503, 403]
+    assert [row["status"] for row in attempts] == ([503, 404] * 6 if scenario == "scattered" else [503, 503, 403])
     assert all(b["time"] - a["time"] >= 2 for a, b in pairwise(attempts))
-    assert json.loads((root / "fake_launches.json").read_text()) == 3
-    assert status(tmp_path)["state"] == "blocked"
+    launches = 7 if scenario == "scattered" else 3
+    assert json.loads((root / "fake_launches.json").read_text()) == launches
+    assert status(tmp_path)["state"] == ("complete" if scenario == "scattered" else "blocked")
+    if scenario == "scattered":
+        assert status(tmp_path)["checkpoint"] == status(tmp_path)["denominator"] == 6
+        assert status(tmp_path)["retry"]["no_progress_launches"] == 0
     second = subprocess.run(command, capture_output=True, text=True, timeout=30)
-    assert second.returncode == 3
+    assert second.returncode == expected
     assert json.loads((root / "fake_requests.json").read_text()) == attempts
-    assert json.loads((root / "fake_launches.json").read_text()) == 3
+    assert json.loads((root / "fake_launches.json").read_text()) == launches
     assert "unused private body" not in first.stdout + first.stderr + (root / "vts" / "job.log").read_text()
 
 

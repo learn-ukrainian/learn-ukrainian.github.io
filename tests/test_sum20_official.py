@@ -262,9 +262,7 @@ def test_definition_card_falls_back_when_official_table_is_missing(tmp_path: Pat
     assert card["id"] == "sum20"
 
 
-def test_definition_card_keeps_none_when_official_and_slovnyk_rows_are_absent(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_definition_card_keeps_none_when_official_and_slovnyk_rows_are_absent(tmp_path: Path, monkeypatch) -> None:
     db_path = _fixture_sources_db(tmp_path, include_article=False)
     monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
     monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)

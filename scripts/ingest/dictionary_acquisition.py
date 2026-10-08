@@ -261,6 +261,14 @@ def initialize(
             )
 
 
+def no_progress_launches(conn: sqlite3.Connection) -> int:
+    """Count durable launch reservations since the last resolved target or explicit resume."""
+    return conn.execute(
+        "SELECT COUNT(*) FROM events WHERE kind='supervisor_launch' AND id > "
+        "COALESCE((SELECT MAX(id) FROM events WHERE kind IN ('positive','not_found','operator_resume')),0)"
+    ).fetchone()[0]
+
+
 def project_status(conn: sqlite3.Connection, directory: Path, now: float) -> dict[str, Any]:
     """Reconcile counts/checkpoint from durable result rows, never from old JSON."""
     job = conn.execute("SELECT * FROM job").fetchone()
@@ -303,6 +311,8 @@ def project_status(conn: sqlite3.Connection, directory: Path, now: float) -> dic
             "next_attempt_at": next_row["next_attempt_at"] if next_row else None,
             "supervisor_launches": job["restarts"],
             "supervisor_restarts": max(0, job["restarts"] - 1),
+            "no_progress_launches": no_progress_launches(conn),
+            "max_no_progress_launches": spec["max_restarts"] + 1,
             "max_restarts": spec["max_restarts"],
         },
         "updated_at": datetime.fromtimestamp(now, UTC).isoformat(),
@@ -319,7 +329,22 @@ def report(conn: sqlite3.Connection, directory: Path, now: float) -> dict[str, A
     # Only closed codes and counters: no exception text, input paths, targets or response bodies.
     with (directory / "job.log").open("a", encoding="utf-8") as log:
         log.write(
-            packed({k: value[k] for k in ("updated_at", "state", "terminal_reason", "checkpoint", "counts")}) + "\n"
+            packed(
+                {
+                    k: value[k]
+                    for k in (
+                        "updated_at",
+                        "state",
+                        "terminal_reason",
+                        "checkpoint",
+                        "counts",
+                        "retry",
+                        "request_attempts",
+                        "current_attempt_budget_used",
+                    )
+                }
+            )
+            + "\n"
         )
     return value
 
@@ -510,7 +535,7 @@ def manual_resume(conn: sqlite3.Connection, now: float) -> None:
         conn.execute(
             "UPDATE results SET status='pending',attempts=0,next_attempt_at=0,reason='',http_status=NULL,payload=NULL WHERE status NOT IN ('positive','not_found','reused')"
         )
-        conn.execute("UPDATE job SET state='running',reason='',restarts=0")
+        conn.execute("UPDATE job SET state='running',reason=''")
         conn.execute("INSERT INTO events(time,kind) VALUES(?,'operator_resume')", (now,))
 
 
@@ -534,13 +559,14 @@ def supervise(
                 report(conn, directory, clock())
                 if job["state"] not in {"running", "transient"}:
                     return EXIT[job["state"]]
-                if job["restarts"] > spec["max_restarts"]:
+                if no_progress_launches(conn) >= spec["max_restarts"] + 1:
                     code = stop(conn, "exhausted", "supervisor_budget")
                     report(conn, directory, clock())
                     return code
                 # Count launches before spawn: unexpected child/supervisor crashes cannot reset it.
                 with conn:
                     conn.execute("UPDATE job SET restarts=restarts+1")
+                    conn.execute("INSERT INTO events(time,kind) VALUES(?,'supervisor_launch')", (clock(),))
                 report(conn, directory, clock())
             command = [
                 str(project_interpreter()),
@@ -647,7 +673,7 @@ Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_
         "--max-restarts",
         type=int,
         default=3,
-        help="Durable supervisor restart cap after initial launch; default 3, range 0..10",
+        help="Durable restart cap without resolved-target progress; default 3 (four launches), range 0..10",
     )
     return result
 

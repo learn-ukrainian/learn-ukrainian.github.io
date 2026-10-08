@@ -36,7 +36,7 @@ Each canonical dictionary owns `<root>/<dictionary>/`:
 | --- | --- |
 | `staging.sqlite3` | Durable frozen specification, ordered results and attempt/outcome events |
 | `status.json` | Atomically replaced projection reconciled from SQLite |
-| `job.log` | Path-free structured state/count log; no articles or exception bodies |
+| `job.log` | Path-free structured state/count/retry log; no articles or exception bodies |
 | `writer.lock`, `supervisor.lock` | OS advisory exclusive writer and supervisor admission |
 
 The shared root also holds `slovnyk.lock/json`, `sum20ua.lock/json` for host-wide
@@ -121,9 +121,17 @@ terminal stop. `supervise` launches `run` and retries transient/unexpected crash
 exits with a quiet interval of at least two seconds. Per-target attempts and
 supervisor launches are reserved **durably before execution**. A restart of either
 process cannot reset the budget. Defaults allow four attempts per unresolved
-target and four total child launches (initial plus three restarts). Reaching
-either cap latches `exhausted`. A launch reservation consumed by a crash still
-counts. Retryable network failures and 408/425/429/5xx never become misses.
+target and four child launches **without durable target progress** (initial plus
+three restarts). Each committed positive article or proven 404 starts a new
+no-progress launch budget; transient results, in-flight attempts and process
+startup do not. Launch reservations and resolved outcomes share the persisted
+event sequence, so progress remains effective across a supervisor restart,
+while subsequent crashes without progress still consume the same bounded cap.
+Scattered recovered failures can therefore complete even when lifetime launches
+exceed four. Reaching either current cap latches `exhausted`. A launch reservation
+consumed by a crash still counts. Neither progress nor an explicit resume erases
+lifetime launch or request-attempt history. Retryable network failures and
+408/425/429/5xx never become misses.
 
 | Exit | Outcome / unattended behavior |
 | --- | --- |
@@ -152,7 +160,7 @@ attempt, use an **explicit** resume action with the original frozen options:
   --delay 4 --timeout 30 --backoff 4 --max-attempts 4 --max-restarts 3
 ```
 
-`resume` makes no requests. It resets unresolved attempt/restart budgets, records
+`resume` makes no requests. It resets unresolved attempt/no-progress launch budgets, records
 an `operator_resume` event and preserves resolved articles/misses and historical
 events. It refuses an active writer or supervisor. Then deliberately launch the
 same reviewed `supervise` command again. The supervisor never passes `resume` to
@@ -171,8 +179,13 @@ the possible all-miss case; it never claims all upstream articles were acquired.
 `request_attempts` counts historical durable attempt reservations, including
 interrupted requests; it cannot prove that every reserved request reached upstream.
 `current_attempt_budget_used` sums current per-target attempt counters, and
-`retry` reports the next unresolved target's attempts/deadline and child launch
-budget. Elapsed time includes interruptions. ETA is `null` until at least two
+`retry` reports the next unresolved target's attempts/deadline.
+`retry.supervisor_launches` and `supervisor_restarts` are lifetime counters;
+`retry.no_progress_launches` is the current launch budget used, bounded by
+`retry.max_no_progress_launches` (`max_restarts + 1`). A resolved target resets
+only that current launch budget, never per-target attempts or historical counts.
+The structured log includes the same retry and attempt counters as status.
+Elapsed time includes interruptions. ETA is `null` until at least two
 network targets resolve, and remains unknown for terminal errors. A supported ETA
 is an estimate from elapsed progress, not evidence of dictionary completeness.
 
@@ -190,7 +203,11 @@ COVERAGE_FILE="${TMPDIR:?}/dictionary-acquisition.coverage" "$ACQ_PY" -m pytest 
   --cov=scripts.ingest.dictionary_acquisition --cov-branch \
   --cov-report=term-missing --cov-fail-under=80
 "$ACQ_PY" -m ruff check scripts/ingest/dictionary_acquisition.py \
-  tests/test_dictionary_acquisition.py
+  scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
+  tests/test_sum20_official.py
+"$ACQ_PY" -m ruff format --check scripts/ingest/dictionary_acquisition.py \
+  scripts/wiki/sum20_official.py tests/test_dictionary_acquisition.py \
+  tests/test_sum20_official.py
 ```
 
 These author tests establish implementation evidence. The driver owns independent
