@@ -1,8 +1,7 @@
 """The activity report (issue #8889 r5 §A2–A3; header comment 5855658208 §4).
 
 Volume, variety and correctness are protected at module grain, not by a
-per-lesson numeric floor (none is calibrated yet — the plan schema's own
-``not_checked: lesson_activity_minimums_not_calibrated`` stands). Instead a
+per-lesson numeric floor. Counts describe the lesson's content; a
 deterministic report is produced at three build stages, each reporting only
 what that stage can know:
 

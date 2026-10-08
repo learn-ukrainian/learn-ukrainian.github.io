@@ -79,9 +79,7 @@ lessons:
     # closes_with_recap: true              # only on a last `teach` lesson that closes the module (rule 1b)
     job: "One sentence: what the learner can do after this lesson that they could not before."
     rationale: "Why here, why in this order; what English speakers get wrong."   # replaces wiki prose
-    word_target: <n>                        # minimum, per lesson (R-04). NOT v1's 1,200, which was a
-                                            # whole module; lesson-grain values are calibrated from
-                                            # the first built pilot, per level, then fixed in config
+    # word_target: <n>                    # optional deprecated legacy metadata; ignored by all gates
     inventory:
       phonetics: { letters: [А, О, У], sounds: [] }   # optional block; A1 letter modules only
       grammar:                              # named points; ids are stable within the level (§2a)
@@ -166,7 +164,7 @@ Rules the validator enforces (all deterministic):
    digit quantities are not parsed and are reported as not checked (§2a).
    Broader "does the title describe the job" is judged in the cross-family plan review.
 6. Every `teach` step has at least one practice activity; activity types are in the level's
-   allowlist; inline/workbook counts meet the per-lesson minimums (uncalibrated today — §2a).
+   allowlist; planned practice linkage and workbook presence are checked without count quotas.
 7. No Ukrainian word form, stress or morphology appears in a plan except as a reference to a pack
    word record; every `forms` tag cited in a lesson must exist in that word record.
 
@@ -249,9 +247,9 @@ passes silently and never invents a value.
 - **`minutes` is not a plan field.** Decision 7.3 stands: it is computed. Until the constants it
   needs exist (reading speed, per-type activity time), it is not computed either, and the
   validator reports `not_checked: minutes_constants_undefined`. A `minutes` key in a plan fails.
-- **`word_target`** is a required positive integer per lesson. Its calibrated per-level minimum
-  does not exist until the first pilot is built; until then the validator checks presence and type
-  and reports `not_checked: word_target_not_calibrated`.
+- **`word_target`** is optional deprecated legacy metadata. If present, it is a positive integer;
+  it has no default and is ignored by all gates, not a minimum. Lessons are sized by job and
+  content, using about 45 minutes of total learner work as guidance, never a quota.
 - **Structured activity declarations (#9541, decision #9540).** The schema gives optional shape,
   just as for `error_refs`; the validator owns requiredness. Presence, including `[]`, is authoritative
   for that field. `focus` remains writer/reviewer guidance and cannot override a declaration; gates
@@ -285,9 +283,8 @@ passes silently and never invents a value.
     expose declared fields as binding constraints only when defined; undeclared-plan prompts retain
     identical bytes. These checks prove the plan; verbatim option rendering and automated comparison
     of the draft with its plan are a separate follow-up owned by the curriculum-upgrade driver.
-- **Activity count minimums** at lesson grain are uncalibrated (§4): reported as
-  `not_checked: lesson_activity_minimums_not_calibrated`. The type allowlist is the set of
-  definitions in `schemas/activities-<level>.schema.json`, read at run time.
+- **Activity counts** are descriptive, with no numeric lesson quota. The type allowlist is the
+  set of definitions in `schemas/activities-<level>.schema.json`, read at run time.
 - **A1 workbook presence (#8889 §A1):** every lesson except a recap has at least one activity with
   `placement: workbook`. The recap keeps the R-03 / A1 arc D4 shape below and does not gain a
   second exercise set. This is a presence rule, not a numeric per-lesson floor.
@@ -350,8 +347,8 @@ coverage; the rendered report counts workbook tasks actually rendered and playab
 reports help the reviewer judge variety and volume; a type count by itself is not variety.
 For a mapped v1 module, show v1 workbook activities and response opportunities beside the
 fresh totals. A reduction needs a stated reason in the plan review; it is not an automatic gate.
-No numeric per-lesson minimum is set before the pilot's observed workload and objective-coverage
-review (§2a; #8889 §A4).
+No numeric word, activity, item or time quota applies. The reviewer judges objective coverage
+and job adequacy; about 45 minutes of total learner work is guidance (R-01/R-04).
 
 The draft report's response unit is fixed by type; the plan report cannot count the units that
 depend on draft items. This table describes the A1 types and the shared counting rule where
@@ -541,7 +538,7 @@ the only place built content is an input, and only within the module being built
    packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
    id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
    lists the modules whose plans cite the changed records so they can be re-verified.
-3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
+3. **`minutes` is kept and computed**, not typed: reading time from the actual content, a per-type time
    per activity, and the video durations from the pack. The arc review uses it to spot overloaded
    lessons; no gate fails on it.
 4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and

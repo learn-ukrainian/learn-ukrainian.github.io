@@ -132,15 +132,6 @@ def _always_not_checked(report: Report) -> None:
         Outcome(codes.MINUTES_CONSTANTS_UNDEFINED, codes.DESCRIPTIONS[codes.MINUTES_CONSTANTS_UNDEFINED])
     )
     report.not_checked.append(
-        Outcome(codes.WORD_TARGET_NOT_CALIBRATED, codes.DESCRIPTIONS[codes.WORD_TARGET_NOT_CALIBRATED])
-    )
-    report.not_checked.append(
-        Outcome(
-            codes.LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED,
-            codes.DESCRIPTIONS[codes.LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED],
-        )
-    )
-    report.not_checked.append(
         Outcome(
             codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
             codes.DESCRIPTIONS[codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY],

@@ -172,9 +172,9 @@ def test_A5_deduplicate_formula_and_taught_lexical(api, tmp_path):
 def test_A6_count_rendered_gloss_identically(api, tmp_path):
     word, _, _ = bind(formula(), api, tmp_path)
     expanded = {"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-004}}"}]}
-    counted = runner.check_6_count(expanded, 0, {"words": [word]})["details"]
+    counted = runner.check_6_count(expanded, {"words": [word]})["details"]
     lexical = {**LEXICAL[0], "id": "W-004", "gloss_en": "good day"}
-    lexical_count = runner.check_6_count(expanded, 0, {"words": [lexical]})["details"]
+    lexical_count = runner.check_6_count(expanded, {"words": [lexical]})["details"]
     assert counted["ukrainian_tokens"] == 2
     assert counted["urok_tokens"] - 2 == lexical_count["urok_tokens"] - 1 == 2
     assert (

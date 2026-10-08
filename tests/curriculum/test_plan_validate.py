@@ -47,8 +47,6 @@ SLUG = "mod-one"
 
 NOT_CHECKED = {
     codes.MINUTES_CONSTANTS_UNDEFINED,
-    codes.WORD_TARGET_NOT_CALIBRATED,
-    codes.LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED,
     codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
     codes.TITLE_QUANTITIES_NOT_PARSED,
 }
@@ -1111,6 +1109,43 @@ def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> Non
     assert "the §6 gate" in payload["validator"]
     assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
     assert payload["waivers"] == []
+
+
+def _strict_quota_world(root: Path, plan: dict, pack: dict, words: dict) -> World:
+    from tests.curriculum.test_plan_validate_cross import _git
+
+    world = write_world(root, plan, pack, words)
+    for args in (("init", "-q", "-b", "main"), ("add", "-A"), ("commit", "-q", "-m", "baseline"),
+                 ("update-ref", "refs/remotes/origin/main", "HEAD")):
+        result = _git(root, *args)
+        assert result.returncode == 0, result.stderr
+    return world
+
+
+@pytest.mark.parametrize("target", [None, 55000])
+def test_complete_plan_has_no_word_quota(tmp_path: Path, target: int | None) -> None:
+    plan, pack, words = build_base()
+    for lesson in plan["lessons"]:
+        if target is None:
+            lesson.pop("word_target")
+        else:
+            lesson["word_target"] = target
+    world = _strict_quota_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
+    assert report.ok, report.render_text()
+    assert {item.code for item in report.not_checked} == NOT_CHECKED
+
+
+def test_quota_free_plan_still_requires_teaching_practice(tmp_path: Path) -> None:
+    plan, pack, words = build_base()
+    for lesson in plan["lessons"]:
+        lesson.pop("word_target")
+    step = next(step for step in plan["lessons"][0]["steps"] if step["kind"] == "teach")
+    step["practice"] = []
+    world = _strict_quota_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, strict=True)
+    assert not report.ok
+    assert any("practice" in item.code for item in report.failures), report.render_text()
 
 
 def test_render_text_prints_activity_report_per_lesson_not_only_module(tmp_path: Path) -> None:
