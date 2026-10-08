@@ -56,6 +56,7 @@ import random
 import re
 import sqlite3
 import sys
+import tempfile
 import time
 import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
@@ -1762,6 +1763,46 @@ def _new_slovnyk_cache(lemma: str, lookup_word: str) -> dict[str, Any]:
     }
 
 
+def _atomic_slovnyk_json(path: Path, value: Any) -> None:
+    """Publish fsynced JSON, preserving existing bytes until atomic replacement.
+
+    Follow dictionary_acquisition's file/directory fsync ordering; unique sibling
+    temporary files also protect tolerant enrichment callers from temp collisions.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+            temporary = Path(handle.name)
+            handle.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        descriptor = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
+def _resolved_slovnyk_lookup(cache: dict[str, Any], slug: str, lookup_word: str) -> bool:
+    """A positive row or identity-bound observed 404 resolves a current lookup."""
+    row = cache["lookups"].get(slug)
+    if _valid_slovnyk_positive(row, slug, lookup_word):
+        return True
+    misses = cache.get("not_found")
+    return (
+        bool(lookup_word)
+        and slug in cache["lookups"]
+        and row is None
+        and isinstance(misses, dict)
+        and misses.get(slug) == {"http_status": 404, "lookup_word": lookup_word}
+    )
+
+
 def _slovnyk_cache(
     lemma: str, *, outcomes: dict[str, _SlovnykOutcome] | None = None, slugs: Sequence[str] | None = None
 ) -> dict[str, Any]:
@@ -1806,8 +1847,7 @@ def _slovnyk_cache(
         changed = True
 
     if changed:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        _atomic_slovnyk_json(path, cache)
     return cache
 
 
@@ -1830,9 +1870,8 @@ def _reusable_slovnyk_cache(cache: Any, lemma: str, lookup_word: str) -> bool:
 def _strict_slovnyk_cache(lemma: str, outcomes: dict[str, _SlovnykOutcome], slugs: Sequence[str]) -> dict[str, Any]:
     """Persist strict positives/misses per result; preserve partial work on stops.
 
-    Legacy nulls are unproven and refetched. Offline/empty targets stay pending.
-    Atomic replacement prevents interrupted JSON writes, but this foreground
-    shared-cache tool requires a single writer (the companion provides isolation).
+    Legacy nulls are unproven and refetched. Observed 404s carry identity-bound
+    evidence; offline/empty targets stay pending. The mirror holds its target lock.
     """
     lookup_word = _slovnyk_lookup_word(lemma)
     path = _slovnyk_cache_path(lemma)
@@ -1841,17 +1880,20 @@ def _strict_slovnyk_cache(lemma: str, outcomes: dict[str, _SlovnykOutcome], slug
         cache = _new_slovnyk_cache(lemma, lookup_word)
     for slug in slugs:
         row = cache["lookups"].get(slug)
-        if _valid_slovnyk_positive(row, slug, lookup_word):
+        if _resolved_slovnyk_lookup(cache, slug, lookup_word):
             outcomes[slug] = _SlovnykOutcome("reused", row)
             continue
         outcome = _fetch_slovnyk_outcome(lemma, lookup_word, slug)
         if outcome.status in {"positive", "not_found"}:
             cache["lookups"][slug] = outcome.row
+            if not isinstance(cache.get("not_found"), dict):
+                cache["not_found"] = {}
+            if outcome.status == "not_found":
+                cache["not_found"][slug] = {"http_status": 404, "lookup_word": lookup_word}
+            else:
+                cache["not_found"].pop(slug, None)
             try:
-                path.parent.mkdir(parents=True, exist_ok=True)
-                temporary = path.with_suffix(".json.tmp")
-                temporary.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                os.replace(temporary, path)
+                _atomic_slovnyk_json(path, cache)
                 if _load_current_slovnyk_cache_file(path) != cache:
                     raise OSError("cache persistence mismatch")
             except OSError:
@@ -1887,9 +1929,10 @@ def _cache_store_lookup(lemma: str, cache: dict[str, Any], slug: str, row: dict[
     if not isinstance(lookups, dict):
         return
     lookups[slug] = row
+    if isinstance(cache.get("not_found"), dict):
+        cache["not_found"].pop(slug, None)
     path = _slovnyk_cache_path(lemma)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _atomic_slovnyk_json(path, cache)
 
 
 @lru_cache(maxsize=4096)
