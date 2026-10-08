@@ -4,9 +4,10 @@
 
 The operator's standing expectations, consolidated 2026-07-05 (user-confirmed list + standing
 orders; fleet-reviewed by codex · agy · cursor · pool · deepseek, 1 round). Served first in
-`/api/rules` and listed in the offline fallback, so every agent that follows the cold-start
-sequence loads this contract. When any other instruction seems to conflict, these are the
-tie-breakers.
+`/api/rules?scope=full` and listed in the offline fallback. The binding digests in `AGENTS.md`
+and `CLAUDE.md` point to this contract; `task-scoped-reading.md` selects the sources to load
+for cold-start and task-specific work. When any other instruction seems to conflict, these
+are the tie-breakers.
 
 ## The contract
 

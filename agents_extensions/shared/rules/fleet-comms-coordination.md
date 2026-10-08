@@ -6,7 +6,8 @@
 **Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Kimi, Cursor, wrappers; AGY/Gemini only as a standalone TUI seat, never an epic-driver seat) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
-served in `GET /api/rules`. Launchers inject a short pointer; the **`drive-epic` skill**
+served in `GET /api/rules?scope=task:fleet-comms`, `scope=task:driver`, or `scope=full`.
+Launchers inject a short pointer; the **`drive-epic` skill**
 teaches the full method loop. Neither may invent a competing design or silently flip
 cutovers.
 
@@ -17,11 +18,11 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 
 | Layer | Role | Where |
 | --- | --- | --- |
-| **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules` + offline path |
+| **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules?scope=task:fleet-comms` (or `scope=task:driver` / `scope=full`) + offline path |
 | **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
-| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
+| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules?scope=task:routing` (or `scope=full`) model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
 | **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
 **Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps/modes are
@@ -146,7 +147,8 @@ work.
 
 Every epic driver session (any harness) MUST:
 
-1. Obey this rule (via `/api/rules` or offline fallback of this file).
+1. Obey this rule (via `/api/rules?scope=task:fleet-comms`, `scope=task:driver`,
+   `scope=full`, or offline fallback of this file).
 2. Run `plane-status` before assuming message-plane availability.
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
@@ -182,7 +184,7 @@ Every epic driver session (any harness) MUST:
 - Gemini/AGY (Flash) is not an epic-driver seat (operator decision 2026-10-03, #9584).
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
   spends the cross-family review-of-record seat). **Live policy** is still
-  `model_catalog.orchestrator_seats` + `/api/rules`.
+  `model_catalog.orchestrator_seats` + `/api/rules?scope=task:routing` (or `scope=full`).
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added
   2026-07-23 after HydrationCapsuleV1 changed the rollover-cost calculus). Its launcher
   fails closed before lease acquisition on ambiguous, already-resumed, or native-app
@@ -262,7 +264,8 @@ are in the onboarding contract.
 ## Offline fallback path
 
 `agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).
-Served in `GET /api/rules` (`scripts/api/rules_router.py` `RULE_SOURCES`).
+Served in `GET /api/rules?scope=task:fleet-comms` or `scope=task:driver`, and in
+`GET /api/rules?scope=full` (`scripts/api/rules_router.py` `RULE_SOURCES`).
 Onboarding contract (not served as a rules blob; linked from this rule):
 `docs/runbooks/agent-seat-onboarding.md`.
 
