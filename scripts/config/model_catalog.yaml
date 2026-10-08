@@ -578,14 +578,17 @@ models:
     roles: [mechanical_only, routine_mechanical, mechanical_classification, readonly_recon]
     transports: [native_claude]
     strengths: [high_volume_classification, extraction, routing, low_latency, low_cost, readonly_search]
-    weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver, no_bounded_implementation]
+    weaknesses: [no_ukrainian_content, no_formal_review, no_design_or_approval, no_security_code, no_driver]
     notes: >-
       #9996: routine lockfile, pointer and smoke work; mechanical TypeSafe/Jev,
       CI failure and issue/DoR classification; read-only recon alongside Luna.
       Mechanical-only admission requires a matching task family, narrow safe
-      owned paths and non-Ukrainian inputs. No bounded code, even with an envelope:
-      the cited workload evidence qualifies classification/extraction/routing,
-      not fleet code authoring. Existing Luna/Flash envelope admission stays intact.
+      owned paths and non-Ukrainian inputs. #10083: the named Claude junior coder
+      requires exact owned paths, objective acceptance criteria, a scope ceiling
+      and a completed Opus 5.5 advisory envelope; escalate architectural,
+      security-sensitive or cross-module work. No Ukrainian text/content/review,
+      review of record, security-sensitive code or driver seats. Existing
+      mechanical-only dispatch and Luna/Flash envelope admission stay intact.
     sources:
       - https://platform.claude.com/docs/en/models/overview
       - https://platform.claude.com/docs/en/models/haiku-5-5/overview

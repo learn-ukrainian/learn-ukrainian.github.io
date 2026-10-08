@@ -1,4 +1,6 @@
 {
+  "model": "claude-sonnet-5-5",
+  "advisorModel": "claude-opus-5-5",
   "permissions": {
     "allow": [
       "Bash(git fetch *)",

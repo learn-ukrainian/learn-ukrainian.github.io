@@ -61,10 +61,16 @@ UTF-8 without Cyrillic. Never route Ukrainian authoring/review/content, formal
 review of record, design/advice/designated approval, security-sensitive code or
 driver seats to Haiku. Claude's Ukrainian seat stays Opus 5.5.
 
-Haiku is **not** a bounded implementation worker, even with a Sol envelope:
-Anthropic's cited guidance qualifies classification/extraction/routing, not this
-fleet's code authoring. Luna/Flash bounded admission and the Sol envelope remain
-unchanged. Broader investigation stays with those existing routes. Haiku is not
+Haiku also serves as a **bounded junior coder** (#10083), mirroring Luna's
+scope discipline: exact owned paths, objective acceptance criteria, a scope
+ceiling, and a completed Opus 5.5 advisory envelope bound to the task before
+implementation. Escalate anything architectural, security-sensitive or
+cross-module to the accountable driver; do not broaden the packet. Preserve
+unrelated and user changes, run proportionate validation, and return evidence,
+risks and blockers. Never merge or claim final disposition. The named Claude
+junior-coder agent carries this contract; existing mechanical-only dispatch
+admission and Luna/Flash bounded admission with the Sol envelope remain unchanged.
+Broader investigation stays with those existing routes. Haiku is not
 a blanket budget substitute for stronger seats. Its API base prices are
 $0.10/$0.50 per MTok input/output and $0.01 cache read through 100,000 prompt
 tokens; above that, $0.50/$2.50 and $0.05 cache read. Native CLI subscription
@@ -155,11 +161,21 @@ other's approval completes it; a proposal by any other agent (Gemini, Grok, Kimi
 needs both; if they disagree, the operator decides. Fable and the former Astra seat hold no advisory, approval, review or critique
 role and are not a last resort for any of them.
 
-**Claude default model: Opus 5.5 (operator directive 2026-09-22):**
+**Claude interactive default: Sonnet 5.5 with Opus 5.5 advisor (#10083):**
 
-- **Default Claude model and orchestrator seat**: **`claude-opus-5-5` (Opus 5.5)**. `start-claude-driver.sh`
+- **Interactive default**: settings `model: claude-sonnet-5-5` and
+  `advisorModel: claude-opus-5-5`, per [model configuration](https://code.claude.com/docs/en/model-config)
+  and [advisor configuration](https://code.claude.com/docs/en/advisor).
+  `start-claude.sh` preserves an explicit or last TUI selection. The unnamed
+  helper inherits Sonnet; no global Haiku subagent override is set because
+  built-in helper tasks include code and other work beyond read-only search.
+  Curriculum orchestrators and writers pin Opus 5.5; `infra-orchestrator` pins Sonnet 5.5.
+- **Launcher driver seat**: `start-claude-driver.sh`
   pins `claude-opus-5-5[1m]` @ `high` unless `--model` / `--effort` (or `LAUNCHER_MODEL` /
-  `LAUNCHER_EFFORT`) override it; interactive `start-claude.sh` keeps the last TUI selection. Opus 5.5
+  `LAUNCHER_EFFORT`) override it. It exports `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`,
+  so the configured `advisorModel` is ignored; this switch is absent from
+  settings `env` and `start-claude.sh`. The junior coder's Opus advisory envelope
+  is separate. Codex drivers keep `gpt-6.1-sol`. Opus 5.5
   also takes advanced non-linguistic Claude-lane work (architecture, hard coding, deep code review).
 - **Review, critique, design input and Ukrainian work**: Opus 5.5 / Sol 6.1 (#9583).
   Orchestration alone never confers approval authority.
