@@ -95,6 +95,13 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
     ev_dir = root / "curriculum" / "l2-uk-en" / "evidence" / "a1"
     ev_dir.mkdir(parents=True, exist_ok=True)
 
+    # Absence must be known from both git's index and HEAD, just as in production.
+    subprocess.run(["git", "init", "-q", str(root)], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(root), "-c", "user.name=Fixture", "-c", "user.email=fixture@example.test",
+         "commit", "-q", "--allow-empty", "-m", "fixture"], check=True, capture_output=True, timeout=30,
+    )
+
     # 1. Plan v2
     plan_data = {
         "plan_schema": 2,
@@ -908,3 +915,69 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
 
     assert echoed == reviewed == manifest["learner_state"]["sha256"]
     assert echoed != hashlib.sha256(lock.yaml_bytes(state.to_dict())).hexdigest()  # not the YAML-bytes hash
+
+
+@pytest.mark.parametrize("caller", ["render-prompt", "write", "build_module"])
+@pytest.mark.parametrize("lesson_n", [1, 2])
+def test_a1_reference_all_production_callers(tmp_path, monkeypatch, caller, lesson_n):
+    paths = _build_synthetic_tree(tmp_path)
+    source = tmp_path / "curriculum/l2-uk-en/a1-v1/synthetic-mod/module.md"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"June reference: {{ literal }} TODO: value: None W-999 Lesson 99\n````\n")
+    # A lesson slug also has an archive; it must never be selected.
+    other = source.parent.parent / f"lesson-{lesson_n}" / "module.md"
+    other.parent.mkdir()
+    other.write_text("WRONG LESSON SLUG")
+    cards = tmp_path / "docs/style-cards"
+    cards.mkdir(parents=True)
+    (cards / "a1.md").write_bytes((REPO_ROOT / "docs/style-cards/a1.md").read_bytes())
+    state_dir = paths["state_dir"] / "synthetic-mod"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    if lesson_n == 2:
+        page = tmp_path / "site/src/content/docs/a1/synthetic-mod/1.mdx"
+        page.parent.mkdir(parents=True)
+        page.write_text("# Built lesson 1\n")
+        (state_dir / "lesson-1.gates.yaml").write_text("passed: true\n")
+        manifest_path = state_dir / "lesson-1.manifest.yaml"
+        manifest_path.write_text(yaml.safe_dump({"inputs": {"lesson": {"sha256": hashlib.sha256(page.read_bytes()).hexdigest()}}}))
+        manifest_path.with_suffix(".sha256").write_text(hashlib.sha256(manifest_path.read_bytes()).hexdigest() + "\n")
+    captured = []
+
+    def dispatch(**kwargs):
+        captured.append(kwargs["prompt_file"].read_text())
+        assert kwargs["preflight_result"].passed
+        assert kwargs["prompt_sha256"] == hashlib.sha256(captured[-1].encode()).hexdigest()
+        return {"draft_file": "test prompt boundary"}
+
+    monkeypatch.setattr("scripts.build.fresh.cli.dispatch_writer", dispatch)
+    output = tmp_path / "rendered.md"
+    if caller == "build_module":
+        result = build_module("a1", "synthetic-mod", repo_root=tmp_path, lesson_n=lesson_n)
+        assert result["lessons"][0]["reason"] == "writer_seat_required", result
+        output = state_dir / f"lesson-{lesson_n}.prompt.md"
+    else:
+        args = [caller, "a1", "synthetic-mod", "--lesson", str(lesson_n), "--repo-root", str(tmp_path)]
+        args += ["-o", str(output)] if caller == "render-prompt" else ["--writer", "codex"]
+        assert main(args) == 0
+        if caller == "write":
+            output = state_dir / f"lesson-{lesson_n}.prompt.md"
+            assert captured == [output.read_text()]
+    prompt = output.read_text()
+    assert "WRONG LESSON SLUG" not in prompt
+    assert "Source: `curriculum/l2-uk-en/a1-v1/synthetic-mod/module.md`" in prompt
+    assert hashlib.sha256(source.read_bytes()).hexdigest() in prompt
+    assert source.read_text() in prompt
+    assert prompt.endswith("<!-- END A1_REFERENCE -->\n")
+
+
+@pytest.mark.parametrize("field,value", [("level", "a2"), ("slug", "wrong-module")])
+def test_a1_reference_refuses_wrong_plan_identity(tmp_path, monkeypatch, field, value):
+    from scripts.build.fresh.cli import _load_lesson_data
+    from scripts.curriculum.validate.loader import load_plan
+
+    paths = _build_synthetic_tree(tmp_path)
+    plan = load_plan(paths["plan"])
+    plan[field] = value
+    monkeypatch.setattr("scripts.build.fresh.cli.load_plan", lambda _: plan)
+    with pytest.raises(ValueError, match="plan_module_identity_mismatch"):
+        _load_lesson_data("a1", "synthetic-mod", 1, repo_root=tmp_path)

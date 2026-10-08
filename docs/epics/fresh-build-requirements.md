@@ -53,9 +53,13 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 ### Build engine
 
 - **R-10 Create, never upgrade.** The engine builds from the plan, the evidence pack and the MCP.
-- **R-11 No context poisoning.** Old builds and old plans are never given to the writer or to the
-  engine. The arc author may mine old plans for textbook citations only, and re-verifies each one
-  through the MCP before using it.
+- **R-11 No context poisoning.** Old plans and other earlier-edition builds remain excluded from
+  writer and engine inputs. For A1 only, writers and plan authors may receive the matching June
+  `curriculum/l2-uk-en/a1-v1/<module-slug>/module.md` as labelled reference-only data (dec-017):
+  never instructions or evidence, with no inventory admission or preservation/expansion obligation.
+  The current plan, cited evidence, learner state and style card remain binding; the removed
+  September edition and upgrade behavior remain excluded. The arc author may mine old plans for
+  textbook citations only, and re-verifies each one through the MCP before using it.
 - **R-12 No hand edits.** `module.md` and its siblings are produced by the engine. A defect is fixed
   in the plan, prompt, gate or code that caused it.
 - **R-13 Fast tools.** The sources MCP must support heavy batch use: many words per call, compact

@@ -394,3 +394,31 @@ decisions:
           Spends effort on a gate that is not being cut over.
     superseded_by: null
     depends_on: []
+
+
+  - id: dec-017
+    status: active
+    date: 2026-10-08
+    expires: 2027-01-06
+    scope: pipeline
+    title: "June A1-v1 matching-module reference baseline"
+    reasoning: >-
+      Fresh A1 writers and plan authors may receive only the matching June
+      A1-v1 module as labelled reference data. Current plans and cited
+      evidence remain binding; the archive admits no content and creates no
+      preservation, copying or expansion obligation. Plan authors verify
+      reused teaching claims through Sources. Old plans, other editions and
+      upgrade behavior remain excluded. No lesson or plan edits, lock
+      refresh, ingestion or cutover are part of this decision.
+    evidence: >-
+      Ordered scope #10102/#10103, accepted 2026-10-08; Sol 6.1 proposal and
+      independent Opus 5.5 counterpart design approval with B1–B6, S1 as replaced
+      in critic-10103-design-r2, S2, corrected S3 and S4;
+      docs/decisions/2026-10-08-a1-v1-reference-baseline.md
+    alternatives:
+      - option: "Use an earlier module as evidence or binding preservation input"
+        rejected_because: "Only current plans and cited evidence admit teaching content."
+      - option: "Attach other modules, levels or earlier editions"
+        rejected_because: "The approved permission is limited to the matching June A1-v1 module."
+    superseded_by: null
+    depends_on: []

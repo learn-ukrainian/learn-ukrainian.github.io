@@ -147,7 +147,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-plan-schema.md
     line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
-  doc_sha256: d49181ae4f5f2711312c0385e342e0bb0e3cb73e66a3b1cc5cf472a55af06af2
+  doc_sha256: 2796cf513714e4181a409f2e94a823fb85e70a44a948b91b4b444f48e53c98f0
   section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
   text: |
     ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
@@ -180,7 +180,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-writer-contract.md
     line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
-  doc_sha256: c90a87e53d3e30c18c22b055b8cb13941e323a1fbc0924c6975715b552f8b802
+  doc_sha256: 4d3d1b1bc48f2accff0f86ef00246072d94c34e6a6629bf1dba35d1473d5424f
   section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
   text: |+
     ## Decisions of the operator, 2026-09-21 (unchanged in r3)

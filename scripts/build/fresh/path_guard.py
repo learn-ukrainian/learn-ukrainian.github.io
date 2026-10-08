@@ -2,10 +2,75 @@
 
 from __future__ import annotations
 
+import os
 import re
+import stat
+import subprocess
 from pathlib import Path
 
+from scripts.level_config import PREVIOUS_EDITIONS
+
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+
+
+def load_a1_reference(repo_root: Path, level: str, slug: str) -> tuple[str, bytes] | None:
+    """Read only the mapped matching A1 module, without following any symlink.
+
+    Missing working-tree bytes are optional only when both the index and HEAD
+    confirm absence. Directory descriptors keep component checks bound to the
+    directories opened; a substituted symlink cannot redirect the read.
+    """
+    if level != "a1":
+        return None
+    validate_module(level, slug)
+    edition = PREVIOUS_EDITIONS.get(level)
+    if edition is None:
+        return None
+    if edition != "a1-v1":
+        raise ValueError("a1_reference_invalid_edition")
+    relative = f"curriculum/l2-uk-en/{edition}/{slug}/module.md"
+    root = repo_root.absolute()
+    descriptor = os.open("/", os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for component in (*root.parts[1:], *Path(relative).parts[:-1]):
+            info = os.lstat(component, dir_fd=descriptor)
+            if not stat.S_ISDIR(info.st_mode):
+                raise ValueError(f"a1_reference_unsafe_component: {relative}")
+            child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        info = os.lstat("module.md", dir_fd=descriptor)
+        if not stat.S_ISREG(info.st_mode) or not info.st_mode & 0o444:
+            raise ValueError(f"a1_reference_not_readable_regular_file: {relative}")
+        leaf = os.open("module.md", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=descriptor)
+        with os.fdopen(leaf, "rb") as source:
+            if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+                raise ValueError(f"a1_reference_not_regular_file: {relative}")
+            data = source.read()
+    except FileNotFoundError as error:
+        tracked = False
+        for command in (["ls-files", "--", relative], ["ls-tree", "--name-only", "HEAD", "--", relative]):
+            try:
+                result = subprocess.run(
+                    ["git", "-C", str(root), *command], capture_output=True, text=True, timeout=30, check=False
+                )
+            except (OSError, subprocess.TimeoutExpired) as git_error:
+                raise ValueError(f"a1_reference_git_unknown: {relative}") from git_error
+            if result.returncode:
+                raise ValueError(f"a1_reference_git_unknown: {relative}") from error
+            tracked = tracked or bool(result.stdout.strip())
+        if tracked:
+            raise ValueError(f"a1_reference_tracked_missing: {relative}") from error
+        return None
+    finally:
+        os.close(descriptor)
+    if not data:
+        raise ValueError(f"a1_reference_empty: {relative}")
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ValueError(f"a1_reference_invalid_utf8: {relative}") from error
+    return relative, data
 
 
 def public_diagnostic(message: str, repo_root: Path) -> str:

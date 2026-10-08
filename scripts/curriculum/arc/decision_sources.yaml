@@ -18,6 +18,12 @@ levels:
       accepted_evidence:
         doc: docs/epics/fresh-build-a1-arc.md
         line: "## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)"
+    - doc: docs/decisions/2026-10-08-a1-v1-reference-baseline.md
+      heading: "## Decision"
+      accepted: "2026-10-08"
+      accepted_evidence:
+        doc: docs/decisions/2026-10-08-a1-v1-reference-baseline.md
+        line: "- **Accepted:** 2026-10-08 (ordered scope #10102/#10103; Sol 6.1 proposal and Opus 5.5 counterpart design approval)."
   a2:
     - doc: docs/epics/fresh-build-a2-arc.md
       heading: "## 2. Decisions"

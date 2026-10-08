@@ -148,6 +148,7 @@ def build_module(
                 else []
             )
             state_sources = dict(
+                repo_root=repo_root,
                 word_store=words, grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", level)
             )
             common = dict(
@@ -180,6 +181,8 @@ def build_module(
                 card_path,
                 is_recap=entry.get("kind") == "recap",
                 built_lessons=built,
+                level=level,
+                slug=slug,
                 learner_state=learner,
                 **state_sources,
             )

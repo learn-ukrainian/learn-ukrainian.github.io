@@ -6,6 +6,7 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 
 | ID | Date | Expires | Scope | Status | Title |
 | ---- | ------ | --------- | ------- | -------- | ------- |
+| dec-017 | 2026-10-08 | 2027-01-06 | pipeline | active | June A1-v1 matching-module reference baseline |
 | dec-016 | 2026-10-01 | 2026-12-30 | pipeline | active | Layer B entailment gate shelved; no cutover |
 | dec-015 | 2026-09-30 | 2026-12-29 | pipeline | active | Evidence pack replaces wiki as LLM research input for core rebuild |
 | dec-014 | 2026-07-28 | 2026-10-26 | atlas-lane-closeout | active | Lane-owned green PRs require same-day formal review and merge arming |

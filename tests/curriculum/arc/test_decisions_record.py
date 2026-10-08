@@ -76,11 +76,12 @@ def test_every_level_carries_its_arc_sections_and_the_shared_ones() -> None:
     headings = [s["heading"] for s in a1["sources"]]
     assert headings[0] == "## 2. Decisions"
     assert headings[1].startswith("## 6. Decisions on the six open questions")
-    assert len(headings) == 5
+    assert len(headings) == 6
+    assert headings[2] == "## Decision"
     for level in ("a2", "b1", "b2"):
         record = yaml.safe_load(_committed(level).read_text(encoding="utf-8"))
         assert record["sources"][1]["heading"].startswith("## 8. Decisions on the five open questions")
-        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][2:]]
+        assert [s["doc"] for s in record["sources"][2:]] == [s["doc"] for s in a1["sources"][3:]]
 
 
 # ---- section boundaries on fixture documents ------------------------------------------
@@ -241,3 +242,23 @@ def test_generated_output_validates_against_the_schema(tmp_path: Path) -> None:
         Draft202012Validator(schema).validate(record)
         record["sources"][0]["extra"] = 1
         assert not Draft202012Validator(schema).is_valid(record)
+
+
+def test_a1_reference_decision_is_level_scoped_and_registered() -> None:
+    doc = "docs/decisions/2026-10-08-a1-v1-reference-baseline.md"
+    sources = _real_sources()
+    entry = next(e for e in sources["levels"]["a1"] if e["doc"] == doc)
+    assert entry["heading"] == "## Decision"
+    assert entry["accepted"] == "2026-10-08"
+    assert "Sol 6.1" in entry["accepted_evidence"]["line"]
+    assert "Opus 5.5" in entry["accepted_evidence"]["line"]
+    assert all(e["doc"] != doc for e in sources["shared"])
+    for level in ("a2", "b1", "b2"):
+        assert all(e["doc"] != doc for e in sources["levels"][level])
+    journal = yaml.safe_load((REPO_ROOT / "docs/decisions/decisions.yaml").read_text())
+    entries = [e for e in journal["decisions"] if e["id"] == "dec-017"]
+    assert len(entries) == 1
+    assert entries[0]["status"] == "active"
+    assert str(entries[0]["date"]) == entry["accepted"]
+    assert str(entries[0]["expires"]) == "2027-01-06"
+    assert "| dec-017 | 2026-10-08 | 2027-01-06 | pipeline | active |" in (REPO_ROOT / "docs/decisions/INDEX.md").read_text()

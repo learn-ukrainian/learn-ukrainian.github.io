@@ -528,6 +528,8 @@ def _load_lesson_data(
     if not paths["plan"].is_file():
         raise FileNotFoundError(f"Plan file not found: {paths['plan']}")
     plan_dict = load_plan(paths["plan"])
+    if plan_dict.get("level") != level or plan_dict.get("slug") != slug:
+        raise ValueError("plan_module_identity_mismatch: plan level and module slug must match the requested module")
 
     lesson_entry = next((l for l in plan_dict.get("lessons", []) if l.get("n") == lesson_n), None)
     if lesson_entry is None:
@@ -929,6 +931,7 @@ def main(argv: list[str] | None = None) -> int:
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
         # What the learner-state block renders from; the check regenerates the block from the same (#9182)
         state_sources = {
+            "repo_root": repo_root,
             "word_store": words_dict,
             "grammar_registry": grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
         }
@@ -972,6 +975,8 @@ def main(argv: list[str] | None = None) -> int:
                 card_path,
                 is_recap=True,
                 built_lessons=built,
+                level=args.level,
+                slug=args.slug,
                 learner_state=p_state,
                 **state_sources,
             )
@@ -993,7 +998,8 @@ def main(argv: list[str] | None = None) -> int:
                 **state_sources,
             )
             check_res = check_rendered_prompt(
-                rendered, lesson_entry, card_path, is_recap=False, learner_state=p_state, **state_sources
+                rendered, lesson_entry, card_path, is_recap=False, learner_state=p_state,
+                level=args.level, slug=args.slug, **state_sources
             )
 
         if not check_res.passed:
@@ -1114,6 +1120,7 @@ def main(argv: list[str] | None = None) -> int:
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
         # What the learner-state block renders from; the check regenerates the block from the same (#9182)
         state_sources = {
+            "repo_root": repo_root,
             "word_store": words_dict,
             "grammar_registry": grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
         }
@@ -1148,6 +1155,8 @@ def main(argv: list[str] | None = None) -> int:
                 card_path,
                 is_recap=True,
                 built_lessons=built,
+                level=args.level,
+                slug=args.slug,
                 learner_state=p_state,
                 **state_sources,
             )
@@ -1169,7 +1178,8 @@ def main(argv: list[str] | None = None) -> int:
                 **state_sources,
             )
             check_res = check_rendered_prompt(
-                rendered_prompt, lesson_entry, card_path, is_recap=False, learner_state=p_state, **state_sources
+                rendered_prompt, lesson_entry, card_path, is_recap=False, learner_state=p_state,
+                level=args.level, slug=args.slug, **state_sources
             )
 
         if not check_res.passed:

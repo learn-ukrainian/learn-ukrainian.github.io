@@ -506,12 +506,12 @@ form for that word; a writer held to listed forms cannot write natural Ukrainian
 
 ## 5. What the lesson writer receives (R-26)
 
-**r9:** what the writer *returns*, the style card, the resolver, the gap procedure and the verification pass are the writer contract, [`fresh-build-writer-contract.md`](fresh-build-writer-contract.md) (#8431 r3). The four inputs below are unchanged.
+**r9:** what the writer *returns*, the style card, the resolver, the gap procedure and the verification pass are the writer contract, [`fresh-build-writer-contract.md`](fresh-build-writer-contract.md) (#8431 r3). The four binding inputs below remain authoritative; dec-017 permits a matching A1-v1 reference appendix.
 
-Exactly four things: the lesson's plan entry; the evidence records that entry cites; the learner
+Four binding inputs: the lesson's plan entry; the evidence records that entry cites; the learner
 state for that position (planned state as §4 defines it, held as word-store ids) with the
 immersion rule for it; the fixed style card (ULP practices, voice,
-four tabs). Not the other lessons' plans, not the whole pack, not any earlier edition.
+four tabs). Not the other lessons' plans or the whole pack. For A1 only, the matching June `a1-v1/<module-slug>/module.md` may be appended as labelled reference-only data under dec-017; it is neither instructions nor evidence and admits no inventory or activity item. Old plans and all other earlier-edition inputs remain excluded.
 
 The recap writer additionally receives the **built** lessons `1..N−1` of the same module — this is
 the only place built content is an input, and only within the module being built.
