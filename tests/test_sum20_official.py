@@ -378,15 +378,18 @@ class _FakeSession:
         return response
 
 
-@pytest.mark.parametrize("valid_reference", [True, False])
+@pytest.mark.parametrize("article_kind", ["valid_reference", "malformed_reference", "recursive"])
 def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, valid_reference: bool
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, article_kind: str
 ) -> None:
+    valid_reference = article_kind == "valid_reference"
     db_path = tmp_path / "staging.db"
     with sqlite3.connect(db_path) as conn:
         ensure_sum20_official_schema(conn)
         conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = 35")
     source = WORDID36_HTML if valid_reference else WORDID36_HTML.replace('class="LINKTXT"', 'class="OTHER"')
+    if article_kind == "recursive":
+        source = "<article>" + "<div>" * 1200 + TARGET_ENTRY + "</div>" * 1200 + "</article>"
     session = _FakeSession([_FakeResponse(200, source)])
     requested: list[int] = []
 
@@ -400,6 +403,7 @@ def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
     assert requested == [36]
     assert counts["ok"] == int(valid_reference)
     assert counts["parse_error"] == int(not valid_reference)
+    assert counts.exit_code == (0 if valid_reference else 4)
     with sqlite3.connect(db_path) as conn:
         assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone()[0] == (
             36 if valid_reference else 35
@@ -492,9 +496,20 @@ def test_offline_query_returns_all_records_with_official_provenance(tmp_path: Pa
         assert "slovnyk.me" not in json.dumps(record, ensure_ascii=False)
 
 
-def test_ingest_keeps_transient_failures_out_of_the_negative_cache(tmp_path: Path, monkeypatch) -> None:
+@pytest.mark.parametrize(
+    "failure,exit_code",
+    [
+        (FetchOutcome("transient_error", error_text="HTTP 503", http_status=503), 1),
+        (FetchOutcome("transient_error", error_text="HTTP 401", http_status=401, terminal=True), 3),
+        (FetchOutcome("transient_error", error_text="HTTP 403", http_status=403, terminal=True), 3),
+        (FetchOutcome("parse_error", error_text="unusable article", http_status=200, terminal=True), 4),
+    ],
+)
+def test_ingest_keeps_transient_failures_out_of_the_negative_cache(
+    tmp_path: Path, monkeypatch, failure, exit_code
+) -> None:
     db_path = tmp_path / "sources.db"
-    outcomes = iter([FetchOutcome("not_found"), FetchOutcome("transient_error", error_text="HTTP 503")])
+    outcomes = iter([FetchOutcome("not_found"), failure])
     monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", lambda *_args, **_kwargs: next(outcomes))
 
     counts = sum20_official_ingest.ingest_wordids(
@@ -508,12 +523,21 @@ def test_ingest_keeps_transient_failures_out_of_the_negative_cache(tmp_path: Pat
     conn = sqlite3.connect(db_path)
     try:
         checkpoint = conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint WHERE singleton = 1").fetchone()[0]
-        transient = conn.execute("SELECT status FROM sum20_crawl_outcomes WHERE wordid = 51").fetchone()[0]
+        transient = conn.execute("SELECT status, error_text FROM sum20_crawl_outcomes WHERE wordid = 51").fetchone()
     finally:
         conn.close()
-    assert counts == {"ok": 0, "unchanged": 0, "not_found": 1, "transient_error": 1, "parse_error": 0}
+    assert counts == {
+        "ok": 0,
+        "unchanged": 0,
+        "not_found": 1,
+        "transient_error": int(failure.status == "transient_error"),
+        "parse_error": int(failure.status == "parse_error"),
+    }
     assert checkpoint == 50
-    assert transient == "transient_error"
+    assert transient == (failure.status, failure.error_text)
+    assert counts.exit_code == exit_code
+    monkeypatch.setattr(sum20_official_ingest, "ingest_wordids", lambda *_args, **_kwargs: counts)
+    assert sum20_official_ingest.main(["--db", str(db_path)]) == exit_code
 
 
 def _fixture_sources_db(tmp_path: Path, *, include_article: bool, create_schema: bool = True) -> Path:
@@ -638,3 +662,70 @@ def test_fetch_keeps_a_caller_supplied_user_agent(monkeypatch: pytest.MonkeyPatc
     fetch_sum20_wordid(1, session=session, retries=0)
 
     assert session.headers["User-Agent"] == "caller-agent/2.0"
+
+
+@pytest.mark.parametrize("code", [401, 403, 201, 302, 400, 499, 600])
+def test_official_first_terminal_response_never_retries(code):
+    session = _FakeSession([_FakeResponse(code)])
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, retries=7, sleep=sleeps.append)
+    assert result.status == "transient_error"
+    assert result.terminal
+    assert result.http_status == code
+    assert result.error_text == f"HTTP {code}"
+    assert not sleeps
+
+
+@pytest.mark.parametrize("terminal", [401, 403, 200])
+def test_official_retry_then_terminal_stop(terminal):
+    session = _FakeSession([_FakeResponse(503), _FakeResponse(terminal, "<article></article>")])
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, retries=7, sleep=sleeps.append)
+    assert result.terminal and result.http_status == terminal
+    assert result.status == ("parse_error" if terminal == 200 else "transient_error")
+    assert sleeps == [2]
+
+
+def test_official_parser_recursion_stops_one_request(monkeypatch):
+    source = "<article>" + "<div>" * 1200 + TARGET_ENTRY + "</div>" * 1200 + "</article>"
+    assert parse_sum20_article("<article>" + TARGET_ENTRY + "</article>", 5).headword == "TARGET"
+    with pytest.raises(RecursionError):
+        parse_sum20_article(source, 5)
+    session = _FakeSession([_FakeResponse(200, source), _FakeResponse(404)])
+    get = session.get
+    calls = []
+
+    def counted_get(*args, **kwargs):
+        calls.append((args, kwargs))
+        return get(*args, **kwargs)
+
+    monkeypatch.setattr(session, "get", counted_get)
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, retries=7, sleep=sleeps.append)
+    assert result == FetchOutcome("parse_error", error_text="unusable article", http_status=200, terminal=True)
+    assert len(calls) == 1
+    assert not sleeps
+
+
+@pytest.mark.parametrize("terminal", [3, 4])
+def test_legacy_terminal_exit_precedes_prior_failure(monkeypatch, terminal):
+    counts = sum20_official_ingest.IngestCounts(
+        ok=0, unchanged=0, not_found=0, transient_error=1, parse_error=int(terminal == 4)
+    )
+    counts.exit_code = terminal
+    monkeypatch.setattr(sum20_official_ingest, "ingest_wordids", lambda *_args, **_kwargs: counts)
+    assert sum20_official_ingest.main([]) == terminal
+
+
+def test_legacy_ingest_help_and_failure_exit(monkeypatch, capsys):
+    parser = sum20_official_ingest.build_parser()
+    help_text = parser.format_help()
+    assert "unbounded foreground" in help_text
+    assert "Exit codes:" in help_text and "unconditional restart" in help_text
+    monkeypatch.setattr(
+        sum20_official_ingest,
+        "ingest_wordids",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(ValueError("invalid limit")),
+    )
+    assert sum20_official_ingest.main([]) == 1
+    assert "failed" in capsys.readouterr().err
