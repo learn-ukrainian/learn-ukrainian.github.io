@@ -520,7 +520,7 @@ def test_expanded_document_schema_valid():
     assert len(errors) == 0
 
 
-def test_combining_accent_fails_expanded_schema_and_check_5():
+def test_combining_accent_fails_expanded_schema_and_check_5(tmp_path, monkeypatch):
     """A combining accent in the expanded document is a bug that fails schema validation and check 5."""
     doc_with_accent = {
         "expanded_schema": 1,
@@ -579,7 +579,9 @@ def test_combining_accent_fails_expanded_schema_and_check_5():
     pack = make_pack(module="a1/test-slug")
     words_store = make_words_store(words=[w1])
 
-    res = check_5_assembly(draft, plan, pack, words_store, "a1", "test-slug", 1)
+    from tests.build.test_fresh_source_coverage import seal_writer
+    seal_writer(tmp_path, monkeypatch, draft, plan, pack, words_store)
+    res = check_5_assembly(draft, plan, pack, words_store, "a1", "test-slug", 1, output_dir=tmp_path)
     assert res.passed is False
     assert "combining accent" in (res.reason or "") or "schema validation" in (res.reason or "")
 
@@ -1034,6 +1036,8 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
 
     state_dir = tmp_path / "state"
     site_dir = tmp_path / "site"
+    from tests.build.test_fresh_source_coverage import seal_writer
+    seal_writer(state_dir, monkeypatch, draft, plan, pack, words_store)
 
     # 1. Stream with open token (stress_open) -> site write refused
     stream_with_open = type(
@@ -2338,6 +2342,17 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
     monkeypatch.setattr(
         "scripts.build.fresh.assemble.check_11_render", lambda *a, **k: CheckResult(check=11, passed=True)
     )
+    from tests.build.test_fresh_source_coverage import seal_writer, search
+    if file == "standard":
+        from scripts.curriculum.evidence.sources import Sources
+        monkeypatch.setattr(Sources, "get_standard_lines", lambda self, start, end:
+                            (pack["standard"][0]["text"], pack["standard"][0]["file_sha256"]))
+        # A valid S-only lesson still captures an actual successful Sources lookup;
+        # the Standard itself is verified by the engine, never credited to this call.
+        calls = [search("search_text", "chunk_id", "unrelated")]
+    else:
+        calls = None
+    seal_writer(tmp_path / "state", monkeypatch, draft, plan, pack, words, calls=calls)
     report = assemble_lesson(
         "a1",
         "sample-slug",

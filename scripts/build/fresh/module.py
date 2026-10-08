@@ -121,6 +121,8 @@ def build_module(
     else:
         lessons.sort(key=lambda item: (item.get("kind") == "recap", item["n"]))
     results = []
+    coverage_by_lesson = {}
+    pack, words = {}, {}
     for entry in lessons:
         n = entry["n"]
         unlink_current(state_dir, n)
@@ -316,6 +318,10 @@ def build_module(
                     expected_inputs=expected,
                     **(runner_kwargs or {}),
                 )
+                coverage_by_lesson[n] = next(
+                    (row["details"]["writer_sources"] for row in report.get("checks", [])
+                     if "writer_sources" in row.get("details", {})), None
+                )
                 ledger = load_ledger(ledger_path, slug, n)
                 if report["passed"] and report.get("manifest_sha256"):
                     results.append(
@@ -379,6 +385,28 @@ def build_module(
         result.update(regenerations=ledger["regenerations"])
         if result["reason"] != HARNESS_EXHAUSTED:
             result["terminal_layer"] = ledger["terminal_layer"]
+    from scripts.build.fresh.assemble import AssemblerError
+    from scripts.build.fresh.source_coverage import coverage_summary, obligations
+
+    for result in results:
+        coverage = coverage_by_lesson.get(result["n"])
+        if coverage is None:
+            forms, evidence, pinned, report_only = set(), {}, {}, set()
+            try:
+                # Cited obligations exist even when the writer produced no draft.
+                forms, evidence, pinned, report_only = obligations(
+                    {}, plan, pack, words, level, slug, result["n"], provenance={"spans": []}
+                )
+                stopped_draft = yaml.safe_load((state_dir / f"lesson-{result['n']}.draft.yaml").read_text())
+                forms, evidence, pinned, report_only = obligations(
+                    stopped_draft, plan, pack, words, level, slug, result["n"]
+                )
+            except (OSError, ValueError, KeyError, TypeError, AssemblerError):
+                pass
+            coverage = coverage_summary(
+                forms, evidence, set(), code="writer_sources_missing", pinned=pinned, report_only=report_only
+            )
+        result["writer_sources"] = coverage
     report = {
         "level": level,
         "slug": slug,
@@ -396,6 +424,7 @@ def build_module(
                     "regenerations",
                     "terminal_layer",
                     "layer",
+                    "writer_sources",
                 )
             }
             for row in results

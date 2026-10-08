@@ -81,3 +81,22 @@ def test_sources_golden_set_matches_frozen_handlers() -> None:
     if not SOURCES_DB_PATH.is_file() or not Path(VESUM_DB_PATH).is_file():
         pytest.skip("local data/sources.db or data/vesum.db is not in this checkout")
     assert _GOLDEN.canonical_bytes(_GOLDEN.capture()) == _GOLDEN.EXPECTED_PATH.read_bytes()
+
+
+def test_style_and_resource_text_identities_preserve_structured_hit_counts(monkeypatch):
+    import asyncio
+
+    import scripts.ingest.resource_catalogue_ingest as resources
+    import wiki.sources_db as sdb
+    server = _GOLDEN.load_server()
+    monkeypatch.setattr(sdb, "search_style_guide", lambda *a: [{"id": 84, "word": "synthetic", "text": "synthetic note"}])
+    content, envelope = asyncio.run(server.handle_dict_search({"query": "synthetic"}, "style_guide", "synthetic label"))
+    assert envelope["match_count"] == len(envelope["hits"]) == 1
+    assert '- **ID**: `84`' in content[0].text
+    hit = {"id": "resource-1", "title": "Synthetic resource", "access": "free", "url": "https://example.org/resource"}
+    monkeypatch.setattr(resources, "search_resources", lambda *a, **kw: [hit])
+    monkeypatch.setattr(sdb, "_get_conn", lambda: None)
+    content, envelope = asyncio.run(server.handle_search_resources({"query": "synthetic"}))
+    assert envelope["match_count"] == len(envelope["hits"]) == 1
+    assert '- **URL**: `https://example.org/resource`' in content[0].text
+    assert 'for: "synthetic"' in content[0].text

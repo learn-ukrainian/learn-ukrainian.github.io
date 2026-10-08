@@ -22,10 +22,12 @@ import yaml
 
 from scripts.build.fresh import assemble
 from scripts.build.fresh import plan_manifest as pm
+from scripts.build.fresh import source_coverage as coverage
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review import integration_check as ic
 from scripts.review.receipts import ledger
 from tests.build.test_fresh_plan_review import fake_verify
+from tests.build.test_fresh_source_coverage import verification
 from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
 from tests.review.test_record import LEVEL, SLUG, finding
 
@@ -51,6 +53,87 @@ def _isolate_atlas_manifest(tmp_path_factory: pytest.TempPathFactory):
 
 
 # --- run-crafted ------------------------------------------------------------------------------------
+
+
+def test_engine_lesson_harvests_bound_synthetic_sources_and_still_confirms_requirements(tmp_path: Path) -> None:
+    built = ic.engine_lesson(tmp_path, 2)
+    state = tmp_path / "state"
+    receipt = json.loads((state / "lesson-2.writer_tool_calls.json").read_text())
+    meta = yaml.safe_load((state / "lesson-2.writer.yaml").read_bytes())
+    task = json.loads((state / "tasks" / f"{receipt['task_id']}.json").read_text())
+    calls = json.loads(Path(task["tool_calls_file"]).read_text())["tool_calls"]
+    assert receipt["lesson"] == {"module": f"{LEVEL}/{SLUG}", "n": 2}
+    for key in ("task_id", "attempt", "writer", "model", "effort", "prompt_sha256"):
+        assert receipt[key] == meta[key]
+    assert task["agent"] == meta["writer"] and task["model"] == meta["model"]
+    assert receipt["prompt_sha256"] == hashlib.sha256((state / "lesson-2.prompt.md").read_bytes()).hexdigest()
+    assert receipt["draft_sha256"] == hashlib.sha256((state / "lesson-2.draft.yaml").read_bytes()).hexdigest()
+    assert receipt["sidecar_sha256"] == hashlib.sha256(Path(task["tool_calls_file"]).read_bytes()).hexdigest()
+    assert receipt["credited_calls"] == coverage.summarize_calls(calls)
+    assert all(call["paired"] is True and call["is_error"] is False for call in calls)
+    report = yaml.safe_load((state / "lesson-2.gates.yaml").read_bytes())
+    check = next(row for row in report["checks"] if row["check"] == 5)
+    summary = check["details"]["writer_sources"]
+    assert report["passed"] and check["status"] == "passed" and summary["code"] is None
+    for group in ("forms", "evidence"):
+        assert summary[group]["required"] > 0
+        assert summary[group]["covered"] == summary[group]["required"] and summary[group]["missing"] == 0
+    assert (state / "lesson-2.requirements.yaml").is_file()
+    assert built.page.is_file() and built.expanded.is_file() and built.provenance.is_file()
+
+
+@pytest.mark.parametrize(
+    "fault,code",
+    [
+        ("missing", "writer_sources_missing"),
+        ("partial", "writer_sources_forms_uncovered"),
+        ("model", "writer_sources_binding_mismatch"),
+        ("attempt", "writer_sources_binding_mismatch"),
+        ("prompt", "writer_sources_binding_mismatch"),
+        ("inputs", "writer_sources_binding_mismatch"),
+        ("draft", "writer_sources_binding_mismatch"),
+    ],
+)
+def test_engine_lesson_refuses_missing_partial_or_misbound_sources(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fault: str, code: str
+) -> None:
+    original = ic.seal_writer
+
+    def faulty_writer(state, mp, draft, plan, pack, words, *, n):
+        kwargs = {}
+        if fault == "partial":
+            forms, _, _, _ = coverage.obligations(draft, plan, pack, words, LEVEL, SLUG, n)
+            kwargs["calls"] = [verification([*sorted(forms), "synthetic-other"], missing=forms)]
+        task, _ = original(state, mp, draft, plan, pack, words, n=n, **kwargs)
+        receipt_path = state / f"lesson-{n}.writer_tool_calls.json"
+        receipt = json.loads(receipt_path.read_text())
+        if fault == "missing":
+            receipt_path.unlink()
+        elif fault == "model":
+            task["model"] = "another-synthetic-model"
+            (state / "tasks" / f"{task['task_id']}.json").write_text(json.dumps(task))
+        elif fault == "attempt":
+            receipt["attempt"] += 1
+            receipt_path.write_text(json.dumps(receipt))
+        elif fault == "prompt":
+            (state / f"lesson-{n}.prompt.md").write_text("A different synthetic prompt.\n")
+        elif fault == "inputs":
+            receipt["inputs_sha256"] = "0" * 64
+            receipt_path.write_text(json.dumps(receipt))
+        elif fault == "draft":
+            with (state / f"lesson-{n}.draft.yaml").open("ab") as stream:
+                stream.write(b"\n# Different persisted bytes.\n")
+
+    monkeypatch.setattr(ic, "seal_writer", faulty_writer)
+    with pytest.raises(RuntimeError, match=code):
+        ic.engine_lesson(tmp_path, 2)
+    report = yaml.safe_load((tmp_path / "state/lesson-2.gates.yaml").read_bytes())
+    check = next(row for row in report["checks"] if row["check"] == 5)
+    assert not report["passed"] and check["status"] == "failed" and check["code"] == code
+    assert not (tmp_path / "site/2.mdx").exists()
+    if fault == "partial":
+        receipt = json.loads((tmp_path / "state/lesson-2.writer_tool_calls.json").read_text())
+        assert receipt["credited_calls"][0]["credited_keys"] == ["form:synthetic-other"]
 
 
 @pytest.fixture(scope="module")

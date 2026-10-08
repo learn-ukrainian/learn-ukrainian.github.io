@@ -6438,7 +6438,10 @@ def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
     import json as _json
     import os as _os
 
-    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt, sources_server_launch
+    from scripts.review.receipts import ledger as receipt_ledger
+    # Launches bind the canonical server, which may differ from an edited worktree.
+    monkeypatch.setattr(receipt_ledger, "SERVER_PATH", sources_server_launch()[1])
 
     user_home = tmp_path / "user-codex"
     user_home.mkdir()
@@ -6648,7 +6651,10 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
     """Provision a real AGY review attempt plus a fake ``agy`` printing the effective MCP table."""
     import json as _json
 
-    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt, sources_server_launch
+    from scripts.review.receipts import ledger as receipt_ledger
+    # Launches bind the canonical server, which may differ from an edited worktree.
+    monkeypatch.setattr(receipt_ledger, "SERVER_PATH", sources_server_launch()[1])
 
     app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
     app_data.mkdir(parents=True)
@@ -19288,8 +19294,11 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
         Path(proof_path).write_text(json.dumps(proof, indent=2) + "\n")
 
 
-def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_path):
-    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt, sources_server_launch
+    from scripts.review.receipts import ledger as receipt_ledger
+    # Launches bind the canonical server, which may differ from an edited worktree.
+    monkeypatch.setattr(receipt_ledger, "SERVER_PATH", sources_server_launch()[1])
 
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("kind: plan\n")
@@ -19637,3 +19646,44 @@ def test_advisory_round_start_lookup_errors_are_recorded_as_unmeasured(
     assert state[key] == {"measured": False, "error": detail}
     assert detail in state["stderr_excerpt"]
     assert "private lookup detail" not in str(state)
+
+
+def test_sources_tool_calls_persist_full_results_privately(tmp_path):
+    calls = [{"name": "mcp__sources__search_text", "paired": True, "is_error": False,
+              "result": {"synthetic_body": "x" * 1200}}, {"name": "exec_command", "result": "unrelated"}]
+    receipt = delegate._persist_sources_tool_calls(tmp_path / "synthetic.json", calls)
+    raw = Path(receipt["tool_calls_file"]).read_bytes()
+    import hashlib
+    import stat
+    assert json.loads(raw) == {"tool_calls": calls[:1]}
+    assert hashlib.sha256(raw).hexdigest() == receipt["tool_calls_sha256"]
+    assert stat.S_IMODE(Path(receipt["tool_calls_file"]).stat().st_mode) == 0o600
+    with pytest.raises(ValueError, match="capture_incomplete"):
+        delegate._persist_sources_tool_calls(tmp_path / "invalid.json", [None])
+
+
+@pytest.mark.parametrize("persist_error", [False, True])
+def test_run_worker_sources_capture_survives_terminal_persistence(tmp_tasks_dir, tmp_path, monkeypatch, persist_error):
+    state_path = delegate._state_path("sources-capture")
+    delegate._write_state_atomic(state_path, {"task_id": "sources-capture", "model": "synthetic-model",
+                                            "effort": "high", "cli_version": "synthetic"})
+    calls = [{"name": "mcp__sources__verify_words", "arguments": {}, "paired": True,
+              "is_error": False, "result": "synthetic-result"}]
+    mock_result = type("Result", (), {"ok": True, "response": "done", "stderr_excerpt": None,
+        "returncode": 0, "rate_limited": False, "model": "synthetic-model", "effort": "high",
+        "cli_version": "synthetic", "tool_calls": calls})()
+    if persist_error:
+        def fail(*args):
+            raise OSError("synthetic persistence error")
+        monkeypatch.setattr(delegate, "_persist_sources_tool_calls", fail)
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(task_id="sources-capture", agent="codex", prompt="synthetic",
+            mode="read-only", cwd_str=str(tmp_path), model="synthetic-model", hard_timeout=60, effort="high")
+    state = delegate._read_state(state_path)
+    assert state["status"] == ("failed" if persist_error else "done")
+    assert rc == (1 if persist_error else 0)
+    if persist_error:
+        assert state["tool_calls_error"] == "writer_sources_capture_incomplete"
+        assert "tool_calls_sha256" not in state
+    else:
+        assert json.loads(Path(state["tool_calls_file"]).read_text()) == {"tool_calls": calls}

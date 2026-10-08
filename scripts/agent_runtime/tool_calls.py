@@ -1,8 +1,7 @@
 """Tool-call telemetry parsing helpers for agent CLI traces.
 
 The normalized records are intentionally small and PII-bearing. Arguments are
-kept because downstream honesty checks need them, but raw tool output is never
-stored: only a capped summary is retained.
+kept because downstream honesty checks need them, with a capped display summary and full results for local evidence consumers.
 """
 
 from __future__ import annotations
@@ -131,6 +130,11 @@ def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             call_id = _tool_result_id(payload)
             if call_id and call_id in by_id:
                 output = _tool_output(payload)
+                by_id[call_id]["paired"] = True
+                by_id[call_id]["is_error"] = bool(
+                    payload.get("is_error", False) or payload.get("isError", False) or payload.get("error")
+                    or (isinstance(output, Mapping) and (output.get("isError") or output.get("is_error")))
+                )
                 by_id[call_id]["output_summary"] = summarize_tool_output(output)
                 if output is not None:
                     by_id[call_id]["result"] = output

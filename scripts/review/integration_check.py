@@ -18,6 +18,8 @@ repository's content trees, and drives the product paths through their own comma
                   and receipts belong to the card's task).
 
 This proves the tooling, not reviewer quality (admitting a reviewer is the seeded-defect measurement, R3).
+Writer Sources receipts are synthetic engine evidence, harvested from fixture task results; they certify
+neither a provider/source interaction nor a publishable lesson.
 Stand-ins, named: ``planned_state`` (the engine lesson's assembly run) and ``pack-verify --strict`` (plan review)
 are replaced at their one seam, as the repository's own tests do, because the real ones need the sources database.
 The lesson manifests record the real planned state of the plan world, the state recording recomputes.
@@ -79,6 +81,7 @@ from tests.build.test_fresh_assemble import (
 from tests.build.test_fresh_plan_review import fake_verify
 from tests.build.test_fresh_runner import _fixture as engine_fixture
 from tests.build.test_fresh_runner import _FixtureSources
+from tests.build.test_fresh_source_coverage import seal_writer
 from tests.curriculum import test_plan_validate as plan_fixture
 from tests.curriculum.resolver.evidence_helpers import receipt_source_paths
 from tests.helpers import plan_review_world
@@ -225,8 +228,6 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
     validate_fixture_draft(draft)
     state = scratch / "state"
     state.mkdir(parents=True)
-    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
-    (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
 
     def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each
         return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
@@ -247,6 +248,10 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
         )
         mp.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": LEVEL})())
         mp.setattr(runner, "write_manifest", lambda *a, **kw: ({"recap": False}, "a" * 64))
+
+        # Seal the shared writer inputs once so both runs and the requirement receipt
+        # bind the same persisted bytes, before the engine annotates its live copy.
+        seal_writer(state, mp, draft, plan, pack, words, n=n)
 
         def run_once(candidate_draft: dict[str, Any]) -> dict[str, Any]:
             return runner.run_lesson(

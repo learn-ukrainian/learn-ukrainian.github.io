@@ -180,7 +180,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-writer-contract.md
     line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
-  doc_sha256: f1744a6e5bd6a857e992d199b930f564dd2183061d1dff080b25dfcd4bbbebaf
+  doc_sha256: a048db8d70b58379e0c02519bbdee410ba27842ca8d9934e6b09f0beca546519
   section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
   text: |+
     ## Decisions of the operator, 2026-09-21 (unchanged in r3)

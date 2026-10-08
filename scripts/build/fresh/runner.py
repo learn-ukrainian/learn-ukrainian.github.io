@@ -1546,26 +1546,29 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
+    # Check 4 annotates the live draft; check 5 binds the persisted writer bytes.
+    writer_draft = copy.deepcopy(draft)
     row, form_options = check_4_activities(draft, lesson, words, pack, level=level)
     if row["status"] == "failed":
         return finish(row)
     if level == "a1":
         row["details"] = {"draft_report": draft_report(plan, [draft])}
     rows.append(row)
-    assembled = check_5_assembly(draft, plan, pack, words, level, slug, n, output_dir=state_dir)
+    assembled = check_5_assembly(writer_draft, plan, pack, words, level, slug, n, output_dir=state_dir, expected_inputs=inputs)
     if not assembled.passed:
-        return finish(
-            failure(
-                5,
-                assembled.reason or "assembly_failed",
-                assembled.layer or "engine",
-                step=assembled.step,
-                activity=assembled.activity,
-                token=assembled.token,
-            )
+        row = failure(
+            5,
+            assembled.reason or "assembly_failed",
+            assembled.layer or "engine",
+            step=assembled.step,
+            activity=assembled.activity,
+            token=assembled.token,
+            code=assembled.reason if assembled.reason and assembled.reason.startswith("writer_sources_") else None,
         )
+        row["details"] = assembled.details
+        return finish(row)
     expanded = assembled.artifacts["expanded_doc"]
-    rows.append(_pass(5))
+    rows.append(_pass(5, assembled.details))
     row = check_6_count(expanded, words)
     if row["status"] == "failed":
         return finish(row)

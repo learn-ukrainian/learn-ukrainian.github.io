@@ -2151,10 +2151,15 @@ def _intent_dedupe_key(call: Mapping[str, Any]) -> str:
     )
 
 
-def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any]:
+def _attach_tool_result(call: dict[str, Any], result_text: str, event: Mapping[str, Any] | None = None) -> dict[str, Any]:
     result = [{"type": "text", "text": result_text}]
     call["output_summary"] = summarize_tool_output(result)
     call["result"] = result
+    if event is not None and call.get("name"):
+        call["paired"] = True
+        call["is_error"] = bool(event.get("status") != "DONE" or event.get("error"))
+        if event.get("truncated_fields"):
+            call["capture_incomplete"] = True
     return call
 
 
@@ -2198,6 +2203,7 @@ def _pair_transcript_fifo(
                     trusted_root=trusted_root,
                     app_data_alias=app_data_alias,
                 ),
+                event,
             )
         )
     calls.extend(pending)
@@ -2265,7 +2271,7 @@ def _pair_transcript_by_step_index(
         if pending:
             call = pending.pop(0)
             pending_keys.discard(_intent_dedupe_key(call))
-            calls.append(_attach_tool_result(call, result_text))
+            calls.append(_attach_tool_result(call, result_text, event))
         else:
             orphan_results += 1
             calls.append(_attach_tool_result(_result_only_call(), result_text))
@@ -2330,6 +2336,7 @@ def _pair_transcript_generic_results(
                         trusted_root=trusted_root,
                         app_data_alias=app_data_alias,
                     ),
+                    event,
                 )
             )
     return calls

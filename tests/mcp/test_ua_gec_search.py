@@ -79,3 +79,13 @@ def test_search_ua_gec_errors_tag_filter_does_not_raise(server_module):
     assert result[0].type == "text"
     # No OperationalError surfaced: either a Found-block or a graceful no-results line.
     assert ("Found" in result[0].text) or ("No UA-GEC results" in result[0].text)
+
+
+def test_ua_gec_text_exposes_row_identity_without_changing_results(server_module, monkeypatch):
+    import wiki.sources_db as sdb
+    hit = {"id": 123, "doc_id": "different-document-id", "error": "synthetic error", "correct": "synthetic correction"}
+    monkeypatch.setattr(sdb, "search_ua_gec_errors", lambda *a, **kw: [hit])
+    result = _run(server_module.handle_search_ua_gec_errors({"query": "synthetic"}))
+    assert len(result) == 1
+    assert '- **Row ID**: `123`' in result[0].text
+    assert 'Found 1 human-annotated error pairs for: "synthetic"' in result[0].text

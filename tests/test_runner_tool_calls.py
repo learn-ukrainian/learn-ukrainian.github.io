@@ -41,6 +41,8 @@ def test_claude_adapter_parses_tool_use_events() -> None:
     ]
     assert result.tool_calls[0]["arguments"] == {"words": ["ранок"]}
     assert result.tool_calls[0]["output_summary"] == "ранок: verified"
+    assert result.tool_calls[0]["paired"] is True and result.tool_calls[0]["is_error"] is False
+    assert "is_error" not in result.tool_calls[1]
 
 
 def test_claude_adapter_extracts_stream_text_without_result_event() -> None:
@@ -253,7 +255,9 @@ def test_codex_adapter_maps_typed_mcp_items_to_tool_calls(tmp_path: Path) -> Non
     assert verify["name"] == "mcp__sources__verify_words"
     assert verify["arguments"] == {"words": ["день"]}
     assert search["name"] == "mcp__sources__search_text"
-    assert search["result"] == [{"type": "text", "text": "Found 1 result"}]
+    assert search["result"]["content"] == [{"type": "text", "text": "Found 1 result"}]
+    assert search["paired"] is True and search["is_error"] is False
+    assert failed["is_error"] is True
     assert search["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
     assert failed["status"] == "failed" and failed["output_summary"] == "server unavailable"
 
@@ -294,3 +298,40 @@ def test_unparseable_tool_event_emits_warning_not_crash(caplog) -> None:
     assert result.ok is True
     assert result.tool_calls == []
     assert "tool-call trace line" in caplog.text
+
+
+@pytest.mark.parametrize("status,is_error,item_error", [("completed", False, None), ("completed", True, None),
+    ("failed", False, None), ("in_progress", False, None), ("completed", False, {"message": "synthetic error"})])
+def test_codex_structured_result_and_all_error_channels(status, is_error, item_error):
+    from agent_runtime.adapters.codex_events import tool_calls_from_items
+    envelope = {"schema": "sources.tool-result.v1", "tool": "verify_words", "status": "ok"}
+    calls = tool_calls_from_items([{"type": "mcp_tool_call", "server": "sources", "tool": "verify_words",
+        "status": status, "arguments": {}, "error": item_error,
+        "result": {"isError": is_error, "content": [], "structured_content": envelope}}])
+    assert calls[0]["result"]["structured_content"] == envelope
+    assert calls[0]["paired"] is True
+    assert calls[0]["is_error"] is (status != "completed" or is_error or bool(item_error))
+
+
+@pytest.mark.parametrize("recovery", [False, True])
+def test_claude_stream_and_session_recovery_preserve_errors(tmp_path, monkeypatch, recovery):
+    import json
+
+    import agent_runtime.adapters.claude as claude_module
+    events = [
+        {"type": "assistant", "message": {"content": [{"type": "tool_use", "id": "u1",
+            "name": "mcp__sources__verify_words", "input": {"words": ["synthetic"]}}]}},
+        {"type": "user", "message": {"content": [{"type": "tool_result", "tool_use_id": "u1",
+            "is_error": True, "content": "synthetic failure"}]}},
+        {"type": "result", "subtype": "success", "result": "Done", "session_id": "synthetic-session"},
+    ]
+    if recovery:
+        session = tmp_path / "session.jsonl"
+        session.write_text("\n".join(json.dumps(event) for event in events))
+        monkeypatch.setattr(claude_module, "_claude_session_jsonl_path", lambda *args, **kwargs: session)
+        stdout = json.dumps(events[-1])
+    else:
+        stdout = "\n".join(json.dumps(event) for event in events)
+    plan = InvocationPlan(cmd=["claude"], cwd=tmp_path, stdin_payload="", output_file=None, env_overrides={})
+    result = ClaudeAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    assert result.tool_calls[0]["paired"] is True and result.tool_calls[0]["is_error"] is True

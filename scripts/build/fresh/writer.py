@@ -481,6 +481,13 @@ def dispatch_writer(
 
     # 6. Save validated draft with lock sidecar
     lock.write(draft_file, lock.yaml_bytes(draft))
+    from scripts.build.fresh.source_coverage import harvest_receipt
+
+    try:
+        harvest_receipt(output_dir, lesson_n, level=level, slug=slug, inputs=dict(inputs),
+                        meta=meta, task=wait_state, draft_file=draft_file)
+    except (OSError, ValueError, TypeError) as err:
+        raise WriterHarnessError("writer_sources_capture_incomplete: cannot harvest evidence") from err
 
     return {
         "draft": draft,

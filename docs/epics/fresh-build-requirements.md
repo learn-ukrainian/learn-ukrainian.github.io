@@ -149,9 +149,16 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   sentences, known learner errors, verified word records with form-grain stress, videos. The
   reasoning the old wiki carried (why this order, what English speakers get wrong) lives in the
   plan as a short rationale per lesson.
-- **R-26 The writer does not search.** A lesson writer receives that lesson's plan entry, that
-  lesson's evidence, and the learner state "completed lessons 1..n−1". The MCP is used after the
-  draft, for verification.
+- **R-26 Writer-time Sources coverage is required.** The writer receives the lesson's plan,
+  cited evidence, learner state and style card, and uses read-only Sources MCP tools while
+  drafting. Before assembly, successful paired results must cover every unique normalized
+  writer-authored learner-facing Ukrainian form and every applicable cited Sources identity.
+  Verify words in batches of at most 50. Missing or partial coverage blocks assembly; source
+  gaps follow the evidence-gap procedure without changing the plan or pack. Engine-only
+  expansions retain check 7. W-records use form verification; S-records remain engine-pinned
+  with verified file digest and line range; U-records remain report-only. Existing phonetic
+  and sourced intentional-error exceptions remain unchanged. Lesson reports include coverage.
+  Post-draft verification and independent semantic review remain required.
 - **R-27 Lesson shape follows the textbooks.** Theory in small steps, each followed by practice,
   then a larger practice block — the exercise density of the school textbooks in the corpus.
 - **R-28 Coverage is deterministic.** Every evidence id a lesson plan lists must be used and cited
