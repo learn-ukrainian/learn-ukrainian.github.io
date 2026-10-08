@@ -10,6 +10,7 @@ import sqlite3
 import stat
 import subprocess
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -676,7 +677,7 @@ def test_collection_error_keeps_healthy_selected_test_and_junit(
 
 
 @pytest.fixture
-def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
+def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[SimpleNamespace]:
     primary = tmp_path / "primary"
     project_python = primary / ".venv" / "bin" / "python"
     project_python.parent.mkdir(parents=True)
@@ -685,6 +686,16 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
     checkout.mkdir()
     events = []
     reports = []
+    snapshots = []
+    make_snapshot = data_tier.tempfile.mkdtemp
+    remove_snapshot = data_tier.shutil.rmtree
+
+    def allocate_snapshot(*args, **kwargs):
+        path = make_snapshot(*args, **kwargs)
+        snapshots.append(Path(path))
+        return path
+
+    monkeypatch.setattr(data_tier.tempfile, "mkdtemp", allocate_snapshot)
     monkeypatch.setattr(data_tier, "primary_checkout", lambda: primary)
     monkeypatch.setattr(data_tier, "project_interpreter", lambda root: project_python if root == primary else None)
     monkeypatch.setattr(data_tier, "require_memory", lambda: None)
@@ -713,7 +724,15 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
         return "reported"
 
     monkeypatch.setattr(data_tier, "report", report)
-    return SimpleNamespace(primary=primary, events=events, reports=reports, execute=execute)
+    try:
+        yield SimpleNamespace(primary=primary, events=events, reports=reports, execute=execute)
+    finally:
+        # Production may retain snapshots until stop is proven; tests own them
+        # after their assertions, even when runner cleanup is monkeypatched.
+        for snapshot in snapshots:
+            if snapshot.exists():
+                remove_snapshot(snapshot)
+            assert not snapshot.exists()
 
 
 @pytest.mark.parametrize("action", ["removed", "skipped", "error"])
@@ -1060,22 +1079,8 @@ def test_nightly_exports_snapshot_bindings_and_reaps_them(nightly, monkeypatch):
     assert not seen[0].exists()
 
 
-@pytest.fixture
-def retained_snapshots():
-    """Reap only test-owned snapshots after the retention assertion scope."""
+def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monkeypatch, tmp_path):
     snapshots = []
-    remove_snapshot = data_tier.shutil.rmtree
-    try:
-        yield snapshots
-    finally:
-        for snapshot in snapshots:
-            if snapshot.exists():
-                remove_snapshot(snapshot)
-            assert not snapshot.exists()
-
-
-def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monkeypatch, tmp_path, retained_snapshots):
-    snapshots = retained_snapshots
     external_sentinel = tmp_path / "outside-snapshot.txt"
     external_sentinel.write_text("keep", encoding="utf-8")
 
@@ -1129,8 +1134,8 @@ def test_nightly_removes_snapshots_before_child_launch_failure(nightly, monkeypa
     assert external_sentinel.read_text(encoding="utf-8") == "keep"
 
 
-def test_nightly_reports_snapshot_cleanup_failure(nightly, monkeypatch, retained_snapshots):
-    snapshots = retained_snapshots
+def test_nightly_reports_snapshot_cleanup_failure(nightly, monkeypatch):
+    snapshots = []
     monkeypatch.setattr(data_tier, "snapshot_databases", lambda _p, _c, root, **_kw: snapshots.append(root) or [])
 
     def fail_cleanup(path):
