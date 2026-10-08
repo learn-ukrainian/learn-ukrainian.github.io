@@ -16,6 +16,7 @@ from scripts.api.observer_presence import (
     reset_observer_presence,
     upsert_presence,
 )
+from tests._host_path_guard import HOST_ALIASES
 
 loop_client = TestClient(
     app,
@@ -31,7 +32,7 @@ remote_client = TestClient(
 )
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = HOST_ALIASES
 _HEARTBEAT = {
     "agent": "grok-bot",
     "kind": "observer",

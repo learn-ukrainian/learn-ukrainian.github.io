@@ -17,6 +17,7 @@ from scripts.api import project_state_router as router_mod
 from scripts.api.main import app
 from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 from scripts.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
+from tests._host_path_guard import HOST_ALIASES
 from tests.api.test_project_state_collect import _init_repo
 
 loop_client = TestClient(
@@ -29,7 +30,7 @@ client = TestClient(app, raise_server_exceptions=False)
 
 _PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = HOST_ALIASES
 
 SHA_MAIN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 SHA_OLD = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"

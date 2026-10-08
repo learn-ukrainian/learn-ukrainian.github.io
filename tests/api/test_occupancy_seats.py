@@ -18,9 +18,10 @@ from scripts.api.monitor_context import fixture_context
 from scripts.api.occupancy import router as occupancy_router
 from scripts.api.occupancy_local import write_marker
 from scripts.lexicon.runner import atlas_job
+from tests._host_path_guard import HOST_ALIASES
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = HOST_ALIASES
 _PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 
 

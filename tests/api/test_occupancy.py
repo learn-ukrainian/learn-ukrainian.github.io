@@ -36,11 +36,12 @@ from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
 from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
 from scripts.lexicon.runner import atlas_job
+from tests._host_path_guard import HOST_ALIASES
 
 client = TestClient(app, raise_server_exceptions=False)
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = HOST_ALIASES
 # Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
 _PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 

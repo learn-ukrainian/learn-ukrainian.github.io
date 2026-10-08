@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.storage import install_data_volume_dropins as installer
+from tests._host_path_guard import host_fact_hits
 
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
@@ -40,13 +41,11 @@ def test_api_supervisor_is_gated_for_linux() -> None:
 
 
 def test_systemd_templates_have_no_host_facts() -> None:
-    forbidden = ("atlas-runner", "hramatka", "46.", "HostName")
     for path in PACKAGING.iterdir():
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        for token in forbidden:
-            assert token not in text, f"{path.name} leaked {token!r}"
+        assert not host_fact_hits(text), f"{path.name} leaked {host_fact_hits(text)!r}"
 
 
 @pytest.mark.repo_wide
