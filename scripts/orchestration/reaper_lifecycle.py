@@ -150,6 +150,30 @@ def is_reap_pending(repo_root: Path, worktree_path: Path) -> bool:
     return isinstance(entries, dict) and str(worktree_path.resolve()) in entries
 
 
+def recover_reap_pending(repo_root: Path, worktree_path: Path) -> None:
+    """Release an orphan while the caller holds the repository reaper lock.
+
+    Every common-reaper entry point holds that exclusive lock from before
+    marking pending until after clearing it. Acquiring it therefore proves
+    that a leftover reservation has no live reap, without a PID or age guess.
+    Release only the selected path, then let the caller repeat all ordinary
+    qualification and final removal checks. Journal failure preserves pending.
+    """
+    entries = _read_mapping(pending_path(repo_root)).get("paths")
+    key = str(worktree_path.resolve())
+    if not isinstance(entries, dict) or key not in entries:
+        return
+    append_journal(
+        repo_root,
+        "reservation-recovery",
+        path=key,
+        decision="release and re-evaluate safety proofs",
+        proof="exclusive repository reaper lock held",
+        reservation=entries[key],
+    )
+    clear_reap_pending(repo_root, worktree_path)
+
+
 def _max_reaps_per_day() -> int:
     raw = os.environ.get("LU_REAPER_MAX_REAPS_PER_DAY")
     if raw is None:

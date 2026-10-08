@@ -412,14 +412,6 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    if reaper_lifecycle.is_reap_pending(repo_root, bound_path):
-        return {
-            "path": str(bound_path),
-            "action": "retained",
-            "reason": "reap-pending reservation blocks a new task bind",
-            "error": None,
-        }
-
     if not _is_registered_worktree(bound_path, repo_root):
         return {
             "path": str(bound_path),

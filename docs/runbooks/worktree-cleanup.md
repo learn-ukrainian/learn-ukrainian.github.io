@@ -303,6 +303,28 @@ PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir
 For regular dispatch worktrees, `post_task_reap` delegates automatic removal
 to this same P0 reaper rather than maintaining a second deletion path.
 
+An interrupted reap can leave an entry in `reap-pending.json`. In apply mode,
+the common reaper acquires the exclusive repository reaper lock, journals a
+`reservation-recovery` decision, and releases the selected path's orphaned
+reservation before repeating the ordinary safety proofs. Both the sweep and
+success-worktree entry points hold that lock for the entire reservation
+lifetime; a concurrent live reap keeps the lock and cannot be stolen. A lock
+refusal or journal failure leaves the reservation intact. Dry runs and
+`LU_REAPER_DISABLED=1` do not release reservations. Dirty, unmerged, active,
+or otherwise unproven worktrees remain subject to the existing refusal gates.
+
+Recover exactly one merged worktree through the common reaper:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.reap_worktrees apply \
+  --merged --worktree "$PRIMARY_REPO/.worktrees/dispatch/<agent>/<task>"
+```
+
+An explicit `--worktree` limits reservation recovery and removal to that target
+and skips the repository-wide orphaned-sandbox process sweep. Inspect the
+result and journal; stop on a skip. Do not hand-edit pending state, force
+removal, or use a separate deletion path.
+
 ## Deletion ownership
 
 Every worktree removal goes through one guarded chokepoint (#8610): Python

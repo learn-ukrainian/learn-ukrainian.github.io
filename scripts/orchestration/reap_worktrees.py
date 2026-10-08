@@ -4083,14 +4083,15 @@ def reap_worktrees(
     Apply mode requires a process-CWD activity probe unless a caller
     deliberately overrides that policy.
     """
-    repo_root = repo_root.resolve()
+    repo_root = primary_checkout_root(repo_root.resolve())
     targets = _target_filter(target_paths)
     results: list[ReapResult] = []
     qualified: list[tuple[WorktreeInfo, str, bool | None, PullRequestState | None]] = []
     active_ids = _active_task_ids()
     if require_activity_probe is None:
         require_activity_probe = bool(apply)
-    killed_sandboxes = stop_orphaned_sandboxes(repo_root) if apply else []
+    # An exact-target recovery must not sweep processes belonging to siblings.
+    killed_sandboxes = stop_orphaned_sandboxes(repo_root) if apply and targets is None else []
     if live_cwds is None or killed_sandboxes:
         live_cwds = _live_cwd_paths(repo_root)
     if require_activity_probe and live_cwds is None:
@@ -4143,6 +4144,12 @@ def reap_worktrees(
                     )
                 )
                 continue
+
+            if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+                # The repository lock covers every reservation's lifetime,
+                # including success-worktree reaps. No live reap can own this
+                # leftover; release it before re-running the normal proofs.
+                reaper_lifecycle.recover_reap_pending(repo_root, info.path)
 
             activity = _activity_reason(
                 repo_root=repo_root,
@@ -4448,55 +4455,58 @@ def reap_success_worktree(
     preserve_then_reap: bool = False,
 ) -> ReapResult:
     """Remove one clean success worktree while keeping its branch."""
-    repo_root = repo_root.resolve()
-    target = worktree_path.resolve()
-    matching = [info for info in list_git_worktrees(repo_root) if info.path.resolve() == target]
-    if not matching:
-        return ReapResult(
-            path=str(target),
-            branch=None,
-            action="skipped",
-            reason="target path is not a registered git worktree",
-            dirty=None,
-            owner="unattributed",
-        )
+    repo_root = primary_checkout_root(repo_root.resolve())
+    with _ReapLock(repo_root):
+        target = worktree_path.resolve()
+        matching = [info for info in list_git_worktrees(repo_root) if info.path.resolve() == target]
+        if not matching:
+            return ReapResult(
+                path=str(target),
+                branch=None,
+                action="skipped",
+                reason="target path is not a registered git worktree",
+                dirty=None,
+                owner="unattributed",
+            )
 
-    info = matching[0]
-    owner = _dispatch_owner(repo_root, info)
-    if not is_under_worktrees(repo_root, info.path):
-        return ReapResult(
-            path=str(info.path),
-            branch=info.branch,
-            action="skipped",
-            reason="outside repo .worktrees/",
-            dirty=None,
-            owner=owner,
-        )
-    clean = _worktree_clean(info.path)
-    dirty = None if clean is None else not clean
-    if reason.startswith("settled dispatch") and not _is_head_reachable_from_remote(info.path, info.head):
-        return ReapResult(
-            path=str(info.path),
-            branch=info.branch,
-            action="skipped",
-            reason="unpushed_head",
+        info = matching[0]
+        owner = _dispatch_owner(repo_root, info)
+        if not is_under_worktrees(repo_root, info.path):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="outside repo .worktrees/",
+                dirty=None,
+                owner=owner,
+            )
+        if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+            reaper_lifecycle.recover_reap_pending(repo_root, info.path)
+        clean = _worktree_clean(info.path)
+        dirty = None if clean is None else not clean
+        if reason.startswith("settled dispatch") and not _is_head_reachable_from_remote(info.path, info.head):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="unpushed_head",
+                dirty=dirty,
+                owner=owner,
+            )
+        res = _reap_qualified_worktree(
+            repo_root=repo_root,
+            info=info,
+            reason=reason,
             dirty=dirty,
-            owner=owner,
+            pr_state=None,
+            apply=apply,
+            preserve_then_reap=preserve_then_reap,
+            prune_merged_branches=False,
+            require_terminal_dispatch_guards=False,
         )
-    res = _reap_qualified_worktree(
-        repo_root=repo_root,
-        info=info,
-        reason=reason,
-        dirty=dirty,
-        pr_state=None,
-        apply=apply,
-        preserve_then_reap=preserve_then_reap,
-        prune_merged_branches=False,
-        require_terminal_dispatch_guards=False,
-    )
-    if res.owner is None:
-        res = replace(res, owner=owner)
-    return res
+        if res.owner is None:
+            res = replace(res, owner=owner)
+        return res
 
 
 def _result_payload(result: ReapResult) -> dict[str, Any]:

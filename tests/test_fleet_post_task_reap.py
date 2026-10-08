@@ -779,7 +779,8 @@ def test_ambiguous_retain_unregistered_directory(hermetic_reap):
     assert bogus.exists()
 
 
-def test_reap_pending_reservation_refuses_bound_task(hermetic_reap):
+@pytest.mark.parametrize("live", [False, True])
+def test_reap_pending_reservation_recovers_or_preserves_live_reap(hermetic_reap, live):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "pending-task")
     _write_task_state(tasks_dir, "pending-task", "done", worktree)
@@ -791,11 +792,25 @@ def test_reap_pending_reservation_refuses_bound_task(hermetic_reap):
         task_id="pending-task",
     )
 
-    report = post_task_reap.post_task_reap("pending-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+    lock = post_task_reap.reap_worktrees._ReapLock(repo_root)
+    if live:
+        lock.__enter__()
+    try:
+        report = post_task_reap.post_task_reap("pending-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+    finally:
+        if live:
+            lock.__exit__(None, None, None)
 
-    assert report["main_worktree"]["action"] == "retained"
-    assert report["main_worktree"]["reason"] == "reap-pending reservation blocks a new task bind"
-    assert worktree.exists()
+    if live:
+        assert report["main_worktree"]["action"] == "retained"
+        assert "another worktree cleanup holds" in report["main_worktree"]["error"]
+        assert worktree.exists()
+        assert post_task_reap.reaper_lifecycle.is_reap_pending(repo_root, worktree)
+    else:
+        assert report["main_worktree"]["action"] == "removed", report
+        assert not worktree.exists()
+        assert not post_task_reap.reaper_lifecycle.is_reap_pending(repo_root, worktree)
+        assert '"event": "reservation-recovery"' in post_task_reap.reaper_lifecycle.journal_path(repo_root).read_text()
 
 
 def test_main_worktree_retain_when_pid_alive(hermetic_reap, monkeypatch):

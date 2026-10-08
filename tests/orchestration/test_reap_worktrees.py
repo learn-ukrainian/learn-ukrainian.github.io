@@ -9,6 +9,7 @@ import shutil
 import signal
 import sqlite3
 import subprocess
+import sys
 import threading
 import time
 from datetime import UTC, datetime
@@ -2009,6 +2010,216 @@ def test_p0_merged_dispatch_reap_journals_recovery_and_restores(
     assert restored is True
     assert error is None
     assert git(worktree, "rev-parse", "HEAD") == head
+
+
+def test_reap_recovers_interrupted_after_mark_without_touching_sibling(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/interrupted-reservation")
+    sibling = add_worktree(repo, "codex/reserved-sibling")
+    head = git(worktree, "rev-parse", "HEAD")
+    child = _REAL_RUN(
+        [
+            sys.executable,
+            "-c",
+            "import os, sys; from pathlib import Path; "
+            "from scripts.orchestration import reap_worktrees as rw, reaper_lifecycle as rl; "
+            "repo, tree = map(Path, sys.argv[1:3]); "
+            "lock = rw._ReapLock(repo); lock.__enter__(); "
+            "rl.mark_reap_pending(repo, worktree_path=tree, branch='codex/interrupted-reservation', "
+            "head=sys.argv[3], task_id=None); os._exit(17)",
+            str(repo),
+            str(worktree),
+            head,
+        ],
+        cwd=Path.cwd(),
+        capture_output=True,
+        text=True,
+        env=git_env(),
+    )
+    assert child.returncode == 17, child.stderr
+    assert reaper_lifecycle.is_reap_pending(repo, worktree)
+    reaper_lifecycle.mark_reap_pending(
+        repo, worktree_path=sibling, branch="codex/reserved-sibling", head=head, task_id=None
+    )
+    patch_gh(monkeypatch, {"codex/interrupted-reservation": [{"number": 71, "state": "MERGED"}]})
+    monkeypatch.setattr(rw, "stop_orphaned_sandboxes", lambda _repo: pytest.fail("targeted reap swept other worktrees"))
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, target_paths=[worktree], apply=True, live_cwds=set()), worktree
+    )
+
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    assert sibling.exists() and reaper_lifecycle.is_reap_pending(repo, sibling)
+    journal = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    recovery = next(row for row in journal if row["event"] == "reservation-recovery")
+    assert recovery["path"] == str(worktree)
+    assert recovery["reservation"]["head"] == head
+    assert recovery["decision"] == "release and re-evaluate safety proofs"
+    assert any(row["event"] == "reap" and row["path"] == str(worktree) for row in journal)
+
+
+@pytest.mark.parametrize("success_entry", [False, True])
+def test_live_reap_reservation_is_never_stolen(tmp_path, monkeypatch, success_entry):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/live-reservation")
+    with rw._ReapLock(repo):
+        reaper_lifecycle.mark_reap_pending(
+            repo,
+            worktree_path=worktree,
+            branch="codex/live-reservation",
+            head=git(worktree, "rev-parse", "HEAD"),
+            task_id=None,
+        )
+        before = reaper_lifecycle.pending_path(repo).read_bytes()
+        with pytest.raises(RuntimeError, match="another worktree cleanup holds"):
+            if success_entry:
+                rw.reap_success_worktree(repo_root=repo, worktree_path=worktree, reason="success")
+            else:
+                rw.reap_worktrees(repo_root=repo, target_paths=[worktree], apply=True, live_cwds=set())
+        assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+        assert worktree.exists()
+        assert not reaper_lifecycle.journal_path(repo).exists()
+
+
+@pytest.mark.parametrize("success_entry", [False, True])
+def test_reservation_recovery_from_linked_worktree_uses_shared_state(tmp_path, monkeypatch, success_entry):
+    repo = init_repo(tmp_path)
+    caller = add_worktree(repo, "codex/recovery-caller")
+    target = add_worktree(repo, "codex/shared-reservation")
+    reaper_lifecycle.mark_reap_pending(
+        repo, worktree_path=target, branch="codex/shared-reservation",
+        head=git(target, "rev-parse", "HEAD"), task_id=None,
+    )
+    patch_gh(monkeypatch, {"codex/shared-reservation": [{"number": 71, "state": "MERGED"}]})
+    if success_entry:
+        result = rw.reap_success_worktree(
+            repo_root=caller, worktree_path=target, reason="settled dispatch", apply=True
+        )
+    else:
+        result = result_for(
+            rw.reap_worktrees(repo_root=caller, target_paths=[target], apply=True, live_cwds=set()), target
+        )
+
+    assert result.action == "removed", result
+    assert not target.exists() and caller.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, target)
+    assert '"event": "reservation-recovery"' in reaper_lifecycle.journal_path(repo).read_text()
+    assert not (caller / "batch_state/worktree-reaper").exists()
+
+
+@pytest.mark.parametrize("unsafe", ["missing", "foreign", "dirty", "unpushed"])
+def test_success_recovery_keeps_existing_boundary_refusals(tmp_path, monkeypatch, unsafe):
+    repo = init_repo(tmp_path)
+    target = repo / ".worktrees/codex-success-refusal"
+    if unsafe != "missing":
+        target = add_worktree(
+            repo, "codex/success-refusal", path=repo.parent / "foreign" if unsafe == "foreign" else target
+        )
+        if unsafe in {"dirty", "unpushed"}:
+            (target / "README.md").write_text("unique work\n")
+        if unsafe == "unpushed":
+            git(target, "add", "README.md")
+            git(target, "commit", "-m", "unpushed work")
+        reaper_lifecycle.mark_reap_pending(
+            repo, worktree_path=target, branch="codex/success-refusal",
+            head=git(target, "rev-parse", "HEAD"), task_id=None,
+        )
+
+    result = rw.reap_success_worktree(
+        repo_root=repo, worktree_path=target, reason="settled dispatch", apply=True
+    )
+
+    assert result.action == "skipped", result
+    expected = {
+        "missing": "not a registered", "foreign": "outside repo .worktrees/",
+        "dirty": "dirty", "unpushed": "unpushed_head",
+    }
+    assert expected[unsafe] in result.reason
+    if unsafe != "missing":
+        assert target.exists()
+    if unsafe in {"dirty", "unpushed"}:
+        assert (target / "README.md").read_text() == "unique work\n"
+        assert not reaper_lifecycle.is_reap_pending(repo, target)
+
+
+@pytest.mark.parametrize("unsafe", ["dirty", "unmerged", "live-cwd"])
+def test_orphan_reservation_recovery_preserves_unsafe_worktree(tmp_path, monkeypatch, unsafe):
+    repo = init_repo(tmp_path)
+    branch = "codex/unsafe-reservation"
+    worktree = add_worktree(repo, branch)
+    # A unique commit prevents ancestry-based eligibility for the unmerged case.
+    (worktree / "unique.txt").write_text("committed work\n")
+    git(worktree, "add", "unique.txt")
+    git(worktree, "commit", "-m", "unique work")
+    if unsafe == "dirty":
+        (worktree / "README.md").write_text("uncommitted work\n")
+    patch_gh(monkeypatch, {branch: [] if unsafe == "unmerged" else [{"number": 71, "state": "MERGED"}]})
+    head = git(worktree, "rev-parse", "HEAD")
+    reaper_lifecycle.mark_reap_pending(repo, worktree_path=worktree, branch=branch, head=head, task_id=None)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            target_paths=[worktree],
+            apply=True,
+            live_cwds={worktree} if unsafe == "live-cwd" else set(),
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped", result
+    assert {"dirty": "dirty", "unmerged": "no reap condition", "live-cwd": "live process cwd"}[unsafe] in result.reason
+    assert worktree.exists() and git(worktree, "rev-parse", "HEAD") == head
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    if unsafe == "dirty":
+        assert (worktree / "README.md").read_text() == "uncommitted work\n"
+    assert '"event": "reservation-recovery"' in reaper_lifecycle.journal_path(repo).read_text()
+
+
+@pytest.mark.parametrize("disabled", [False, True])
+def test_orphan_reservation_dry_run_or_disabled_preserves_pending(tmp_path, monkeypatch, disabled):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/observe-reservation")
+    reaper_lifecycle.mark_reap_pending(
+        repo,
+        worktree_path=worktree,
+        branch="codex/observe-reservation",
+        head=git(worktree, "rev-parse", "HEAD"),
+        task_id=None,
+    )
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+    if disabled:
+        monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, target_paths=[worktree], apply=disabled, live_cwds=set()), worktree
+    )
+
+    assert result.action == "skipped" and result.reason == "active reap reservation"
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before and worktree.exists()
+
+
+def test_reservation_recovery_journal_failure_preserves_pending(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/journal-failure")
+    reaper_lifecycle.mark_reap_pending(
+        repo,
+        worktree_path=worktree,
+        branch="codex/journal-failure",
+        head=git(worktree, "rev-parse", "HEAD"),
+        task_id=None,
+    )
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+
+    def fail_journal(*args, **kwargs):
+        raise OSError("injected journal failure")
+
+    monkeypatch.setattr(reaper_lifecycle, "append_journal", fail_journal)
+    with pytest.raises(OSError, match="injected journal failure"):
+        rw.reap_worktrees(repo_root=repo, target_paths=[worktree], apply=True, live_cwds=set())
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before and worktree.exists()
 
 
 def test_p0_gh_guard_failure_never_deletes(
