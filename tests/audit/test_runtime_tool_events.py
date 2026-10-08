@@ -38,3 +38,13 @@ def test_map_runtime_tool_calls_prefers_full_result_over_truncated_summary() -> 
     assert len(events) == 1
     assert TRUNCATION_SUFFIX not in str(events[0]["output"])
     assert len(str(events[0]["output"])) > 500
+
+
+def test_codex_result_reaches_actual_qg_excerpt_reader():
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+
+    text = 'Direct excerpt\nwith "literal quotes" and no JSON escaping.'
+    calls = tool_calls_from_items([{"type": "mcp_tool_call", "server": "sources", "tool": "search_text",
+        "status": "completed", "arguments": {"query": "fixture"},
+        "result": {"content": [{"type": "text", "text": text}], "structured_content": {"fixture": 1}}}])
+    assert map_runtime_tool_calls(calls)[0]["output"] == text

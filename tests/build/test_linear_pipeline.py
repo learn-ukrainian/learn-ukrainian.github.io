@@ -4543,3 +4543,20 @@ def test_codex_writer_and_reviewer_defaults_use_astra_with_explicit_effort():
 def test_agy_writer_and_reviewer_defaults_use_live_flash_with_preserved_effort():
     assert linear_pipeline.WRITER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "high"}
     assert linear_pipeline.REVIEWER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "medium"}
+
+
+def test_codex_result_reaches_actual_textbook_reader():
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+    from scripts.build.linear_pipeline import _result_items_from_call
+
+    text = ('Found 1 results for: "fixture"\n\n### Result 1\n'
+            '- **Section**: Page 3\n- **Source**: fixture grade 1\n'
+            '- **Subject**: fixture\n- **Source file**: `fixture`\n'
+            '- **Chunk ID**: `fixture_s003`\n- **Text**:\nDirect textbook excerpt.')
+    item = {"type": "mcp_tool_call", "server": "sources", "tool": "search_text",
+            "status": "completed", "arguments": {"query": "fixture"},
+            "result": {"content": [{"type": "text", "text": text}]}}
+    call = tool_calls_from_items([item])[0]
+    assert _result_items_from_call(call) == [{"source_type": "textbook", "source": "fixture grade 1",
+        "title": "Fixture Grade 1, p.3", "text": "Direct textbook excerpt.",
+        "author": "fixture", "grade": 1, "page": 3}]

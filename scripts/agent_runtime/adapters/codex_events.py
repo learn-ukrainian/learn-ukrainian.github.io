@@ -245,10 +245,13 @@ def tool_calls_from_items(items: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             if not (isinstance(server, str) and server and isinstance(tool, str) and tool):
                 continue
             record = tool_call_record(
-                name=f"mcp__{server}__{tool}", arguments=item.get("arguments"), output=item.get("result")
+                name=f"mcp__{server}__{tool}", arguments=item.get("arguments"), output=_mcp_output(item)
             )
             record["output_summary"] = summarize_tool_output(_mcp_output(item))
             result = item.get("result")
+            # Internal evidence preserves the complete MCP envelope; legacy
+            # consumers continue to receive _mcp_output in result.
+            record["mcp_result"] = result
             record["paired"] = isinstance(result, Mapping)
             record["is_error"] = bool(
                 item.get("status") != "completed" or item.get("error")

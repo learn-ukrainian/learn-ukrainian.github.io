@@ -20,6 +20,7 @@ from scripts.curriculum.learner_state.inventory_gate import GateFailure, GateRep
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import (
+    ORTHOGRAPHY_CASES,
     make_draft,
     make_pack,
     make_plan,
@@ -1203,3 +1204,116 @@ def test_runner_missing_writer_sources_stops_at_shared_check_5(tmp_path, monkeyp
     assert (failed["check"], failed["code"], failed["layer"]) == (5, "writer_sources_missing", "engine")
     assert failed["details"]["writer_sources"]["forms"]["missing"] > 0
     assert not (state / "lesson-1.expanded.yaml").exists()
+
+
+@pytest.mark.parametrize("origin,exception", [
+    ("assembly", KeyError), ("assembly", IndexError), ("assembly", AttributeError),
+    ("coverage", StopIteration), ("coverage", KeyError), ("coverage", IndexError),
+])
+def test_check5_exception_writes_layer_correct_gates(tmp_path, monkeypatch, origin, exception):
+    from scripts.build.fresh import source_coverage
+
+    fixture = _fixture()
+    def fail(*args, **kwargs):
+        raise exception("fixture diagnostic")
+    # No receipt setup invokes the deliberately failing assembler before run_lesson.
+    monkeypatch.setattr(assemble if origin == "assembly" else source_coverage,
+                        "assemble_expanded_document" if origin == "assembly" else "check_coverage", fail)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, *fixture, sources_receipt=False)
+    saved = yaml.safe_load((state / "lesson-1.gates.yaml").read_text())
+    assert lock.check(state / "lesson-1.gates.yaml")
+    assert saved["checks"] == report["checks"] and saved["passed"] is False
+    row = next(row for row in saved["checks"] if row["check"] == 5)
+    assert row["status"] == "failed"
+    assert row["layer"] == ("writer" if origin == "assembly" else "engine")
+    assert row["reason"].startswith("assembly raised:" if origin == "assembly" else
+                                    "source coverage raised: " + exception.__name__)
+    assert "fixture diagnostic" in row["reason"]
+    assert not row.get("code", "").startswith("writer_sources_")
+
+
+@pytest.mark.parametrize("case", ORTHOGRAPHY_CASES)
+@pytest.mark.parametrize("mutation", ["valid", "bad_key", "word_distractor"])
+def test_all_closed_lists_reach_full_runner_check7(tmp_path, monkeypatch, case, mutation):
+    from scripts.verification import vesum
+    from tests.build.test_fresh_assemble import orthography_fixture
+
+    fixture = orthography_fixture(case)
+    item = fixture[0]["activities"][0]["items"][0]
+    key = item["options"].index(item["answer"])
+    other = item["options"][1 - key]
+    if mutation == "bad_key":
+        item["answer"] = other
+    calls = []
+    def lookup(forms, **kwargs):
+        calls.append(forms)
+        # Typed synthetic oracle: a distractor with positive analysis must fail.
+        return {form: ([{"lemma": form, "pos": "noun"}] if mutation == "word_distractor" else []) for form in forms}
+    monkeypatch.setattr(vesum, "verify_words", lookup)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, *fixture)
+    assert all(row["status"] == "passed" for row in report["checks"] if row["check"] < 7), report
+    row = next(row for row in report["checks"] if row["check"] == 7)
+    if mutation == "valid":
+        assert row["status"] == "passed", report
+        assert report["passed"], report
+    else:
+        assert row["code"] == ("orthography_target_invalid" if mutation == "bad_key" else "orthography_distractor_is_word")
+    if mutation != "bad_key":
+        assert calls and calls[-1] == ["л" + option + "к" for option in item["options"]]
+    tokens = receipts.check_receipts(state / "lesson-1.resolutions.yaml")["tokens"]
+    answers = [token for token in tokens if token["unit"].get("activity") == "a1" and token["unit"].get("block") == "answer"]
+    assert all(token["class"] == "skipped:vesum_exempt" and token["candidates"] == [] for token in answers)
+
+
+def test_orthography_answer_never_credits_coincidental_letter_record(tmp_path, monkeypatch):
+    from scripts.verification import vesum
+    from tests.build.test_fresh_assemble import ORTHOGRAPHY_CASES, orthography_fixture
+
+    fixture = orthography_fixture(ORTHOGRAPHY_CASES[2])
+    fixture[3]["words"].append(make_word_record(3, "я", pos="pron", gloss_en="synthetic letter collision"))
+    monkeypatch.setattr(vesum, "verify_words", lambda forms, **kwargs: {form: [] for form in forms})
+    report, state, _ = _run_contract(tmp_path, monkeypatch, *fixture)
+    assert report["passed"], report
+    answers = [token for token in receipts.check_receipts(state / "lesson-1.resolutions.yaml")["tokens"]
+               if token["unit"].get("block") == "answer"]
+    assert len(answers) == 1
+    assert answers[0]["class"] == "skipped:vesum_exempt" and answers[0]["candidates"] == []
+    assert not answers[0].get("selected")
+
+
+def test_orthography_explanation_cannot_bypass_allowlist(tmp_path, monkeypatch):
+    from tests.build.test_fresh_assemble import ORTHOGRAPHY_CASES, orthography_fixture
+
+    fixture = orthography_fixture(ORTHOGRAPHY_CASES[3])
+    fixture[0]["activities"][0]["items"][0]["explanation"] = "позастанове"
+    report, _, _ = _run_contract(tmp_path, monkeypatch, *fixture)
+    row = next(row for row in report["checks"] if row["status"] == "failed")
+    assert row["check"] == 7 and row["code"] == "lemma_outside_state"
+
+
+@pytest.mark.parametrize("defect", ["assembler_error", "expanded_schema", "provenance_schema", "internal_id"])
+def test_check5_existing_assembly_diagnostics_survive_coverage(tmp_path, monkeypatch, defect):
+    fixture = _fixture()
+    original = assemble.assemble_expanded_document
+    def defective_assembly(*args, **kwargs):
+        if defect == "assembler_error":
+            raise assemble.AssemblerError("fixture_contract_code", "fixture diagnostic", layer="pack")
+        expanded, provenance = original(*args, **kwargs)
+        if defect == "expanded_schema":
+            expanded["expanded_schema"] = 999
+        elif defect == "provenance_schema":
+            provenance["provenance_schema"] = 999
+        elif defect == "internal_id":
+            expanded["units"][0]["text"] = "1234abcd_c0001"
+        return expanded, provenance
+    monkeypatch.setattr(assemble, "assemble_expanded_document", defective_assembly)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, *fixture,
+                                    sources_receipt=defect != "assembler_error")
+    saved = yaml.safe_load((state / "lesson-1.gates.yaml").read_text())
+    row = next(row for row in saved["checks"] if row["check"] == 5)
+    assert row["status"] == "failed" and not row["code"].startswith("writer_sources_")
+    assert row["layer"] == ("pack" if defect == "assembler_error" else "writer")
+    reason = {"assembler_error": "fixture_contract_code:", "expanded_schema": "expanded document schema validation",
+              "provenance_schema": "provenance document schema validation", "internal_id": "internal_learner_term:"}[defect]
+    assert row["reason"].startswith(reason)
+    assert saved["checks"] == report["checks"] and lock.check(state / "lesson-1.gates.yaml")

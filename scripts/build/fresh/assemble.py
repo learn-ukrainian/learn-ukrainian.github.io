@@ -1444,7 +1444,8 @@ def assemble_expanded_document(
                     # The translation parser trims candidate edges. Expand the
                     # same learner text so provenance describes its actual chips.
                     answer = answer.strip()
-                for role, span_text in _split_inline_spans(answer, "item_answer"):
+                answer_role = "vesum_exempt" if act_type == "fill-in" and item.get("mode") == "orthography" else "item_answer"
+                for role, span_text in _split_inline_spans(answer, answer_role):
                     if act_type == "error-correction":
                         error_ref = item.get("error_ref")
                         add_unit(
@@ -1869,14 +1870,17 @@ def check_5_assembly(
 
     try:
         expanded_doc, provenance_doc = assemble_expanded_document(draft, plan, pack, words_store, level, slug, lesson_n)
+    except AssemblerError as exc:
+        return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
+    except Exception as exc:
+        return CheckResult(check=5, passed=False, reason=f"assembly raised: {exc}", layer="writer")
+    try:
         coverage = check_coverage(
             draft, plan, pack, words_store, level, slug, lesson_n,
             state_dir=output_dir, expected_inputs=expected_inputs, provenance=provenance_doc,
         )
-    except AssemblerError as exc:
-        return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
-    except (OSError, ValueError, KeyError, TypeError):
-        return CheckResult(check=5, passed=False, reason="writer_sources_evidence_uncovered", layer="engine")
+    except Exception as exc:
+        return CheckResult(check=5, passed=False, reason=f"source coverage raised: {type(exc).__name__}: {exc}", layer="engine")
     if coverage["code"]:
         return CheckResult(check=5, passed=False, reason=coverage["code"], layer="engine",
                            details={"writer_sources": coverage})

@@ -17,6 +17,7 @@ import yaml
 from scripts.build.fresh import assemble, runner, writer
 from scripts.build.fresh import source_coverage as coverage
 from scripts.curriculum.evidence import lock
+from tests.build.test_fresh_assemble import ORTHOGRAPHY_CASES
 from tests.build.test_fresh_runner import _fixture
 
 
@@ -704,3 +705,164 @@ def test_formula_w_record_requires_all_component_form_results():
     assert summary["evidence"]["missing"] == 1
     complete = partial | coverage.credited_keys(verification(["synthetic-second"]))
     assert coverage.coverage_summary(set(), evidence, complete, code=None)["evidence"]["covered"] == 1
+
+
+@pytest.mark.parametrize("variant", ["content", "fallback", "empty", "error", "isError", "missing",
+                                     "truncated", "mismatch", "malformed", "unpaired"])
+def test_codex_persistence_harvest_coverage_differential(tmp_path, monkeypatch, variant):
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+    from scripts.delegate import _persist_sources_tool_calls
+
+    fixture = _fixture()
+    forms, evidence, _, _ = coverage.obligations(*fixture, "a1", "sample-slug", 1)
+    requested = sorted(forms | {key[5:] for key in evidence.values() if isinstance(key, str) and key.startswith("form:")})
+    envelope = verification(requested)["result"]
+    item = {"type": "mcp_tool_call", "server": "sources", "tool": "verify_words", "status": "completed",
+            "arguments": {"words": requested},
+            "result": {"content": [{"type": "text", "text": "fixture display"}], "structured_content": envelope}}
+    if variant == "fallback":
+        item["result"]["content"] = []
+    elif variant == "empty":
+        item["result"] = {"content": []}
+    elif variant == "error":
+        item["error"] = {"message": "fixture error"}
+    elif variant == "isError":
+        item["result"]["isError"] = True
+    elif variant == "missing":
+        item.pop("result")
+    elif variant == "truncated":
+        item["result"]["content"][0]["text"] = "[...truncated]"
+    elif variant == "mismatch":
+        envelope["query"] = {"words": ["different"]}
+    elif variant == "malformed":
+        item["result"] = "malformed"
+    calls = tool_calls_from_items([item])
+    if variant == "unpaired":
+        calls[0]["paired"] = False
+    # fe0fbab's credit path consumed the full MCP object. Keep that baseline
+    # separate from c33dadcc31's legacy result/consumer baseline.
+    legacy_credit_call = {**calls[0], "result": item.get("result")}
+    legacy_credit_call.pop("mcp_result")
+    assert legacy_credit_call["result"] == calls[0]["mcp_result"]
+    # These exact fe0fbab baseline credits were verified before freezing the
+    # fixture. CI consumes the expected result without historical Git reads.
+    expected = {"form:слово"} if variant in {"content", "fallback"} else set()
+    assert coverage.credited_keys(calls[0]) == expected
+    assert bool(expected) == (variant in {"content", "fallback"})
+    state = tmp_path / "state"
+    task, inputs = seal_writer(state, monkeypatch, *fixture, calls=calls)
+    task_path = state / "tasks" / (task["task_id"] + ".json")
+    task.update(_persist_sources_tool_calls(task_path, calls))
+    task_path.write_text(json.dumps(task))
+    meta = yaml.safe_load((state / "lesson-1.writer.yaml").read_text())
+    coverage.harvest_receipt(state, 1, level="a1", slug="sample-slug", inputs=inputs,
+                             meta=meta, task=task, draft_file=state / "lesson-1.draft.yaml")
+    receipt = json.loads((state / "lesson-1.writer_tool_calls.json").read_text())
+    summary = check(state, fixture)
+    assert (summary["code"] is None) == bool(expected)
+    if expected:
+        assert receipt["credited_calls"][0]["credited_keys"] == sorted(expected)
+        assert receipt["credited_calls"][0]["result_sha256"] == coverage.digest(item["result"])
+        # Re-sealing the sidecar and task does not re-seal the per-call receipt.
+        calls[0]["mcp_result"]["content"][0:0] = [{"type": "text", "text": "altered evidence bytes"}]
+        task.update(_persist_sources_tool_calls(task_path, calls))
+        task_path.write_text(json.dumps(task))
+        receipt["sidecar_sha256"] = task["tool_calls_sha256"]
+        (state / "lesson-1.writer_tool_calls.json").write_text(json.dumps(receipt))
+        assert check(state, fixture)["code"] == "writer_sources_binding_mismatch"
+
+
+@pytest.mark.parametrize("case", ORTHOGRAPHY_CASES)
+def test_five_typed_orthography_exclusions(case):
+    from scripts.curriculum.resolver.tokenize import tokenize
+    from tests.build.test_fresh_assemble import baseline_assembly, orthography_fixture
+
+    fixture = orthography_fixture(case)
+    _, old = baseline_assembly(fixture, case[0])
+    forms, evidence, _, _ = coverage.obligations(*fixture, "a1", "sample-slug", 1)
+    assert forms == {"слово"}
+    assert evidence["W-2"] == "form:" + coverage._form(fixture[3]["words"][1]["lemma"])
+    formerly_required = {coverage._form(t.lookup) for s in old["spans"]
+                         if s["source"] == "writer_prose" and s["role"] != "phonetics"
+                         for t in tokenize(s["text"]) if t.kind in {"cyrillic", "mixed"}}
+    assert formerly_required >= forms and formerly_required != forms
+
+
+@pytest.mark.parametrize("control", ["orthography_prose", "writer_options", "bilingual", "narration_dialogue", "identities"])
+def test_ordinary_forms_and_identities_stay_required(control):
+    from tests.build.test_fresh_assemble import ORTHOGRAPHY_CASES, orthography_fixture
+
+    draft, plan, pack, words = orthography_fixture(ORTHOGRAPHY_CASES[3])
+    item = draft["activities"][0]["items"][0]
+    expected = set()
+    if control == "orthography_prose":
+        item.update(sentence="слово л___к слово", explanation="пояснення", option_why=["перше", "друге"])
+        expected = {"слово", "пояснення", "перше", "друге"}
+    elif control == "writer_options":
+        for aid, typ, entry in [("a2", "quiz", {"question": "Choose", "options": ["ліве", "праве"], "correct": 0}),
+                                ("a3", "odd-one-out", {"words": ["третє", "четверте"], "correct": 0})]:
+            plan["lessons"][0]["activities"].append({"id": aid, "type": typ, "placement": "inline", "focus": "Choose"})
+            draft["activities"].append({"id": aid, "instruction": "Choose", "items": [{**entry, "explanation": "Choose"}]})
+            draft["steps"][0]["blocks"].append({"kind": "activity", "ref": aid})
+        expected = {"ліве", "праве", "третє", "четверте"}
+    elif control == "bilingual":
+        draft["steps"][0]["blocks"].append({"kind": "bilingual", "uk": ["слово"], "en": ["English мережа"]})
+        expected = {"мережа"}
+    elif control == "narration_dialogue":
+        draft["steps"][0]["blocks"].append({"kind": "prose", "text": "розповідь", "explains": []})
+        draft["dialogue"] = {"lines": [{"speaker": "Person", "text": "діалог"}], "translation_en": ["переклад"]}
+        draft["steps"][0]["blocks"].append({"kind": "dialogue"})
+        expected = {"розповідь", "діалог", "переклад"}
+    else:
+        pack["texts"] = [{"id": "T-1", "source": {"chunk_id": "synthetic-chunk"}}]
+        plan["lessons"][0]["steps"][0]["evidence"].append("T-1")
+    forms, evidence, _, _ = coverage.obligations(draft, plan, pack, words, "a1", "sample-slug", 1)
+    assert expected <= forms
+    if control == "identities":
+        assert evidence == {"W-1": "form:слово", "W-2": "form:люк", "T-1": "chunk:synthetic-chunk"}
+
+
+@pytest.mark.parametrize("control", ["phonetics", "cited_error", "uncited_error"])
+def test_existing_typed_coverage_exceptions(control):
+    fixture = _fixture()
+    draft, plan, pack, _words = fixture
+    if control == "phonetics":
+        draft["steps"][0]["blocks"].append({"kind": "prose", "text": "Meet {{uk:ю}}.", "explains": []})
+        plan["lessons"][0]["inventory"]["phonetics"] = {"letters": ["Ю"], "sounds": []}
+        expected = {"слово"}
+    else:
+        plan["lessons"][0]["activities"] = [{"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Fix"}]
+        draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+        item = {"sentence": "помилка", "error": "помилка", "correction": "виправлення", "explanation": "Fix"}
+        if control in {"cited_error", "uncited_error"}:
+            item["error_ref"] = "E-1"
+            pack["errors"] = [{"id": "E-1", "incorrect": "помилка", "correct": "виправлення", "source": {"table": "ua_gec_errors", "id": 123}}]
+        draft["activities"] = [{"id": "a1", "instruction": "Fix", "items": [item]}]
+        expected = {"слово"} if control == "cited_error" else {"слово", "помилка"}
+    _, provenance = assemble.assemble_expanded_document(*fixture, "a1", "sample-slug", 1)
+    if control == "uncited_error":
+        # Exercise the existing schema-valid writer_prose error_text contract
+        # with a complete typed provenance document, rather than a role mock.
+        for span in provenance["spans"]:
+            if span["role"] == "error_text":
+                span["source"] = "writer_prose"
+                for key in ("ref", "record_kind", "record_side"):
+                    span[key] = None
+        assemble.get_provenance_validator().validate(provenance)
+    forms, _, _, _ = coverage.obligations(*fixture, "a1", "sample-slug", 1, provenance=provenance)
+    assert forms == expected
+
+
+@pytest.mark.parametrize("encoding", ["int", "answer", "dict"])
+def test_nonorthography_required_forms_and_expansion_match_rejected_head(encoding):
+    from scripts.curriculum.resolver.tokenize import tokenize
+    from tests.build.test_fresh_assemble import baseline_assembly
+
+    fixture = quiz_fixture(encoding)
+    old = baseline_assembly(fixture, "quiz-" + encoding)
+    new = assemble.assemble_expanded_document(*fixture, "a1", "sample-slug", 1)
+    assert tuple(map(lock.yaml_bytes, new)) == tuple(map(lock.yaml_bytes, old))
+    required = {coverage._form(t.lookup) for s in old[1]["spans"]
+                if s["source"] == "writer_prose" and s["role"] != "phonetics"
+                for t in tokenize(s["text"]) if t.kind in {"cyrillic", "mixed"}}
+    assert coverage.obligations(*fixture, "a1", "sample-slug", 1)[0] == required

@@ -13,7 +13,13 @@ Coverage comes from actual paired non-error results, never queries, hit counts o
 Search results must echo the query and identify the cited chunk, UA-GEC row, style entry or URL.
 W-records are covered by form verification; S-records remain engine-pinned with verified digest
 and line range; U-records remain report-only. Existing phonetic and sourced intentional-error
-exceptions remain unchanged. Engine-only record expansions retain check 7. Steps, their order, their evidence and their activities are binding; only the wording inside a step is the writer's. The recap writer also receives the built lessons 1…N−1 of its module.
+exceptions remain unchanged. For a plan activity of type `fill-in` whose draft item has
+`mode: orthography`, blank fragments and answers use the existing `vesum_exempt` role;
+only that item's `vesum_exempt` and `item_option` spans are excluded from required forms.
+Its prefix, suffix, explanation and option feedback stay required. Ordinary answers and
+writer options retain their roles and coverage obligations. The existing closed-list
+validation and check 7 completed-target and nonword-distractor checks still bind.
+Engine-only record expansions retain check 7. Steps, their order, their evidence and their activities are binding; only the wording inside a step is the writer's. The recap writer also receives the built lessons 1…N−1 of its module.
 
 ## Principles
 1. **The writer returns data, not a page.** One structured document per call, validated by a schema before anything else looks at it. The engine assembles the four tabs from it; nobody interprets prose to find a step, an activity or a citation.
@@ -228,7 +234,10 @@ Question 1 he answered himself; on the others he said **"i accept the defaults"*
 The engine harvests a metadata-only `lesson-n.writer_tool_calls.json`, bound to lesson,
 task, attempt, writer/model/effort, the full existing INPUT_KEYS digest, actual prompt hash,
 exact draft-byte hash and ignored full-result sidecar hash. It recomputes coverage at check 5;
-a saved verdict has no authority. Full results remain in ignored task state and are never
+a saved verdict has no authority. Each result hash covers the same complete per-call material
+used for credit and error/truncation guards. Codex keeps that MCP envelope in internal
+`mcp_result`, preserving the legacy normalized `result` consumed by grounding readers.
+Full results remain in ignored task state and are never
 staged. Public metadata contains only tool names, credited identities and result hashes,
 never queries, excerpts or private grounding bodies. Coverage proves source interaction and
 identity matching; semantic review still judges support, naturalness and pedagogy. Sources

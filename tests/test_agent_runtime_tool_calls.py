@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+import pytest
+
 from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
 
 
@@ -264,3 +266,66 @@ def test_paired_results_preserve_explicit_claude_errors():
         assert calls[0]["is_error"] is error
     orphan = normalize_tool_calls([{"type": "tool_result", "tool_use_id": "missing", "content": "synthetic"}])
     assert orphan == []
+
+
+@pytest.mark.parametrize("variant", ["content", "empty", "fallback", "error", "isError", "missing", "malformed"])
+def test_codex_legacy_result_variants(variant):
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+    from scripts.agent_runtime.tool_calls import summarize_tool_output
+    from scripts.audit.runtime_tool_events import map_runtime_tool_calls
+    from scripts.build.linear_pipeline import _result_items_from_call
+
+    item = {"type": "mcp_tool_call", "server": "sources", "tool": "search_text",
+            "status": "completed", "arguments": {"query": "fixture"},
+            "result": {"content": [{"type": "text", "text": "fixture excerpt"}],
+                       "structured_content": {"fixture": "structured"}}}
+    expected = item["result"]["content"]
+    if variant in {"empty", "fallback"}:
+        item["result"]["content"] = []
+        expected = item["result"]["structured_content"] if variant == "fallback" else None
+        if variant == "empty":
+            del item["result"]["structured_content"]
+    elif variant == "error":
+        item["error"] = {"message": "fixture server error"}
+        expected = "fixture server error"
+    elif variant == "isError":
+        item["result"]["isError"] = True
+    elif variant in {"missing", "malformed"}:
+        item["result"] = None if variant == "missing" else "malformed"
+        expected = None
+    record = tool_calls_from_items([item])[0]
+    assert record.get("result") == expected
+    assert ("result" in record) == (expected is not None)
+    assert record["mcp_result"] == item["result"]
+    # Exact c33dadcc31 consumer-facing shape, frozen independently of Git
+    # availability in CI. Missing outputs omit result rather than storing None.
+    baseline = {"name": "mcp__sources__search_text", "arguments": {"query": "fixture"},
+                "status": "completed", "output_summary": summarize_tool_output(expected)}
+    if expected is not None:
+        baseline["result"] = expected
+    assert _result_items_from_call(record) == _result_items_from_call(baseline)
+    assert map_runtime_tool_calls([record]) == map_runtime_tool_calls([baseline])
+
+
+@pytest.mark.parametrize("item,name,arguments,result", [
+    ({"type": "command_execution", "command": "fixture", "aggregated_output": "literal output"}, "exec_command", {"cmd": "fixture"}, "literal output"),
+    ({"type": "file_change", "changes": ["fixture"]}, "apply_patch", {"changes": ["fixture"]}, None),
+    ({"type": "web_search", "query": "fixture"}, "web_search", {"query": "fixture"}, None),
+    ({"type": "collab_tool_call", "tool": "fixture_tool", "receiver_thread_ids": ["fixture"]}, "fixture_tool", {"receiver_thread_ids": ["fixture"]}, None),
+    ({"type": "todo_list", "items": ["fixture"]}, "update_plan", {"items": ["fixture"]}, None),
+])
+def test_codex_other_typed_calls_keep_legacy_shape(item, name, arguments, result):
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+
+    call = tool_calls_from_items([item])[0]
+    assert call["name"] == name and call["arguments"] == arguments
+    assert call.get("result") == result and "mcp_result" not in call
+
+
+@pytest.mark.parametrize("item", [{"type": "unknown"}, {"type": "collab_tool_call"},
+    {"type": "mcp_tool_call", "server": "", "tool": "verify_word"},
+    {"type": "mcp_tool_call", "server": "sources", "tool": None}])
+def test_codex_invalid_typed_calls_do_not_capture(item):
+    from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
+
+    assert tool_calls_from_items([item]) == []

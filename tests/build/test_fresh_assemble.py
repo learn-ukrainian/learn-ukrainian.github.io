@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ast
+import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -2410,3 +2412,187 @@ def test_proper_name_with_gloss_remains_in_flashcard_deck():
         {"lemma": "Name", "translation": "a name", "pos": "propn", "atlas_href": None},
     ])
     assert '"front":"Name","back":"a name"' in mdx
+
+
+# Structural orthography doubles: these target forms assert routing, not language validity.
+ORTHOGRAPHY_CASES = [("apostrophe-or-empty", ["'", ""], "'"),
+                    ("soft-sign-or-empty", ["ь", ""], "ь"),
+                    ("a-or-ya", ["а", "я"], "я"),
+                    ("u-or-yu", ["у", "ю"], "ю"),
+                    ("e-or-ye", ["е", "є"], "є")]
+
+
+def orthography_fixture(case):
+    from tests.build.test_fresh_runner import _fixture
+
+    _name, options, answer = case
+    draft, plan, pack, words = _fixture()
+    target = make_word_record(2, "л" + answer + "к", gloss_en="synthetic target")
+    words["words"].append(target)
+    lesson = plan["lessons"][0]
+    lesson["inventory"]["vocabulary"]["incidental"].append({"lemma": target["lemma"], "evidence": "W-2"})
+    lesson["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Spelling"}]
+    lesson["steps"][0]["practice"] = ["a1"]
+    lesson["steps"][0]["evidence"].append("W-2")
+    draft["steps"][0]["blocks"][0]["explains"].append("W-2")
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [{
+        "sentence": "л___к", "options": options.copy(), "answer": answer,
+        "mode": "orthography", "kind": "orthography", "target_record": "W-2",
+        "explanation": "Check the spelling.", "option_why": ["Target.", "Other completion."]}]}]
+    validate_fixture_draft(draft)
+    return draft, plan, pack, words
+
+
+# Expanded/provenance fingerprints captured from exact fe0fbab09dcaab7a3b399de1b0435cb81817c5b3.
+# CI may use shallow checkouts; regression fixtures must not need historical Git objects.
+BASELINE_ASSEMBLY_DIGESTS = {
+    "apostrophe-or-empty": [
+        "f1c22d802016da08b0e85ae34b4f974668f909e88ad1b518f3a635ef324e5f7e",
+        "7c59468a3cf7a743758fdc709ef8189a2ea8f624b6e1a0747876c9d6c76b2e91"
+    ],
+    "soft-sign-or-empty": [
+        "89912d4a8a7e161ba860fc3c6ac97b349f7e355630cf8c8f054ed3fd1c186e3a",
+        "cde730d2d3c58b11b7c04fdb5a2b2f1f1142916e43f4756190f803a4efd42941"
+    ],
+    "a-or-ya": [
+        "36a286e9cbcb41095a75b0f0a23fbc7f40da6c48185b0c1577a17198784d0a94",
+        "005f91b9b913be92d612a80b675bb68da70d796283dbc7cbaeace6867ca3368f"
+    ],
+    "u-or-yu": [
+        "cf872d6010e7645e1c539ee2ffdab228f2c5e387e092d7a725d5bd8b4552b8bc",
+        "093014f9b0e3b1d248f49500877eacdc38802104df2ab2e53a02cf204357a07d"
+    ],
+    "e-or-ye": [
+        "5a5a9ce0cc35949bdb350353adb8bfad9165a09f9b78aaf9e16a94e9e3fe4de3",
+        "d0879910d7a07d2bcf121c18b67f0e1cd93d7f2b398fa2867b8b8dc6f7145c23"
+    ],
+    "quiz-int": [
+        "888c4d57a704b6b4fd55532b75688450139c4019c2c669f572c10b2e88db3d3f",
+        "0cecd6b206ce3d0bc0eb22c462432ee31af831dafde189258de286efcc94fa6a"
+    ],
+    "quiz-answer": [
+        "888c4d57a704b6b4fd55532b75688450139c4019c2c669f572c10b2e88db3d3f",
+        "0cecd6b206ce3d0bc0eb22c462432ee31af831dafde189258de286efcc94fa6a"
+    ],
+    "quiz-dict": [
+        "888c4d57a704b6b4fd55532b75688450139c4019c2c669f572c10b2e88db3d3f",
+        "0cecd6b206ce3d0bc0eb22c462432ee31af831dafde189258de286efcc94fa6a"
+    ],
+    "answer-form_choice": [
+        "d9f5db83fec78b8deceede2a2ee67537732180f9f824d79c96b8f8bde22cfa19",
+        "688a48805ce1331da56801dddcd2460bbd245306b1cbca59a76dac76902b5ede"
+    ],
+    "answer-translate": [
+        "e99fd2fca4c1596778458e8cec456592e40487c5d6a089e4acb5a3a72160381d",
+        "5ec1ada44506f986f7a70250136c7004cdaec1f07faa50141a4e384db3909102"
+    ],
+    "answer-error_correction": [
+        "b5786b631ddc75ec24a6c138b6b996ffd52671487593f64e9bdf66c10f600c55",
+        "ea66f0788466ead587d12c057d464be19cb6e8b7c8d4d76e8d50b78e6b42f40f"
+    ],
+    "answer-true_false": [
+        "d1462442d1daacd4792fe9d62ddef37a7cb744cd17864747e00f7812d9673232",
+        "fd3f7c7f7acf6f6078807cf972f3f842d92edbcbd6145962b48eac8ae8aa9cbf"
+    ],
+    "answer-missing_mode": [
+        "d9f5db83fec78b8deceede2a2ee67537732180f9f824d79c96b8f8bde22cfa19",
+        "20bc1ca4b4700977e7add5e164e43e2c66f84b3450b7ea3794db81ced83589db"
+    ],
+    "answer-other_type": [
+        "e99fd2fca4c1596778458e8cec456592e40487c5d6a089e4acb5a3a72160381d",
+        "5ec1ada44506f986f7a70250136c7004cdaec1f07faa50141a4e384db3909102"
+    ]
+}
+
+
+def baseline_assembly(fixture, baseline_key):
+    """Build the old-role control and prove its complete bytes against frozen fe0fbab."""
+    from scripts.curriculum.evidence import lock
+
+    docs = copy.deepcopy(assemble_expanded_document(*fixture, "a1", "sample-slug", 1))
+    for document, key in zip(docs, ("units", "spans"), strict=True):
+        for unit in document[key]:
+            if unit.get("block") == "answer" and unit["role"] == "vesum_exempt":
+                unit["role"] = "item_answer"
+    actual = [hashlib.sha256(lock.yaml_bytes(document)).hexdigest() for document in docs]
+    assert actual == BASELINE_ASSEMBLY_DIGESTS[baseline_key]
+    return docs
+
+
+@pytest.mark.parametrize("case", ORTHOGRAPHY_CASES, ids=[row[0] for row in ORTHOGRAPHY_CASES])
+def test_orthography_only_answer_role_changes_and_render_bytes_hold(tmp_path, monkeypatch, case):
+    from scripts.build.fresh import assemble
+    from scripts.curriculum.evidence import lock
+
+    fixture = orthography_fixture(case)
+    old_doc, old_prov = baseline_assembly(fixture, case[0])
+    new_doc, new_prov = assemble_expanded_document(*fixture, "a1", "sample-slug", 1)
+    answer_units = [u for u in new_doc["units"] if u["activity"] == "a1" and u["block"] == "answer"]
+    assert len(answer_units) == 1 and answer_units[0]["role"] == "vesum_exempt"
+    assert answer_units[0]["text"] == case[2]
+    for document, key in [(new_doc, "units"), (new_prov, "spans")]:
+        for unit in document[key]:
+            if unit.get("activity") == "a1" and unit.get("block") == "answer":
+                unit["role"] = "item_answer"
+    assert lock.yaml_bytes(new_doc) == lock.yaml_bytes(old_doc)
+    assert lock.yaml_bytes(new_prov) == lock.yaml_bytes(old_prov)
+    # Render both original documents through the real check 9, with identical
+    # resolutions: vowel-free/monosyllable answers must never gain stress.
+    new_doc, _ = assemble_expanded_document(*fixture, "a1", "sample-slug", 1)
+    monkeypatch.setattr(assemble, "planned_state", lambda *a, **k: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *a, **k: (True, ""))
+    monkeypatch.setattr(lesson_lock, "compute_lesson_lock", lambda *a, **k: {"lessons": [{"n": 1, "entry_sha256": fixture[0]["inputs"]["lesson_lock_entry_sha256"]}]})
+    stream = type("Stream", (), {"tokens": [], "failures": []})()
+    draft, plan, pack, words = fixture
+    results = [check_9_stress_and_render(doc, draft, plan, pack, words, stream, "a1", "sample-slug", 1,
+                output_dir=tmp_path / str(i), site_dir=tmp_path / ("site" + str(i)))
+               for i, doc in enumerate([old_doc, new_doc])]
+    assert all(result.passed for result in results), results
+    assert results[0].artifacts["mdx"] == results[1].artifacts["mdx"]
+
+
+@pytest.mark.parametrize("control", ["form_choice", "translate", "error_correction", "true_false", "missing_mode", "other_type"])
+def test_ordinary_answer_controls_use_actual_assembly_and_resolver(control):
+    from scripts.build.fresh import source_coverage
+    from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument
+    from scripts.curriculum.resolver.stream import resolve
+    from tests.build.test_fresh_runner import _fixture, _FixtureSources
+
+    fixture = _fixture()
+    draft, plan, pack, words = fixture
+    typ = "fill-in"
+    item = {"sentence": "____", "answer": "слово", "options": ["слово", "слова"],
+            "mode": "form-choice", "record": "W-1", "answer_tags": "noun:inanim:n:v_naz", "explanation": "Choose"}
+    if control in {"translate", "other_type"}:
+        typ = "translate"
+        item = {"source": "word", "answer": "слово", "explanation": "Translate"}
+        if control == "other_type":
+            item["mode"] = "orthography"
+    elif control == "error_correction":
+        typ = "error-correction"
+        item = {"sentence": "слове", "error": "слове", "correction": "слово", "error_ref": "E-1", "explanation": "Fix"}
+        pack["errors"] = [{"id": "E-1", "incorrect": "слове", "correct": "слово"}]
+    elif control == "true_false":
+        typ = "true-false"
+        item = {"statement": "слово", "is_true": True, "explanation": "Read"}
+    elif control == "missing_mode":
+        item.pop("mode")
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": typ, "placement": "inline", "focus": "Control"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Control", "items": [item]}]
+    expanded, provenance = assemble_expanded_document(*fixture, "a1", "sample-slug", 1)
+    old = baseline_assembly(fixture, "answer-" + control)
+    from scripts.curriculum.evidence import lock
+    assert tuple(map(lock.yaml_bytes, (expanded, provenance))) == tuple(map(lock.yaml_bytes, old))
+    answers = [s for s in provenance["spans"] if s.get("block") == "answer"]
+    if control == "true_false":
+        assert not answers
+    else:
+        assert len(answers) == 1 and answers[0]["role"] == "item_answer"
+        assert answers[0]["source"] == ("record" if control == "error_correction" else "writer_prose")
+        stream = resolve(ExpandedDocument.from_data(expanded), Allowlist.from_records(words["words"]), _FixtureSources())
+        tokens = [t for t in stream.tokens if t["unit"].get("block") == "answer"]
+        assert len(tokens) == 1 and tokens[0]["class"] == "resolved"
+        assert tokens[0]["selected"]["stressed"] == "сло́во"
+    assert "слово" in source_coverage.obligations(*fixture, "a1", "sample-slug", 1, provenance=provenance)[0]

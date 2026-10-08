@@ -255,7 +255,7 @@ def test_codex_adapter_maps_typed_mcp_items_to_tool_calls(tmp_path: Path) -> Non
     assert verify["name"] == "mcp__sources__verify_words"
     assert verify["arguments"] == {"words": ["день"]}
     assert search["name"] == "mcp__sources__search_text"
-    assert search["result"]["content"] == [{"type": "text", "text": "Found 1 result"}]
+    assert search["result"] == [{"type": "text", "text": "Found 1 result"}]
     assert search["paired"] is True and search["is_error"] is False
     assert failed["is_error"] is True
     assert search["output_summary"] == '[{"text": "Found 1 result", "type": "text"}]'
@@ -308,7 +308,8 @@ def test_codex_structured_result_and_all_error_channels(status, is_error, item_e
     calls = tool_calls_from_items([{"type": "mcp_tool_call", "server": "sources", "tool": "verify_words",
         "status": status, "arguments": {}, "error": item_error,
         "result": {"isError": is_error, "content": [], "structured_content": envelope}}])
-    assert calls[0]["result"]["structured_content"] == envelope
+    assert calls[0]["result"] == (item_error["message"] if item_error else envelope)
+    assert calls[0]["mcp_result"]["structured_content"] == envelope
     assert calls[0]["paired"] is True
     assert calls[0]["is_error"] is (status != "completed" or is_error or bool(item_error))
 

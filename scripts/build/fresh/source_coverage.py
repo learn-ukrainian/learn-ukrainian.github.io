@@ -95,7 +95,7 @@ def credited_keys(call: dict[str, Any]) -> set[str]:
     """
     name = call.get("name", "")
     args = call.get("arguments")
-    result = call.get("result")
+    result = call.get("mcp_result", call.get("result"))
     if (
         not name.startswith(PREFIX)
         or call.get("paired") is not True
@@ -264,7 +264,8 @@ def credited_keys(call: dict[str, Any]) -> set[str]:
 def summarize_calls(calls: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Public receipt projection: no raw results, queries or excerpt bodies."""
     return [
-        {"tool": call["name"], "credited_keys": sorted(keys), "result_sha256": digest(call.get("result"))}
+        {"tool": call["name"], "credited_keys": sorted(keys),
+         "result_sha256": digest(call.get("mcp_result", call.get("result")))}
         for call in calls
         if (keys := credited_keys(call))
     ]
@@ -319,7 +320,8 @@ def obligations(
     """Use existing assembly provenance and validated exceptions, without publishing.
 
     Engine record expansions retain check 7. Writer options are included even
-    though the resolver skips them; only its existing phonetics/error exceptions apply.
+    though the resolver skips them. Existing phonetics/record exceptions apply;
+    only fill-in items in orthography mode also exclude vesum_exempt/item_option.
     """
     from scripts.build.fresh.assemble import assemble_expanded_document
     from scripts.build.fresh.prompt import extract_plan_citations
@@ -327,14 +329,26 @@ def obligations(
 
     if provenance is None:
         _, provenance = assemble_expanded_document(draft, plan, pack, words, level, slug, n)
+    lesson = next(row for row in plan["lessons"] if row["n"] == n)
+    fill_ins = {activity["id"] for activity in lesson.get("activities", []) if activity["type"] == "fill-in"}
+    orthography_items = {
+        (activity["id"], index)
+        for activity in draft.get("activities", [])
+        if activity["id"] in fill_ins
+        for index, item in enumerate(activity.get("items", []))
+        if item.get("mode") == "orthography"
+    }
     forms = {
         _form(token.lookup)
         for span in provenance["spans"]
         if span["source"] == "writer_prose" and span["role"] != "phonetics"
+        and not (
+            (span.get("activity"), span.get("item")) in orthography_items
+            and span["role"] in {"vesum_exempt", "item_option"}
+        )
         for token in tokenize(span["text"])
         if token.kind in {"cyrillic", "mixed"}
     }
-    lesson = next(row for row in plan["lessons"] if row["n"] == n)
     records = {
         row["id"]: row
         for rows in pack.values()
