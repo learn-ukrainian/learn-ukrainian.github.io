@@ -14,7 +14,10 @@ import hashlib
 import json
 import os
 import re
+import shlex
+import shutil
 import subprocess
+import tempfile
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
@@ -36,6 +39,7 @@ DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
 # GitHub's web-flow signing key, published at https://github.com/web-flow.gpg.
 # Pin the full fingerprint: signer names and unverified gpgsig headers are not proof.
 GITHUB_WEB_FLOW_FINGERPRINT = "968479A1AFF927E37D1A566BB5690EEEBB952194"
+GITHUB_WEB_FLOW_KEY_FILE = Path(__file__).with_name("github-web-flow.gpg")
 
 STATES = (
     "ISSUE_LINKED",
@@ -1049,7 +1053,31 @@ def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> 
     if len(parents) != 2:
         return False
     try:
-        signature = _run_git(repo_root, ["show", "-s", "--format=%G?%x1f%GF", sha])
+        gpg = shutil.which("gpg")
+        if not gpg:
+            return False
+        with tempfile.TemporaryDirectory(prefix="github-web-flow-") as key_home:
+            # An explicit home and no-options isolate both keys and configuration
+            # from the caller. Import the complete published file; the pin below
+            # still admits only the selected signing key.
+            gpg_command = [
+                gpg, "--no-options", "--homedir", key_home, "--batch",
+                "--no-autostart", "--no-auto-key-retrieve", "--no-auto-key-import",
+            ]
+            subprocess.run(
+                [*gpg_command, "--import", str(GITHUB_WEB_FLOW_KEY_FILE)],
+                capture_output=True, check=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+            verifier = Path(key_home) / "verify-gpg"
+            verifier.write_text(
+                "#!/bin/sh\nexec " + shlex.join(gpg_command) + ' "$@"\n', encoding="utf-8",
+            )
+            verifier.chmod(0o700)
+            signature = _run_git(repo_root, [
+                "-c", "gpg.format=openpgp", "-c", f"gpg.program={verifier}",
+                "-c", f"gpg.openpgp.program={verifier}",
+                "show", "-s", "--format=%G?%x1f%GF", sha,
+            ])
         # U is cryptographically valid with unknown key trust. The fingerprint
         # pin supplies identity trust; missing, bad, expired and revoked fail.
         if signature not in {
@@ -1059,7 +1087,7 @@ def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> 
             return False
         clean_tree = _run_git(repo_root, ["merge-tree", "--write-tree", "--no-messages", *parents])
         return clean_tree == _run_git(repo_root, ["show", "-s", "--format=%T", sha])
-    except LifecycleError:
+    except (LifecycleError, OSError, subprocess.SubprocessError):
         # Conflicts, unavailable objects/keys and unsupported Git prove no exemption.
         return False
 

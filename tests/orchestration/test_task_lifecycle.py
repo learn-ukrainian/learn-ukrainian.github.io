@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
+import shutil
 import subprocess
 import time
 from copy import deepcopy
@@ -1302,10 +1304,230 @@ def test_local_git_observation_cross_checks_exact_worktree_branch(
     assert wrong["worktree_branch_matches"] is False
 
 
+# Offline Git object pack from the public actions/hello-world-javascript-action
+# merge below, signed by the pinned GitHub key. It retains the exact commits and
+# trees needed by merge-tree; unchanged blobs are unnecessary. The base is a
+# shallow boundary, so neither historical repository objects nor network access
+# are required. Git index-pack checks the pack checksum and object identities.
+SIGNED_PUBLISHER_MERGE = "47eaec9b0ef67e9ce32c6bac2bddb1f1223df554"
+SIGNED_PUBLISHER_BASE = "7b5f22c2afb0b04bc23e02fac244ee8d6874961f"
+SIGNED_PUBLISHER_PACK = (
+    "UEFDSwAAAAIAAAAJn0t4nHVUy66jSAzd8xUlzTK6QxVvpJ5RE24CJIFAgIRkM4KieCS8nwlfP5m+urtpL2z5+NgLy8dDRwggUGZi"
+    "Vo4SyPIiA/kEQRxCIkVQlEWICSPhEPOsSDVhR6oBiBGfMAxmwiSCEeQizLAEMkmIGY4jRIoFSeRkASXf/IgQFLKID2EUyhKMMcNE"
+    "LEPw23GCLIsiz8solEUqHIes7oAbFmVYATXL+2zIwY/+V14+8E8tH/Qx+hPX5d8AiQIvSRzLcmAF30a90TIfBtKBLxr4UdUdaYrX"
+    "zzQfst+2pU3a5yn4+M/WG82wgK3ZwDU0S/H80+YXTgEKzP0WrxVlrSqKs3Z2jeNro3pSUeiI48j7WaEoCpvWzpvS+UxaHmE3iNPO"
+    "ivVdMjFHmwIPbtk1xbl8ZUVf1xq+nOUj/7k3djBignsGG1ewmPi4fPrJgtrHYG9X10yaddhlW/2ZmRRQCsw9z9gZnLZ4FndshIdw"
+    "M6kJfVlnyG1ZGY3GPtFtycLY1NLYbdEkwCpYbbvjwdMTCtxdbytO3sUygk1C7/XieTisXfb1QBk/y1a6qF6+VY76YE7OxLl93nre"
+    "Rlt7Pssp/qx67z2Yy0PZHHfi3nZcNltu6lM/tT4/77TVqve2K6mhY0EQY3e7bS9pVbCzV7ticKDR7el4KQXE/n0hebB/HjC/IG8R"
+    "R3xaX2oemRUzhxdLva7uD9EZPwM37fbOZi+K8uWpMe6smBA6WwpMWsCWJbLPxFiaO755Bstv5qvZRaveQJyGdmkg57bk2sQxbrLV"
+    "PqtBK/IYcu1GufsBBeKbpt+cJbraqQKR2uiiwNgKrO9FkO1K895mB/3MHmlElGq6sq++nXuMXKMtlqIj5ooCvHfr+BtcDfbQFtpp"
+    "V1yDXrkfZm63DXXm2k8vyyTWkrovb8aT44ZmH3T2sV+bgVZ1xUQBhO/zOR78Vcp4EdGkA1dkssBIhqqp4nWIwvw8l5vjIprz3Lid"
+    "GlpJ6fi+cJMVrYxPNAU+LdncR65KXxTV0FH1eO6X6c6c/Im3WSwhO7vQahXjAy+V7zO6HRPh3NNsEvl0Pd4k/r3J3ZrftJdbUlr0"
+    "VGTwQTyWAn9JW/dOfWliY33+vyIok3QpAc1YFKAj7Uj6AfzB8AgkXV2CEA95XfV0TBpSxWFUD/SXDP/5rnzHsSnqMP4IuyF//5Dh"
+    "Q6Co9Vg24Df1r/E8GGog/Au5M381mUl4nH1Tya6rRhDd8xUtZYleTDO4GymJAtjge8FcGw/Y3jVNg5lxMxl/fXxflKyi1KJ0alSp"
+    "jk7PGQOMSgmCKIJSTFSF6LqONczkWI9iNSE6gwzBd40KLeGs7gElMZapBklMKaI6oZJGkEZVRpEOGUSaCpEURf/264mqEoLliMRL"
+    "hliCJVlCWJZkDCmFSqwkGtYZ0gQy9PeGAz+jBTDKnrEa/FZT8hP9mWb9fYh+pU31B4BoqeqaIiEEfkiaJAnvbJX1PePAyfrNEL3n"
+    "Gs7acv7/sbRNuywFP77NXDsfPtg5O3D4cHzjeArWP/MCEMDU2dQ0DNMyjL25/2y30witwIJkj4ZBO91LwzDW0XVvbB634snlutfC"
+    "T/0W0vz0cT6iTgBSUZ7V7exL84JHxFGVxkwvc8tX+4txjdsdMw/W7Fh+cPVT9AgTyxis1BBXhtHcLmaPBXCZi9Bxv6AtSqqs5ZER"
+    "KvazeR3CUvpw8i5h9/U5hXXrRKvz4sDlXG9qFOLF6eqqjNBZAPVJdy/NlrWhc2Z7t1msmyGxJtKIxzmo6DBvEknHg4VDr3wabcC0"
+    "MY1u/d1DSnpcNUsBBMtzvLNn5nTXMln3X4HnuOFWk+aNNVRyzuOTf6iVeyGLPtXHfs/Oh9SF17myJdtnp70AxG2OEmdvZpmyPDbD"
+    "0fdVqAb5hq8K98nTctNkh6RyYb1JWtHd76pxS8NhGEhKn4rnWgKoMtGRgpRfdTyu7+x4WNw3d/OyIZ0NSZTK7fxlV8GpfmrYYBuH"
+    "rXa9Vc+GMuUP7/ninwJ4ZafX5InTiKhYUqWPZyn1sNh4p7S84TEz55HF832NLZIo8dK+wuHTEcWHZhTes83fXMA+nAvNSB+B/MDj"
+    "971P2H4es0t+S08tbrh5nN7iyZqiPOw65p6na+EhNkWqYuPFMRQAPujV1C2vLvS9tpWVq7MUcbcgi9daHT9f++yALjUvZq2mTswe"
+    "2mMhb2g5qIbDzWCpvdnsh41B2qkLqpujbU1bP89TtY0D6RwE9itMy4+smJrMUcMgl1utrb9ixs6zP4r8dp92rQA8XFCGH0PgBjSH"
+    "YxshJRLA72JeIuFvTaz91X8rQtgynjLQDmUJOHsMrOvBL7K6BAlvKkBonzV1t/hHu4s463pBWNfdwBn4Dt6OM9o3fAZZ995QNe+X"
+    "A1LHbxwNWdn/BV3QeASvBnicMzEAAoXk/JTUwhyG2znan6RcC90WqiY9OHJ341SdtYaLDQ0MzExMFFJSC1LzUhKT8kv0KnNzGEr0"
+    "jtb+fOo6+zu/v/DPo/t+Pbix8pYJ2Kjy/KLstJz88mKGT48mK2nr5m23Vpq5Z/LPG0drpxbkAQD1oTEWrwZ4nDMxAAKF5PyU1MIc"
+    "hts52p+kXAvdFqomPThyd+NUnbWGiw0NDMxMTBRSUgtS81ISk/JL9CpzcxhK9I7W/nzqOvs7v7/wz6P7fj24sfKWCdio8vyi7LSc"
+    "/PJihkeX2M/xe3rECvsevxJxw1WsnGeVMgDlei6hlWJ4nJVU2a6bSBB95yv6LRNZNvtmZUYBjG1wjAHvjvLQQGNjszRNY5v79eHm"
+    "RjOZJSOlpX7oU6dOlUpdhxKEAOJ0IRH1KOVEWRU4OeW5GHJIizhVV7kYCVoMY1lUGQwJKilQIzkVhFiAacRFnBTFgog4IYWxIEkI"
+    "aYmiqZKu8CkDW3qpCEgQRmUCo4p+7u8X8KGP6rooioN/RD62DSLNqKwIwnk3Omf00kajuCr+ALyqyBrPixIHBlx/mB4tMkoRAbOM"
+    "ztsIfPie9vF/08743GRnMHw9pj1zPODPfLB2Zp6x2Yb2N5wBDHg009g0DNMyjMAMXBxYa88KLR4GatvK20tuGIaeS4FhLtn9XlZ3"
+    "eGVE/mW2tKPrTngkDLDslSo6wpEIQno9XrVi8zwk6SUmYtQaHJU1J3NCpQhCa3sadBuCnMWL4XHbnIibUvefDEjXaV1EAqWCT1xf"
+    "SZEub6HlhYPr0tG1srCtpe15R50tWk1N6SrweNvKFezki/rB3iQGGOuOJwXlszpL/ECwU/W0j8S98XBNxz5Jkk/tZHcIDra3XM6C"
+    "q+HWL6hcJNvJVJetUt4xgMoTYrpcRh6IpZJ028Dyvsjq4PpQnZ2redNT/YjyZFJ129qLHheMj2X3VBaTw+Y+h3zAAInlznUyf6LO"
+    "j4ylmZrmvMh8Pi92UO/wcYeUGc7PSRYkW5XNqagv2D15zHbPYKCG7nTOgKVdGpYAX7pOWdoCcsLMcDq0827+qp3UDTKf8iond689"
+    "1M+Of+Est54d5r47C31RIUKv4EQXAj1hlR70O9yc/XnihlZ2rkXW8+gJHUPcCks+nFye55OyT2ahjGlzzc2A92Ir1M8MGCy6+Sdc"
+    "NGW1sDZ9USwJFHLu+tMzbGlxuzq3PGAvh8SwRa/abMspf1sM3P1kap8nushtGODKhxNKYHc7pmkX0Rc2frq5Fiv6U1OIPjGuzinQ"
+    "d7iW7848eTFLvVicEO2mWCHrzSBUGHBVRERdBHmkID/FZQBdNDletMBM2EST2KZRvXsJw7yUpcEdL58BTeSiSWb4BrXVtO8he67O"
+    "j0+r4JEKsnsRy8N+3f+z3+tWwczbTtje5L83gjHbAgMY06wqG7bFeQWTISQ06/eegpRUBZABrYDyxmzA559wv/x2oRQ3Y5b9a1HZ"
+    "n3Df/yg8Yobgc4hyBBsEyoqi5lekWPKW2bx/lbG+ucevCfSxVwNk7/JoNLor7xnmdTItTiBFyfDNylAZZ6gZ9yX+fHfDEhZo/LPR"
+    "MeBH6r33v541Bu+Ud3+P0A73IklGUEzHmFRJ+02vJ7118J3wXWD4Bo4bVPTIsIDXijB92wyzzs5l326VpsOoG//bm5sW44rQH130"
+    "K82kBD+pPXicMzQwMDMxUdBLzkhNzs4v06vMzWHgPrrkx+aCabEpPf0HxHnSqm61X9hqCFWXnlmSWFJSlJlUWpJazJC91DVjf1z2"
+    "ArGAzYH68+352C8oPTYxAAKwwozSJIZZTMsc1r8q3rYp7Mfs0/YfjPISd9YhmZWZnpdflMrQsGKm6AzhO27rb1dceMnK9vvdKs1m"
+    "mKqczOTUvOLUFLDTJirPuzvtSWqX2T6nFZmKZ+Nf7/V6B1OYm1iUnZJfnqebk5lXAlbNP6/79aIctTPOuW/Dr/0p2ajMpqgLU52X"
+    "n5KqW5ZaVJyZn8fwztrJ7Vop1903ZhoXlu7x69c1OhYMU1hQlFpSkplaBHXqsbVRl77Un3i41nmBC8OfzLwcWy1GdKVFyWDrPU9a"
+    "RD+IMJ+3M+mmaYzjxi2ega0KMKWVibk5CId+bhLVZN4tzfRnVbBLW8o1fTOholaoSmd/F1f/cD/XoGCGW+Jfre8fF5KWlln92r1h"
+    "+660bbMuQVX5eDq7+gW7MsTPM9E9I2epXj2NvdQxPeeZQe2j41AlQa6OLr6uerkpDJderTWZ31yy0fKGyzbv4HqtqhKmLkisxcen"
+    "ZVaUlBalFsfHM7x/ullZ/2vvDLXatlr1SCMmo5XLImDKgJFfAlIjcljy3yO2JgmpySnO7DPML1hOcn8CtS8xuQQYtGDvMXn6Mz6u"
+    "Ejqeu6XGvosnTNyw9WQ7iip4QGw/afL58HufulIrsYUCpsVflvef8oXYmZSYkg5McQ3xG8WfVnzeOat3efYmJ6eqbw8uS0EUpGQW"
+    "lzB8OfZcJ7M7PpvD0MDhsSbzmbl7ErihNqUWg21Jzs9Ly0zXy80qZnggZqPS5nL6b7TBGYY3z827v6RbsEMVZwH9B1MKVOn1Uu/I"
+    "J+OaWOEP+fVi/1QCsw5wK0FVFiQmZyemp+rm5CdnA5UCE5PysrY9P8w8+KYduFfRvalkVf50MQdUxRB19umhvZUuzqybyz4te5fL"
+    "LVA9y1QWqq4oPyentADJAZeWK5a9lfvyTPRF98dtBa4Fe2If60G8XVyUzLCILdo87PxDTc0//2prVy080GfLoAcAOyl/9KkPeJwz"
+    "NDAwMzFRSM5ITc7WTcksLtGrzM1hcOLRXnhyb+Gc7wnXr71/xy/CyWx41xCqMhOsItSYRco4flf6wnn1ttNv+jHwzGb9CFORn5Ja"
+    "mKObmJeYU1mcWQxWflpVymman7KyVOXsW4ZH12yW7j80Bao8tSIxtyAnVbc8vyg7LSe/HKzeYdGf/qbNAXddr73V/7NmrqrC5x4h"
+    "qPqczOTUvOLUFLC6vEQOQ3WenZdMMw4VxoScObXuVEAdXF1eSWoRWFWBWH2qXprKWZuN7hxRxioJFvmH4gAbHl2L/wHgktOb8DVy"
+    "BfEMoOiweXDOKMrFN3icu8l+k31Cgsgk7h7b5+K7VdmlXotOkGA87Cj8b9rGklRmAMFxDAv+AeLSB84PSUhdE03H1FjYRRZ3DKoj"
+    "eJz7yfiTcYKYiFZDhtej+cr/PLl2+vkxtrPsf7RJbaLWeQDCMwzky1AqgvIs87ZoJSkjHm6xPE4vt0g="
+)
+
+
+@pytest.fixture
+def signed_publisher_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    repo = tmp_path / "signed-publisher"
+    subprocess.run(["git", "init", "-q", str(repo)], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-C", str(repo), "index-pack", "--stdin"],
+        input=base64.b64decode(SIGNED_PUBLISHER_PACK), capture_output=True, check=True, timeout=30,
+    )
+    (repo / ".git" / "shallow").write_text(SIGNED_PUBLISHER_BASE + "\n", encoding="utf-8")
+    return repo
+
+
+@pytest.mark.parametrize("format_override", ["openpgp", "ssh", "x509"])
+def test_real_git_accepts_pinned_publisher_with_isolated_keyring(
+    signed_publisher_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    format_override: str,
+) -> None:
+    repo = signed_publisher_repo
+    # The caller's empty keyring cannot verify this commit. Its configured
+    # verifier and signature format must also be ignored by the production path.
+    caller_home = tmp_path / "caller keyring"
+    caller_home.mkdir(mode=0o700)
+    monkeypatch.setenv("GNUPGHOME", str(caller_home))
+    caller_before = list(caller_home.iterdir())
+    for key, value in (
+        ("gpg.format", format_override),
+        ("gpg.program", str(tmp_path / "unavailable-gpg")),
+        ("gpg.openpgp.program", str(tmp_path / "unavailable-openpgp")),
+    ):
+        task_lifecycle._run_git(repo, ["config", key, value])
+    parents = task_lifecycle._run_git(repo, ["show", "-s", "--format=%P", SIGNED_PUBLISHER_MERGE]).split()
+
+    assert task_lifecycle._verified_publisher_merge(repo, SIGNED_PUBLISHER_MERGE, parents) is True
+    assert list(caller_home.iterdir()) == caller_before
+
+
+def test_vendored_publisher_file_contains_both_keys(tmp_path: Path) -> None:
+    result = subprocess.run(
+        [
+            "gpg", "--no-options", "--homedir", str(tmp_path), "--batch",
+            "--with-colons", "--show-keys", str(task_lifecycle.GITHUB_WEB_FLOW_KEY_FILE),
+        ],
+        capture_output=True, text=True, check=True, timeout=30,
+    )
+    fingerprints = {
+        line.split(":")[9] for line in result.stdout.splitlines() if line.startswith("fpr:")
+    }
+    assert fingerprints == {
+        task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT,
+        "5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23",
+    }
+
+
+@pytest.mark.parametrize("failure", ["no-gpg", "missing-key-file", "invalid-key-file"])
+def test_real_publisher_verification_fails_closed_without_keyring(
+    signed_publisher_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str,
+) -> None:
+    if failure == "no-gpg":
+        monkeypatch.setattr(task_lifecycle.shutil, "which", lambda _program: None)
+    else:
+        key_file = tmp_path / "unavailable-key.gpg"
+        if failure == "invalid-key-file":
+            key_file.write_text("invalid public key\n", encoding="utf-8")
+        monkeypatch.setattr(task_lifecycle, "GITHUB_WEB_FLOW_KEY_FILE", key_file)
+    parents = task_lifecycle._run_git(
+        signed_publisher_repo, ["show", "-s", "--format=%P", SIGNED_PUBLISHER_MERGE],
+    ).split()
+
+    assert task_lifecycle._verified_publisher_merge(
+        signed_publisher_repo, SIGNED_PUBLISHER_MERGE, parents,
+    ) is False
+
+
+def test_real_git_rejects_throwaway_signed_publisher_merge(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
+        monkeypatch.delenv(name, raising=False)
+    key_home = tmp_path / "throwaway-keyring"
+    key_home.mkdir(mode=0o700)
+    monkeypatch.setenv("GNUPGHOME", str(key_home))
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    gpg = shutil.which("gpg")
+    assert gpg is not None
+
+    def git(*args: str, message: str | None = None) -> str:
+        return subprocess.run(
+            ["git", *args], cwd=repo, input=message, capture_output=True, text=True,
+            check=True, timeout=30,
+        ).stdout.strip()
+
+    try:
+        subprocess.run(
+            [
+                gpg, "--no-options", "--homedir", str(key_home), "--batch",
+                "--pinentry-mode", "loopback", "--passphrase", "",
+                "--quick-generate-key", "GitHub <noreply@github.com>", "ed25519", "sign", "0",
+            ],
+            check=True, capture_output=True, timeout=30,
+        )
+        keys = subprocess.run(
+            [gpg, "--no-options", "--homedir", str(key_home), "--with-colons", "--list-keys"],
+            check=True, capture_output=True, text=True, timeout=30,
+        ).stdout
+        fingerprint = next(line.split(":")[9] for line in keys.splitlines() if line.startswith("fpr:"))
+        git("init", "-q", "-b", "main")
+        for key, value in (
+            ("user.name", "GitHub"), ("user.email", "noreply@github.com"),
+            ("user.signingkey", fingerprint), ("gpg.format", "openpgp"),
+            ("gpg.program", gpg), ("gpg.openpgp.program", gpg), ("commit.gpgsign", "false"),
+        ):
+            git("config", key, value)
+        (repo / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+        git("add", ".gitignore")
+        tree = git("write-tree")
+        base = git("commit-tree", tree, message="base\n")
+        git("update-ref", "refs/heads/main", base)
+        main = git("commit-tree", tree, "-p", base, message="main update\n")
+        git("update-ref", "refs/remotes/origin/main", main)
+        topic = git("commit-tree", tree, "-p", base, message="implementation\n\nX-Agent: codex/42-closeout\n")
+        head = git(
+            "commit-tree", "-S", tree, "-p", topic, "-p", main,
+            message="Merge branch 'main' into codex/42-closeout\n",
+        )
+        # Prove that this is a valid signature in the caller's trusted keyring,
+        # and that the merge tree is clean. Rejection must be about publisher identity.
+        assert git("show", "-s", "--format=%G?%x1f%GF", head) == f"G\x1f{fingerprint}"
+        assert fingerprint != task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT
+        assert git("merge-tree", "--write-tree", "--no-messages", topic, main) == tree
+        git("reset", "--hard", base)
+        worktree = repo / ".worktrees" / "dispatch" / "codex" / "42-closeout"
+        git("worktree", "add", "-qb", "codex/42-closeout", str(worktree), head)
+
+        observed = task_lifecycle.observe_local_git(
+            worktree, head_sha=head, branch="codex/42-closeout", worktree=str(worktree),
+        )
+
+        observed_commit = next(item for item in observed["commits"] if item["sha"] == head)
+        assert observed_commit["second_parent_on_main"] is True
+        assert observed_commit["verified_publisher_merge"] is False
+        assert task_lifecycle._local_readiness(observed) == [
+            f"commit {head} lacks exactly one valid X-Agent trailer",
+        ]
+    finally:
+        subprocess.run(
+            ["gpgconf", "--homedir", str(key_home), "--kill", "gpg-agent"],
+            check=True, capture_output=True, timeout=30,
+        )
+
+
 @pytest.mark.parametrize(
     ("shape", "trailers", "accepted"),
     [
-        ("publisher", "", True),
         ("ordinary", "X-Agent: codex/42-closeout", True),
         ("publisher", "X-Agent: codex/42-closeout", True),
         ("ordinary", "", False),
@@ -1404,10 +1626,11 @@ def test_local_git_commit_attribution(
         if shape == "merge-unavailable" and args[0] == "merge-tree":
             raise task_lifecycle.LifecycleError("merge proof unavailable")
         if (
-            shape in {"publisher", "extra-tree", "merge-unavailable"}
-            and args == ["show", "-s", "--format=%G?%x1f%GF", head]
+            shape in {"extra-tree", "merge-unavailable"}
+            and args[-4:] == ["show", "-s", "--format=%G?%x1f%GF", head]
         ):
-            # Only the crypto boundary is mocked; trees and ancestry use real Git.
+            # Simulate valid signatures only for rejected tree/proof cases.
+            # The publisher accept path uses the real signed fixture above.
             return f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}"
         return run_git(root, args)
 
@@ -1425,7 +1648,7 @@ def test_local_git_commit_attribution(
         "second_parent_on_main": (
             len(parents) == 2 and parents[1] == main_parent and shape != "ancestry-unavailable"
         ),
-        "verified_publisher_merge": shape == "publisher" and not trailers,
+        "verified_publisher_merge": False,
         "x_agent_trailers": trailers.splitlines(),
     }
     blockers = task_lifecycle._local_readiness(observed)
@@ -1438,8 +1661,8 @@ def test_local_git_commit_attribution(
 @pytest.mark.parametrize(
     ("signature", "accepted"),
     [
-        (f"G\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", True),
-        (f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", True),
+        ("G\x1f5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23", False),
+        ("U\x1f5DE3E0509C47EA3CF04A42D34AEE18F83AFDEB23", False),
         *[(f"{status}\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}", False) for status in "BXYREN"],
         ("G\x1f" + "a" * 40, False),
         ("G\x1f", False),
@@ -1453,7 +1676,7 @@ def test_publisher_merge_requires_verified_pinned_signature(
 
     def run_git(root: Path, args: list[str]) -> str:
         calls.append(args)
-        return signature if args[0] == "show" and "%G?" in args[2] else "tree"
+        return signature if args[-4] == "show" and "%G?" in args[-2] else "tree"
 
     monkeypatch.setattr(task_lifecycle, "_run_git", run_git)
     assert task_lifecycle._verified_publisher_merge(tmp_path, HEAD, [HEAD, MERGE]) is accepted
@@ -1469,7 +1692,7 @@ def test_publisher_merge_proof_fails_closed(
             if failure == "merge-tree":
                 raise task_lifecycle.LifecycleError("conflicting or unavailable merge")
             return "tree"
-        if "%G?" in args[2]:
+        if "%G?" in args[-2]:
             if failure == "signature":
                 raise task_lifecycle.LifecycleError("verification unavailable")
             return f"U\x1f{task_lifecycle.GITHUB_WEB_FLOW_FINGERPRINT}"
