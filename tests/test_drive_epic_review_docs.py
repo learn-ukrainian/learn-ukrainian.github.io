@@ -318,6 +318,7 @@ def test_documented_shell_continues_only_same_nonce_wait(tmp_path, scenario, exp
         """import json, os, subprocess, sys
 from pathlib import Path
 sys.path.insert(0, os.environ['RECIPE_REPO'])
+sys.path.insert(0, str(Path(os.environ['RECIPE_REPO']) / 'scripts'))
 from scripts import delegate
 
 argv = sys.argv[1:]
@@ -381,7 +382,7 @@ raise SystemExit(args.func(args))
         text=True,
         timeout=45,
         env={
-            **os.environ,
+            **{key: value for key, value in os.environ.items() if key != "PYTHONPATH"},
             "RECIPE_PY": str(executable),
             "RECIPE_REPO": str(REFERENCE.parents[5]),
             "RECIPE_CALLS": str(call_file),
@@ -511,6 +512,7 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
         """import json, os, subprocess, sys
 from pathlib import Path
 sys.path.insert(0, os.environ['RECIPE_REPO'])
+sys.path.insert(0, str(Path(os.environ['RECIPE_REPO']) / 'scripts'))
 from scripts import delegate
 argv = sys.argv[1:]
 if argv[0] == '-c':
@@ -562,7 +564,7 @@ raise SystemExit(args.func(args))
     initialization = launch.split("# If requires_silence_timeout", 1)[0]
     initialization = initialization.replace('PY="$PRIMARY_REPO/.venv/bin/python"', 'PY="$RECIPE_PY"')
     loop = "while true; do" + launch.split("while true; do", 1)[1]
-    env = {key: value for key, value in os.environ.items() if key != "REVIEW_NONCE"}
+    env = {key: value for key, value in os.environ.items() if key not in ("REVIEW_NONCE", "PYTHONPATH")}
     result = subprocess.run(
         ["bash", "-c", initialization + lookup + loop],
         cwd=REFERENCE.parents[5],
