@@ -287,7 +287,7 @@ def test_idempotent_settlement_completed_replay_and_append_only_evidence(tmp_pat
                 (decisions[0].decision_id,),
             )
 
-    evidence = list_routing_decisions(root=root, limit=10)
+    evidence = list_routing_decisions(root=root, limit=10, private=True)
     assert evidence[0]["authority_key"] == "repo:9:head"
     assert evidence[0]["requested"]["role"] == "formal-review"
     assert evidence[0]["resolved"]["route"] == "codex-primary"
@@ -301,8 +301,72 @@ def test_idempotent_settlement_completed_replay_and_append_only_evidence(tmp_pat
 
 def test_read_projection_does_not_create_or_migrate_missing_plane(tmp_path: Path) -> None:
     root = _root(tmp_path) / "missing"
-    assert list_routing_decisions(root=root) == []
+    with pytest.raises(RoutingReservationUnavailable, match="routing_decision_reader_unavailable"):
+        list_routing_decisions(root=root)
     assert not root.exists()
+
+
+@pytest.mark.parametrize("state", ["complete", "failed"])
+def test_actual_public_ledger_serializers_hide_nested_private_data(tmp_path, state):
+    sentinel = "PRIVATE_ROUTING_LEDGER_SENTINEL"
+    root = _root(tmp_path)
+    with RoutingReservationLedger(root=root) as ledger:
+        selection = replace(_selection(type("Context", (), {
+            "bucket_usage": lambda self, _bucket: type("Usage", (), {"inflight_reservations": 0})(),
+            "available_slots": lambda *args: 1, "quota_available_slots": lambda *args: 1,
+        })()), trace={"gates": {"token": sentinel}, "substitution_note": sentinel},
+            quota_snapshot={"nested": {"reason": sentinel}}, credential_bucket=sentinel)
+        reservation = ledger.reserve_selection(_request(sentinel, sentinel), lambda _: selection, now="2035-01-01T00:00:00Z")
+        ledger.settle(reservation.reservation_id, status=state,
+                      failure_classification=sentinel if state == "failed" else None,
+                      terminal_evidence={"exception": sentinel, "trace": {"evidence": sentinel}},
+                      now="2035-01-01T00:00:01Z")
+        assert ledger.get(reservation.reservation_id).trace["substitution_note"] == sentinel
+        assert any(sentinel in str(item.evidence) for item in ledger.decisions(reservation.reservation_id))
+    public = list_routing_decisions(root=root)
+    private = list_routing_decisions(root=root, private=True)
+    assert sentinel not in json.dumps(public)
+    assert sentinel in json.dumps(private)
+    assert public[0]["state"] == state
+    assert public[0]["quota"] is None
+    assert public[0]["resolved"]["trace"] is None
+
+
+def test_read_projection_reports_corrupt_database_and_missing_tables(tmp_path):
+    root = _root(tmp_path)
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / "comms.sqlite3"
+    path.write_bytes(b"not a database")
+    with pytest.raises(RoutingReservationUnavailable, match="routing_decision_reader_unavailable"):
+        list_routing_decisions(root=root)
+
+    path.write_bytes(b"")
+    with pytest.raises(RoutingReservationUnavailable, match="routing_decision_reader_unavailable"):
+        list_routing_decisions(root=root)
+
+
+def test_read_projection_reports_corrupt_private_json(tmp_path):
+    root = _root(tmp_path)
+    with RoutingReservationLedger(root=root) as ledger:
+        reservation = ledger.reserve_selection(_request("corrupt", "nonce"), _selection, now="2035-01-01T00:00:00Z")
+        ledger._conn.execute("UPDATE routing_reservations SET trace_json=? WHERE reservation_id=?", ("{", reservation.reservation_id))
+        ledger._conn.commit()
+    with pytest.raises(RoutingReservationUnavailable, match="routing_decision_reader_corrupt"):
+        list_routing_decisions(root=root)
+
+
+def test_read_projection_reports_connection_error_without_private_detail(tmp_path, monkeypatch):
+    import scripts.fleet_comms.routing_reservations as routing
+
+    root = _root(tmp_path)
+    with RoutingReservationLedger(root=root):
+        pass
+    def unavailable(*args, **kwargs):
+        raise sqlite3.OperationalError("PRIVATE_CONNECTION_SENTINEL")
+    monkeypatch.setattr(routing, "cp_connect", unavailable)
+    with pytest.raises(RoutingReservationUnavailable, match="routing_decision_reader_unavailable") as error:
+        list_routing_decisions(root=root)
+    assert "PRIVATE_CONNECTION_SENTINEL" not in str(error.value)
 
 
 def test_same_authority_key_semantic_conflict_fails_closed(tmp_path: Path) -> None:

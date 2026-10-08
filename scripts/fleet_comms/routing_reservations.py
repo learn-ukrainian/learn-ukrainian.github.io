@@ -1231,23 +1231,24 @@ def open_routing_reservation_ledger(root: Path | None = None) -> RoutingReservat
     return RoutingReservationLedger(root=root)
 
 
-def list_routing_decisions(*, root: Path | None = None, limit: int = 100) -> list[dict[str, Any]]:
+def list_routing_decisions(*, root: Path | None = None, limit: int = 100, private: bool = False) -> list[dict[str, Any]]:
     """Read recent routing evidence without creating, migrating, or writing SQLite.
 
-    A missing plane or pre-v6 schema is deliberately reported as an empty
-    projection.  Runtime readers must never turn an observation into a writer.
+    Missing/corrupt sources raise a bounded unavailable code, never a false
+    empty history. ``private=True`` retains original evidence for private
+    reports; public callers receive a closed projection. Neither mode writes.
     """
     bounded_limit = _positive_int(limit, "limit")
-    plane_root = Path(root).resolve() if root is not None else default_plane_root()
+    plane_root = Path(root) if root is not None else default_plane_root()
     db_path = plane_root / "comms.sqlite3"
-    if not db_path.is_file():
-        return []
-    assert_component_supported(StoreId.FLEET_COMMS, "routing_reservations")  # #7482
+    if not db_path.is_file() or any(part.is_symlink() for part in (db_path, *db_path.parents)):
+        raise RoutingReservationUnavailable("routing_decision_reader_unavailable") from None
     try:
+        assert_component_supported(StoreId.FLEET_COMMS, "routing_reservations")  # #7482
         connection = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
         connection.row_factory = sqlite3.Row
-    except sqlite3.Error:
-        return []
+    except (sqlite3.Error, OSError, ValueError, TypeError, RuntimeError):
+        raise RoutingReservationUnavailable("routing_decision_reader_unavailable") from None
     try:
         required_tables = {"routing_reservations", "routing_reservation_decisions"}
         tables = {
@@ -1258,7 +1259,7 @@ def list_routing_decisions(*, root: Path | None = None, limit: int = 100) -> lis
             )
         }
         if tables != required_tables:
-            return []
+            raise RoutingReservationUnavailable("routing_decision_reader_unavailable") from None
         rows = connection.execute(
             """SELECT d.decision_id, d.reservation_id, d.event_type, d.state,
                       d.evidence_json, d.created_at AS decision_created_at,
@@ -1278,15 +1279,26 @@ def list_routing_decisions(*, root: Path | None = None, limit: int = 100) -> lis
                ORDER BY d.created_at DESC, d.decision_id DESC LIMIT ?""",
             (bounded_limit,),
         ).fetchall()
-    except sqlite3.Error:
-        return []
+    except (sqlite3.Error, OSError, ValueError, TypeError, RuntimeError):
+        raise RoutingReservationUnavailable("routing_decision_reader_unavailable") from None
     finally:
         connection.close()
-    return [_routing_decision_projection(row) for row in rows]
+    try:
+        projector = _private_routing_decision_projection if private else _routing_decision_projection
+        return [projector(row) for row in rows]
+    except (ValueError, TypeError, KeyError):
+        raise RoutingReservationUnavailable("routing_decision_reader_corrupt") from None
 
 
 def _routing_decision_projection(row: sqlite3.Row) -> dict[str, Any]:
     """Return the dashboard allowlist; omit resolver inputs and any payload bodies."""
+    from scripts.fleet.router_policy import public_routing_record
+
+    return public_routing_record(_private_routing_decision_projection(row))
+
+
+def _private_routing_decision_projection(row: sqlite3.Row) -> dict[str, Any]:
+    """Preserve full original evidence for explicitly private history reporting."""
     return {
         "decision_id": str(row["decision_id"]),
         "reservation_id": str(row["reservation_id"]),

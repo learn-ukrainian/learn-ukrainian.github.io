@@ -1,0 +1,162 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "model-router-receipt.v1"
+    },
+    "status": {
+      "enum": [
+        "UNKNOWN",
+        "cancelled",
+        "complete",
+        "dead_lettered",
+        "done",
+        "expired",
+        "failed",
+        "queued",
+        "refused",
+        "reserved",
+        "running",
+        "selected",
+        "unknown"
+      ]
+    },
+    "code": {
+      "enum": [
+        "CAPACITY_EXHAUSTED",
+        "CAPACITY_UNKNOWN",
+        "EXPORT_INVALID",
+        "FACTS_UNKNOWN",
+        "HOUR_COMPLETE",
+        "HOUR_INVALID",
+        "POLICY_INVALID",
+        "POLICY_UNAVAILABLE",
+        "POLICY_UNSAFE",
+        "PROOF_INVALID",
+        "PROOF_MISSING",
+        "READER_CORRUPT",
+        "READER_MISMATCH",
+        "READER_PARTIAL",
+        "READER_UNAVAILABLE",
+        "REFUSED",
+        "SELECTED",
+        "UNKNOWN",
+        "admission_refused",
+        "cancelled",
+        "provider_unavailable",
+        "rate_limited",
+        "result_invalid",
+        "timeout",
+        "transport_error",
+        "ttl_expired_orphan"
+      ]
+    },
+    "rule_ids": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "CAPACITY_EXHAUSTED",
+          "CAPACITY_UNKNOWN",
+          "EXPORT_INVALID",
+          "FACTS_UNKNOWN",
+          "HOUR_COMPLETE",
+          "HOUR_INVALID",
+          "POLICY_INVALID",
+          "POLICY_UNAVAILABLE",
+          "POLICY_UNSAFE",
+          "PROOF_INVALID",
+          "PROOF_MISSING",
+          "READER_CORRUPT",
+          "READER_MISMATCH",
+          "READER_PARTIAL",
+          "READER_UNAVAILABLE",
+          "REFUSED",
+          "SELECTED",
+          "UNKNOWN"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "lane": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "harness": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "transport": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "catalog_sha256": {
+      "type": "string",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "snapshot_sha256": {
+      "type": "string",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "task_sha256": {
+      "type": "string",
+      "pattern": "^(sha256:)?[0-9a-f]{64}$"
+    },
+    "target_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "observed_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|\\+00:00)$"
+    },
+    "expires_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|\\+00:00)$"
+    },
+    "effort": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "code",
+    "rule_ids"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "model-router-receipt.schema.json",
+  "description": "Public closed receipt projection. Identities additionally require exact installed-catalog membership in the executable projector. No private policy/capacity or arbitrary trace/evidence/reason."
+}

@@ -54,6 +54,7 @@ from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.failure_codes import RUNTIME_FAILURE_CODES
 from agent_runtime.usage import _iter_usage_records as _iter_usage_file_records
 from agent_runtime.usage import has_headroom
+from scripts.fleet.router_policy import public_code, public_routing_record
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.orchestration import codex_transport_health
@@ -704,13 +705,15 @@ def _routing_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
         raw = read_plane_status(repo_root=resolved_ctx.roots.project_root, recent_limit=0)
     except Exception:
         raw = {"mode": "unavailable", "enabled": False}
-    mode = str(raw.get("mode") or "unavailable")
+    mode = raw.get("mode")
+    if mode not in ("authority", "shadow", "dual_write", "legacy", "unavailable"):
+        mode = "unavailable"
     authority_active = mode == "authority"
     return {
         "mode": mode,
-        "enabled": bool(raw.get("enabled")),
-        "authority": "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative",
-        "cutover": "authority_active" if authority_active else "pre_flip_operator_gated",
+        "enabled": raw.get("enabled") is True,
+        "authority": "unknown" if mode == "unavailable" else "fleet_comms_authoritative" if authority_active else "file_handoffs_authoritative",
+        "cutover": "unknown" if mode == "unavailable" else "authority_active" if authority_active else "pre_flip_operator_gated",
     }
 
 
@@ -728,11 +731,6 @@ def _routing_first(*values: Any) -> Any:
     return next((value for value in values if value is not None), None)
 
 
-def _routing_trace_value(trace: dict[str, Any], *keys: str) -> Any:
-    """Read a trace field across policy-version-compatible names."""
-    return _routing_first(*(trace.get(key) for key in keys))
-
-
 def _routing_duration_s(record: dict[str, Any]) -> float | None:
     direct = _routing_value(record, "duration_s", "duration_seconds")
     if isinstance(direct, (int, float)) and not isinstance(direct, bool):
@@ -747,20 +745,6 @@ def _routing_duration_s(record: dict[str, Any]) -> float | None:
     return max(0.0, round((settled - started).total_seconds(), 3))
 
 
-def _routing_quota_freshness_state(value: Any) -> str | None:
-    """Classify a recorded quota freshness value without treating a time as state."""
-    if not isinstance(value, str):
-        return None
-    normalized = value.strip().lower()
-    if normalized == "fresh":
-        return "fresh"
-    if normalized in {"stale", "stale_last_good"}:
-        return "stale"
-    if normalized in {"unavailable", "unknown"}:
-        return normalized
-    return None
-
-
 def _routing_selection_reason(record: dict[str, Any]) -> Any:
     """Read an explicitly recorded selection reason, never infer one from a route."""
     evidence = record.get("evidence") if isinstance(record.get("evidence"), dict) else {}
@@ -773,22 +757,22 @@ def _routing_selection_reason(record: dict[str, Any]) -> Any:
         trace_detail.get("substitution_note"),
     )
     if direct_reason is not None:
-        return direct_reason
+        return public_code(direct_reason)
     # A terminal event's evidence describes execution, not selection.  Older
     # flat projections have no event type, so retain that compatible fallback.
-    if _routing_value(record, "event_type") in {None, "reserved"}:
-        return evidence.get("reason")
+    if _routing_value(record, "event_type") is None or _routing_value(record, "event_type") == "reserved":
+        return public_code(evidence.get("reason"))
     return None
 
 
 def _routing_event_item(record: dict[str, Any]) -> dict[str, Any]:
     """Return the body-free lifecycle facts suitable for an expandable timeline."""
-    return {
+    return public_routing_record({
         "decision_id": _routing_value(record, "decision_id"),
         "event_type": _routing_value(record, "event_type"),
         "state": _routing_value(record, "state"),
         "timestamp": _routing_value(record, "created_at", "timestamp"),
-    }
+    })
 
 
 _ROUTING_EVENT_ORDER = {
@@ -818,63 +802,20 @@ def _routing_event_sort_key(record: dict[str, Any]) -> tuple[datetime, int, str]
 
 
 def _routing_capacity_evidence(records: list[dict[str, Any]], quota_snapshot: dict[str, Any]) -> dict[str, Any] | None:
-    """Project the finite capacity/load allowlist from routing authority evidence."""
-    scheduler = quota_snapshot.get("scheduler") if isinstance(quota_snapshot.get("scheduler"), dict) else {}
-    reservation_evidence: dict[str, Any] = {}
-    for record in records:
-        if _routing_value(record, "event_type") != "reserved":
-            continue
-        evidence = record.get("evidence")
-        if isinstance(evidence, dict):
-            reservation_evidence = evidence
-            break
-    fields = {
-        "active_credential_before": reservation_evidence.get("active_credential_before"),
-        "active_quota_before": reservation_evidence.get("active_quota_before"),
-        "credential_limit": reservation_evidence.get("credential_limit"),
-        "quota_limit": reservation_evidence.get("quota_limit"),
-        "completed_input_bytes": scheduler.get("completed_input_bytes"),
-        "active_reserved_input_bytes": scheduler.get("active_reserved_input_bytes"),
-        "inflight": scheduler.get("inflight"),
-        "failures": scheduler.get("failures"),
-        "circuit_open": scheduler.get("circuit_open"),
-        "capacity_exhausted": scheduler.get("capacity_exhausted"),
-        "quota_remaining_pct": scheduler.get("quota_remaining_pct"),
-        "quota_stale": scheduler.get("quota_stale"),
-    }
-    allowed = {
-        key: value
-        for key, value in fields.items()
-        if isinstance(value, (str, int, float, bool)) and not isinstance(value, bytes)
-    }
-    return allowed or None
+    """Capacity belongs to private reporting; retain the public API's unknown."""
+    return None
 
 
 def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
     """Serialize an allowlisted, body-free routing decision for the Runtime UI."""
+    record = public_routing_record(record)
     requested = record.get("requested") if isinstance(record.get("requested"), dict) else {}
     resolved = record.get("resolved") if isinstance(record.get("resolved"), dict) else {}
-    quota_detail = record.get("quota") if isinstance(record.get("quota"), dict) else {}
-    quota_snapshot = _routing_first(
-        quota_detail.get("snapshot") if isinstance(quota_detail.get("snapshot"), dict) else None,
-        _routing_value(record, "quota_snapshot") if isinstance(_routing_value(record, "quota_snapshot"), dict) else None,
-    ) or {}
     lifecycle = record.get("lifecycle") if isinstance(record.get("lifecycle"), dict) else {}
-    replay = record.get("replay") if isinstance(record.get("replay"), dict) else {}
-    retry = record.get("retry") if isinstance(record.get("retry"), dict) else {}
-    selection_trace = _routing_first(_routing_value(record, "selection_trace", "trace"), resolved.get("trace"))
-    trace = selection_trace if isinstance(selection_trace, dict) else {}
-    snapshot_codexbar = quota_snapshot.get("codexbar") if isinstance(quota_snapshot.get("codexbar"), dict) else {}
-    quota_freshness = _routing_first(
-        _routing_value(record, "quota_freshness"),
-        quota_detail.get("freshness"),
-        quota_snapshot.get("freshness"),
-        snapshot_codexbar.get("freshness"),
-    )
     automatic = _routing_value(record, "automatic")
     if not isinstance(automatic, bool):
         automatic = _routing_value(record, "route_mode") == "auto" or requested.get("route_mode") == "auto"
-    return {
+    return public_routing_record({
         "decision_id": _routing_value(record, "decision_id"),
         "decision_event": _routing_value(record, "event_type"),
         "decision_state": _routing_value(record, "state"),
@@ -900,45 +841,18 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "resolved_route": _routing_first(_routing_value(record, "resolved_route", "route"), resolved.get("route")),
         "resolved_model": _routing_first(_routing_value(record, "resolved_model", "model"), resolved.get("model")),
         "resolved_family": _routing_first(_routing_value(record, "resolved_family", "family"), resolved.get("family")),
-        "quota_bucket": _routing_first(_routing_value(record, "quota_bucket"), quota_detail.get("bucket")),
-        "policy_version": _routing_first(_routing_value(record, "policy_version"), resolved.get("policy_version")),
+        "quota_bucket": None,
+        "policy_version": None,
         "selection_reason": _routing_selection_reason(record),
-        "selection_trace": selection_trace,
-        "selection_reasoning": {
-            # The order is deliberate: a candidate must first be eligible and
-            # task-suitable before quota, opportunity cost, capacity, or
-            # failure posture can distinguish otherwise suitable routes.
-            "hard_eligibility": _routing_trace_value(
-                trace,
-                "hard_eligibility", "eligibility", "capability_gates", "gates",
-            ),
-            "task_fit_quality": _routing_trace_value(
-                trace,
-                "task_fit", "capability_fit", "strength", "quality_rank", "suitability",
-            ),
-            "tie_breakers": _routing_trace_value(
-                trace,
-                "tie_breakers", "quota_cost_capacity", "quota", "opportunity_cost", "failure_posture",
-            ),
-            "cheaper_or_idle_not_selected": _routing_trace_value(
-                trace,
-                "cheaper_or_idle_not_selected", "rejected_alternatives", "not_selected",
-            ),
-        },
-        "quota_source": _routing_first(
-            _routing_value(record, "quota_source"), quota_detail.get("source"), quota_snapshot.get("source")
-        ),
-        "quota_freshness": quota_freshness,
-        "quota_freshness_state": _routing_quota_freshness_state(quota_freshness),
-        "quota_fresh_at": _routing_first(
-            _routing_value(record, "quota_fresh_at"), quota_detail.get("fresh_at"),
-            quota_snapshot.get("fresh_at"), quota_snapshot.get("fetched_at"), snapshot_codexbar.get("fetched_at"),
-        ),
-        "quota_headroom": _routing_first(_routing_value(record, "quota_headroom"), quota_snapshot.get("headroom")),
-        "quota_headroom_band": _routing_first(
-            _routing_value(record, "quota_headroom_band"), quota_detail.get("headroom_band")
-        ),
-        "credential_bucket": _routing_first(_routing_value(record, "credential_bucket"), quota_detail.get("credential_bucket")),
+        "selection_trace": None,
+        "selection_reasoning": None,
+        "quota_source": None,
+        "quota_freshness": None,
+        "quota_freshness_state": None,
+        "quota_fresh_at": None,
+        "quota_headroom": None,
+        "quota_headroom_band": None,
+        "credential_bucket": None,
         "estimated_input_bytes": _routing_first(_routing_value(record, "estimated_input_bytes"), requested.get("estimated_input_bytes")),
         "actual_input_bytes": _routing_value(record, "actual_input_bytes"),
         "actual_output_bytes": _routing_value(record, "actual_output_bytes"),
@@ -952,11 +866,11 @@ def _routing_assignment_item(record: dict[str, Any]) -> dict[str, Any]:
         "settled_at": _routing_first(_routing_value(record, "settled_at", "terminal_at"), lifecycle.get("settled_at")),
         "duration_s": _routing_duration_s(record),
         "failure_classification": _routing_first(_routing_value(record, "failure_classification"), lifecycle.get("failure_classification")),
-        "retry_chain": _routing_first(_routing_value(record, "retry_chain", "retry"), retry),
-        "failover_chain": _routing_first(_routing_value(record, "failover_chain", "failover"), retry.get("fallback_from")),
-        "replay_status": _routing_first(_routing_value(record, "replay_status", "replay"), replay),
-        "cache_status": _routing_value(record, "cache_status", "cache"),
-    }
+        "retry_chain": None,
+        "failover_chain": None,
+        "replay_status": None,
+        "cache_status": None,
+    })
 
 
 _ROUTING_ACTIVE_STATES = frozenset({"reserved", "running"})
@@ -1029,7 +943,7 @@ def _routing_assignment_aggregate(records: list[dict[str, Any]]) -> dict[str, An
         quota_snapshot = {}
     item["capacity_evidence"] = _routing_capacity_evidence(ordered, quota_snapshot)
     item["current_state"] = _routing_first(item.get("reservation_state"), item.get("terminal_status"), item.get("decision_state"))
-    return item
+    return public_routing_record(item)
 
 
 def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -1060,7 +974,7 @@ def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = N
             "plane": plane,
             "assignments": [],
         }
-    except (OSError, sqlite3.Error, TypeError, ValueError):
+    except (OSError, sqlite3.Error, TypeError, ValueError, RuntimeError):
         return {
             "availability": "unavailable",
             "reason": "routing_decision_reader_failed",
