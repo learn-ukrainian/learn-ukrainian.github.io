@@ -109,7 +109,7 @@ def test_generic_home_pattern_is_the_fallback_and_skips_url_paths() -> None:
 
 
 @pytest.mark.parametrize("escape", ["\\n", "\\r", "\\t", "\\x1b", "\\u001b"])
-def test_generic_home_pattern_matches_after_an_escape_sequence(escape: str) -> None:
+def test_generic_home_pattern_extra_samples(escape: str) -> None:
     generic = re.compile(nd.home_dir_pattern(nd.Needles()))
     assert generic.search(f"first line{escape}{OTHER_HOME}/x")
     assert not generic.search("https://example.org/home/page")
@@ -167,9 +167,7 @@ def test_violation_messages_do_not_repeat_configured_values(
     ],
 )
 @pytest.mark.parametrize("separator", ["\n", "\r\n", "\t", "\x1b"])
-def test_validators_reject_home_paths_inside_multiline_values(
-    module_name: str, function_name: str, separator: str
-) -> None:
+def test_validators_reject_structured_samples(module_name: str, function_name: str, separator: str) -> None:
     module = pytest.importorskip(f"scripts.projects.open_model_data.{module_name}")
     validate = getattr(module, function_name)
     for payload in (
