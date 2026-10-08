@@ -1157,6 +1157,55 @@ def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
 
 
+@pytest.mark.parametrize(
+    "harness,model,has_record,expected",
+    [
+        ("codex", "impl-8512-claude-exclude", True, "openai"),  # AC-02
+        ("claude", "claude-opus-5-5", False, "anthropic"),  # AC-03
+        ("codex", "gpt-6.1-sol", False, "openai"),  # AC-03
+        ("codex", "impl-8512-claude-exclude", False, "unknown"),  # AC-04
+        ("claude", "grok-4.7-adapter-fix", False, "unknown"),
+        ("claude-infra", "glm-adapter-review", False, "unknown"),
+        ("codex", "gpt-6.1-sol-claude-port", False, "unknown"),
+        ("codex", "gpt-6.1-sol-high-adapter-fix", False, "unknown"),
+        ("claude-infra", "glm", False, "zhipu"),
+        ("claude", "grok-4.7-adapter-fix", True, "openai"),
+        ("claude-infra", "glm-adapter-review", True, "openai"),
+        ("codex", "gpt-6.1-sol-claude-port", True, "openai"),
+    ],
+)
+def test_author_task_record_precedes_family_tokens(monkeypatch, tmp_path, harness, model, has_record, expected):
+    tasks = tmp_path / "tasks"
+    if has_record:
+        write_task(tasks, task_id=model, model="gpt-6.1-sol", agent=harness)
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {harness}/{model}"}}],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {expected}
+
+
+@pytest.mark.parametrize("effort", ["", "-low", "-medium", "-high", "-xhigh", "-max"])
+@pytest.mark.parametrize("context", ["", "[1m]"])
+@pytest.mark.parametrize(
+    "harness,model,expected",
+    [
+        ("codex", "gpt-6.1-sol", "openai"),
+        ("claude", "claude-opus-5-5", "anthropic"),
+        ("claude-infra", "glm", "zhipu"),
+        ("codex", "openai/gpt-6.1-sol", "openai"),
+    ],
+)
+def test_model_trailer_preserves_effort_and_context_forms(monkeypatch, tmp_path, harness, model, expected, effort, context):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"work\n\nX-Agent: {harness}/{model}{effort}{context}"}}],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {expected}
+
+
 def test_archived_review_task_and_reply_are_loadable(tmp_path):
     """#8625: a review archived before its verdict was recorded can still be published."""
     tasks = tmp_path / "tasks"
