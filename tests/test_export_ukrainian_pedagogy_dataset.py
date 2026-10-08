@@ -11,12 +11,12 @@ import os
 from pathlib import Path
 
 from scripts.dataset import export_ukrainian_pedagogy_dataset as exporter
+from tests._host_path_guard import host_path_hits
 
 
 def test_source_has_no_hardcoded_operator_path() -> None:
     src = Path(exporter.__file__).read_text(encoding="utf-8")
-    assert "/Users/krisztiankoos/projects/learn-ukrainian-infra-private" not in src
-    assert "/Users/krisztiankoos" not in src
+    assert not host_path_hits(src)
 
 
 def test_project_root_resolves_from_file_location() -> None:

@@ -99,6 +99,7 @@ from scripts.lexicon.source_attribution import (
     WIKIDATA_LABEL,
     join_academic_source_labels,
 )
+from tests._host_path_guard import checkout_path_hits
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -5991,7 +5992,7 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     # Portability is a source-code property: the module must resolve the
     # primary checkout dynamically rather than embed an operator's absolute path.
     src = Path(enrich_manifest_module.__file__).read_text(encoding="utf-8")
-    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
+    assert not checkout_path_hits(src)
 
 
 def test_morphology_filters_russian_infinitive_tsya_form(monkeypatch) -> None:

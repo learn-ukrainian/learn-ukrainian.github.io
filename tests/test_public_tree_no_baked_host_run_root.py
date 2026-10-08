@@ -1,8 +1,8 @@
 """Anti-leak guard for baked host checkout / venv paths in the public tree.
 
-Detector needles stay in dedicated tests and OPSEC scanners. Production
-docs, scripts, curriculum (including `_archive`), and operator examples
-must not bake a host checkout or interpreter path.
+Needles come from tests/_host_path_guard.py (a home directory followed by the
+checkout name). Production docs, scripts, curriculum (including `_archive`),
+and operator examples must not bake a host checkout or interpreter path.
 """
 
 from __future__ import annotations
@@ -11,19 +11,11 @@ from pathlib import Path
 
 import pytest
 
+from tests._host_path_guard import checkout_path_hits
+
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
 ROOT = Path(__file__).resolve().parents[1]
-
-# Reject-sample prefixes. Do not copy these into public files.
-_BAKED_CHECKOUT_PREFIXES = (
-    "/Users/krisztiankoos/projects/learn-ukrainian",
-    "/Users/your-user/projects/learn-ukrainian",
-    "/Users/REPLACE/projects/learn-ukrainian",
-    "/Users/k/projects/learn-ukrainian",
-    "/Users/me/projects/learn-ukrainian",
-    "/Users/you/projects/learn-ukrainian",
-)
 
 _TEXT_SUFFIXES = {
     ".md",
@@ -100,7 +92,9 @@ def test_public_tree_has_no_baked_host_checkout_or_venv() -> None:
         except (UnicodeDecodeError, OSError):
             continue
         rel = str(path.relative_to(ROOT))
-        for prefix in _BAKED_CHECKOUT_PREFIXES:
-            if prefix in text:
-                leaked.append(f"{rel} contains {prefix}")
+        # macOS-style checkouts only for now; checkouts under other home roots
+        # join this scan once the remaining public examples are generalised.
+        for hit in checkout_path_hits(text):
+            if hit.startswith("/Users"):
+                leaked.append(f"{rel} contains {hit}")
     assert not leaked, "baked host run-root still present:\n" + "\n".join(leaked)

@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner import atlas_job
+from tests._host_path_guard import host_path_hits
 
 
 def _git_env() -> dict[str, str]:
@@ -55,9 +56,9 @@ def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
 
 
-def test_source_has_no_baked_ops_home_defaults() -> None:
+def test_source_has_no_baked_home_defaults() -> None:
     text = Path(atlas_job.__file__).read_text(encoding="utf-8")
-    assert "/home/ops" not in text
+    assert not host_path_hits(text)
 
 
 def test_valid_plan_is_ok() -> None:
