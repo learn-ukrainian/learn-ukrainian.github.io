@@ -3,13 +3,17 @@ Ingest ZNO booklet metadata and online tasks from zno.osvita.ua into sources.db.
 """
 
 import argparse
+import contextlib
 import json
+import math
 import re
 import sqlite3
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urljoin, urlparse
 
 from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
 from scripts.storage.paths import REGISTRY_ROOT
@@ -820,36 +824,146 @@ def ingest_documents(conn: sqlite3.Connection):
         )
 
 
-# Simple global to track the time of the last HTTP request
-_last_request_time = 0.0
+# Local command-line acquisition policy; intentionally no shared network layer.
+USER_AGENT = (
+    "LearnUkrainianBot/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+_access_stopped = False
+_robots_delays: dict[str, float] = {}
+_request_times: dict[str, float] = {}
+
+
+class AccessStopped(RuntimeError):
+    """A source denied acquisition; no later network request is allowed this run."""
+
+
+def _check_access(status: int, headers: object, body: str = "") -> None:
+    global _access_stopped
+    fields = {str(k).lower(): str(v).lower().strip() for k, v in headers.items()}
+    lowered = body[:8000].lower()
+    challenged = fields.get("cf-mitigated") == "challenge" or any(
+        marker in lowered for marker in (
+            "checking your browser", "cf-browser-verification", "cf_chl_", "cf-chl-",
+            "attention required! | cloudflare", "enable javascript and cookies to continue",
+        )
+    ) or bool(re.search(r"<title[^>]*>\s*just a moment", lowered))
+    if _access_stopped or status in {403, 429} or challenged:
+        _access_stopped = True
+        raise AccessStopped("Source access denied or challenged; acquisition stopped for this run")
+
+
+def _robots_crawl_delay(body: str) -> float:
+    """Read observed crawl-delay, including fractions, from applicable UA groups.
+
+    Crawl-delay is an extension to RFC 9309. Specific matching groups take
+    precedence over '*'; all matching groups contribute their maximum floor.
+    """
+    groups: list[tuple[list[str], list[float]]] = []
+    agents: list[str] = []
+    delays: list[float] = []
+    directives = False
+    for line in body.splitlines():
+        field, sep, value = line.partition("#")[0].partition(":")
+        if not sep:
+            continue
+        field, value = field.strip().lower(), value.strip()
+        if field == "user-agent":
+            if directives:
+                groups.append((agents, delays))
+                agents, delays, directives = [], [], False
+            agents.append(value.lower())
+        elif agents:
+            directives = True
+            if field == "crawl-delay":
+                try:
+                    delay = float(value)
+                except ValueError:
+                    continue
+                if math.isfinite(delay) and delay >= 0:
+                    delays.append(delay)
+    groups.append((agents, delays))
+    product = USER_AGENT.split("/", 1)[0].lower()
+    specific = [values for names, values in groups if any(n != "*" and n and n in product for n in names)]
+    applicable = specific or [values for names, values in groups if "*" in names]
+    return max((v for values in applicable for v in values), default=0.0)
+
+
+def _wait_for_request(url: str, floor: float = 0.0) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    delay = max(floor, _robots_delays.get(origin, 0.0))
+    previous = _request_times.get(origin)
+    if previous is not None:
+        remaining = delay - (time.monotonic() - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+    _request_times[origin] = time.monotonic()
+
+
 FETCH_TIMEOUT_SECONDS = 30
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # Inspect the redirect before issuing the next source request.
+        return None
+
+
+def _open(request):
+    return urllib.request.build_opener(_NoRedirect()).open(request, timeout=FETCH_TIMEOUT_SECONDS)
+
+
+def _fetch(url: str, rate_limit: float, *, robots: bool = True) -> str:
+    _check_access(0, {})
+    for _hop in range(11):
+        parsed = urlparse(url)
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if robots and origin not in _robots_delays:
+            _robots_delays[origin] = 0.0
+            with contextlib.suppress(urllib.error.URLError, OSError):
+                _robots_delays[origin] = _robots_crawl_delay(_fetch(f"{origin}/robots.txt", rate_limit, robots=False))
+        _wait_for_request(url, rate_limit)
+        request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+        try:
+            response = _open(request)
+        except urllib.error.HTTPError as exc:
+            # urllib represents a deliberately unfollowed redirect as HTTPError.
+            try:
+                _check_access(exc.code, exc.headers)
+                if exc.code not in {301, 302, 303, 307, 308}:
+                    _check_access(exc.code, exc.headers, exc.read().decode("utf-8", errors="replace"))
+                    raise
+            except BaseException:
+                exc.close()
+                raise
+            response = exc
+        with response:
+            status = getattr(response, "status", getattr(response, "code", 200))
+            headers = getattr(response, "headers", {})
+            _check_access(status, headers)
+            html = response.read().decode("utf-8")
+            _check_access(status, headers, html)
+            location = headers.get("Location", "")
+            if status in {301, 302, 303, 307, 308} and location:
+                url = urljoin(url, location)
+                continue
+            return html
+    raise urllib.error.URLError("Acquisition exceeded redirect limit")
+
+
 def fetch_page_with_rate_limit(url: str, cache_path: Path, rate_limit: float = 2.0) -> str:
-    """
-    Fetch URL content with a rate limit, caching the results locally.
-    """
-    global _last_request_time
+    """Fetch with per-origin observed robots floors and validated cache hits."""
+    _check_access(0, {})
     if cache_path.exists():
-        return cache_path.read_text(encoding="utf-8")
+        html = cache_path.read_text(encoding="utf-8")
+        _check_access(200, {}, html)
+        return html
 
-    # Enforce rate limit
-    elapsed = time.time() - _last_request_time
-    if elapsed < rate_limit:
-        sleep_time = rate_limit - elapsed
-        time.sleep(sleep_time)
-
-    # Fetch page
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_SECONDS) as response:
-        html = response.read().decode("utf-8")
-
-    _last_request_time = time.time()
-
-    # Cache locally
+    html = _fetch(url, rate_limit)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(html, encoding="utf-8")
-
     return html
 
 

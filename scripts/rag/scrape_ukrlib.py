@@ -38,6 +38,7 @@ import contextlib
 import hashlib
 import html
 import json
+import math
 import os
 import re
 import subprocess
@@ -47,6 +48,7 @@ import time
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import ClassVar
+from urllib.parse import urljoin, urlparse
 
 if __package__:
     from .config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
@@ -824,36 +826,162 @@ def verify_source_content(
         )
 
 
+# Local command-line acquisition policy; intentionally no shared network layer.
+USER_AGENT = (
+    "LearnUkrainianBot/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+_access_stopped = False
+_robots_delays: dict[str, float] = {}
+_request_times: dict[str, float] = {}
+
+
+class AccessStopped(RuntimeError):
+    """A source denied acquisition; no later network request is allowed this run."""
+
+
+def _check_access(status: int, headers: object, body: str = "") -> None:
+    global _access_stopped
+    fields = {str(k).lower(): str(v).lower().strip() for k, v in headers.items()}
+    lowered = body[:8000].lower()
+    challenged = fields.get("cf-mitigated") == "challenge" or any(
+        marker in lowered for marker in (
+            "checking your browser", "cf-browser-verification", "cf_chl_", "cf-chl-",
+            "attention required! | cloudflare", "enable javascript and cookies to continue",
+        )
+    ) or bool(re.search(r"<title[^>]*>\s*just a moment", lowered))
+    if _access_stopped or status in {403, 429} or challenged:
+        _access_stopped = True
+        raise AccessStopped("Source access denied or challenged; acquisition stopped for this run")
+
+
+def _robots_crawl_delay(body: str) -> float:
+    """Read observed crawl-delay, including fractions, from applicable UA groups.
+
+    Crawl-delay is an extension to RFC 9309. Specific matching groups take
+    precedence over '*'; all matching groups contribute their maximum floor.
+    """
+    groups: list[tuple[list[str], list[float]]] = []
+    agents: list[str] = []
+    delays: list[float] = []
+    directives = False
+    for line in body.splitlines():
+        field, sep, value = line.partition("#")[0].partition(":")
+        if not sep:
+            continue
+        field, value = field.strip().lower(), value.strip()
+        if field == "user-agent":
+            if directives:
+                groups.append((agents, delays))
+                agents, delays, directives = [], [], False
+            agents.append(value.lower())
+        elif agents:
+            directives = True
+            if field == "crawl-delay":
+                try:
+                    delay = float(value)
+                except ValueError:
+                    continue
+                if math.isfinite(delay) and delay >= 0:
+                    delays.append(delay)
+    groups.append((agents, delays))
+    product = USER_AGENT.split("/", 1)[0].lower()
+    specific = [values for names, values in groups if any(n != "*" and n and n in product for n in names)]
+    applicable = specific or [values for names, values in groups if "*" in names]
+    return max((v for values in applicable for v in values), default=0.0)
+
+
+def _wait_for_request(url: str, floor: float = 0.0) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    delay = max(floor, _robots_delays.get(origin, 0.0))
+    previous = _request_times.get(origin)
+    if previous is not None:
+        remaining = delay - (time.monotonic() - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+    _request_times[origin] = time.monotonic()
+
+
 # ── Fetching ─────────────────────────────────────────────────────────
 
-def fetch_page(url: str, retries: int = 3) -> str:
-    """Fetch a page handling windows-1251 encoding, with retries."""
-    for attempt in range(1, retries + 1):
+def _curl_response(url: str) -> tuple[int, dict[str, str], bytes, int]:
+    """Capture status/headers separately so source bytes retain their encoding.
+
+    curl performs one hop and no internal retry: Python must inspect every
+    response before another request. Temporary metadata is never corpus data.
+    """
+    with tempfile.TemporaryDirectory() as scratch:
+        headers_path = Path(scratch) / "headers"
+        body_path = Path(scratch) / "body"
         try:
             result = subprocess.run(
-                ["curl", "-sL", "--max-time", "30", "--retry", "2",
+                ["curl", "-sS", "--max-time", "30", "--dump-header", str(headers_path),
+                 "--output", str(body_path), "--write-out", "%{http_code}",
                  "-H", "Accept-Charset: windows-1251,utf-8",
-                 "-H", "User-Agent: Mozilla/5.0 (compatible; UkrLibScraper/1.0)",
-                 url],
-                capture_output=True,
-                timeout=60,
+                 "-H", f"User-Agent: {USER_AGENT}", url],
+                capture_output=True, timeout=60,
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(f"curl timed out for {url}") from exc
-        if result.returncode == 0 and result.stdout:
+        headers: dict[str, str] = {}
+        if headers_path.exists():
+            for line in headers_path.read_text("iso-8859-1").splitlines():
+                if line.startswith("HTTP/"):
+                    headers = {}
+                elif ":" in line:
+                    key, value = line.split(":", 1)
+                    headers[key.strip().lower()] = value.strip()
+        status = int(result.stdout.strip() or b"0")
+        body = body_path.read_bytes() if body_path.exists() else b""
+        return status, headers, body, result.returncode
+
+
+def _curl_request(url: str, *, robots: bool = True) -> tuple[int, bytes, int]:
+    _check_access(0, {})
+    for _hop in range(11):
+        parsed = urlparse(url)
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if robots and origin not in _robots_delays:
+            _robots_delays[origin] = 0.0
+            try:
+                status, body, rc = _curl_request(f"{origin}/robots.txt", robots=False)
+                if rc == 0 and status == 200:
+                    _robots_delays[origin] = _robots_crawl_delay(body.decode("utf-8", errors="replace"))
+            except AccessStopped:
+                raise
+            except RuntimeError:
+                pass  # Unavailable robots retains the configured request floor.
+        _wait_for_request(url, DELAY_BETWEEN_PAGES)
+        status, headers, body, rc = _curl_response(url)
+        _check_access(status, headers, body.decode("utf-8", errors="replace"))
+        if rc == 0 and status in {301, 302, 303, 307, 308} and headers.get("location"):
+            url = urljoin(url, headers["location"])
+            continue
+        return status, body, rc
+    raise RuntimeError("Acquisition exceeded redirect limit")
+
+
+def fetch_page(url: str, retries: int = 3) -> str:
+    """Fetch windows-1251 content; denial stops instead of retrying or parsing."""
+    for attempt in range(1, retries + 1):
+        status, body, rc = _curl_request(url)
+        if rc == 0 and status < 400 and body:
             break
+        if 400 <= status < 500:
+            raise RuntimeError(f"HTTP {status} for {url}")
         if attempt < retries:
             wait = attempt * 3
-            print(f"    Retry {attempt}/{retries} for {url} (rc={result.returncode}), waiting {wait}s...")
+            print(f"    Retry {attempt}/{retries} for {url} (rc={rc}), waiting {wait}s...")
             time.sleep(wait)
     else:
-        raise RuntimeError(f"curl failed for {url} after {retries} attempts: rc={result.returncode} {result.stderr.decode()}")
+        raise RuntimeError(f"curl failed for {url} after {retries} attempts: rc={rc} HTTP {status}")
 
-    # Try windows-1251 first (ukrlib default)
     try:
-        return result.stdout.decode("windows-1251")
+        return body.decode("windows-1251")
     except UnicodeDecodeError:
-        return result.stdout.decode("utf-8", errors="replace")
+        return body.decode("utf-8", errors="replace")
 
 
 def get_author_works(author_id: int) -> tuple[list[dict], list[dict]]:
@@ -1236,6 +1364,8 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
                         expected_author=source_author,
                         expected_title=title,
                     )
+                except AccessStopped:
+                    raise
                 except Exception as e:
                     print(f"    ERROR: {e}")
                     continue
@@ -1403,6 +1533,8 @@ def scrape_narod(dry_run: bool = False) -> int:
             print(f"\n  [{i}/{n}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
             try:
                 text, source_url = scrape_narod_work(w["genre_id"], w["bookid"])
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"    ERROR: {e}")
                 continue

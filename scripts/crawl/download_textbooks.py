@@ -10,12 +10,14 @@ Usage:
 
 import argparse
 import hashlib
+import math
 import os
 import re
 import sys
 import tempfile
 import time
 from collections.abc import Callable
+from itertools import chain
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -48,9 +50,86 @@ DOWNLOAD_CHUNK_SIZE = 1024 * 1024
 # Polite crawl delay (seconds between requests)
 CRAWL_DELAY = 2.0
 
+# Local command-line acquisition policy; intentionally no shared network layer.
+USER_AGENT = (
+    "LearnUkrainianBot/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+_access_stopped = False
+_robots_delays: dict[str, float] = {}
+_request_times: dict[str, float] = {}
+
+
+class AccessStopped(RuntimeError):
+    """A source denied acquisition; no later network request is allowed this run."""
+
+
+def _check_access(status: int, headers: object, body: str = "") -> None:
+    global _access_stopped
+    fields = {str(k).lower(): str(v).lower().strip() for k, v in headers.items()}
+    lowered = body[:8000].lower()
+    challenged = fields.get("cf-mitigated") == "challenge" or any(
+        marker in lowered for marker in (
+            "checking your browser", "cf-browser-verification", "cf_chl_", "cf-chl-",
+            "attention required! | cloudflare", "enable javascript and cookies to continue",
+        )
+    ) or bool(re.search(r"<title[^>]*>\s*just a moment", lowered))
+    if _access_stopped or status in {403, 429} or challenged:
+        _access_stopped = True
+        raise AccessStopped("Source access denied or challenged; acquisition stopped for this run")
+
+
+def _robots_crawl_delay(body: str) -> float:
+    """Read observed crawl-delay, including fractions, from applicable UA groups.
+
+    Crawl-delay is an extension to RFC 9309. Specific matching groups take
+    precedence over '*'; all matching groups contribute their maximum floor.
+    """
+    groups: list[tuple[list[str], list[float]]] = []
+    agents: list[str] = []
+    delays: list[float] = []
+    directives = False
+    for line in body.splitlines():
+        field, sep, value = line.partition("#")[0].partition(":")
+        if not sep:
+            continue
+        field, value = field.strip().lower(), value.strip()
+        if field == "user-agent":
+            if directives:
+                groups.append((agents, delays))
+                agents, delays, directives = [], [], False
+            agents.append(value.lower())
+        elif agents:
+            directives = True
+            if field == "crawl-delay":
+                try:
+                    delay = float(value)
+                except ValueError:
+                    continue
+                if math.isfinite(delay) and delay >= 0:
+                    delays.append(delay)
+    groups.append((agents, delays))
+    product = USER_AGENT.split("/", 1)[0].lower()
+    specific = [values for names, values in groups if any(n != "*" and n and n in product for n in names)]
+    applicable = specific or [values for names, values in groups if "*" in names]
+    return max((v for values in applicable for v in values), default=0.0)
+
+
+def _wait_for_request(url: str, floor: float = 0.0) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    delay = max(floor, _robots_delays.get(origin, 0.0))
+    previous = _request_times.get(origin)
+    if previous is not None:
+        remaining = delay - (time.monotonic() - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+    _request_times[origin] = time.monotonic()
+
+
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "User-Agent": USER_AGENT,
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 
@@ -65,6 +144,62 @@ class DownloadValidationError(ValueError):
     """Raised when a streamed response cannot be retained as a PDF."""
 
     pass
+
+
+def _request(url: str, *, session=None, method: str = "get", robots: bool = True,
+             follow_redirects: bool = True, **kwargs):
+    """Check and pace every HTTP hop, including form and PDF requests."""
+    _check_access(0, {})
+    for _hop in range(11):
+        parsed = urlparse(url)
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if robots and origin not in _robots_delays:
+            _robots_delays[origin] = 0.0
+            try:
+                response = _request(f"{origin}/robots.txt", session=session, robots=False, timeout=30)
+                try:
+                    _robots_delays[origin] = _robots_crawl_delay(response.text)
+                finally:
+                    _safe_close(response)
+            except requests.RequestException:
+                pass  # Ordinary unavailable robots retains the configured floor.
+        _wait_for_request(url, CRAWL_DELAY)
+        sender = getattr(session or requests, method)
+        response = sender(url, headers=HEADERS, allow_redirects=False, **kwargs)
+        try:
+            status = getattr(response, "status_code", 200)
+            _check_access(status, getattr(response, "headers", {}))
+            # Do not hydrate PDF streams to inspect an HTML page.
+            if not kwargs.get("stream"):
+                _check_access(status, getattr(response, "headers", {}), response.text)
+            elif status >= 300 or "text/html" in _header(response, "Content-Type").lower():
+                # Inspect at most one bounded prefix before errors/redirects or
+                # confirmation parsing, then replay it into the existing stream.
+                stream = response.iter_content(chunk_size=8192)
+                prefix: list[bytes] = []
+                size = 0
+                for chunk in stream:
+                    prefix.append(chunk)
+                    size += len(chunk)
+                    if size >= 8000:
+                        break
+                _check_access(status, getattr(response, "headers", {}), b"".join(prefix)[:8000].decode("utf-8", errors="replace"))
+                response.iter_content = lambda chunk_size, saved=prefix, rest=stream: chain(saved, rest)
+            response.raise_for_status()
+            location = _header(response, "Location")
+            if follow_redirects and status in {301, 302, 303, 307, 308} and location:
+                url = urljoin(url, location)
+                _safe_close(response)
+                kwargs.pop("params", None)
+                if status == 303 or (status in {301, 302} and method == "post"):
+                    method = "get"
+                    kwargs.pop("data", None)
+                continue
+            return response
+        except BaseException:
+            _safe_close(response)
+            raise
+    raise requests.TooManyRedirects("Acquisition exceeded redirect limit")
 
 
 def transliterate_ua(text: str) -> str:
@@ -274,10 +409,10 @@ def extract_pdf_links(slug: str, author: str, grade: int, target_year: int | Non
     url = f"{BASE_URL}/{slug}.html"
     print(f"  Fetching: {url}")
 
-    resp = requests.get(url, headers=HEADERS, timeout=30)
-    resp.raise_for_status()
+    resp = _request(url, timeout=30)
 
     soup = BeautifulSoup(resp.text, "html.parser")
+    _safe_close(resp)
 
     # Title guard (hard)
     title_tag = soup.find("title")
@@ -405,9 +540,9 @@ def extract_shkola_pdf_links(
 
     session = requests.Session()
     session.headers.update(HEADERS)
-    response = session.get(page_url, timeout=30)
-    response.raise_for_status()
+    response = _request(page_url, session=session, timeout=30)
     soup = BeautifulSoup(response.text, "html.parser")
+    _safe_close(response)
     title_tag = soup.find("title")
     title_text = title_tag.get_text(strip=True) if title_tag else ""
     title_norm = normalize_whitespace(title_text)
@@ -437,12 +572,11 @@ def extract_shkola_pdf_links(
             continue
 
         endpoint = urljoin(getattr(response, "url", page_url), form.get("action") or "")
-        redirect = session.post(
-            endpoint,
+        redirect = _request(
+            endpoint, session=session, method="post", follow_redirects=False,
             data={"vslink": button["value"]},
             timeout=30,
             stream=True,
-            allow_redirects=False,
         )
         try:
             redirect.raise_for_status()
@@ -611,6 +745,7 @@ def _retain_response(
         digest = hashlib.sha256()
         total = 0
         first_nonempty = b""
+        access_prefix = b""
         with temporary.open("wb") as handle:
             for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
                 if not chunk:
@@ -619,6 +754,9 @@ def _retain_response(
                     raise DownloadValidationError("response yielded text instead of bytes")
                 if not first_nonempty:
                     first_nonempty = bytes(chunk)
+                if not first_nonempty.startswith(PDF_SIGNATURE):
+                    access_prefix += chunk[:max(0, 8000 - len(access_prefix))]
+                    _check_access(200, {}, access_prefix.decode("utf-8", errors="ignore"))
                 total += len(chunk)
                 if max_size_bytes is not None and total > max_size_bytes:
                     raise DownloadValidationError(
@@ -684,7 +822,7 @@ def download_pdf(
         return False
 
     print(f"  Downloading: {dest.name}...")
-    resp = requests.get(url, headers=HEADERS, timeout=120, stream=True)
+    resp = _request(url, timeout=120, stream=True)
     try:
         resp.raise_for_status()
         return _retain_response(
@@ -727,7 +865,7 @@ def download_from_gdrive(
     session.headers.update(HEADERS)
 
     # Step 1: Initial request
-    resp = session.get(url, params={"export": "download", "id": drive_id}, stream=True, timeout=120)
+    resp = _request(url, session=session, params={"export": "download", "id": drive_id}, stream=True, timeout=120)
     resp.raise_for_status()
 
     # Check if we got the confirmation page
@@ -736,7 +874,23 @@ def download_from_gdrive(
     confirm_url = url
     content_type = resp.headers.get("Content-Type", "")
     if "text/html" in content_type:
-        html_content = resp.text
+        # Read confirmation HTML through the bounded stream, never Response.text.
+        # The first 8 KiB is sufficient for the established challenge markers.
+        html_bytes = bytearray()
+        try:
+            for chunk in resp.iter_content(chunk_size=8192):
+                html_bytes.extend(chunk)
+                _check_access(resp.status_code, resp.headers, html_bytes[:8000].decode("utf-8", errors="replace"))
+                limit = min(DOWNLOAD_CHUNK_SIZE, max_size_bytes or DOWNLOAD_CHUNK_SIZE)
+                if len(html_bytes) > limit:
+                    raise DownloadValidationError("confirmation HTML exceeds response limit")
+            html_content = html_bytes.decode("utf-8", errors="replace")
+            # A non-confirmation response still goes through PDF validation.
+            # Replay every inspected byte, including a mislabeled valid PDF.
+            resp.iter_content = lambda chunk_size, saved=bytes(html_bytes): iter((saved,))
+        except BaseException:
+            _safe_close(resp)
+            raise
 
         # 1. Parse HTML using BeautifulSoup
         soup = BeautifulSoup(html_content, "html.parser")
@@ -797,7 +951,7 @@ def download_from_gdrive(
         if uuid_token:
             params["uuid"] = uuid_token
         _safe_close(resp)
-        resp = session.get(confirm_url, params=params, stream=True, timeout=120)
+        resp = _request(confirm_url, session=session, params=params, stream=True, timeout=120)
         resp.raise_for_status()
 
     try:
@@ -924,6 +1078,8 @@ def main():
             except TitleGuardError:
                 # Expected-vs-actual warning printed inside extract_pdf_links
                 time.sleep(CRAWL_DELAY)
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"  ERROR fetching page: {e}")
                 time.sleep(CRAWL_DELAY)
@@ -939,6 +1095,8 @@ def main():
                     )
                     if pdfs:
                         print(f"  Using Shkola fallback: {fallback_page_url}")
+                except AccessStopped:
+                    raise
                 except Exception as exc:
                     print(f"  WARNING: fallback page failed: {exc}")
 
@@ -995,6 +1153,8 @@ def main():
                         retained_store=retained_store,
                         max_size_bytes=args.max_size_bytes,
                     )
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"  WARNING: primary download failed for {filename}: {e}")
                 downloaded = None
@@ -1019,6 +1179,8 @@ def main():
                             )
                         print(f"  Used same-page mirror: {alternate['label']}")
                         break
+                    except AccessStopped:
+                        raise
                     except Exception as alternate_error:
                         print(f"  WARNING: same-page mirror failed: {alternate_error}")
                 if downloaded is None:
@@ -1054,6 +1216,8 @@ def main():
                                 )
                             print(f"  Used Shkola fallback: {fallback_page_url}")
                             break
+                        except AccessStopped:
+                            raise
                         except Exception as fallback_error:
                             print(f"  WARNING: fallback download failed: {fallback_error}")
                 if downloaded is None:

@@ -27,6 +27,13 @@ from scripts.ingest.zno_ingest import (
 )
 
 
+@pytest.fixture(autouse=True)
+def isolate_transport(monkeypatch):
+    monkeypatch.setattr(zno_ingest, "_access_stopped", False)
+    monkeypatch.setattr(zno_ingest, "_robots_delays", {"https://example.invalid": 0.0})
+    monkeypatch.setattr(zno_ingest, "_request_times", {})
+
+
 @pytest.fixture
 def db_path(tmp_path: Path) -> Path:
     return tmp_path / "sources.db"
@@ -358,8 +365,10 @@ def test_fetch_page_uses_bounded_request_timeout(tmp_path: Path, monkeypatch: py
         timeouts.append(timeout)
         return Response()
 
-    monkeypatch.setattr(zno_ingest.urllib.request, "urlopen", fake_urlopen)
-    monkeypatch.setattr(zno_ingest, "_last_request_time", 0.0)
+    class Opener:
+        open = staticmethod(fake_urlopen)
+
+    monkeypatch.setattr(zno_ingest.urllib.request, "build_opener", lambda *_handlers: Opener())
 
     html = fetch_page_with_rate_limit("https://example.invalid/test/", tmp_path / "page.html", rate_limit=0)
 
