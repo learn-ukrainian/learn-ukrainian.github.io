@@ -4456,16 +4456,17 @@ def test_read_only_checkout_snapshot_detects_database_link_target_changes(tmp_pa
     assert delegate._read_only_mutation_paths(before, after) == ["data/sources.db"]
 
 
-def test_read_only_worktree_database_links_share_snapshot_coverage(tmp_path, monkeypatch):
-    """Adding a provisioned database must automatically add snapshot coverage."""
+def test_read_only_worktree_database_links_share_snapshot_coverage(tmp_path):
+    """Additional database links must automatically receive snapshot coverage."""
     primary, worktree = _init_repo_with_worktree(tmp_path)
     relative_path = "data/extra.db"
-    monkeypatch.setattr(delegate, "_LINKED_DATABASE_PATHS", (*delegate._LINKED_DATABASE_PATHS, relative_path))
     database = primary / relative_path
     database.parent.mkdir()
     database.write_bytes(b"before")
 
     delegate._provision_data_symlinks(worktree, primary)
+    (worktree / "data").mkdir(exist_ok=True)
+    (worktree / relative_path).symlink_to(database)
 
     assert (worktree / relative_path).is_symlink()
     before, error = delegate._read_only_checkout_snapshot(worktree)
@@ -4488,6 +4489,27 @@ def test_read_only_checkout_snapshot_refuses_broken_database_link(tmp_path):
     assert snapshot is None
     assert error == "linked database snapshot failed: data/sources.db: FileNotFoundError"
     assert not (primary / "missing.db").exists()
+
+
+def test_read_only_checkout_snapshot_refuses_unreadable_database_directory(tmp_path, monkeypatch):
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / "sources.db"
+    database.parent.mkdir()
+    database.write_bytes(b"database fixture")
+    delegate._provision_data_symlinks(worktree, primary)
+    original_scandir = os.scandir
+
+    def unreadable(path):
+        if path == worktree / "data":
+            raise PermissionError("fixture directory unreadable")
+        return original_scandir(path)
+
+    monkeypatch.setattr(os, "scandir", unreadable)
+
+    snapshot, error = delegate._read_only_checkout_snapshot(worktree)
+
+    assert snapshot is None
+    assert error == "linked database snapshot failed: data: PermissionError"
 
 
 def test_read_only_runtime_telemetry_path_classification():

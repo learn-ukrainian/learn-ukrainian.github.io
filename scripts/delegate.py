@@ -5269,9 +5269,6 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
 # read-only dispatches (#7124). The guard diffs only what the task could own.
 _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
 
-# Provisioning and read-only snapshots must cover the same database links.
-_LINKED_DATABASE_PATHS = ("data/vesum.db", "data/sources.db")
-
 
 def _is_read_only_snapshot_excluded_path(path: str) -> bool:
     """Return whether a checkout-relative path is outside the snapshot scope."""
@@ -5360,10 +5357,19 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
-    for relative_path in _LINKED_DATABASE_PATHS:
-        link = cwd / relative_path
+    # Discover database links directly so every provisioned link is covered
+    # without duplicating the provisioning paths in another scope.
+    try:
+        with os.scandir(cwd / "data") as data_entries:
+            database_paths = sorted(Path(entry.path) for entry in data_entries if entry.name.endswith(".db"))
+    except FileNotFoundError:
+        database_paths = []
+    except OSError as exc:
+        return None, f"linked database snapshot failed: data: {type(exc).__name__}"
+    for link in database_paths:
         if not link.is_symlink():
             continue
+        relative_path = link.relative_to(cwd).as_posix()
         try:
             link_text = os.readlink(link)
             target = link.resolve(strict=True)
@@ -8243,7 +8249,8 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         return
 
     for relative_path in (
-        *_LINKED_DATABASE_PATHS,
+        "data/vesum.db",
+        "data/sources.db",
         "node_modules",
         "site/node_modules",
     ):
