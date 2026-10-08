@@ -62,6 +62,11 @@ catalog's shared C6 instructions; both retain C6's UA-GEC admission rules.
    registry and component code. Generic mutations
    must refuse; the component owns additional semantic must-fail cases.
 
+Components may expose `artifact_files(ctx)` to return deterministic private
+packet bytes keyed by relative output names. The framework alone writes them
+through `OutputGuard`, includes their digests in the manifest, and compares them
+in `verify`. Output-name conflicts and changes to the pinned spec refuse.
+
 Tests can pass in-process objects through `main(..., _test_components={...})` or
 `load_components(..., _test_overrides={...})`. These seams have no CLI flag or
 request-file representation and cannot add ids outside the closed registry.
@@ -72,7 +77,8 @@ all five verify mutations and tamper refusal using synthetic SQLite rows.
 
 `omd-review-request.v2` carries input locations only: required `catalog` and
 `register` (YAML paths), `databases` (`store` → database path), and
-`ua_gec` containing only `root` (the corpus directory path). Tests may also supply
+`ua_gec` containing only `root` (the corpus directory path). The optional
+`antonenko_receipts` is a nonempty directory path, with no policy fields. Tests may also supply
 `synthetic_sources`, restricted to ids starting with `synthetic` and register
 forms starting with `SYNTHETIC `. Every other key, including `compatibility`,
 `corpus`, `components` or `candidates`, refuses `request_policy_key`. v1 refuses
@@ -122,6 +128,14 @@ Every component spec requires:
   query's unit id. Swapped citations fail `unit_id_mismatch`, including on
   withheld/excluded accounting rows.
 - `frozen_count`: exact measured count at that unit grain.
+- Optional `census_query` freezes the source census separately from derived
+  units. Its required `census_id` source-field selector maps each candidate
+  to a census row; the gate requires exact census coverage, not only a count.
+  Each pair has one unique unit; duplicates always refuse.
+  Per-operation `records_counted` and `record_reasons` expose the same counts.
+  Generic missing-unit verification removes the entire unit.
+- Binding `span_equal` compares a selected value's offsets with the cited
+  receipt's offset field, independently of quoted text equality.
 - `reasons`: closed arrays for `accepted`, `rejected`, `withheld`, `excluded`.
   Include framework withholding codes `attribution_unresolved`,
   `locator_unavailable`, `catalog_inapplicable` where applicable. Reason codes
@@ -160,8 +174,8 @@ column: [source slot names]}`. It emits the catalog's positional three-element
 JSON header array using only cited cell text and fixed separators; absent levels
 remain positional empty arrays/strings, and all-empty cells withhold.
 Other optional keys: `transforms` (closed transform id to policy),
-`context_serializer` and `response_serializer` (`text` joins exact parts with LF;
-`json_array` uses canonical JSON string arrays), `unit_grain`, `annotation_layer`,
+`context_serializer` and `response_serializer` (`text` joins exact parts with LF),
+`unit_grain`, `annotation_layer`,
 `reference_multiplicity` (reviewed README metadata), and `applicability` for each variant operation.
 The catalog's `sense_variant` declarations supply variant names; operation
 contracts' applicability declarations must include every referenced variant.
@@ -244,23 +258,13 @@ refuse inappropriate cardinality. Sense/article `one_group` rules with
   rows collapse as sets; missing, extra or divergent variants fail. This checks
   complete variant agreement independently of extraction, without replacing
   quotation or supporting-citation authentication.
-- `contrast_pair`: selectors `rejected`, `recommended`, `response` establish the
-  visible direction. `book_rejected`/`book_recommended` cite one `book_source`
-  row that contains both members as whole Unicode tokens (including apostrophes
-  and combining marks); `rejected_key`/`recommended_key` bind their separate forms.
-  `sum11_source` must equal the rejected member after unstressing;
-  `ulif_source` and `vesum_source` independently attest the recommended form.
-  `receipt` selects a cited adjudication row whose `pair_field` names the shared
-  book row key and whose `sol_field`/`opus_field` are APPROVE. WP6 owns receipt
-  authenticity and the source-specific adjudication contract and tests.
 
 Optional rule-level `citation_field` pins the actual citation field, and
 `locator_field` names the held row column that must equal each citation's
 locator. Both constraints quantify over every expanded witness.
 
 Supporting citations must connect to their own primary citation through
-exact-field equality/form agreement, or the contrast rule's independently checked
-book/form witnesses. Mentioning a supporting row or comparing it with itself is
+exact-field equality/form agreement. Mentioning a supporting row or comparing it with itself is
 insufficient. Structural binding is mechanism proof; D3 supplies semantic judgment.
 
 ## Citation roles and splits
@@ -289,10 +293,8 @@ The combined-grade pattern follows the two measured source filenames; other
 grade ranges are refused until authenticated. Admission is re-derived from each
 cited row, even when grade metadata is zero or misleading. Grade metadata
 does not control admission; university grade-0 rows are admitted by allowlisted
-filenames. СУМ-11 requires
-`risk` and `keywords` (defaults `sovietization_risk`, `sovietization_keywords`),
-an admitted C7 contrast, opt-in/context flags, and use only in the rejected
-model-visible member. Risk and keywords are copied from the source to provenance.
+filenames. SUM-11 citations are refused as `sum11_role`; Russification contrast
+is a word-card projection, not a direct dataset component.
 
 The component spec's `corpus` mapping supplies `store`, `table`, `split`, `document`,
 `author`, `layer`, `text`. The gate independently scans that corpus, orders whole
