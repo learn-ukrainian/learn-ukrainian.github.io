@@ -171,8 +171,9 @@ launcher_enter_driver_scope() {
   exec 218<&-
   # The entry helper already reported a typed configuration/verification
   # refusal. Preserve it; only failure to start an entry is scope-start-failed.
-  [ "$verified" != refused ] || exit 6
-  if [ "$verified" != verified ]; then
+  if [ "$verified" = refused ]; then
+    rc=6
+  elif [ "$verified" != verified ]; then
     driver_scope_refuse scope-start-failed || true
     # Only a supervisory successor carries a captured predecessor generation.
     # This path has never claimed a lease and must never close one.
@@ -184,9 +185,14 @@ launcher_enter_driver_scope() {
           "$LC_SUPERVISORY_PREDECESSOR_GENERATION" scope-start-failed
       fi
     fi
-    exit 6
+    rc=6
+  else
+    case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
   fi
-  case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
+  local exit_line
+  exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC rc=$rc signal=${pending:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf '%s\n' "$exit_line" >&2
+  logger -t lu-driver "$exit_line" 2>/dev/null || true
   exit "$rc"
 }
 
