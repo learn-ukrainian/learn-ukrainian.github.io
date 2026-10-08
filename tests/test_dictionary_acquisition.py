@@ -808,6 +808,23 @@ def test_missing_job_refuses(tmp_path, action):
     assert invoke(action, arguments(tmp_path), HTTP([], clock), clock) == 2
 
 
+@pytest.mark.parametrize("style", ["file", "module"])
+def test_cli_entrypoints_without_pythonpath(tmp_path, monkeypatch, style):
+    repo = Path(__file__).resolve().parents[1]
+    monkeypatch.delenv("PYTHONPATH", raising=False)
+    if style == "file":
+        command = [sys.executable, str(repo / "scripts/ingest/dictionary_acquisition.py"), "--help"]
+        cwd = tmp_path
+        expected = "usage:"
+    else:
+        command = [sys.executable, "-c", "import scripts.ingest.dictionary_acquisition; print('IMPORT_COMPLETE')"]
+        cwd = repo
+        expected = "IMPORT_COMPLETE"
+    result = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=30, check=False)
+    assert result.returncode == 0, result.stderr
+    assert expected in result.stdout
+
+
 def test_cli_help_and_argparse_error(capsys):
     with pytest.raises(SystemExit) as help_exit:
         acquisition.main(["--help"])

@@ -27,6 +27,9 @@ from urllib.parse import quote
 
 import requests
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.common.repo_root import project_interpreter
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
