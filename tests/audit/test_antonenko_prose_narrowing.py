@@ -11,45 +11,38 @@ falling back to the H2 prefix-only query when no chunk satisfies both.
 """
 from __future__ import annotations
 
-import sqlite3
+import functools
 from pathlib import Path
 
 import pytest
 
 from scripts.audit._judge_eval_lib import (
     ANTONENKO_PROSE_MARKERS,
-    ANTONENKO_SOURCE,
-    DB,
     _antonenko_fulltext_search,
     _render_evidence_section,
     retrieve_evidence,
 )
-from scripts.lib.readonly_sqlite import open_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
-def _antonenko_corpus_present() -> bool:
-    if not DB.exists():
-        return False
-    try:
-        conn = open_readonly(DB)
-        try:
-            n = conn.execute(
-                "SELECT COUNT(*) FROM textbooks WHERE source_file = ?",
-                (ANTONENKO_SOURCE,),
-            ).fetchone()[0]
-        finally:
-            conn.close()
-    except sqlite3.OperationalError:
-        return False
-    return n > 0
 
 
-pytestmark = pytest.mark.skipif(
-    not _antonenko_corpus_present(),
-    reason="Antonenko full-text corpus absent from sources.db",
-)
+
+pytestmark = pytest.mark.data_tier("sources", tables=("textbooks",))
+
+
+@pytest.fixture(autouse=True)
+def bound_judge_stores(data_store_factory, requires_vesum_db, monkeypatch):
+    from scripts.audit import _judge_eval_lib as judge
+
+    sources = data_store_factory("sources", required_sqlite_tables=("textbooks",))
+    for name in ("retrieve_antonenko", "_heritage_check", "_antonenko_fulltext_search"):
+        bound = functools.partial(getattr(judge, name), db_path=sources)
+        monkeypatch.setattr(judge, name, bound)
+        if name == "_antonenko_fulltext_search":
+            monkeypatch.setitem(globals(), name, bound)
+    monkeypatch.setattr(judge, "_vesum_unknown", functools.partial(judge._vesum_unknown, db_path=requires_vesum_db))
 
 
 def test_marker_constant_excludes_overbroad_phrases() -> None:
@@ -85,11 +78,7 @@ def test_narrowed_retrieval_fires_on_russianism_phrase() -> None:
     hits = _antonenko_fulltext_search(
         "Ми обговоримо це питання на наступному тижні."
     )
-    if not hits:
-        pytest.skip(
-            "no Antonenko prose hit for this probe — corpus may not contain "
-            "the relevant russianism discussion"
-        )
+    assert hits, "Required Antonenko probe evidence is absent"
     # If hits exist, the flag must be present and one of {True, False}.
     assert all("marker_narrowed" in h for h in hits)
     assert all(isinstance(h["marker_narrowed"], bool) for h in hits)
@@ -107,8 +96,7 @@ def test_fallback_activates_when_narrowed_query_finds_nothing() -> None:
     # not specifically with russianism markers. Choose a benign Ukrainian
     # sentence — if marker filtering returns 0, fallback should fire.
     hits = _antonenko_fulltext_search("Сьогодні чудова погода у Львові.")
-    if not hits:
-        pytest.skip("no Antonenko hits at all for this probe")
+    assert hits, "Required Antonenko probe evidence is absent"
     # At least the flag must be present everywhere.
     assert all("marker_narrowed" in h for h in hits)
     # Within one call hits are uniformly narrowed or uniformly fallback;
@@ -126,8 +114,7 @@ def test_rendered_prompt_surfaces_narrowed_status() -> None:
     judge can calibrate trust in the snippets."""
     ev = retrieve_evidence("Ми обговоримо це питання на наступному тижні.")
     rendered = _render_evidence_section(ev)
-    if "(no prose hits)" in rendered:
-        pytest.skip("no prose hits to render — narrowed status not surfaced")
+    assert '(no prose hits)' not in rendered, "Required Antonenko probe evidence is absent"
     # Exactly one of the two preambles fires.
     has_narrowed = "Narrowed retrieval (H3a)" in rendered
     has_fallback = "Fallback retrieval" in rendered
@@ -142,7 +129,6 @@ def test_hits_preserve_backward_compatible_fields() -> None:
     each hit. The H3a addition of ``marker_narrowed`` must not displace any
     legacy field."""
     hits = _antonenko_fulltext_search("на повістці дня сьогодні нові правила")
-    if not hits:
-        pytest.skip("no Antonenko prose hit for this probe")
+    assert hits, "Required Antonenko probe evidence is absent"
     for h in hits:
         assert {"page", "matched_token", "snippet", "marker_narrowed"} <= set(h)

@@ -17,8 +17,8 @@ pytestmark = pytest.mark.reads_content
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 POINTER_PATH = MANIFEST_PATH.with_name("lexicon-manifest.pointer.json")
-VESUM_PATH = PROJECT_ROOT / "data" / "vesum.db"
-SOURCES_PATH = PROJECT_ROOT / "data" / "sources.db"
+
+
 CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
 
 FAKE_CURRICULUM = {"levels": {"a1": {"modules": ["known-module"]}}}
@@ -84,28 +84,44 @@ def _pinned_local_manifest(
 
 def test_real_lexicon_manifest_conforms_to_atlas_gates():
     manifest = _pinned_local_manifest()
-    if manifest is None:
-        pytest.skip(
-            "Atlas manifest not hydrated locally (or stale vs pointer); hydrate with: "
-            + manifest_io.RECOVERY_COMMAND
-        )
+    assert manifest is not None, "Atlas manifest must be hydrated and match its pointer"
     migrate_manifest(manifest)
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
-    heritage = SOURCES_PATH if SOURCES_PATH.exists() else None
-
-    if VESUM_PATH.exists():
-        # Local dev: full enforcement incl. lemma↔VESUM membership.
-        with VesumLemmaLookup(VESUM_PATH) as vesum:
-            violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=heritage)
-    else:
-        # CI lacks the 967MB gitignored data/vesum.db → vesum=None skips ONLY the
-        # lemma_in_vesum gate; every other §8 gate still enforces on the real manifest.
-        violations = validate(manifest, vesum=None, curriculum=curriculum, heritage=heritage)
+    violations = validate(manifest, vesum=None, curriculum=curriculum)
 
     # Pre-migration manifest still carries unmapped relation_pairs corpora
     # (synonym_verdicts, grinchyshyn-1986, ukr-mova.in.ua) until corpus map expansion
     # and migrate_source_labels.py --write (#5163); enforce every other gate here.
     assert [v for v in violations if v.gate != "unmapped_source_label"] == []
+
+
+def test_real_lexicon_manifest_membership_conforms(requires_sources_db, requires_vesum_db):
+    """Only real VESUM/heritage membership requires logical stores (#9981)."""
+    manifest = _pinned_local_manifest()
+    assert manifest is not None, "Atlas manifest must be hydrated and match its pointer"
+    migrate_manifest(manifest)
+    curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
+    with VesumLemmaLookup(requires_vesum_db) as vesum:
+        violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=requires_sources_db)
+    assert [v for v in violations if v.gate == "lemma_in_vesum"] == []
+
+
+def test_store_free_manifest_conformance_runs_without_stores(monkeypatch, tmp_path):
+    """Missing stores must neither skip nor remove the non-membership gates."""
+    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "absent.db"))
+    monkeypatch.setenv("LU_VESUM_DB", str(tmp_path / "absent.db"))
+    monkeypatch.setitem(globals(), "_pinned_local_manifest", lambda: _manifest(_entry()))
+    curriculum = tmp_path / "curriculum.yaml"
+    curriculum.write_text(yaml.safe_dump(FAKE_CURRICULUM), encoding="utf-8")
+    monkeypatch.setitem(globals(), "CURRICULUM_PATH", curriculum)
+    test_real_lexicon_manifest_conforms_to_atlas_gates()
+    # Retain a behavioral tripwire for a store-free conformance violation.
+    monkeypatch.setitem(
+        globals(), "_pinned_local_manifest",
+        lambda: _manifest(_entry(course_usage=[{"track": "a1", "slug": "missing-module"}])),
+    )
+    with pytest.raises(AssertionError):
+        test_real_lexicon_manifest_conforms_to_atlas_gates()
 
 
 def test_pinned_local_manifest_loader_never_downloads(
@@ -241,28 +257,14 @@ def test_lemma_in_vesum_allowlist_is_offline_fallback_when_no_heritage():
     assert _gates_for(entry, vesum=set(), heritage=None) == []
 
 
-def _sources_has_grinchenko_table() -> bool:
-    if not SOURCES_PATH.exists():
-        return False
-    import sqlite3
-
-    from scripts.lib.readonly_sqlite import open_readonly
-
-    try:
-        with open_readonly(SOURCES_PATH) as conn:
-            row = conn.execute(
-                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='grinchenko' LIMIT 1"
-            ).fetchone()
-        return row is not None
-    except sqlite3.Error:
-        return False
 
 
-@pytest.mark.skipif(not _sources_has_grinchenko_table(), reason="needs data/sources.db with grinchenko table")
-def test_heritage_lemma_lookup_attests_grinchenko_word_real_db():
+
+@pytest.mark.data_tier("sources", tables=("grinchenko",))
+def test_heritage_lemma_lookup_attests_grinchenko_word_real_db(data_store_factory):
     # #3211: real Грінченко/ЕСУМ lookup — хвастливий is attested (Грінченко headword),
     # nonsense is not. Proves the live fallback resolves the VESUM gap without an allowlist.
-    with HeritageLemmaLookup(SOURCES_PATH) as heritage:
+    with HeritageLemmaLookup(data_store_factory("sources", required_sqlite_tables=("grinchenko",))) as heritage:
         assert heritage.has_attestation("хвастливий") is True
         assert heritage.has_attestation("зызыжщ") is False
 

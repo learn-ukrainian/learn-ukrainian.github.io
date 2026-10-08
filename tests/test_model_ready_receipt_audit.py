@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 from dataclasses import replace
 from pathlib import Path
 
@@ -16,14 +15,28 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_RECEIPT = resolve_open_model_path(
     "data/projects/open_model_data/model_views/model_ready_product_audit_v1.json"
 )
-# Code inputs recorded by the frozen receipt. Their hashes are the
-# pre-migration blobs; path routing changed the current bytes.
-PRE_MIGRATION = "55d0ed1515835e5f7b7d1d12b933ad4c46706e1f"
-CODE_INPUTS = (
-    "scripts/projects/open_model_data/audit_model_ready_receipts.py",
-    "scripts/projects/open_model_data/model_view_exporter.py",
-    "tests/test_model_ready_receipt_audit.py",
-)
+# Independently pinned blobs from 55d0ed1515835e5f7b7d1d12b933ad4c46706e1f.
+# Path routing changed the current bytes; shallow clones retain these pins.
+CODE_INPUTS = {
+    "scripts/projects/open_model_data/audit_model_ready_receipts.py": {
+        "bytes": 24720,
+        "sha256": "c4d352a234fd697c26c3d798cf5b5be2911d1bef7d11523099e558ae49067fae",
+    },
+    "scripts/projects/open_model_data/model_view_exporter.py": {
+        "bytes": 87760,
+        "sha256": "46e2c80f6a8b30fd03412e09af2c00d8648164827ea80a29f3d834d23fa4da36",
+    },
+    "tests/test_model_ready_receipt_audit.py": {
+        "bytes": 8637,
+        "sha256": "339fff639cc208e657c9121556ff53210515407d2eb9b131e6bf3357863d02a8",
+    },
+}
+
+
+@pytest.mark.parametrize("key", CODE_INPUTS)
+def test_frozen_historical_code_input_pins(key: str) -> None:
+    tracked = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
+    assert tracked["direct_inputs"][key] == CODE_INPUTS[key]
 
 
 def rebind(receipt: dict[str, object]) -> None:
@@ -145,16 +158,6 @@ def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -
         path = _current_input(key)
         payload = path.read_bytes()
         assert meta == {"bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
-    for key in CODE_INPUTS:
-        payload = subprocess.check_output(
-            ["git", "cat-file", "blob", f"{PRE_MIGRATION}:{key}"],
-            cwd=ROOT,
-            timeout=30,
-        )
-        assert tracked["direct_inputs"][key] == {
-            "bytes": len(payload),
-            "sha256": hashlib.sha256(payload).hexdigest(),
-        }
     with pytest.raises(audit.AuditError, match="direct input hashes"):
         audit.validate_receipt(tracked, inputs.schema, inputs)
     audit.validate_receipt(receipt, inputs.schema, inputs)
