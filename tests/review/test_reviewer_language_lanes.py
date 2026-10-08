@@ -41,6 +41,11 @@ def test_each_ukrainian_content_path_is_classified(path):
     assert is_ukrainian_content_change(ResolverInputs(author_model="codex", changed_paths=(path,)))
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+
+
 def test_unrelated_paths_do_not_match_content_patterns():
     assert not is_ukrainian_content_change(
         ResolverInputs(author_model="codex", changed_paths=("scripts/review/reviewer_resolver.py", "docs/infra.md"))

@@ -15473,7 +15473,7 @@ def _dispatch_route(
             requested_agent = selected_agent
             original_model = selected_model
 
-        if _dispatch_check_budget_enabled(args):
+        if request.review_select is not None or _dispatch_check_budget_enabled(args):
             force_agent = bool(getattr(args, "force_agent", False))
             diagnostic_sink: dict[str, Any] = {}
             dispatch_agent = _resolve_agent_with_budget_guard(
@@ -16074,16 +16074,17 @@ def _resolve_agent_with_budget_guard(
 ) -> str:
     """Return possibly-substituted agent.
 
-    Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
+    Writer routes hard-auto-sub on fresh snapshot when the lane is near_cap, hot, or in
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
     route) has a known target. Without a usable fallback: refuse (raise
-    BudgetGuardRefuseError). ``force_agent`` disables that substitution and
+    BudgetGuardRefuseError). ``force_agent`` disables that writer substitution and
     the capacity refusal, and still prints and stores the lane's quota and
     health (explicit unknowns when telemetry is missing).
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
-    Review routes use ``review_select`` before either coding fallback path.
+    Review routes use ``review_select`` before either coding fallback path;
+    pace only orders equal fits and ``force_agent`` never bypasses review hard gates.
     A lane with a credit balance present (``scripts.fleet.credit_lane``) is not substituted.
     """
     requested = (agent or "").strip().lower()
@@ -16273,6 +16274,12 @@ def _resolve_agent_with_budget_guard(
             model=requested_model,
         )
     )
+    if review_select is not None:
+        from scripts.review.capacity import review_capacity_action
+
+        review_blocked, review_reason = review_capacity_action(requested, agent_dict, diags, requested_model)
+        if review_blocked:
+            needs_action, reason = True, review_reason
     if force_agent:
         _publish_forced_lane_diagnostics(
             requested,
@@ -16282,40 +16289,30 @@ def _resolve_agent_with_budget_guard(
             sink=diagnostic_sink,
             ranked=payload.get("ranked_by_headroom"),
         )
-        return requested
-    if not needs_action:
-        return requested
-
+        if review_select is None:
+            return requested
     if review_select is not None:
         # #9959: capacity is an exclusion before the resolver ranks candidates,
         # not a veto on its first pick. Keep coding fallbacks out of review
         # selection, and evaluate exact candidate models with this guard's
         # existing thresholds/credit rules. The snapshot is caller-owned data.
-        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, candidate_dispatch_model
+        from scripts.review.capacity import review_capacity_action
+        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES
 
         capacity_exclusions: dict[str, str] = {}
         for candidate in REVIEW_CANDIDATES.values():
             info = agents.get(candidate.route, {}) or {}
-            info = info if isinstance(info, dict) else {}
-            blocked, cause = _budget_needs_hard_capacity_action(
-                status=_budget_lane_status(candidate.route, info),
-                will_last=_budget_will_last_to_reset(info),
-                is_stale=is_stale,
-                snapshot_metadata=diags,
-                pace=_budget_pace(info),
-                headroom_blocked=_budget_headroom_blocked(info),
-                lane=candidate.route,
-                info=info,
-                model=candidate_dispatch_model(candidate),
-            )
+            blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
         review_snapshot = {**payload, "review_capacity_exclusions": capacity_exclusions}
-        sub, chosen = review_select(review_snapshot, requested)
+        sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
+            if not needs_action:
+                return requested
             if status in {"cool", "warm"} and "deficit" in reason:
                 note = (
-                    "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
+                    "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer "
                     "on pace-only deficit."
                 )
             else:
@@ -16331,17 +16328,7 @@ def _resolve_agent_with_budget_guard(
             return requested
         sub_info = agents.get(sub, {}) or {}
         sub_dict = sub_info if isinstance(sub_info, dict) else {}
-        sub_blocked, sub_reason = _budget_needs_hard_capacity_action(
-            status=_budget_lane_status(sub, sub_dict),
-            will_last=_budget_will_last_to_reset(sub_dict),
-            is_stale=is_stale,
-            snapshot_metadata=diags,
-            pace=_budget_pace(sub_dict),
-            headroom_blocked=_budget_headroom_blocked(sub_dict),
-            lane=sub,
-            info=sub_dict,
-            model=chosen,
-        )
+        sub_blocked, sub_reason = review_capacity_action(sub, sub_dict, diags, chosen)
         if sub_blocked:
             raise BudgetGuardRefuseError(
                 f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
@@ -16361,6 +16348,9 @@ def _resolve_agent_with_budget_guard(
             how="reviewer-resolver",
         )
         return sub
+
+    if not needs_action:
+        return requested
 
     sub = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
@@ -17574,7 +17564,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested lane is near_cap/hot/deficit. Code review admits a sole "
+            "when the requested writer lane is near_cap/hot/deficit. Reviews always read "
+            "fresh capacity, even without this flag; pace alone orders equal fits. Code review admits a sole "
             "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
             "and health gates still bind. Review substitutes follow the resolver's eligible "
             "order; no-capacity refusals name every candidate and exclusion. Prepaid DeepSeek/OpenRouter "
