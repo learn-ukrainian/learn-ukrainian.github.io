@@ -6,19 +6,56 @@ driver_scope_refuse() {
   return 6
 }
 
+# Generic, conservative fallbacks (bytes), not sized for any host. Each
+# deployment sets its real limits in the environment or in the config file
+# below; see docs/runbooks/driver-memory-scope.md.
+DS_FALLBACK_HIGH=2147483648
+DS_FALLBACK_MAX=3221225472
+DS_FALLBACK_SWAP=536870912
+DS_FALLBACK_PYTEST_WORKERS=2
+
+driver_scope_load_config() {
+  # KEY=VALUE lines, parsed and never sourced; the environment wins.
+  local file="${LU_DRIVER_SCOPE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/learn-ukrainian/driver-scope.env}"
+  local key value
+  [ -f "$file" ] && [ -r "$file" ] || return 0
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    case "$key" in
+      LU_DRIVER_MEMORY_HIGH|LU_DRIVER_MEMORY_MAX|LU_DRIVER_MEMORY_SWAP_MAX|LU_DRIVER_PYTEST_MAX_WORKERS) ;;
+      *) continue ;;
+    esac
+    [[ "$value" =~ ^[0-9]{1,15}$ ]] || continue
+    [ -n "${!key:-}" ] || printf -v "$key" '%s' "$value"
+  done < "$file"
+}
+
+driver_scope_mem_total() {
+  # Physical memory in bytes, the only ceiling a deployment value may not pass.
+  local key value unit
+  while read -r key value unit; do
+    [ "$key" = MemTotal: ] && [[ "$value" =~ ^[0-9]+$ ]] && { printf '%s' $((value * 1024)); return 0; }
+  done < /proc/meminfo
+  return 1
+}
+
 driver_scope_config() {
-  # One configuration point, byte values; overrides may only lower limits.
-  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-6442450944}"
-  DS_MAX="${LU_DRIVER_MEMORY_MAX:-9663676416}"
-  DS_SWAP="${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}"
-  local value
-  for value in "$DS_HIGH" "$DS_MAX" "$DS_SWAP"; do
-    [[ "$value" =~ ^[0-9]{1,12}$ ]] || { driver_scope_refuse invalid-limits; return 6; }
+  # One configuration point, byte values: environment, then config file, then
+  # the generic fallbacks. High < Max <= MemTotal and swap <= Max.
+  driver_scope_load_config
+  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-$DS_FALLBACK_HIGH}"
+  DS_MAX="${LU_DRIVER_MEMORY_MAX:-$DS_FALLBACK_MAX}"
+  DS_SWAP="${LU_DRIVER_MEMORY_SWAP_MAX:-$DS_FALLBACK_SWAP}"
+  DS_PYTEST_WORKERS="${LU_DRIVER_PYTEST_MAX_WORKERS:-$DS_FALLBACK_PYTEST_WORKERS}"
+  local value total
+  for value in "$DS_HIGH" "$DS_MAX" "$DS_SWAP" "$DS_PYTEST_WORKERS"; do
+    [[ "$value" =~ ^[0-9]{1,15}$ ]] || { driver_scope_refuse invalid-limits; return 6; }
   done
-  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_HIGH > 6442450944 || 10#$DS_MAX > 9663676416 || 10#$DS_SWAP > 1073741824 )); then
+  total="$(driver_scope_mem_total)" || { driver_scope_refuse memtotal-unreadable; return 6; }
+  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_MAX > total || 10#$DS_SWAP > 10#$DS_MAX )); then
     driver_scope_refuse invalid-limits; return 6
   fi
   DS_HIGH=$((10#$DS_HIGH)); DS_MAX=$((10#$DS_MAX)); DS_SWAP=$((10#$DS_SWAP))
+  DS_PYTEST_WORKERS=$((10#$DS_PYTEST_WORKERS))
 }
 
 driver_scope_bus() {
@@ -133,11 +170,12 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   entry="$2"; shift 2
   driver_scope_config && driver_scope_verify || exit 6
   # #9624: pytest `-n auto`/`-n logical` inside a driver scope resolves to at
-  # most 8 workers (a 16-worker shard peaked at 7.18 GiB, above MemoryHigh;
-  # the 8-worker peak is posted on #9624). An inherited 0-8 is kept (0 means
-  # no xdist workers); CI never runs through this entry.
-  if ! [[ "${PYTEST_XDIST_AUTO_NUM_WORKERS:-}" =~ ^[0-8]$ ]]; then
-    export PYTEST_XDIST_AUTO_NUM_WORKERS=8
+  # most the deployment's worker cap, sized with the scope's MemoryHigh. An
+  # inherited value from 0 (no xdist workers) up to the cap is kept; CI never
+  # runs through this entry.
+  inherited="${PYTEST_XDIST_AUTO_NUM_WORKERS:-}"
+  if ! [[ "$inherited" =~ ^[0-9]{1,4}$ ]] || (( 10#$inherited > DS_PYTEST_WORKERS )); then
+    export PYTEST_XDIST_AUTO_NUM_WORKERS="$DS_PYTEST_WORKERS"
   fi
   printf 'verified\n' > "$entry"
   exec bash "$@"

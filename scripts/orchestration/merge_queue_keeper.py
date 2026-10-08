@@ -49,6 +49,20 @@ DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
 REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
 # GitHub's PR-files endpoint stops at this many files without saying so.
 PR_FILES_LIMIT = 3000
+# Opt-in requeue gate: when set, a head the merge queue ejected is re-enqueued
+# at most once, and only with a ``grant`` decision for ``"<pr>:<head>"`` in
+# this JSON file (written by the operator's flake prover). Unset keeps the
+# legacy re-enqueue-until-third-drop behaviour.
+REQUEUE_GATE_ENV = "MQ_KEEPER_REQUEUE_GATE"
+# Slow mode: ``--apply`` skips a run that starts within this many seconds of
+# the last recorded run, so a frequent timer can be throttled without a unit edit.
+MIN_INTERVAL_ENV = "MQ_KEEPER_MIN_INTERVAL_SECONDS"
+SLOW_FLAG_ENV = "MQ_KEEPER_SLOW_FLAG"
+SLOW_INTERVAL_SECONDS = 300
+# Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
+INTERVAL_SLACK_SECONDS = 15
+# Gate holds the keeper reports without a PR comment: the drop comment already says why.
+QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 
 
 class KeeperError(RuntimeError):
@@ -139,7 +153,13 @@ class GitHub:
         queues = {branch: repo.get(f"q{i}") is not None for i, branch in enumerate(sorted(branches))}
         if any(f"q{i}" not in repo for i in range(len(branches))):
             raise KeeperError("queue configuration unknown")
-        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"], "reset_at": rate.get("resetAt")}
+        return {
+            "prs": prs["nodes"],
+            "queues": queues,
+            "remaining": rate["remaining"],
+            "cost": rate["cost"],
+            "reset_at": rate.get("resetAt"),
+        }
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-comments", repo=self.repository, number=number))
@@ -387,6 +407,83 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
     return "ready"
 
 
+def _requeue_grants(path: Path | None) -> dict[str, dict[str, Any]] | None:
+    """Requeue decisions keyed ``"<pr>:<head>"``, or None when the gate is off.
+
+    A missing, unreadable or malformed decision file grants nothing, so a
+    gated keeper holds every ejected head instead of guessing.
+    """
+    if path is None:
+        return None
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("requeue"), dict):
+        return {}
+    return {key: value for key, value in data["requeue"].items() if isinstance(key, str) and isinstance(value, dict)}
+
+
+def _requeue_hold(
+    drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
+) -> str | None:
+    """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if grants is None or drops < 1:
+        return None
+    if drop_key in previous.get("requeued", {}):
+        return "requeue-spent" if drops >= 2 else None
+    decision = grants.get(drop_key, {}).get("decision")
+    if decision == "grant":
+        return None
+    return "requeue-denied" if decision == "deny" else "requeue-pending"
+
+
+def _gate_hold(
+    gh: GitHub,
+    number: int,
+    head: str,
+    drops: int,
+    grants: dict[str, dict[str, Any]] | None,
+    previous: Mapping[str, Any],
+) -> str | None:
+    """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
+    if grants is None:
+        return None
+    drop_key = f"{number}:{head}"
+    if drop_key in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
+        return "squash-text-blocked"
+    return _requeue_hold(drop_key, drops, grants, previous)
+
+
+def _min_interval(environ: Mapping[str, str]) -> int:
+    """Seconds an ``--apply`` run must wait after the last one (0 = every timer tick)."""
+    seconds = 0
+    raw = environ.get(MIN_INTERVAL_ENV, "").strip()
+    if raw:
+        try:
+            seconds = max(0, int(raw))
+        except ValueError:
+            seconds = SLOW_INTERVAL_SECONDS
+    flag = environ.get(SLOW_FLAG_ENV, "").strip()
+    if flag and Path(flag).exists():
+        seconds = max(seconds, SLOW_INTERVAL_SECONDS)
+    return seconds
+
+
+def _throttled(state_path: Path, seconds: int, now: datetime | None = None) -> bool:
+    """True when the last recorded run is younger than ``seconds`` (minus timer slack)."""
+    if seconds <= 0:
+        return False
+    try:
+        observed = datetime.fromisoformat(json.loads(state_path.read_text())["observed"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    if observed.tzinfo is None:
+        return False
+    elapsed = ((now or datetime.now(UTC)) - observed).total_seconds()
+    return 0 <= elapsed < seconds - INTERVAL_SLACK_SECONDS
+
+
 def _load(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {"queued": {}, "drops": {}}
@@ -399,6 +496,8 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("queued"), dict)
         or not isinstance(data.get("drops"), dict)
         or not isinstance(data.get("approved", {}), dict)
+        or not isinstance(data.get("requeued", {}), dict)
+        or not isinstance(data.get("squash_revoked", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -491,7 +590,9 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     )
 
 
-def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
+def run(
+    gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
+) -> tuple[list[str], bool]:
     branches = gh.branch_names()
     snap = gh.snapshot(branches)
     lines: list[str] = []
@@ -499,12 +600,16 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     estimated_remaining = snap["remaining"]
     budget = estimated_remaining - 30 >= FLOOR
     if not budget:
-        return [f"GraphQL budget stop: skipped remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR} reset_at={snap.get('reset_at')}"], False
+        return [
+            f"GraphQL budget stop: skipped remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR} reset_at={snap.get('reset_at')}"
+        ], False
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
     login = gh.identity()
     observed = datetime.now(UTC).isoformat()
+    grants = _requeue_grants(requeue_gate)
+    open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
     for pr in snap["prs"]:
         number, head, node_id = pr.get("number"), pr.get("headRefOid"), pr.get("id")
         if not isinstance(number, int) or not isinstance(head, str) or not isinstance(node_id, str):
@@ -547,6 +652,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             except KeeperError:
                 detail = " Queue removal diagnosis unknown."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
+        if reason == "ready" and queued is not True and not armed:
+            try:
+                reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+            except KeeperError:
+                reason = "requeue-unknown"
         rollup = [
             {
                 "name": item.get("name"),
@@ -625,6 +735,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
+                if reason == "ready" and queued is not True and not armed:
+                    reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -651,6 +763,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} revoked: {revoke}")
                     if queued is True:
                         queued_now.pop(key, None)
+                    if revoke == "squash-text-blocked":
+                        previous.setdefault("squash_revoked", {})[drop_key] = observed
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
@@ -665,9 +779,12 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 else:
                     queued_now[key] = head
                     lines.append(f"#{number} enqueued")
+                if grants is not None and drops >= 1:
+                    previous.setdefault("requeued", {})[drop_key] = observed
                 estimated_remaining -= 30
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
+                and reason not in QUIET_GATE_REASONS
                 and comment_safe
                 and (_ever_approved(comments, login) or dropped)
             ):
@@ -684,6 +801,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
+        for name in ("requeued", "squash_revoked"):
+            if name in previous:
+                previous[name] = {
+                    item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
+                }
         cutoff = datetime.now(UTC) - timedelta(hours=24)
         failures = [
             item
@@ -716,7 +838,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nExit codes: 0 success/lock overlap; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_REQUEUE_GATE=<decision file> re-enqueues an ejected head once, only with a grant; MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
@@ -737,9 +859,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = args.repo_root.resolve()
     lock_path = root / "batch_state/locks/merge_queue_keeper.lock"
+    gate_value = os.environ.get(REQUEUE_GATE_ENV, "").strip()
+    requeue_gate = Path(gate_value) if gate_value else None
     if not args.apply:
         try:
-            lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=False)
+            lines, failed = run(
+                GitHub(root, args.repo),
+                root / "batch_state/merge_queue_keeper.json",
+                apply=False,
+                requeue_gate=requeue_gate,
+            )
         except GitHubRateLimited as exc:
             print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
             return 0
@@ -756,8 +885,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         except BlockingIOError:
             print("merge queue keeper: overlap, skipped")
             return 0
+        state_path = root / "batch_state/merge_queue_keeper.json"
+        interval = _min_interval(os.environ)
+        if _throttled(state_path, interval):
+            print(f"merge queue keeper: slow mode, skipped interval={interval}s")
+            return 0
         try:
-            lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=args.apply)
+            lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply, requeue_gate=requeue_gate)
         except GitHubRateLimited as exc:
             print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
             return 0

@@ -12675,6 +12675,8 @@ def _dispatch(
         return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
+    # Claims use the enforced commit scope (--owned-path), not research
+    # classification paths, which neither grant nor restrict writes (#10015).
     # Runs before task-state write / worktree / branch side effects so a refuse
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
@@ -12698,7 +12700,7 @@ def _dispatch(
             ownership = admit_write_paths(
                 task_id=task_id,
                 mode=str(args.mode),
-                owned_paths=getattr(args, "research_owned_path", None),
+                owned_paths=_declared_owned_paths(getattr(args, "owned_path", None)),
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
                 pid=os.getpid(),
                 guard_mode=guard_mode,
@@ -16281,7 +16283,31 @@ def _resolve_agent_with_budget_guard(
         return requested
 
     if review_select is not None:
-        sub, chosen = review_select(payload, requested)
+        # #9959: capacity is an exclusion before the resolver ranks candidates,
+        # not a veto on its first pick. Keep coding fallbacks out of review
+        # selection, and evaluate exact candidate models with this guard's
+        # existing thresholds/credit rules. The snapshot is caller-owned data.
+        from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, candidate_dispatch_model
+
+        capacity_exclusions: dict[str, str] = {}
+        for candidate in REVIEW_CANDIDATES.values():
+            info = agents.get(candidate.route, {}) or {}
+            info = info if isinstance(info, dict) else {}
+            blocked, cause = _budget_needs_hard_capacity_action(
+                status=_budget_lane_status(candidate.route, info),
+                will_last=_budget_will_last_to_reset(info),
+                is_stale=is_stale,
+                snapshot_metadata=diags,
+                pace=_budget_pace(info),
+                headroom_blocked=_budget_headroom_blocked(info),
+                lane=candidate.route,
+                info=info,
+                model=candidate_dispatch_model(candidate),
+            )
+            if blocked:
+                capacity_exclusions[candidate.name] = cause
+        review_snapshot = {**payload, "review_capacity_exclusions": capacity_exclusions}
+        sub, chosen = review_select(review_snapshot, requested)
         if sub == requested and chosen == requested_model:
             if status in {"cool", "warm"} and "deficit" in reason:
                 note = (
@@ -17546,7 +17572,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
             "when the requested lane is near_cap/hot/deficit. Code review admits a sole "
             "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
-            "and health gates still bind. Prepaid DeepSeek/OpenRouter "
+            "and health gates still bind. Review substitutes follow the resolver's eligible "
+            "order; no-capacity refusals name every candidate and exclusion. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),

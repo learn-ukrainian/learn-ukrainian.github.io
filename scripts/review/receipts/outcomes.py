@@ -3,6 +3,10 @@
 Decides whether a tool call produced no hits, hits but no support, unavailable,
 or error from structured facts captured at record time.
 
+Invalid-input rejections (structured markers, leading ``invalid_input:`` text,
+VESUM rejection summaries and stress-oracle summaries) become error with zero
+hits before any unavailable, no-result or hit classification.
+
 Real "no result" forms across the review tools in .mcp/servers/sources/server.py:
 --------------------------------------------------------------------------------
 Tool                  Line(s) in server.py  "No result" wording / pattern
@@ -373,6 +377,18 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     text = result if isinstance(result, str) else ""
     stripped = text.strip()
     parsed = _extract_json(text)
+
+    # Sources rejects arguments through plain text, structured payloads, or
+    # verify_stress's one-line summary. Reject before any hit/unavailable
+    # fallback; source text merely mentioning this marker is not a rejection.
+    invalid_input = (
+        isinstance(parsed, dict)
+        and any(parsed.get(key) == "invalid_input" for key in ("status", "error_code", "disposition"))
+    ) or stripped.startswith("invalid_input:")
+    if tool in {"verify_word", "verify_words", "verify_lemma"}:
+        invalid_input = invalid_input or stripped.startswith("0 analyses (0 distinct lemmas)\n\ninvalid_input:")
+    if invalid_input or (tool == "verify_stress" and re.match(r"^[^\n]+ — invalid_input:", stripped)):
+        return {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
 
     if tool == "search_resources" and "Resource catalogue ingestion is required before searching resources." in text:
         return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}
