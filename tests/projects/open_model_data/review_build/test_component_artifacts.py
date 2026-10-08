@@ -64,6 +64,59 @@ def test_component_artifacts_refuse_conflicts_and_unsafe_paths(bundle, monkeypat
             execute(bundle["root"] / "request.json", guard, component_objects={"C1": SyntheticArtifacts(bundle, files)})
 
 
+@pytest.mark.parametrize("verify", [False, True], ids=["build", "verify"])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "verification.json",
+        "mutation-fixtures",
+        "mutation-fixtures/results.json",
+        "mutation-fixtures/component-results.json",
+        "mutation-fixtures/absent_quote.jsonl",
+        "mutation-fixtures/nested/arbitrary.bin",
+    ],
+)
+def test_component_artifacts_refuse_reserved_outputs(bundle, monkeypatch, name, verify):
+    monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
+    obj = SyntheticArtifacts(bundle, {})
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        if verify:
+            execute(bundle["root"] / "request.json", guard, component_objects={"C1": obj})
+        obj.generated = {name: b"SYNTHETIC forged proof"}
+        with pytest.raises(BuildError, match=r"^artifact_conflict$"):
+            execute(bundle["root"] / "request.json", guard, verify=verify, component_objects={"C1": obj})
+        assert json.loads(guard.read("verification.json")) == {
+            "schema": "omd-review-verification.v1",
+            "status": "unverified",
+        }
+        assert not (guard.path / "mutation-fixtures").exists()
+        assert (guard.path / "manifest.json").exists() == verify
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "verification.json.bak",
+        "mutation-fixtures-backup/results.json",
+        "C1/verification.json",
+        "C1/mutation-fixtures/results.json",
+    ],
+)
+def test_component_artifacts_allow_non_reserved_paths(bundle, monkeypatch, name):
+    monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
+    content = b"SYNTHETIC ordinary artifact\n"
+    obj = SyntheticArtifacts(bundle, {name: content})
+    with OutputGuard(bundle["root"] / "SYNTHETIC-out") as guard:
+        execute(bundle["root"] / "request.json", guard, component_objects={"C1": obj})
+        assert guard.read(name) == content
+        assert json.loads(guard.read("manifest.json"))["files"][name] == digest(content)
+        assert (
+            execute(bundle["root"] / "request.json", guard, verify=True, component_objects={"C1": obj})["status"]
+            == "verified"
+        )
+        assert guard.read(name) == content
+
+
 def test_artifact_hook_cannot_change_component_policy(bundle, monkeypatch):
     monkeypatch.setattr(output, "filesystem", lambda p: "ext4")
     obj = SyntheticArtifacts(bundle, {})

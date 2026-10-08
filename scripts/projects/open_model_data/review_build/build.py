@@ -107,8 +107,13 @@ def artifacts(
     files["README.md"] = ("\n".join(readme) + "\n").encode()
     for name, content in (extra_files or {}).items():
         # Components return bytes; only the common output guard writes them.
-        OutputGuard._parts(name)
-        require(name not in files and name not in {"manifest.json", "private-manifest.json"}, "artifact_conflict")
+        parts = OutputGuard._parts(name)
+        require(
+            name not in files
+            and name not in {"manifest.json", "private-manifest.json", "verification.json"}
+            and parts[0] != "mutation-fixtures",
+            "artifact_conflict",
+        )
         require(isinstance(content, bytes), "component_artifact")
         files[name] = content
     manifest = {
