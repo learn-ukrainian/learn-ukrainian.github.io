@@ -15557,6 +15557,10 @@ def _kimi_dispatch_gate(
         return result
 
     def trees() -> list[Any]:
+        if args.mode == "read-only" and not (getattr(args, "worktree", None) or getattr(args, "branch", None)):
+            # Mechanical classification/recon can read an ordinary checkout.
+            # Kimi writes still use the dispatch-worktree resolver below.
+            return _kimi_worktree_trees(validated_cwd or target_repo_root)
         resolved, commit = _kimi_start_trees(
             args,
             agent=seat[0],
