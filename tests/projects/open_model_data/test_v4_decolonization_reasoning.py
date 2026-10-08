@@ -25,7 +25,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     strip_accents,
     synthesize_trajectory_and_dpo,
 )
-from tests._host_path_guard import host_path_hits
+from tests._host_path_guard import assert_no_host_paths
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
@@ -328,7 +328,7 @@ def test_generate_pipeline_mock(
         assert d_file.stat().st_size < 2_000_000
 
         t_content = t_file.read_text(encoding="utf-8")
-        assert not host_path_hits(t_content)
+        assert_no_host_paths(t_content)
         assert "/tmp/" not in t_content
         assert "ulp-" not in t_content
         assert "ohoiko" not in t_content

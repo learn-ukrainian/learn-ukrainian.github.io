@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from tests._host_path_guard import checkout_path_hits, host_path_hits
+from tests._host_path_guard import assert_no_checkout_paths, assert_no_host_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_class_b.sh"
@@ -187,7 +187,7 @@ def test_remote_wrapper_resolves_primary_root_portably() -> None:
     source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
 
     # Ban the hardcoded absolute path in live source.
-    assert not checkout_path_hits(source)
+    assert_no_checkout_paths(source)
     assert "ATLAS_PRIMARY_ROOT" in source
     assert 'git -C "$WORKTREE" rev-parse --git-common-dir' in source
 
@@ -281,7 +281,7 @@ def test_launchers_never_reference_teacher_product_or_home_trees() -> None:
     for launcher in (REMOTE_LAUNCHER, LOCAL_LAUNCHER):
         text = launcher.read_text(encoding="utf-8")
         assert "/opt/hramatka" not in text
-        assert not host_path_hits(text)
+        assert_no_host_paths(text)
 
 
 def _local_run_root_block(source: str) -> str:
