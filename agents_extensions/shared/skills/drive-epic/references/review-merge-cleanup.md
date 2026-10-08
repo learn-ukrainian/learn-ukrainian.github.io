@@ -18,8 +18,8 @@ enqueue or re-queue.
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
   caveman lite is style (never persisted review text).
 
-**Reviewer family is live data.** Pick the reviewer from the live Cursor Cloud
-catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
+**Reviewer family is live data.** Resolve through `closeout_cli resolve-reviewer`
+using the live model catalog and health (§6 below). Do **not** hardcode Claude
 Sonnet (or any one model). The writer's family is never eligible.
 
 **Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
@@ -32,22 +32,88 @@ use the existing `ask-<lane>` / `delegate.py` review path below; the landing ord
 in §7 is the same.
 
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
-`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
-closed. Use lightweight direct review:
+`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones. A review
+`ask-<lane> --review` / `--type review` uses a toolful native CLI with synchronous
+dispatch/wait; the driver cannot continue meanwhile. Its legacy `--background` flag is rejected.
+ACP is only for ordinary non-review `ask-*`; use detached dispatch/wait below to settle separately.
+Ask stdout is reply text, not SHA evidence. Code/infra admission resolves the existing
+remote-tracking target and sets `pinned_head` before routing; checkout preparation fetches
+and refuses a different head. After settlement compare task `pinned_head` and actual
+`worktree_base_sha` with the current pushed branch tip; the recorder uses `worktree_base_sha`.
+
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk.
+`requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
+pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
+in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
+and requests toolful code/infra review with findings under `_dispatch_wrappers.py`
+and `schemas/code-review-findings.v1.schema.json`.
 
 ```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
-# Do not enqueue or auto-merge here — landing order is §7.
+set -euo pipefail
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+PY="$PRIMARY_REPO/.venv/bin/python"
+
+# If requires_silence_timeout is true, set SILENCE_TIMEOUT_SECONDS from current
+# seat/runtime guidance and add --silence-timeout "$SILENCE_TIMEOUT_SECONDS".
+dispatch_result="$("$PY" scripts/delegate.py dispatch \
+  --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
+  --mode read-only --worktree --task-id "$REVIEW_TASK" \
+  --prompt-file "$REVIEW_BRIEF" --branch "$AUTHOR_BRANCH" \
+  --pinned-head "$HEAD_SHA" --require-review-verdict \
+  --review-profile code --review-author-model "$AUTHOR_MODEL" \
+  --review-risk "$REVIEW_RISK")"
+mapfile -t dispatch_lines <<<"$dispatch_result"
+REVIEW_TASK="${dispatch_lines[0]}"
+REVIEW_NONCE="${dispatch_lines[1]}"
+# Arm in a yielding tool session. Re-arm ONLY wait on client expiry.
+while true; do
+  wait_rc=0
+  wait_result="$("$PY" scripts/delegate.py wait "$REVIEW_TASK" \
+    --run-nonce "$REVIEW_NONCE" --timeout 1800)" || wait_rc=$?
+  if (( wait_rc == 0 )); then printf '%s\n' "$wait_result"; break; fi
+  if (( wait_rc == 124 )) && [[ -z "$wait_result" ]]; then
+    state="$("$PY" scripts/delegate.py status "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE")"
+    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' <<<"$state"; then continue; fi
+    # A terminal state raced expiry: read its same-nonce settlement/exit code.
+    "$PY" scripts/delegate.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1
+    exit $?
+  fi
+  printf '%s\n' "$wait_result"
+  exit "$wait_rc"
+done
 ```
 
-This command line is unchanged, but the transport underneath it is not ACP
-(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
-route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
---worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
---no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+**Synchronous ask expiry:** its wait omits `--run-nonce`; wait rc 124 with empty stdout
+becomes wrapper `ok=false`, empty `response`, and `ask-<lane> review dispatch did not complete: status=None`.
+The outer subprocess timeout instead reports `delegate.py wait timed out at process level`
+while the original review may still be live. Either signal requires the same lookup and
+original-task wait recovery below; neither is a terminal task-record `timeout`.
+Ask itself does not expose the dispatch nonce (or rc 124 for client expiry). Set `REVIEW_TASK` to the original ask's task ID
+and `PRIMARY_REPO`/`PY` as above; query the live task record via `delegate.py status`:
+
+```bash
+set -euo pipefail
+state="$("$PY" scripts/delegate.py status "$REVIEW_TASK")"
+REVIEW_NONCE="$("$PY" -c 'import json,sys; s=json.load(sys.stdin); n=s.get("run_nonce"); (s.get("task_id")==sys.argv[1] and isinstance(n,str) and n.strip()) or sys.exit("invalid task identity/nonce"); print(n)' "$REVIEW_TASK" <<<"$state")"
+```
+
+Resume **only** the `while true` wait loop above, even for `done`; never rerun dispatch.
+Missing/invalid lookup or nonce drift refuses continuation, not a new review.
+
+Keep task ID and nonce. Wait rc 124 with `running`/`spawning` (stderr diagnostic, no stdout record)
+means client expiry: re-arm only wait. Status rejects nonce drift; `done` racing expiry gets one settlement read.
+Only terminal task-record `timeout` (stdout record) is settled failure. Settlement requires `done`, matching
+identity, attested model/family, unchanged branch/SHA, and complete reply; failure, missing/malformed
+evidence, unknown identity, or moved head is not approval.
+
+Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then bind it:
+
+```bash
+"$PY" scripts/review/record_cf_verdict.py --task-id "$REVIEW_TASK" --pr "$PR_NUMBER"
+```
+
+Require same-SHA CI before merge; the publisher checks task, reviewer, branch,
+and PR head. Moved heads need re-review; do not enqueue/auto-merge here (§7).
 
 **Read-only review asks can be refused on brief wording (#8703).** The write-shape check
 in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
@@ -74,16 +140,15 @@ forge does not enforce independent review, so the driver verifies both gates
 itself. Auto-merge / enqueue is **not** review; PRs have reached `main` that
 way with empty reviews. Drivers follow this order:
 
-0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
-   via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
-   `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
-   while CF is open or while iterating findings — CI also runs on
-   draft PRs, so a draft still burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
-   runs once on that tip.
-1. **Independent cross-family exact-head CF** — attested `resolved_model`,
-   different family from the author, APPROVE on the tip (post on the PR once
-   open, bound to that SHA).
-2. **Open the PR** → **CI Gate green** on that **same** head.
+0. **CF review-fix before CI (binding).** Push the branch. Use §6's toolful
+   launch and settlement; fix → re-CF until qualified `VERDICT: APPROVE` on
+   the tip. **Do not open any PR** (draft or ready) while CF is open or findings
+   are being fixed — draft PRs also start CI.
+1. **Independent cross-family exact-head CF** — attested reviewer model,
+   outside the author's family, `done`, APPROVE, and task SHA matches the tip (§6).
+2. **Open the PR** → bind the completed review with
+   `scripts/review/record_cf_verdict.py --task-id <review-id> --pr <N>` →
+   **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 
 **Never auto-merge or enqueue first.** Never treat `.venv/bin/python -m scripts.publish pr-merge --auto` as a

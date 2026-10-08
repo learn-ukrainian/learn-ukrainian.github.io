@@ -496,8 +496,23 @@ def summarize_fleet_burn(
     }
 
 
-def has_headroom(agent: str, model: str) -> tuple[bool, str]:
+def has_headroom(
+    agent: str,
+    model: str,
+    *,
+    unreadable: dict[str, int] | None = None,
+) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
+
+    Args:
+        agent: Agent name whose ``usage_<agent>-*.jsonl`` files to scan.
+        model: Model name to filter records by.
+        unreadable: Optional ``{"files", "lines", "records"}`` counter that
+            receives the shared reader's fault counts. A line that is not
+            strict UTF-8, not JSON, or not a JSON object, and a file that
+            cannot be read, each increment the counter instead of raising
+            or being silently dropped (#9924). When omitted the counts are
+            still computed but not surfaced.
 
     Returns:
         (True, "")  — no recent rate-limit in the 15-minute window, proceed.
@@ -509,7 +524,8 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
         1. Check in-process cache first (fast path, zero I/O).
         2. Fall through to reading today's JSONL files scoped by
            (agent, model), looking for any rate_limited record within
-           the last 15 minutes.
+           the last 15 minutes, via the shared ``_iter_usage_records``
+           line reader.
 
     Window history: originally 5 hours, reduced to 15 minutes on
     2026-04-10, then to 5 minutes + min-events-to-block=2 on 2026-04-11
@@ -531,37 +547,38 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     cutoff = now - _RATE_LIMIT_WINDOW_S
     usage_dir = _usage_dir()
     rate_limit_events: list[float] = []
+    if unreadable is None:
+        unreadable = {"files": 0, "lines": 0, "records": 0}
 
     for file_path in usage_dir.glob(f"usage_{agent}-*.jsonl"):
         try:
             # Skip files whose modification time is entirely before the cutoff
             if file_path.stat().st_mtime < cutoff:
                 continue
-
-            with open(file_path, encoding="utf-8") as f:
-                for raw in f:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        rec = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue  # truncated or corrupted line; skip
-                    if rec.get("model") != model:
-                        continue
-                    if rec.get("outcome") != "rate_limited":
-                        continue
-                    ts_str = rec.get("ts")
-                    if not ts_str:
-                        continue
-                    try:
-                        ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00")).timestamp()
-                    except (ValueError, AttributeError):
-                        continue
-                    if ts >= cutoff:
-                        rate_limit_events.append(ts)
+        except FileNotFoundError:
+            # A regular file removed after the listing held no records. A
+            # listed symlink whose target is missing is evidence that cannot
+            # be read — the same rule summarize_lane_runtime applies.
+            if os.path.islink(file_path):
+                unreadable["files"] += 1
+            continue
         except OSError:
-            continue  # file disappeared mid-scan or permission denied; skip
+            unreadable["files"] += 1
+            continue
+        for rec in _iter_usage_records(file_path, unreadable):
+            if rec.get("model") != model:
+                continue
+            if rec.get("outcome") != "rate_limited":
+                continue
+            ts_str = rec.get("ts")
+            if not ts_str:
+                continue
+            try:
+                ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+            except (ValueError, AttributeError, TypeError):
+                continue
+            if ts >= cutoff:
+                rate_limit_events.append(ts)
 
     # Cross-check the in-process cache as well — its event may not be on
     # disk yet (writer race) and we'd otherwise undercount.

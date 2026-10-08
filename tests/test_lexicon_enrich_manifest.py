@@ -4171,8 +4171,11 @@ def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monk
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {"word": lemma, "text": "ВЕЛИ́КИЙ, а, е. протилежне малий."}}}
-        if lemma == "великий" else {},
+        lambda lemma: (
+            {"lookups": {"newsum": {"word": lemma, "text": "ВЕЛИ́КИЙ, а, е. протилежне малий."}}}
+            if lemma == "великий"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -4244,18 +4247,18 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
         [(lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.") for lemma, antonym in pairs.items()],
     )
-    assert all(
-        _definition_antonym_relations(conn, lemma, cache={}) == []
-        for lemma in pairs
-    )
+    assert all(_definition_antonym_relations(conn, lemma, cache={}) == [] for lemma in pairs)
 
     before_counts = {lemma: 0 for lemma in pairs}
     after_items = {
         lemma: [
-            relation["item"] for relation in _definition_antonym_relations(
+            relation["item"]
+            for relation in _definition_antonym_relations(
                 conn,
                 lemma,
-                cache={"lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}},
+                cache={
+                    "lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}
+                },
             )
         ]
         for lemma in pairs
@@ -4312,9 +4315,13 @@ def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatc
         ),
     )
     _patch_synonym_vesum(monkeypatch, {"коса"})
-    cache = {"lookups": {"newsum": {
-        "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
-    }}}
+    cache = {
+        "lookups": {
+            "newsum": {
+                "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+            }
+        }
+    }
 
     assert _homonym_relations(conn, "коса", cache={}) == []  # СУМ-11 alone cannot verify a relation.
     relations = _homonym_relations(conn, "коса", cache=cache)
@@ -4350,9 +4357,17 @@ def test_homonym_relations_precompute_by_manifest_headword(monkeypatch) -> None:
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {
-            "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
-        }}} if lemma == "коса" else {},
+        lambda lemma: (
+            {
+                "lookups": {
+                    "newsum": {
+                        "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+                    }
+                }
+            }
+            if lemma == "коса"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -4793,9 +4808,7 @@ def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
     after_numbers = {
         lemma: [
             relation["homonym_no"]
-            for relation in _homonym_relations(
-                conn, lemma, cache={"lookups": {"newsum": {"text": definition}}}
-            )
+            for relation in _homonym_relations(conn, lemma, cache={"lookups": {"newsum": {"text": definition}}})
         ]
         for lemma, (definition, _numbers) in fixtures.items()
     }
@@ -4990,9 +5003,11 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {
-            "word": "кафе", "text": "КАФЕ́, невідм., с. Те саме, що кав'ярня."
-        }}} if lemma == "кафе" else {},
+        lambda lemma: (
+            {"lookups": {"newsum": {"word": "кафе", "text": "КАФЕ́, невідм., с. Те саме, що кав'ярня."}}}
+            if lemma == "кафе"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -7179,3 +7194,87 @@ def test_hub_cache_only_cli_writes_offline_candidate(hub_cache, tmp_path, monkey
     with pytest.raises(FileNotFoundError):
         enrich_manifest_module.main(["--write", flag, "--output", str(missing_output)])
     assert not missing_output.exists()
+
+
+@pytest.mark.parametrize(
+    "cache",
+    [
+        None,
+        {},
+        {"schema_version": 4, "lemma": "sample", "lookup_word": "sample", "lookups": {}, "fetched_at": "invalid"},
+        {"schema_version": 4, "lemma": "sample", "lookup_word": "sample", "lookups": {}, "fetched_at": "2026-01-01"},
+    ],
+)
+def test_strict_cache_reuse_requires_provenance(cache):
+    assert not enrich_manifest_module._reusable_slovnyk_cache(cache, "sample", "sample")
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"dictionary_slug": "other"},
+        {"text": ""},
+        {"word": ""},
+        {"source_url": "https://slovnyk.me/dict/vts/other"},
+        {"source_url": "https://[invalid"},
+        {"source_url": "https://slovnyk.me/dict/vts/sample?query=1"},
+    ],
+)
+def test_strict_cache_positive_identity_rejects_invalid_rows(change):
+    row = {
+        "dictionary_slug": "vts",
+        "word": "sample",
+        "text": "synthetic",
+        "source_url": "https://slovnyk.me/dict/vts/sample",
+    }
+    assert not enrich_manifest_module._valid_slovnyk_positive(row | change, "vts", "sample")
+
+
+def test_strict_cache_rechecks_unattested_null_then_empty_200(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    path = enrich_manifest_module._slovnyk_cache_path("sample")
+    path.write_text(
+        json.dumps(enrich_manifest_module._new_slovnyk_cache("sample", "sample") | {"lookups": {"vts": None}})
+    )
+    before = path.read_bytes()
+    calls = []
+
+    def get(*_args, **_kwargs):
+        calls.append(1)
+        return SimpleNamespace(status_code=200, text="<article></article>", headers={})
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", get)
+    outcomes = {}
+    enrich_manifest_module._slovnyk_cache("sample", outcomes=outcomes, slugs=("vts", "newsum"))
+    assert outcomes["vts"].status == "parse_error"
+    assert "newsum" not in outcomes
+    assert len(calls) == 1 and path.read_bytes() == before
+
+
+def test_strict_cache_retries_then_stops_access_without_new_default_exception(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_backoff_sleep", lambda *_args: None)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("vts",))
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    calls = []
+    codes = iter([503, 503, 403, 403])
+
+    def get(*_args, **_kwargs):
+        code = next(codes)
+        calls.append(code)
+        return SimpleNamespace(status_code=code, text="unused", headers={})
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", get)
+    outcomes = {}
+    enrich_manifest_module._slovnyk_cache("sample", outcomes=outcomes)
+    assert outcomes["vts"].status == "blocked" and outcomes["vts"].http_status == 403
+    assert calls == [503, 503, 403]
+    assert enrich_manifest_module._slovnyk_cache("sample")["lookups"] == {}
+    assert calls == [503, 503, 403, 403]
