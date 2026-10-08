@@ -919,7 +919,31 @@ def _write_and_print(path: Path, ledger: Mapping[str, Any], extra: Mapping[str, 
 
 
 def cmd_init(args: argparse.Namespace) -> int:
-    identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
+    fresh_fields = ("repository", "stream_epic", "issue", "semantic_title", "task_family", "role", "terminal_goal")
+    try:
+        if args.identity_file:
+            if any(getattr(args, field) is not None for field in fresh_fields):
+                raise task_lifecycle.LifecycleError("fresh identity options require --fresh-task-id")
+            identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
+        else:
+            missing = ["--" + field.replace("_", "-") for field in fresh_fields if getattr(args, field) is None]
+            if missing:
+                raise task_lifecycle.LifecycleError("--fresh-task-id requires " + ", ".join(missing))
+            identity = task_identity.build_identity(
+                repository=args.repository,
+                stream_epic=args.stream_epic,
+                stream_epic_url=None,
+                github_issue_number=args.issue,
+                github_issue_url=None,
+                semantic_title=args.semantic_title,
+                task_family=args.task_family,
+                role=args.role,
+                fresh_task_id=args.fresh_task_id,
+                terminal_goal=args.terminal_goal,
+                lifecycle_state="active",
+            )
+    except ValueError as exc:
+        raise task_lifecycle.LifecycleError(str(exc)) from exc
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
     registered_epics = adapter.registered_stream_epics(identity["repository"])
@@ -965,6 +989,8 @@ def cmd_init(args: argparse.Namespace) -> int:
         existing = task_lifecycle.load_lifecycle(path)
         if existing["lifecycle_id"] != ledger["lifecycle_id"]:
             raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
+        if identity.get("origin") == "fresh" and existing["identity"] != identity:
+            raise task_lifecycle.LifecycleError("existing lifecycle ledger does not match the exact fresh task identity")
         ledger = existing
     _assert_live_memberships(
         adapter, ledger, registered_epics=registered_epics,
@@ -1082,73 +1108,85 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout init --help\n  .venv/bin/python -m scripts.orchestration.task_closeout carrier --state-file ledger.json\n  .venv/bin/python -m scripts.orchestration.task_closeout reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
     )
-    parser.add_argument("--repo-root", type=Path, default=repo_root_from_file())
+    parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
 
-    init = sub.add_parser("init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.")
-    init.add_argument("--identity-file", required=True)
-    init.add_argument("--ac-policy", required=True)
-    init.add_argument("--author-family", required=True)
-    init.add_argument("--required-check", action="append", required=True)
-    init.add_argument("--pr", type=int)
-    init.add_argument("--state-file")
-    init.add_argument("--now")
-    init.add_argument("--reuse", action="store_true")
+    init = sub.add_parser(
+        "init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.",
+        description="Initialize from a validated envelope or an exact fresh native task ID.\nFresh threads require all identity options and never resume a rollover.",
+    )
+    source = init.add_mutually_exclusive_group(required=True)
+    source.add_argument("--identity-file", help="Existing task-identity.v1 JSON envelope, e.g. identity.json.")
+    source.add_argument("--fresh-task-id", help="Exact current native thread ID; required fresh identity options follow.")
+    init.add_argument("--repository", help="Fresh identity repository, e.g. org/repo; required with --fresh-task-id.")
+    init.add_argument("--stream-epic", type=int, help="Fresh identity registered stream epic number; required with --fresh-task-id.")
+    init.add_argument("--issue", type=int, help="Fresh identity GitHub issue number; required with --fresh-task-id.")
+    init.add_argument("--semantic-title", help="Fresh identity task description; required with --fresh-task-id.")
+    init.add_argument("--task-family", help="Fresh identity lowercase task family slug; required with --fresh-task-id.")
+    init.add_argument("--role", help="Fresh identity assigned role, e.g. driver; required with --fresh-task-id.")
+    init.add_argument("--terminal-goal", choices=sorted(task_identity.TERMINAL_GOALS), help="Fresh identity completion goal; required with --fresh-task-id.")
+    init.add_argument("--ac-policy", required=True, help='JSON mapping of stable AC IDs to due states and evidence types, e.g. ac-policy.json.')
+    init.add_argument("--author-family", required=True, help='Implementation author family, e.g. codex.')
+    init.add_argument("--required-check", action="append", required=True, help='Required CI check name, e.g. CI Gate; repeat for each check.')
+    init.add_argument("--pr", type=int, help='Exact GitHub PR number; init defaults to unbound.')
+    init.add_argument("--state-file", help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    init.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
+    init.add_argument("--reuse", action="store_true", help='Reuse a ledger without resetting evidence; default refuses an existing ledger.')
     init.set_defaults(func=cmd_init)
 
     locate = sub.add_parser("locate", help="Resolve the shared ledger path from task-identity.v1.")
-    locate.add_argument("--identity-file", required=True)
+    locate.add_argument("--identity-file", required=True, help='Validated task-identity.v1 JSON envelope, e.g. identity.json.')
     locate.set_defaults(func=cmd_locate, state_file=None)
 
     bind = sub.add_parser("bind-pr", help="Bind the exact PR once; mismatched rebinding fails closed.")
-    bind.add_argument("--state-file", required=True)
-    bind.add_argument("--pr", type=int, required=True)
-    bind.add_argument("--now")
+    bind.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    bind.add_argument("--pr", type=int, required=True, help='Exact GitHub PR number; init defaults to unbound.')
+    bind.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     bind.set_defaults(func=cmd_bind_pr)
 
     evidence = sub.add_parser("add-evidence", help="Append typed current-task AC evidence.")
-    evidence.add_argument("--state-file", required=True)
-    evidence.add_argument("--ac-id", required=True)
-    evidence.add_argument("--type", choices=sorted(task_lifecycle.EVIDENCE_TYPES), required=True)
-    evidence.add_argument("--summary", required=True)
-    evidence.add_argument("--url")
-    evidence.add_argument("--commit")
+    evidence.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    evidence.add_argument("--ac-id", required=True, help='Exact stable acceptance criterion ID, e.g. AC-01.')
+    evidence.add_argument("--type", choices=sorted(task_lifecycle.EVIDENCE_TYPES), required=True, help='Typed evidence category, e.g. test.')
+    evidence.add_argument("--summary", required=True, help='Evidence or remaining-scope description; remaining-scope defaults to empty.')
+    evidence.add_argument("--url", help='Public supporting evidence URL; default omitted.')
+    evidence.add_argument("--commit", help='Exact evidence commit SHA; default omitted.')
     evidence.add_argument("--details", help="JSON object; review evidence records model families and verdict.")
-    evidence.add_argument("--now")
+    evidence.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     evidence.set_defaults(func=cmd_evidence)
 
     remaining = sub.add_parser("remaining-scope", help="Record none/open/transferred remaining scope.")
-    remaining.add_argument("--state-file", required=True)
-    remaining.add_argument("--status", choices=["none", "open", "transferred"], required=True)
-    remaining.add_argument("--summary", default="")
-    remaining.add_argument("--follow-up-issue", type=int)
-    remaining.add_argument("--follow-up-stream-epic", type=int)
-    remaining.add_argument("--evidence-id", action="append")
-    remaining.add_argument("--now")
+    remaining.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    remaining.add_argument("--status", choices=["none", "open", "transferred"], required=True, help='Remaining scope disposition: none, open, or transferred.')
+    remaining.add_argument("--summary", default="", help='Evidence or remaining-scope description; remaining-scope defaults to empty.')
+    remaining.add_argument("--follow-up-issue", type=int, help='Transferred-scope issue number; default omitted.')
+    remaining.add_argument("--follow-up-stream-epic", type=int, help='Transferred-scope registered epic number; default omitted.')
+    remaining.add_argument("--evidence-id", action="append", help='Supporting ledger evidence ID; repeat as needed; default none.')
+    remaining.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     remaining.set_defaults(func=cmd_remaining_scope)
 
     reconcile = sub.add_parser("reconcile", help="Read GitHub/Git authority and append an idempotent receipt.")
-    reconcile.add_argument("--state-file", required=True)
-    reconcile.add_argument("--branch")
-    reconcile.add_argument("--worktree")
+    reconcile.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    reconcile.add_argument("--branch", help='Exact implementation branch name; default inferred by the adapter.')
+    reconcile.add_argument("--worktree", help='Implementation worktree path; default inferred by the adapter.')
     reconcile.add_argument("--observation-file", help="Hermetic observation fixture; no live GitHub reads.")
-    reconcile.add_argument("--now")
+    reconcile.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     reconcile.set_defaults(func=cmd_reconcile)
 
     mutate = sub.add_parser("mutate", help="Explicitly authorize one narrow GitHub closeout mutation.")
-    mutate.add_argument("action", choices=["sync-acs", "arm-auto-merge", "close-issue"])
-    mutate.add_argument("--state-file", required=True)
-    mutate.add_argument("--authorize", action="store_true")
-    mutate.add_argument("--actor", required=True)
-    mutate.add_argument("--branch")
-    mutate.add_argument("--worktree")
-    mutate.add_argument("--now")
+    mutate.add_argument("action", choices=["sync-acs", "arm-auto-merge", "close-issue"], help='One remote closeout action; current-head gates still apply.')
+    mutate.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    mutate.add_argument("--authorize", action="store_true", help='Authorize the selected remote action; default records refusal without mutation.')
+    mutate.add_argument("--actor", required=True, help='Attribution for the narrow authorization, e.g. codex/task-id.')
+    mutate.add_argument("--branch", help='Exact implementation branch name; default inferred by the adapter.')
+    mutate.add_argument("--worktree", help='Implementation worktree path; default inferred by the adapter.')
+    mutate.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     mutate.set_defaults(func=cmd_mutate)
 
     carrier = sub.add_parser("carrier", help="Render the exact delegation/ledger/rollover carrier.")
-    carrier.add_argument("--state-file", required=True)
+    carrier.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
     carrier.set_defaults(func=cmd_carrier)
     return parser
 
