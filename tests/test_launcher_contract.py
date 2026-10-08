@@ -525,6 +525,57 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     return root / "start-claude-driver.sh", close_attempts, close_marker, child_started
 
 
+def test_claude_driver_disables_settings_advisor_in_provider_environment(tmp_path: Path) -> None:
+    launcher, _, close_marker, _ = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body='printf "advisor_disabled=%s\\n" "${CLAUDE_CODE_DISABLE_ADVISOR_TOOL:-}"',
+        failed_close_attempts=0,
+    )
+    settings = launcher.parent / ".claude/settings.json"
+    settings.parent.mkdir(parents=True, exist_ok=True)
+    settings.write_text('{"advisorModel": "claude-opus-5-5"}\n', encoding="utf-8")
+    env = {key: value for key, value in os.environ.items()
+           if not key.startswith(("GIT_", "LAUNCHER_"))}
+    env["CLAUDE_CODE_DISABLE_ADVISOR_TOOL"] = "0"
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent, env=env, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "advisor_disabled=1" in result.stdout
+    assert close_marker.is_file()
+    preview = run_launcher("start-claude-driver.sh", "--epic", "devops",
+                           env={"LAUNCHER_MODEL": "", "LAUNCHER_EFFORT": ""})
+    assert preview.returncode == 0, preview.stderr
+    assert "claude-opus-5-5" in preview.stdout and "1m" in preview.stdout
+    assert "--effort high" in preview.stdout
+    codex = run_launcher("start-codex-driver.sh", "--epic", "devops",
+                         env={"LAUNCHER_MODEL": "", "LAUNCHER_EFFORT": ""})
+    assert codex.returncode == 0, codex.stderr
+    assert "gpt-6.1-sol" in codex.stdout
+
+
+def test_interactive_claude_keeps_advisor_enabled(tmp_path: Path) -> None:
+    checkout = tmp_path / "checkout"
+    copy_interactive_launcher_checkout(checkout)
+    binary = tmp_path / "bin/claude"
+    binary.parent.mkdir()
+    binary.write_text(
+        '#!/bin/sh\nprintf "advisor_disabled=%s\\n" "${CLAUDE_CODE_DISABLE_ADVISOR_TOOL:-}"\n',
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+    result = run_launcher(
+        "start-claude.sh", dry_run=False, root=checkout,
+        env={"PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+             "HOME": str(tmp_path / "home"), "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
+             "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": ""},
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "advisor_disabled=\n" in result.stdout
+    assert "advisor_disabled=1" not in result.stdout
+
+
 def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path) -> None:
     launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
         tmp_path,

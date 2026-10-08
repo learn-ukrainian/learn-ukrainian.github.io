@@ -75,16 +75,16 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10005 host-CLI adapter argv revision; see SPEC.md.
-# no-cli bytes remain the #9996 Haiku merge revision.
+# Literal digests bind the #10083 Haiku junior-coder text revision; see SPEC.md.
+# The independently pinned #10016 reviewer overlay remains separate.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "4aa193c0e4ff57e6e1b497ca260c6ce1a632817fb5766caeccb6c2afd561886c",
-    "SPEC.md": "8a4f1083d8e732efca2d47d7752088663e62b211d3fd8cbb3b89a9ae14fb046d",
-    "baseline.json.gz": "514d93440ebe7dc1d2a840a1c7356d70e26c2b34e9b68d5f1e94c734a4c02138",
+    "SHA256SUMS": "3c692e7e21cd45f2566c5af66af6e8b9aaa968d2ab3b44aa3175facea74a7289",
+    "SPEC.md": "f5c29081ebd0ebd29225eee60686ebff4a3ff56a210818510327d482cb42fda0",
+    "baseline.json.gz": "4d25253d94185ff40373967291fbeca8cebadd4b5c9885ce0f20e3eeaa11ddb3",
     "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "0d28bb5a15f9f7734f4cec1e62951dd0e51e6c05c325c14445b14d4336a62459",
-    "no-cli/baseline.json.gz": "4b7e5572b9417a3477843f64a480983d576a1d734ac27ae7a62597f2ef434ec4",
+    "no-cli/SHA256SUMS": "8667b767b7cfbcc6317cee16bc32276be97ee77db56b8d8c60f55c10038d6603",
+    "no-cli/baseline.json.gz": "26727a4aabfb9731bbcfa5264b58f58a45dc0fb387cadf4b7cc0650d4e147ede",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",

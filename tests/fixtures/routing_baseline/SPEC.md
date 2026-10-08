@@ -262,3 +262,25 @@ Inputs and the occurrence ledger stay byte-identical.
 The no-CLI configuration is byte-identical, including its baseline. Its Grok
 rows still refuse with the missing-CLI PATH error and never reach argv.
 Any other difference blocks regeneration.
+
+
+## Haiku junior coder (#10083)
+
+Both configurations were reproduced with `capture.py` against the merged
+checkout; use `--configuration no-cli` for the independent artifact. Compare
+every surface against the approved baseline with the separately pinned #10016
+reviewer overlay applied. That overlay matches the captured reviewer bytes
+exactly and remains separate; retain the historical reviewer receipts here.
+
+Only Haiku's catalog `weaknesses` and `notes` change: remove
+`no_bounded_implementation` and replace the bounded-code prohibition with the
+named junior coder's exact owned paths, objective acceptance criteria, scope
+ceiling, completed Opus 5.5 advisory envelope and escalation of architectural,
+security-sensitive or cross-module work. Ukrainian text/content/review, review
+of record, security code and driver seats remain banned. Catalog eligibility
+and mechanical admission refusals are unchanged.
+
+Every other surface is byte-identical in both configurations, including the
+historical reviewer receipts, inputs and occurrence ledger. `capture.py` and
+the #10016 overlay are byte-identical. `SHA256SUMS` and the independent digest
+pins in `tests/review/test_model_catalog.py` bind this revision.
