@@ -194,8 +194,8 @@ unreadable default refuses the merge.
 The enqueue mutation takes no commit text: the queue composes the squash from
 the PR's title and body when it builds the merge group. Every agent edit of a
 title or body goes through the publisher (`pr-edit`), which scans it. The merge
-queue keeper (`scripts/orchestration/merge_queue_keeper.py`, every five
-minutes) also re-reads each queued PR's default squash subject and body, and
+queue keeper (`scripts/orchestration/merge_queue_keeper.py`, every minute;
+slow mode throttles it back to five minutes) also re-reads each queued PR's default squash subject and body, and
 the message of the queue entry's head commit once GitHub reports one, through
 the `squash-text` read, and dequeues the PR on a blocking finding
 (`revoked: squash-text-blocked`, no text quoted). A read or matcher failure is

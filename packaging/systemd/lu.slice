@@ -2,10 +2,13 @@
 # Operator decision 2026-10-07: one capped pool bounds launcher-started
 # drivers and dispatch workers together. Terminal panes started outside a
 # launcher sit outside this pool and stay uncontained (S4 residual).
-# Sizing (measured 2026-10-07): about 30.6 GiB RAM; shared services peak
-# about 3 GiB; lu-dispatch.slice keeps MemoryMax=20G unchanged.
 # A pool-level OOM may pick a driver or a worker (documented failure mode C1).
-# MemorySwapMax bounds pool swap instead of 1G per child (dispatch + each driver).
+# MemorySwapMax= on the pool bounds swap for dispatch and every driver together.
+#
+# Limits are set per deployment, not here. The deployment installs a limits
+# drop-in next to this unit (lu.slice.d/10-limits.conf) with MemoryHigh=,
+# MemoryMax= and MemorySwapMax=, and verifies it with systemctl --user show
+# before this unit is installed, so the live limits never lapse.
 # Apply, check and rollback: scripts/ops/lu_slice_apply.sh (runbook:
 # docs/runbooks/driver-memory-scope.md).
 [Unit]
@@ -13,6 +16,3 @@ Description=Learn Ukrainian shared driver and dispatch pool
 
 [Slice]
 MemoryAccounting=yes
-MemoryHigh=24G
-MemoryMax=26G
-MemorySwapMax=4G

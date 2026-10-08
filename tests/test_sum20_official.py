@@ -378,15 +378,18 @@ class _FakeSession:
         return response
 
 
-@pytest.mark.parametrize("valid_reference", [True, False])
+@pytest.mark.parametrize("article_kind", ["valid_reference", "malformed_reference", "recursive"])
 def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, valid_reference: bool
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, article_kind: str
 ) -> None:
+    valid_reference = article_kind == "valid_reference"
     db_path = tmp_path / "staging.db"
     with sqlite3.connect(db_path) as conn:
         ensure_sum20_official_schema(conn)
         conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = 35")
     source = WORDID36_HTML if valid_reference else WORDID36_HTML.replace('class="LINKTXT"', 'class="OTHER"')
+    if article_kind == "recursive":
+        source = "<article>" + "<div>" * 1200 + TARGET_ENTRY + "</div>" * 1200 + "</article>"
     session = _FakeSession([_FakeResponse(200, source)])
     requested: list[int] = []
 
@@ -400,6 +403,7 @@ def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
     assert requested == [36]
     assert counts["ok"] == int(valid_reference)
     assert counts["parse_error"] == int(not valid_reference)
+    assert counts.exit_code == (0 if valid_reference else 4)
     with sqlite3.connect(db_path) as conn:
         assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone()[0] == (
             36 if valid_reference else 35
@@ -680,6 +684,27 @@ def test_official_retry_then_terminal_stop(terminal):
     assert result.terminal and result.http_status == terminal
     assert result.status == ("parse_error" if terminal == 200 else "transient_error")
     assert sleeps == [2]
+
+
+def test_official_parser_recursion_stops_one_request(monkeypatch):
+    source = "<article>" + "<div>" * 1200 + TARGET_ENTRY + "</div>" * 1200 + "</article>"
+    assert parse_sum20_article("<article>" + TARGET_ENTRY + "</article>", 5).headword == "TARGET"
+    with pytest.raises(RecursionError):
+        parse_sum20_article(source, 5)
+    session = _FakeSession([_FakeResponse(200, source), _FakeResponse(404)])
+    get = session.get
+    calls = []
+
+    def counted_get(*args, **kwargs):
+        calls.append((args, kwargs))
+        return get(*args, **kwargs)
+
+    monkeypatch.setattr(session, "get", counted_get)
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, retries=7, sleep=sleeps.append)
+    assert result == FetchOutcome("parse_error", error_text="unusable article", http_status=200, terminal=True)
+    assert len(calls) == 1
+    assert not sleeps
 
 
 @pytest.mark.parametrize("terminal", [3, 4])

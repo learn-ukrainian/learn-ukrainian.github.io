@@ -11,14 +11,20 @@
  * 1. Exit code 0 (no fatal errors)
  * 2. No "[ERROR]" lines in output
  * 3. All expected pages generated
+ *
+ * When FRONTEND_BUILD_RECORD is set (the Frontend CI job, #9718), the checks run
+ * against that job's single recorded build instead of rebuilding. The record is
+ * verified first and any mismatch fails every test; it never falls back to a build.
  */
 
-import { describe, it, expect } from 'vitest';
+import { beforeAll, describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
 import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { verifyBuildRecord } from '../helpers/ci-build-artifact';
 
 const STARLIGHT_DIR = join(__dirname, '..', '..');
+const BUILD_RECORD = process.env.FRONTEND_BUILD_RECORD;
 const RAW_ADMONITION_RE = /:::(info|tip|caution|note|danger|warning)/g;
 
 function collectHtmlFiles(dir: string): string[] {
@@ -40,6 +46,14 @@ describe('Astro build renders all pages', () => {
   let buildOutput: string;
   let buildExitCode: number;
 
+  if (BUILD_RECORD !== undefined) {
+    beforeAll(() => {
+      const build = verifyBuildRecord(BUILD_RECORD);
+      buildOutput = build.log;
+      buildExitCode = build.record.exitCode as number;
+    }, 300000);
+  }
+
   // Run build once for all tests.
   //
   // IMPORTANT: the third arg to `it()` is the test timeout. vitest
@@ -52,18 +66,20 @@ describe('Astro build renders all pages', () => {
   // Normal lesson builds stay fast for author iteration, while ATLAS_STATIC_ROUTES=1
   // generates static Word Atlas pages. Standalone ESUM routes were retired (#7059).
   it('astro build succeeds with zero errors', () => {
-    try {
-      buildOutput = execSync('npm run build 2>&1', {
-        cwd: STARLIGHT_DIR,
-        env: { ...process.env, ATLAS_MANIFEST_ALLOW_STALE_POINTER: '1' },
-        timeout: 360000,
-        encoding: 'utf-8',
-        maxBuffer: 50 * 1024 * 1024, // 50MB: full build output for 31k pages exceeds default 1MB
-      });
-      buildExitCode = 0;
-    } catch (e: any) {
-      buildOutput = e.stdout || e.message;
-      buildExitCode = e.status || 1;
+    if (BUILD_RECORD === undefined) {
+      try {
+        buildOutput = execSync('npm run build 2>&1', {
+          cwd: STARLIGHT_DIR,
+          env: { ...process.env, ATLAS_MANIFEST_ALLOW_STALE_POINTER: '1' },
+          timeout: 360000,
+          encoding: 'utf-8',
+          maxBuffer: 50 * 1024 * 1024, // 50MB: full build output for 31k pages exceeds default 1MB
+        });
+        buildExitCode = 0;
+      } catch (e: any) {
+        buildOutput = e.stdout || e.message;
+        buildExitCode = e.status || 1;
+      }
     }
 
     // Must exit 0

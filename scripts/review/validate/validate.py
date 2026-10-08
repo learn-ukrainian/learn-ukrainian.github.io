@@ -202,7 +202,7 @@ def _outcome_shown(outcome: str, record: dict[str, Any]) -> bool:
 
     if outcome == "error":
         return call_status == "error" or facts.get("status") == "error"
-    if call_status != "ok":
+    if call_status != "ok" or facts.get("status") == "error":
         return False
     if outcome == "unavailable":
         return bool(facts.get("unavailable")) or facts.get("status") == "unavailable"
@@ -621,10 +621,15 @@ def _check_finding_evidence(
                 manifest_sha256=manifest_sha256,
                 previous_attempt_id=previous_attempt_id,
             )
-            if record is not None and (record.get("status") != "ok" or record.get("tool") not in check.review_tools):
+            if record is not None and (
+                record.get("status") != "ok"
+                or record.get("tool") not in check.review_tools
+                or _outcome_shown("error", record)
+            ):
                 check.add(
                     codes.EVIDENCE_RECEIPT_INVALID,
-                    f"{finding.get('id')}: positive evidence receipt {receipt_id} requires status: ok and review tool",
+                    f"{finding.get('id')}: positive evidence receipt {receipt_id} requires status: ok, "
+                    "review tool and non-error outcome",
                 )
     else:
         for receipt_id in _cited_receipts(finding):
@@ -639,10 +644,15 @@ def _check_finding_evidence(
                 manifest_sha256=manifest_sha256,
                 previous_attempt_id=previous_attempt_id,
             )
-            if record is not None and (record.get("status") != "ok" or record.get("tool") not in check.review_tools):
+            if record is not None and (
+                record.get("status") != "ok"
+                or record.get("tool") not in check.review_tools
+                or _outcome_shown("error", record)
+            ):
                 check.add(
                     codes.EVIDENCE_RECEIPT_INVALID,
-                    f"{finding.get('id')}: source conflict receipt {receipt_id} requires status: ok and review tool",
+                    f"{finding.get('id')}: source conflict receipt {receipt_id} requires status: ok, "
+                    "review tool and non-error outcome",
                 )
 
     expected = finding.get("expected")

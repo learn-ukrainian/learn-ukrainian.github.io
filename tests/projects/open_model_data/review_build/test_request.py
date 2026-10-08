@@ -130,6 +130,62 @@ def test_required_input_location_missing_refuses(bundle, key):
         request.read_request(bundle["root"] / "request.json")
 
 
+@pytest.fixture
+def location_request(tmp_path):
+    path = tmp_path / "request.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema": "omd-review-request.v2",
+                "databases": {},
+                "ua_gec": {"root": "SYNTHETIC-gec"},
+                "catalog": "SYNTHETIC-catalog",
+                "register": "SYNTHETIC-register",
+            }
+        )
+    )
+    return path
+
+
+@pytest.mark.parametrize("other_cwd", [False, True], ids=["request-parent", "other-cwd"])
+@pytest.mark.parametrize("location", ["SYNTHETIC-receipts", "./SYNTHETIC-receipts", "", " \t\n", None, 7, {}, []])
+def test_optional_receipt_location_refuses_before_component_loading(location_request, monkeypatch, other_cwd, location):
+    config = json.loads(location_request.read_bytes())
+    config["antonenko_receipts"] = location
+    location_request.write_text(json.dumps(config))
+    original = location_request.read_bytes()
+    cwd = location_request.parent / "other" if other_cwd else location_request.parent
+    cwd.mkdir(exist_ok=True)
+    monkeypatch.chdir(cwd)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("invalid receipt location reached component loading")
+
+    monkeypatch.setattr(build, "load_components", forbidden)
+    with pytest.raises(BuildError, match=r"^request_locations$"):
+        request.read_request(location_request)
+    with pytest.raises(BuildError, match=r"^request_locations$"):
+        build.execute(location_request, SimpleNamespace(write=lambda *args: None))
+    assert location_request.read_bytes() == original
+
+
+@pytest.mark.parametrize("other_cwd", [False, True], ids=["request-parent", "other-cwd"])
+@pytest.mark.parametrize("include_receipts", [False, True], ids=["missing-optional", "absolute"])
+def test_optional_receipt_location_preserves_absolute_or_missing_input(
+    location_request, monkeypatch, other_cwd, include_receipts
+):
+    config = json.loads(location_request.read_bytes())
+    if include_receipts:
+        config["antonenko_receipts"] = str(location_request.parent / "SYNTHETIC-receipts")
+    location_request.write_text(json.dumps(config, indent=2) + "\n")
+    original = location_request.read_bytes()
+    cwd = location_request.parent / "other" if other_cwd else location_request.parent
+    cwd.mkdir(exist_ok=True)
+    monkeypatch.chdir(cwd)
+    assert request.read_request(location_request) == (original, config)
+    assert location_request.read_bytes() == original
+
+
 @pytest.mark.parametrize("change", ["source_id", "source_values", "role", "sensitive", "quarantine"])
 def test_competing_table_policy_refuses_before_extraction(bundle, monkeypatch, change):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")

@@ -17,6 +17,7 @@ Output:
 Used by: CI (planned) + manual checks before merging new LIT plans.
 """
 
+import argparse
 import re
 import sys
 from datetime import datetime
@@ -210,4 +211,20 @@ def main():
         sys.exit(0)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description=(
+            "Audit literature plans for missing biographies or documented exclusions.\n"
+            "Use before merging literature plans; --help does not run or write the audit."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.audit.bio_lit_cross_reference\n"
+            "  .venv/bin/python scripts/audit/bio_lit_cross_reference.py --help\n\n"
+            "Outputs: summary on stdout; docs/audits/bio-lit-cross-reference-gaps.md\n"
+            "Exit codes: 0 = all plans covered; 1 = undocumented gaps.\n"
+            "Related: docs/audits/bio-lit-cross-reference-exclusions.md; #9991"
+        ),
+    )
+    parser.parse_args()
     main()

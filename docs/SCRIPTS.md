@@ -13,6 +13,51 @@ Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
+## GRAC frequency snapshot
+
+`.venv/bin/python -m scripts.ingest.grac_frequency_ingest --db data/grac_frequency.db`
+ingests `lemma` and `word` down to the inclusive `--min-freq` (default 5).
+Use a separate local destination for probes; `--max-pages` bounds committed
+frequency bands per attribute, including any requests needed to finish a tie.
+
+The ingest requests page 1 of each descending frequency window. It fetches the
+last frequency group with equal `wlminfreq`/`wlmaxfreq`, enlarging `wlmaxitems`
+to that group's `total` when needed, and verifies the entire distinct group
+before advancing `wlmaxfreq` below it. Higher frequencies are wholly in page 1;
+no tie is split between committed windows. A truncated or changing tie halts
+without advancing the checkpoint. Items are deduplicated by `(attr, str)`;
+a wholesale earlier band violates the upper bound and halts. Completion also
+requires the stored distinct count to equal the original server `total` for the
+floor; a mismatch reports the gap and stays incomplete.
+
+Existing offset checkpoints, including page 12 with 12,000 lemma rows, replay
+once from the top automatically. No database replacement or row deletion is
+needed. Existing items retain their original provenance; new request receipts
+append after the old checkpoint. `frequency_cursor` stores the next upper
+frequency and original total; `request_bounds` records the actual request
+floor, ceiling and size. Provenance/checkpoint page numbers are receipt IDs;
+remote `wlpage` is always 1. Rows, receipts and cursor commit together.
+The three-second default delay, bounded retry/backoff and immediate 403/429
+stop policy apply to tie requests too. A reconciliation failure needs operator
+investigation; rerunning does not turn an incomplete snapshot into complete.
+
+A six-request bounded probe verified the frequency-window parameters on
+2026-10-08 (#10087):
+
+```text
+wlminfreq=9369 wlmaxfreq=9369 wlmaxitems=1000: rows=2 total=2 lastpage=1 frequencies=[9369]
+wlminfreq=5 wlmaxfreq=9368 wlmaxitems=1000: rows=1000 total=1135917 lastpage=0 min_returned=8316 max_returned=9366
+wlminfreq=5 wlmaxfreq=5 wlmaxitems=2: rows=2 total=147011 lastpage=0
+wlminfreq=5 wlmaxfreq=5 wlmaxitems=147011: rows=147011 distinct=147011 total=147011 lastpage=1
+```
+
+The first two requests tested `wlsort=w`: the first lacked `Items`, and the
+second returned `No format specified for custom frequency`. The ingest uses
+`wlsort=frq`.
+The successful exact-floor probe recovered a tie larger than the normal page
+size in one response. API/manatee versions were `open-5.71.15` and
+`2.36.7-open-2.225.8`. See #9969 for the original snapshot/read design.
+
 ## Reviewer bench health
 
 `.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
@@ -1034,15 +1079,16 @@ per-lane models (`wave_models: null`), so dispatch admission enforces the allowl
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
-`danger` worker when any check fails. Read-only dispatches are exempt. The defaults live in
-`scripts/config.py`, and an environment variable with the same name overrides each one:
+`danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
+defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets
+them through the environment variable of the same name (see the private operations docs):
 
-| Check | Refused when | Default |
-| --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
-| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
-| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
-| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) | 2 GiB |
+| Check | Refused when |
+| --- | --- |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap |
+| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
+| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
+| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch

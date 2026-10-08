@@ -418,7 +418,7 @@ def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float)
             if not valid_slovnyk(article, spec["dictionary"], row["lookup"]):
                 return "parse_error", code, None, 0
             payload = {"article": article, "content_sha256": digest(article["text"].encode())}
-    except (Sum20ParseError, ValueError, TypeError):
+    except (Sum20ParseError, ValueError, TypeError, RecursionError):
         return "parse_error", code, None, 0
     payload.update(
         source_url=url,

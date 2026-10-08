@@ -8,22 +8,26 @@ import re
 import unicodedata
 from pathlib import Path
 
+import pytest
+
 from scripts.guardrails.delegate_ownership import (
     ClaimKind,
     GuardMode,
     OwnershipLedger,
+    PathClaim,
     _safe_task_state_name,
     admit_write_paths,
     claims_conflict,
     env_guard_mode,
     normalize_claim,
+    owned_path_matcher,
     refusal_message,
     sanitize_for_display,
 )
 
 
-def test_normalize_file_subtree_unknown():
-    assert normalize_claim("scripts/delegate.py").kind == ClaimKind.FILE
+def test_normalize_literal_subtree_unknown():
+    assert normalize_claim("scripts/delegate.py").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/**").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/**/*.py").kind == ClaimKind.UNKNOWN
@@ -49,6 +53,62 @@ def test_claims_conflict_matrix():
     assert claims_conflict(normalize_claim("a/x/"), sub)
     assert not claims_conflict(sub, sib)
     assert not claims_conflict(f_a, normalize_claim("a/**/*.py"))
+
+
+@pytest.mark.parametrize("directory", ["scripts/agent_runtime", "scripts/agent_runtime/", "scripts/agent_runtime/**"])
+@pytest.mark.parametrize("legacy", [False, True])
+def test_plain_directory_matches_commit_scope_and_conflicts_both_ways(directory, legacy):
+    child = "scripts/agent_runtime/runner.py"
+    parent_claim = normalize_claim(directory)
+    child_claim = normalize_claim(child)
+    if legacy:
+        parent_claim = PathClaim(directory, ClaimKind.FILE, parent_claim.norm)
+        child_claim = PathClaim(child, ClaimKind.FILE, child_claim.norm)
+    matcher = owned_path_matcher(directory)
+    assert matcher is not None and matcher(child) and matcher(parent_claim.norm)
+    assert claims_conflict(parent_claim, child_claim)
+    assert claims_conflict(child_claim, parent_claim)
+    sibling = normalize_claim("scripts/agent_runtime_other")
+    assert not matcher(sibling.norm)
+    assert not claims_conflict(parent_claim, sibling)
+    assert not claims_conflict(sibling, parent_claim)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize(
+    "held,incoming,refused,overlap",
+    [
+        ("scripts/agent_runtime", "scripts/agent_runtime/runner.py", True, True),
+        ("scripts/agent_runtime/runner.py", "scripts/agent_runtime", True, True),
+        ("scripts/agent_runtime", "scripts/agent_runtime/*.py", True, False),
+        ("scripts/agent_runtime/*.py", "scripts/agent_runtime", True, False),
+        ("scripts/agent_runtime", "scripts/agent_runtime_other", False, False),
+    ],
+)
+def test_directory_admission_with_mixed_ledger(tmp_path, legacy, held, incoming, refused, overlap):
+    ledger = OwnershipLedger(tmp_path / "ownership.sqlite3", task_state_dir=tmp_path, mode=GuardMode.REFUSE)
+    pid = os.getpid()
+    (tmp_path / "holder.json").write_text(json.dumps({"status": "running", "pid": pid}), encoding="utf-8")
+    holder = ledger.admit(task_id="holder", mode="workspace-write", owned_paths=[held], pid=pid)
+    assert holder.admitted
+    if legacy:
+        # Preserve the old row's key and shape, including FILE for a plain
+        # directory, while admitting new SUBTREE rows alongside it.
+        claim = normalize_claim(held)
+        kind = ClaimKind.FILE if claim.kind is ClaimKind.SUBTREE else claim.kind
+        with ledger._connect() as conn:
+            conn.execute(
+                "UPDATE write_claims SET claim_json = ? WHERE task_id = ?",
+                (json.dumps(PathClaim(claim.raw, kind, claim.norm).as_dict()), "holder"),
+            )
+    result = ledger.admit(task_id="incoming", mode="workspace-write", owned_paths=[incoming], pid=pid)
+    assert result.admitted is (not refused)
+    assert bool(result.conflicts) is overlap
+    if refused:
+        assert "REFUSE" in result.reason
+    if refused and not overlap:
+        assert "--owned-path" in result.reason
+        assert "--research-owned-path" not in result.reason
 
 
 def test_read_only_exempt(tmp_path: Path):
@@ -595,7 +655,8 @@ def test_unprovable_refusal_names_peer_and_is_not_called_a_conflict(tmp_path: Pa
     assert "cannot prove write-path disjointness" in reason, reason
     assert "undeclared" in reason, reason  # the blocking peer is named
     assert f"pid {pid}" in reason, reason
-    assert "--research-owned-path" in reason and "--allow-path-overlap" in reason, reason
+    assert "--owned-path" in reason and "--allow-path-overlap" in reason, reason
+    assert "--research-owned-path" not in reason, reason
 
 
 def test_real_conflict_refusal_still_reads_as_a_conflict(tmp_path: Path):

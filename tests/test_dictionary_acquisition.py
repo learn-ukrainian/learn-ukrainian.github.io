@@ -280,6 +280,36 @@ def test_parse_error_never_advances_or_becomes_miss(tmp_path, dictionary):
         )
 
 
+def test_official_parser_recursion_stops_one_request_and_latches(tmp_path):
+    # Keep the real parser: this is a valid entry beyond its recursive walk limit.
+    entry = OFFICIAL_HTML.removeprefix("<article>").removesuffix("</article>")
+    source = "<article>" + "<div>" * 1200 + entry + "</div>" * 1200 + "</article>"
+    assert acquisition.parse_sum20_article(OFFICIAL_HTML, 5).headword == "SAMPLE"
+    with pytest.raises(RecursionError):
+        acquisition.parse_sum20_article(source, 5)
+    clock = Clock()
+    http = HTTP([response(200, source), response(200, OFFICIAL_HTML)], clock)
+    argv = arguments(tmp_path, "sum20_official")
+    assert invoke("run", argv, http, clock) == 4
+    result = status(tmp_path, "sum20_official")
+    assert result["state"] == "parse_error"
+    assert result["terminal_reason"] == "unusable_article"
+    assert result["checkpoint"] == 0
+    assert result["next_wordid"] == 5
+    assert result["counts"]["error"] == result["counts"]["pending"] == 1
+    assert result["counts"]["positive"] == result["counts"]["miss"] == 0
+    with database(tmp_path, "sum20_official") as conn:
+        assert conn.execute("SELECT status,http_status,attempts FROM results WHERE position=0").fetchone()[:] == (
+            "parse_error",
+            200,
+            1,
+        )
+    assert invoke("run", argv, http, clock) == 4
+    assert invoke("supervise", argv, http, clock, launch=lambda *_a, **_k: pytest.fail("latched job launched")) == 4
+    assert len(http.calls) == 1
+    assert status(tmp_path, "sum20_official") == result
+
+
 def test_official_positive_payload_and_bounded_range(tmp_path):
     clock = Clock()
     http = HTTP([response(200, OFFICIAL_HTML), response(404)], clock)

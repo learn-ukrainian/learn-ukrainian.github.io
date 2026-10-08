@@ -13594,8 +13594,8 @@ def test_read_only_review_in_own_worktree_still_removed_past_finished_claims(tmp
         task_id="reap-ro-own",
         mode="read-only",
         sibling_records={
-            "old-done": {"status": "done"},
-            "old-dry-run": {"status": "dry_run"},
+            "old-done": {"status": "done", "worktree_reused": True, "worktree_branch": "cursor/reap-ro-own"},
+            "old-dry-run": {"status": "dry_run", "worktree_reused": True, "worktree_branch": "cursor/reap-ro-own"},
             "elsewhere": {"status": "running", "worktree_path": str(tmp_path / "other")},
         },
     )

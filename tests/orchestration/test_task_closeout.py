@@ -17,21 +17,22 @@ MERGE = "b" * 40
 REVIEW_URL = "https://github.com/org/repo/pull/77#issuecomment-1"
 
 
-def _body(*, checked: bool = False) -> str:
+def _body(*, checked: bool = False, plain: bool = False) -> str:
     mark = "x" if checked else " "
+    template = "- [{mark}] {id}: {text}" if plain else "- [{mark}] **{id}** — {text}"
     return "\n".join(
         [
-            f"- [{mark}] **AC-IMPL** — Implementation is verified.",
-            f"- [{mark}] **AC-REVIEW** — Independent review passes.",
-            f"- [{mark}] **AC-MERGE** — The pull request merges.",
-            f"- [{mark}] **AC-CLOSE** — The issue is actually closed.",
-            f"- [{mark}] **AC-CLEAN** — Branch and worktree are cleaned.",
+            template.format(mark=mark, id="AC-IMPL", text="Implementation is verified."),
+            template.format(mark=mark, id="AC-REVIEW", text="Independent review passes."),
+            template.format(mark=mark, id="AC-MERGE", text="The pull request merges."),
+            template.format(mark=mark, id="AC-CLOSE", text="The issue is actually closed."),
+            template.format(mark=mark, id="AC-CLEAN", text="Branch and worktree are cleaned."),
             "",
         ]
     )
 
 
-def _ledger(tmp_path: Path, *, review: bool = True, merged: bool = False) -> tuple[Path, dict]:
+def _ledger(tmp_path: Path, *, review: bool = True, merged: bool = False, plain: bool = False) -> tuple[Path, dict]:
     identity = task_identity.build_identity(
         repository="org/repo",
         stream_epic=10,
@@ -58,7 +59,7 @@ def _ledger(tmp_path: Path, *, review: bool = True, merged: bool = False) -> tup
     ledger = task_lifecycle.build_lifecycle(
         identity,
         author_family="codex",
-        ac_snapshot=task_lifecycle.build_ac_snapshot(_body(), policy, finalized_at=NOW),
+        ac_snapshot=task_lifecycle.build_ac_snapshot(_body(plain=plain), policy, finalized_at=NOW),
         required_checks=["CI Gate"],
         now=NOW,
         pr_number=77,
@@ -391,6 +392,58 @@ def test_sync_acs_checks_only_evidenced_criteria_and_replays(tmp_path: Path) -> 
     assert first["remote_mutation_performed"] is True
     assert second["replayed"] is True
     assert second["remote_mutation_performed"] is False
+
+
+def test_sync_acs_checks_plain_id_criteria_and_replays(tmp_path: Path) -> None:
+    """#10055: plain-ID checkboxes must be found and checked off — before the
+    shared line grammar the bold-only needle made sync-acs a silent no-op."""
+    path, _ = _ledger(tmp_path, plain=True)
+    adapter = FakeAdapter(_observation(body=_body(plain=True)))
+
+    first = task_closeout.perform_mutation(
+        path,
+        adapter,
+        action="sync-acs",
+        authorized_by="codex/5297",
+        branch="codex/42-closeout",
+        worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+        now=NOW,
+    )
+    second = task_closeout.perform_mutation(
+        path,
+        adapter,
+        action="sync-acs",
+        authorized_by="codex/5297",
+        branch="codex/42-closeout",
+        worktree="/repo/.worktrees/dispatch/codex/42-closeout",
+        now=NOW,
+    )
+
+    body = adapter.observation["github"]["issue"]["body"]
+    assert adapter.calls == ["sync-acs"]
+    assert "- [x] AC-IMPL:" in body
+    assert "- [x] AC-REVIEW:" in body
+    assert "- [ ] AC-MERGE:" in body
+    assert first["remote_mutation_performed"] is True
+    assert second["replayed"] is True
+    assert second["remote_mutation_performed"] is False
+
+
+def test_desired_remote_state_reports_unchecked_plain_id_criterion_not_reached(tmp_path: Path) -> None:
+    """#10055: a still-unchecked plain-ID criterion must NOT report the
+    sync-acs desired state as already reached."""
+    _, ledger = _ledger(tmp_path, plain=True)
+    observation = _observation(body=_body(plain=True))
+
+    assert task_closeout._desired_remote_state("sync-acs", ledger, observation) is False
+    expected_body, checked_ids = task_closeout.evidenced_issue_body(ledger, observation)
+    assert checked_ids == ["AC-IMPL", "AC-REVIEW"]
+    assert "- [x] AC-IMPL:" in expected_body
+    assert "- [x] AC-REVIEW:" in expected_body
+    assert "- [ ] AC-MERGE:" in expected_body
+
+    observation["github"]["issue"]["body"] = expected_body
+    assert task_closeout._desired_remote_state("sync-acs", ledger, observation) is True
 
 
 def test_intent_recovery_does_not_repeat_remote_close(tmp_path: Path) -> None:

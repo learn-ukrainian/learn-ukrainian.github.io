@@ -648,7 +648,7 @@ def fetch_sum20_wordid(
             else:
                 try:
                     parse_sum20_article(response.text, wordid)
-                except (Sum20ParseError, ValueError, TypeError):
+                except (Sum20ParseError, ValueError, TypeError, RecursionError):
                     return FetchOutcome(
                         "parse_error", error_text="unusable article", http_status=last_code, terminal=True
                     )

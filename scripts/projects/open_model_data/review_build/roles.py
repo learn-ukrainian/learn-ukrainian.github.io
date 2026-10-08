@@ -6,7 +6,7 @@ import re
 import unicodedata
 from collections import defaultdict
 
-from .contract import Candidate, Citation, digest, values
+from .contract import Candidate, Citation, digest
 from .errors import require
 from .snapshot import SnapshotReader
 
@@ -62,7 +62,7 @@ class SourceRoles:
             if str(row[spec["author"]]) in self.dev_authors:
                 self.dev_documents.add(str(row[spec["document"]]))
 
-    def check(self, citation: Citation, candidate: Candidate, bindings: set[str], rejected_slot: str = "") -> None:
+    def check(self, citation: Citation, candidate: Candidate, bindings: set[str]) -> None:
         key = (citation.store, citation.table, citation.source_id)
         require(key in self.compatibility, "source_compatibility")
         spec = self.compatibility[key]
@@ -80,26 +80,7 @@ class SourceRoles:
         if sensitive is not None:
             require(sensitive in row and row[sensitive] in {0, "0", 1, "1"}, "sensitivity_unavailable")
             require(row[sensitive] not in {1, "1"}, "sensitive_source")
-        if spec["role"] == "sum11" or citation.source_id == "sum11":
-            require(
-                spec["role"] == "sum11"
-                and candidate.component == "C7"
-                and "contrast_pair" in bindings
-                and "c7_opt_in" in candidate.flags
-                and "soviet_colonization_context" in candidate.flags,
-                "sum11_role",
-            )
-            occurrences = [value for value in values(candidate) if citation in value.citations]
-            require(
-                bool(occurrences)
-                and all(value in candidate.context and value.slot == rejected_slot for value in occurrences),
-                "sum11_role",
-            )
-            require(
-                row.get(spec.get("risk", "sovietization_risk")) is not None
-                and row.get(spec.get("keywords", "sovietization_keywords")) is not None,
-                "sum11_markers",
-            )
+        require(spec["role"] != "sum11" and citation.source_id != "sum11", "sum11_role")
         if spec["role"] == "ua_gec":
             require(self.corpus is not None, "split_unavailable")
             split = row[spec["split"]]
@@ -125,10 +106,4 @@ class SourceRoles:
     def metadata(self, citation: Citation) -> dict:
         spec = self.compatibility[citation.store, citation.table, citation.source_id]
         result = {"source_role": spec["role"]}
-        if spec["role"] == "sum11":
-            row = self.reader.row(citation)
-            result.update(
-                sovietization_risk=row[spec.get("risk", "sovietization_risk")],
-                sovietization_keywords=row[spec.get("keywords", "sovietization_keywords")],
-            )
         return result

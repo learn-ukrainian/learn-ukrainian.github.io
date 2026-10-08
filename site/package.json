@@ -22,6 +22,7 @@
     "astro": "astro",
     "test": "npm run test:unit && npm run test:built-output",
     "test:unit": "npm run hydrate && vitest run --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts",
+    "test:unit:ci": "node --experimental-strip-types ./tests/helpers/ci-build-artifact.ts verify --record \"$FRONTEND_BUILD_RECORD\" && vitest run --fileParallelism --maxWorkers=3 --exclude tests/unit/build-renders.test.ts --exclude tests/unit/etymology-handler-built-output.test.ts",
     "test:built-output": "vitest run tests/unit/build-renders.test.ts tests/unit/etymology-handler-built-output.test.ts",
     "test:watch": "npm run hydrate && vitest --watch",
     "test:coverage": "npm run hydrate && vitest run --coverage",
@@ -72,7 +73,8 @@
     "nanoid": "^3.3.17",
     "markdown-it": ">=14.2.0",
     "postcss": "8.5.23",
-    "http-cache-semantics": ">=4.3.0"
+    "http-cache-semantics": ">=4.3.0",
+    "katex": "0.18.2"
   },
   "allowScripts": {
     "esbuild@0.28.1": true,

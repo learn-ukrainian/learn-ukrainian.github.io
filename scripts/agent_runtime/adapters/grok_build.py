@@ -7,10 +7,15 @@ API path). This adapter drives
 the local ``grok`` CLI binary (``~/.local/bin/grok``) in
 single-turn headless mode:
 
-    grok -p "<prompt>" --output-format json [-m MODEL] [--effort LEVEL] \
+    grok -p "<prompt>" --output-format streaming-messages-json [-m MODEL] [--effort LEVEL] \
          --permission-mode <mode> --cwd <dir> --no-alt-screen
 
-Headless JSON output is a single object: ``{text, stopReason, sessionId, ...}``.
+Headless text is one assistant message per model response. Messages are joined
+with a newline so a later ``VERDICT:`` line stays a line (#10005). Chunks
+inside one message are concatenated. ``--json-schema`` keeps
+``--output-format json`` (the flag implies json). That object is
+``{text, stopReason, sessionId, ...}`` and the schema path reads
+``structuredOutput``, not ``text``.
 The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
@@ -78,6 +83,7 @@ from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..grok_reviewer_permissions import GROK_REVIEWER_TOOLS
+from ..jsonl import jsonl_lines
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -539,13 +545,18 @@ class GrokBuildAdapter:
         else:
             cmd.extend(["-p", prompt])
 
-        cmd.extend(["--output-format", "json", "--no-alt-screen"])
         output_schema = load_output_schema(tc)
+        # #10005: --output-format json concatenates assistant messages with no
+        # separator, so a later VERDICT line is glued onto the previous sentence.
+        # streaming-messages-json emits one assistant frame per model response.
+        # --json-schema implies json and the verdict is structuredOutput.
+        output_format = "json" if output_schema is not None else "streaming-messages-json"
+        cmd.extend(["--output-format", output_format, "--no-alt-screen"])
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. Reviewers retain that Bash deny alongside a closed tool
-        # set and all-tool guard; literal shell execution remains unresolved.
+        # read tools can run. Reviewers deny Bash unconditionally and expose only
+        # tracked-file read tools through a closed tool set and all-tool guard.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
@@ -727,7 +738,11 @@ class GrokBuildAdapter:
     ) -> ParseResult:
         _ = output_file  # grok -p flushes to stdout
 
-        obj = _parse_json_object(stdout)
+        # Assemble NDJSON before the single-object parser. That parser spans
+        # the first brace to the last and would corrupt a multi-event stream.
+        obj = _grok_stream_envelope(stdout)
+        if obj is None:
+            obj = _parse_json_object(stdout)
         terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
         permission_cancelled = _permission_cancellation(obj, plan, call_start_time)
         if permission_cancelled:
@@ -1023,6 +1038,351 @@ def _adapt_prompt_for_grok_build_mcp(prompt: str) -> str:
         "instructions above are sufficient for this review. Return the final "
         "JSON object now, starting with `{` and ending with `}`.\n"
     )
+
+
+# streaming-messages-json (Anthropic Messages) and its partial-message framing.
+# `type:error` is excluded: a lone error object stays on the legacy JSON path.
+_GROK_MESSAGE_STREAM_TYPES = frozenset(
+    {
+        "system",
+        "assistant",
+        "user",
+        "result",
+        "message_start",
+        "content_block_start",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop",
+    }
+)
+# streaming-json: one ACP-derived session update per line. `usage` is the
+# per-response boundary. `end` carries the turn's stop reason.
+_GROK_UPDATE_STREAM_TYPES = frozenset(
+    {
+        "thought",
+        "tool_call",
+        "tool_call_update",
+        "text",
+        "usage",
+        "plan",
+        "available_commands",
+        "end",
+    }
+)
+
+
+def _grok_stream_marker(obj: dict) -> bool:
+    kind = obj.get("type")
+    if not isinstance(kind, str) or kind == "error":
+        return False
+    if kind in _GROK_MESSAGE_STREAM_TYPES or kind in _GROK_UPDATE_STREAM_TYPES:
+        return True
+    return kind == "max_turns_reached" or kind.startswith("auto_compact")
+
+
+def _complete_json_objects(stdout: str) -> list[dict]:
+    """Return JSON objects that occupy one physical line.
+
+    Records split at LF only, so U+0085, U+2028 and U+2029 inside a JSON
+    string stay in that record. Pretty-printed single objects and log noise
+    are not stream events. A line that does not parse as one object is left
+    for the legacy parser.
+    """
+    objects: list[dict] = []
+    for line in jsonl_lines(stdout):
+        stripped = line.strip()
+        if not stripped.startswith("{"):
+            continue
+        try:
+            value = json.loads(stripped)
+        except ValueError:
+            continue
+        if isinstance(value, dict):
+            objects.append(value)
+    return objects
+
+
+def _remember_session(obj: dict, session_id: str | None) -> str | None:
+    for key in ("sessionId", "session_id"):
+        value = obj.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return session_id
+
+
+def _frame_stop_reason(obj: dict) -> str | None:
+    """Return this frame's stop reason when the field is a string.
+
+    JSON null and a missing field are both absent. An empty string is present.
+    """
+    stop = obj.get("stopReason")
+    if not isinstance(stop, str):
+        stop = obj.get("stop_reason")
+    return stop if isinstance(stop, str) else None
+
+
+def _remember_terminal(
+    obj: dict,
+    *,
+    stop_reason: str | None,
+    session_id: str | None,
+    model_usage: dict | None,
+) -> tuple[str | None, str | None, dict | None]:
+    stop = _frame_stop_reason(obj)
+    if stop is not None:
+        stop_reason = stop
+    session_id = _remember_session(obj, session_id)
+    usage = obj.get("modelUsage")
+    if isinstance(usage, dict):
+        model_usage = usage
+    return stop_reason, session_id, model_usage
+
+
+def _stream_error_message(obj: dict) -> str:
+    for key in ("message", "error"):
+        value = obj.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return "grok stream error"
+
+
+def _result_is_error(obj: dict) -> bool:
+    if obj.get("is_error") is True:
+        return True
+    subtype = obj.get("subtype")
+    return isinstance(subtype, str) and subtype.startswith("error")
+
+
+def _result_error_detail(obj: dict) -> str | None:
+    """Return ``errors[0]`` when it is a non-empty string.
+
+    With a stop reason the caller stores this as diagnostic detail. With a
+    null or missing stop reason it is the provider error message.
+    """
+    errors = obj.get("errors")
+    if not isinstance(errors, list) or not errors:
+        return None
+    first = errors[0]
+    if isinstance(first, str) and first.strip():
+        return first
+    return None
+
+
+def _message_text_blocks(message: dict) -> str:
+    """Concatenate text blocks of one assistant message. Tool blocks are not text."""
+    content = message.get("content")
+    if isinstance(content, str):
+        return content
+    if not isinstance(content, list):
+        return ""
+    parts: list[str] = []
+    for block in content:
+        if isinstance(block, dict) and block.get("type") == "text" and isinstance(block.get("text"), str):
+            parts.append(block["text"])
+    return "".join(parts)
+
+
+def _join_messages(parts: list[str]) -> str:
+    """Join separate messages with a newline. Empty messages add no blank line."""
+    return "\n".join(part for part in parts if part)
+
+
+def _stream_envelope(
+    *,
+    text: str,
+    stop_reason: str | None,
+    session_id: str | None,
+    model_usage: dict | None,
+    error_message: str | None,
+    detail_message: str | None = None,
+) -> dict:
+    if error_message is not None:
+        envelope: dict = {"type": "error", "message": error_message, "text": text}
+    else:
+        envelope = {"text": text}
+        # Detail from a result frame's errors[0]. Presence of message does not
+        # make the envelope a provider failure; only type=error does.
+        if detail_message:
+            envelope["message"] = detail_message
+    if stop_reason is not None:
+        envelope["stopReason"] = stop_reason
+    if session_id is not None:
+        envelope["sessionId"] = session_id
+    if model_usage is not None:
+        envelope["modelUsage"] = model_usage
+    return envelope
+
+
+def _messages_stream_envelope(objects: list[dict]) -> dict:
+    """Assemble streaming-messages-json from assistant frames and text deltas.
+
+    Text blocks and ``text_delta`` chunks of one message concatenate. Separate
+    assistant messages join with a newline. A flushed assistant frame for an
+    id replaces that id's deltas so partial framing is not counted twice.
+    ``result.result`` is only the last message and is used when no assistant
+    text was assembled. An error-subtype ``result`` that carries a
+    ``stop_reason`` stays this ordinary envelope: ``stopReason`` is the turn's
+    reason and ``errors[0]`` is diagnostic ``message``. An error-subtype
+    ``result`` whose ``stop_reason`` is null or missing is the new-format
+    equivalent of ``type:error``: ``errors[0]`` is the provider message, so
+    typed codes classify from it (#10005).
+    """
+    slots: dict[str, dict] = {}
+    order: list[str] = []
+    anon = 0
+    current_partial: str | None = None
+    result_text: str | None = None
+    stop_reason: str | None = None
+    session_id: str | None = None
+    model_usage: dict | None = None
+    error_message: str | None = None
+    detail_message: str | None = None
+
+    def fresh_id() -> str:
+        nonlocal anon
+        anon += 1
+        return f"anon:{anon}"
+
+    def slot(message_id: str) -> dict:
+        found = slots.get(message_id)
+        if found is None:
+            found = {"frame": "", "deltas": [], "saw_frame": False}
+            slots[message_id] = found
+            order.append(message_id)
+        return found
+
+    for obj in objects:
+        kind = obj.get("type")
+        session_id = _remember_session(obj, session_id)
+        if kind == "message_start":
+            message = obj.get("message") if isinstance(obj.get("message"), dict) else {}
+            message_id = message.get("id")
+            if not isinstance(message_id, str) or not message_id:
+                message_id = fresh_id()
+            current_partial = message_id
+            slot(message_id)
+        elif kind == "content_block_delta":
+            delta = obj.get("delta")
+            if isinstance(delta, dict) and delta.get("type") == "text_delta" and isinstance(delta.get("text"), str):
+                if current_partial is None:
+                    current_partial = fresh_id()
+                slot(current_partial)["deltas"].append(delta["text"])
+        elif kind == "message_stop":
+            current_partial = None
+        elif kind == "assistant":
+            message = obj.get("message") if isinstance(obj.get("message"), dict) else {}
+            message_id = message.get("id")
+            if not isinstance(message_id, str) or not message_id:
+                message_id = fresh_id()
+            rec = slot(message_id)
+            rec["saw_frame"] = True
+            rec["frame"] = _message_text_blocks(message)
+        elif kind == "result":
+            stop_reason, session_id, model_usage = _remember_terminal(
+                obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
+            )
+            # A named stop_reason keeps cancelled and max-turns turns on the
+            # ordinary final path (#9987). Null or missing stop_reason is the
+            # streaming-messages-json form of type=error (#10005).
+            if _result_is_error(obj) and _frame_stop_reason(obj) is None:
+                if error_message is None:
+                    error_message = _result_error_detail(obj) or "grok stream error"
+            elif _result_is_error(obj):
+                if detail_message is None:
+                    detail_message = _result_error_detail(obj)
+            elif isinstance(obj.get("result"), str):
+                result_text = obj["result"]
+        elif kind == "error" and error_message is None:
+            error_message = _stream_error_message(obj)
+            stop_reason, session_id, model_usage = _remember_terminal(
+                obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
+            )
+
+    parts = [rec["frame"] if rec["saw_frame"] else "".join(rec["deltas"]) for rec in (slots[mid] for mid in order)]
+    text = _join_messages(parts)
+    if not text and isinstance(result_text, str):
+        text = result_text
+    return _stream_envelope(
+        text=text,
+        stop_reason=stop_reason,
+        session_id=session_id,
+        model_usage=model_usage,
+        error_message=error_message,
+        detail_message=None if error_message is not None else detail_message,
+    )
+
+
+def _updates_stream_envelope(objects: list[dict]) -> dict:
+    """Assemble streaming-json. ``text`` events are chunks of the current message.
+
+    A ``usage`` event, or a changed ``messageId``, ends that message. The next
+    message is joined with a newline. Tool calls do not split a message.
+    ``end`` supplies the turn stop reason, session id, and model usage.
+    """
+    chunks: list[str] = []
+    parts: list[str] = []
+    open_id: str | None = None
+    stop_reason: str | None = None
+    session_id: str | None = None
+    model_usage: dict | None = None
+    error_message: str | None = None
+
+    def flush() -> None:
+        nonlocal open_id
+        text = "".join(chunks)
+        chunks.clear()
+        open_id = None
+        if text:
+            parts.append(text)
+
+    for obj in objects:
+        kind = obj.get("type")
+        if kind == "text":
+            message_id = obj.get("messageId")
+            message_id = message_id if isinstance(message_id, str) and message_id else None
+            if chunks and message_id is not None and open_id is not None and message_id != open_id:
+                flush()
+            if message_id is not None:
+                open_id = message_id
+            data = obj.get("data")
+            if isinstance(data, str):
+                chunks.append(data)
+        elif kind == "usage":
+            flush()
+        elif kind == "end":
+            stop_reason, session_id, model_usage = _remember_terminal(
+                obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
+            )
+        elif kind == "error" and error_message is None:
+            error_message = _stream_error_message(obj)
+            stop_reason, session_id, model_usage = _remember_terminal(
+                obj, stop_reason=stop_reason, session_id=session_id, model_usage=model_usage
+            )
+    flush()
+    return _stream_envelope(
+        text=_join_messages(parts),
+        stop_reason=stop_reason,
+        session_id=session_id,
+        model_usage=model_usage,
+        error_message=error_message,
+    )
+
+
+def _grok_stream_envelope(stdout: str) -> dict | None:
+    """Return a legacy ``{text, stopReason, sessionId, modelUsage}`` envelope.
+
+    Returns None when stdout is not a message stream, including a lone
+    ``{"type":"error",...}`` object. The caller then uses the single-object
+    parser. Separate assistant messages are joined with a newline; chunks of
+    one message are concatenated.
+    """
+    objects = _complete_json_objects(stdout)
+    if not any(_grok_stream_marker(obj) for obj in objects):
+        return None
+    if any(obj.get("type") in _GROK_MESSAGE_STREAM_TYPES for obj in objects):
+        return _messages_stream_envelope(objects)
+    return _updates_stream_envelope(objects)
 
 
 def _parse_json_object(stdout: str) -> dict | None:

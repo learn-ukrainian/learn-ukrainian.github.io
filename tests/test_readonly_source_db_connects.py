@@ -384,11 +384,12 @@ def test_import_access_forms_and_helper_calls(source):
 
 
 def test_live_collection_helpers_in_base_census():
-    import json
-    baseline = json.loads(lint.BASELINE.read_text())
-    entries = lint.census(baseline['base_commit'])['entries']
-    paths = {e['path'] for e in entries if e['kind'] == 'test_import_access'}
-    assert {'tests/test_esum_search.py', 'tests/audit/test_antonenko_prose_narrowing.py'} <= paths
+    # Classify the current tree, as the ratchet does when a shallow clone lacks
+    # the frozen base. Migrated helpers must leave the committed baseline too.
+    entries = lint.census('HEAD')['entries']
+    actual = {lint.StoreFinding(**e) for e in entries if e['kind'] == 'test_import_access'}
+    expected = {e for e in lint.baseline_entries() if e.kind == 'test_import_access'}
+    assert actual == expected
 
 
 def test_baseline_identity_survives_lines_but_counts_occurrences():
@@ -616,6 +617,48 @@ def test_absent_base_scans_every_file_and_rejects_new_builders(tmp_path, monkeyp
     violations, unreadable = lint.find_violations(tmp_path, ())
     assert unreadable == []
     assert len(violations) == 1 and 'store_path' in violations[0]
+
+
+def _git(repo, *args):
+    subprocess.run(['git', '-C', str(repo), *args], check=True, timeout=30)
+
+
+def test_absent_commit_census_classifies_head(tmp_path):
+    """A depth-1 checkout can classify HEAD when the frozen base object is absent."""
+    _git(tmp_path, 'init', '-q')
+    _git(tmp_path, 'config', 'user.email', 'census@example.com')
+    _git(tmp_path, 'config', 'user.name', 'Census')
+    (tmp_path / 'scripts').mkdir()
+    (tmp_path / 'tests').mkdir()
+    (tmp_path / 'scripts' / 'a.py').write_text("DB = DATA_DIR / 'sources.db'\n")
+    (tmp_path / 'tests' / 'empty.py').write_text('')
+    _git(tmp_path, 'add', 'scripts', 'tests')
+    _git(tmp_path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'base')
+    head = lint.census('HEAD', tmp_path)
+    absent = lint.census('0' * 40, tmp_path)
+    assert absent['base_commit'] == head['base_commit']
+    assert absent['entries'] == head['entries']
+    assert any(entry['path'] == 'scripts/a.py' and entry['kind'] == 'store_path' for entry in absent['entries'])
+
+
+def test_present_commit_census_does_not_substitute_later_head(tmp_path):
+    _git(tmp_path, 'init', '-q')
+    _git(tmp_path, 'config', 'user.email', 'census@example.com')
+    _git(tmp_path, 'config', 'user.name', 'Census')
+    (tmp_path / 'scripts').mkdir()
+    (tmp_path / 'tests').mkdir()
+    (tmp_path / 'scripts' / 'a.py').write_text("DB = DATA_DIR / 'sources.db'\n")
+    (tmp_path / 'tests' / 'empty.py').write_text('')
+    _git(tmp_path, 'add', 'scripts', 'tests')
+    _git(tmp_path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'base')
+    first = subprocess.check_output(['git', '-C', str(tmp_path), 'rev-parse', 'HEAD'], text=True, timeout=30).strip()
+    (tmp_path / 'scripts' / 'b.py').write_text("DB = DATA_DIR / 'vesum.db'\n")
+    _git(tmp_path, 'add', 'scripts/b.py')
+    _git(tmp_path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'later')
+    old = lint.census(first, tmp_path)
+    assert old['base_commit'] == first
+    assert any(entry['path'] == 'scripts/a.py' for entry in old['entries'])
+    assert all(entry['path'] != 'scripts/b.py' for entry in old['entries'])
 
 
 @pytest.mark.parametrize('path,scope', [
