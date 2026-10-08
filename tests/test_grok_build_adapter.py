@@ -75,11 +75,25 @@ def test_basic_headless_invocation(tmp_path):
     plan = _build("Fix the bug in foo.py", tmp_path)
     assert plan.cmd[0] == FAKE_GROK
     assert _val(plan.cmd, "-p") == "Fix the bug in foo.py"
-    assert _val(plan.cmd, "--output-format") == "json"
+    assert _val(plan.cmd, "--output-format") == "streaming-messages-json"
+    assert "--include-partial-messages" not in plan.cmd
     assert "--no-alt-screen" in plan.cmd
     assert _val(plan.cmd, "--cwd") == str(tmp_path)
     assert plan.stdin_payload == ""
     assert plan.output_file is None
+
+
+def test_json_schema_keeps_json_output_format(tmp_path):
+    schema = {"type": "object", "properties": {"verdict": {"type": "string"}}}
+    with patch("agent_runtime.adapters.grok_build.load_output_schema", return_value=schema):
+        plan = _build("review", tmp_path)
+    try:
+        assert _val(plan.cmd, "--output-format") == "json"
+        assert json.loads(_val(plan.cmd, "--json-schema")) == schema
+        assert "--include-partial-messages" not in plan.cmd
+        assert "streaming-messages-json" not in plan.cmd
+    finally:
+        GrokBuildAdapter().cleanup_invocation(plan)
 
 
 def test_mode_permission_mapping(tmp_path):
@@ -147,7 +161,7 @@ def test_exact_argv_per_mode(tmp_path):
         "-p",
         "inspect",
         "--output-format",
-        "json",
+        "streaming-messages-json",
         "--no-alt-screen",
         "--permission-mode",
         "auto",
@@ -177,7 +191,7 @@ def test_exact_argv_per_mode(tmp_path):
         "-p",
         "edit code",
         "--output-format",
-        "json",
+        "streaming-messages-json",
         "--no-alt-screen",
         "--permission-mode",
         "bypassPermissions",
@@ -199,7 +213,7 @@ def test_exact_argv_per_mode(tmp_path):
         "-p",
         "danger task",
         "--output-format",
-        "json",
+        "streaming-messages-json",
         "--no-alt-screen",
         "--permission-mode",
         "bypassPermissions",
@@ -244,7 +258,7 @@ def test_danger_argv_matches_workspace_write(tmp_path):
             "-p",
             "PROMPT",
             "--output-format",
-            "json",
+            "streaming-messages-json",
             "--no-alt-screen",
             "--permission-mode",
             "bypassPermissions",

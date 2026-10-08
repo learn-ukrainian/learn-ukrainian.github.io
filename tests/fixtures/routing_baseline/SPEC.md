@@ -232,3 +232,33 @@ constants live in the catalog module so standalone catalog consumers retain
 their runtime-independent validation and resolution; admission imports those
 same constants. This import fix changes no captured result. Any other difference
 blocks regeneration.
+
+
+## Grok streaming-messages-json argv (#10005, round d)
+
+Both configurations were regenerated with `capture.py` against this checkout.
+Use `--configuration no-cli` for the independent artifact. Independent digest
+pins in `tests/review/test_model_catalog.py` bind this ordered revision.
+
+The host-CLI baseline changes only the `adapters` surface. Four successful
+non-schema rows change the `--output-format` value from `json` to
+`streaming-messages-json`:
+
+| Row | Agent | Mode | Isolation |
+| --- | --- | --- | --- |
+| 28 | `grok` | read-only | false |
+| 30 | `grok` | workspace-write | false |
+| 32 | `grok-build` | read-only | false |
+| 34 | `grok-build` | workspace-write | false |
+
+Those rows have no `--json-schema` flag. The value is argv index 4 on the
+read-only rows and index 6 on the workspace-write rows; every other argv token
+on those rows is unchanged. Isolation rows 29, 31, 33 and 35 still refuse
+before argv (`review_parent_owned_roots_missing`). Every other adapter row is
+unchanged. Reviewer, role, approval, capacity, dispatch, launcher, catalog,
+registry, fallback, routing-holder and source-contract surfaces are identical.
+Inputs and the occurrence ledger stay byte-identical.
+
+The no-CLI configuration is byte-identical, including its baseline. Its Grok
+rows still refuse with the missing-CLI PATH error and never reach argv.
+Any other difference blocks regeneration.
