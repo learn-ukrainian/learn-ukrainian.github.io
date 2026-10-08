@@ -2587,23 +2587,37 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
     return cards
 
 
+
+def _primary_checkout_vesum_db() -> Path | None:
+    """Return the primary checkout's VESUM database, or None when unavailable.
+
+    Uses the sanctioned store resolver, which follows a linked worktree's Git
+    directory back to the primary checkout (and honours its documented
+    override). Nothing is opened or created.
+    """
+    from scripts.storage.topology import StoreBinding, resolve_store
+
+    binding = resolve_store("vesum", PROJECT_ROOT)
+    return binding.path if isinstance(binding, StoreBinding) else None
+
 def find_vesum_db(specified: Path | None = None) -> Path:
     """Return the VESUM database path.
 
     An explicitly specified path is returned as given, even when it does not
     exist, so the caller reports it as missing instead of silently using a
-    different database. Without one, the local tree is searched.
+    different database. Without one, the local tree is searched, then the
+    primary checkout that owns this worktree.
     """
     if specified is not None:
         return Path(specified)
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-    ]
+    candidates = [PROJECT_ROOT / "data" / "vesum.db"]
+    primary = _primary_checkout_vesum_db()
+    if primary is not None and primary not in candidates:
+        candidates.append(primary)
     for c in candidates:
         if c.exists() and c.stat().st_size > 0:
             return c
-    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+    return PROJECT_ROOT / "data" / "vesum.db"
 
 
 def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | None = None) -> dict[str, Any]:

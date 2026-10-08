@@ -2834,23 +2834,37 @@ def export_verb_mechanics_deck(
     return payload
 
 
+
+def _primary_checkout_vesum_db() -> Path | None:
+    """Return the primary checkout's VESUM database, or None when unavailable.
+
+    Uses the sanctioned store resolver, which follows a linked worktree's Git
+    directory back to the primary checkout (and honours its documented
+    override). Nothing is opened or created.
+    """
+    from scripts.storage.topology import StoreBinding, resolve_store
+
+    binding = resolve_store("vesum", PROJECT_ROOT)
+    return binding.path if isinstance(binding, StoreBinding) else None
+
 def find_vesum_db(specified: Path | None = None) -> Path:
     """Return the VESUM database path.
 
     An explicitly specified path is returned as given, even when it does not
     exist, so the caller reports it as missing instead of silently using a
-    different database. Without one, the local tree is searched.
+    different database. Without one, the local tree is searched, then the
+    primary checkout that owns this worktree.
     """
     if specified is not None:
         return Path(specified)
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
-    ]
+    candidates = [PROJECT_ROOT / "data" / "vesum.db"]
+    primary = _primary_checkout_vesum_db()
+    if primary is not None and primary not in candidates:
+        candidates.append(primary)
     for c in candidates:
         if c.exists() and c.stat().st_size > 1000:
             return c
-    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+    return PROJECT_ROOT / "data" / "vesum.db"
 
 
 def verify_deck_with_vesum(
@@ -3004,9 +3018,10 @@ def main() -> None:
     print(f"Exported deck to {args.export}")
 
     if args.verify_vesum:
-        report = verify_deck_with_vesum(cards, db_path=find_vesum_db(args.vesum_db))
+        vesum_db = find_vesum_db(args.vesum_db)
+        report = verify_deck_with_vesum(cards, db_path=vesum_db)
         print(f"VESUM verification: {report}")
-        dist_report = verify_distractors_with_vesum(cards, db_path=find_vesum_db(args.vesum_db))
+        dist_report = verify_distractors_with_vesum(cards, db_path=vesum_db)
         print(f"VESUM distractor verification: {dist_report}")
         if report.get("verified") is False or dist_report.get("verified") is False:
             print("ERROR: VESUM verification failed!", file=sys.stderr)
