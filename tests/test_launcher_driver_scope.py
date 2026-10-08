@@ -33,6 +33,12 @@ while [ "$1" != -- ]; do shift; done
 shift
 [ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || exit 1
 printf '0::/test/lu.slice/lu-driver.slice/%s\\n' "$unit" > "$FAKE_CGROUP"
+if [ "${FAKE_UNLINK_ENTRY:-0}" = 1 ]; then
+  rc=0
+  "$@" || rc=$?
+  rm -f "$TMPDIR"/tmp.*
+  exit "$rc"
+fi
 exec "$@"
 """)
     exe.chmod(0o755)
@@ -66,6 +72,8 @@ esac
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
         # Hermetic: never read a deployment config from the runner's home.
         "LU_DRIVER_SCOPE_CONFIG": str(tmp_path / "no-driver-scope.env"),
+        "FLEET_COMMS_ROOT": str(tmp_path / "fleet-plane"),
+        "LC_SUPERVISORY_PREDECESSOR_GENERATION": "",
     }
 
 
@@ -210,6 +218,82 @@ def test_slice_requires_loaded_unit_file(tmp_path: Path, state: str, fragment: s
 def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)
     assert _run(launcher, env, TEST_RC=str(rc)).returncode == rc
+
+
+def test_entry_owner_observes_verified_after_path_unlinked(tmp_path: Path) -> None:
+    """A sibling's cleanup cannot erase the completed child's entry proof."""
+    launcher, env = _launcher(tmp_path)
+    temporary = tmp_path / "temporary"
+    temporary.mkdir()
+    result = _run(launcher, env, TMPDIR=str(temporary), FAKE_UNLINK_ENTRY="1", TEST_RC="3")
+    assert result.returncode == 3, result.stderr
+    assert "DRIVER_SCOPE_VERIFIED" in result.stderr
+    assert "scope-start-failed" not in result.stderr
+    assert "PROVIDER:stdin survives" in result.stdout
+    assert not list(temporary.iterdir())
+
+
+@pytest.mark.parametrize("publish_ok", [True, False])
+def test_failed_supervisory_successor_scope_publishes_and_preserves_exit(tmp_path: Path, publish_ok: bool) -> None:
+    from tests.test_session_supervisor_shell import _assert_failure_publication, _failure_publication_fixture
+
+    launcher, env = _launcher(tmp_path)
+    env.update(_failure_publication_fixture(tmp_path, seed_channel=publish_ok))
+    launcher.chmod(0o755)
+    helper = launcher.parent / "scripts/lib/session_supervisor.sh"
+    shutil.copy2(REPO / "scripts/lib/session_supervisor.sh", helper)
+    predecessor = tmp_path / "predecessor.sh"
+    predecessor.write_text(f"""#!/usr/bin/env bash
+set -euo pipefail
+source {shlex.quote(str(helper))}
+LC_ROOT={shlex.quote(str(launcher.parent))}
+LC_PROVIDER=claude
+LC_DRIVER_LEASE_CLOSED=1
+LC_SUPERVISORY_DELIVERY=fixture-delivery
+LC_DRIVER_ORIGINAL_ARGS=()
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=30 SESSION_STREAM_LEASE_ID=fixture-lease
+session_supervisor_exec_successor
+""")
+    result = _run(predecessor, env, FAKE_SCOPE_FAIL="1")
+    assert result.returncode == 6, result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=scope-start-failed" in result.stderr
+    assert result.stdout == ""
+    _assert_failure_publication(env, "scope-start-failed", published=publish_ok)
+
+
+@pytest.mark.parametrize(
+    "failure,generation",
+    [
+        ("FAKE_SCOPE_FAIL", ""),
+        ("FAKE_BUS_FAIL", ""),
+        ("FAKE_BUS_FAIL", "30"),
+        ("FAKE_OOM_POLICY", ""),
+        ("FAKE_OOM_POLICY", "30"),
+    ],
+)
+def test_scope_refusals_publish_only_for_captured_successor_start(
+    tmp_path: Path,
+    failure: str,
+    generation: str,
+) -> None:
+    from tests.test_session_supervisor_shell import _failure_publication_fixture
+
+    launcher, env = _launcher(tmp_path)
+    env.update(_failure_publication_fixture(tmp_path, seed_channel=True))
+    shutil.copy2(REPO / "scripts/lib/session_supervisor.sh", launcher.parent / "scripts/lib/session_supervisor.sh")
+    result = _run(
+        launcher,
+        env,
+        **{failure: "stop" if failure == "FAKE_OOM_POLICY" else "1"},
+        SESSION_SUPERVISOR_WAKE_DELIVERY="fixture-delivery",
+        SESSION_SUPERVISOR_WAKE_STREAM="epic:9999",
+        # No captured generation => ordinary failure; other refusal reasons
+        # never publish even with a captured predecessor.
+        LC_SUPERVISORY_PREDECESSOR_GENERATION=generation,
+    )
+    assert result.returncode == 6, result.stderr
+    assert result.stdout == ""
+    assert not Path(env["TEST_PUBLISH_ARGS"]).exists()
 
 
 @pytest.mark.parametrize(

@@ -35,10 +35,11 @@ def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path
     successor = tmp_path / "start-codex-driver.sh"
     successor.write_text(
         "#!/usr/bin/env bash\n"
-        "[ -z \"${SESSION_STREAM_SESSION_ID+x}\" ] || exit 31\n"
-        "[ -z \"${SESSION_STREAM_GENERATION+x}\" ] || exit 32\n"
-        "[ \"$SESSION_SUPERVISOR_WAKE_STREAM\" = epic:9999 ] || exit 33\n"
-        "[ \"$SESSION_SUPERVISOR_WAKE_DELIVERY\" = fixture-delivery ] || exit 34\n"
+        '[ -z "${SESSION_STREAM_SESSION_ID+x}" ] || exit 31\n'
+        '[ -z "${SESSION_STREAM_GENERATION+x}" ] || exit 32\n'
+        '[ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:9999 ] || exit 33\n'
+        '[ "$SESSION_SUPERVISOR_WAKE_DELIVERY" = fixture-delivery ] || exit 34\n'
+        '[ "$LC_SUPERVISORY_PREDECESSOR_GENERATION" = 1 ] || exit 37\n'
         "printf '%s\\n' \"$@\"\n",
         encoding="utf-8",
     )
@@ -62,6 +63,7 @@ exit 36
     result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
     assert result.returncode == 0, result.stderr
     assert result.stdout.splitlines() == ["--epic", "fixture", "literal $(false) argument"]
+
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
