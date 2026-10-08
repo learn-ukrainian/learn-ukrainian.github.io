@@ -274,3 +274,41 @@ list, row hash, exact atom eligibility and store agreement. It does not pretend
 to prove private commitments: those retain the local-receipt warning. Formula
 bindings have no reviewer-provenance warning. Rendering, Словник and immersion
 counting all consume the same printed text and selected gloss.
+
+## Consuming an existing local receipt
+
+`words-verify`, `pack-verify` and `fresh.cli plan-manifest` accept explicit local
+runtime inputs for **read-only** verification of an existing receipt:
+
+```bash
+.venv/bin/python -m scripts.curriculum.evidence words-verify a1 --strict --json \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.curriculum.evidence pack-verify a1 special-signs --strict --json \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.build.fresh.cli plan-manifest a1 special-signs \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+```
+
+Use `--receipt-base REF` when the receipt was sealed with a `sense-select --base`
+other than `origin/main`. Private input, key and receipt must pass the existing
+outside-Git path guard. These consumers neither create nor rotate keys and never
+issue receipts. Partial configuration, unavailable prerequisites and invalid
+proof fail with safe reason codes; runtime paths and private diagnostics are
+excluded from their proof reports.
+
+Every invocation reselects the **complete level binding set**, recomputes keyed
+commitments, checks reviewed provenance and formula bindings, scans for leaks,
+requires a clean HEAD, derives the expected payload from current inputs and
+verifies the HMAC. Changed HEAD, binding bytes, private input, matcher, key id or
+scan scope cannot reuse an old seal. The manifest preparation command performs
+this verification afresh even if an older report claims success; its report
+records only the receipt contract's nonsecret identity and commitments, and the
+manifest hashes that report. Credential paths are never manifest inputs.
+
+Authenticated coverage removes only the covered private-commitment warnings.
+Unrelated public errors, reviewed-provenance notices and other warnings remain,
+and status is recomputed normally. Without explicit local inputs, private proof
+remains unchecked and manifest admission still requires `status: ok`; public-only
+verification needs no private credentials. Synthetic fixtures demonstrate this
+mechanism only. Authentic host-local replay and independent exact-head evaluation
+remain required for product acceptance.

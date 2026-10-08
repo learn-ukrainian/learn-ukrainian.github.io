@@ -860,3 +860,85 @@ def test_every_plan_manifest_of_record_in_the_repository_still_validates() -> No
             ["git", "-C", str(repo), "cat-file", "blob", f":{record}"], capture_output=True, check=True, timeout=30
         ).stdout
         plan_manifest.validate_manifest_document(yaml.safe_load(content))
+
+
+def test_manifest_threads_local_runtime_to_fresh_verification_without_recording_paths(env, capsys, monkeypatch):
+    from scripts.curriculum.evidence import sense_cli
+
+    assert validate_provisional(env) == 0
+    calls = []
+    original = fake_verify(calls=calls)
+    proof = {
+        "status": "verified",
+        "head": "a" * 40,
+        "bindings_sha256": "b" * 64,
+        "private_input_commitment": "c" * 64,
+        "key_id": "fixture",
+        "matcher": "fixture",
+        "leak_scan_scope": {"kind": "diff"},
+    }
+
+    def replay(level, slug, **kwargs):
+        assert kwargs["receipt_inputs"].key_id == "fixture"
+        return {**original(level, slug, **kwargs), "local_receipt": proof}
+
+    monkeypatch.setattr(plan_manifest, "verify_pack_strict", replay)
+    inputs = sense_cli.LocalReceiptInputs(
+        Path("PRIVATE_INPUT"), Path("PRIVATE_KEY"), "fixture", Path("PRIVATE_RECEIPT")
+    )
+    manifest, digest = plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root, receipt_inputs=inputs)
+    assert calls[-1]["receipt_inputs"] == inputs and calls[-1]["repo_root"] == env.root.resolve()
+    report = json.loads((env.state_dir / plan_manifest.PACK_VERIFY_REPORT_NAME).read_text())
+    assert report["local_receipt"] == proof
+    text = json.dumps(report) + yaml.safe_dump(manifest)
+    assert "PRIVATE_INPUT" not in text and "PRIVATE_KEY" not in text and "PRIVATE_RECEIPT" not in text
+    assert digest
+    # CLI options must be passed to that same fresh seam.
+    code, out, err = run(
+        env,
+        capsys,
+        "plan-manifest",
+        LEVEL,
+        SLUG,
+        "--private-input",
+        "PRIVATE_INPUT",
+        "--key-file",
+        "PRIVATE_KEY",
+        "--key-id",
+        "fixture",
+        "--receipt",
+        "PRIVATE_RECEIPT",
+    )
+    assert code == 0, err
+    assert calls[-1]["receipt_inputs"] == inputs
+    assert "PRIVATE_INPUT" not in out
+
+
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "local_receipt_stale_or_invalid",
+        "reference_binding_reselection_failed",
+        "private_text_leak_suspected",
+        "commitment_key_required",
+    ],
+)
+def test_manifest_replays_instead_of_trusting_edited_passing_report(env, capsys, monkeypatch, reason):
+    from scripts.curriculum.evidence import sense_cli
+
+    make_manifest(env, capsys)
+    report_path = env.state_dir / plan_manifest.PACK_VERIFY_REPORT_NAME
+    report = json.loads(report_path.read_text())
+    report["status"] = "ok"
+    report["local_receipt"] = {"status": "verified"}
+    report_path.write_text(json.dumps(report))
+    calls = []
+    original = fake_verify("failed", (reason,), calls=calls)
+    monkeypatch.setattr(plan_manifest, "verify_pack_strict", original)
+    inputs = sense_cli.LocalReceiptInputs(key_id="fixture")
+    with pytest.raises(plan_manifest.PlanReviewError) as caught:
+        plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root, receipt_inputs=inputs)
+    assert caught.value.code == plan_manifest.PACK_VERIFY_REFUSED
+    assert calls[-1]["receipt_inputs"] == inputs
+    assert json.loads(report_path.read_text())["status"] == "failed"
+    assert not (env.state_dir / plan_manifest.MANIFEST_NAME).exists()

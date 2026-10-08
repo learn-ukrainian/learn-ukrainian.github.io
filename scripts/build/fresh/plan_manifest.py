@@ -259,6 +259,7 @@ def pack_verify_report(
         "chunk_id_moved": list(result.get("chunk_id_moved", [])),
         "not_checked": list(result.get("not_checked", [])),
         "counts": {key: value for key, value in sorted(result.items()) if key.endswith("_count")},
+        **({"local_receipt": result["local_receipt"]} if "local_receipt" in result else {}),
     }
 
 
@@ -524,7 +525,14 @@ def _entry(root: Path, path: Path) -> dict[str, str]:
         ) from error
 
 
-def write_plan_manifest(level: str, slug: str, *, repo_root: Path, sources_instance: Any = None) -> tuple[dict, str]:
+def write_plan_manifest(
+    level: str,
+    slug: str,
+    *,
+    repo_root: Path,
+    sources_instance: Any = None,
+    receipt_inputs: Any = None,
+) -> tuple[dict, str]:
     """Run pack-verify --strict on the provisional pack, then write the plan-review manifest.
 
     Refuses (PlanReviewError, and the current manifest pointer is removed so a
@@ -534,13 +542,15 @@ def write_plan_manifest(level: str, slug: str, *, repo_root: Path, sources_insta
     """
     root = repo_root.resolve()
     try:
-        return _write_plan_manifest(level, slug, root, sources_instance)
+        return _write_plan_manifest(level, slug, root, sources_instance, receipt_inputs)
     except PlanReviewError:
         unlink_current(root, level, slug)
         raise
 
 
-def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: Any) -> tuple[dict, str]:
+def _write_plan_manifest(
+    level: str, slug: str, root: Path, sources_instance: Any, receipt_inputs: Any = None
+) -> tuple[dict, str]:
     plans = root / TREE / "lesson-plans" / level
     evidence = root / TREE / "evidence" / level
     directory = state_dir(root, level, slug)
@@ -578,10 +588,11 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
             "that pack-verify checks",
         )
 
+    runtime = {"receipt_inputs": receipt_inputs, "repo_root": root} if receipt_inputs is not None else {}
     pack_before = (file_sha256(pack_path), file_sha256(files["pack_lock"]))
     try:
         result = verify_pack_strict(
-            level, slug, evidence_dir=evidence, plans_dir=plans, sources_instance=sources_instance
+            level, slug, evidence_dir=evidence, plans_dir=plans, sources_instance=sources_instance, **runtime
         )
     except (OSError, sqlite3.Error) as error:
         raise PlanReviewError(PACK_VERIFY_REFUSED, f"pack-verify --strict could not run: {error}") from error

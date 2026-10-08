@@ -426,6 +426,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "  schemas/plan-review-manifest-v1.schema.json, issues #8397 #8430"
         ),
     )
+    from scripts.curriculum.evidence import sense_cli
+
+    sense_cli.add_receipt_arguments(p_plan_manifest)
     p_plan_promote = subparsers.add_parser(
         "plan-promote",
         help="Promote the reviewed provisional pack hash into the plan (transactional)",
@@ -713,7 +716,14 @@ def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
 
     try:
         if args.command == "plan-manifest":
-            manifest, digest = plan_manifest.write_plan_manifest(args.level, args.slug, repo_root=repo_root)
+            from scripts.curriculum.evidence import sense_cli
+
+            manifest, digest = plan_manifest.write_plan_manifest(
+                args.level,
+                args.slug,
+                repo_root=repo_root,
+                receipt_inputs=sense_cli.receipt_inputs(args),
+            )
             print(json.dumps({"manifest_sha256": digest, "manifest": manifest}, ensure_ascii=False, sort_keys=True))
             return 0
         if args.command == "plan-promote":

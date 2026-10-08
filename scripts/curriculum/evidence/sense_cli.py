@@ -8,6 +8,7 @@ import re
 import subprocess
 import unicodedata
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -468,6 +469,203 @@ def leak_scan(
     }
 
 
+def checked_receipt_payload(
+    repo: Path,
+    evidence: Path,
+    store: dict,
+    context: bindings.Context,
+    private: dict,
+    key: bytes,
+    key_id: str,
+    api: sources.Sources,
+    selected: dict,
+    *,
+    base: str = "origin/main",
+    pr_text: str | None = None,
+    full_tree_report: Path | None = None,
+) -> tuple[dict, dict]:
+    """Reselect the entire binding set and derive the existing receipt's expected payload."""
+    for wid, binding in context.entries.items():
+        if binding["method"] not in {"reviewed.v1", "formula_row.v1"}:
+            continue
+        word = next((w for w in store["words"] if w["id"] == wid), None)
+        if word is None:
+            raise ValueError("word_missing")
+        rows = bindings.rows_for(word, api)
+        if word.get("kind") == "formula":
+            validate_formula_record(word, store, evidence, api)
+        if binding["method"] == "formula_row.v1":
+            if context.select(word, rows, None).gloss is None:
+                raise ValueError("formula_binding_invalid")
+            # Keyed formula reference evidence is reselected; coordinate-only
+            # bindings keep their explicit public sense choice.
+            if "commitment" in binding and selected.get(wid) != binding:
+                raise ValueError("formula_binding_reselection_failed")
+            selected.pop(wid, None)
+            continue
+        pool = bindings.candidate_list(word, rows)
+        current = bindings.reviewed_binding(
+            word,
+            pool,
+            binding["id"],
+            binding["span_index"],
+            binding["reviewer"]["task_id"],
+            tasks_dir(),
+            atom_index=binding["atom_index"],
+        )
+        if current != binding:
+            raise ValueError("review_subject_stale_or_unapproved")
+        selected.pop(wid, None)
+    expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
+    if selected != expected:
+        raise ValueError("reference_binding_reselection_failed")
+    scan = leak_scan(
+        repo,
+        private,
+        context,
+        store,
+        api,
+        base=base,
+        pr_text=pr_text,
+        full_tree_report=full_tree_report,
+    )
+    if scan["status"] != "checked":
+        raise ValueError("private_text_leak_suspected")
+    payload = bindings.receipt_payload(evidence / bindings.BINDINGS, private, key, key_id, repo)
+    payload["leak_scan_scope"] = scan["scope"]
+    return payload, scan
+
+
+@dataclass(frozen=True)
+class LocalReceiptInputs:
+    """Explicit host-local runtime inputs; never serialize these paths into evidence."""
+
+    private_input: Path | None = None
+    key_file: Path | None = None
+    key_id: str | None = None
+    receipt: Path | None = None
+    base: str = "origin/main"
+
+
+def add_receipt_arguments(parser: argparse.ArgumentParser) -> None:
+    """Expose the existing read-only local receipt contract to verification consumers."""
+    parser.add_argument("--private-input", type=Path, help="Private JSONL outside Git (default: no local proof)")
+    parser.add_argument(
+        "--key-file", type=Path, help="Existing host-local key outside Git, at least 32 bytes (default: none)"
+    )
+    parser.add_argument("--key-id", help="Existing public receipt key identifier, e.g. build1 (default: none)")
+    parser.add_argument("--receipt", type=Path, help="Existing HMAC receipt outside Git; verify only (default: none)")
+    parser.add_argument(
+        "--receipt-base", default="origin/main", help="Receipt leak-scan merge-base ref (default: origin/main)"
+    )
+
+
+def receipt_inputs(args: argparse.Namespace) -> LocalReceiptInputs | None:
+    """Partial explicit configuration must be refused rather than treated as absent."""
+    if any((args.private_input, args.key_file, args.key_id, args.receipt)) or args.receipt_base != "origin/main":
+        return LocalReceiptInputs(args.private_input, args.key_file, args.key_id, args.receipt, args.receipt_base)
+    return None
+
+
+def verify_local_receipt(
+    level: str,
+    evidence: Path,
+    api: sources.Sources,
+    inputs: LocalReceiptInputs,
+    *,
+    repo: Path,
+) -> tuple[frozenset[str], dict]:
+    """Read-only authenticated replay, with safe reason codes and no receipt issuance."""
+    try:
+        from scripts.ingest.build_ohoiko_a1_reference import require_private_path
+
+        if inputs.private_input is None or inputs.key_file is None or not inputs.key_id:
+            raise ValueError("commitment_key_required")
+        if inputs.receipt is None:
+            raise ValueError("local_receipt_required")
+        for private_path in (inputs.private_input, inputs.key_file, inputs.receipt):
+            require_private_path(private_path, repo)
+        context = bindings.Context.read(level, evidence)
+        if context.invalid:
+            raise ValueError("sense_bindings_invalid")
+        store = yaml.safe_load((evidence / "_words.yaml").read_text())
+        private = bindings.private_entries(inputs.private_input, context.inventory)
+        key = inputs.key_file.read_bytes()
+        bindings.keyed({}, key)
+        selected, _ = select_store(store, context.inventory, private, api, key, inputs.key_id)
+        payload, _ = checked_receipt_payload(
+            repo,
+            evidence,
+            store,
+            context,
+            private,
+            key,
+            inputs.key_id,
+            api,
+            selected,
+            base=inputs.base,
+        )
+        if not bindings.verify_receipt(inputs.receipt, payload, key):
+            raise ValueError("local_receipt_stale_or_invalid")
+        covered = frozenset(
+            wid for wid, binding in context.entries.items() if bindings.local_proof(binding) == "private_commitment"
+        )
+        return covered, {"status": "verified", **payload}
+    except Exception as error:
+        return frozenset(), {"status": "failed", "reason": safe_error_reason(error)}
+
+
+def safe_error_reason(error: Exception) -> str:
+    """Never echo private parse, filesystem, SQLite or ledger diagnostics."""
+    safe_codes = {
+        "sense_bindings_invalid",
+        "word_missing",
+        "review_arguments_required",
+        "commitment_key_required",
+        "commitment_key_invalid",
+        "reference_binding_reselection_failed",
+        "private_text_leak_suspected",
+        "local_receipt_required",
+        "local_receipt_stale_or_invalid",
+        "receipt_requires_clean_head",
+        "private_inventory_coverage_invalid",
+        "private_entry_invalid",
+        "review_task_invalid",
+        "review_author_identity_invalid",
+        "review_effort_invalid",
+        "review_harness_invalid",
+        "receipt_check_required",
+        "review_not_done_or_unrelated",
+        "review_identity_unknown",
+        "review_family_invalid",
+        "review_result_changed",
+        "review_subject_stale_or_unapproved",
+        "review_sources_unproven",
+        "review_date_invalid",
+        "private_output_inside_repository",
+        "formula_coordinates_required",
+        "formula_binding_invalid",
+        "formula_binding_reselection_failed",
+        "formula_gloss_ineligible",
+        "formula_part_identity_invalid",
+        "formula_vesum_unavailable",
+        "formula_tokens_invalid",
+        "formula_punctuation_invalid",
+        "formula_token_parts_mismatch",
+        "formula_part_cycle",
+        "formula_part_missing_or_retired",
+        "formula_part_non_lexical",
+        "formula_part_ambiguous",
+        "formula_part_entry_invalid",
+        "formula_part_form_invalid",
+        "formula_alias_unattested",
+        "formula_alias_invalid",
+        "formula_definition_invalid",
+    }
+    reason = str(error) if isinstance(error, ValueError) and str(error) in safe_codes else type(error).__name__
+    return reason
+
+
 def parser(command: str) -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog=f"sense-{command}",
@@ -640,40 +838,6 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                         selected[wid] = binding
                 bindings.write(path, args.level, selected)
             if args.check:
-                for wid, binding in context.entries.items():
-                    if binding["method"] not in {"reviewed.v1", "formula_row.v1"}:
-                        continue
-                    word = next((w for w in store["words"] if w["id"] == wid), None)
-                    if word is None:
-                        raise ValueError("word_missing")
-                    rows = bindings.rows_for(word, api)
-                    if word.get("kind") == "formula":
-                        validate_formula_record(word, store, evidence, api)
-                    if binding["method"] == "formula_row.v1":
-                        if context.select(word, rows, None).gloss is None:
-                            raise ValueError("formula_binding_invalid")
-                        # Keyed formula reference evidence is reselected; coordinate-only
-                        # bindings keep their explicit public sense choice.
-                        if "commitment" in binding and selected.get(wid) != binding:
-                            raise ValueError("formula_binding_reselection_failed")
-                        selected.pop(wid, None)
-                        continue
-                    pool = bindings.candidate_list(word, rows)
-                    current = bindings.reviewed_binding(
-                        word,
-                        pool,
-                        binding["id"],
-                        binding["span_index"],
-                        binding["reviewer"]["task_id"],
-                        tasks_dir(),
-                        atom_index=binding["atom_index"],
-                    )
-                    if current != binding:
-                        raise ValueError("review_subject_stale_or_unapproved")
-                    selected.pop(wid, None)
-                expected = {k: v for k, v in context.entries.items() if v["method"] == bindings.BOOK_METHOD}
-                if selected != expected:
-                    raise ValueError("reference_binding_reselection_failed")
                 pr_text = None
                 if args.pr:
                     import subprocess
@@ -694,23 +858,23 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
                             pr_text = " ".join([data["title"], data["body"], *(c["body"] for c in data["comments"])])
                         except (ValueError, KeyError, TypeError):
                             pr_text = None
-                scan = leak_scan(
+                payload, scan = checked_receipt_payload(
                     repo,
-                    private,
-                    context,
+                    evidence,
                     store,
+                    context,
+                    private,
+                    key,
+                    args.key_id,
                     api,
+                    selected,
                     base=args.base,
                     pr_text=pr_text,
                     full_tree_report=args.full_tree_report,
                 )
                 print(json.dumps({"leak_scan": scan}))
-                if scan["status"] != "checked":
-                    raise ValueError("private_text_leak_suspected")
                 if not args.receipt:
                     raise ValueError("local_receipt_required")
-                payload = bindings.receipt_payload(path, private, key, args.key_id, repo)
-                payload["leak_scan_scope"] = scan["scope"]
                 if args.verify_receipt:
                     if not bindings.verify_receipt(args.receipt, payload, key):
                         raise ValueError("local_receipt_stale_or_invalid")
@@ -732,51 +896,6 @@ def main(argv: list[str] | None = None, *, command: str = "select") -> int:
     except Exception as error:
         # Parse/SQLite/ledger errors can contain private input. Only controlled
         # reason codes are safe to report; never print an arbitrary exception.
-        safe_codes = {
-            "sense_bindings_invalid",
-            "word_missing",
-            "review_arguments_required",
-            "commitment_key_required",
-            "commitment_key_invalid",
-            "reference_binding_reselection_failed",
-            "private_text_leak_suspected",
-            "local_receipt_required",
-            "local_receipt_stale_or_invalid",
-            "receipt_requires_clean_head",
-            "private_inventory_coverage_invalid",
-            "private_entry_invalid",
-            "review_task_invalid",
-            "review_author_identity_invalid",
-            "review_effort_invalid",
-            "review_harness_invalid",
-            "receipt_check_required",
-            "review_not_done_or_unrelated",
-            "review_identity_unknown",
-            "review_family_invalid",
-            "review_result_changed",
-            "review_subject_stale_or_unapproved",
-            "review_sources_unproven",
-            "review_date_invalid",
-            "private_output_inside_repository",
-            "formula_coordinates_required",
-            "formula_binding_invalid",
-            "formula_binding_reselection_failed",
-            "formula_gloss_ineligible",
-            "formula_part_identity_invalid",
-            "formula_vesum_unavailable",
-            "formula_tokens_invalid",
-            "formula_punctuation_invalid",
-            "formula_token_parts_mismatch",
-            "formula_part_cycle",
-            "formula_part_missing_or_retired",
-            "formula_part_non_lexical",
-            "formula_part_ambiguous",
-            "formula_part_entry_invalid",
-            "formula_part_form_invalid",
-            "formula_alias_unattested",
-            "formula_alias_invalid",
-            "formula_definition_invalid",
-        }
-        reason = str(error) if isinstance(error, ValueError) and str(error) in safe_codes else type(error).__name__
+        reason = safe_error_reason(error)
         print(json.dumps({"status": "failed", "reason": reason}))
         return 1

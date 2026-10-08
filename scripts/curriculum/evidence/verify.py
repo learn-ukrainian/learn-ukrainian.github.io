@@ -20,7 +20,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
-from . import codes, lock, pack, publication, registry, sense_bindings, sources
+from . import codes, lock, pack, publication, registry, sense_bindings, sense_cli, sources
 from .words import (
     cefr_field,
     cited_rows,
@@ -53,6 +53,23 @@ def _drift(strict: bool, errors: list[str], warnings: list[str], message: str) -
         warnings.append(line)
 
 
+def _local_proof(
+    level: str,
+    evidence: Path,
+    api: sources.Sources,
+    inputs: sense_cli.LocalReceiptInputs | None,
+    repo: Path | None,
+    errors: list[str],
+) -> tuple[frozenset[str], dict]:
+    """Obtain proof only through fresh replay; explicit invalid inputs fail closed."""
+    if inputs is None:
+        return frozenset(), {"status": "not_supplied"}
+    covered, proof = sense_cli.verify_local_receipt(level, evidence, api, inputs, repo=repo or Path.cwd())
+    if proof["status"] != "verified":
+        errors.append(f"{codes.UNVERIFIABLE}: local_receipt:{proof['reason']}")
+    return covered, proof
+
+
 def verify_words_store(
     level: str,
     *,
@@ -61,6 +78,8 @@ def verify_words_store(
     sources_instance: sources.Sources | None = None,
     strict: bool = False,
     report: Callable[[str], None] | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Verify an existing level word store against sources, ledger, and lock."""
     evidence_base = (
@@ -136,6 +155,7 @@ def verify_words_store(
         owns_sources = True
 
     try:
+        covered, local_proof = _local_proof(level, evidence_base, sources_instance, receipt_inputs, repo_root, errors)
         # 4. Compare source versions
         built_with = store_doc.get("built_with", {})
         current_vesum = sources_instance._vesum_identity()[0]
@@ -224,7 +244,7 @@ def verify_words_store(
                     ):
                         errors.append(f"{word['id']}: formula_binding_invalid")
                     unchecked = sense_bindings.local_proof(binding_context.entries.get(word["id"], {}))
-                    if unchecked:
+                    if unchecked and not (word["id"] in covered and unchecked == "private_commitment"):
                         warnings.append(f"{word['id']}: {sense_bindings.CI_NOTICE}")
                         not_checked.append(f"{word['id']}:{unchecked}")
                 except (ValueError, OSError, KeyError) as exc:
@@ -293,10 +313,9 @@ def verify_words_store(
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: {selection.reason}")
             if word.get("gloss_basis") != selection.basis:
                 errors.append(f"{codes.GLOSS_MISMATCH}: {word_id}: binding_basis_mismatch")
-            method = binding_context.entries.get(word_id, {}).get("method")
-            if method in sense_bindings.LOCAL_PROOF_METHODS:
+            unchecked = sense_bindings.local_proof(binding_context.entries.get(word_id, {}))
+            if unchecked and not (word_id in covered and unchecked == "private_commitment"):
                 warnings.append(f"{word_id}: {sense_bindings.CI_NOTICE}")
-                unchecked = sense_bindings.LOCAL_PROOF_METHODS[method]
                 not_checked.append(f"{word_id}:{unchecked}")
             expected_gloss = selection.gloss
             expected_gloss_source = selection.source
@@ -537,9 +556,14 @@ def verify_words_store(
             "source_version_changed": source_version_changed,
             "sources_db_scheme": scheme,
             "cited_rows_drifted_words": rows_drifted_total,
-            "private_commitments": {"status": "unverifiable_in_ci", "local_receipt_required": True}
+            "local_receipt": local_proof,
+            "private_commitments": (
+                local_proof
+                if local_proof["status"] == "verified"
+                else {"status": "unverifiable_in_ci", "local_receipt_required": True}
+            )
             if any(
-                sense_bindings.LOCAL_PROOF_METHODS.get(w.get("gloss_basis", {}).get("method")) == "private_commitment"
+                sense_bindings.local_proof(binding_context.entries.get(w["id"], {})) == "private_commitment"
                 for w in words_list
             )
             else {"status": "not_applicable"},
@@ -573,6 +597,7 @@ def main(argv: list[str] | None = None) -> int:
             "  1: Lock mismatch, registry disagreement, corruption, or source_changed under --strict\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
+            "Related:\n  docs/runbooks/reference-sense-bindings.md; sense-select --check --verify-receipt\n"
         ),
     )
     parser.add_argument("level", help="Target curriculum level slug (e.g. 'a1', 'a2')")
@@ -585,6 +610,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
 
+    sense_cli.add_receipt_arguments(parser)
     args = parser.parse_args(argv)
 
     report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
@@ -600,6 +626,7 @@ def main(argv: list[str] | None = None) -> int:
             sources_instance=explicit_sources,
             strict=args.strict,
             report=report,
+            receipt_inputs=sense_cli.receipt_inputs(args),
         )
     except Exception as exc:
         if args.json:
@@ -751,6 +778,8 @@ def verify_pack(
     offline: bool = False,
     strict: bool = False,
     report: Callable[[str], None] | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Verify integrity of a module evidence pack against sources, locks, and State Standard."""
     if strict and offline:
@@ -838,6 +867,7 @@ def verify_pack(
         owns_sources = True
 
     try:
+        covered, local_proof = _local_proof(level, evidence_base, sources_instance, receipt_inputs, repo_root, errors)
         # 3. sources.db identity scheme: rows-v2 verifies each cited row below;
         #    file-v1 recorded a file digest, which only the retired file hash could check.
         built_with = pack_doc.get("built_with", {})
@@ -956,7 +986,7 @@ def verify_pack(
                     context = sense_bindings.Context.read(level, evidence_base)
                     for wid in sorted(cited_gloss_ids(plan_doc)):
                         unchecked = sense_bindings.local_proof(context.entries.get(wid, {}))
-                        if unchecked:
+                        if unchecked and not (wid in covered and unchecked == "private_commitment"):
                             warnings.append(f"{level}/{slug} {wid}: {sense_bindings.CI_NOTICE}")
                             not_checked.append(f"{wid}:{unchecked}")
                     errors.extend(
@@ -1134,6 +1164,7 @@ def verify_pack(
             "chunk_id_moved": chunk_id_moved,
             "not_checked": not_checked,
             "snapshot": sources_instance.snapshot_report(),
+            "local_receipt": local_proof,
             "reports": reports,
             "warnings": warnings,
             "errors": errors,
@@ -1164,6 +1195,7 @@ def main_pack(argv: list[str] | None = None) -> int:
             "  1: Lock mismatch, quote mismatch, error mismatch, standard mismatch, open unsupported under --strict, or refused --strict --offline\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
+            "Related:\n  docs/runbooks/reference-sense-bindings.md; sense-select --check --verify-receipt\n"
         ),
     )
     parser.add_argument("level", help="Target curriculum level slug (e.g. 'a1', 'a2')")
@@ -1179,6 +1211,7 @@ def main_pack(argv: list[str] | None = None) -> int:
     parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
     parser.add_argument("--standard-path", type=Path, default=None, help="Override State Standard file path")
 
+    sense_cli.add_receipt_arguments(parser)
     args = parser.parse_args(argv)
 
     report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
@@ -1202,6 +1235,7 @@ def main_pack(argv: list[str] | None = None) -> int:
             offline=args.offline,
             strict=args.strict,
             report=report,
+            receipt_inputs=sense_cli.receipt_inputs(args),
         )
     except Exception as exc:
         if args.json:

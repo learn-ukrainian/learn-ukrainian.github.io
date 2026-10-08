@@ -1631,3 +1631,304 @@ def test_store_gloss_is_public_only_as_an_open_atom_of_its_own_lemma(bound, tmp_
     if expected == "failed":
         assert result["signals"] == {"distinctive_wording": 0, "mapping_copy": 1}
     assert meaning not in json.dumps(result)
+
+
+@pytest.fixture
+def authenticated_replay(book_bound, monkeypatch):
+    """Synthetic mechanism proof using real Git, reselection, leak scan and HMAC."""
+    outside, api, binding = book_bound
+    repo = outside / "replay-repo"
+    evidence = repo / "curriculum/l2-uk-en/evidence/a1"
+    plans = repo / "curriculum/l2-uk-en/lesson-plans/a1"
+    evidence.mkdir(parents=True)
+    plans.mkdir(parents=True)
+    bindings.write(evidence / bindings.BINDINGS, "a1", {"W-001": binding})
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "source": {"digest": "t" * 64},
+            "matches": [
+                {
+                    "stressed_form": f"{w}-stressed",
+                    "unstressed_form": w,
+                    "vowel_index": 0,
+                    "vowel_indices": [0],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+        },
+    )
+    request = outside / "word-request.yaml"
+    request.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}},
+                ],
+            }
+        )
+    )
+    words.build_words("a1", request, evidence_dir=evidence, sources_instance=api, mcp_commit="a" * 40)
+    (plans / "synthetic.yaml").write_text(yaml.safe_dump({"vocabulary": {"core": ["W-001"]}}))
+    request = outside / "pack-request.yaml"
+    request.write_text(yaml.safe_dump({"request_schema": 1, "module": "a1/synthetic"}))
+    pack.build_pack("a1", "synthetic", request, evidence_dir=evidence, sources_instance=api, offline=True)
+    subprocess.run(["git", "init", "-q", str(repo)], check=True, timeout=30)
+    for args in (
+        ("config", "user.name", "Synthetic"),
+        ("config", "user.email", "synthetic@example.invalid"),
+        ("commit", "--allow-empty", "-qm", "Synthetic base"),
+        ("branch", "receipt-base"),
+        ("add", "."),
+        ("commit", "-qm", "Synthetic evidence"),
+    ):
+        bindings.git(repo, *args)
+    private = outside / "local-input.jsonl"
+    private.write_text(json.dumps(FIXTURE["private"]) + "\n")
+    key = outside / "local-key"
+    key.write_bytes(KEY)
+    inputs = sense_cli.LocalReceiptInputs(private, key, "test-key", outside / "local-receipt", "receipt-base")
+    context = bindings.Context.read("a1", evidence)
+    store = yaml.safe_load((evidence / "_words.yaml").read_text())
+    entries = bindings.private_entries(private, context.inventory)
+    selected, _ = sense_cli.select_store(store, context.inventory, entries, api, KEY, inputs.key_id)
+    payload, scan = sense_cli.checked_receipt_payload(
+        repo,
+        evidence,
+        store,
+        context,
+        entries,
+        KEY,
+        inputs.key_id,
+        api,
+        selected,
+        base=inputs.base,
+    )
+    assert scan["status"] == "checked"
+    bindings.write_receipt(inputs.receipt, payload, KEY)
+    assert bindings.verify_receipt(inputs.receipt, payload, KEY)
+    return repo, evidence, plans, api, inputs
+
+
+@pytest.mark.parametrize("consumer", ["words", "pack"])
+def test_consumers_replay_authenticated_entire_set(authenticated_replay, consumer, monkeypatch, capsys):
+    repo, evidence, plans, api, inputs = authenticated_replay
+    monkeypatch.chdir(repo)
+    kwargs = dict(evidence_dir=evidence, plans_dir=plans, sources_instance=api, strict=True, repo_root=repo)
+    call = (
+        (lambda **kw: verify.verify_words_store("a1", **kw))
+        if consumer == "words"
+        else (lambda **kw: verify.verify_pack("a1", "synthetic", **kw))
+    )
+    unchecked = call(**kwargs)
+    assert unchecked["status"] == "warning" and unchecked["not_checked"] == ["W-001:private_commitment"]
+    checked = call(**kwargs, receipt_inputs=inputs)
+    assert checked["status"] == "ok" and checked["not_checked"] == [] and checked["errors"] == []
+    assert checked["local_receipt"]["head"] == bindings.git(repo, "rev-parse", "HEAD").decode().strip()
+    if consumer == "words":
+        assert checked["private_commitments"]["status"] == "verified"
+    # CLI plumbing must reach the same real replay, without publishing runtime paths.
+    monkeypatch.setattr(sources, "Sources", lambda **kw: api)
+    args = [
+        "a1",
+        *(["synthetic"] if consumer == "pack" else []),
+        "--strict",
+        "--json",
+        "--evidence-dir",
+        str(evidence),
+        "--plans-dir",
+        str(plans),
+        "--private-input",
+        str(inputs.private_input),
+        "--key-file",
+        str(inputs.key_file),
+        "--key-id",
+        inputs.key_id,
+        "--receipt",
+        str(inputs.receipt),
+        "--receipt-base",
+        inputs.base,
+    ]
+    assert (verify.main if consumer == "words" else verify.main_pack)(args) == 0
+    output = capsys.readouterr().out
+    assert json.loads(output)["status"] == "ok"
+    assert str(inputs.private_input) not in output and str(inputs.key_file) not in output
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing_receipt",
+        "missing_key",
+        "missing_private",
+        "partial",
+        "tampered_seal",
+        "wrong_key",
+        "key_id",
+        "head",
+        "dirty",
+        "bindings",
+        "private_input",
+        "matcher",
+        "scan_scope",
+        "reselection",
+        "leak",
+        "inside_git",
+        "forged_success",
+        "review_provenance",
+    ],
+)
+def test_consumer_receipt_refusals(authenticated_replay, monkeypatch, change):
+    from dataclasses import replace
+
+    repo, evidence, plans, api, inputs = authenticated_replay
+    if change.startswith("missing_"):
+        path = {
+            "missing_receipt": inputs.receipt,
+            "missing_key": inputs.key_file,
+            "missing_private": inputs.private_input,
+        }[change]
+        path.unlink()
+    elif change == "partial":
+        inputs = replace(inputs, key_file=None)
+    elif change in {"tampered_seal", "forged_success"}:
+        receipt = json.loads(inputs.receipt.read_text())
+        if change == "tampered_seal":
+            receipt["seal"] = "0" * 64
+        else:
+            receipt["payload"]["status"] = "verified"
+        inputs.receipt.write_text(json.dumps(receipt))
+    elif change == "wrong_key":
+        inputs.key_file.write_bytes(b"x" * 32)
+    elif change == "key_id":
+        inputs = replace(inputs, key_id="other")
+    elif change == "head":
+        (repo / "public.txt").write_text("Public fixture")
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Changed head")
+    elif change == "dirty":
+        (repo / "untracked.txt").write_text("Public fixture")
+    elif change == "bindings":
+        path = evidence / bindings.BINDINGS
+        path.write_text(path.read_text() + "# changed bytes\n")
+        bindings.lock.write(path)
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Binding drift")
+    elif change == "private_input":
+        private = {**FIXTURE["private"], "meaning": "different meaning"}
+        inputs.private_input.write_text(json.dumps(private) + "\n")
+    elif change == "matcher":
+        monkeypatch.setattr(matcher, "VERSION", "changed")
+    elif change == "scan_scope":
+        inputs = replace(inputs, base="HEAD")
+    elif change == "reselection":
+        # An uncited binding must still be validated by the complete-set checker.
+        context = bindings.Context.read("a1", evidence)
+        bindings.write(evidence / bindings.BINDINGS, "a1", {**context.entries, "W-999": {**context.entries["W-001"]}})
+    elif change == "leak":
+        # Keep the valid seal; refusal must precede authentication when scanning fails.
+        original = sense_cli.leak_scan
+
+        def failed_scan(*a, **kw):
+            return {**original(*a, **kw), "status": "failed"}
+
+        monkeypatch.setattr(sense_cli, "leak_scan", failed_scan)
+    elif change == "inside_git":
+        inputs = replace(inputs, private_input=evidence / "_words.yaml")
+    elif change == "review_provenance":
+        context = bindings.Context.read("a1", evidence)
+        binding = {
+            "method": "reviewed.v1",
+            "row_sha256": "0" * 64,
+            "id": 2,
+            "span_index": 0,
+            "atom_index": 0,
+            "span": "target",
+            "reviewer": {"task_id": "unavailable"},
+        }
+        # Real review lookup is refused; malformed/unrelated metadata cannot confer coverage.
+        context.entries["W-001"] = binding
+        monkeypatch.setattr(bindings.Context, "read", lambda *a: context)
+    result = verify.verify_pack(
+        "a1",
+        "synthetic",
+        evidence_dir=evidence,
+        plans_dir=plans,
+        sources_instance=api,
+        strict=True,
+        receipt_inputs=inputs,
+        repo_root=repo,
+    )
+    assert result["status"] == "failed" and result["local_receipt"]["status"] == "failed"
+    assert result["errors"]
+    serialized = json.dumps(result["local_receipt"])
+    assert str(inputs.private_input) not in serialized and "different meaning" not in serialized
+
+
+def test_authenticated_replay_does_not_discharge_unrelated_public_errors(authenticated_replay):
+    repo, evidence, plans, api, inputs = authenticated_replay
+    # An invalid public quote survives even though the private proof is authentic.
+    path = evidence / "synthetic.yaml"
+    doc = yaml.safe_load(path.read_text())
+    doc["built_with"]["sources_db"] = "0" * 64
+    path.write_text(yaml.safe_dump(doc))
+    bindings.lock.write(path)
+    # Derive a new synthetic seal for this changed head; public verification still fails.
+    bindings.git(repo, "add", ".")
+    bindings.git(repo, "commit", "-qm", "Public identity error")
+    context = bindings.Context.read("a1", evidence)
+    private = bindings.private_entries(inputs.private_input, context.inventory)
+    store = yaml.safe_load((evidence / "_words.yaml").read_text())
+    selected, _ = sense_cli.select_store(store, context.inventory, private, api, KEY, inputs.key_id)
+    payload, _ = sense_cli.checked_receipt_payload(
+        repo, evidence, store, context, private, KEY, inputs.key_id, api, selected, base=inputs.base
+    )
+    bindings.write_receipt(inputs.receipt, payload, KEY)
+    result = verify.verify_pack(
+        "a1",
+        "synthetic",
+        evidence_dir=evidence,
+        plans_dir=plans,
+        sources_instance=api,
+        strict=True,
+        receipt_inputs=inputs,
+        repo_root=repo,
+    )
+    assert result["local_receipt"]["status"] == "verified" and result["status"] == "failed"
+    assert result["not_checked"] == [] and result["errors"]
+
+
+@pytest.mark.parametrize("change", ["none", "stale", "missing_word", "unapproved"])
+def test_shared_checker_rederives_reviewed_provenance(review_dispatch, tmp_path, monkeypatch, change):
+    from types import SimpleNamespace
+
+    tasks, pool, record, _result, task, _verdict = review_dispatch
+    binding = bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks)
+    context = bindings.Context("a1", {"W-001": binding}, [])
+    store = {"level": "a1", "words": [WORD]}
+    bindings.write(tmp_path / bindings.BINDINGS, "a1", context.entries)
+    api = SimpleNamespace(gloss_rows=lambda pairs: SimpleNamespace(raw={("synthetic", "noun"): [row(["target"])]}))
+    monkeypatch.setattr(sense_cli, "tasks_dir", lambda: tasks)
+    monkeypatch.setattr(sense_cli, "leak_scan", lambda *a, **kw: {"status": "checked", "scope": {"kind": "diff"}})
+    monkeypatch.setattr(bindings, "git", lambda repo, *args: b"" if args[0] == "status" else b"a" * 40)
+    if change == "stale":
+        context.entries["W-001"]["reviewer"]["result_sha256"] = "0" * 64
+    elif change == "missing_word":
+        store["words"] = []
+    elif change == "unapproved":
+        task["status"] = "failed"
+        record.write_text(json.dumps(task))
+    if change != "none":
+        with pytest.raises(ValueError):
+            sense_cli.checked_receipt_payload(tmp_path, tmp_path, store, context, {}, KEY, "fixture", api, {})
+    else:
+        payload, scan = sense_cli.checked_receipt_payload(
+            tmp_path, tmp_path, store, context, {}, KEY, "fixture", api, {}
+        )
+        assert payload["head"] == "a" * 40 and scan["status"] == "checked"

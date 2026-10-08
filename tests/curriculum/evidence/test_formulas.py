@@ -794,6 +794,28 @@ def test_builder_private_formula_selection_and_keyed_receipt(api, tmp_path, monk
     )
     assert not verified_pack["errors"], verified_pack
     assert "W-004:private_commitment" in verified_pack["not_checked"]
+    # Both consumers must replay the existing seal and discharge the keyed formula.
+    local_inputs = sense_cli.LocalReceiptInputs(private, key_path, "fixture", tmp_path / "receipt")
+    checked_words = verify.verify_words_store(
+        "a1",
+        evidence_dir=tmp_path,
+        plans_dir=plans_dir,
+        sources_instance=api,
+        strict=True,
+        receipt_inputs=local_inputs,
+    )
+    assert checked_words["status"] == "ok" and checked_words["not_checked"] == []
+    assert checked_words["private_commitments"]["status"] == "verified"
+    checked_pack = verify.verify_pack(
+        "a1",
+        "formula-fixture",
+        evidence_dir=tmp_path,
+        plans_dir=plans_dir,
+        sources_instance=api,
+        strict=True,
+        receipt_inputs=local_inputs,
+    )
+    assert checked_pack["status"] == "ok" and checked_pack["not_checked"] == []
     assert any(bindings.CI_NOTICE in w for w in verified_pack["warnings"])
     binding["commitment"] = "0" * 64
     bindings.write(tmp_path / bindings.BINDINGS, "a1", {formula_word["id"]: binding})
