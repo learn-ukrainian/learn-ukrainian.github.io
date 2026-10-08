@@ -6,7 +6,7 @@ All rules are hard requirements. Partial compliance = failure.
 
 ## Quick Reference
 
-The two word-target rows below follow rule 1's scope.
+The two word-target rows below follow rule 1's scope. Its anti-padding exception binds both workflows.
 
 | When... | Do this |
 |---|---|
@@ -28,7 +28,7 @@ The two word-target rows below follow rule 1's scope.
 
 <critical>
 
-**Scope.** Rule 1, rule 3 and the Words, Activities, Unique_types and Vocab rows of rule 2 bind legacy module workflows: every module workflow outside the fresh-build engine (for example V7, the linear pipeline and `track-completion`). Core fresh-build lessons (rule 4) are sized by their own contracts, not by these `config.py` targets, section tolerances or count minimums, nor by any overshoot. Legacy workflows keep every target unchanged; the Naturalness row of rule 2 and all other rules bind both.
+**Scope.** Rule 1, rule 3 and the Words, Activities, Unique_types and Vocab rows of rule 2 bind legacy module workflows: every module workflow outside the fresh-build engine (for example V7, the linear pipeline and `track-completion`). Core fresh-build lessons (rule 4) are sized by their own contracts, not by these `config.py` targets, section tolerances or count minimums, nor by any overshoot. Legacy workflows keep every target unchanged; the Naturalness row of rule 2 and all other rules bind both. Exception: rule 1's anti-padding duty also binds both: content meets any word target only with source-backed necessary pedagogy, never by repeating exposition or auto-padding. The rest of rule 1 (`config.py` sizing and `SIZE_POLICY_MISMATCH` routing) stays legacy-only.
 
 Meet reviewed targets with source-backed necessary pedagogy. Never lower targets
 to match content, repeat exposition to reach them, or auto-pad. If grounded

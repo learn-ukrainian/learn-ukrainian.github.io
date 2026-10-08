@@ -61,6 +61,11 @@ def test_curriculum_injection_routes_sizing_and_keeps_legacy_gates(api_client, s
     assert "Core fresh-build lessons (rule 4)" in scope
     assert "sized by their own contracts" in scope
     assert "Naturalness row of rule 2 and all other rules bind both" in scope
+    assert "Exception: rule 1's anti-padding duty also binds both" in scope
+    assert "source-backed necessary pedagogy" in scope
+    assert "never by repeating exposition or auto-padding" in scope
+    assert "(`config.py` sizing and `SIZE_POLICY_MISMATCH` routing) stays legacy-only" in scope
+    assert "follow rule 1's scope. Its anti-padding exception binds both workflows." in text
 
     gates = _section(text, 2)
     for obligation in (
