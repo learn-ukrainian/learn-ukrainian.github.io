@@ -1292,3 +1292,195 @@ def test_freeze_replay_compares_type_exact_manifest(pilot, change, capsys):
     assert pilot["manifest"].read_bytes() == before and db_bytes(pilot) == sources
     refusal = "REFUSED: Immutable manifest exists with different content\n"
     assert capsys.readouterr().err == (refusal if change in edits else "")
+
+
+@pytest.fixture
+def register_parse_spy(monkeypatch):
+    """Count actual parses independently of process history and clear after spies."""
+    foundation._parse_register_bytes.cache_clear()
+    original = foundation.yaml.safe_load
+    calls = []
+
+    def counted(content):
+        calls.append(content)
+        return original(content)
+
+    monkeypatch.setattr(foundation.yaml, "safe_load", counted)
+    try:
+        yield calls
+    finally:
+        foundation._parse_register_bytes.cache_clear()
+
+
+def test_register_cache_copies_first_and_warm_returns(tmp_path, register_parse_spy):
+    content = b"sources: &entries\n  - id: fixture\n    terms: {labels: [original]}\nalias: *entries\n"
+    paths = [tmp_path / name for name in ("first.yaml", "second.yaml")]
+    for path in paths:
+        path.write_bytes(content)
+    first = foundation.load_register(paths[0])
+    assert first["alias"] is first["sources"]  # YAML aliases retain their within-result sharing.
+    first["sources"][0]["terms"]["labels"].append("first caller mutation")
+    second = foundation.load_register(paths[1])
+    assert second == {"sources": [{"id": "fixture", "terms": {"labels": ["original"]}}],
+                      "alias": [{"id": "fixture", "terms": {"labels": ["original"]}}]}
+    assert second["alias"] is second["sources"] and second is not first
+    second["alias"][0]["terms"]["labels"].clear()
+    third = foundation.load_register(paths[0])
+    assert third["sources"][0]["terms"]["labels"] == ["original"]
+    assert register_parse_spy == [content]  # Identical bytes at different paths share one parse.
+
+
+def test_register_cache_fresh_same_length_same_mtime_and_return_to_a(tmp_path, register_parse_spy):
+    path = tmp_path / "register.yaml"
+    a, b = b"sources: [{id: alpha}]\n", b"sources: [{id: bravo}]\n"
+    assert len(a) == len(b)
+    path.write_bytes(a)
+    original_stat = path.stat()
+    for content, expected in [(a, "alpha"), (b, "bravo"), (a, "alpha")]:
+        path.write_bytes(content)
+        os.utime(path, ns=(original_stat.st_atime_ns, original_stat.st_mtime_ns))
+        assert path.stat().st_mtime_ns == original_stat.st_mtime_ns
+        assert foundation.load_register(path) == {"sources": [{"id": expected}]}
+    assert register_parse_spy == [a, b]
+
+
+def test_register_cache_two_entry_lru_eviction(tmp_path, register_parse_spy):
+    path = tmp_path / "register.yaml"
+    for value in ["alpha", "bravo", "alpha", "third", "bravo"]:
+        path.write_text(f"sources: [{{id: {value}}}]\n")
+        assert foundation.load_register(path) == {"sources": [{"id": value}]}
+        assert foundation._parse_register_bytes.cache_info().currsize <= 2
+    assert register_parse_spy == [b"sources: [{id: alpha}]\n", b"sources: [{id: bravo}]\n",
+                                  b"sources: [{id: third}]\n", b"sources: [{id: bravo}]\n"]
+    assert foundation._parse_register_bytes.cache_info().maxsize == 2
+
+
+def test_register_cache_read_failure_is_not_hidden(tmp_path, monkeypatch, register_parse_spy):
+    path = tmp_path / "register.yaml"
+    content = b"sources: [{id: fixture}]\n"
+    path.write_bytes(content)
+    assert foundation.load_register(path) == {"sources": [{"id": "fixture"}]}
+
+    def unreadable(self):
+        raise OSError("synthetic unreadable register")
+
+    monkeypatch.setattr(Path, "read_bytes", unreadable)
+    with pytest.raises(OSError, match="synthetic unreadable register"):
+        foundation.load_register(path)
+    assert register_parse_spy == [content]
+
+
+def test_register_cache_invalid_yaml_retries_and_cli_refuses(pilot, register_parse_spy, capsys):
+    path = pilot["root"] / "malformed.yaml"
+    content = b"sources: [unterminated\n"
+    path.write_bytes(content)
+    for _ in range(2):
+        with pytest.raises(yaml.YAMLError):
+            foundation.load_register(path)
+    command = list(pilot["freeze"])
+    command[command.index("--source-register") + 1] = str(path)
+    before = db_bytes(pilot)
+    for _ in range(2):
+        assert foundation.main(command) == 1
+        assert capsys.readouterr().err == (
+            "REFUSED: Invalid or inaccessible input; check schema and readable sources\n")
+        assert not pilot["manifest"].exists() and db_bytes(pilot) == before
+    assert register_parse_spy == [content] * 4
+    assert foundation._parse_register_bytes.cache_info().currsize == 0
+
+
+@pytest.mark.parametrize("operation", ["freeze", "allocate", "verify"])
+def test_register_cache_command_output_and_fingerprints_equivalent(pilot, operation, monkeypatch,
+                                                                   register_parse_spy, capsys):
+    prepared(pilot)
+    capsys.readouterr()
+    foundation._parse_register_bytes.cache_clear()
+    register_parse_spy.clear()
+    before = ([pilot[k].read_bytes() for k in ("manifest", "registry")], db_bytes(pilot))
+    assert pilot["operation"](operation) == 0
+    cold = capsys.readouterr()
+    assert len(register_parse_spy) == 1  # Freeze and REGISTER validation share identical bytes.
+    assert pilot["operation"](operation) == 0
+    assert capsys.readouterr() == cold and len(register_parse_spy) == 1
+    with monkeypatch.context() as uncached:
+        uncached.setattr(foundation, "load_register", lambda path: yaml.safe_load(path.read_bytes()))
+        assert pilot["operation"](operation) == 0
+        assert capsys.readouterr() == cold
+    assert before == ([pilot[k].read_bytes() for k in ("manifest", "registry")], db_bytes(pilot))
+
+
+@pytest.mark.parametrize("fault,reason", [
+    ("pin", "Register pin binding mismatch"),
+    ("admission", "Require independent source admission"),
+    ("register_schema", "Invalid permissions-register.schema.json"),
+    ("schema_definition", "Invalid permissions-register.schema.json"),
+    ("manifest", "Changed manifest bytes/content; restore admitted freeze"),
+    ("heldout", "Heldout and replay must be disjoint"),
+])
+def test_register_cache_warm_validation_refusals(pinned_pilot, fault, reason, monkeypatch,
+                                                register_parse_spy, capsys):
+    p = pinned_pilot
+    capsys.readouterr()
+    assert p["operation"]("verify") == 0
+    capsys.readouterr()
+    extra = []
+    if fault == "pin":
+        p["pin"]["manifest_sha256"] = "0" * 64
+        save(p["pin_path"], p["pin"])
+    elif fault == "admission":
+        entry = admitted_pin(p["register"], p["pin"]["source_ids"], p["candidate"]["denominator"])
+        entry["admission"]["author_seat_distinct"] = False
+        p["pin"]["pins"].append(entry)
+        save(p["pin_path"], p["pin"])
+    elif fault == "register_schema":
+        p["register"]["schema_version"] = "invalid"
+        p["register_path"].write_text(yaml.safe_dump(p["register"], allow_unicode=True))
+        foundation.load_register(p["register_path"])  # Warm malformed schema data, not a verdict.
+    elif fault == "schema_definition":
+        original_load = foundation.load
+
+        def changed_schema(path):
+            value = original_load(path)
+            if path.name == "permissions-register.schema.json":
+                value["required"].append("synthetic_required_field")
+            return value
+
+        monkeypatch.setattr(foundation, "load", changed_schema)
+    elif fault == "manifest":
+        manifest = json.loads(p["manifest"].read_bytes())
+        manifest["counts"]["units"] = 149
+        save(p["manifest"], manifest)
+    elif fault == "heldout":
+        member = p["root"] / "membership.json"
+        locator = p["candidate"]["source_records"][0]["locator"]
+        save(member, dict(heldout=[locator], replay=[]))
+        assert p["operation"]("verify", "--heldout-manifest", str(member)) == 0
+        capsys.readouterr()
+        save(member, dict(heldout=[locator], replay=[locator]))
+        extra = ["--heldout-manifest", str(member)]
+    before = ([p[k].read_bytes() for k in ("manifest", "registry", "pin_path")], db_bytes(p))
+    parse_count = len(register_parse_spy)
+    assert p["operation"]("verify", *extra) == 1
+    warm = capsys.readouterr()
+    assert not warm.out and reason in warm.err and warm.err.startswith("REFUSED: ")
+    assert len(register_parse_spy) == parse_count
+    with monkeypatch.context() as uncached:
+        uncached.setattr(foundation, "load_register", lambda path: yaml.safe_load(path.read_bytes()))
+        assert p["operation"]("verify", *extra) == 1
+        assert capsys.readouterr() == warm
+    assert before == ([p[k].read_bytes() for k in ("manifest", "registry", "pin_path")], db_bytes(p))
+
+
+def test_register_cache_keeps_independent_file_digest_reads(pilot, monkeypatch, register_parse_spy):
+    original = foundation.file_digest
+    reads = []
+
+    def counted(path):
+        reads.append(path)
+        return original(path)
+
+    monkeypatch.setattr(foundation, "file_digest", counted)
+    assert pilot["operation"]("freeze") == 0
+    assert pilot["operation"]("freeze") == 0
+    assert len(register_parse_spy) == 1
+    assert reads.count(REGISTER) >= 4  # Separate source-register and REGISTER fingerprints each time.
