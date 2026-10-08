@@ -143,7 +143,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
-- **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
+- **WORD TARGETS (legacy module workflows):** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand. Core fresh-build lessons follow their own sizing contract (`non-negotiable-rules.md` rule 4).
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
 **Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
