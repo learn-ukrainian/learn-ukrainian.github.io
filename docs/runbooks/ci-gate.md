@@ -7,6 +7,27 @@ jobs and the full non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
 Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
+The advisory Hygiene workflow keeps a separate slim environment. Its focused
+agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
+`requirements.txt`, with direct and transitive dependencies constrained by all
+named `==` pins in `requirements-lock.txt` (local path requirements cannot be
+constraints).
+The shared conftest's Claude adapter pre-import needs jsonschema; its process
+guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
+Before executing the focused tests, a `--setup-only` guard collects the same
+test set and runs its fixtures: `--collect-only` alone cannot detect missing
+dependencies imported during autouse setup. The guard propagates import errors;
+`tests/test_hygiene_workflow.py`, run by required CI Gate, also restricts fixture
+setup imports to the standard library, repository-local modules and Hygiene's
+installed dependency closure resolved through `importlib.metadata`. Other
+third-party imports fail even when installed in CI Gate's larger environment.
+Negative controls cover unavailable jsonschema and a fixture-time `requests`
+import in a scratch copy of the shared conftest. The scratch `tests` package
+includes the original package path so newly registered repository plugins remain visible.
+Repository imports are classified by their resolved paths (including namespace
+packages), with installed site-packages and symlinks outside the checkout excluded.
+Direct regression tests cover arbitrary module names and resolved-path boundaries.
+
 | Job | What it does |
 | --- | --- |
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
