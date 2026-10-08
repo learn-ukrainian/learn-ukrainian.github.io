@@ -8,14 +8,7 @@ import pytest
 
 from scripts.audit import check_content_spelling as gate
 
-requires_vesum_db = pytest.mark.skipif(
-    not Path("data/vesum.db").exists()
-    or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason=(
-        "requires the full VESUM data/vesum.db; CI may omit or stub it; "
-        "build a verified shadow with scripts/rag/build_vesum_shadow.py and provision the required DB"
-    ),
-)
+requires_vesum_db = pytest.mark.data_tier("vesum")
 
 
 def test_fixture_reports_typo_and_suppresses_valid_form(tmp_path: Path) -> None:

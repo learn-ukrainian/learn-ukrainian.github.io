@@ -27,6 +27,7 @@ RUNTIME_FAILURE_CODES = frozenset(
         "adapter_refused",
         "cwd_unpinned",
         "primary_tree_write",
+        "permission_cancelled",
         "protocol_output_limit",
         "provider_auth",
         "provider_overloaded",

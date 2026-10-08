@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -185,6 +184,7 @@ def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tm
     source.parent.mkdir()
     source.write_bytes(b"first")
     _record(primary, "retry-9645", status="done", worktree_path=str(checkout))
+    _git(primary, "worktree", "lock", str(checkout))
     first, second = {}, {}
     with worktree_claims.worktree_lock(checkout, lock_dir=worktree_claims.repository_lock_dir(primary)):
         error = worktree_claims.git_worktree_remove(
@@ -192,9 +192,9 @@ def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tm
             checkout,
             force=False,
             preservation_receipt=first,
-            git_runner=lambda _root, argv: subprocess.CompletedProcess(argv, 1, "", "injected Git refusal"),
         )
         assert error and checkout.exists()
+        _git(primary, "worktree", "unlock", str(checkout))
         if changed:
             source.write_bytes(b"second")
         error = worktree_claims.git_worktree_remove(

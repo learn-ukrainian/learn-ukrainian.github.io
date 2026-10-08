@@ -6,25 +6,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 import yaml
 
 from scripts.curriculum.evidence import __main__, words
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PYTHON = sys.executable
-
-
-def _real_sources_db() -> Path:
-    path = REPO_ROOT / "data/sources.db"
-    if path.is_file():
-        return path
-    from scripts.guardrails.worktree_containment import resolve_main_root
-
-    return resolve_main_root(REPO_ROOT) / "data/sources.db"
-
-
-HAS_REAL_SOURCES_DB = _real_sources_db().is_file()
 
 
 def _db_flags(sources_db: Path, vesum_db: Path) -> list[str]:
@@ -162,8 +149,7 @@ def test_cli_dry_run_does_not_write_files(synthetic_sources, synthetic_vesum, tm
     assert not (ev_dir / "_words.registry.yaml").exists()
 
 
-@pytest.mark.skipif(not HAS_REAL_SOURCES_DB, reason="requires the real data/sources.db dictionary")
-def test_cli_dry_run_committed_five_lemmas_request(tmp_path):
+def test_cli_dry_run_committed_five_lemmas_request(tmp_path, requires_sources_db, requires_vesum_db):
     req_path = REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml"
     assert req_path.is_file()
 
@@ -184,6 +170,7 @@ def test_cli_dry_run_committed_five_lemmas_request(tmp_path):
             str(tmp_path / "plans"),
             "--dry-run",
             "--json",
+            *_db_flags(requires_sources_db, requires_vesum_db),
         ],
         capture_output=True,
         text=True,

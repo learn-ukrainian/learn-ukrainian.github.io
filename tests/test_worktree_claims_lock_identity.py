@@ -8,7 +8,6 @@ directory B, while the same directory spelled another way is the same lock.
 from __future__ import annotations
 
 import json
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -273,7 +272,7 @@ def test_unreadable_review_record_fails_closed(tmp_path, monkeypatch, unreadable
     )
 
 
-def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, registered_trees):
+def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, registered_trees, monkeypatch):
     from tests.orchestration.test_worktree_claims_cli import _linked, _primary
 
     primary = _primary(tmp_path)
@@ -284,10 +283,13 @@ def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, register
     registered_trees.append(tree)
     record = {"status": "running", "task_id": "review", "review_contract": {"input_root": str(tree)}}
     calls = []
+    real_run = worktree_claims.safe_git
 
-    def git_runner(_cwd, argv):
+    def observing_runner(argv, **kwargs):
         calls.append(argv)
-        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+        return real_run(argv, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "safe_git", observing_runner)
 
     def remove():
         return worktree_claims.remove_unclaimed_worktree(
@@ -298,7 +300,6 @@ def test_shared_remover_preserves_review_inputs_then_releases(tmp_path, register
             lock_dir=tmp_path / "locks",
             owner_task_id=None,
             reason="test",
-            git_runner=git_runner,
         )
 
     state.write_text(json.dumps(record))
