@@ -33,6 +33,11 @@ PUBLICATION_LIMIT = "publication_limit"
 PUBLICATION_ATTRIBUTION = "publication_attribution"
 PUBLICATION_PLAN_UNRESOLVED = "publication_plan_unresolved"
 PUBLICATION_REGISTRY_UNREADABLE = "publication_registry_unreadable"
+PUBLICATION_LESSON_LIMIT = "publication_lesson_limit"
+PUBLICATION_COURSE_LIMIT = "publication_course_limit"
+PUBLICATION_UNIT_LIMIT = "publication_unit_limit"
+PUBLICATION_SCOPE_INCOMPLETE = "publication_scope_incomplete"
+PUBLICATION_DENOMINATOR_DRIFT = "publication_denominator_drift"
 OWNED_QUOTE_REFUSED = "owned_quote_refused"
 PRIVATE_CITATION_REFUSED = "private_citation_refused"
 OWNED_RIGHTS_UNREADABLE = "owned_rights_unreadable"
@@ -77,6 +82,11 @@ DESCRIPTIONS = {
     PUBLICATION_ATTRIBUTION: "gap: quote lacks the required source attribution",
     PUBLICATION_PLAN_UNRESOLVED: "failure: cannot resolve the plan for publication checks",
     PUBLICATION_REGISTRY_UNREADABLE: "failure: cannot read or parse the publication registry",
+    PUBLICATION_LESSON_LIMIT: "failure: owned excerpts exceed a lesson allowance",
+    PUBLICATION_COURSE_LIMIT: "failure: owned excerpts exceed a course allowance",
+    PUBLICATION_UNIT_LIMIT: "failure: owned excerpts exceed a canonical unit allowance",
+    PUBLICATION_SCOPE_INCOMPLETE: "failure: publication scope or attribution is unverified",
+    PUBLICATION_DENOMINATOR_DRIFT: "failure: canonical source metadata changed",
     OWNED_QUOTE_REFUSED: "failure: owned reference text cannot be published",
     PRIVATE_CITATION_REFUSED: "failure: private-permission sources cannot be cited",
     OWNED_RIGHTS_UNREADABLE: "failure: cannot read or validate the owned-source rights record",

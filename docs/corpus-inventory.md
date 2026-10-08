@@ -410,3 +410,9 @@ restart and MCP verification; rehearsal on a copy does not establish live delive
 # literary by genre: SELECT genre,COUNT(*) FROM literary_texts GROUP BY genre ORDER BY 2 DESC;
 ```
 After refreshing, bump the "Last refreshed" date at the top and re-sync `v7-design-and-corpus.md` §2.
+
+## Bounded owned-source lesson excerpts (#10106)
+
+Issue #10106 permits short attributed lesson excerpts only from the eleven exact identities in `docs/l2-uk-direct/textbook-selection.yaml`: ULP seasons 1–6, `owned-oho-a1-workbook`, `owned-oho-a1-transcripts`, `owned-ulp-charts`, `owned-fmu-1-premium`, and `owned-yak-inozemtsi-kozaka-riatuvaly`. All other owned and private references remain grounding-only; word-card restrictions remain unchanged.
+
+Canonical full-section metadata and editorial caps live in the selection registry. See the fresh-build writer contract for exact counting and the metadata-only publication report. Unknown legacy provenance and existing over-cap site usage remain blocked; Atlas #10135 owns reconciliation, curriculum-upgrade owns repo-exposed grounding and other owned-example gaps.

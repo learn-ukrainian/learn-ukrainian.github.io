@@ -405,6 +405,8 @@ def learner_text_permission(path: str, record: dict[str, Any]) -> str | dict[str
     try:
         if path == "pack.texts.*.quote":
             return publication.quote_attribution(record)
+        if path == "pack.examples.*.text" and (record.get("source") or {}).get("file") in publication.NAMED_EXCERPTS:
+            return publication.quote_attribution(publication.excerpt_record(record))
         if path in {"pack.texts.*.episode_url", "pack.texts.*.url"}:
             return publication.resource_citation(record)
     except ValueError as exc:
@@ -952,6 +954,11 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    try:
+        publication.enforce_publication(lesson_entry, pack, level=level, module=slug, draft=draft)
+    except ValueError as exc:
+        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+
     literacy = bool((lesson_entry.get("inventory", {}).get("phonetics") or {}).get("letters"))
     include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
@@ -1013,7 +1020,8 @@ def assemble_expanded_document(
             # phonetics item. A multi-letter word keeps the ordinary word path.
             letter_tokens = tokenize(text)
             if letter_tokens and all(
-                token.kind == "cyrillic" and (
+                token.kind == "cyrillic"
+                and (
                     len(token.lookup) == 1
                     or (len(token.lookup) == 2 and token.lookup[0].casefold() == token.lookup[1].casefold())
                 )
@@ -1694,7 +1702,7 @@ def assemble_expanded_document(
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
     # 4. Tab: resursy (Resources) - CITED ids only
-    for cid, section, resource in build_resursy_entries(lesson_entry, pack):
+    for cid, section, resource in build_resursy_entries(lesson_entry, pack, draft=draft):
         # Resource metadata is exempt from vocabulary checks; quote prose is not.
         role = "vesum_exempt" if section == "books" else "record_print"
         add_unit("resursy", None, None, None, f"res_{cid}", role, resource["title"], source="record", ref=cid)
@@ -2099,9 +2107,32 @@ def build_resursy_entries(
     pack: dict[str, Any],
     *,
     warnings: list[dict[str, str]] | None = None,
+    draft: dict[str, Any] | None = None,
 ) -> list[tuple[str, str, dict[str, Any]]]:
     """Build Resursy entries from cited pack records only, as (record id, section, entry)."""
     entries: list[tuple[str, str, dict[str, Any]]] = []
+    try:
+        printed = publication.excerpt_occurrences(lesson_plan, pack, draft=draft)
+        for index, occurrence in enumerate(printed, 1):
+            record = occurrence["record"]
+            publication.quote_attribution(record)
+            entry = publication.load_registry()[(record.get("source") or {})["file"]]
+            entries.append(
+                (
+                    record["id"],
+                    "books",
+                    {
+                        "title": publication.owned_attribution(entry),
+                        "url": entry["public_link"]["url"],
+                        "description": f"Excerpt {index}",
+                        "author": "",
+                        "pages": "",
+                    },
+                )
+            )
+    except ValueError as exc:
+        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+    printed_ids = {occurrence["record"]["id"] for occurrence in printed}
 
     texts_by_id: dict[str, dict[str, Any]] = {}
     for t in pack.get("texts", []):
@@ -2142,6 +2173,8 @@ def build_resursy_entries(
                 cited_video_ids.append(ev)
 
     for cid in cited_text_ids:
+        if cid in printed_ids:
+            continue
         t_rec = texts_by_id.get(cid)
         if t_rec is None:
             raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
@@ -2259,6 +2292,18 @@ def _render_urok_markdown(
     concatenation of its units' pieces in order. Dialogue lines are emitted as the page's
     DialogueBox component; their units live in the `exchanges` payload (`CODEC_JS_JSON_STRING`).
     """
+    try:
+        render_plan = {
+            "steps": [
+                {"id": step.get("id"), "needs": ["quote", "example"],
+                 "evidence": [block.get("ref") for block in step.get("blocks", [])
+                              if block.get("kind") in {"quote", "example"}]}
+                for step in draft.get("steps", [])
+            ]
+        }
+        publication.enforce_publication(render_plan, pack, draft=draft)
+    except ValueError as exc:
+        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
     stressed_units = stressed_doc.get("units", [])
     if include_english is None:
         include_english = body_english_support_allowed(stressed_doc.get("lesson", {}).get("level", "a1"))
@@ -2333,11 +2378,15 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 ex_rec = examples_by_id.get(ref_id)
                 if ex_rec:
+                    attr = learner_text_permission("pack.examples.*.text", ex_rec)
                     en = str(ex_rec.get("translation_en") or "") if include_english else ""
                     w.line("> ", *block_fragments(step_id, block_idx, str(ex_rec.get("text", ""))))
                     if en:
                         w.line(">")
                         w.line("> *", mdx_safe_text(en), "*")
+                    if attr:
+                        w.line(">")
+                        w.line("> — *", mdx_safe_text(attr), "*")
                     w.blank()
 
             elif kind == "quote":
@@ -2716,7 +2765,7 @@ def check_9_stress_and_render(
     slovnyk_entries = build_slovnyk_entries(lesson_entry, words_store, stream)
     vocab_items = [item for _wid, item in slovnyk_entries]
     resource_warnings: list[dict[str, str]] = []
-    resursy_entries = build_resursy_entries(lesson_entry, pack, warnings=resource_warnings)
+    resursy_entries = build_resursy_entries(lesson_entry, pack, warnings=resource_warnings, draft=draft)
     external_resources: dict[str, list[dict[str, Any]]] = {}
     for _rid, section, entry in resursy_entries:
         external_resources.setdefault(section, []).append(entry)

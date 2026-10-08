@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import codes, lesson_lock, pack, sense_cli, verify, words
+from . import codes, lesson_lock, pack, publication, sense_cli, verify, words
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -26,6 +26,7 @@ def main(argv: list[str] | None = None) -> int:
             "  words-verify  Verify integrity of a level word store against sources and ledger\n"
             "  build-pack    Build a module evidence pack from a request YAML\n"
             "  pack-verify   Verify integrity of a module evidence pack against sources and lock\n"
+            "  publication-report  Report all eleven bounded owned sources (metadata only)\n"
             "  lessons-lock  Generate, check, or diff the per-lesson evidence lock\n\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.curriculum.evidence build-words a1 --request req.yaml\n"
@@ -36,6 +37,9 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 alphabet\n"
             "  .venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 --all --diff origin/main\n\n"
             "Outcome Codes:\n"
+            "Outputs: command-specific evidence artifacts; publication-report writes none.\n"
+            "Exit codes: 0 successful; 1 failed/blocked; 2 invalid command.\n"
+            "Related: #10106; docs/epics/fresh-build-writer-contract.md\n"
             f"{codes.help_text()}\n"
         ),
     )
@@ -52,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             "build_pack",
             "pack-verify",
             "pack_verify",
+            "publication-report",
             "lessons-lock",
             "lessons_lock",
         ],
@@ -66,7 +71,9 @@ def main(argv: list[str] | None = None) -> int:
     cmd = args_list[0]
     rest = args_list[1:]
 
-    if cmd == "sense-select":
+    if cmd == "publication-report":
+        return publication.report_main(rest)
+    elif cmd == "sense-select":
         return sense_cli.main(rest)
     elif cmd == "sense-bind":
         return sense_cli.main(rest, command="bind")

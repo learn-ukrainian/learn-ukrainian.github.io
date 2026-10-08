@@ -4,10 +4,12 @@ sources:
     rights: owned_cite_only
     title: Oho! Ukrainian Grammar & Workbook A1
     author: Anna Ohoiko
+    short_excerpts: true
   owned-oho-a1-transcripts:
     rights: owned_cite_only
     title: Oho! A1 — Transcripts
     author: Anna Ohoiko
+    short_excerpts: true
   owned-oho-a1-unit-audio:
     rights: owned_cite_only
     title: Oho! A1 — unit audio
@@ -16,6 +18,7 @@ sources:
     rights: owned_cite_only
     title: Як іноземці козака рятували
     author: Anna Ohoiko
+    short_excerpts: true
   owned-yak-inozemtsi-kozaka-riatuvaly-audio:
     rights: owned_cite_only
     title: Як іноземці козака рятували — audiobook
@@ -28,10 +31,12 @@ sources:
     rights: owned_cite_only
     title: 5 Minute Ukrainian, season 1 Premium
     author: Anna Ohoiko
+    short_excerpts: true
   owned-ulp-charts:
     rights: owned_cite_only
     title: Ukrainian Lessons charts (adjectives; verbs of motion with prefixes)
     author: Anna Ohoiko
+    short_excerpts: true
   anna-ohoiko-1000-words-2nd-ed:
     rights: owned_cite_only
   anna-ohoiko-500-verbs:
@@ -80,23 +85,29 @@ sources:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 1 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true
   ulp-2-00-lesson-notes:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 2 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true
   ulp-3-00-lesson-notes:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 3 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true
   ulp-4-00-lesson-notes:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 4 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true
   ulp-5-00-lesson-notes:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 5 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true
   ulp-6-00-lesson-notes:
     rights: owned_cite_only
     title: Ukrainian Lessons Podcast — Season 6 lesson notes
     author: Anna Ohoiko
+    short_excerpts: true

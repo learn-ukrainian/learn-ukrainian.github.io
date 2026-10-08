@@ -128,6 +128,7 @@ def test_operator_decisions_are_recorded(register: dict) -> None:
         "o1_verbatim_use": "2026-10-03",
         "o3_textbooks_used": "2026-10-03",
         "d5_permissions_sought": "2026-10-06",
+        "d6_bounded_owned_excerpts": "2026-10-08",
     }
     for key in ("o1_verbatim_use", "o3_textbooks_used", "d5_permissions_sought"):
         assert decisions[key]["url"] == f"{ISSUES_URL}/6321"
@@ -315,3 +316,17 @@ def test_markdown_twin_records_each_permission_status(sources: list[dict]) -> No
         assert f"**Permission status:** `{source['permission_status']}`" in section
         if "permission_note" in source:
             assert source["permission_note"] in section
+
+
+def test_owned_excerpt_exception_is_named_and_word_cards_stay_internal(register, sources):
+    by_id = {source["id"]: source for source in sources}
+    named = by_id["owned_lesson_excerpts"]
+    private = by_id["ulp_private"]
+    assert named["appears_in"] == ["internal", "site"]
+    assert "never a word-card field source" in named["role"]
+    assert "anna-ohoiko-1000-words-2nd-ed" not in str(named["stored_in"])
+    assert "anna-ohoiko-500-verbs" not in str(named["stored_in"])
+    assert private["appears_in"] == ["internal"]
+    assert "1000-words" in str(private["stored_in"]) and "500-verbs" in str(private["stored_in"])
+    decision = next(d for d in register["operator_decisions"] if d["id"] == "d6_bounded_owned_excerpts")
+    assert decision["url"].endswith("/10106")

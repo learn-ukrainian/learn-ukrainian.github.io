@@ -346,6 +346,13 @@ def preflight_lesson(
             if record_list_map.get(rid) == "texts":
                 quote_records.setdefault(rid, linked_at.get(activity.get("id"), first_step_id))
     gaps += _quote_byte_gaps(quote_records, pack_records, store_records, quote_word_lookup)
+    if pack is not None and not any(gap.need in {"quote", "example", "pack_missing"} for gap in gaps):
+        try:
+            publication.enforce_publication(
+                plan_entry, pack, level=level or "unknown", module=slug or "unknown", root=repo_root or REPO_ROOT
+            )
+        except ValueError as exc:
+            gaps.append(Gap(step=first_step_id, need="publication_right", detail=str(exc)))
 
     # 5. Check all cited forms in lesson for non-pending stress (R-23)
     inv = plan_entry.get("inventory") or {}

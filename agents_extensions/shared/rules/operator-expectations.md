@@ -247,7 +247,7 @@ tie-breakers.
     locator per quoted item, licence notices on released files, and takedown requests handled
     through GitHub issues. Public release still needs the operator's present-tense go. The one
     exception is methodology, not rights: the private pedagogy references (register id
-    `ulp_private`) stay grounding-only per their register entry.
+    `ulp_private`) stay grounding-only per their register entry, except the eleven named bounded lesson-excerpt entries (`owned_lesson_excerpts`, #10106). The exception requires occurrence accounting, coherent lesson/course/unit caps and verified attribution; it does not change word-card restrictions.
 
 ## Precedence
 

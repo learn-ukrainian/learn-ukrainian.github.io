@@ -43,6 +43,12 @@ operator_decisions:
     permission in 2026-10, per the operator; written confirmation pending. This updates the practice described
     in d4_no_outreach only for these permissions.
   url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321
+- id: d6_bounded_owned_excerpts
+  date: '2026-10-08'
+  decision: 'Issue #10106 permits short attributed lesson excerpts only for eleven named identities, within per-excerpt,
+    lesson, course and canonical-unit editorial caps. Other owned/private references and word-card restrictions
+    remain unchanged. Provenance and attribution duties remain binding.'
+  url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10106
 removal_route:
   url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
   how: A rights holder opens a GitHub issue naming the source and the content; the maintainer removes it from the
@@ -1763,7 +1769,7 @@ sources:
   - Who represents the author’s heirs?
 - id: ulp_private
   permission_status: none
-  name: Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references)
+  name: Anna Ohoiko's 1000 words and 500 verbs (private references)
   organisation: Anna Ohoiko (Ukrainian Lessons)
   role: Private reference for pedagogy only; never quoted and never a card field source.
   fields_used:
@@ -1772,8 +1778,7 @@ sources:
   - internal
   appears_note: Private pedagogy reference; its text is not on the site or in the dataset.
   stored_in:
-  - data/sources.db textbooks rows ulp-*-lesson-notes, anna-ohoiko-* (from the operator's private files under docs/references/private/,
-    gitignored)
+  - 'data/sources.db textbooks: anna-ohoiko-1000-words-2nd-ed, anna-ohoiko-500-verbs'
   provenance:
     urls:
     - The operator's own purchased copies under docs/references/private/ (gitignored)
@@ -1804,6 +1809,60 @@ sources:
   citation:
     form: Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko).
     shown_label: null
+  removal:
+    route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
+    scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).
+  open_questions: []
+- id: owned_lesson_excerpts
+  permission_status: none
+  name: Eleven named owned sources — bounded lesson excerpts
+  organisation: Anna Ohoiko (Ukrainian Lessons)
+  role: 'Bounded attributed lesson excerpts under #10106; never a word-card field source.'
+  fields_used:
+  - short_attributed_excerpt
+  appears_in:
+  - internal
+  - site
+  appears_note: Only the eleven named identities permit bounded lesson excerpts; existing unknown provenance and
+    over-cap use remain blocked.
+  stored_in:
+  - 'data/sources.db textbooks and textbook_sections: ulp-1-00-lesson-notes, ulp-2-00-lesson-notes,
+    ulp-3-00-lesson-notes, ulp-4-00-lesson-notes, ulp-5-00-lesson-notes, ulp-6-00-lesson-notes,
+    owned-oho-a1-workbook, owned-oho-a1-transcripts, owned-ulp-charts, owned-fmu-1-premium,
+    owned-yak-inozemtsi-kozaka-riatuvaly'
+  provenance:
+    urls:
+    - https://www.ukrainianlessons.com/
+    - https://www.ukrainianlessons.com/oho-a1/
+    - https://www.ukrainianlessons.com/cossack/
+    retrieved: null
+    retrieved_evidence: Canonical full sections verified locally; public attribution links fetched successfully
+      on 2026-10-08. No source prose is recorded here.
+  terms:
+    found: true
+    licence:
+      name: All rights reserved (Anna Ohoiko)
+      spdx: null
+      verbatim_quote: null
+    conditions:
+      share_alike: null
+      non_commercial: null
+    quotes:
+    - id: ulp_ip
+      quote: This Agreement does not transfer to you any intellectual property owned by Ogoiko, Anna or third parties,
+        and all rights, titles, and interests in and to such property will remain (as between the parties) solely
+        with Ogoiko, Anna.
+      url: https://www.ukrainianlessons.com/terms-and-conditions/
+      read_on: '2026-09-27'
+    - id: ulp_no_scraping
+      quote: (h) to spam, phish, pharm, pretext, spider, crawl, or scrape
+      gloss_en: Listed among prohibited uses of the website.
+      url: https://www.ukrainianlessons.com/terms-and-conditions/
+      read_on: '2026-09-27'
+    searched: []
+  citation:
+    form: Registry-owned author, title, verified public link and distinct excerpt occurrence label.
+    shown_label: Per-source bibliography in Resources.
   removal:
     route: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
     scope: the stored copies listed in stored_in (deleted only with the operator's authorisation).

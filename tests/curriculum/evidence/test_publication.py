@@ -18,7 +18,11 @@ def record(file=BOOK, quote="Synthetic excerpt", page=39):
 
 def test_policy_denominator_and_private_denials():
     entries = publication.load_registry()
-    allowed = {key: entry for key, entry in entries.items() if entry["publish"]["allowed"]}
+    allowed = {
+        key: entry
+        for key, entry in entries.items()
+        if entry["publish"]["allowed"] and key not in publication.NAMED_EXCERPTS
+    }
     assert len(allowed) == 162
     unconfirmed = {key for key, entry in entries.items() if entry["publish"].get("reason") == "title_unconfirmed"}
     assert unconfirmed == {"9-klas-tekhnolohiyi-bilenko-2026"}
@@ -26,7 +30,7 @@ def test_policy_denominator_and_private_denials():
     assert {entry["grade"] for entry in allowed.values()} == set(range(1, 12))
     assert {key for key, entry in entries.items() if not entry["publish"]["allowed"] and key not in unconfirmed} == set(
         PRIVATE
-    )
+    ) - publication.NAMED_EXCERPTS
     for key, entry in allowed.items():
         assert entry["file"] == key
         assert entry["publish"] == {
@@ -85,7 +89,9 @@ def test_citation_uses_imprint_year_instead_of_file_or_pack_year(file, year, chu
 
 def test_year_checks_cover_candidates_without_inventing_missing_imprints():
     entries = publication.load_registry()
-    candidates = {key: entry for key, entry in entries.items() if key not in PRIVATE}
+    candidates = {
+        key: entry for key, entry in entries.items() if key not in PRIVATE and key not in publication.NAMED_EXCERPTS
+    }
     assert len(candidates) == 163
     for key, entry in candidates.items():
         proof = entry["year_provenance"]
@@ -109,7 +115,9 @@ def test_year_checks_cover_candidates_without_inventing_missing_imprints():
         publication.quote_attribution(record(file=withheld["file"]))
 
 
-@pytest.mark.parametrize("file", [*PRIVATE, "unregistered", BOOK + ".txt"])
+@pytest.mark.parametrize(
+    "file", [*(file for file in PRIVATE if file not in publication.NAMED_EXCERPTS), "unregistered", BOOK + ".txt"]
+)
 def test_denied_and_unregistered_sources(file):
     rec = record(file)
     rec["source"]["publish"] = {"allowed": True, "limit_chars": 9999, "attribution": "Fake"}
@@ -215,7 +223,7 @@ def test_registry_read_error_has_typed_reason(tmp_path):
 
 def test_every_allowed_source_has_confirmed_human_bibliography():
     for key, entry in publication.load_registry().items():
-        if not entry["publish"]["allowed"]:
+        if not entry["publish"]["allowed"] or key in publication.NAMED_EXCERPTS:
             continue
         citation = publication.quote_attribution(record(file=key))
         assert key not in citation
@@ -279,8 +287,12 @@ def test_private_credits_are_registry_owned_and_never_quote_rights(file):
     assert citation["url"] == entries[file]["resource_credit"]["url"]
     assert citation["description"] == ""
     assert "PRIVATE" not in str(citation)
-    with pytest.raises(ValueError, match="owned_quote_refused"):
-        publication.quote_attribution(rec)
+    if file in publication.NAMED_EXCERPTS:
+        with pytest.raises(ValueError, match="publication_limit"):
+            publication.quote_attribution({**rec, "quote": "x" * 201})
+    else:
+        with pytest.raises(ValueError, match="owned_quote_refused"):
+            publication.quote_attribution(rec)
 
 
 @pytest.mark.parametrize("field", ["episode_url", "url"])
@@ -359,7 +371,10 @@ def test_every_owned_identity_denies_quotes_before_injected_registry(slug, polic
             "resource_credit": {"title": "Injected credit", "url": "https://example.com/"},
         }
     }
-    with pytest.raises(ValueError, match=r"^owned_quote_refused:"):
+    with pytest.raises(
+        ValueError,
+        match=r"^publication_scope_incomplete:" if slug in publication.NAMED_EXCERPTS else r"^owned_quote_refused:",
+    ):
         publication.quote_attribution(rec, injected)
     if policy["rights"] == "private_permission":
         with pytest.raises(ValueError, match=r"^private_citation_refused:"):
@@ -442,3 +457,261 @@ def test_protected_denominator_includes_skips_legacy_works_and_ulp_seasons():
     private = {slug for slug, policy in entries.items() if policy["rights"] == "private_permission"}
     assert private == {"owned-teacher-a-slides", "owned-teacher-b-notes", "owned-operator-study-files"}
     assert all(set(entries[slug]) == {"rights"} for slug in private)
+
+
+def owned_entries(chars=20000, unit_chars=2000):
+    """Synthetic canonical metadata, separate from the driver's held-out proof."""
+    import hashlib
+
+    entries = publication.load_registry()
+    for file in publication.NAMED_EXCERPTS:
+        units = {
+            str(i): {
+                "number": str(i),
+                "chars": unit_chars,
+                "sha256": hashlib.sha256(("x" * unit_chars).encode()).hexdigest(),
+            }
+            for i in range(1, chars // unit_chars + 1)
+        }
+        entries[file]["canonical"] = {"canonical_chars": chars, "unit_count": len(units), "units": units}
+    return entries
+
+
+def owned_occurrence(size=120, *, lesson=1, step="s1", unit=1, file="ulp-1-00-lesson-notes", ref="T-001"):
+    rec = record(file, "x" * size)
+    rec["source"].update(chunk_id=f"{file}_l{unit:04d}_w001", section_id=None)
+    return {"key": ("l2-uk-en", "a1", "synthetic", lesson, step, ref), "record": rec, "column": "lesson"}
+
+
+def test_owned_excerpt_course_boundary_repeats_and_generated_copies():
+    entries = owned_entries()
+    first = owned_occurrence()
+    boundary = owned_occurrence(80, lesson=2, unit=2)
+    report = publication.check_occurrences([first, boundary, first], entries)
+    assert report["errors"] == []
+    assert report["sources"]["ulp-1-00-lesson-notes"]["lesson"] == 200
+    over = publication.check_occurrences([first, owned_occurrence(120, lesson=2, unit=2)], entries)
+    assert any(e.startswith("publication_course_limit:") for e in over["errors"])
+    repeated_step = publication.check_occurrences([first, owned_occurrence(step="s2", unit=2)], entries)
+    assert any(e.startswith("publication_course_limit:") for e in repeated_step["errors"])
+    tampered = owned_occurrence(119)
+    assert any(
+        e.startswith("publication_scope_incomplete:")
+        for e in publication.check_occurrences([first, tampered], entries)["errors"]
+    )
+
+
+def test_owned_excerpt_unit_and_lesson_caps():
+    entries = owned_entries(60000, 2000)
+    report = publication.check_occurrences([owned_occurrence(), owned_occurrence(120, lesson=2)], entries)
+    assert any(e.startswith("publication_unit_limit:") for e in report["errors"])
+    report = publication.check_occurrences([owned_occurrence(160), owned_occurrence(160, step="s2", unit=2)], entries)
+    assert any(e.startswith("publication_lesson_limit:") for e in report["errors"])
+    uses = [
+        owned_occurrence(10, step=f"s{i}", unit=i, file=file)
+        for i, file in enumerate(sorted(publication.NAMED_EXCERPTS)[:4], 1)
+    ]
+    assert any(
+        e.startswith("publication_lesson_limit:") for e in publication.check_occurrences(uses, entries)["errors"]
+    )
+    uses = [
+        owned_occurrence(180, step=f"s{i}", unit=i, file=file)
+        for i, file in enumerate(sorted(publication.NAMED_EXCERPTS)[:3], 1)
+    ]
+    assert any(
+        e.startswith("publication_lesson_limit:") for e in publication.check_occurrences(uses, entries)["errors"]
+    )
+    uses = [owned_occurrence(10, step=f"s{i}", unit=i) for i in range(1, 4)]
+    assert any(
+        e.startswith("publication_lesson_limit:") for e in publication.check_occurrences(uses, entries)["errors"]
+    )
+
+
+def test_owned_excerpt_nfc_original_and_exact_named_exception():
+    entries = publication.load_registry()
+    assert len(publication.NAMED_EXCERPTS) == 11
+    assert {
+        key for key, val in publication.load_owned_rights().items() if val.get("short_excerpts")
+    } == publication.NAMED_EXCERPTS
+    for file in publication.NAMED_EXCERPTS:
+        assert publication.quote_attribution(record(file, "e\u0301" * 200), entries)
+        with pytest.raises(ValueError, match="publication_limit"):
+            publication.quote_attribution(record(file, "e\u0301" * 201), entries)
+        assert entries[file]["canonical"]["canonical_chars"] == sum(
+            unit["chars"] for unit in entries[file]["canonical"]["units"].values()
+        )
+    for file in (
+        "anna-ohoiko-1000-words-2nd-ed",
+        "anna-ohoiko-500-verbs",
+        "owned-oho-a1-unit-audio",
+        "owned-teacher-a-slides",
+    ):
+        with pytest.raises(ValueError, match="owned_quote_refused"):
+            publication.quote_attribution(record(file))
+
+
+@pytest.mark.parametrize("field", ["author", "title", "public_link"])
+def test_owned_excerpt_required_attribution_never_uses_pack_spoof(field):
+    entries = owned_entries()
+    file = "ulp-1-00-lesson-notes"
+    entries[file][field] = None
+    rec = record(file)
+    rec["source"].update(author="Spoof", title="Spoof", url="https://example.com/")
+    with pytest.raises(ValueError, match="publication_scope_incomplete"):
+        publication.quote_attribution(rec, entries)
+
+
+@pytest.mark.parametrize("mutation", ["chars", "count", "hash", "number", "policy", "alias"])
+def test_owned_excerpt_denominator_and_alias_tampering_fails(mutation):
+    entries = owned_entries()
+    file = "ulp-1-00-lesson-notes"
+    entry = entries[file]
+    if mutation == "chars":
+        entry["canonical"]["canonical_chars"] += 1
+    elif mutation == "count":
+        entry["canonical"]["unit_count"] += 1
+    elif mutation == "hash":
+        entry["canonical"]["units"]["1"]["sha256"] = "bad"
+    elif mutation == "number":
+        entry["canonical"]["units"]["1"]["number"] = "2"
+    elif mutation == "policy":
+        entry["publish"]["limit_chars"] = 999
+    elif mutation == "alias":
+        entry["file"] = "invented-alias"
+    with pytest.raises(ValueError, match="publication_scope_incomplete"):
+        publication.validate_owned_policy(file, entry)
+
+
+def test_owned_excerpt_example_activity_and_repeated_draft_occurrences():
+    rec = owned_occurrence()["record"]
+    ex = {**rec, "id": "EX-001", "text": rec["quote"]}
+    del ex["quote"]
+    pack = {"texts": [rec], "examples": [ex]}
+    plan = {
+        "n": 1,
+        "steps": [
+            {"id": "s1", "needs": ["quote", "example"], "evidence": ["T-001", "EX-001"], "practice": ["a1"]},
+            {"id": "s2", "needs": ["quote"], "ref": "T-001", "practice": ["a2"]},
+        ],
+        "activities": [
+            {"id": "a1", "focus": "host: {kind: quote, ref: T-001}"},
+            {"id": "a2", "focus": "quote host refs T-001"},
+        ],
+    }
+    found = publication.excerpt_occurrences(plan, pack)
+    assert len(found) == 3 and all(row["record"]["quote"] == "x" * 120 for row in found)
+    draft = {
+        "steps": [{"id": "s1", "blocks": [{"kind": "example", "ref": "EX-001"}, {"kind": "example", "ref": "EX-001"}]}]
+    }
+    assert len(publication.excerpt_occurrences({"steps": []}, pack, draft=draft)) == 2
+    with pytest.raises(ValueError, match="publication_scope_incomplete: actual excerpt exceeds planned reservation"):
+        publication.enforce_publication(
+            {"steps": [{"id": "s1", "needs": ["example"], "ref": "EX-001"}]}, pack, draft=draft
+        )
+    with pytest.raises(ValueError, match="publication_scope_incomplete"):
+        publication.excerpt_occurrences(plan, {})
+    plan["steps"][1]["practice"] = []
+    with pytest.raises(ValueError, match="activity host step missing"):
+        publication.excerpt_occurrences(plan, pack)
+
+
+def test_owned_excerpt_full_sections_metadata_and_substring_proof():
+    import sqlite3
+
+    from scripts.curriculum.evidence.sources import Sources
+
+    file = "ulp-1-00-lesson-notes"
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript("""
+        CREATE TABLE textbook_sections(section_id INTEGER, source_file TEXT, section_number TEXT, full_text TEXT, page_start INTEGER);
+        CREATE TABLE textbooks(chunk_id TEXT, source_file TEXT, parent_section_id INTEGER, text TEXT);
+    """)
+    conn.execute("INSERT INTO textbook_sections VALUES (1, ?, '1', ?, 1)", (file, "x\n y " * 1000))
+    conn.execute("INSERT INTO textbooks VALUES (?, ?, NULL, ?)", (file + "_l0001_w001", file, "x  y " * 100))
+    api = Sources()
+    api._db = lambda: conn
+    try:
+        metadata = api.publication_metadata(file)
+        assert metadata["canonical_chars"] == 5000 and metadata["unit_count"] == 1
+        entry = publication.load_registry()[file]
+        entry["canonical"] = __import__("copy").deepcopy(metadata)
+        rec = record(file, "x y")
+        rec["source"]["chunk_id"] = file + "_l0001_w001"
+        assert publication.publication_unit(rec, entry, api) == "1"
+        assert publication.validate_owned_policy(file, entry, api) == metadata
+        entry["canonical"]["canonical_chars"] += 1
+        entry["canonical"]["units"]["1"]["chars"] += 1
+        with pytest.raises(ValueError, match="publication_denominator_drift"):
+            publication.validate_owned_policy(file, entry, api)
+        entry["canonical"] = metadata
+        with pytest.raises(ValueError, match="quote_mismatch"):
+            publication.publication_unit({**rec, "quote": "absent"}, entry, api)
+        rec["source"]["section_id"] = 1
+        with pytest.raises(ValueError, match="forged parent section"):
+            publication.publication_unit(rec, entry, api)
+        conn.execute("UPDATE textbooks SET parent_section_id=1")
+        assert publication.publication_unit(rec, entry, api) == "1"
+        rec["source"]["section_id"] = 2
+        with pytest.raises(ValueError, match="cited parent differs"):
+            publication.publication_unit(rec, entry, api)
+        rec["source"]["section_id"] = 1
+        conn.execute("UPDATE textbooks SET source_file='unregistered'")
+        with pytest.raises(ValueError, match="cited source identity unresolved"):
+            publication.publication_unit(rec, entry, api)
+        conn.execute("INSERT INTO textbook_sections VALUES (2, ?, '1', 'x', 2)", (file,))
+        with pytest.raises(ValueError, match="ambiguous canonical sections"):
+            api.publication_metadata(file)
+        conn.execute("DELETE FROM textbook_sections WHERE section_id=2")
+        conn.execute("UPDATE textbook_sections SET full_text=''")
+        with pytest.raises(ValueError, match="empty canonical section"):
+            api.publication_metadata(file)
+    finally:
+        conn.close()
+
+
+def test_owned_excerpt_unknown_unit_registered_relabel_and_right_withdrawal():
+    entries = owned_entries()
+    occurrence = owned_occurrence()
+    occurrence["record"]["source"]["file"] = "ulp-2-00-lesson-notes"
+    assert any(
+        e.startswith("publication_scope_incomplete:")
+        for e in publication.check_occurrences([occurrence], entries)["errors"]
+    )
+    occurrence = owned_occurrence(unit=99)
+    assert any("no canonical unit mapping" in e for e in publication.check_occurrences([occurrence], entries)["errors"])
+    file = "ulp-1-00-lesson-notes"
+    entries[file]["publish"]["allowed"] = False
+    with pytest.raises(ValueError, match="publication_right"):
+        publication.quote_attribution(record(file), entries)
+
+
+@pytest.mark.parametrize(
+    "malformed",
+    [
+        None,
+        [],
+        {"units": []},
+        {"units": {"1": {"chars": 1, "number": "1", "sha256": 1}}, "canonical_chars": 1, "unit_count": 1},
+    ],
+)
+def test_owned_excerpt_malformed_canonical_metadata_has_stable_failure(malformed):
+    entries = owned_entries()
+    file = "ulp-1-00-lesson-notes"
+    entries[file]["canonical"] = malformed
+    with pytest.raises(ValueError, match="publication_scope_incomplete"):
+        publication.validate_owned_policy(file, entries[file])
+
+
+def test_owned_excerpt_book_grounding_credit_stays_metadata_only():
+    rec = record("owned-oho-a1-workbook")
+    rec["quote"] = rec["supports"] = "PRIVATE_SYNTHETIC_SENTINEL"
+    citation = publication.resource_citation(rec)
+    assert citation["url"] == "https://www.ukrainianlessons.com/oho-a1/"
+    assert "Anna Ohoiko" in citation["title"]
+    assert "PRIVATE_SYNTHETIC_SENTINEL" not in str(citation)
+
+
+def test_owned_excerpt_unavailable_tracked_scope_fails_closed(tmp_path):
+    with pytest.raises(ValueError, match="publication_scope_incomplete: tracked course scope unavailable"):
+        publication.tracked_inputs(tmp_path)

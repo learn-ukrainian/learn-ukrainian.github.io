@@ -83,6 +83,7 @@ term of protection (Art. 31) and public domain (Art. 32(3)).
 | `textbooks` | Individual authors and publishers (e.g. Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова); PDFs via pidruchnyk.com.ua and lib.imzo.gov.ua | internal, site, dataset | In copyright (authors/publishers); free public access by law, no reuse licence | — |
 | `frazeolohichnyi` | Compilers В. М. Білоноженко, І. С. Гнатюк, В. В. Дятчук, Неровня, Т. О. Федоренко; responsible editor В. О. Винник; publisher Наукова думка; Український мовно-інформаційний фонд НАН України | internal, site, dataset | In copyright (co-authored, 2003); no licence found | Фразеологічний словник української мови — scripts/lexicon/source_attribution.py PHRASEOLOGY_LABEL |
 | `antonenko_style_guide` | Heirs of Борис Антоненко-Давидович (d. 9 May 1984) — no contact found | internal, site, dataset | In copyright until 31 Dec 2054 (Art. 31(2)); rights with the heirs | «Як ми говоримо» Антоненка-Давидовича — scripts/lexicon/source_attribution.py DAVYDOV_LABEL |
+| `owned_lesson_excerpts` | Anna Ohoiko (Ukrainian Lessons) | site, internal | All rights reserved | #10106 bounded excerpts |
 | `ulp_private` | Anna Ohoiko (Ukrainian Lessons) | internal | All rights reserved (Anna Ohoiko) | — |
 | `zno_nmt` | Український центр оцінювання якості освіти (test author); copies published by osvita.ua, zno.osvita.ua and lv.testportal.gov.ua | internal | No licence text recorded | — |
 | `pravopys_2019` | Інститут мовознавства ім. О. О. Потебні НАН України, Інститут української мови НАН України and Український мовно-інформаційний фонд НАН України (copyright holders per the imprint page); publisher Наукова думка | internal, site, dataset | No licence text recorded | — |
@@ -642,14 +643,14 @@ Edition evidence: `registry/projects/open_model_data/sources/frazeolohichnyi_edi
 
 The held edition remains unverified in the holdings record; a 1991 ingest filename alone is not edition proof. Use the section title when no positive printed page is held.
 
-### Ukrainian Lessons Podcast notes and Anna Ohoiko's books (private references) — `ulp_private`
+### Anna Ohoiko's 1000 words and 500 verbs (private references) — `ulp_private`
 
 - **Permission status:** `none`
 - **Organisation:** Anna Ohoiko (Ukrainian Lessons)
 - **Role:** Private reference for pedagogy only; never quoted and never a card field source.
 - **Fields:** reference_text
 - **Appears in:** internal — Private pedagogy reference; its text is not on the site or in the dataset.
-- **Stored in:** data/sources.db textbooks rows ulp-*-lesson-notes, anna-ohoiko-* (from the operator's private files under docs/references/private/, gitignored)
+- **Stored in:** data/sources.db textbooks: anna-ohoiko-1000-words-2nd-ed, anna-ohoiko-500-verbs (from the operator's private files under docs/references/private/, gitignored)
 - **Where from:** The operator's own purchased copies under docs/references/private/ (gitignored) · Supplied by the operator; not fetched from the website.
 - **Licence as found:** All rights reserved (Anna Ohoiko). Share-alike: not stated. Non-commercial: not stated.
 - **Terms as found:**
@@ -657,6 +658,18 @@ The held edition remains unverified in the holdings record; a 1991 ingest filena
   - «(h) to spam, phish, pharm, pretext, spider, crawl, or scrape» — Listed among prohibited uses of the website (https://www.ukrainianlessons.com/terms-and-conditions/, read 2026-09-27)
 - **Citation:** Not shown; cited only in internal notes as Ukrainian Lessons (Anna Ohoiko). Label shown: not named on learner pages.
 - **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues) — the stored copies listed in stored_in (deleted only with the operator's authorisation).
+
+### Eleven named owned sources — bounded lesson excerpts — `owned_lesson_excerpts`
+
+- **Permission status:** `none`
+- **Organisation:** Anna Ohoiko (Ukrainian Lessons)
+- **Role:** Bounded attributed lesson excerpts under #10106; never a word-card field source.
+- **Appears in:** site and internal — Only the eleven named identities permit bounded lesson excerpts; existing unknown provenance and over-cap use remain blocked.
+- **Identities:** `ulp-1-00-lesson-notes`, `ulp-2-00-lesson-notes`, `ulp-3-00-lesson-notes`, `ulp-4-00-lesson-notes`, `ulp-5-00-lesson-notes`, `ulp-6-00-lesson-notes`, `owned-oho-a1-workbook`, `owned-oho-a1-transcripts`, `owned-ulp-charts`, `owned-fmu-1-premium`, `owned-yak-inozemtsi-kozaka-riatuvaly`
+- **Provenance:** Canonical full sections verified locally; public attribution links fetched successfully on 2026-10-08. No source prose is recorded here.
+- **Terms:** All rights reserved; this is an editorial-use decision under #10106, not a licence grant.
+- **Citation:** Registry-owned author, title, verified public link and distinct excerpt occurrence label.
+- **Removal:** [GitHub issue](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues).
 
 ### ЗНО (2010–2021) and НМТ (2022–2025) Ukrainian-language tests with official answer keys — `zno_nmt`
 
@@ -721,3 +734,5 @@ Open questions: The publisher and place come from the ingest record only. Check 
 - **Removal:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues — the Atlas/practice fields carrying this source's label; the stored copies listed in stored_in (deleted only with the operator's authorisation).
 
 Open questions: none recorded.
+
+Operator decision `d6_bounded_owned_excerpts` (2026-10-08): Issue #10106 permits short attributed lesson excerpts only for eleven named identities, within per-excerpt, lesson, course and canonical-unit editorial caps. Other owned/private references and word-card restrictions remain unchanged. Provenance and attribution duties remain binding. [#10106](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10106).

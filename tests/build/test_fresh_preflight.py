@@ -192,7 +192,7 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
     [
         ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 800, 39, None),
         ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 801, 39, "publication_limit"),
-        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "owned_quote_refused"),
+        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_scope_incomplete"),
         ("not-registered", "Synthetic excerpt", 39, "publication_right"),
         ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", None, "publication_attribution"),
         ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", 0, "publication_attribution"),
@@ -615,3 +615,14 @@ def test_preflight_checks_the_bytes_of_an_activity_hosted_quote(clean_word_store
         lesson, pack=clean_pack, word_store=clean_word_store, quote_word_lookup=lambda words: set()
     )
     assert [(gap.step, gap.detail) for gap in result.gaps] == [("s2", "private_use: quote T-002 U+F0FC")]
+
+
+def test_owned_excerpt_preflight_checks_printed_examples_and_repeat_budget(clean_word_store):
+    from tests.curriculum.evidence.test_publication import owned_occurrence
+
+    rec = owned_occurrence(201)["record"]
+    example = {**rec, "id": "EX-001", "text": rec["quote"]}
+    del example["quote"]
+    plan = {"steps": [{"id": "s1", "needs": ["example"], "ref": "EX-001"}]}
+    result = preflight_lesson(plan, pack={"examples": [example]}, word_store=clean_word_store)
+    assert any(gap.detail.startswith("publication_limit:") for gap in result.gaps)

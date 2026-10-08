@@ -253,7 +253,7 @@ def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
     [
         ("1-klas-bukvar-zaharijchuk-2025-1", True, False, None),
         ("1-klas-bukvar-zaharijchuk-2025-1", True, True, "publication_limit"),
-        ("ulp-1-00-lesson-notes", True, False, "owned_quote_refused"),
+        ("ulp-1-00-lesson-notes", True, False, "publication_scope_incomplete"),
         ("unregistered", True, False, "publication_right"),
         ("ulp-1-00-lesson-notes", False, False, None),
     ],
@@ -1371,3 +1371,88 @@ def test_gloss_gate_word_store_load_failure_is_one_infrastructure_error(
     assert result["errors"][0].startswith(codes.SOURCE_UNAVAILABLE + ":")
     assert "word-store gloss gate" in result["errors"][0]
     assert not any(codes.GLOSS_MISSING in error for error in result["errors"])
+
+
+@pytest.mark.parametrize("second_size,expected", [(80, "ok"), (120, "publication_course_limit")])
+def test_owned_excerpt_pack_verify_enforces_course_boundary_with_canonical_db(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch, second_size, expected
+):
+    import json
+    import subprocess
+
+    file = "ulp-1-00-lesson-notes"
+    texts = []
+    with sqlite3.connect(synthetic_sources) as conn:
+        for index, source_file in enumerate(sorted(publication.NAMED_EXCERPTS), 1):
+            for unit in (1, 2):
+                sid = 100 + index * 2 + unit
+                size = 120 if unit == 1 else second_size
+                excerpt = "synthetic-first " + "x" * (size - len("synthetic-first  synthetic-last")) + " synthetic-last"
+                full_text = excerpt + " " + "z" * (9999 - size)
+                conn.execute(
+                    "INSERT INTO textbook_sections VALUES (?,?,?,?,?,?,?,?,?)",
+                    (sid, source_file, 1, "Synthetic", unit, unit, unit, 1, full_text),
+                )
+                if source_file == file:
+                    chunk = f"{file}_l{unit:04d}_w001"
+                    conn.execute(
+                        "INSERT INTO textbooks VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                        (
+                            sid,
+                            chunk,
+                            "Synthetic",
+                            full_text,
+                            file,
+                            1,
+                            "Synthetic",
+                            len(full_text),
+                            sid,
+                            "Synthetic",
+                            "mova",
+                        ),
+                    )
+                    texts.append(
+                        {
+                            "id": f"T-{unit:03d}",
+                            "source": {"table": "textbooks", "chunk_id": chunk},
+                            "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
+                            "supports": "Synthetic support",
+                        }
+                    )
+    request = tmp_path / "request.yaml"
+    request.write_text(yaml.safe_dump({"request_schema": 1, "module": "a1/test-mod", "texts": texts}))
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, request)
+    plans = tmp_path / "plans"
+    plans.mkdir()
+    (plans / "test-mod.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "lessons": [
+                    {"n": unit, "steps": [{"id": "s1", "needs": ["quote"], "ref": f"T-{unit:03d}"}]} for unit in (1, 2)
+                ]
+            }
+        )
+    )
+    entries = publication.load_registry()
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        for source_file in publication.NAMED_EXCERPTS:
+            entries[source_file]["canonical"] = api.publication_metadata(source_file)
+    registry_path = tmp_path / "docs/l2-uk-direct/textbook-selection.yaml"
+    registry_path.parent.mkdir(parents=True)
+    registry_path.write_text(yaml.safe_dump({"sources": entries}))
+    inventory = tmp_path / "site/src/data/lexicon-sentence-inventory.json"
+    inventory.parent.mkdir(parents=True)
+    inventory.write_text(json.dumps({"rows": []}))
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(["git", "add", "docs", "site"], cwd=tmp_path, check=True, timeout=30)
+    monkeypatch.setattr(publication, "REGISTRY_PATH", registry_path)
+    monkeypatch.setattr(publication, "REPO_ROOT", tmp_path)
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as api:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plans, sources_instance=api, offline=True
+        )
+    if expected == "ok":
+        assert result["status"] == "ok", result["errors"]
+    else:
+        assert result["status"] == "failed"
+        assert any(error.startswith(expected + ":") for error in result["errors"])

@@ -1484,6 +1484,37 @@ class Sources:
             result.append(d)
         return result
 
+    def publication_sections(self, source_file: str) -> list[dict]:
+        """Full sections of one exact identity, never overlapping retrieval windows."""
+        return [
+            dict(row)
+            for row in self._db().execute(
+                "SELECT * FROM textbook_sections WHERE source_file = ? ORDER BY section_id",
+                (source_file,),
+            )
+        ]
+
+    def publication_metadata(self, source_file: str) -> dict:
+        """Reproducible metadata only; retain every section as a separate unit."""
+        sections = self.publication_sections(source_file)
+        if not sections or len({row["section_number"] for row in sections}) != len(sections):
+            raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: ambiguous canonical sections")
+        units = {}
+        for row in sections:
+            text = unicodedata.normalize("NFC", row["full_text"] or "")
+            if not text:
+                raise ValueError(f"{codes.PUBLICATION_SCOPE_INCOMPLETE}: empty canonical section")
+            units[str(row["section_id"])] = {
+                "number": str(row["section_number"]),
+                "chars": len(text),
+                "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            }
+        return {
+            "canonical_chars": sum(unit["chars"] for unit in units.values()),
+            "unit_count": len(units),
+            "units": units,
+        }
+
     def get_literary_chunk(self, chunk_id: str | int) -> dict | None:
         conn = self._db()
         row = conn.execute("SELECT * FROM literary_texts WHERE chunk_id = ?", (str(chunk_id),)).fetchone()

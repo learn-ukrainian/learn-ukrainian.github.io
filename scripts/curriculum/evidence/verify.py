@@ -943,6 +943,7 @@ def verify_pack(
         )
         plan_path = plans_base / f"{slug}.yaml"
         quote_refs = {}
+        plan_doc = {}
         try:
             plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
             if not isinstance(plan_doc, dict):
@@ -1000,6 +1001,11 @@ def verify_pack(
             kind = ex["source"].get("kind")
             table = "literary_texts" if kind == "literary" else "textbooks"
             verify_quote(ex["id"], ex["text"], ex["sha256"], ex["source"], table=table)
+
+        try:
+            publication.enforce_publication(plan_doc or {}, pack_doc, level=level, module=slug, api=sources_instance)
+        except ValueError as exc:
+            errors.append(str(exc))
 
         # 7. Errors
         for err_rec in pack_doc.get("errors", []):

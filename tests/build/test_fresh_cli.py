@@ -908,3 +908,47 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
 
     assert echoed == reviewed == manifest["learner_state"]["sha256"]
     assert echoed != hashlib.sha256(lock.yaml_bytes(state.to_dict())).hexdigest()  # not the YAML-bytes hash
+
+
+def test_owned_excerpt_publication_report_cli_is_metadata_only(tmp_path, monkeypatch, capsys):
+    import json
+    import sqlite3
+
+    from scripts.curriculum.evidence import publication
+    from scripts.curriculum.evidence.__main__ import main as evidence_main
+    from scripts.curriculum.evidence.sources import Sources
+
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    database = tmp_path / "synthetic.sqlite3"
+    entries = publication.load_registry()
+    with sqlite3.connect(database) as conn:
+        conn.execute(
+            "CREATE TABLE textbook_sections(section_id INTEGER, source_file TEXT, section_number TEXT, full_text TEXT, page_start INTEGER)"
+        )
+        for index, file in enumerate(sorted(publication.NAMED_EXCERPTS), 1):
+            conn.execute(
+                "INSERT INTO textbook_sections VALUES (?, ?, '1', ?, 1)",
+                (index, file, "SYNTHETIC_PRIVATE_SENTINEL " * 1000),
+            )
+    with Sources(sources_db=database) as api:
+        for file in publication.NAMED_EXCERPTS:
+            entries[file]["canonical"] = api.publication_metadata(file)
+    for path, document in {
+        "docs/l2-uk-direct/textbook-selection.yaml": yaml.safe_dump({"sources": entries}),
+        "site/src/data/lexicon-sentence-inventory.json": json.dumps({"rows": []}),
+    }.items():
+        target = tmp_path / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(document)
+    subprocess.run(["git", "add", "docs", "site"], cwd=tmp_path, check=True, timeout=30)
+    monkeypatch.setattr(publication, "REPO_ROOT", tmp_path)
+    assert evidence_main(["publication-report", "--sources-db", str(database)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert len(result["sources"]) == 11 and result["status"] == "ok"
+    assert "SYNTHETIC_PRIVATE_SENTINEL" not in json.dumps(result)
+    assert all(row["lesson"] == row["site_data"] == row["repo_exposed"] == 0 for row in result["sources"].values())
+    with sqlite3.connect(database) as conn:
+        conn.execute("UPDATE textbook_sections SET full_text = full_text || 'drift'")
+    assert evidence_main(["publication-report", "--sources-db", str(database)]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert any(error.startswith("publication_denominator_drift:") for error in result["errors"])
