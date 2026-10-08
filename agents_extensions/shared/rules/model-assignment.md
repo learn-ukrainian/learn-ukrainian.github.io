@@ -17,7 +17,12 @@ Sol-authored change), and at critical risk Opus 5.5 is chosen for non-Anthropic 
 Neither transport reviews an xAI-authored change, including the unknown-Auto union {xAI, Moonshot},
 or its own subject seat. Verdicts count only with runtime model attestation: native `modelUsage`
 reports exactly one admitted model id; Cursor reports its pinned high-effort model itself.
-Designated approval remains Opus 5.5 + Sol 6.1; Gemini/AGY stays off code review and Kimi is unchanged.
+Designated approval remains Opus 5.5 + Sol 6.1, and Kimi is unchanged.
+The 2026-10-08 approval admits Gemini as a formal reviewer of low-risk and medium-risk code, and of
+Ukrainian work when the reviewer uses the Sources MCP. High-risk and critical review stay with Opus 5.5 or
+Sol 6.1 until Gemini 4 passes [AGY authority qualification](../../../docs/runbooks/agy-authority-qualification.md). The reviewer resolver and
+target admission still exclude Gemini from code and infra review; wiring the low-risk and medium-risk seat
+is a separate change, and until it lands the resolver's refusal stands.
 This interim seat is revisited when Gemini 4 or a code-capable Gemini model is admitted.
 `review_scheduler.risk_reviewer_models` admits Opus 5.5, Sol 6.1 and Grok 4.7 at high;
 critical eligibility requires the catalog's `critical_review` role. These eligibility gates
@@ -26,11 +31,13 @@ admission, including `--force-agent` and budget substitution or retention. DeepS
 review, and Sonnet is excluded from critical security review. Historical
 capability and transport descriptions below confer no routing permission.
 
-**Flash is not a planning, design or driver seat (operator decision 2026-10-03, #9584):** Gemini 3.8 Flash (AGY)
-is not used to plan, design, drive or orchestrate epics or large projects. The authoritative seats for planning,
-design input and driving are `gpt-6.1-sol` and `claude-opus-5-5` (#9583). Flash remains a
-strong seat for bounded, well-specified tasks, including Ukrainian content review under a fixed brief. Task-level
-Flash rows below are unchanged. Gemini 4 is re-evaluated when it is generally available.
+**Gemini may drive epics (2026-10-08 approval):** `start-gemini-driver.sh --epic <lane>` launches a Gemini
+epic driver through the shared driver path. The driver default is `gemini-3.1-pro-high`; `gemini-3.8-flash-high`
+is also certified. No other Gemini model id is certified for the driver, and another provider's driver refuses a
+Gemini model id. This replaces the #9584 driver exclusion. Design input and designated approval stay with
+`gpt-6.1-sol` and `claude-opus-5-5` (#9583). Flash remains a strong seat for bounded, well-specified tasks,
+including Ukrainian content review under a fixed brief. Task-level Flash rows below are unchanged. Gemini 4 is
+re-evaluated when it is generally available.
 
 **Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
 prefers primary seats before last resort, then ranks semantic suitability before quality tier; health and quota break ties
@@ -192,7 +199,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
   * **Claude seat**: `claude-sonnet-5-5` (preserves frontier window; fast & efficient). For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive.
   * **Codex seat**: `gpt-6.1-sol` @ `high` (standard review)
   * **GLM seat**: `glm-5.3` @ `high` (local-only; advisory `max`)
-  * **Gemini seat** (Ukrainian language/content review only; Gemini/AGY never reviews code, infra, tooling, CI, tests, hooks or skills): `gemini-3.8-flash-high`
+  * **Gemini seat**: `gemini-3.8-flash-high`. Ukrainian language/content review with the Sources MCP. The 2026-10-08 approval adds low-risk and medium-risk code review; high-risk and critical review stay with Opus 5.5 or Sol 6.1 until Gemini 4 qualifies, and the resolver refuses Gemini code review until its wiring lands.
 Every `code` or `infra` review-typed dispatch, including `ask-* --review`, resolves its target before admission:
 branch/PR reviews collect literal changes from the base-branch merge-base to the pinned head;
 attempts require the record's `target.changed_paths`. An unresolved target refuses with
@@ -331,9 +338,10 @@ threshold. Further delegation requires authorization. Worktree and completion ga
 acceptance criteria stated up front. It does **not** self-decompose an open-ended objective
 into serial micro-PRs. The accountable orchestrator owns sequencing and fan-out; leaving Flash
 to invent its own merge cadence re-starves CI (2026-07-24 queue incident). Catalog membership
-in `orchestrator_seats` does not license Flash to plan, design, drive or orchestrate epics or large projects
-(operator decision 2026-10-03, #9584), nor self-orchestration of implementation work —
-session cadence already notes AGY compaction loses orchestration state (not a daily driver).
+in `orchestrator_seats` does not license a Flash worker to plan, design or orchestrate large projects
+(#9584), nor self-orchestration of implementation work. Driving an epic is a separate seat: it runs only
+through `start-gemini-driver.sh` (2026-10-08 approval), and AGY compaction loses orchestration state, so
+the driver re-verifies lease and hydration after compaction.
 Brief shape: `workflow.md` § Dispatch brief unit.
 
 **Writer routing refinement (user-confirmed 2026-07-07):** general content writing runs on **codex + agy** (agy = the standout A1-A2 immersion teaching voice per the 2026-07-04 bakeoff — do not forget it exists); the Claude window is SAVED for judgment work (architecture, adversarial review, hard bugs — codex is the primary coder, not Claude). The **V7 PIPELINE writer seat is separate**: it stays `claude-tools` because that seat is in-harness TOOL-CALLING fit, not prose (codex-tools emitted `tool_calls=0`); after any Claude-model rotation, spot-check ONE module before the next batch.
@@ -404,9 +412,9 @@ refine its implementation ordering.
 Standing role assignment for orchestrated sessions (names rotate; route by the role, not the label).
 Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_seats` + `formal_cf_defaults`.
 
-- **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these except `agy` may own a cold-start /
-  drive-board loop (prioritize → delegate → request CF → merge-in-lane); `agy` is a catalog seat only
-  (operator decision 2026-10-03, #9584). Do **not** run worker-level
+- **Orchestrator seats (fleet-comms stream #5512 / #4707)** — any of these may own a cold-start /
+  drive-board loop (prioritize → delegate → request CF → merge-in-lane); `agy` drives through
+  `start-gemini-driver.sh` (2026-10-08 approval). Do **not** run worker-level
   implementation on the orchestrator seat — delegate it (>50 LOC non-test, mechanical, fixtures, or
   anything parallelizable → a worker). **Codex was re-added as a driver seat** (user 2026-07-23),
   reversing the 2026-07-22 removal: HydrationCapsuleV1 makes its rollover cost acceptable. Machine
@@ -419,7 +427,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Opus / Sol take advice and Ukrainian judgment. Orchestration alone does not confer approval authority |
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
-  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Catalog seat only — **not a planning, design or driver seat** (operator decision 2026-10-03, #9584; the catalog entry is kept, not deleted) and not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request) |
+  | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to `gemini-3.1-pro-high` and also accepts `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperforms 3.1 Pro) |
   | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
@@ -471,7 +479,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   Bounded implementation defaults to Luna @ `high` under a Sol advisory envelope; adversarial reviewer effort is Sol @ `high`.
   Ordinary advice uses GPT-6.1 Sol @ `high`. The #9275 envelope remains mandatory.
 * Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
-  orchestration state — not a driver), gemini CLI (retired → agy).
+  orchestration state; a Gemini driver re-verifies lease and hydration after compaction), gemini CLI (retired → agy).
 
   The review of record is one cross-family review on the pushed branch before
   PR creation: toolful `ask --review --branch <name>` or detached dispatch
@@ -676,13 +684,13 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **Codex Sol @ `high`** for accountable coding and broader integration; **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Use **Luna @ `high`** for routine bounded work, always under a complete Sol advisory envelope (`--advisory-task`, #9275). Cursor `grok-4.7-high` is a supported mechanical/ordinary code alternative when live capacity and fit favor it; pin the model (`auto` only for a well-defined coding dispatch) | **agy** `gemini-3.8-flash-high` for well-defined work (bounded fallback: Sol advisory envelope required) · **kimi** `k3-256k` · Cursor when fit allows | grok | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, shed mechanical work unless a verified operator reset reserve applies; claude seat = only ≤5-LOC CI-fix-I-caused; Workers never sole authority; retired Pro pins are historical only |
-| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol | **high:** only `gpt-6.1-sol` or `claude-opus-5-5`, per the #9538 review admission rule at the top of this file · **medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
+| **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol | **high:** only `gpt-6.1-sol` or `claude-opus-5-5`, per the #9538 review admission rule at the top of this file · **medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For the `code` and `infra` review profiles, security-sensitive changed paths automatically raise effective review risk to `critical`, even when the author requests low, medium or high. The shared `scripts/review/security_paths.py` classifier includes both rename names and deletions; owned paths can only add coverage. Resolve the target first. The resolver and every code/infra review-typed dispatch collect target changed paths before admission and require the catalog `critical_review` role, preserve cross-family and subject-seat exclusions, and refuse with a reason when no qualified reviewer is available (#9125). Catalog weaknesses remain descriptive. **Gemini code review (2026-10-08 approval): Gemini-family seats may formally review low-risk and medium-risk code, and Ukrainian work with the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 until Gemini 4 qualifies. The resolver and reviewer admission still refuse Gemini for code and infra (the 2026-09-25 gate) until the low-risk and medium-risk wiring lands.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: only claude, codex (GPT), agy (Gemini); every other model family excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; Grok is excluded from every Ukrainian review and judge seat; FOLK stays cross-family GPT↔Claude per the folk rubric |
 | **Research / recon / triage** | **Haiku 5.5 read-only recon/search** alongside **Luna @ `high`** under a complete Sol advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible opencode models — pool (FREE) · glm (LOCAL); DeepSeek is excluded from dispatch and review (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
-**Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` with no review-typing flag is an implementation dispatch and is not gated; a code-profile review-typed dispatch to agy is refused at reviewer admission. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
+**Gemini code-review gate — accepted residuals (2026-09-25 gate; still enforced until the 2026-10-08 approval's low-risk and medium-risk wiring lands).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` with no review-typing flag is an implementation dispatch and is not gated; a code-profile review-typed dispatch to agy is refused at reviewer admission. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
 
 **LANGUAGE-LANES RULE (HARD, operator order 2026-09-27): “only claude, gpt and gemini should be invlved in ukrainina content. no other models allowed if it is about ukrainina lang. culture, heritage.” Every seat that authors, reviews, critiques, settles, or judges Ukrainian language, culture, or heritage content — including linguistic/content review and CEFR/russicism analysis — routes ONLY to claude, codex (GPT), or agy (Gemini).** Grok, deepseek, glm, kimi, cursor, pool, gemma, and every other model family are excluded from every language seat (deepseek's former VESUM-gated content-review default is retired; gemma's surface-review slice applies to non-language work only). Standing carve-outs still bind on top: NO deepseek for folk (moot under this rule, kept for history), folk review pairing stays GPT↔Claude. Grok remains available for code, infra, and non-language work.
 

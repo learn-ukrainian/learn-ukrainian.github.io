@@ -844,6 +844,128 @@ def _init_args(tmp_path: Path, identity_path: Path) -> object:
     )
 
 
+def _fresh_init_command(tmp_path: Path) -> list[str]:
+    policy = _write_json(
+        tmp_path / "fresh-policy.json",
+        {"AC-IMPL": {"due_state": "IMPLEMENTATION_READY", "required_evidence": ["test"]}},
+    )
+    return [
+        "--repo-root", str(tmp_path), "init",
+        "--fresh-task-id", "native-driver-42", "--repository", "org/repo",
+        "--stream-epic", "10", "--issue", "42",
+        "--semantic-title", "Enforce task closeout", "--task-family", "infrastructure",
+        "--role", "driver", "--terminal-goal", "merge",
+        "--ac-policy", str(policy), "--author-family", "codex",
+        "--required-check", "CI Gate", "--now", NOW,
+    ]
+
+
+def _stub_fresh_init(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True, timeout=30)
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", _stub_read_issue(parent_epic=10))
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "registered_stream_epics", lambda self, repository: [10])
+    monkeypatch.setattr(
+        task_closeout.GhGitHubAdapter, "read_issue_parent",
+        lambda self, repository, number: {"number": 10, "repository": repository},
+    )
+
+
+def test_cli_fresh_init_carrier_and_read_only_reconcile_preserve_exact_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys,
+) -> None:
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = _fresh_init_command(tmp_path)
+    assert task_closeout.main(command) == 0
+    initialized = json.loads(capsys.readouterr().out)
+    path = Path(initialized["state_file"])
+    ledger = task_lifecycle.load_lifecycle(path)
+    identity = ledger["identity"]
+    assert path == task_lifecycle.lifecycle_path(tmp_path, identity)
+    assert identity["task_id"] == "native-driver-42"
+    assert identity["origin"] == "fresh"
+    assert set(identity).isdisjoint({"lineage_id", "generation", "predecessor_task_id", "replacement_task_id"})
+
+    assert task_closeout.main(["carrier", "--state-file", str(path)]) == 0
+    assert json.loads(capsys.readouterr().out)["identity"] == identity
+    observation = _observation(body="- [ ] **AC-IMPL** — Implementation is verified.\n")
+    observation["github"]["pr"] = None
+    observation_path = _write_json(tmp_path / "fresh-observation.json", observation)
+    assert task_closeout.main([
+        "reconcile", "--state-file", str(path), "--observation-file", str(observation_path), "--now", NOW,
+    ]) == 0
+    reconciled = json.loads(capsys.readouterr().out)
+    assert reconciled["lifecycle"]["identity"] == identity
+    assert task_lifecycle.load_lifecycle(path)["mutation_receipts"] == []
+    # Same native task may reuse the complete ledger without losing its receipt.
+    assert task_closeout.main([*command, "--reuse"]) == 0
+    capsys.readouterr()
+    assert task_lifecycle.load_lifecycle(path)["observation_receipts"]
+
+
+@pytest.mark.parametrize("existing_form", ["fresh", "rollover"])
+def test_cli_fresh_init_reuse_refuses_another_threads_ledger(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys, existing_form: str,
+) -> None:
+    _stub_fresh_init(tmp_path, monkeypatch)
+    command = _fresh_init_command(tmp_path)
+    assert task_closeout.main(command) == 0
+    path = Path(json.loads(capsys.readouterr().out)["state_file"])
+    ledger = task_lifecycle.load_lifecycle(path)
+    if existing_form == "rollover":
+        ledger["identity"] = _identity_dict()
+        task_lifecycle.write_lifecycle(path, ledger)
+    before = path.read_bytes()
+    command[command.index("--fresh-task-id") + 1] = "another-native-thread"
+    assert task_closeout.main([*command, "--reuse"]) == 2
+    assert "exact fresh task identity" in capsys.readouterr().err
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("missing", [
+    "--repository", "--stream-epic", "--issue", "--semantic-title", "--task-family", "--role", "--terminal-goal",
+])
+def test_cli_fresh_init_requires_complete_assignment_before_remote_reads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys, missing: str,
+) -> None:
+    def refuse_read(*args, **kwargs):
+        pytest.fail("invalid fresh identity must fail before GitHub reads")
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", refuse_read)
+    command = _fresh_init_command(tmp_path)
+    index = command.index(missing)
+    del command[index:index + 2]
+    assert task_closeout.main(command) == 2
+    assert missing in capsys.readouterr().err
+    assert not list(tmp_path.rglob("task-lifecycle.json"))
+
+
+@pytest.mark.parametrize("task_id", ["", " ", "native thread", "native\x00thread"])
+def test_cli_fresh_init_reports_malformed_identity_without_remote_reads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys, task_id: str,
+) -> None:
+    def refuse_read(*args, **kwargs):
+        pytest.fail("invalid fresh identity must fail before GitHub reads")
+    monkeypatch.setattr(task_closeout.GhGitHubAdapter, "read_issue", refuse_read)
+    command = _fresh_init_command(tmp_path)
+    command[command.index("--fresh-task-id") + 1] = task_id
+    assert task_closeout.main(command) == 2
+    assert "error" in json.loads(capsys.readouterr().err)
+
+
+def test_cli_init_sources_are_mutually_exclusive(tmp_path: Path) -> None:
+    command = _fresh_init_command(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        task_closeout.build_parser().parse_args([*command, "--identity-file", "identity.json"])
+    assert exc.value.code == 2
+
+
+def test_cli_identity_file_rejects_fresh_options_before_remote_reads(tmp_path: Path, capsys) -> None:
+    identity = _write_json(tmp_path / "identity.json", _identity_dict())
+    args = _init_args(tmp_path, identity)
+    args.role = "driver"
+    with pytest.raises(task_lifecycle.LifecycleError, match="require --fresh-task-id"):
+        task_closeout.cmd_init(args)
+
+
 def _stub_read_issue(*, parent_epic: int | None) -> object:
     def _read_issue(self, repository: str, issue_number: int) -> dict:
         return {

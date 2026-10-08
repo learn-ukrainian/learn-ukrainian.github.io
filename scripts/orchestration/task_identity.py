@@ -120,10 +120,11 @@ def build_identity(
     semantic_title: str,
     task_family: str,
     role: str,
-    predecessor_task_id: str,
-    replacement_task_id: str | None,
-    lineage_id: str,
-    generation: int,
+    predecessor_task_id: str | None = None,
+    replacement_task_id: str | None = None,
+    lineage_id: str | None = None,
+    generation: int | None = None,
+    fresh_task_id: str | None = None,
     terminal_goal: str,
     lifecycle_state: str = "prepared",
     migration_source: str = "explicit",
@@ -135,8 +136,28 @@ def build_identity(
         raise ValueError("stream epic must be positive")
     if github_issue_number is not None and github_issue_number < 1:
         raise ValueError("GitHub issue number must be positive")
-    if not isinstance(lineage_id, str) or not _LINEAGE_RE.fullmatch(lineage_id):
-        raise ValueError("lineage ID must start with a lowercase letter and contain only lowercase letters, digits, or hyphens")
+    if fresh_task_id is not None:
+        if any(value is not None for value in (predecessor_task_id, replacement_task_id, lineage_id, generation)):
+            raise ValueError("fresh task identity must not contain rollover fields")
+        if not isinstance(fresh_task_id, str) or any(character.isspace() for character in fresh_task_id):
+            raise ValueError("fresh task ID must be an exact non-whitespace native task ID")
+        thread_identity = {
+            "origin": "fresh",
+            "task_id": _clean_text(fresh_task_id, "fresh task ID", maximum=256),
+        }
+    else:
+        if not isinstance(lineage_id, str) or not _LINEAGE_RE.fullmatch(lineage_id):
+            raise ValueError("lineage ID must start with a lowercase letter and contain only lowercase letters, digits, or hyphens")
+        thread_identity = {
+            "predecessor_task_id": _clean_text(predecessor_task_id, "predecessor task ID", maximum=256),
+            "replacement_task_id": (
+                _clean_text(replacement_task_id, "replacement task ID", maximum=256)
+                if replacement_task_id is not None
+                else None
+            ),
+            "lineage_id": lineage_id,
+            "generation": generation,
+        }
     epic_url = _check_exact_url("stream epic URL", stream_epic_url, _github_url(repo, "issues", stream_epic))
     issue_url = _check_exact_url(
         "GitHub issue URL", github_issue_url, _github_url(repo, "issues", github_issue_number)
@@ -163,14 +184,7 @@ def build_identity(
         "visible_title": rendered,
         "task_family": task_family,
         "role": _clean_text(role, "role", maximum=100),
-        "predecessor_task_id": _clean_text(predecessor_task_id, "predecessor task ID", maximum=256),
-        "replacement_task_id": (
-            _clean_text(replacement_task_id, "replacement task ID", maximum=256)
-            if replacement_task_id is not None
-            else None
-        ),
-        "lineage_id": lineage_id,
-        "generation": generation,
+        **thread_identity,
         "terminal_goal": cleaned_terminal_goal,
         "lifecycle_state": lifecycle_state,
         "carriers": carriers,
@@ -246,6 +260,8 @@ def new_title_transition(*, harness: str, visible_title_value: str, prepared_at:
 
 
 def validate_title_transition(transition: Mapping[str, Any], identity: Mapping[str, Any]) -> dict[str, Any]:
+    if identity.get("origin") == "fresh":
+        raise ValueError("fresh task identity has no rollover title transition")
     required = {
         "schema_version",
         "harness",

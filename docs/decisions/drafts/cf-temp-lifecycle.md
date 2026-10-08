@@ -146,8 +146,8 @@ To prevent Time-of-Check to Time-of-Use (TOCTOU) races between checking process 
 ### 5.1 Configuration & Thresholds
 
 Disk-pressure thresholds are specified via environment configuration or configuration file, **never hardcoded**:
-- Environment Variable: `LU_REVIEW_TEMP_MIN_FREE_GB` (Default: `10.0` GB).
-- Config Path: `config/hygiene.yaml` (`review_temp_min_free_gb: 10.0`).
+- Environment Variable: `LU_REVIEW_TEMP_MIN_FREE_GB` (generic default: `9.5` GB; deployments set their own).
+- Config Path: `config/hygiene.yaml` (`review_temp_min_free_gb: 9.5`).
 
 ### 5.2 Escalation Rules
 
@@ -178,7 +178,7 @@ def _hardened_review_scope(roots: tuple[Path, ...]):
     def _signal_handler(signum, frame):
         _cleanup_review_resources(state=None, roots=roots)
         sys.exit(128 + signum)
-    
+
     previous_handlers = {}
     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
         previous_handlers[sig] = signal.signal(sig, _signal_handler)
@@ -308,7 +308,7 @@ Every safety guard introduced must have a dedicated test that **FAILS** if the g
    - Mutation check: If start-time matching is removed, test FAILS.
 
 4. **`test_disk_pressure_escalates_sweeper`**
-   - Setup: Mock free disk space < 10GB. Create manifest-less root aged 2 hours.
+   - Setup: Mock free disk space below the threshold. Create manifest-less root aged 2 hours.
    - Assert: Root is reaped under disk pressure.
    - Mutation check: If disk pressure check is removed, test FAILS.
 

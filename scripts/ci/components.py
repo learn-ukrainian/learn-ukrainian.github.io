@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import copy
 import hashlib
 import json
 import math
@@ -393,10 +394,23 @@ def scan_imports(sources: dict[str, bytes], known_paths: set[str] | None = None)
 def import_graph(manifest: dict, root: Path = ROOT) -> dict:
     """Lift discovered file dependencies to node edges; assert mandatory imports."""
     sources = python_sources(root)
-    graph = cached_import_scan(tuple(sources.items()), tuple(tracked_paths(root)))
+    # Snapshot content, not object identity: callers can mutate a manifest or
+    # edit tracked sources between queries. Keep cached results private too.
+    return copy.deepcopy(cached_import_graph(
+        tuple(sources.items()), tuple(tracked_paths(root)), json.dumps(manifest, sort_keys=True),
+    ))
+
+
+@lru_cache(maxsize=2)
+def cached_import_graph(sources: tuple, known_paths: tuple, manifest_json: str) -> dict:
+    """Reuse node lifting only while sources, indexed paths and manifest agree."""
+    manifest = json.loads(manifest_json)
+    graph = cached_import_scan(sources, known_paths)
+    owners = {path: assign_path(path, manifest)[0]
+              for path in {path for edge in graph["file_edges"] for path in edge}}
     pairs = {(producer, consumer) for importer, target in graph["file_edges"]
-             for producer in assign_path(target, manifest)[0]
-             for consumer in assign_path(importer, manifest)[0]}
+             for producer in owners[target]
+             for consumer in owners[importer]}
     missing = [edge["id"] for edge in manifest["edges"]
                if edge["kind"] in {"import", "dynamic"}
                and (edge["producer"], edge["consumer"]) not in pairs]

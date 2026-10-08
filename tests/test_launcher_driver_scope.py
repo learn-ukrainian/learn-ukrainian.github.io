@@ -100,7 +100,7 @@ def _launcher(tmp_path: Path, provider: str = "claude") -> tuple[Path, dict[str,
     shutil.copy2(REPO / "scripts/lib/git_identity.py", root / "scripts/lib/git_identity.py")
     env["TEST_PROJECT_PYTHON"] = sys.executable
     # Only provider/lease/preparation seams are stubbed. The full main entry,
-    # defaults, Gemini refusal, scope setup, identity and limit validation stay real.
+    # defaults, uncertified-Gemini refusal, scope setup, identity and limit validation stay real.
     core.write_text(
         core.read_text()
         + """
@@ -173,16 +173,18 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
 @pytest.mark.parametrize(
     "provider,model",
     [
-        ("gemini", "gemini-3.8-flash-high"),
+        ("gemini", "gemini-unknown"),
+        ("gemini", "gemini-3.7-flash-high"),
         ("claude", "gemini-3.8-flash-high"),
         ("claude", "gemini:gemini-3.1-pro-high"),
     ],
 )
-def test_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
+def test_uncertified_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
     launcher, env = _launcher(tmp_path, provider)
     result = _run(launcher, env, LAUNCHER_MODEL=model, FAKE_BUS_FAIL="1")
     assert result.returncode == 4, result.stderr
-    assert "AGY/Gemini is not a planning, design or driver seat." in result.stderr
+    assert f"model '{model}' " in result.stderr
+    assert "(certified: gemini-3.1-pro-high, gemini-3.8-flash-high)." in result.stderr
     assert result.stdout == ""
     assert not Path(env["FAKE_STARTS"]).exists()
     assert "DRIVER_SCOPE_" not in result.stderr

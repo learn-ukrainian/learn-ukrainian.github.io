@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import delegate
@@ -15,7 +17,17 @@ from scripts.orchestration import agent_ledger, orchestrator_control, task_ident
 NOW = "2026-07-16T10:00:00Z"
 
 
-def _lifecycle_file(tmp_path: Path) -> Path:
+def _lifecycle_file(tmp_path: Path, *, fresh: bool = False) -> Path:
+    thread = (
+        {"fresh_task_id": "native-driver-42", "lifecycle_state": "active"}
+        if fresh else {
+            "predecessor_task_id": "thread-old",
+            "replacement_task_id": "thread-new",
+            "lineage_id": "lineage-closeout",
+            "generation": 1,
+            "lifecycle_state": "confirmed",
+        }
+    )
     identity = task_identity.build_identity(
         repository="org/repo",
         stream_epic=10,
@@ -25,12 +37,8 @@ def _lifecycle_file(tmp_path: Path) -> Path:
         semantic_title="Enforce task closeout",
         task_family="infrastructure",
         role="implementer",
-        predecessor_task_id="thread-old",
-        replacement_task_id="thread-new",
-        lineage_id="lineage-closeout",
-        generation=1,
         terminal_goal="merge",
-        lifecycle_state="confirmed",
+        **thread,
     )
     body = "- [ ] **AC-IMPL** — Implementation is verified.\n"
     policy = {
@@ -51,8 +59,9 @@ def _lifecycle_file(tmp_path: Path) -> Path:
     return path
 
 
-def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path) -> None:
-    path = _lifecycle_file(tmp_path)
+@pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])
+def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path, fresh: bool) -> None:
+    path = _lifecycle_file(tmp_path, fresh=fresh)
 
     carrier, prompt = delegate._load_task_lifecycle_carrier(str(path))
 
@@ -61,12 +70,17 @@ def test_delegate_loads_validated_carrier_and_prompt(tmp_path: Path) -> None:
     assert carrier["identity"]["github_issue_number"] == 42
     assert "authoritative carrier" in prompt
     assert carrier["lifecycle_id"] in prompt
+    assert carrier["identity"] == task_lifecycle.load_lifecycle(path)["identity"]
+    if fresh:
+        assert carrier["identity"]["task_id"] == "native-driver-42"
+        assert "native-driver-42" in prompt
 
 
+@pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])
 def test_agent_ledger_persists_carrier_and_monitor_returns_it(
-    tmp_path: Path,
+    tmp_path: Path, fresh: bool,
 ) -> None:
-    path = _lifecycle_file(tmp_path)
+    path = _lifecycle_file(tmp_path, fresh=fresh)
     task = agent_ledger.upsert_task(
         tmp_path,
         task_id="closeout-worker",
@@ -80,12 +94,14 @@ def test_agent_ledger_persists_carrier_and_monitor_returns_it(
 
     assert task["task_lifecycle"]["state_file"] == str(path.resolve())
     assert monitored["task_lifecycle"] == task["task_lifecycle"]
+    assert task["task_lifecycle"]["identity"] == task_lifecycle.load_lifecycle(path)["identity"]
 
 
+@pytest.mark.parametrize("fresh", [False, True], ids=["rollover", "fresh"])
 def test_orchestrator_forwards_and_retains_lifecycle_carrier(
-    tmp_path: Path, capsys
+    tmp_path: Path, capsys, fresh: bool,
 ) -> None:
-    path = _lifecycle_file(tmp_path)
+    path = _lifecycle_file(tmp_path, fresh=fresh)
     prompt = tmp_path / "prompt.md"
     prompt.write_text("Do the worker task.", encoding="utf-8")
 
@@ -131,3 +147,4 @@ def test_orchestrator_forwards_and_retains_lifecycle_carrier(
 
     assert inbox["tasks"][0]["status"] == "missing"
     assert inbox["tasks"][0]["task_lifecycle"]["current_state"] == "ISSUE_LINKED"
+    assert inbox["tasks"][0]["task_lifecycle"]["identity"] == task_lifecycle.load_lifecycle(path)["identity"]

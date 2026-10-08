@@ -46,6 +46,7 @@ import contextlib
 import errno
 import fcntl
 import json
+import math
 import os
 import re
 import shutil
@@ -84,11 +85,14 @@ FAULT_ENV_VAR = "LU_TASK_SCRATCH_FAULT"
 FAULT_KILL_BEFORE_RELEASE = "kill-before-release"
 
 # Orphan age gates (#8738): 2h after the newest directory/metadata change
-# normally; 30m when the scratch volume is below DEFAULT_MIN_FREE_GB. Pressure only
-# ever shortens the age gate — identity and liveness proofs are unchanged.
+# normally; 30m when the scratch volume is below the free-space floor. Pressure
+# only ever shortens the age gate — identity and liveness proofs are unchanged.
 DEFAULT_MIN_AGE_S = 2 * 60 * 60
 DEFAULT_PRESSURE_MIN_AGE_S = 30 * 60
-DEFAULT_MIN_FREE_GB = 15.0
+# The floor comes from SCRATCH_MIN_FREE_ENV when set (the deployment sets it);
+# DEFAULT_MIN_FREE_GB is only the generic fallback. The tmp leak sweep shares it.
+SCRATCH_MIN_FREE_ENV = "LU_SCRATCH_MIN_FREE_GB"
+DEFAULT_MIN_FREE_GB = 14.0
 
 DEFAULT_GROUP_GRACE_S = 15.0
 DEFAULT_KILL_AFTER_S = 30.0
@@ -1104,6 +1108,25 @@ def _child_group_dead(lease: Mapping[str, Any], *, boot: str | None) -> tuple[bo
     return True, "child_group_dead"
 
 
+def scratch_min_free_gb(environ: Mapping[str, str] | None = None) -> float:
+    """Return the scratch free-space floor in GB.
+
+    Reads ``SCRATCH_MIN_FREE_ENV`` and falls back to ``DEFAULT_MIN_FREE_GB``
+    when it is unset or blank. A value that is not a finite, non-negative
+    number raises ``ValueError`` rather than silently using the fallback.
+    """
+    raw = (os.environ if environ is None else environ).get(SCRATCH_MIN_FREE_ENV, "").strip()
+    if not raw:
+        return DEFAULT_MIN_FREE_GB
+    try:
+        value = float(raw)
+    except ValueError:
+        raise ValueError(f"{SCRATCH_MIN_FREE_ENV} must be a number of GB, got {raw!r}") from None
+    if not math.isfinite(value) or value < 0:
+        raise ValueError(f"{SCRATCH_MIN_FREE_ENV} must be a finite, non-negative number of GB, got {raw!r}")
+    return value
+
+
 def recover_orphans(
     *,
     apply: bool = False,
@@ -1111,14 +1134,17 @@ def recover_orphans(
     now: float | None = None,
     min_age_s: float = DEFAULT_MIN_AGE_S,
     pressure_min_age_s: float = DEFAULT_PRESSURE_MIN_AGE_S,
-    min_free_gb: float = DEFAULT_MIN_FREE_GB,
+    min_free_gb: float | None = None,
 ) -> dict[str, Any]:
     """Inventory the managed namespace and reclaim provably orphaned entries.
 
     Dry-run (the default) is mutation-free. Every non-reclaimed entry is
-    reported with the guard that preserved it.
+    reported with the guard that preserved it. ``min_free_gb`` defaults to
+    ``scratch_min_free_gb()``.
     """
     current = time.time() if now is None else now
+    if min_free_gb is None:
+        min_free_gb = scratch_min_free_gb()
     namespace = task_scratch_namespace(root)
     entries: list[RecoveryEntry] = []
     result: dict[str, Any] = {
