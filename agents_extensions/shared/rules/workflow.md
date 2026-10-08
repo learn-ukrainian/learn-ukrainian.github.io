@@ -183,8 +183,10 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 
 0. **CF review-fix before CI (binding).** Push the implementation branch.
    Run independent exact-head cross-family CF on that branch (`ask-<lane>
-   --branch <name>` / equivalent toolful review). This resolves and pins the remote head;
-   compare the actual reviewed SHA with the current branch tip before accepting APPROVE.
+   --review --branch <name>` / detached dispatch; drive-epic §6). Delegate
+   admission pins the remote-tracking target; fetch refuses movement. Compare
+   task `pinned_head`/`worktree_base_sha` with the pushed tip, not ask reply stdout.
+   Continue client expiry on the same task/nonce (§6), never repeat the launch.
    On `REQUEST_CHANGES`: fix on the branch → re-CF the new SHA. **Do not open any PR** (draft or ready)
    while CF is still open or while iterating CF findings. In this repo,
    `.github/workflows/ci.yml` runs on `opened` / `synchronize` with **no**
@@ -426,8 +428,9 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
    reviewed SHA; never copy a `behavior_proof_status` string.
 6. **Pass the independent review and CI gates** — ONE cross-family review round:
-   reviewer outside the author model family, verdict + findings posted on the PR,
-   bound to the current head. Use a qualified, toolful native review lane; the
+   qualified toolful reviewer outside the author model family, exact-head APPROVE
+   before PR creation; then `record_cf_verdict.py` binds verdict + findings to
+   the PR head, followed by same-head CI (drive-epic §6–§7). The
    shielded formal path remains retired, including for high-risk code. Non-blocking
    findings may remain documented. If a fix changes the head, obtain approval and
    green CI for that new head before enqueue. Do not fold unreviewed edits into merge.

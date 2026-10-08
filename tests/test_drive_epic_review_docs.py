@@ -8,14 +8,19 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import re
 import shlex
+import subprocess
+import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
 
 from scripts import delegate
 from scripts.ai_agent_bridge import _cli
+from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
 from scripts.review import record_cf_verdict as recorder
 
 REFERENCE = (
@@ -46,80 +51,129 @@ def _canonical_review_asks():
 
 
 @pytest.mark.parametrize("argv", _canonical_review_asks())
-def test_canonical_review_ask_recipes_forward_pushed_branch_target(argv, monkeypatch):
-    """Run the documented argv through the real parser and handler, without inference."""
+def test_canonical_review_ask_recipes_reach_branch_pin_admission(argv, monkeypatch, tmp_path, capsys):
+    """Exercise parser → handler → wrapper → delegate admission, with real Git targets."""
+    from tests.test_authoring_review_feasibility import SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    head = repo.commit(SOL)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo.root)
+    argv = ["feature" if arg == "<branch>" else arg for arg in argv]
     args = _cli._build_parser().parse_args(argv)
-    assert args.branch, "pre-PR formal review must target the pushed author branch"
+    assert args.branch == "feature", "formal review must target the pushed author branch"
     assert args.pr is None
     monkeypatch.setattr(_cli, "require_core_or_exit", lambda _name: None)
     monkeypatch.setattr(_cli.sys, "stdin", io.StringIO("Review the pushed branch."))
-    dispatched = []
-    monkeypatch.setattr(_cli, "_dispatch_headless_review", lambda *a, **kw: dispatched.append(kw))
+
+    @contextmanager
+    def prompt_directory():
+        yield tmp_path
+
+    monkeypatch.setattr(wrappers, "_prompt_directory", prompt_directory)
+    real_run = subprocess.run
+    commands = []
+    reply = tmp_path / "review.result"
+    reply.write_text("VERDICT: APPROVE\n", encoding="utf-8")
+
+    def native_boundary(command, **kwargs):
+        if "scripts/delegate.py" not in command:
+            return real_run(command, **kwargs)
+        commands.append(command)
+        if "dispatch" in command:
+            launch = delegate.build_parser().parse_args(command[2:])
+            # The wrapper passes no explicit branch pin; the real admission
+            # callback must set it before reviewer route evaluation.
+            assert launch.pinned_head is None
+            refusal, target = delegate._admit_dispatch_target(launch, agent=launch.agent, trees=None)
+            assert refusal is None and target is not None
+            assert launch.pinned_head == launch._review_target.head_sha == head
+            base = delegate._resolve_worktree_base_sha(
+                agent=launch.agent,
+                task_id=launch.task_id,
+                base="main",
+                branch="feature",
+                pinned_head_sha=launch.pinned_head,
+                validated_path=tmp_path / "checkout",
+            )
+            assert base == head
+            # The remote moves AFTER admission while the tracking ref is old.
+            # Actual checkout preparation fetches and refuses the new SHA.
+            repo.advance_remote("feature", SOL)
+            with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
+                delegate._resolve_worktree_base_sha(
+                    agent=launch.agent,
+                    task_id=launch.task_id,
+                    base="main",
+                    branch="feature",
+                    pinned_head_sha=launch.pinned_head,
+                    validated_path=tmp_path / "checkout",
+                )
+            return subprocess.CompletedProcess(command, 0, f"{launch.task_id}\n{NONCE}\n", "")
+        assert "wait" in command and "--run-nonce" not in command
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps(
+                {
+                    "status": "done",
+                    "result_file": str(reply),
+                    "worktree_base_sha": head,
+                }
+            ),
+            "",
+        )
+
+    monkeypatch.setattr(wrappers.subprocess, "run", native_boundary)
     _cli._handle_acp_compat(args, "claude")
-    assert len(dispatched) == 1
-    assert dispatched[0]["branch"] == args.branch
-    assert dispatched[0]["pr_number"] is None
+    assert len(commands) == 2
+    assert capsys.readouterr().out.strip() == "VERDICT: APPROVE"  # reply, not SHA
 
 
 def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeypatch, tmp_path, capsys):
     """Retired ask background fails; native dispatch settles by nonce and rejects bad evidence."""
     # Reproduce the formerly documented command through the real ask parser and
     # handler. Refusal occurs before any provider, task, or GitHub boundary.
-    ask = _cli._build_parser().parse_args(
-        ["ask-codex", "-", "--task-id", "review-fixture", "--background"]
-    )
+    ask = _cli._build_parser().parse_args(["ask-codex", "-", "--task-id", "review-fixture", "--background"])
     monkeypatch.setattr(_cli, "require_core_or_exit", lambda _name: None)
     with pytest.raises(SystemExit, match="legacy ask --background is retired"):
         _cli._handle_acp_compat(ask, "codex")
-    branch_ask = _cli._build_parser().parse_args(
-        [
-            "ask-codex",
-            "Review the pushed author branch at its resolved remote head.",
-            "--task-id", "review-fixture",
-            "--review",
-            "--branch", "codex/author",
-        ]
-    )
-    assert branch_ask.branch == "codex/author"
-    assert branch_ask.review
-
     reference = REFERENCE.read_text(encoding="utf-8")
     assert "`--background` flag is rejected" in reference
-    assert "scripts/delegate.py dispatch" in reference
-    assert "--pinned-head \"$HEAD_SHA\"" in reference
-    assert "--run-nonce \"$REVIEW_NONCE\"" in reference
-    assert "scripts/review/record_cf_verdict.py" in reference
     assert "requires_silence_timeout" in reference
     assert "Only terminal task-record" in reference
-    shared_rules = REFERENCE.parents[3] / "rules"
-    fleet_rules = (shared_rules / "fleet-comms-coordination.md").read_text(encoding="utf-8")
-    model_rules = (shared_rules / "model-assignment.md").read_text(encoding="utf-8")
-    workflow_rules = (shared_rules / "workflow.md").read_text(encoding="utf-8")
-    for rules in (fleet_rules, model_rules):
-        assert "--review --branch <branch>" in rules
-        assert "record_cf_verdict.py" in rules
-        assert "ask --pinned-head" not in rules
-    assert "compare the actual reviewed SHA" in workflow_rules
 
     # Parse the documented producer with delegate's real CLI. Its public
-    # contract is detached dispatch; this fixture replaces only the worker
-    # launch/provider boundary and returns its task ID plus nonce immediately.
+    # contract is detached dispatch. Task fixtures below exercise settlement,
+    # not production: run the actual cmd_dispatch nonce-producer test separately.
     launch = delegate.build_parser().parse_args(
         [
             "dispatch",
-            "--agent", "claude",
-            "--model", "claude-opus-5-5",
-            "--effort", "high",
-            "--mode", "read-only",
+            "--agent",
+            "claude",
+            "--model",
+            "claude-opus-5-5",
+            "--effort",
+            "high",
+            "--mode",
+            "read-only",
             "--worktree",
-            "--task-id", "review-fixture",
-            "--prompt-file", str(tmp_path / "review.md"),
-            "--branch", "codex/author",
-            "--pinned-head", HEAD,
+            "--task-id",
+            "review-fixture",
+            "--prompt-file",
+            str(tmp_path / "review.md"),
+            "--branch",
+            "codex/author",
+            "--pinned-head",
+            HEAD,
             "--require-review-verdict",
-            "--review-profile", "code",
-            "--review-author-model", "gpt-6.1-sol",
-            "--review-risk", "medium",
+            "--review-profile",
+            "code",
+            "--review-author-model",
+            "gpt-6.1-sol",
+            "--review-risk",
+            "medium",
         ]
     )
     assert launch.func is delegate.cmd_dispatch
@@ -156,9 +210,7 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
 
     # A client wait deadline can expire while task state remains running. Its
     # 124 result is not settlement; re-arm the same parsed wait/nonce.
-    wait = delegate.build_parser().parse_args(
-        ["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"]
-    )
+    wait = delegate.build_parser().parse_args(["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"])
     assert wait.run_nonce == NONCE
     assert wait.func is delegate.cmd_wait
 
@@ -235,3 +287,126 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
     task_path.write_text(json.dumps(failed), encoding="utf-8")
     with pytest.raises(recorder.RecordError, match="review task is not done"):
         recorder._task(review_task, task_root)
+
+
+@pytest.mark.parametrize(
+    "scenario,expected_rc,wait_count",
+    [
+        ("done", 0, 1),
+        ("running_expiry", 0, 2),
+        ("spawning_expiry_twice", 0, 3),
+        ("done_racing_expiry", 0, 2),
+        ("terminal_timeout", 124, 1),
+        ("terminal_timeout_racing_expiry", 124, 2),
+        ("cancelled_racing_expiry", 1, 2),
+        ("cancelled", 1, 1),
+        ("stale_nonce", 1, 1),
+        ("nonce_drift_after_expiry", 1, 1),
+    ],
+)
+def test_documented_shell_continues_only_same_nonce_wait(tmp_path, scenario, expected_rc, wait_count):
+    """Execute the whole fence under set -e, with real cmd_wait/status and offline launch."""
+    body = REFERENCE.read_text(encoding="utf-8")
+    recipe = next(
+        block for block in re.findall(r"^```bash\n(.*?)^```", body, re.M | re.S) if "dispatch_result=" in block
+    )
+    # Replace only the interpreter boundary; keep the documented shell, parser,
+    # flags, stdout capture and continuation logic intact.
+    recipe = recipe.replace('PY="$PRIMARY_REPO/.venv/bin/python"', 'PY="$RECIPE_PY"')
+    helper = tmp_path / "native_boundary.py"
+    helper.write_text(
+        """import json, os, subprocess, sys
+from pathlib import Path
+sys.path.insert(0, os.environ['RECIPE_REPO'])
+from scripts import delegate
+
+argv = sys.argv[1:]
+if argv[0] == '-c':
+    raise SystemExit(subprocess.run([sys.executable, *argv], check=False).returncode)
+assert argv.pop(0) == 'scripts/delegate.py'
+args = delegate.build_parser().parse_args(argv)
+path = Path(os.environ['RECIPE_CALLS'])
+calls = json.loads(path.read_text()) if path.exists() else []
+calls.append(argv)
+path.write_text(json.dumps(calls))
+nonce = 'run-nonce-fixture'
+if args.command == 'dispatch':
+    assert args.pinned_head == 'a' * 40 and args.branch == 'codex/author'
+    assert args.require_review_verdict and args.worktree == 'auto'
+    print(args.task_id)
+    print(nonce)
+    raise SystemExit(0)  # launch boundary only; real producer is tested separately
+
+assert args.task_id == 'review-fixture' and args.run_nonce == nonce
+scenario = os.environ['RECIPE_SCENARIO']
+waits = sum(command[0] == 'wait' for command in calls)
+state = {'task_id': args.task_id, 'run_nonce': nonce, 'status': 'done'}
+if scenario in ('terminal_timeout', 'cancelled') or (scenario in ('terminal_timeout_racing_expiry', 'cancelled_racing_expiry') and waits > 1):
+    state['status'] = 'timeout' if scenario.startswith('terminal_timeout') else 'cancelled'
+elif scenario == 'stale_nonce':
+    state['run_nonce'] = 'another-run'
+elif scenario in ('running_expiry', 'done_racing_expiry', 'nonce_drift_after_expiry', 'terminal_timeout_racing_expiry', 'cancelled_racing_expiry') and waits == 1:
+    state['status'] = 'running'
+elif scenario == 'spawning_expiry_twice' and waits <= 2:
+    state['status'] = 'spawning'
+if args.command == 'status':
+    if scenario == 'done_racing_expiry':
+        state['status'] = 'done'
+    if scenario == 'terminal_timeout_racing_expiry':
+        state['status'] = 'timeout'
+    if scenario == 'cancelled_racing_expiry':
+        state['status'] = 'cancelled'
+    if scenario == 'nonce_drift_after_expiry':
+        state['run_nonce'] = 'another-run'
+clock = [0.0]
+delegate._read_state_or_archived = lambda task: (path, state)
+delegate._heal_dead_task = lambda *a, **kw: None
+delegate.time.monotonic = lambda: clock[0]
+delegate.time.sleep = lambda seconds: clock.__setitem__(0, args.timeout + 1)
+raise SystemExit(args.func(args))
+""",
+        encoding="utf-8",
+    )
+    executable = tmp_path / "fixture-python"
+    executable.write_text(
+        f'#!/bin/bash\nexec {shlex.quote(sys.executable)} {shlex.quote(str(helper))} "$@"\n',
+        encoding="utf-8",
+    )
+    executable.chmod(0o700)
+    call_file = tmp_path / "calls.json"
+    result = subprocess.run(
+        ["bash", "-c", recipe],
+        cwd=REFERENCE.parents[5],
+        capture_output=True,
+        text=True,
+        timeout=45,
+        env={
+            **os.environ,
+            "RECIPE_PY": str(executable),
+            "RECIPE_REPO": str(REFERENCE.parents[5]),
+            "RECIPE_CALLS": str(call_file),
+            "RECIPE_SCENARIO": scenario,
+            "REVIEW_AGENT": "claude",
+            "REVIEW_MODEL": "claude-opus-5-5",
+            "REVIEW_TASK": "review-fixture",
+            "REVIEW_BRIEF": str(tmp_path / "brief.md"),
+            "AUTHOR_BRANCH": "codex/author",
+            "HEAD_SHA": HEAD,
+            "AUTHOR_MODEL": "gpt-6.1-sol",
+            "REVIEW_RISK": "medium",
+        },
+    )
+    assert result.returncode == expected_rc, result.stderr
+    calls = json.loads(call_file.read_text(encoding="utf-8"))
+    assert sum(command[0] == "dispatch" for command in calls) == 1
+    waits = [command for command in calls if command[0] == "wait"]
+    assert len(waits) == wait_count
+    assert all(
+        command[1] == "review-fixture" and command[command.index("--run-nonce") + 1] == NONCE for command in waits
+    )
+    if expected_rc == 0:
+        assert json.loads(result.stdout)["status"] == "done"
+    elif scenario.startswith("terminal_timeout"):
+        assert json.loads(result.stdout)["status"] == "timeout"
+    elif scenario in ("stale_nonce", "nonce_drift_after_expiry"):
+        assert "stale_run_nonce" in result.stderr

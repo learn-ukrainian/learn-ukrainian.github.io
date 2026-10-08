@@ -40,7 +40,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
 - For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
-- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = toolful seat + verdict posted on the PR.
+- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = qualified toolful approval before PR, then `record_cf_verdict.py` binding + same-head CI (drive-epic §6–§7).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
 ## Two halves (do not conflate)
@@ -48,7 +48,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Half | Status | Surfaces |
 | --- | --- | --- |
 | **Session stream / lease** | Live | `claim_session_supervisor_env`, `SESSION_STREAM_*`, stream tail/digest, canary mint (hook-less seats) |
-| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via direct `ask-*` + PR comment (sealed `review-pr` RETIRED) |
+| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via toolful review + `record_cf_verdict.py` (sealed `review-pr` RETIRED) |
 
 Driver launchers already claim stream leases. Drivers must **also** speak the
 message-plane + CF half. An occupied lease fails closed: do not start a second
@@ -104,8 +104,10 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
 # Push the author branch, then get exact-head APPROVE before opening any PR.
-# `ask --branch` resolves and pins the current remote branch head for native
-# toolful review; compare the returned reviewed SHA with the branch tip.
+# Delegate admission pins the remote-tracking target; fetch refuses movement.
+# Compare task pinned_head/worktree_base_sha with the pushed tip, not ask stdout.
+# Ask waits synchronously without nonce; on expiry continue the same task/nonce
+# using drive-epic §6's wait recipe, never repeat this launch.
 printf '%s\n' "Review pushed branch <branch> at its resolved remote head; return verdict + findings." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
     --task-id review-<id> --review --branch <branch>
@@ -135,7 +137,8 @@ job/reservation state. The dashboard is read-only: its filters, search,
 details, and load-more controls never select, retry, cancel, reclaim, or reroute
 work.
 
-- Cross-family review is **direct only** (`ask-<lane>` + post verdict on the PR).
+- Cross-family review is **direct only** (qualified toolful APPROVE before PR, then
+  `record_cf_verdict.py` binding + same-head CI; drive-epic §6–§7).
   Shielded formal `review-pr` / eligibility pins are RETIRED (operator 2026-08-07).
   Route the reviewer seat by model-assignment (outside the author's family).
 
@@ -244,9 +247,12 @@ The default is two rounds and the hard maximum is three.
 `gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
 proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
 unavailable; the same review via headless dispatch with tools approved).
-For pre-PR CF, `ask-<lane> --review --branch <name>` resolves the remote head
-for native toolful dispatch + wait; compare the reviewed SHA and require
-outside-family APPROVE before PR, then bind it with `record_cf_verdict.py`.
+For pre-PR CF, `ask-<lane> --review --branch <name>` uses native dispatch +
+synchronous wait. Delegate admission pins the remote-tracking target and fetch
+refuses movement; compare task SHA evidence, not reply stdout (drive-epic §6).
+Require qualified outside-family APPROVE before PR, then bind it with
+`record_cf_verdict.py` and require same-head CI. Continue an expired wait on
+the same task/nonce (§6), never repeat the launch.
 `--pr` targets an existing PR; only non-review `ask-*` stays on ACP.
 
 There is no bridge/provider-execution fallback. Unknown routes, invalid model or

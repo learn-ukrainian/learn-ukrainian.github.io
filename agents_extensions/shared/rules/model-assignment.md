@@ -470,9 +470,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   orchestration state — not a driver), gemini CLI (retired → agy).
 
   The review of record is one cross-family review on the pushed branch before
-  PR creation: `ask --review --branch <name>` pins the remote head; compare its
-  SHA and require APPROVE. Then create the PR and bind with
-  `record_cf_verdict.py`.
+  PR creation: toolful `ask --review --branch <name>` or detached dispatch
+  (drive-epic §6). Compare task pin/checkout SHA with the pushed tip and require
+  qualified APPROVE; ask stdout is reply text. Continue expiry on the same
+  task/nonce, never redispatch. Then create the PR, bind with
+  `record_cf_verdict.py`, and require same-head CI.
   **Shielded formal CF
   (`review-pr`, sealed multi-GB `lu-review-*` / `shielded-reviews` isolation) is
   RETIRED (operator 2026-08-07)** — fail-closed in the CLI. Do not reintroduce
@@ -693,7 +695,7 @@ Drive high-judgment work (design, architecture, in-the-loop review, brief author
 * **Module-content panel** (writers, content review — LANGUAGE-LANES RULE binds): **agy** (Gemini 3.8 Flash default for routine and deep; Gemini 3.1 Pro only on explicit request) · **GPT-6.1 Sol @ high** · **claude**. ~~cursor seat~~ removed (excluded from language seats, user 2026-07-17). Prefer a bake-off + cross-family verification. Folk content review stays **cross-family (GPT↔Claude)** per `docs/folk-epic/folk-review-rubric.md` — **NO DeepSeek for folk culture** (lacks intrinsic Ukrainian-culture knowledge).
 * **Infra panel** (code, gates, pipeline, tooling, schemas, Atlas/lexicon; CF follows the Code review row): **GPT-6.1 Sol @ high** · **cursor `grok-4.7-high`** (mechanical pin, or concrete `composer-2.5`; never `auto` in review) · **native Grok 4.7** · **Pool Laguna S 2.1** (free review volume) · **GLM-5.3 / Z.AI** (deep security/bug review + large-context coherence audits; LOCAL-ONLY) · **Gemma 4** (surface review only; often via OpenRouter). Pin Cursor's concrete model whenever family independence matters — never `auto` as CF identity.
 
-Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.8-flash-high` (Ukrainian-language review only; `--to-model gemini-3.1-pro-high` only on explicit request; implementation routing above is unchanged) · `ask-cursor --model grok-4.7-high` (a review of a Grok author uses an Other Models slug, not `auto`) · `ask-grok` (alias `ask-grok-build`; code, infra, or other non-language work only) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `ask-deepseek` (consult-only for non-language work, LOCAL-ONLY; alias `ask-hermes`; first-party Flash @ high via opencode ACP, #6805) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. DeepSeek is excluded from dispatch and review; Pro is retired; Flash remains active in the catalog, with `ask-deepseek` restricted to consultation, never implementation or review. Bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`), not stdout.
+Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to-model gemini-3.8-flash-high` (Ukrainian-language review only; `--to-model gemini-3.1-pro-high` only on explicit request; implementation routing above is unchanged) · `ask-cursor --model grok-4.7-high` (a review of a Grok author uses an Other Models slug, not `auto`) · `ask-grok` (alias `ask-grok-build`; code, infra, or other non-language work only) · `ask-pool [--variant high|max]` · `ask-glm` (LOCAL-ONLY) · `ask-gemma` (cheap; ⚠️ not a sole seminar writer / factual reviewer) · `ask-deepseek` (consult-only for non-language work, LOCAL-ONLY; alias `ask-hermes`; first-party Flash @ high via opencode ACP, #6805) · `discuss <channel> "<topic>" --with <a,b,c>` for a bounded multi-round. DeepSeek is excluded from dispatch and review; Pro is retired; Flash remains active in the catalog, with `ask-deepseek` restricted to consultation, never implementation or review. Non-review bridge `ask-*` replies arrive as INBOX MESSAGES (`ab read <id>`); formal review asks use native dispatch/wait and print reply text (drive-epic §6).
 
 **opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode". **OpenRouter is mainly for Pool + Gemma access** (operator 2026-08-08); the catalog can reach more models through OpenRouter, but **we do not need to** — prefer native/first-party seats (Cursor, Claude, AGY, Z.AI GLM, Codex, Kimi, Grok). **Kimi K3 workers never ride OpenRouter** (`kimi` / `kimicc` / `kimi-code/k3*` = native `kimi` CLI only). Do not invent OpenRouter as a general multi-model fallback bus when a native lane exists (`ask-opencode <model>` is RETIRED — the bridge fails it closed; `ask-pool`/`ask-glm`/`ask-gemma`/`ask-deepseek` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok = implementation (native and Cursor code/infra review at every risk with runtime attestation, operator decision 2026-10-05 (#9769)); deepseek = historical harness evidence only; excluded from dispatch and review; **gemma** (Google Gemma 4 via **`google-ais/gemma-4-31b-it`, $0 DEFAULT** — AIS-direct with the user's key, no paid SKU exists for Gemma on the Gemini API; TOOLLESS `chat` agent; paid OR `-it` via `--model` fallback only, note the spend; OR `:free` pool-starved, avoid) = a metered lane for non-language surface review. **Gemma is excluded from Ukrainian language, culture, and heritage work, including russicism checks, wiki drafting, seminar writing, and factual review, under the 2026-09-27 LANGUAGE-LANES RULE.** The 2026-07-05 source-citation probe evidence remains in `docs/projects/qg-quality-gate/model-evidence.md`; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai **`laguna-s-2.1`** (default gen-2 S; also `laguna-xs-2.1` / fallback `laguna-m.1`), **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.3`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
@@ -902,9 +904,12 @@ The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. Th
 ## PR cross-family review (direct only — operator 2026-08-06; sealed formal RETIRED 2026-08-07)
 
 Review: one direct cross-family `ask --review --branch <name>` on the pushed
-branch. Compare its resolved SHA and require APPROVE before PR; then bind with
+branch. Delegate admission pins the remote-tracking target; fetch refuses
+movement. Compare task `pinned_head`/`worktree_base_sha` with the pushed tip,
+not ask reply stdout; require qualified APPROVE before PR, then bind with
 `record_cf_verdict.py`, require same-SHA CI, and reap the worktree
-(`reap_worktrees.py --apply` / `drive-epic` §7a).
+(`reap_worktrees.py --apply` / `drive-epic` §7a). Ask waits synchronously without
+nonce; continue expiry on the same task/nonce using §6, never repeat the launch.
 
 ```bash
 printf '%s\n' "Review pushed branch <branch> at its resolved remote head: VERDICT + findings." | \
@@ -919,6 +924,6 @@ printf '%s\n' "Review pushed branch <branch> at its resolved remote head: VERDIC
 and the snapshot flow is refused with no bypass. Cross-family still means outside the author's
 model family; discussion and same-family chat are not the gate.
 
-Bridge steers with a **warning** (not refuse) if `ask-* --review` looks like PR CF
-without a sealed target — so agent work is not discarded (#5486 warn-not-reject).
-Size caps still fail closed. See `docs/best-practices/agent-bridge.md`.
+Code/infra formal reviews require a resolvable target before delegate admission
+(§ review target admission above); missing targets refuse. Ordinary ACP asks
+cannot supply review of record. Use drive-epic §6 for launch and settlement.
