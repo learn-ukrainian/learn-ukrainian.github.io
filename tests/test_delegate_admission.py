@@ -301,6 +301,105 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert (tasks_dir / dispatch_admission.LOCK_FILE_NAME).is_file()
 
 
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", "read-only"])
+@pytest.mark.parametrize(
+    "research_paths,owned_paths,conflicts",
+    [
+        (["tests/**"], ["tests/test_incoming.py"], False),
+        (["tests/test_incoming.py"], ["tests/test_holder.py"], True),
+    ],
+    ids=["broad-research-disjoint-writer", "narrow-research-overlapping-writer"],
+)
+def test_dispatch_ownership_uses_commit_scope(
+    tasks_dir, monkeypatch, capsys, mode, research_paths, owned_paths, conflicts
+):
+    """#10015: real ownership admission ignores research classification in both directions."""
+    import sqlite3
+
+    from scripts.guardrails import delegate_ownership as ownership
+
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "refuse")
+    pid = os.getpid()
+    state_dir = Path(os.environ["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"])
+    _running_record(state_dir, "holder", pid=pid)
+    holder = ownership.admit_write_paths(
+        task_id="holder", mode="workspace-write", owned_paths=["tests/test_holder.py"], pid=pid
+    )
+    assert holder.admitted
+    admissions = []
+    real_admit = ownership.admit_write_paths
+
+    def capture_admission(**kwargs):
+        result = real_admit(**kwargs)
+        admissions.append(result)
+        return result
+
+    monkeypatch.setattr(ownership, "admit_write_paths", capture_admission)
+    spawned = []
+
+    class _Proc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: spawned.append(cmd) or _Proc())
+    args = _live_danger_args(tasks_dir, "ownership-incoming")
+    args.mode = mode
+    args.owned_path = owned_paths
+    args.research_owned_path = research_paths
+
+    rc = delegate.cmd_dispatch(args)
+
+    refused = conflicts and mode != "read-only"
+    err = capsys.readouterr().err
+    assert rc == (2 if refused else 0), err
+    assert len(admissions) == 1
+    assert admissions[0].skipped is (mode == "read-only")
+    assert admissions[0].admitted is (not refused)
+    assert bool(admissions[0].conflicts) is refused
+    assert len([cmd for cmd in spawned if "_worker" in cmd]) == (0 if refused else 1)
+    state = delegate._read_state(delegate._state_path(args.task_id))
+    if refused:
+        assert "write-path ownership refused" in err
+        assert state is None
+    else:
+        assert state["owned_paths"] == owned_paths
+    with sqlite3.connect(os.environ["LEARN_UKRAINIAN_OWNERSHIP_LEDGER"]) as conn:
+        rows = conn.execute("SELECT claim_json, pid FROM write_claims WHERE task_id = ?", (args.task_id,)).fetchall()
+    if refused or mode == "read-only":
+        assert rows == []
+    else:
+        assert [json.loads(claim)["raw"] for claim, _pid in rows] == owned_paths
+        assert [claim_pid for _claim, claim_pid in rows] == [_Proc.pid]
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_dispatch_without_commit_scope_refuses_before_ownership(tasks_dir, monkeypatch, capsys, mode):
+    """Research paths cannot replace the required --owned-path at authoring admission."""
+    from scripts.guardrails import delegate_ownership as ownership
+
+    real_authoring_admission = delegate._authoring_review_admission
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(delegate, "_authoring_review_admission", real_authoring_admission)
+    monkeypatch.setattr(
+        ownership, "admit_write_paths", lambda **_kwargs: pytest.fail("ownership must not run without commit scope")
+    )
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("an unscoped writer must not spawn")
+    )
+    args = _live_danger_args(tasks_dir, "ownership-unscoped")
+    args.mode = mode
+    args.owned_path = None
+    args.research_owned_path = ["tests/**"]
+
+    assert delegate.cmd_dispatch(args) == 2
+
+    err = capsys.readouterr().err
+    assert delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN in err
+    assert "write dispatch declares no --owned-path" in err
+    assert not delegate._state_path(args.task_id).exists()
+
+
 def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(tasks_dir, monkeypatch, capsys):
     """Two dispatches pass the early check; the locked re-check refuses the one that finds the cap full."""
     _stub_worktree(monkeypatch, tasks_dir)
