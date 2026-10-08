@@ -33,9 +33,13 @@ SCHEMA_VERSION = 1
 
 # Any home directory under the usual roots. The look-behind keeps URL paths
 # such as ``example.org/home/page`` out while still matching quoted, spaced
-# or ``file://`` forms. A name must start with a letter, digit or underscore,
-# so elided examples (three dots) and dot-directories do not count.
-GENERIC_HOME_DIR_PATTERN = r"(?<![\w.-])(?:/home|/Users)/[A-Za-z0-9_][A-Za-z0-9_.-]*"
+# or ``file://`` forms. Escaped text (JSON dumps, source literals) puts a
+# word character right before a path that starts a new line or field
+# (``\n``, ``\t``, ``\u001b``, ``\x1b``), so a backslash escape also counts as
+# a boundary. A name must start with a letter, digit or underscore, so elided
+# examples (three dots) and dot-directories do not count.
+_HOME_DIR_BOUNDARY = r"(?:(?<![\w.-])|(?<=\\[A-Za-z])|(?<=\\x[0-9A-Fa-f]{2})|(?<=\\u[0-9A-Fa-f]{4}))"
+GENERIC_HOME_DIR_PATTERN = _HOME_DIR_BOUNDARY + r"(?:/home|/Users)/[A-Za-z0-9_][A-Za-z0-9_.-]*"
 
 _RUN_USER_RE = re.compile(r"^[a-z_][a-z0-9_-]*$")
 
