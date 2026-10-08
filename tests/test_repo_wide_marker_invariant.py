@@ -132,6 +132,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
     "tests/build/test_fresh_page_safety.py::test_ci_runs_site_toolchain_tests_in_required_frontend_job",
+    "tests/build/test_fresh_path_guard.py::test_baseline_ledger_reproduces_all_exact_git_blobs_and_loader_identities",
     "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/common/test_jsonl_splitlines_guard.py::test_scripts_structured_readers_do_not_use_str_splitlines",
