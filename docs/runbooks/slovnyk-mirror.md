@@ -23,6 +23,9 @@ distinct lemmas in the selected manifest and the currently configured dictionary
 `--limit` caps the initial manifest selection but does not shrink that denominator.
 `fetched`, `reused`, `misses`, `errors` and `pending` partition lookup accounting.
 Errors are unresolved work even though they are counted separately from pending.
+If another alias durably resolves an earlier failed or unaccounted lookup during
+the run, final accounting moves that alias lookup from `errors` or `pending` to
+`reused`. It does not count the shared publication as another fetch or miss.
 Only `verified_complete` proves fully resolved lemmas; attempted is never completion.
 
 Every startup checks the actual cache schema, normalized lookup identity, filename,
@@ -38,6 +41,11 @@ Same-lookup lemma aliases share validated rows without replacing completed cache
 bytes or repeating requests. Distinct lookup identities sharing a filename fail
 closed before overwrite. Final completion and checkpoint digests are revalidated
 against the current durable cache; earlier scan results cannot prove completion.
+Collision failures report `reason=cache-filename-collision` and
+`action=resolve-distinct-lookup-identities-before-retry`, without emitting raw
+lookup identities or filenames. Check the manifest and retained cache locally
+for distinct identities mapped to the same sanitized filename; resolve the
+conflict before retrying. The diagnostic does not authorize cache deletion.
 
 Cache results are written to unique sibling temporary files, flushed and fsynced,
 then atomically replaced and the directory fsynced. Checkpoints use the same

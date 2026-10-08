@@ -24,6 +24,7 @@ from scripts.lexicon.enrich_manifest import (
     _slovnyk_cache,
     _slovnyk_cache_path,
     _slovnyk_lookup_word,
+    _SlovnykCacheCollision,
 )
 
 
@@ -124,7 +125,7 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
         for lemma in lemmas:
             path, identity = _slovnyk_cache_path(lemma), _slovnyk_lookup_word(lemma)
             if path in identities and identities[path] != identity:
-                raise ValueError("cache filename collision between distinct lookup identities")
+                raise _SlovnykCacheCollision("cache filename collision between distinct lookup identities")
             identities[path] = identity
         selected = lemmas if args.limit is None else lemmas[: args.limit]
         fingerprint = hashlib.sha256(
@@ -191,6 +192,9 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
             status = "limited"
     except KeyboardInterrupt:
         status = "interrupted"
+    except _SlovnykCacheCollision:
+        emit("ERROR reason=cache-filename-collision action=resolve-distinct-lookup-identities-before-retry")
+        status = "error"
     except (OSError, ValueError, TypeError, AttributeError, KeyError):
         emit("ERROR invalid input/checkpoint or storage/publication failure")
         status = "error"
@@ -201,15 +205,18 @@ def _run_mirror(args, checkpoint: Path, cache_dir: Path, emit) -> int:
                 completed.clear()
                 for lemma in lemmas:
                     rows, digest = _cache_state(lemma)
-                    for slug in rows - resolved[lemma]:
-                        if (lemma, slug) not in accounted:
-                            counts["pending"] -= 1
+                    for slug in rows:
+                        key = accounted.get((lemma, slug), "pending")
+                        if key in {"pending", "errors"}:
+                            counts[key] -= 1
                             counts["reused"] += 1
+                            accounted[lemma, slug] = "reused"
                     for slug in resolved[lemma] - rows:
-                        key = accounted[lemma, slug]
+                        key = accounted.get((lemma, slug), "pending")
                         if key != "errors":
                             counts[key] -= 1
                             counts["errors"] += 1
+                            accounted[lemma, slug] = "errors"
                     resolved[lemma] = rows
                     if digest is not None:
                         completed[lemma] = digest

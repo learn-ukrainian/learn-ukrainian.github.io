@@ -5278,7 +5278,7 @@ def _is_read_only_snapshot_excluded_path(path: str) -> bool:
 
 
 def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
-    """Capture the observable Git state of a read-only worker's checkout.
+    """Capture Git state and linked database contents for a read-only worker.
 
     The snapshot includes ignored files because a writeful legacy audit can
     create ignored cache entries that ordinary ``git status`` deliberately
@@ -5287,6 +5287,10 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
 
     Paths under ``.worktrees/`` are excluded entirely (#7124): they belong to
     concurrent dispatch lanes, not to the task being guarded.
+    Provisioned DB links retain their Git status when the primary target is
+    written (#9421). Fingerprint their link text, resolved path, and contents,
+    including SQLite's persistent journal/WAL at the resolved target, so a
+    write followed by retargeting to an older copy cannot settle ``done``.
     """
     commands = (
         (
@@ -5353,6 +5357,38 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
+    # Discover database links directly so every provisioned link is covered
+    # without duplicating the provisioning paths in another scope.
+    try:
+        with os.scandir(cwd / "data") as data_entries:
+            database_paths = sorted(Path(entry.path) for entry in data_entries if entry.name.endswith(".db"))
+    except FileNotFoundError:
+        database_paths = []
+    except OSError as exc:
+        return None, f"linked database snapshot failed: data: {type(exc).__name__}"
+    for link in database_paths:
+        if not link.is_symlink():
+            continue
+        relative_path = link.relative_to(cwd).as_posix()
+        try:
+            link_text = os.readlink(link)
+            target = link.resolve(strict=True)
+            fingerprints = []
+            for suffix in ("", "-journal", "-wal"):
+                database_file = Path(f"{target}{suffix}")
+                try:
+                    with database_file.open("rb") as handle:
+                        digest = hashlib.file_digest(handle, "sha256").hexdigest()
+                except FileNotFoundError:
+                    if not suffix:
+                        raise
+                    digest = None
+                fingerprints.append(digest)
+        except (OSError, RuntimeError) as exc:
+            return None, f"linked database snapshot failed: {relative_path}: {type(exc).__name__}"
+        entries[relative_path] = entries.get(relative_path, "!!") + ":" + json.dumps(
+            {"link_text": link_text, "resolved_path": str(target), "contents": fingerprints}
+        )
     return entries, None
 
 
@@ -10387,7 +10423,11 @@ def _run_worker(
                 final_state.pop("read_only_checkout_pre", None)
                 final_state.pop("read_only_checkout_post", None)
                 clean_snapshots_to_discard = snapshot_dir
-            if read_only_mutation_paths or task_records_snapshot_error:
+            if (
+                read_only_mutation_paths
+                or task_records_snapshot_error
+                or (read_only_snapshot_error or "").startswith("linked database snapshot failed:")
+            ):
                 final_status = "failed"
                 ok_outcome = False
 
@@ -10715,6 +10755,14 @@ def _run_worker(
             snapshot = _publish_cause(
                 task_id,
                 _TypedCause("task_records_snapshot_failed", diagnostic=task_records_snapshot_error),
+                source="worker",
+                field="last_error",
+            )
+            last_error = f"{last_error}; {snapshot}" if last_error else snapshot
+        elif (read_only_snapshot_error or "").startswith("linked database snapshot failed:"):
+            snapshot = _publish_cause(
+                task_id,
+                _TypedCause("read_only_checkout_snapshot_failed", diagnostic=read_only_snapshot_error),
                 source="worker",
                 field="last_error",
             )

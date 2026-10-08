@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import os
+import re
+import select
 import shlex
 import shutil
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -64,12 +67,20 @@ case "$1" in
 esac
 """)
     exe.chmod(0o755)
+    exe = bindir / "logger"
+    exe.write_text("""#!/usr/bin/env bash
+[ "$#" = 3 ] && [ "$1" = -t ] && [ "$2" = lu-driver ] || exit 99
+printf '%s\\n' "$3" >> "$FAKE_LOGGER_MESSAGES"
+exit "${FAKE_LOGGER_RC:-0}"
+""")
+    exe.chmod(0o755)
     cgroup = tmp_path / "cgroup"
     cgroup.write_text("0::/test/outside.scope\n")
     return {
         "PATH": f"{bindir}:{os.environ['PATH']}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
+        "FAKE_LOGGER_MESSAGES": str(tmp_path / "logger-messages"),
         # Hermetic: never read a deployment config from the runner's home.
         "LU_DRIVER_SCOPE_CONFIG": str(tmp_path / "no-driver-scope.env"),
         "FLEET_COMMS_ROOT": str(tmp_path / "fleet-plane"),
@@ -216,10 +227,106 @@ def test_slice_requires_loaded_unit_file(tmp_path: Path, state: str, fragment: s
         assert "PROVIDER:" not in result.stdout
 
 
-@pytest.mark.parametrize("rc", [1, 2, 3, 4, 5, 137])
+def _assert_exit_line(stderr: str, env: dict[str, str], rc: int, forwarded: str = "none") -> None:
+    lines = [line for line in stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT")]
+    assert len(lines) == 1, stderr
+    match = re.fullmatch(
+        rf"DRIVER_SCOPE_EXIT epic=devops rc={rc} signal={forwarded} ts=(\d{{4}}-\d{{2}}-\d{{2}}T\d{{2}}:\d{{2}}:\d{{2}}Z)",
+        lines[0],
+    )
+    assert match, lines[0]
+    timestamp = datetime.strptime(match[1], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+    assert abs((datetime.now(UTC) - timestamp).total_seconds()) < 15
+    assert Path(env["FAKE_LOGGER_MESSAGES"]).read_text().splitlines() == lines
+
+
+@pytest.mark.parametrize("rc", [0, 1, 2, 3, 4, 5, 137])
 def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)
-    assert _run(launcher, env, TEST_RC=str(rc)).returncode == rc
+    result = _run(launcher, env, TEST_RC=str(rc), TZ="Pacific/Honolulu")
+    assert result.returncode == rc, result.stderr
+    _assert_exit_line(result.stderr, env, rc)
+
+
+@pytest.mark.parametrize("rc", [0, 130])
+def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> None:
+    launcher, env = _launcher(tmp_path)
+    with subprocess.Popen(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**os.environ, **env, "TEST_RC": str(rc)},
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ) as process:
+        assert process.stdout is not None and process.stderr is not None
+        # Preparation follows scope verification. The child then waits for
+        # stdin, so the exit write happens only after the stderr reader closes.
+        assert select.select([process.stdout], [], [], 15)[0], "preparation timed out"
+        assert process.stdout.readline() == "PREPARED\n"
+        process.stderr.close()
+        stdout, _ = process.communicate("stdin survives\n", timeout=15)
+    assert process.returncode == rc
+    assert "PROVIDER:stdin survives" in stdout
+    journal = Path(env["FAKE_LOGGER_MESSAGES"]).read_text()
+    _assert_exit_line(journal, env, rc)
+
+
+def test_forwarded_term_records_exit_once(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    adapter = launcher.parent / "scripts/launchers/claude.sh"
+    with adapter.open("a") as stream:
+        # Signal the waiting parent while this child is still running; wait for
+        # the forwarded TERM instead of exiting independently.
+        stream.write("""
+launcher_adapter_exec() {
+  trap 'exit 0' TERM
+  kill -TERM "$PPID"
+  while :; do sleep 0.1; done
+}
+""")
+    result = _run(launcher, env)
+    assert result.returncode == 143, result.stderr
+    _assert_exit_line(result.stderr, env, 143, "TERM")
+
+
+@pytest.mark.parametrize("rc", [0, 5, 137])
+def test_logger_failure_preserves_exit_and_stderr(tmp_path: Path, rc: int) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(launcher, env, TEST_RC=str(rc), FAKE_LOGGER_RC="1")
+    assert result.returncode == rc, result.stderr
+    _assert_exit_line(result.stderr, env, rc)
+
+
+def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
+    (bindir / "logger").unlink()
+    # Keep the sandbox utilities available without falling back to host logger.
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git"):
+        executable = shutil.which(name)
+        assert executable is not None
+        (bindir / name).symlink_to(executable)
+    env["PATH"] = str(bindir)
+    result = _run(launcher, env, TEST_RC="137")
+    assert result.returncode == 137, result.stderr
+    assert shutil.which("logger", path=env["PATH"]) is None
+    assert not Path(env["FAKE_LOGGER_MESSAGES"]).exists()
+    lines = [line for line in result.stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT")]
+    assert len(lines) == 1, result.stderr
+    assert re.fullmatch(
+        r"DRIVER_SCOPE_EXIT epic=devops rc=137 signal=none ts=\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+        lines[0],
+    )
+
+
+@pytest.mark.parametrize("extra", [{"FAKE_SCOPE_FAIL": "1"}, {"FAKE_OOM_POLICY": "stop"}])
+def test_reaped_scope_refusal_records_exit(tmp_path: Path, extra: dict[str, str]) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(launcher, env, **extra)
+    assert result.returncode == 6, result.stderr
+    _assert_exit_line(result.stderr, env, 6)
 
 
 def test_entry_owner_observes_verified_after_path_unlinked(tmp_path: Path) -> None:

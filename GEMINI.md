@@ -151,7 +151,7 @@ Key changes from earlier versions:
 | Seminar | None | N/A |
 
 ### Quality gates
-- Word targets from `scripts/audit/config.py` — ALWAYS read, never hardcode
+- Legacy module word targets from `scripts/audit/config.py` — ALWAYS read, never hardcode (core fresh-build lessons: `non-negotiable-rules.md` rule 4)
 - Review: deterministic fixes only, accept at score >= 8.0 after R1 fixes
 - Write prompt ends with mandatory plan-point checklist (recency effect)
 - Positive rules over negative: "Start with concrete example" not just "Don't say Let us"

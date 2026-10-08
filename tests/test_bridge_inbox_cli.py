@@ -1034,6 +1034,57 @@ def test_open_model_data_slot_bridge_round_trip(provider, isolate_db, capsys):
 # ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────
 
 
+def test_curriculum_upgrade_alias_round_trip_keeps_dedicated_inbox(isolate_db, capsys):
+    alias = "codex-curriculum-upgrade"
+    slot = "codex-core"
+    assert _channels.resolve_recipient_alias(slot) == slot
+    assert _channels.resolve_recipient_alias(alias) == slot
+    assert _run_cli(["send", "bare control", "--to", "codex", "--from", "claude-infra"]) == 0
+    assert _run_cli(["send", "curriculum proof", "--to", alias, "--from", "claude-infra"]) == 0
+    capsys.readouterr()
+    with sqlite3.connect(isolate_db) as conn:
+        assert conn.execute("SELECT to_llm, content FROM messages ORDER BY id").fetchall() == [
+            ("codex", "bare control"), (slot, "curriculum proof"),
+        ]
+
+    for recipient in (alias, slot):
+        assert _run_cli(["inbox", "--for", recipient]) == 0
+        inbox = capsys.readouterr().out
+        assert f"Inbox for {slot}: 1 unread" in inbox
+        assert "curriculum proof" in inbox
+        assert "bare control" not in inbox
+    assert _run_cli(["inbox", "--for", "codex"]) == 0
+    inbox = capsys.readouterr().out
+    assert "bare control" in inbox
+    assert "curriculum proof" not in inbox
+
+    assert _run_cli(["ack-all", alias, "--consumed-by-live-driver"]) == 0
+    capsys.readouterr()
+    with sqlite3.connect(isolate_db) as conn:
+        assert conn.execute(
+            "SELECT to_llm, acknowledged, consumed_by_live_driver FROM messages ORDER BY id"
+        ).fetchall() == [("codex", 0, 0), (slot, 1, 1)]
+    assert _run_cli(["inbox", "--for", alias]) == 0
+    inbox = capsys.readouterr().out
+    assert f"Inbox for {slot}: 0 unread | 0 read-but-not-live-consumed | 1 live-consumed" in inbox
+    assert "bare control" not in inbox
+
+
+def test_curriculum_upgrade_alias_requires_registered_core_slot(tmp_path):
+    assignments = tmp_path / "assignments.yaml"
+    assignments.write_text("assignments: {core: {slots: []}}\n", encoding="utf-8")
+    alias = "codex-curriculum-upgrade"
+    assert _channels.resolve_recipient_alias(alias, assignments_path=assignments) == alias
+
+
+def test_required_core_slots_keep_dedicated_recipients():
+    for provider in ("claude", "codex", "gemini", "grok", "cursor"):
+        slot = f"{provider}-core"
+        assert slot in _channels._load_registry_slots()
+        assert _channels.resolve_recipient_alias(slot) == slot
+    assert "kimi-core" not in _channels._load_registry_slots()
+
+
 def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
     # monitor still carries `slots: []` in area_assignments.yaml;
     # already-minted SESSION_HANDOFF_AGENT names must drain via the provider.

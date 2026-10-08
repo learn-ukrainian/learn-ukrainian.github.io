@@ -21,15 +21,17 @@ function sha256(data: Buffer): string {
   return createHash('sha256').update(data).digest('hex');
 }
 
-function packageFixture() {
-  const content = '{"schema":"atlas-practice-index","schemaVersion":1,"deckVersion":"deck","level":"A1"}\n';
+function packageFixture(
+  path = 'practice-index.A1.json',
+  content = '{"schema":"atlas-practice-index","schemaVersion":1,"deckVersion":"deck","level":"A1"}\n',
+) {
   const fileBytes = Buffer.from(content, 'utf8');
   const packageBytes = Buffer.from(
     JSON.stringify({
       schema: 'atlas-practice-deck-package',
       schemaVersion: 1,
       deckVersion: 'deck',
-      files: [{ path: 'practice-index.A1.json', content }],
+      files: [{ path, content }],
     }),
     'utf8',
   );
@@ -45,9 +47,9 @@ function packageFixture() {
     file_count: 1,
     files: [
       {
-        path: 'practice-index.A1.json',
-        level: 'A1',
-        kind: 'index',
+        path,
+        level: path.split('.')[1],
+        kind: path.split('.')[0].slice('practice-'.length),
         bytes: fileBytes.length,
         sha256: sha256(fileBytes),
       },
@@ -135,6 +137,87 @@ describe('hydrate practice deck release download', () => {
     ['https://github.com/attacker/repo/releases/download/t/evil.gz', 'github.com different repo'],
   ])('rejects non-allowlisted asset URL: %s (%s)', (url) => {
     expect(() => assertAllowedDownloadUrl(url)).toThrow(/allowlisted|https/);
+  });
+});
+
+describe('practice deck imperative package contract', () => {
+  // Test the transport boundary with opaque content, not synthetic certified cards.
+  test.each(['A1', 'A2', 'B1', 'B2', 'C1'])('accepts a pinned imperative shard at %s byte-for-byte', (level) => {
+    const path = `practice-imperative.${level}.json`;
+    const content = `{"schema":"atlas-practice-imperative","schemaVersion":1,"deckVersion":"deck","level":"${level}","imperative":[]}\n`;
+    const { packageBytes, pointer } = packageFixture(path, content);
+
+    expect(parsePackage(packageBytes, pointer)).toEqual([[path, Buffer.from(content, 'utf8')]]);
+  });
+
+  test.each([
+    '../practice-imperative.A1.json',
+    '/practice-imperative.A1.json',
+    'nested/practice-imperative.A1.json',
+    'nested\\practice-imperative.A1.json',
+    'practice-imperative.C2.json',
+    'practice-imperative.a1.json',
+    'practice-imperative.A1.json.tmp',
+    'practice-unknown.A1.json',
+    'practice-imperative.A1.json\n',
+    'practice-imperative.\u202eA1.json',
+  ])('rejects unsafe or unsupported pointer shard %j', (path) => {
+    const { packageBytes, pointer } = packageFixture(path);
+    expect(() => parsePackage(packageBytes, pointer)).toThrow('unsafe Atlas practice deck shard path');
+  });
+
+  test.each<[string, string | number]>([
+    ['bytes', 0],
+    ['sha256', '0'.repeat(64)],
+  ])('rejects an imperative shard whose pinned %s differs', (key, value) => {
+    const { packageBytes, pointer } = packageFixture('practice-imperative.A1.json');
+    const corrupted = { ...pointer, files: [{ ...pointer.files[0], [key]: value }] };
+    expect(() => parsePackage(packageBytes, corrupted)).toThrow('shard hash mismatch');
+  });
+
+  test.each(['package_bytes', 'package_sha256'])('rejects altered imperative package %s', (key) => {
+    const { packageBytes, pointer } = packageFixture('practice-imperative.A1.json');
+    const corrupted = { ...pointer, [key]: key === 'package_bytes' ? 0 : '0'.repeat(64) };
+    expect(() => parsePackage(packageBytes, corrupted)).toThrow(/package (size|sha) mismatch/);
+  });
+
+  test.each(['sha256', 'bytes', 'level', 'kind'])('rejects missing imperative pointer metadata %s', (key) => {
+    const { packageBytes, pointer } = packageFixture('practice-imperative.A1.json');
+    const file = { ...pointer.files[0] };
+    delete (file as Record<string, unknown>)[key];
+    expect(() => parsePackage(packageBytes, { ...pointer, files: [file] })).toThrow(`missing ${key}`);
+  });
+
+  test.each<[string, unknown, string]>([
+    ['schema', 'other', 'schema mismatch'],
+    ['schemaVersion', 2, 'schemaVersion mismatch'],
+    ['deckVersion', 'other', 'deckVersion mismatch'],
+    ['files', [], 'file count mismatch'],
+    ['files', [{ path: '../practice-imperative.A1.json', content: '{}' }], 'unsafe Atlas practice deck shard path'],
+    ['files', [{ path: 'practice-imperative.A2.json', content: '{}' }], 'not pinned by pointer'],
+    ['files', [{ path: 'practice-imperative.A1.json', content: null }], 'missing string content'],
+    ['files', [{ path: 'practice-imperative.A1.json', content: '{}' }], 'shard hash mismatch'],
+  ])('rejects invalid imperative package %s (%s)', (key, value, message) => {
+    const { packageBytes, pointer } = packageFixture('practice-imperative.A1.json');
+    const altered = Buffer.from(JSON.stringify({ ...JSON.parse(packageBytes.toString('utf8')), [key]: value }));
+    // Re-pin the outer envelope so the inner guard must catch the defect.
+    expect(() => parsePackage(altered, {
+      ...pointer, package_bytes: altered.length, package_sha256: sha256(altered),
+    })).toThrow(message);
+  });
+
+  test.each(['pointer', 'package'])('rejects duplicate imperative shards in the %s', (where) => {
+    const { packageBytes, pointer } = packageFixture('practice-imperative.A1.json');
+    const payload = JSON.parse(packageBytes.toString('utf8'));
+    payload.files.push(payload.files[0]);
+    const duplicated = Buffer.from(JSON.stringify(payload));
+    const files = where === 'pointer'
+      ? [pointer.files[0], pointer.files[0]]
+      : [pointer.files[0], { ...pointer.files[0], path: 'practice-imperative.A2.json', level: 'A2' }];
+    expect(() => parsePackage(duplicated, {
+      ...pointer, files, file_count: 2,
+      package_bytes: duplicated.length, package_sha256: sha256(duplicated),
+    })).toThrow(`duplicate Atlas practice deck ${where} shard`);
   });
 });
 

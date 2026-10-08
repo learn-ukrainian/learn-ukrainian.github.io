@@ -12,7 +12,7 @@
 
 > **BEHAVIORAL RULES** are in `agents_extensions/shared/memory/MEMORY.md` — enforced every session. Key: finish the job (no tech debt), stop asking (just do it), test before shipping, use tracking docs, no quality shortcuts, investigate before coding, be honest.
 
-> **NON-NEGOTIABLE RULES** in `agents_extensions/shared/rules/non-negotiable-rules.md` (served at `GET /api/rules`; offline: `agents_extensions/shared/rules/_load-via-api.md`) — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
+> **NON-NEGOTIABLE RULES** in `agents_extensions/shared/rules/non-negotiable-rules.md` (served at `GET /api/rules`; offline: `agents_extensions/shared/rules/_load-via-api.md`) — legacy word count targets are MINIMUMS (fresh-build lessons: rule 4 contracts), all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
@@ -148,7 +148,7 @@ Being readable and being concise are different things, and readable matters more
 short by being selective about what you include — drop details that do not change what the
 reader would do next — never by compressing prose into fragments, abbreviations, arrow chains,
 or jargon. This does not license terseness that costs clarity (`#0I`: plain language always),
-and it never applies to curriculum content, where word targets are MINIMUMS.
+and it never applies to curriculum content, where legacy word targets are MINIMUMS.
 
 The same applies to files written to disk: match the length of a written deliverable to what
 the task needs. Do not pad reports or handoffs with filler sections, redundant summaries, or

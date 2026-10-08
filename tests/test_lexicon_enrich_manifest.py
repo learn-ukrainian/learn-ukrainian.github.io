@@ -7227,8 +7227,9 @@ def test_strict_cache_distinct_lookup_collision_preserves_bytes(monkeypatch, tmp
     calls = []
     monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_outcome", lambda *_args: calls.append(1))
     outcomes = {}
-    with pytest.raises(ValueError, match="cache filename collision"):
+    with pytest.raises(enrich_manifest_module._SlovnykCacheCollision, match="cache filename collision") as error:
         enrich_manifest_module._strict_slovnyk_cache("abc-def", outcomes, ("vts",))
+    assert str(error.value) == "cache filename collision between distinct lookup identities"
     assert path.read_bytes() == before and not calls and not outcomes
 
 

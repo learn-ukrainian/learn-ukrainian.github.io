@@ -19,6 +19,7 @@ Code review eligibility follows the `model-assignment.md` Code review row.
 
 ### 5. Word Targets Are Minimums
 **NEVER** reduce content or change `word_target` to match short content. Expand the content instead.
+Scope: legacy module workflows (`non-negotiable-rules.md` rule 1); core fresh-build lessons are sized by their own contracts (rule 4).
 
 ### 6. GitHub Issues as Persistent Memory
 Every change tracked via GH issues. Before work: find/create issue. After: update/close. Reference in commits. Full protocol: [`issue-tracking.md`](docs/best-practices/issue-tracking.md)
