@@ -195,18 +195,23 @@ def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
     ],
 )
 def test_config_consumer_file_launches_without_pythonpath(
-    tmp_path: Path, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
+    tmp_path: Path, monkeypatch, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
 ) -> None:
     """Real file launches must work even outside the repository cwd."""
     root = Path(__file__).resolve().parents[2]
     if entrypoint == "scripts/audit/review_plan.py":
-        manifest = audit.read_yaml(root / "curriculum" / "l2-uk-en" / "curriculum.yaml")
-        level_data = next(data for level, data in manifest["levels"].items() if audit.base_level(level) == "a1")
+        manifest_path = root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+        manifest = audit.read_yaml(manifest_path)
+        # Direct-plan discovery must survive a manifest with no matching A1 slug.
+        for level, data in manifest["levels"].items():
+            if audit.base_level(level) == "a1":
+                data["modules"] = []
+        read_yaml = audit.read_yaml
+        monkeypatch.setattr(audit, "read_yaml", lambda path: manifest if path == manifest_path else read_yaml(path))
         plan_path = next(
             plan_path
-            for slug in level_data["modules"]
-            if (plan_path := root / "curriculum" / "l2-uk-en" / "plans" / "a1" / f"{slug}.yaml").is_file()
-            and audit.read_yaml(plan_path)
+            for plan_path in sorted((root / "curriculum" / "l2-uk-en" / "plans" / "a1").glob("*.yaml"))
+            if audit.read_yaml(plan_path)
         )
         arguments = ["a1", plan_path.stem, "--dry-run"]
         expected_output = f"DRY RUN: {plan_path.stem}"
