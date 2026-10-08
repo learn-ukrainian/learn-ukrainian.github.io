@@ -594,6 +594,9 @@ class ClaudeAdapter:
         are rejected outright due to the 2026-04-23 postmortem gate.
         """
         tc: dict[str, Any] = tool_config or {}
+        from scripts.agent_runtime.mechanical_admission import refuse_mechanical_execution
+
+        refuse_mechanical_execution(model or self.default_model, mode=mode, cwd=cwd, tool_config=tc, prompt=prompt)
         discussion_readonly = _discussion_readonly_requested(tool_config)
         review_isolation = bool(tc.get("review_isolation"))
         explicit_allowed_tools = tc.get("allowed_tools") is not None

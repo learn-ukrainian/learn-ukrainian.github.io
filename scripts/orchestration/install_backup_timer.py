@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Install the Learn Ukrainian backup systemd user units (preview by default).
 
-Renders the learn-ukrainian-backup{,-retention}.{service,timer} templates from
-packaging/systemd/ with @REPO_ROOT@ replaced by the primary checkout, verifies
+Renders the learn-ukrainian-backup{,-retention}.{service,timer} templates and
+the learn-ukrainian-backup-alert@.service failure-alert template (started by
+the two services' OnFailure=) from packaging/systemd/ with @REPO_ROOT@
+replaced by the primary checkout, verifies
 them with systemd-analyze when available, and previews the result. Nothing is
 written unless --apply is given; --enable (with --apply) also enables and
 starts the two timers. A symlinked unit file, or a symlink anywhere from the
@@ -33,6 +35,7 @@ UNIT_NAMES = (
     "learn-ukrainian-backup.timer",
     "learn-ukrainian-backup-retention.service",
     "learn-ukrainian-backup-retention.timer",
+    "learn-ukrainian-backup-alert@.service",
 )
 TIMER_NAMES = tuple(name for name in UNIT_NAMES if name.endswith(".timer"))
 REPO_ROOT_PLACEHOLDER = "@REPO_ROOT@"

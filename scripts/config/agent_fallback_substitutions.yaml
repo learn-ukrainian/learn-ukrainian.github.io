@@ -40,7 +40,16 @@ dispatch_fallbacks:
 # router" (paste of the substitution table built during the budget-economics
 # discussion that day). Capacity-first codex→cursor shed: operator 2026-08-12.
 
+# Task-level Haiku selection uses catalog roles, never a blanket agent shed:
+# routine_mechanical: mechanical_worker first, anthropic_practical fallback;
+# mechanical_classification: mechanical_worker; readonly_recon: mechanical_worker
+# alongside bounded_worker (Luna still needs its Sol envelope). Haiku is never a
+# replacement for review, language, design/approval, security, driver or bounded code.
 substitutions:
+  - currently_uses: "routine lockfile, pointer and smoke tasks"
+    fallback: "Resolve catalog role routine_mechanical: Haiku 5.5 first, Sonnet 5.5 fallback"
+    budget_bucket: "Claude; provider health and quota must admit the selected route"
+
   - currently_uses: "delegate.py --agent claude (adversarial review)"
     fallback: 'Agent(subagent_type="general-purpose", model="opus")'
     fallback_note: "Agent tool subagents run as children of this session"

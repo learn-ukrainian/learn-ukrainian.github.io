@@ -10,10 +10,6 @@ Tests:
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import pytest
-
 from scripts.practice.numeral_agreement_engine import (
     InterferenceType,
     NounParadigm,
@@ -442,13 +438,9 @@ def test_zero_collision_guarantee_fixture_paradigms():
             assert len(d["explanation_en"].strip()) > 10
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
-    reason="Requires full local data/vesum.db (>1MB); CI omits it",
-)
-def test_zero_collision_guarantee_large_scale():
+def test_zero_collision_guarantee_large_scale(requires_vesum_db):
     """Verify zero-collision guarantee across >= 1,000 generated cards."""
-    paradigms = load_noun_paradigms_from_db(limit=1600)
+    paradigms = load_noun_paradigms_from_db(limit=1600, vesum_db_path=requires_vesum_db)
     assert len(paradigms) >= 1000, f"Expected at least 1,000 paradigms, got {len(paradigms)}"
 
     cards = generate_deck_across_all_tiers(paradigms, target_count=1050)

@@ -9925,6 +9925,8 @@ def _run_worker(
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
+            if state.get("mechanical_task"):
+                tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
                 and mode == "read-only"
@@ -12832,6 +12834,8 @@ def _dispatch(
                 "substitution": agent_substitution,
                 "agent_alias_note": agent_alias_note,
             }
+            if mechanical_task := _mechanical_task_scope(args):
+                dry_run_state["mechanical_task"] = mechanical_task
             if routing.budget_diagnostics:
                 dry_run_state["routing_facts"] = routing.budget_diagnostics
             if requested_harness is not None:
@@ -13321,6 +13325,8 @@ def _dispatch(
             initial_state["review_contract"] = review_contract
             initial_state["review_input_paths"] = [str(path) for path in review_input_paths]
             initial_state["review_access"] = review_access
+        if mechanical_task := _mechanical_task_scope(args):
+            initial_state["mechanical_task"] = mechanical_task
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -15674,6 +15680,7 @@ def _admit_dispatch_target(
     ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
     from scripts.review.target_resolution import TargetResolutionError
 
@@ -15737,10 +15744,31 @@ def _admit_dispatch_target(
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
             trees=trees,
+            task_family=getattr(args, "research_task_family", None),
+            task_role=getattr(args, "research_role", None),
+            task_prompt=getattr(args, "prompt", None),
         )
-    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
+
+
+def _mechanical_task_scope(args: argparse.Namespace) -> dict[str, Any]:
+    """Persist the admission inputs the execution adapter must recheck (#9996)."""
+    from scripts.agent_runtime.mechanical_admission import MECHANICAL_FAMILIES
+
+    family = getattr(args, "research_task_family", None)
+    if family not in MECHANICAL_FAMILIES:
+        return {}
+    return {
+        "family": family,
+        "role": getattr(args, "research_role", None),
+        "track": getattr(args, "research_track", None),
+        "language_lane": _dispatch_is_language_lane(args),
+        "review": _dispatch_is_review_typed(args),
+        "paths": list(dict.fromkeys((getattr(args, "owned_path", None) or []) +
+                                    (getattr(args, "research_owned_path", None) or []))),
+    }
 
 
 def _discard_model_probe_output(plan: object) -> None:
@@ -17617,7 +17645,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-task-family",
         default=None,
         metavar="FAMILY",
-        help="ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate).",
+        help=("ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
+              "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
+              "declare narrow safe owned paths. Classification and recon use read-only mode."),
     )
     d.add_argument(
         "--research-track",

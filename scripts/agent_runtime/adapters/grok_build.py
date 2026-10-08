@@ -15,9 +15,10 @@ The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
-- ``read-only``       → ``auto`` + ``--deny`` on write tools and ``Bash`` by
-  default. Ordinary reviewer opt-ins replace the Bash deny with fleet and
-  publish PreToolUse guards.
+- ``read-only``       → ``auto`` + unconditional ``Bash``, ``Write`` and ``Edit``
+  denies. Reviewers have no shell; only tracked checkout read tools are exposed.
+  Fleet and publish PreToolUse guards plus the tracked-read hook provide a
+  second layer for reads only, never a replacement for native denies (#9987).
 - ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
   plus the tracked fleet PreToolUse guards through the hook bridge
@@ -27,8 +28,8 @@ Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still pr
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
 while ``plan`` blocks all tool calls outright. Write dispatches map to
 ``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
-maps to ``auto`` so non-shell read tools can run; only opted-in reviewers get
-guarded Bash. Other read-only calls retain their Bash deny.
+maps to ``auto`` so non-shell read tools can run. Opted-in reviewers retain
+the Bash, Write and Edit denies and expose only tracked-file reads (#9987).
 
 Issue #8965: Grok 1.0.41 treats an explicit ``--permission-mode auto`` as winning
 over ``--always-approve``, so ``yolo_mode`` stays false and the auto classifier
@@ -37,7 +38,8 @@ refuses ``git push`` before the command runs. ``workspace-write`` therefore uses
 Write sessions install the fleet PreToolUse guards (primary-checkout write,
 secret-print, merge, and the rest of the tracked worker set) through the same
 hook bridge. They do not load the reviewer publish guard or the read-only Git
-push rewrite. Read-only reviewer sessions stay as #8945 shipped them.
+push rewrite. Read-only reviewers have no shell and use the hook as a second
+layer for tracked reads only (#9987).
 
 Issue #9008: ``danger`` keeps that argv. Claude loads the same fleet guards
 on both write modes; ``workspace-write`` is ``dontAsk`` plus an allow list and
@@ -62,14 +64,20 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import shlex
 import shutil
 import tempfile
 from dataclasses import replace
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
+from uuid import UUID
+
+from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
+from ..grok_reviewer_permissions import GROK_REVIEWER_TOOLS
 from ..result import ParseResult
 from ..trail_isolation import (
     GROK_TRAIL_DENY_TOOLS,
@@ -82,6 +90,53 @@ from ._output_schema import json_value, load_output_schema, plan_output_schema, 
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
+
+# Diagnostics may include provider prose or partial assistant text. Mask path
+# shapes after secret redaction and before bounding, including relative paths.
+_DIAGNOSTIC_PATH = re.compile(
+    r"(?:[A-Za-z]:[\\/]|\\\\|~[\w.-]*[\\/]|\.{1,2}[\\/]|/|[\w.-]+[\\/])"
+    r"[^\s'\"`,;<>|)\]}]*"
+)
+
+
+def _stop_diagnostic(envelope: dict | None, stderr: str) -> str:
+    """Keep the terminal reason/detail ahead of partial text in a safe excerpt."""
+
+    def safe(value: str) -> str:
+        cleaned = _DIAGNOSTIC_PATH.sub("<path>", redact_text(value) or "")
+        return " ".join("".join(ch if ch.isprintable() else " " for ch in cleaned).split())
+
+    if envelope is None or "stopReason" not in envelope:
+        reason = "missing stopReason"
+    else:
+        reason = "stopReason=" + safe(json.dumps(envelope["stopReason"], ensure_ascii=False))[:160]
+    parts = [f"grok final answer incomplete: {reason}"]
+    if envelope is not None:
+        # Only terminal envelope fields, never nested tool output. Different
+        # CLI releases may expose cancellation/stop detail in these fields.
+        detail = {
+            key: envelope[key]
+            for key in (
+                "stopReasonDetail",
+                "stopDetail",
+                "stopDetails",
+                "cancellation_category",
+                "cancellationCategory",
+                "message",
+                "error",
+                "structuredOutputError",
+            )
+            if key in envelope
+        }
+        if detail:
+            parts.append("stop detail: " + safe(json.dumps(detail, ensure_ascii=False))[:220])
+    if stderr.strip():
+        parts.append(safe(stderr.strip()))
+    if envelope is not None and envelope.get("text"):
+        parts.append(safe(str(envelope["text"]).strip()))
+    # delegate persists the first diagnostic line in .diag. Keep the stop
+    # detail on that line too, ahead of stderr and partial answer text.
+    return " ".join(parts)[:500]
 
 
 # Runtime mode → grok CLI --permission-mode value.
@@ -101,10 +156,16 @@ _MODE_PERMISSION: dict[str, str] = {
 # run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
 
+# #9987: native dontAsk cancels allowed Git calls; bypass fails open if a hook
+# fails. Retain auto plus the unconditional Bash deny until the driver resolves
+# that incompatibility. The hook is defense in depth, never the shell backstop.
+_REVIEWER_PERMISSION_MODE = "auto"
+_REVIEWER_ALLOW_RULES = ("Read", "Grep")
+
 # Default deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
 # --permission-mode auto may approve unnamed commands, and prefix Bash denies
 # are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
-# write tools wholesale unless the caller opts into reviewer hooks.
+# write tools wholesale, including for callers opting into reviewer hooks.
 # Native Grok's documented permission-rule prefixes are Bash, Edit, Write, Read,
 # Grep, WebFetch, and MCPTool. These are permission prefixes, not built-in tool
 # IDs: ``search_replace`` belongs to ``--disallowed-tools``, not ``--deny``.
@@ -224,15 +285,39 @@ def _guard_agent_definition(
     return "\n".join(lines)
 
 
-def _reviewer_agent_definition() -> str:
+def _reviewer_agent_definition(cwd: Path) -> str:
     """Read-only reviewer agent: fleet guards plus the publish guard."""
-    return _guard_agent_definition(
+    from scripts.common.repo_root import project_interpreter
+
+    source_root = Path(__file__).resolve().parents[3]
+    guard = source_root / "scripts/agent_runtime/grok_reviewer_permissions.py"
+    if not guard.is_file():
+        raise RuntimeError("Grok reviewer permission guard unavailable")
+    definition = _guard_agent_definition(
         name="lu-read-only-reviewer",
         description="Read-only reviewer with fleet PreToolUse guards",
-        body="Review the requested work using the available tools and report executed evidence.",
+        body=(
+            "Review the requested work using tracked-file reads only. "
+            "Approval-requiring tools are denied without prompting. Continue with permitted "
+            "read tools on tracked files inside this checkout (grep requires a file path); "
+            "do not retry a denied action through a wrapper. "
+            "Shell execution is unavailable: auto mode retains the native Bash, Write and "
+            "Edit denies. The hook is a second layer for reads only (#9987). "
+            "Report any execution evidence you could not obtain."
+        ),
         publish_guard=True,
         native_aliases=False,
     )
+    guard_command = shlex.join([str(project_interpreter(source_root)), str(guard), "--review-root", str(cwd)])
+    # This guard consumes native Grok events directly, before native approval.
+    hook = (
+        '    - matcher: ".*"\n'
+        "      hooks:\n"
+        "        - type: command\n"
+        f"          command: {json.dumps(guard_command)}\n"
+        "          timeout: 15\n"
+    )
+    return definition.replace("\n---\n", "\n" + hook + "---\n", 1)
 
 
 def _write_guard_agent_definition() -> str:
@@ -290,6 +375,47 @@ def grok_session_dir(grok_home: Path, cwd: Path, session_id: str) -> Path:
     identical, documented lookup rule.
     """
     return grok_cwd_sessions_dir(grok_home, cwd) / session_id
+
+
+def _permission_cancellation(
+    envelope: dict | None, plan: InvocationPlan | None, call_start_time: float | None
+) -> bool:
+    """Classify only typed cancellation evidence for this exact native turn."""
+    if envelope is None or envelope.get("stopReason") != "cancelled":
+        return False
+    for key in ("cancellation_category", "cancellationCategory"):
+        if envelope.get(key) in ("permission_cancelled", "PermissionCancelled"):
+            return True
+    # Native JSON may omit the category. Never scan peers or infer it from
+    # assistant/tool text; bind the last terminal event to the returned UUID.
+    sid = envelope.get("sessionId") or envelope.get("session_id")
+    if plan is None or not isinstance(sid, str):
+        return False
+    try:
+        if str(UUID(sid)) != sid:
+            return False
+        if sid in plan.metadata.get(_META_LIVENESS_SNAPSHOT, ()):
+            return False
+        events = grok_session_dir(resolve_grok_home(env=plan.env_overrides), plan.cwd, sid) / "events.jsonl"
+        terminal = None
+        with events.open(encoding="utf-8") as stream:
+            for line in stream:
+                if not line.strip():
+                    continue
+                event = json.loads(line)
+                if not isinstance(event, dict):
+                    return False
+                if event.get("type") == "turn_ended":
+                    terminal = event
+        if terminal is None:
+            return False
+        if call_start_time is not None:
+            stamp = datetime.fromisoformat(terminal["ts"].replace("Z", "+00:00"))
+            if stamp.tzinfo is None or stamp.timestamp() < call_start_time:
+                return False
+        return terminal.get("outcome") == "cancelled" and terminal.get("cancellation_category") == "permission_cancelled"
+    except (OSError, ValueError, TypeError, KeyError, UnicodeError, RecursionError):
+        return False
 
 
 class GrokBuildAdapter:
@@ -367,7 +493,7 @@ class GrokBuildAdapter:
         guard_agent_suffix: str | None = None
         guard_definition: str | None = None
         if reviewer_tools:
-            guard_definition = _reviewer_agent_definition()
+            guard_definition = _reviewer_agent_definition(cwd)
             guard_agent_suffix = ".grok-reviewer-agent.md"
             guard_agent_key = _META_REVIEWER_AGENT_FILE
         elif mode in _UNATTENDED_WRITE_MODES and not trail_isolation and not review_isolation and not mcp_read_only:
@@ -418,7 +544,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
-        # read tools can run. The reviewer opt-in replaces the Bash deny with hooks.
+        # read tools can run. Reviewers retain that Bash deny alongside a closed tool
+        # set and all-tool guard; literal shell execution remains unresolved.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
@@ -430,10 +557,18 @@ class GrokBuildAdapter:
             permission_mode = "default"
         elif review_isolation:
             permission_mode = str(tc.get("permission_mode") or "bypassPermissions")
+        elif reviewer_tools:
+            permission_mode = _REVIEWER_PERMISSION_MODE
         else:
             permission_mode = "bypassPermissions" if mcp_read_only else _MODE_PERMISSION[mode]
         cmd.extend(["--permission-mode", permission_mode])
         cmd.extend(["--cwd", str(execution_cwd)])
+        if reviewer_tools:
+            cmd.extend(["--no-subagents", "--disable-web-search"])
+            for rule in _REVIEWER_ALLOW_RULES:
+                cmd.extend(["--allow", rule])
+            for rule in ("MCPTool", "WebFetch", "WebSearch"):
+                cmd.extend(["--deny", rule])
         if (mcp_read_only or mode in _UNATTENDED_WRITE_MODES) and not review_isolation and not trail_isolation:
             cmd.append("--always-approve")
         if mcp_read_only and not review_isolation:
@@ -443,8 +578,6 @@ class GrokBuildAdapter:
                 cmd.extend(["--deny", rule])
         elif mode == "read-only" and not trail_isolation and not review_isolation:
             for rule in _READ_ONLY_DENY_RULES:
-                if reviewer_tools and rule == "Bash":
-                    continue
                 cmd.extend(["--deny", rule])
         if trail_isolation:
             cmd.extend(
@@ -516,6 +649,8 @@ class GrokBuildAdapter:
         if disallowed:
             cmd.extend(["--disallowed-tools", str(disallowed)])
         allowed = tc.get("allowed_tools")
+        if reviewer_tools:
+            allowed = ",".join(GROK_REVIEWER_TOOLS)
         if allowed:
             cmd.extend(["--tools", str(allowed)])
 
@@ -529,7 +664,7 @@ class GrokBuildAdapter:
             "grok invocation: task=%s mode=%s permission=%s model=%s effort=%s",
             task_id,
             mode,
-            _MODE_PERMISSION[mode],
+            permission_mode,
             requested_model,
             effective_effort,
         )
@@ -590,9 +725,13 @@ class GrokBuildAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        _ = (output_file, call_start_time)  # grok -p flushes to stdout
+        _ = output_file  # grok -p flushes to stdout
 
         obj = _parse_json_object(stdout)
+        terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
+        permission_cancelled = _permission_cancellation(obj, plan, call_start_time)
+        if permission_cancelled:
+            obj = {**obj, "cancellation_category": "permission_cancelled"}
         usage = obj.get("modelUsage") if obj else None
         runtime_model = next(iter(usage)) if isinstance(usage, dict) and len(usage) == 1 else None
         if not isinstance(runtime_model, str) or not runtime_model.strip():
@@ -627,7 +766,9 @@ class GrokBuildAdapter:
             return ParseResult(
                 ok=False,
                 response="",
-                stderr_excerpt=provider_error[:500] or "grok provider error",
+                stderr_excerpt=(
+                    _stop_diagnostic(obj, stderr) if not terminal_ok else provider_error[:500] or "grok provider error"
+                ),
                 rate_limited=failure_code == "rate_limited",
                 failure_code=failure_code,
                 provider_error_text=provider_error,
@@ -639,6 +780,8 @@ class GrokBuildAdapter:
         if output_schema is not None:
             envelope = json_value(stdout)
             envelope = envelope if isinstance(envelope, dict) else {}
+            if permission_cancelled:
+                envelope = {**envelope, "cancellation_category": "permission_cancelled"}
             parsed = structured_result(
                 envelope.get("structuredOutput"),
                 output_schema,
@@ -651,7 +794,17 @@ class GrokBuildAdapter:
                 ),
                 session_id=envelope.get("sessionId"),
             )
-            return replace(parsed, substitution=attribution)
+            return replace(
+                parsed,
+                failure_code="permission_cancelled" if permission_cancelled else parsed.failure_code,
+                provider_error_text=provider_error,
+                substitution=attribution,
+                stderr_excerpt=(
+                    _stop_diagnostic(envelope, stderr)
+                    if envelope.get("stopReason") != "end_turn"
+                    else parsed.stderr_excerpt
+                ),
+            )
 
         if obj is not None:
             text = str(obj.get("text") or "").strip()
@@ -666,13 +819,16 @@ class GrokBuildAdapter:
         # leave only opening narration (#9771). Text alone is not a final
         # answer: require the CLI's exact terminal marker, as the structured
         # path already does. Do not infer completion from the reply body.
-        terminal_ok = obj is not None and obj.get("stopReason") == "end_turn"
         usable = bool(text)
         failed = returncode != 0 or not usable or not terminal_ok
         failure_code = (
-            "provider_stream_incomplete"
+            "permission_cancelled"
+            if permission_cancelled
+            else "provider_stream_incomplete"
             if not terminal_ok
-            else provider_failure_code(provider_error) if failed else None
+            else provider_failure_code(provider_error)
+            if failed
+            else None
         )
         rate_limited = failed and failure_code == "rate_limited"
         ok = returncode == 0 and usable and not failed
@@ -681,12 +837,10 @@ class GrokBuildAdapter:
         if not ok:
             source = (stderr or "").strip() or (stdout or "").strip() or ""
             stderr_excerpt = source[:500] or None
-            if not terminal_ok and (returncode == 0 or text):
-                reason = "missing stopReason" if obj is None or "stopReason" not in obj else "non-end_turn stopReason"
+            if not terminal_ok and (obj is not None or returncode == 0 or text):
                 # Preserve partial text only in bounded diagnostics, never in
                 # response (which becomes the driver's result file).
-                diagnostic = f"{text}\n{stderr.strip()}".strip() if text else source
-                stderr_excerpt = f"grok final answer incomplete: {reason}\n{diagnostic}".strip()[:500]
+                stderr_excerpt = _stop_diagnostic(obj, stderr or (stdout if obj is None else ""))
 
         return ParseResult(
             ok=ok,

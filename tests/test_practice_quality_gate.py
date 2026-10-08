@@ -1134,13 +1134,10 @@ def test_production_practice_quality_gate_passes(tmp_path: Path, monkeypatch):
     assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"
 
 
-@pytest.mark.skipif(
-    not Path("data/vesum.db").exists() or not Path("site/public/lexicon/practice-index.A1.json").exists(),
-    reason="Requires local data/vesum.db and generated practice shards in site/public/lexicon/",
-)
-def test_production_practice_shards_all_modes_gate_passes():
+def test_production_practice_shards_all_modes_gate_passes(requires_vesum_db):
     """Verify that all practice shards across all modes satisfy volume thresholds and linguistic gates."""
-    results = run_all_practice_audits(all_modes=True, verify_vesum=True)
+    assert Path("site/public/lexicon/practice-index.A1.json").is_file(), "Generated practice shards must be provisioned"
+    results = run_all_practice_audits(all_modes=True, verify_vesum=True, vesum_db=requires_vesum_db)
     total_violations = sum(len(v) for v in results.values())
     assert total_violations == 0, f"Practice Shards Quality Gate failed with violations: {results}"
 

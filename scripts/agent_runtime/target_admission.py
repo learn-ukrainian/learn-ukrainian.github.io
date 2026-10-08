@@ -169,6 +169,9 @@ def resolve_and_admit(
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
     review_facts: Any = None,
+    task_family: str | None = None,
+    task_role: str | None = None,
+    task_prompt: str | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -228,6 +231,13 @@ def resolve_and_admit(
     requested = _gate_names(seats, models)
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
+    from .mechanical_admission import refuse_mechanical_task
+
+    mechanical_scope = {key: gate[key] for key in (
+        "paths", "language_lane", "research_track", "prompt_file", "trees"
+    ) if key in gate}
+    refuse_mechanical_task(requested[1], mode=mode, task_family=task_family,
+                           task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(requested[1])
     # Target reads follow the original-request gates, but precede every
@@ -340,6 +350,8 @@ def resolve_and_admit(
     )
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
+        refuse_mechanical_task(final[1], mode=mode, task_family=task_family,
+                               task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
     with _minting():
