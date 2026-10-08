@@ -2072,3 +2072,25 @@ def test_non_cursor_auto_incoming_writer_is_not_admitted(harness):
 @pytest.mark.parametrize("selector", ["auto", "default", "cursor:auto", "cursor/default"])
 def test_cursor_auto_harness_aliases_keep_cursor_family(harness, selector):
     assert recorder._author_model_family(harness, selector) == "cursor"
+
+
+@pytest.mark.parametrize("remaining", [54, 5])
+@pytest.mark.parametrize("head", [SHA, OTHER])
+def test_10016_quota_does_not_change_exact_head_verdict_qualification(monkeypatch, tmp_path, remaining, head):
+    from scripts.fleet import credit_lane
+
+    reads = []
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_: reads.append(True) or {
+        "agents": {"codex": {"remaining_pct": remaining}}, "diagnostics": {"stale": False},
+    })
+    facts = facts_for({"google"})
+    route = recorder.structural_review_route(facts, risk="critical")
+    assert route.selected is not None and route.selected.capacity.remaining_pct is None
+    tasks, _, _ = setup_record(monkeypatch, tmp_path, head=head)
+    if head == SHA:
+        result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+        assert result["head"] == SHA
+    else:
+        with pytest.raises(recorder.RecordError, match="head moved"):
+            recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert reads == []

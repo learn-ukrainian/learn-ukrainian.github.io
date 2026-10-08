@@ -19,6 +19,13 @@ from scripts.common.git_context import sanitized_git_env
 from tests.project_python import project_python
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+
+
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     # sanitized_git_env() strips GIT_DIR/GIT_WORK_TREE/etc — without it, running
     # this suite from inside a `git commit` pre-commit hook leaks the OUTER

@@ -244,10 +244,11 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     ],
 )
 def test_bench_health_preserves_capacity_gate(status, reason, route, names, capsys):
-    results = check_bench_health(routing_snapshot={route: status})
+    data = {"agents": {route: {"status": status, "remaining_pct": 5}}, "diagnostics": {"stale": False}}
+    results = check_bench_health(routing_snapshot=data)
     assert all(not names.intersection(seats) for seats in results.values())
     # Native Grok supplies the second Anthropic seat when Codex is unavailable.
-    assert main([], routing_snapshot={route: status}) == (0 if route == "codex" else 1)
+    assert main([], routing_snapshot=data) == (0 if route == "codex" else 1)
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
@@ -257,7 +258,7 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
     )
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(
-        {route: status}, data_egress_policy="local_interactive", review_profile="code", risk="medium"
+        data, data_egress_policy="local_interactive", review_profile="code", risk="medium"
     )
     for family in AUTHOR_FAMILIES:
         for name in names:
@@ -275,7 +276,9 @@ def test_bench_health_preserves_critical_role_gate():
 @pytest.mark.parametrize("route,family", [("codex", "anthropic"), ("claude", "openai")])
 def test_accepted_single_seat_still_requires_available_reviewer(risk, status, route, family, capsys):
     # Disable both newly admitted Grok routes to keep exercising the zero-seat invariant.
-    assert main(["--risk", risk], routing_snapshot={route: status, "grok": status, "cursor": status}) == 1
+    data = {"agents": {lane: {"status": status, "remaining_pct": 5} for lane in (route, "grok", "cursor")},
+            "diagnostics": {"stale": False}}
+    assert main(["--risk", risk], routing_snapshot=data) == 1
     captured = capsys.readouterr()
     finding = next(item for item in _findings(captured) if item["author_family"] == family)
     assert finding["minimum"] == 1

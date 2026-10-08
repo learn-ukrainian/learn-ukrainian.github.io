@@ -15,6 +15,7 @@ from hashlib import sha256
 from typing import Any
 
 from scripts.fleet import credit_lane
+from scripts.review.capacity import review_capacity
 
 
 @dataclass(frozen=True)
@@ -52,13 +53,28 @@ def _optional_integer(value: object) -> int | None:
     return int(number) if number is not None else None
 
 
-def _route_record(candidate: Any, snapshot: Mapping[str, object] | None) -> Mapping[str, object]:
+def _route_record(
+    candidate: Any, snapshot: Mapping[str, object] | None, *, prefer_route: bool = False
+) -> Mapping[str, object]:
     if not isinstance(snapshot, Mapping):
         return {}
+    keys = (
+        candidate.name, candidate.route, candidate.concrete_model, getattr(candidate, "family", ""),
+        *sorted(candidate.health_keys),
+    )
+    if prefer_route:
+        # Allowance belongs to the canonical seat; model health aliases must
+        # not hide an exhausted shared window. Aliases remain a fallback.
+        keys = (candidate.route, *keys)
     agents = snapshot.get("agents")
     if not isinstance(agents, Mapping):
+        # Legacy injected health maps carry no quota, but hot still orders
+        # otherwise equal review fits without becoming an exclusion.
+        for key in keys:
+            status = snapshot.get(key)
+            if isinstance(status, str):
+                return {"status": status.strip().lower()}
         return {}
-    keys = (candidate.name, candidate.route, candidate.concrete_model, *sorted(candidate.health_keys))
     for key in keys:
         record = agents.get(key)
         if isinstance(record, Mapping):
@@ -149,8 +165,10 @@ def selection_key(
     freshness_rank = {True: 0, False: 1, None: 2}[metrics.quota_fresh]
     capacity_evidence_rank = 3 if headroom_unknown else freshness_rank
     headroom = -(metrics.quota_remaining_pct or 0.0)
+    capacity = review_capacity(_route_record(candidate, snapshot, prefer_route=True), (snapshot or {}).get("diagnostics"))
     return (
         capacity_evidence_rank,
+        capacity.pressure,
         load_unknown,
         normalized_load,
         headroom,

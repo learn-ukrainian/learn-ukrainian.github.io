@@ -260,6 +260,7 @@ def resolve_and_admit(
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
         approved_review_targets: set[tuple[str, str | None]] = set()
+        admitted_review_models: dict[str, str | None] = {}
         review_seat = name
         retired_model_resolution = None
         if review_dispatch:
@@ -289,6 +290,7 @@ def resolve_and_admit(
             requested_seat: str = review_seat,
             requested_model: str | None = review_model,
             approved: set[tuple[str, str | None]] = approved_review_targets,
+            admitted_models: dict[str, str | None] = admitted_review_models,
         ) -> tuple[str, str | None]:
             selected = _resolve_review_target(
                 requested_seat,
@@ -299,6 +301,7 @@ def resolve_and_admit(
                 attempt=review_attempt,
                 snapshot=snapshot,
                 budget_seat=budget_seat,
+                budget_model=admitted_models.get(budget_seat),
                 budget_substitute=fallbacks.get(budget_seat),
                 owned_paths=review_owned_paths,
                 changed_paths=review_changed_paths,
@@ -307,6 +310,7 @@ def resolve_and_admit(
                 facts=review_facts,
             )
             approved.add(selected)
+            admitted_models[selected[0]] = selected[1]
             return selected
 
         if review_dispatch:
@@ -377,6 +381,7 @@ def _resolve_review_target(
     attempt: bool,
     snapshot: Mapping[str, Any] | None,
     budget_seat: str,
+    budget_model: str | None = None,
     budget_substitute: str | None = None,
     owned_paths: tuple[str, ...] = (),
     changed_paths: tuple[str, ...] = (),
@@ -393,6 +398,7 @@ def _resolve_review_target(
     authorship and scope, #9739) stand in for a single ``author_model``; a given
     ``author_model`` is added to them, never substituted.
     """
+    from scripts.review.capacity import review_capacity_action
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
@@ -438,7 +444,10 @@ def _resolve_review_target(
             "REVIEW_ROUTE_REFUSED: --review-author-model and --review-risk support the code profile only; "
             "Ukrainian reviews use --review-profile ukrainian without these flags"
         )
-    if attempt and snapshot is not None:
+    attempt_blocked, _ = review_capacity_action(
+        seat, ((snapshot or {}).get("agents") or {}).get(seat, {}), (snapshot or {}).get("diagnostics"), requested_model
+    )
+    if attempt and snapshot is not None and budget_seat and attempt_blocked:
         if budget_substitute and budget_substitute != budget_seat:
             detail = (
                 f"review attempt refused: agent substitution from {budget_seat} to {budget_substitute} "
@@ -461,7 +470,7 @@ def _resolve_review_target(
             risk=effective_review_risk(risk or "medium", facts.changed_paths, facts.scope_paths, profile=profile),
             review_profile=profile,
             author_model=author_model or "",
-            routing_snapshot=snapshot if trusted else None,
+            routing_snapshot=snapshot,
         )
     else:
         inputs = ResolverInputs(
@@ -469,7 +478,7 @@ def _resolve_review_target(
             review_profile=profile,
             domain=profile,
             risk=effective_review_risk(risk or "medium", changed_paths, owned_paths, profile=profile),
-            routing_snapshot=snapshot if trusted else None,
+            routing_snapshot=snapshot,
             owned_paths=owned_paths,
             changed_paths=changed_paths,
             subject_seats=subject.seats,
@@ -514,7 +523,10 @@ def _resolve_review_target(
         raise ReviewAdmissionRefused(
             f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail}{risk_note} (#8517)"
         )
-    if eligible and (snapshot is None or not trusted):
+    lane_info = (snapshot.get("agents") or {}).get(seat, {}) if snapshot else {}
+    blocked, _ = review_capacity_action(seat, lane_info, (snapshot or {}).get("diagnostics"), requested_model)
+    eligible = eligible and not blocked
+    if eligible and (snapshot is None or not budget_seat or not trusted or attempt):
         return seat, model
     if not trusted:
         hint = (
@@ -532,10 +544,18 @@ def _resolve_review_target(
         tuple(candidate for candidate in rung if candidate.family not in forbidden)
         for rung in REVIEW_LADDERS[inputs.risk]
     )
+    # The budget guard may be checking a reviewer already substituted during
+    # initial admission. Its allowance and credit allowlist belong to that
+    # admitted seat/model, independently of the original request.
+    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
+    budget_model = budget_model or (requested_model if budget_seat == seat else _default_model_for(budget_seat))
+    budget_blocked, _ = review_capacity_action(
+        budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
+    )
     resolution = resolve_reviewer(
         inputs,
         ladder=ladder,
-        excluded_quota_buckets=frozenset({budget_seat}) if snapshot else frozenset(),
+        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
     )
     if resolution.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
@@ -544,18 +564,7 @@ def _resolve_review_target(
     # bucket leaves no eligible substitute, retain the already cross-family,
     # snapshot-validated reviewer only when its lane still has capacity.
     # Health, circuit, subject, suitability and near-cap gates remain binding.
-    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
-    lane_status = (
-        (lane_info.get("interactive") or {}).get("status") or lane_info.get("status")
-        if budget_seat == "claude"
-        else lane_info.get("status")
-    )
-    if (
-        selected is None
-        and snapshot is not None
-        and lane_status in {"cool", "warm"}
-        and not (lane_info.get("runtime") or {}).get("headroom_blocked")
-    ):
+    if selected is None and snapshot is not None and not budget_blocked:
         if eligible and seat == budget_seat:
             return seat, model
         # The initial admission may already have replaced a same-family request.
