@@ -154,8 +154,20 @@ ROLLOVER_HEALTH=$(run_bounded 2 "$ROLLOVER_PYTHON" "$ROLLOVER_SCRIPT" \
   --repo-root "$CANONICAL_ROOT" detect --agent "$HANDOFF_AGENT" 2>&1) || true
 
 # 3. Key reminders. Claude keys its per-project directory by the checkout
-# path with every character outside [A-Za-z0-9-] replaced by '-'.
-CLAUDE_PROJECT_KEY=$(printf '%s' "$CANONICAL_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
+# path with every character outside [A-Za-z0-9-] replaced by '-'. The memory
+# directory belongs to the primary checkout, resolved exactly as
+# session-setup.sh resolves it, so a worktree session names the same directory.
+MEMORY_ROOT="${CODEX_CANONICAL_REPO_ROOT:-}"
+if [ -z "$MEMORY_ROOT" ]; then
+  MEMORY_GIT_COMMON_DIR=$(run_bounded 2 git -C "$PROJECT_DIR" rev-parse --path-format=absolute \
+    --git-common-dir 2>/dev/null) || MEMORY_GIT_COMMON_DIR=""
+  if [ -n "$MEMORY_GIT_COMMON_DIR" ] && [ "$(basename "$MEMORY_GIT_COMMON_DIR")" = ".git" ]; then
+    MEMORY_ROOT=$(dirname "$MEMORY_GIT_COMMON_DIR")
+  else
+    MEMORY_ROOT="$PROJECT_DIR"
+  fi
+fi
+CLAUDE_PROJECT_KEY=$(printf '%s' "$MEMORY_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
 CONTEXT="$CONTEXT
 KEY REMINDERS:
   - Thread rollover health (read-only): $ROLLOVER_HEALTH

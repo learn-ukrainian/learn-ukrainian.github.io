@@ -22,10 +22,14 @@ PROJECTS_DIR = Path.home() / ".claude" / "projects"
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "token-usage"
 
 # Readable project names, matched against Claude's encoded checkout directory
-# names: the checkout itself (``...-<name>``) or one of its worktrees
-# (``...-<name>--worktrees-...``), wherever the checkout lives.
+# names (every character outside [A-Za-z0-9-] becomes '-'): the checkout itself
+# (``...-<name>``) or one of its worktrees under ``.worktrees/`` or
+# ``.claude/worktrees/`` (``...-<name>--worktrees-...``,
+# ``...-<name>--claude-worktrees-...``), wherever the checkout lives. Any other
+# suffix, such as a sibling copy ``<name>--backup`` or ``<name>__backup``, is
+# another checkout and is not counted.
 PROJECT_NAMES = ("learn-ukrainian", "kubedojo")
-PROJECT_DIR_RE = re.compile(r"-(" + "|".join(map(re.escape, PROJECT_NAMES)) + r")(?:--.*)?$")
+PROJECT_DIR_RE = re.compile(r"-(" + "|".join(map(re.escape, PROJECT_NAMES)) + r")(?:--(?:claude-)?worktrees-.+)?$")
 
 # Filter: only include sessions within the last N days (None = all time)
 SINCE_DAYS = int(os.environ.get("SINCE_DAYS", "0")) or None
