@@ -1,5 +1,5 @@
 {
- "parser_version": "pravopys_2019_pdf_v3",
+ "parser_version": "pravopys_2019_pdf_v4",
  "about": "Words of the official PDF that script_anomalies() reports after decoding, each reviewed against the rendered page. Every other word of every § must be in one script.",
  "paragraphs": {
   "35": {
