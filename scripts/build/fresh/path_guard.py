@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import re
 import stat
@@ -11,6 +13,10 @@ from pathlib import Path
 from scripts.level_config import PREVIOUS_EDITIONS
 
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+A1_BASELINE_LEDGER = "curriculum/l2-uk-en/a1-v1/baseline-v1.sha256.json"
+# Frozen from exact core-file blobs at 18e6b86bae29d586ca0e230b7450037c2e4c1c6d.
+# The mutable curriculum manifest is deliberately not a provenance authority.
+A1_BASELINE_LEDGER_SHA256 = "084843b0248be21e12f4894091e9d39d0d710e182cce8edf806dea9e86d88dd1"
 
 
 def load_a1_reference(repo_root: Path, level: str, slug: str) -> tuple[str, bytes] | None:
@@ -30,23 +36,8 @@ def load_a1_reference(repo_root: Path, level: str, slug: str) -> tuple[str, byte
         raise ValueError("a1_reference_invalid_edition")
     relative = f"curriculum/l2-uk-en/{edition}/{slug}/module.md"
     root = repo_root.absolute()
-    descriptor = os.open("/", os.O_RDONLY | os.O_DIRECTORY)
     try:
-        for component in (*root.parts[1:], *Path(relative).parts[:-1]):
-            info = os.lstat(component, dir_fd=descriptor)
-            if not stat.S_ISDIR(info.st_mode):
-                raise ValueError(f"a1_reference_unsafe_component: {relative}")
-            child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=descriptor)
-            os.close(descriptor)
-            descriptor = child
-        info = os.lstat("module.md", dir_fd=descriptor)
-        if not stat.S_ISREG(info.st_mode) or not info.st_mode & 0o444:
-            raise ValueError(f"a1_reference_not_readable_regular_file: {relative}")
-        leaf = os.open("module.md", os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=descriptor)
-        with os.fdopen(leaf, "rb") as source:
-            if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
-                raise ValueError(f"a1_reference_not_regular_file: {relative}")
-            data = source.read()
+        data = _read_a1_file(root, relative)
     except FileNotFoundError as error:
         tracked = False
         for command in (["ls-files", "--", relative], ["ls-tree", "--name-only", "HEAD", "--", relative]):
@@ -61,7 +52,46 @@ def load_a1_reference(repo_root: Path, level: str, slug: str) -> tuple[str, byte
             tracked = tracked or bool(result.stdout.strip())
         if tracked:
             raise ValueError(f"a1_reference_tracked_missing: {relative}") from error
+        data = None
+    try:
+        ledger_bytes = _read_a1_file(root, A1_BASELINE_LEDGER)
+    except FileNotFoundError as error:
+        raise ValueError("a1_reference_provenance_ledger_missing") from error
+    if hashlib.sha256(ledger_bytes).hexdigest() != A1_BASELINE_LEDGER_SHA256:
+        raise ValueError("a1_reference_provenance_ledger_digest")
+    # Parsing occurs only after authenticating the complete immutable ledger.
+    files = json.loads(ledger_bytes)["files"]
+    if data is None:
+        if relative in files:
+            raise ValueError(f"a1_reference_baseline_missing: {relative}")
         return None
+    if relative not in files:
+        raise ValueError(f"a1_reference_provenance_unknown_module: {relative}")
+    if hashlib.sha256(data).hexdigest() != files[relative]:
+        raise ValueError(f"a1_reference_provenance_byte_drift: {relative}")
+    return relative, data
+
+
+def _read_a1_file(root: Path, relative: str) -> bytes:
+    """Read nonempty UTF-8 bytes through race-safe, no-symlink descriptors."""
+    descriptor = os.open("/", os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for component in (*root.parts[1:], *Path(relative).parts[:-1]):
+            info = os.lstat(component, dir_fd=descriptor)
+            if not stat.S_ISDIR(info.st_mode):
+                raise ValueError(f"a1_reference_unsafe_component: {relative}")
+            child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        filename = Path(relative).name
+        info = os.lstat(filename, dir_fd=descriptor)
+        if not stat.S_ISREG(info.st_mode) or not info.st_mode & 0o444:
+            raise ValueError(f"a1_reference_not_readable_regular_file: {relative}")
+        leaf = os.open(filename, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=descriptor)
+        with os.fdopen(leaf, "rb") as source:
+            if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+                raise ValueError(f"a1_reference_not_regular_file: {relative}")
+            data = source.read()
     finally:
         os.close(descriptor)
     if not data:
@@ -70,7 +100,7 @@ def load_a1_reference(repo_root: Path, level: str, slug: str) -> tuple[str, byte
         data.decode("utf-8")
     except UnicodeDecodeError as error:
         raise ValueError(f"a1_reference_invalid_utf8: {relative}") from error
-    return relative, data
+    return data
 
 
 def public_diagnostic(message: str, repo_root: Path) -> str:
