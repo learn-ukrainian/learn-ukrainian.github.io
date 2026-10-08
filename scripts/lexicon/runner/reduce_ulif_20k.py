@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 import time
 from collections.abc import Sequence
@@ -40,6 +39,7 @@ def _event(name: str, **fields: Any) -> None:
 def _run(args: argparse.Namespace) -> int:
     repo = args.repo.resolve()
     _load_repo(repo)
+    _resolve_job_memory_mib(args)
     from scripts.lexicon.runner.memory import (
         MemoryPolicy,
         require_hard_cap_protection,
@@ -175,6 +175,24 @@ def _maybe_enrich(
     return 0
 
 
+def _resolve_job_memory_mib(args: argparse.Namespace) -> None:
+    """Fill --memory-*-mib from contracts.job_memory_mib; refuse non-positive values.
+
+    Needs the repo on sys.path (``_load_repo``). An invalid environment value
+    raises ValueError from contracts.env_mib before any work starts.
+    """
+    from scripts.lexicon.runner.contracts import job_memory_mib
+
+    job_high, job_max = job_memory_mib()
+    if args.memory_high_mib is None:
+        args.memory_high_mib = job_high
+    elif args.memory_high_mib <= 0:
+        raise SystemExit("--memory-high-mib must be a positive whole number of MiB")
+    if args.memory_max_mib is None:
+        args.memory_max_mib = job_max
+    elif args.memory_max_mib <= 0:
+        raise SystemExit("--memory-max-mib must be a positive whole number of MiB")
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
@@ -215,18 +233,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--max-lemmas", type=int, default=None)
     parser.add_argument("--include-raw-html", action="store_true")
     parser.add_argument("--skip-cohort-pin", action="store_true")
-    # Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
-    # a deployment sets the env vars.
-    parser.add_argument(
-        "--memory-high-mib",
-        type=int,
-        default=int(os.environ.get("LU_LEXICON_JOB_MEMORY_HIGH_MIB", "").strip() or 1280),
-    )
-    parser.add_argument(
-        "--memory-max-mib",
-        type=int,
-        default=int(os.environ.get("LU_LEXICON_JOB_MEMORY_MAX_MIB", "").strip() or 1792),
-    )
+    parser.add_argument("--memory-high-mib", type=int, default=None)
+    parser.add_argument("--memory-max-mib", type=int, default=None)
     parser.add_argument(
         "--require-memory-cap",
         action="store_true",
