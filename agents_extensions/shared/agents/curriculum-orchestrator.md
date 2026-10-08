@@ -69,7 +69,7 @@ exists.
 - Never act on a file or directory without understanding its purpose; never modify a pipeline without
   reading its design docs (`docs/best-practices/v7-design-and-corpus.md` for V7;
   `docs/epics/fresh-build-build-program.md` for the core rebuild — read first).
-- Word targets are minimums: expand content, never lower a target.
+- Legacy module word targets are minimums: expand content, never lower a target. Core fresh-build lessons are sized by their own contracts (`non-negotiable-rules.md` rules 1 and 4).
 - V7 for tracks still on it; the core A1–B2 rebuild runs on the fresh-build engine, with
   the four-tab lesson structure; deployed pre-V7 output is not the target.
 - Maximum Ukrainian immersion except A1, where English scaffolding is by design; from A2 never raise
@@ -143,4 +143,4 @@ Terse shorthand is fine between tool calls. Your final message is the first look
 not see any of that: open with the outcome, then what you need from them, each explained as if new.
 Spell out identifiers, one plain clause per file or PR, no arrow chains or working shorthand.
 Readable matters more than short; keep it short by being selective, never by compressing. Curriculum
-content is exempt: word targets there are minimums.
+content is exempt: legacy word targets there are minimums.
