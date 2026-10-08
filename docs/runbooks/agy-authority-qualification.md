@@ -58,6 +58,19 @@ is not the denominator. Use the existing
 No qualification calls, credential changes or host changes are authorized by
 this runbook's implementation.
 
+## Current Gemini admissions (2026-10-08 approval)
+
+The 2026-10-08 approval sets these Gemini roles. They are recorded here so the
+qualification gate below is read against them; they do not qualify Gemini 4.
+
+| Role | Admission |
+| --- | --- |
+| Epic driver | Admitted. `start-gemini-driver.sh --epic <lane>` enters the shared driver path. The driver default is `gemini-3.1-pro-high`; `gemini-3.8-flash-high` is also certified. Every other Gemini model id is refused. |
+| Low-risk and medium-risk code review | Admitted as formal review. The reviewer resolver and target admission still exclude Gemini from code and infra review; wiring this seat is a separate reviewed change. |
+| Ukrainian review | Admitted as formal review when the reviewer uses the Sources MCP. |
+| High-risk and critical code review | Not admitted. These stay with Opus 5.5 or Sol 6.1 until Gemini 4 passes this protocol's code/infra high and critical gates. |
+| Design input and designated approval | Not admitted. Designated approval stays with Opus 5.5 and Sol 6.1. |
+
 ## Current source evidence and unresolved prerequisites
 
 Source inspection baseline: `bfe799371645705497ac2f58789b9c5e1ad2b1ab`.
@@ -71,7 +84,7 @@ they are not a provider forecast or lasting health attestation.
 | [AGY adapter](../../scripts/agent_runtime/adapters/agy.py), `build_invocation` and `_resolve_model_flag` | Emits a resolved `--model` slug and rejects unknown explicit models. Effort remains a no-op with the `not yet wired through CLI` diagnostic. `entire_fleet.actual_model` is constructed from configured/resolved values before launch; it is not observed backend identity. Historical docstrings about display-label-only invocation are not current argv evidence. |
 | Same adapter, native `review_isolation` branch | Raises `agy_isolated_review_unsupported` without `review_attempt_boundary`. Existing content attempts with that boundary are a distinct route; their success cannot establish native formal code/infra isolation. |
 | [AGY permission runbook](agy-review-permissions.md), [attempt isolation runbook](formal-review-attempt-isolation.md), [review MCP provisioner](../../scripts/agent_runtime/review_mcp.py) and [receipt ledger](../../scripts/review/receipts/ledger.py) | Source implements scoped Sources exposure, exact tool grants and attempt boundaries for content review. Configuration, unit tests and fixture success do not prove all required tools work for a new candidate/runtime. |
-| [Formal AGY isolation runbook](agy-formal-cf-isolation.md), [catalog](../../scripts/config/model_catalog.yaml), [catalog validation](../../scripts/review/model_catalog.py), [resolver](../../scripts/review/reviewer_resolver.py) and [target admission](../../scripts/agent_runtime/target_admission.py) | AGY formal eligibility is false; Gemini/AGY code/infra review is excluded, including explicit pins and injected ladders. Qualification cannot override these production gates. |
+| [Formal AGY isolation runbook](agy-formal-cf-isolation.md), [catalog](../../scripts/config/model_catalog.yaml), [catalog validation](../../scripts/review/model_catalog.py), [resolver](../../scripts/review/reviewer_resolver.py) and [target admission](../../scripts/agent_runtime/target_admission.py) | AGY formal eligibility is false; Gemini/AGY code/infra review is excluded, including explicit pins and injected ladders. The 2026-10-08 approval of low-risk and medium-risk code review is not yet wired into these gates. Qualification cannot override these production gates. |
 | [Historical benchmark](../../scripts/audit/code_review_benchmark.py), case fields, `score_case` and `aggregate` | Prior art for case/gold structure and TP/FP/FN accounting only. Its historical model/transport matrix, heuristic matching and lack of blind adjudication do not implement this qualification protocol. Do not execute that matrix. |
 
 Four prerequisite proof rows must be complete **before any AGY qualification
@@ -89,9 +102,11 @@ Devops owns unresolved candidate availability, full prerequisite evidence and
 actual qualification. Infra owns #9302 role migration. The installed CLI has an
 effort flag but the inspected adapter does not wire it; actual identity proof
 has not been established here. Content-review tooling is not a substitute for
-the missing native authority-review proof. Current planning/design/driver and
-code/infra exclusions remain binding until the necessary explicit policy
-clearance and reviewed implementation. No fallback, guessed model ID, release
+the missing native authority-review proof. The 2026-10-08 approval lifts the
+driver exclusion and admits low-risk and medium-risk code review. The design
+input, designated approval, and high-risk and critical code/infra exclusions
+remain binding until Gemini 4 qualifies here, the necessary explicit policy
+clearance is given, and the implementation is reviewed. No fallback, guessed model ID, release
 date, synthetic pass or prototype capability proof closes these gaps.
 
 ## 1. Prepare and freeze the packet
