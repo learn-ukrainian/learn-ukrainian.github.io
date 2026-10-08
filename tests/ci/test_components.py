@@ -557,7 +557,7 @@ def test_resolved_test_sets_do_not_freeze_to_manifest_samples(manifest):
     graph = c.import_graph(manifest)
     paths = c.tracked_paths()
     for node in c.NODE_IDS:
-        resolved = set(c.test_files(node, manifest))
+        resolved = set(c.test_files(node, manifest, paths=paths, graph=graph))
         mapped = {path for path in paths if path.startswith("tests/")
                   and Path(path).name.startswith("test_") and path.endswith(".py")
                   and node in c.assign_path(path, manifest)[0]}
@@ -622,7 +622,7 @@ def test_open_model_subprocess_test_prefix_is_owned(manifest):
 
 
 def test_test_cli_forwards_workers_and_timeout(monkeypatch, capsys):
-    monkeypatch.setattr(c, 'test_files', lambda *a: ['tests/test_fixture.py'])
+    monkeypatch.setattr(c, 'test_files', lambda *a, **k: ['tests/test_fixture.py'])
     monkeypatch.setattr(c, 'vitest_files', lambda *a: [])
     monkeypatch.setattr(c, 'collect_tests', lambda *a: (['tests/test_fixture.py::test_fixture'], 0))
     commands = []
@@ -684,7 +684,7 @@ def test_junit_coverage_fresh_sets_failures_skips_absence_and_duplicate_preceden
     duplicate.write_text('<testsuite><testcase classname="tests.test_fixture.OtherClass" name="test_fail"/></testsuite>')
     ids = ['tests/test_fixture.py::test_ok[dot.value]', 'tests/test_fixture.py::OtherClass::test_fail',
            'tests/test_fixture.py::test_skip', 'tests/test_fixture.py::test_absent', 'tests/test_other.py::test_other']
-    monkeypatch.setattr(c, 'test_files', lambda *a: ['tests/test_fixture.py'])
+    monkeypatch.setattr(c, 'test_files', lambda *a, **k: ['tests/test_fixture.py'])
     calls = []
     def collect(files, args, root):
         calls.append((files, args))

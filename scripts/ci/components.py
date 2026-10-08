@@ -489,19 +489,21 @@ def inventory(manifest: dict, root: Path = ROOT) -> dict:
     }
 
 
-def test_files(component: str, manifest: dict, root: Path = ROOT) -> list[str]:
+def test_files(component: str, manifest: dict, root: Path = ROOT, *, paths: list[str] | None = None, graph: dict | None = None) -> list[str]:
     """Resolve all mapped pytest files plus transitive source importers."""
     node = manifest["components"][component]
     files = set(node["test_files"])
     prefixes = tuple(node["test_prefixes"])
-    paths = tracked_paths(root)
+    if paths is None:
+        paths = tracked_paths(root)
     tests = {path for path in paths if path.startswith("tests/")
              and PurePosixPath(path).name.startswith("test_") and path.endswith(".py")}
     files.update(path for path in tests if component in assign_path(path, manifest)[0]
                  or (prefixes and path.startswith(prefixes)))
     sources = {path for path in paths if not path.startswith("tests/")
                and component in assign_path(path, manifest)[0]}
-    graph = import_graph(manifest, root)
+    if graph is None:
+        graph = import_graph(manifest, root)
     # Reverse traversal from *files*, rather than node SCCs, avoids treating
     # every test in a cyclic product pair as an importer of every source file.
     reverse = {}
@@ -763,7 +765,9 @@ def junit_coverage(paths: list[Path], manifest: dict, components: Sequence[str],
         identity = nodeid_to_junit_id(row.node_id)
         if rank[row.outcome] >= rank.get(outcomes.get(identity), -1):
             outcomes[identity] = row.outcome
-    files = {node: test_files(node, manifest, root) for node in components}
+    paths_list = tracked_paths(root)
+    graph = import_graph(manifest, root)
+    files = {node: test_files(node, manifest, root, paths=paths_list, graph=graph) for node in components}
     collected = {}
     for node in components:
         args = tuple(manifest["components"][node]["test_args"])
