@@ -82,7 +82,20 @@ ENV_MAX_LIVE_WRITE_WORKERS = "DISPATCH_MAX_LIVE_WRITE_WORKERS"
 ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
 ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
-_DEFAULT_WORKER_MEM_RESERVE_GIB = 2.0
+_DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
+# Deployment env file with the same variables (``NAME=value`` or
+# ``export NAME=value`` lines). Read only for the live environment, after the
+# process environment, so a long-running session started before the host set
+# its overrides still sees them. ``DISPATCH_ADMISSION_ENV_FILE`` names another
+# file; set it to an empty value to read none.
+ENV_ADMISSION_FILE = "DISPATCH_ADMISSION_ENV_FILE"
+ADMISSION_ENV_FILE_NAME = "dispatch-admission.env"
+_THRESHOLD_ENV_NAMES = (
+    ENV_MAX_LIVE_WRITE_WORKERS,
+    ENV_MIN_MEM_AVAILABLE_GIB,
+    ENV_MAX_LOAD_PER_CPU,
+    ENV_WORKER_MEM_RESERVE_GIB,
+)
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
 # slot until the worker exists (#8717).
@@ -251,9 +264,60 @@ def _env_number(env: Mapping[str, str], name: str, default: float, *, integer: b
     return value
 
 
+def admission_env_file(environ: Mapping[str, str], *, live: bool) -> Path | None:
+    """The deployment env file to read, or ``None``.
+
+    ``DISPATCH_ADMISSION_ENV_FILE`` wins (empty means none). Otherwise the live
+    environment uses ``$XDG_CONFIG_HOME/learn-ukrainian/dispatch-admission.env``
+    (the home config directory when unset); an explicit mapping without the
+    variable reads none.
+    """
+    if ENV_ADMISSION_FILE in environ:
+        raw = environ[ENV_ADMISSION_FILE].strip()
+        return Path(raw).expanduser() if raw else None
+    if not live:
+        return None
+    base = environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+    return Path(base) / "learn-ukrainian" / ADMISSION_ENV_FILE_NAME
+
+
+def read_admission_env_file(path: Path | None) -> dict[str, str]:
+    """Threshold variables from a deployment env file; missing or unreadable reads as empty."""
+    if path is None:
+        return {}
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    values: dict[str, str] = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].lstrip()
+        name, sep, value = line.partition("=")
+        name, value = name.strip(), value.strip()
+        if not sep or name not in _THRESHOLD_ENV_NAMES:
+            continue
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        values[name] = value
+    return values
+
+
 def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
-    """Config defaults, each overridden by its environment variable. Invalid values raise ``ValueError``."""
-    env = os.environ if environ is None else environ
+    """Config defaults, overridden by the deployment env file, then by the environment.
+
+    Invalid values raise ``ValueError``.
+    """
+    live = environ is None
+    process_env = os.environ if environ is None else environ
+    file_env = read_admission_env_file(admission_env_file(process_env, live=live))
+    env = {
+        **file_env,
+        **{k: v for k, v in process_env.items() if k in _THRESHOLD_ENV_NAMES and v.strip()},
+    }
     defaults = config_defaults()
     return Thresholds(
         max_live_write_workers=int(

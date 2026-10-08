@@ -44,20 +44,21 @@ DELEGATE_WORKTREE_ADD_MAX_S = 900.0
 # danger) when any check fails; read-only dispatches are exempt. An environment
 # variable with the same name overrides each default; `--force-admission
 # "<reason>"` overrides one dispatch and records the reason in its task record.
-# The defaults below are generic and conservative. Real values are
-# deployment-configured: each host sets them through the environment overrides
-# (see the private operations docs). Task admission snapshots carry memory, load, and
-# CPU steal counters for measurement.
+# The defaults below are generic and deliberately conservative; they are not
+# any deployment's values. Each host sets its real values through the
+# environment overrides or the deployment env file read by
+# dispatch_admission.load_thresholds (see the private operations docs). Task
+# admission snapshots carry memory, load, and CPU steal counters for measurement.
 # Live write workers (spawning/running, pid alive) at which a new one is refused.
-DISPATCH_MAX_LIVE_WRITE_WORKERS = 4
+DISPATCH_MAX_LIVE_WRITE_WORKERS = 2
 # /proc/meminfo MemAvailable floor, in GiB.
-DISPATCH_MIN_MEM_AVAILABLE_GIB = 6.0
+DISPATCH_MIN_MEM_AVAILABLE_GIB = 8.5
 # 1-minute load average divided by os.cpu_count(); refused above this.
-DISPATCH_MAX_LOAD_PER_CPU = 1.5
+DISPATCH_MAX_LOAD_PER_CPU = 1.0
 # Shared lu.slice pool (#9975): refused when the pool's non-reclaimable use
 # (memory.current minus file cache) plus this per-worker reserve, in GiB, would
 # exceed lu.slice memory.high. Skipped when the cgroup files are missing.
-DISPATCH_WORKER_MEM_RESERVE_GIB = 2.0
+DISPATCH_WORKER_MEM_RESERVE_GIB = 2.5
 
 # =============================================================================
 # TRACK CONFIGURATION

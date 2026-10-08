@@ -252,11 +252,12 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
         min_mem_available_gib=config.DISPATCH_MIN_MEM_AVAILABLE_GIB,
         max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
     )
-    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (
-        4,
-        6.0,
-        1.5,
-    )
+    assert (
+        defaults.max_live_write_workers,
+        defaults.min_mem_available_gib,
+        defaults.max_load_per_cpu,
+        defaults.worker_mem_reserve_gib,
+    ) == (2, 8.5, 1.0, 2.5)
 
     overridden = adm.load_thresholds(
         {
@@ -271,22 +272,21 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
 def test_defaults_allow_cap_slots_and_refuse_below_the_floor(tmp_path, probe):
     tasks = tmp_path / "tasks"
     defaults = adm.load_thresholds({})
-    for index in range(3):
-        _record(tasks, f"writer-{index:02d}", pid=1000 + index)
+    _record(tasks, "writer-00", pid=1000)
 
     before_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
     assert before_cap.admitted
-    assert "live write workers 3/4" in before_cap.summary()
+    assert "live write workers 1/2" in before_cap.summary()
 
-    _record(tasks, "writer-03", pid=1003)
+    _record(tasks, "writer-01", pid=1001)
     at_cap = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: True, thresholds=defaults)
     assert not at_cap.admitted
-    assert "live write workers 4/4 reached the cap" in at_cap.failures[0]
+    assert "live write workers 2/2 reached the cap" in at_cap.failures[0]
 
-    probe["probe"] = adm.HostProbe(mem_available_bytes=int(5.9 * _GIB), load1=0.0, cpu_count=8, proc_available=True)
+    probe["probe"] = adm.HostProbe(mem_available_bytes=int(8.4 * _GIB), load1=0.0, cpu_count=8, proc_available=True)
     below_floor = adm.evaluate("workspace-write", tmp_path / "empty", thresholds=defaults)
     assert not below_floor.admitted
-    assert "below the floor of 6 GiB" in below_floor.failures[0]
+    assert "below the floor of 8.5 GiB" in below_floor.failures[0]
 
 
 @pytest.mark.parametrize(
@@ -405,17 +405,17 @@ def test_summary_omits_the_slice_when_it_is_not_reported(tmp_path, probe):
 # --- Shared lu.slice pool headroom (#9975) --------------------------------------------------
 
 
-def _fake_pool(directory: Path, *, current: int, file_cache: int, high: int = 24 * _GIB) -> Path:
+def _fake_pool(directory: Path, *, current: int, file_cache: int, high: int = 21 * _GIB) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "memory.current").write_text(f"{current}\n", encoding="ascii")
     (directory / "memory.high").write_text(f"{high}\n", encoding="ascii")
-    (directory / "memory.max").write_text(f"{26 * _GIB}\n", encoding="ascii")
+    (directory / "memory.max").write_text(f"{23 * _GIB}\n", encoding="ascii")
     (directory / "memory.stat").write_text(f"active_file {file_cache}\ninactive_file 0\n", encoding="ascii")
     return directory
 
 
 def test_full_shared_pool_refuses_a_write_worker(tmp_path, probe, monkeypatch):
-    pool = _fake_pool(tmp_path / "lu.slice", current=25 * _GIB, file_cache=2 * _GIB)
+    pool = _fake_pool(tmp_path / "lu.slice", current=21 * _GIB, file_cache=_GIB // 2)
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
     tasks = tmp_path / "tasks"
 
@@ -424,40 +424,40 @@ def test_full_shared_pool_refuses_a_write_worker(tmp_path, probe, monkeypatch):
     assert not decision.admitted
     [failure] = decision.failures
     assert failure == (
-        "lu.slice non-cache use 23.0 GiB plus a 2 GiB worker reserve exceeds MemoryHigh 24.0 GiB "
-        "(DISPATCH_WORKER_MEM_RESERVE_GIB=2)"
+        "lu.slice non-cache use 20.5 GiB plus a 2.5 GiB worker reserve exceeds MemoryHigh 21.0 GiB "
+        "(DISPATCH_WORKER_MEM_RESERVE_GIB=2.5)"
     )
     record = decision.to_record()
-    assert record["pool_nonreclaimable_gib"] == 23.0
-    assert record["pool_file_cache_gib"] == 2.0
-    assert record["pool_limit_gib"] == 24.0
-    assert record["worker_mem_reserve_gib"] == 2.0
+    assert record["pool_nonreclaimable_gib"] == 20.5
+    assert record["pool_file_cache_gib"] == 0.5
+    assert record["pool_limit_gib"] == 21.0
+    assert record["worker_mem_reserve_gib"] == 2.5
     assert record["pool_check_skipped"] is None
 
 
 def test_file_cache_does_not_count_against_the_pool(tmp_path, probe, monkeypatch):
-    pool = _fake_pool(tmp_path / "lu.slice", current=23 * _GIB, file_cache=6 * _GIB)
+    pool = _fake_pool(tmp_path / "lu.slice", current=28 * _GIB, file_cache=14 * _GIB)
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
 
     decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
 
     assert decision.admitted
-    assert "lu.slice 17.0/24.0 GiB non-cache (+6.0 GiB file cache; worker reserve 2 GiB)" in decision.summary()
+    assert "lu.slice 14.0/21.0 GiB non-cache (+14.0 GiB file cache; worker reserve 2.5 GiB)" in decision.summary()
 
 
 def test_worker_reserve_env_override_changes_the_pool_decision(tmp_path, probe, monkeypatch):
-    pool = _fake_pool(tmp_path / "lu.slice", current=21 * _GIB, file_cache=0)
+    pool = _fake_pool(tmp_path / "lu.slice", current=17 * _GIB, file_cache=0)
     monkeypatch.setenv("LU_SLICE_CGROUP", str(pool))
     tasks = tmp_path / "tasks"
 
     roomy = adm.evaluate("workspace-write", tasks, thresholds=_LIMITS)
     strict = adm.evaluate(
-        "workspace-write", tasks, thresholds=adm.load_thresholds({adm.ENV_WORKER_MEM_RESERVE_GIB: "4"})
+        "workspace-write", tasks, thresholds=adm.load_thresholds({adm.ENV_WORKER_MEM_RESERVE_GIB: "5.5"})
     )
 
     assert roomy.admitted
     assert not strict.admitted
-    assert any("DISPATCH_WORKER_MEM_RESERVE_GIB=4" in failure for failure in strict.failures)
+    assert any("DISPATCH_WORKER_MEM_RESERVE_GIB=5.5" in failure for failure in strict.failures)
 
 
 def test_missing_pool_cgroup_skips_the_check_and_logs_why(tmp_path, probe, monkeypatch, caplog):
@@ -503,3 +503,47 @@ def test_read_only_dispatch_does_not_probe_the_pool(tmp_path, monkeypatch):
     monkeypatch.setattr(adm, "probe_pool", lambda *_a, **_k: pytest.fail("read-only must not probe the pool"))
 
     assert adm.evaluate("read-only", tmp_path / "tasks").admitted
+
+
+def test_deployment_env_file_fills_thresholds_the_environment_does_not_set(tmp_path):
+    env_file = tmp_path / "admission.env"
+    env_file.write_text(
+        "# deployment overrides\n"
+        f"export {adm.ENV_MAX_LIVE_WRITE_WORKERS}=7\n"
+        f"{adm.ENV_MIN_MEM_AVAILABLE_GIB}='5.5'\n"
+        "UNRELATED=1\n"
+        "not a line\n",
+        encoding="utf-8",
+    )
+    limits = adm.load_thresholds(
+        {adm.ENV_ADMISSION_FILE: str(env_file), adm.ENV_MIN_MEM_AVAILABLE_GIB: "9.5"}
+    )
+    assert limits.max_live_write_workers == 7  # from the file
+    assert limits.min_mem_available_gib == 9.5  # the environment wins over the file
+    assert limits.max_load_per_cpu == adm.config_defaults().max_load_per_cpu
+
+
+def test_env_file_is_optional_and_can_be_disabled(tmp_path, monkeypatch):
+    assert adm.load_thresholds({adm.ENV_ADMISSION_FILE: str(tmp_path / "missing.env")}) == adm.config_defaults()
+    assert adm.admission_env_file({adm.ENV_ADMISSION_FILE: ""}, live=True) is None
+    # An explicit mapping without the variable reads no file; the live default is XDG-based.
+    assert adm.admission_env_file({}, live=False) is None
+    assert adm.admission_env_file({"XDG_CONFIG_HOME": str(tmp_path)}, live=True) == (
+        tmp_path / "learn-ukrainian" / adm.ADMISSION_ENV_FILE_NAME
+    )
+
+
+def test_live_thresholds_read_the_default_env_file(tmp_path, monkeypatch):
+    target = tmp_path / "learn-ukrainian" / adm.ADMISSION_ENV_FILE_NAME
+    target.parent.mkdir()
+    target.write_text(f"{adm.ENV_MAX_LOAD_PER_CPU}=0.5\n", encoding="utf-8")
+    monkeypatch.delenv(adm.ENV_ADMISSION_FILE, raising=False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    assert adm.load_thresholds().max_load_per_cpu == 0.5
+
+
+def test_invalid_env_file_value_is_refused(tmp_path):
+    env_file = tmp_path / "admission.env"
+    env_file.write_text(f"{adm.ENV_MAX_LIVE_WRITE_WORKERS}=many\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="is not a whole number"):
+        adm.load_thresholds({adm.ENV_ADMISSION_FILE: str(env_file)})

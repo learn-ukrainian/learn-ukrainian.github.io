@@ -1081,7 +1081,11 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
 `danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
 defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets
-them through the environment variable of the same name (see the private operations docs):
+them through the environment variable of the same name, or in a deployment env file
+(`NAME=value` lines, `$XDG_CONFIG_HOME/learn-ukrainian/dispatch-admission.env` by default, or the
+file named by `DISPATCH_ADMISSION_ENV_FILE`; empty reads none) that a session started before the
+host set its overrides still picks up. A process environment variable wins over the file (see the
+private operations docs):
 
 | Check | Refused when |
 | --- | --- |
