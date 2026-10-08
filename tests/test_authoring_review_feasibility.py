@@ -286,7 +286,7 @@ def record_verdict(
                 return comments[-1]
             raise AssertionError(args.verb)
         if args[-2:] == ["--json", "baseRefName,baseRefOid,headRefOid"]:
-            return {"baseRefOid": base, "headRefOid": head}
+            return {"baseRefName": "main", "baseRefOid": base, "headRefOid": head}
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": "feature", "state": "OPEN"}
         raise AssertionError(args)
@@ -1196,7 +1196,9 @@ def test_attach_without_pr_enumerates_from_the_open_prs_older_release_base(
     assert (receipt["review_base_sha"], receipt["base_tip_sha"], receipt["head_sha"]) == (release, release, head)
 
     # The recorder, run on its own on the same history, reads that base, sees both families and qualifies no one.
-    monkeypatch.setattr(recorder, "_run_json", lambda _args: {"baseRefOid": release, "headRefOid": head})
+    monkeypatch.setattr(
+        recorder, "_run_json", lambda _args: {"baseRefName": "release", "baseRefOid": release, "headRefOid": head}
+    )
     monkeypatch.setattr(recorder, "_pages", lambda _request: github_listing(repo, release, head))
     pr_facts = recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
     assert pr_facts.existing_families == {"anthropic", "openai", "xai"}

@@ -785,6 +785,8 @@ def pr_review_facts(
 
     The PR's base and head come from GitHub; membership comes from the local
     ``git rev-list``. Any difference between the two commit sets refuses.
+    The base ref name is required before facts are collected: a missing, blank,
+    or non-string name would otherwise skip default-branch exclusion.
     """
     pr = _run_json(
         ["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefName,baseRefOid,headRefOid"]
@@ -792,6 +794,9 @@ def pr_review_facts(
     base = pr.get("baseRefOid") if isinstance(pr, dict) else None
     head = pr.get("headRefOid") if isinstance(pr, dict) else None
     base_name = pr.get("baseRefName") if isinstance(pr, dict) else None
+    if not isinstance(base_name, str) or not base_name.strip():
+        raise RecordError("PR base ref name missing or malformed")
+    base_name = base_name.strip()
     if not isinstance(base, str) or not SHA.fullmatch(base):
         raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
     if head != head_sha:
@@ -802,7 +807,7 @@ def pr_review_facts(
     github_shas = [entry.get("sha") for entry in listed]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
         raise RecordError("PR commit set malformed")
-    exclude = authorship_exclude_sha(repo_root, base_branch=base_name if isinstance(base_name, str) else None)
+    exclude = authorship_exclude_sha(repo_root, base_branch=base_name)
     facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
