@@ -413,6 +413,7 @@ raise SystemExit(args.func(args))
         assert "stale_run_nonce" in result.stderr
 
 
+@pytest.mark.parametrize("expiry_kind", ["client", "process"])
 @pytest.mark.parametrize(
     "scenario,expected_rc,recovery_waits",
     [
@@ -428,7 +429,7 @@ raise SystemExit(args.func(args))
     ],
 )
 def test_ask_expiry_lookup_and_documented_same_task_continuation(
-    monkeypatch, tmp_path, scenario, expected_rc, recovery_waits
+    monkeypatch, tmp_path, expiry_kind, scenario, expected_rc, recovery_waits
 ):
     """Real ask parsing/expiry → documented status lookup → nonce-bound wait, offline."""
     from contextlib import redirect_stderr, redirect_stdout
@@ -460,6 +461,9 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
             )
             return subprocess.CompletedProcess(command, 0, f"{args.task_id}\n{NONCE}\n", "")
         assert args.command == "wait" and args.run_nonce is None
+        if expiry_kind == "process":
+            assert kwargs["timeout"] == args.timeout + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
+            raise subprocess.TimeoutExpired(command, kwargs["timeout"])
         monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, args.timeout + 1))
         stdout, stderr = io.StringIO(), io.StringIO()
         with redirect_stdout(stdout), redirect_stderr(stderr):
@@ -487,9 +491,16 @@ def test_ask_expiry_lookup_and_documented_same_task_continuation(
         )
         with pytest.raises(SystemExit) as expiry:
             _cli._handle_acp_compat(args, "codex")
-    signal = "ask-codex review dispatch did not complete: status=None"
-    assert expiry.value.code == signal  # ask exposes a failure message, not wait's rc 124
-    assert observed == [{"response": "", "ok": False, "stderr_excerpt": signal}]
+    if expiry_kind == "client":
+        signal = "ask-codex review dispatch did not complete: status=None"
+        assert expiry.value.code == signal  # ask exposes a failure message, not wait's rc 124
+        assert observed == [{"response": "", "ok": False, "stderr_excerpt": signal}]
+    else:
+        signal = "delegate.py wait timed out at process level"
+        assert signal in str(expiry.value.code)
+        assert observed == []  # the outer timeout raises rather than returning a task result
+    recovery_text = REFERENCE.read_text().split("**Synchronous ask expiry:**", 1)[1].split("```bash", 1)[0]
+    assert ("status=None" if expiry_kind == "client" else signal) in recovery_text
     assert json.loads(task_path.read_text())["run_nonce"] == NONCE
     assert [command[0] for command in calls] == ["dispatch", "wait"]
     call_file.write_text(json.dumps(calls), encoding="utf-8")
