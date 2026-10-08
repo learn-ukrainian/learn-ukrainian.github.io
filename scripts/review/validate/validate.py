@@ -30,6 +30,13 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.activity_rubric import (
+    ActivityRubricError,
+    activity_table,
+    is_a1,
+    pinned_rubric,
+    review_errors,
+)
 from scripts.curriculum.resolver.codes import TABS
 from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records, review_tools
 
@@ -562,6 +569,7 @@ def _check_finding_evidence(
     attempt_id: str,
     manifest_sha256: str,
     previous_attempt_id: str | None,
+    a1_activity: bool = False,
 ) -> None:
     present = [key for key in EVIDENCE_KEYS if key in finding]
     if len(present) != 1:
@@ -571,7 +579,7 @@ def _check_finding_evidence(
     allow_previous = status in PREVIOUS_STATUSES
     if present[0] == "unsupported_by_source":
         severity = finding.get("severity")
-        if severity in {"BLOCKER", "MAJOR"}:
+        if severity in {"BLOCKER", "MAJOR"} and not a1_activity:
             check.add(
                 codes.UNSUPPORTED_SEVERITY_ABOVE_MINOR,
                 f"{finding.get('id')}: unsupported_by_source finding severity {severity} is above MINOR",
@@ -876,6 +884,33 @@ def validate_review(
         _check_taxonomy(check, review, taxonomy, recap=recap)
 
     findings = review.get("findings") if isinstance(review.get("findings"), list) else []
+    level = str(manifest.get("level", "")) if isinstance(manifest, dict) else ""
+    try:
+        inputs = manifest.get("inputs", {}) if isinstance(manifest, dict) else {}
+        rubric = pinned_rubric(level, inputs, lambda path: (root / path).read_bytes())
+        table = []
+        if rubric is not None:
+            if not plan_mode:
+                from scripts.review.prompts.eligibility import pin_refusals
+
+                if pin_refusals(manifest, root):
+                    raise ActivityRubricError("activity_rubric: ineligible manifest pins")
+                pin = manifest["inputs"]["plan"]
+                data = (root / pin["path"]).read_bytes()
+                if hashlib.sha256(data).hexdigest() != pin["sha256"]:
+                    raise ActivityRubricError("activity_rubric: changed pinned plan bytes")
+                plan = yaml.safe_load(data)
+            if not isinstance(plan, dict):
+                raise ActivityRubricError("activity_rubric: pinned plan unavailable")
+            table = activity_table(plan, rubric, manifest.get("lesson"))
+            if not plan_mode and {unit["activity"] for unit in units if unit["activity"]} != {
+                row["activity"] for row in table
+            }:
+                raise ActivityRubricError("activity_rubric: document activity IDs differ from pinned plan")
+        for error in review_errors(review, level, table, rubric):
+            check.add(codes.SCHEMA_INVALID, error)
+    except (ActivityRubricError, OSError, yaml.YAMLError, KeyError) as error:
+        check.add(codes.SCHEMA_INVALID, str(error))
     kind = review.get("kind") if isinstance(review.get("kind"), str) else ""
     for finding in findings:
         if not isinstance(finding, dict):
@@ -890,6 +925,7 @@ def validate_review(
             attempt_id=attempt_id,
             manifest_sha256=manifest_hash,
             previous_attempt_id=previous_attempt_id,
+            a1_activity=is_a1(level) and isinstance(finding.get("rubric"), dict),
         )
 
     if not check.ok:

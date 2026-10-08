@@ -28,6 +28,7 @@ import yaml
 from jinja2 import DictLoader, StrictUndefined
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
+from scripts.build.fresh.activity_rubric import ActivityRubricError, activity_table, pinned_rubric
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
@@ -450,6 +451,18 @@ def _build_context(
         context.update(_lesson_context(reader, manifest))
     elif kind == "plan":
         context.update(_plan_context(reader, manifest))
+    if kind in {"plan", "lesson"}:
+        try:
+            rubric = pinned_rubric(manifest["level"], manifest["inputs"], reader.read_bytes)
+            context["activity_rubric_text"] = reader.pin_text("inputs.activity_rubric") if rubric else None
+            context["activity_rubric_approval_text"] = (
+                reader.pin_text("inputs.activity_rubric_approval") if rubric else None
+            )
+            context["activity_rubric_table"] = (
+                activity_table(reader.pin_yaml("inputs.plan"), rubric, manifest.get("lesson")) if rubric else []
+            )
+        except ActivityRubricError as error:
+            raise RenderError(str(error)) from error
     return context
 
 
@@ -486,7 +499,10 @@ def sentinel_context(context: dict[str, Any]) -> dict[str, Any]:
     Structure is kept (lists keep their length, an empty one gets a single item so loop bodies
     render too), so rendering it yields exactly the text the template itself produces.
     """
-    return {key: value if key in MANIFEST_CONTEXT_KEYS else _sentinel(value) for key, value in context.items()}
+    result = {key: value if key in MANIFEST_CONTEXT_KEYS else _sentinel(value) for key, value in context.items()}
+    if context.get("activity_rubric_table") == []:
+        result["activity_rubric_table"] = []
+    return result
 
 
 @dataclass(frozen=True)

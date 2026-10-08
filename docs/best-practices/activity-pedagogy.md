@@ -96,7 +96,7 @@ Ukrainian pedagogy's most iconic exercise has no schema type yet. A `dictation` 
 | `watch-and-repeat` | Pronunciation video with repeat prompt | A1 inline |
 | `divide-words` | Split a word into syllables visually | A1 inline + workbook |
 | `count-syllables` | Count syllables in a word | A1 inline + workbook |
-| `pick-syllables` | Choose the correct syllable to complete a word | A1 inline + workbook |
+| `pick-syllables` | Select the complete set of indices matching the taught category | A1 inline + workbook |
 
 Gone forever from A2 onward. Principle 2.
 
@@ -108,8 +108,8 @@ Gone forever from A2 onward. Principle 2.
 | `unjumble` | Reorder shuffled words into a correct sentence | A1–B1 |
 | `order` | Put items in correct sequence (chronological, logical) | A1–B1 |
 | `odd-one-out` | Pick the item that doesn't belong with the rest | A1–B1 |
-| `observe` | Study a picture/diagram and answer | A1–A2 |
-| `phrase-table` | Fill cells in a substitution table | A1–A2 |
+| `observe` | Notice a contrast in `examples` with a `prompt`, then apply it | A1–A2 |
+| `phrase-table` | Consult grouped phrases as an unscored contextual phrase bank | A1–A2 |
 | `classify` | Legacy category assignment; deprecated in favor of `group-sort` and forbidden in new plans even where a legacy level schema defines it | — |
 
 ### Sort / Match (not gamification, runs through C2)
@@ -447,3 +447,22 @@ A clean run prints zero `WOULD DROP` lines. If any appear, decide case-by-case: 
 ## 6. History
 
 - **2026-04-10 (issue [#1185](https://github.com/anthropics/learn-ukrainian/issues/1185))** — One-shot comprehensive tuning of `ACTIVITY_CONFIGS` for all 14 levels. Adversarial review by Gemini (`gemini-3.1-pro-preview`) found 7 fixable issues plus a schema gap (dictation). All 7 fixes applied; dictation tracked separately as a schema ticket.
+
+
+### Fresh A1 activity rubric candidate (#10109)
+
+[a1-activity-rubric.yaml](a1-activity-rubric.yaml) contains all 20 schema types,
+including the explicit forbidden `classify` row, fixed applicability and a source-role
+ledger. It is a candidate pending independent grading and exact-digest designated
+adoption, recorded externally in
+[a1-activity-rubric.approval.yaml](a1-activity-rubric.approval.yaml). Pending adoption
+refuses all three fresh A1 review entry points. Repository schema policy establishes
+operations and admission, not learning effectiveness; child-literacy witnesses require
+reasoned adult-L2 adaptation. Owned sources are title/locator only; unavailable books
+are not claimed as consulted. No learner examples or activities are added here.
+
+`observe` supplies `examples`/`prompt`; `phrase-table` supplies grouped phrases;
+`pick-syllables` uses a category and multiple-index accepted set. Their actual schema
+shapes outrank an informal type name. Support/scaffolds are review judgments only:
+existing placement and plan-review counters remain unchanged, as does intentional
+A1 English scaffolding under the current immersion payload.

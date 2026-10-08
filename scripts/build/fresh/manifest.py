@@ -404,6 +404,12 @@ def write_manifest(
     previous_attempt: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], str]:
     root = repo_root.resolve()
+    from scripts.build.fresh.activity_rubric import ActivityRubricError, approved_pins
+
+    try:
+        rubric_pins = approved_pins(level, root)
+    except ActivityRubricError as error:
+        raise ManifestInputError(root, str(error), root) from error
     page_dir = site_dir or root / "site/src/content/docs" / level / slug
     expected_paths = (
         (plans_dir, root / "curriculum/l2-uk-en/lesson-plans" / level),
@@ -468,6 +474,7 @@ def write_manifest(
         "review_eligible": True,
         "blocked_by": [],
         "inputs": {
+            **rubric_pins,
             "plan": _input(plan_path, root),
             "pack": _locked_input(pack_path, root),
             "pack_lock": _input(Path(f"{pack_path}.lock"), root),

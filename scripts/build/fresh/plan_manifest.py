@@ -60,6 +60,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.activity_rubric import ActivityRubricError, approved_pins, pinned_rubric
 from scripts.build.fresh.manifest import _input, learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.manifest import sha256 as file_sha256
 from scripts.build.fresh.path_guard import checked_path, validate_module
@@ -101,9 +102,12 @@ INPUT_NAMES = (
     "validate_report",
     "pack_verify_report",
     "v1_totals",
+    "activity_rubric",
+    "activity_rubric_approval",
 )
-#: Inputs a manifest written before they existed may lack (see the module docstring).
-OPTIONAL_INPUT_NAMES = frozenset({"v1_totals"})
+#: Historical v1 totals and A1-only inputs absent on other levels. The schema
+#: and adoption loader still require both rubric pins on every A1 attempt.
+OPTIONAL_INPUT_NAMES = frozenset({"v1_totals", "activity_rubric", "activity_rubric_approval"})
 _RECEIPT_KEYS = (
     "manifest_sha256",
     "reviewed_plan_sha256",
@@ -541,6 +545,10 @@ def write_plan_manifest(level: str, slug: str, *, repo_root: Path, sources_insta
 
 
 def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: Any) -> tuple[dict, str]:
+    try:
+        rubric_pins = approved_pins(level, root)
+    except ActivityRubricError as error:
+        raise PlanReviewError(MANIFEST_INVALID, str(error)) from error
     plans = root / TREE / "lesson-plans" / level
     evidence = root / TREE / "evidence" / level
     directory = state_dir(root, level, slug)
@@ -643,7 +651,7 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
         "level": level,
         "slug": slug,
         "position": position,
-        "inputs": {name: _entry(root, files[name]) for name in INPUT_NAMES},
+        "inputs": {**{name: _entry(root, files[name]) for name in INPUT_NAMES if name in files}, **rubric_pins},
         "learner_state": {"sha256": learner_state_sha256(state), "source": "planned_state"},
     }
     validate_manifest_document(manifest)
@@ -835,6 +843,11 @@ def plan_review_freshness(root: Path, manifest: dict, manifest_sha: str) -> Fres
     level, slug = manifest["level"], manifest["slug"]
     stale: dict[str, str] = {}
     inputs = manifest["inputs"]
+
+    try:
+        pinned_rubric(level, inputs, lambda path: (root / path).read_bytes())
+    except (ActivityRubricError, OSError) as error:
+        stale["activity_rubric"] = str(error)
 
     for name in INPUT_NAMES:
         if name == "plan" or (name in OPTIONAL_INPUT_NAMES and name not in inputs):

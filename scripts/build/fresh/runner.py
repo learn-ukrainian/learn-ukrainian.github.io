@@ -1259,7 +1259,8 @@ def check_4_activities(
         if mod_level == "a1" or typ == "order":
             structural_reason = _structural_activity_error(activity, typ, records)
             if structural_reason is not None:
-                return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
+                reason = f"{structural_reason} (A1-ACT-002)" if typ == "classify" else structural_reason
+                return failure(4, reason, "writer", code=structural_reason, activity=aid), {}
     return _pass(4), form_options
 
 

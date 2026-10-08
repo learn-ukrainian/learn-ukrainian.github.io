@@ -1,0 +1,1284 @@
+rubric_version: 1
+issue: 10109
+scope: Adult English-speaking A1 learners; candidate, adoption pending
+authored_input_sha256: 63b0cfd87802cba6803b5f13664f651309159b804c246d6ca95c3bfaf871b5f6
+source_roles:
+  S: Retrieved direct method or facet-specific normative witness; limits stated individually.
+  A: Reasoned adaptation; independent grading required.
+  U: Unresolved; no fabricated claim.
+  P: Repository policy for schema/operations, not learning effectiveness.
+aliases:
+  multiple-choice: quiz
+support: A1 English scaffolding follows the existing immersion payload intentionally. Neither rubric adoption nor
+  support/scaffold labels alter placement, counts or immersion.
+source_gaps:
+- 'Drive-held university foreign-student books: unavailable, not consulted; no ingestion/recovery under #10109.'
+- Error-correction and watch-and-repeat exact adult-L2 method locators remain unresolved; keyword hits do not count.
+- Primer section metadata and printed pages differ as recorded; do not silently substitute physical-page citations.
+- DF 12.1 task 5 is a grammatical-discrimination comparator, not a verified direct bin-sorting task.
+clauses:
+- id: A1-C01
+  text: The task requires Ukrainian comprehension, discrimination or purposeful production; language-mechanics practice
+    is valid.
+  references:
+  - POLICY
+- id: A1-C02
+  text: Productive targets are taught at the activity’s step. Approved incidental formulas may be encountered as
+    supported chunks, without drilling their untaught grammar.
+  references:
+  - POLICY
+- id: A1-C03
+  text: Printed choices are readable; instruction, gloss and feedback support follow the current immersion payload.
+  references:
+  - POLICY
+- id: A1-C04
+  text: The accepted answer or answer set is defensible in context; feedback explains the actual decision.
+  references:
+  - POLICY
+- id: A1-C05
+  text: Sources establish the relevant claim, and the required text, image or recording is available.
+  references:
+  - POLICY
+- id: A1-B01
+  text: Rule or terminology recall replacing Ukrainian practice
+  references:
+  - POLICY
+- id: A1-B02
+  text: Copying-only work presented as evidence of comprehension or production
+  references:
+  - POLICY
+- id: A1-B03
+  text: Required productive use of untaught grammar
+  references:
+  - POLICY
+- id: A1-B04
+  text: Fragment assembly without a meaningful linguistic decision
+  references:
+  - POLICY
+- id: A1-B05
+  text: Ambiguous key, incomplete accepted set or misleading feedback
+  references:
+  - POLICY
+- id: A1-B06
+  text: Answer leakage that removes the intended decision
+  references:
+  - POLICY
+- id: A1-B07
+  text: Unverified language claim, missing grounding or unavailable required modality
+  references:
+  - POLICY
+- id: A1-B08
+  text: Claiming a scaffold or media exposure proves a scored learner response
+  references:
+  - POLICY
+rows:
+- id: A1-ACT-001
+  type: anagram
+  verdict: conditional
+  placement: workbook
+  conditions: Reconstruct a meaningful, introduced word; use taught letters and a contextual clue; retain existing
+    multiset/store-form checks.
+  bans: Arbitrary letter manipulation, spelling not yet readable, visible answer copying.
+  references:
+  - PR-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-002
+  type: classify
+  verdict: forbidden
+  placement: forbidden
+  conditions: Retain the row for complete schema coverage and an explicit rejection.
+  bans: Treating schema admission as fresh-plan permission.
+  references:
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-003
+  type: count-syllables
+  verdict: conditional
+  placement: both
+  conditions: Perform a purposeful phonological decision on sourced, introduced words; preserve existing key and
+    target-variety checks.
+  bans: Repeated identical keys, counting presented as comprehension, confusing syllables with line-breaking.
+  references:
+  - PR-2
+  - ORTH-63
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-004
+  type: divide-words
+  verdict: conditional
+  placement: both
+  conditions: Segment introduced words according to a verified model; distinguish spoken syllables from orthographic
+    line-breaking.
+  bans: Arbitrary splitting or claiming the gate’s delimiter check establishes the full phonological judgment.
+  references:
+  - PR-2
+  - ORTH-63
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-005
+  type: error-correction
+  verdict: conditional
+  placement: workbook
+  conditions: Use an applicable E-record, one identifiable error and a taught correction; preserve item-specific
+    explanations.
+  bans: Invented learner errors, untaught corrections, multiple unexplained repairs.
+  references:
+  - UNRESOLVED
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-006
+  type: fill-in
+  verdict: conditional
+  placement: both
+  conditions: One meaningful blank; taught form choice or an existing sourced orthography list; context must exclude
+    distractors.
+  bans: Missing context, rule recall, unsupported option lists, multiple workable completions.
+  references:
+  - OHO-2
+  - DF-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-007
+  type: group-sort
+  verdict: conditional
+  placement: both
+  conditions: Preserve fresh grammatical-feature grouping, bound records and per-entry `why`; require one defensible
+    group per entry.
+  bans: General subject categories, literacy categories that conflict with the fresh grouping contract, ambiguous
+    entries.
+  references:
+  - DF-5
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-008
+  type: image-to-letter
+  verdict: conditional
+  placement: inline
+  conditions: Establish the intended Ukrainian picture name and taught sound–letter association; remove plausible
+    alternative naming ambiguity.
+  bans: Inferring a letter from an English picture name; ambiguous emoji; answer-bearing labels.
+  references:
+  - PR-3
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-009
+  type: letter-grid
+  verdict: unscored_support
+  placement: inline
+  conditions: Provide a verified letter reference connected to a later discrimination or reading task.
+  bans: Counting the grid, viewing it or copying it as scored practice.
+  references:
+  - PR-3
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+    A1-C02:
+      applies: true
+      reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
+        grammar.
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: false
+      reason: No scored answer/key in this scaffold or media exposure; verify its content under C05 and do not claim
+        response proof (B08).
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: false
+      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
+        activity.
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: Alphabet-reference schema operation; primer initial-sound discrimination motivates linking the
+    reference to a later adult L2 reading decision. No verified grid-specific effectiveness claim.
+- id: A1-ACT-010
+  type: match-up
+  verdict: conditional
+  placement: both
+  conditions: Match meaningful form/gloss or question/answer relationships; preserve roles, record binding and pair
+    feedback.
+  bans: Fact matching, duplicate plausible partners, visual matching that bypasses Ukrainian.
+  references:
+  - OHO-1
+  - DF-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-011
+  type: observe
+  verdict: scaffold
+  placement: both
+  conditions: Use the actual `examples`/`prompt` shape for noticing a taught contrast, followed by application.
+  bans: Rule naming as the learner outcome; implying unsupported image interaction or scored production.
+  references:
+  - DF-1
+  - DF-2
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+    A1-C02:
+      applies: true
+      reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
+        grammar.
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: false
+      reason: No scored answer/key in this scaffold or media exposure; verify its content under C05 and do not claim
+        response proof (B08).
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: false
+      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
+        activity.
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-012
+  type: odd-one-out
+  verdict: conditional
+  placement: both
+  conditions: State one relevant linguistic criterion; exactly one item differs in the intended sense or feature.
+  bans: Trivia categories, unexplained exceptions, several defensible exclusions.
+  references:
+  - PR-2
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: Adapt primer discrimination to one explicitly taught linguistic contrast among introduced items;
+    exactly one justified exception. Policy establishes schema operation, not effectiveness.
+- id: A1-ACT-013
+  type: order
+  verdict: conditional
+  placement: both
+  conditions: Sequence meaningful utterances or actions using information conveyed in Ukrainian; preserve the complete
+    permutation and explanation.
+  bans: World-knowledge chronology, arbitrary ordering or English cues supplying the answer.
+  references:
+  - DF-3
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-014
+  type: phrase-table
+  verdict: unscored_support
+  placement: both
+  conditions: Use actual grouped phrases as a contextual phrase bank connected to subsequent selection or use.
+  bans: Claiming editable substitution cells or scored responses that the schema does not provide; copying-only
+    assessment.
+  references:
+  - DF-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: Supports a specified later Ukrainian decision; this scaffold itself is not response proof.
+    A1-C02:
+      applies: true
+      reason: References introduced targets or supported incidental formulas; no productive drilling of untaught
+        grammar.
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: false
+      reason: No scored answer/key in this scaffold or media exposure; verify its content under C05 and do not claim
+        response proof (B08).
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: false
+      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
+        activity.
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-015
+  type: pick-syllables
+  verdict: conditional
+  placement: both
+  conditions: Use the actual category/multiple-index operation; teach the criterion and verify the complete accepted
+    set.
+  bans: Invented word-completion behavior; category trivia; treating multiple selection as a single key.
+  references:
+  - PR-2
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+  grounding_reason: Adapt primer segmentation/discrimination to the actual category and multiple-index selection
+    operation; taught criterion and full accepted set, not invented completion behavior.
+- id: A1-ACT-016
+  type: quiz
+  verdict: conditional
+  placement: both
+  conditions: Choose a meaning, appropriate response, taught form or heard target; bind the relevant host/records
+    and explain each option.
+  bans: Questions about rules as facts, outside knowledge, grammatical labels replacing application.
+  references:
+  - DF-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-017
+  type: translate
+  verdict: conditional
+  placement: workbook
+  conditions: Supported EN→UK use of taught expressions; acknowledge acceptable production alternatives or preserve
+    single-answer options mode.
+  bans: Translation in the main lesson, copying a visible equivalent, an unjustifiably exclusive key.
+  references:
+  - ULP-1
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-018
+  type: true-false
+  verdict: conditional
+  placement: both
+  conditions: Judge a statement against its Ukrainian host; preserve comprehension kind, two feedback entries and
+    the existing four-item cap.
+  bans: General facts, rule propositions, negative wording beyond learner scope.
+  references:
+  - DF-6
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-019
+  type: unjumble
+  verdict: conditional
+  placement: both
+  conditions: Reconstruct a meaningful utterance from taught words; context must justify the intended order.
+  bans: Fragment-splicing busywork or rejecting other natural orders without evidence.
+  references:
+  - DF-4
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: true
+      reason: 'Applies to this operation: The accepted answer or answer set is defensible in context; feedback explains
+        the actual decision.'
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: true
+      reason: 'Applies to this operation: Answer leakage that removes the intended decision'
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+- id: A1-ACT-020
+  type: watch-and-repeat
+  verdict: conditional
+  placement: inline
+  conditions: A working, verified recording models the identified target; repetition has a specific listening/pronunciation
+    purpose.
+  bans: Passive viewing counted as response proof; unavailable video; automatic pronunciation-success claims without
+    assessment.
+  references:
+  - UNRESOLVED
+  - POLICY
+  applicability:
+    A1-C01:
+      applies: true
+      reason: 'Applies to this operation: The task requires Ukrainian comprehension, discrimination or purposeful
+        production; language-mechanics practice is valid.'
+    A1-C02:
+      applies: true
+      reason: 'Applies to this operation: Productive targets are taught at the activity’s step. Approved incidental
+        formulas may be encountered as supported chunks, without drilling their untaught grammar.'
+    A1-C03:
+      applies: true
+      reason: 'Applies to this operation: Printed choices are readable; instruction, gloss and feedback support
+        follow the current immersion payload.'
+    A1-C04:
+      applies: false
+      reason: No scored answer/key in this scaffold or media exposure; verify its content under C05 and do not claim
+        response proof (B08).
+    A1-C05:
+      applies: true
+      reason: 'Applies to this operation: Sources establish the relevant claim, and the required text, image or
+        recording is available.'
+    A1-B01:
+      applies: true
+      reason: 'Applies to this operation: Rule or terminology recall replacing Ukrainian practice'
+    A1-B02:
+      applies: true
+      reason: 'Applies to this operation: Copying-only work presented as evidence of comprehension or production'
+    A1-B03:
+      applies: true
+      reason: 'Applies to this operation: Required productive use of untaught grammar'
+    A1-B04:
+      applies: true
+      reason: 'Applies to this operation: Fragment assembly without a meaningful linguistic decision'
+    A1-B05:
+      applies: true
+      reason: 'Applies to this operation: Ambiguous key, incomplete accepted set or misleading feedback'
+    A1-B06:
+      applies: false
+      reason: Models/support intentionally expose language; answer leakage is assessed in the subsequent response
+        activity.
+    A1-B07:
+      applies: true
+      reason: 'Applies to this operation: Unverified language claim, missing grounding or unavailable required modality'
+    A1-B08:
+      applies: true
+      reason: 'Applies to this operation: Claiming a scaffold or media exposure proves a scored learner response'
+sources:
+  POLICY:
+    role: P
+    title: Fresh A1 activity and review contracts
+    locator: docs/best-practices/activity-pedagogy.md §2; docs/style-cards/a1.md §5; docs/epics/fresh-build-review-contracts.md
+      Contract 1 and Contract 2; schemas/fresh-activity-constraints-v1.json
+    limit: Repository admission, scope, feedback and support policy; not learning-effectiveness evidence.
+  DF-1:
+    role: S
+    title: Dobra Forma, University of Kansas Ukrainian Language Program
+    locator: docs/references/dobra-forma/chapters/1.2.md tasks 1–5 and final test
+    url: https://opentext.ku.edu/dobraforma/chapter/1-2/
+    limit: Beginner adult English-speaker L2 noticing, completion, response selection and matching methods; individual
+      grammar is not admitted before its taught step.
+  DF-2:
+    role: S
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/2.3.md tasks 1, 2, 4, 6–7
+    url: https://opentext.ku.edu/dobraforma/chapter/2-3/
+    limit: Model followed by contextual practice, not evidence for scored observation.
+  DF-3:
+    role: S
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/5.1.md task 5
+    url: https://opentext.ku.edu/dobraforma/chapter/5-1/
+    limit: Actual task sequences telephone-dialogue lines; its subsequent grammatical marking is not part of the
+      A1 ordering adaptation.
+  DF-4:
+    role: S
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/7.3.md task 1
+    url: https://opentext.ku.edu/dobraforma/chapter/7-3/
+    limit: Actual task orders words into a natural utterance and follows with comprehension; no claim that one order
+      always exhausts acceptable Ukrainian orders.
+  DF-5:
+    role: A
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/12.1.md task 5
+    url: https://opentext.ku.edu/dobraforma/chapter/12-1/
+    limit: Actual task distinguishes single versus multiple referents from heard forms. Comparator for grammatical
+      discrimination; adapting this listening decision to record-bound sorting bins still requires independent judgment.
+      Not a verified direct drag-to-bin task.
+  DF-6:
+    role: S
+    title: Dobra Forma
+    locator: docs/references/dobra-forma/chapters/7.3.md task 7
+    url: https://opentext.ku.edu/dobraforma/chapter/7-3/
+    limit: Actual task judges statements against a dialogue; neither general-fact recall nor permission to reuse
+      its grammar early.
+  OHO-1:
+    role: S
+    rights: owned_cite_only
+    title: Oho! Ukrainian Grammar & Workbook A1
+    locator: owned-oho-a1-workbook_f1_p0038_c0001
+    limit: Retrieved method witness for matching; title and locator only, no excerpts.
+  OHO-2:
+    role: S
+    rights: owned_cite_only
+    title: Oho! Ukrainian Grammar & Workbook A1
+    locator: owned-oho-a1-workbook_f1_p0098_c0001, exercise/audio references 38.4–38.7
+    limit: Retrieved contextual completion method; title and locator only, no excerpts. Not permission for untaught
+      grammar.
+  ULP-1:
+    role: S
+    rights: owned_cite_only
+    title: Ukrainian Lessons Podcast — Season 1 lesson notes
+    locator: Lesson 10, ulp-1-00-lesson-notes_l0010_w003
+    limit: Retrieved translation-instruction method; title and locator only, no excerpts.
+  PR-1:
+    role: A
+    title: Zaharijchuk primer, 2025, part 1
+    locator: 1-klas-bukvar-zaharijchuk-2025-1_s0054; section metadata page 58, printed page 56
+    limit: Actual letter-puzzle word construction. Adapt to adult L2 by using introduced words with a meaningful
+      contextual cue rather than child narrative or arbitrary manipulation. Witness, not adult-L2 effectiveness
+      proof.
+  PR-2:
+    role: A
+    title: Zaharijchuk primer, 2025, part 1
+    locator: 1-klas-bukvar-zaharijchuk-2025-1_s0053; section metadata page 57, printed page 55; _s0014, metadata
+      page 17, printed page 15
+    limit: Actual oral picture-name segmentation and discrimination. Adult L2 adaptation uses known sourced words,
+      explicitly taught criteria and complete feedback; counting and multiple-index selection are adaptations, not
+      exact task matches. Images were not retrieved.
+  PR-3:
+    role: A
+    title: Zaharijchuk primer, 2025, part 1
+    locator: 1-klas-bukvar-zaharijchuk-2025-1_s0014; section metadata page 17, printed page 15
+    limit: Actual picture-name initial-sound discrimination. Adapt to adult L2 through established Ukrainian naming
+      and a taught sound–letter mapping; an emoji alone cannot establish the name. Images were not retrieved.
+  ORTH-63:
+    role: S
+    title: Ukrainian Orthography, 2019
+    locator: §63, pp. 93–95, official authorized edition, Naukova Dumka
+    url: https://www.ulif.org.ua/system/files/pravopus-new.pdf
+    limit: Normative line-transfer restrictions; line transfer and oral syllable segmentation must not be equated.
+      Not L2 method evidence.
+  UNRESOLVED:
+    role: U
+    title: Unresolved type-specific method evidence
+    locator: '#10109 source-ledger residual'
+    limit: Keyword hits alone do not establish an actual task. No claim of direct adult-L2 method or learning effectiveness
+      until source-capable independent grading resolves it.

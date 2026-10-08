@@ -118,6 +118,8 @@ _Table = dict[str, Callable[[_Module, dict[str, Any]], str]]
 #: "Contract 2 - lesson review", Receives). ``upstream_lessons[]`` is the recap's built lessons
 #: 1..N-1; ``diff`` and ``previous_attempt.*`` exist only on a re-review.
 LESSON_LOCATIONS: _Table = {
+    "inputs.activity_rubric": lambda m, e: "docs/best-practices/a1-activity-rubric\\.yaml",
+    "inputs.activity_rubric_approval": lambda m, e: "docs/best-practices/a1-activity-rubric\\.approval\\.yaml",
     "inputs.plan": lambda m, e: f"{m.plans}/{re.escape(m.slug)}\\.yaml",
     "inputs.pack": lambda m, e: f"{m.evidence}/{re.escape(m.slug)}\\.yaml",
     "inputs.pack_lock": lambda m, e: f"{m.evidence}/{re.escape(m.slug)}\\.yaml\\.lock",
@@ -150,6 +152,8 @@ LESSON_LOCATIONS: _Table = {
 #: Plan review (contract: "The review attempt manifest (r4)", plan review; "Contract 1 - plan review",
 #: Receives). The arc source is the level's arc document that ``_arc.yaml`` names.
 PLAN_LOCATIONS: _Table = {
+    "inputs.activity_rubric": LESSON_LOCATIONS["inputs.activity_rubric"],
+    "inputs.activity_rubric_approval": LESSON_LOCATIONS["inputs.activity_rubric_approval"],
     "inputs.plan": LESSON_LOCATIONS["inputs.plan"],
     "inputs.pack": LESSON_LOCATIONS["inputs.pack"],
     "inputs.pack_lock": LESSON_LOCATIONS["inputs.pack_lock"],

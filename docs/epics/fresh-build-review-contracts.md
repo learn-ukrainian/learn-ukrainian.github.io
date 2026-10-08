@@ -169,3 +169,45 @@ Question 3 he answered himself; on the others he said **"i accept the defaults"*
 
 ## Deliverables (for implementing agents, after acceptance — briefed in the build program, `docs/epics/fresh-build-build-program.md`)
 (a) the two contracts as a section of the plan-schema document; (b) `schemas/review-v1.schema.json` and the **active** validator described above; (b2) the **review receipt ledger** — harness-side recording of every `sources` call in a review attempt with the fields listed under "Receipts", built on the sources server's V4 recorder, returning receipt ids to the seat; (c) the two reviewer prompts, built only from the manifest's inputs, hashed; (d) the module-digest generator, reading the observed-state index of #8414; (e) the driver's provenance-based layer-assignment rules, the findings database, the budget ledger keyed by stable identities, and the dependency-closure computation; (f) the seeded-defect sets for lessons and for plans, their planting scripts with the deterministic-green check, the scoring manifests, the blinded adjudication step and the scoring script; (g) the settle procedure as a dispatchable task for a language lane with its four outcomes; (h) the replacement for the `content-review` skill — **operator go required**. Sibling: the lesson **writer** contract and the fixed style card, #8431.
+
+
+## A1 activity rubric binding (#10109)
+
+Plan review, lesson review and lesson re-review require both canonical A1-only inputs:
+`activity_rubric` (`docs/best-practices/a1-activity-rubric.yaml`) and
+`activity_rubric_approval` (`docs/best-practices/a1-activity-rubric.approval.yaml`),
+each pinned by path and SHA-256. Other levels refuse both pins and all new return fields.
+Eligibility admits only those paths. Missing pins, changed bytes, unmapped types,
+legacy `classify`, pending adoption or an approval for another digest refuse review.
+The candidate is pending; its presence supplies no production clearance.
+
+The external approval record carries `status`, `rubric_sha256`, `author_model`,
+`approver_model`, `approval_reference` and `approval_sha256`. The reference and digest
+identify the genuine designated approval after separate GPT/Gemini whole-rubric grading;
+the driver verifies that provenance. A pending record has null approval fields. Test
+records are explicitly synthetic and never adoption evidence. Existing manifest pins
+are never refreshed silently when rubric, source, approval or proof bytes change.
+
+The renderer derives a fixed per-activity row/clause table from the pinned plan.
+`multiple-choice` explicitly resolves to `quiz`. The return adds
+`activity_rubric: {<actual ID>: clean | [finding IDs]}`; keys cover every actual activity
+exactly. Every activity location/scope, regardless of finding dimension, requires
+`rubric: {row, clause}` matching its actual type and the row's fixed applicability.
+An activity-dimension finding must name the actual activity. Reviewers cannot invent
+an activity type or opt out of a clause. `clean` cannot coexist with a finding there.
+A ban or unmet necessary condition is at least MAJOR. An unsupported approval-critical
+A1 activity claim uses the existing search-receipt branch at MAJOR, overriding only
+that branch's general MINOR cap; active/persisting findings block via the existing
+verdict rule. No semantic regex, additional verdict dimension or condition-return matrix.
+Support/scaffold judgments do not change activity totals, placement or immersion.
+
+Adoption requires independent GPT and Gemini whole-rubric grades in five separate
+dimension calls per family, minimum score 8, no MAJOR/BLOCKER, target 9, then fresh
+exact-digest Opus designated approval distinct from the critic, grader, labeler and
+driver. Material changes require a full re-grade. Driver-owned frozen evaluation uses
+real historical activities across all 20 types, excludes development data, and requires
+zero consensus false accepts/flags with a nonempty unacceptable arm; disagreements
+and per-type/pool denominators stay visible. A type without consensus is held for
+first learner use under #10110. Two full grading rounds and two held-out runs maximum;
+material findings block and residuals remain with the driver. Design, grading,
+designated adoption, held-out proof and formal exact-head CF remain distinct.

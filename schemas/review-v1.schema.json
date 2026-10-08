@@ -12,6 +12,7 @@
     "attempt": {"$ref": "#/$defs/attempt"},
     "reviewer": {"$ref": "#/$defs/reviewer"},
     "checks": {"$ref": "#/$defs/checks"},
+    "activity_rubric": {"type": "object", "additionalProperties": {"$ref": "#/$defs/check_value"}},
     "findings": {
       "type": "array",
       "items": {"$ref": "#/$defs/finding"}
@@ -214,6 +215,13 @@
           ]
         },
         "severity": {"enum": ["BLOCKER", "MAJOR", "MINOR"]},
+        "rubric": {
+          "type": "object", "additionalProperties": false, "required": ["row", "clause"],
+          "properties": {
+            "row": {"type": "string", "pattern": "^A1-ACT-[0-9]{3}$"},
+            "clause": {"type": "string", "pattern": "^A1-[CB][0-9]{2}$"}
+          }
+        },
         "claim": {"type": "string", "minLength": 1},
         "evidence": {"$ref": "#/$defs/receipt_ref"},
         "unsupported_by_source": {

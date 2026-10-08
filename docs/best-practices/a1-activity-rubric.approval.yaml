@@ -1,0 +1,10 @@
+approval_version: 1
+status: pending
+rubric_sha256: null
+author_model: gpt-6.1-sol
+approver_model: null
+approval_reference: null
+approval_sha256: null
+condition: Independent whole-rubric GPT/Gemini dimension grades, then fresh distinct
+  Opus designated approval of the exact candidate digest; driver owns evaluation and
+  adoption.

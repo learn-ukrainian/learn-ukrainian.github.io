@@ -312,7 +312,8 @@ def _activity_fresh_constraint_errors(
         if rule is None:
             continue
         if rule.get("forbidden"):
-            errors.append(DraftError("activity_fresh_constraints", path + "/type", f"{key}: forbidden in fresh drafts"))
+            rubric_id = " A1-ACT-002" if key == "classify-a1" else ""
+            errors.append(DraftError("activity_fresh_constraints", path + "/type", f"{key}:{rubric_id} forbidden in fresh drafts"))
             continue
         for field_name in rule.get("required_activity_fields", []):
             if field_name not in activity:
