@@ -1856,22 +1856,109 @@ def test_pr_review_facts_drop_a_main_squash_merged_onto_a_stale_base(repo, tasks
         recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
 
 
-def test_a_main_merge_with_no_branch_commit_still_refuses(repo, tasks):
+def _assert_admits_a_reviewer_outside(fact):
+    resolution = recorder.structural_review_route(fact, risk="medium")
+    assert resolution.fail_closed_reason is None
+    assert resolution.selected is not None
+    assert resolution.selected.family != fact.incoming_family
+
+
+def _merge_main_onto_a_branch_with_no_commit(repo):
+    """No-ff merge of a newer default-branch tip onto a branch that has not authored a commit."""
     base = repo.sha("origin/main")
     repo.git("checkout", "-q", "trunk")
     squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
     repo.publish("trunk", to="main")
     repo.git("checkout", "-q", "feature")
     repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    return base, squash
+
+
+def test_clean_base_merge_still_admits_the_incoming_writer(repo, tasks):
+    """A known writer is admitted after a clean base merge, as on a fast-forward."""
+    base, squash = _merge_main_onto_a_branch_with_no_commit(repo)
+    common = {
+        "repository": REPOSITORY,
+        "repo_root": repo.root,
+        "base_tip_sha": base,
+        "task_root": tasks,
+        "incoming_agent": "claude",
+        "incoming_model": "claude-opus-5-5",
+        "authorship_exclude_sha": squash,
+    }
+    admitted = recorder.collect_branch_review_facts(**common, head_sha=repo.sha("HEAD"))
+    assert admitted.existing_families == set()
+    assert admitted.incoming_family == "anthropic"
+    assert admitted.incoming_writer == "claude/claude-opus-5-5"
+    assert admitted.commits
+    assert all(commit.family is None for commit in admitted.commits)
+    assert squash not in {commit.sha for commit in admitted.commits}
+    _assert_admits_a_reviewer_outside(admitted)
+
+    forwarded = recorder.collect_branch_review_facts(**common, head_sha=squash)
+    assert forwarded.commits == ()
+    assert forwarded.existing_families == set()
+    assert forwarded.incoming_family == admitted.incoming_family
+    _assert_admits_a_reviewer_outside(forwarded)
+
+
+def test_a_main_merge_with_no_branch_commit_still_refuses(repo, tasks, monkeypatch):
+    base, squash = _merge_main_onto_a_branch_with_no_commit(repo)
+    head = repo.sha("HEAD")
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=base,
+        head_sha=head,
+        task_root=tasks,
+        authorship_exclude_sha=squash,
+    )
+    with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent") as refused:
+        recorder.refuse_excluded_only_range(facts, repo_root=repo.root, exclude_sha=squash)
+    assert refused.value.code == recorder.FACTS_AUTHORSHIP_UNKNOWN
+
+    repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+    monkeypatch.setattr(
+        recorder,
+        "_run_json",
+        lambda _args, **_kwargs: {"baseRefName": "main", "baseRefOid": base, "headRefOid": head},
+    )
+    monkeypatch.setattr(recorder, "_pages", lambda _request: github_listing(repo, base, head))
     with pytest.raises(recorder.BranchFactsError, match="missing explicit X-Agent"):
-        recorder.collect_branch_review_facts(
-            repository=REPOSITORY,
-            repo_root=repo.root,
-            base_tip_sha=base,
-            head_sha=repo.sha("HEAD"),
-            task_root=tasks,
-            authorship_exclude_sha=squash,
-        )
+        recorder.pr_review_facts(REPOSITORY, 42, head_sha=head, task_root=tasks, repo_root=repo.root)
+
+
+def test_github_sha_filter_uses_one_bounded_enumeration(repo, monkeypatch):
+    base = repo.sha("HEAD")
+    own = repo.commit(OPUS, message="branch author")
+    repo.git("checkout", "-q", "trunk")
+    later = repo.commit(SOL, path="src/app.py", message="later main")
+    calls: list[tuple] = []
+    real = recorder._facts_git
+
+    def spy(repo_root, args, **kwargs):
+        calls.append((args, kwargs.get("deadline"), kwargs.get("input_bytes")))
+        return real(repo_root, args, **kwargs)
+
+    monkeypatch.setattr(recorder, "_facts_git", spy)
+    assert recorder._shas_not_reachable_from(repo.root, [own, "not-a-sha"], None) == [own, "not-a-sha"]
+    assert calls == []
+
+    kept = recorder._shas_not_reachable_from(repo.root, [base, own, later, "not-a-sha", later], later)
+    assert len(calls) == 1
+    args, deadline, payload = calls[0]
+    assert args == ["rev-list", "--no-walk", "--stdin"]
+    assert deadline is not None
+    assert payload == f"{base}\n{own}\n{later}\n{later}\n^{later}\n".encode("ascii")
+    assert kept == [own, "not-a-sha"]
+
+    def timed_out(repo_root, args, **kwargs):
+        raise recorder.BranchFactsError(recorder.FACTS_AUTHORSHIP_UNKNOWN, "git rev-list timed out", timed_out=True)
+
+    monkeypatch.setattr(recorder, "_facts_git", timed_out)
+    with pytest.raises(recorder.BranchFactsError, match="timed out") as refused:
+        recorder._shas_not_reachable_from(repo.root, [own, base], later)
+    assert refused.value.timed_out
 
 
 def test_authorship_exclude_sha_is_the_default_tip_only(repo):

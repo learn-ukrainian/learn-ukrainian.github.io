@@ -615,13 +615,9 @@ def collect_branch_review_facts(
             raise BranchFactsError(
                 FACTS_AUTHORSHIP_UNKNOWN, "branch fact collection timed out; refusing a partial history"
             )
-    # A clean merge of the excluded tip is not an author. When that is all
-    # that remains, the branch has no commit of its own.
-    if authorship_exclude_sha is not None and commits and all(commit.family is None for commit in commits):
-        raise BranchFactsError(
-            FACTS_AUTHORSHIP_UNKNOWN,
-            "author model unknown: missing explicit X-Agent model trailer",
-        )
+    # A proven clean merge of the excluded tip authors nothing, and it stays
+    # in the facts. Dispatch can still admit the incoming writer. A branch
+    # review refuses that range in refuse_excluded_only_range.
     incoming_writer = None
     incoming_family = None
     if incoming_agent:
@@ -715,39 +711,53 @@ def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str |
 
 
 def _shas_not_reachable_from(repo_root: Path, shas: list[str], exclude_sha: str | None) -> list[str]:
-    """Drop commits reachable from ``exclude_sha``, including that commit."""
+    """Drop commits reachable from ``exclude_sha``, including that commit.
+
+    One ``git rev-list --no-walk`` covers every valid SHA under a single
+    deadline. Strings that are not commit SHAs stay, without starting Git.
+    """
     if exclude_sha is None:
         return list(shas)
+    pending = [sha for sha in shas if isinstance(sha, str) and SHA.fullmatch(sha)]
+    if not pending:
+        return [sha if isinstance(sha, str) else "" for sha in shas]
+    listed = _facts_git(
+        repo_root,
+        ["rev-list", "--no-walk", "--stdin"],
+        deadline=time.monotonic() + _GIT_STEP_TIMEOUT_S,
+        code=FACTS_AUTHORSHIP_UNKNOWN,
+        input_bytes=("\n".join((*pending, f"^{exclude_sha}")) + "\n").encode("ascii"),
+    )
+    reachable = set(listed.decode("ascii", errors="strict").split())
     kept: list[str] = []
     for sha in shas:
-        if not isinstance(sha, str) or not SHA.fullmatch(sha):
+        if isinstance(sha, str) and SHA.fullmatch(sha):
+            if sha in reachable:
+                kept.append(sha)
+        else:
             kept.append(sha if isinstance(sha, str) else "")
-            continue
-        try:
-            _facts_git(
-                repo_root,
-                ["merge-base", "--is-ancestor", sha, exclude_sha],
-                deadline=time.monotonic() + 30,
-                code=FACTS_AUTHORSHIP_UNKNOWN,
-            )
-        except BranchFactsError as exc:
-            if exc.timed_out:
-                raise
-            kept.append(sha)
     return kept
 
 
 def refuse_excluded_only_range(facts: BranchReviewFacts, *, repo_root: Path, exclude_sha: str | None) -> None:
-    """Refuse a branch review whose commits are all reachable from the excluded tip.
+    """Refuse a branch review that has no commit of its own.
 
-    Fact collection itself stays quiet for an empty range. The rebase plan
-    enumerates that tip on purpose, and an empty author set there is the
-    result. The recorder and the resolver still refuse: the branch has no
-    commit of its own, and the reason is the one an unattributable commit
-    already produces.
+    Fact collection stays quiet. Dispatch admits a known incoming writer onto
+    a branch that has not authored a commit yet, including after a clean merge
+    of the excluded tip. The recorder and the resolver still refuse that
+    range: every remaining commit is reachable from the excluded tip, or the
+    only commits left are proven clean merges of it. The reason is the one an
+    unattributable commit already produces.
     """
-    if exclude_sha is None or facts.commits or facts.existing_families or facts.base_tip_sha == facts.head_sha:
+    if exclude_sha is None or facts.existing_families or facts.base_tip_sha == facts.head_sha:
         return
+    if any(commit.family is not None for commit in facts.commits):
+        return
+    if facts.commits:
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "author model unknown: missing explicit X-Agent model trailer",
+        )
     full = _facts_git(
         repo_root,
         ["rev-list", f"{facts.base_tip_sha}..{facts.head_sha}"],
