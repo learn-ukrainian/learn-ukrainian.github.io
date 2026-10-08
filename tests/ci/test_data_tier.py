@@ -1060,17 +1060,31 @@ def test_nightly_exports_snapshot_bindings_and_reaps_them(nightly, monkeypatch):
     assert not seen[0].exists()
 
 
-def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monkeypatch, tmp_path):
+@pytest.fixture
+def retained_snapshots():
+    """Reap only test-owned snapshots after the retention assertion scope."""
     snapshots = []
+    remove_snapshot = data_tier.shutil.rmtree
+    try:
+        yield snapshots
+    finally:
+        for snapshot in snapshots:
+            if snapshot.exists():
+                remove_snapshot(snapshot)
+            assert not snapshot.exists()
+
+
+def test_nightly_retains_readable_snapshots_when_scope_stop_fails(nightly, monkeypatch, tmp_path, retained_snapshots):
+    snapshots = retained_snapshots
     external_sentinel = tmp_path / "outside-snapshot.txt"
     external_sentinel.write_text("keep", encoding="utf-8")
 
     def snapshot(primary, checkout, snapshots_dir, *, only):
+        snapshots.append(snapshots_dir)
         path = snapshots_dir / "sources.db"
         with sqlite3.connect(path) as connection:
             connection.execute("CREATE TABLE witness (value TEXT)")
             connection.execute("INSERT INTO witness VALUES ('retained')")
-        snapshots.append(snapshots_dir)
         return []
 
     def refuse_stop(unit):
@@ -1115,8 +1129,8 @@ def test_nightly_removes_snapshots_before_child_launch_failure(nightly, monkeypa
     assert external_sentinel.read_text(encoding="utf-8") == "keep"
 
 
-def test_nightly_reports_snapshot_cleanup_failure(nightly, monkeypatch):
-    snapshots = []
+def test_nightly_reports_snapshot_cleanup_failure(nightly, monkeypatch, retained_snapshots):
+    snapshots = retained_snapshots
     monkeypatch.setattr(data_tier, "snapshot_databases", lambda _p, _c, root, **_kw: snapshots.append(root) or [])
 
     def fail_cleanup(path):
