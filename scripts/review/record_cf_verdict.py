@@ -291,45 +291,52 @@ def _attribute_commit(
     harness, model = trailers[0].split("/", 1)
     if not harness or not model:
         raise RecordError("author model unknown")
-    # Cursor has historically required harness-aware resolution; otherwise
-    # resolve the model itself before consulting task provenance.
-    family = _author_model_family(harness, model)
-    source = "trailer-model"
-    if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-        if not TASK_ID.fullmatch(model):
-            raise RecordError("author model unknown")
+    # Task provenance wins over family tokens embedded in the trailer's task id.
+    task_file = None
+    if TASK_ID.fullmatch(model):
         task_file = _hot_or_archived(task_root, f"{model}.json")
         if not task_file.resolve().is_relative_to(task_root.resolve()):
             raise RecordError("author task provenance unavailable")
-        if task_file.exists():
-            # The common X-Agent trailer names a task, not a model. Resolve
-            # that task's recorded model only after validating its provenance.
-            try:
-                author_task = json.loads(task_file.read_text(encoding="utf-8"))
-            except (OSError, ValueError) as exc:
-                raise RecordError("author task provenance unavailable") from exc
-            if (
-                not isinstance(author_task, dict)
-                or author_task.get("repository") != repository
-                or not str(author_task.get("agent") or "").startswith(harness)
-            ):
-                raise RecordError("author task provenance conflicts with commit trailer")
-            if harness.startswith("cursor") and is_cursor_auto_selector(author_task.get("model")):
-                author_model = author_task["model"]
-            elif harness.startswith("cursor"):
-                author_model = (
-                    author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None
-                )
-            else:
-                author_model = author_task.get("model")
-            family = _author_model_family(harness, str(author_model or ""))
-            source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
-        elif harness in SINGLE_FAMILY_HARNESSES:
-            family = SINGLE_FAMILY_HARNESSES[harness]
-            source = "single-family-harness"
+    if task_file is not None and task_file.exists():
+        # Resolve the recorded model only after validating the task provenance.
+        try:
+            author_task = json.loads(task_file.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise RecordError("author task provenance unavailable") from exc
+        if (
+            not isinstance(author_task, dict)
+            or author_task.get("repository") != repository
+            or not str(author_task.get("agent") or "").startswith(harness)
+        ):
+            raise RecordError("author task provenance conflicts with commit trailer")
+        if harness.startswith("cursor") and is_cursor_auto_selector(author_task.get("model")):
+            author_model = author_task["model"]
+        elif harness.startswith("cursor"):
+            author_model = (
+                author_task.get("resolved_model") if author_task.get("resolved_model_known") is True else None
+            )
         else:
-            family = UNKNOWN_AUTHOR_FAMILY
-            source = "unresolved-author"
+            author_model = author_task.get("model")
+        family = _author_model_family(harness, str(author_model or ""))
+        source = "task-record-archived" if task_file.parent.name == ARCHIVE_DIR_NAME else "task-record"
+    else:
+        # Only catalog models and Cursor selectors prove a model identity;
+        # substring family matching cannot distinguish a missing task record.
+        family = (
+            _author_model_family(harness, model)
+            if resolve_catalog_model_id(model) is not None or is_cursor_auto_selector(model)
+            else UNKNOWN_AUTHOR_FAMILY
+        )
+        source = "trailer-model"
+        if family in UNRESOLVED_AUTHOR_FAMILIES:
+            if not TASK_ID.fullmatch(model):
+                raise RecordError("author model unknown")
+            if harness in SINGLE_FAMILY_HARNESSES:
+                family = SINGLE_FAMILY_HARNESSES[harness]
+                source = "single-family-harness"
+            else:
+                family = UNKNOWN_AUTHOR_FAMILY
+                source = "unresolved-author"
     if family in UNRESOLVED_AUTHOR_FAMILIES:
         # A committed author without a concrete identity is reviewable by any
         # known family (#9944). This does not grant Unknown a reviewer identity.
