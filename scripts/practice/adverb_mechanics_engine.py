@@ -2588,9 +2588,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
 
 
 def find_vesum_db(specified: Path | None = None) -> Path:
-    """Finds vesum.db checking the specified path, then the local tree."""
-    if specified and specified.exists() and specified.stat().st_size > 0:
-        return specified
+    """Return the VESUM database path.
+
+    An explicitly specified path is returned as given, even when it does not
+    exist, so the caller reports it as missing instead of silently using a
+    different database. Without one, the local tree is searched.
+    """
+    if specified is not None:
+        return Path(specified)
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
@@ -2747,6 +2752,12 @@ def export_deck(cards: list[AdverbCard], target_path: Path | str) -> dict[str, A
 def main() -> None:
     parser = argparse.ArgumentParser(description="Adverb Deep Mechanics Practice Engine")
     parser.add_argument("--verify-vesum", action="store_true", help="Verify targets against VESUM")
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=None,
+        help="Path to vesum.db (default: data/vesum.db found in the local tree)",
+    )
     parser.add_argument("--export", action="store_true", help="Export canonical JSON deck")
     parser.add_argument(
         "--output", type=str, default="registry/practice/adverb_mechanics_deck.json", help="Output path"
@@ -2757,7 +2768,7 @@ def main() -> None:
     cards = build_canonical_adverb_cards()
 
     if args.verify_vesum:
-        res = verify_deck_with_vesum(cards)
+        res = verify_deck_with_vesum(cards, vesum_db_path=find_vesum_db(args.vesum_db))
         if args.json:
             print(json.dumps(res, ensure_ascii=False, indent=2))
         else:
