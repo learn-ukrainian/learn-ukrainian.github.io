@@ -22,7 +22,13 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import v4_source_custody_access as custody
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
-from tests._host_path_guard import FIXTURE_HOME, FIXTURE_USER, checkout_path_hits, host_path_hits
+from tests._host_path_guard import (
+    FIXTURE_HOME,
+    FIXTURE_USER,
+    assert_no_checkout_paths,
+    assert_no_host_paths,
+    assert_no_host_templates,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 REGISTRY_CUSTODY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "custody"
@@ -197,8 +203,8 @@ def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
     )
     for path in production_paths:
         text = path.read_text(encoding="utf-8")
-        assert not checkout_path_hits(text), f"{path} still bakes a host run-root"
-        assert not re.search(r"/home/<", text), f"{path} still documents a host path template"
+        assert_no_checkout_paths(text, f"{path} bakes a host run-root")
+        assert_no_host_templates(text, f"{path} documents a host path template")
 
 
 def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
@@ -218,7 +224,7 @@ def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
     )
     for path in narrative_docs:
         text = path.read_text(encoding="utf-8")
-        assert not host_path_hits(text), f"{path} still documents a host run-root or checkout path"
+        assert_no_host_paths(text, f"{path} documents a host run-root or checkout path")
 
 
 def test_primary_repo_root_uses_env_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

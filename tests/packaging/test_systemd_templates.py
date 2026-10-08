@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.storage import install_data_volume_dropins as installer
-from tests._host_path_guard import host_fact_hits
+from tests._host_path_guard import assert_no_host_facts
 
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
@@ -45,7 +45,7 @@ def test_systemd_templates_have_no_host_facts() -> None:
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        assert not host_fact_hits(text), f"{path.name} leaked {host_fact_hits(text)!r}"
+        assert_no_host_facts(text, path.name)
 
 
 @pytest.mark.repo_wide

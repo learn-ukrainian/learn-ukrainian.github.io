@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 from scripts.common.repo_root import main_checkout_root
-from tests._host_path_guard import HOST_ALIASES, host_fact_hits, host_path_hits
+from tests._host_path_guard import HOST_ALIAS, assert_no_host_facts, assert_no_host_paths
 from tests.helpers.python import project_python, require_repo_venv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -1115,8 +1115,8 @@ def test_no_public_ssh_host_or_remote_root_defaults() -> None:
     source = SERVICES_SH.read_text(encoding="utf-8")
     assert "LU_SERVICES_SSH_HOST" in source
     assert "LU_SERVICES_REMOTE_ROOT" in source
-    assert not [hit for hit in host_fact_hits(source) if hit in HOST_ALIASES]
-    assert not host_path_hits(source)
+    assert_no_host_facts(source, "services.sh", kinds=(HOST_ALIAS,))
+    assert_no_host_paths(source, "services.sh")
 
 
 def test_failed_remote_delegate_does_not_spawn_local(

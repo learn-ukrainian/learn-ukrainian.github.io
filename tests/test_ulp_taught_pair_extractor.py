@@ -15,11 +15,11 @@ from scripts.lexicon.ulp_taught_pair_extractor import (
     measure_corpus_intake_ulp,
     measure_curated_ulp_lists,
 )
-from tests._host_path_guard import host_path_hits
+from tests._host_path_guard import assert_no_host_paths
 
 
 def test_source_has_no_baked_home_defaults() -> None:
-    assert not host_path_hits(Path(extractor.__file__).read_text(encoding="utf-8"))
+    assert_no_host_paths(Path(extractor.__file__).read_text(encoding="utf-8"))
 
 
 def test_extract_basic_margin_pair() -> None:
