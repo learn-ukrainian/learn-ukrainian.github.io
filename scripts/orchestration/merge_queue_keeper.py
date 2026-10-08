@@ -49,10 +49,9 @@ DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
 REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
 # GitHub's PR-files endpoint stops at this many files without saying so.
 PR_FILES_LIMIT = 3000
-# Opt-in requeue gate: when set, a head the merge queue ejected is re-enqueued
-# at most once, and only with a ``grant`` decision for ``"<pr>:<head>"`` in
-# this JSON file (written by the operator's flake prover). Unset keeps the
-# legacy re-enqueue-until-third-drop behaviour.
+# A head the merge queue ejected is re-enqueued at most once, and only with
+# a ``grant`` decision for ``"<pr>:<head>"`` in this JSON file (written by
+# the operator's flake prover). Without a configured file, no grant exists.
 REQUEUE_GATE_ENV = "MQ_KEEPER_REQUEUE_GATE"
 # Slow mode: ``--apply`` skips a run that starts within this many seconds of
 # the last recorded run, so a frequent timer can be throttled without a unit edit.
@@ -408,10 +407,10 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
 
 
 def _requeue_grants(path: Path | None) -> dict[str, dict[str, Any]] | None:
-    """Requeue decisions keyed ``"<pr>:<head>"``, or None when the gate is off.
+    """Requeue decisions keyed ``"<pr>:<head>"``, or None when no file is configured.
 
     A missing, unreadable or malformed decision file grants nothing, so a
-    gated keeper holds every ejected head instead of guessing.
+    keeper holds every ejected head instead of guessing.
     """
     if path is None:
         return None
@@ -428,10 +427,14 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
-    if grants is None or drops < 1:
-        return None
     if drop_key in previous.get("requeued", {}):
-        return "requeue-spent" if drops >= 2 else None
+        return "requeue-spent"
+    if drop_key in previous.get("undiagnosed", {}):
+        return "requeue-unknown"
+    if drops < 1:
+        return None
+    if grants is None:
+        return "requeue-pending"
     decision = grants.get(drop_key, {}).get("decision")
     if decision == "grant":
         return None
@@ -447,10 +450,12 @@ def _gate_hold(
     previous: Mapping[str, Any],
 ) -> str | None:
     """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
-    if grants is None:
-        return None
     drop_key = f"{number}:{head}"
-    if drop_key in previous.get("squash_revoked", {}) and gh.squash_blocked(number, head) is not False:
+    if (
+        grants is not None
+        and drop_key in previous.get("squash_revoked", {})
+        and gh.squash_blocked(number, head) is not False
+    ):
         return "squash-text-blocked"
     return _requeue_hold(drop_key, drops, grants, previous)
 
@@ -497,6 +502,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("drops"), dict)
         or not isinstance(data.get("approved", {}), dict)
         or not isinstance(data.get("requeued", {}), dict)
+        or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
@@ -641,14 +647,21 @@ def run(
         detail = ""
         failed_jobs: list[str] = []
         if dropped:
+            dropped_head = previous["queued"][key]
+            previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
+        else:
+            dropped_head = head
+        prior_drop_key = f"{number}:{dropped_head}"
+        if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs = _drop_detail(gh, number, head, previous.get("observed", ""))
+                detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
-                    dropped_head = previous["queued"][key]
-                    prior_drop_key = f"{number}:{dropped_head}"
+                    previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
                     if dropped_head == head:
                         drops = previous["drops"][drop_key]
+                else:
+                    detail = " Queue removal diagnosis unknown."
             except KeeperError:
                 detail = " Queue removal diagnosis unknown."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
@@ -789,7 +802,7 @@ def run(
                 and (_ever_approved(comments, login) or dropped)
             ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
-            elif dropped and detail and comment_safe:
+            elif reason != "ready" and dropped and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
                 previous.setdefault("failures", []).append({"job": job, "pr": number, "at": observed})
@@ -801,7 +814,7 @@ def run(
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("requeued", "squash_revoked"):
+        for name in ("requeued", "squash_revoked", "undiagnosed"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
