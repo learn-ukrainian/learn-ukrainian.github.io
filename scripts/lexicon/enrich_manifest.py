@@ -60,11 +60,12 @@ import time
 import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
+from dataclasses import dataclass
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, unquote, urlsplit
 
 import requests
 
@@ -124,7 +125,7 @@ from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
 from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma, verify_word
-from scripts.wiki.slovnyk_me import primary_synonym_sense_text
+from scripts.wiki.slovnyk_me import normalize_word, primary_synonym_sense_text
 
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
@@ -1642,46 +1643,81 @@ def _slovnyk_backoff_sleep(attempt: int, retry_after: float | None) -> None:
     time.sleep(delay + random.uniform(0.0, 0.5))
 
 
-def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
-    """Fetch an entry from slovnyk.me for a specific dictionary.
+@dataclass(frozen=True)
+class _SlovnykOutcome:
+    """Opt-in transport evidence; never inferred from a legacy null cache row."""
 
-    Returns the parsed entry dict, or None if the entry was not found (404).
-    Raises _SlovnykTransientError on network error or server error (5xx/429,
-    so a later run retries it).
-    """
-    if _phase1_offline_mode():
-        return None
+    status: str
+    row: dict[str, Any] | None = None
+    http_status: int | None = None
 
+
+def _valid_slovnyk_positive(row: Any, slug: str, lookup_word: str) -> bool:
+    """Validate identity and direct source locator without changing parser semantics."""
+    if not isinstance(row, dict) or row.get("dictionary_slug") != slug:
+        return False
+    if not all(isinstance(row.get(key), str) and row[key].strip() for key in ("word", "text", "source_url")):
+        return False
+    try:
+        url = urlsplit(row["source_url"])
+    except ValueError:
+        return False
+    prefix = f"/dict/{slug}/"
+    return (
+        url.scheme == "https"
+        and url.netloc == "slovnyk.me"
+        and not url.query
+        and not url.fragment
+        and url.path.startswith(prefix)
+        and normalize_word(unquote(url.path[len(prefix) :])) == lookup_word
+        and row.get("lookup_word", lookup_word) == lookup_word
+    )
+
+
+def _fetch_slovnyk_outcome(lemma: str, lookup_word: str, slug: str, *, validate: bool = True) -> _SlovnykOutcome:
+    """Bounded foreground transport; first access/unsupported HTTP and parse stop."""
+    if _phase1_offline_mode() or not lookup_word:
+        return _SlovnykOutcome("pending")
     url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
         _polite_slovnyk_delay()
         try:
-            response = requests.get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT})
-        except requests.RequestException as exc:
+            response = requests.get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT}, allow_redirects=False)
+        except requests.RequestException:
             if attempt < _SLOVNYK_MAX_RETRIES:
                 _slovnyk_backoff_sleep(attempt, None)
                 continue
-            raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
-
-        if response.status_code == 404:
-            return None
-        if response.status_code == 429 or response.status_code >= 500:
+            return _SlovnykOutcome("transient_error")
+        code = response.status_code
+        if code == 404:
+            return _SlovnykOutcome("not_found", http_status=code)
+        if code in {408, 425, 429} or 500 <= code <= 599:
             if attempt < _SLOVNYK_MAX_RETRIES:
                 _slovnyk_backoff_sleep(attempt, _parse_retry_after(response.headers.get("Retry-After")))
                 continue
-            raise _SlovnykTransientError(f"transient slovnyk.me status {response.status_code} for {url}")
+            return _SlovnykOutcome("transient_error", http_status=code)
+        if code != 200:
+            return _SlovnykOutcome("blocked", http_status=code)
         try:
-            response.raise_for_status()
-        except requests.HTTPError as exc:
-            raise _SlovnykTransientError(f"transient slovnyk.me request failure for {url}") from exc
-        return _parse_slovnyk_entry(
-            response.text,
-            lemma=lemma,
-            lookup_word=lookup_word,
-            slug=slug,
-            url=url,
-        )
-    raise _SlovnykTransientError(f"transient slovnyk.me exhausted retries for {url}")
+            row = _parse_slovnyk_entry(response.text, lemma=lemma, lookup_word=lookup_word, slug=slug, url=url)
+        except (ValueError, TypeError):
+            return _SlovnykOutcome("parse_error", http_status=code)
+        if row is None or (validate and not _valid_slovnyk_positive(row, slug, lookup_word)):
+            return _SlovnykOutcome("parse_error", http_status=code)
+        return _SlovnykOutcome("positive", row, code)
+    return _SlovnykOutcome("transient_error")
+
+
+def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
+    """Compatible tolerant lookup: row/None, or the established transient exception.
+
+    Strict evidence belongs to the opt-in mirror channel. Tolerant callers keep
+    their existing ambiguous None contract and never receive new stop exceptions.
+    """
+    outcome = _fetch_slovnyk_outcome(lemma, lookup_word, slug, validate=False)
+    if outcome.status in {"blocked", "transient_error"}:
+        raise _SlovnykTransientError("slovnyk.me request unavailable")
+    return outcome.row
 
 
 def _load_slovnyk_cache_file(path: Path) -> dict[str, Any] | None:
@@ -1726,8 +1762,12 @@ def _new_slovnyk_cache(lemma: str, lookup_word: str) -> dict[str, Any]:
     }
 
 
-def _slovnyk_cache(lemma: str) -> dict[str, Any]:
-    """Read or populate the one-file-per-lemma slovnyk.me cache."""
+def _slovnyk_cache(
+    lemma: str, *, outcomes: dict[str, _SlovnykOutcome] | None = None, slugs: Sequence[str] | None = None
+) -> dict[str, Any]:
+    """Read/populate tolerant cache; only the foreground mirror opts into evidence."""
+    if outcomes is not None:
+        return _strict_slovnyk_cache(lemma, outcomes, slugs if slugs is not None else _SLOVNYK_LOOKUP_SLUGS)
     lookup_word = _slovnyk_lookup_word(lemma)
     path = _slovnyk_cache_path(lemma)
     cache = _load_slovnyk_cache_file(path)
@@ -1768,6 +1808,58 @@ def _slovnyk_cache(lemma: str) -> dict[str, Any]:
     if changed:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return cache
+
+
+def _reusable_slovnyk_cache(cache: Any, lemma: str, lookup_word: str) -> bool:
+    """Require current schema, lookup identity and an aware provenance timestamp."""
+    if (
+        not isinstance(cache, dict)
+        or cache.get("schema_version") != _SLOVNYK_CACHE_SCHEMA_VERSION
+        or cache.get("lemma") != lemma
+        or cache.get("lookup_word") != lookup_word
+        or not isinstance(cache.get("lookups"), dict)
+    ):
+        return False
+    try:
+        return dt.datetime.fromisoformat(cache["fetched_at"]).tzinfo is not None
+    except (KeyError, ValueError, TypeError):
+        return False
+
+
+def _strict_slovnyk_cache(lemma: str, outcomes: dict[str, _SlovnykOutcome], slugs: Sequence[str]) -> dict[str, Any]:
+    """Persist strict positives/misses per result; preserve partial work on stops.
+
+    Legacy nulls are unproven and refetched. Offline/empty targets stay pending.
+    Atomic replacement prevents interrupted JSON writes, but this foreground
+    shared-cache tool requires a single writer (the companion provides isolation).
+    """
+    lookup_word = _slovnyk_lookup_word(lemma)
+    path = _slovnyk_cache_path(lemma)
+    cache = _load_current_slovnyk_cache_file(path)
+    if not _reusable_slovnyk_cache(cache, lemma, lookup_word):
+        cache = _new_slovnyk_cache(lemma, lookup_word)
+    for slug in slugs:
+        row = cache["lookups"].get(slug)
+        if _valid_slovnyk_positive(row, slug, lookup_word):
+            outcomes[slug] = _SlovnykOutcome("reused", row)
+            continue
+        outcome = _fetch_slovnyk_outcome(lemma, lookup_word, slug)
+        if outcome.status in {"positive", "not_found"}:
+            cache["lookups"][slug] = outcome.row
+            try:
+                path.parent.mkdir(parents=True, exist_ok=True)
+                temporary = path.with_suffix(".json.tmp")
+                temporary.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                os.replace(temporary, path)
+                if _load_current_slovnyk_cache_file(path) != cache:
+                    raise OSError("cache persistence mismatch")
+            except OSError:
+                outcomes[slug] = _SlovnykOutcome("error", http_status=outcome.http_status)
+                break
+        outcomes[slug] = outcome
+        if outcome.status in {"blocked", "parse_error"}:
+            break
     return cache
 
 

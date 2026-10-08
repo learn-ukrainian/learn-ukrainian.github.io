@@ -22,12 +22,14 @@ Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 MARKER = re.compile(
     r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
-    r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|CHANGES_REQUESTED|BLOCKED) "
+    r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|APPROVE|CHANGES_REQUESTED|BLOCKED) "
     r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))? -->\Z"
 )
 MARKER_PREFIX = "<!-- cf-verdict"
 TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
 REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
+# The recorder normalizes APPROVE to APPROVED, but older trailers carry the reviewer's raw token (#10119).
+VERDICT_ALIASES = {"APPROVE": "APPROVED"}
 SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 REQUIRED_CHECKS = ("CI Gate",)
 DEFAULT_GH_TIMEOUT_SECONDS = 60.0
@@ -80,12 +82,22 @@ def _author_login(comment: Mapping[str, Any]) -> str | None:
     return None
 
 
-def parse_marker(body: str) -> dict[str, str] | None:
-    """Accept only an intact recorder comment with one terminal marker."""
+def _terminal_marker(body: str) -> re.Match[str] | None:
+    """Return the well-formed trailer when it is the body's only marker and its last line."""
     if body.count(MARKER_PREFIX) != 1:
         return None
-    last = body.rstrip("\n").split("\n")[-1]
-    match = MARKER.fullmatch(last)
+    return MARKER.fullmatch(body.rstrip("\n").split("\n")[-1])
+
+
+def _edited(comment: Mapping[str, Any]) -> bool:
+    created = _timestamp(_field(comment, "created_at", "createdAt"))
+    updated = _timestamp(_field(comment, "updated_at", "updatedAt"))
+    return created is None or updated is None or created != updated
+
+
+def parse_marker(body: str) -> dict[str, str] | None:
+    """Accept only an intact recorder comment with one terminal marker."""
+    match = _terminal_marker(body)
     if match is None:
         return None
     item = match.groupdict()
@@ -108,6 +120,7 @@ def parse_marker(body: str) -> dict[str, str] | None:
         or f"Task id: {item['task']}" not in body
     ):
         return None
+    item["verdict"] = VERDICT_ALIASES.get(item["verdict"], item["verdict"])
     return item
 
 
@@ -144,15 +157,22 @@ def lookup_verdict(
             untrusted.append(str(_field(comment, "id", "databaseId") or index))
             continue
         if marker is None:
-            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+            trailer = _terminal_marker(body)
+            if trailer is None or trailer["verdict"] != "APPROVE":
+                return Verdict("unknown", untrusted_markers=tuple(untrusted))
+            # An approval trailer outside the keeper format cannot hide a rejection, so it neither
+            # poisons the head nor counts as approval; an edited one still poisons it (#10119).
+            if trailer["sha"] == sha and _edited(comment):
+                return Verdict("unknown", untrusted_markers=tuple(untrusted))
+            if re.search(r"(?im)^\s*VERDICT:", body):
+                legacy = True
+            continue
         if marker["sha"] != sha:
             other_head = True
             continue
         if marker["family"] in {"unknown", "unattested", "ambiguous", "conflicting"}:
             return Verdict("unknown", untrusted_markers=tuple(untrusted))
-        created = _timestamp(_field(comment, "created_at", "createdAt"))
-        updated = _timestamp(_field(comment, "updated_at", "updatedAt"))
-        if created is None or updated is None or created != updated:
+        if _edited(comment):
             return Verdict("unknown", untrusted_markers=tuple(untrusted))
         candidates.append((_timestamp(marker["started"]), index, marker))
     if not candidates:

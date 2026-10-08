@@ -615,6 +615,9 @@ def collect_branch_review_facts(
             raise BranchFactsError(
                 FACTS_AUTHORSHIP_UNKNOWN, "branch fact collection timed out; refusing a partial history"
             )
+    # A proven clean merge of the excluded tip authors nothing, and it stays
+    # in the facts. Dispatch can still admit the incoming writer. A branch
+    # review refuses that range in refuse_excluded_only_range.
     incoming_writer = None
     incoming_family = None
     if incoming_agent:
@@ -666,6 +669,128 @@ def structural_review_route(facts: BranchReviewFacts, *, risk: str, review_profi
     return resolve_reviewer(facts.resolver_inputs(risk=risk, review_profile=review_profile))
 
 
+def _canonical_base_branch_name(base_branch: str) -> str:
+    """Branch name behind the spellings target resolution already accepts.
+
+    ``main``, ``origin/main``, ``remotes/origin/main``,
+    ``refs/remotes/origin/main`` and ``refs/heads/main`` name one branch.
+    A non-default ref keeps its own name, including a slash that is part of it.
+    """
+    name = base_branch.strip()
+    for prefix in ("refs/remotes/origin/", "remotes/origin/", "refs/heads/", "origin/"):
+        if name.startswith(prefix):
+            return name[len(prefix) :]
+    return name
+
+
+def authorship_exclude_sha(repo_root: Path, *, base_branch: str | None) -> str | None:
+    """Current default-branch tip when ``base_branch`` names that branch.
+
+    The same rule as dispatch admission (#9988): a review whose base is the
+    default branch drops commits reachable from that branch's current tip.
+    Any other base keeps the full enumeration. The tip is the local
+    ``refs/remotes/origin/HEAD``. A checkout that has not recorded it returns
+    None, so callers keep the previous enumeration rather than guessing a tip.
+    Qualified spellings of that ref are reduced to the branch name first.
+    """
+    if not isinstance(base_branch, str) or not base_branch.strip():
+        return None
+    name = _canonical_base_branch_name(base_branch)
+    try:
+        ref = _facts_git(
+            repo_root,
+            ["symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
+            deadline=time.monotonic() + 30,
+            code=FACTS_TARGET_UNKNOWN,
+        )
+    except BranchFactsError:
+        return None
+    pointed = ref.decode("ascii", errors="strict").strip()
+    if not pointed.startswith("origin/"):
+        return None
+    if name != pointed.removeprefix("origin/"):
+        return None
+    try:
+        tip = _facts_git(
+            repo_root,
+            ["rev-parse", f"{pointed}^{{commit}}"],
+            deadline=time.monotonic() + 30,
+            code=FACTS_TARGET_UNKNOWN,
+        )
+    except BranchFactsError:
+        return None
+    sha = tip.decode("ascii", errors="strict").strip()
+    if not SHA.fullmatch(sha):
+        return None
+    return sha
+
+
+def _shas_not_reachable_from(repo_root: Path, shas: list[str], exclude_sha: str | None) -> list[str]:
+    """Drop commits reachable from ``exclude_sha``, including that commit.
+
+    One ``git rev-list --no-walk`` covers every valid SHA under a single
+    deadline. Strings that are not commit SHAs stay, without starting Git.
+    """
+    if exclude_sha is None:
+        return list(shas)
+    pending = [sha for sha in shas if isinstance(sha, str) and SHA.fullmatch(sha)]
+    if not pending:
+        return [sha if isinstance(sha, str) else "" for sha in shas]
+    listed = _facts_git(
+        repo_root,
+        ["rev-list", "--no-walk", "--stdin"],
+        deadline=time.monotonic() + _GIT_STEP_TIMEOUT_S,
+        code=FACTS_AUTHORSHIP_UNKNOWN,
+        input_bytes=("\n".join((*pending, f"^{exclude_sha}")) + "\n").encode("ascii"),
+    )
+    reachable = set(listed.decode("ascii", errors="strict").split())
+    kept: list[str] = []
+    for sha in shas:
+        if isinstance(sha, str) and SHA.fullmatch(sha):
+            if sha in reachable:
+                kept.append(sha)
+        else:
+            kept.append(sha if isinstance(sha, str) else "")
+    return kept
+
+
+def refuse_excluded_only_range(facts: BranchReviewFacts, *, repo_root: Path, exclude_sha: str | None) -> None:
+    """Refuse a branch review that has no commit of its own.
+
+    Fact collection stays quiet. Dispatch admits a known incoming writer onto
+    a branch that has not authored a commit yet, including after a clean merge
+    of the excluded tip, and a rebase plan still enumerates that range. The
+    recorder and the resolver still refuse it: the frozen base and head are
+    the same commit, every remaining commit is reachable from the excluded
+    tip, or the only commits left are proven clean merges of it.
+    """
+    if facts.base_tip_sha == facts.head_sha:
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "empty review range: the branch has no commits of its own",
+        )
+    if exclude_sha is None or facts.existing_families:
+        return
+    if any(commit.family is not None for commit in facts.commits):
+        return
+    if facts.commits:
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "author model unknown: missing explicit X-Agent model trailer",
+        )
+    full = _facts_git(
+        repo_root,
+        ["rev-list", f"{facts.base_tip_sha}..{facts.head_sha}"],
+        deadline=time.monotonic() + 30,
+        code=FACTS_AUTHORSHIP_UNKNOWN,
+    )
+    if full.strip():
+        raise BranchFactsError(
+            FACTS_AUTHORSHIP_UNKNOWN,
+            "author model unknown: missing explicit X-Agent model trailer",
+        )
+
+
 def pr_review_facts(
     repository: str,
     pr_number: int,
@@ -680,10 +805,18 @@ def pr_review_facts(
 
     The PR's base and head come from GitHub; membership comes from the local
     ``git rev-list``. Any difference between the two commit sets refuses.
+    The base ref name is required before facts are collected: a missing, blank,
+    or non-string name would otherwise skip default-branch exclusion.
     """
-    pr = _run_json(["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefOid,headRefOid"])
+    pr = _run_json(
+        ["gh", "pr", "view", str(pr_number), "--repo", repository, "--json", "baseRefName,baseRefOid,headRefOid"]
+    )
     base = pr.get("baseRefOid") if isinstance(pr, dict) else None
     head = pr.get("headRefOid") if isinstance(pr, dict) else None
+    base_name = pr.get("baseRefName") if isinstance(pr, dict) else None
+    if not isinstance(base_name, str) or not base_name.strip():
+        raise RecordError("PR base ref name missing or malformed")
+    base_name = base_name.strip()
     if not isinstance(base, str) or not SHA.fullmatch(base):
         raise RecordError("PR base SHA unavailable; cannot prove clean base merge")
     if head != head_sha:
@@ -694,6 +827,7 @@ def pr_review_facts(
     github_shas = [entry.get("sha") for entry in listed]
     if not all(isinstance(sha, str) and SHA.fullmatch(sha) for sha in github_shas):
         raise RecordError("PR commit set malformed")
+    exclude = authorship_exclude_sha(repo_root, base_branch=base_name)
     facts = collect_branch_review_facts(
         repository=repository,
         repo_root=repo_root,
@@ -702,8 +836,11 @@ def pr_review_facts(
         task_root=task_root,
         subject_seats=subject_seats,
         subject_families=subject_families,
+        authorship_exclude_sha=exclude,
     )
-    if sorted(github_shas) != sorted(commit.sha or "" for commit in facts.commits):
+    refuse_excluded_only_range(facts, repo_root=repo_root, exclude_sha=exclude)
+    github_own = _shas_not_reachable_from(repo_root, github_shas, exclude)
+    if sorted(github_own) != sorted(commit.sha or "" for commit in facts.commits):
         raise RecordError("PR commit set differs from the local base..head enumeration; fetch and retry")
     return facts
 

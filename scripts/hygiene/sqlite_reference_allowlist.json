@@ -290,6 +290,16 @@
     ]
   },
   {
+    "path": "scripts/ingest/dictionary_acquisition.py",
+    "reference_count": 9,
+    "kind": "writer",
+    "target_db": "per-dictionary acquisition staging.sqlite3",
+    "reason": "Persists isolated acquisition job specification, results and events; no canonical source-store admission.",
+    "calls": [
+      "sqlite3.connect(directory / 'staging.sqlite3', timeout=1)"
+    ]
+  },
+  {
     "path": "scripts/ingest/dictionary_ingest.py",
     "reference_count": 13,
     "kind": "writer",

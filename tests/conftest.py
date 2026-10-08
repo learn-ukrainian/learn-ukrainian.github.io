@@ -924,6 +924,8 @@ def _hermetic_dispatch_admission_host(monkeypatch):
         "LU_SLICE_CGROUP",
     ):
         monkeypatch.delenv(name, raising=False)
+    # Never read a deployment env file from the machine running the tests.
+    monkeypatch.setenv("DISPATCH_ADMISSION_ENV_FILE", "")
     monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
 
 

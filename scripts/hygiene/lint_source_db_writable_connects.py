@@ -650,9 +650,30 @@ def classify_store_source(source: str, rel_path: str, *, syntax: _Syntax | None 
     return result
 
 
+def _commit_sha(commit: str, root: Path) -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"{commit}^{{commit}}"],
+        cwd=root, capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
+
+
 def census(commit: str, root: Path = REPO_ROOT) -> dict:
-    """Read the complete committed tree, independent of checkout sparsity."""
-    sha = subprocess.check_output(["git", "rev-parse", f"{commit}^{{commit}}"], cwd=root, text=True, timeout=30).strip()
+    """Read the complete committed tree, independent of checkout sparsity.
+
+    A shallow checkout has no frozen base object. Classify HEAD, the tree
+    that checkout has, as ``base_blob_ids`` does. ``base_commit`` is the
+    tree that was actually read.
+    """
+    sha = _commit_sha(commit, root)
+    if sha is None and commit != "HEAD":
+        sha = _commit_sha("HEAD", root)
+    if sha is None:
+        sha = subprocess.check_output(
+            ["git", "rev-parse", f"{commit}^{{commit}}"], cwd=root, text=True, timeout=30,
+        ).strip()
     paths = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "-z", sha, "--", "scripts", "tests"], cwd=root, timeout=30)
     names = [p for p in paths.decode().split("\0") if p.endswith(".py")]
     requests = "".join(f"{sha}:{p}\n" for p in names).encode()

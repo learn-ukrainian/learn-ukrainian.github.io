@@ -592,6 +592,8 @@ class FetchOutcome:
     status: str
     document_html: str = ""
     error_text: str = ""
+    http_status: int | None = None
+    terminal: bool = False
 
 
 def _retry_delay(response: requests.Response | None, retry_backoff_s: float, attempt: int) -> float:
@@ -613,8 +615,9 @@ def fetch_sum20_wordid(
 ) -> FetchOutcome:
     """GET one official wordid with bounded exponential backoff.
 
-    A network/5xx/429 failure is always ``transient_error``.  It is never
-    translated into a missing-record result, so a resumed crawl retries it.
+    Network/408/425/429/5xx failures are bounded retries. Other non-200
+    responses stop on the first response, stored lossily as ``transient_error``
+    with numeric HTTP evidence and ``terminal=True``. Only 404 proves a miss.
     """
     client = session or requests.Session()
     # A requests.Session already carries "python-requests/<version>" and
@@ -627,33 +630,32 @@ def fetch_sum20_wordid(
         client.headers["Accept"] = "text/html,application/xhtml+xml"
     url = official_url_for_wordid(wordid)
     last_error = ""
+    last_code = None
     for attempt in range(max(0, retries) + 1):
         response: requests.Response | None = None
         try:
-            response = client.get(url, params={"page": 0}, timeout=timeout_s)
-            if response.status_code == 404:
-                return FetchOutcome("not_found")
-            if response.status_code in {408, 425, 429} or response.status_code >= 500 or response.status_code >= 400:
-                last_error = f"HTTP {response.status_code} for {url}"
+            response = client.get(url, params={"page": 0}, timeout=timeout_s, allow_redirects=False)
+            last_code = response.status_code
+            if last_code == 404:
+                return FetchOutcome("not_found", http_status=last_code)
+            if last_code in {408, 425, 429} or 500 <= last_code <= 599:
+                last_error = f"HTTP {last_code}"
+            elif last_code != 200:
+                # Keep the four-status storage contract; terminal evidence is separate.
+                return FetchOutcome(
+                    "transient_error", error_text=f"HTTP {last_code}", http_status=last_code, terminal=True
+                )
             else:
                 try:
-                    _ = _extract_article_html(response.text)
-                except Sum20ParseError as exc:
-                    return FetchOutcome("parse_error", error_text=str(exc))
-                if not _first_with_class_from_html(response.text, "ENTRY"):
-                    return FetchOutcome("not_found")
-                return FetchOutcome("ok", document_html=response.text)
-        except requests.RequestException as exc:
-            last_error = f"{type(exc).__name__}: {exc}"
+                    parse_sum20_article(response.text, wordid)
+                except (Sum20ParseError, ValueError, TypeError, RecursionError):
+                    return FetchOutcome(
+                        "parse_error", error_text="unusable article", http_status=last_code, terminal=True
+                    )
+                return FetchOutcome("ok", document_html=response.text, http_status=last_code)
+        except requests.RequestException:
+            last_code = None
+            last_error = "network request failure"
         if attempt < max(0, retries):
             sleep(_retry_delay(response, retry_backoff_s, attempt))
-    return FetchOutcome("transient_error", error_text=last_error or "request retries exhausted")
-
-
-def _first_with_class_from_html(document_html: str, class_name: str) -> bool:
-    """Check article structure before classifying a successful request as a miss."""
-    article_html = _extract_article_html(document_html)
-    parser = _ArticleTreeParser()
-    parser.feed(article_html)
-    parser.close()
-    return _first_with_class(parser.root, class_name, stop_classes=frozenset()) is not None
+    return FetchOutcome("transient_error", error_text=last_error or "request retries exhausted", http_status=last_code)

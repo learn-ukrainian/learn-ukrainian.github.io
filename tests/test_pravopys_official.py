@@ -106,9 +106,11 @@ def test_printed_latin_and_one_script_words_stay_as_printed(printed: str) -> Non
 
 
 def test_endings_on_the_next_row_take_the_script_of_their_word() -> None:
-    page = po.PageLayout(page=50, rows=[_row("душ-", page=50, y0=10), _row("á, пліч-", page=50, y0=23),
-                                        _row("ó-пліч", page=50, y0=36)],
-                         margin_labels=[po.MarginLabel(50, 10, "Cкладені")])
+    page = po.PageLayout(
+        page=50,
+        rows=[_row("душ-", page=50, y0=10), _row("á, пліч-", page=50, y0=23), _row("ó-пліч", page=50, y0=36)],
+        margin_labels=[po.MarginLabel(50, 10, "Cкладені")],
+    )
     (restored,) = po.restore_page_scripts([page])
     assert [row.text for row in restored.rows] == ["душ-", f"а{A}, пліч-", f"о{A}-пліч"]
     assert [label.text for label in restored.margin_labels] == ["Складені"]
@@ -121,7 +123,9 @@ def test_script_anomalies_report_mixed_words_and_bare_latin_stress() -> None:
 
 def test_context_readings_rewrite_whole_printed_tokens_only() -> None:
     paragraph = po.Paragraph(
-        66, 96, None,
+        66,
+        96,
+        None,
         rows=[_row("І відміна: і так", page=96), _row("ІІ відміна", page=96), _row("ІІІ відміна", page=97)],
         margin_labels=[po.MarginLabel(96, 10, "-IР-, -ИР-")],
     )
@@ -138,7 +142,10 @@ def test_context_readings_rewrite_whole_printed_tokens_only() -> None:
 
 @pytest.mark.parametrize(
     "reading",
-    [po.ContextReading(66, "rows", "І відміна", "I відміна", 2, "test"), po.ContextReading(7, "rows", "x", "y", 1, "test")],
+    [
+        po.ContextReading(66, "rows", "І відміна", "I відміна", 2, "test"),
+        po.ContextReading(7, "rows", "x", "y", 1, "test"),
+    ],
 )
 def test_context_readings_refuse_a_drifted_parse(reading: po.ContextReading) -> None:
     paragraph = po.Paragraph(66, 96, None, rows=[_row("І відміна", page=96)])
@@ -147,9 +154,46 @@ def test_context_readings_refuse_a_drifted_parse(reading: po.ContextReading) -> 
 
 
 def test_context_readings_are_single_script() -> None:
-    for reading in po.CONTEXT_READINGS:
+    for reading in (*po.CONTEXT_READINGS, *po.SECTION_CONTEXT_READINGS, *po.TOC_CONTEXT_READINGS):
         assert po.script_anomalies(reading.reading) == [], reading
         assert po.restore_scripts(reading.reading) == reading.reading, reading
+
+
+def test_section_readings_use_ordinals_and_preserve_cyrillic_controls() -> None:
+    section = po.Section(19, 1, "ІІ. І СЛОВА", 96, None, rows=[_row("ХХ ст.; І та і, Іван, Х", page=96)])
+    readings = [
+        po.ContextReading(19, "title", "ІІ.", "II.", 1, "synthetic part label"),
+        po.ContextReading(19, "rows", "ХХ ст.", "XX ст.", 1, "synthetic century"),
+    ]
+    (read,) = po.apply_context_readings([section], readings)
+    assert read.title == "II. І СЛОВА"
+    assert read.rows == [_row("XX ст.; І та і, Іван, Х", page=96)]
+    assert section.title == "ІІ. І СЛОВА"
+    assert section.rows[0].text == "ХХ ст.; І та і, Іван, Х"
+
+
+def test_toc_readings_use_entry_index_and_preserve_other_fields() -> None:
+    entries = [po.TocEntry("part", None, "І. СЛОВА", None), po.TocEntry("paragraph", 82, "ІІ відміна", 112)]
+    readings = [
+        po.ContextReading(0, "title", "І.", "I.", 1, "synthetic part label"),
+        po.ContextReading(1, "title", "ІІ відміна", "II відміна", 1, "synthetic declension label"),
+    ]
+    assert po.apply_context_readings(entries, readings) == [
+        po.TocEntry("part", None, "I. СЛОВА", None),
+        po.TocEntry("paragraph", 82, "II відміна", 112),
+    ]
+    assert entries[1].title == "ІІ відміна"
+
+
+@pytest.mark.parametrize(
+    "target", [po.Section(2, 1, "І. СЛОВА", 11, None), po.TocEntry("part", None, "І. СЛОВА", None)]
+)
+@pytest.mark.parametrize("missing", [False, True])
+def test_metadata_readings_fail_on_wrong_count_or_missing_locator(target, missing: bool) -> None:
+    locator = 2 if isinstance(target, po.Section) else 0
+    reading = po.ContextReading(999 if missing else locator, "title", "І.", "I.", 2, "synthetic drift")
+    with pytest.raises(po.PravopysParseError, match="missing locator" if missing else "expected 2"):
+        po.apply_context_readings([target], [reading])
 
 
 # ── Layout ───────────────────────────────────────────────────────
@@ -160,13 +204,15 @@ def _line(page: int, x0: float, y0: float, x1: float, size: float, text: str) ->
 
 
 def test_layout_drops_running_heads_and_keeps_margin_labels_apart() -> None:
-    pages = po.layout_pages([
-        _line(12, 231, 31, 363, 8.5, "І. Правопис частин основи слова"),
-        _line(12, 188, 63, 192, 8.5, "Ї"),
-        _line(12, 237, 56, 445, 11.0, "§ 3. Перший рядок"),
-        _line(12, 150, 69, 445, 11.0, "другий рядок"),
-        _line(12, 433, 526, 445, 12.0, "12"),
-    ])
+    pages = po.layout_pages(
+        [
+            _line(12, 231, 31, 363, 8.5, "І. Правопис частин основи слова"),
+            _line(12, 188, 63, 192, 8.5, "Ї"),
+            _line(12, 237, 56, 445, 11.0, "§ 3. Перший рядок"),
+            _line(12, 150, 69, 445, 11.0, "другий рядок"),
+            _line(12, 433, 526, 445, 12.0, "12"),
+        ]
+    )
     (page,) = pages
     assert [row.text for row in page.rows] == ["§ 3. Перший рядок", "другий рядок"]
     assert [label.text for label in page.margin_labels] == ["Ї"]
@@ -174,22 +220,26 @@ def test_layout_drops_running_heads_and_keeps_margin_labels_apart() -> None:
 
 
 def test_note_size_margin_labels_need_a_body_line_beside_them() -> None:
-    pages = po.layout_pages([
-        _line(177, 237, 433, 445, 11.0, "9. Перший рядок пункту"),
-        _line(177, 181, 439, 199, 9.5, "Ą, Ę"),
-        _line(177, 167, 470, 227, 9.5, "останній рядок примітки."),
-    ])
+    pages = po.layout_pages(
+        [
+            _line(177, 237, 433, 445, 11.0, "9. Перший рядок пункту"),
+            _line(177, 181, 439, 199, 9.5, "Ą, Ę"),
+            _line(177, 167, 470, 227, 9.5, "останній рядок примітки."),
+        ]
+    )
     (page,) = pages
     assert [label.text for label in page.margin_labels] == ["Ą, Ę"]
     assert [row.text for row in page.rows] == ["9. Перший рядок пункту", "останній рядок примітки."]
 
 
 def test_table_cells_on_one_baseline_are_tab_joined() -> None:
-    pages = po.layout_pages([
-        _line(101, 152, 70.7, 163, 11.0, "Н."),
-        _line(101, 200, 70.7, 243, 11.0, "машин-и"),
-        _line(101, 296, 71.2, 350, 11.0, "відмінниц-і"),
-    ])
+    pages = po.layout_pages(
+        [
+            _line(101, 152, 70.7, 163, 11.0, "Н."),
+            _line(101, 200, 70.7, 243, 11.0, "машин-и"),
+            _line(101, 296, 71.2, 350, 11.0, "відмінниц-і"),
+        ]
+    )
     assert pages[0].rows[0].text == "Н.\tмашин-и\tвідмінниц-і"
 
 
@@ -201,16 +251,18 @@ def _row(text: str, page: int = 383, x0: float = 150.0, size: float = 11.0, y0: 
 
 
 def test_contents_parse_paragraphs_headings_parts_and_untitled_entries() -> None:
-    toc = po.parse_toc([
-        _row("ЗМІСТ"),
-        _row("ПЕРЕДМОВА ............................  5"),
-        _row("І. ПРАВОПИС ЧАСТИН ОСНОВИ СЛОВА"),
-        _row("БУКВЕНІ ПОЗНАЧЕННЯ ДЕЯКИХ ГОЛОСНИХ ЗВУКІВ ........ 11"),
-        _row("§ 1. Е, И ..................................... 11"),
-        _row("§ 13. Зміни приголосних"),
-        _row("(буква Щ) ............................... 22"),
-        _row("§ 140 .......................................... 164"),
-    ])
+    toc = po.parse_toc(
+        [
+            _row("ЗМІСТ"),
+            _row("ПЕРЕДМОВА ............................  5"),
+            _row("І. ПРАВОПИС ЧАСТИН ОСНОВИ СЛОВА"),
+            _row("БУКВЕНІ ПОЗНАЧЕННЯ ДЕЯКИХ ГОЛОСНИХ ЗВУКІВ ........ 11"),
+            _row("§ 1. Е, И ..................................... 11"),
+            _row("§ 13. Зміни приголосних"),
+            _row("(буква Щ) ............................... 22"),
+            _row("§ 140 .......................................... 164"),
+        ]
+    )
     assert [(e.kind, e.number, e.title, e.page) for e in toc] == [
         ("heading", None, "ПЕРЕДМОВА", 5),
         ("part", None, "І. ПРАВОПИС ЧАСТИН ОСНОВИ СЛОВА", None),
@@ -438,8 +490,9 @@ def test_search_finds_both_readings_of_an_unresolved_line_end_hyphen(tmp_path: P
     parsed.paragraphs[49].rows[1:2] = [_row(f"Бе{A}рклі-", page=60, y0=63), _row("сквер.", page=60, y0=76)]
     conn = sqlite3.connect(tmp_path / "sources.db")
     po.store_edition(conn, parsed, ULIF, retrieved_at="2026-10-03T15:05:00Z")
-    stored = conn.execute("SELECT text, text_normalized, hyphen_alternatives FROM pravopys_paragraphs "
-                          "WHERE number = 50").fetchone()
+    stored = conn.execute(
+        "SELECT text, text_normalized, hyphen_alternatives FROM pravopys_paragraphs WHERE number = 50"
+    ).fetchone()
     assert f"Бе{A}рклі-\nсквер." in stored[0]  # the printed text is unchanged
     assert f"Бе{A}рклісквер." in stored[1]
     assert f"Бе{A}рклі-сквер" in json.loads(stored[2])
@@ -597,7 +650,9 @@ def test_real_pdf_words_are_in_one_script_except_reviewed_printed_latin() -> Non
     assert allowlist["parser_version"] == po.PARSER_VERSION
 
     def found(texts_by_key: dict[str, list[str]]) -> dict[str, list[str]]:
-        hits = {key: sorted(w for text in texts for w in po.script_anomalies(text)) for key, texts in texts_by_key.items()}
+        hits = {
+            key: sorted(w for text in texts for w in po.script_anomalies(text)) for key, texts in texts_by_key.items()
+        }
         return {key: words for key, words in hits.items() if words}
 
     paragraphs = found({str(p.number): [po.layout_text(p.rows)] for p in parsed.paragraphs})
@@ -631,7 +686,10 @@ def test_real_pdf_context_readings_are_stored_and_found(tmp_path: Path) -> None:
     ]
     # § 66: the four declensions numbered I, II, III, IV in Latin capitals.
     assert tokens([row.text for row in by_number[66].rows], r"^\w+(?= відміна)") == [
-        [latin_i], [latin_i] * 2, [latin_i] * 3, [latin_i, latin_v]
+        [latin_i],
+        [latin_i] * 2,
+        [latin_i] * 3,
+        [latin_i, latin_v],
     ]
 
     conn = sqlite3.connect(tmp_path / "sources.db")
@@ -639,3 +697,240 @@ def test_real_pdf_context_readings_are_stored_and_found(tmp_path: Path) -> None:
     for topic, number in (("ia", 129), ("I", 66), ("II", 66), ("III", 66), ("IV", 66)):
         assert number in [hit["section"] for hit in po.search_paragraphs(conn, topic, po.TOC_PARAGRAPH_COUNT)], topic
     conn.close()
+
+
+# #9638 shared physical census locators (authoring evidence, not held-out).
+# Each row records printed page, baseline y coordinate, and complete Roman-like
+# token sequence, including any ordinary Cyrillic control on that same line.
+ROMAN_PARAGRAPH_LINES = {
+    35: [
+        (51, 171.12, ["XX"]),
+        (51, 183.89, ["XX"]),
+    ],
+    57: [
+        (88, 115.98, ["I", "II", "III"]),
+    ],
+    66: [
+        (96, 187.08, ["I"]),
+        (96, 277.38, ["II"]),
+        (97, 56.16, ["III"]),
+        (97, 134.76, ["IV"]),
+    ],
+    67: [
+        (97, 352.98, ["I", "II"]),
+        (97, 391.38, ["I"]),
+        (98, 251.16, ["II"]),
+    ],
+    68: [
+        (100, 355.5, ["I"]),
+        (102, 342.18, ["II"]),
+        (106, 332.1, ["III"]),
+        (107, 119.46, ["IV"]),
+    ],
+    82: [
+        (112, 365.94, ["I"]),
+        (112, 417.96, ["II"]),
+        (112, 469.92, ["III"]),
+    ],
+    106: [
+        (140, 303.0, ["I", "XXI"]),
+    ],
+    115: [
+        (145, 247.02, ["I"]),
+        (145, 332.58, ["II"]),
+    ],
+    122: [
+        (155, 512.47, ["IV"]),
+    ],
+    129: [
+        (159, 158.46, ["I", "І"]),
+        (160, 225.0, ["II"]),
+        (160, 322.02, ["III"]),
+    ],
+    140: [
+        (164, 496.68, ["I"]),
+        (165, 80.99, ["II"]),
+        (165, 133.02, ["III"]),
+    ],
+    142: [
+        (167, 259.86, ["I"]),
+        (167, 272.4, ["I", "II"]),
+        (167, 297.36, ["II"]),
+        (168, 146.65, ["II"]),
+    ],
+    143: [
+        (170, 501.6, ["I"]),
+        (172, 286.92, ["II"]),
+        (174, 82.02, ["III"]),
+    ],
+    144: [
+        (179, 262.63, ["I"]),
+    ],
+    145: [
+        (179, 338.76, ["III"]),
+    ],
+    152: [
+        (188, 169.02, ["I", "II", "III"]),
+        (188, 181.98, ["I"]),
+        (188, 273.0, ["II"]),
+        (188, 415.98, ["III"]),
+        (189, 296.65, ["II"]),
+        (189, 308.23, ["I"]),
+    ],
+    155: [
+        (198, 384.48, ["II"]),
+        (199, 127.63, ["I"]),
+        (199, 162.13, ["II"]),
+    ],
+    158: [
+        (203, 440.01, ["I"]),
+        (210, 406.8, ["I"]),
+        (214, 136.63, ["II"]),
+        (221, 79.15, ["I"]),
+        (221, 109.71, ["II"]),
+    ],
+    159: [
+        (226, 349.41, ["I"]),
+        (227, 57.27, ["II"]),
+    ],
+    160: [
+        (228, 393.93, ["I"]),
+        (229, 374.73, ["II"]),
+        (230, 288.72, ["I"]),
+    ],
+    161: [
+        (230, 468.09, ["I"]),
+        (233, 469.44, ["I"]),
+        (234, 324.66, ["I"]),
+        (236, 168.31, ["I"]),
+        (237, 209.65, ["XVI", "XVIII"]),
+        (237, 221.23, ["XX", "XXI"]),
+        (237, 335.79, ["II"]),
+        (240, 188.23, ["I"]),
+        (240, 216.81, ["III", "І"]),
+        (241, 248.23, ["II"]),
+    ],
+    162: [
+        (242, 496.68, ["II"]),
+        (242, 509.4, ["II", "III"]),
+    ],
+    163: [
+        (243, 104.46, ["I"]),
+        (245, 273.0, ["II"]),
+        (246, 56.16, ["III"]),
+    ],
+    166: [
+        (249, 327.78, ["III"]),
+    ],
+    167: [
+        (249, 445.38, ["I"]),
+        (253, 223.5, ["II"]),
+        (253, 392.52, ["II", "III"]),
+        (254, 225.0, ["XX"]),
+        (254, 303.0, ["II"]),
+        (254, 406.63, ["I"]),
+        (254, 464.17, ["I"]),
+    ],
+}
+
+
+@pytest.fixture(scope="module")
+def roman_edition():
+    if not REAL_PDF:
+        pytest.skip("set LU_PRAVOPYS_2019_PDF to a pinned official copy")
+    pdf = Path(REAL_PDF)
+    official = pravopys_2019_ingest.official_file_for(pdf)
+    assert official.sha256 == ULIF.sha256
+    parsed = po.parse_edition(pdf, official)
+    assert po.validate_against_toc(parsed) == []
+    assert len(parsed.paragraphs) == 168
+    return parsed
+
+
+def _roman_like_tokens(text: str) -> list[str]:
+    return re.findall(r"(?<!\w)[IVXІХ]+(?!\w)", text)
+
+
+@pytest.mark.parametrize("number", ROMAN_PARAGRAPH_LINES)
+def test_real_pdf_every_numeral_bearing_paragraph(roman_edition, number: int) -> None:
+    paragraph = next(p for p in roman_edition.paragraphs if p.number == number)
+    for page, y0, expected in ROMAN_PARAGRAPH_LINES[number]:
+        (row,) = [r for r in paragraph.rows if r.page == page and abs(r.y0 - y0) < 0.01]
+        assert _roman_like_tokens(row.text) == expected, (number, page, y0)
+
+
+def test_real_pdf_numerals_in_every_metadata_field(roman_edition) -> None:
+    # All nine physical title tokens, including six already-correct readings.
+    expected_titles = {2: "I", 19: "II", 22: "I", 25: "II", 28: "III", 29: "IV", 37: "III", 41: "IV", 44: "V"}
+    for section in roman_edition.sections:
+        expected = [expected_titles[section.ordinal]] if section.ordinal in expected_titles else []
+        if section.ordinal in (38, 39, 42):
+            expected = ["І"]  # conjunctions in printed section titles, not numerals
+        assert _roman_like_tokens(section.title) == expected
+    # All six foreword tokens on five physical lines; no other section intro has one.
+    expected_intro = [
+        (6, 81.36, ["XVI"]),
+        (6, 93.96, ["XVII"]),
+        (6, 358.56, ["II"]),
+        (7, 371.16, ["XX"]),
+        (8, 156.96, ["XX", "XXI"]),
+    ]
+    for page, y0, expected in expected_intro:
+        (row,) = [r for r in roman_edition.sections[0].rows if r.page == page and abs(r.y0 - y0) < 0.01]
+        assert _roman_like_tokens(row.text) == expected
+    # All eighteen contents copies, including four already-correct readings.
+    expected_toc = {
+        1: "I",
+        120: "II",
+        126: "I",
+        142: "II",
+        158: "III",
+        162: "IV",
+        208: "III",
+        235: "IV",
+        255: "V",
+        260: "I",
+        261: "II",
+        263: "I",
+        264: "II",
+        266: "I",
+        267: "II",
+        269: "I",
+        270: "II",
+        271: "III",
+    }
+    for index, expected in expected_toc.items():
+        assert _roman_like_tokens(roman_edition.toc[index].title) == [expected]
+    # Cyrillic labels/conjunctions remain; the census identified zero numeral margin labels.
+    assert _roman_like_tokens(
+        next(r.text for r in roman_edition.paragraphs[160].rows if r.page == 240 and abs(r.y0 - 216.81) < 0.01)
+    ) == ["III", "І"]
+
+
+def test_real_pdf_numerals_are_stored_and_searchable(roman_edition, tmp_path: Path) -> None:
+    with sqlite3.connect(tmp_path / "roman.db") as conn:
+        counts = po.store_edition(conn, roman_edition, ULIF, retrieved_at="2026-10-03T15:53:24Z")
+        assert counts.paragraphs == counts.toc_paragraphs == 168
+        hits = {
+            token: {hit["section"] for hit in po.search_paragraphs(conn, token, limit=168)}
+            for token in ("I", "II", "III", "IV", "V", "XVI", "XVIII", "XX", "XXI")
+        }
+        for number, lines in ROMAN_PARAGRAPH_LINES.items():
+            expected_tokens = {token for _page, _y0, tokens in lines for token in tokens if token.isascii()}
+            for token in expected_tokens:
+                assert number in hits[token], (number, token)
+            stored = po.get_paragraph(conn, number)
+            assert stored["text"] == po.layout_text(roman_edition.paragraphs[number - 1].rows)
+        stored_paths = conn.execute("SELECT number, section_path FROM pravopys_paragraphs").fetchall()
+        for number, path in stored_paths:
+            for title in json.loads(path):
+                label = re.match(r"^([IVXІХ]+)(?:\.|\s+в)", title)
+                if label:
+                    assert label.group(1).isascii(), number
+        # An ordinary Cyrillic conjunction in the inherited heading remains unchanged.
+        assert "І" in _roman_like_tokens(" ".join(po.get_paragraph(conn, 121)["section_path"]))
+        for ordinal, title, intro in conn.execute("SELECT ordinal, title, intro_text FROM pravopys_sections"):
+            section = roman_edition.sections[ordinal - 1]
+            assert (title, intro) == (section.title, po.layout_text(section.rows))
+        for number, title in conn.execute("SELECT number, title FROM pravopys_paragraphs"):
+            assert title == po.toc_paragraphs(roman_edition.toc)[number].title

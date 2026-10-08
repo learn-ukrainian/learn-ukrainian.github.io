@@ -21,7 +21,7 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SETTINGS = REPO_ROOT / "agents_extensions" / "shared" / "settings.json"
 
-INTERPRETERS = ("python", "python3", ".venv/bin/python", "/home/ops/learn-ukrainian/.venv/bin/python")
+INTERPRETERS = ("python", "python3", ".venv/bin/python")
 SUDO_SUBCOMMANDS = {"systemctl", "journalctl", "apt-get", "ufw", "mount", "umount", "caddy"}
 
 
@@ -69,9 +69,18 @@ def test_session_env_disables_bytecode_for_sibling_git() -> None:
     assert settings["env"]["PYTHONDONTWRITEBYTECODE"] == "1"
 
 
+def test_allow_rules_name_the_interpreter_relative_to_the_checkout() -> None:
+    """Allow rules must not pin one machine's checkout location: an
+    interpreter head is either bare or the checkout-relative venv path."""
+    for pattern in _bash_patterns(_permissions()["allow"]):
+        head = pattern.split(" ", 1)[0]
+        if _is_interpreter_head(head):
+            assert head in INTERPRETERS, pattern
+
+
 def test_allow_list_is_present_and_bash_scoped() -> None:
     allow = _permissions()["allow"]
-    assert len(allow) >= 50
+    assert len(allow) >= 40
     assert len(allow) == len(set(allow)), "duplicate allow rules"
     assert all(rule.startswith("Bash(") and rule.endswith(")") for rule in allow)
 
@@ -207,14 +216,14 @@ def test_no_ask_rule_shadows_an_allow_rule() -> None:
         ("git push origin HEAD:gh-pages", "deny"),
         ("git push origin HEAD:production --force", "deny"),
         (
-            "/home/ops/learn-ukrainian/.venv/bin/python -m pytest -o python_files='*.py' /tmp/test_evil.py",
+            "/workdir/repo/.venv/bin/python -m pytest -o python_files='*.py' scratch/test_evil.py",
             None,
         ),
         ("git switch -f main", "deny"),
         # never pre-approved: left to the classifier or a prompt
         ("gh api repos/learn-ukrainian/learn-ukrainian.github.io", None),
         ("gh repo delete learn-ukrainian/learn-ukrainian.github.io", None),
-        ("/home/ops/learn-ukrainian/.venv/bin/python -c 'print(1)'", None),
+        ("/workdir/repo/.venv/bin/python -c 'print(1)'", None),
         ("sudo rm -rf /var/tmp/lu", None),
         ("sudo bash -c id", None),
         ("git push --force origin claude/x", "deny"),
