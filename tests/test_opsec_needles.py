@@ -70,6 +70,7 @@ def test_generic_home_pattern_is_the_fallback_and_skips_url_paths() -> None:
     assert generic.search(f"file://{OTHER_HOME}/x")
     assert generic.search("/".join(("", "Users", "someone", "x")))
     assert not generic.search("https://example.org/home/page")
+    assert not generic.search("/".join(("", "Users", "...")))
     assert not generic.search(FIXTURE_HOME)
 
 

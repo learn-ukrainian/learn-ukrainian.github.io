@@ -31,8 +31,9 @@ SCHEMA_VERSION = 1
 
 # Any home directory under the usual roots. The look-behind keeps URL paths
 # such as ``example.org/home/page`` out while still matching quoted, spaced
-# or ``file://`` forms.
-GENERIC_HOME_DIR_PATTERN = r"(?<![\w.-])(?:/home|/Users)/[A-Za-z0-9_.-]+"
+# or ``file://`` forms. A name must start with a letter, digit or underscore,
+# so elided examples (three dots) and dot-directories do not count.
+GENERIC_HOME_DIR_PATTERN = r"(?<![\w.-])(?:/home|/Users)/[A-Za-z0-9_][A-Za-z0-9_.-]*"
 
 _RUN_USER_RE = re.compile(r"^[a-z_][a-z0-9_-]*$")
 
