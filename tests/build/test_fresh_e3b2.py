@@ -1058,15 +1058,18 @@ def test_module_writer_budget_counts_only_delivered_content(
     assert ledger_path.read_bytes() == before_render
 
 
-def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, capsys):
+@pytest.mark.parametrize("receipt_mode", ["complete", "missing", "partial"])
+def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, capsys, receipt_mode):
     """Exercise the real checks 1-12 with injected model, resolver, and render edges."""
     from scripts.build.fresh import assemble, cli, module, runner
+    from scripts.build.fresh import source_coverage as coverage
     from scripts.build.fresh.preflight import PreflightResult
     from scripts.curriculum.learner_state.inventory_gate import GateReport
     from scripts.curriculum.resolver.inputs import Allowlist
     from tests.build.test_fresh_assemble import validate_fixture_plan
     from tests.build.test_fresh_runner import _fixture as lesson_fixture
     from tests.build.test_fresh_runner import _FixtureSources
+    from tests.build.test_fresh_source_coverage import verification
 
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
     base_draft, base_plan, pack, words = lesson_fixture()
@@ -1138,6 +1141,10 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     calls = []
     version = [1]
+    tasks = tmp_path / "synthetic-writer-tasks"
+    tasks.mkdir()
+    monkeypatch.setattr(coverage, "tasks_dir", lambda: tasks)
+    initial_pages = {path.name: path.read_bytes() for path in page_dir.glob("*.mdx")}
 
     def writer_call(**kw):
         n = kw["lesson_n"]
@@ -1150,10 +1157,52 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         ).hexdigest()
         if n == 1 and version[0] == 2:
             draft["steps"][0]["blocks"][0]["text"] += " слово"
-        lock.atomic_write(state_dir / f"lesson-{n}.draft.yaml", lock.yaml_bytes(draft))
+        draft_path = state_dir / f"lesson-{n}.draft.yaml"
+        lock.atomic_write(draft_path, lock.yaml_bytes(draft))
+        # Synthetic engine evidence only: no provider call or linguistic claim.
+        # Keep each lesson/rebuild's task immutable and bind the actual fake call.
+        task_id = f"synthetic-writer-{n}-{len(calls)}"
+        meta = {
+            "task_id": task_id,
+            "attempt": kw["attempt"],
+            "writer": kw["writer"],
+            "model": kw["model"],
+            "effort": kw.get("effort", "high"),
+            "prompt_sha256": kw["prompt_sha256"],
+        }
+        assert hashlib.sha256(kw["prompt_file"].read_bytes()).hexdigest() == meta["prompt_sha256"]
         lock.atomic_write(
             state_dir / f"lesson-{n}.writer.yaml",
-            lock.yaml_bytes({"writer": kw["writer"], "model": kw["model"], "effort": kw.get("effort", "high")}),
+            lock.yaml_bytes(meta),
+        )
+        if receipt_mode == "missing":
+            return
+        forms, evidence, _, _ = coverage.obligations(draft, plan, pack, words, level, slug, n)
+        identities = {
+            key for identity in evidence.values() for key in ([identity] if isinstance(identity, str) else identity)
+        }
+        assert all(key.startswith("form:") for key in identities)  # This fixture cites only W records.
+        verified = sorted(forms | {key[5:] for key in identities if key.startswith("form:")})
+        tool_calls = [verification(verified[offset : offset + 50]) for offset in range(0, len(verified), 50)]
+        if receipt_mode == "partial":
+            # One non-error partial result credits an unrelated synthetic item,
+            # but lacks the fixture's sole required form and W identity.
+            tool_calls = [verification([*verified, "synthetic-other"], missing=verified)]
+        sidecar = tasks / f"{task_id}.tool_calls.json"
+        sidecar.write_text(json.dumps({"tool_calls": tool_calls}, ensure_ascii=False), encoding="utf-8")
+        task = {
+            "task_id": task_id,
+            "status": "done",
+            "agent": meta["writer"],
+            "model": meta["model"],
+            "effort": meta["effort"],
+            "prompt_sha256": meta["prompt_sha256"],
+            "tool_calls_file": str(sidecar),
+            "tool_calls_sha256": hashlib.sha256(sidecar.read_bytes()).hexdigest(),
+        }
+        (tasks / f"{task_id}.json").write_text(json.dumps(task), encoding="utf-8")
+        coverage.harvest_receipt(
+            state_dir, n, level=level, slug=slug, inputs=kw["inputs"], meta=meta, task=task, draft_file=draft_path
         )
 
     def question_call(batch, seat):
@@ -1204,6 +1253,34 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     assert not no_recap["complete"] and no_recap["lessons"][0]["reason"] == "recap_inputs_not_built"
     if saved:
         shutil.copy2(state_dir / "module.build.yaml", saved / "recap-inputs-not-built.build.yaml")
+    if receipt_mode != "complete":
+        refused = module.build_module(
+            level,
+            slug,
+            repo_root=tmp_path,
+            writer_seat="codex:gpt-6.1-sol",
+            question_seat="codex:gpt-6.1-sol",
+            writer_dispatch=writer_call,
+            runner=run_actual,
+        )
+        assert not refused["complete"] and calls == [1]
+        assert refused["lessons"][0]["stopping_check"] == 5
+        assert refused["lessons"][0]["terminal_layer"] == "engine"
+        gates = yaml.safe_load((state_dir / "lesson-1.gates.yaml").read_text(encoding="utf-8"))
+        assert all(row["status"] == "passed" for row in gates["checks"][:4])
+        failed = gates["checks"][4]
+        assert failed["code"] == (
+            "writer_sources_missing" if receipt_mode == "missing" else "writer_sources_forms_uncovered"
+        )
+        summary = failed["details"]["writer_sources"]
+        assert summary["evidence"]["missing"] > 0
+        assert summary["forms"]["covered"] == 0 and summary["forms"]["missing"] > 0
+        if receipt_mode == "partial":
+            receipt = json.loads((state_dir / "lesson-1.writer_tool_calls.json").read_text())
+            assert receipt["credited_calls"][0]["credited_keys"] == ["form:synthetic-other"]
+        assert initial_pages == {path.name: path.read_bytes() for path in page_dir.glob("*.mdx")}
+        assert not list(state_dir.glob("lesson-*.manifest.yaml"))
+        return
     build_with_injections = module.build_module
     with monkeypatch.context() as patch:
         patch.setattr(
@@ -1366,6 +1443,11 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         evidence_dir=evidence_dir,
         question_seat="codex:gpt-6.1-sol",
         site_dir=page_dir,
+        expected_inputs={
+            **hashes(paths, 2, None),
+            "style_card_sha256": hashlib.sha256(card.read_bytes()).hexdigest(),
+            "prompt_sha256": hashlib.sha256((state_dir / "lesson-2.prompt.md").read_bytes()).hexdigest(),
+        },
     )
     assert report["passed_through"] == 12 and report["manifest_sha256"] is None
     assert "digest_error:observed_missing:" in report["reason"]
