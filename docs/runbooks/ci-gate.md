@@ -22,7 +22,11 @@ setup imports to the standard library, repository-local modules and Hygiene's
 installed dependency closure resolved through `importlib.metadata`. Other
 third-party imports fail even when installed in CI Gate's larger environment.
 Negative controls cover unavailable jsonschema and a fixture-time `requests`
-import in a scratch copy of the shared conftest.
+import in a scratch copy of the shared conftest. The scratch `tests` package
+includes the original package path so newly registered repository plugins remain visible.
+Repository imports are classified by their resolved paths (including namespace
+packages), with installed site-packages and symlinks outside the checkout excluded.
+Direct regression tests cover arbitrary module names and resolved-path boundaries.
 
 | Job | What it does |
 | --- | --- |

@@ -10,6 +10,8 @@ import pytest
 import yaml
 from packaging.requirements import Requirement
 
+from tests.ci.hygiene_import_guard import HygieneImportsOnly
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "hygiene.yml"
 V4_RUNTIME_SRC = "packages/v4-runtime/src"
@@ -102,19 +104,13 @@ def test_hygiene_environment_guard_checks_fixture_imports(
         # This is the reviewer's fixture-time mutation, never a live-tree edit.
         cwd = tmp_path / "repo"
         cwd.mkdir()
-        # Only inputs used by focused collection/setup, not a repo-wide copy.
+        # Only focused collection inputs are linked; package helpers resolve
+        # through the original tests package, without a hand list of names.
         inputs = [
             ".git",
             "pyproject.toml",
             "scripts",
             "packages",
-            "tests/__init__.py",
-            "tests/helpers",
-            "tests/ci",
-            "tests/sparse_trees.py",
-            "tests/cursor_process_guard.py",
-            "tests/cursor_exec_tripwire.py",
-            "tests/opsec_fixtures.py",
             *(arg for arg in args if arg.startswith("tests/")),
         ]
         for relative in inputs:
@@ -122,13 +118,14 @@ def test_hygiene_environment_guard_checks_fixture_imports(
             target = cwd / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             target.symlink_to(entry, target_is_directory=entry.is_dir())
+        (cwd / "tests/__init__.py").write_text(
+            (REPO_ROOT / "tests/__init__.py").read_text() + f"\n__path__.append({str(REPO_ROOT / 'tests')!r})\n"
+        )
         conftest = (REPO_ROOT / "tests/conftest.py").read_text()
         (cwd / "tests/conftest.py").write_text(
             conftest + "\n@pytest.fixture(autouse=True)\ndef undeclared_hygiene_dependency():\n    import requests\n"
         )
     probe = """
-import importlib.abc
-import importlib.machinery
 import importlib.metadata
 import site
 import sys
@@ -136,6 +133,7 @@ from pathlib import Path
 
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
+from tests.ci.hygiene_import_guard import HygieneImportsOnly
 
 pending = [(Requirement(line.partition("#")[0].strip()).name, frozenset())
            for line in Path(sys.argv[1]).read_text().splitlines()]
@@ -160,26 +158,7 @@ roots = (Path.cwd().resolve(), Path(sys.argv[2]).resolve())
 site_roots = [Path(root).resolve() for root in (*site.getsitepackages(), site.getusersitepackages())]
 missing = sys.argv[3]
 
-class HygieneImportsOnly(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        top = fullname.partition('.')[0]
-        if top == missing:
-            raise ModuleNotFoundError(f"No module named '{fullname}'", name=fullname)
-        if top in allowed:
-            return None
-        spec = importlib.machinery.PathFinder.find_spec(fullname, path)
-        locations = ([spec.origin] if spec and spec.origin else
-                     list(spec.submodule_search_locations or ()) if spec else [])
-        resolved = [Path(location).resolve() for location in locations]
-        # CI's .venv may be inside the repo; installed modules are not local.
-        if resolved and all(any(location.is_relative_to(root) for root in roots)
-                            and not any(location.is_relative_to(root) for root in site_roots)
-                            for location in resolved):
-            return None
-        raise ModuleNotFoundError(
-            f"Hygiene dependency not declared: '{fullname}'", name=fullname)
-
-sys.meta_path.insert(0, HygieneImportsOnly())
+sys.meta_path.insert(0, HygieneImportsOnly(allowed, roots, site_roots, missing))
 import pytest
 raise SystemExit(pytest.main(sys.argv[4:]))
 """
@@ -212,6 +191,51 @@ raise SystemExit(pytest.main(sys.argv[4:]))
             assert "ModuleNotFoundError: No module named 'jsonschema'" in output
         else:
             assert "Hygiene dependency not declared: 'requests'" in output
+
+
+@pytest.mark.parametrize(
+    "kind", ["module", "package", "namespace", "external", "escaping_symlink", "site_package", "mixed_namespace"]
+)
+def test_hygiene_guard_classifies_resolved_locations(kind: str, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    site_root = repo / ".venv" / "site-packages"
+    site_root.mkdir(parents=True)
+    module = "new_repository_plugin"
+    search = [str(repo)]
+    if kind == "package":
+        (repo / module).mkdir()
+        (repo / module / "__init__.py").write_text("")
+    elif kind in {"namespace", "mixed_namespace"}:
+        (repo / module).mkdir()
+        if kind == "mixed_namespace":
+            (outside / module).mkdir()
+            search.append(str(outside))
+    elif kind == "escaping_symlink":
+        external = outside / f"{module}.py"
+        external.write_text("")
+        (repo / f"{module}.py").symlink_to(external)
+    else:
+        root = {"module": repo, "external": outside, "site_package": site_root}[kind]
+        (root / f"{module}.py").write_text("")
+        search = [str(root)]
+    finder = HygieneImportsOnly(set(), (repo,), [site_root])
+    if kind in {"module", "package", "namespace"}:
+        assert finder.find_spec(module, search) is not None
+    else:
+        with pytest.raises(ModuleNotFoundError, match=f"Hygiene dependency not declared: '{module}'"):
+            finder.find_spec(module, search)
+
+
+def test_hygiene_guard_preserves_declared_and_missing_dependency_controls(tmp_path: Path) -> None:
+    finder = HygieneImportsOnly({"pytest", "jsonschema"}, (tmp_path,), [], missing="jsonschema")
+    assert finder.find_spec("pytest") is None
+    with pytest.raises(ModuleNotFoundError, match="No module named 'jsonschema'"):
+        finder.find_spec("jsonschema")
+    with pytest.raises(ModuleNotFoundError, match="Hygiene dependency not declared: 'nonexistent_dependency'"):
+        finder.find_spec("nonexistent_dependency")
 
 
 def test_hygiene_focused_agent_config_tests_can_import_v4_runtime() -> None:
