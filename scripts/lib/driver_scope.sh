@@ -191,7 +191,9 @@ launcher_enter_driver_scope() {
   fi
   local exit_line
   exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC rc=$rc signal=${pending:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-  printf '%s\n' "$exit_line" >&2
+  # A closed stderr reader must not SIGPIPE the waiting launcher before the
+  # journal write or replace the child's status. Isolate the write's signal.
+  (printf '%s\n' "$exit_line" >&2) || true
   logger -t lu-driver "$exit_line" 2>/dev/null || true
   exit "$rc"
 }

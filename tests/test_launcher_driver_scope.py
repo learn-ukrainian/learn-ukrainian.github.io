@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import select
 import shlex
 import shutil
 import subprocess
@@ -245,6 +246,31 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     result = _run(launcher, env, TEST_RC=str(rc), TZ="Pacific/Honolulu")
     assert result.returncode == rc, result.stderr
     _assert_exit_line(result.stderr, env, rc)
+
+
+@pytest.mark.parametrize("rc", [0, 130])
+def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> None:
+    launcher, env = _launcher(tmp_path)
+    with subprocess.Popen(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**os.environ, **env, "TEST_RC": str(rc)},
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ) as process:
+        assert process.stdout is not None and process.stderr is not None
+        # Preparation follows scope verification. The child then waits for
+        # stdin, so the exit write happens only after the stderr reader closes.
+        assert select.select([process.stdout], [], [], 15)[0], "preparation timed out"
+        assert process.stdout.readline() == "PREPARED\n"
+        process.stderr.close()
+        stdout, _ = process.communicate("stdin survives\n", timeout=15)
+    assert process.returncode == rc
+    assert "PROVIDER:stdin survives" in stdout
+    journal = Path(env["FAKE_LOGGER_MESSAGES"]).read_text()
+    _assert_exit_line(journal, env, rc)
 
 
 def test_forwarded_term_records_exit_once(tmp_path: Path) -> None:
