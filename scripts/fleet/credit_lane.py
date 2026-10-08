@@ -1108,7 +1108,10 @@ def routing_facts(
     policy: CreditPolicy | None = None,
     now: datetime | None = None,
     usage_dir: Path | None = None,
-) -> RoutingFacts:
+    subscription_only: bool = False,
+    applicability: Mapping[str, Any] | None = None,
+    transport: str | None = None,
+) -> RoutingFacts | SubscriptionFacts:
     """The one consumer-facing reading of a complete routing-budget lane record (#9740).
 
     Composes the owner's calculations over one clock and one shared
@@ -1129,6 +1132,17 @@ def routing_facts(
     fresh probe: a missing probe age or an unknown probe freshness keeps the
     label hot. A hot label from any other source stays hot.
     """
+    if subscription_only:
+        return subscription_facts(
+            lane,
+            record,
+            model=model,
+            transport=transport,
+            applicability=applicability,
+            snapshot_metadata=snapshot_metadata,
+            now=now,
+        )
+
     from scripts.api.subscription_usage import pace_expected_pct, pace_is_visible
 
     lane_key = lane.strip().lower()
@@ -1301,3 +1315,272 @@ def dispatch_refusal(lane: str, model: str | None, *, policy: CreditPolicy | Non
     if not allowlist_applies(state):
         return None
     return refusal_text(lane_key, model, state, policy)
+
+
+# Supported source paths only, pinned to the existing producer, never percentage-
+# inferred windows. Applicability still requires explicit producer declarations.
+SUBSCRIPTION_SOURCE_DIGEST = "3f72f4a9bf47b00c1d34c9af2f59a2a42805080ea8c5200afa6d4bf7ab8ad1cd"
+SUBSCRIPTION_CATALOG_DIGEST = "d997c53757f103f439c791aa01afa479195fec1d005eb3b03996373dca2c0175"
+SUBSCRIPTION_SOURCES = {
+    ("codex", "native_codex"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+    ("claude", "native_claude"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+    ("cursor", "cursor"): (
+        "provider_windows.auto",
+        "claude_gpt_windows.five_hour",
+        "claude_gpt_windows.weekly",
+    ),
+    ("agy", "agy"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+    ("grok", "native_grok"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+    ("kimi", "native_kimi"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+    ("kimicc", "native_kimi"): ("windows.primary", "windows.secondary", "windows.tertiary"),
+}
+
+
+@dataclass(frozen=True)
+class SubscriptionFacts:
+    """Explicit subscription-only projection; inventory never supplies capacity.
+
+    ``applicability`` is collector-owned producer/catalog metadata, not a caller
+    restriction or a policy campaign. It binds lane, concrete model, transport,
+    source digests, max_age_s, and a complete ``windows`` declaration. Each
+    declaration has source, bucket, scope (shared/model), model (null/shared),
+    pool (subscription/paid/on_demand), applicable and required booleans.
+    Reported subscription limits cannot be omitted. Optional absence is allowed;
+    a reported optional window must still be valid. Bucket aliases must agree.
+    Unsupported producers or incomplete metadata retain UNKNOWN, never headroom.
+    """
+
+    capacity: str
+    rule_id: str
+    limiting_pace: float | None = None
+    remaining_pct: float | None = None
+    observed_at: str | None = None
+    expires_at: str | None = None
+    buckets: tuple[str, ...] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def subscription_timestamp(value: Any) -> datetime | None:
+    """Explicit UTC timestamps only; malformed/future observations cannot rank."""
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None and parsed.utcoffset() == timedelta(0) else None
+
+
+def _subscription_number(value: Any, *, maximum: float = math.inf) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, (float, int)):
+        return None
+    try:
+        if not math.isfinite(value):
+            return None
+    except OverflowError:
+        return None
+    return float(value) if 0 <= value <= maximum else None
+
+
+def _subscription_window(
+    window: Mapping[str, Any],
+    *,
+    observed: datetime,
+    current: datetime,
+) -> tuple[float, float, datetime] | None:
+    remaining = _subscription_number(window.get("remaining_pct"), maximum=100)
+    used = _subscription_number(window.get("used_pct"), maximum=100)
+    if remaining is None or (used is not None and not math.isclose(used + remaining, 100)):
+        return None
+    if "used_pct" in window and window["used_pct"] is not None and used is None:
+        return None
+    reset = subscription_timestamp(window.get("resets_at"))
+    start = subscription_timestamp(window.get("starts_at"))
+    minutes = _subscription_number(window.get("window_minutes"))
+    if reset is None or reset <= current:
+        return None
+    if minutes is not None and minutes > 0:
+        try:
+            derived = reset - timedelta(minutes=minutes)
+        except OverflowError:
+            return None
+        if start is not None and start != derived:
+            return None
+        start = derived
+    elif start is None or ("window_minutes" in window and window["window_minutes"] is not None):
+        return None
+    if not start <= observed <= current < reset:
+        return None
+    seconds = (reset - start).total_seconds()
+    return remaining, remaining / 100 - (reset - current).total_seconds() / seconds, reset
+
+
+def subscription_facts(
+    lane: str,
+    record: Mapping[str, Any] | None,
+    *,
+    model: str | None,
+    transport: str | None,
+    applicability: Mapping[str, Any] | None,
+    snapshot_metadata: Mapping[str, Any] | None,
+    now: datetime | None,
+) -> SubscriptionFacts:
+    """Normalize every applicable subscription bucket over the injected clock.
+
+    No reads, writes, policy loading, runtime-record probes, resets or credit
+    calculations. Minimum pace slack is owned here, never recalculated by the
+    selector. Fresh observations alone qualify; near-cap retention is imposed
+    by consumers after this projection. Metadata lacking provenance refuses.
+    """
+    unknown = SubscriptionFacts(CAPACITY_UNKNOWN, "SUBSCRIPTION_METADATA_UNKNOWN")
+    if not isinstance(now, datetime) or now.tzinfo is None or now.utcoffset() != timedelta(0):
+        return unknown
+    if not isinstance(lane, str) or not isinstance(transport, str) or not isinstance(model, str):
+        return unknown
+    supported = SUBSCRIPTION_SOURCES.get((lane, transport))
+    if not supported or not isinstance(record, Mapping) or not isinstance(applicability, Mapping):
+        return unknown
+    if set(applicability) != {
+        "lane",
+        "model",
+        "transport",
+        "producer_digest",
+        "catalog_digest",
+        "max_age_s",
+        "windows",
+    } or (
+        applicability["lane"] != lane
+        or applicability["model"] != model
+        or applicability["transport"] != transport
+        or applicability["producer_digest"] != SUBSCRIPTION_SOURCE_DIGEST
+        or applicability["catalog_digest"] != SUBSCRIPTION_CATALOG_DIGEST
+    ):
+        return unknown
+    max_age = _subscription_number(applicability["max_age_s"])
+    if max_age is None or max_age <= 0 or max_age > UNREADABLE_POLICY_MAX_AGE_S:
+        return unknown
+    if not isinstance(snapshot_metadata, Mapping) or snapshot_metadata.get("stale") is not False:
+        return SubscriptionFacts(CAPACITY_UNKNOWN_STALE, "SUBSCRIPTION_SNAPSHOT_STALE")
+    probe = record.get("codexbar")
+    if not isinstance(probe, Mapping):
+        return unknown
+    observed = subscription_timestamp(probe.get("fetched_at"))
+    if observed is None or observed > now:
+        return unknown
+    if (now - observed).total_seconds() >= max_age or probe.get("stale") is True:
+        return SubscriptionFacts(CAPACITY_UNKNOWN_STALE, "SUBSCRIPTION_OBSERVATION_STALE")
+    declarations = applicability["windows"]
+    if not isinstance(declarations, list) or not declarations:
+        return unknown
+    declared: dict[str, tuple[str, bool]] = {}
+    buckets: dict[str, tuple[float, float, datetime]] = {}
+    for entry in declarations:
+        if not isinstance(entry, Mapping) or set(entry) != {
+            "source",
+            "bucket",
+            "scope",
+            "model",
+            "pool",
+            "applicable",
+            "required",
+        }:
+            return unknown
+        source = entry["source"]
+        bucket = entry["bucket"]
+        if (
+            not isinstance(source, str)
+            or source not in supported
+            or not isinstance(bucket, str)
+            or not bucket
+            or len(bucket) > 128
+            or not isinstance(entry["scope"], str)
+            or entry["scope"] not in {"shared", "model"}
+            or not isinstance(entry["pool"], str)
+            or entry["pool"] not in {"subscription", "paid", "on_demand"}
+            or not isinstance(entry["applicable"], bool)
+            or not isinstance(entry["required"], bool)
+            or (entry["scope"] == "shared" and entry["model"] is not None)
+            or (
+                entry["scope"] == "model"
+                and (
+                    not isinstance(entry["model"], str)
+                    or not entry["model"]
+                    or (entry["model"] != model and (entry["applicable"] or entry["required"]))
+                )
+            )
+        ):
+            return unknown
+        if source in declared and declared[source] != (bucket, entry["applicable"]):
+            return unknown
+        declared[source] = bucket, entry["applicable"]
+        if (
+            lane in {"codex", "claude"}
+            and source in {"windows.primary", "windows.secondary"}
+            and (entry["scope"] != "shared" or not entry["required"])
+        ):
+            return unknown
+        parent, leaf = source.split(".")
+        group = probe.get(parent)
+        window = group.get(leaf) if isinstance(group, Mapping) else None
+        reported = isinstance(window, Mapping) and any(
+            window.get(k) is not None for k in ("used_pct", "remaining_pct", "resets_at", "window_minutes", "starts_at")
+        )
+        if not entry["applicable"]:
+            if entry["required"] or (
+                reported and entry["pool"] == "subscription" and (entry["scope"] == "shared" or entry["model"] == model)
+            ):
+                return unknown
+            continue
+        if entry["pool"] != "subscription":
+            return unknown
+        if not reported:
+            if entry["required"]:
+                return unknown
+            continue
+        reading = _subscription_window(window, observed=observed, current=now)
+        if reading is None:
+            return SubscriptionFacts(CAPACITY_UNKNOWN, "SUBSCRIPTION_WINDOW_INVALID")
+        if bucket in buckets and buckets[bucket] != reading:
+            return SubscriptionFacts(CAPACITY_UNKNOWN, "SUBSCRIPTION_ALIAS_CONFLICT")
+        buckets[bucket] = reading
+    for source in supported:
+        parent, leaf = source.split(".")
+        group = probe.get(parent)
+        window = group.get(leaf) if isinstance(group, Mapping) else None
+        if (
+            isinstance(window, Mapping)
+            and any(
+                window.get(k) is not None
+                for k in ("remaining_pct", "used_pct", "resets_at", "window_minutes", "starts_at")
+            )
+            and source not in declared
+        ):
+            return unknown
+    if lane in {"codex", "claude"} and any(
+        source not in declared or not declared[source][1] for source in ("windows.primary", "windows.secondary")
+    ):
+        return unknown
+    # Cursor's included pool is separate from paid API/on-demand; never cross it
+    # with the explicitly exposed Claude/GPT third-party subscription windows.
+    if lane == "cursor" and model and model.startswith("claude-"):
+        if not {"claude_gpt_windows.five_hour", "claude_gpt_windows.weekly"} <= set(declared):
+            return unknown
+        if any(source.startswith("provider_windows.") and active for source, (_, active) in declared.items()):
+            return unknown
+    if not buckets:
+        return unknown
+    remaining = min(reading[0] for reading in buckets.values())
+    slack = min(reading[1] for reading in buckets.values())
+    expiry = min(observed + timedelta(seconds=max_age), *(reading[2] for reading in buckets.values()))
+    capacity = CAPACITY_AVOID if remaining == 0 else CAPACITY_VERIFIED
+    return SubscriptionFacts(
+        capacity,
+        "SUBSCRIPTION_EXHAUSTED" if remaining == 0 else "SUBSCRIPTION_FRESH",
+        slack,
+        remaining,
+        _iso(observed),
+        _iso(expiry),
+        tuple(sorted(buckets)),
+    )

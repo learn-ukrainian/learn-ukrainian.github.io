@@ -1831,3 +1831,436 @@ def test_consumers_do_not_rederive_owner_decisions(path):
             if key == "healthy" and len(node.args) > 1:
                 reads.append(f"{path}:{node.lineno}: .get('healthy', default)")
     assert reads == [], "consumer re-derives an owner decision:\n" + "\n".join(reads)
+
+
+# #10154 subscription projection controls use immutable injected metadata. These
+# author tests do not consume the independent integration oracle or its outputs.
+def _subscription_fixture():
+    record = {
+        "codexbar": {
+            "fetched_at": NOW.isoformat(),
+            "windows": {
+                "primary": {
+                    "remaining_pct": 80,
+                    "used_pct": 20,
+                    "window_minutes": 240,
+                    "resets_at": (NOW + timedelta(hours=2)).isoformat(),
+                },
+                "secondary": {
+                    "remaining_pct": 60,
+                    "used_pct": 40,
+                    "window_minutes": 1200,
+                    "resets_at": (NOW + timedelta(hours=2)).isoformat(),
+                },
+            },
+        },
+    }
+    metadata = {
+        "lane": "codex",
+        "model": "gpt-6.1-sol",
+        "transport": "native_codex",
+        "producer_digest": credit_lane.SUBSCRIPTION_SOURCE_DIGEST,
+        "catalog_digest": credit_lane.SUBSCRIPTION_CATALOG_DIGEST,
+        "max_age_s": 900,
+        "windows": [
+            {
+                "source": f"windows.{key}",
+                "bucket": f"codex.{key}",
+                "scope": "shared",
+                "model": None,
+                "pool": "subscription",
+                "applicable": True,
+                "required": True,
+            }
+            for key in ("primary", "secondary")
+        ],
+    }
+    return record, metadata
+
+
+def _subscription_facts(record, metadata, *, now=NOW, diagnostics=None, lane="codex", transport="native_codex"):
+    return credit_lane.routing_facts(
+        lane,
+        record,
+        model="gpt-6.1-sol",
+        now=now,
+        transport=transport,
+        applicability=metadata,
+        snapshot_metadata={"stale": False} if diagnostics is None else diagnostics,
+        subscription_only=True,
+    )
+
+
+def test_subscription_limiting_pace_is_not_lowest_percentage():
+    record, metadata = _subscription_fixture()
+    facts = _subscription_facts(record, metadata)
+    assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+    assert facts.limiting_pace == pytest.approx(0.3)  # primary .8-.5; secondary .6-.1
+    assert facts.remaining_pct == 60
+    assert facts.buckets == ("codex.primary", "codex.secondary")
+    assert facts.to_dict()["rule_id"] == "SUBSCRIPTION_FRESH"
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("remaining_pct", float("nan")),
+        ("remaining_pct", float("inf")),
+        ("remaining_pct", True),
+        ("remaining_pct", -1),
+        ("remaining_pct", 101),
+        ("remaining_pct", None),
+        ("used_pct", 200),
+        ("used_pct", 30),
+        ("used_pct", "twenty"),
+        ("window_minutes", None),
+        ("window_minutes", 0),
+        ("window_minutes", -1),
+        ("resets_at", None),
+        ("resets_at", "not-a-date"),
+        ("resets_at", NOW.isoformat()),
+        ("resets_at", "2026-10-02T20:00:00"),
+        ("starts_at", NOW.isoformat()),
+    ],
+)
+def test_subscription_invalid_window_cannot_fabricate_pace(field, value):
+    record, metadata = _subscription_fixture()
+    record["codexbar"]["windows"]["primary"][field] = value
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda r, m: m.update(producer_digest="0" * 64),
+        lambda r, m: m.update(catalog_digest="0" * 64),
+        lambda r, m: m.update(model="claude-opus-5-5"),
+        lambda r, m: m.update(transport="cursor"),
+        lambda r, m: m.update(lane="cursor"),
+        lambda r, m: m.update(max_age_s=0),
+        lambda r, m: m.update(max_age_s=901),
+        lambda r, m: m.update(max_age_s=True),
+        lambda r, m: m.update(windows=[]),
+        lambda r, m: m.update(windows="unknown"),
+        lambda r, m: m.update(unknown=True),
+        lambda r, m: m["windows"][0].update(source="provider_windows.api"),
+        lambda r, m: m["windows"][0].update(pool="paid"),
+        lambda r, m: m["windows"][0].update(required="yes"),
+        lambda r, m: m["windows"][0].update(scope="model", model="other"),
+        lambda r, m: m["windows"][0].update(scope="shared", model="gpt-6.1-sol"),
+        lambda r, m: m["windows"][0].update(bucket=""),
+        lambda r, m: m["windows"][0].update(applicable=False),
+        lambda r, m: m["windows"].pop(),
+        lambda r, m: r["codexbar"].update(fetched_at=None),
+        lambda r, m: r["codexbar"].update(fetched_at=(NOW + timedelta(seconds=1)).isoformat()),
+    ],
+)
+def test_subscription_metadata_unknown(mutation):
+    record, metadata = _subscription_fixture()
+    mutation(record, metadata)
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_staleness_expiry_unknown_observation():
+    record, metadata = _subscription_fixture()
+    record["codexbar"]["fetched_at"] = (NOW - timedelta(seconds=901)).isoformat()
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN_STALE
+    record["codexbar"]["fetched_at"] = NOW.isoformat()
+    assert _subscription_facts(record, metadata, diagnostics={}).capacity == credit_lane.CAPACITY_UNKNOWN_STALE
+    assert _subscription_facts(record, metadata, now=NOW.replace(tzinfo=None)).capacity == credit_lane.CAPACITY_UNKNOWN
+    assert _subscription_facts(record, None).capacity == credit_lane.CAPACITY_UNKNOWN
+    assert _subscription_facts(None, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+    assert _subscription_facts(record, metadata, lane="unmapped").capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_optional_absence_and_reported_limit():
+    record, metadata = _subscription_fixture()
+    metadata["windows"].append(
+        {
+            "source": "windows.tertiary",
+            "bucket": "model",
+            "scope": "model",
+            "model": "gpt-6.1-sol",
+            "pool": "subscription",
+            "applicable": True,
+            "required": False,
+        }
+    )
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_VERIFIED
+    record["codexbar"]["windows"]["tertiary"] = dict(record["codexbar"]["windows"]["secondary"])
+    record["codexbar"]["windows"]["tertiary"].update(remaining_pct=0, used_pct=100)
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_AVOID
+    metadata["windows"].pop()
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_aliases_validate_and_count_once():
+    record, metadata = _subscription_fixture()
+    record["codexbar"]["windows"]["secondary"] = copy.deepcopy(record["codexbar"]["windows"]["primary"])
+    metadata["windows"][1]["bucket"] = metadata["windows"][0]["bucket"]
+    assert _subscription_facts(record, metadata).buckets == ("codex.primary",)
+    record["codexbar"]["windows"]["secondary"].update(remaining_pct=70, used_pct=30)
+    assert _subscription_facts(record, metadata).rule_id == "SUBSCRIPTION_ALIAS_CONFLICT"
+    metadata["windows"].append({**metadata["windows"][0], "bucket": "other"})
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_explicit_start_without_inferred_duration():
+    record, metadata = _subscription_fixture()
+    window = record["codexbar"]["windows"]["primary"]
+    del window["window_minutes"]
+    window["starts_at"] = (NOW - timedelta(hours=2)).isoformat()
+    assert _subscription_facts(record, metadata).limiting_pace == pytest.approx(0.3)
+
+
+@pytest.mark.parametrize("credits,resets", [(None, None), (0, 0), (10**9, 99), ("unreadable", {"available_count": 99})])
+def test_subscription_inventory_immutable_noninterference(credits, resets):
+    record, metadata = _subscription_fixture()
+    before = _subscription_facts(record, metadata)
+    record.update(credit_balance=credits, reset_credits=resets)
+    original = copy.deepcopy(record)
+    assert _subscription_facts(record, metadata) == before
+    assert record == original
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("scope", []),
+        ("pool", {}),
+        ("source", []),
+        ("bucket", []),
+        ("scope", "other"),
+        ("required", False),
+        ("applicable", False),
+    ],
+)
+def test_subscription_malformed_declaration_is_unknown(field, value):
+    record, metadata = _subscription_fixture()
+    metadata["windows"][0][field] = value
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_boundary_and_extreme_duration():
+    record, metadata = _subscription_fixture()
+    record["codexbar"]["fetched_at"] = (NOW - timedelta(seconds=900)).isoformat()
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN_STALE
+    record["codexbar"]["fetched_at"] = NOW.isoformat()
+    record["codexbar"]["windows"]["primary"]["window_minutes"] = 1e300
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_absent_not_applicable_and_paid_metadata():
+    record, metadata = _subscription_fixture()
+    metadata["windows"].append(
+        {
+            "source": "windows.tertiary",
+            "bucket": "paid",
+            "scope": "model",
+            "model": "gpt-6.1-sol",
+            "pool": "paid",
+            "applicable": False,
+            "required": False,
+        }
+    )
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_VERIFIED
+    record["codexbar"]["windows"]["tertiary"] = {"remaining_pct": 99}
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_VERIFIED
+
+
+def test_subscription_wrong_harness_and_missing_codexbar():
+    record, metadata = _subscription_fixture()
+    assert _subscription_facts(record, metadata, transport="cursor").capacity == credit_lane.CAPACITY_UNKNOWN
+    assert _subscription_facts({}, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+    metadata["windows"][0] = None
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_timestamp_explicit_utc_only():
+    assert credit_lane.subscription_timestamp(123) is None
+    assert credit_lane.subscription_timestamp("2026-10-08T00:00:00+02:00") is None
+    assert credit_lane.subscription_timestamp("2026-10-08T00:00:00Z") == datetime(2026, 10, 8, tzinfo=UTC)
+
+
+def test_subscription_cursor_pools_distinct_and_model_limits():
+    model = "claude-opus-5-5"
+    record = {
+        "codexbar": {
+            "fetched_at": NOW.isoformat(),
+            "claude_gpt_windows": {
+                key: {
+                    "used_pct": 20,
+                    "remaining_pct": 80,
+                    "window_minutes": 240,
+                    "resets_at": (NOW + timedelta(hours=2)).isoformat(),
+                }
+                for key in ("five_hour", "weekly")
+            },
+        }
+    }
+    metadata = {
+        "lane": "cursor",
+        "model": model,
+        "transport": "cursor",
+        "producer_digest": credit_lane.SUBSCRIPTION_SOURCE_DIGEST,
+        "catalog_digest": credit_lane.SUBSCRIPTION_CATALOG_DIGEST,
+        "max_age_s": 900,
+        "windows": [
+            {
+                "source": f"claude_gpt_windows.{key}",
+                "bucket": key,
+                "scope": "model",
+                "model": model,
+                "pool": "subscription",
+                "applicable": True,
+                "required": True,
+            }
+            for key in ("five_hour", "weekly")
+        ],
+    }
+
+    def facts():
+        return credit_lane.routing_facts(
+            "cursor",
+            record,
+            model=model,
+            transport="cursor",
+            applicability=metadata,
+            snapshot_metadata={"stale": False},
+            now=NOW,
+            subscription_only=True,
+        )
+
+    assert facts().capacity == credit_lane.CAPACITY_VERIFIED
+    record["codexbar"]["claude_gpt_windows"]["weekly"].update(remaining_pct=0, used_pct=100)
+    assert facts().capacity == credit_lane.CAPACITY_AVOID
+    record["codexbar"]["claude_gpt_windows"]["weekly"].update(remaining_pct=80, used_pct=20)
+    metadata["windows"].pop()
+    del record["codexbar"]["claude_gpt_windows"]["weekly"]
+    assert facts().capacity == credit_lane.CAPACITY_UNKNOWN
+    record["codexbar"]["provider_windows"] = {"auto": dict(record["codexbar"]["claude_gpt_windows"]["five_hour"])}
+    metadata["windows"] = [
+        {
+            "source": "provider_windows.auto",
+            "bucket": "auto",
+            "scope": "shared",
+            "model": None,
+            "pool": "subscription",
+            "applicable": True,
+            "required": True,
+        }
+    ]
+    del record["codexbar"]["claude_gpt_windows"]
+    assert facts().capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_no_applicable_optional_buckets_stays_unknown():
+    record, metadata = _subscription_fixture()
+    metadata.update(lane="grok", transport="native_grok")
+    metadata["windows"] = [
+        {
+            "source": "windows.tertiary",
+            "bucket": "none",
+            "scope": "shared",
+            "model": None,
+            "pool": "subscription",
+            "applicable": False,
+            "required": False,
+        }
+    ]
+    record["codexbar"]["windows"] = {}
+    result = _subscription_facts(record, metadata, lane="grok", transport="native_grok")
+    assert result.capacity == credit_lane.CAPACITY_UNKNOWN
+    record["codexbar"]["windows"]["tertiary"] = {"remaining_pct": 50}
+    assert (
+        _subscription_facts(record, metadata, lane="grok", transport="native_grok").capacity
+        == credit_lane.CAPACITY_UNKNOWN
+    )
+
+
+def test_subscription_optional_reported_metadata_without_allowance_is_unknown():
+    record, metadata = _subscription_fixture()
+    metadata["windows"].append(
+        {
+            "source": "windows.tertiary",
+            "bucket": "optional",
+            "scope": "model",
+            "model": "gpt-6.1-sol",
+            "pool": "subscription",
+            "applicable": True,
+            "required": False,
+        }
+    )
+    record["codexbar"]["windows"]["tertiary"] = {
+        "window_minutes": 240,
+        "resets_at": (NOW + timedelta(hours=2)).isoformat(),
+    }
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+    record["codexbar"]["windows"]["primary"]["remaining_pct"] = 10**400
+    assert _subscription_facts(record, metadata).capacity == credit_lane.CAPACITY_UNKNOWN
+
+
+def test_subscription_foreign_model_pool_cannot_affect_cursor_claude():
+    model = "claude-opus-5-5"
+    record = {
+        "codexbar": {
+            "fetched_at": NOW.isoformat(),
+            "claude_gpt_windows": {
+                key: {
+                    "used_pct": 20,
+                    "remaining_pct": 80,
+                    "window_minutes": 240,
+                    "resets_at": (NOW + timedelta(hours=2)).isoformat(),
+                }
+                for key in ("five_hour", "weekly")
+            },
+            "provider_windows": {"auto": {"remaining_pct": 0, "used_pct": 100}},
+        }
+    }
+    metadata = {
+        "lane": "cursor",
+        "model": model,
+        "transport": "cursor",
+        "producer_digest": credit_lane.SUBSCRIPTION_SOURCE_DIGEST,
+        "catalog_digest": credit_lane.SUBSCRIPTION_CATALOG_DIGEST,
+        "max_age_s": 900,
+        "windows": [
+            {
+                "source": f"claude_gpt_windows.{key}",
+                "bucket": key,
+                "scope": "model",
+                "model": model,
+                "pool": "subscription",
+                "applicable": True,
+                "required": True,
+            }
+            for key in ("five_hour", "weekly")
+        ],
+    }
+    metadata["windows"].append(
+        {
+            "source": "provider_windows.auto",
+            "bucket": "cursor.included",
+            "scope": "model",
+            "model": "composer-2.5",
+            "pool": "subscription",
+            "applicable": False,
+            "required": False,
+        }
+    )
+    args = dict(
+        model=model,
+        transport="cursor",
+        applicability=metadata,
+        snapshot_metadata={"stale": False},
+        now=NOW,
+        subscription_only=True,
+    )
+    facts = credit_lane.routing_facts("cursor", record, **args)
+    assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+    assert facts.buckets == ("five_hour", "weekly")
+    metadata["windows"][-1]["model"] = model
+    assert credit_lane.routing_facts("cursor", record, **args).capacity == credit_lane.CAPACITY_UNKNOWN
+    metadata["windows"][-1].update(applicable=True, required=True)
+    record["codexbar"]["provider_windows"]["auto"] = dict(record["codexbar"]["claude_gpt_windows"]["weekly"])
+    assert credit_lane.routing_facts("cursor", record, **args).capacity == credit_lane.CAPACITY_UNKNOWN

@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "model-router-decision.v1"
+        },
+        "status": {
+          "const": "refused"
+        },
+        "rule_ids": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "CLOCK_INVALID",
+              "REQUEST_INVALID",
+              "TARGET_FACTS_MISSING",
+              "POLICY_INVALID",
+              "CATALOG_RESOLVER_MISMATCH",
+              "INPUT_INVALID",
+              "TARGET_BINDING_MISMATCH",
+              "DATA_EGRESS_REFUSED",
+              "AUTHOR_IDENTITY_UNRESOLVED",
+              "AUTHOR_IDENTITY_CONFLICT",
+              "REVIEW_PROFILE_UNSUPPORTED",
+              "SUBJECT_SCOPE_AMBIGUOUS",
+              "ROLE_UNSUPPORTED",
+              "SNAPSHOT_INVALID",
+              "CAPACITY_UNKNOWN",
+              "NO_ELIGIBLE_ROUTE"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "code": {
+          "enum": [
+            "CLOCK_INVALID",
+            "REQUEST_INVALID",
+            "TARGET_FACTS_MISSING",
+            "POLICY_INVALID",
+            "CATALOG_RESOLVER_MISMATCH",
+            "INPUT_INVALID",
+            "TARGET_BINDING_MISMATCH",
+            "DATA_EGRESS_REFUSED",
+            "AUTHOR_IDENTITY_UNRESOLVED",
+            "AUTHOR_IDENTITY_CONFLICT",
+            "REVIEW_PROFILE_UNSUPPORTED",
+            "SUBJECT_SCOPE_AMBIGUOUS",
+            "ROLE_UNSUPPORTED",
+            "SNAPSHOT_INVALID",
+            "CAPACITY_UNKNOWN",
+            "NO_ELIGIBLE_ROUTE"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "rule_ids",
+        "code"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "model-router-decision.v1"
+        },
+        "status": {
+          "const": "selected"
+        },
+        "rule_ids": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "CATALOG_HARD_GATES",
+              "SUBSCRIPTION_ONLY",
+              "LEXICOGRAPHIC_SELECTION"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "role": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "purpose": {
+          "enum": [
+            "inspect",
+            "launch"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "family": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "lane": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "harness": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "transport": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "effort": {
+          "const": "high"
+        },
+        "target_sha": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$",
+          "minLength": 40,
+          "maxLength": 40
+        },
+        "prompt_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "catalog_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "policy_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "snapshot_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "trusted_facts_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$",
+          "not": {
+            "pattern": "[\\s]"
+          }
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$",
+          "not": {
+            "pattern": "[\\s]"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "rule_ids",
+        "task_id",
+        "role",
+        "purpose",
+        "model",
+        "family",
+        "lane",
+        "harness",
+        "transport",
+        "effort",
+        "target_sha",
+        "prompt_sha256",
+        "catalog_sha256",
+        "policy_sha256",
+        "snapshot_sha256",
+        "trusted_facts_sha256",
+        "observed_at",
+        "expires_at"
+      ]
+    }
+  ]
+}

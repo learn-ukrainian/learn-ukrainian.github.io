@@ -1,0 +1,100 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "model-router-request.v1"
+    },
+    "role": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+      "not": {
+        "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+      }
+    },
+    "purpose": {
+      "enum": [
+        "inspect",
+        "launch"
+      ]
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+      "not": {
+        "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+      }
+    },
+    "prompt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "restrictions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "excluded_seats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "excluded_families": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "isolation_required": {
+          "type": "boolean"
+        },
+        "model": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "transport": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,127}$",
+          "not": {
+            "pattern": "[\\s\\u0000-\\u001f\\u007f]"
+          }
+        },
+        "risk": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        }
+      },
+      "required": []
+    }
+  },
+  "required": [
+    "schema_version",
+    "role",
+    "purpose",
+    "task_id",
+    "prompt_sha256",
+    "restrictions"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
