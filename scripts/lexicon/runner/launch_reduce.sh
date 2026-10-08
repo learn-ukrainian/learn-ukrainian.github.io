@@ -35,12 +35,17 @@ fi
 
 EXTRA_ARGS=("$@")
 
+# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
+# a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
+JOB_MEMORY_HIGH_MIB="${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}"
+JOB_MEMORY_MAX_MIB="${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}"
+
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
   nohup systemd-run --user --wait --collect --unit="${UNIT%.service}" \
     --working-directory="$REPO" \
-    --property=MemoryHigh=1536M \
-    --property=MemoryMax=2048M \
+    --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M" \
+    --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M" \
     --property=StandardOutput="append:$LOG" \
     --property=StandardError="append:$LOG" \
     /usr/bin/nice -n 10 /usr/bin/ionice -c3 "$REPO/.venv/bin/python" \

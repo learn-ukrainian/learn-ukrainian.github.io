@@ -209,6 +209,11 @@ run_cmd() {
 }
 WRAPPED="set -o pipefail; cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$PYTHONPATH:$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
 
+# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
+# a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
+JOB_MEMORY_HIGH_MIB="${LU_LEXICON_JOB_MEMORY_HIGH_MIB:-1280}"
+JOB_MEMORY_MAX_MIB="${LU_LEXICON_JOB_MEMORY_MAX_MIB:-1792}"
+
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
   # Protocol path (atlas_job): Restart=no, optional RuntimeMaxSec, ExecStopPost
@@ -227,8 +232,8 @@ printf '{"service_result":"%s","exit_code":"%s","exit_status":"%s"}\n' \
 EOS
   chmod +x "$WORK_DIR/write-exit-status.sh"
   SYSTEMD_PROPS=(
-    --property=MemoryHigh=1536M
-    --property=MemoryMax=2048M
+    --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"
+    --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M"
     --property=Restart="${ATLAS_RE_ENRICH_RESTART:-no}"
     --property="Environment=ATLAS_JOB_EXIT_STATUS_FILE=${EXIT_STATUS_FILE}"
     --property="ExecStopPost=${WORK_DIR}/write-exit-status.sh"

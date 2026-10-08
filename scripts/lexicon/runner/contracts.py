@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Literal
@@ -21,11 +23,40 @@ PARSED_SCHEMA_VERSION = "parsed-schema-v1"
 PACKET_SCHEMA_VERSION = "packet-v1"
 BUNDLE_SCHEMA_VERSION = "bundle-v1"
 
-# Default memory policy for a local run. Deployment ceilings are selected below
-# the host's physical memory with explicit OS headroom; never copy these onto a
-# smaller host.
-DEFAULT_MEMORY_HIGH_BYTES = 8 * 1024**3
-DEFAULT_MEMORY_MAX_BYTES = 10 * 1024**3
+# Memory caps (MiB) are generic, conservative defaults. A deployment sets its
+# own through the environment, selected below the host's physical memory with
+# explicit OS headroom. The policy pair applies when a job names no caps; the
+# job pair caps one runner job's scope (launchers and runner CLIs).
+ENV_MEMORY_HIGH_MIB = "LU_LEXICON_MEMORY_HIGH_MIB"
+ENV_MEMORY_MAX_MIB = "LU_LEXICON_MEMORY_MAX_MIB"
+ENV_JOB_MEMORY_HIGH_MIB = "LU_LEXICON_JOB_MEMORY_HIGH_MIB"
+ENV_JOB_MEMORY_MAX_MIB = "LU_LEXICON_JOB_MEMORY_MAX_MIB"
+GENERIC_MEMORY_HIGH_MIB = 5632
+GENERIC_MEMORY_MAX_MIB = 6656
+GENERIC_JOB_MEMORY_HIGH_MIB = 1280
+GENERIC_JOB_MEMORY_MAX_MIB = 1792
+
+
+def env_mib(name: str, default: int, environ: Mapping[str, str] | None = None) -> int:
+    """A positive whole number of MiB from ``name``, or ``default`` when unset or blank."""
+    raw = (os.environ if environ is None else environ).get(name, "").strip()
+    if not raw:
+        return default
+    if not raw.isdigit() or int(raw) <= 0:
+        raise ValueError(f"{name} must be a positive whole number of MiB, got {raw!r}")
+    return int(raw)
+
+
+def job_memory_mib(environ: Mapping[str, str] | None = None) -> tuple[int, int]:
+    """(high, max) MiB for one runner job."""
+    return (
+        env_mib(ENV_JOB_MEMORY_HIGH_MIB, GENERIC_JOB_MEMORY_HIGH_MIB, environ),
+        env_mib(ENV_JOB_MEMORY_MAX_MIB, GENERIC_JOB_MEMORY_MAX_MIB, environ),
+    )
+
+
+DEFAULT_MEMORY_HIGH_BYTES = env_mib(ENV_MEMORY_HIGH_MIB, GENERIC_MEMORY_HIGH_MIB) * 1024**2
+DEFAULT_MEMORY_MAX_BYTES = env_mib(ENV_MEMORY_MAX_MIB, GENERIC_MEMORY_MAX_MIB) * 1024**2
 
 
 class ChunkState(StrEnum):

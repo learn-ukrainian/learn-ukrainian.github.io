@@ -17,15 +17,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-# Default job memory caps (MiB); local tests override.
-DEFAULT_MEMORY_HIGH_MIB = 1536
-DEFAULT_MEMORY_MAX_MIB = 2048
+# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*); a
+# deployment sets the env vars. Read here without importing the package, which
+# is not on sys.path until the driver loads its repo.
+DEFAULT_MEMORY_HIGH_MIB = int(os.environ.get("LU_LEXICON_JOB_MEMORY_HIGH_MIB", "").strip() or 1280)
+DEFAULT_MEMORY_MAX_MIB = int(os.environ.get("LU_LEXICON_JOB_MEMORY_MAX_MIB", "").strip() or 1792)
 DEFAULT_CHUNK_SIZE = 25
 
 

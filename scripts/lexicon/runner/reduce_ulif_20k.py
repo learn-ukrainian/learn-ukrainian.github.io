@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections.abc import Sequence
@@ -214,8 +215,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--max-lemmas", type=int, default=None)
     parser.add_argument("--include-raw-html", action="store_true")
     parser.add_argument("--skip-cohort-pin", action="store_true")
-    parser.add_argument("--memory-high-mib", type=int, default=1536)
-    parser.add_argument("--memory-max-mib", type=int, default=2048)
+    # Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
+    # a deployment sets the env vars.
+    parser.add_argument(
+        "--memory-high-mib",
+        type=int,
+        default=int(os.environ.get("LU_LEXICON_JOB_MEMORY_HIGH_MIB", "").strip() or 1280),
+    )
+    parser.add_argument(
+        "--memory-max-mib",
+        type=int,
+        default=int(os.environ.get("LU_LEXICON_JOB_MEMORY_MAX_MIB", "").strip() or 1792),
+    )
     parser.add_argument(
         "--require-memory-cap",
         action="store_true",
