@@ -481,11 +481,6 @@
       "failure_class": "module_not_found"
     },
     {
-      "path": "scripts/audit/apply_source_inventory_promotion.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
       "path": "scripts/audit/audit_module.py",
       "form": "file",
       "failure_class": "module_not_found"
@@ -504,16 +499,6 @@
       "path": "scripts/audit/decision_lineage.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/audit/freeze_benchmark.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/generate_activity_quality_queue.py",
-      "form": "file",
-      "failure_class": "import_error"
     },
     {
       "path": "scripts/audit/generate_daily_pool.py",
@@ -566,44 +551,9 @@
       "failure_class": "other_import_failure"
     },
     {
-      "path": "scripts/audit/paronym_residual_audit.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
       "path": "scripts/audit/plan_source_inventory_promotion.py",
       "form": "file",
       "failure_class": "module_not_found"
-    },
-    {
-      "path": "scripts/audit/probe_uk_writing_score.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/qg_bakeoff.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/qg_corpus_report.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/qg_seat_decision.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/qg_tier2_canary_check.py",
-      "form": "file",
-      "failure_class": "import_error"
-    },
-    {
-      "path": "scripts/audit/relation_residual_audit.py",
-      "form": "file",
-      "failure_class": "import_error"
     },
     {
       "path": "scripts/audit/rewrite_fixture_pointers.py",
