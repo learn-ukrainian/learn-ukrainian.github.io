@@ -97,9 +97,9 @@ quality claim. Passing it neither authorizes nor satisfies the frozen Stage 1
 requirement for an A100 or H100.
 
 The validation uses a [Hugging Face Job](https://huggingface.co/docs/huggingface_hub/guides/jobs)
-with the `l40sx1` flavor. Hugging Face documents this flavor as one 48 GB
-NVIDIA L40S with 8 vCPUs, 62 GB RAM, and 380 GB ephemeral storage at USD
-0.03/minute; `timeout=3600` is mandatory and exact. Its maximum provider
+on a single-GPU flavor that Hugging Face lists at USD 0.03/minute (the exact
+flavor is pinned in the probe plan and its schema, not repeated here);
+`timeout=3600` is mandatory and exact. Its maximum provider
 compute charge is therefore USD 1.80, within the operator's EUR 3 ceiling.
 Hugging Face is selected for this narrow probe because its Job timeout stops
 the running job and its billing; this is a bounded-provider-control choice,

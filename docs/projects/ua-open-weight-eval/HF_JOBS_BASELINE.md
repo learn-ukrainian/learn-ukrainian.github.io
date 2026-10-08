@@ -25,7 +25,7 @@ fine-tune, optimize, or publish a model. The attempt is closed as invalid.
 | Tokenizer | `google/gemma-4-31B-it-qat-q4_0-unquantized` at `1e4d8beecacb8b7590c1d8bedd7335f687bf311f` |
 | Backend | vLLM `0.26.0` plus `vllm-gguf-plugin==0.0.4` |
 | Container | `vllm/vllm-openai@sha256:770fe65b2c73ee74a5c42165cf3433de4048cc2cd9c57a937ca4e35aba5aa87b` (Linux amd64) |
-| Hardware | one single-GPU HF Jobs flavor; no exposed ports or SSH |
+| Hardware | one single-GPU HF Jobs flavor |
 | Decoding | temperature `0`, seed `0`, maximum 160 generated tokens, two parse retries |
 | Context | text-only; maximum model length 8,192 tokens; no multimodal projector |
 | Cost | USD 1.80/hour, retrieved 2026-08-02 from the [official Jobs price table](https://huggingface.co/docs/hub/jobs-pricing); USD 6.00 total ceiling |
