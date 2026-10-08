@@ -7,6 +7,27 @@ jobs and the full non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
 Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
+The advisory Hygiene workflow keeps a separate slim environment. Its focused
+agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
+`requirements.txt`, with direct and transitive dependencies constrained by all
+named `==` pins in `requirements-lock.txt` (local path requirements cannot be
+constraints).
+The shared conftest's Claude adapter pre-import needs jsonschema; its process
+guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
+Before executing the focused tests, a `--setup-only` guard collects the same
+test set and runs its fixtures: `--collect-only` alone cannot detect missing
+dependencies imported during autouse setup. The guard propagates import errors;
+`tests/test_hygiene_workflow.py`, run by required CI Gate, also restricts fixture
+setup imports to the standard library, repository-local modules and Hygiene's
+installed dependency closure resolved through `importlib.metadata`. Other
+third-party imports fail even when installed in CI Gate's larger environment.
+Negative controls cover unavailable jsonschema and a fixture-time `requests`
+import in a scratch copy of the shared conftest. The scratch `tests` package
+includes the original package path so newly registered repository plugins remain visible.
+Repository imports are classified by their resolved paths (including namespace
+packages), with installed site-packages and symlinks outside the checkout excluded.
+Direct regression tests cover arbitrary module names and resolved-path boundaries.
+
 | Job | What it does |
 | --- | --- |
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
@@ -51,7 +72,7 @@ that chose *which* tests or checks a change ran is gone.
 | Static practice assets | Contracts | checks.sh |
 | Dossier word counts | Contracts | checks.sh |
 | BIO preparation capsules and holds | Contracts (inline Python) | checks.sh → `scripts/ci/bio_preparation_gate.py` |
-| Frontend build, generated-artifact drift (before test:unit re-runs hydrate), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order) |
+| Frontend build, generated-artifact drift (directly after the build), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order); one hydrate and one recorded build, reused only after verification (below) |
 | Frontend change denominator incl. backend hydrate inputs | Changes (`classify_changes`) | Frontend scope step (`frontend_change_scope.py`); completeness kept by `tests/test_frontend_denominator_invariant.py` |
 | Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on every event |
 | Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
@@ -149,6 +170,49 @@ diff, so the scan reads the metadata alone.
 Because the pull_request run already executes every job, reuse applies
 whenever `main` has not moved between the PR's last green run and its queue
 entry.
+
+## Frontend: one hydrate, one recorded build (#9718)
+
+The Frontend step runs `npm run hydrate` once, then
+`site/tests/helpers/ci-build-artifact.ts record` runs `astro build` once. The
+record (under `$RUNNER_TEMP`) keeps the complete build log and exit code, writes a
+fresh nonce into `dist/`, and stores the input identity: HEAD, the tracked
+working-tree diff and the content hash of every file under `site/src/data`,
+`site/public` and `data/atlas.db`, taken before the build. The build may only
+add inputs: `astro.config.mjs` creates the fallback
+`site/public/audio/pronunciation/manifest.json` when it is absent, as on a fresh
+runner. Such a file is hashed after the build, listed in the record's
+`buildCreatedInputs` and printed as `build created input: …`. A build that
+changes or removes an existing input fails verification. A failed build fails
+the step at once.
+
+The generated-artifact drift check runs directly after the build. Then:
+
+1. `npm run test:unit:ci` verifies the record, then runs the same Vitest
+   selection and excludes as `test:unit`, without a second hydrate, with
+   `--fileParallelism --maxWorkers=3`. Three workers leave one of the runner's
+   four vCPUs to the Vitest main process, matching Vitest's own default of the
+   CPU count minus one. Every test file still runs in its own isolated worker.
+2. `ci-build-artifact.ts verify` runs again, so an input a unit test changed
+   fails here.
+3. `npm run test:built-output` runs with `FRONTEND_BUILD_RECORD` set.
+   `build-renders.test.ts` verifies the record and runs its original assertions
+   on the recorded log and `dist/`, without rebuilding.
+
+Verification fails if the record, log or `dist/` is missing, the log hash or the
+`dist/` nonce differs, the build exited non-zero, or any input changed. It never
+falls back to a rebuild. Without `FRONTEND_BUILD_RECORD`, `npm test`,
+`npm run test:unit` and `npm run test:built-output` behave as before:
+self-contained, with their own hydrate and build. Outside `test:unit:ci`, unit
+test files still run one at a time (`fileParallelism: false` in
+`site/vitest.config.ts`), and `test:built-output` always does.
+
+Parallel unit files must not write shared paths. The Atlas fixture parity tests
+give `SqliteAtlasDataSource` a private empty `searchArtifactsDir` instead of
+hiding `site/src/data/lexicon-search-*.json` (#9850). Other unit files write only
+under their own temporary directories. The exception is
+`ActivityKit.contract.test.tsx`, which regenerates the `*.generated.ts` type
+files; those are imported only with `import type`, which the compiler erases.
 
 ## pytest shards
 

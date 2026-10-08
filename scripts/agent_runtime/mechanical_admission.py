@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -69,6 +70,7 @@ def refuse_mechanical_task(
         refuse("Ukrainian authoring, review and content are excluded")
     if any(CYRILLIC.search(path) or set(PurePosixPath(path).parts) & {"curriculum", "wiki"} for path in owned):
         refuse("Ukrainian content paths are excluded")
+    stage = "task prompt"
     try:
         if task_prompt:
             from scripts.lib.rules_core import core_block
@@ -78,11 +80,14 @@ def refuse_mechanical_task(
             task_text = task_prompt.replace(core_block("core"), "")
             if content_problem(task_text.encode("utf-8")):
                 refuse("task prompt must be plain UTF-8 without Cyrillic")
+        stage = "prompt file"
         if prompt_file and content_problem(Path(prompt_file).read_bytes()):
             refuse("task input must be plain UTF-8 without Cyrillic")
+        stage = "tree resolution"
         resolved = trees() if callable(trees) else trees
         if not resolved:
             refuse("owned content must be available for admission")
+        stage = "owned content"
         for tree in resolved:
             for path in owned:
                 _, files = tree.owned_files(path)
@@ -93,8 +98,8 @@ def refuse_mechanical_task(
                         refuse("owned content must be plain UTF-8 without Cyrillic")
     except MechanicalAdmissionRefused:
         raise
-    except (OSError, RuntimeError, ValueError) as exc:
-        refuse(f"task input unavailable ({type(exc).__name__})")
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        refuse(f"task input unavailable at {stage} ({type(exc).__name__})")
 
 
 def refuse_mechanical_execution(

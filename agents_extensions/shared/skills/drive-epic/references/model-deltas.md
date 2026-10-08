@@ -8,6 +8,12 @@ row's remaining seat-specific rule is no-solo *implementation* (driver-only), no
 utilization half. Current model ids and pins are live data in `/api/rules` and
 `scripts/config/model_catalog.yaml`; the rows below are behaviour, not the roster.
 
+Grok review briefs (native CLI and Cursor): reviewers have no sandbox and use
+tracked-file reads only, with no shell, tests or scripts (#9987). Supply the diff
+and CI evidence; never ask a Grok reviewer to execute commands. Route
+execution-dependent reviews to Opus 5.5 or Sol 6.1. Grok's admission at every
+risk, including critical, is unchanged.
+
 | Seat | Delta |
 | --- | --- |
 | **Grok (native CLI, `grok-4.7`)** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a model-quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** |

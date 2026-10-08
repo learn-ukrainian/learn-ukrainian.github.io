@@ -891,6 +891,7 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
     assert scan["uses"] == full_scan["uses"]
     assert scan["with"] == {
+        "version": "3.99.0",
         "base": "${{ steps.metadata.outputs.parent }}",
         "head": "${{ steps.metadata.outputs.commit }}",
         "extra_args": "--results=verified,unknown --exclude-detectors=Lob",

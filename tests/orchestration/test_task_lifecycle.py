@@ -1963,6 +1963,66 @@ def test_criterion_length_limits_and_legacy_bold_ids():
         task_lifecycle.parse_issue_acceptance_criteria("- [ ] CI Gate green")
 
 
+# --------------------------------------------------------------------------- #
+# #10055 — check_ac_checkbox shares the parser's one line grammar: bold and
+# plain IDs check off identically, exact IDs only, and indentation, checked
+# state, and the trailing newline survive byte-for-byte.
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+@pytest.mark.parametrize("indent", ["", "  "])
+def test_check_ac_checkbox_marks_every_parser_form(form, indent):
+    line = indent + "- [ ] " + form.format(id="AC-01", text="Output is current.")
+    body = "Some intro prose.\n" + line + "\n"
+    updated = task_lifecycle.check_ac_checkbox(body, "AC-01")
+    assert updated == "Some intro prose.\n" + line.replace("- [ ]", "- [x]") + "\n"
+    assert task_lifecycle.parse_issue_acceptance_criteria(updated) == [
+        {"id": "AC-01", "text": "Output is current.", "checked": True},
+    ]
+
+
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+def test_check_ac_checkbox_matches_the_exact_id_only(form):
+    body = "\n".join(
+        [
+            "- [ ] " + form.format(id="AC-1", text="First criterion."),
+            "- [ ] " + form.format(id="AC-10", text="Tenth criterion."),
+            "",
+        ]
+    )
+    first_only = task_lifecycle.check_ac_checkbox(body, "AC-1").splitlines()
+    assert first_only[0].startswith("- [x]")
+    assert first_only[1].startswith("- [ ]")
+    tenth_only = task_lifecycle.check_ac_checkbox(body, "AC-10").splitlines()
+    assert tenth_only[0].startswith("- [ ]")
+    assert tenth_only[1].startswith("- [x]")
+
+
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}"])
+def test_check_ac_checkbox_ignores_ids_mentioned_in_other_criteria(form):
+    other = "- [ ] " + form.format(id="AC-02", text="Depends on **AC-01** and AC-01 being done.")
+    body = "- [ ] **AC-01** — First criterion.\n" + other + "\n"
+    updated = task_lifecycle.check_ac_checkbox(body, "AC-01")
+    assert updated.splitlines() == ["- [x] **AC-01** — First criterion.", other]
+
+
+@pytest.mark.parametrize("mark", ["x", "X"])
+@pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
+def test_check_ac_checkbox_leaves_checked_lines_byte_identical(mark, form):
+    body = "- [" + mark + "] " + form.format(id="AC-01", text="Output is current.") + "\n"
+    assert task_lifecycle.check_ac_checkbox(body, "AC-01") == body
+
+
+def test_check_ac_checkbox_preserves_a_missing_trailing_newline():
+    body = "- [ ] AC-01: Output is current."
+    assert task_lifecycle.check_ac_checkbox(body, "AC-01") == "- [x] AC-01: Output is current."
+
+
+def test_check_ac_checkbox_without_a_matching_line_returns_the_body():
+    body = "- [ ] **AC-01** — Output is current.\n"
+    assert task_lifecycle.check_ac_checkbox(body, "AC-99") == body
+    assert task_lifecycle.check_ac_checkbox("", "AC-01") == ""
+
+
 @pytest.mark.parametrize("ac_id", ["AC-01", "AC-01b", "AC-01c"])
 @pytest.mark.parametrize("form", ["**{id}** — {text}", "{id}: {text}", "{id} {text}"])
 def test_actual_closeout_init_accepts_equivalent_checkbox_forms(tmp_path, monkeypatch, ac_id, form):

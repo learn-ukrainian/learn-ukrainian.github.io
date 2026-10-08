@@ -130,6 +130,17 @@ def test_required_input_location_missing_refuses(bundle, key):
         request.read_request(bundle["root"] / "request.json")
 
 
+@pytest.mark.parametrize("location", ["SYNTHETIC-receipts", "", None, {"role": "modern"}, []])
+def test_optional_receipt_location_is_only_a_nonempty_path(bundle, location):
+    bundle["config"]["antonenko_receipts"] = location
+    save_bundle(bundle)
+    if isinstance(location, str) and location:
+        assert request.read_request(bundle["root"] / "request.json")[1]["antonenko_receipts"] == location
+    else:
+        with pytest.raises(BuildError, match="request_locations"):
+            request.read_request(bundle["root"] / "request.json")
+
+
 @pytest.mark.parametrize("change", ["source_id", "source_values", "role", "sensitive", "quarantine"])
 def test_competing_table_policy_refuses_before_extraction(bundle, monkeypatch, change):
     monkeypatch.setattr(output, "filesystem", lambda path: "ext4")

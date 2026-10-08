@@ -545,7 +545,7 @@ def test_force_new_reuse_requires_one_same_task_archived_creator(checkout, varia
     for _ in range(2):  # Exercise both fresh and content-verified cached lookups.
         # Retention now requires a resolved branch shared by creator and successor.
         # This uncommitted fixture intentionally has no such branch evidence.
-        if variant in {"keep_both", "keep_archive", "keep_current"}:
+        if variant not in {"same_task", "missing_creator"}:
             with pytest.raises(ValueError, match="retention intent"):
                 output.resolve_worktree_record(repo, tasks, repo_root=primary)
             continue
@@ -863,12 +863,22 @@ def test_internal_release_link_to_vanished_pids_preserves_the_link(checkout):
 
 
 def test_sole_creator_wins_with_different_task_reuser_without_retention(checkout):
+    from tests.orchestration.test_worktree_claims_cli import _git
+
     repo, primary, tasks = checkout
     source = artifact(checkout, "ignored/report.txt")
-    creator = {"task_id": "output-task", "worktree_path": str(repo), "worktree_reused": False, "status": "done"}
+    _git(repo, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-m", "branch proof")
+    creator = {
+        "task_id": "output-task",
+        "worktree_path": str(repo),
+        "worktree_reused": False,
+        "status": "done",
+        "run_nonce": "creator-run",
+        "worktree_branch": _git(repo, "rev-parse", "--abbrev-ref", "HEAD"),
+    }
     canonical = tasks / "output-task.json"
     canonical.write_text(json.dumps(creator))
-    reuser = dict(creator, task_id="other-task", worktree_reused=True)
+    reuser = dict(creator, task_id="other-task", worktree_reused=True, run_nonce="reuser-run")
     reused_record = tasks / "other-task.json"
     reused_record.write_text(json.dumps(reuser))
     for _ in range(2):  # Exercise both fresh and content-verified cached lookups.

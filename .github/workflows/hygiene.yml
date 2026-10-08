@@ -209,7 +209,11 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest pyyaml
+          # Shared conftest's adapter pre-import needs jsonschema; its process
+          # guard uses psutil (#10030). Use declarations and their locked pins.
+          sed -nE '/^(pytest|pyyaml|jsonschema|psutil)[<=>]/p' requirements.txt > "$RUNNER_TEMP/hygiene-requirements.txt"
+          sed -nE '/^[A-Za-z0-9_.-]+==/p' requirements-lock.txt > "$RUNNER_TEMP/hygiene-constraints.txt"
+          .venv/bin/python -m pip install -r "$RUNNER_TEMP/hygiene-requirements.txt" -c "$RUNNER_TEMP/hygiene-constraints.txt"
 
       - name: Verify agent extension deployment
         run: |
@@ -221,6 +225,17 @@ jobs:
       # after the lockfile (setuptools + --no-build-isolation). This slim
       # venv does not; PYTHONPATH exposes the src layout without running
       # setup.py's asset build hook.
+      # --collect-only misses imports made by autouse fixtures. --setup-only
+      # collects the same set and exercises those imports without test bodies.
+      - name: Guard focused test collection and setup
+        env:
+          PYTHONPATH: packages/v4-runtime/src
+        run: |
+          .venv/bin/python -m pytest \
+            tests/test_deploy_script_idempotency.py \
+            tests/test_agent_runtime_tool_config.py \
+            --setup-only --tb=short
+
       - name: Run focused agent config tests
         env:
           PYTHONPATH: packages/v4-runtime/src

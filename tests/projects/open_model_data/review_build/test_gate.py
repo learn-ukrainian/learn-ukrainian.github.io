@@ -159,6 +159,24 @@ def test_genuine_quotes_wrong_relationship_fail(bundle, fixture):
         run_gate(bundle)
 
 
+def test_derived_units_keep_independent_source_census_frozen(bundle):
+    bundle["spec"]["census_query"] = {**bundle["spec"]["unit_query"], "sql": "SELECT DISTINCT group_id FROM units"}
+    bundle["spec"]["census_id"] = selector(field="group_id")
+    bundle["spec"]["frozen_count"] = 1
+    records, report = run_gate(bundle)
+    assert len(records) == report["accounting"]["C1"]["counted"] == 12
+    bundle["spec"]["frozen_count"] = 2
+    with pytest.raises(BuildError, match="frozen_count"):
+        run_gate(bundle)
+
+
+def test_record_multiplicity_cannot_hide_a_duplicate_unit(bundle):
+    bundle["spec"]["unit_multiplicity"] = "records"
+    bundle["candidates"].append(bundle["candidates"][0])
+    with pytest.raises(BuildError, match="duplicate_unit"):
+        run_gate(bundle)
+
+
 @pytest.mark.parametrize(
     "fixture,code",
     [

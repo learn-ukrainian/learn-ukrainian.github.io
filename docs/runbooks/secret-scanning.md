@@ -154,6 +154,13 @@ closed-output subcommand to the wrapper, with tests, in a reviewed PR.
 | Gate | When | Scope |
 | --- | --- | --- |
 | gitleaks (`.pre-commit-config.yaml`, `.gitleaks.toml`) | Every commit, staged files | Stops a secret before it is committed. |
-| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR and merge-queue run | The pushed range, verified mode, `--results=verified,unknown`. Required. |
+| TruffleHog in CI (`.github/workflows/ci.yml`, `scripts/ci/secret_scan_scope.py`) | Every PR, merge-queue and scheduled run | The event's range (full history on the nightly schedule), verified mode, `--results=verified,unknown`. Required. |
 | OPSEC linter (`scripts/audit/lint_opsec_leaks.py`) | CI Secret scan job | Infrastructure identifiers (addresses, key headers) that are not credentials. |
 | This wrapper | On demand, as above | Offline; whole work tree or whole public history. |
+
+The action SHA pins the workflow script only. Both TruffleHog steps set the
+action input `version` to one exact release (`3.99.0` as of #10056). Omitting
+it pulls `:latest`. Bump both steps together to the newest
+`trufflesecurity/trufflehog` release, never to an older tag to clear a finding,
+then re-run `scripts/audit/secret_scan_local.py tree`.
+`tests/ci/test_trufflehog_scanner_pin.py` rejects a missing pin and `latest`.

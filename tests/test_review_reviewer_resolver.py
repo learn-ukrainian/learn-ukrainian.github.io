@@ -992,6 +992,38 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
     )
 
 
+def test_dispatch_capacity_exclusions_do_not_change_normal_resolver_selection():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap"}, "codex": {"status": "cool"}},
+        "review_capacity_exclusions": {OPENAI_FRONTIER.name: "weekly deficit"},
+    }
+    inputs = ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=snapshot)
+    assert resolve_reviewer(inputs).selected.name == OPENAI_FRONTIER.name
+    exhausted = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert exhausted.selected is None
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in exhausted.fail_closed_reason
+    assert "dispatch capacity: weekly deficit" in exhausted.fail_closed_reason
+    for item in exhausted.trace:
+        assert item.name in exhausted.fail_closed_reason
+        assert item.reason in exhausted.fail_closed_reason
+
+
+def test_dispatch_capacity_uses_resolver_transport_fallback_order():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap"}, "codex": {"status": "cool"}},
+        "review_capacity_exclusions": {
+            OPENAI_FRONTIER.name: "weekly deficit",
+            GROK_4_7.name: "runtime capacity unavailable",
+        },
+    }
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="critical", routing_snapshot=snapshot)
+    result = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert result.selected.name == GROK_4_7_CURSOR_FALLBACK.name
+    primary = next(item for item in result.trace if item.name == GROK_4_7.name)
+    assert primary.status == "excluded"
+    assert primary.reason == "dispatch capacity: runtime capacity unavailable"
+
+
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5-5"]
     missing_reason = resolve_reviewer(

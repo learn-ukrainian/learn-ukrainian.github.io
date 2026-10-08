@@ -6,7 +6,7 @@ Local single-host ledger (`batch_state/tasks/write-ownership.sqlite3`) with
 exempt. REFUSE mode (default after #5645 soak) blocks conflicting writable admits;
 WARN mode admits on conflict but records would-refuse (opt-in via DELEGATE_OWNERSHIP_MODE=warn).
 
-Claims come from normalized ``--research-owned-path`` values but are stored
+Claims come from normalized ``--owned-path`` values but are stored
 separately from the fail-open research registry.
 """
 
@@ -100,6 +100,8 @@ TERMINAL_TASK_STATUSES = frozenset(
 
 
 class ClaimKind(StrEnum):
+    # Legacy ledgers used FILE for plain paths; they have the same prefix
+    # ownership as SUBTREE, including descendants, regardless of filesystem type.
     FILE = "file"
     SUBTREE = "subtree"
     UNKNOWN = "ownership_unknown"
@@ -155,12 +157,12 @@ def _posix_norm(path: str) -> str:
 
 
 def normalize_claim(raw: str) -> PathClaim:
-    """Normalize a single --research-owned-path value into a claim."""
+    """Normalize --owned-path; every literal path owns itself and its descendants."""
     text = (raw or "").strip().replace("\\", "/")
     if not text or text in {".", "./"}:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm="")
 
-    # Preserve subtree intent before normpath (which strips trailing /).
+    # Strip subtree suffixes before normpath and wildcard validation.
     is_double_star = text.endswith("/**")
     is_subtree_slash = text.endswith("/") and not is_double_star
     body = text[: -len("/**")] if is_double_star else text.rstrip("/") if is_subtree_slash else text
@@ -179,10 +181,7 @@ def normalize_claim(raw: str) -> PathClaim:
     if norm.startswith("/") or norm.startswith("../") or norm == ".." or "/../" in f"/{norm}/" or drive_qualified:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
-    if is_double_star or is_subtree_slash:
-        return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
-
-    return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
+    return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
 
 
 def owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
@@ -332,7 +331,7 @@ def refusal_message(
     parts: list[str] = []
     if self_unprovable:
         declared = ", ".join(repr(sanitize_for_display(c.raw)) for c in unknown[:3]) if unknown else "none declared"
-        parts.append(f"this task declared no comparable --research-owned-path ({declared})")
+        parts.append(f"this task declared no comparable --owned-path ({declared})")
     distinct_peers = _dedupe_peers(unprovable_peers)
     if distinct_peers:
         peers = ", ".join(_peer_label(p) for p in distinct_peers[:3])
@@ -342,22 +341,15 @@ def refusal_message(
     return (
         f"cannot prove write-path disjointness (REFUSE): {detail}. "
         "No actual path overlap was found. Fix by re-running the undeclared "
-        "dispatches with --research-owned-path, or pass "
+        "dispatches with --owned-path, or pass "
         "--allow-path-overlap '<why this is safe>'."
     )
 
 
 def claims_conflict(a: PathClaim, b: PathClaim) -> bool:
-    """Return True if two concrete claims intersect. UNKNOWN never proves overlap alone."""
+    """Compare prefix ownership, including legacy FILE rows; UNKNOWN proves no overlap."""
     if a.kind == ClaimKind.UNKNOWN or b.kind == ClaimKind.UNKNOWN:
         return False
-    if a.kind == ClaimKind.FILE and b.kind == ClaimKind.FILE:
-        return a.norm == b.norm
-    if a.kind == ClaimKind.FILE and b.kind == ClaimKind.SUBTREE:
-        return a.norm == b.norm or a.norm.startswith(b.norm + "/")
-    if a.kind == ClaimKind.SUBTREE and b.kind == ClaimKind.FILE:
-        return b.norm == a.norm or b.norm.startswith(a.norm + "/")
-    # subtree/subtree
     return a.norm == b.norm or a.norm.startswith(b.norm + "/") or b.norm.startswith(a.norm + "/")
 
 
