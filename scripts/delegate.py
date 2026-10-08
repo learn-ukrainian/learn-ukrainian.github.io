@@ -5278,7 +5278,7 @@ def _is_read_only_snapshot_excluded_path(path: str) -> bool:
 
 
 def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
-    """Capture the observable Git state of a read-only worker's checkout.
+    """Capture Git state and linked database contents for a read-only worker.
 
     The snapshot includes ignored files because a writeful legacy audit can
     create ignored cache entries that ordinary ``git status`` deliberately
@@ -5287,6 +5287,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
 
     Paths under ``.worktrees/`` are excluded entirely (#7124): they belong to
     concurrent dispatch lanes, not to the task being guarded.
+    Provisioned DB links retain their Git status when the primary target is
+    written (#9421). Fingerprint their contents, including SQLite's persistent
+    journal/WAL at the resolved target, so such writes cannot settle ``done``.
     """
     commands = (
         (
@@ -5353,6 +5356,26 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
+    for relative_path in ("data/vesum.db", "data/sources.db"):
+        link = cwd / relative_path
+        if not link.is_symlink():
+            continue
+        try:
+            target = link.resolve(strict=True)
+            fingerprints = []
+            for suffix in ("", "-journal", "-wal"):
+                database_file = Path(f"{target}{suffix}")
+                try:
+                    with database_file.open("rb") as handle:
+                        digest = hashlib.file_digest(handle, "sha256").hexdigest()
+                except FileNotFoundError:
+                    if not suffix:
+                        raise
+                    digest = None
+                fingerprints.append(digest)
+        except (OSError, RuntimeError) as exc:
+            return None, f"linked database snapshot failed: {relative_path}: {type(exc).__name__}"
+        entries[relative_path] = entries.get(relative_path, "!!") + ":" + json.dumps(fingerprints)
     return entries, None
 
 
@@ -10387,7 +10410,11 @@ def _run_worker(
                 final_state.pop("read_only_checkout_pre", None)
                 final_state.pop("read_only_checkout_post", None)
                 clean_snapshots_to_discard = snapshot_dir
-            if read_only_mutation_paths or task_records_snapshot_error:
+            if (
+                read_only_mutation_paths
+                or task_records_snapshot_error
+                or (read_only_snapshot_error or "").startswith("linked database snapshot failed:")
+            ):
                 final_status = "failed"
                 ok_outcome = False
 
@@ -10715,6 +10742,14 @@ def _run_worker(
             snapshot = _publish_cause(
                 task_id,
                 _TypedCause("task_records_snapshot_failed", diagnostic=task_records_snapshot_error),
+                source="worker",
+                field="last_error",
+            )
+            last_error = f"{last_error}; {snapshot}" if last_error else snapshot
+        elif (read_only_snapshot_error or "").startswith("linked database snapshot failed:"):
+            snapshot = _publish_cause(
+                task_id,
+                _TypedCause("read_only_checkout_snapshot_failed", diagnostic=read_only_snapshot_error),
                 source="worker",
                 field="last_error",
             )
