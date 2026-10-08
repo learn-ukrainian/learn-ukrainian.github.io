@@ -359,6 +359,23 @@ def test_changed_html_replaces_children_atomically() -> None:
         conn.close()
 
 
+@pytest.fixture(autouse=True)
+def observed_robots(monkeypatch):
+    """Parser/retry cases start after a successful robots observation."""
+    from urllib.robotparser import RobotFileParser
+
+    from scripts.lexicon import sum20_lookup as transport
+
+    parser = RobotFileParser()
+    parser.parse([])
+    monkeypatch.setattr(transport, "_sum20_robots", parser)
+    ticks = iter(range(0, 100000, 100))
+    monkeypatch.setattr(transport.time, "monotonic", lambda: float(next(ticks)))
+    # These tests isolate article retry semantics, not elapsed wall-clock spacing.
+    monkeypatch.setattr(transport, "_sum20_last_request", None)
+    monkeypatch.setattr(transport, "_sum20_stopped", False)
+
+
 class _FakeResponse:
     def __init__(self, status_code: int, text: str = "", headers: dict[str, str] | None = None) -> None:
         self.status_code = status_code
@@ -664,7 +681,7 @@ def test_fetch_keeps_a_caller_supplied_user_agent(monkeypatch: pytest.MonkeyPatc
     assert session.headers["User-Agent"] == "caller-agent/2.0"
 
 
-@pytest.mark.parametrize("code", [401, 403, 201, 302, 400, 499, 600])
+@pytest.mark.parametrize("code", [401, 403, 429, 201, 302, 400, 499, 600])
 def test_official_first_terminal_response_never_retries(code):
     session = _FakeSession([_FakeResponse(code)])
     sleeps = []
@@ -729,3 +746,74 @@ def test_legacy_ingest_help_and_failure_exit(monkeypatch, capsys):
     )
     assert sum20_official_ingest.main([]) == 1
     assert "failed" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("headers,body", [({"CF-Mitigated": "challenge"}, "ordinary body"), ({}, "<div id='cf_chl_widget'>")])
+def test_official_challenge_stops_before_parsing_and_future_requests(headers, body):
+    from scripts.lexicon import sum20_lookup as transport
+
+    session = _FakeSession([_FakeResponse(200, body, headers)])
+    calls = []
+    get = session.get
+    session.get = lambda *a, **k: calls.append(a) or get(*a, **k)
+    sleeps = []
+    result = fetch_sum20_wordid(5, session=session, sleep=sleeps.append)
+    assert result.terminal and result.http_status == 200 and result.status == "transient_error"
+    assert transport._sum20_stopped and sleeps == [] and len(calls) == 1
+    second = fetch_sum20_wordid(6, session=session, sleep=sleeps.append)
+    assert second.terminal and len(calls) == 1 and sleeps == []
+
+
+def test_official_detection_script_parses_normally():
+    source = "<article>" + TARGET_ENTRY + "</article><script src='/cdn-cgi/challenge-platform/scripts/jsd/api.js'></script>"
+    result = fetch_sum20_wordid(5, session=_FakeSession([_FakeResponse(200, source)]), retries=0)
+    assert result.status == "ok" and result.document_html == source and not result.terminal
+
+
+def test_official_503_retry_after_is_retained():
+    session = _FakeSession([_FakeResponse(503, headers={"Retry-After": "7"}), _FakeResponse(404)])
+    sleeps = []
+    assert fetch_sum20_wordid(5, session=session, sleep=sleeps.append).status == "not_found"
+    assert sleeps == [7.0]
+
+
+@pytest.mark.parametrize("robots_delay", ["10", "2.5"])
+def test_ingest_observed_delay_overrides_two_second_default(monkeypatch, tmp_path, robots_delay):
+    from scripts.lexicon import sum20_lookup as transport
+
+    now = [0.0]
+    monkeypatch.setattr(transport, "_sum20_robots", None)
+    monkeypatch.setattr(transport.time, "monotonic", lambda: now[0])
+    calls = []
+    session = _FakeSession([])
+
+    def get(url, **kwargs):
+        calls.append((url, now[0], kwargs))
+        return _FakeResponse(200, f"User-agent: *\nCrawl-delay: {robots_delay}\nDisallow:") if url.endswith("/robots.txt") else _FakeResponse(404)
+
+    session.get = get
+    monkeypatch.setattr(official_module.requests, "Session", lambda: session)
+    counts = sum20_official_ingest.ingest_wordids(tmp_path / "sources.db", limit=2, sleep=lambda seconds: now.__setitem__(0, now[0] + seconds))
+    assert counts["not_found"] == 2 and len(calls) == 3
+    assert calls[1][1] - calls[0][1] >= float(robots_delay)
+    assert calls[2][1] - calls[1][1] >= float(robots_delay)
+    assert all("https://github.com/learn-ukrainian/learn-ukrainian.github.io" in c[2]["headers"]["User-Agent"] for c in calls)
+
+
+def test_ingest_denial_preserves_checkpoint_and_same_process_stop(monkeypatch, tmp_path):
+    from scripts.lexicon import sum20_lookup as transport
+
+    session = _FakeSession([_FakeResponse(429)])
+    calls = []
+    get = session.get
+    session.get = lambda *a, **k: calls.append(a) or get(*a, **k)
+    monkeypatch.setattr(official_module.requests, "Session", lambda: session)
+    db = tmp_path / "sources.db"
+    sleeps = []
+    first = sum20_official_ingest.ingest_wordids(db, sleep=sleeps.append)
+    second = sum20_official_ingest.ingest_wordids(db, sleep=sleeps.append)
+    assert first.exit_code == second.exit_code == 3 and len(calls) == 1 and sleeps == []
+    assert transport._sum20_stopped
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0

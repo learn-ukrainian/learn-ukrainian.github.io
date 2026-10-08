@@ -271,3 +271,68 @@ def test_main_runs_with_primary_fallback_db(tmp_path: Path, monkeypatch: pytest.
     assert headwords[0]["lemma"] == "мама"
     assert headwords[0]["gloss"] == "mother"
     assert headwords[0]["gloss_source"] == "dmklinger"
+
+
+@pytest.mark.parametrize("code,body", [(403, "denied"), (429, "slow down"), (200, "<title>Just a moment...</title>")])
+def test_cache_access_stop_preserves_bytes_and_stops_later_lemmas(monkeypatch, tmp_path, code, body):
+    em = admit.transport
+    monkeypatch.setattr(em, "SLOVNYK_CACHE", tmp_path)
+    path = em._slovnyk_cache_path("sample")
+    path.write_text(json.dumps({"schema_version": em._SLOVNYK_CACHE_SCHEMA_VERSION, "lookups": {"ukreng": {"text": "settled"}}}))
+    before = path.read_bytes()
+    calls = []
+    monkeypatch.setattr(admit, "fetch_slovnyk_curl", lambda word, slug: calls.append((word, slug)) or (code, body))
+    with pytest.raises(em._SlovnykAccessStopped):
+        admit.ensure_slovnyk_cache("sample")
+    with pytest.raises(em._SlovnykAccessStopped):
+        admit.ensure_slovnyk_cache("other")
+    assert calls == [("sample", "newsum")] and path.read_bytes() == before
+
+
+def test_cache_saves_success_before_denial(monkeypatch, tmp_path):
+    em = admit.transport
+    monkeypatch.setattr(em, "SLOVNYK_CACHE", tmp_path)
+    replies = iter([(200, "article"), (429, "denied")])
+    calls = []
+    monkeypatch.setattr(admit, "fetch_slovnyk_curl", lambda word, slug: calls.append(slug) or next(replies))
+    monkeypatch.setattr(admit, "_parse_slovnyk_entry", lambda *a, **k: {"text": "settled success"})
+    with pytest.raises(em._SlovnykAccessStopped):
+        admit.ensure_slovnyk_cache("sample")
+    assert calls == ["newsum", "vts"]
+    assert json.loads(em._slovnyk_cache_path("sample").read_text())["lookups"] == {"newsum": {"text": "settled success"}}
+
+
+@pytest.mark.parametrize("code", [200, 404, 503, 0])
+def test_cache_success_miss_and_transient_contract(monkeypatch, tmp_path, code):
+    em = admit.transport
+    monkeypatch.setattr(em, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(admit, "fetch_slovnyk_curl", lambda *a: (code, "synthetic"))
+    monkeypatch.setattr(admit, "_parse_slovnyk_entry", lambda *a, **k: {"text": "success"})
+    result = admit.ensure_slovnyk_cache("sample")
+    expected = {slug: {"text": "success"} if code == 200 else None for slug in admit.SLOVNYK_SLUGS} if code in (200, 404) else {}
+    assert result["lookups"] == expected and not em._slovnyk_access_stopped
+    assert em._slovnyk_cache_path("sample").exists() == (code in (200, 404))
+    if code in (200, 404):
+        monkeypatch.setattr(admit, "fetch_slovnyk_curl", lambda *a: pytest.fail("settled lookups are local"))
+        assert admit.ensure_slovnyk_cache("sample")["lookups"] == expected
+
+
+def test_glossary_curl_reuses_polite_transport(monkeypatch):
+    calls = []
+    monkeypatch.setattr(admit, "fetch_newsum_curl", lambda word, **kw: calls.append((word, kw)) or (404, ""))
+    assert admit.fetch_slovnyk_curl("sample", "vts", timeout=10) == (404, "")
+    assert calls == [("sample", {"slug": "vts", "timeout": 10, "user_agent": admit.USER_AGENT})]
+    assert "https://github.com/learn-ukrainian/learn-ukrainian.github.io" in admit.USER_AGENT
+
+
+def test_glossary_cli_stop_preserves_output(monkeypatch, tmp_path, capsys):
+    candidates = tmp_path / "candidates.json"
+    candidates.write_text('{"attempted": []}')
+    db = tmp_path / "sources.db"
+    _make_sqlite_db(db)
+    output = tmp_path / "glossary.yaml"
+    output.write_bytes(b"settled glossary\n")
+    monkeypatch.setattr(admit, "admit_candidates", lambda *a, **k: (_ for _ in ()).throw(admit.transport._SlovnykAccessStopped("synthetic denial")))
+    assert admit.main(["--candidates", str(candidates), "--sources-db", str(db), "--book-id", "synthetic", "--title", "Synthetic", "--out", str(output)]) == 1
+    assert "partial source cache preserved" in capsys.readouterr().err
+    assert output.read_bytes() == b"settled glossary\n"

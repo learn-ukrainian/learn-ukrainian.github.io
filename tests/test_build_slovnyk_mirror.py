@@ -109,6 +109,14 @@ def test_mirror_stop_preserves_partial_counts_and_cache(mirror_fixture, capsys, 
     assert f"STOP blocked HTTP={terminal}" in output
     cache = json.loads(enrich_manifest_module._slovnyk_cache_path("sample").read_text())
     assert set(cache["lookups"]) == {"vts"}
+    # Same process remains stopped; an explicit new-run boundary enables resume.
+    before_calls = len(calls)
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
+    assert len(calls) == before_calls
+    capsys.readouterr()
+    enrich_manifest_module._slovnyk_access_stopped = False
+    enrich_manifest_module._slovnyk_robots = None
+    enrich_manifest_module._last_slovnyk_fetch = None
     queue(404, 404, 404)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
     assert "fetched=0 reused=1 misses=3 errors=0 pending=0" in capsys.readouterr().out
@@ -127,7 +135,16 @@ def test_mirror_parse_stop_and_default_tolerant_caller(mirror_fixture, monkeypat
     assert "fetched=0 reused=0 misses=0 errors=1 pending=3" in capsys.readouterr().out
     queue(403, 200)
     monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("vts", "newsum"))
-    assert enrich_manifest_module._slovnyk_cache("sample")["lookups"] == {"newsum": None}
+    path = enrich_manifest_module._slovnyk_cache_path("sample")
+    # A settled sibling survives; a denied lookup is never cached as a miss.
+    path.parent.mkdir(parents=True, exist_ok=True)
+    settled = {"schema_version": enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION, "lookups": {"ukreng": {"text": "settled"}}}
+    path.write_text(json.dumps(settled))
+    original = path.read_bytes()
+    with pytest.raises(enrich_manifest_module._SlovnykAccessStopped):
+        enrich_manifest_module._slovnyk_cache("sample")
+    assert len(calls) == 2 and calls[-1].endswith("/vts/sample")
+    assert path.read_bytes() == original
 
 
 @pytest.mark.parametrize("mode", ["offline", "empty", "limit"])
@@ -570,6 +587,12 @@ def test_terminal_stop_accounts_durable_alias_rows_and_resumes(mirror_fixture, c
     assert json.loads(checkpoint.read_text())["completed"] == {}
     retained_positive = cache["lookups"]["newsum"]
 
+    assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 1
+    assert len(calls) == 3
+    capsys.readouterr()
+    enrich_manifest_module._slovnyk_access_stopped = False
+    enrich_manifest_module._slovnyk_robots = None
+    enrich_manifest_module._last_slovnyk_fetch = None
     queue(recovery)
     assert build_slovnyk_mirror.main(["--manifest", str(manifest)]) == 0
     output = capsys.readouterr().out

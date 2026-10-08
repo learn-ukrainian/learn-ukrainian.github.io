@@ -19,7 +19,7 @@
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "2593f3b93af5932239012ae3891ce9739cb70dd797d7017960a1b85a0512bcad"
+        "sha256": "9584efa1df46b267f2bfca60d4592eae795dc3dedb9e1744859893c780ede4a0"
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "6bcd257bf2ec323ba2ab5489c8a6530434d896a593b6b68989959e400ff0fd6a"
+        "sha256": "96018ef14594fa9407f548c77c805e34a03aad9b396847a668b7db6dde12baae"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -207,7 +207,7 @@
       },
       {
         "path": "scripts/lexicon/fill_slovnyk_sum20_cache.py",
-        "sha256": "7507a9ad475abe79ecf2e480d3445a157c3360ee6380dd79e84233e5bad8dbd1"
+        "sha256": "4fe86ad99ab60c5a5891d8b2dd78990358e6c0cf721b799ce7de9a076b7cf821"
       },
       {
         "path": "scripts/lexicon/fix_esum_garbled_etymologies.py",
@@ -355,7 +355,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",
-        "sha256": "98eaa148f8f0be9f3f43d1c7c74ecdb72df26f94d4c99205b3386e9badf1a45d"
+        "sha256": "d694df910156ae35b68289f8284ecfaa3818eaf2cb43db9df01ff3673f4715d4"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",

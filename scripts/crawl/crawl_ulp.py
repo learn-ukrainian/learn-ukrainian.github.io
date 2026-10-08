@@ -24,12 +24,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
+import time
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit
+from urllib.robotparser import RobotFileParser
 
 import httpx
+import requests
 
 # ── Config ────────────────────────────────────────────────────────
 BASE_URL = "https://www.ukrainianlessons.com"
@@ -50,6 +55,91 @@ SEASONS: dict[int, dict] = {
 }
 
 REQUEST_TIMEOUT = 30
+
+
+USER_AGENT = (
+    "learn-ukrainian-ulp/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io; educational resource metadata)"
+)
+_ulp_robots: dict[str, RobotFileParser] = {}
+_ulp_last_request: dict[str, float] = {}
+_ulp_stopped = False
+
+
+class _ULPAccessStopped(RuntimeError):
+    """Abort this collection run without replacing the existing output."""
+
+
+def _ulp_check_response(response) -> None:
+    global _ulp_stopped
+    body = response.text.lower()
+    if (
+        response.status_code in {401, 403, 407, 429}
+        or 300 <= response.status_code < 400
+        or any(str(key).lower() == "cf-mitigated" and str(value).lower() == "challenge" for key, value in response.headers.items())
+        or any(
+            marker in body
+            for marker in (
+                "<title>just a moment",
+                "<title>attention required",
+                "checking your browser",
+                "cf-browser-verification",
+                "cf_chl_",
+                "cf-chl-",
+                "cloudflare ray id",
+                "enable javascript and cookies to continue",
+            )
+        )
+    ):
+        _ulp_stopped = True
+        raise _ULPAccessStopped("ULP access denied or challenged; no further requests")
+
+
+def _ulp_get(client, url: str, *, requests_client: bool = False):
+    global _ulp_stopped
+    if _ulp_stopped:
+        raise _ULPAccessStopped("ULP access stopped for this process")
+    parts = urlsplit(url)
+    origin = f"{parts.scheme}://{parts.netloc}"
+    if origin not in _ulp_robots:
+        try:
+            response = client.get(
+                f"{origin}/robots.txt",
+                timeout=REQUEST_TIMEOUT,
+                **({"allow_redirects": False} if requests_client else {}),
+            )
+            _ulp_last_request[origin] = time.monotonic()
+            _ulp_check_response(response)
+            if response.status_code not in {200, 404}:
+                raise _ULPAccessStopped("ULP robots unavailable")
+        except (requests.RequestException, httpx.HTTPError) as exc:
+            _ulp_stopped = True
+            raise _ULPAccessStopped("ULP robots unavailable") from exc
+        except _ULPAccessStopped:
+            _ulp_stopped = True
+            raise
+        parser = RobotFileParser()
+        # robotparser accepts integer delays; round fractional observations up.
+        robots_text = re.sub(
+            r"(?im)^(\s*crawl-delay\s*:\s*)(\d+\.\d+)(\s*(?:#.*)?)$",
+            lambda match: f"{match[1]}{math.ceil(float(match[2]))}{match[3]}",
+            response.text,
+        )
+        parser.parse(robots_text.splitlines() if response.status_code == 200 else [])
+        _ulp_robots[origin] = parser
+    parser = _ulp_robots[origin]
+    if not parser.can_fetch(USER_AGENT, url):
+        _ulp_stopped = True
+        raise _ULPAccessStopped("ULP robots disallows target")
+    delay = max(2.0, parser.crawl_delay(USER_AGENT) or 0)
+    if origin in _ulp_last_request:
+        remaining = delay - (time.monotonic() - _ulp_last_request[origin])
+        if remaining > 0:
+            time.sleep(remaining)
+    _ulp_last_request[origin] = time.monotonic()
+    response = client.get(url, timeout=REQUEST_TIMEOUT, **({"allow_redirects": False} if requests_client else {}))
+    _ulp_check_response(response)
+    return response
 
 
 # ── Topic extraction ─────────────────────────────────────────────
@@ -127,6 +217,7 @@ def extract_topics(title: str, description: str = "") -> list[str]:
 
 # ── Season + level helpers ───────────────────────────────────────
 
+
 def get_season_info(episode_num: int) -> tuple[int, str, str]:
     """Return (season, level, focus) for a ULP episode number."""
     for s, info in SEASONS.items():
@@ -146,12 +237,13 @@ def get_fmu_level(episode_num: int) -> str:
 
 # ── iTunes API scraping ─────────────────────────────────────────
 
+
 def fetch_itunes_episodes(podcast_id: int, limit: int = 300) -> list[dict]:
     """Fetch podcast episodes from iTunes Lookup API."""
     url = f"https://itunes.apple.com/lookup?id={podcast_id}&media=podcast&entity=podcastEpisode&limit={limit}"
-    client = httpx.Client(follow_redirects=True, timeout=REQUEST_TIMEOUT)
+    client = httpx.Client(follow_redirects=False, timeout=REQUEST_TIMEOUT, headers={"User-Agent": USER_AGENT})
     try:
-        r = client.get(url)
+        r = _ulp_get(client, url)
         r.raise_for_status()
         data = r.json()
         return [e for e in data.get("results", []) if e.get("kind") == "podcast-episode"]
@@ -272,40 +364,27 @@ def parse_fmu_itunes(episodes: list[dict]) -> list[dict]:
 
 # ── Website scraping (season 1 only) ────────────────────────────
 
+
 def scrape_season1_from_website() -> list[dict]:
-    """Scrape season 1 episode titles from the website (too old for iTunes).
-
-    Uses requests (not httpx) — the website's Cloudflare responds better to it
-    for the first request in a fresh session.
-    """
-    import requests as req
-
-    session = req.Session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9,uk;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-    })
+    """Scrape season 1 metadata with truthful identity and a terminal access stop."""
+    session = requests.Session()
+    session.headers.update({"User-Agent": USER_AGENT})
 
     try:
-        r = session.get(f"{BASE_URL}/season1/", timeout=REQUEST_TIMEOUT)
+        r = _ulp_get(session, f"{BASE_URL}/season1/", requests_client=True)
         r.raise_for_status()
         r.encoding = "utf-8"
         text = r.text
-    except Exception as e:
-        print(f"  WARNING: Could not fetch season1 page: {e}")
+    except requests.RequestException:
+        print("  WARNING: Could not fetch season1 page")
         return []
     finally:
         session.close()
 
     entries: list[dict] = []
-    pattern = r'href="https://www\.ukrainianlessons\.com/episode(\d+)/?"[^>]*>([^<]*(?:<strong>[^<]*</strong>[^<]*)*)</a>'
+    pattern = (
+        r'href="https://www\.ukrainianlessons\.com/episode(\d+)/?"[^>]*>([^<]*(?:<strong>[^<]*</strong>[^<]*)*)</a>'
+    )
     matches = re.findall(pattern, text)
 
     seen: set[int] = set()
@@ -325,26 +404,28 @@ def scrape_season1_from_website() -> list[dict]:
         title = re.sub(r"^ULP\s+\d+-\d+\s*", "", clean).strip()
         _, level, focus = get_season_info(ep_num)
 
-        entries.append({
-            "id": f"ulp-ep-{ep_num:03d}",
-            "content_type": "podcast_episode",
-            "series": "ULP",
-            "season": 1,
-            "episode": ep_num,
-            "url": f"{BASE_URL}/episode{ep_num}/",
-            "title": title,
-            "title_uk": "",
-            "description": "",
-            "topics": extract_topics(title, ""),
-            "suggested_level": level,
-            "season_focus": focus,
-            "release_date": "",
-        })
+        entries.append(
+            {
+                "id": f"ulp-ep-{ep_num:03d}",
+                "content_type": "podcast_episode",
+                "series": "ULP",
+                "season": 1,
+                "episode": ep_num,
+                "url": f"{BASE_URL}/episode{ep_num}/",
+                "title": title,
+                "title_uk": "",
+                "description": "",
+                "topics": extract_topics(title, ""),
+                "suggested_level": level,
+                "season_focus": focus,
+                "release_date": "",
+            }
+        )
 
     return entries
 
 
-# Static fallback for season 1 (if website is blocked by Cloudflare)
+# Existing local season 1 metadata (for empty successful responses)
 SEASON1_TITLES: dict[int, str] = {
     1: "Informal Greetings in Ukrainian",
     2: "Formal Greetings and Saying Goodbye in Ukrainian + Pronouns",
@@ -414,6 +495,7 @@ def season1_fallback() -> list[dict]:
 
 # ── Blog articles (from existing catalog) ────────────────────────
 
+
 def load_blog_articles() -> list[dict]:
     """Load blog articles from the existing crawl_ulp_blog.py catalog."""
     sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -440,6 +522,7 @@ def load_blog_articles() -> list[dict]:
 
 # ── Assembly ─────────────────────────────────────────────────────
 
+
 def build_db(ulp: list[dict], fmu: list[dict], blog: list[dict]) -> dict:
     """Assemble the unified resource database."""
     # Sort episodes by number
@@ -462,12 +545,42 @@ def build_db(ulp: list[dict], fmu: list[dict], blog: list[dict]) -> dict:
 
 # ── Main ─────────────────────────────────────────────────────────
 
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Crawl ukrainianlessons.com podcast + blog")
-    parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
-    parser.add_argument("--episodes-only", action="store_true", dest="episodes_only")
-    parser.add_argument("--blog-only", action="store_true", dest="blog_only")
-    parser.add_argument("--dry-run", action="store_true", dest="dry_run")
+    parser = argparse.ArgumentParser(
+        description="Collect Ukrainian Lessons podcast metadata and the local blog catalog.\n"
+        "Use for metadata refresh; access denials stop the run without replacing output.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.crawl.crawl_ulp --episodes-only\n"
+        "  .venv/bin/python -m scripts.crawl.crawl_ulp --blog-only\n"
+        "Outputs: resource metadata JSON; existing output preserved on access stop.\n"
+        "Exit codes: 0 success, 1 access stop, 2 invalid arguments.\n"
+        "Related: docs/sources/collector-behavior.md; #8999",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=OUTPUT_PATH,
+        help="Output JSON path (default: docs/resources/ukrainianlessons/blog_db.json).",
+    )
+    parser.add_argument(
+        "--episodes-only",
+        action="store_true",
+        dest="episodes_only",
+        help="Only collect podcast metadata (default: all resources).",
+    )
+    parser.add_argument(
+        "--blog-only",
+        action="store_true",
+        dest="blog_only",
+        help="Only load the local blog catalog, without HTTP (default: all resources).",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        dest="dry_run",
+        help="Describe requests without HTTP; writes empty metadata JSON (default: false).",
+    )
     args = parser.parse_args()
 
     ulp_episodes: list[dict] = []
@@ -476,50 +589,55 @@ def main() -> int:
 
     do_all = not (args.episodes_only or args.blog_only)
 
-    if do_all or args.episodes_only:
-        if args.dry_run:
-            print("Would fetch: 240 ULP episodes (iTunes API + season1 page)")
-            print("Would fetch: 60 FMU episodes (iTunes API)")
-        else:
-            # 1. Get seasons 2-6 from iTunes (200 episodes)
-            print("Fetching ULP episodes from iTunes API...")
-            itunes_raw = fetch_itunes_episodes(ULP_ITUNES_ID, limit=300)
-            itunes_episodes = parse_ulp_itunes(itunes_raw)
-            itunes_nums = {e["episode"] for e in itunes_episodes}
-            print(f"  iTunes: {len(itunes_episodes)} episodes (range: {min(itunes_nums)}-{max(itunes_nums)})")
-
-            # 2. Get season 1 from website (too old for iTunes 200-limit)
-            print("Fetching season 1 from website...")
-            s1_episodes = scrape_season1_from_website()
-            s1_only = [e for e in s1_episodes if e["episode"] not in itunes_nums]
-            if not s1_only:
-                print("  Website blocked — using static fallback for season 1")
-                s1_only = [e for e in season1_fallback() if e["episode"] not in itunes_nums]
-            print(f"  Season 1: {len(s1_only)} episodes")
-
-            ulp_episodes = itunes_episodes + s1_only
-
-            # 3. Check coverage
-            all_nums = {e["episode"] for e in ulp_episodes}
-            missing = set(range(1, 241)) - all_nums
-            if missing:
-                print(f"  Missing episodes: {sorted(missing)}")
+    try:
+        if do_all or args.episodes_only:
+            if args.dry_run:
+                print("Would fetch: 240 ULP episodes (iTunes API + season1 page)")
+                print("Would fetch: 60 FMU episodes (iTunes API)")
             else:
-                print("  Complete: all 240 episodes covered")
+                # 1. Get seasons 2-6 from iTunes (200 episodes)
+                print("Fetching ULP episodes from iTunes API...")
+                itunes_raw = fetch_itunes_episodes(ULP_ITUNES_ID, limit=300)
+                itunes_episodes = parse_ulp_itunes(itunes_raw)
+                itunes_nums = {e["episode"] for e in itunes_episodes}
+                print(f"  iTunes: {len(itunes_episodes)} episodes (range: {min(itunes_nums)}-{max(itunes_nums)})")
 
-            # 4. Get FMU
-            print("Fetching FMU episodes from iTunes API...")
-            fmu_raw = fetch_itunes_episodes(FMU_ITUNES_ID, limit=100)
-            fmu_episodes = parse_fmu_itunes(fmu_raw)
-            print(f"  FMU: {len(fmu_episodes)} episodes")
+                # 2. Get season 1 from website (too old for iTunes 200-limit)
+                print("Fetching season 1 from website...")
+                s1_episodes = scrape_season1_from_website()
+                s1_only = [e for e in s1_episodes if e["episode"] not in itunes_nums]
+                if not s1_only:
+                    print("  No season 1 metadata found — using the existing local catalog")
+                    s1_only = [e for e in season1_fallback() if e["episode"] not in itunes_nums]
+                print(f"  Season 1: {len(s1_only)} episodes")
 
-    if do_all or args.blog_only:
-        if args.dry_run:
-            print("Would load: 119 blog articles (existing catalog)")
-        else:
-            print("Loading blog articles from catalog...")
-            blog_articles = load_blog_articles()
-            print(f"  Blog: {len(blog_articles)} articles")
+                ulp_episodes = itunes_episodes + s1_only
+
+                # 3. Check coverage
+                all_nums = {e["episode"] for e in ulp_episodes}
+                missing = set(range(1, 241)) - all_nums
+                if missing:
+                    print(f"  Missing episodes: {sorted(missing)}")
+                else:
+                    print("  Complete: all 240 episodes covered")
+
+                # 4. Get FMU
+                print("Fetching FMU episodes from iTunes API...")
+                fmu_raw = fetch_itunes_episodes(FMU_ITUNES_ID, limit=100)
+                fmu_episodes = parse_fmu_itunes(fmu_raw)
+                print(f"  FMU: {len(fmu_episodes)} episodes")
+
+        if do_all or args.blog_only:
+            if args.dry_run:
+                print("Would load: 119 blog articles (existing catalog)")
+            else:
+                print("Loading blog articles from catalog...")
+                blog_articles = load_blog_articles()
+                print(f"  Blog: {len(blog_articles)} articles")
+
+    except _ULPAccessStopped as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
 
     db = build_db(ulp_episodes, fmu_episodes, blog_articles)
 
@@ -544,4 +662,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except _ULPAccessStopped as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)

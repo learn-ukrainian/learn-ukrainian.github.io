@@ -51,6 +51,7 @@ import datetime as dt
 import functools
 import html
 import json
+import math
 import os
 import random
 import re
@@ -67,6 +68,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, unquote, urlsplit
+from urllib.robotparser import RobotFileParser
 
 import requests
 
@@ -204,15 +206,17 @@ _IDIOM_ABBREVIATIONS_WITH_INTERNAL_DOTS = (
     "перев.",
     "зі сл.",
 )
-# slovnyk.me is Cloudflare-fronted and rate-limits bursts (429). 0.12s (~8 req/s) tripped
-# it: 429 -> _SlovnykTransientError -> never cached -> re-fetched every run (#3097). 0.34s
-# (~3 req/s) is Cloudflare-friendly for sustained scraping; the mirror builder can override
-# via LEXICON_SLOVNYK_DELAY. Paired with Retry-After + exponential backoff in _fetch_slovnyk_entry.
-_SLOVNYK_DELAY_SECONDS = float(os.environ.get("LEXICON_SLOVNYK_DELAY", "0.34"))
+# Configured spacing is a floor; an observed robots crawl-delay can raise it.
+_SLOVNYK_DELAY_SECONDS = float(os.environ.get("LEXICON_SLOVNYK_DELAY", "2.0"))
 _SLOVNYK_MAX_RETRIES = int(os.environ.get("LEXICON_SLOVNYK_MAX_RETRIES", "5"))
 _SLOVNYK_BACKOFF_BASE_SECONDS = 1.5
 _SLOVNYK_BACKOFF_CAP_SECONDS = 90.0
-_SLOVNYK_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #2985)"
+_SLOVNYK_USER_AGENT = (
+    "learn-ukrainian-word-atlas/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io; educational dictionary lookup)"
+)
+_slovnyk_robots: RobotFileParser | None = None
+_slovnyk_access_stopped = False
 _STRESS_SOURCE = "ukrainian-word-stress"
 _CEFR_SOURCE = "PULS CEFR"
 _CEFR_ESTIMATED_SOURCE = "estimated (GRAC frequency)"
@@ -266,10 +270,10 @@ _SLOVNYK_UKRENG_SOURCE = BALLA_LABEL
 _GOROH_TRANSLATION_SOURCE = GOROH_LABEL
 _E2U_TRANSLATION_SOURCE = E2U_LABEL
 _E2U_DELAY_SECONDS = float(os.environ.get("LEXICON_E2U_DELAY", "0.34"))
-_E2U_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup)"
+_E2U_USER_AGENT = _SLOVNYK_USER_AGENT
 _WIKIDATA_TRANSLATION_SOURCE = WIKIDATA_LABEL
 _WIKIDATA_DELAY_SECONDS = float(os.environ.get("LEXICON_WIKIDATA_DELAY", "0.34"))
-_WIKIDATA_USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational; Wikidata wbsearch/entity per lemma)"
+_WIKIDATA_USER_AGENT = _SLOVNYK_USER_AGENT
 _SLOVNYK_BASE = "https://slovnyk.me"
 # v3 (#6524 P1): bumped because every schema_version==2 cache file on disk was
 # written by the pre-fix `" ".join(...)` article-text join (#6465's root-cause
@@ -360,7 +364,7 @@ _SYNONYM_LABEL_RE = re.compile(
     flags=re.IGNORECASE,
 )
 
-_last_slovnyk_fetch = 0.0
+_last_slovnyk_fetch: float | None = None
 _last_e2u_fetch = 0.0
 _last_wikidata_fetch = 0.0
 _stressifier: Any | None = None
@@ -1385,7 +1389,7 @@ def _slovnyk_lookup_word(lemma: str) -> str:
     # "березень / березня") have NO combined slovnyk.me entry, so the joined
     # string misses every dictionary (and the miss gets cached). Look up the
     # first (imperfective / base) form, which carries the canonical article.
-    # This also re-keys the cache file, bypassing the previously cached miss.
+    # This also re-keys the cache file, superseding the previously cached miss.
     if "/" in base:
         base = base.split("/", 1)[0].strip(_LEMMA_EDGE_PUNCTUATION)
     return base
@@ -1602,13 +1606,84 @@ class _SlovnykTransientError(Exception):
     """Retryable slovnyk.me lookup failure that must not be cached as a miss."""
 
 
-def _polite_slovnyk_delay() -> None:
-    global _last_slovnyk_fetch
-    if _last_slovnyk_fetch:
-        elapsed = time.monotonic() - _last_slovnyk_fetch
-        if elapsed < _SLOVNYK_DELAY_SECONDS:
-            time.sleep(_SLOVNYK_DELAY_SECONDS - elapsed)
-    _last_slovnyk_fetch = time.monotonic()
+class _SlovnykAccessStopped(RuntimeError):
+    """Terminal access stop; never a retryable failure or a negative cache entry."""
+
+    def __init__(self, message: str, http_status: int | None = None):
+        super().__init__(message)
+        self.http_status = http_status
+
+
+def _slovnyk_access_denied(code: int, body: str, headers: Any = None) -> bool:
+    """Recognize HTTP denials and challenge envelopes before parsing content."""
+    lowered = body.lower()
+    return (
+        code in {401, 403, 407, 429}
+        or 300 <= code < 400
+        or any(str(key).lower() == "cf-mitigated" and str(value).lower() == "challenge" for key, value in (headers or {}).items())
+        or any(
+            marker in lowered
+            for marker in (
+                "<title>just a moment",
+                "<title>attention required",
+                "checking your browser",
+                "cf-browser-verification",
+                "cf_chl_",
+                "cf-chl-",
+                "cloudflare ray id",
+                "enable javascript and cookies to continue",
+            )
+        )
+    )
+
+
+def _polite_slovnyk_delay(*, client=None, clock=None, sleep=None, timeout: float = 20) -> None:
+    global _last_slovnyk_fetch, _slovnyk_robots, _slovnyk_access_stopped
+    if _slovnyk_access_stopped:
+        raise _SlovnykAccessStopped("slovnyk.me access stopped for this process")
+    client = client or requests
+    clock = clock or time.monotonic
+    sleep = sleep or time.sleep
+    if _slovnyk_robots is None:
+        try:
+            response = client.get(
+                f"{_SLOVNYK_BASE}/robots.txt",
+                timeout=timeout,
+                headers={"User-Agent": _SLOVNYK_USER_AGENT},
+                allow_redirects=False,
+            )
+        except requests.RequestException as exc:
+            _slovnyk_access_stopped = True
+            raise _SlovnykAccessStopped("slovnyk.me robots unavailable") from exc
+        _last_slovnyk_fetch = clock()
+        if _slovnyk_access_denied(
+            response.status_code, response.text, response.headers
+        ) or response.status_code not in {200, 404}:
+            _slovnyk_access_stopped = True
+            raise _SlovnykAccessStopped("slovnyk.me robots access stopped", response.status_code)
+        _slovnyk_robots = RobotFileParser()
+        # robotparser accepts integer delays; round fractional observations up.
+        robots_text = re.sub(
+            r"(?im)^(\s*crawl-delay\s*:\s*)(\d+\.\d+)(\s*(?:#.*)?)$",
+            lambda match: f"{match[1]}{math.ceil(float(match[2]))}{match[3]}",
+            response.text,
+        )
+        _slovnyk_robots.parse(robots_text.splitlines() if response.status_code == 200 else [])
+    delay = max(0.0, _SLOVNYK_DELAY_SECONDS, _slovnyk_robots.crawl_delay(_SLOVNYK_USER_AGENT) or 0)
+    if _last_slovnyk_fetch is not None:
+        elapsed = clock() - _last_slovnyk_fetch
+        if elapsed < delay:
+            sleep(delay - elapsed)
+    _last_slovnyk_fetch = clock()
+
+
+def _slovnyk_check_target(url: str) -> None:
+    global _slovnyk_access_stopped
+    if _slovnyk_access_stopped or (
+        _slovnyk_robots is not None and not _slovnyk_robots.can_fetch(_SLOVNYK_USER_AGENT, url)
+    ):
+        _slovnyk_access_stopped = True
+        raise _SlovnykAccessStopped("slovnyk.me target access stopped")
 
 
 def _polite_e2u_delay() -> None:
@@ -1681,11 +1756,18 @@ def _valid_slovnyk_positive(row: Any, slug: str, lookup_word: str) -> bool:
 
 def _fetch_slovnyk_outcome(lemma: str, lookup_word: str, slug: str, *, validate: bool = True) -> _SlovnykOutcome:
     """Bounded foreground transport; first access/unsupported HTTP and parse stop."""
+    global _slovnyk_access_stopped
     if _phase1_offline_mode() or not lookup_word:
         return _SlovnykOutcome("pending")
+    if _slovnyk_access_stopped:
+        return _SlovnykOutcome("blocked")
     url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
-        _polite_slovnyk_delay()
+        try:
+            _polite_slovnyk_delay()
+            _slovnyk_check_target(url)
+        except _SlovnykAccessStopped:
+            return _SlovnykOutcome("blocked")
         try:
             response = requests.get(url, timeout=20, headers={"User-Agent": _SLOVNYK_USER_AGENT}, allow_redirects=False)
         except requests.RequestException:
@@ -1694,14 +1776,18 @@ def _fetch_slovnyk_outcome(lemma: str, lookup_word: str, slug: str, *, validate:
                 continue
             return _SlovnykOutcome("transient_error")
         code = response.status_code
+        if _slovnyk_access_denied(code, response.text, response.headers):
+            _slovnyk_access_stopped = True
+            return _SlovnykOutcome("blocked", http_status=code)
         if code == 404:
             return _SlovnykOutcome("not_found", http_status=code)
-        if code in {408, 425, 429} or 500 <= code <= 599:
+        if code in {408, 425} or 500 <= code <= 599:
             if attempt < _SLOVNYK_MAX_RETRIES:
                 _slovnyk_backoff_sleep(attempt, _parse_retry_after(response.headers.get("Retry-After")))
                 continue
             return _SlovnykOutcome("transient_error", http_status=code)
         if code != 200:
+            _slovnyk_access_stopped = True
             return _SlovnykOutcome("blocked", http_status=code)
         try:
             row = _parse_slovnyk_entry(response.text, lemma=lemma, lookup_word=lookup_word, slug=slug, url=url)
@@ -1714,13 +1800,15 @@ def _fetch_slovnyk_outcome(lemma: str, lookup_word: str, slug: str, *, validate:
 
 
 def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
-    """Compatible tolerant lookup: row/None, or the established transient exception.
-
-    Strict evidence belongs to the opt-in mirror channel. Tolerant callers keep
-    their existing ambiguous None contract and never receive new stop exceptions.
-    """
+    """Return row/miss; transient failures retry, access stops escape tolerant callers."""
+    global _slovnyk_access_stopped
+    if _slovnyk_access_stopped:
+        raise _SlovnykAccessStopped("slovnyk.me access stopped for this process")
     outcome = _fetch_slovnyk_outcome(lemma, lookup_word, slug, validate=False)
-    if outcome.status in {"blocked", "transient_error"}:
+    if outcome.status == "blocked":
+        _slovnyk_access_stopped = True
+        raise _SlovnykAccessStopped("slovnyk.me access denied or challenged")
+    if outcome.status == "transient_error":
         raise _SlovnykTransientError("slovnyk.me request unavailable")
     return outcome.row
 
@@ -1846,6 +1934,10 @@ def _slovnyk_cache(
             continue
         try:
             lookups[slug] = _fetch_slovnyk_entry(lemma, lookup_word, slug) if lookup_word else None
+        except _SlovnykAccessStopped:
+            if changed:
+                _atomic_slovnyk_json(path, cache)
+            raise
         except _SlovnykTransientError:
             continue
         changed = True
@@ -8842,7 +8934,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         if output.resolve() == MANIFEST.resolve():
             parser.error("cache-only output must differ from the baseline manifest")
-        # Deliberately bypass load_manifest: a missing local input must fail,
+        # Read directly without load_manifest: a missing local input must fail,
         # never hydrate a release or replace a richer candidate.
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         counts = {}
@@ -8858,7 +8950,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"{name}: {added} newly non-empty / {len(manifest['entries'])} entries; candidate: {output}")
         return 0
 
-    enriched, total = enrich()
+    try:
+        enriched, total = enrich()
+    except _SlovnykAccessStopped as exc:
+        print(f"Enrichment stopped: {exc}; partial source cache preserved", file=sys.stderr)
+        return 1
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     etymology_covered, etymology_total = _single_word_etymology_coverage(manifest)
     pronunciation_covered = sum(

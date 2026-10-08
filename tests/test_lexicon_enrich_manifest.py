@@ -7279,7 +7279,7 @@ def test_strict_cache_rechecks_unattested_null_then_empty_200(monkeypatch, tmp_p
     assert len(calls) == 1 and path.read_bytes() == before
 
 
-def test_strict_cache_retries_then_stops_access_without_new_default_exception(monkeypatch, tmp_path):
+def test_strict_cache_retries_then_default_access_stop_escapes(monkeypatch, tmp_path):
     from types import SimpleNamespace
 
     monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
@@ -7300,8 +7300,11 @@ def test_strict_cache_retries_then_stops_access_without_new_default_exception(mo
     enrich_manifest_module._slovnyk_cache("sample", outcomes=outcomes)
     assert outcomes["vts"].status == "blocked" and outcomes["vts"].http_status == 403
     assert calls == [503, 503, 403]
-    assert enrich_manifest_module._slovnyk_cache("sample")["lookups"] == {}
-    assert calls == [503, 503, 403, 403]
+    with pytest.raises(enrich_manifest_module._SlovnykAccessStopped):
+        enrich_manifest_module._slovnyk_cache("sample")
+    with pytest.raises(enrich_manifest_module._SlovnykAccessStopped):
+        enrich_manifest_module._slovnyk_cache("other")
+    assert calls == [503, 503, 403]
 
 
 @pytest.mark.parametrize("failure", ["serialize", "file-sync", "replace"])
@@ -7407,3 +7410,159 @@ def test_cache_publication_failure_preserves_previously_valid_rows(monkeypatch, 
         json.loads(path.read_text())["lookups"]["vts"], "vts", "sample"
     )
     assert list(tmp_path.iterdir()) == [path]
+
+
+@pytest.fixture
+def collector_clock(monkeypatch):
+    em = enrich_manifest_module
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    monkeypatch.setattr(em, "_slovnyk_access_stopped", False)
+    monkeypatch.setattr(em, "_slovnyk_robots", None)
+    monkeypatch.setattr(em, "_last_slovnyk_fetch", None)
+    monkeypatch.setattr(em, "_SLOVNYK_DELAY_SECONDS", 0)
+    clock = [0.0]
+    monkeypatch.setattr(em.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(em.time, "sleep", lambda s: clock.__setitem__(0, clock[0] + s))
+    return clock
+
+
+@pytest.mark.parametrize(
+    "code,body,headers",
+    [
+        (403, "denied", {}),
+        (429, "slow down", {"Retry-After": "30"}),
+        (401, "denied", {}),
+        (200, "<title>Just a moment...</title>", {}),
+        (503, "<title>Just a moment...</title>", {}),
+        (200, "synthetic", {"cf-mitigated": "challenge"}),
+    ],
+)
+def test_collector_terminal_access_no_retry_laundering(monkeypatch, collector_clock, code, body, headers):
+    from types import SimpleNamespace
+
+    em = enrich_manifest_module
+    calls = []
+    replies = iter(
+        [
+            SimpleNamespace(status_code=200, text="User-agent: *\nCrawl-delay: 5\nDisallow:", headers={}),
+            SimpleNamespace(status_code=code, text=body, headers=headers),
+        ]
+    )
+
+    def get(url, **kwargs):
+        calls.append((url, collector_clock[0], kwargs))
+        return next(replies)
+
+    monkeypatch.setattr(em.requests, "get", get)
+    with pytest.raises(em._SlovnykAccessStopped):
+        em._fetch_slovnyk_entry("sample", "sample", "vts")
+    with pytest.raises(em._SlovnykAccessStopped):
+        em._fetch_slovnyk_entry("other", "other", "newsum")
+    assert len(calls) == 2 and calls[-1][1] == 5
+    assert not issubclass(em._SlovnykAccessStopped, em._SlovnykTransientError)
+    assert all(not kwargs["allow_redirects"] for _, _, kwargs in calls)
+    assert "https://github.com/learn-ukrainian/learn-ukrainian.github.io" in calls[-1][2]["headers"]["User-Agent"]
+
+
+@pytest.mark.parametrize(
+    "robots_code,body",
+    [
+        (403, "denied"),
+        (429, "denied"),
+        (503, "unavailable"),
+        (200, "User-agent: *\nDisallow: /dict/"),
+        (200, "<title>Just a moment...</title>"),
+    ],
+)
+def test_collector_robots_stops_without_content(monkeypatch, collector_clock, robots_code, body):
+    from types import SimpleNamespace
+
+    em = enrich_manifest_module
+    calls = []
+
+    def get(url, **kwargs):
+        calls.append(url)
+        return SimpleNamespace(status_code=robots_code, text=body, headers={})
+
+    monkeypatch.setattr(em.requests, "get", get)
+    assert em._fetch_slovnyk_outcome("sample", "sample", "vts").status == "blocked"
+    assert len(calls) == 1 and calls[0].endswith("robots.txt")
+
+
+def test_collector_missing_robots_spacing_zero_clock(monkeypatch, collector_clock):
+    from types import SimpleNamespace
+
+    em = enrich_manifest_module
+    monkeypatch.setattr(em, "_SLOVNYK_DELAY_SECONDS", 2)
+    calls = []
+
+    def get(url, **kwargs):
+        calls.append((url, collector_clock[0]))
+        return SimpleNamespace(status_code=404, text="", headers={})
+
+    monkeypatch.setattr(em.requests, "get", get)
+    assert em._fetch_slovnyk_outcome("sample", "sample", "vts").status == "not_found"
+    assert em._fetch_slovnyk_outcome("other", "other", "vts").status == "not_found"
+    assert [t for _, t in calls] == [0, 2, 4]
+
+
+def test_collector_robots_network_failure_is_terminal(monkeypatch, collector_clock):
+    em = enrich_manifest_module
+
+    def get(*args, **kwargs):
+        raise em.requests.ConnectionError("synthetic")
+
+    monkeypatch.setattr(em.requests, "get", get)
+    assert em._fetch_slovnyk_outcome("sample", "sample", "vts").status == "blocked"
+    assert em._slovnyk_access_stopped
+
+
+def test_collector_partial_cache_saved_on_access_stop(monkeypatch, collector_clock, tmp_path):
+    em = enrich_manifest_module
+    monkeypatch.setattr(em, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(em, "_SLOVNYK_LOOKUP_SLUGS", ("vts", "newsum", "synonyms"))
+    monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
+    calls = []
+
+    def fetch(lemma, lookup_word, slug, **kwargs):
+        calls.append(slug)
+        return (
+            em._SlovnykOutcome("positive", {"text": "settled success"})
+            if slug == "vts"
+            else em._SlovnykOutcome("blocked", http_status=429)
+        )
+
+    monkeypatch.setattr(em, "_fetch_slovnyk_outcome", fetch)
+    with pytest.raises(em._SlovnykAccessStopped):
+        em._slovnyk_cache("sample")
+    saved = json.loads(em._slovnyk_cache_path("sample").read_text())
+    assert saved["lookups"] == {"vts": {"text": "settled success"}}
+    assert calls == ["vts", "newsum"]
+
+
+@pytest.fixture(autouse=True)
+def isolate_collector_state_and_fingerprint(monkeypatch, tmp_path):
+    """Each fake-transport test is its own process/run; keep generated output local."""
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_access_stopped", False)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_robots", None)
+    monkeypatch.setattr(enrich_manifest_module, "_last_slovnyk_fetch", None)
+    monkeypatch.setattr(enrich_manifest_module, "DEFAULT_FINGERPRINT", tmp_path / "fingerprint.json")
+
+
+@pytest.mark.parametrize("snippet", ["<script src='/cdn-cgi/challenge-platform/scripts/jsd/api.js'></script>", "<div class='g-recaptcha h-captcha'>verify you are human</div>"])
+def test_collector_detection_script_is_not_challenge(monkeypatch, collector_clock, snippet):
+    from types import SimpleNamespace
+
+    em = enrich_manifest_module
+    document = '<section id="dictionary-acticle"><article><h1>sample</h1><p>ordinary dictionary content</p></article></section>' + snippet
+    replies = iter([SimpleNamespace(status_code=404, text="", headers={}), SimpleNamespace(status_code=200, text=document, headers={})])
+    monkeypatch.setattr(em.requests, "get", lambda *_a, **_k: next(replies))
+    row = em._fetch_slovnyk_entry("sample", "sample", "vts")
+    assert row and "ordinary dictionary content" in row["text"] and not em._slovnyk_access_stopped
+
+
+def test_collector_cli_reports_access_stop(monkeypatch, capsys):
+    em = enrich_manifest_module
+    monkeypatch.setattr(em, "enrich", lambda: (_ for _ in ()).throw(em._SlovnykAccessStopped("synthetic denial")))
+    assert em.main(["--write"]) == 1
+    assert "partial source cache preserved" in capsys.readouterr().err

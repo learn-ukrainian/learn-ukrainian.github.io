@@ -43,7 +43,7 @@ SUM20_ATTRIBUTION_LABEL = (
 )
 PARSER_VERSION = "sum20_official_v2"
 QUARANTINE_COLUMN = "quarantine_reason"
-DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
+DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (+https://github.com/learn-ukrainian/learn-ukrainian.github.io; educational corpus)"
 
 _ARTICLE_RE = re.compile(r"<article\b[^>]*>.*?</article\s*>", re.IGNORECASE | re.DOTALL)
 _ACUTE_RE = re.compile("[\u0300\u0301]")
@@ -612,13 +612,17 @@ def fetch_sum20_wordid(
     retries: int = 3,
     retry_backoff_s: float = 2.0,
     sleep: Callable[[float], None] = time.sleep,
+    delay_s: float = 2.0,
 ) -> FetchOutcome:
     """GET one official wordid with bounded exponential backoff.
 
-    Network/408/425/429/5xx failures are bounded retries. Other non-200
+    Network/408/425/5xx failures are bounded retries. Other non-200
     responses stop on the first response, stored lossily as ``transient_error``
     with numeric HTTP evidence and ``terminal=True``. Only 404 proves a miss.
     """
+    # Lazy import keeps parser/schema imports acyclic; reuse the owned transport.
+    from scripts.lexicon import sum20_lookup as transport
+
     client = session or requests.Session()
     # A requests.Session already carries "python-requests/<version>" and
     # "Accept: */*", so setdefault() never applied the project's identifying
@@ -634,13 +638,14 @@ def fetch_sum20_wordid(
     for attempt in range(max(0, retries) + 1):
         response: requests.Response | None = None
         try:
-            response = client.get(url, params={"page": 0}, timeout=timeout_s, allow_redirects=False)
+            response = transport._sum20_get(url, timeout_s, client=client, sleep=sleep, delay_s=delay_s, params={"page": 0}, user_agent=client.headers["User-Agent"])
             last_code = response.status_code
             if last_code == 404:
                 return FetchOutcome("not_found", http_status=last_code)
-            if last_code in {408, 425, 429} or 500 <= last_code <= 599:
+            if last_code in {408, 425} or 500 <= last_code <= 599:
                 last_error = f"HTTP {last_code}"
             elif last_code != 200:
+                transport._sum20_stopped = True
                 # Keep the four-status storage contract; terminal evidence is separate.
                 return FetchOutcome(
                     "transient_error", error_text=f"HTTP {last_code}", http_status=last_code, terminal=True
@@ -653,6 +658,8 @@ def fetch_sum20_wordid(
                         "parse_error", error_text="unusable article", http_status=last_code, terminal=True
                     )
                 return FetchOutcome("ok", document_html=response.text, http_status=last_code)
+        except transport._Sum20AccessStopped as exc:
+            return FetchOutcome("transient_error", error_text=f"HTTP {exc.http_status}" if exc.http_status else str(exc), http_status=exc.http_status, terminal=True)
         except requests.RequestException:
             last_code = None
             last_error = "network request failure"

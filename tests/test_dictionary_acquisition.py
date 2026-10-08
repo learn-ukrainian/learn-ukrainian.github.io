@@ -131,14 +131,18 @@ class HTTP:
         self.responses = iter(responses)
         self.clock = clock
         self.calls = []
+        self.robots_calls = []
         self.trust_env = True
 
     def get(self, url, **kwargs):
+        if url.endswith("/robots.txt"):
+            self.robots_calls.append((self.clock(), url, kwargs))
+            return response(200, "User-agent: *\nDisallow:")
         self.calls.append((self.clock(), url, kwargs))
-        response = next(self.responses)
-        if isinstance(response, BaseException):
-            raise response
-        return response
+        reply = next(self.responses)
+        if isinstance(reply, BaseException):
+            raise reply
+        return reply
 
     def __enter__(self):
         return self
@@ -239,7 +243,7 @@ def test_positive_miss_and_unique_frozen_denominator(tmp_path):
 
 
 @pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
-@pytest.mark.parametrize("code", [401, 403, 302, 400])
+@pytest.mark.parametrize("code", [401, 403, 429, 302, 400])
 def test_first_access_failure_stops_one_request_and_latches(tmp_path, dictionary, code):
     clock = Clock()
     http = HTTP([response(code), response()], clock)
@@ -347,7 +351,7 @@ def test_transient_backoff_exhaustion_survives_process_invocations(tmp_path):
         assert conn.execute("SELECT COUNT(*) FROM events WHERE kind='operator_resume'").fetchone()[0] == 1
 
 
-@pytest.mark.parametrize("code", [408, 425, 429, 500, 599])
+@pytest.mark.parametrize("code", [408, 425, 500, 599])
 def test_http_retryable_statuses_are_errors(tmp_path, code):
     clock = Clock()
     assert invoke("run", arguments(tmp_path), HTTP([response(code)], clock), clock) == 75
@@ -717,6 +721,8 @@ class HTTP:
     def __exit__(self, *_):
         pass
     def get(self, *args, **kwargs):
+        if args[0].endswith("/robots.txt"):
+            return SimpleNamespace(status_code=200, text="User-agent: *\\nDisallow:", headers={})
         counter = root / "fake_requests.json"
         requests = json.loads(counter.read_text()) if counter.exists() else []
         code = (503 if len(requests) % 2 == 0 else 404) if scenario == "scattered" else (503 if len(requests) < 2 else 403)
@@ -871,7 +877,7 @@ def test_packing_is_stable_and_digest_matches():
         (403, "blocked"),
         (408, "transient_error"),
         (425, "transient_error"),
-        (429, "transient_error"),
+        (429, "blocked"),
         (500, "transient_error"),
         (599, "transient_error"),
         (201, "blocked"),
@@ -892,12 +898,16 @@ def test_transport_semantics_match_legacy_strict_paths(monkeypatch, dictionary, 
     http = HTTP([response(code, document)], clock)
     spec = {"dictionary": dictionary, "timeout": 1}
     row = {"target": "5" if dictionary == "sum20_official" else "sample", "lookup": "sample"}
-    status, numeric, _payload, _retry = acquisition.fetch_once(http, spec, row, clock())
+    status, numeric, _payload, _retry = acquisition.fetch_once(http, spec, row, clock(), clock=clock, sleep=clock.sleep)
     assert (status, numeric) == (expected, code)
     if dictionary == "sum20_official":
+        # Compare independent transport runs, not a request after the first run stopped.
+        acquisition.sum20_transport._sum20_stopped = False
+        acquisition.sum20_transport._sum20_robots = None
+        acquisition.sum20_transport._sum20_last_request = None
         legacy_http = HTTP([response(code, document)], clock)
         legacy_http.headers = {}
-        result = official.fetch_sum20_wordid(5, session=legacy_http, retries=0)
+        result = official.fetch_sum20_wordid(5, session=legacy_http, retries=0, sleep=clock.sleep)
         semantic = (
             "blocked"
             if result.terminal and result.status != "parse_error"
@@ -905,6 +915,9 @@ def test_transport_semantics_match_legacy_strict_paths(monkeypatch, dictionary, 
         )
         assert semantic == expected
     else:
+        em._slovnyk_access_stopped = False
+        em._slovnyk_robots = None
+        em._last_slovnyk_fetch = None
         monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
         monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
         monkeypatch.setattr(em, "_SLOVNYK_MAX_RETRIES", 0)
@@ -928,16 +941,19 @@ def test_transport_ambiguity_and_network_semantics_match(monkeypatch, dictionary
         return response(200, "<article></article>")
 
     http = HTTP([], clock)
-    http.get = lambda *_args, **_kwargs: reply()
+    http.get = lambda url, **_kwargs: response(200, "User-agent: *\nDisallow:") if url.endswith("/robots.txt") else reply()
     expected = "parse_error" if bad == "empty" else "transient_error"
     status, numeric, *_ = acquisition.fetch_once(
-        http, {"dictionary": dictionary, "timeout": 1}, {"target": "5", "lookup": "sample"}, clock()
+        http, {"dictionary": dictionary, "timeout": 1}, {"target": "5", "lookup": "sample"}, clock(), clock=clock, sleep=clock.sleep
     )
     assert status == expected
     if dictionary == "sum20_official":
         http.headers = {}
-        result = official.fetch_sum20_wordid(5, session=http, retries=0)
+        result = official.fetch_sum20_wordid(5, session=http, retries=0, sleep=clock.sleep)
     else:
+        em._slovnyk_access_stopped = False
+        em._slovnyk_robots = None
+        em._last_slovnyk_fetch = None
         monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
         monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
         monkeypatch.setattr(em, "_SLOVNYK_MAX_RETRIES", 0)
@@ -945,3 +961,49 @@ def test_transport_ambiguity_and_network_semantics_match(monkeypatch, dictionary
         result = em._fetch_slovnyk_outcome("sample", "sample", "vts")
     assert result.status == expected
     assert result.http_status == numeric
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+@pytest.mark.parametrize("robots_delay", ["10", "2.5"])
+def test_acquisition_obeys_observed_robots_delay(tmp_path, dictionary, robots_delay):
+    clock = Clock()
+    http = HTTP([response(404), response(404)], clock)
+    original_get = http.get
+
+    def get(url, **kwargs):
+        if url.endswith("/robots.txt"):
+            http.robots_calls.append((clock(), url, kwargs))
+            return response(200, f"User-agent: *\nCrawl-delay: {robots_delay}\nDisallow:")
+        return original_get(url, **kwargs)
+
+    http.get = get
+    assert invoke("run", arguments(tmp_path, dictionary, ("5", "6") if dictionary == "sum20_official" else ("sample", "other")), http, clock) == 0
+    assert len(http.robots_calls) == 1 and len(http.calls) == 2
+    assert http.calls[0][0] - http.robots_calls[0][0] >= float(robots_delay)
+    assert http.calls[1][0] - http.calls[0][0] >= float(robots_delay)
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+@pytest.mark.parametrize("denial", [response(429, headers={"Retry-After": "30"}), response(200, headers={"CF-Mitigated": "challenge"}), response(503, "<title>Just a moment...</title>")])
+def test_acquisition_access_stop_blocks_different_job_without_reset(tmp_path, dictionary, denial):
+    clock = Clock()
+    http = HTTP([denial], clock)
+    targets = ("5",) if dictionary == "sum20_official" else ("sample",)
+    assert invoke("run", arguments(tmp_path, dictionary, targets), http, clock) == 3
+    before = clock.sleeps[:]
+    assert len(http.calls) == 1
+    (tmp_path / "second").mkdir()
+    assert invoke("run", arguments(tmp_path / "second", dictionary, targets), http, clock) == 3
+    assert len(http.calls) == len(http.robots_calls) == 1
+    # Durable host admission may record a zero wait; no Retry-After or backoff sleep.
+    assert all(s <= 2 for s in clock.sleeps) and max(before) <= 2
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+def test_acquisition_detection_script_does_not_stop(tmp_path, dictionary):
+    clock = Clock()
+    document = OFFICIAL_HTML if dictionary == "sum20_official" else SLOVNYK_HTML
+    document += "<script src='/cdn-cgi/challenge-platform/scripts/jsd/api.js'></script>"
+    targets = ("5",) if dictionary == "sum20_official" else ("sample",)
+    assert invoke("run", arguments(tmp_path, dictionary, targets), HTTP([response(200, document), response(404)], clock), clock) == 0
+    assert status(tmp_path, dictionary)["counts"]["positive"] == 1

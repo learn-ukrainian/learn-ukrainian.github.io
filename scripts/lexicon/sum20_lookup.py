@@ -11,13 +11,17 @@ from __future__ import annotations
 
 import contextlib
 import json
+import math
 import os
 import re
 import sqlite3
+import time
+from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
+from urllib.robotparser import RobotFileParser
 
 import requests
 from bs4 import BeautifulSoup
@@ -32,8 +36,84 @@ from scripts.wiki.sum20_official import (
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    "learn-ukrainian-sum20/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io; educational dictionary lookup)"
 )
+_sum20_robots: RobotFileParser | None = None
+_sum20_last_request: float | None = None
+_sum20_stopped = False
+
+
+class _Sum20AccessStopped(RuntimeError):
+    """Terminal stop, distinct from a dictionary miss or retryable error."""
+
+    def __init__(self, message: str, http_status: int | None = None):
+        super().__init__(message)
+        self.http_status = http_status
+
+
+def _sum20_check_response(response: requests.Response) -> None:
+    global _sum20_stopped
+    from scripts.lexicon.enrich_manifest import _slovnyk_access_denied
+
+    if _slovnyk_access_denied(response.status_code, response.text, response.headers) or 300 <= response.status_code < 400:
+        _sum20_stopped = True
+        raise _Sum20AccessStopped("SUM-20 access denied or challenged; no further requests", response.status_code)
+
+
+def _sum20_get(
+    url: str,
+    timeout_s: float,
+    *,
+    client=None,
+    sleep: Callable[[float], None] | None = None,
+    clock: Callable[[], float] | None = None,
+    delay_s: float = 2.0,
+    params=None,
+    user_agent: str = DEFAULT_USER_AGENT,
+) -> requests.Response:
+    global _sum20_robots, _sum20_last_request, _sum20_stopped
+    if _sum20_stopped:
+        raise _Sum20AccessStopped("SUM-20 access stopped for this process")
+    client = client or requests
+    sleep = sleep or time.sleep
+    clock = clock or time.monotonic
+    headers = {"User-Agent": user_agent, "Accept": "text/html,application/xhtml+xml"}
+    if _sum20_robots is None:
+        try:
+            response = client.get(
+                "https://sum20ua.com/robots.txt", headers=headers, timeout=timeout_s, allow_redirects=False
+            )
+            _sum20_last_request = clock()
+            _sum20_check_response(response)
+            if response.status_code not in {200, 404}:
+                raise _Sum20AccessStopped("SUM-20 robots unavailable", response.status_code)
+        except requests.RequestException as exc:
+            _sum20_stopped = True
+            raise _Sum20AccessStopped("SUM-20 robots unavailable") from exc
+        except _Sum20AccessStopped:
+            _sum20_stopped = True
+            raise
+        _sum20_robots = RobotFileParser()
+        # robotparser accepts integer delays; round fractional observations up.
+        robots_text = re.sub(
+            r"(?im)^(\s*crawl-delay\s*:\s*)(\d+\.\d+)(\s*(?:#.*)?)$",
+            lambda match: f"{match[1]}{math.ceil(float(match[2]))}{match[3]}",
+            response.text,
+        )
+        _sum20_robots.parse(robots_text.splitlines() if response.status_code == 200 else [])
+    if not _sum20_robots.can_fetch(user_agent, url):
+        _sum20_stopped = True
+        raise _Sum20AccessStopped("SUM-20 robots disallows target")
+    delay = max(2.0, delay_s, _sum20_robots.crawl_delay(user_agent) or 0)
+    if _sum20_last_request is not None:
+        remaining = delay - (clock() - _sum20_last_request)
+        if remaining > 0:
+            sleep(remaining)
+    _sum20_last_request = clock()
+    response = client.get(url, headers=headers, timeout=timeout_s, allow_redirects=False, **({"params": params} if params is not None else {}))
+    _sum20_check_response(response)
+    return response
 
 
 @lru_cache(maxsize=1)
@@ -160,9 +240,8 @@ def fetch_and_cache_sum20(
     """Fetch official СУМ-20 articles for lemma from sum20ua.com and cache into sources.db."""
     norm_lemma = normalize_sum20_lookup(lemma)
     url = f"https://sum20ua.com/List/Search?searchWord={quote(lemma)}"
-    headers = {"User-Agent": DEFAULT_USER_AGENT}
     try:
-        resp = requests.get(url, headers=headers, timeout=timeout_s)
+        resp = _sum20_get(url, timeout_s)
         if resp.status_code != 200:
             return []
         soup = BeautifulSoup(resp.text, "html.parser")
@@ -179,7 +258,7 @@ def fetch_and_cache_sum20(
 
         for wid in matching_wordids:
             art_url = f"https://sum20ua.com/?wordid={wid}&page=0"
-            art_resp = requests.get(art_url, headers=headers, timeout=timeout_s)
+            art_resp = _sum20_get(art_url, timeout_s)
             if art_resp.status_code == 200:
                 try:
                     parsed = parse_sum20_article(art_resp.text, wordid=wid)
@@ -187,6 +266,9 @@ def fetch_and_cache_sum20(
                 except Exception:
                     continue
         conn.commit()
+    except _Sum20AccessStopped:
+        conn.commit()  # retain successful earlier articles; denial is never a miss
+        raise
     except Exception:
         pass
 

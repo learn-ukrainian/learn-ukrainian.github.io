@@ -846,6 +846,32 @@ def requires_literary_wave12_jsonl() -> Path:
 
 
 @pytest.fixture(autouse=True)
+def _isolate_collector_transport_state():
+    """Each test is an independent CLI process; keep stops within each test (#8999).
+
+    Reset only modules already imported, including direct-script aliases. Never
+    import a collector just to isolate it, or reset before an individual request.
+    Teardown covers modules first imported by the test itself.
+    """
+    def reset():
+        states = {
+            "lexicon.enrich_manifest": {"_slovnyk_access_stopped": False, "_slovnyk_robots": None, "_last_slovnyk_fetch": None},
+            "lexicon.sum20_lookup": {"_sum20_stopped": False, "_sum20_robots": None, "_sum20_last_request": None},
+            "crawl.crawl_ulp": {"_ulp_stopped": False, "_ulp_robots": {}, "_ulp_last_request": {}},
+        }
+        for suffix, attributes in states.items():
+            for name in (suffix, "scripts." + suffix):
+                module = sys.modules.get(name)
+                if module is not None:
+                    for attribute, value in attributes.items():
+                        setattr(module, attribute, value.copy() if isinstance(value, dict) else value)
+
+    reset()
+    yield
+    reset()
+
+
+@pytest.fixture(autouse=True)
 def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     """Every test writes llm_qg runtime state (DB + circuit sidecar) to tmp_path.
 

@@ -31,6 +31,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.repo_root import project_interpreter
+from scripts.lexicon import enrich_manifest as transport
+from scripts.lexicon import sum20_lookup as sum20_transport
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
     _SLOVNYK_USER_AGENT,
@@ -376,8 +378,12 @@ def retry_after(headers: Any, now: float) -> float:
             return 0
 
 
-def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float) -> tuple[str, int | None, Any, float]:
-    """Exactly one GET, no redirects/retries/challenge workarounds; existing parsers."""
+def fetch_once(
+    session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float,
+    *, clock: Callable[[], float] | None = None, sleep: Callable[[float], None] | None = None,
+) -> tuple[str, int | None, Any, float]:
+    """One article GET after robots preflight; no redirects or denial retries."""
+    transport_clock = time.monotonic if clock is time.time else clock
     official = spec["dictionary"] == SUM20_SOURCE_ID
     url = (
         official_url_for_wordid(int(row["target"]))
@@ -385,26 +391,38 @@ def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float)
         else f"https://slovnyk.me/dict/{spec['dictionary']}/{quote(row['lookup'], safe='')}"
     )
     try:
-        response = session.get(
-            url,
-            timeout=spec["timeout"],
-            allow_redirects=False,
-            headers={
-                "User-Agent": DEFAULT_USER_AGENT if official else _SLOVNYK_USER_AGENT,
-                "Accept": "text/html,application/xhtml+xml",
-            },
-            **({"params": {"page": 0}} if official else {}),
-        )
+        if official:
+            response = sum20_transport._sum20_get(
+                url, spec["timeout"], client=session, clock=transport_clock, sleep=sleep,
+                delay_s=spec.get("delay", 2.0), params={"page": 0}, user_agent=DEFAULT_USER_AGENT,
+            )
+        else:
+            transport._polite_slovnyk_delay(client=session, clock=transport_clock, sleep=sleep, timeout=spec["timeout"])
+            transport._slovnyk_check_target(url)
+            response = session.get(
+                url, timeout=spec["timeout"], allow_redirects=False,
+                headers={"User-Agent": _SLOVNYK_USER_AGENT, "Accept": "text/html,application/xhtml+xml"},
+            )
+    except (transport._SlovnykAccessStopped, sum20_transport._Sum20AccessStopped) as exc:
+        return "blocked", exc.http_status, None, 0
     except requests.RequestException:
         return "transient_error", None, None, 0
     code = response.status_code
-    if code in {401, 403}:
+    if transport._slovnyk_access_denied(code, response.text, response.headers):
+        if official:
+            sum20_transport._sum20_stopped = True
+        else:
+            transport._slovnyk_access_stopped = True
         return "blocked", code, None, 0
     if code == 404:
         return "not_found", code, None, 0
-    if code in {408, 425, 429} or 500 <= code <= 599:
+    if code in {408, 425} or 500 <= code <= 599:
         return "transient_error", code, None, retry_after(response.headers, now)
     if code != 200:
+        if official:
+            sum20_transport._sum20_stopped = True
+        else:
+            transport._slovnyk_access_stopped = True
         return "blocked", code, None, 0
     try:
         if official:
@@ -482,7 +500,7 @@ def acquire(
                 )
                 conn.execute("INSERT INTO events(position,time,kind) VALUES(?,?,'attempt')", (row["position"], now))
             report(conn, directory, now)
-            status, http, payload, retry = fetch_once(session, spec, row, now)
+            status, http, payload, retry = fetch_once(session, spec, row, now, clock=clock, sleep=sleep)
             finished = clock()
             delay = max(spec["delay"], spec["backoff"] * 2 ** row["attempts"], retry)
             state = {"blocked": "blocked", "parse_error": "parse_error", "transient_error": "transient"}.get(

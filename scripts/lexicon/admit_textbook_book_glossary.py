@@ -14,12 +14,12 @@ clear two real, source-backed gates:
 Nothing is invented: a candidate missing either gate stays in the residual
 bucket with the reason recorded, never a guessed definition or gloss.
 
-СУМ-20/ВТС/ukreng live behind Cloudflare, which blocks a plain ``requests``
-client but accepts a polite curl User-Agent (matches
-``fill_slovnyk_sum20_cache.py``) — this script fetches with curl and writes
-into the same one-file-per-lemma cache
-(``data/lexicon/slovnyk_cache/<lemma>.json``, schema v4) so the fetch is
-reusable by ``enrich_manifest.py`` and future grade passes.
+СУМ-20/ВТС/ukreng collection reuses the shared curl transport in
+``fill_slovnyk_sum20_cache.py``. It identifies the project and public contact,
+observes robots spacing and stops immediately on access denial or challenge.
+Successful lookups retain the same one-file-per-lemma cache
+(``data/lexicon/slovnyk_cache/<lemma>.json``, schema v4), reusable by
+``enrich_manifest.py``; an access stop preserves successful earlier lookups.
 
 Run from the repository root::
 
@@ -37,9 +37,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
 import sys
-import time
 import urllib.parse
 from functools import lru_cache
 from pathlib import Path
@@ -78,6 +76,7 @@ except ImportError:
             )
 
 
+from scripts.lexicon import enrich_manifest as transport
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
     _definition_body,
@@ -88,10 +87,10 @@ from scripts.lexicon.enrich_manifest import (
     _slovnyk_lookup_word,
 )
 from scripts.lexicon.extract_book_headword_inventory import _atomic_write_yaml
+from scripts.lexicon.fill_slovnyk_sum20_cache import fetch_newsum_curl
 
-USER_AGENT = "learn-ukrainian-word-atlas/1.0 (noncommercial educational per-lemma lookup; issue #7551)"
+USER_AGENT = transport._SLOVNYK_USER_AGENT
 SLOVNYK_SLUGS = ("newsum", "vts", "ukreng")
-SLEEP_SECONDS = 0.3
 DEFINITION_CHAR_LIMIT = 320
 GLOSS_MAX_SENSES = 3
 
@@ -203,22 +202,7 @@ def resolve_sources_db(
 
 
 def fetch_slovnyk_curl(word: str, slug: str, *, timeout: int = 15) -> tuple[int, str]:
-    url = f"https://slovnyk.me/dict/{slug}/{urllib.parse.quote(word)}"
-    cmd = ["curl", "-s", "-w", "\n%{http_code}", "-A", USER_AGENT, "--max-time", str(timeout), url]
-    try:
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout + 5)
-    except subprocess.TimeoutExpired:
-        return 0, ""
-    if res.returncode != 0:
-        return 0, ""
-    parts = res.stdout.rsplit("\n", 1)
-    if len(parts) == 2:
-        body, code_str = parts
-        try:
-            return int(code_str.strip()), body
-        except ValueError:
-            return 0, body
-    return 0, ""
+    return fetch_newsum_curl(word, slug=slug, timeout=timeout, user_agent=USER_AGENT)
 
 
 def load_dmklinger_index(conn: SQLiteConnection) -> dict[str, list[tuple[str, str]]]:
@@ -254,9 +238,8 @@ def ensure_slovnyk_cache(lemma: str) -> dict[str, Any]:
     """Curl-fetch any missing СУМ-20/ВТС/ukreng lookups and persist them.
 
     Idempotent: an already-attempted slug (hit or a genuine 404 miss) is
-    never re-fetched. A transient failure (Cloudflare challenge, timeout,
-    non-200/404 status) is left unset so a later run retries it instead of
-    being cached as a false miss.
+    never re-fetched. Network and 5xx failures remain unset. Access denials
+    stop the process immediately, saving only successful earlier lookups.
     """
     path = _slovnyk_cache_path(lemma)
     cache = _load_slovnyk_cache_file(path)
@@ -271,26 +254,29 @@ def ensure_slovnyk_cache(lemma: str) -> dict[str, Any]:
     lookups = cache.setdefault("lookups", {})
     lookup_word = _slovnyk_lookup_word(lemma)
     changed = False
-    for slug in SLOVNYK_SLUGS:
-        if slug in lookups:
-            continue
-        code, body = fetch_slovnyk_curl(lookup_word, slug)
-        time.sleep(SLEEP_SECONDS)
-        if code == 200 and "Just a moment" not in body and "<title>Just a moment" not in body:
-            url = f"https://slovnyk.me/dict/{slug}/{urllib.parse.quote(lookup_word)}"
-            row = _parse_slovnyk_entry(body, lemma=lemma, lookup_word=lookup_word, slug=slug, url=url)
-            lookups[slug] = row
-            changed = True
-        elif code == 404:
-            lookups[slug] = None
-            changed = True
-        # else: transient (403 challenge / timeout / 5xx) — leave unset, retry later.
-    if changed:
-        import datetime as dt
+    try:
+        for slug in SLOVNYK_SLUGS:
+            if slug in lookups:
+                continue
+            if transport._slovnyk_access_stopped:
+                raise transport._SlovnykAccessStopped("slovnyk.me access stopped for this process")
+            code, body = fetch_slovnyk_curl(lookup_word, slug)
+            if transport._slovnyk_access_denied(code, body) or 300 <= code < 400:
+                transport._slovnyk_access_stopped = True
+                raise transport._SlovnykAccessStopped("slovnyk.me access denied or challenged", code)
+            if code == 200:
+                url = f"https://slovnyk.me/dict/{slug}/{urllib.parse.quote(lookup_word)}"
+                lookups[slug] = _parse_slovnyk_entry(body, lemma=lemma, lookup_word=lookup_word, slug=slug, url=url)
+                changed = True
+            elif code == 404:
+                lookups[slug] = None
+                changed = True
+    finally:
+        if changed:
+            import datetime as dt
 
-        cache["fetched_at"] = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(cache, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            cache["fetched_at"] = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
+            transport._atomic_slovnyk_json(path, cache)
     return cache
 
 
@@ -398,7 +384,11 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         conn.close()
 
-    admitted, residual = admit_candidates(attempted, dmklinger_index=dmklinger_index)
+    try:
+        admitted, residual = admit_candidates(attempted, dmklinger_index=dmklinger_index)
+    except transport._SlovnykAccessStopped as exc:
+        print(f"Glossary collection stopped: {exc}; partial source cache preserved", file=sys.stderr)
+        return 1
     admitted.sort(key=lambda item: (-(item["count"] or 0), item["lemma"]))
     residual.sort(key=lambda item: (-(item["count"] or 0), item["lemma"]))
 

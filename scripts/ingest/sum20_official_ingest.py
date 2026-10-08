@@ -85,6 +85,7 @@ def ingest_wordids(
                 retries=retries,
                 retry_backoff_s=retry_backoff_s,
                 sleep=sleep,
+                delay_s=max(2.0, delay_s),
             )
             attempted += 1
             if outcome.status == "ok":
@@ -165,7 +166,7 @@ Related: scripts.ingest.dictionary_acquisition; docs/runbooks/dictionary-acquisi
         "--delay",
         type=float,
         default=2.0,
-        help="Minimum seconds between requests (default: 2.0).",
+        help="Minimum seconds between requests (default: 2.0); observed robots crawl-delay always applies.",
     )
     parser.add_argument("--retries", type=int, default=3, help="Retries after transient failures (default: 3).")
     parser.add_argument(
