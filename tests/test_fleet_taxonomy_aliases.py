@@ -40,10 +40,13 @@ def _infra_harness_stream_id() -> str:
 INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
-def test_area_assignments_have_no_gemini_driver_slots() -> None:
+def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> None:
     assignments = yaml.safe_load((_REPO_ROOT / "scripts/config/area_assignments.yaml").read_text())
     slots = [slot for area in assignments["assignments"].values() for slot in area.get("slots", [])]
-    assert not [slot for slot in slots if slot.startswith("gemini-")]
+    codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
+    gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
+    assert codex_lanes
+    assert gemini_lanes == codex_lanes
 
 
 # ---------------------------------------------------------------------------
@@ -332,7 +335,7 @@ def test_launcher_static_selector_wiring(launcher: str) -> None:
         # Drivers validate selectors before provider preflight or CLI invocation.
         ("start-claude-driver.sh", "invalid_selector_xyz", 2),
         ("start-codex-driver.sh", "invalid_selector_xyz", 2),
-        ("start-gemini-driver.sh", "invalid_selector_xyz", 4),
+        ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
         ("start-grok-driver.sh", "invalid_selector_xyz", 2),
         ("start-cursor-driver.sh", "invalid_selector_xyz", 2),
     ],
@@ -360,10 +363,7 @@ def test_hermetic_launcher_unknown_selector_fails_closed_contract(
         f"Launcher {launcher} with arg {unknown_arg} returned rc={result.returncode}, expected {expected_rc}\n"
         f"stdout: {result.stdout}\nstderr: {result.stderr}"
     )
-    if launcher == "start-gemini-driver.sh":
-        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-    else:
-        assert "unknown lane selector" in result.stderr.lower() or "invalid" in result.stderr.lower()
+    assert "unknown lane selector" in result.stderr.lower() or "invalid" in result.stderr.lower()
 
 
 def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):

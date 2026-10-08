@@ -1,10 +1,9 @@
 # Gemini Launcher Runbook
 
-> **Gemini 3.8 Flash (AGY) is not a planning, design or driver seat** (operator decision
-> 2026-10-03, #9584). Epic driving belongs to `gpt-6.1-sol` and `claude-opus-5-5`
-> (see `docs/runbooks/epic-orchestrator-roster.md`). Use Gemini for bounded, fully specified
-> work and Ukrainian content review. The former driver entrypoint is a refusing
-> compatibility stub (#9633).
+> **Gemini may drive epics (2026-10-08 approval)** through `start-gemini-driver.sh`
+> (see `docs/runbooks/epic-orchestrator-roster.md`). Design input and designated approval
+> stay with `gpt-6.1-sol` and `claude-opus-5-5`. Standalone sessions take bounded, fully
+> specified work and Ukrainian content review.
 
 ## Launcher
 
@@ -23,13 +22,19 @@
 ./start-gemini.sh -- --sandbox read-only
 ```
 
-`start-gemini-driver.sh` is retained as a refusing compatibility stub. Every
-AGY/Gemini driver attempt exits with code 4 and names `claude-opus-5-5`
-(Opus 5.5), `gpt-6.1-sol` (Sol 6.1), and the `grok-4.7` driver fallback.
-The shared launcher refuses before root resolution, adapter preflight,
-deployment, stream lease, canary or provider execution, including dry-run
-and forced attempts. Help remains read-only. `--epic` and `--force` are
-rejected by the standalone launcher; it never claims a driver lease.
+`start-gemini-driver.sh --epic <lane>` launches a Gemini epic driver through
+the shared driver path (2026-10-08 approval): scope entry, rules core, deploy,
+stream lease, provider canary and drive-epic binding, the same shape as the
+other driver entrypoints. The driver defaults to `gemini-3.1-pro-high`;
+`--model gemini-3.8-flash-high` is also certified. Any other Gemini model id
+exits with code 4 before startup, and so does a Gemini model id given to
+another provider's driver. `--epic` and `--force` are rejected by the
+standalone launcher; it never claims a driver lease.
+
+```bash
+./start-gemini-driver.sh --epic infra
+./start-gemini-driver.sh --epic infra --model gemini-3.8-flash-high
+```
 
 ## Launcher Flags
 
@@ -42,9 +47,9 @@ rejected by the standalone launcher; it never claims a driver lease.
 
 Standalone `start-gemini.sh` and `delegate.py --agent agy` remain available
 for their permitted non-driver roles. The rules core is included in the
-standalone session. Gemini driver slots are absent from
-`scripts/config/area_assignments.yaml`; the legacy handoff identity resolver
-is retained solely for historical packet lookup.
+standalone session. Gemini driver slots are listed in
+`scripts/config/area_assignments.yaml` wherever Codex has one, and
+`handoff_identity_for_gemini_epic` names the `gemini-<lane>` slot.
 
 ## Fleet Management & Rate Limits
 

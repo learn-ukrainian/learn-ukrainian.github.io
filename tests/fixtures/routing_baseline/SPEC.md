@@ -262,3 +262,30 @@ Inputs and the occurrence ledger stay byte-identical.
 The no-CLI configuration is byte-identical, including its baseline. Its Grok
 rows still refuse with the missing-CLI PATH error and never reach argv.
 Any other difference blocks regeneration.
+
+## Gemini epic driver (#10146)
+
+Both configurations were captured with `capture.py` against this checkout, and
+each surface was compared with the frozen baseline plus the
+`routing-10016.json.gz` reviewer overlay. Only the `launchers` and `catalog`
+surfaces differ; the fixture replaces exactly those two surfaces and keeps its
+original `reviewer` surface, so the overlay comparison is unchanged. Inputs and
+the occurrence ledger stay byte-identical in both configurations, and the
+no-CLI configuration shows the same two-surface difference.
+
+The 2026-10-08 approval admits Gemini as an epic driver on two certified pins:
+
+| Row | Provider | Mode | Variant | Change |
+| --- | --- | --- | --- | --- |
+| 25 | `gemini` | driver | default | Exit 4 refusal becomes exit 0 with model `gemini-3.1-pro-high` |
+| 26 | `gemini` | driver | environment | Still exit 4; the message names `claude-opus-5-5` as not certified for the gemini driver |
+| 27 | `gemini` | driver | cli | Still exit 4; the message names `grok-4.7` as not certified for the gemini driver |
+
+Every `help` row (4, 9, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64 and 69)
+gains the Gemini driver and interactive model defaults in the `--model`
+description. Row 29 also loses the former Gemini refusal text and shows the
+shared driver mode and driver examples. Retired-pin row 28 is unchanged. The
+catalog changes only `orchestrator_seats.agy.note`. Reviewer, role, approval,
+capacity, dispatch, adapter, registry, fallback, routing-holder and
+source-contract surfaces are identical. Any other difference blocks
+regeneration.
