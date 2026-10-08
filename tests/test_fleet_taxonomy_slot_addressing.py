@@ -54,16 +54,24 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_36() -> None:
-    """Verify 24 infrastructure slots and twelve Ukrainian content/data slots."""
+def test_roster_slot_count_is_41() -> None:
+    """Verify 24 infrastructure, twelve Ukrainian content/data, and five core slots."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 36
-    assert len(set(slots)) == 36
+    assert len(slots) == 41
+    assert len(set(slots)) == 41
+    assert set(data["assignments"]["core"]["slots"]) == {
+        "claude-core",
+        "codex-core",
+        "gemini-core",
+        "grok-core",
+        "cursor-core",
+    }
+    assert "kimi-core" not in slots
     assert data["assignments"]["open-model-data"]["slots"] == [
         "claude-open-model-data",
         "codex-open-model-data",
@@ -100,14 +108,17 @@ def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: st
 
 
 def test_phantom_slots_absent_from_valid_agents() -> None:
-    """Guard test: *-harness, *-seminars, and *-core phantom slots are NOT in get_valid_agents()."""
+    """Harness/seminars slots stay absent; five registered core slots are valid."""
     valids = _channels.get_valid_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
     providers = ("claude", "codex", "gemini", "grok", "kimi", "cursor")
-    phantoms = ("harness", "seminars", "core")
+    phantoms = ("harness", "seminars")
     for provider in providers:
         for suffix in phantoms:
             phantom_slot = f"{provider}-{suffix}"
             assert phantom_slot not in valids, f"Phantom slot '{phantom_slot}' found in valid agents"
+    for core_slot in ("claude-core", "codex-core", "gemini-core", "grok-core", "cursor-core"):
+        assert core_slot in valids
+    assert "kimi-core" not in valids
 
 
 def test_unknown_slot_rejected_naming_valids() -> None:
