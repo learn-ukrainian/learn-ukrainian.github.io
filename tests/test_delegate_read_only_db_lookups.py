@@ -229,6 +229,44 @@ def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
         assert state["read_only_mutation_paths"] == []
 
 
+@pytest.mark.parametrize("name", _DATABASES)
+def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
+    primary: Path, tmp_tasks_dir, name: str
+) -> None:
+    """#9421: retargeting a link cannot hide an earlier write to the primary DB."""
+    task_id = f"review-9421-retarget-{name.removesuffix('.db')}"
+    worktree, _, _ = delegate._ensure_worktree(
+        agent="agy",
+        task_id=task_id,
+        raw_path=str(primary / ".worktrees" / "dispatch" / "agy" / task_id),
+        resolved_base_sha=_git(primary, "rev-parse", "HEAD"),
+        full_checkout=True,
+    )
+    database = primary / "data" / name
+    before = _digest(database)
+    copy = tmp_tasks_dir / f"pre-write-{name}"
+    copy.write_bytes(database.read_bytes())
+    git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
+    worker_script = _RELATIVE_OPEN + """
+import os
+link = "data/" + sys.argv[1]
+os.unlink(link)
+os.symlink(sys.argv[3], link)
+"""
+
+    rc, state, output = _run_read_only_worker(worktree, task_id, worker_script, name, "write", str(copy))
+
+    assert output == "opened"
+    assert _digest(database) != before
+    assert (worktree / "data" / name).resolve() == copy
+    assert _digest(worktree / "data" / name) == before
+    assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"data/{name}"]
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+
+
 @pytest.mark.parametrize("action", ["write", "read"])
 @pytest.mark.parametrize("name", _DATABASES)
 def test_read_only_sparse_dispatch_flags_a_relative_database_open(

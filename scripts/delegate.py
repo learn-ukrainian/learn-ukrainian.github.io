@@ -5269,6 +5269,9 @@ def _worktree_is_dirty(worktree: Path) -> bool | None:
 # read-only dispatches (#7124). The guard diffs only what the task could own.
 _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS = frozenset({".worktrees"})
 
+# Provisioning and read-only snapshots must cover the same database links.
+_LINKED_DATABASE_PATHS = ("data/vesum.db", "data/sources.db")
+
 
 def _is_read_only_snapshot_excluded_path(path: str) -> bool:
     """Return whether a checkout-relative path is outside the snapshot scope."""
@@ -5288,8 +5291,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
     Paths under ``.worktrees/`` are excluded entirely (#7124): they belong to
     concurrent dispatch lanes, not to the task being guarded.
     Provisioned DB links retain their Git status when the primary target is
-    written (#9421). Fingerprint their contents, including SQLite's persistent
-    journal/WAL at the resolved target, so such writes cannot settle ``done``.
+    written (#9421). Fingerprint their link text, resolved path, and contents,
+    including SQLite's persistent journal/WAL at the resolved target, so a
+    write followed by retargeting to an older copy cannot settle ``done``.
     """
     commands = (
         (
@@ -5356,11 +5360,12 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
         path = record[3:]
         if not _is_read_only_snapshot_excluded_path(path):
             entries[path] = "!!"
-    for relative_path in ("data/vesum.db", "data/sources.db"):
+    for relative_path in _LINKED_DATABASE_PATHS:
         link = cwd / relative_path
         if not link.is_symlink():
             continue
         try:
+            link_text = os.readlink(link)
             target = link.resolve(strict=True)
             fingerprints = []
             for suffix in ("", "-journal", "-wal"):
@@ -5375,7 +5380,9 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
                 fingerprints.append(digest)
         except (OSError, RuntimeError) as exc:
             return None, f"linked database snapshot failed: {relative_path}: {type(exc).__name__}"
-        entries[relative_path] = entries.get(relative_path, "!!") + ":" + json.dumps(fingerprints)
+        entries[relative_path] = entries.get(relative_path, "!!") + ":" + json.dumps(
+            {"link_text": link_text, "resolved_path": str(target), "contents": fingerprints}
+        )
     return entries, None
 
 
@@ -8236,8 +8243,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         return
 
     for relative_path in (
-        "data/vesum.db",
-        "data/sources.db",
+        *_LINKED_DATABASE_PATHS,
         "node_modules",
         "site/node_modules",
     ):

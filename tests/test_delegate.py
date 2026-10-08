@@ -4420,6 +4420,63 @@ def test_read_only_checkout_snapshot_hashes_linked_database_contents(tmp_path, s
     assert delegate._read_only_mutation_paths(before, after) == ["data/sources.db"]
 
 
+@pytest.mark.parametrize("change", ["link-text", "resolved-path"])
+def test_read_only_checkout_snapshot_detects_database_link_target_changes(tmp_path, change):
+    """Link identity changes count even when the database contents stay identical."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    database = primary / "data" / "sources.db"
+    database.parent.mkdir()
+    database.write_bytes(b"database fixture")
+    alias = primary / "database-alias.db"
+    alias.symlink_to(database)
+    link = worktree / "data" / "sources.db"
+    link.parent.mkdir()
+    link.symlink_to(alias)
+    before, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    original_link_text = os.readlink(link)
+    original_target = link.resolve()
+
+    if change == "link-text":
+        link.unlink()
+        link.symlink_to(os.path.relpath(alias, link.parent))
+        assert os.readlink(link) != original_link_text
+        assert link.resolve() == original_target
+    else:
+        copy = primary / "database-copy.db"
+        copy.write_bytes(database.read_bytes())
+        alias.unlink()
+        alias.symlink_to(copy)
+        assert os.readlink(link) == original_link_text
+        assert link.resolve() != original_target
+
+    assert link.read_bytes() == database.read_bytes()
+    after, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert delegate._read_only_mutation_paths(before, after) == ["data/sources.db"]
+
+
+def test_read_only_worktree_database_links_share_snapshot_coverage(tmp_path, monkeypatch):
+    """Adding a provisioned database must automatically add snapshot coverage."""
+    primary, worktree = _init_repo_with_worktree(tmp_path)
+    relative_path = "data/extra.db"
+    monkeypatch.setattr(delegate, "_LINKED_DATABASE_PATHS", (*delegate._LINKED_DATABASE_PATHS, relative_path))
+    database = primary / relative_path
+    database.parent.mkdir()
+    database.write_bytes(b"before")
+
+    delegate._provision_data_symlinks(worktree, primary)
+
+    assert (worktree / relative_path).is_symlink()
+    before, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert relative_path in before
+    database.write_bytes(b"after!")
+    after, error = delegate._read_only_checkout_snapshot(worktree)
+    assert error is None
+    assert delegate._read_only_mutation_paths(before, after) == [relative_path]
+
+
 def test_read_only_checkout_snapshot_refuses_broken_database_link(tmp_path):
     primary, worktree = _init_repo_with_worktree(tmp_path)
     link = worktree / "data" / "sources.db"
