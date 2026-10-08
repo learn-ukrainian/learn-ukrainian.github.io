@@ -268,7 +268,7 @@ def test_paired_results_preserve_explicit_claude_errors():
     assert orphan == []
 
 
-@pytest.mark.parametrize("variant", ["content", "empty", "fallback", "error", "isError", "missing", "malformed"])
+@pytest.mark.parametrize("variant", ["content", "empty", "fallback", "error", "isError", "missing", "malformed", "json_error"])
 def test_codex_legacy_result_variants(variant):
     from scripts.agent_runtime.adapters.codex_events import tool_calls_from_items
     from scripts.agent_runtime.tool_calls import summarize_tool_output
@@ -288,6 +288,9 @@ def test_codex_legacy_result_variants(variant):
     elif variant == "error":
         item["error"] = {"message": "fixture server error"}
         expected = "fixture server error"
+    elif variant == "json_error":
+        item["error"] = {"message": '{"b": 1, "a": 2}'}
+        expected = {"b": 1, "a": 2}
     elif variant == "isError":
         item["result"]["isError"] = True
     elif variant in {"missing", "malformed"}:
@@ -303,6 +306,7 @@ def test_codex_legacy_result_variants(variant):
                 "status": "completed", "output_summary": summarize_tool_output(expected)}
     if expected is not None:
         baseline["result"] = expected
+    assert {k: record[k] for k in baseline} == baseline
     assert _result_items_from_call(record) == _result_items_from_call(baseline)
     assert map_runtime_tool_calls([record]) == map_runtime_tool_calls([baseline])
 

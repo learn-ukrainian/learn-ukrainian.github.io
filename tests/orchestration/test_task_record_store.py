@@ -45,3 +45,17 @@ def test_relocated_result_file_points_at_the_moved_sidecar(tmp_path):
     # Hot records and empty values are never rewritten.
     assert store.relocated_result_file(tasks / "old.json", hot_result) == hot_result
     assert store.relocated_result_file(archived, None) is None
+
+
+def test_tool_calls_relocation_prefers_located_run_and_keeps_legacy(tmp_path):
+    for record in (tmp_path / 'hot.id.tool_calls.json', tmp_path / 'archive' / 'old.renamed.json'):
+        record.parent.mkdir(exist_ok=True)
+        stored = tmp_path / 'legacy.tool_calls.json'
+        stored.write_text('legacy')
+        assert store.relocated_tool_calls_file(record, str(stored)) == str(stored)
+        paired = record.with_suffix('.tool_calls')
+        paired.write_text('own run')
+        assert store.relocated_tool_calls_file(record, str(stored)) == str(paired)
+        assert store.relocated_tool_calls_file(record, None) == str(paired)
+        paired.unlink()
+        assert store.relocated_tool_calls_file(record, None) is None

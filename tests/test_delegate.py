@@ -19687,3 +19687,102 @@ def test_run_worker_sources_capture_survives_terminal_persistence(tmp_tasks_dir,
         assert "tool_calls_sha256" not in state
     else:
         assert json.loads(Path(state["tool_calls_file"]).read_text()) == {"tool_calls": calls}
+
+
+@pytest.mark.parametrize('task_id', ['sources', 'sources.with.dots', 'sources.tool_calls'])
+def test_sources_sidecar_persistence_keeps_task_views_clean(tmp_tasks_dir, monkeypatch, capsys, task_id):
+    from argparse import Namespace
+
+    from scripts.orchestration.task_record_store import iter_task_records
+    from tests.test_delegate_api import _pin_tasks_dir, _task_payload, client
+
+    state_path = delegate._state_path(task_id)
+    receipt = delegate._persist_sources_tool_calls(state_path, [
+        {'name': 'mcp__sources__verify_words', 'result': 'synthetic'}])
+    assert Path(receipt['tool_calls_file']) == state_path.with_suffix('.tool_calls')
+    state = {**_task_payload(task_id, status='done'), **receipt}
+    delegate._write_state_atomic(state_path, state)
+    assert list(iter_task_records(tmp_tasks_dir, include_archive=True)) == [state_path]
+    assert delegate.cmd_list(Namespace(all=True, status=None)) == 0
+    assert [r['task_id'] for r in json.loads(capsys.readouterr().out)] == [task_id]
+    _pin_tasks_dir(monkeypatch, tmp_tasks_dir)
+    response = client.get('/api/delegate/tasks')
+    assert response.status_code == 200
+    assert [r['task_id'] for r in response.json()['tasks']] == [task_id]
+    from scripts.fleet_comms.efficiency_metrics import collect_stream_bottleneck_metrics
+    metrics = collect_stream_bottleneck_metrics(tasks_dir=tmp_tasks_dir,
+                                               plane_db=tmp_tasks_dir / 'absent-plane.sqlite3')
+    assert not [e for e in metrics['source_errors'] if e['source'] == 'dispatch']
+    assert metrics['unclassified']['by_stream_epic']['dispatch']['raw']['event_count'] == 1
+
+
+def test_sources_force_new_multiple_runs_pair_without_overwrite(tmp_tasks_dir, monkeypatch):
+    import hashlib
+
+    from scripts.orchestration.task_record_store import relocated_tool_calls_file
+
+    task_id = 'sources.tool_calls'
+    state_path = delegate._state_path(task_id)
+    stamp = '20260901T000000123456Z'
+    occupied = state_path.with_name(f'{state_path.stem}.{stamp}.archived.tool_calls')
+    occupied.write_bytes(b'keep collision')
+    for attempt in range(3):
+        receipt = delegate._persist_sources_tool_calls(state_path, [
+            {'name': 'mcp__sources__verify_words', 'result': str(attempt)}])
+        delegate._write_state_atomic(state_path, {'task_id': task_id, 'status': 'done', **receipt})
+        state_path.with_suffix('.result').write_text(f'result {attempt}')
+        snapshot = tmp_tasks_dir / f'{task_id}.snapshots'
+        snapshot.mkdir()
+        (snapshot / 'pre.json').write_text(str(attempt))
+        moved = delegate._archive_task_artifacts(task_id, stamp=stamp)
+        record = next(p for p in moved if p.suffix == '.json')
+        state = delegate._read_state(record)
+        sidecar = Path(relocated_tool_calls_file(record, state['tool_calls_file']))
+        assert sidecar in moved
+        assert hashlib.sha256(sidecar.read_bytes()).hexdigest() == state['tool_calls_sha256']
+        assert json.loads(sidecar.read_text())['tool_calls'][0]['result'] == str(attempt)
+        assert record.with_suffix('.result').read_text() == f'result {attempt}'
+        from scripts.orchestration.stale_task_records import sidecar_paths
+        assert set(sidecar_paths(record)) == set(moved) - {record}
+    assert occupied.read_bytes() == b'keep collision'
+    assert len(list(tmp_tasks_dir.glob('*.archived.json'))) == 3
+
+
+def test_delegate_by_id_relocates_archived_tool_calls(tmp_tasks_dir):
+    from scripts.orchestration.task_record_store import archived_task_record_path
+    task_id = 'archived.sources'
+    record = archived_task_record_path(tmp_tasks_dir, task_id)
+    record.parent.mkdir(parents=True)
+    record.write_text(json.dumps({'task_id': task_id, 'tool_calls_file': 'missing-legacy'}))
+    record.with_suffix('.tool_calls').write_text('own bytes')
+    path, state = delegate._read_state_or_archived(task_id)
+    assert path == record and state['archived']
+    assert state['tool_calls_file'] == str(record.with_suffix('.tool_calls'))
+    hot = delegate._state_path(task_id)
+    hot.write_text(record.read_text())
+    hot.with_suffix('.tool_calls').write_text('current bytes')
+    path, state = delegate._read_state_or_archived(task_id)
+    assert path == hot and state['tool_calls_file'] == str(hot.with_suffix('.tool_calls'))
+
+
+def test_sources_force_new_late_collision_never_overwrites(tmp_tasks_dir, monkeypatch):
+    from scripts.orchestration import stale_task_records
+    task_id = 'late-force-new'
+    state = delegate._state_path(task_id)
+    state.write_bytes(b'own record')
+    receipt = delegate._persist_sources_tool_calls(state, [])
+    sidecar = Path(receipt['tool_calls_file'])
+    original = stale_task_records._move_no_replace
+    raced = []
+
+    def move(src, dst):
+        if src == state:
+            dst.write_bytes(b'competing archive')
+            raced.append(dst)
+        original(src, dst)
+
+    monkeypatch.setattr(stale_task_records, '_move_no_replace', move)
+    with pytest.raises(FileExistsError):
+        delegate._archive_task_artifacts(task_id)
+    assert state.read_bytes() == b'own record' and sidecar.is_file()
+    assert len(raced) == 1 and raced[0].read_bytes() == b'competing archive'

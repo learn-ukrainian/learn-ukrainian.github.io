@@ -225,6 +225,8 @@ def build_module(
                 results.append(result)
                 break
             while True:
+                # Evidence is scoped to this attempt, including pre-runner stops.
+                coverage_by_lesson.pop(n, None)
                 harness = load_harness(ledger_path, slug, n)
                 if harness["terminal_state"] is not None:
                     stopped = _stop(n, HARNESS_EXHAUSTED, check=1, layer="engine" if not fresh else "harness")
@@ -391,26 +393,41 @@ def build_module(
     for result in results:
         coverage = coverage_by_lesson.get(result["n"])
         if coverage is None:
-            forms, evidence, pinned, report_only = set(), {}, {}, set()
             try:
                 # Cited obligations exist even when the writer produced no draft.
                 forms, evidence, pinned, report_only = obligations(
                     {}, plan, pack, words, level, slug, result["n"], provenance={"spans": []}
                 )
-                stopped_draft = yaml.safe_load((state_dir / f"lesson-{result['n']}.draft.yaml").read_text())
-                forms, evidence, pinned, report_only = obligations(
-                    stopped_draft, plan, pack, words, level, slug, result["n"]
-                )
             except (OSError, ValueError, KeyError, TypeError, AssemblerError):
-                pass
-            coverage = coverage_summary(
-                forms, evidence, set(), code="writer_sources_missing", pinned=pinned, report_only=report_only
-            )
+                # Even the cited obligations are unavailable. Zero would lie.
+                coverage = None
+            else:
+                try:
+                    stopped_draft = yaml.safe_load((state_dir / f"lesson-{result['n']}.draft.yaml").read_text())
+                    forms, evidence, pinned, report_only = obligations(
+                        stopped_draft, plan, pack, words, level, slug, result["n"]
+                    )
+                except (OSError, ValueError, KeyError, TypeError, AssemblerError):
+                    # Keep the cited subset when draft-derived obligations fail.
+                    pass
+                coverage = coverage_summary(
+                    forms, evidence, set(), code=None, pinned=pinned, report_only=report_only, evaluated=False
+                )
         result["writer_sources"] = coverage
     report = {
         "level": level,
         "slug": slug,
-        "complete": len(results) == len(lessons) and all(row["passed"] and row["manifest_sha256"] for row in results),
+        "complete": len(results) == len(lessons) and all(
+            row["passed"] and row["manifest_sha256"] and row["writer_sources"] is not None
+            and row["writer_sources"]["code"] is None
+            and all(
+                row["writer_sources"][group][field] is not None
+                for group in ("forms", "evidence")
+                for field in ("covered", "missing", "covered_sha256", "missing_sha256")
+            )
+            and row["writer_sources"]["noncredited_calls"] is not None
+            for row in results
+        ),
         "lessons": [
             {
                 key: row[key]

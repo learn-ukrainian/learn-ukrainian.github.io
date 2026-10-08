@@ -1661,3 +1661,168 @@ def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_d
     row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
 
     assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")
+
+
+@pytest.mark.parametrize('collision', [False, True, 'sidecar_only'])
+def test_sources_sidecar_archive_restore_pairs_located_record(tasks_dir, collision):
+    import hashlib
+
+    from scripts import delegate
+    path = _terminal(tasks_dir, 'sources.with.dots.tool_calls')
+    receipt = delegate._persist_sources_tool_calls(path, [
+        {'name': 'mcp__sources__verify_words', 'result': 'this run'}])
+    original = {**json.loads(path.read_text()), **receipt}
+    path.write_text(json.dumps(original))
+    raw = Path(receipt['tool_calls_file']).read_bytes()
+    archive = tasks_dir / 'archive'
+    archive.mkdir()
+    if collision:
+        if collision is True:
+            (archive / path.name).write_text('{"keep": true}')
+        path.with_suffix('.tool_calls').replace(archive / 'legacy-other-run')
+        path.with_suffix('.tool_calls').write_bytes(raw)
+        (archive / path.with_suffix('.tool_calls').name).write_bytes(b'keep other run')
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report['actions'] == {'archived': 1}
+    moved = report['records'][0]['moved']
+    record = archive / moved[0]
+    paired = Path(task_record_store.relocated_tool_calls_file(record, original['tool_calls_file']))
+    assert paired == record.with_suffix('.tool_calls')
+    assert paired.read_bytes() == raw
+    assert hashlib.sha256(raw).hexdigest() == original['tool_calls_sha256']
+    assert not Path(original['tool_calls_file']).exists()
+    if collision:
+        if collision is True:
+            assert (archive / path.name).read_text() == '{"keep": true}'
+        assert (archive / path.with_suffix('.tool_calls').name).read_bytes() == b'keep other run'
+    restored = str_mod.restore_archived(tasks_dir, [record.name], apply=True)
+    assert restored['actions'] == {'restored': 1}
+    restored_record = tasks_dir / record.name
+    assert Path(task_record_store.relocated_tool_calls_file(restored_record, original['tool_calls_file'])).read_bytes() == raw
+
+
+def test_sources_late_archive_collision_keeps_both_files(tasks_dir, monkeypatch):
+    path = _terminal(tasks_dir, 'sources-race')
+    paired = path.with_suffix('.tool_calls')
+    paired.write_bytes(b'own run')
+    original_stage = str_mod._stage
+
+    def stage(source, directory):
+        if source == paired:
+            (directory / paired.name).write_bytes(b'late competing run')
+        return original_stage(source, directory)
+
+    monkeypatch.setattr(str_mod, '_stage', stage)
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report['actions'] == {'error': 1}
+    assert paired.read_bytes() == b'own run'
+    assert (tasks_dir / 'archive' / paired.name).read_bytes() == b'late competing run'
+    assert 'not archived' in report['records'][0]['error']
+
+
+@pytest.mark.parametrize('failure', [OSError, RuntimeError])
+def test_sources_archive_stat_error_restores_record_and_sidecar(tasks_dir, monkeypatch, failure):
+    record = _terminal(tasks_dir, 'stat-failure')
+    sidecar = record.with_suffix('.tool_calls')
+    sidecar.write_bytes(b'own sealed bytes')
+    before, checked = record.read_bytes(), record.stat()
+    original_stage, original_lstat = str_mod._stage, str_mod.os.lstat
+    staged_record, faults = [], []
+
+    def stage(path, directory):
+        staged = original_stage(path, directory)
+        if path == record:
+            staged_record.append(staged)
+        return staged
+
+    def lstat(path, *a, **kw):
+        if staged_record and Path(path) == staged_record[0] and not faults:
+            faults.append(True)
+            raise failure('staged record cannot be inspected')
+        return original_lstat(path, *a, **kw)
+
+    monkeypatch.setattr(str_mod, '_stage', stage)
+    monkeypatch.setattr(str_mod.os, 'lstat', lstat)
+    with pytest.raises(str_mod._Unplaced if failure is OSError else RuntimeError):
+        str_mod._move_group(record, tasks_dir / 'archive', STAMP, checked=checked)
+    assert record.read_bytes() == before and sidecar.read_bytes() == b'own sealed bytes'
+    assert _no_staging_left(tasks_dir)
+
+
+def test_sources_replaced_record_is_parked_when_hot_name_is_retaken(tasks_dir, monkeypatch):
+    record = _terminal(tasks_dir, 'replaced-sources')
+    checked = record.stat()
+    original_stage = str_mod._stage
+
+    def stage(path, directory):
+        if path == record:
+            delegate._write_state_atomic(record, {'task_id': 'replacement', 'status': 'done'})
+        staged = original_stage(path, directory)
+        if path == record:
+            record.write_bytes(b'new live writer')
+        return staged
+
+    monkeypatch.setattr(str_mod, '_stage', stage)
+    with pytest.raises(str_mod._Unplaced) as raised:
+        str_mod._move_group(record, tasks_dir / 'archive', STAMP, checked=checked)
+    assert record.read_bytes() == b'new live writer'
+    assert json.loads(raised.value.where.read_text())['task_id'] == 'replacement'
+    assert raised.value.where.name.startswith(record.name + '.unplaced-')
+    assert _no_staging_left(tasks_dir)
+
+
+def test_sources_sidecar_stage_error_keeps_original_bytes(tasks_dir, monkeypatch):
+    record = _terminal(tasks_dir, 'stage-failure')
+    sidecar = record.with_suffix('.tool_calls')
+    sidecar.write_bytes(b'own sealed bytes')
+    original_stage = str_mod._stage
+
+    def stage(path, directory):
+        if path == sidecar:
+            raise OSError('sidecar cannot be staged')
+        return original_stage(path, directory)
+
+    monkeypatch.setattr(str_mod, '_stage', stage)
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report['actions'] == {'error': 1}
+    assert 'sidecar cannot be staged' in report['records'][0]['error']
+    assert sidecar.read_bytes() == b'own sealed bytes'
+    assert _no_staging_left(tasks_dir)
+
+
+def test_sources_placement_runtime_error_restores_original_bytes(tasks_dir, monkeypatch):
+    archive = tasks_dir / 'archive'
+    archive.mkdir()
+    home = tasks_dir / 'own.tool_calls'
+    home.write_bytes(b'own sealed bytes')
+    staged = str_mod._stage(home, archive)
+    original_move = str_mod._move_no_replace
+
+    def move(src, dst):
+        if dst == archive / home.name:
+            raise RuntimeError('placement interrupted')
+        return original_move(src, dst)
+
+    monkeypatch.setattr(str_mod, '_move_no_replace', move)
+    with pytest.raises(RuntimeError, match='placement interrupted'):
+        str_mod._place_or_unstage(staged, home, archive, home.name, STAMP, paired=True)
+    assert home.read_bytes() == b'own sealed bytes'
+    assert _no_staging_left(tasks_dir)
+
+
+def test_sources_two_sidecar_collisions_keep_record_pairing(tasks_dir, monkeypatch):
+    monkeypatch.setattr(delegate, '_archive_stamp', lambda: STAMP)
+    record = _terminal(tasks_dir, 'twice-sources')
+    paired = record.with_suffix('.tool_calls')
+    paired.write_bytes(b'own sealed bytes')
+    archive = tasks_dir / 'archive'
+    archive.mkdir()
+    first = archive / paired.name
+    second = archive / f'{record.stem}.{STAMP}.archived.tool_calls'
+    first.write_bytes(b'first foreign run')
+    second.write_bytes(b'second foreign run')
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    assert report['actions'] == {'archived': 1}
+    destination = archive / report['records'][0]['moved'][0]
+    assert destination.with_suffix('.tool_calls').read_bytes() == b'own sealed bytes'
+    assert first.read_bytes() == b'first foreign run' and second.read_bytes() == b'second foreign run'

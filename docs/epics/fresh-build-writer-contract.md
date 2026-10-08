@@ -242,3 +242,19 @@ staged. Public metadata contains only tool names, credited identities and result
 never queries, excerpts or private grounding bodies. Coverage proves source interaction and
 identity matching; semantic review still judges support, naturalness and pedagogy. Sources
 lookups never permit copying `ulp_private` grounding into learner content or card fields.
+
+Task full-result JSON bytes use the ignored `<task>.tool_calls` sidecar, outside
+the task-record `*.json` namespace. Archive, restore and force-new rotation pair
+it with the located record's name; readers reverify its digest. Original task-ID
+receipt lookup does not cross-credit renamed historical runs. Explicit legacy
+sidecar paths remain readable, subject to the same binding checks.
+
+Module reports describe the current attempt only. When coverage was not
+evaluated (including an engine exception or a stop before check 5), the
+`writer_sources_not_evaluated` object preserves required counts and their
+fingerprints, engine pins and report-only metadata. Covered/missing counts,
+their fingerprints and noncredited calls are null. Required obligations are
+those computable from the available inputs: if draft-derived obligations fail,
+the cited subset remains visible. Only when even cited obligations cannot be
+computed is `writer_sources` null. Genuine evaluated missing, partial or binding
+failures retain computed coverage. Unknown coverage never permits `complete: true`.

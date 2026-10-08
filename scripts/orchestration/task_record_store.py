@@ -74,3 +74,14 @@ def relocated_result_file(record_path: Path, result_file: str | None) -> str | N
         return result_file
     moved = record_path.with_name(Path(result_file).name)
     return str(moved) if moved.is_file() else result_file
+
+
+def relocated_tool_calls_file(record_path: Path, stored_file: str | None) -> str | None:
+    """Resolve the located run's sidecar first; retain explicit legacy paths.
+
+    Rotation and archive collision renaming pair files by record stem. The
+    stored basename can instead name a newer run; callers must still verify
+    the recorded digest before consuming any resolved bytes.
+    """
+    paired = record_path.with_suffix(".tool_calls")
+    return str(paired) if paired.is_file() else stored_file

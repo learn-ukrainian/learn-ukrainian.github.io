@@ -99,7 +99,10 @@
             ]
           },
           "writer_sources": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": false,
             "required": [
               "contract_version",
@@ -121,19 +124,13 @@
                   "writer_sources_capture_incomplete",
                   "writer_sources_binding_mismatch",
                   "writer_sources_forms_uncovered",
-                  "writer_sources_evidence_uncovered"
+                  "writer_sources_evidence_uncovered",
+                  "writer_sources_not_evaluated"
                 ]
               },
-              "forms": {
-                "$ref": "#/$defs/coverage_counts"
-              },
-              "evidence": {
-                "$ref": "#/$defs/coverage_counts"
-              },
-              "noncredited_calls": {
-                "type": "integer",
-                "minimum": 0
-              },
+              "forms": {},
+              "evidence": {},
+              "noncredited_calls": {},
               "engine_pinned": {
                 "type": "object",
                 "additionalProperties": {
@@ -164,6 +161,44 @@
                 "type": "array",
                 "items": {
                   "type": "string"
+                }
+              }
+            },
+            "if": {
+              "type": "object",
+              "required": [
+                "code"
+              ],
+              "properties": {
+                "code": {
+                  "const": "writer_sources_not_evaluated"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "forms": {
+                  "$ref": "#/$defs/unevaluated_counts"
+                },
+                "evidence": {
+                  "$ref": "#/$defs/unevaluated_counts"
+                },
+                "noncredited_calls": {
+                  "type": "null"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "forms": {
+                  "$ref": "#/$defs/coverage_counts"
+                },
+                "evidence": {
+                  "$ref": "#/$defs/coverage_counts"
+                },
+                "noncredited_calls": {
+                  "type": "integer",
+                  "minimum": 0
                 }
               }
             }
@@ -208,6 +243,68 @@
         "missing_sha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "unevaluated_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required",
+        "covered",
+        "missing",
+        "required_sha256",
+        "covered_sha256",
+        "missing_sha256"
+      ],
+      "properties": {
+        "required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "covered": {
+          "type": "null"
+        },
+        "missing": {
+          "type": "null"
+        },
+        "required_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "covered_sha256": {
+          "type": "null"
+        },
+        "missing_sha256": {
+          "type": "null"
+        }
+      }
+    }
+  },
+  "if": {
+    "required": [
+      "complete"
+    ],
+    "properties": {
+      "complete": {
+        "const": true
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "lessons": {
+        "items": {
+          "properties": {
+            "writer_sources": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": null
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from ..jsonl import jsonl_lines
-from ..tool_calls import summarize_tool_output, tool_call_record
+from ..tool_calls import tool_call_record
 
 _SESSION_ID_VALUE_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -247,7 +247,6 @@ def tool_calls_from_items(items: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             record = tool_call_record(
                 name=f"mcp__{server}__{tool}", arguments=item.get("arguments"), output=_mcp_output(item)
             )
-            record["output_summary"] = summarize_tool_output(_mcp_output(item))
             result = item.get("result")
             # Internal evidence preserves the complete MCP envelope; legacy
             # consumers continue to receive _mcp_output in result.

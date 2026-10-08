@@ -334,7 +334,15 @@ def test_module_rewrite_after_success_starts_each_call_at_one(module_build):
         inputs = {key: expected["style_card_sha256" if key == "card_sha256" else key] for key in INPUT_KEYS}
         inputs["draft_sha256"] = hashlib.sha256((state / "lesson-1.draft.yaml").read_bytes()).hexdigest()
         record_success(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1, inputs)
-        return {"passed": True, "manifest_sha256": "a" * 64}
+        from scripts.build.fresh.source_coverage import coverage_summary, obligations
+        forms, evidence, pinned, report_only = obligations(
+            kw["draft"], kw["plan"], kw["pack"], kw["words"], *args[:3], provenance={"spans": []})
+        keys = {"form:" + form for form in forms}
+        for identity in evidence.values():
+            keys.update([identity] if isinstance(identity, str) else identity)
+        summary = coverage_summary(forms, evidence, keys, code=None, pinned=pinned, report_only=report_only)
+        return {"passed": True, "manifest_sha256": "a" * 64,
+                "checks": [{"check": 5, "status": "passed", "details": {"writer_sources": summary}}]}
 
     for number in range(4):
         report = build(successful=True, runner=successful_runner, prompt=f"fixture prompt {number}")

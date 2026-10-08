@@ -170,14 +170,14 @@ def search(tool, key, value, *, query="synthetic query"):
     )
 
 
-def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, expected_inputs=None, n=1):
+def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, expected_inputs=None, n=1, prompt_bytes=None):
     """Explicit fake-seat receipt through the production harvester; no gate bypass."""
     state.mkdir(parents=True, exist_ok=True)
     tasks = state / "tasks"
     tasks.mkdir(exist_ok=True)
     monkeypatch.setattr(coverage, "tasks_dir", lambda: tasks)
     level, slug = draft["lesson"]["module"].split("/")
-    prompt = b"Synthetic writer prompt for admission mechanics.\n"
+    prompt = prompt_bytes if prompt_bytes is not None else b"Synthetic writer prompt for admission mechanics.\n"
     prompt_hash = hashlib.sha256(prompt).hexdigest()
     inputs = {
         "plan_sha256": hashlib.sha256(lock.yaml_bytes(plan)).hexdigest(),
@@ -675,10 +675,11 @@ def test_stopped_module_reports_cited_obligations_without_a_valid_draft(tmp_path
     row = report["lessons"][0]
     summary = row["writer_sources"]
     assert not report["complete"] and row["stopping_check"] == 0
-    assert summary["code"] == "writer_sources_missing"
+    assert summary["code"] == "writer_sources_not_evaluated"
     assert summary["evidence"]["required"] >= 2
-    assert summary["evidence"]["missing"] == summary["evidence"]["required"]
-    assert summary["forms"]["required"] == summary["forms"]["covered"] == 0
+    assert summary["evidence"]["missing"] is None
+    assert summary["forms"]["required"] == 0
+    assert summary["forms"]["covered"] is None
     assert (state / "module.build.yaml").is_file()
 
 
@@ -866,3 +867,66 @@ def test_nonorthography_required_forms_and_expansion_match_rejected_head(encodin
                 if s["source"] == "writer_prose" and s["role"] != "phonetics"
                 for t in tokenize(s["text"]) if t.kind in {"cyrillic", "mixed"}}
     assert coverage.obligations(*fixture, "a1", "sample-slug", 1)[0] == required
+
+
+@pytest.mark.parametrize('state', ['archived', 'missing', 'tampered', 'wrong_run', 'rotated'])
+def test_direct_reader_reverifies_relocated_sidecar(tmp_path, monkeypatch, state):
+    from scripts.delegate import _persist_sources_tool_calls
+    fixture = _fixture()
+    directory = tmp_path / 'state'
+    task, _ = seal_writer(directory, monkeypatch, *fixture)
+    tasks = directory / 'tasks'
+    record = tasks / (task['task_id'] + '.json')
+    calls = json.loads(Path(task['tool_calls_file']).read_text())['tool_calls']
+    task.update(_persist_sources_tool_calls(record, calls))
+    record.write_text(json.dumps(task))
+    meta = yaml.safe_load((directory / 'lesson-1.writer.yaml').read_text())
+    # Refresh the receipt only to bind the production persistence bytes.
+    _, inputs = seal_writer(directory, monkeypatch, *fixture, calls=calls)
+    task.update(_persist_sources_tool_calls(record, calls))
+    record.write_text(json.dumps(task))
+    coverage.harvest_receipt(directory, 1, level='a1', slug='sample-slug', inputs=inputs,
+        meta=meta, task=task, draft_file=directory / 'lesson-1.draft.yaml')
+    legacy = tasks / (task['task_id'] + '.tool_calls.json')
+    legacy.unlink()
+    paired = record.with_suffix('.tool_calls')
+    if state == 'archived':
+        archive = tasks / 'archive'
+        archive.mkdir()
+        paired.replace(archive / paired.name)
+        record.replace(archive / record.name)
+        assert check(directory, fixture)['code'] is None
+        return
+    if state == 'missing':
+        paired.unlink()
+    elif state == 'tampered':
+        paired.write_bytes(b'tampered')
+    elif state == 'wrong_run':
+        _persist_sources_tool_calls(record, [verification(['other-run'])])
+    else:
+        record.replace(record.with_name('historical.renamed.json'))
+        paired.replace(record.with_name('historical.renamed.tool_calls'))
+    assert check(directory, fixture)['code'] == 'writer_sources_binding_mismatch'
+
+
+@pytest.mark.parametrize('code', [None, 'writer_sources_missing', 'writer_sources_not_evaluated'])
+def test_schema_restricts_unknown_counts_to_not_evaluated(code):
+    from jsonschema import Draft202012Validator, ValidationError
+    summary = coverage.coverage_summary({'known'}, {'T-1': 'chunk:1'}, set(), code=None,
+        evaluated=False, report_only={'U-1'}, pinned={'S-1': {
+            'file_sha256': 'a' * 64, 'lines': '1-2', 'fingerprint': 'b' * 64}})
+    assert summary['forms']['required'] == summary['evidence']['required'] == 1
+    assert summary['report_only'] == ['U-1'] and 'S-1' in summary['engine_pinned']
+    summary['code'] = code
+    row = dict(n=1, passed=False, passed_through=0, manifest_sha256=None, stopping_check=0,
+               reason='stop', regenerations=0, terminal_layer=None, layer='driver', writer_sources=summary)
+    report = dict(level='a1', slug='synthetic', complete=False, lessons=[row])
+    validator = Draft202012Validator(json.loads(Path('schemas/module-build-report-v1.schema.json').read_text()))
+    if code == 'writer_sources_not_evaluated':
+        validator.validate(report)
+        report['complete'] = True
+        with pytest.raises(ValidationError):
+            validator.validate(report)
+    else:
+        with pytest.raises(ValidationError):
+            validator.validate(report)

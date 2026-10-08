@@ -560,6 +560,8 @@ def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
     state_path = _state_path(task_id)
     state = _read_state(state_path)
     if state is not None:
+        if "tool_calls_file" in state:
+            state["tool_calls_file"] = task_record_store.relocated_tool_calls_file(state_path, state["tool_calls_file"])
         return state_path, state
     archived_path = _archived_state_path(task_id)
     archived = _read_state(archived_path)
@@ -568,6 +570,8 @@ def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
     archived = {**archived, "archived": True}
     if "result_file" in archived:
         archived["result_file"] = task_record_store.relocated_result_file(archived_path, archived["result_file"])
+    if "tool_calls_file" in archived:
+        archived["tool_calls_file"] = task_record_store.relocated_tool_calls_file(archived_path, archived["tool_calls_file"])
     return archived_path, archived
 
 
@@ -749,21 +753,29 @@ def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[P
     state_path = _state_path(task_id)
     archived: list[Path] = []
     with task_state_lock(state_path):
+        from scripts.orchestration.stale_task_records import _move_no_replace
+
         diagnostic = _diagnostic_path(task_id)
         rotated = diagnostic.with_name(diagnostic.name + _DIAG_ROTATED_SUFFIX)
-        for path in (state_path, _result_path(task_id), diagnostic, rotated):
+        snapshot_dir = state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
+        paths = (state_path, _result_path(task_id), state_path.with_suffix(".tool_calls"), diagnostic, rotated)
+        # Choose one run tag for the entire group, even when only a sidecar
+        # collides. Atomic no-replace moves also protect against a late writer.
+        tag = stamp
+        while True:
+            destinations = [path.with_name(f"{path.stem}.{tag}.archived{path.suffix}") for path in paths]
+            snapshot_dest = snapshot_dir.with_name(f"{snapshot_dir.name}.{tag}.archived")
+            if not any(os.path.lexists(path) for path in (*destinations, snapshot_dest)):
+                break
+            tag = f"{stamp}.{int(uuid.uuid4().hex[:12], 16)}"
+        for path, dest in zip(paths, destinations, strict=True):
             if not path.exists():
                 continue
-            dest = _archived_artifact_path(path, stamp)
-            os.replace(path, dest)
+            _move_no_replace(path, dest)
             archived.append(dest)
-        snapshot_dir = state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
         if snapshot_dir.is_dir():
-            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
-            if dest.exists():
-                dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
-            os.replace(snapshot_dir, dest)
-            archived.append(dest)
+            _move_no_replace(snapshot_dir, snapshot_dest)
+            archived.append(snapshot_dest)
     return archived
 
 
@@ -9770,7 +9782,7 @@ def _persist_sources_tool_calls(state_path: Path, calls: list[dict[str, Any]]) -
         raise ValueError("writer_sources_capture_incomplete")
     records = [call for call in calls if str(call.get("name", "")).startswith("mcp__sources__")]
     raw = (json.dumps({"tool_calls": records}, ensure_ascii=False, sort_keys=True) + "\n").encode("utf-8")
-    path = state_path.with_suffix(".tool_calls.json")
+    path = state_path.with_suffix(".tool_calls")
     atomic_write(path, raw, mode=0o600)
     return {"tool_calls_file": str(path), "tool_calls_sha256": hashlib.sha256(raw).hexdigest()}
 

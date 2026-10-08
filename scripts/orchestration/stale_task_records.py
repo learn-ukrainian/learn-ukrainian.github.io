@@ -1033,16 +1033,16 @@ def settle_stale(
 # ---------------------------------------------------------------------------
 
 
-def _sidecar_names(stem: str) -> tuple[str, str]:
-    """``(<result>, <snapshot dir>)`` names that belong to the record ``<stem>.json``."""
+def _sidecar_names(stem: str) -> tuple[str, str, str]:
+    """Result, snapshot directory and Sources sidecar paired with ``<stem>.json``."""
     match = _REDISPATCH_ARCHIVED_STEM_RE.match(stem)
     if match is None:
-        return f"{stem}.result", f"{stem}{_SNAPSHOT_SUFFIX}"
-    return f"{stem}.result", f"{match['base']}{_SNAPSHOT_SUFFIX}.{match['tag']}.archived"
+        return f"{stem}.result", f"{stem}{_SNAPSHOT_SUFFIX}", f"{stem}.tool_calls"
+    return f"{stem}.result", f"{match['base']}{_SNAPSHOT_SUFFIX}.{match['tag']}.archived", f"{stem}.tool_calls"
 
 
 def sidecar_paths(record_path: Path) -> list[Path]:
-    """Delegate-owned sidecars of a record: ``<stem>.result`` and its snapshot directory."""
+    """Delegate-owned result, snapshot directory and Sources sidecar for a record."""
     candidates = (record_path.with_name(name) for name in _sidecar_names(record_path.stem))
     return [path for path in candidates if path.exists()]
 
@@ -1183,12 +1183,20 @@ def _unstage(staged: Path, home: Path, dest_dir: Path) -> Path:
     return staged
 
 
-def _place_or_unstage(staged: Path, home: Path, dest_dir: Path, name: str, stamp: str) -> Path:
+def _place_or_unstage(
+    staged: Path, home: Path, dest_dir: Path, name: str, stamp: str, *, paired: bool = False
+) -> Path:
     """:func:`_place` a staged file; on any failure :func:`_unstage` it before raising.
 
     An :class:`OSError` becomes :class:`_Unplaced`, which says where the file is.
     """
     try:
+        if paired:
+            # A Sources sidecar must keep the already located record's name.
+            # A late collision is reported and restored, never renamed alone.
+            dest = dest_dir / name
+            _move_no_replace(staged, dest)
+            return dest
         return _place(staged, dest_dir, name, stamp)
     except BaseException as exc:
         where = _unstage(staged, home, dest_dir)
@@ -1227,7 +1235,12 @@ def _move_group(
         if where == record_path:
             raise _RecordReplaced
         raise _Unplaced("record replaced during the move and rewritten again", home=record_path, where=where)
-    record_dest = _place_or_unstage(staged, record_path, dest_dir, record_path.name, stamp)
+    name = record_path.name
+    while os.path.lexists((dest_dir / name).with_suffix(".tool_calls")):
+        name = delegate._archived_artifact_path(dest_dir / record_path.name, stamp).name
+        if os.path.lexists((dest_dir / name).with_suffix(".tool_calls")):
+            stamp = f"{stamp}.{int(uuid.uuid4().hex[:12], 16)}"
+    record_dest = _place_or_unstage(staged, record_path, dest_dir, name, stamp)
     moved, problems = [record_dest.name], []
     # A renamed record takes its sidecars' names along, so they still pair up.
     for sidecar, name in zip(sidecars, _sidecar_names(record_dest.stem), strict=True):
@@ -1239,7 +1252,9 @@ def _move_group(
             problems.append(f"{sidecar.name} not archived: {exc}")
             continue
         try:
-            moved.append(_place_or_unstage(staged, sidecar, dest_dir, name, stamp).name)
+            moved.append(_place_or_unstage(
+                staged, sidecar, dest_dir, name, stamp, paired=sidecar.suffix == ".tool_calls"
+            ).name)
         except _Unplaced as exc:
             problems.append(f"{sidecar.name} not archived ({exc.reason}); left at {exc.where}")
     return moved, problems

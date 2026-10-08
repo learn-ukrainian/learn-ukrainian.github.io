@@ -9,6 +9,7 @@ from functools import partial
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from scripts.build.fresh import cli, module, regeneration, writer
 from scripts.build.fresh.preflight import PreflightResult
@@ -75,7 +76,16 @@ def _success(*a, **kw):
     inputs = _inputs(kw)
     inputs["draft_sha256"] = hashlib.sha256((kw["state_dir"] / "lesson-1.draft.yaml").read_bytes()).hexdigest()
     regeneration.record_success(kw["state_dir"] / "lesson-1.regeneration.yaml", a[1], 1, inputs)
-    return {"passed": True, "manifest_sha256": "b" * 64}
+    from scripts.build.fresh.source_coverage import coverage_summary, obligations
+    forms, evidence, pinned, report_only = obligations(
+        kw["draft"], kw["plan"], kw["pack"], kw["words"], a[0], a[1], a[2]
+    )
+    keys = {"form:" + form for form in forms}
+    for identity in evidence.values():
+        keys.update([identity] if isinstance(identity, str) else identity)
+    summary = coverage_summary(forms, evidence, keys, code=None, pinned=pinned, report_only=report_only)
+    return {"passed": True, "manifest_sha256": "b" * 64,
+            "checks": [{"check": 5, "status": "passed", "details": {"writer_sources": summary}}]}
 
 
 @pytest.mark.parametrize("layer", ["engine", "plan", "pack", "word_store", "driver"])
@@ -323,3 +333,157 @@ def test_fresh_state_rerun_reuses_done_attempts_without_paid_dispatch(context, m
     assert ledger["regenerations"] == int(failure_layer == "writer")
     assert ledger["terminal_layer"] == ("engine" if failure_layer == "engine" else None)
     assert not (fresh_state / "lesson-1.writer-harness.yaml").exists()
+
+
+def test_passed_runner_without_coverage_is_incomplete(context):
+    report = context.build(lambda *a, **kw: {'passed': True, 'manifest_sha256': 'b' * 64})
+    assert report['lessons'][0]['passed']
+    assert not report['complete']
+    assert report['lessons'][0]['writer_sources']['code'] == 'writer_sources_not_evaluated'
+    assert report['lessons'][0]['writer_sources']['forms']['covered'] is None
+
+
+def test_later_attempt_writer_stop_does_not_reuse_previous_coverage(context):
+    from scripts.build.fresh.source_coverage import coverage_summary
+    from scripts.build.fresh.writer import WriterCallError
+    calls = []
+
+    def write(**kw):
+        calls.append(kw['attempt'])
+        if len(calls) == 2:
+            raise WriterCallError('current attempt stopped before check 5')
+        lock.write(kw['output_dir'] / 'lesson-1.draft.yaml', lock.yaml_bytes(context.draft))
+
+    def fail_after_coverage(*a, **kw):
+        failure = {'check': 6, 'status': 'failed', 'layer': 'writer', 'reason': 'rewrite required'}
+        regeneration.record_failure(kw['state_dir'] / 'lesson-1.regeneration.yaml', a[1], 1, failure, _inputs(kw))
+        return {'passed': False, 'checks': [
+            {'check': 5, 'status': 'passed', 'details': {'writer_sources': coverage_summary(
+                {'previous-only'}, {}, {'form:previous-only'}, code=None)}}, failure]}
+
+    report = context.build(fail_after_coverage, writer_dispatch=write)
+    assert calls == [1, 2]
+    row = report['lessons'][0]
+    assert row['stopping_check'] == 1 and row['layer'] == 'writer'
+    assert row['writer_sources']['code'] == 'writer_sources_not_evaluated'
+    assert row['writer_sources']['forms']['covered'] is None
+    assert row['writer_sources']['forms']['required_sha256'] != coverage_summary(
+        {'previous-only'}, {}, set(), code=None)['forms']['required_sha256']
+    assert not report['complete']
+    assert yaml.safe_load((context.state / 'module.build.yaml').read_text()) == report
+
+
+@pytest.mark.parametrize('draft_only', [False, True])
+def test_unavailable_obligations_do_not_fabricate_zero(context, monkeypatch, draft_only):
+    from scripts.build.fresh import source_coverage
+    original = source_coverage.obligations
+
+    def unavailable(draft, *a, **kw):
+        if not draft_only or draft:
+            raise ValueError('synthetic obligations unavailable')
+        return original(draft, *a, **kw)
+
+    monkeypatch.setattr(source_coverage, 'obligations', unavailable)
+    report = context.build(lambda *a, **kw: {'passed': False, 'stopping_check': 5, 'layer': 'engine', 'reason': 'stop'})
+    assert not report['complete']
+    summary = report['lessons'][0]['writer_sources']
+    if draft_only:
+        assert summary['code'] == 'writer_sources_not_evaluated'
+        assert summary['evidence']['required'] > 0
+        assert summary['evidence']['covered'] is None
+    else:
+        assert summary is None
+    assert yaml.safe_load((context.state / 'module.build.yaml').read_text()) == report
+
+
+@pytest.mark.parametrize('mode', ['positive', 'coverage_exception', 'assembly_exception', 'missing', 'partial', 'later_writer_stop'])
+def test_module_real_runner_writes_truthful_coverage(context, monkeypatch, mode):
+    from scripts.build.fresh import assemble, runner, source_coverage
+    from scripts.curriculum.learner_state.inventory_gate import GateReport
+    from scripts.curriculum.resolver.inputs import Allowlist
+    from tests.build.test_fresh_runner import _FixtureSources, _run_contract
+    from tests.build.test_fresh_source_coverage import seal_writer, verification
+
+    # Install the existing deterministic source/render dependencies, then run
+    # the actual module -> run_lesson path with its own bound current receipt.
+    setup = context.root / 'setup'
+    setup.mkdir()
+    draft, plan, pack, words = lesson_fixture()
+    _run_contract(setup, monkeypatch, draft, plan, pack, words)
+    real = source_coverage.check_coverage
+    engine_calls = []
+    monkeypatch.setattr(assemble.lesson_lock, 'compute_lesson_lock', lambda *a, **kw: {
+        'lessons': [{'n': 1, 'entry_sha256': 'a' * 64}]})
+
+    def coverage_error(*a, **kw):
+        assert real(*a, **kw)['code'] is None, 'the receipt must be valid before the engine fails'
+        raise ValueError('synthetic coverage engine failure')
+
+    def assembly_error(*a, **kw):
+        raise ValueError('synthetic assembly engine failure')
+
+    def actual_runner(*a, **kw):
+        kw['draft']['lesson'] = {'module': f'{a[0]}/{a[1]}', 'n': a[2]}
+        kw['draft']['inputs'].update({k: v for k, v in kw['expected_inputs'].items()
+                                    if k in kw['draft']['inputs']})
+        calls = [verification(['unrelated-form'])] if mode == 'partial' else None
+        seal_writer(kw['state_dir'], monkeypatch, kw['draft'], kw['plan'], kw['pack'], kw['words'],
+                    expected_inputs=kw['expected_inputs'], calls=calls,
+                    prompt_bytes=(kw['state_dir'] / 'lesson-1.prompt.md').read_bytes())
+        if mode == 'missing':
+            (kw['state_dir'] / 'lesson-1.writer_tool_calls.json').unlink()
+        with monkeypatch.context() as engine:
+            if mode == 'coverage_exception':
+                engine.setattr(source_coverage, 'check_coverage', coverage_error)
+            elif mode == 'assembly_exception':
+                engine.setattr(assemble, 'assemble_expanded_document', assembly_error)
+            if mode == 'later_writer_stop':
+                engine.setattr(runner, 'check_9_stress_and_render', lambda *a, **kw:
+                    assemble.CheckResult(check=9, passed=False, layer='writer', reason='synthetic rewrite'))
+            engine_calls.append(1)
+            return runner.run_lesson(*a, **kw, sources=_FixtureSources(),
+            allowlist=Allowlist.from_records(kw['words']['words'], words_lock='f' * 64),
+            inventory_gate=lambda *a, **kw: GateReport('a1', context.slug, 1, ()),
+            observed_writer=lambda *a, **kw: None,
+            render_check=lambda *a, **kw: assemble.CheckResult(check=11, passed=True,
+                artifacts={'verify_shippable': {'shippable': True}}))
+
+    if mode == 'later_writer_stop':
+        writer_calls = []
+
+        def write(**kw):
+            writer_calls.append(kw['attempt'])
+            if len(writer_calls) > 1:
+                raise writer.WriterCallError('current writer attempt stopped')
+            lock.write(kw['output_dir'] / 'lesson-1.draft.yaml', lock.yaml_bytes(context.draft))
+
+        report = context.build(actual_runner, writer_dispatch=write)
+        assert writer_calls == [1, 2] and engine_calls == [1]
+    else:
+        report = context.build(actual_runner)
+    row = report['lessons'][0]
+    coverage = row['writer_sources']
+    assert yaml.safe_load((context.state / 'module.build.yaml').read_text()) == report
+    if mode == 'positive':
+        assert report['complete'] and row['passed'], json.dumps(report)
+        assert coverage['code'] is None and coverage['forms']['missing'] == 0
+    elif mode == 'later_writer_stop':
+        assert not report['complete'] and row['stopping_check'] == 1 and row['layer'] == 'writer'
+        assert coverage['code'] == 'writer_sources_not_evaluated'
+        assert coverage['forms']['required'] > 0 and coverage['forms']['covered'] is None
+    else:
+        assert not report['complete'] and not row['passed']
+        assert row['stopping_check'] == 5, json.dumps(report)
+        assert row['layer'] == ('writer' if mode == 'assembly_exception' else 'engine')
+        if mode.endswith('exception'):
+            assert 'raised' in row['reason']
+            assert coverage['code'] == 'writer_sources_not_evaluated'
+            assert coverage['forms']['required'] > 0
+            assert coverage['forms']['covered'] is None
+            assert coverage['forms']['missing'] is None
+            assert coverage['noncredited_calls'] is None
+        else:
+            assert coverage['code'] == ('writer_sources_missing' if mode == 'missing'
+                                         else 'writer_sources_forms_uncovered')
+            assert coverage['forms']['missing'] > 0
+            assert coverage['forms']['covered'] == 0

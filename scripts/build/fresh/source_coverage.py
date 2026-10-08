@@ -20,7 +20,7 @@ from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
 from scripts.ingest.resource_catalogue_ingest import normalise_url
-from scripts.orchestration.task_record_store import locate_task_record
+from scripts.orchestration.task_record_store import locate_task_record, relocated_tool_calls_file
 
 CONTRACT = "fresh-writer-sources.v1"
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas/fresh-writer-sources-v1.schema.json"
@@ -412,25 +412,26 @@ def coverage_summary(
     noncredited: int = 0,
     pinned: dict[str, dict[str, str]] | None = None,
     report_only: set[str] | None = None,
+    evaluated: bool = True,
 ) -> dict[str, Any]:
-    """Counts and fingerprints, safe even for lessons stopped before check 5."""
+    """Preserve obligations; unknown coverage must never imply missing evidence."""
     covered_forms = {form for form in forms if "form:" + form in keys}
     covered_evidence = {rid for rid, key in evidence.items() if _evidence_covered(key, keys)}
     groups = {"forms": (forms, covered_forms), "evidence": (set(evidence), covered_evidence)}
     return {
         "contract_version": CONTRACT,
-        "code": code,
-        "noncredited_calls": noncredited,
+        "code": code if evaluated else "writer_sources_not_evaluated",
+        "noncredited_calls": noncredited if evaluated else None,
         "engine_pinned": pinned or {},
         "report_only": sorted(report_only or set()),
         **{
             label: {
                 "required": len(required),
-                "covered": len(covered),
-                "missing": len(required - covered),
+                "covered": len(covered) if evaluated else None,
+                "missing": len(required - covered) if evaluated else None,
                 "required_sha256": digest(sorted(required)),
-                "covered_sha256": digest(sorted(covered)),
-                "missing_sha256": digest(sorted(required - covered)),
+                "covered_sha256": digest(sorted(covered)) if evaluated else None,
+                "missing_sha256": digest(sorted(required - covered)) if evaluated else None,
             }
             for label, (required, covered) in groups.items()
         },
@@ -502,7 +503,7 @@ def check_coverage(
             or receipt["sidecar_sha256"] != task.get("tool_calls_sha256")
         ):
             raise ValueError(code)
-        raw = Path(task["tool_calls_file"]).read_bytes()
+        raw = Path(relocated_tool_calls_file(task_path, task["tool_calls_file"])).read_bytes()
         if hashlib.sha256(raw).hexdigest() != receipt["sidecar_sha256"]:
             raise ValueError(code)
         payload = json.loads(raw)
