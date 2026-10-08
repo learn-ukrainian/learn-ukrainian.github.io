@@ -14,7 +14,8 @@ selector. Load the sources for the task and current phase before acting; load
 additional sources when scope changes. Git `agents_extensions/` remains
 canonical; deployed harness copies are consumers.
 
-The Monitor `GET /api/rules?format=markdown` endpoint remains the complete,
+The Monitor `GET /api/rules?format=markdown` endpoint serves the binding core.
+`GET /api/rules?scope=full&format=markdown` remains the complete,
 hash-cacheable rules reference. Use it when the full ruleset is needed, not as
 a requirement to inject unrelated rules on every task. If Monitor is unavailable,
 use the same selector via

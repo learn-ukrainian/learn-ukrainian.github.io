@@ -3,15 +3,17 @@
 Mounted at /api/rules in main.py.
 
 Endpoints:
-    GET /api/rules                  Default: markdown blob
-    GET /api/rules?format=markdown  Single concatenated Markdown string
+    GET /api/rules                  Default: binding core Markdown
+    GET /api/rules?format=markdown  Binding core Markdown string
     GET /api/rules?format=json      {hash, bytes, sources[], markdown}
     GET /api/rules?scope=core       The rules core every seat loads
     GET /api/rules?scope=content    The core plus the curriculum addendum
+    GET /api/rules?scope=full       Complete reference archive (explicit opt-in)
     GET /api/rules?scope=task:NAME  The reference sources task-scoped-reading.md selects
 
-Without ``scope`` the legacy full bundle is served unchanged (sources, order,
-shape and hash). A scoped response carries its own hash — sha256 over
+Without ``scope`` the binding core is served, identically to ``scope=core``.
+The legacy full reference retains its sources, order, bytes and hash under
+``scope=full``. A core/content/task response carries its own hash — sha256 over
 ``scope=<scope>\n`` plus the Markdown — so its ETag and cache identity never
 collide with the full bundle or another scope. Scope sources and assembly come
 from ``scripts/lib/rules_core.py``, the same loader launchers and workers use
@@ -74,14 +76,15 @@ def _matches_etag(if_none_match: str | None, digest: str) -> bool:
     return False
 
 
-# Order matters: critical rules first, then hard-limit non-negotiables,
-# then the mandatory workflow and remaining always-load rules. Changing
+# Full-reference archive only; cold-start seats receive rules_core.CORE_REL.
+# Order matters: operator contract first, then critical rules, non-negotiables,
+# the mandatory workflow and remaining references. Changing
 # this order is a user-visible contract change — agents that cache the
 # concatenated blob by hash will see a new hash and refetch.
 #
 # Fleet doctrine + living role scorecard (#5529 / #5474) ship AFTER
 # model-assignment so machine routing remains earlier in the blob while
-# cold-start agents still receive the scoreboard without hunting docs/.
+# explicit full-reference readers still receive the scoreboard.
 RULE_SOURCES: tuple[str, ...] = (
     "agents_extensions/shared/rules/operator-expectations.md",
     "agents_extensions/shared/rules/critical-rules.md",
@@ -148,7 +151,9 @@ def scope_digest(scope: str, markdown: str) -> str:
 
 
 def _assemble_scope(project_root: Path, scope: str) -> tuple[str, list[str], str]:
-    """Return (markdown, sources, digest) for ``core``, ``content`` or ``task:<name>``."""
+    """Return (markdown, sources, digest) for a seat, task or full reference."""
+    if scope == "full":
+        return _assemble_rules(project_root)
     try:
         sources = list(rules_core.scope_sources(scope))
         markdown = rules_core.assemble(tuple(sources), project_root)
@@ -168,7 +173,7 @@ def get_rules(
     ),
     scope: str | None = Query(
         None,
-        description="Omit for the full bundle; 'core', 'content', or 'task:<name>' for a scoped selection.",
+        description="Omit for the binding core; 'content' adds curriculum rules; 'task:<name>' or 'full' selects references.",
     ),
     ctx: MonitorContext = Depends(get_ctx),
 ):
@@ -185,13 +190,11 @@ def get_rules(
     body — the client should reuse its cache. This makes the SDK's
     cache-hit path one small HTTP round-trip with zero payload.
     """
-    if scope is None:
-        markdown, sources, digest = _assemble_rules(ctx.roots.project_root)
-    else:
-        markdown, sources, digest = _assemble_scope(ctx.roots.project_root, scope)
+    effective_scope = "core" if scope is None else scope
+    markdown, sources, digest = _assemble_scope(ctx.roots.project_root, effective_scope)
     etag = f'"{digest}"'
     session_id = session_id_from_request(request)
-    scope_headers = {"X-Rules-Scope": scope} if scope is not None else {}
+    scope_headers = {"X-Rules-Scope": effective_scope}
 
     if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
@@ -200,7 +203,7 @@ def get_rules(
         )
 
     if format == "json":
-        return _rules_json_response(markdown, sources, digest, etag, session_id, scope=scope)
+        return _rules_json_response(markdown, sources, digest, etag, session_id, scope=effective_scope)
 
     # Raw Markdown path. FastAPI's default str response is
     # application/json, which would JSON-encode the whole blob — wrong
@@ -244,25 +247,21 @@ def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
 def rules_hash(*, project_root: Path, scope: str | None = None) -> str:
     """Hash-only helper used by ``/api/state/manifest``.
 
-    Cheap enough to call on every manifest request (three small file
-    reads). Returns empty string on unreadable state so the manifest
+    Defaults to the binding core, matching the unscoped endpoint.
+    Returns empty string on unreadable state so the manifest
     stays 200-OK even if rules are momentarily missing.
     """
     try:
-        if scope is None:
-            _, _, digest = _assemble_rules(project_root)
-        else:
-            _, _, digest = _assemble_scope(project_root, scope)
+        _, _, digest = _assemble_scope(project_root, "core" if scope is None else scope)
     except HTTPException:
         return ""
     return digest
 
 
-def rules_source_paths(*, project_root: Path) -> list[str]:
+def rules_source_paths(*, project_root: Path, scope: str = "core") -> list[str]:
     """Resolve the set of rule sources that actually exist right now.
 
-    Mirrors ``_read_rule_files()`` but without reading the bodies, for
-    the manifest to advertise what the current concat covers.
+    Defaults to the binding core. Full and task references are explicit.
     """
-    root = project_root
-    return [rel for rel in RULE_SOURCES if (root / rel).is_file()]
+    sources = RULE_SOURCES if scope == "full" else rules_core.scope_sources(scope)
+    return [rel for rel in sources if rules_core.source_path(rel, project_root).is_file()]

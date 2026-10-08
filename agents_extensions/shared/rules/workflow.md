@@ -146,7 +146,7 @@ mission needs operator/advisor approval.
 
 Use canonical Git sources selected for the task. Do not load another harness's
 root instructions or unrelated session state during Codex startup. Monitor's
-complete `/api/rules?format=markdown` reference supports cached full-policy
+complete `/api/rules?scope=full&format=markdown` reference supports cached full-policy
 reads; when unavailable, the same task-scoped selector and ordered full fallback
 remain available in `agents_extensions/shared/rules/_load-via-api.md`.
 

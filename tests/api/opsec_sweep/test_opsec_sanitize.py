@@ -38,15 +38,17 @@ def test_path_tokens_stop_at_backticks(path):
     assert redact_lane_health_text(f"Open `{path}`next.") == f"Open `{REDACTED_ABSOLUTE_PATH}`next."
 
 
-def test_real_app_rules_json_preserves_source_bytes():
+@pytest.mark.parametrize("scope", [None, "core", "content", "task:cli", "full"])
+def test_real_app_rules_json_preserves_source_bytes(scope):
     from scripts.api.main import create_app
     from scripts.api.monitor_context import fixture_context
-    from scripts.api.rules_router import _assemble_rules
+    from scripts.api.rules_router import _assemble_scope
 
     root = Path(__file__).resolve().parents[3]
-    expected, sources, digest = _assemble_rules(root)
+    expected, sources, digest = _assemble_scope(root, scope or "core")
     app = create_app(fixture_context(root))
-    response = TestClient(app).get("/api/rules?format=json")
+    url = "/api/rules?format=json" + (f"&scope={scope}" if scope else "")
+    response = TestClient(app).get(url)
 
     assert response.status_code == 200
     payload = response.json()

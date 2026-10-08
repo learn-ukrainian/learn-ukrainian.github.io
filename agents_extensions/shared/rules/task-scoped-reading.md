@@ -2,8 +2,10 @@
 
 Every seat loads [`core.md`](core.md), the short binding rule set, through
 `/api/rules?scope=core&format=markdown` or the same offline loader. Curriculum
-seats use `scope=content`, which adds `core-curriculum.md`. The unscoped API is
-the complete compatibility reference, not the cold-start bundle.
+seats use `scope=content`, which adds `core-curriculum.md`. The unscoped API
+also serves the binding core (at most 40,000 UTF-8 bytes); other rules load
+through the task scopes below. `scope=full` retains the complete reference
+for explicit policy audits.
 
 The root `AGENTS.md` digest and operator contract remain binding. Read
 `agents_extensions/shared/rules/operator-expectations.md` before consequential
@@ -39,7 +41,7 @@ names `repo-change`, `cli`, `curriculum`, `fresh-build`, `routing`, `driver`,
 `fleet-comms`, `intake`, `review`, `task-family`, `rollover` (in row order).
 `_load-via-api.md` lists the same files for offline reads.
 
-The complete Monitor `/api/rules?format=markdown` response is available for full
+The complete Monitor `/api/rules?scope=full&format=markdown` response is available for full
 policy audits, ambiguous cross-cutting tasks, and clients needing the complete
 ruleset. Its hash cache and source order are unchanged. Offline, select these
 same Git sources; `_load-via-api.md` retains the ordered full-reference list.

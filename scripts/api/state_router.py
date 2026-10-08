@@ -3232,7 +3232,7 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
             "hash": rules_hash(project_root=ctx.roots.project_root),
             "url": "/api/rules?format=markdown",
             "format": "markdown",
-            "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+            "note": "Binding core (at most 40 KB). Load additional rules through task scopes.",
         },
         # Scoped rules carry their own hash; content = core + curriculum addendum.
         "rules_core": {

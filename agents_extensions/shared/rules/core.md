@@ -2,8 +2,8 @@
 
 <critical>
 
-Binds every seat. Curriculum seats add `core-curriculum.md`; procedures: "Load when". `core-manifest.yaml`
-maps each inventory unit to its anchor comment.
+Binds every seat. Curriculum seats add `core-curriculum.md`. Load procedures via `task-scoped-reading.md`.
+`core-manifest.yaml` maps each inventory unit to its anchor comment.
 
 ## P0 — Tool-backed claims, honest reporting
 
@@ -172,6 +172,6 @@ The repo is public and Ukraine is at war with Russia; the enemy reads it too.
 - Curriculum: `core-curriculum.md`, `non-negotiable-rules.md`, `pipeline.md`, `activity-yaml.md`.
 - CLI, storage: `cli-help-standard.md`, `storage-topology.md`.
 - Review; intake; rollover: `local-code-review`, `entire-context`, `thread-rollover` skills.
-- Full ruleset: `/api/rules?format=markdown`; offline `_load-via-api.md`.
+- Full ruleset: `/api/rules?scope=full&format=markdown`; offline `_load-via-api.md`.
 
 </critical>
