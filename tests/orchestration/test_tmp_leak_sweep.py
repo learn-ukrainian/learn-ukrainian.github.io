@@ -23,6 +23,12 @@ def _touch_old(path: Path, *, age_s: float, as_file: bool = False) -> None:
     os.utime(path, (past, past))
 
 
+@pytest.fixture(autouse=True)
+def _generic_scratch_floor(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Sweep tests use the generic floor, never a deployment's env value."""
+    monkeypatch.delenv(tls.SCRATCH_MIN_FREE_ENV, raising=False)
+
+
 def test_name_patterns_match_known_leaks() -> None:
     assert tls.name_matches_leak_pattern("review-6621")
     assert tls.name_matches_leak_pattern("pr6591-exact-ujs9Ng")
@@ -745,3 +751,10 @@ def test_scratch_git_marker_disposition(temp_deletion_layout, marker):
         (metadata / "object").write_bytes(b"disposable clone metadata")
         tls._remove_path(target, repo_root=primary, approved_temp_roots=(scratch,))
         assert not target.exists()
+
+
+def test_sweep_reads_the_shared_env_floor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(tls, "free_space_gb", lambda _p: 25.0)
+    assert tls.sweep_tmp_leaks(apply=False, tmp_roots=[tmp_path], now=time.time())["disk_pressure"] is False
+    monkeypatch.setenv(tls.SCRATCH_MIN_FREE_ENV, "27")
+    assert tls.sweep_tmp_leaks(apply=False, tmp_roots=[tmp_path], now=time.time())["disk_pressure"] is True

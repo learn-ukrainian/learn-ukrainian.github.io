@@ -37,13 +37,19 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.scratch import resolve_scratch_root
-from scripts.common.task_scratch import NAMESPACE_DIRNAME, managed_scratch_paths
+from scripts.common.task_scratch import (
+    DEFAULT_MIN_FREE_GB,
+    NAMESPACE_DIRNAME,
+    SCRATCH_MIN_FREE_ENV,
+    managed_scratch_paths,
+    scratch_min_free_gb,
+)
 from scripts.path_safety import assert_delete_target
 
 # 2h normal; 30m under disk pressure.
 DEFAULT_MIN_AGE_S = 2 * 60 * 60
 DEFAULT_PRESSURE_MIN_AGE_S = 30 * 60
-DEFAULT_MIN_FREE_GB = 15.0
+# Pressure floor: shared with task scratch recovery (scratch_min_free_gb()).
 
 # Basename-only patterns for LU-owned ad-hoc temp residue.
 _LEAK_NAME_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -501,7 +507,7 @@ def sweep_tmp_leaks(
     now: float | None = None,
     min_age_s: float = DEFAULT_MIN_AGE_S,
     pressure_min_age_s: float = DEFAULT_PRESSURE_MIN_AGE_S,
-    min_free_gb: float = DEFAULT_MIN_FREE_GB,
+    min_free_gb: float | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Discover and optionally delete age-gated LU temp leaks.
@@ -509,6 +515,8 @@ def sweep_tmp_leaks(
     Returns a body-free summary suitable for scheduled hygiene receipts.
     """
     current = time.time() if now is None else now
+    if min_free_gb is None:
+        min_free_gb = scratch_min_free_gb()
     roots = list(tmp_roots) if tmp_roots is not None else default_tmp_roots()
     resolved_repo = (repo_root or Path(__file__).resolve().parents[2]).resolve()
     approved_roots = tuple(roots)
@@ -649,8 +657,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--min-free-gb",
         type=float,
-        default=DEFAULT_MIN_FREE_GB,
-        help=f"free-space threshold for pressure mode (default {DEFAULT_MIN_FREE_GB})",
+        default=None,
+        help=f"free-space threshold for pressure mode (default ${SCRATCH_MIN_FREE_ENV}, else {DEFAULT_MIN_FREE_GB})",
     )
     parser.add_argument(
         "--json",

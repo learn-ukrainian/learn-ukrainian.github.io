@@ -26,6 +26,12 @@ pytestmark = pytest.mark.skipif(not Path("/proc").is_dir(), reason="task-scratch
 # --------------------------------------------------------------------------
 
 
+@pytest.fixture(autouse=True)
+def _generic_scratch_floor(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Age-gate tests use the generic floor, never a deployment's env value."""
+    monkeypatch.delenv(ts.SCRATCH_MIN_FREE_ENV, raising=False)
+
+
 def _namespace(root: Path) -> Path:
     return root / ts.NAMESPACE_DIRNAME
 
@@ -578,9 +584,9 @@ def test_unknown_group_probe_preserves(tmp_path: Path, monkeypatch) -> None:
     [
         (100.0, ts.DEFAULT_MIN_AGE_S - 1, "too_young"),
         (100.0, ts.DEFAULT_MIN_AGE_S, "would_reap"),
-        (14.9, ts.DEFAULT_PRESSURE_MIN_AGE_S - 1, "too_young"),
-        (14.9, ts.DEFAULT_PRESSURE_MIN_AGE_S, "would_reap"),
-        (15.0, ts.DEFAULT_PRESSURE_MIN_AGE_S, "too_young"),
+        (ts.DEFAULT_MIN_FREE_GB - 0.1, ts.DEFAULT_PRESSURE_MIN_AGE_S - 1, "too_young"),
+        (ts.DEFAULT_MIN_FREE_GB - 0.1, ts.DEFAULT_PRESSURE_MIN_AGE_S, "would_reap"),
+        (ts.DEFAULT_MIN_FREE_GB, ts.DEFAULT_PRESSURE_MIN_AGE_S, "too_young"),
     ],
 )
 def test_age_gate_boundaries(tmp_path: Path, monkeypatch, free_gb: float, age_s: int, expected: str) -> None:
@@ -1059,3 +1065,27 @@ def test_symlink_and_cross_device_refusals_are_kept(tmp_path: Path, monkeypatch)
         _remove_planted(root, path)
     assert (foreign / "keep").read_text() == "keep"
     assert (outside / "keep").read_text() == "keep"
+
+
+def test_scratch_floor_comes_from_env_with_generic_fallback() -> None:
+    assert ts.scratch_min_free_gb({}) == ts.DEFAULT_MIN_FREE_GB
+    assert ts.scratch_min_free_gb({ts.SCRATCH_MIN_FREE_ENV: " "}) == ts.DEFAULT_MIN_FREE_GB
+    assert ts.scratch_min_free_gb({ts.SCRATCH_MIN_FREE_ENV: "22.5"}) == 22.5
+
+
+@pytest.mark.parametrize("raw", ["lots", "-1", "nan", "inf"])
+def test_scratch_floor_rejects_malformed_env(raw: str) -> None:
+    with pytest.raises(ValueError, match=ts.SCRATCH_MIN_FREE_ENV):
+        ts.scratch_min_free_gb({ts.SCRATCH_MIN_FREE_ENV: raw})
+
+
+def test_recover_reads_the_env_floor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "root"
+    path = _plant_dead_owner(root)
+    _age_tree(path, ts.DEFAULT_PRESSURE_MIN_AGE_S)
+    monkeypatch.setattr(ts, "free_space_gb", lambda _p: 25.0)
+    assert ts.recover_orphans(root=root, now=time.time())["disk_pressure"] is False
+    monkeypatch.setenv(ts.SCRATCH_MIN_FREE_ENV, "27")
+    report = ts.recover_orphans(root=root, now=time.time())
+    assert report["disk_pressure"] is True
+    assert _entry(report, path.name)["action"] == "would_reap"
