@@ -53,6 +53,28 @@ restic rclone path with that final directory name.
   is rebuilt with SQLite's online backup command.
 - SQLite WAL/SHM/journal sidecars for selected databases,
   plus `__pycache__`, `.DS_Store`, and retired `qdrant/` data, are excluded.
+- All exclude patterns go to restic through a private `--exclude-file`, never
+  as one `--exclude` flag per path, so thousands of databases cannot overflow
+  the kernel argument limit. Literal paths are escaped for restic's pattern
+  syntax, including `$` and spaces, which exclude files would otherwise expand
+  or trim.
+- On Linux, databases under a pytest base temp directory (any `pytest-*`
+  path component below the project, such as `pytest-of-<user>` or a
+  `--basetemp` like `pytest-RC`) are per-run test scratch: they are neither
+  uploaded nor kept in the file phase, and the receipt counts them.
+- Preserved SQLite evidence can be packed into a dated archive under
+  `batch_state/backups/archives/NAME.tar.zst` with a
+  `NAME.tar.zst.manifest` (`# archive_bytes:` and `# files:` headers, then one
+  `size<TAB>mtime<TAB>project-relative path` line per database). The file phase
+  uploads the archive; a listed database whose size and mtime still match is
+  excluded as a loose file. A database that changed after archiving is backed
+  up loose with a warning, and a manifest whose archive is missing or a
+  different size is ignored with a warning. Verify the archive (listing, count
+  and per-file hashes) before writing its manifest; the originals are never
+  deleted by the backup.
+- The backup logs `SQLite databases backed up: N of M (...)`; `last-run.json`
+  records `databases_backed_up`, and the change-only failure and recovery
+  alerts include it.
 - Scoped `*-home/` directories in `batch_state/` and `home/` directories in
   `batch_state/review-receipts/` are excluded. Review homes are ephemeral and
   may contain credential links. Absolute symlinks elsewhere still stop backup.
@@ -300,6 +322,9 @@ Drive backup, or another directory containing files.
 - SQLite WAL/SHM/journal sidecars for selected databases: transient
   state incorporated into each staged online database backup.
 - Ephemeral scoped homes in `batch_state/`, including review-receipt homes.
+- SQLite databases under pytest base temp directories (`pytest-*`).
+- Loose copies of databases covered by a verified archive manifest; the
+  archive itself is backed up.
 - `data/textbooks` and `data/vesum` when they are legacy Drive symlinks. Their
   targets remain in the legacy backup until a separate migration is planned.
 

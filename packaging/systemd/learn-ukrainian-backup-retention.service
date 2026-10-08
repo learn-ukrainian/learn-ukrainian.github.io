@@ -1,10 +1,15 @@
 [Unit]
 Description=Learn Ukrainian backup retention (weekly restic forget --prune)
+# Change-only failure report to the Fleet Comms cto channel.
+OnFailure=learn-ukrainian-backup-alert@%n.service
 
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env
+# restic prune refuses fewer than two rclone backend connections; the script
+# enforces that floor for prune, this sets it for the whole retention run.
+Environment=LU_BACKUP_RCLONE_CONNECTIONS=2
 # Prune rewrites repository packs locally before upload; keep it off the fast
 # path and bounded. A weekly forget over ~30 daily-run snapshots is minutes.
 # Allow up to one hour waiting for the shared backup lock, then two hours to run.
@@ -12,3 +17,6 @@ TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
 ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh retention
+# Change-only recovery notice; runs only after a successful ExecStart=. A
+# failed notice never fails the run (leading '-').
+ExecStartPost=-/usr/bin/env @REPO_ROOT@/.venv/bin/python @REPO_ROOT@/scripts/orchestration/backup_failure_alert.py recovered %n
