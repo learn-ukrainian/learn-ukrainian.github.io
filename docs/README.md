@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-121 document families and 29 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+120 document families and 29 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -225,8 +225,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `projects-fleet-design-memos` | doc_family | current | `docs/projects/arc-layer/**`, `docs/projects/fleet-taxonomy/**`, `docs/projects/fleet-trails/**`, `docs/projects/launcher-consolidation/**`, `docs/projects/vesum/**` | Single-file advisor design memos - arc layer, fleet taxonomy alias audit, fleet trails, launcher consolidation and the VESUM re-ingest design. |
 | `projects-folk-remediation` | doc_family | current | `docs/projects/folk-reading-coverage-remediation.md` | FOLK reading coverage remediation tracker. |
 | `registry-reference-inputs` | registry | current | `registry/authors_rights.yaml`, `registry/canonical_anchors.yaml`, `registry/folk_heritage_attestations.yaml`, `registry/folk_micro_genres.yaml`, `registry/foreign_proper_noun_attestations.yaml`, `registry/historical_language_corpus_denominator.yaml`, `registry/pidruchnyk_urls.yaml`, `registry/primary_text_sources.yaml`, `registry/textbook_curriculum_denominator.yaml`, `registry/university_corpus_denominator.yaml`, `registry/lexicon-dataset.pointer.json`, `registry/lt_replacements.json`, `registry/russianism-patterns-ua-gec.csv` | Frozen reference inputs and denominators - authors' rights, canonical anchors, folk and proper-noun attestations, primary text sources, textbook, university and historical corpus denominators, Russianism patterns and replacement table. |
-| `registry-artifacts` | registry | current | `registry/artifacts/**` | Group manifests that bind content-addressed payloads in the local artifact store, the frozen storage classification table, consumer lists, test baselines and the tracked-data allowlist. |
-| `registry-storage-migration-notes` | evidence | historical | `registry/artifacts/notes-P*.md`, `registry/artifacts/host-run-p*.junit.xml` | Storage-migration phase notes and host-run JUnit receipts. |
+| `registry-artifacts` | registry | current | `registry/artifacts/**` | Group manifests that bind content-addressed payloads in the local artifact store, the frozen storage classification table and the tracked-data allowlist. |
 | `registry-corpus-audit` | evidence | current | `registry/corpus_audit/**` | Corpus gap taxonomy, ingestion roadmap and NAVSI-200 catalog. |
 | `registry-corpus-audit-draft-tickets` | doc_family | draft | `registry/corpus_audit/draft_tickets/**` | Draft ingestion tickets for grammar-source blocker cases, one per source and topic, awaiting human approval before filing. |
 | `registry-corpus-channels` | registry | current | `registry/external_articles/**`, `registry/youtube_discovery/**` | External-article channel list and YouTube discovery search patterns for corpus acquisition. |

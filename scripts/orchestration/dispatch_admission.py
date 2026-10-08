@@ -397,7 +397,7 @@ def probe_host() -> HostProbe:
         and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
         and Path("/proc") == PROC_ROOT
     ):
-        return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=8, proc_available=True)
+        return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=64, proc_available=True)
     return read_host(PROC_ROOT)
 
 

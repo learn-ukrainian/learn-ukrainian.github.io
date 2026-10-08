@@ -44,9 +44,8 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.storage.topology import StoreBinding, StoreRefusal, resolve_store
 
-DB = PROJECT_ROOT / "data" / "sources.db"
-VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
 UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
 
 PR_2006_REF = "origin/pr-2006"
@@ -74,6 +73,15 @@ ANTONENKO_PROSE_MARKERS = (
 )
 UA_GEC_RELEVANT_TAGS = ("F/Calque", "F/Style", "F/Collocation", "G/Case", "G/Gender")
 UA_GEC_ANN_RE = re.compile(r"\{([^{}=]*?)=>([^{}]*?):::error_type=([^}]+)\}")
+
+
+def _read_store_path(store: str, db_path: Path | None) -> Path:
+    """Resolve the current local read binding, validating explicit paths too."""
+    binding = None if db_path is None else StoreBinding(store, Path(db_path))
+    resolved = resolve_store(store, repository_root=PROJECT_ROOT, binding=binding)
+    if isinstance(resolved, StoreRefusal):
+        raise RuntimeError(f"{store} read store refused: {resolved.reason}")
+    return resolved.path
 
 
 def utc_timestamp() -> str:
@@ -148,13 +156,13 @@ def pull_calibration_cases(
     return cases
 
 
-def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[str, Any]]:
+def retrieve_antonenko(text: str, k: int = 8, *, db_path: Path | None = None) -> list[dict[str, Any]]:
     """Find Antonenko entries whose headwords appear in ``text``.
 
     Ported from ``scripts/audit/russianism_judge.py`` on ``origin/pr-2006``.
     It grounds the judge prompt in canonical evidence from the local sources DB.
     """
-    conn = _open_readonly(db_path)
+    conn = _open_readonly(_read_store_path("sources", db_path))
     try:
         words = set(re.findall(r"[А-Яа-яҐґЄєІіЇї'’ʼ\-]+", text.lower()))
         if not words:
@@ -207,7 +215,7 @@ def _proper_noun_tokens(text: str) -> set[str]:
     return proper_nouns
 
 
-def _heritage_check(text: str, *, db_path: Path = DB) -> list[dict[str, Any]]:
+def _heritage_check(text: str, *, db_path: Path | None = None) -> list[dict[str, Any]]:
     """Tokens with attestation in Grinchenko (1907) or ESUM etymology.
 
     Single-word attestation in pre-Soviet / etymological dictionaries is strong
@@ -216,7 +224,7 @@ def _heritage_check(text: str, *, db_path: Path = DB) -> list[dict[str, Any]]:
     tokens = _text_tokens(text)
     if not tokens:
         return []
-    conn = _open_readonly(db_path)
+    conn = _open_readonly(_read_store_path("sources", db_path))
     try:
         placeholders = ",".join("?" * len(tokens))
         grinchenko = {
@@ -289,7 +297,7 @@ def _russian_shadow_check(text: str) -> dict[str, Any]:
     return {"available": True, "triggered_tokens": triggered}
 
 
-def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
+def _vesum_unknown(text: str, *, db_path: Path | None = None) -> list[str]:
     """Cyrillic tokens NOT present in VESUM as a known word_form.
 
     Proper nouns are excluded — place and person names are typically absent
@@ -298,13 +306,11 @@ def _vesum_unknown(text: str, *, db_path: Path = VESUM_DB) -> list[str]:
     tokens = _text_tokens(text)
     if not tokens:
         return []
-    if not db_path.exists():
-        return []
     proper_nouns = _proper_noun_tokens(text)
     candidate_tokens = [t for t in tokens if t not in proper_nouns]
     if not candidate_tokens:
         return []
-    conn = _open_readonly(db_path)
+    conn = _open_readonly(_read_store_path("vesum", db_path))
     try:
         placeholders = ",".join("?" * len(candidate_tokens))
         known = {
@@ -329,7 +335,7 @@ def _antonenko_fulltext_search(
     text: str,
     k: int = 4,
     *,
-    db_path: Path = DB,
+    db_path: Path | None = None,
     snippet_chars: int = 200,
 ) -> list[dict[str, Any]]:
     """Search the full-text Antonenko corpus (169 page chunks) for phrases
@@ -366,6 +372,7 @@ def _antonenko_fulltext_search(
     prefixes = sorted({t[:5] for t in tokens if len(t) >= 5})
     if not prefixes:
         return []
+    db_path = _read_store_path("sources", db_path)
 
     prefix_or = " OR ".join(f'"{p}"*' for p in prefixes)
     marker_or = " OR ".join(f'"{m}"' for m in ANTONENKO_PROSE_MARKERS)
@@ -542,7 +549,7 @@ def retrieve_evidence(text: str) -> dict[str, Any]:
     }
 
 
-def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[str, Any]]:
+def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path | None = None) -> list[dict[str, Any]]:
     """Find UA-GEC error pairs matching words in ``text``.
 
     Searches the ``ua_gec_errors`` FTS5 table for error→correction triples
@@ -552,6 +559,7 @@ def retrieve_ua_gec(text: str, k: int = 8, *, db_path: Path = DB) -> list[dict[s
     G/Case, G/Gender). Densest evidence source for phraseological and
     register calques that don't have Antonenko-Davydovych headword entries.
     """
+    db_path = _read_store_path("sources", db_path)
     conn = _open_readonly(db_path)
     conn.row_factory = sqlite3.Row
     try:

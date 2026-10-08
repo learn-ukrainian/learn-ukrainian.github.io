@@ -20,7 +20,7 @@ ModuleNotFoundError: No module named 'agent'
 [0m
 [0m$ [0mpython3 -c "
 import sys
-sys.path.insert(0, '/Users/krisztiankoos')
+sys.path.insert(0, '<operator-home>')
 from agent import find_russianisms
 print(find_russianisms('На протязі учбовий співпадати мішати приймати участь'))
 print(find_russianisms('немає русизмів'))

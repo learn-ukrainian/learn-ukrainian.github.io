@@ -138,9 +138,9 @@ SUBCHUNK_RETRIEVAL_DEPTH = 200
 
 #: Per-cell encode batch sizes. Memory pressure scales with
 #: batch_size × max_length²; cell C at 8192 tokens needs a much
-#: smaller batch than cells A/B to fit a 16-32 GB unified-memory
-#: M-series Mac. Numbers chosen empirically: A=32, B=16, C=4 keeps
-#: peak workspace under ~3 GB on top of the 2.3 GB BGE-M3 model.
+#: smaller batch than cells A/B to fit a unified-memory workstation.
+#: Numbers chosen empirically: A=32, B=16, C=4 keeps peak workspace
+#: small next to the BGE-M3 model itself.
 #: Override with --batch-A / --batch-B / --batch-C if your machine
 #: has more headroom.
 DEFAULT_BATCH_SIZES = {
@@ -689,9 +689,9 @@ def run_cell(
             }
 
             # Free the encoded sub-chunk array before the next period
-            # to keep peak RSS down on the M-series Mac. Release MPS
+            # to keep peak RSS down on the workstation. Release MPS
             # workspace explicitly — gc alone leaves it allocated and
-            # the next period's encode tips a 16 GB Mac into OOM.
+            # the next period's encode tips the workstation into OOM.
             # (Empirical: post-#1562 OOM-reboot 2026-04-25 on cell B
             # middle_ukrainian after a successful OES.)
             del sub_dense, sub_texts, sub_chunks

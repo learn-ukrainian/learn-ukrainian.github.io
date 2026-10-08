@@ -356,6 +356,35 @@ def test_supervisory_duplicate_wake_never_starts_second_live_driver(supervisory_
     assert supervisor.close_driver(role="driver", lease=lease) == "closed"
 
 
+def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tmp_path, monkeypatch):
+    from unittest.mock import Mock
+
+    from agents_extensions.shared.session_streams.model import utc_now
+    from scripts.ai_agent_bridge import _ui_codex
+    from scripts.ai_agent_bridge._inbox_watch import InboxEvent, wake_driver_once
+
+    now = utc_now()
+    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: now)
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    before = supervisor.remote.stream(lease.stream_id)
+    thread = "019e6063-c3da-78d1-acaa-4cd684a08786"
+    monkeypatch.setattr(_ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}))
+    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    monkeypatch.setattr(_ui_codex, "send", send)
+    start = Mock(side_effect=AssertionError("live lease forbids launcher"))
+    assert wake_driver_once(
+        service, supervisor.remote, stream_id=lease.stream_id,
+        launcher=Path("start-codex-driver.sh"), epic="fixture", run=start,
+        inbox_events=[InboxEvent(1, "fixture-sender", "fixture-request", "pending work")],
+    )
+    assert send.call_args.kwargs["thread_id"] == thread
+    assert "pending work" in send.call_args.kwargs["message"]
+    start.assert_not_called()
+    assert supervisor.remote.stream(lease.stream_id) == before
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+
+
 def test_supervisory_consumed_released_generation_starts_exactly_one_successor(supervisory_cycle):
     from datetime import UTC, datetime, timedelta
     from types import SimpleNamespace
