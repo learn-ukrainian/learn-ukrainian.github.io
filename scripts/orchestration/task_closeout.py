@@ -537,21 +537,7 @@ class StaticObservationAdapter:
         return deepcopy(self.observation)
 
 
-def _replace_checkbox(body: str, ac_id: str) -> str:
-    lines = body.splitlines()
-    needle = f"**{ac_id}**"
-    for index, line in enumerate(lines):
-        if needle in line and line.lstrip().startswith("- ["):
-            prefix = line[: len(line) - len(line.lstrip())]
-            content = line.lstrip()
-            lines[index] = prefix + "- [x]" + content[5:]
-    suffix = "\n" if body.endswith("\n") else ""
-    return "\n".join(lines) + suffix
-
-
-def evidenced_issue_body(
-    ledger: Mapping[str, Any], observation: Mapping[str, Any]
-) -> tuple[str, list[str]]:
+def evidenced_issue_body(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> tuple[str, list[str]]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
     valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
@@ -560,7 +546,7 @@ def evidenced_issue_body(
         if not criterion["applicable"]:
             continue
         if set(criterion["required_evidence"]).issubset(valid.get(criterion["id"], set())):
-            body = _replace_checkbox(body, criterion["id"])
+            body = task_lifecycle.check_ac_checkbox(body, criterion["id"])
             checked_ids.append(criterion["id"])
     return body, checked_ids
 

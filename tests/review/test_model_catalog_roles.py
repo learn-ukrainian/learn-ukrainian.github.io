@@ -24,7 +24,7 @@ from scripts.review.model_catalog import (
 )
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
-from tests.review.test_model_catalog import BASELINE, CAPTURE, FIXTURE, INPUTS
+from tests.review.test_model_catalog import BASELINE, CAPTURE, FIXTURE, INPUTS, REVIEW_CAPACITY_BASELINE
 
 
 @pytest.fixture
@@ -384,7 +384,7 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     monkeypatch.setattr(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief,
                         now=CAPTURE["FIXED_NOW"]))
     actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case)))
-    assert json.loads(CAPTURE["encode"](actual)) == BASELINE["reviewer"][index]
+    assert json.loads(CAPTURE["encode"](actual)) == REVIEW_CAPACITY_BASELINE["reviewer"][index]
 
 
 def test_fixture_bytes_remain_frozen():

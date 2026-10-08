@@ -301,6 +301,105 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert (tasks_dir / dispatch_admission.LOCK_FILE_NAME).is_file()
 
 
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", "read-only"])
+@pytest.mark.parametrize(
+    "research_paths,owned_paths,conflicts",
+    [
+        (["tests/**"], ["tests/test_incoming.py"], False),
+        (["tests/test_incoming.py"], ["tests/test_holder.py"], True),
+    ],
+    ids=["broad-research-disjoint-writer", "narrow-research-overlapping-writer"],
+)
+def test_dispatch_ownership_uses_commit_scope(
+    tasks_dir, monkeypatch, capsys, mode, research_paths, owned_paths, conflicts
+):
+    """#10015: real ownership admission ignores research classification in both directions."""
+    import sqlite3
+
+    from scripts.guardrails import delegate_ownership as ownership
+
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "refuse")
+    pid = os.getpid()
+    state_dir = Path(os.environ["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"])
+    _running_record(state_dir, "holder", pid=pid)
+    holder = ownership.admit_write_paths(
+        task_id="holder", mode="workspace-write", owned_paths=["tests/test_holder.py"], pid=pid
+    )
+    assert holder.admitted
+    admissions = []
+    real_admit = ownership.admit_write_paths
+
+    def capture_admission(**kwargs):
+        result = real_admit(**kwargs)
+        admissions.append(result)
+        return result
+
+    monkeypatch.setattr(ownership, "admit_write_paths", capture_admission)
+    spawned = []
+
+    class _Proc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: spawned.append(cmd) or _Proc())
+    args = _live_danger_args(tasks_dir, "ownership-incoming")
+    args.mode = mode
+    args.owned_path = owned_paths
+    args.research_owned_path = research_paths
+
+    rc = delegate.cmd_dispatch(args)
+
+    refused = conflicts and mode != "read-only"
+    err = capsys.readouterr().err
+    assert rc == (2 if refused else 0), err
+    assert len(admissions) == 1
+    assert admissions[0].skipped is (mode == "read-only")
+    assert admissions[0].admitted is (not refused)
+    assert bool(admissions[0].conflicts) is refused
+    assert len([cmd for cmd in spawned if "_worker" in cmd]) == (0 if refused else 1)
+    state = delegate._read_state(delegate._state_path(args.task_id))
+    if refused:
+        assert "write-path ownership refused" in err
+        assert state is None
+    else:
+        assert state["owned_paths"] == owned_paths
+    with sqlite3.connect(os.environ["LEARN_UKRAINIAN_OWNERSHIP_LEDGER"]) as conn:
+        rows = conn.execute("SELECT claim_json, pid FROM write_claims WHERE task_id = ?", (args.task_id,)).fetchall()
+    if refused or mode == "read-only":
+        assert rows == []
+    else:
+        assert [json.loads(claim)["raw"] for claim, _pid in rows] == owned_paths
+        assert [claim_pid for _claim, claim_pid in rows] == [_Proc.pid]
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_dispatch_without_commit_scope_refuses_before_ownership(tasks_dir, monkeypatch, capsys, mode):
+    """Research paths cannot replace the required --owned-path at authoring admission."""
+    from scripts.guardrails import delegate_ownership as ownership
+
+    real_authoring_admission = delegate._authoring_review_admission
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(delegate, "_authoring_review_admission", real_authoring_admission)
+    monkeypatch.setattr(
+        ownership, "admit_write_paths", lambda **_kwargs: pytest.fail("ownership must not run without commit scope")
+    )
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("an unscoped writer must not spawn")
+    )
+    args = _live_danger_args(tasks_dir, "ownership-unscoped")
+    args.mode = mode
+    args.owned_path = None
+    args.research_owned_path = ["tests/**"]
+
+    assert delegate.cmd_dispatch(args) == 2
+
+    err = capsys.readouterr().err
+    assert delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN in err
+    assert "write dispatch declares no --owned-path" in err
+    assert not delegate._state_path(args.task_id).exists()
+
+
 def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(tasks_dir, monkeypatch, capsys):
     """Two dispatches pass the early check; the locked re-check refuses the one that finds the cap full."""
     _stub_worktree(monkeypatch, tasks_dir)
@@ -353,6 +452,124 @@ def _scratch_repo(root: Path) -> Path:
     _git(repo, "init", "-q", "-b", "main")
     _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "base")
     return repo
+
+
+def _mechanical_canary_args(*extra: str):
+    return delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-haiku-5-5",
+        "--task-id", "haiku-mechanical-canary", "--mode", "read-only", "--dry-run",
+        "--research-task-family", "mechanical_classification",
+        "--research-owned-path", "package-lock.json",
+        "--prompt", "Classify the lockfile format. Read only.", *extra,
+    ])
+
+
+def _lockfile_repo(root: Path, content: str = '{"lockfileVersion": 3}') -> Path:
+    repo = _scratch_repo(root)
+    (repo / "package-lock.json").write_text(content, encoding="utf-8")
+    _git(repo, "add", "package-lock.json")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "-m", "lockfile")
+    return repo
+
+
+def _content_gate(args, repo: Path, *, cwd: Path | None = None):
+    return delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: (request.seat, request.model, "explicit"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=cwd,
+    )
+
+
+@pytest.mark.parametrize("explicit_cwd", [False, True])
+@pytest.mark.parametrize("family", ["mechanical_classification", "readonly_recon", "routine_mechanical"])
+def test_readonly_mechanical_without_worktree_reads_checkout_and_commit(tmp_path, monkeypatch, explicit_cwd, family):
+    repo = _lockfile_repo(tmp_path)
+    args = _mechanical_canary_args("--research-task-family", family)
+
+    def write_resolver_must_not_run(*args, **kwargs):
+        pytest.fail("read-only mechanical task reached Kimi's write-only tree resolver")
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", write_resolver_must_not_run)
+    # An explicit cwd wins over the default checkout, including when the default
+    # cannot be read. Both the on-disk and committed content readers are real.
+    refusal, start, target = _content_gate(
+        args, tmp_path / "unavailable" if explicit_cwd else repo, cwd=repo if explicit_cwd else None,
+    )
+    assert refusal is None and start is None
+    assert target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("unsafe_tree", ["disk", "commit"])
+def test_readonly_mechanical_without_worktree_checks_both_content_trees(tmp_path, unsafe_tree):
+    safe, unsafe = '{"lockfileVersion": 3}', '{"name": "Україна"}'
+    repo = _lockfile_repo(tmp_path, unsafe if unsafe_tree == "commit" else safe)
+    (repo / "package-lock.json").write_text(unsafe if unsafe_tree == "disk" else safe, encoding="utf-8")
+    refusal, start, target = _content_gate(_mechanical_canary_args(), repo)
+    assert "owned content must be plain UTF-8 without Cyrillic" in refusal
+    assert start is None and target is None
+
+
+def test_readonly_mechanical_unreadable_checkout_reports_resolution_stage(tmp_path):
+    refusal, start, target = _content_gate(_mechanical_canary_args(), tmp_path / "missing")
+    assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (RuntimeError) (#9996)"
+    assert start is None and target is None
+
+
+@pytest.mark.parametrize("unsafe", [False, True])
+def test_substituted_readonly_mechanical_route_checks_checkout_without_worktree(tmp_path, unsafe):
+    repo = _lockfile_repo(tmp_path, '{"name": "Україна"}' if unsafe else '{"lockfileVersion": 3}')
+    args = _mechanical_canary_args("--model", "claude-sonnet-5-5")
+    refusal, start, target = delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: ("claude", "claude-haiku-5-5", "test-substitution"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=None,
+    )
+    assert start is None
+    if unsafe:
+        assert "owned content must be plain UTF-8 without Cyrillic" in refusal and target is None
+    else:
+        assert refusal is None and target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("selector", ["--worktree", "--branch"])
+def test_readonly_mechanical_with_worktree_keeps_start_tree_resolution(tmp_path, monkeypatch, selector):
+    from scripts.agent_runtime.kimi_admission import worktree_trees
+
+    repo = _lockfile_repo(tmp_path)
+    commit = _git(repo, "rev-parse", "HEAD")
+    calls = []
+
+    def start_trees(args, **kwargs):
+        calls.append(args)
+        return worktree_trees(repo), commit
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", start_trees)
+    extra = (selector,) if selector == "--worktree" else (selector, "existing-branch")
+    args = _mechanical_canary_args(*extra)
+    refusal, start, target = _content_gate(args, repo)
+    assert refusal is None and target.model == "claude-haiku-5-5"
+    assert start == commit and calls == [args]
+
+
+@pytest.mark.parametrize("agent,model,path", [
+    ("kimi", "kimi-code/k3", "site/src/components/LiveStatus.tsx"),
+    ("claude", "claude-haiku-5-5", "package-lock.json"),
+])
+def test_write_content_gate_without_worktree_still_refuses(tmp_path, agent, model, path):
+    args = _mechanical_canary_args(
+        "--agent", agent, "--model", model, "--mode", "workspace-write",
+        "--research-task-family", "routine_mechanical", "--research-owned-path", path, "--owned-path", path,
+    )
+    # Remove the canary's research path when checking Kimi's narrower allowlist.
+    args.research_owned_path = [path]
+    refusal, start, target = _content_gate(args, tmp_path)
+    assert refusal and start is None and target is None
+    if agent == "kimi":
+        assert "ROUTING REFUSED: KIMI CODING-ONLY" in refusal and "ValueError" in refusal
+        with pytest.raises(ValueError, match="workspace-write without a dispatch worktree"):
+            delegate._kimi_start_trees(
+                args, agent=agent, target_repo_root=tmp_path, validated_worktree=None, validated_cwd=None,
+            )
+    else:
+        assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (ValueError) (#9996)"
 
 
 def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:

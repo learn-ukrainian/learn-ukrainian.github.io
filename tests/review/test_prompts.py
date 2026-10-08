@@ -530,6 +530,23 @@ def test_check_and_render_fail_on_unauthorized_file_read(tmp_path: Path, monkeyp
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("kind", ["lesson", "rereview"])
+def test_rendered_sum11_continuation_cannot_settle(tmp_path, monkeypatch, kind):
+    if kind == "rereview":
+        path, _ = _write_rereview(tmp_path, monkeypatch)
+    else:
+        path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _, _ = render_prompt(
+        path,
+        template_name="lesson-rereview" if kind == "rereview" else None,
+        repo_root=tmp_path,
+    )
+    assert (
+        "`search_definitions` (SUM-11) is available for Sovietization context only;\n"
+        "it can never settle meaning, norm or stress."
+    ) in rendered
+
+
 def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     manifest_path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _, _ = render_prompt(manifest_path, repo_root=tmp_path)
@@ -550,7 +567,10 @@ def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path
     assert "inspect_word" in rendered
     assert "inspect_words" in rendered
     assert "query_sum20" in rendered
-    assert "`query_ulif` and other Sources\nwriters are unavailable on every review route, including full access." in rendered
+    assert (
+        "`query_ulif` and other Sources\nwriters are unavailable on every review route, including full access."
+        in rendered
+    )
     for tool in (
         "verify_word",
         "verify_lemma",

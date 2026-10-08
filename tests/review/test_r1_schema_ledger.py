@@ -1672,7 +1672,7 @@ _PRINTED_OUTCOME_CASES: list[tuple[str, str, str | Exception, str, str]] = [
         "verify_words",
         "invalid_input: words must be a non-empty list",
         "ok",
-        "hits_but_no_support",
+        "error",
     ),
     ("empty_result", "search_text", "No results found.", "ok", "no_hits"),
     ("hits", "verify_words", "Batch verification: 1 words\nFound: 1/1\n- слово — FOUND", "ok", "hits_but_no_support"),

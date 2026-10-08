@@ -480,12 +480,13 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         "agents": {
             "gemini": {"status": "hot", "health": {"healthy": True}},
             "grok": {"status": "cool", "health": {"healthy": True}},
-            "claude": {"status": "warm", "health": {"healthy": True}},
+            "claude": {"status": "warm", "remaining_pct": 45, "health": {"healthy": True}},
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5-5"
-    assert resolution.selected.health == "degraded"
+    assert resolution.selected.health == "healthy"
+    assert resolution.selected.capacity.freshness == credit_lane.UNKNOWN
 
 
 def test_gemini_lane_outage_does_not_create_code_review_route():
@@ -581,7 +582,8 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
         ResolverInputs(
             author_model="gemini",
             risk="medium",
-            routing_snapshot={"codex": "near_cap", "cursor": "healthy"},
+            routing_snapshot={"agents": {"codex": {"status": "near_cap", "remaining_pct": 5},
+                                        "cursor": {"status": "healthy"}}, "diagnostics": {"stale": False}},
         )
     )
     assert resolution.selected is not None
@@ -957,7 +959,7 @@ def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate(practical_a
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", risk="medium"),
         ladder=((sonnet, PRACTICAL_ASTRA),),
-        runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
+        runtime_state={"agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "healthy"}}, "diagnostics": {"stale": False}},
     )
     assert resolution.selected.name == "synthetic-practical-astra"
     sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5-5")
@@ -990,6 +992,40 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
     assert "no unreserved concurrency slot" in next(
         item.reason for item in full_credential.trace if item.name == "synthetic-practical-astra"
     )
+
+
+def test_dispatch_capacity_exclusions_do_not_change_normal_resolver_selection():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "diagnostics": {"stale": False},
+        "review_capacity_exclusions": {OPENAI_FRONTIER.name: "weekly deficit"},
+    }
+    inputs = ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=snapshot)
+    assert resolve_reviewer(inputs).selected.name == OPENAI_FRONTIER.name
+    exhausted = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert exhausted.selected is None
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in exhausted.fail_closed_reason
+    assert "dispatch capacity: weekly deficit" in exhausted.fail_closed_reason
+    for item in exhausted.trace:
+        assert item.name in exhausted.fail_closed_reason
+        assert item.reason in exhausted.fail_closed_reason
+
+
+def test_dispatch_capacity_uses_resolver_transport_fallback_order():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "diagnostics": {"stale": False},
+        "review_capacity_exclusions": {
+            OPENAI_FRONTIER.name: "weekly deficit",
+            GROK_4_7.name: "runtime capacity unavailable",
+        },
+    }
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="critical", routing_snapshot=snapshot)
+    result = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert result.selected.name == GROK_4_7_CURSOR_FALLBACK.name
+    primary = next(item for item in result.trace if item.name == GROK_4_7.name)
+    assert primary.status == "excluded"
+    assert primary.reason == "dispatch capacity: runtime capacity unavailable"
 
 
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
@@ -1582,6 +1618,9 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
         expected = "claude-sonnet-5-5"
     else:
         expected = "openai_frontier"
+    if state == "native-near-cap":
+        snapshot = {"agents": {route: {"status": status} for route, status in snapshot.items()}, "diagnostics": {"stale": False}}
+        snapshot["agents"]["grok"]["remaining_pct"] = 5
     result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, routing_snapshot=snapshot))
     assert (result.selected.name if result.selected else None) == expected
 
@@ -1848,7 +1887,7 @@ def _credit_codex(credit: dict | None, *, diagnostics: dict | None = None, **ove
     }
     if credit is not None:
         record["credit"] = credit
-    snapshot: dict = {"agents": {"codex": record}}
+    snapshot: dict = {"agents": {"codex": record}, "diagnostics": {"stale": False}}
     if diagnostics is not None:
         snapshot["diagnostics"] = diagnostics
     return snapshot
@@ -1915,10 +1954,10 @@ def test_near_cap_without_usable_credits_stays_excluded(credit):
     assert result.credit is None
 
 
-def test_flat_near_cap_map_carries_no_credit_and_stays_excluded():
+def test_flat_near_cap_map_without_allowance_stays_unknown():
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot={"codex": "near_cap"})
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded" and result.credit is None
+    assert result.status == "eligible" and result.health is None and result.credit is None
 
 
 def test_stale_published_credit_balance_stays_excluded():
@@ -1947,9 +1986,16 @@ def test_published_credit_relief_is_rechecked_against_the_full_record(record, di
     result = evaluate_candidate(
         OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=snapshot)
     )
-    assert result.status == "excluded"
-    assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
-    assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+    if diagnostics == {"stale": True} or record.get("stale") or record.get("freshness") == "stale_last_good":
+        assert result.status == "eligible" and result.credit is None
+    else:
+        assert result.status == "excluded"
+        assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+        assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+    # Credit relief itself remains fail-closed, even when stale allowance is advisory.
+    relief = credit_lane.published_credit_relief("codex", snapshot["agents"]["codex"]["credit"], "gpt-6.1-sol",
+                                               record=snapshot["agents"]["codex"], snapshot_stale=bool((diagnostics or {}).get("stale")))
+    assert relief["state"] == credit_lane.CREDITS_UNVERIFIED
 
 
 def test_credit_balance_never_relaxes_hard_health_exclusion():
@@ -1986,6 +2032,7 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     assert resolve_reviewer(inputs, ladder=ladder, runtime_state=plain).selected.name == "synthetic-practical-astra"
 
     credit_backed = {
+        "diagnostics": {"stale": False},
         "agents": {
             "codex": {**_credit_codex(_published_credit())["agents"]["codex"], "scheduler": light_codex},
             "claude": {"status": "healthy", "scheduler": busy_claude},
@@ -1997,9 +2044,10 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
 
     # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
     only_credit = {
+        "diagnostics": {"stale": False},
         "agents": {
             "codex": _credit_codex(_published_credit())["agents"]["codex"],
-            "claude": {"status": "near_cap"},
+            "claude": {"status": "near_cap", "remaining_pct": 5},
         }
     }
     resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=only_credit)

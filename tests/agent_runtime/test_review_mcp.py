@@ -183,6 +183,20 @@ def _host_independent_umask() -> Iterator[None]:
 
 
 @pytest.fixture(autouse=True)
+def _isolate_dispatch_worktrees(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Refusal regressions must fail before provisioning a real dispatch tree."""
+    ensure_worktree = delegate_cli._ensure_worktree
+
+    def ensure_fixture_worktree(**kwargs):
+        assert delegate_cli._REPO_ROOT.resolve().is_relative_to(tmp_path.resolve()), (
+            "dispatch reached real worktree provisioning"
+        )
+        return ensure_worktree(**kwargs)
+
+    monkeypatch.setattr(delegate_cli, "_ensure_worktree", ensure_fixture_worktree)
+
+
+@pytest.fixture(autouse=True)
 def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
     """Dispatch tests here are about review-attempt refusals, not host health.
 
@@ -613,10 +627,12 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
         assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
 
 
-def test_delegate_dispatch_refuses_budget_guard_substitution(
+@pytest.mark.parametrize("remaining_pct", [None, 54.0, 10.0, 5.0])
+def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
     manifest_file: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
+    remaining_pct: float | None,
 ) -> None:
     monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
     fake_budget = {
@@ -636,6 +652,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             },
         },
     }
+    if remaining_pct is not None:
+        fake_budget["agents"]["claude"]["remaining_pct"] = remaining_pct
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
     monkeypatch.setattr(
         "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
@@ -660,15 +678,25 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             "rev-001",
             "--attempt-id",
             "att-001",
+            "--dry-run",
         ]
     )
-    assert rc == 2
     captured = capsys.readouterr()
-    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
-    assert (
-        "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
-        in captured.err
-    )
+    if remaining_pct is not None and remaining_pct <= 10:
+        assert rc == 2
+        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
+        assert (
+            "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
+            in captured.err
+        )
+    else:
+        # #10016 AC-01 items 1, 2 and 5: burn/pace alone cannot exclude
+        # the selected reviewer, including immutable review attempts.
+        assert rc == 0
+        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" not in captured.err
+        assert "REVIEW_IDENTITY_SUBSTITUTED" not in captured.err
+        state = json.loads(delegate_cli._state_path("review-task-budget-sub").read_bytes())
+        assert state["agent"] == "claude" and state["substitution"] is None
 
 
 def test_delegate_dispatch_refuses_retired_alias_substitution(

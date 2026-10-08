@@ -57,6 +57,7 @@ def artifacts(
     resolver: Resolver,
     pins: dict,
     register_bytes: bytes,
+    extra_files: dict[str, bytes] | None = None,
 ) -> dict[str, bytes]:
     gate = Gate(reader, catalog, resolver, config["components"])
     effective = prepare(candidates, gate)
@@ -104,6 +105,17 @@ def artifacts(
         if metrics["status"] != "PASS":
             readme.append(f"- {operation}: {metrics['status']}; not training-ready.")
     files["README.md"] = ("\n".join(readme) + "\n").encode()
+    for name, content in (extra_files or {}).items():
+        # Components return bytes; only the common output guard writes them.
+        parts = OutputGuard._parts(name)
+        require(
+            name not in files
+            and name not in {"manifest.json", "private-manifest.json", "verification.json"}
+            and parts[0] != "mutation-fixtures",
+            "artifact_conflict",
+        )
+        require(isinstance(content, bytes), "component_artifact")
+        files[name] = content
     manifest = {
         "schema": "omd-review-build.v1",
         "framework_version": FRAMEWORK_VERSION,
@@ -181,7 +193,11 @@ def verify_mutations(
         "empty_locator": changed_value(
             replace(value, citations=(replace(value.citations[0], locator=""), *value.citations[1:]))
         ),
-        "missing_unit": candidates[:i] + candidates[i + 1 :],
+        "missing_unit": [
+            c
+            for c in candidates
+            if (c.component, c.operation, c.unit_id) != (candidate.component, candidate.operation, candidate.unit_id)
+        ],
     }
     # Find an observable swap: a heading's span can quote the same prefix from
     # two different fields, in which case that particular swap is no mutation.
@@ -327,7 +343,21 @@ def execute(
         require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
         require(digest(canonical(request)) == pins["request"], "spec_mutated")
         pins["candidates"] = digest(candidates_bytes)
-        result = artifacts(config, candidates, reader, catalog, resolver, pins, register_bytes)
+        extra_files = {}
+        for obj in (component_objects or {}).values():
+            producer = getattr(obj, "artifact_files", None)
+            if producer is not None:
+                for name, content in producer(ctx).items():
+                    require(name not in extra_files, "artifact_conflict")
+                    extra_files[name] = content
+        require(digest(canonical(request)) == pins["request"], "spec_mutated")
+        require(digest(canonical(config["components"])) == pins["component_specs"], "spec_mutated")
+        require(
+            component_objects is None
+            or digest(canonical({c: obj.spec for c, obj in component_objects.items()})) == pins["component_specs"],
+            "spec_mutated",
+        )
+        result = artifacts(config, candidates, reader, catalog, resolver, pins, register_bytes, extra_files)
         if verify:
             require(out.read("manifest.json") == result["manifest.json"], "artifact_mismatch")
             for name, content in sorted(result.items()):

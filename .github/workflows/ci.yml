@@ -86,8 +86,14 @@ jobs:
           python-version-file: '.python-version'
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
-      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
+      # `version` is the scanner image tag. The uses SHA pins this action's
+      # script only; omitting version pulls :latest. Bump: set both TruffleHog
+      # steps to the newest trufflesecurity/trufflehog release (3.99.0 or
+      # newer — never an older tag to clear a finding) and re-scan with
+      # scripts/audit/secret_scan_local.py tree.
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # action v3.97.9
         with:
+          version: "3.99.0"
           base: ${{ steps.metadata.outputs.parent }}
           head: ${{ steps.metadata.outputs.commit }}
           extra_args: --results=verified,unknown --exclude-detectors=Lob
@@ -130,8 +136,12 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
+      # Same scanner pin as the queue-metadata step. Bump both together:
+      # newest trufflesecurity/trufflehog release, never an older tag to clear
+      # a finding, then re-scan with scripts/audit/secret_scan_local.py tree.
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # action v3.97.9
         with:
+          version: "3.99.0"
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
@@ -244,15 +254,23 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 scripts/ci/frontend_change_scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA"
-      # Drift check sits between build and test:unit, which re-runs hydrate (#7673).
+      # Hydrate and build once (#9718). The record binds the build's log, exit code and
+      # dist/ to the hydrated inputs; test:unit:ci, the verify below and build-renders
+      # fail closed unless that exact build and those inputs are still current.
+      # The drift check stays directly after the build (#7673).
       - if: steps.scope.outputs.run == 'true'
         name: Build, drift check, unit and built-output tests
         working-directory: site
+        env:
+          FRONTEND_BUILD_RECORD: ${{ runner.temp }}/frontend-build/record.json
         run: |
           set -euo pipefail
-          npm run build
+          npm run hydrate
+          node --experimental-strip-types tests/helpers/ci-build-artifact.ts \
+            record --record "$FRONTEND_BUILD_RECORD" -- npm run astro -- build
           git diff --exit-code -- src/data/lexicon-teacher-lesson-keys.json src/data/practice-zno-meta.json
-          npm run test:unit
+          npm run test:unit:ci
+          node --experimental-strip-types tests/helpers/ci-build-artifact.ts verify --record "$FRONTEND_BUILD_RECORD"
           npm run test:built-output
 
   pytest:

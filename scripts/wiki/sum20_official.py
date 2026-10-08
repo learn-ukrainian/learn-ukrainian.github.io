@@ -31,9 +31,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "scripts":
         raise
     # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
-    _scripts_dir = next(
-        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
-    )
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
     if str(_scripts_dir) not in sys.path:
         sys.path.insert(0, str(_scripts_dir))
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
@@ -43,7 +41,7 @@ SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
 SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
-PARSER_VERSION = "sum20_official_v1"
+PARSER_VERSION = "sum20_official_v2"
 QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
@@ -56,6 +54,7 @@ _POS_RE = re.compile(
 )
 _ADJECTIVE_ENDINGS_RE = re.compile(r",\s*[а-яіїєґ]\s*,\s*[а-яіїєґ]\.$", re.IGNORECASE)
 _BLOCK_TAGS = frozenset({"article", "div", "p", "li", "br", "h1", "h2", "h3", "tr", "td"})
+_ENTRY_BOUNDARIES = frozenset({"ENTRY", "LINKENTRY"})
 
 
 class Sum20ParseError(ValueError):
@@ -104,15 +103,21 @@ def _classes(node: _Node) -> set[str]:
     return set(node.attrs.get("class", "").split())
 
 
-def _walk(node: _Node) -> Iterable[_Node]:
+def _walk(node: _Node, *, stop_classes: frozenset[str] = _ENTRY_BOUNDARIES) -> Iterable[_Node]:
+    """Walk owned fields, pruning nested articles unless explicitly requested."""
     yield node
     for child in node.children:
-        if isinstance(child, _Node):
-            yield from _walk(child)
+        if isinstance(child, _Node) and not (_classes(child) & stop_classes):
+            yield from _walk(child, stop_classes=stop_classes)
 
 
-def _first_with_class(node: _Node, class_name: str) -> _Node | None:
-    return next((candidate for candidate in _walk(node) if class_name in _classes(candidate)), None)
+def _first_with_class(
+    node: _Node, class_name: str, *, stop_classes: frozenset[str] = _ENTRY_BOUNDARIES
+) -> _Node | None:
+    return next(
+        (candidate for candidate in _walk(node, stop_classes=stop_classes) if class_name in _classes(candidate)),
+        None,
+    )
 
 
 def _all_with_class(node: _Node, class_name: str) -> list[_Node]:
@@ -123,12 +128,14 @@ def _clean_text(value: str) -> str:
     return _SPACE_RE.sub(" ", html.unescape(value)).strip()
 
 
-def _node_text(node: _Node) -> str:
+def _node_text(node: _Node, *, include_entries: bool = False) -> str:
     parts: list[str] = []
 
     def collect(candidate: _Node | str) -> None:
         if isinstance(candidate, str):
             parts.append(candidate)
+            return
+        if candidate is not node and not include_entries and _classes(candidate) & _ENTRY_BOUNDARIES:
             return
         if candidate.tag in _BLOCK_TAGS:
             parts.append(" ")
@@ -139,6 +146,39 @@ def _node_text(node: _Node) -> str:
 
     collect(node)
     return _clean_text("".join(parts))
+
+
+def _has_reference_target(entry: _Node, root: _Node) -> bool:
+    """Require one primary reference and one matching, defined linked article."""
+    links = _all_with_class(entry, "LINK")
+    references = _all_with_class(entry, "LINKTXT")
+    if len(links) != 1 or len(references) != 1:
+        return False
+    link_references = _all_with_class(links[0], "LINKTXT")
+    if len(link_references) != 1 or link_references[0] is not references[0]:
+        return False
+    reference = _node_text(references[0])
+    if not reference:
+        return False
+    linked_containers = [node for node in _walk(root, stop_classes=frozenset()) if "LINKENTRY" in _classes(node)]
+    if len(linked_containers) != 1:
+        return False
+    linked_entries = [
+        node for node in _walk(linked_containers[0], stop_classes=frozenset({"LINKENTRY"})) if "ENTRY" in _classes(node)
+    ]
+    if len(linked_entries) != 1:
+        return False
+    target = linked_entries[0]
+    words = _all_with_class(target, "WORD")
+    if len(words) != 1 or not _node_text(words[0]):
+        return False
+    if normalize_sum20_lookup(reference) != normalize_sum20_lookup(_node_text(words[0])):
+        return False
+    for sense in _all_with_class(target, "INTF") + _all_with_class(target, "INTN"):
+        formula = _first_with_class(sense, "FORMULA")
+        if formula is not None and _node_text(formula):
+            return True
+    return False
 
 
 def normalize_sum20_lookup(value: str) -> str:
@@ -221,11 +261,16 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
     parser.feed(article_html)
     parser.close()
 
-    entry = _first_with_class(parser.root, "ENTRY")
-    if entry is None:
+    entries = [node for node in _walk(parser.root, stop_classes=frozenset({"LINKENTRY"})) if "ENTRY" in _classes(node)]
+    if not entries:
         raise Sum20ParseError("official article contains no .ENTRY")
-    word_node = _first_with_class(entry, "WORD")
-    stressed_headword = _node_text(word_node) if word_node else ""
+    if len(entries) != 1:
+        raise Sum20ParseError("official article contains ambiguous primary .ENTRY elements")
+    entry = entries[0]
+    words = _all_with_class(entry, "WORD")
+    if len(words) > 1:
+        raise Sum20ParseError("official article contains ambiguous primary headwords")
+    stressed_headword = _node_text(words[0]) if words else ""
     if not stressed_headword:
         raise Sum20ParseError("official article contains no headword")
     headword = _ACUTE_RE.sub("", stressed_headword)
@@ -259,7 +304,7 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
                     parsed_bib_fields=_parsed_bib_fields(source),
                 )
             )
-    if not senses:
+    if not senses and not _has_reference_target(entry, parser.root):
         raise Sum20ParseError("official article contains no definition senses")
 
     return Sum20Article(
@@ -269,7 +314,7 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
         pos=pos,
         grammar=grammar,
         article_html=article_html,
-        article_text=_node_text(parser.root),
+        article_text=_node_text(parser.root, include_entries=True),
         normalized_lookup_key=normalize_sum20_lookup(headword),
         senses=senses,
         citations=citations,
@@ -408,15 +453,20 @@ def utc_now() -> str:
 
 
 def upsert_sum20_article(conn: SQLiteConnection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
-    """Store one parsed article; return whether its content changed."""
-    fetched_at = fetched_at or utc_now()
+    """Replace changed content or parser output, retaining row identity/quarantine.
+
+    Fresh fetches omit ``fetched_at`` to refresh retrieval provenance. Offline
+    reparses must explicitly supply the stored retrieval timestamp.
+    """
+    fetched_at = utc_now() if fetched_at is None else fetched_at
     content_sha256 = article.content_sha256
     existing = conn.execute(
-        "SELECT id, content_sha256 FROM sum20_articles WHERE wordid = ?", (article.wordid,)
+        "SELECT id, content_sha256, parser_version FROM sum20_articles WHERE wordid = ?", (article.wordid,)
     ).fetchone()
     if (
         existing is not None
         and str(existing["content_sha256"] if isinstance(existing, sqlite3.Row) else existing[1]) == content_sha256
+        and str(existing["parser_version"] if isinstance(existing, sqlite3.Row) else existing[2]) == PARSER_VERSION
     ):
         article_id = int(existing["id"] if isinstance(existing, sqlite3.Row) else existing[0])
         conn.execute("UPDATE sum20_articles SET fetched_at = ? WHERE id = ?", (fetched_at, article_id))
@@ -606,4 +656,4 @@ def _first_with_class_from_html(document_html: str, class_name: str) -> bool:
     parser = _ArticleTreeParser()
     parser.feed(article_html)
     parser.close()
-    return _first_with_class(parser.root, class_name) is not None
+    return _first_with_class(parser.root, class_name, stop_classes=frozenset()) is not None

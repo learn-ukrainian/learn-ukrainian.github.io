@@ -9,7 +9,7 @@ from .contract import canonical
 from .errors import BuildError, require
 from .output import private_umask
 
-KEYS = frozenset({"schema", "databases", "ua_gec", "catalog", "register", "synthetic_sources"})
+KEYS = frozenset({"schema", "databases", "ua_gec", "catalog", "register", "synthetic_sources", "antonenko_receipts"})
 
 
 def read_request(path: Path) -> tuple[bytes, dict]:
@@ -33,6 +33,15 @@ def read_request(path: Path) -> tuple[bytes, dict]:
     )
     require(isinstance(request["ua_gec"], dict), "request_locations")
     require(request["ua_gec"].keys() <= {"root"}, "request_policy_key")
+    require(
+        "antonenko_receipts" not in request
+        or (
+            isinstance(request["antonenko_receipts"], str)
+            and bool(request["antonenko_receipts"].strip())
+            and Path(request["antonenko_receipts"]).is_absolute()
+        ),
+        "request_locations",
+    )
     require(isinstance(request["ua_gec"].get("root"), str) and bool(request["ua_gec"]["root"]), "request_locations")
     require(
         isinstance(request.get("synthetic_sources", []), list)

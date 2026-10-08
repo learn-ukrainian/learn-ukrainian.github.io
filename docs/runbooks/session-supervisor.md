@@ -104,6 +104,37 @@ The helper:
 4. Exports `SESSION_SUPERVISOR_CAPSULE_PATH` pointing to the capsule.
 5. Fails the launch closed on supervisor error or an incomplete envelope.
 
+### Supervisory wake ownership and failure status
+
+The launcher opens separate read and write descriptors for the wake file,
+then immediately unlinks its temporary name. The watcher inherits only the
+write side as stdout; it never owns deletion. The launcher reads the delivery
+through its retained descriptor after the watcher exits. Removing or replacing
+the former pathname cannot discard those bytes. Launcher cleanup closes the
+descriptor after reaping the watcher, and never deletes a replacement file.
+This follows the [open-file lifetime defined by unlink(2)](https://man7.org/linux/man-pages/man2/unlink.2.html).
+
+A missing/unreadable wake descriptor or empty delivery reports
+`wake-file-missing`; an unsuccessful watcher reports `watcher-failed`.
+Both clear the delivery, stop the provider, close the predecessor's existing
+lease, then attempt one status publication before returning the original
+non-zero status. Neither executes a successor.
+
+Before clearing `SESSION_STREAM_*` for a supervisory successor, the launcher
+captures the predecessor generation in
+`LC_SUPERVISORY_PREDECESSOR_GENERATION`. If the successor fails to start its
+scope entry, the waiting launcher reports `scope-start-failed`, attempts one
+status publication, and exits 6 before preparation or lease acquisition.
+Other configuration and verification refusals exit 6 without publishing.
+The captured generation is cleared on verified launcher re-entry.
+
+Publication uses the already-resolved project interpreter and
+`scripts.fleet_comms channel publish cto -`, with the driver's sender identity,
+kind `status`, and idempotency key `<stream>-<generation>-<reason>`. The JSON
+body contains exactly `stream`, numeric `generation`, and `reason`. It contains
+no diagnostic details. The launcher never creates the channel, retries the
+successor, or changes its exit status when publication fails.
+
 ## Capsule schema
 
 ```json

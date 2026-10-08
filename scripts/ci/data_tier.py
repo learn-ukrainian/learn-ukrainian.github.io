@@ -640,7 +640,8 @@ def run(args: argparse.Namespace) -> int:
     }
     baseline = {}
     primary = checkout = output_dir = log = scope_unit = None
-    snapshot_temp = None
+    snapshot_dir = None
+    scope_may_exist = False
     try:
         baseline = json.loads(BASELINE.read_text(encoding="utf-8"))["known_failures"]
         selection = load_selection()
@@ -667,8 +668,8 @@ def run(args: argparse.Namespace) -> int:
         scratch_root = Path(tempfile.gettempdir()).resolve()
         if any((parent / ".git").exists() for parent in (scratch_root, *scratch_root.parents)):
             raise DataTierError("runner scratch root must be outside any Git checkout")
-        snapshot_temp = tempfile.TemporaryDirectory(prefix="lu-data-tier-", dir=scratch_root)
-        snapshots = Path(snapshot_temp.name)
+        snapshot_dir = Path(tempfile.mkdtemp(prefix="lu-data-tier-", dir=scratch_root))
+        snapshots = snapshot_dir
         summary["missing_databases"] = snapshot_databases(primary, checkout, snapshots, only=args.only)
         if not args.only:
             provision_host_files(primary, checkout)
@@ -707,6 +708,7 @@ def run(args: argparse.Namespace) -> int:
         else:
             environment.pop("LU_BULK_ROOT", None)
         with log.open("w", encoding="utf-8") as stream:
+            scope_may_exist = True
             pytest_exit = run_process_group(scope, cwd=checkout, env=environment, stdout=stream, timeout=remaining)
         summary["pytest_exit"] = pytest_exit
         if not junit.exists():
@@ -729,7 +731,7 @@ def run(args: argparse.Namespace) -> int:
         # The scope is outside the service cgroup: stop it before removing its
         # checkout, including when SIGTERM interrupts the waiting parent.
         scope_stopped = True
-        if scope_unit:
+        if scope_unit and scope_may_exist:
             try:
                 stop_scope(scope_unit)
             except Exception as error:
@@ -740,9 +742,9 @@ def run(args: argparse.Namespace) -> int:
                 remove_test_worktree(primary, checkout)
             except Exception as error:
                 summary["runner_errors"].append(f"checkout cleanup failed: {safe_text(str(error))}")
-        if snapshot_temp and scope_stopped:
+        if snapshot_dir and (scope_stopped or not scope_may_exist):
             try:
-                snapshot_temp.cleanup()
+                shutil.rmtree(snapshot_dir)
             except Exception as error:
                 summary["runner_errors"].append(f"snapshot cleanup failed: {safe_text(str(error))}")
         if log and log.exists():
