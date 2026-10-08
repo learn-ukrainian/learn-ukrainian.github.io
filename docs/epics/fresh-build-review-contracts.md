@@ -187,3 +187,6 @@ Scripts do not certify semantic usefulness. The frozen held-out protocol is inde
 25 cases (6 valid, 9 structural, 4 semantic, 6 selector); qualified Sources-backed review
 judges shuffled valid controls and semantic failures. Any false accept/reject stops landing.
 #10110 owns pilot/calibration; this implementation does not certify lessons.
+English context, instructions and observable criteria may quote taught Ukrainian as teacher
+metalanguage, not learner print or inventory evidence; review confirms each quoted form
+and construction is taught before the step (historical D4 superseded by arc section 8).

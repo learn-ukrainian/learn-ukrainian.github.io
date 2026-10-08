@@ -226,6 +226,7 @@ LEARNER_READ_WORD_NOT_IN_PRINT = "learner_read_word_not_in_print"
 
 A1_RECAP_MIGRATION_REQUIRED = "a1_recap_migration_required"
 RECAP_TASK_INVALID = "recap_task_invalid"
+RECAP_TASK_QUOTED_UKRAINIAN = "recap_task_quoted_ukrainian"
 RECAP_TASK_INVENTORY = "recap_task_inventory"
 RECAP_TASK_ORDER = "recap_task_order"
 RECAP_TASK_PRINT = "recap_task_print"
@@ -234,6 +235,7 @@ ORIENTATION_CORE_WORDS = "orientation_core_words"
 DESCRIPTIONS = {
     A1_RECAP_MIGRATION_REQUIRED: "legacy A1 recap requires retirement/migration by #10108",
     RECAP_TASK_INVALID: "practical recap task violates its structural contract",
+    RECAP_TASK_QUOTED_UKRAINIAN: "quoted Ukrainian requires taught-form and construction review",
     RECAP_TASK_INVENTORY: "recap uses unknown or unavailable inventory",
     RECAP_TASK_ORDER: "recap task is duplicated or placed outside its closing step",
     RECAP_TASK_PRINT: "recap print is undeclared, unprintable or undecodable",

@@ -374,6 +374,28 @@ the analysis that matches the key. Match-up names `left_role` and
 record, and each pair has a `why`. These are draft item fields, while the plan states the
 activity type, focus, placement, model, and evidence it will need.
 
+### 2c. A1 practical recap contract (#10105)
+
+A recap/checkpoint lesson, or an embedded closing recap, has a `task` on its last
+step (embedded: kind recap). Fields: unique `id`; action select_for_context,
+personalize, label, respond or read_and_use; nonempty English `context_en` and
+`instruction_en`; response_mode spoken, written, selection or spoken_or_written;
+nonempty array `success_criteria_en`; `learner_reads` using the existing record/word
+selector shape (empty only where no learner print is required). Reuse step.uses and
+step.evidence. No decision field: semantic judgment decides meaningful choice.
+Scripts require known evidence, inventory available before the step, exact source
+print and decodability, order/placement, and no recap introductions. Earlier teaching
+in the same lesson counts. Early A1 is activity_instruction: [en] in immersion_table.yaml;
+its recap is a practical task, not comprehension questions. Copying-only/question-only
+actions are outside the enum; disguised copying remains a semantic finding.
+Explicit a1-orientation is an English practical orientation recap without Ukrainian
+production, with overview exemplars and zero new core words. Legacy A1 closure lacks
+this contract and fails a1_recap_migration_required; #10108 owns retirement.
+A2+ retains C7/C8 and admits no A1 task field. No draft schema changes are required.
+English context, instructions and observable criteria may quote taught Ukrainian as teacher
+metalanguage, not learner print or inventory evidence; review confirms each quoted form
+and construction is taught before the step (historical D4 superseded by arc section 8).
+
 ## 3. Evidence pack
 
 ```yaml
@@ -558,22 +580,3 @@ state, lesson-grain immersion, quantity-only deterministic title check, dialogue
 Added after #8403: a text quote is anchored by **verbatim text + content hash + (source file,
 page)**. `chunk_id` is a convenience locator only — textbook chunk ids shifted on a re-chunk and
 left 93 wiki registries dangling, so an id alone is not a stable reference.
-
-## A1 practical recap contract (#10105)
-
-A recap/checkpoint lesson, or an embedded closing recap, has a `task` on its last
-step (embedded: kind recap). Fields: unique `id`; action select_for_context,
-personalize, label, respond or read_and_use; nonempty English `context_en` and
-`instruction_en`; response_mode spoken, written, selection or spoken_or_written;
-nonempty array `success_criteria_en`; `learner_reads` using the existing record/word
-selector shape (empty only where no learner print is required). Reuse step.uses and
-step.evidence. No decision field: semantic judgment decides meaningful choice.
-Scripts require known evidence, inventory available before the step, exact source
-print and decodability, order/placement, and no recap introductions. Earlier teaching
-in the same lesson counts. Early A1 is activity_instruction: [en] in immersion_table.yaml;
-its recap is a practical task, not comprehension questions. Copying-only/question-only
-actions are outside the enum; disguised copying remains a semantic finding.
-Explicit a1-orientation is an English practical orientation recap without Ukrainian
-production, with overview exemplars and zero new core words. Legacy A1 closure lacks
-this contract and fails a1_recap_migration_required; #10108 owns retirement.
-A2+ retains C7/C8 and admits no A1 task field. No draft schema changes are required.

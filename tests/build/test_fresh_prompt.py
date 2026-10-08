@@ -1385,18 +1385,6 @@ def test_structured_citation_discovery_preserves_existing_sources_and_ignores_pr
     }
 
 
-@pytest.fixture(autouse=True)
-def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
-    # D4 changed under #10105; #10108 owns tracked arc regeneration.
-    # Tests generate a current isolated arc without weakening source-hash checks.
-    from scripts.curriculum.learner_state import immersion as selector
-    from tests.build.test_fresh_recap_contract import generated_a1_arc
-    original = selector.load_arc
-    positions = generated_a1_arc(tmp_path)
-    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
-                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
-                        else original(track, **kwargs))
-
 
 @pytest.mark.parametrize("level,recap,pin", [
     ("a2", False, "7b0b6e68c5255ca1529a48f6560043949a5b291e8949d9930627430028f9756d"),

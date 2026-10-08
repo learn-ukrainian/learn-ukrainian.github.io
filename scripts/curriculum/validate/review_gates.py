@@ -197,7 +197,7 @@ otherwise at lesson end; options have no recording exemption.
   "letter"); function words and words describing records do not. A quoted Ukrainian word names its records. The
   claim fails when no record of the category is in the lesson's recycled list, inventory or step vocabulary.
 - C25: a ``practice`` step whose practice list is empty and which has no needs, hosts no dialogue and carries no
-  paradigm leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
+  paradigm or task leaves the writer an empty section (steps are fixed structure, plan schema §7 decision 1).
 - C26 gives every declared ``targets`` id (otherwise every W- id of a comprehension focus) exactly one outcome;
   the outcomes are a total mapping over the
   ids, so no id can pass unseen. An id the word store lacks fails. A word is held when a spelling of its record is a
@@ -940,9 +940,16 @@ class ReviewGates(Gates):
                     if task["id"] in seen:
                         self.fail(codes.RECAP_TASK_ORDER, "duplicate recap task id", lesson["n"], step_id)
                     seen.add(task["id"])
-                    fields = [task["id"], task["context_en"], task["instruction_en"], *task["success_criteria_en"]]
-                    if any(not value.strip() or _LETTER.search(value) for value in fields):
+                    fields = [task["context_en"], task["instruction_en"], *task["success_criteria_en"]]
+                    if not task["id"].strip() or any(not re.search(r"[A-Za-z]", value) for value in fields):
                         self.fail(codes.RECAP_TASK_INVALID, "context, instruction and observable criteria must be nonempty English", lesson["n"], step_id)
+                    quoted = sorted({token for value in fields for token in _ROW_TOKEN.findall(value)
+                                     if _LETTER.search(token)})
+                    if quoted:
+                        self.note(codes.RECAP_TASK_QUOTED_UKRAINIAN,
+                                  f"Quoted Ukrainian {quoted}: teacher metalanguage, not learner print or "
+                                  "inventory evidence; review must confirm each form and construction is taught "
+                                  "before this step", lesson["n"], step_id)
                     if any((step.get("introduces") or {}).get(key) for key in ("letters", "grammar", "vocabulary")):
                         self.fail(codes.RECAP_TASK_INVENTORY, "recap introduces no inventory", lesson["n"], step_id)
                     uses = step.get("uses") or {}
@@ -1884,17 +1891,18 @@ class ReviewGates(Gates):
     # -- C25 ------------------------------------------------------------------
 
     def check_practice_steps_have_content(self) -> None:
+        """C25: tasks print content, just like activities, needs, paradigms and dialogue."""
         for lesson in self.plan["lessons"]:
             dialogue_step = (lesson.get("dialogue") or {}).get("step")
             for step in lesson["steps"]:
                 if step.get("kind") != "practice" or step.get("practice") or step.get("needs"):
                     continue
-                if step.get("paradigm") or step["id"] == dialogue_step:
+                if step.get("task") or step.get("paradigm") or step["id"] == dialogue_step:
                     continue
                 self.fail(
                     codes.PRACTICE_STEP_EMPTY,
                     f"practice step {step['id']} links no activity, needs no block (quote, example, video …), hosts "
-                    "no dialogue and carries no paradigm; steps are fixed structure (plan schema §7 decision 1), so "
+                    "no dialogue and carries no paradigm or task; steps are fixed structure (plan schema §7 decision 1), so "
                     "the writer must produce an empty section; merge it into the step it prepares (#9487 C25)",
                     lesson["n"],
                     step["id"],

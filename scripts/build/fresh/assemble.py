@@ -186,8 +186,8 @@ from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver import receipts
-from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
-from scripts.curriculum.resolver.stream import resolve
+from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+from scripts.curriculum.resolver.stream import load_allowlist, resolve
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
@@ -3130,11 +3130,13 @@ def assemble_lesson(
     """End-to-end assembly pipeline for one lesson (checks 5, 9, 11).
 
     Refuses site write on failures or open tokens, writing only state files.
+    In-memory plan_dict/words_dict do not override the resolver allowlist:
+    its learner state always comes from the locked plan and word store on disk.
     """
     root = repo_root or REPO_ROOT
 
     paths = lesson_lock.resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=root)
-    state_dir = output_dir or (paths["evidence_dir"] / "_state" / slug)
+    state_dir = output_dir or (paths["state_dir"] / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
     plan = plan_dict if plan_dict is not None else yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
@@ -3169,22 +3171,31 @@ def assemble_lesson(
 
     # Resolver resolution
     try:
-        from scripts.curriculum.resolver.stream import allowlist_for_lesson
-
-        allowlist = allowlist_for_lesson(level, slug, lesson_n, evidence_dir=evidence_dir, plans_dir=plans_dir)
-    except Exception:
-        allowlist = Allowlist.from_records(words_store.get("words", []))
-
-    try:
-        sources = Sources()
-    except Exception:
-        sources = None
-    expanded_obj = ExpandedDocument.from_data(expanded_doc)
-    lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
-    stream = resolve(
-        expanded_obj, allowlist, sources,
-        source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
-    )
+        allowlist = load_allowlist(
+            level, slug, lesson_n,
+            plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
+        )
+        with Sources() as sources:
+            expanded_obj = ExpandedDocument.from_data(expanded_doc)
+            lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
+            stream = resolve(
+                expanded_obj, allowlist, sources,
+                source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
+            )
+    except ResolverError as err:
+        code, message = err.code, err.message
+        layer = "pack" if code in {resolver_codes.UNKNOWN_WORD_ID, resolver_codes.LOCK_MISMATCH} else "engine"
+    except (OSError, ValueError) as err:
+        code, message, layer = "resolver_input_unavailable", str(err), "pack"
+    except Exception as err:
+        code, message, layer = "resolver_error", str(err), "engine"
+    else:
+        code = None
+    if code is not None:
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": f"{code}: {message}", "layer": layer, "code": code},
+        }
 
     # Major 4: Check if stream has any failures or open tokens
     stream_failures = list(getattr(stream, "failures", []) or [])
@@ -3220,6 +3231,7 @@ def assemble_lesson(
             },
             "check_5": c5.to_dict(),
             "blocking_tokens": [str(t.get("token", "")) for t in blocking_tokens],
+            "blocking_token_classes": [str(t.get("class", "")) for t in blocking_tokens],
             "stream_failures": [str(f) for f in stream_failures],
             "message": f"stream has {len(blocking_tokens)} blocking token(s) and {len(stream_failures)} failure(s); refusing site write",
         }

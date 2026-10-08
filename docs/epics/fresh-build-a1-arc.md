@@ -47,18 +47,10 @@ home theme (D6).
 memorised chunk before its grammar is taught, if and only if the plan marks it `chunk` and the
 lesson does not analyse it. §3 is the single table of what is a system and what is a chunk at A1.
 
-**D4 — A1 closes with a practical recap using taught inventory** (R-03, #10105).
-Every recap/checkpoint lesson and embedded closing recap declares an approved plan-step
-`task`: action, English context/instruction, response mode, observable English criteria,
-permitted learner print, and the step's existing uses/evidence. A story is optional support,
-not a required first-person story → Ukrainian-only questions → production sequence.
-Early A1 is data-defined by `activity_instruction: [en]` in `immersion_table.yaml`;
-its closure is practical application rather than comprehension questions or copying alone.
-Inventory is available before the recap step; earlier teaching in that lesson counts.
-Recaps introduce nothing. Explicit `a1-orientation` has an English practical orientation
-recap, no Ukrainian production requirement and no new core words. Scripts check structure;
-qualified independent review judges usefulness, Ukrainian processing and decisions.
-Old A1 plans fail `a1_recap_migration_required`; #10108 owns disposition, without rewriting here.
+**D4 — Every module ends with a recap lesson in the ULP review shape** (R-03): a short
+first-person story side by side in Ukrainian and English, Ukrainian-only questions about it, one
+production task. Checkpoint modules are made of such lessons plus a self-check and introduce
+nothing new.
 
 **D0 — The Standard is the minimum; ULP is the schedule (operator, 2026-09-21).** Everything the
 Standard lists for A1 must be owned by a position. Teaching something *earlier* than the Standard
@@ -246,3 +238,25 @@ household objects already met at 9 and 12.
 - `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradicted
   the Standard (genitive, five cases, cardinals 1–1000 as grammar); the level plan was retired on
   2026-09-30 in #9252 item 2 and remains in Git history at `fc241af5ff`. The claims are replaced by §3 here.
+
+## 8. Revision r3.1: A1 practical recap (#10105)
+
+Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)
+
+Historical section 2 remains verbatim; its acceptance date does not accept this revision.
+The following replaces D4 for current A1 builds.
+
+**D4 — A1 closes with a practical recap using taught inventory** (R-03, #10105).
+Every recap/checkpoint lesson and embedded closing recap declares an approved plan-step
+`task`: action, English context/instruction, response mode, observable English criteria,
+permitted learner print, and the step's existing uses/evidence. A story is optional support,
+not a required first-person story → Ukrainian-only questions → production sequence.
+Early A1 is data-defined by `activity_instruction: [en]` in `immersion_table.yaml`;
+its closure is practical application rather than comprehension questions or copying alone.
+Inventory is available before the recap step; earlier teaching in that lesson counts.
+Recaps introduce nothing. Explicit `a1-orientation` has an English practical orientation
+recap, no Ukrainian production requirement and no new core words. Scripts check structure;
+qualified independent review judges usefulness, Ukrainian processing and decisions.
+Old A1 plans fail `a1_recap_migration_required`; #10108 owns disposition, without rewriting here.
+
+Declaring a1-orientation in the tracked arc is #10108 work; until then no tracked position selects it.

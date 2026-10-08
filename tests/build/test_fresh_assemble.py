@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import json
 import re
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -1056,6 +1057,12 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
 
     monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma, **_sense: f"/lexicon/{lemma}/")
     monkeypatch.setattr("scripts.build.fresh.assemble.resolve", lambda *args, **kwargs: stream_with_open)
+    # This unit test already supplies a synthetic resolver stream; isolate its
+    # loader/source boundary rather than pretending in-memory inputs are locked.
+    from scripts.curriculum.resolver.inputs import Allowlist
+
+    monkeypatch.setattr("scripts.build.fresh.assemble.load_allowlist", lambda *a, **k: Allowlist.from_records([w1]))
+    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: nullcontext(object()))
 
     rep = assemble_lesson(
         "a1",
@@ -2327,7 +2334,10 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
     monkeypatch.setattr(
         "scripts.build.fresh.assemble.resolve", lambda *a, **k: type("Stream", (), {"tokens": [], "failures": []})()
     )
-    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: None)
+    from scripts.curriculum.resolver.inputs import Allowlist
+
+    monkeypatch.setattr("scripts.build.fresh.assemble.load_allowlist", lambda *a, **k: Allowlist.from_records([]))
+    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: nullcontext(object()))
     monkeypatch.setattr(
         "scripts.build.fresh.assemble.planned_state", lambda *a, **k: type("State", (), {"cumulative_core_count": 10})()
     )
@@ -2397,14 +2407,170 @@ def test_proper_name_with_gloss_remains_in_flashcard_deck():
     assert '"front":"Name","back":"a name"' in mdx
 
 
-@pytest.fixture(autouse=True)
-def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
-    # D4 changed under #10105; #10108 owns tracked arc regeneration.
-    # Tests generate a current isolated arc without weakening source-hash checks.
-    from scripts.curriculum.learner_state import immersion as selector
-    from tests.build.test_fresh_recap_contract import generated_a1_arc
-    original = selector.load_arc
-    positions = generated_a1_arc(tmp_path)
-    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
-                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
-                        else original(track, **kwargs))
+@pytest.mark.parametrize("boundary", ["load_allowlist", "Sources", "resolve"])
+@pytest.mark.parametrize("kind,code,layer", [
+    ("unknown_word_id", "unknown_word_id", "pack"),
+    ("lock_mismatch", "lock_mismatch", "pack"),
+    ("invalid_input", "invalid_input", "engine"),
+    ("oserror", "resolver_input_unavailable", "pack"),
+    ("valueerror", "resolver_input_unavailable", "pack"),
+    ("unexpected", "resolver_error", "engine"),
+])
+def test_resolver_setup_failures_are_structured_and_close_sources(tmp_path, monkeypatch, boundary, kind, code, layer):
+    from scripts.build.fresh import assemble
+    from scripts.curriculum.resolver.inputs import ResolverError
+    from tests.build.test_fresh_recap_contract import quoted_task_world
+
+    world = quoted_task_world(tmp_path)
+    events = []
+
+    class FixtureSources:
+        def __enter__(self):
+            events.append("opened")
+            return self
+
+        def __exit__(self, *_exc):
+            events.append("closed")
+
+    error = (OSError("controlled failure") if kind == "oserror" else
+             ValueError("controlled failure") if kind == "valueerror" else
+             RuntimeError("controlled failure") if kind == "unexpected" else
+             ResolverError(kind, "controlled failure"))
+
+    def fail(*_args, **_kwargs):
+        raise error
+
+    monkeypatch.setattr(assemble, "Sources", FixtureSources)
+    monkeypatch.setattr(assemble, boundary, fail)
+    site = tmp_path / "site/src/content/docs/a1/sample-slug"
+    report = assemble.assemble_lesson("a1", "sample-slug", 1, repo_root=tmp_path)
+    assert report == {
+        "ok": False,
+        "failure": {"check": 9, "passed": False, "code": code, "layer": layer,
+                    "reason": f"{code}: controlled failure"},
+    }
+    assert events == (["opened", "closed"] if boundary == "resolve" else [])
+    assert not (site / "1.mdx").exists()
+
+
+@pytest.mark.parametrize("defect", ["missing_plan", "invalid_plan", "missing_words_lock", "mismatched_words_lock"])
+def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, defect):
+    from scripts.build.fresh import assemble
+    from scripts.curriculum.evidence import lock
+    from tests.build.test_fresh_recap_contract import quoted_task_world
+
+    world = quoted_task_world(tmp_path)
+    plan_path = world["plans_dir"] / "sample-slug.yaml"
+    words_path = world["evidence_dir"] / "_words.yaml"
+    if defect == "missing_plan":
+        plan_path.unlink()  # Controlled test fixture, never a repository file.
+    elif defect == "invalid_plan":
+        plan_path.write_text("plan_schema: invalid\n")
+        lock.write(plan_path)
+    elif defect == "missing_words_lock":
+        Path(f"{words_path}.lock").unlink()
+    else:
+        Path(f"{words_path}.lock").write_text("0" * 64 + "\n")
+    # In-memory assembly inputs remain valid, but cannot replace locked disk state.
+    monkeypatch.setattr(assemble, "Sources", lambda: pytest.fail("Sources opened after invalid allowlist"))
+    report = assemble.assemble_lesson(
+        "a1", "sample-slug", 1, repo_root=tmp_path,
+        draft_dict=world["draft"], plan_dict=world["plan"], pack_dict=world["pack"], words_dict=world["words"],
+    )
+    failure = report["failure"]
+    assert report["ok"] is False
+    assert failure["check"] == 9 and failure["passed"] is False
+    assert failure["reason"].startswith(f"{failure['code']}: ")
+    assert failure["layer"] == ("pack" if failure["code"] in {"lock_mismatch", "resolver_input_unavailable"} else "engine")
+    assert failure["code"] == ("plan_not_found" if defect == "missing_plan" else
+                               "v1_plan" if defect == "invalid_plan" else "lock_mismatch")
+    assert not (tmp_path / "site/src/content/docs/a1/sample-slug/1.mdx").exists()
+
+
+def test_recap_keeps_paradigm_table_and_bilingual_dialogue_units_on_page():
+    from scripts.build.fresh.assemble import assemble_expanded_document
+    from tests.build.test_fresh_recap_contract import task
+
+    # English labels are controlled layout data, not Ukrainian source claims.
+    word = make_word_record(1, "model")
+    teaching = {
+        "id": "s1", "kind": "teach", "teach": "A model.", "evidence": ["T-1"],
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []}, "practice": [],
+        "paradigm": {"id": "P-1", "word": "W-1", "forms": [word["forms"][0]["tags"]]},
+    }
+    closing = {"id": "s2", "kind": "recap", "task": task(), "evidence": ["T-1"],
+               "uses": {"grammar": [], "vocabulary": ["W-1"]}, "practice": []}
+    # Low-level expansion/render contract; plan pedagogical validation is separate.
+    plan = {"arc_ref": {"position": 1}, "lessons": [{
+        "n": 1, "steps": [teaching, closing], "inventory": {"vocabulary": {"core": []}},
+    }]}
+    draft = {"status": "ok", "steps": [
+        {"id": "s1", "lead_in": "Meet the model.", "blocks": [
+            {"kind": "paradigm", "ref": "P-1"},
+            {"kind": "table", "rows": [["Form", "Use"], ["model", "context"]]},
+            {"kind": "dialogue"},
+        ]},
+        {"id": "s2", "blocks": []},
+    ], "dialogue": {"lines": [{"speaker": "One", "text": "First model."},
+                                {"speaker": "Two", "text": "Second model."}],
+                    "translation_en": ["First support.", "Second support."]}}
+    pack, words = make_pack(texts=[make_text_record(1, "model")]), make_words_store(words=[word])
+    expanded, provenance = assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
+    page, mapping = _render_urok_markdown(draft, expanded, pack, words)
+    assert "| model |" in page and "| model | context |" in page
+    assert "First model." in page and "Second model." in page
+    assert "First support." in page and "Second support." in page
+    assert task()["instruction_en"] in page
+    assert mapping.verify(page) == {i: u["text"] for i, u in enumerate(expanded["units"]) if u["tab"] == "urok"}
+    assert any(s["ref"] == "W-1" and s["role"] == "record_print" for s in provenance["spans"])
+
+
+@pytest.mark.parametrize("defect,code", [("status", "draft_status_not_ok"), ("lesson", "lesson_not_found"),
+                                        ("paradigm", "paradigm_not_found"), ("word", "word_not_found"),
+                                        ("form", "form_not_found")])
+def test_expansion_refuses_unavailable_paradigm_inputs(defect, code):
+    from scripts.build.fresh.assemble import assemble_expanded_document
+
+    word = make_word_record(1, "model", forms=[{"form": "model", "tags": "noun"}])
+    plan = {"arc_ref": {"position": 1}, "lessons": [{"n": 1, "steps": [
+        {"id": "s1", "paradigm": {"id": "P-1", "word": "W-1", "forms": ["noun"]}},
+    ]}]}
+    draft = {"status": "ok", "steps": [{"id": "s1", "blocks": [{"kind": "paradigm", "ref": "P-1"}]}]}
+    words = {"words": [word]}
+    if defect == "status":
+        draft["status"] = "evidence_gap"
+    elif defect == "lesson":
+        plan["lessons"] = []
+    elif defect == "paradigm":
+        plan["lessons"][0]["steps"] = []
+    elif defect == "word":
+        words["words"] = []
+    else:
+        word["forms"] = []
+    with pytest.raises(AssemblerError) as caught:
+        assemble_expanded_document(draft, plan, {}, words, "a1", "unit", 1)
+    assert caught.value.code == code
+
+
+@pytest.mark.parametrize("kind,item", [
+    ("translate", {"prompt": "Choose a model.", "answer": "model", "options": ["model", "other"]}),
+    ("translate", {"prompt": "Choose a model.", "options": [{"text": "model", "correct": True},
+                                                            {"text": "other", "correct": False}]}),
+    ("select", {"prompt": "Choose a model.", "options": [{"text": "model", "correct": True},
+                                                         {"text": "other", "correct": False}]}),
+    ("fill-in", {"prompt": "___", "answer": "model", "options": ["model", "other"]}),
+    ("image-to-letter", {"letter": "model", "options": ["model", "other"]}),
+])
+def test_expansion_preserves_existing_activity_key_roles(kind, item):
+    from scripts.build.fresh.assemble import assemble_expanded_document
+
+    plan = {"arc_ref": {"position": 1}, "lessons": [{"n": 1, "steps": [{"id": "s1", "practice": ["a1"]}],
+                                                    "activities": [{"id": "a1", "type": kind}]}]}
+    draft = {"status": "ok", "steps": [], "activities": [{"id": "a1", "items": [item]}]}
+    expanded, provenance = assemble_expanded_document(draft, plan, {}, {}, "a2", "unit", 1)
+    options = [s for s in provenance["spans"] if s["role"] == "item_option"]
+    assert [s["text"] for s in options] == ["model", "other"]
+    assert [s["is_key"] for s in options] == [True, False]
+    assert all(s["option_origin"] == "writer_typed" and s["step"] == "s1" for s in options)
+    assert all(u["text"] for u in expanded["units"])

@@ -910,14 +910,47 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
     assert echoed != hashlib.sha256(lock.yaml_bytes(state.to_dict())).hexdigest()  # not the YAML-bytes hash
 
 
-@pytest.fixture(autouse=True)
-def _current_a1_arc_for_contract_tests(tmp_path, monkeypatch):
-    # D4 changed under #10105; #10108 owns tracked arc regeneration.
-    # Tests generate a current isolated arc without weakening source-hash checks.
-    from scripts.curriculum.learner_state import immersion as selector
-    from tests.build.test_fresh_recap_contract import generated_a1_arc
-    original = selector.load_arc
-    positions = generated_a1_arc(tmp_path)
-    monkeypatch.setattr(selector, "load_arc", lambda track, **kwargs:
-                        positions if track.lower().split("-")[0] == "a1" and not kwargs.get("arc_path")
-                        else original(track, **kwargs))
+@pytest.mark.parametrize("root_mode", ["argument", "environment"])
+@pytest.mark.parametrize("quote,taught", [("село", True), ("замок", False)])
+def test_assemble_cli_uses_requested_root_without_folder_overrides(tmp_path, monkeypatch, capsys, root_mode, quote, taught):
+    from scripts.curriculum.evidence.sources import Sources
+    from tests.build.test_fresh_recap_contract import quoted_task_world
+
+    slug = "controlled-root-only"
+    world = quoted_task_world(tmp_path, quote, slug=slug)
+    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: Sources(
+        vesum_db=world["vesum_db"], sources_db=tmp_path / "unused-sources.db",
+    ))
+    args = ["assemble", "a1", slug, "--lesson", "1"]
+    if root_mode == "argument":
+        args.extend(["--repo-root", str(tmp_path)])
+    else:
+        monkeypatch.setenv("LEARN_UKRAINIAN_REPO_ROOT", str(tmp_path))
+    rc = main(args)
+    out = capsys.readouterr()
+    mdx = tmp_path / f"site/src/content/docs/a1/{slug}/1.mdx"
+    assert rc == (0 if taught else 1), out.err
+    assert mdx.exists() is taught
+    assert (world["evidence_dir"] / f"_state/{slug}/lesson-1.expanded.yaml").is_file()
+    if taught:
+        assert "Assembly succeeded" in out.out
+        assert mdx.read_text().count(world["captured"]["pedagogical_stressed_form"]) >= 4
+    else:
+        assert out.err.count(f"Blocking token: {quote}") == 3
+
+
+@pytest.mark.parametrize("kind,code", [("oserror", "resolver_input_unavailable"), ("unexpected", "resolver_error")])
+def test_assemble_cli_prints_structured_check9_setup_failure(tmp_path, monkeypatch, capsys, kind, code):
+    from tests.build.test_fresh_recap_contract import quoted_task_world
+
+    quoted_task_world(tmp_path, slug="controlled-root-only")
+
+    def fail(*_args, **_kwargs):
+        raise (OSError("controlled failure") if kind == "oserror" else RuntimeError("controlled failure"))
+
+    monkeypatch.setattr("scripts.build.fresh.assemble.load_allowlist", fail)
+    rc = main(["assemble", "a1", "controlled-root-only", "--lesson", "1", "--repo-root", str(tmp_path)])
+    out = capsys.readouterr()
+    assert rc == 1
+    assert f"Check 9: {code}: controlled failure" in out.err
+    assert not (tmp_path / "site/src/content/docs/a1/controlled-root-only/1.mdx").exists()

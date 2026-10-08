@@ -105,6 +105,12 @@ def _cyrillic_allowed(path: tuple) -> bool:
         return True
     if len(rest) >= 2 and rest[0] == "activities" and rest[2:] == ("focus",):
         return True
+    # English teacher metalanguage may quote taught Ukrainian; ids remain Latin.
+    if rest[0] == "steps" and rest[2:3] == ("task",):
+        if rest[3:] in (("context_en",), ("instruction_en",)):
+            return True
+        if len(rest) == 5 and rest[3] == "success_criteria_en":
+            return True
     if len(rest) == 7 and rest[0] == "steps" and rest[2:4] == ("task", "learner_reads") and rest[5] == "words":
         return True
     if rest[0] == "activities" and (

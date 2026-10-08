@@ -13,7 +13,6 @@ from jsonschema import Draft202012Validator
 from scripts import config
 from scripts.build.fresh.assemble import AssemblerError, _render_urok_markdown, assemble_expanded_document
 from scripts.build.fresh.immersion import compute_immersion_payload
-from scripts.curriculum.arc.generate_arc import render_arc_yaml
 from scripts.curriculum.arc.loader import ArcPosition, ArcStaleError, load_arc
 from scripts.curriculum.learner_state.immersion import ImmersionError, compute_lesson_immersion_band
 from scripts.curriculum.validate import codes
@@ -36,14 +35,6 @@ def task(task_id: str = "practical-closure") -> dict:
         "success_criteria_en": ["Select a model suited to the context."],
         "learner_reads": [],
     }
-
-
-def generated_a1_arc(tmp_path: Path) -> list[ArcPosition]:
-    """Generate a current isolated arc; never refresh tracked migration inputs."""
-    doc = ROOT / "docs/epics/fresh-build-a1-arc.md"
-    arc = tmp_path / "_arc.yaml"
-    arc.write_text(render_arc_yaml(doc.read_bytes(), "docs/epics/fresh-build-a1-arc.md"), encoding="utf-8")
-    return load_arc("a1", arc_path=arc, doc_path=doc)
 
 
 @pytest.mark.parametrize(
@@ -79,8 +70,8 @@ def test_invalid_counts_fail_closed(count):
     assert exc.value.code == ("cumulative_core_count_missing" if count is None else "cumulative_core_count_invalid")
 
 
-def test_explicit_orientation_vs_normal_zero(tmp_path):
-    positions = generated_a1_arc(tmp_path)
+def test_explicit_orientation_vs_normal_zero():
+    positions = load_arc("a1")
     original = positions[0]
     from dataclasses import replace
 
@@ -100,11 +91,10 @@ def test_explicit_orientation_vs_normal_zero(tmp_path):
 
 def test_stale_arc_is_rejected(tmp_path):
     doc = ROOT / "docs/epics/fresh-build-a1-arc.md"
-    generated_a1_arc(tmp_path)
     changed = tmp_path / "changed.md"
     changed.write_bytes(doc.read_bytes() + b"\nChanged source.\n")
     with pytest.raises(ArcStaleError):
-        compute_lesson_immersion_band("a1", 1, 1, 0, arc_path=tmp_path / "_arc.yaml", doc_path=changed)
+        compute_lesson_immersion_band("a1", 1, 1, 0, doc_path=changed)
 
 
 def gate_world(*, embedded=False, early_count=0, orientation=False):
@@ -283,6 +273,7 @@ def produced_recap_codes() -> set[str]:
     for change in [
         lambda g, s: s.pop("task"),
         lambda g, s: s["task"].update(instruction_en=" "),
+        lambda g, s: s["task"].update(instruction_en="Choose 'село'."),
         lambda g, s: s["uses"].update(vocabulary=["W-999"]),
         lambda g, s: g.plan["lessons"][0]["steps"].append({"id": "s3", "kind": "practice"}),
         lambda g, s: s["task"].update(learner_reads=["T-999"]),
@@ -353,8 +344,337 @@ def test_config_a1_invalid_counts_and_non_a1_invariance(count):
         ) == config.compute_immersion_band(level, 1, {"cumulative_vocabulary": 0})
 
 
-def test_task_print_is_the_only_cyrillic_task_field():
+def test_task_cyrillic_is_allowed_in_print_and_english_scaffolding():
     from scripts.curriculum.validate.validate import _cyrillic_allowed
 
     assert _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "learner_reads", 0, "words", 0))
-    assert not _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "instruction_en"))
+    for field in ("context_en", "instruction_en"):
+        assert _cyrillic_allowed(("lessons", 0, "steps", 0, "task", field))
+    assert _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "success_criteria_en", 0))
+    assert not _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "id"))
+
+
+def test_tracked_a1_selector_and_payload():
+    band = compute_lesson_immersion_band("a1", 1, 1, 0)
+    payload = compute_immersion_payload("a1", 1, 1, 0)
+    assert band.band_key == payload.band_key == "a1-m01-03"
+    assert band.advisory_uk_share == payload.advisory_uk_share == (0, 15)
+    assert payload.structural_targets == {}
+
+
+@pytest.mark.parametrize("field", ["context_en", "instruction_en", "success_criteria_en"])
+def test_quoted_scaffolding_is_note_only_and_not_inventory_credit(field):
+    g, step = gate_world()
+    value = "Choose 'село' in this context."
+    step["task"][field] = [value] if field == "success_criteria_en" else value
+    _check_cyrillic(g.report, g.plan)
+    g.check_practical_recaps()
+    assert g.report.failures == []
+    notes = [n for n in g.report.notes if n.code == codes.RECAP_TASK_QUOTED_UKRAINIAN]
+    assert len(notes) == 1 and "село" in notes[0].message
+    assert (notes[0].lesson, notes[0].step) == (1, "s2")
+    assert "not learner print or inventory evidence" in notes[0].message
+    step["uses"]["vocabulary"] = ["W-999"]
+    g.check_practical_recaps()
+    assert codes.RECAP_TASK_INVENTORY in g.report.codes()
+
+
+@pytest.mark.parametrize("field", ["id", "context_en", "instruction_en", "success_criteria_en"])
+@pytest.mark.parametrize("value", [" ", "123 !", "село"])
+def test_scaffolding_requires_latin_letters_and_id_requires_nonempty(field, value):
+    g, step = gate_world()
+    step["task"][field] = [value] if field == "success_criteria_en" else value
+    g.check_practical_recaps()
+    if field == "id" and value.strip():
+        assert codes.RECAP_TASK_INVALID not in g.report.codes()
+        if value == "село":
+            _check_cyrillic(g.report, g.plan)
+            assert codes.CYRILLIC_IN_DISALLOWED_FIELD in g.report.codes()
+    else:
+        assert codes.RECAP_TASK_INVALID in g.report.codes()
+
+
+def test_all_quoted_fields_emit_one_note_with_unique_tokens():
+    g, step = gate_world()
+    for field in ("context_en", "instruction_en"):
+        step["task"][field] = "Say 'село'."
+    step["task"]["success_criteria_en"] = ["Say 'село'.", "Choose 'замок'."]
+    g.check_practical_recaps()
+    notes = [n for n in g.report.notes if n.code == codes.RECAP_TASK_QUOTED_UKRAINIAN]
+    assert len(notes) == 1
+    assert "['замок', 'село']" in notes[0].message
+    assert g.report.failures == []
+
+
+def test_task_only_practice_counts_as_printed_content():
+    g, step = gate_world()
+    step["kind"] = "practice"
+    g.check_practice_steps_have_content()
+    assert g.report.failures == []
+    step.pop("task")
+    g.check_practice_steps_have_content()
+    assert codes.PRACTICE_STEP_EMPTY in g.report.codes()
+
+
+def quoted_task_world(tmp_path, quote="село", *, slug="sample-slug"):
+    """Controlled locked disk fixture from existing captured source facts."""
+    import sqlite3
+
+    from scripts.curriculum.evidence import lesson_lock, lock
+    from tests.build.test_fresh_assemble import (
+        make_draft,
+        make_pack,
+        make_plan,
+        make_plan_lesson,
+        make_text_record,
+        make_word_record,
+        make_words_store,
+    )
+
+    capture = json.loads((ROOT / "tests/fixtures/stress-ci.json").read_text())
+    captured = next(row for row in capture["forms"] if row["form_unstressed"] == "село")
+    analysis = capture["vesum"]["село"][0]
+    word = make_word_record(1, "село", forms=[{
+        "form": "село", "tags": analysis["tags"], "stress_source": "ulif", "markers": [],
+        "learner": True, "stressed": captured["pedagogical_stressed_form"],
+    }])
+    base_analysis = capture["vesum"]["апостроф"][0]
+    base_form = next(row for row in capture["forms"] if row["form_unstressed"] == "апостроф")
+    base_word = make_word_record(2, "апостроф", forms=[{
+        "form": "апостроф", "tags": base_analysis["tags"], "stress_source": "ulif", "markers": [],
+        "learner": True, "stressed": base_form["pedagogical_stressed_form"],
+    }])
+    untaught_analysis = capture["vesum"]["замок"][0]
+    untaught_form = next(row for row in capture["forms"] if row["form_unstressed"] == "замок")
+    untaught_word = make_word_record(3, "замок", forms=[{
+        "form": "замок", "tags": untaught_analysis["tags"], "stress_source": "ulif", "markers": [],
+        "learner": True, "stressed": untaught_form["pedagogical_stressed_form"],
+    }])
+    words = make_words_store(words=[word, base_word, untaught_word])
+    introduction = {
+        "id": "s1", "kind": "teach", "teach": "Teach the recorded model.",
+        "evidence": ["T-1"], "introduces": {"vocabulary": ["W-1"], "grammar": [], "letters": list("село")},
+        "uses": {"vocabulary": [], "grammar": []}, "practice": [],
+    }
+    closing = {
+        "id": "s2", "kind": "recap", "task": task(), "evidence": ["T-1"],
+        "uses": {"vocabulary": ["W-1"], "grammar": []}, "practice": [],
+    }
+    closing["task"]["learner_reads"] = [{"ref": "T-1", "words": ["село"]}]
+    closing["task"].update(
+        context_en=f"The familiar label is '{quote}'.", instruction_en=f"Choose '{quote}' for this context.",
+        success_criteria_en=[f"Say '{quote}' for the appropriate context."],
+    )
+    lesson = make_plan_lesson(1, [introduction, closing], core_words=[word])
+    lesson["closes_with_recap"] = True
+    lesson["inventory"]["phonetics"] = {"letters": list("село"), "sounds": []}
+    plan = make_plan(lessons=[lesson], module=slug)
+    pack = make_pack(texts=[make_text_record(1, "село")])
+    plans_dir, evidence_dir = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1", tmp_path / "curriculum/l2-uk-en/evidence/a1"
+    plans_dir.mkdir(parents=True)
+    evidence_dir.mkdir(parents=True)
+    for path, data in [
+        (plans_dir / f"{slug}.yaml", plan), (evidence_dir / f"{slug}.yaml", pack),
+        (evidence_dir / "_words.yaml", words),
+        (evidence_dir / "_base.request.yaml", {"words": [{"lemma": "апостроф", "pos": "noun"}]}),
+    ]:
+        path.write_bytes(lock.yaml_bytes(data))
+        lock.write(path)
+    locked = lesson_lock.compute_lesson_lock(
+        "a1", slug, plans_dir=plans_dir, evidence_dir=evidence_dir, repo_root=tmp_path,
+    )
+    lock_path = evidence_dir / f"_state/{slug}/lessons.lock.yaml"
+    lock_path.parent.mkdir(parents=True)
+    lock.write(lock_path, lock.yaml_bytes(locked))
+    draft = make_draft(
+        module=f"a1/{slug}",
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "Teach the familiar label.", "explains": ["T-1"]}]},
+               {"id": "s2", "blocks": [{"kind": "prose", "text": "Use it in context.", "explains": ["T-1"]}]}],
+        lesson_lock_entry_sha256=locked["lessons"][0]["entry_sha256"],
+    )
+    # A small database of captured VESUM analyses supports outside-state diagnostics.
+    vesum_db = tmp_path / "captured-vesum.db"
+    with sqlite3.connect(vesum_db) as conn:
+        conn.executescript("""
+            CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER,
+                word_form TEXT, lemma TEXT, pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT);
+            CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT);
+            CREATE TABLE vesum_build_metadata (key TEXT, value TEXT);
+            CREATE VIEW forms AS SELECT word_form, lemma, pos, tags FROM forms_all;
+        """)
+        conn.execute("INSERT INTO vesum_build_metadata VALUES (?,?)", (
+            "canonical_jsonl_sha256", hashlib.sha256(json.dumps(capture["vesum"]).encode()).hexdigest(),
+        ))
+        row_id = 0
+        for spelling in ("село", "замок"):
+            for row in capture["vesum"][spelling]:
+                row_id += 1
+                conn.execute("INSERT INTO forms_all VALUES (?,?,?,?,?,?,?,?)", (
+                    row_id, row_id, spelling, row["lemma"], row["pos"], row["tags"], "", f"capture:{row_id}",
+                ))
+    (lock_path.parent / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes(draft))
+    return {
+        "plan": plan, "pack": pack, "words": words, "draft": draft,
+        "plans_dir": plans_dir, "evidence_dir": evidence_dir, "vesum_db": vesum_db,
+        "captured": captured,
+    }
+
+
+@pytest.mark.parametrize("quote,taught", [("село", True), ("замок", False)])
+def test_quoted_tasks_real_resolution_stress_and_check9(tmp_path, monkeypatch, quote, taught):
+    """Real assembly, allowlist, resolver, locks, stress, render and check11 on both cases."""
+    import yaml
+
+    from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render
+    from scripts.curriculum.evidence.sources import Sources
+    from scripts.curriculum.resolver import codes as resolver_codes
+    from scripts.curriculum.resolver.inputs import ExpandedDocument
+    from scripts.curriculum.resolver.stream import load_allowlist, resolve
+
+    world = quoted_task_world(tmp_path, quote)
+    plan, pack, words, draft = (world[key] for key in ("plan", "pack", "words", "draft"))
+    plans_dir, evidence_dir, vesum_db, captured = (world[key] for key in (
+        "plans_dir", "evidence_dir", "vesum_db", "captured",
+    ))
+    assembled = check_5_assembly(draft, plan, pack, words, "a1", "sample-slug", 1)
+    assert assembled.passed, assembled.to_dict()
+    expanded = assembled.artifacts["expanded_doc"]
+    instructions = [u for u in expanded["units"] if str(u["block"]).startswith("recap_")
+                    and not str(u["block"]).startswith("recap_print")]
+    assert len([u for u in instructions if quote in u["text"]]) == 3
+    assert all(u["role"] == "instruction" for u in instructions)
+    printed = [u for u in expanded["units"] if str(u["block"]).startswith("recap_print")]
+    assert len(printed) == 1 and printed[0]["text"] == "село"
+    assert printed[0]["role"] == "record_print"
+
+    with Sources(vesum_db=vesum_db, sources_db=tmp_path / "unused-sources.db") as sources:
+        allowlist = load_allowlist(
+            "a1", "sample-slug", 1, plans_dir=plans_dir, evidence_dir=evidence_dir,
+        )
+        assert set(allowlist.records) == {"W-1", "W-2"}
+        stream = resolve(ExpandedDocument.from_data(expanded), allowlist, sources)
+    quoted_tokens = [t for t in stream.tokens if t["token"] == quote and t["role"] == "instruction"]
+    assert len(quoted_tokens) == 3
+    from scripts.build.fresh.assemble import assemble_lesson
+
+    closed_sources = []
+
+    class CapturedSources(Sources):
+        def close(self):
+            super().close()
+            closed_sources.append(self)
+
+    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: CapturedSources(
+        vesum_db=vesum_db, sources_db=tmp_path / "unused-sources.db",
+    ))
+    full = assemble_lesson(
+        "a1", "sample-slug", 1, repo_root=tmp_path, draft_dict=draft,
+        plan_dict=plan, pack_dict=pack, words_dict=words, plans_dir=plans_dir,
+        evidence_dir=evidence_dir, output_dir=tmp_path / "full-state", site_dir=tmp_path / "full-site",
+    )
+    assert len(closed_sources) == 1
+    assert closed_sources[0]._conn is None and closed_sources[0]._receipt_words == {}
+    if not taught:
+        assert {t["class"] for t in quoted_tokens} == {resolver_codes.LEMMA_OUTSIDE_STATE}
+        assert len(stream.failures) == 3
+        assert not (tmp_path / "site/1.mdx").exists()
+        print("quoted_tasks: assembly=PASS resolver=lemma_outside_state (3) render=not_attempted")
+        print("production_assembly_untaught:", json.dumps(full, ensure_ascii=False, default=str))
+        assert not full.get("check_9", {}).get("passed"), full
+        assert full["failure"]["layer"] == "stream", full
+        assert full["failure"]["check"] == 9
+        assert full["blocking_tokens"] == [quote] * 3, full
+        assert full["blocking_token_classes"] == [resolver_codes.LEMMA_OUTSIDE_STATE] * 3, full
+        assert not (tmp_path / "full-site/1.mdx").exists()
+        return
+    assert full["ok"], full
+    assert full["check_5"]["passed"] and full["check_9"]["passed"] and full["check_11"]["passed"], full
+    full_mdx = (tmp_path / "full-site/1.mdx").read_text()
+    assert full_mdx.count(captured["pedagogical_stressed_form"]) >= 4
+    assert "recap_print" in (tmp_path / "full-state/lesson-1.expanded.yaml").read_text()
+    print("production_assembly_taught: check5=PASS resolver=resolved check9=PASS check11=PASS MDX=written")
+    assert stream.failures == [] and stream.open_tokens() == []
+    assert all(t["selected"]["stressed"] == captured["pedagogical_stressed_form"] for t in quoted_tokens)
+    rendered = check_9_stress_and_render(
+        expanded, draft, plan, pack, words, stream, "a1", "sample-slug", 1,
+        provenance_doc=assembled.artifacts["provenance"], repo_root=tmp_path,
+        plans_dir=plans_dir, evidence_dir=evidence_dir, output_dir=tmp_path / "state", site_dir=tmp_path / "site",
+    )
+    assert rendered.passed, rendered.to_dict()
+    mdx = (tmp_path / "site/1.mdx").read_text()
+    assert mdx.count(captured["pedagogical_stressed_form"]) >= 3
+    stressed = yaml.safe_load((tmp_path / "state/lesson-1.stressed.yaml").read_text())
+    assert all(captured["pedagogical_stressed_form"] in u["text"] for u in stressed["units"]
+               if str(u["block"]).startswith("recap_") and quote in u["text"])
+    print("quoted_tasks: assembly=PASS resolver=resolved (3) check9=PASS MDX=written")
+
+
+def test_quoted_task_scaffolding_through_validate_plan(tmp_path):
+    from scripts.curriculum.validate.validate import validate_plan
+    from tests.curriculum.test_plan_validate import (
+        LEMMA_MAMA,
+        LEVEL,
+        SLUG,
+        build_cyrillic_lemma,
+        write_world,
+    )
+
+    plan, pack, words = build_cyrillic_lemma()
+    closure = plan["lessons"][-1]["steps"][-1]
+    for field in ("context_en", "instruction_en"):
+        closure["task"][field] = f"Choose '{LEMMA_MAMA}' in this context."
+    closure["task"]["success_criteria_en"] = [f"Say '{LEMMA_MAMA}' for this context."]
+    # A task-only practice step prints content without a redundant linked activity.
+    closure["practice"] = []
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    assert report.ok, report.render_text()
+    notes = [n for n in report.notes if n.code == codes.RECAP_TASK_QUOTED_UKRAINIAN]
+    assert len(notes) == 1 and LEMMA_MAMA in notes[0].message
+
+
+@pytest.mark.parametrize("path", [
+    ("title",), ("subtitle",), ("focus",), ("objectives", 0),
+    ("lessons", 0, "dialogue", "situation"),
+    ("lessons", 0, "dialogue", "setting"),
+    ("lessons", 0, "dialogue", "target_grammar"),
+    ("lessons", 0, "dialogue", "speakers", 0, "name"),
+    ("lessons", 0, "dialogue", "places", 0, "name"),
+])
+def test_cyrillic_prose_permissions_remain_available(path):
+    from scripts.curriculum.validate.validate import _cyrillic_allowed
+
+    assert _cyrillic_allowed(path)
+
+
+@pytest.mark.parametrize("path", [
+    ("lessons", 0, "dialogue", "speakers", 0, "id"),
+    ("lessons", 0, "dialogue", "places", 0, "id"),
+    ("lessons", 0, "steps", 0, "task", "action"),
+    ("lessons", 0, "steps", 0, "task", "response_mode"),
+])
+def test_cyrillic_identifiers_remain_disallowed(path):
+    from scripts.curriculum.validate.validate import _cyrillic_allowed
+
+    assert not _cyrillic_allowed(path)
+
+
+def test_precomputed_band_preserves_a2_structural_payload_and_display():
+    band = compute_lesson_immersion_band("a2", 1, 1, 0, waiver="controlled waiver")
+    payload = compute_immersion_payload("a2", 1, 1, lesson_band=band)
+    assert payload.structural_targets == band.module_structural
+    assert "Module structural minimums" in band.render_text()
+    assert "Waiver: controlled waiver" in band.render_text()
+    from dataclasses import replace
+
+    assert "Not checked:" not in replace(band, not_checked=[]).render_text()
+
+
+def test_legacy_a2_letter_contract_remains_available_outside_ulp_band():
+    rule = config.get_immersion_rule("a2", 25, letter_module=True)
+    assert config._ulp_letter_module_contract("a2") in rule
+
+
+def test_legacy_immersion_hook_text_is_preserved(monkeypatch):
+    monkeypatch.setattr(config, "_ulp_practices_rule", lambda *_args: "Controlled compatibility hook.")
+    assert config.get_immersion_rule("a2", 25).endswith("\n\nControlled compatibility hook.")
