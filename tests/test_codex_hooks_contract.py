@@ -228,20 +228,34 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
     assert completed.stdout == ""
 
 
-def _run_bound_codex_compact(tmp_path: Path) -> str:
+def _run_bound_codex_compact(tmp_path: Path, *, block_hydration_import: bool = False) -> str:
     """Exercise the real bounded runner and canary handoff resolver."""
     (tmp_path / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
     fake_python = tmp_path / "fake-python"
+    selection_guard = ""
+    if block_hydration_import:
+        # Selection must not pay the unrelated hydration runtime's import cost.
+        guarded_selection = (
+            "import sys; sys.modules['scripts.session_canary.shared_hydration'] = None; "
+            "exec(sys.argv.pop(1))"
+        )
+        selection_guard = (
+            "if [ \"${1:-}\" = '-c' ]; then\n"
+            "  shift\n"
+            f"  exec {shlex.quote(sys.executable)} -c {shlex.quote(guarded_selection)} \"$@\"\n"
+            "fi\n"
+        )
     fake_python.write_text(
         "#!/bin/bash\n"
         "if [ \"${1:-}\" = '-m' ]; then\n"
         "  printf '%s\\n' '{\"schema_name\":\"HydrationCapsuleV1\",\"execution_allowed\":true}'\n"
         "  exit 0\n"
         "fi\n"
-        f"exec {shlex.quote(sys.executable)} \"$@\"\n",
+        + selection_guard
+        + f"exec {shlex.quote(sys.executable)} \"$@\"\n",
         encoding="utf-8",
     )
     fake_python.chmod(0o755)
@@ -316,6 +330,18 @@ def test_bound_codex_driver_without_any_handoff_blocks(tmp_path: Path) -> None:
     context = _run_bound_codex_compact(tmp_path)
     assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" in context
     assert "No Codex/shared driver handoff selected" in context
+
+
+def test_shared_handoff_selection_does_not_import_hydration_runtime(tmp_path: Path) -> None:
+    fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("# shared driver state\n", encoding="utf-8")
+
+    context = _run_bound_codex_compact(tmp_path, block_hydration_import=True)
+
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert '\"schema_name\":\"HydrationCapsuleV1\"' in context
+    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
 
 
 def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:

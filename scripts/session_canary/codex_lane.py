@@ -32,17 +32,7 @@ def _epic_dir(repo: Path, epic: str) -> Path:
 
 
 def _load_ranked(repo: Path, epic: str) -> list[handoff_select.LoadedCandidate]:
-    return handoff_select.load_and_rank_candidates(
-        repo,
-        epic,
-        (
-            "CODEX-DRIVER-HANDOFF.md",
-            "INTERIM-DRIVER-HANDOFF.md",
-            "CLAUDE-DRIVER-HANDOFF.md",
-            "GEMINI-DRIVER-HANDOFF.md",
-        ),
-        preferred=("CODEX-DRIVER-HANDOFF.md",),
-    )
+    return handoff_select.load_codex_candidates(repo, epic)
 
 
 def _handoff_candidates(repo: Path, epic: str) -> list[Path]:
