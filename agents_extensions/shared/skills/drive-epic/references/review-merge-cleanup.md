@@ -85,7 +85,10 @@ done
 
 **Synchronous ask expiry:** its wait omits `--run-nonce`; wait rc 124 with empty stdout
 becomes wrapper `ok=false`, empty `response`, and `ask-<lane> review dispatch did not complete: status=None`.
-Ask itself does not expose rc 124 or the dispatch nonce. Set `REVIEW_TASK` to the original ask's task ID
+The outer subprocess timeout instead reports `delegate.py wait timed out at process level`
+while the original review may still be live. Either signal requires the same lookup and
+original-task wait recovery below; neither is a terminal task-record `timeout`.
+Ask itself does not expose the dispatch nonce (or rc 124 for client expiry). Set `REVIEW_TASK` to the original ask's task ID
 and `PRIMARY_REPO`/`PY` as above; query the live task record via `delegate.py status`:
 
 ```bash
