@@ -2430,7 +2430,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
 
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
-    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance."""
+    """Frozen 1a0207b784 bytes updated for #10104, plus only the explicit #9625 AGY guidance."""
     from scripts.review.prompts.render import render
 
     if kind == "plan":
