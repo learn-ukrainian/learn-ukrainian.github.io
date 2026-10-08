@@ -465,6 +465,7 @@ def reviewed_binding(
             and receipt.get("manifest_sha256") == attempt["manifest_sha256"]
             and receipt.get("tool") == tool
             and receipt.get("status") == "ok"
+            and receipt.get("outcome_facts", {}).get("status") != "error"
             and not receipt.get("outcome_facts", {}).get("unavailable", True)
             and word["lemma"] in queried
         )

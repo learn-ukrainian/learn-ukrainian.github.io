@@ -620,8 +620,9 @@ def git_worktree_remove(
 
     Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
     pipeline call this; ``tests/orchestration/test_worktree_removal_invariant.py``
-    fails on any other caller. ``force`` first passes the delete-target guard,
-    then runs ``git worktree remove --force``, which a clean porcelain tree
+    fails on any other caller. Forced targets pass the delete-target guard;
+    the reaper explicitly guards non-force continuation-cohort targets.
+    ``force`` runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
     files, and a locked one. The removal is bounded by ``timeout`` when the

@@ -13,10 +13,7 @@ import {
 } from '@site/src/lib/lexicon/atlasDb';
 import { articleProps } from '../helpers/word-atlas-record';
 import { renderWordAtlasArticle } from '../helpers/render-word-atlas-article';
-import {
-  resetSqliteAtlasDataSourceCachesForTests,
-  SqliteAtlasDataSource,
-} from '@site/src/lib/lexicon/sqlite-atlas-data-source';
+import { SqliteAtlasDataSource } from '@site/src/lib/lexicon/sqlite-atlas-data-source';
 
 const atlasDbPath = resolve(
   process.env.ATLAS_DB_PATH ?? resolve(process.cwd(), '../data/atlas.db'),
@@ -136,23 +133,35 @@ function makeFixtureDb(): InstanceType<typeof Database> {
   return db;
 }
 
+/** Freeze a loaded record so no test can change what another test reads. */
+function deepFreeze<T>(value: T): T {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    for (const child of Object.values(value)) deepFreeze(child);
+  }
+  return value;
+}
+
 describe('entry_type-branched article rendering (#4385)', () => {
   let cache: AtlasPayloadCache;
+  // Building the source reads the whole atlas.db, so the file builds it once.
+  // Nothing in this file changes ATLAS_DB_PATH, and render() freezes every
+  // record it uses, so the shared source stays a read-only snapshot.
+  let source: SqliteAtlasDataSource;
 
   beforeAll(() => {
     resetAtlasPayloadCacheForTests();
     cache = getAtlasPayloadCache();
+    source = new SqliteAtlasDataSource();
   });
 
   async function render(entry: LexiconEntry | undefined, slug: string): Promise<string> {
     expect(entry, `fixture missing: ${slug}`).toBeDefined();
-    resetSqliteAtlasDataSourceCachesForTests();
-    const source = new SqliteAtlasDataSource();
     const result = await source.getEntry(slug);
     expect(result.kind).toBe('entry');
     if (result.kind !== 'entry') throw new Error('expected entry');
     return renderWordAtlasArticle({
-      record: result.record,
+      record: deepFreeze(result.record),
       generatedAt: 'test',
       manifestVersion: 'test',
     });

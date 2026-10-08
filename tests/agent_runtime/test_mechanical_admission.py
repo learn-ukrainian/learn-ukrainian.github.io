@@ -133,8 +133,47 @@ def test_prompt_and_content_read_errors_fail_closed(tmp_path):
         admission.refuse_mechanical_task((HAIKU,), **scope(prompt_file=str(prompt)))
     def unavailable():
         raise OSError("private diagnostic must not escape")
-    with pytest.raises(admission.MechanicalAdmissionRefused, match=r"unavailable \(OSError\)"):
+    with pytest.raises(admission.MechanicalAdmissionRefused, match=r"unavailable at tree resolution \(OSError\)"):
         admission.refuse_mechanical_task((HAIKU,), **scope(trees=unavailable))
+
+
+@pytest.mark.parametrize("stage", ["prompt file", "tree resolution", "owned content"])
+@pytest.mark.parametrize("error", [OSError, RuntimeError, ValueError, subprocess.SubprocessError])
+def test_input_failure_names_stage_and_class_without_exception_text(monkeypatch, stage, error):
+    def unavailable(*args):
+        raise error("private/path/secret and Україна")
+
+    overrides = {}
+    if stage == "prompt file":
+        monkeypatch.setattr(Path, "read_bytes", unavailable)
+        overrides["prompt_file"] = "private/path/task.md"
+    elif stage == "tree resolution":
+        overrides["trees"] = unavailable
+    else:
+        tree = Tree()
+        monkeypatch.setattr(tree, "owned_files", unavailable)
+        overrides["trees"] = (tree,)
+    with pytest.raises(admission.MechanicalAdmissionRefused) as refused:
+        admission.refuse_mechanical_task((HAIKU,), **scope(**overrides))
+    assert str(refused.value) == (
+        f"MECHANICAL_TASK_REFUSED: task input unavailable at {stage} ({error.__name__}) (#9996)"
+    )
+
+
+def test_missing_prompt_file_names_stage_without_path(tmp_path):
+    with pytest.raises(admission.MechanicalAdmissionRefused) as refused:
+        admission.refuse_mechanical_task((HAIKU,), **scope(prompt_file=str(tmp_path / "missing.md")))
+    assert str(refused.value) == (
+        "MECHANICAL_TASK_REFUSED: task input unavailable at prompt file (FileNotFoundError) (#9996)"
+    )
+
+
+def test_unencodable_task_prompt_names_stage_without_content():
+    with pytest.raises(admission.MechanicalAdmissionRefused) as refused:
+        admission.refuse_mechanical_task((HAIKU,), **scope(task_prompt="private/path/\ud800"))
+    assert str(refused.value) == (
+        "MECHANICAL_TASK_REFUSED: task input unavailable at task prompt (UnicodeEncodeError) (#9996)"
+    )
 
 
 @pytest.mark.parametrize("activity", ["review", "consult"])

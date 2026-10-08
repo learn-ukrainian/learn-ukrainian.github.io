@@ -103,6 +103,18 @@ _AC_LIKE_CHECKBOX_RE = re.compile(r"^[-*+]\s*\[[^\]]*\]\s*[*_`]*AC(?=[^A-Za-z]|$
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
+def _match_ac_checkbox_line(line: str) -> re.Match[str] | None:
+    """The one definition of a stable-ID AC checkbox line, bold or plain.
+
+    Shared by :func:`parse_issue_acceptance_criteria` and
+    :func:`check_ac_checkbox` so the parser and the sync-acs writer can never
+    drift apart: a line the parser reads as criterion ``X`` is exactly the
+    line the writer checks off for ``X``.
+    """
+    normalized = line.strip()
+    return _AC_RE.fullmatch(normalized) or _PLAIN_AC_RE.fullmatch(normalized)
+
+
 class LifecycleError(ValueError):
     """The lifecycle ledger or requested transition violates the contract."""
 
@@ -501,7 +513,7 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     seen: set[str] = set()
     for raw_line in str(body or "").splitlines():
         line = raw_line.strip()
-        match = _AC_RE.fullmatch(line) or _PLAIN_AC_RE.fullmatch(line)
+        match = _match_ac_checkbox_line(line)
         if not match:
             if _AC_LIKE_CHECKBOX_RE.match(line):
                 raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
@@ -522,6 +534,29 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     if not criteria:
         raise LifecycleError("issue body has no stable-ID acceptance criteria")
     return criteria
+
+
+def check_ac_checkbox(body: str, ac_id: str) -> str:
+    """Mark the checkbox line of criterion ``ac_id`` as checked.
+
+    Uses the same line grammar as :func:`parse_issue_acceptance_criteria`
+    (through :func:`_match_ac_checkbox_line`), so bold (``**AC-01** — …``) and
+    plain (``AC-01: …`` / ``AC-01 …``) IDs are found identically, ``AC-1``
+    never matches the ``AC-10`` line, and an ID mentioned inside another
+    criterion's text is never checked. Already-checked lines, lines of other
+    criteria, indentation, and the trailing newline are preserved
+    byte-for-byte.
+    """
+    text = str(body or "")
+    lines = text.splitlines()
+    for index, raw_line in enumerate(lines):
+        match = _match_ac_checkbox_line(raw_line)
+        if match is None or match.group("id") != ac_id or match.group("checked").lower() == "x":
+            continue
+        prefix = raw_line[: len(raw_line) - len(raw_line.lstrip())]
+        content = raw_line.lstrip()
+        lines[index] = prefix + "- [x]" + content[5:]
+    return "\n".join(lines) + ("\n" if text.endswith("\n") else "")
 
 
 def ac_content_hash(criteria: list[Mapping[str, Any]]) -> str:

@@ -12675,6 +12675,8 @@ def _dispatch(
         return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
+    # Claims use the enforced commit scope (--owned-path), not research
+    # classification paths, which neither grant nor restrict writes (#10015).
     # Runs before task-state write / worktree / branch side effects so a refuse
     # leaves no residue. Read-only modes are exempt inside the helper.
     # Dry-run must leave zero residue (same contract as tmp-lease reap) — skip
@@ -12698,7 +12700,7 @@ def _dispatch(
             ownership = admit_write_paths(
                 task_id=task_id,
                 mode=str(args.mode),
-                owned_paths=getattr(args, "research_owned_path", None),
+                owned_paths=_declared_owned_paths(getattr(args, "owned_path", None)),
                 allow_path_overlap=getattr(args, "allow_path_overlap", None),
                 pid=os.getpid(),
                 guard_mode=guard_mode,
@@ -15555,6 +15557,10 @@ def _kimi_dispatch_gate(
         return result
 
     def trees() -> list[Any]:
+        if args.mode == "read-only" and not (getattr(args, "worktree", None) or getattr(args, "branch", None)):
+            # Mechanical classification/recon can read an ordinary checkout.
+            # Kimi writes still use the dispatch-worktree resolver below.
+            return _kimi_worktree_trees(validated_cwd or target_repo_root)
         resolved, commit = _kimi_start_trees(
             args,
             agent=seat[0],

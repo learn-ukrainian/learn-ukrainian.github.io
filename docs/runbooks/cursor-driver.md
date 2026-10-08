@@ -71,11 +71,11 @@ Cross-family independence checks evaluate either the **attested concrete model f
 - **Driver merges own-lane PRs:** After exact-head cross-family CF APPROVE + CI Gate green, the Cursor driver (like every epic driver) enqueues/merges its own lane's PRs via `.venv/bin/python -m scripts.publish pr-merge --number <N>` per `drive-epic` §7 and `critical-rules` §8.5. Workers never merge. Do **not** ask the operator to merge — that is the defect this fleet was built to remove. GUI supervision chats are not the merge seat; the leased TUI/driver session is.
 - **Single Playbook:** No second router or alternate state machine; drivers run the standard `drive-epic` skill.
 
-## Do-Not-Vendor List (Non-Goals)
+## Tool Integration Constraints
 
-The following tools and frameworks are explicitly rejected and must not be vendored or integrated:
+The following constraints apply to tool and framework integration:
 
-- **No pstack / `/poteto-mode`:** No third-party stack-management plugins.
+- **pstack:** Allowed for the Cursor CLI lane only, with its version following the private pin; other driver CLIs remain without pstack (decision recorded in the private infrastructure repository, 2026-10-06).
 - **No Graphite:** No external CLI stack wrappers.
 - **No Benny:** No external automated workflow bots.
 - **No N-Implementation Arenas (`/arena`):** Contest is handled via `ab discuss`, followed by a single dispatched owner.

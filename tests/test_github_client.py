@@ -622,11 +622,78 @@ def test_partial_graphql_error_is_not_success_or_cached(tmp_path):
         db.execute("SELECT 1")
 
 
-def test_cli_timeout_reaps_a_real_descendant(tmp_path):
-    import os
+def _observe_reaped_descendant(pid, *, process=None):
+    """Return ``disappeared`` or ``reaped``. A live descendant raises ``TimeoutExpired``.
+
+    Construction is the existence check. ``Process`` raises ``NoSuchProcess`` when
+    the pid is already gone, including when it exits during construction. A prior
+    ``pid_exists`` check races with that (#9993). The 5s wait is unchanged: a
+    descendant that survives it still fails the caller.
+    """
+    import psutil
+
+    observe = psutil.Process if process is None else process
+    try:
+        child = observe(pid)
+    except psutil.NoSuchProcess:
+        return "disappeared"
+    child.wait(timeout=5)
+    return "reaped"
+
+
+def test_descendant_disappearance_during_observation_is_accepted(monkeypatch):
     import sys
 
     import psutil
+
+    proc = subprocess.Popen([sys.executable, "-c", "import os; os._exit(0)"])
+    proc.wait(timeout=5)
+    assert not psutil.pid_exists(proc.pid)
+    monkeypatch.setattr(psutil, "pid_exists", lambda _pid: pytest.fail("check-then-use pid_exists"))
+    assert _observe_reaped_descendant(proc.pid) == "disappeared"
+
+
+def test_live_descendant_still_fails_observation():
+    import sys
+
+    import psutil
+
+    proc = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        assert psutil.Process(proc.pid).is_running()
+
+        def still_alive(pid):
+            assert pid == proc.pid
+
+            class Descendant:
+                def wait(self, timeout):
+                    assert timeout == 5
+                    assert psutil.Process(pid).is_running()
+                    raise psutil.TimeoutExpired(timeout, pid=pid)
+
+            return Descendant()
+
+        with pytest.raises(psutil.TimeoutExpired) as caught:
+            _observe_reaped_descendant(proc.pid, process=still_alive)
+        assert caught.value.seconds == 5 and caught.value.pid == proc.pid
+    finally:
+        proc.kill()
+        proc.wait(timeout=5)
+
+
+def test_descendant_that_exits_is_reaped():
+    import sys
+
+    proc = subprocess.Popen([sys.executable, "-c", "import os; os._exit(0)"])
+    try:
+        assert _observe_reaped_descendant(proc.pid) == "reaped"
+    finally:
+        proc.wait(timeout=5)
+
+
+def test_cli_timeout_reaps_a_real_descendant(tmp_path):
+    import os
+    import sys
 
     pid_file = tmp_path / "child.pid"
     executable = tmp_path / "gh"
@@ -640,9 +707,7 @@ def test_cli_timeout_reaps_a_real_descendant(tmp_path):
     )
     with pytest.raises(subprocess.TimeoutExpired):
         store.request("GET", "repos/o/r/issues", timeout=1)
-    child = psutil.Process(int(pid_file.read_text())) if psutil.pid_exists(int(pid_file.read_text())) else None
-    if child is not None:
-        child.wait(timeout=5)
+    assert _observe_reaped_descendant(int(pid_file.read_text())) in {"disappeared", "reaped"}
 
 
 def test_low_keeper_budget_skips_identity_checks_and_state_write(tmp_path):
