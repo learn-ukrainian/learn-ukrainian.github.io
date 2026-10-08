@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Condensed Monitor API cold start for Cursor (200k context).
 
-Fetches /api/rules (canonical complete ruleset; AGENTS.md + CLAUDE.md are
-digests, not a substitute). Prints a compact markdown briefing (~3–5k
-tokens) for session orientation; does not reprint the rules blob.
+Fetches /api/rules (binding core; AGENTS.md + CLAUDE.md are digests, not a
+substitute). Task references load through scope=task:<name>; scope=full
+selects the complete reference archive. Prints a compact markdown briefing
+(~3–5k tokens) for session orientation; does not reprint the rules blob.
 """
 
 from __future__ import annotations

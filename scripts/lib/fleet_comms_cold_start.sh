@@ -2,7 +2,8 @@
 # fleet_comms_cold_start.sh — shared authority-aware fleet-comms cold-start helpers.
 #
 # Binding doctrine: agents_extensions/shared/rules/fleet-comms-coordination.md
-# (also served at GET /api/rules). Method playbook: drive-epic skill (#5632).
+# (also served at GET /api/rules?scope=task:fleet-comms or scope=full).
+# Method playbook: drive-epic skill (#5632).
 # Authority cutover approved by the operator in #6159 on 2026-08-01.
 #
 # Usage (from a start-*.sh after PROJECT_DIR is set):
@@ -72,7 +73,7 @@ fleet_comms_cold_clause() {
   local rule
   rule="$(fleet_comms_rule_relpath)"
   printf '%s' \
-    "Fleet-comms (#6159) authority cutover — obey ${rule} (also in /api/rules). " \
+    "Fleet-comms (#6159) authority cutover — obey ${rule} (also in /api/rules?scope=task:fleet-comms or scope=full). " \
     "Method playbook: load skill drive-epic (provider drivers inject the binding after lease + canary). " \
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \

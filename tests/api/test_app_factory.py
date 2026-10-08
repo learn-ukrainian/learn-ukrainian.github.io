@@ -197,7 +197,7 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     (first_root / "agents_extensions" / "shared" / "rules").mkdir(parents=True)
-    (first_root / "agents_extensions" / "shared" / "rules" / "operator-expectations.md").write_text(
+    (first_root / "agents_extensions" / "shared" / "rules" / "core.md").write_text(
         "# First Rules\nFirst rule body\n",
         encoding="utf-8",
     )
@@ -223,7 +223,7 @@ def test_step1_session_streams_cluster_isolation(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     (second_root / "agents_extensions" / "shared" / "rules").mkdir(parents=True)
-    (second_root / "agents_extensions" / "shared" / "rules" / "operator-expectations.md").write_text(
+    (second_root / "agents_extensions" / "shared" / "rules" / "core.md").write_text(
         "# Second Rules\nSecond rule body\n",
         encoding="utf-8",
     )

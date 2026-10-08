@@ -545,10 +545,12 @@ class MonitorClient:
     ) -> ComponentResult:
         """Return rule text, cached by manifest hash.
 
-        ``scope=None`` is the full bundle (cache key ``rules``). ``core``,
-        ``content`` and ``task:<name>`` are cached under ``rules:<scope>`` so a
-        scope never serves another scope's bytes; ``core`` and ``content`` use
-        the manifest's ``rules_core`` / ``rules_content`` hashes.
+        ``scope=None`` is the binding core (cache key ``rules``). ``full``
+        explicitly selects the complete reference archive. Explicit scopes
+        (``core``, ``content``, ``task:<name>`` and ``full``) are cached under
+        ``rules:<scope>`` so a scope never serves another scope's bytes;
+        ``core`` and ``content`` use the manifest's ``rules_core`` /
+        ``rules_content`` hashes.
         """
         if scope is None:
             return self._cached_component(
