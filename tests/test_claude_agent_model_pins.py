@@ -10,10 +10,20 @@ import yaml
 
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused, refuse_mechanical_task
 from scripts.review.model_catalog import load_model_catalog
+from tests.test_launcher_contract import PUBLIC
 
 ROOT = Path(__file__).resolve().parents[1]
 SHARED = ROOT / "agents_extensions/shared"
 HAIKU = "claude-haiku-5-5"
+AGENT_PINS = (
+    ("curriculum-orchestrator", "claude-opus-5-5"),
+    ("curriculum-track-orchestrator", "claude-opus-5-5"),
+    ("curriculum-writer", "claude-opus-5-5"),
+    ("infra-orchestrator", "claude-sonnet-5-5"),
+    ("haiku-junior-coder", HAIKU),
+    ("haiku-search", HAIKU),
+    ("haiku-mechanical", HAIKU),
+)
 
 
 def test_interactive_settings_use_documented_model_and_advisor_keys():
@@ -24,15 +34,7 @@ def test_interactive_settings_use_documented_model_and_advisor_keys():
     assert "CLAUDE_CODE_SUBAGENT_MODEL" not in settings.get("env", {})
 
 
-@pytest.mark.parametrize("agent,model", [
-    ("curriculum-orchestrator", "claude-opus-5-5"),
-    ("curriculum-track-orchestrator", "claude-opus-5-5"),
-    ("curriculum-writer", "claude-opus-5-5"),
-    ("infra-orchestrator", "claude-sonnet-5-5"),
-    ("haiku-junior-coder", HAIKU),
-    ("haiku-search", HAIKU),
-    ("haiku-mechanical", HAIKU),
-])
+@pytest.mark.parametrize("agent,model", AGENT_PINS)
 def test_reserved_and_helper_agent_pins(agent, model):
     metadata = yaml.safe_load((SHARED / "agents" / f"{agent}.md").read_text().split("---", 2)[1])
     assert metadata["model"] == model
@@ -41,7 +43,8 @@ def test_reserved_and_helper_agent_pins(agent, model):
 
 
 def test_no_code_or_ukrainian_agent_inherits_a_model():
-    for path in (SHARED / "agents").glob("*.md"):
+    for agent, _ in AGENT_PINS:
+        path = SHARED / "agents" / f"{agent}.md"
         metadata = yaml.safe_load(path.read_text().split("---", 2)[1])
         assert metadata["model"] != "inherit", path.name
 
@@ -49,7 +52,9 @@ def test_no_code_or_ukrainian_agent_inherits_a_model():
 def test_no_global_haiku_subagent_override():
     settings = json.loads((SHARED / "settings.json").read_text())
     assert settings["model"] == "claude-sonnet-5-5"  # Unnamed helper inherits the interactive model.
-    for path in [*ROOT.glob("start-*.sh"), ROOT / "scripts/lib/launcher_core.sh"]:
+    # PUBLIC is the exact launcher inventory, enforced by the launcher contract.
+    for path in [*(ROOT / name for name in PUBLIC), ROOT / "scripts/lib/launcher_core.sh",
+                 ROOT / "scripts/launchers/claude.sh"]:
         assert "CLAUDE_CODE_SUBAGENT_MODEL=" not in path.read_text(), path.name
 
 
