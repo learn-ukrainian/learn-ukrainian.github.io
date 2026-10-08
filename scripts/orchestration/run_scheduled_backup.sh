@@ -146,6 +146,13 @@ parse_bytes_added() {
     awk '{total += $1} END {if (NR > 0) printf "%d\n", total}'
 }
 
+# SQLite databases uploaded by the online-backup phase; empty when the run
+# ended before that phase reported.
+parse_databases_backed_up() {
+  local log=$1
+  grep -oE 'SQLite databases backed up: [0-9]+' "$log" | awk 'END {if (NR > 0) print $NF}' || true
+}
+
 # Total snapshots of this backup family in the repository; best effort — the
 # receipt must still be written when the repository is unreachable.
 query_snapshot_count() {
@@ -157,10 +164,11 @@ query_snapshot_count() {
 
 write_last_run() {
   local status=$1 started=$2 finished=$3 log=$4 output=$5 skip_snapshots=${6:-}
-  local run_id bytes_added snapshot_count temporary
+  local run_id bytes_added snapshot_count databases_backed_up temporary
 
   run_id="$(parse_run_id "$log")" || return 1
   bytes_added="$(parse_bytes_added "$log")" || return 1
+  databases_backed_up="$(parse_databases_backed_up "$log")" || return 1
   snapshot_count=""
   if [[ "$skip_snapshots" != skip-snapshots ]]; then
     snapshot_count="$(query_snapshot_count)" || return 1
@@ -175,6 +183,7 @@ write_last_run() {
     --arg run_id "$run_id" \
     --arg bytes_added "$bytes_added" \
     --arg snapshot_count "$snapshot_count" \
+    --arg databases_backed_up "$databases_backed_up" \
     '{
       schema_version: 1,
       started_at_utc: $started,
@@ -182,7 +191,8 @@ write_last_run() {
       exit_status: $status,
       run_id: (if $run_id == "" then null else $run_id end),
       snapshot_count: (if $snapshot_count == "" then null else ($snapshot_count | tonumber) end),
-      bytes_added: (if $bytes_added == "" then null else ($bytes_added | tonumber) end)
+      bytes_added: (if $bytes_added == "" then null else ($bytes_added | tonumber) end),
+      databases_backed_up: (if $databases_backed_up == "" then null else ($databases_backed_up | tonumber) end)
     }' > "$temporary" || { rm -f "$temporary"; return 1; }
   jq -e . "$temporary" >/dev/null || { rm -f "$temporary"; return 1; }
   mv "$temporary" "$output" || { rm -f "$temporary"; return 1; }
