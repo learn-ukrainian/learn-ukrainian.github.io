@@ -1,4 +1,8 @@
-"""Offline walkthrough for the documented detached formal-review path (#9663)."""
+"""Offline walkthrough for detached formal review (#9663).
+
+Actual dispatch stdout and task-record producer evidence is covered by
+tests/test_delegate.py::test_dispatch_generates_and_persists_run_nonce.
+"""
 
 from __future__ import annotations
 
@@ -29,6 +33,17 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
     monkeypatch.setattr(_cli, "require_core_or_exit", lambda _name: None)
     with pytest.raises(SystemExit, match="legacy ask --background is retired"):
         _cli._handle_acp_compat(ask, "codex")
+    branch_ask = _cli._build_parser().parse_args(
+        [
+            "ask-codex",
+            "Review the pushed author branch at its resolved remote head.",
+            "--task-id", "review-fixture",
+            "--review",
+            "--branch", "codex/author",
+        ]
+    )
+    assert branch_ask.branch == "codex/author"
+    assert branch_ask.review
 
     reference = REFERENCE.read_text(encoding="utf-8")
     assert "`--background` flag is rejected" in reference
@@ -36,6 +51,17 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
     assert "--pinned-head \"$HEAD_SHA\"" in reference
     assert "--run-nonce \"$REVIEW_NONCE\"" in reference
     assert "scripts/review/record_cf_verdict.py" in reference
+    assert "requires_silence_timeout" in reference
+    assert "Only terminal task-record" in reference
+    shared_rules = REFERENCE.parents[3] / "rules"
+    fleet_rules = (shared_rules / "fleet-comms-coordination.md").read_text(encoding="utf-8")
+    model_rules = (shared_rules / "model-assignment.md").read_text(encoding="utf-8")
+    workflow_rules = (shared_rules / "workflow.md").read_text(encoding="utf-8")
+    for rules in (fleet_rules, model_rules):
+        assert "--review --branch <branch>" in rules
+        assert "record_cf_verdict.py" in rules
+        assert "ask --pinned-head" not in rules
+    assert "compare the actual reviewed SHA" in workflow_rules
 
     # Parse the documented producer with delegate's real CLI. Its public
     # contract is detached dispatch; this fixture replaces only the worker
@@ -85,26 +111,36 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
     }
     task_path.write_text(json.dumps(task), encoding="utf-8")
     (task_root / "review-fixture.result").write_text("VERDICT: APPROVE\n", encoding="utf-8")
-    # Model the detached producer's two-line stdout receipt. It returns while
-    # the worker fixture is still running, leaving the driver free to proceed.
-    dispatch_result = "review-fixture\n" + NONCE
-    dispatch_lines = dispatch_result.splitlines()
-    assert dispatch_lines == ["review-fixture", NONCE]
-    review_task, review_nonce = dispatch_lines
+    # The existing producer regression runs cmd_dispatch --dry-run and checks
+    # its actual two-line task-id/run-nonce stdout against the persisted record.
+    review_task, review_nonce = "review-fixture", NONCE
     assert json.loads(task_path.read_text(encoding="utf-8"))["status"] == "running"
-    independent_work_completed = True
-    assert independent_work_completed
 
-    # The armed wait accepts only this run nonce. The first read is still
-    # running; the fixture's worker boundary settles it on the next wake.
+    # A client wait deadline can expire while task state remains running. Its
+    # 124 result is not settlement; re-arm the same parsed wait/nonce.
     wait = delegate.build_parser().parse_args(
-        ["wait", review_task, "--run-nonce", review_nonce, "--timeout", "10"]
+        ["wait", review_task, "--run-nonce", review_nonce, "--timeout", "1"]
     )
     assert wait.run_nonce == NONCE
     assert wait.func is delegate.cmd_wait
 
     def read_task(_task_id):
         return task_path, json.loads(task_path.read_text(encoding="utf-8"))
+
+    clock = [0.0]
+    monkeypatch.setattr(delegate.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(delegate, "_read_state_or_archived", read_task)
+    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: clock.__setitem__(0, 2.0))
+    assert delegate.cmd_wait(wait) == 124
+    expired = json.loads(capsys.readouterr().err)
+    assert expired["last_known_status"] == "running"
+    assert json.loads(task_path.read_text(encoding="utf-8"))["run_nonce"] == review_nonce
+
+    # Re-arm the same task/run nonce; the worker fixture now reaches terminal
+    # done, after which the task record and actual reply can be checked.
+    wait.timeout = 10
+    clock[0] = 0.0
 
     def settle(_seconds):
         current = json.loads(task_path.read_text(encoding="utf-8"))
@@ -113,8 +149,6 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
         current["resolved_model"] = "claude-opus-5-5"
         task_path.write_text(json.dumps(current), encoding="utf-8")
 
-    monkeypatch.setattr(delegate, "_read_state_or_archived", read_task)
-    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(delegate.time, "sleep", settle)
     assert delegate.cmd_wait(wait) == 0
     assert json.loads(capsys.readouterr().out)["status"] == "done"
@@ -149,6 +183,14 @@ def test_detached_exact_head_review_launch_settle_and_publication_guards(monkeyp
             task_root=task_root,
             lock_root=tmp_path / "locks",
         )
+
+    # A completed record without its reply is not publishable evidence.
+    reply_path = task_path.with_suffix(".result")
+    missing_reply = task_root / "missing.reply"
+    reply_path.rename(missing_reply)
+    with pytest.raises(recorder.RecordError, match="record or reply unavailable"):
+        recorder._task(review_task, task_root)
+    missing_reply.rename(reply_path)
 
     # Terminal failure wins over approval-looking reply text.
     failed = dict(completed, status="failed")

@@ -103,15 +103,15 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
-# ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (.venv/bin/python -m scripts.publish pr-comment / .venv/bin/python -m scripts.publish pr-review). Merge when CI is green.
-# Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
-# `--type review` routes to a headless native CLI WITH tools (delegate.py
-# dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
-# ACP (operator 2026-08-23, #7155) — this command line is unchanged, the
-# transport underneath it is not.
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review
+# Push the author branch, then get exact-head APPROVE before opening any PR.
+# `ask --branch` resolves and pins the current remote branch head for native
+# toolful review; compare the returned reviewed SHA with the branch tip.
+printf '%s\n' "Review pushed branch <branch> at its resolved remote head; return verdict + findings." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+    --task-id review-<id> --review --branch <branch>
+# Only after APPROVE matches that SHA, open the PR and bind the completed review:
+.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>
+# Then require CI on that same SHA before landing; see drive-epic §7 / §7a for cleanup.
 # SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
 # do not run it. Its commands were removed in #8520, and the snapshot flow is
 # refused with no bypass.
@@ -148,8 +148,9 @@ Every epic driver session (any harness) MUST:
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Review of record = ONE cross-family round posted on the PR at the current head
-   (direct ask + posted verdict). **Shielded formal CF (`review-pr`, sealed MCP,
+4. Review of record = ONE cross-family round on the pushed branch before the PR;
+   after opening the PR, `record_cf_verdict` binds the completed review to its
+   head and author qualification. **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
    2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
    and same-family chat are still not the gate.
@@ -206,9 +207,11 @@ Supported fleet seats cold-start through:
 
 Discussion is never the review of record. **Shielded formal CF (`review-pr` /
 `publish-review-verdict` / sealed `lu-review-*`) is RETIRED** (operator 2026-08-07).
-Review of record = one direct cross-family `ask-*` + posted PR verdict. ACP is
-structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms owns
-durable coordination state.
+Review of record = one direct cross-family `ask-* --review --branch <name>` on
+the pushed branch before PR creation, followed after PR creation by
+`record_cf_verdict` to bind the completed review, head, and author qualification.
+ACP is structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms
+owns durable coordination state.
 
 ### CF thrash ban (operator 2026-08-06; formal path retired 2026-08-07)
 
@@ -241,10 +244,10 @@ The default is two rounds and the hard maximum is three.
 `gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
 proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
 unavailable; the same review via headless dispatch with tools approved).
-`ask-<lane> --review` / `--type review` / `--pr` / `--branch` therefore never
-reach `run_compat_ask` — they route to `delegate.py dispatch --agent <lane>
---worktree` (a real TUI agent with tools) and block on `delegate.py wait` for
-the result. Only non-review `ask-*` stays on ACP.
+For pre-PR CF, `ask-<lane> --review --branch <name>` resolves the remote head
+for native toolful dispatch + wait; compare the reviewed SHA and require
+outside-family APPROVE before PR, then bind it with `record_cf_verdict.py`.
+`--pr` targets an existing PR; only non-review `ask-*` stays on ACP.
 
 There is no bridge/provider-execution fallback. Unknown routes, invalid model or
 effort overrides, unavailable ACP, cancellation, timeout, and partial results are

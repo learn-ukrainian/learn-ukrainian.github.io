@@ -38,27 +38,23 @@ wrapper runs dispatch and wait synchronously; it does not let the driver
 continue while the review runs. Its legacy `--background` flag is rejected.
 ACP remains for ordinary, non-review `ask-*` only. For a review that can
 settle separately, use the existing detached native dispatch and wait path
-below. This keeps the same toolful reviewer and exact-head gate.
+below.
 
-Resolve the reviewer from the current target with
-`scripts.review.closeout_cli ... resolve-reviewer` as described in
-`model-assignment.md`. Use the returned invocation and route receipt: set the
-concrete reviewer seat/model, author model, risk, and any required silence
-timeout from that receipt. Do not hand-pick a seat or copy a stale route.
-`REVIEW_BRIEF` must identify the author branch and exact SHA, request an
-independent toolful code/infra review with findings, and include the current
-code-review output contract from `scripts/ai_agent_bridge/_dispatch_wrappers.py`
-and `schemas/code-review-findings.v1.schema.json` (one plain verdict plus the
-schema-conforming findings object and exact-target evidence).
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author
+model, and risk. `requires_silence_timeout` is boolean; if true, use documented
+seat/runtime seconds, pass `--silence-timeout <seconds>` explicitly (default
+3600), and confirm `silence_timeout` in the task record. Never infer duration
+or reuse stale routing. `REVIEW_BRIEF` names branch/SHA and requests toolful
+code/infra review with findings under `_dispatch_wrappers.py` and
+`schemas/code-review-findings.v1.schema.json`.
 
 ```bash
 set -euo pipefail
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 PY="$PRIMARY_REPO/.venv/bin/python"
 
-# These values come from the current reviewer-resolver receipt and the target.
-# If that receipt requires a silence timeout, pass its exact value with
-# --silence-timeout on dispatch.
+# If requires_silence_timeout is true, set SILENCE_TIMEOUT_SECONDS from current
+# seat/runtime guidance and add --silence-timeout "$SILENCE_TIMEOUT_SECONDS".
 dispatch_result="$("$PY" scripts/delegate.py dispatch \
   --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
   --mode read-only --worktree --task-id "$REVIEW_TASK" \
@@ -76,28 +72,20 @@ REVIEW_NONCE="${dispatch_lines[1]}"
   --run-nonce "$REVIEW_NONCE" --timeout 1800
 ```
 
-Dispatch returns the task ID and run nonce before the worker finishes. Keep
-both; do not start a second dispatch or build a task-file polling loop. The
-existing `delegate.py wait` command blocks and checks task state internally.
-After it settles, read the actual task record and result file. Require terminal
-`done`, the expected task/run identity, attested reviewer model/family, the
-branch and SHA still matching the current author target, and a complete
-well-formed verdict/findings reply. `failed`, `timeout`, `cancelled`,
-`crashed`, `rate_limited`, `no_deliverable`, missing or malformed evidence,
-unknown reviewer identity, or a moved head is not approval; resolve findings
-and repeat review on the current head as needed.
+Keep task ID and nonce. Exit 124 with status `running`/`spawning` means wait
+expired; re-arm that wait, never dispatch again. Only terminal task-record
+`timeout` is settled failure. After settlement require `done`, matching
+identity, attested model/family, unchanged branch/SHA, and a complete reply;
+failure, missing/malformed evidence, unknown identity, or moved head is not approval.
 
-Only exact-head cross-family `VERDICT: APPROVE` permits opening the PR. After
-the PR exists, publish and bind that completed review with:
+Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then bind it:
 
 ```bash
 "$PY" scripts/review/record_cf_verdict.py --task-id "$REVIEW_TASK" --pr "$PR_NUMBER"
 ```
 
-Then require CI Gate green on the same SHA before driver-owned merge. The
-publisher rechecks the completed branch-pinned task, reviewer qualification,
-PR branch, and PR head; a moved head must be reviewed again. Do not enqueue or
-auto-merge from this sequence — landing order is §7.
+Require same-SHA CI before merge; the publisher checks task, reviewer, branch,
+and PR head. Moved heads need re-review; do not enqueue/auto-merge here (§7).
 
 **Read-only review asks can be refused on brief wording (#8703).** The write-shape check
 in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a

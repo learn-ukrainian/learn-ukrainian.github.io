@@ -183,8 +183,10 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 
 0. **CF review-fix before CI (binding).** Push the implementation branch.
    Run independent exact-head cross-family CF on that branch (`ask-<lane>
-   --branch <name>` / equivalent toolful review). On `REQUEST_CHANGES`: fix on
-   the branch → re-CF the new SHA. **Do not open any PR** (draft or ready)
+   --branch <name>` / equivalent toolful review). This resolves and pins the
+   remote branch head; compare the actual reviewed SHA with the current branch
+   tip before accepting APPROVE. On `REQUEST_CHANGES`: fix on the branch →
+   re-CF the new SHA. **Do not open any PR** (draft or ready)
    while CF is still open or while iterating CF findings. In this repo,
    `.github/workflows/ci.yml` runs on `opened` / `synchronize` with **no**
    draft guard — a draft PR still starts CI and slows the review-fix loop.
@@ -192,7 +194,9 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
    runs once on that tip. Accidental parallel CI is waste, not permission to
    skip this order.
 1. Independent cross-family exact-head review **APPROVE** on the tip.
-2. Open the PR (CI starts) and obtain **CI Gate green** on that **same** head.
+2. Open the PR, then run `scripts/review/record_cf_verdict.py` to bind the
+   completed review, reviewed head, and author qualification. Obtain **CI Gate
+   green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
 makes a prior APPROVE stale. Automated merge pipelines cannot replace review gates; enqueue

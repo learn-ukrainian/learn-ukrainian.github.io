@@ -469,17 +469,16 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
 * Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
-  The review of record is ONE direct cross-family round (operator order
-  2026-08-06): plain `ask-<lane>` with the diff reference, verdict + findings
-  posted on the PR at the current head by the requester. **Shielded formal CF
+  The review of record is one cross-family review on the pushed branch before
+  PR creation: `ask --review --branch <name>` pins the remote head; compare its
+  SHA and require APPROVE. Then create the PR and bind with
+  `record_cf_verdict.py`.
+  **Shielded formal CF
   (`review-pr`, sealed multi-GB `lu-review-*` / `shielded-reviews` isolation) is
   RETIRED (operator 2026-08-07)** — fail-closed in the CLI. Do not reintroduce
   it. Lightweight agent review + green CI + merge + worktree/temp cleanup is
-  the path. `ask-<lane> --type review` (or `--review`/`--pr`/`--branch`) is a
-  headless native CLI dispatch WITH tools (`delegate.py dispatch --agent
-  <lane> --worktree`; `gh`/pytest available) — never tool-less ACP (operator
-  2026-08-23, #7155): ACP's `--deny-all --no-fs --no-terminal` transport
-  cannot run `gh auth`, so it cannot ground a review verdict.
+  the path. `ask-<lane> --review --branch <name>` uses the headless native CLI
+  with tools, never tool-less ACP (operator 2026-08-23, #7155).
 
   **Historical projection only — not the live CF gate (#7017).** The table
   below mirrors `scripts/config/fleet_communications.yaml`'s endpoint
@@ -902,15 +901,17 @@ The same table lives in `agents_extensions/shared/memory/MEMORY.md` rule #M0. Th
 
 ## PR cross-family review (direct only — operator 2026-08-06; sealed formal RETIRED 2026-08-07)
 
-Review of record: ONE direct round via plain `ask-<lane>` (reference the branch/diff
-for the reviewer to fetch; do not paste huge diffs inline), verdict + findings posted
-on the PR at the current head by the requester. Then merge when CI is green and reap
-the worktree (`reap_worktrees.py --apply` / `drive-epic` §7a).
+Review: one direct cross-family `ask --review --branch <name>` on the pushed
+branch. Compare its resolved SHA and require APPROVE before PR; then bind with
+`record_cf_verdict.py`, require same-SHA CI, and reap the worktree
+(`reap_worktrees.py --apply` / `drive-epic` §7a).
 
 ```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
+printf '%s\n' "Review pushed branch <branch> at its resolved remote head: VERDICT + findings." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
+    --task-id review-<id> --review --branch <branch>
+# After APPROVE matches the branch SHA, open the PR and bind the completed review:
+.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>
 ```
 
 **Shielded formal CF is RETIRED.** Do not run `review-pr` / `publish-review-verdict`
