@@ -81,7 +81,7 @@ PINNED_DIGESTS = {
     "SHA256SUMS": "4aa193c0e4ff57e6e1b497ca260c6ce1a632817fb5766caeccb6c2afd561886c",
     "SPEC.md": "8a4f1083d8e732efca2d47d7752088663e62b211d3fd8cbb3b89a9ae14fb046d",
     "baseline.json.gz": "514d93440ebe7dc1d2a840a1c7356d70e26c2b34e9b68d5f1e94c734a4c02138",
-    "capture.py": "4fda4d4c7d36f893a5324e0b7f0f6944eec11af8481df2953c3d4c0307d6b7a3",
+    "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/SHA256SUMS": "0d28bb5a15f9f7734f4cec1e62951dd0e51e6c05c325c14445b14d4336a62459",
     "no-cli/baseline.json.gz": "4b7e5572b9417a3477843f64a480983d576a1d734ac27ae7a62597f2ef434ec4",
@@ -200,6 +200,36 @@ def test_capture_environment_controls_lookup_and_version_probes(tmp_path):
         assert invoke.returncode == 97
         assert invoke.stderr == "capture stub refuses provider execution\n"
     assert shutil.which("npx", path=env["PATH"]) is None
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_capture_policy_cache_is_scoped_and_restores_reader(tmp_path, monkeypatch, mocker, fail):
+    from scripts.fleet import credit_lane
+
+    policy_path = tmp_path / "policy.yaml"
+    policy_text = credit_lane.POLICY_PATH.read_text()
+    reader = mocker.Mock(wraps=credit_lane.load_policy)
+    monkeypatch.setattr(credit_lane, "load_policy", reader)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+
+    def surfaces(source, scratch, project_python):
+        policy = credit_lane.load_policy(policy_path)
+        assert credit_lane.load_policy(policy_path) is policy
+        if fail:
+            raise RuntimeError("capture failed")
+        return policy.near_cap_remaining_pct
+
+    monkeypatch.setitem(CAPTURE["capture"].__globals__, "_capture_surfaces", surfaces)
+    for calls, threshold in enumerate((11.0, 12.0), start=1):
+        policy_path.write_text(policy_text.replace("near_cap_remaining_pct: 10.0", f"near_cap_remaining_pct: {threshold}"))
+        if fail:
+            with pytest.raises(RuntimeError, match="capture failed"):
+                CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable))
+        else:
+            assert CAPTURE["capture"](tmp_path, tmp_path, Path(sys.executable)) == threshold
+        assert reader.call_count == calls
+        reader.assert_called_with(policy_path)
+        assert credit_lane.load_policy is reader
 
 
 def test_capture_encodes_structures_without_reordering_arrays():
