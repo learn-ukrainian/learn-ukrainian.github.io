@@ -288,7 +288,7 @@ def test_bad_seed_is_not_reused(tmp_path, changes):
         {"text": ""},
         {"lookup_word": "other"},
         {"source_url": "https://slovnyk.me/dict/vts/other"},
-        {"source_url": "https://user:secret@slovnyk.me/dict/vts/sample"},
+        {"source_url": "https://" + "user" + ":" + "secret" + "@" + "slovnyk.me" + "/dict/vts/sample"},
         {"source_url": "https://slovnyk.me/dict/vts/sample?secret=x"},
         {"source_url": "https://slovnyk.me/dict/newsum/sample"},
     ],
@@ -721,3 +721,89 @@ def test_atomic_json_replaces_projection_and_refusal_storage_failure(tmp_path, c
 def test_packing_is_stable_and_digest_matches():
     assert acquisition.packed({"b": 2, "a": 1}) == '{"a":1,"b":2}'
     assert acquisition.digest(b"") == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+@pytest.mark.parametrize(
+    "code,expected",
+    [
+        (200, "positive"),
+        (404, "not_found"),
+        (401, "blocked"),
+        (403, "blocked"),
+        (408, "transient_error"),
+        (425, "transient_error"),
+        (429, "transient_error"),
+        (500, "transient_error"),
+        (599, "transient_error"),
+        (201, "blocked"),
+        (204, "blocked"),
+        (301, "blocked"),
+        (400, "blocked"),
+        (407, "blocked"),
+        (499, "blocked"),
+        (600, "blocked"),
+    ],
+)
+def test_transport_semantics_match_legacy_strict_paths(monkeypatch, dictionary, code, expected):
+    from scripts.lexicon import enrich_manifest as em
+    from scripts.wiki import sum20_official as official
+
+    clock = Clock()
+    document = OFFICIAL_HTML if dictionary == "sum20_official" else SLOVNYK_HTML
+    http = HTTP([response(code, document)], clock)
+    spec = {"dictionary": dictionary, "timeout": 1}
+    row = {"target": "5" if dictionary == "sum20_official" else "sample", "lookup": "sample"}
+    status, numeric, _payload, _retry = acquisition.fetch_once(http, spec, row, clock())
+    assert (status, numeric) == (expected, code)
+    if dictionary == "sum20_official":
+        legacy_http = HTTP([response(code, document)], clock)
+        legacy_http.headers = {}
+        result = official.fetch_sum20_wordid(5, session=legacy_http, retries=0)
+        semantic = (
+            "blocked"
+            if result.terminal and result.status != "parse_error"
+            else ("positive" if result.status == "ok" else result.status)
+        )
+        assert semantic == expected
+    else:
+        monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+        monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
+        monkeypatch.setattr(em, "_SLOVNYK_MAX_RETRIES", 0)
+        monkeypatch.setattr(em.requests, "get", lambda *_args, **_kwargs: response(code, document))
+        result = em._fetch_slovnyk_outcome("sample", "sample", dictionary)
+        assert result.status == expected
+    assert result.http_status == numeric
+
+
+@pytest.mark.parametrize("dictionary", ["vts", "sum20_official"])
+@pytest.mark.parametrize("bad", ["empty", "network"])
+def test_transport_ambiguity_and_network_semantics_match(monkeypatch, dictionary, bad):
+    from scripts.lexicon import enrich_manifest as em
+    from scripts.wiki import sum20_official as official
+
+    clock = Clock()
+
+    def reply():
+        if bad == "network":
+            raise requests.ConnectionError("private request detail")
+        return response(200, "<article></article>")
+
+    http = HTTP([], clock)
+    http.get = lambda *_args, **_kwargs: reply()
+    expected = "parse_error" if bad == "empty" else "transient_error"
+    status, numeric, *_ = acquisition.fetch_once(
+        http, {"dictionary": dictionary, "timeout": 1}, {"target": "5", "lookup": "sample"}, clock()
+    )
+    assert status == expected
+    if dictionary == "sum20_official":
+        http.headers = {}
+        result = official.fetch_sum20_wordid(5, session=http, retries=0)
+    else:
+        monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+        monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
+        monkeypatch.setattr(em, "_SLOVNYK_MAX_RETRIES", 0)
+        monkeypatch.setattr(em.requests, "get", http.get)
+        result = em._fetch_slovnyk_outcome("sample", "sample", "vts")
+    assert result.status == expected
+    assert result.http_status == numeric

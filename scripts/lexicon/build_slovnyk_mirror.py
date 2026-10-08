@@ -1,25 +1,8 @@
 #!/usr/bin/env python3
-"""Build-time slovnyk.me mirror for the Word Atlas (#3097).
+"""Foreground slovnyk.me shared-cache builder with observed outcome reporting.
 
-Politely pre-populates the per-lemma slovnyk.me cache (`data/lexicon/slovnyk_cache/`,
-gitignored) for every manifest lemma, so a later `enrich_manifest` run reads cache hits
-instead of live-fetching. This converts the ~96-min-every-run live-fetch tax into a
-one-time, resumable scrape.
-
-Why this exists: slovnyk.me is Cloudflare-fronted and 429-rate-limits bursts. The old
-0.12s delay tripped it, and `_SlovnykTransientError` results were never cached, so every
-enrich re-fetched ~1000 lemmas. This builder reuses the now-429-friendly
-`enrich_manifest._fetch_slovnyk_entry` (Retry-After + exponential backoff) at a polite,
-configurable rate.
-
-Resumable: fully-cached lemmas are skipped; a partially-cached lemma fetches only its
-missing dictionary slugs. Safe to Ctrl-C and re-run — each lemma's cache is written as it
-completes.
-
-Usage:
-    .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror              # full run
-    .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror --limit 5    # small test batch
-    LEXICON_SLOVNYK_DELAY=0.5 .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror
+Use one writer for this legacy cache. Unattended independent dictionary jobs
+belong to scripts.ingest.dictionary_acquisition, with isolated durable staging.
 """
 
 from __future__ import annotations
@@ -33,26 +16,21 @@ from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_LOOKUP_SLUGS,
     MANIFEST,
     _load_current_slovnyk_cache_file,
+    _reusable_slovnyk_cache,
     _slovnyk_cache,
     _slovnyk_cache_path,
     _slovnyk_lookup_word,
+    _valid_slovnyk_positive,
 )
 
 
 def _is_fully_cached(lemma: str) -> bool:
-    """True if every dictionary slug for ``lemma`` is already cached (any value, incl. miss).
-
-    Gated to the current schema version (#6524): a "complete" v2 row must
-    still be queued into ``todo`` below so ``_slovnyk_cache()`` heals it,
-    instead of being skipped forever as already-done.
-    """
+    """Only current, identity-valid positives prove reusable work; nulls do not."""
     cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
-    if not cache or cache.get("lookup_word") != _slovnyk_lookup_word(lemma):
-        return False
-    lookups = cache.get("lookups")
-    if not isinstance(lookups, dict):
-        return False
-    return all(slug in lookups for slug in _SLOVNYK_LOOKUP_SLUGS)
+    lookup_word = _slovnyk_lookup_word(lemma)
+    return _reusable_slovnyk_cache(cache, lemma, lookup_word) and all(
+        _valid_slovnyk_positive(cache["lookups"].get(slug), slug, lookup_word) for slug in _SLOVNYK_LOOKUP_SLUGS
+    )
 
 
 def _manifest_lemmas(manifest_path: Path) -> list[str]:
@@ -68,50 +46,81 @@ def _manifest_lemmas(manifest_path: Path) -> list[str]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Build-time slovnyk.me mirror (#3097).")
-    parser.add_argument("--manifest", type=Path, default=MANIFEST, help="Atlas manifest JSON.")
-    parser.add_argument("--limit", type=int, default=None, help="Cap lemmas processed (testing).")
-    parser.add_argument("--progress-every", type=int, default=25, help="Progress log cadence.")
+    parser = argparse.ArgumentParser(
+        description="Populate the foreground per-lemma shared slovnyk.me cache.\n"
+        "Use one writer; use dictionary_acquisition for unattended isolated dictionary jobs.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror --manifest manifest.json --limit 5
+  .venv/bin/python -m scripts.lexicon.build_slovnyk_mirror --manifest manifest.json
+Outputs: per-lemma JSON in LEXICON_SLOVNYK_CACHE (default data/lexicon/slovnyk_cache);
+lookup counts fetched/reused/misses/errors/pending partition the full manifest x dictionary-slug denominator.
+Exit codes: 0 all lookups resolved this invocation; 1 unresolved/storage/access/parse failure; 2 usage error.
+First access or parse stop ends the run, preserving partial results. Offline/empty lookups stay pending (exit 1).
+Legacy nulls are refetched; only observed 404 proves a miss in this invocation. No durable terminal latch.
+Related: scripts.ingest.dictionary_acquisition; docs/runbooks/dictionary-acquisition.md; #10003.
+""",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=MANIFEST,
+        help="Atlas manifest JSON, e.g. manifest.json (default: Atlas manifest).",
+    )
+    parser.add_argument(
+        "--limit", type=int, default=None, help="Cap lemmas attempted, e.g. 5 (default: all); remainder stays pending."
+    )
+    parser.add_argument(
+        "--progress-every", type=int, default=25, help="Progress log cadence in lemmas (default: 25), e.g. 10."
+    )
     args = parser.parse_args(argv)
-
-    lemmas = _manifest_lemmas(args.manifest)
-    todo = [lemma for lemma in lemmas if not _is_fully_cached(lemma)]
-    print(
-        f"manifest lemmas={len(lemmas)} already-cached={len(lemmas) - len(todo)} "
-        f"to-fetch={len(todo)} slugs/lemma={len(_SLOVNYK_LOOKUP_SLUGS)}",
-        flush=True,
-    )
-    if args.limit is not None:
-        todo = todo[: args.limit]
-        print(f"--limit {args.limit}: processing {len(todo)} lemma(s)", flush=True)
-
-    fetched = errors = 0
+    if args.progress_every < 1 or (args.limit is not None and args.limit < 0):
+        parser.error("limit must be nonnegative and progress-every positive")
+    try:
+        lemmas = _manifest_lemmas(args.manifest)
+    except (OSError, ValueError, TypeError, AttributeError):
+        print("ERROR invalid or unavailable manifest", flush=True)
+        return 1
+    denominator = len(lemmas) * len(_SLOVNYK_LOOKUP_SLUGS)
+    counts = dict.fromkeys(("fetched", "reused", "misses", "errors", "pending"), 0)
+    counts["pending"] = denominator
+    selected = lemmas if args.limit is None else lemmas[: args.limit]
     start = time.monotonic()
-    for i, lemma in enumerate(todo, 1):
+    print(f"manifest lemmas={len(lemmas)} denominator={denominator} selected={len(selected)}", flush=True)
+    for index, lemma in enumerate(selected, 1):
+        outcomes = {}
         try:
-            _slovnyk_cache(lemma)
-            fetched += 1
-        except Exception as exc:  # log and continue; builder must be resumable
-            errors += 1
-            print(f"  ERROR {lemma!r}: {type(exc).__name__}: {exc}", flush=True)
-        if i % args.progress_every == 0 or i == len(todo):
-            elapsed = time.monotonic() - start
-            rate = i / elapsed if elapsed else 0.0
-            eta_min = (len(todo) - i) / rate / 60 if rate else 0.0
-            print(
-                f"  [{i}/{len(todo)}] fetched={fetched} errors={errors} "
-                f"{rate:.2f} lemma/s ETA {eta_min:.1f}m",
-                flush=True,
+            _slovnyk_cache(lemma, outcomes=outcomes, slugs=_SLOVNYK_LOOKUP_SLUGS)
+        except (OSError, ValueError, TypeError):
+            # No exception bodies/paths: storage failure cannot attest fetched work.
+            counts["errors"] += 1
+            counts["pending"] -= 1
+            break
+        terminal = False
+        for outcome in outcomes.values():
+            key = {"positive": "fetched", "reused": "reused", "not_found": "misses", "pending": "pending"}.get(
+                outcome.status, "errors"
             )
-
-    elapsed_min = (time.monotonic() - start) / 60
-    print(f"DONE fetched={fetched} errors={errors} of {len(todo)} in {elapsed_min:.1f}m", flush=True)
+            if key != "pending":
+                counts[key] += 1
+                counts["pending"] -= 1
+            if outcome.status in {"blocked", "parse_error", "error"}:
+                terminal = True
+                print(f"STOP {outcome.status} HTTP={outcome.http_status}", flush=True)
+        if index % args.progress_every == 0 or index == len(selected) or terminal:
+            print(
+                f"[{index}/{len(selected)}] " + " ".join(f"{key}={value}" for key, value in counts.items()), flush=True
+            )
+        if terminal:
+            break
+    elapsed = time.monotonic() - start
     print(
-        "Re-run any time to fill gaps (resumable). A subsequent `make atlas` enrich now "
-        "reads cache hits instead of live-fetching.",
+        "RESULT "
+        + " ".join(f"{key}={value}" for key, value in counts.items())
+        + f" denominator={denominator} elapsed={elapsed:.1f}s",
         flush=True,
     )
-    return 0
+    return 1 if counts["errors"] or counts["pending"] else 0
 
 
 if __name__ == "__main__":

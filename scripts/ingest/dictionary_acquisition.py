@@ -23,7 +23,7 @@ from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, unquote, urlsplit
+from urllib.parse import quote
 
 import requests
 
@@ -34,8 +34,9 @@ from scripts.lexicon.enrich_manifest import (
     _parse_slovnyk_entry,
     _slovnyk_cache_path,
     _slovnyk_lookup_word,
+    _valid_slovnyk_positive,
 )
-from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, normalize_word, resolve_dict_slug
+from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS, resolve_dict_slug
 from scripts.wiki.sum20_official import (
     DEFAULT_USER_AGENT,
     PARSER_VERSION,
@@ -164,21 +165,7 @@ def make_spec(args: argparse.Namespace) -> tuple[dict[str, Any], list[tuple[str,
 
 def valid_slovnyk(row: Any, dictionary: str, lookup: str) -> bool:
     """Validate a positive retained article and its direct dictionary locator."""
-    if not isinstance(row, dict) or row.get("dictionary_slug") != dictionary:
-        return False
-    if not all(isinstance(row.get(k), str) and row[k].strip() for k in ("word", "text", "source_url")):
-        return False
-    url = urlsplit(row["source_url"])
-    prefix = f"/dict/{dictionary}/"
-    return (
-        url.scheme == "https"
-        and url.netloc == "slovnyk.me"
-        and not url.query
-        and not url.fragment
-        and url.path.startswith(prefix)
-        and normalize_word(unquote(url.path[len(prefix) :])) == lookup
-        and row.get("lookup_word", lookup) == lookup
-    )
+    return _valid_slovnyk_positive(row, dictionary, lookup)
 
 
 def seed_row(directory: Path | None, lemma: str, lookup: str, dictionary: str) -> dict[str, Any] | None:
@@ -621,7 +608,7 @@ def parser() -> argparse.ArgumentParser:
 Outputs: <root>/<dictionary>/{staging.sqlite3,status.json,job.log}; persistent locks and host throttle files.
 Exit codes: 0 complete/status/resume; 2 invalid/mismatch; 3 blocked HTTP; 4 parse error; 5 exhausted;
             6 conflicting writer/supervisor; 75 transient (run only). No terminal state resumes implicitly.
-Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_mirror (bulk cache companion).
+Related: docs/runbooks/dictionary-acquisition.md; #10003 / #6321; build_slovnyk_mirror (foreground shared-cache tool).
 """,
     )
     result.add_argument(

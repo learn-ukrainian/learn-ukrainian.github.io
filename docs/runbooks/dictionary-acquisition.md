@@ -1,18 +1,25 @@
 # Unattended dictionary staging (#10003, epic #6321)
 
-Use `scripts.ingest.dictionary_acquisition` for one explicitly selected dictionary
-and one frozen target. The existing `scripts.lexicon.build_slovnyk_mirror` remains
-the supported bulk cache builder. This companion writes isolated staging only;
-importing, publishing and live acquisition runs belong to the accountable driver.
-It installs no service and does not change existing caches or live databases.
+Use `scripts.ingest.dictionary_acquisition` as the unattended isolated-staging
+entrypoint for one explicitly selected dictionary and one frozen target. It
+writes staging only; importing, publishing and live acquisition runs belong to
+the accountable driver. It installs no service and does not change existing
+caches or live databases.
 
-The companion keeps its observable, one-request transport local:
-`_fetch_slovnyk_entry` returns `None` for both 404 and a 200 with no parsed entry,
-and retries access failures as transient; `fetch_sum20_wordid` hides the numeric
-HTTP status and can classify an article lacking `.ENTRY` as not found. Those
-interfaces cannot supply the required first-access-failure stop or proven-404
-distinction. The companion calls their existing article parsers directly and
-preserves their source identities without patching global transports.
+The foreground `scripts.lexicon.build_slovnyk_mirror` writes a shared per-lemma
+cache; the legacy official ingest writes directly to its selected database.
+Neither provides the companion's isolation, aggregate durable rate reservation,
+or durable terminal restart latch. Their compatibility repairs preserve HTTP
+classification and truthful failures without turning them into unattended jobs.
+
+The companion keeps its one-request transport local: internal legacy retries
+and process-local pacing cannot durably reserve every attempt across jobs. It
+reuses dictionary identities, lookup normalization, URL construction, identifying
+headers and the existing article parsers. There is no transport framework or
+parser fork. Valid 200s yield positives; unusable 200s stop as parse errors; only
+404 proves a miss; 401/403 and other unsupported non-200s stop immediately;
+408/425/429/5xx and network exceptions are transient. Numeric HTTP evidence is
+retained even when legacy storage labels are lossy. Redirects are unsupported.
 
 ## Targets and storage
 
@@ -214,3 +221,63 @@ These author tests establish implementation evidence. The driver owns independen
 held-out subprocess interruption/concurrency/reconciliation cases, native Opus
 exact-head review, CI, landing, cleanup and operational source-access checks.
 No live acquisition or canonical-store write is part of offline validation.
+
+
+## Foreground compatibility tools
+
+Use the mirror only with a single writer to its shared per-lemma cache. Its
+`--manifest` defaults to the Atlas manifest, `--limit` defaults to all lemmas,
+and `--progress-every` defaults to 25. `LEXICON_SLOVNYK_CACHE` selects the cache;
+otherwise it writes `data/lexicon/slovnyk_cache`. It does not update the manifest.
+The request delay defaults to 0.34 seconds and the retry budget to five retries,
+configured by `LEXICON_SLOVNYK_DELAY` and `LEXICON_SLOVNYK_MAX_RETRIES`.
+These process-local settings do not coordinate traffic with other processes.
+
+```bash
+"$ACQ_PY" -m scripts.lexicon.build_slovnyk_mirror --manifest "$ACQ_MANIFEST" --limit 5
+"$ACQ_PY" -m scripts.ingest.sum20_official_ingest --db staging.db --start-wordid 5 --limit 8
+```
+
+Mirror output counts **lookups**, with the denominator equal to unique manifest
+lemmas times configured lookup dictionary slugs. `fetched` requires a validated
+positive successfully persisted; `reused` requires a current-schema positive
+matching lemma, lookup and dictionary with its provenance timestamp and direct
+source URL. Reuse preserves stored provenance. `misses` counts observed 404s in
+this invocation. `errors` counts failed attempts; `pending` includes unattempted,
+offline, empty-lookup and limit-excluded work. These counts partition the full
+denominator. A helper call, a key or an unannotated null proves no fetched work.
+
+The mirror exits **0** only when all lookups resolve for this invocation,
+**1** for unresolved/storage/access/parse failures and **2** for usage errors.
+First access or parse failure ends the run and preserves persisted partial work.
+Ordinary transient failures remain unresolved. An intentional offline run exits
+1 when work remains pending. Legacy nulls cannot attest historical HTTP status,
+so strict mirror invocations refetch them, even after a previous observed 404.
+Use the companion for durable proven-404 records and isolated resumable staging.
+Default enrichment cache callers retain their tolerant row/null contract and do
+not receive new strict access/acquisition/parse exceptions.
+
+The official legacy ingest defaults to 100 wordids, a two-second delay, three
+retries and two-second initial exponential backoff. `--start-wordid` overrides
+the stored resume point; `--db` selects the destination (default `data/sources.db`).
+`--limit 0` means **unbounded foreground work**, preserving the existing flag
+semantics. It directly writes articles, crawl outcomes and the checkpoint, and
+prints the unchanged `ok`, `unchanged`, `not_found`, `transient_error`,
+`parse_error` counts. Only positives or observed 404s advance the checkpoint;
+ordinary transient and parse failures leave the failed wordid unresolved.
+
+Legacy official exits: **0** successful range, **1** ordinary acquisition or
+storage/input failure, **2** argparse usage error, **3** terminal access or
+unsupported HTTP stop, **4** parse failure. A terminal 3 or 4 takes precedence
+over an earlier ordinary failure 1; the first terminal outcome stops immediately.
+No precedence between terminal classes is needed because neither is followed by
+another request. A 200 without a usable article is unresolved parse failure,
+never a miss. A first 401/403 causes exactly one request despite the retry budget.
+
+The official table keeps exactly four statuses: `ok`, `not_found`,
+`transient_error`, `parse_error`. This is **lossy**: `transient_error` can store a
+terminal HTTP 403 access stop, with exact numeric HTTP evidence in `error_text`.
+The transport's separate terminal signal supplies exit 3. The status name does
+not authorize automatic retry. Unlike the companion's lossless blocked outcome,
+this row has no durable terminal latch. Never put legacy ingest or the mirror
+in an unconditional restart loop. Review a stop before any deliberate new run.
