@@ -463,9 +463,9 @@ handoff_identity_for_kimi_epic() {
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
-# Resolve legacy Gemini / Antigravity handoff identities for historical packet
-# lookup only. These are not registered driver slots; launcher_core refuses
-# AGY/Gemini driver sessions before identity resolution.
+# Echo the per-epic Gemini / Antigravity driver rollover slot (2026-10-08
+# approval). Provider-specific so a Gemini seat never adopts Claude/Codex/Grok/
+# Kimi packets.
 handoff_identity_for_gemini_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0

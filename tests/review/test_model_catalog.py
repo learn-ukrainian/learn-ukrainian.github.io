@@ -75,16 +75,16 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10005 host-CLI adapter argv revision; see SPEC.md.
-# no-cli bytes remain the #9996 Haiku merge revision.
+# Literal digests bind the #10146 Gemini driver launcher and catalog revision of both
+# configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "4aa193c0e4ff57e6e1b497ca260c6ce1a632817fb5766caeccb6c2afd561886c",
-    "SPEC.md": "8a4f1083d8e732efca2d47d7752088663e62b211d3fd8cbb3b89a9ae14fb046d",
-    "baseline.json.gz": "514d93440ebe7dc1d2a840a1c7356d70e26c2b34e9b68d5f1e94c734a4c02138",
+    "SHA256SUMS": "37128e156002545c2559a1323d13c850882d487f85412fe0e26cb770867d8094",
+    "SPEC.md": "a79d27e53aebc1c90f3d73a53401078a66451b79a4afaa02861bf6cbe31c18a6",
+    "baseline.json.gz": "1588c162c68390bbf49192979e3c316479161f67b72a1207c8e694fdf1c0e29e",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "0d28bb5a15f9f7734f4cec1e62951dd0e51e6c05c325c14445b14d4336a62459",
-    "no-cli/baseline.json.gz": "4b7e5572b9417a3477843f64a480983d576a1d734ac27ae7a62597f2ef434ec4",
+    "no-cli/SHA256SUMS": "1e3106d119e2e1a66a685f60273079335aa94492acfa96ea8dec7b5c8b97cd10",
+    "no-cli/baseline.json.gz": "526ed2951d6b6b3fa6a4b6e4e2e42125f639291521c6f92737822a47a74fbf58",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",

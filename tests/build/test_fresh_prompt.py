@@ -245,6 +245,31 @@ def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sam
     assert len(check_res.prompt_sha256) == 64
 
 
+@pytest.mark.parametrize("level,card", [("a1", "a1"), ("a2", "a2"), ("b1", "b1plus")])
+@pytest.mark.parametrize("recap", [False, True])
+def test_writer_prompts_have_no_quota(sample_plan_entry, sample_learner_state, sample_cited_records, level, card, recap):
+    entry = dict(sample_plan_entry)
+    entry.pop("word_target")
+    kwargs = dict(
+        cited_records=sample_cited_records, learner_state=sample_learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload(level, arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level=level, slug="sounds-intro", lesson_n=1, style_card_path=CARDS_DIR / f"{card}.md",
+    )
+    renderer = render_recap_prompt if recap else render_lesson_prompt
+    if recap:
+        kwargs["built_lessons"] = []
+    prompt = renderer(plan_entry=entry, **kwargs)
+    # Deprecated metadata never reaches an instruction, for either prompt and every card.
+    entry["word_target"] = 55000
+    assert renderer(plan_entry=entry, **kwargs) == prompt
+    assert "Word Target" not in prompt and "word_target" not in prompt
+    assert "word target is a minimum" not in prompt
+    assert "45 minutes" in prompt and "guidance" in prompt
+    # R-30's existing structural immersion payload is explicitly excluded from sizing quotas.
+    assert "Module Structural Minimums" in prompt
+
+
 @pytest.mark.parametrize("level", ["a2", "b1", "b2"])
 @pytest.mark.parametrize("recap", [False, True])
 def test_non_a1_rendered_prompts_keep_main_candidate_wording(

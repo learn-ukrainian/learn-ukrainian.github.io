@@ -80,7 +80,7 @@ _BIO_DEPTH_TYPES = frozenset(
 )
 _INVENTORY_PREPARATION_REASON_CODES = frozenset({"PREPARATION_HOLD_ACTIVE", "PREPARATION_IDENTITY_DRIFT"})
 _BAKED_MACOS_CHECKOUT = "/Users/" + r"[^/\s]+" + "/projects/learn-ukrainian"
-_BAKED_LINUX_CHECKOUT = "/home/" + "ops/learn-ukrainian"
+_BAKED_LINUX_CHECKOUT = "/home/" + r"[^/\s]+" + "/learn-ukrainian"
 _BAKED_HOST_CHECKOUT_SLASH_RE = re.compile(
     rf"(?:{_BAKED_MACOS_CHECKOUT}|{_BAKED_LINUX_CHECKOUT})/"
 )

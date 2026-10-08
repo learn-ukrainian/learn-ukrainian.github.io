@@ -1,7 +1,7 @@
 # Chunk-policy bakeoff results (#1553 step 5)
 
 **Date**: 2026-04-25
-**Hardware**: M-series Mac, 16 GB unified memory
+**Hardware**: M-series Mac (unified memory)
 **Sample size per period**: 1000 (matches #1345)
 **Sub-chunk retrieval depth**: 200
 **Cell A baseline tolerance (vs #1345)**: ±0.02 R@10
@@ -18,8 +18,8 @@ bakeoff did not measurably distinguish chunk policies on the existing
 `scripts/rag/benchmark_queries.yaml` gold set. Cell B (paragraph-aware
 1500/150 + encoder 2048) produced **identical** modern Recall@10 and
 nDCG@10 to Cell A and **slightly worse** archaic-literary scores. Cell C
-(4000/400 + encoder 8192) was hardware-infeasible on 16 GB unified
-memory (Metal aborted on a 9.96 GB buffer allocation request).
+(4000/400 + encoder 8192) was hardware-infeasible on the workstation's
+unified memory (Metal aborted on a buffer allocation request).
 
 ## Cell A reproduction sanity check
 
@@ -71,18 +71,18 @@ behavior. The literary corpora's median/p99 token counts (literary p99
 (p99=14991) but the random 1000-sample subset apparently didn't surface
 the long-tail rows in numbers sufficient to move the metrics.
 
-## Cell C: hardware-infeasible on 16 GB
+## Cell C: hardware-infeasible on the workstation
 
 Cell C requested `max_length=8192`, `batch_size=4`. On the first encoding
 batch (OES sub-chunks), Metal failed to allocate a private MTLBuffer:
 
 ```
 MPSCore/Utility/MPSCommandBufferImageCache.mm:1420:
-  failed assertion `Failed to allocate private MTLBuffer for size 9964830976'
+  failed assertion `Failed to allocate private MTLBuffer for size <bytes>'
 ```
 
-**9.96 GB** — more than half the Mac's 16 GB unified memory, on top of
-~3 GB already held by BGE-M3 + the Python runtime + the OS. The Metal
+The requested buffer was more than the workstation's unified memory could
+provide on top of what BGE-M3, the Python runtime and the OS already held. The Metal
 kernel aborted with a hard assertion (process exit 0, but no output
 written). Cell C cannot run on this hardware in any configuration that
 preserves the chunk-policy semantics (the only way to fit it would be
@@ -160,15 +160,15 @@ Re-run a Cell B-vs-A bakeoff against the extended gold set. If Cell B
 wins on the new queries while staying neutral on the existing ones,
 revisit the INDEX_MAX_LENGTH bump decision.
 
-### 2. Hardware ceiling: 16 GB unified memory
+### 2. Hardware ceiling: workstation unified memory
 
 8192-token encoding is infeasible on this hardware regardless of the
 chunk-policy outcome. Even a 4000-token chunk policy with `batch_size=1`
 (max memory thrift) would barely fit. Production retrieval — once the
 gold set extension above lands and (if) justifies a window bump — would
 need to either (a) target a different INDEX_MAX_LENGTH (≤2048), or
-(b) document that the encode step requires a workstation with 32+ GB
-unified memory. Cloud GPU is an option for one-shot encoding but not for
+(b) document that the encode step requires a workstation with
+substantially more unified memory. Cloud GPU is an option for one-shot encoding but not for
 the live pipeline.
 
 ### 3. Modern source mismatch (per Codex review #461)

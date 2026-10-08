@@ -260,7 +260,7 @@ def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monk
     record["sense_gloss"] = "unchecked override must be ignored"
     rendered = assemble.render_unit_piece("{{gloss:W-001}}", assemble.gloss_replacer(store))
     assert rendered == "synthetic (target)"
-    count = runner.check_6_count({"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-001}}"}]}, 0, store)
+    count = runner.check_6_count({"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-001}}"}]}, store)
     assert count["details"]["urok_tokens"] == 2
     from types import SimpleNamespace
 

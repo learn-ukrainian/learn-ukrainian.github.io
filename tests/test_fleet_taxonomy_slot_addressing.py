@@ -37,8 +37,8 @@ def test_roster_slots_accepted_by_validation() -> None:
     assert "grok-infra" in all_valids
     assert "claude-atlas" in all_valids
     assert "codex-devops" in all_valids
-    assert "gemini-hramatka" not in all_valids
-    assert not any(agent.startswith("gemini-") for agent in all_valids)
+    assert "gemini-hramatka" in all_valids
+    assert "gemini-infra" in all_valids
     assert "claude-folk" in all_valids
     assert "codex-corpus" in all_valids
     assert "cursor-infra" in all_valids
@@ -54,19 +54,20 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_28() -> None:
-    """Verify 20 infrastructure slots and eight Ukrainian content/data slots."""
+def test_roster_slot_count_is_36() -> None:
+    """Verify 24 infrastructure slots and twelve Ukrainian content/data slots."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 28
-    assert len(set(slots)) == 28
+    assert len(slots) == 36
+    assert len(set(slots)) == 36
     assert data["assignments"]["open-model-data"]["slots"] == [
         "claude-open-model-data",
         "codex-open-model-data",
+        "gemini-open-model-data",
     ]
     assert "cursor-infra" in slots
     assert "cursor-devops" in slots
@@ -74,17 +75,17 @@ def test_roster_slot_count_is_28() -> None:
     assert "cursor-atlas" in slots
     assert "claude-folk" in slots
     assert "codex-bio" in slots
-    assert "gemini-hramatka" not in slots
-    assert not any(slot.startswith("gemini-") for slot in slots)
+    assert "gemini-hramatka" in slots
+    assert "gemini-infra" in slots
 
 
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
-    """Ukrainian content/data areas have only eligible Claude and GPT identities."""
+    """Ukrainian content/data areas have only eligible Claude, GPT and Gemini identities."""
     assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
     for area in ("seminars", "hramatka", "open-model-data"):
         slots = assignments[area]["slots"]
         assert slots, area
-        assert all(slot.split("-", 1)[0] in {"claude", "codex"} for slot in slots), (area, slots)
+        assert all(slot.split("-", 1)[0] in {"claude", "codex", "gemini"} for slot in slots), (area, slots)
 
 
 @pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
