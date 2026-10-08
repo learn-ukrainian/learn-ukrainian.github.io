@@ -37,7 +37,7 @@ Write using Ukrainian linguistic metalanguage: звук (sound), літера (l
 5 precise rules beat 50 generic ones. Every rule must be testable. If you can't write a test case for a rule, the rule is too vague to follow.
 
 ## Hard Rules
-1. **Word targets are MINIMUMS** — expand content, never lower targets
+1. **Legacy module word targets are MINIMUMS** — expand content, never lower targets (core fresh-build lessons: `non-negotiable-rules.md` rule 4)
 2. **Plans are IMMUTABLE** — if you can't meet the plan, STOP and report
 3. **No Russian** — zero tolerance for ы, ё, ъ, э, Surzhyk, Russian sources
 4. **No IPA or Latin transliteration** — stress marks (´) only

@@ -7,7 +7,11 @@ they do not claim that an LLM follows those instructions or that a lesson passes
 
 from __future__ import annotations
 
+import json
+import os
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -156,3 +160,76 @@ def test_universal_source_naturalness_and_plan_rules_remain_in_api(api_client):
     assert "immutable without approval" in plans
     assert "Content outline, objectives, and word targets remain immutable" in plans
     assert "vocabulary_hints" in plans
+
+
+@pytest.mark.parametrize("surface", ["context-loader", "standard", "orchestrated", "full-execution"])
+def test_gemini_bridge_injects_scoped_sizing_and_retains_other_rules(monkeypatch, surface):
+    from scripts.ai_agent_bridge import _prompts
+
+    monkeypatch.setattr(_prompts, "REPO_ROOT", ROOT)
+    context = _prompts._load_gemini_context()
+    if surface == "context-loader":
+        text = context
+    else:
+        text = _prompts.build_gemini_prompt(
+            {"content": "Inspect fresh lesson sizing scope.", "data": None},
+            stdout_only=surface == "orchestrated",
+            output_path=None,
+            allow_write=surface == "full-execution",
+            delimiters=None,
+        )
+        assert context in text
+
+    hard_rules = text.split("## Hard Rules\n", 1)[1].split("\n\n---", 1)[0]
+    assert hard_rules.splitlines()[0] == (
+        "1. **Legacy module word targets are MINIMUMS** — expand content, never lower targets "
+        "(core fresh-build lessons: `non-negotiable-rules.md` rule 4)"
+    )
+    assert "1. **Word targets are MINIMUMS**" not in text
+    original = (ROOT / ".gemini/docs/LINGUISTICS.md").read_text(encoding="utf-8")
+    # The loader and every builder must retain all non-sizing linguistic duties.
+    assert original.split("## Hard Rules\n", 1)[0] in text
+    assert hard_rules.splitlines()[1:] == original.split("## Hard Rules\n", 1)[1].splitlines()[1:]
+    assert "**Plans are IMMUTABLE**" in hard_rules
+    assert "Check VESUM" in text
+
+
+@pytest.mark.parametrize("seat", ["claude", "codex", "grok"])
+def test_real_post_compact_scopes_claude_reminder_and_preserves_early_exits(tmp_path, seat):
+    # A minimal interactive environment prevents inherited dispatch/seat flags
+    # from selecting another hook branch. Health detection remains read-only.
+    environment = {
+        "PATH": os.environ["PATH"],
+        "CLAUDE_PROJECT_DIR": str(tmp_path),
+        "CODEX_CANONICAL_REPO_ROOT": str(tmp_path),
+        "SESSION_HANDOFF_AGENT": seat,
+        "THREAD_ROLLOVER_PYTHON": sys.executable,
+        "THREAD_ROLLOVER_SCRIPT": str(ROOT / "scripts/orchestration/thread_handoff.py"),
+        "SESSION_BOUNDED_RUNNER": str(ROOT / "scripts/agent_runtime/bounded_command.py"),
+    }
+    result = subprocess.run(
+        ["bash", str(ROOT / f"{SHARED}/hooks/post-compact.sh")],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stderr == ""
+    if seat == "codex":
+        assert result.stdout == ""
+        return
+    context = json.loads(result.stdout)["additionalContext"]
+    reminder = (
+        "  - Legacy module word targets are MINIMUMS (check config.py); "
+        "core fresh-build lessons: non-negotiable-rules.md rule 4"
+    )
+    if seat == "grok":
+        assert "Grok post-compact, thin path" in context
+        assert reminder not in context
+        assert "CONTEXT RESTORED AFTER COMPACTION" not in context
+    else:
+        assert "CONTEXT RESTORED AFTER COMPACTION" in context
+        assert reminder in context.splitlines()
+        assert "  - Word targets are MINIMUMS (check config.py)" not in context.splitlines()

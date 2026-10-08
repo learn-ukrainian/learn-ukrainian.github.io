@@ -158,7 +158,7 @@ CONTEXT="$CONTEXT
 KEY REMINDERS:
   - Thread rollover health (read-only): $ROLLOVER_HEALTH
   - If a live packet is shown, read its handoff path; SessionStart provides the lifecycle commands.
-  - Word targets are MINIMUMS (check config.py)
+  - Legacy module word targets are MINIMUMS (check config.py); core fresh-build lessons: non-negotiable-rules.md rule 4
   - Edit agents_extensions/shared/, not .claude/ directly
   - .venv/bin/python only
   - Pre-commit: ruff + /simplify + cross-family code review (non-Gemini seat)
