@@ -1571,7 +1571,9 @@ function renderedArticleLayers(args: {
   const enrichedMeaning = Boolean(enrichment?.meaning?.definitions?.some(hasArticleText) ||
     hasArticleText(enrichment?.meaning?.note));
   return {
-    meaning: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss) ||
+    meaning: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss),
+    // Historical context remains visible, but cannot establish meaning readiness.
+    meaningSection: definitionCards.length > 0 || enrichedMeaning || hasArticleText(entry.gloss) ||
       hasArticleText(entry.soviet_colonization_context?.definition),
     enrichedMeaning,
     etymology: hasArticleText(enrichment?.etymology?.text) ||

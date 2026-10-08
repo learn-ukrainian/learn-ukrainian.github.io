@@ -33,6 +33,17 @@ const THIN_FIXTURES: Record<string, number> = {
   "fixture-phraseologism": 1, "fixture-proverb": 1, "fixture-proper-name": 1,
 };
 
+// The frozen overview uses short labels; disclosure names the actual headings.
+const SECTION_LABELS: Record<string, string> = {
+  'Походження': 'Етимологія',
+  'Синонімія': 'Синоніми та антоніми',
+  'Омонім': 'Омоніми',
+  'Паронім': 'Пароніми',
+  'Фразеологія': 'Фразеологізми та сталі вирази',
+  'Засвідчення': 'Літературні засвідчення',
+  'Wikimedia': 'Вікіпедія',
+};
+
 describe("WordAtlasArticle normalized DOM parity (PR3)", () => {
   let source: SqliteAtlasDataSource;
   let catalog: ReturnType<SqliteAtlasDataSource["getStaticCatalog"]>;
@@ -89,7 +100,10 @@ describe("WordAtlasArticle normalized DOM parity (PR3)", () => {
         expect(note?.querySelector("[aria-live], [role=status]")).toBeNull();
         const waiting = Array.from(reference.querySelectorAll(".atlas-overview-card.pending"))
           .filter((card) => !["Курс", "Стилістика", "Зовнішні"].includes(card.querySelector(".overview-label")?.textContent?.trim() ?? ""))
-          .map((card) => card.querySelector(".overview-label")?.textContent?.trim());
+          .map((card) => {
+            const label = card.querySelector(".overview-label")?.textContent?.trim() ?? "";
+            return SECTION_LABELS[label] ?? label;
+          });
         expect(Array.from(note?.querySelectorAll("li [data-loc=uk]") ?? []).map((item) => item.textContent)).toEqual(waiting);
         expect(rendered.querySelectorAll(".atlas-overview-card.pending")).toHaveLength(0);
         // Only these six approved overview/note regions may differ. All source

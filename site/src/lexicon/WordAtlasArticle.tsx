@@ -493,7 +493,7 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {renderable.meaning && (
+          {renderable.meaningSection && (
             <section className="atlas-section">
               <h2>Значення</h2>
               {definitionCards.map((card) => (

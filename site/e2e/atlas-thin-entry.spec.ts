@@ -34,7 +34,12 @@ for (const [slug, tier] of entries) {
             await expect(note.locator(`p [data-loc="${locale === 'en' ? 'uk' : 'en'}"]`)).toBeHidden();
             await expect(note.locator('[aria-live], [role="status"]')).toHaveCount(0);
             await expect(article.locator('.atlas-overview-card.pending')).toHaveCount(0);
-            const details = note.locator('details.marked-forms');
+            const details = note.locator('details.marked-forms.atlas-source-waiting');
+            await expect(details).toHaveCount(1);
+            await expect(details).not.toHaveAttribute('open', '');
+            await expect(details.locator('ul')).toBeHidden();
+            await expect(details.locator(`summary [data-loc="${locale}"]`)).toHaveText(
+              locale === 'en' ? 'Layers awaiting sources' : 'Розділи, що очікують на джерела');
             await details.locator('summary').focus();
             await page.keyboard.press('Enter');
             await expect(details).toHaveAttribute('open', '');
@@ -44,6 +49,13 @@ for (const [slug, tier] of entries) {
               expect(gap).not.toMatch(/^(Course|Style|External materials|Курс|Стилістика|Зовнішні)$/);
             }
             await page.keyboard.press('Enter');
+            await expect(details).not.toHaveAttribute('open', '');
+            await expect(details.locator('ul')).toBeHidden();
+            // Space also toggles the native disclosure without moving focus.
+            await page.keyboard.press('Space');
+            await expect(details).toHaveAttribute('open', '');
+            await expect(details.locator('ul')).toBeVisible();
+            await page.keyboard.press('Space');
             await expect(details).not.toHaveAttribute('open', '');
           }
           await expect(article.locator('[data-testid="atlas-practice-cta"], [data-testid="atlas-practice-cta-unavailable"]')).toHaveCount(1);

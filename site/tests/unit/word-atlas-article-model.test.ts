@@ -2377,6 +2377,32 @@ describe("thin rendered-state presentation (#8327)", () => {
   });
 
   test.each([
+    { soviet_colonization_context: { source: 'СУМ-11', definition: 'Historical context', sovietization_risk: 1, keywords: [] } },
+    { enrichment: { definition_cards: [{ id: 'sum11', source: 'СУМ-11', definitions: ['Historical context'] }] } },
+  ])("historical context stays visible without satisfying modern meaning readiness: %j", (historical) => {
+    const { model, doc } = view(historical);
+    expect(model.renderable.meaningSection).toBe(true);
+    expect(model.renderable.meaning).toBe(false);
+    expect(model.renderedTier).toEqual({ tier: 'bare', richBuckets: 0 });
+    expect(model.articleOverview.find((card) => card.id === 'meaning')?.ready).toBe(false);
+    expect(model.sourceWaitingLayers.map((card) => card.id)).toContain('meaning');
+    expect(doc.querySelector('.soviet-colonization-box')?.textContent).toContain('Historical context');
+    expect(doc.querySelector('.atlas-source-waiting [data-i18n="atlas.layer.meaning"] [data-loc=en]')?.textContent).toBe('Meaning');
+    expect(doc.querySelectorAll('.atlas-overview-card.ready')).toHaveLength(0);
+  });
+
+  test("modern meaning alongside historical context satisfies only the modern readiness gate", () => {
+    const { model, doc } = view({ gloss: 'Available gloss',
+      soviet_colonization_context: { source: 'СУМ-11', definition: 'Historical context', sovietization_risk: 1, keywords: [] },
+    });
+    expect(model.renderable.meaningSection).toBe(true);
+    expect(model.articleOverview.find((card) => card.id === 'meaning')?.ready).toBe(true);
+    expect(model.sourceWaitingLayers.map((card) => card.id)).not.toContain('meaning');
+    expect(doc.querySelector('.soviet-colonization-box')?.textContent).toContain('Historical context');
+    expect(doc.querySelector('.def-card.sum20 .def-text')?.textContent).toBe('Available gloss');
+  });
+
+  test.each([
     { paradigm: { kind: "noun", cases: { nom: { singular: "form", plural: "" } } } },
     { paradigm: { kind: "verb", infinitive: "form" } },
     { paradigm: { kind: "verb", impersonal: "form" } },
@@ -2443,6 +2469,18 @@ describe("thin rendered-state presentation (#8327)", () => {
       "Синоніми та антоніми", "Омоніми", "Пароніми", "Фразеологізми та сталі вирази", "Приповідки",
       "Стиль і норма", "Літературні засвідчення", "Переклад", "Вікіпедія", "Зовнішні матеріали"]) {
       expect(headings).toContain(heading);
+    }
+    const waiting = view().doc;
+    const expectedHeadings = {
+      meaning: 'Значення', etymology: 'Етимологія', morphology: 'Морфологія',
+      formNotes: 'Написання і вимова', synonyms: 'Синоніми та антоніми',
+      homonyms: 'Омоніми', paronyms: 'Пароніми', idioms: 'Фразеологізми та сталі вирази',
+      proverbs: 'Приповідки', usageNotes: 'Стиль і норма', literary: 'Літературні засвідчення',
+      translation: 'Переклад', wiki: 'Вікіпедія',
+    };
+    for (const [id, heading] of Object.entries(expectedHeadings)) {
+      expect(waiting.querySelector(`[data-i18n="atlas.layer.${id}"] [data-loc=uk]`)?.textContent).toBe(heading);
+      expect(headings, id).toContain(heading);
     }
   });
 
