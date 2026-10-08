@@ -108,6 +108,7 @@ def test_parse_range() -> None:
 def test_file_entrypoint_audits_real_module(tmp_path: Path) -> None:
     """The post-build-review file entrypoint must import the shared config."""
     root = Path(__file__).resolve().parents[2]
+    module = next(module for module in audit.select_modules("bio", None, None) if module.built)
     output = tmp_path / "audit.json"
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)
@@ -118,7 +119,7 @@ def test_file_entrypoint_audits_real_module(tmp_path: Path) -> None:
             "--track",
             "bio",
             "--slugs",
-            "oleksandr-bilash",
+            module.slug,
             "--format",
             "json",
             "--fail-on",
@@ -182,9 +183,9 @@ def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
         ),
         (
             "scripts/audit/review_plan.py",
-            ["a1", "sounds-letters-and-hello", "--dry-run"],
+            None,
             0,
-            "DRY RUN: sounds-letters-and-hello",
+            "DRY RUN:",
         ),
         ("scripts/audit_module.py", ["--help"], 0, "usage: audit_module.py"),
         ("scripts/analytics/vocab_progression.py", ["--help"], 0, "usage: vocab_progression.py"),
@@ -198,6 +199,17 @@ def test_config_consumer_file_launches_without_pythonpath(
 ) -> None:
     """Real file launches must work even outside the repository cwd."""
     root = Path(__file__).resolve().parents[2]
+    if entrypoint == "scripts/audit/review_plan.py":
+        manifest = audit.read_yaml(root / "curriculum" / "l2-uk-en" / "curriculum.yaml")
+        level_data = next(data for level, data in manifest["levels"].items() if audit.base_level(level) == "a1")
+        plan_path = next(
+            plan_path
+            for slug in level_data["modules"]
+            if (plan_path := root / "curriculum" / "l2-uk-en" / "plans" / "a1" / f"{slug}.yaml").is_file()
+            and audit.read_yaml(plan_path)
+        )
+        arguments = ["a1", plan_path.stem, "--dry-run"]
+        expected_output = f"DRY RUN: {plan_path.stem}"
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)
     result = subprocess.run(
@@ -261,6 +273,110 @@ print(json.dumps([shared('a1', 1), shared('a2', 4), shared('b1', 3)]))
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert json.loads(result.stdout) == [[40, 55], [85, 100], [100, 100]]
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize(
+    ("path_order", "module_name", "mutations"),
+    [
+        (["."], "scripts.audit.config", (43, 63, 33, 66, 29, 71)),
+        (["scripts"], "audit.config", (44, 64, 34, 67, 30, 72)),
+        (["scripts/audit", "scripts"], "audit.config", (45, 65, 35, 68, 31, 73)),
+        (["scripts/audit", "scripts"], "config", (46, 66, 36, 69, 32, 74)),
+    ],
+)
+def test_shared_policy_mutations_reach_audit_wrappers_in_real_processes(
+    tmp_path: Path, path_order: list[str], module_name: str, mutations: tuple[int, ...]
+) -> None:
+    """Audit-first file/package imports reuse the canonical mutable policy module."""
+    root = Path(__file__).resolve().parents[2]
+    paths = [str(root / entry) for entry in path_order]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import json
+from pathlib import Path
+
+root = Path({str(root)!r})
+sys_path = {paths!r}
+import sys
+sys.path = sys_path + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in (root, root / 'scripts', root / 'scripts/audit')
+]
+config = importlib.import_module({module_name!r})
+canonical = importlib.import_module('scripts.config')
+assert Path(canonical.__file__).resolve() == root / 'scripts/config.py'
+assert config._shared_config is canonical
+assert [config.get_a1_immersion_range(1), config.get_a2_immersion_range(4), config.get_b1_immersion_range(3)] == [
+    (40, 55), (85, 100), (100, 100)
+]
+a1_min, a1_max, a2_min, a2_max, b1_min, b1_max = {mutations!r}
+for family, module_num, minimum, maximum in (
+    ('a1', 1, a1_min, a1_max),
+    ('a2', 4, a2_min, a2_max),
+    ('b1', 3, b1_min, b1_max),
+):
+    band = next(band for band in canonical.IMMERSION_POLICIES[family] if module_num <= band['max_module'])
+    band['advisory_pct_min'] = minimum
+    band['advisory_pct_max'] = maximum
+assert [config.get_a1_immersion_range(1), config.get_a2_immersion_range(4), config.get_b1_immersion_range(3)] == [
+    (a1_min, a1_max), (a2_min, a2_max), (b1_min, b1_max)
+]
+print(json.dumps([a1_min, a1_max, a2_min, a2_max, b1_min, b1_max]))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert json.loads(result.stdout) == list(mutations)
+    assert result.stderr == ""
+
+
+def test_shared_policy_import_ignores_bare_config_shadow(tmp_path: Path) -> None:
+    """Qualified policy imports must not resolve an unrelated bare config module."""
+    root = Path(__file__).resolve().parents[2]
+    shadow = tmp_path / "shadow"
+    shadow.mkdir()
+    (shadow / "config.py").write_text("raise AssertionError('bare config shadow imported')\n", encoding="utf-8")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import sys
+from pathlib import Path
+
+root = Path({str(root)!r})
+blocked = (root, root / 'scripts', root / 'scripts/audit')
+sys.path = [{str(shadow)!r}, str(root), str(root / 'scripts/audit'), str(root / 'scripts')] + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in blocked
+]
+config = importlib.import_module('scripts.audit.config')
+canonical = importlib.import_module('scripts.config')
+assert config._shared_config is canonical
+assert Path(config.shared_get_immersion_range.__code__.co_filename).resolve() == root / 'scripts/config.py'
+assert 'config' not in sys.modules
+print('bare config shadow ignored')
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout == "bare config shadow ignored\n"
     assert result.stderr == ""
 
 
