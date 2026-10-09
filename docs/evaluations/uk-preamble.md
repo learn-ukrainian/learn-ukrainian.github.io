@@ -87,6 +87,9 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   --language-lane --rules-seat core --cwd <worker cwd>` and
   `--research-task-family` taken from the task kind (`ukrainian-review` for
   review and judge, `ukrainian-authoring` for writing), for every seat. It
+  requires `--worker-cwd` to resolve inside an existing registered isolated Git
+  worktree. Primary and unregistered checkouts are refused before dispatch: automatic
+  per-task worktrees would invalidate the fixed frame shared by paired arms. It
   does not pass `--worktree`, `--lifecycle-file`, `--advisory-task` or any
   other `--research-*` flag. The family classifies a Ukrainian task so a
   Flash dispatch is not refused as a bounded fallback. Pointer-selecting
@@ -115,9 +118,9 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   owner, or an unreadable record) refuses that preflight and archives nothing.
   A real dispatch omits `--force-new` and still refuses to reuse an
   existing task id.
-- Delegate still wraps the prompt. When the worker cwd lies in a registered
+- Delegate still wraps the prompt. The worker cwd must lie in a registered
   Git worktree (the default cwd is this checkout, which is one when the
-  harness runs from a dispatch worktree), delegate adds its worktree block
+  harness runs from a dispatch worktree). Delegate adds its worktree block
   (paths, interpreter, sparse-checkout note, test scope) and then the rules
   core again in front of it, and applies its sparse checkout to that
   worktree. The sparse-checkout note depends on paths the prompt names. The

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import errno
 import http.client
 import http.server
 import json
 import signal
+import socket
 import sqlite3
 import threading
 import time
@@ -195,7 +197,7 @@ def test_real_capsule_stream_fetch_budget_and_no_retry(
             assert capsule["state"] == "blocked"
             assert capsule["blocked"] is True
             assert capsule["execution_allowed"] is False
-            assert capsule["degradation_reasons"] == ["deadline-exceeded"]
+            assert capsule["degradation_reasons"] == ["deadline-exceeded", "stream-evidence-timeout"]
             assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
     finally:
         server.shutdown()
@@ -697,3 +699,145 @@ def test_sanitizer_preserves_sentence_like_strings_with_slashes(value: str) -> N
 def test_sanitizer_rejects_raw_output_secrets_and_external_paths(value: dict[str, str]) -> None:
     with pytest.raises(hydration.HydrationSanitizationError):
         hydration.sanitize_hydration_value(value)
+
+
+@pytest.mark.parametrize("failure", [TimeoutError(), ConnectionRefusedError(), ConnectionResetError()])
+def test_retry_recovers_transport_failure_with_fresh_500ms_budget(monkeypatch, failure) -> None:
+    response = _remote_stream(monkeypatch)
+    clock = [10.0]
+    deadlines = []
+    sleeps = []
+    monkeypatch.setattr(hydration.time, "monotonic", lambda: clock[0])
+
+    def sleep(seconds):
+        sleeps.append(seconds)
+        clock[0] += seconds
+
+    def fetch(stream_id, *, deadline):
+        deadlines.append(deadline)
+        assert deadline - clock[0] == pytest.approx(0.500)
+        if len(deadlines) == 1:
+            clock[0] += 0.501
+            raise failure
+        return response
+
+    monkeypatch.setattr(hydration.time, "sleep", sleep)
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
+    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "gemini")
+    assert attempts == 2
+    assert capsule["state"] == "ready"
+    assert capsule["execution_allowed"] is True
+    assert capsule["deadline_ms"] == 500.0
+    assert deadlines == pytest.approx([10.5, 11.051])
+    assert sleeps == [0.050]
+    hydration._validate_capsule(capsule)
+
+
+def test_retry_caps_timeout_attempts_at_three(monkeypatch) -> None:
+    _remote_stream(monkeypatch)
+    calls = []
+    sleeps = []
+
+    def fetch(stream_id, *, deadline):
+        calls.append(deadline)
+        raise TimeoutError("not used for classification")
+
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
+    monkeypatch.setattr(hydration.time, "sleep", sleeps.append)
+    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "gemini")
+    assert attempts == len(calls) == 3
+    assert sleeps == [0.050, 0.050]
+    assert capsule["blocked"] is True
+    assert capsule["deadline_ms"] == 500.0
+    assert capsule["degradation_reasons"] == ["stream-evidence-timeout"]
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "lease-mismatch",
+        "expired",
+        "unsafe",
+        "malformed-digest",
+        "invalid-stream",
+        "invalid-lane",
+        "lane-mismatch",
+        "missing-env",
+        "http-status",
+        "malformed-json",
+    ],
+)
+def test_retry_refuses_nontransient_failures_even_after_deadline(monkeypatch, failure) -> None:
+    response = _remote_stream(monkeypatch)
+    clock = [10.0]
+    calls = []
+    monkeypatch.setattr(hydration.time, "monotonic", lambda: clock[0])
+    if failure == "lease-mismatch":
+        response["lease"]["fencing_token"] += 1
+    elif failure == "expired":
+        response["lease"]["expires_at"] = "2000-01-01T00:00:00Z"
+    elif failure == "unsafe":
+        response["lease"]["holder"]["instance_id"] = "ghp_" + "a" * 26
+        monkeypatch.setenv("SESSION_STREAM_INSTANCE_ID", response["lease"]["holder"]["instance_id"])
+    elif failure == "malformed-digest":
+        response["digest"] = None
+    elif failure == "missing-env":
+        monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
+
+    def fetch(stream_id, *, deadline):
+        calls.append(deadline)
+        clock[0] += 0.501
+        if failure in {"http-status", "malformed-json"}:
+            raise LookupError("timeout deadline-exceeded connection failure")
+        return response
+
+    def no_sleep(seconds):
+        pytest.fail("permanent failures must not back off or retry")
+
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", fetch)
+    monkeypatch.setattr(hydration.time, "sleep", no_sleep)
+    stream = "invalid" if failure == "invalid-stream" else "epic:123"
+    lane = "invalid lane" if failure == "invalid-lane" else "codex" if failure == "lane-mismatch" else "gemini"
+    capsule, attempts = hydration.build_hydration_capsule_with_retry(stream, lane)
+    assert attempts == 1
+    assert capsule["blocked"] is True
+    assert len(calls) <= 1
+
+
+def test_retry_does_not_repeat_degraded_allowed_capsule(monkeypatch) -> None:
+    clock = iter((10.0, 10.501, 10.501))
+    monkeypatch.setattr(hydration.time, "monotonic", lambda: next(clock))
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream, deadline: _evidence())
+    capsule, attempts = hydration.build_hydration_capsule_with_retry("epic:123", "gemini")
+    assert attempts == 1
+    assert capsule["state"] == "degraded"
+    assert capsule["execution_allowed"] is True
+
+
+@pytest.mark.parametrize(
+    ("error", "kind"),
+    [
+        (TimeoutError("lease mismatch"), "stream-evidence-timeout"),
+        (ConnectionRefusedError("unsafe"), "stream-evidence-connection-failure"),
+        (socket.gaierror("dns failure"), "stream-evidence-connection-failure"),
+        (OSError(errno.ENETUNREACH, "network"), "stream-evidence-connection-failure"),
+        (PermissionError("timeout"), "stream-evidence-invalid"),
+        (LookupError("deadline-exceeded"), "stream-evidence-invalid"),
+    ],
+)
+
+def test_evidence_failure_classifies_types_and_network_errno(error, kind) -> None:
+    assert hydration._evidence_failure(error) == kind
+
+
+def test_deadline_alone_cannot_mask_permanent_unavailable_evidence(monkeypatch) -> None:
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream, deadline: _evidence())
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
+    capsule["lease_state"] = {"status": "unavailable", "reason": "stream-evidence-unavailable"}
+    capsule["blocked"] = True
+    capsule["execution_allowed"] = False
+    capsule["state"] = "blocked"
+    capsule["degradation_reasons"] = ["deadline-exceeded", "stream-evidence-invalid"]
+    assert hydration._retryable_capsule(capsule) is False
+    capsule["degradation_reasons"] = ["deadline-exceeded"]
+    assert hydration._retryable_capsule(capsule) is True

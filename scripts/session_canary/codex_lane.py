@@ -117,7 +117,10 @@ def _close_exact_lease(repo: Path, epic: str) -> bool:
 
 
 def cmd_hydrate(args: argparse.Namespace) -> int:
-    capsule = shared_hydration.build_hydration_capsule(_stream_id(args), _HOLDER_AGENT)
+    launcher_agent = os.environ.get("SESSION_STREAM_AGENT", _HOLDER_AGENT)
+    lane = launcher_agent if launcher_agent == _HOLDER_AGENT or launcher_agent.startswith("codex-") else _HOLDER_AGENT
+    capsule, attempts = shared_hydration.build_hydration_capsule_with_retry(_stream_id(args), lane)
+    print(f"hydration_attempts: {attempts}", file=sys.stderr)
     print(json.dumps(capsule, ensure_ascii=False, sort_keys=True))
     if not capsule["execution_allowed"]:
         print("ACTION: hydration blocked — do not continue this driver.", file=sys.stderr)
