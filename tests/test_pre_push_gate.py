@@ -753,6 +753,17 @@ def test_public_gate_material_omits_operational_measurements() -> None:
     )
     assert not re.search(r"(?i)load.average|cpu.seconds|loaded.host|measured[^\n]*\d", text)
     assert not re.search(r"(?i)(?:\d+|two) (?:test |xdist )?workers", text)
+    assert not re.search(r"(?i)\b(?:cpu|minutes?|cores?|capacity)\b", text)
+    assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", text)
+
+
+def test_auto_finalize_timeout_comment_omits_gate_timings() -> None:
+    from scripts import delegate
+
+    source = Path(delegate.__file__).read_text(encoding="utf-8")
+    comment = re.search(r"# The auto-finalize push runs the pre-push gate.*\n(?:#.*\n)*?(?=\w)", source)
+    assert comment is not None
+    assert not re.search(r"\b\d+(?:\.\d+)? ?s\b", comment.group(0))
 
 
 # ---- review round 1: every ref update, sparse tests, untracked inputs, bounded cleanup -----------------------
@@ -900,7 +911,7 @@ def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_ga
         )
         assert code == 0
 
-    assert time.monotonic() - started < 25.0  # the 300 s sleeper held the pipe in the old design
+    assert time.monotonic() - started < 25.0  # the long sleeper held the pipe in the old design
     assert _gone(int(pid_file.read_text(encoding="utf-8")))
 
 

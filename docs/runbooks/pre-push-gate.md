@@ -33,11 +33,12 @@ The last stderr line before the bypass hint is machine-readable: `{"pre_push_gat
 
 ## Bounds
 
-One admitted gate per repository at a time (lock under the Git common dir), admission wait 300 s, one run
-budget of 600 s shared by every ref update of the push. Each update is validated
-with its own base. Command output goes to a file, and after every command the gate kills any descendant
-that inherited its run token (10 s cleanup bound), so a detached child cannot stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and
-`LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only shorten these.
+One admitted gate per repository at a time (lock under the Git common dir). The admission wait and one run
+budget are shared by every ref update of the push; their limits are the constants in `.githooks/pre_push_gate.py`.
+Each update is validated with its own base. Command output goes to a file, and after every command the gate
+kills any descendant that inherited its run token within a short cleanup bound, so a detached child cannot
+stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and `LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only
+shorten these.
 
 `LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
 The default is 1 (single process); invalid values refuse validation, including receipt reuse.
