@@ -1,0 +1,32 @@
+[
+  {
+    "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+    "symbol": "_sibling_git_invocation",
+    "site": "reference:Call(func=Name(id='shlex.split', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[])"
+  },
+  {
+    "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+    "symbol": "_tokenize",
+    "site": "reference:Call(func=Name(id='shlex.shlex', ctx=Load()), args=[Call(func=Name(id='_mask_quoted_literals', ctx=Load()), args=[Call(func=Name(id='_normalize_quoted_command_substitutions', ctx=Load()), args=[Call(func=Name(id='_normalize_backtick_substitutions', ctx=Load()), args=[Call(func=Name(id='_decode_ansi_c_quotes', ctx=Load()), args=[Call(func=Name(id='shell_shlex.preprocess_shell_command', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[])], keywords=[])], keywords=[])], keywords=[])], keywords=[])], keywords=[keyword(arg='posix', value=Constant(value=True)), keyword(arg='punctuation_chars', value=Constant(value='();<>|&\\n'))])"
+  },
+  {
+    "path": "agents_extensions/shared/hooks/guard-primary-checkout-write.py",
+    "symbol": "main",
+    "site": "reference:Call(func=Name(id='shlex.split', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[])"
+  },
+  {
+    "path": "agents_extensions/shared/hooks/guard-public-github-text.py",
+    "symbol": "invokes_gh",
+    "site": "reference:Call(func=Name(id='shlex.shlex', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[keyword(arg='posix', value=Constant(value=True)), keyword(arg='punctuation_chars', value=Constant(value=';|&()\\n'))])"
+  },
+  {
+    "path": "agents_extensions/shared/hooks/guard-secret-print.py",
+    "symbol": "_shell_script.decode",
+    "site": "reference:Call(func=Name(id='shlex.split', ctx=Load()), args=[Call(func=Attribute(value=Constant(value=''), attr='join', ctx=Load()), args=[Subscript(value=Name(id='args', ctx=Load()), slice=Slice(lower=Name(id='index', ctx=Load())), ctx=Load())], keywords=[])], keywords=[keyword(arg='posix', value=Constant(value=True))])"
+  },
+  {
+    "path": "agents_extensions/shared/hooks/heal-core-bare.py",
+    "symbol": "_is_git_command",
+    "site": "reference:Call(func=Name(id='shlex.split', ctx=Load()), args=[Name(id='command', ctx=Load())], keywords=[keyword(arg='posix', value=Constant(value=True))])"
+  }
+]
