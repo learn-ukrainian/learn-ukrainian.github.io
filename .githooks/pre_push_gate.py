@@ -380,7 +380,7 @@ class Admission:
 
     def __enter__(self) -> Admission:
         self.state.mkdir(parents=True, exist_ok=True)
-        fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR, 0o644)
+        fd = os.open(self.state / "admission.lock", os.O_CREAT | os.O_RDWR, 0o600)
         started = time.monotonic()
         while True:
             try:
