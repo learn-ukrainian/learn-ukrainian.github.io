@@ -163,7 +163,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "e1a118493dbf88d65a8e2eb28a3ea525eca49e0dde64cb46a9f6676cd5f0b7f0"
+        "sha256": "23b243ce327b32296ce82b2063efbde0792c845d636f0ad37c2d776d4a3fd9d0"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -295,7 +295,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_atlas_intake.py",
-        "sha256": "88d754e5d4d836ce02aad92f8335e20ed8d05abfc257c9f447015f5ffe15f0dc"
+        "sha256": "90a477565bb14f2b18c307d1cae5b0f0e1055c76e55620fe6b026f0e0191222b"
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
