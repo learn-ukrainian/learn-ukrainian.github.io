@@ -902,7 +902,9 @@ def test_cursor_pinned_models_lead_with_the_seat_pin():
         ("Cursor:Auto", "cursor_auto_outside_coding_task"),
         ("default", "cursor_auto_outside_coding_task"),
         ("composer-2.5-fast", "cursor_model_not_approved"),
-        ("grok-4.7-high", "cursor_model_not_approved"),
+        ("composer-2.5[fast=true]", "cursor_model_not_approved"),
+        ("composer-2.5[arbitrary=value]", "cursor_model_not_approved"),
+        ("grok-4.7-fast", "cursor_model_not_approved"),
         ("claude-opus-5-5", "cursor_model_not_approved"),
     ],
 )
@@ -913,7 +915,7 @@ def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str
     assert "pin grok-4.7 or composer-2.5" in refusal
 
 
-@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"])
 def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
     assert cursor_non_dispatch_model_refusal(model) is None
 

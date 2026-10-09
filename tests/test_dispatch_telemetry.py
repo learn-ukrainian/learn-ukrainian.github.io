@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -59,6 +60,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     headless = outcome.startswith("headless-")
     task_id = "agy-record"
     state_path = delegate._state_path(task_id)
+    worker_cwd = repo
     delegate._write_state_atomic(
         state_path,
         {
@@ -80,6 +82,15 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     if profile == "code":
         from tests import test_delegate_bounded_advisory as advisory
 
+        # The bounded code review must run in an isolated checkout, as dispatch does.
+        worker_cwd = delegate._auto_worktree_path("agy", task_id, repo_root=repo)
+        subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worker_cwd), "HEAD"],
+            cwd=repo,
+            check=True,
+            capture_output=True,
+            timeout=30,
+        )
         # Code review has no Ukrainian exemption. Bind a genuine sealed
         # advisory envelope to this Flash launch before testing telemetry.
         launch = advisory._launch
@@ -89,12 +100,12 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
             **launch(mode, cwd), "agent": "agy", "model_id": "gemini-3.8-flash-high", "hard_timeout": 30,
         })
         admission, prompt = advisory._admitted_worker(
-            tasks, repo_root=repo, cwd=repo, owned=["tracked.txt"], brief=prompt,
+            tasks, repo_root=repo, worktree=worker_cwd, owned=["tracked.txt"], brief=prompt,
             task_contract="Review tracked.txt with read-only permissions.",
         )
         state = delegate._read_state(state_path)
         state.pop("advisory_exemption")
-        delegate._write_state_atomic(state_path, {**state, **admission})
+        delegate._write_state_atomic(state_path, {**state, **admission, "cwd": str(worker_cwd)})
     telemetry = AgyTelemetry(
         attempts=(
             AgyAttempt(completion_reason="agy_background_task_canceled"),
@@ -211,7 +222,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
             agent="agy",
             prompt=prompt,
             mode="read-only",
-            cwd_str=str(repo),
+            cwd_str=str(worker_cwd),
             model="gemini-3.8-flash-high",
             hard_timeout=30,
             runtime_tmp_root=str(lease),
@@ -250,6 +261,10 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         return
     # A review profile alone types the dispatch and requires isolation (#10073).
     expected_profile = profile
+    assert runtime.call_args.kwargs["cwd"] == worker_cwd
+    if profile == "code":
+        assert worker_cwd != repo
+        assert terminal["worktree_path"] == str(worker_cwd)
     assert runtime.call_args.kwargs["tool_config"].get("review_profile") == expected_profile
     if expected_profile:
         assert runtime.call_args.kwargs["tool_config"]["agy_home_override"] == str(repo / "lease-home")

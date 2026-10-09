@@ -51,6 +51,13 @@ from tests.test_ask_review_admission_floor import write_code_review_manifest
 
 
 @pytest.fixture
+def isolated_dispatch_repo(tmp_path, monkeypatch):
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
+
+    return isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
+
+
+@pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
@@ -1919,6 +1926,7 @@ def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
     assert delegate._read_state(path) == original
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     """Regression (Codex 2026-04-10 audit): if Popen itself fails (e.g.
     Python binary not found, invalid fd, etc.), cmd_dispatch must mark
@@ -1965,6 +1973,7 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys):
     """A late scope start must fail the task instead of leaving it spawning."""
     path = delegate._state_path("ambiguous-scope")
@@ -2004,6 +2013,7 @@ def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys)
     ["inside-driver-scope; systemd-run unavailable", "caller-cgroup-unavailable", "caller-cgroup-unverifiable"],
 )
 @pytest.mark.parametrize("review", [False, True])
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_fallback_refusal_records_no_worker_started(tmp_tasks_dir, capsys, reason, review):
     path = delegate._state_path("fallback-refusal")
     args = _minimal_dispatch_args("fallback-refusal")
@@ -2211,6 +2221,7 @@ def test_worker_parser_accepts_output_schema(tmp_path):
     assert args.output_schema == str(schema_path)
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
     args = delegate.build_parser().parse_args(
         [
@@ -2255,6 +2266,7 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
     assert cmd[cmd.index("--max-budget-usd") + 1] == "0.5"
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, capsys):
     """Isolation can be forced off; the worker argv and pid tracking stay the old spawn."""
     monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
@@ -2300,6 +2312,7 @@ def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, caps
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_launches_worker_in_slice_when_probe_is_ready(tmp_tasks_dir, dispatch_slice_probe):
     """Probe ready → the worker goes through ``systemd-run --scope`` (#8891).
 
@@ -2354,6 +2367,7 @@ def test_dispatch_launches_worker_in_slice_when_probe_is_ready(tmp_tasks_dir, di
     assert f"--slice={delegate.dispatch_isolation.SLICE_UNIT}" in cmd
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_uses_plain_popen_when_probe_reports_no_slice(tmp_tasks_dir, dispatch_slice_probe, capsys):
     """Probe not ready → the worker is a plain ``Popen`` (#8891).
 
@@ -2405,6 +2419,7 @@ def test_dispatch_uses_plain_popen_when_probe_reports_no_slice(tmp_tasks_dir, di
 
 
 @pytest.mark.parametrize("language_lane", [False, True])
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir, language_lane):
     """Dispatch should persist model/effort/cli_version immediately."""
     import argparse
@@ -2460,6 +2475,7 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir, langu
     assert state["review_language_lane"] is language_lane
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeypatch):
     """task_id may include an agent prefix, e.g. codex/test-mkdir-1885."""
     import argparse
@@ -2750,6 +2766,7 @@ def test_dispatch_force_new_refuses_live_running_or_spawning(tmp_tasks_dir, caps
 
 
 @pytest.mark.parametrize("status", ["done", "failed", "cancelled", "rate_limited", "needs_finalize"])
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_dir, capsys, status):
     """#6980: --force-new is the only reuse escape, and it must archive both
     the prior record and the prior result before writing a new spawn state.
@@ -2796,6 +2813,7 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
 @pytest.mark.parametrize(
     "case", ["cancelled", "unpushed", "needs_finalize", "retention", "unknown", "rate_limited", "retry", "late"]
 )
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_force_new_interrupted_matrix(tmp_path, monkeypatch, tmp_tasks_dir, case):
     primary, tree, _origin, path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
     (primary / ".git/info/exclude").write_text("batch_state/\n")
@@ -2862,6 +2880,7 @@ def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, caps
     assert not delegate._state_path("archived-task").exists()
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_dir):
     archived = delegate._archived_state_path("archived-task")
     delegate._write_state_atomic(
@@ -2920,6 +2939,7 @@ def test_force_new_refuses_foreign_terminal_record(tmp_tasks_dir, capsys, prior_
     assert not list(tmp_tasks_dir.glob(f"{task_id}.*.archived.*"))
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_force_new_allows_owned_hot_record_with_foreign_archived_sibling(tmp_tasks_dir):
     task_id = "mixed-history"
     hot_path = delegate._state_path(task_id)
@@ -8024,6 +8044,7 @@ def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
     assert rebase_cmd[-1] == "origin/main"
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     import argparse
 
@@ -8067,6 +8088,7 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     assert "AGENT_ALLOW_MERGE" not in env
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, monkeypatch):
     """#7827: every dispatched worker must carry the explicit dispatch marker
     the SessionStart gate uses to skip the orchestrator-owned thread lease."""
@@ -8129,6 +8151,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
 @pytest.mark.parametrize(
     "inherited_entries", [[], ["/some/other/path", "/another/import/root"]], ids=["empty", "inherited"]
 )
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(
     tmp_tasks_dir,
     tmp_path,
@@ -8190,7 +8213,8 @@ def test_dispatch_worker_env_pythonpath_resolves_cap_plugin_outside_rootdir(
     entries = env["PYTHONPATH"].split(os.pathsep)
     scripts_dir = Path(entries[0])
     assert scripts_dir.is_absolute()
-    assert scripts_dir == delegate._REPO_ROOT / "scripts"
+    state = delegate._read_state(delegate._state_path("dispatch-marker-pythonpath"))
+    assert scripts_dir == Path(state["cwd"]) / "scripts"
     assert (scripts_dir / "ci" / "pytest_dispatch_cap.py").is_file()
     if inherited_entries:
         assert entries[-len(inherited_entries) :] == inherited_entries
@@ -8220,6 +8244,7 @@ print(plugin.__file__)
     assert Path(result.stdout.strip()).resolve() == (scripts_dir / "ci" / "pytest_dispatch_cap.py").resolve()
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
     import argparse
 
@@ -8270,6 +8295,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
     )
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     tmp_tasks_dir,
     tmp_path,
@@ -8328,6 +8354,7 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_dir, tmp_path, monkeypatch):
     """A caller that rendered its prompt to a file can prove the task ran exactly that file (R3 adjudication)."""
 
@@ -8384,21 +8411,23 @@ def _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, task_id, extra_
 
 
 @pytest.mark.rules_core_absent
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks_dir, tmp_path, monkeypatch):
     """The source hash covers only the caller's prompt; the effective hash covers what the worker was handed."""
     source = hashlib.sha256(b"the source prompt").hexdigest()
 
-    # nothing appended: the effective prompt is the source prompt
+    # Automatic isolation adds the worktree block around the bound source prompt.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-plain", [])
     assert state["prompt_sha256"] == source
-    assert state["prompt_blocks"] == []
-    assert state["effective_prompt_sha256"] == source
+    assert state["prompt_blocks"] == ["worktree"]
+    assert state["effective_prompt_sha256"] != source
 
-    # an explicit primary checkout read-only dispatch appends nothing
+    # An explicit primary target gets the same worktree instructions.
     state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
     assert state["mode"] == "read-only"
-    assert state["prompt_blocks"] == []
-    assert state["effective_prompt_sha256"] == state["prompt_sha256"] == source
+    assert state["prompt_blocks"] == ["worktree"]
+    assert state["prompt_sha256"] == source
+    assert state["effective_prompt_sha256"] != source
 
     # a lifecycle carrier, a worktree block and a research block, in the order they appear in the prompt
     monkeypatch.setattr(
@@ -8426,6 +8455,7 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     assert worker_prompt.endswith("\n[research]\n")
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_persists_and_forwards_output_schema(
     tmp_tasks_dir,
     tmp_path,
@@ -8584,6 +8614,7 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
     assert env["AGENT_ALLOW_MERGE"] == "1"
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
     tmp_tasks_dir,
     tmp_path,
@@ -8636,6 +8667,7 @@ def test_dispatch_codex_worker_env_maps_github_token_to_gh_token(
     assert "GITHUB_TOKEN" not in env
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_gemini_worker_env_strips_gh_token(
     tmp_tasks_dir,
     tmp_path,
@@ -8663,7 +8695,6 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="gemini",
@@ -8674,10 +8705,8 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        # #8516: gemini→agy read-only with no target now auto-pins a real
-        # dispatch worktree; this env-policy test passes an out-of-repo
-        # scratch cwd instead so no worktree is created under fake Popen.
-        cwd=str(tmp_path),
+        # Automatic provisioning runs real Git in the temporary source repository.
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -8691,6 +8720,7 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
     assert "GITHUB_TOKEN" not in env
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_agy_worker_env_strips_gh_token(
     tmp_tasks_dir,
     tmp_path,
@@ -8726,7 +8756,6 @@ def test_dispatch_agy_worker_env_strips_gh_token(
     monkeypatch.setenv("GITHUB_TOKEN", "ghp_parentgithub")
     monkeypatch.setenv("GH_TOKEN", "ghp_parentgh")
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="agy",
@@ -8737,10 +8766,8 @@ def test_dispatch_agy_worker_env_strips_gh_token(
         prompt_file=None,
         mode="read-only",
         model=None,
-        # #8516: agy read-only with no target now auto-pins a real dispatch
-        # worktree; this env-policy test passes an out-of-repo scratch cwd
-        # instead so no worktree is created under fake Popen.
-        cwd=str(tmp_path),
+        # Automatic provisioning runs real Git in the temporary source repository.
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -8754,6 +8781,7 @@ def test_dispatch_agy_worker_env_strips_gh_token(
     assert "GITHUB_TOKEN" not in env
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
     tmp_tasks_dir,
     tmp_path,
@@ -8785,7 +8813,6 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
 
     args = argparse.Namespace(
         agent="gemini",
@@ -8796,10 +8823,8 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
         prompt_file=None,
         mode="read-only",
         model=None,
-        # #8516: gemini→agy read-only with no target now auto-pins a real
-        # dispatch worktree; this alias test passes an out-of-repo scratch
-        # cwd instead so no worktree is created under fake Popen.
-        cwd=str(tmp_path),
+        # Automatic provisioning runs real Git in the temporary source repository.
+        cwd=str(delegate._REPO_ROOT),
         worktree=None,
         hard_timeout=3600,
         allow_merge=False,
@@ -11756,10 +11781,14 @@ def test_dirty_primary_guard_rejects_tracked_modified_receipt(tmp_path, monkeypa
 
 
 @pytest.mark.parametrize("agent", ["codex", "agy"])
-def test_dispatch_read_only_explicit_primary_cwd(tmp_tasks_dir, monkeypatch, agent):
-    """An explicit primary cwd retains the previous dispatch target."""
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
-    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
+def test_dispatch_read_only_isolates_explicit_primary_cwd(tmp_tasks_dir, tmp_path, monkeypatch, agent):
+    """#10025: explicit primary-root callers also get detached isolation."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    _patch_worker_popen(monkeypatch)
+    base_sha = delegate._resolve_sha(main)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
     args = _write_args(
         task_id=f"ro-root-{agent}",
         agent=agent,
@@ -11774,30 +11803,101 @@ def test_dispatch_read_only_explicit_primary_cwd(tmp_tasks_dir, monkeypatch, age
 
     assert rc == 0
     state = delegate._read_state(delegate._state_path(f"ro-root-{agent}"))
-    assert state is not None
-    assert state["cwd"] == str(delegate._REPO_ROOT)
+    worktree = main / f".worktrees/dispatch/{agent}/ro-root-{agent}"
+    assert state["cwd"] == str(worktree)
+    assert state["worktree_path"] == str(worktree)
+    assert state["worktree_branch"] is None
+    assert state["worktree_base_sha"] == base_sha
 
 
-def test_dispatch_read_only_allows_dirty_primary_checkout(
+def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#10025 R1-F1: check the record cmd_dispatch actually writes, with a real detached checkout."""
+    from scripts.review.seeds import adjudicate as adj
+    from tests.review.seeds.fixtures import Env, finding, mechanical_seed
+    from tests.review.seeds.test_adjudicate import Case
+
+    case = Case(Env(tmp_path / "measurement"), mechanical_seed("seed-a1"), [finding("F-01", "BLOCKER")])
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(adj, "_delegate_module", lambda: delegate)
+    monkeypatch.setenv("LU_TASKS_DIR", str(case.env.tasks))
+    # The initial fixture record must not stand in for the real dispatch.
+    (case.env.tasks / f"{case.task_id}.json").unlink()
+    monkeypatch.chdir(main)
+    _patch_worker_popen(monkeypatch)
+    base_sha = delegate._resolve_sha(main)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
+    argv = adj.dispatch_argv(case.task_file, case.task_id, "codex", model="gpt-6.1-sol")
+    parsed = delegate.build_parser().parse_args(argv[2:])
+
+    assert delegate.cmd_dispatch(parsed) == 0
+    state = delegate._read_state(delegate._state_path(case.task_id))
+    checkout = delegate._auto_worktree_path("codex", case.task_id)
+    assert checkout.is_dir() and state["worktree_branch"] is None
+    assert state["prompt_sha256"] != state["effective_prompt_sha256"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["worktree_sparse"]["full_checkout"] is True
+    assert adj.check_dispatch_binding(
+        case.unit_id, case.review_id, case.attempt_id, case.task_id, case.env.tasks, case.env.root
+    ) == {"model": "gpt-6.1-sol", "harness": "codex", "family": "openai"}
+
+
+def test_dispatch_default_read_only_isolates_dirty_primary_checkout(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """Read-only preflight still runs so agents can inspect and report dirt."""
+    """Concurrent primary edits do not prevent the default isolated review."""
     main, _ = _init_repo_with_worktree(tmp_path)
     (main / "tracked.txt").write_text("dirty\n")
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.chdir(main)
-    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
-    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
-    args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=str(main), worktree=None)
+    _patch_worker_popen(monkeypatch)
+    base_sha = delegate._resolve_sha(main)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
+    args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=None, worktree=None)
 
     rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     state = delegate._read_state(delegate._state_path("ro-dirty-main"))
     assert state is not None
-    assert state["cwd"] == str(main)
+    assert state["cwd"] == str(main / ".worktrees/dispatch/codex/ro-dirty-main")
+
+
+@pytest.mark.parametrize("target", ["subdir", "unregistered", "worktree"])
+def test_read_only_explicit_cwd_requires_registered_isolation(
+    target,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    main, worktree = _init_repo_with_worktree(tmp_path)
+    subdir = main / "subdir"
+    subdir.mkdir()
+    unregistered = main / ".worktrees/dispatch/codex/unregistered"
+    unregistered.mkdir(parents=True)
+    cwd = {"subdir": subdir, "unregistered": unregistered, "worktree": worktree}[target]
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    spawned = []
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
+    args = _write_args(task_id="ro-explicit", mode="read-only", cwd=str(cwd))
+
+    rc = delegate.cmd_dispatch(args)
+
+    state = delegate._read_state(delegate._state_path("ro-explicit"))
+    if target == "worktree":
+        assert rc == 0
+        assert state["cwd"] == str(worktree)
+        assert state["worktree_path"] == str(worktree)
+        assert len(spawned) == 1
+    else:
+        assert rc == 2
+        assert state is None
+        assert spawned == []
+        assert "read-only --cwd requires a verified added worktree" in capsys.readouterr().err
 
 
 def test_default_read_only_dispatch_uses_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -14743,6 +14843,32 @@ def test_non_string_status_claims_instead_of_crashing_the_scan(tmp_tasks_dir, tm
     assert _delegate_claim_refusal(worktree, task_id="review-odd") == "worktree claimed by active task impl-odd"
 
 
+def test_read_only_cwd_registration_lost_before_attach_refuses_spawn(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#10025: lost registration must never fall back to an unisolated cwd."""
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="readonly-registration")
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    resolve = delegate._resolve_verified_worktree_path
+    seen = 0
+
+    def disappear(path):
+        nonlocal seen
+        if Path(path) == worktree:
+            seen += 1
+            return resolve(path) if seen == 1 else None
+        return resolve(path)
+
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", disappear)
+    spawned = []
+    _spawn_passthrough_popen(monkeypatch, spawned.append)
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="codex", task_id="readonly-lost-registration", cwd=str(worktree), mode="read-only")
+    )
+    assert rc == 1
+    assert not spawned
+    assert delegate._read_state(delegate._state_path("readonly-lost-registration")) is None
+    assert "is no longer a registered worktree" in capsys.readouterr().err
+
+
 def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """#8610 r4: a checkout removed while ``--cwd`` dispatch waits fails dispatch; no record, no spawn."""
     task_id = "reap-ro-cwd-settling"
@@ -16907,6 +17033,7 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
     assert contract["prompt_sha256"] == state["prompt_sha256"]
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_review_attempt_scope_launch_keeps_the_guard_fake(tmp_tasks_dir, monkeypatch, dispatch_slice_probe):
     """A ready slice probe keeps ``_GuardFakeProc`` as the scoped worker (#9009).
 
@@ -17583,6 +17710,7 @@ def test_dispatch_dry_run_reaps_lease_on_post_allocation_error(tmp_tasks_dir, tm
     assert not lease_root.exists()
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_reaps_lease_on_pre_spawn_error(tmp_tasks_dir, tmp_path, monkeypatch):
     """#7164: Leases allocated during live dispatch must not be orphaned if pre-spawn setup fails."""
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
@@ -17737,6 +17865,7 @@ def test_dispatch_generates_and_persists_run_nonce(tmp_tasks_dir, monkeypatch, c
     assert lines[1] == state["run_nonce"]
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_emits_run_nonce_in_summary_and_stdout(tmp_tasks_dir, monkeypatch, capsys):
     """#7168: Live dispatch surfaces run_nonce in the summary line and machine-readable stdout."""
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
@@ -19370,6 +19499,7 @@ def test_auto_finalize_refuses_when_every_change_is_outside_owned_paths(tmp_path
     assert delegate._resolve_sha(worktree) == head
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_dispatch_records_only_explicit_owned_paths(tmp_tasks_dir, tmp_path, monkeypatch):
     """owned_paths is the task's --owned-path values, never its --research-owned-path ones."""
     monkeypatch.setattr(delegate, "_build_research_context", lambda args: None)
@@ -19519,6 +19649,7 @@ def test_full_review_default_requires_full_checkout_before_provisioning(
     assert not delegate._state_path("full-needs-tree").exists()
 
 
+@pytest.mark.usefixtures("isolated_dispatch_repo")
 def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """Captured return proof: real renderer/admission/ledger/validator/recorder/promotion, no model run."""
     import yaml
@@ -19535,7 +19666,27 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
     from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _record, _review
 
     monkeypatch.setattr(pm, "verify_pack_strict", fake_verify())
-    env = build_env(tmp_path / "fixture")
+    fixture_primary = build_env(tmp_path / "fixture-primary")
+    subprocess.run(
+        ["git", "-C", str(fixture_primary.root), "worktree", "add", "--detach", str(tmp_path / "fixture"), "HEAD"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    from dataclasses import replace
+
+    checkout = tmp_path / "fixture"
+    env = replace(
+        fixture_primary,
+        root=checkout,
+        world=replace(
+            fixture_primary.world,
+            **{
+                field: checkout / getattr(fixture_primary.world, field).relative_to(fixture_primary.root)
+                for field in ("plan_path", "pack_path", "words_path")
+            },
+        ),
+    )
     digest = make_manifest(env, capsys)
     from tests.review.test_prompts import _write_module_manifest
 
@@ -19551,7 +19702,8 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
     prepare = review_mcp.prepare_review_attempt
     receipts = tmp_path / "receipts"
     monkeypatch.setattr(review_mcp, "prepare_review_attempt", lambda **kw: prepare(**kw, receipts_root=receipts))
-    monkeypatch.setattr(delegate, "_REPO_ROOT", env.root)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", fixture_primary.root)
+    monkeypatch.chdir(fixture_primary.root)
     _patch_worker_popen(monkeypatch)
     args = _write_args(
         agent="claude",
@@ -19589,7 +19741,7 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
             "scripts.agent_runtime.attempt_boundary.verify_full_review_tree",
             side_effect=ReviewIsolationError("full_review_tree_mismatch"),
         ),
-        patch.object(delegate, "_resolve_invocation_git_root", return_value=env.root),
+        patch.object(delegate, "_resolve_invocation_git_root", return_value=fixture_primary.root),
         patch.object(delegate, "_resolve_worktree_base_sha", return_value="a" * 40),
         patch.object(delegate, "_ensure_worktree", return_value=(env.root, None, {"reused": False})),
         patch.object(delegate, "_settle_worktree_reap", return_value={"action": "removed"}) as reap,
