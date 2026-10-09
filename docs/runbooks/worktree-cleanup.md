@@ -464,6 +464,25 @@ record, detached HEAD for the detached classes) before removal, and
   `.worktrees/`, strictly under `/tmp`, `/var/tmp`, `$TMPDIR` or a
   `scratchpad` directory. Reason `foreign registered checkout`. Any other
   outside path is still reported as `outside repo .worktrees/`.
+  Qualification and the locked removal recheck also require a bounded
+  `lsof +D` probe with no open file descriptors or mapped files inside the
+  checkout, including nested mount points. An unavailable probe, warning,
+  error or timeout preserves the checkout. An empty selection also requires
+  readable process FD and mapping entries in procfs; partial visibility or
+  a platform without that proof preserves it. Negative proof additionally
+  requires the initial PID namespace and an unrestricted procfs mount;
+  nested namespaces, filtered procfs mounts and process-entry overmounts
+  preserve the checkout. Unprivileged runs that cannot inspect every process
+  retain all foreign checkouts, including idle ones. Infra owns this cleanup
+  residual until a complete process view is available through an authorized
+  execution context; this check never changes host permissions.
+  Its refusal reason contains no
+  file paths. This probe complements the existing cwd and lock checks.
+  Long readers such as backups should take `git worktree lock --reason
+  "long reader" <checkout>` before reading and `git worktree unlock
+  <checkout>` after they finish. Hold the lock for the entire read, including
+  gaps between opened files: a point-in-time activity probe cannot protect
+  future reads. Unlock only the lock that the reader owns.
 
 ### Interrupted `git worktree add` (#8663)
 
