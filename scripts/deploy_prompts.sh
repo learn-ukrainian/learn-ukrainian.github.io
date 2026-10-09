@@ -42,6 +42,7 @@ source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
+GROK_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/grok"
 DEPLOY_STATE_DIR="${DEPLOY_STATE_DIR:-$PROJECT_ROOT/.deploy-state}"
 AGENT_SHARED_MANIFEST="$DEPLOY_STATE_DIR/shared-to-agent.manifest"
 
@@ -437,6 +438,9 @@ diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
 fi
+if [[ -d "$GROK_EXTENSIONS" ]]; then
+    diff_overlay_files "$GROK_EXTENSIONS" ".grok" "$GROK_EXTENSIONS → .grok"
+fi
 diff_overlay_files "gemini_extensions" ".gemini" "gemini_extensions → .gemini"
 diff_shared_skill_overlays
 diff_gemini_skill_owners
@@ -476,6 +480,10 @@ write_shared_agent_manifest
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     rsync -av "$CODEX_EXTENSIONS/" .codex/
+fi
+# Grok is a narrow overlay: unrelated configuration and runtime files survive.
+if [[ -d "$GROK_EXTENSIONS" ]]; then
+    rsync -av "$GROK_EXTENSIONS/" .grok/
 fi
 # shellcheck disable=SC2046
 # rsync needs the destination's parent dir to exist before it can create

@@ -165,6 +165,31 @@ The launcher owns lease open/close for Grok. The cold-start prompt explicitly te
 | INTERIM / CLAUDE / CODEX driver handoff | Dual-write **diary** board |
 | Canary probe | Rot measurement only (not the board) |
 
+## Native driver safety hooks
+
+`npm run agents:deploy` overlays `agents_extensions/grok/hooks/driver.json`
+onto `.grok/hooks/driver.json`, compares that file on subsequent deployment,
+and preserves unrelated `.grok` configuration. The two native `PreToolUse`
+matcher groups reuse the write-worker guard selection and native tool aliases,
+without reviewer restrictions or a Stop hook. The bridge supplies the shared
+guards with `tool_name` and `tool_input`, rejects malformed event envelopes and
+truncated inputs, preserves each guard's structured-input failure contract,
+and retains the publishing guard's input rewrite.
+
+`start-grok-driver.sh` binds a fresh native session UUID with `--session-id`.
+The profile runs only when that UUID matches the event's `sessionId` and the
+launcher identity is `grok` / `grok-tui`. Interactive launches clear the binding;
+workers, isolated reviews and native children have different session IDs.
+Commands resolve the shared project interpreter and this launcher's tracked
+guard sources. Project hooks require the existing native folder-trust grant;
+the launcher does not grant trust or disable that gate.
+
+Discovery can be verified with `grok inspect --json` in an isolated deployed
+checkout. Residual: live firing in a real launcher-bound driver session has
+not yet been observed. The accountable driver owns that observation before
+claiming runtime certification; stop if the installed client cannot execute
+project hooks, and do not patch the client.
+
 ## Related
 
 - `scripts/session_canary/diary.py` — stamp / handback / hydrate capsule helpers

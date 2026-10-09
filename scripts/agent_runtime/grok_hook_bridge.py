@@ -10,11 +10,17 @@ The guard argument is either a tracked guard path in this checkout, run
 directly, or the project interpreter followed by one of the tracked guards that
 need it. The Claude adapter emits that second form; any other path,
 interpreter, guard or extra argument denies.
+
+The driver profile supplies ``--driver MATCHER`` instead. That entrypoint
+uses the same guard groups as write workers and requires the launcher's native
+session UUID. Its guards retain their own structured-input contracts; unknown
+events and truncated inputs deny before any guard is run.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import shlex
 import subprocess
 import sys
@@ -87,29 +93,107 @@ def guard_argv(command: str) -> list[str]:
     return argv
 
 
+def _translate(payload: dict, *, strict: bool = True) -> dict:
+    """Translate native fields, retaining each driver's guard input contract."""
+    if payload.get("hookEventName", payload.get("hook_event_name")) not in {"PreToolUse", "pre_tool_use"}:
+        raise ValueError("invalid PreToolUse event")
+    tool_name = _TOOL_NAMES.get(payload.get("toolName"))
+    tool_input = payload.get("toolInput")
+    if payload.get("toolInputTruncated") or tool_name is None:
+        raise ValueError("unknown or truncated tool payload")
+    if strict and not isinstance(tool_input, dict):
+        raise ValueError("unknown tool payload")
+    if strict and tool_name == "Bash" and not isinstance(tool_input.get("command"), str):
+        raise ValueError("shell command unavailable")
+    translated = dict(payload)
+    translated["tool_name"] = tool_name
+    translated["tool_input"] = dict(tool_input) if isinstance(tool_input, dict) else tool_input
+    if isinstance(translated["tool_input"], dict):
+        translated["tool_input"].setdefault("cwd", payload.get("cwd"))
+    return translated
+
+
+def _driver_main(matcher: str) -> int:
+    """Run one shared guard group only for the launcher's native session UUID.
+
+    Workers, reviews and native child sessions may inherit driver environment
+    variables, but their native session id cannot match this launch binding.
+    No lease is acquired, inspected or changed here.
+    """
+    session_id = os.environ.get("LU_GROK_DRIVER_SESSION_ID")
+    if not session_id:
+        return 0
+    raw = sys.stdin.read()
+    payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise ValueError("invalid PreToolUse event")
+    if payload.get("sessionId") != session_id:
+        if not payload.get("sessionId"):
+            raise ValueError("driver event session unavailable")
+        return 0
+    if os.environ.get("SESSION_STREAM_AGENT") != "grok" or os.environ.get("SESSION_STREAM_HARNESS") != "grok-tui":
+        raise ValueError("driver launcher identity unavailable")
+    source_root = Path(__file__).resolve().parents[2]
+    if str(source_root) not in sys.path:
+        sys.path.insert(0, str(source_root))
+    from scripts.agent_runtime.adapters.grok_build import _fleet_guard_groups
+
+    groups = _fleet_guard_groups(publish_guard=False, native_aliases=True)
+    group = next((group for group in groups if group["matcher"] == matcher), None)
+    if group is None:
+        raise ValueError("unknown driver guard group")
+    translated = _translate(payload, strict=False)
+    outputs = []
+    for hook in group["hooks"]:
+        argv = guard_argv(hook["command"])
+        # All Python guards use the shared interpreter, including guards whose
+        # worker invocation is an executable path with a generic shebang.
+        if len(argv) == 1 and Path(argv[0]).suffix == ".py":
+            argv.insert(0, str(_project_interpreter(source_root)))
+        result = subprocess.run(
+            argv,
+            input=json.dumps(translated),
+            text=True,
+            check=False,
+            timeout=max(15, int(hook.get("timeout", 5))),
+            capture_output=True,
+        )
+        sys.stderr.write(result.stderr)
+        if result.returncode != 0:
+            return 2
+        # In particular, retain the publishing guard's updatedInput decision.
+        if result.stdout.strip():
+            outputs.append(result.stdout.strip())
+    for output in outputs:
+        print(output)
+    return 0
+
+
 def main() -> int:
     try:
+        if len(sys.argv) == 3 and sys.argv[1] == "--driver":
+            return _driver_main(sys.argv[2])
         if len(sys.argv) != 2:
             raise ValueError("one fleet guard path required")
         argv = guard_argv(sys.argv[1])
         payload = json.load(sys.stdin)
-        if not isinstance(payload, dict) or payload.get("hook_event_name") != "PreToolUse":
+        if not isinstance(payload, dict):
             raise ValueError("invalid PreToolUse event")
-        tool_name = _TOOL_NAMES.get(payload.get("toolName"))
-        tool_input = payload.get("toolInput")
-        if tool_name is None or not isinstance(tool_input, dict):
-            raise ValueError("unknown reviewer tool payload")
-        if tool_name == "Bash" and not isinstance(tool_input.get("command"), str):
-            raise ValueError("shell command unavailable")
-        translated = dict(payload)
-        translated["tool_name"] = tool_name
-        translated["tool_input"] = dict(tool_input)
-        translated["tool_input"].setdefault("cwd", payload.get("cwd"))
+        translated = _translate(payload)
         result = subprocess.run(argv, input=json.dumps(translated), text=True, check=False, timeout=10)
         return 0 if result.returncode == 0 else 2
-    except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
+    except (
+        OSError,
+        ValueError,
+        TypeError,
+        RuntimeError,
+        RecursionError,
+        ImportError,
+        KeyError,
+        subprocess.TimeoutExpired,
+    ) as exc:
         detail = f": {exc}" if isinstance(exc, GuardInvocationError) else ""
-        print(f"BLOCKED by grok reviewer hook bridge: {type(exc).__name__}{detail}.", file=sys.stderr)
+        print(f"BLOCKED by grok hook bridge: {type(exc).__name__}{detail}.", file=sys.stderr)
         return 2
 
 

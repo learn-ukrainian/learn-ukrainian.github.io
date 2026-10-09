@@ -462,9 +462,49 @@ def _copy_declared_paths(target: Path, paths: tuple[str, ...]) -> None:
 
 
 def _copy_full_tree(target: Path) -> None:
-    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
+    for directory in ("agents_extensions/shared", "agents_extensions/codex", "agents_extensions/grok", "gemini_extensions"):
         shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
     _copy_deploy_harness(target)
+
+
+@pytest.mark.parametrize("unrelated", [False, True])
+def test_grok_driver_overlay_is_narrow_and_idempotent(tmp_path: Path, unrelated: bool) -> None:
+    # This fixture copies explicit files; unrelated source trees are empty.
+    # _init_checkout also supports tree discovery, which this test never needs.
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    for relative in _SYNTHETIC_SOURCE_DIRS:
+        (repo / relative).mkdir(parents=True, exist_ok=True)
+    _copy_deploy_harness(repo)
+    source = repo / "agents_extensions/grok/hooks/driver.json"
+    source.parent.mkdir(parents=True)
+    shutil.copy2(REPO_ROOT / "agents_extensions/grok/hooks/driver.json", source)
+    destination = repo / ".grok/hooks/driver.json"
+    preserved = [repo / ".grok/config.toml", repo / ".grok/hooks/local.json", repo / ".grok/runtime/note.txt"]
+    if unrelated:
+        for path in preserved:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"unrelated local content\n")
+    preview = _run_command(repo, ["bash", str(DEPLOY_SCRIPT), "--dry-run"])
+    assert preview.returncode == 0, preview.stdout + preview.stderr
+    assert "agents_extensions/grok → .grok" in preview.stdout
+    assert not destination.exists()
+    first = _run(repo, DEPLOY_SCRIPT)
+    assert first.returncode == 0, first.stdout + first.stderr
+    assert destination.read_bytes() == source.read_bytes()
+    deployed_mtime = destination.stat().st_mtime_ns
+    second = _run(repo, DEPLOY_SCRIPT)
+    assert second.returncode == 0, second.stdout + second.stderr
+    assert "No changes to deploy." in second.stdout
+    assert destination.stat().st_mtime_ns == deployed_mtime
+    # A drift confined to Grok must itself trigger redeployment.
+    destination.write_text("{}\n", encoding="utf-8")
+    third = _run(repo, DEPLOY_SCRIPT)
+    assert third.returncode == 0, third.stdout + third.stderr
+    assert "Files agents_extensions/grok/hooks/driver.json and .grok/hooks/driver.json differ" in third.stdout
+    assert destination.read_bytes() == source.read_bytes()
+    if unrelated:
+        assert all(path.read_bytes() == b"unrelated local content\n" for path in preserved)
 
 
 def _init_checkout(tmp_path: Path, *, full_tree: bool = False, only: tuple[str, ...] | None = None) -> Path:
