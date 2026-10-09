@@ -1,29 +1,33 @@
 """Conservative, execution-free Python import impact analysis.
 
-An unresolved load anywhere can hide an importer of any changed module, so it
-forces FULL globally. The graph still exposes resolved dependents for diagnosis;
-those edges alone are never evidence that narrowed CI is safe. This module does
-not enable selection in the full-suite workflow.
+Inventory, parse and resource failures force FULL globally. Runtime uncertainty
+is scoped to the affected dependency closure; unrelated command runners do not
+disable selection. Shell intermediaries participate without being executed.
+This module does not enable selection in the full-suite workflow.
 """
 
 from __future__ import annotations
 
 import ast
 import gc
+import os
 import re
 import subprocess
 import time
 from collections import defaultdict, deque
 from collections.abc import Iterable, Mapping
 from concurrent.futures import ProcessPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from multiprocessing import get_context
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_BUDGET_SECONDS = 10.0
 _REFERENCE = re.compile(r"(?:scripts|tests|agents_extensions)(?:[/.][A-Za-z_]\w*)+(?:\.py)?")
-_BARE_REFERENCE = re.compile(r"[A-Za-z_]\w*(?:[/.][A-Za-z_]\w*)*(?:\.py)?")
+_BARE_REFERENCE = re.compile(r"[A-Za-z_]\w*(?:[/.][A-Za-z_]\w*)*(?:\.(?:py|sh))?")
+_SHELL_REFERENCE = re.compile(r"(?:[A-Za-z_][\w-]*/)*[A-Za-z_][\w-]*\.sh\b")
+_PYTHON_PATH = re.compile(r"(?:[A-Za-z_]\w*/)*[A-Za-z_]\w*\.py\b")
+_MODULE_COMMAND = re.compile(r"(?:^|\s)[\"']?-m[\"']?\s+[\"']?([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)")
 _LOADERS = {
     "__import__": (0, "name", False),
     "import_module": (0, "name", False),
@@ -59,31 +63,18 @@ def read_sources(root: Path = ROOT) -> dict[str, bytes]:
         mode, sha, stage = meta.split()
         if stage != "0":
             raise ValueError("unmerged index")
-        if path.endswith(".py"):
+        if path.endswith((".py", ".sh")):
             if mode not in {"100644", "100755"}:
-                raise ValueError(f"non-regular Python source: {path}")
+                raise ValueError(f"non-regular source: {path}")
             entries[path] = sha
-    batch = subprocess.run(
-        ["git", "cat-file", "--batch"], cwd=root, check=True,
-        input="".join(sha + "\n" for sha in entries.values()).encode(),
-        capture_output=True, timeout=BUILD_BUDGET_SECONDS,
-    ).stdout
-    sources = {}
-    offset = 0
-    for path, sha in entries.items():
-        end = batch.index(b"\n", offset)
-        actual, kind, size = batch[offset:end].split()
-        if actual.decode() != sha or kind != b"blob":
-            raise ValueError("invalid source blob")
-        offset = end + 1
-        sources[path] = batch[offset:offset + int(size)]
-        offset += int(size) + 1
     sparse = subprocess.run(
         ["git", "ls-files", "-t", "-z"], cwd=root, check=True,
         capture_output=True, timeout=BUILD_BUDGET_SECONDS,
     ).stdout.decode("utf-8", errors="surrogateescape")
     skipped = {entry[2:] for entry in sparse.split("\0") if entry.startswith("S ")}
-    for path in sources:
+    sources = {}
+    missing = {}
+    for path, sha in entries.items():
         current = root / path
         if current.is_symlink():
             raise ValueError(f"non-regular source: {path}")
@@ -91,12 +82,31 @@ def read_sources(root: Path = ROOT) -> dict[str, bytes]:
             sources[path] = current.read_bytes()
         elif path not in skipped:
             raise ValueError(f"missing or non-regular source: {path}")
+        else:
+            missing[path] = sha
+    # Present files are already authoritative overlays. Only sparse files need
+    # blob reads, avoiding a second full copy of the repository's source bytes.
+    if missing:
+        batch = subprocess.run(
+            ["git", "cat-file", "--batch"], cwd=root, check=True,
+            input="".join(sha + "\n" for sha in missing.values()).encode(),
+            capture_output=True, timeout=BUILD_BUDGET_SECONDS,
+        ).stdout
+        offset = 0
+        for path, sha in missing.items():
+            end = batch.index(b"\n", offset)
+            actual, kind, size = batch[offset:end].split()
+            if actual.decode() != sha or kind != b"blob":
+                raise ValueError("invalid source blob")
+            offset = end + 1
+            sources[path] = batch[offset:offset + int(size)]
+            offset += int(size) + 1
     untracked = subprocess.run(
         ["git", "ls-files", "--others", "--exclude-standard", "-z"], cwd=root,
         check=True, capture_output=True, timeout=BUILD_BUDGET_SECONDS,
     ).stdout.decode("utf-8", errors="surrogateescape")
     for path in untracked.split("\0"):
-        if path.endswith(".py"):
+        if path.endswith((".py", ".sh")):
             current = root / path
             if current.is_symlink() or not current.is_file():
                 raise ValueError(f"non-regular source: {path}")
@@ -123,13 +133,23 @@ def _nodes(tree: ast.AST) -> Iterable[ast.AST]:
     pending = [tree]
     while pending:
         node = pending.pop()
-        if isinstance(node, (ast.Constant, ast.Name)):
+        # Documentation can cite another executable without loading it. Skip
+        # inert string expressions (including docstrings), not runtime values.
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+            continue
+        if isinstance(node, ast.Constant):
+            if isinstance(node.value, str):
+                yield node
+            continue
+        if isinstance(node, ast.Name):
             yield node
             continue
-        if isinstance(node, relevant):
+        if isinstance(node, relevant) and (
+            not isinstance(node, ast.Attribute) or node.attr in _LOADERS or node.attr == "repo_wide"
+        ):
             yield node
-        for field in node._fields:
-            value = getattr(node, field)
+        for child_field in node._fields:
+            value = getattr(node, child_field)
             if isinstance(value, list):
                 pending.extend(child for child in value if isinstance(child, ast.AST) and child._fields and not isinstance(child, ast.alias))
             elif isinstance(value, ast.AST) and value._fields:
@@ -143,6 +163,22 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
     load_paths: set[str] = set()
     reasons: set[str] = set()
     safety = False
+    test_source = is_test_file(path)
+
+    if path.endswith(".sh"):
+        text = source.decode("utf-8") if isinstance(source, bytes) else source
+        text = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#")).replace("\\\n", " ")
+        # Retain references even in shell variable-prefixed paths. Resolution
+        # checks the repository inventory, never the host filesystem or shell.
+        for match in _PYTHON_PATH.finditer(text):
+            reference = match.group()
+            # $ROOT/scripts/... is a variable-prefixed repository path, not
+            # a Python module named ROOT.scripts....
+            local = _REFERENCE.search(reference)
+            imports.add((local.group() if local else reference, False))
+        imports.update((match.group(1), True) for match in _MODULE_COMMAND.finditer(text))
+        load_paths.update(match.group() for match in _SHELL_REFERENCE.finditer(text))
+        return path, imports, load_paths, reasons, safety
 
     def add(importer, name, *, required=False):
         imports.add((name, required))
@@ -152,7 +188,9 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
     except (SyntaxError, ValueError, UnicodeError, RecursionError):
         reasons.add(f"parse-error:{path}")
         return path, imports, load_paths, reasons, safety
-    nodes = list(_nodes(tree))
+    groups: dict[type, list[ast.AST]] = defaultdict(list)
+    for node in _nodes(tree):
+        groups[type(node)].append(node)
     aliases: dict[str, str] = {}
 
     def bind(alias: str, name: str) -> None:
@@ -166,7 +204,7 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             reasons.add(f"ambiguous-loader-alias:{path}:{alias}")
         aliases[alias] = name
 
-    for node in nodes:
+    for node in groups[ast.Import] + groups[ast.ImportFrom]:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 bind(alias.asname or alias.name.split(".")[0], alias.name if alias.asname else alias.name.split(".")[0])
@@ -174,7 +212,46 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             for alias in node.names:
                 bind(alias.asname or alias.name, f"{node.module}.{alias.name}")
 
-    callees = {id(node.func) for node in nodes if isinstance(node, ast.Call)}
+    callees = {id(node.func) for node in groups[ast.Call]}
+    # Most Name nodes are variables with no loading role. Filter them once,
+    # after imports have bound loader aliases, instead of repeatedly examining
+    # every variable through the full dependency decision tree.
+    loader_names = set(_LOADERS) | {
+        alias for alias, name in aliases.items() if name.split(".")[-1] in _LOADERS
+    }
+    groups[ast.Name] = [node for node in groups[ast.Name] if node.id in loader_names]
+    assignments: dict[str, list[ast.AST]] = defaultdict(list)
+    for node in groups[ast.Assign] + groups[ast.AnnAssign]:
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+        for target in targets:
+            if isinstance(target, ast.Name) and node.value is not None:
+                assignments[target.id].append(node.value)
+
+    def command_shell_paths(command: ast.AST | None) -> set[str]:
+        """Follow argv constants and assigned Path components without executing."""
+        refs: set[str] = set()
+        pending = [command] if command is not None else []
+        visited: set[int] = set()
+        while pending:
+            current = pending.pop()
+            if id(current) in visited:
+                continue
+            visited.add(id(current))
+            if isinstance(current, ast.Name):
+                pending.extend(assignments.get(current.id, ()))
+            elif isinstance(current, ast.Constant) and isinstance(current.value, str):
+                if ".sh" in current.value:
+                    refs.update(match.group() for match in _SHELL_REFERENCE.finditer(current.value))
+                matches = _PYTHON_PATH.finditer(current.value) if ".py" in current.value else ()
+                for match in matches:
+                    reference = match.group()
+                    local = _REFERENCE.search(reference)
+                    imports.add((local.group() if local else reference, False))
+            else:
+                pending.extend(ast.iter_child_nodes(current))
+        return refs
+
+    nodes = (node for group in groups.values() for node in group)
 
     for node in nodes:
         if isinstance(node, ast.Import):
@@ -195,21 +272,35 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             for alias in node.names:
                 add(path, f"{name}.{alias.name}")
         elif isinstance(node, ast.Constant) and isinstance(node.value, str):
-            # A bare module string or final Path component can refer to any
-            # scripts suffix exposed by sys.path. Ambiguity only adds edges.
-            if len(node.value) <= 256 and _BARE_REFERENCE.fullmatch(node.value):
+            # String candidates resolve only to actual repository modules in
+            # build_graph, with stricter rules than genuine import statements.
+            # Production file-path data (e.g. a scope allowlist) does not load
+            # that module. Path-based execution is captured at loader/command
+            # calls; tests additionally use paths to copy/load source fixtures.
+            path_reference = test_source or "/" not in node.value
+            if path_reference and len(node.value) <= 256 and ("." in node.value or "/" in node.value) and _BARE_REFERENCE.fullmatch(node.value):
                 add(path, node.value)
-            if len(node.value) <= 256 and node.value.endswith(".py"):
+            if path_reference and len(node.value) <= 256 and node.value.endswith(".py"):
                 add(path, PurePosixPath(node.value).name)
-            for match in _REFERENCE.finditer(node.value):
+            # Tests also copy/read shell fixtures before executing them. In
+            # production code, executable shell references come from command
+            # expressions below, not arbitrary help text or lint registries.
+            if test_source and ".sh" in node.value and _SHELL_REFERENCE.fullmatch(node.value):
+                load_paths.add(node.value)
+            matches = _REFERENCE.finditer(node.value) if any(
+                prefix in node.value for prefix in ("scripts", "tests", "agents_extensions")
+            ) else ()
+            for match in matches:
                 reference = match.group()
+                if "/" in reference and not test_source:
+                    continue
                 add(path, reference)
                 # String monkeypatch targets can append a symbol to a module.
                 while "." in reference and not reference.endswith(".py"):
                     reference = reference.rsplit(".", 1)[0]
                     add(path, reference)
         elif isinstance(node, (ast.Attribute, ast.Name)):
-            if isinstance(node, ast.Attribute) and node.attr == "repo_wide" and is_test_file(path):
+            if isinstance(node, ast.Attribute) and node.attr == "repo_wide" and test_source:
                 safety = True
             if isinstance(node, ast.Attribute) and node.attr not in _LOADERS:
                 continue
@@ -253,11 +344,24 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
                 "asyncio.create_subprocess_exec", "asyncio.create_subprocess_shell",
             }:
                 argv = node.args[0] if node.args else next((kw.value for kw in node.keywords if kw.arg == "args"), None)
-                # An opaque command can run any local module. For a literal
-                # argv, source constants already add module and path edges.
-                if not isinstance(argv, (ast.List, ast.Tuple)) or any(
-                    not isinstance(arg, ast.Constant) for arg in argv.elts[1:]
-                ):
+                load_paths.update(command_shell_paths(argv))
+                # Arguments to git and other known non-Python executables do
+                # not become opaque Python loads merely by using variables.
+                # Literal module/script targets remain resolvable even when
+                # later command arguments are dynamic.
+                args = argv.elts if isinstance(argv, (ast.List, ast.Tuple)) else []
+                executable = args[0] if args else None
+                literal = executable.value if isinstance(executable, ast.Constant) else None
+                python = _name(executable) in {"sys.executable", "sys._base_executable"} or (
+                    isinstance(literal, str) and PurePosixPath(literal).name.startswith("python")
+                )
+                if python:
+                    target = args[2] if len(args) > 2 and isinstance(args[1], ast.Constant) and args[1].value == "-m" else (
+                        args[1] if len(args) > 1 else None
+                    )
+                    if not isinstance(target, ast.Constant) or not isinstance(target.value, str):
+                        reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
+                elif not isinstance(literal, str):
                     reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
             if leaf not in _LOADERS:
                 continue
@@ -294,9 +398,10 @@ class ImportGraph:
     safety_tests: set[str]
     reasons: tuple[str, ...]
     build_seconds: float
+    uncertainty: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
-    def test_dependents(self, changed: Iterable[str]) -> set[str]:
-        """Reverse transitive closure, including cycles and test helper modules."""
+    def reached_files(self, changed: Iterable[str]) -> set[str]:
+        """Reverse transitive closure, including shell and test helpers."""
         visited = set(changed)
         pending = deque(visited)
         while pending:
@@ -304,12 +409,29 @@ class ImportGraph:
                 if importer not in visited:
                     visited.add(importer)
                     pending.append(importer)
-        return visited & self.tests
+        return visited
+
+    def test_dependents(self, changed: Iterable[str]) -> set[str]:
+        """Return tests in the dependency closure."""
+        return self.reached_files(changed) & self.tests
+
+    def selection_reasons(self, paths: Iterable[str]) -> list[str]:
+        """Scope uncertainty to affected sources, including changed tests.
+
+        Already selected tests and their support files execute opaque loads. Those
+        calls cannot introduce additional test importers of the changed source.
+        An opaque load in a changed test itself still fails closed.
+        """
+        changed = set(paths)
+        return sorted(set(self.reasons).union(*(
+            self.uncertainty.get(path, ()) for path in self.reached_files(changed)
+            if not path.startswith("tests/") or path in changed
+        )))
 
     def impacted_tests(self, changed: Iterable[str]) -> dict:
-        """FULL on any uncertainty or any changed module without test reachability."""
+        """FULL on affected uncertainty or a changed module without tests."""
         paths = sorted(set(changed))
-        reasons = list(self.reasons)
+        reasons = self.selection_reasons(paths)
         for path in paths:
             if path not in self.dependents:
                 reasons.append(f"missing-module:{path}")
@@ -340,8 +462,14 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
         except (OSError, ValueError, subprocess.SubprocessError):
             return ImportGraph({}, set(), set(), ("source-inventory-error",), time.monotonic() - started)
     modules: dict[str, set[str]] = defaultdict(set)
+    shell_paths: dict[str, set[str]] = defaultdict(set)
     namespaces: set[str] = set()
     for path in sources:
+        if path.endswith(".sh"):
+            parts = path.split("/")
+            for index in range(len(parts)):
+                shell_paths["/".join(parts[index:])].add(path)
+            continue
         name = _module(path)
         modules[name].add(path)
         parts = name.split(".")
@@ -354,43 +482,71 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
     dependents: dict[str, set[str]] = {path: set() for path in sources}
     tests = {path for path in sources if is_test_file(path)}
     safety_tests: set[str] = set()
+    uncertainty: dict[str, set[str]] = defaultdict(set)
+    # Package ancestors depend only on inventory, not on each reference. Many
+    # files repeat the same imports; compute these once rather than per edge.
+    package_parents: dict[str, set[str]] = {}
+    for path in sources:
+        parts = _module(path).split(".")
+        package_parents[path] = {
+            parent for index in range(1, len(parts))
+            for parent in modules.get(".".join(parts[:index]), ())
+            if parent.endswith("/__init__.py")
+        }
 
     def add(importer: str, name: str, *, required: bool = False) -> None:
+        # Bare words such as 'main', 'config' and 'test' are ordinary data,
+        # not evidence of an import through an arbitrary sys.path suffix.
+        if not required and "." not in name and "/" not in name:
+            return
         name = name.removesuffix(".py").replace("/", ".")
         targets = modules.get(name, set())
         if not targets and required and name.startswith(("scripts.", "tests.", "agents_extensions.")) and name not in namespaces:
-            reasons.add(f"unresolved-import:{importer}:{name}")
+            uncertainty[importer].add(f"unresolved-import:{importer}:{name}")
         for target in targets:
             dependents[target].add(importer)
             # Importing a submodule executes regular parent packages.
-            parts = _module(target).split(".")
-            for index in range(1, len(parts)):
-                for parent in modules.get(".".join(parts[:index]), ()):
-                    if parent.endswith("/__init__.py"):
-                        dependents[parent].add(importer)
+            for parent in package_parents[target]:
+                dependents[parent].add(importer)
 
-    items = list(sources.items())
-    # Four bounded local CPU workers, no provider calls or source execution.
+    # Largest files first avoid a long final parser chunk on this repository's
+    # uneven source sizes. Cap workers at available CPUs and eight processes.
+    items = sorted(sources.items(), key=lambda item: len(item[1]), reverse=True)
+    workers = min(8, os.cpu_count() or 1)
+    # Bounded local CPU workers, no provider calls or source execution.
     # Small fixture graphs stay in-process; large graphs return compact records.
     try:
         if len(items) > 32:
             # ASTs have no parent cycles. Refcounting reclaims each file's AST;
             # avoid repeated cyclic-GC traversals in these short-lived workers.
-            with ProcessPoolExecutor(max_workers=4, mp_context=get_context("fork"), initializer=gc.disable) as executor:
-                records = list(executor.map(_scan_source, items, chunksize=16))
+            with ProcessPoolExecutor(max_workers=workers, mp_context=get_context("fork"), initializer=gc.disable) as executor:
+                records = list(executor.map(_scan_source, items, chunksize=4))
         else:
             records = [_scan_source(item) for item in items]
     except (OSError, RuntimeError, ValueError):
         return ImportGraph(dependents, tests, set(), ("parser-worker-error",), time.monotonic() - started)
     for path, imports, load_paths, errors, safety in records:
-        reasons.update(errors)
+        for error in errors:
+            if error.startswith("parse-error:"):
+                reasons.add(error)
+            else:
+                uncertainty[path].add(error)
         if safety:
             safety_tests.add(path)
         for name, required in imports:
             add(path, name, required=required)
         for target in load_paths:
-            if target not in sources:
-                reasons.add(f"unresolved-load-path:{path}:{target}")
+            if target.endswith(".sh"):
+                parts = target.split("/")
+                targets = next((
+                    shell_paths[suffix] for index in range(len(parts))
+                    if (suffix := "/".join(parts[index:])) in shell_paths
+                ), ())
+                for shell in targets:
+                    if shell != path:
+                        dependents[shell].add(path)
+            elif target not in sources:
+                uncertainty[path].add(f"unresolved-load-path:{path}:{target}")
             else:
                 dependents[target].add(path)
 
@@ -404,7 +560,10 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
     elapsed = time.monotonic() - started
     if elapsed >= BUILD_BUDGET_SECONDS:
         reasons.add("graph-build-budget-exceeded")
-    return ImportGraph(dependents, tests, safety_tests, tuple(sorted(reasons)), elapsed)
+    return ImportGraph(
+        dependents, tests, safety_tests, tuple(sorted(reasons)), elapsed,
+        {path: tuple(sorted(errors)) for path, errors in uncertainty.items()},
+    )
 
 
 def get_impacted_tests(changed_files: Iterable[str], *, root: Path = ROOT, graph: ImportGraph | None = None) -> dict:

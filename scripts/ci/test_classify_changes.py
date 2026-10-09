@@ -2,7 +2,7 @@
 
 import unittest
 
-from scripts.ci.classify_changes import SAFETY_NET, build_selected_candidates
+from scripts.ci.classify_changes import SAFETY_NET, SELECTED_CANDIDATE_CEILING, build_selected_candidates
 from scripts.ci.test_impact import build_graph
 
 
@@ -33,8 +33,10 @@ class CandidateTests(unittest.TestCase):
         self.sources["tests/test_indirect.py"] = ""
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
-    def test_global_uncertainty_fails_closed(self):
+    def test_scoped_uncertainty_fails_closed(self):
         self.sources["tests/test_loader.py"] = "__import__(target)"
+        self.assertIsNotNone(self.select(["scripts/tool.py"]))
+        self.sources["scripts/loader.py"] = "import scripts.tool\n__import__(target)"
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
     def test_existing_full_triggers(self):
@@ -54,7 +56,9 @@ class CandidateTests(unittest.TestCase):
 
     def test_ceiling_and_empty_changes(self):
         self.assertIsNone(self.select([]))
-        self.sources.update({f"tests/test_other_{index}.py": "import scripts.tool" for index in range(80)})
+        self.sources.update({
+            f"tests/test_other_{index}.py": "import scripts.tool" for index in range(SELECTED_CANDIDATE_CEILING)
+        })
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
     def test_test_only_includes_importers_and_safety_tests(self):

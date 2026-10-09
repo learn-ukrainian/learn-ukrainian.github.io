@@ -15,7 +15,9 @@ from scripts.ci.test_impact import ROOT, ImportGraph, build_graph, is_test_file
 
 # The current partition/reuse tests supersede the retired shard-partition file.
 SAFETY_NET = "tests/test_ci_split.py"
-SELECTED_CANDIDATE_CEILING = 80
+# Leave room for the complete repo_wide safety baseline plus targeted tests.
+# Selection still fails closed before it approaches the full repository suite.
+SELECTED_CANDIDATE_CEILING = 200
 
 
 def hits_shared_root_denylist(path: str) -> bool:
@@ -94,6 +96,8 @@ def build_selected_candidates(
         candidates.update(impact["tests"])
     # Test-only changes may import other test files; include those dependents.
     candidates.update(graph.test_dependents(candidates))
+    if graph.selection_reasons(paths):
+        return None
     candidates.update(graph.safety_tests)
     candidates.add(SAFETY_NET)
     if not candidates <= tree_set or len(candidates) >= SELECTED_CANDIDATE_CEILING:

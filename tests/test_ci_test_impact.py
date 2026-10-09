@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.ci import test_impact as impact
-from scripts.ci.classify_changes import SAFETY_NET, build_selected_candidates
+from scripts.ci.classify_changes import SAFETY_NET, SELECTED_CANDIDATE_CEILING, build_selected_candidates
 
 
 def graph(sources):
@@ -116,15 +116,22 @@ def test_transitive_import_through_local_src_layout_package():
     "__import__('scripts', fromlist=names)",
     "from importlib import import_module as load\nload(target)\nfrom unrelated import function as load",
 ])
-def test_nonliteral_import_anywhere_forces_full(source):
+def test_uncertainty_is_scoped_to_reached_sources(source):
     result = graph({
         "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
         "scripts/unrelated.py": source,
     })
     selection = result.impacted_tests(["scripts/target.py"])
-    assert selection["full_suite"]
-    assert selection["reasons"]
+    assert not selection["full_suite"]
+    assert not selection["reasons"]
     assert selection["tests"] == ["tests/test_use.py"]
+    # Once the uncertain source imports the changed module, uncertainty is
+    # relevant even if that source has no separately named test of its own.
+    result = graph({
+        "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
+        "scripts/consumer.py": "import scripts.target\n" + source,
+    })
+    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
 
 
 def test_parse_error_anywhere_forces_full():
@@ -175,7 +182,7 @@ def test_root_conftest_reaches_every_test():
 ])
 def test_unresolved_local_dependency_forces_full(source):
     result = graph({"scripts/target.py": "", "tests/test_use.py": source})
-    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
+    assert result.impacted_tests(["tests/test_use.py"])["full_suite"]
 
 
 def test_public_query_and_repo_wide_safety_test():
@@ -196,7 +203,7 @@ def test_candidate_union_and_full_fallback_in_ci_suite():
     assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=result) == [
         SAFETY_NET, "tests/test_target_by_name.py", "tests/test_use.py",
     ]
-    sources["tests/test_dynamic.py"] = "__import__(module)"
+    sources["scripts/consumer.py"] = "import scripts.target\n__import__(module)"
     assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=graph(sources)) is None
 
 
@@ -251,16 +258,154 @@ def test_full_repository_build_budget_and_sol_dependency():
     # The subprocess is awaited, uses this test interpreter, and never runs tests.
     code = """
 from scripts.ci.test_impact import BUILD_BUDGET_SECONDS, build_graph
+from scripts.ci.classify_changes import SELECTED_CANDIDATE_CEILING, build_selected_candidates
 result = build_graph()
 assert result.build_seconds < BUILD_BUDGET_SECONDS, result.build_seconds
-assert 'tests/test_remote_supervisor.py' in result.test_dependents(['scripts/ai_agent_bridge/_inbox_watch.py'])
+changed = ['scripts/ai_agent_bridge/_inbox_watch.py']
+selection = result.impacted_tests(changed)
+assert not selection['full_suite'], (len(selection['reasons']), selection['reasons'][:5])
+candidates = build_selected_candidates(changed, result.dependents, impact_graph=result)
+assert candidates is not None
+assert 'tests/test_remote_supervisor.py' in candidates
+assert result.safety_tests <= set(candidates)
+assert len(candidates) < SELECTED_CANDIDATE_CEILING
+assert len(candidates) < len(result.tests)
+assert {'tests/test_git_hooks.py', 'tests/test_assert_primary_on_main.py'} <= result.test_dependents(
+    ['scripts/guardrails/assert_primary_on_main.py']
+)
 print(f'graph_seconds={result.build_seconds:.3f}')
+print(f'selected={len(candidates)} total={len(result.tests)} safety={len(result.safety_tests)}')
 """
     result = subprocess.run(
         [sys.executable, "-c", code], cwd=Path(__file__).resolve().parents[1],
         capture_output=True, text=True, timeout=30,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+    print(result.stdout.strip())
+
+
+def test_safety_baseline_fits_but_ceiling_still_applies():
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target", SAFETY_NET: ""}
+    sources.update({
+        f"tests/test_safety_{index}.py": "import pytest\npytestmark = pytest.mark.repo_wide"
+        for index in range(87)
+    })
+    selected = build_selected_candidates(["scripts/target.py"], sources, impact_graph=graph(sources))
+    assert selected is not None
+    assert len(selected) == 89
+    sources.update({
+        f"tests/test_consumer_{index}.py": "import scripts.target"
+        for index in range(SELECTED_CANDIDATE_CEILING)
+    })
+    assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=graph(sources)) is None
+
+
+def test_ordinary_bare_strings_do_not_link_suffix_modules():
+    result = graph({
+        "scripts/pkg/main.py": "", "scripts/pkg/config.py": "",
+        "tests/test_words.py": "WORDS = ['main', 'config', 'missing.module']",
+        "tests/test_use.py": "import scripts.pkg.main",
+    })
+    assert result.test_dependents(["scripts/pkg/main.py"]) == {"tests/test_use.py"}
+    assert not result.test_dependents(["scripts/pkg/config.py"])
+    assert not result.uncertainty
+
+
+def test_docstrings_do_not_create_import_or_shell_edges():
+    result = graph({
+        "scripts/target.py": "", "scripts/hook.sh": '"$PY" scripts/target.py',
+        "scripts/consumer.py": '"""Mirrors scripts.target and hook.sh."""',
+        "tests/test_use.py": "import scripts.target",
+    })
+    assert result.test_dependents(["scripts/target.py"]) == {"tests/test_use.py"}
+    assert not result.dependents["scripts/hook.sh"]
+
+
+@pytest.mark.parametrize("source", [
+    "import subprocess\nsubprocess.run(['git', *args])",
+    "import subprocess, sys\nsubprocess.run([sys.executable, '-m', 'scripts.target', value])",
+])
+def test_known_commands_with_dynamic_arguments_do_not_force_full(source):
+    result = graph({
+        "scripts/target.py": "", "scripts/consumer.py": source,
+        "tests/test_use.py": "import scripts.target",
+    })
+    assert not result.impacted_tests(["scripts/target.py"])["full_suite"]
+
+
+def test_selected_tests_can_execute_their_opaque_loads():
+    result = graph({
+        "scripts/target.py": "",
+        "tests/test_use.py": "import scripts.target\n__import__(name)",
+    })
+    assert result.impacted_tests(["scripts/target.py"])["tests"] == ["tests/test_use.py"]
+    assert not result.impacted_tests(["scripts/target.py"])["full_suite"]
+    assert result.impacted_tests(["tests/test_use.py"])["full_suite"]
+
+
+def test_selected_test_support_can_execute_opaque_loads():
+    result = graph({
+        "scripts/target.py": "",
+        "tests/helpers.py": "import scripts.target\n__import__(name)",
+        "tests/test_use.py": "import tests.helpers",
+    })
+    selection = result.impacted_tests(["scripts/target.py"])
+    assert not selection["full_suite"]
+    assert selection["tests"] == ["tests/test_use.py"]
+    assert result.impacted_tests(["tests/helpers.py"])["full_suite"]
+
+
+@pytest.mark.parametrize("command", [
+    '"$PY" -m scripts.pkg.module',
+    '"$PY" "-m" "scripts.pkg.module"',
+    '"$PY" -m \\\n scripts.pkg.module',
+])
+def test_shell_intermediaries_include_python_paths_modules_and_sourced_scripts(command):
+    result = graph({
+        "scripts/pkg/target.py": "", "scripts/pkg/module.py": "",
+        "scripts/hook.sh": '"$PY" "$ROOT/scripts/pkg/target.py"\nsource "$ROOT/scripts/nested.sh"',
+        "scripts/nested.sh": command,
+        "tests/test_hook.py": "from pathlib import Path\nHOOK = Path('scripts') / 'hook.sh'",
+        "tests/test_outside.py": "",
+    })
+    for changed in ("scripts/pkg/target.py", "scripts/pkg/module.py"):
+        assert result.impacted_tests([changed])["tests"] == ["tests/test_hook.py"]
+
+
+def test_shell_comments_do_not_create_edges():
+    result = graph({
+        "scripts/target.py": "", "scripts/hook.sh": "# tests/test_use.py covers this hook\nexit 0",
+        "tests/test_use.py": "import scripts.target\nHOOK = 'scripts/hook.sh'",
+    })
+    assert not result.dependents["tests/test_use.py"]
+
+
+def test_python_shell_commands_follow_assignments_but_not_documentation():
+    result = graph({
+        "scripts/target.py": "", "scripts/hook.sh": '"$PY" scripts/target.py',
+        "scripts/consumer.py": (
+            "from pathlib import Path\nimport subprocess\n"
+            "hook = Path('scripts') / 'hook.sh'\ncommand = ['bash', str(hook)]\n"
+            "subprocess.run(command)"
+        ),
+        "scripts/documentation.py": "HELP = 'scripts/hook.sh'",
+        "tests/test_use.py": "import scripts.consumer",
+    })
+    assert result.test_dependents(["scripts/target.py"]) == {"tests/test_use.py"}
+    assert "scripts/documentation.py" not in result.dependents["scripts/hook.sh"]
+
+
+def test_production_path_data_is_not_a_load_but_python_argv_is():
+    result = graph({
+        "scripts/target.py": "",
+        "scripts/scope.py": "PATHS = {'scripts/target.py': 'allowed path'}",
+        "scripts/consumer.py": (
+            "import subprocess, sys\nsubprocess.run([sys.executable, 'scripts/target.py', value])"
+        ),
+        "tests/test_use.py": "import scripts.consumer",
+    })
+    assert "scripts/scope.py" not in result.dependents["scripts/target.py"]
+    assert result.impacted_tests(["scripts/target.py"])["tests"] == ["tests/test_use.py"]
 
 
 def test_local_parser_pool_matches_in_process_graph():
