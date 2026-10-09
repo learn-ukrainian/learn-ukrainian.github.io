@@ -53,6 +53,8 @@ def _fault(excerpt: str, *, ok: bool = False):
                 executed_command_count=0,
                 unknown_command_count=0,
                 kill_count=0,
+                evidence_complete=True,
+                side_effect_tool_count=0,
             ),
         ),
     )
@@ -115,14 +117,15 @@ def test_write_mode_transient_retries_when_workspace_is_unchanged(tmp_path, monk
 
 
 @pytest.mark.parametrize(
-    "executed,unknown",
+    "executed,unknown,side_effects",
     [
-        (1, 0),
-        (0, 1),
+        (1, 0, 0),
+        (0, 1, 0),
+        (0, 0, 1),
     ],
-    ids=["executed-commands", "unknown-commands"],
+    ids=["executed-commands", "unknown-commands", "side-effect-tools"],
 )
-def test_write_mode_transient_is_unsafe_replay_when_commands_executed(tmp_path, monkeypatch, executed, unknown):
+def test_write_mode_transient_is_unsafe_replay_when_commands_executed(tmp_path, monkeypatch, executed, unknown, side_effects):
     fault = _fault(API_503)
     fault = replace(
         fault,
@@ -132,6 +135,7 @@ def test_write_mode_transient_is_unsafe_replay_when_commands_executed(tmp_path, 
                 fault.parse.agy_attempt,
                 executed_command_count=executed,
                 unknown_command_count=unknown,
+                side_effect_tool_count=side_effects,
             )
         )
     )
@@ -160,3 +164,48 @@ def test_non_transient_failure_is_not_retried(tmp_path, monkeypatch):
     adapter.build_invocation.assert_not_called()
     assert result.parse.agy_telemetry.retry_disposition == "no_retry"
     assert result.parse.agy_telemetry.reroute_required is False
+
+def test_parser_to_runner_protocol_failure_path(tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.runner import _ExecutionOutcome
+
+    # Init-only stream string, missing terminal result
+    stdout = '{"event": "init"}'
+    plan = InvocationPlan(cmd=["fake-agy", "stream-json"], cwd=tmp_path)
+    adapter = AgyAdapter()
+
+    # Run through the real parse path
+    parse = adapter.parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=1,
+        output_file=None,
+        plan=plan,
+        call_start_time=0.0
+    )
+
+    # Ensure protocol failures are correctly typed
+    assert parse.protocol_failure is True
+    assert parse.stderr_excerpt and "missing terminal result" in parse.stderr_excerpt
+
+    # Use real ParseResult to mock an outcome that bypasses subprocess
+    outcome = _ExecutionOutcome(
+        parse=parse,
+        duration_s=1.0,
+        returncode=1,
+        kill_reason=None,
+        stdout_text=stdout,
+        stderr_text="",
+        liveness_paths=(),
+        process_group_exited=True,
+    )
+
+    # Let the runner try to execute. It will call _execute_invocation_once twice because it identifies the outcome as a transient fault.
+    result, once, _mock_adapter, *_ = _execute(
+        tmp_path, monkeypatch, [outcome, outcome], mode="read-only"
+    )
+
+    assert once.call_count == 2
+    assert result.parse.agy_telemetry.retry_disposition == "exhausted"
+    assert result.parse.agy_retry_reason == TRANSIENT_PROVIDER_FAULT
