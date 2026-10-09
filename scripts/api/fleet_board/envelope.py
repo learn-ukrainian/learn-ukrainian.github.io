@@ -78,6 +78,7 @@ _SCHEMA_DATA: dict[str, Any] = {
 
 _NULL_S: dict[str, Any] = {"type": ["string", "null"]}
 _NULL_N: dict[str, Any] = {"type": ["number", "null"]}
+_NULL_B: dict[str, Any] = {"type": ["boolean", "null"]}
 
 
 def _obj(required: list[str], properties: dict[str, Any]) -> dict[str, Any]:
@@ -89,6 +90,32 @@ def _obj(required: list[str], properties: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+_RESULT = _obj(["at", "status"], {"at": _NULL_S, "status": _NULL_S})
+_RESTORE = _obj(["at", "ok"], {"at": _NULL_S, "ok": _NULL_B})
+_DOWNLOAD = _obj(
+    ["source", "state", "done", "total", "pct", "last_progress_at", "stalled"],
+    {
+        "source": {"type": "string", "minLength": 1},
+        "state": _NULL_S,
+        "done": _NULL_N,
+        "total": _NULL_N,
+        "pct": _NULL_N,
+        "last_progress_at": _NULL_S,
+        "stalled": _NULL_B,
+    },
+)
+_DRIVER = _obj(
+    ["agent_id", "context_pct", "compactions", "stop_count", "ask_count", "idle_min", "measured_at"],
+    {
+        "agent_id": {"type": "string", "minLength": 1},
+        "context_pct": _NULL_N,
+        "compactions": _NULL_N,
+        "stop_count": _NULL_N,
+        "ask_count": _NULL_N,
+        "idle_min": _NULL_N,
+        "measured_at": _NULL_S,
+    },
+)
 _ALERT = _obj(
     ["name", "severity", "summary", "starts_at", "state"],
     {"name": _NULL_S, "severity": _NULL_S, "summary": _NULL_S, "starts_at": _NULL_S, "state": _NULL_S},
@@ -107,6 +134,25 @@ _LINK = _obj(
 )
 
 _DATA_SCHEMAS: dict[str, dict[str, Any]] = {
+    "fleet.v1.backups": _obj(
+        ["age_h", "stale", "last_result", "restore_test"],
+        {
+            "age_h": _NULL_N,
+            "stale": _NULL_B,
+            "last_result": {"anyOf": [_RESULT, {"type": "null"}]},
+            "restore_test": {"anyOf": [_RESTORE, {"type": "null"}]},
+        },
+    ),
+    "fleet.v1.downloads": _obj(
+        ["state", "items"],
+        {
+            "state": {"anyOf": [{"enum": ["ok", "unknown"]}, {"type": "null"}]},
+            "items": {"type": "array", "items": _DOWNLOAD},
+        },
+    ),
+    "fleet.v1.harness": _obj(["drivers"], {"drivers": {"type": "array", "items": _DRIVER}}),
+    "fleet.v1.harness_driver": _obj(["driver"], {"driver": {"anyOf": [_DRIVER, {"type": "null"}]}}),
+
     "fleet.v1.alerts": _obj(["alerts"], {"alerts": {"type": "array", "items": _ALERT}}),
     "fleet.v1.stats": _obj(
         ["stats"],
