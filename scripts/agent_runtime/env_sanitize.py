@@ -493,6 +493,8 @@ def build_agent_env(
         raw.pop("CLAUDE_CODE_DISABLE_BACKGROUND_TASKS", None)
     raw.update(overrides or {})
     raw.pop("LU_OPSEC_OVERRIDE", None)
+    # Driver state belongs to the launcher session, never child/consult agents.
+    raw.pop("LU_DRIVER_STATE_FILE", None)
 
     env: dict[str, str] = {}
     for name, value in raw.items():

@@ -10,7 +10,7 @@ case "$mode" in
   *) mode=agy-hook ;;
 esac
 fallback='{}'
-[ "$mode" = agy-pretool-hook ] && fallback='{"decision": "allow"}'
+[ "$mode" != agy-hook ] && fallback='{"decision": "allow"}'
 # Drain the hook input before any child can fail without reading it. Preserve
 # trailing newlines with a sentinel removed after command substitution.
 payload=$(cat; printf '.')

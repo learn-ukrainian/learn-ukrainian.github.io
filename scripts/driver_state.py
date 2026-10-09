@@ -29,11 +29,11 @@ hook rejects an oversized rendered envelope visibly, without clipping goals.
 turn on a question or a plan, with fewer of its own workers running than the
 private ``LU_DRIVER_MIN_WORKERS`` target, or with nothing armed to wake it.
 An absent or invalid target is unknown and cannot force a worker-count continuation. In those cases it returns
-``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
+``{"decision": "deny", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
 per-conversation counter caps consecutive continuations when its private storage
-is available. Exhaustion returns a visible ``continue: false`` gate failure and
+is available. Exhaustion returns ``decision: allow`` with a visible gate failure and
 records its typed cause. Counter errors preserve required continuation while
 allowing clean reports and escalations to stop.
 ``agy-pretool-hook`` denies the interactive
@@ -205,7 +205,9 @@ def cmd_agy_hook(stdin_text: str) -> dict:
     try:
         message = render_injection(text, path)
     except ValueError as exc:
-        return _gate_failure(path, str(payload.get("conversationId") or ""), "state_envelope_oversized", str(exc))
+        return _gate_failure(
+            path, str(payload.get("conversationId") or ""), "state_envelope_oversized", str(exc), hook="agy-hook"
+        )
     return {"injectSteps": [{"ephemeralMessage": message}]}
 
 
@@ -217,10 +219,12 @@ _QUESTION_RE = re.compile(
 )
 _PLAN_RE = re.compile(
     r"\bi('ll| will)\s+(?:(?:now|next|then)\s+)?"
-    r"(dispatch|rebase|start|run|open|fix|merge|enqueue|commit|push|implement|update|check|verify)\b",
+    r"(dispatch|rebase|start|run|open|fix|merge|enqueue|commit|push|implement|update|"
+    r"check(?!\s+back\s+when\s+the\s+armed\s+wait\s+fires\b)|verify)\b",
     re.IGNORECASE | re.MULTILINE,
 )
-_PLAN_HEADING_RE = re.compile(r"^(?:#+\s*)?(next (steps?|actions?)|plan|pending actions?)\b\s*:?(.*)$", re.I)
+_PLAN_HEADING_RE = re.compile(r"^(?:#+\s*)?(next (steps?|actions?)|plan|pending actions?)(?:\s*:\s*(.*)|\s*)$", re.I)
+_NO_PENDING_ACTION_RE = re.compile(r"^(?:none|nothing|complete|completed|done)\b(?:\s*[.!;]|\s*$)", re.I)
 
 
 def _message_prose(text: str) -> str:
@@ -266,9 +270,9 @@ def ends_on_question_or_plan(text: str) -> str | None:
     for i, line in enumerate(lines):
         match = _PLAN_HEADING_RE.match(line.strip())
         if match:
-            actions = [match[3].strip(), *lines[i + 1 :]]
+            actions = [(match[3] or "").strip(), *lines[i + 1 :]]
             actions = [action.strip() for action in actions if action.strip()]
-            if actions and not re.fullmatch(r"(?:none|nothing|complete|completed|done)[.!]?", actions[0], re.I):
+            if actions and not _NO_PENDING_ACTION_RE.match(actions[0]):
                 return "your final message lists actions you have not done"
     return None
 
@@ -382,14 +386,17 @@ def _reset_counter(state: Path, conversation_id: str) -> None:
     _counter_path(state, conversation_id).write_text("0", encoding="utf-8")
 
 
-def _gate_failure(state: Path, conversation: str, code: str, reason: str) -> dict:
-    """Persist a private typed failure; always return the visible stop result."""
+def _gate_failure(state: Path, conversation: str, code: str, reason: str, *, hook: str = "agy-stop-hook") -> dict:
+    """Persist a typed failure and return the hook's visible protocol result.
+
+    Counter mutation belongs exclusively to Stop, never PreInvocation.
+    """
     failure = {
         "schema": "driver-gate-failure.v1",
         "status": "failed",
         "code": code,
         "recorded_at": datetime.now(UTC).isoformat(),
-        "stopReason": reason,
+        "reason": reason,
     }
     try:
         _counter_path(state, conversation).with_suffix(".failure.json").write_text(
@@ -398,27 +405,27 @@ def _gate_failure(state: Path, conversation: str, code: str, reason: str) -> dic
     except OSError:
         # A storage fault must never turn a policy failure into a silent allow.
         print(json.dumps(failure), file=sys.stderr)
-    with contextlib.suppress(OSError):
-        _reset_counter(state, conversation)
-    return {"continue": False, "stopReason": reason}
+    if hook == "agy-hook":
+        return {"injectSteps": [{"ephemeralMessage": reason}]}
+    return {"decision": "allow" if hook == "agy-stop-hook" else "deny", "reason": reason}
 
 
 def cmd_agy_stop_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     path = _driver_session(payload)
     if path is None:
-        return {}
+        return {"decision": "allow"}
     conversation = str(payload.get("conversationId") or "")
     reason = str(payload.get("terminationReason") or "").upper().removeprefix("EXECUTOR_TERMINATION_REASON_")
     if reason in SKIP_TERMINATION_REASONS:
         with contextlib.suppress(OSError):
             _reset_counter(path, conversation)
-        return {}  # errors, limits and user cancels are not policy decisions
+        return {"decision": "allow"}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
     if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
         with contextlib.suppress(OSError):
             _reset_counter(path, conversation)
-        return {}
+        return {"decision": "allow"}
     reasons = []
     seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
     minimum = minimum_workers()
@@ -437,9 +444,11 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     if not reasons:
         with contextlib.suppress(OSError):
             _reset_counter(path, conversation)
-        return {}
+        return {"decision": "allow"}
     try:
         if _bump_counter(path, conversation) > MAX_CONSECUTIVE_CONTINUES:
+            with contextlib.suppress(OSError):
+                _reset_counter(path, conversation)
             return _gate_failure(
                 path,
                 conversation,
@@ -449,7 +458,7 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     except (OSError, ValueError):
         reasons.append("continuation counter unavailable")
     return {
-        "decision": "continue",
+        "decision": "deny",
         "reason": (
             "DRIVER-STATE standing decision policy: "
             + "; ".join(reasons)
@@ -537,14 +546,18 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             payload = _payload(stdin_text)
             path = _driver_session(payload)
             if path is not None:
+                if args.cmd == "agy-stop-hook":
+                    with contextlib.suppress(OSError):
+                        _reset_counter(path, str(payload.get("conversationId") or ""))
                 result = _gate_failure(
                     path,
                     str(payload.get("conversationId") or ""),
                     "hook_error",
                     "DRIVER-GATE-FAILED: driver-state hook error.",
+                    hook=args.cmd,
                 )
             else:
-                result = {"decision": "allow"} if args.cmd == "agy-pretool-hook" else {}
+                result = {} if args.cmd == "agy-hook" else {"decision": "allow"}
         sys.stdout.write(json.dumps(result))
         return 0
     if args.cmd == "whoami":
