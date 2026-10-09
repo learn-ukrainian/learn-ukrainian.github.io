@@ -301,6 +301,18 @@ def test_reviewer_probe_real_worktree_dispatch_is_wrapped_and_the_harness_expect
     assert condition_problems(_delegate_record(linked_worktree, named, "a"), expected=expected, args_sha256="a")
 
 
+@pytest.mark.parametrize("spelling", ["absolute", "relative"])
+def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeypatch, spelling: str):
+    """Paired runs cannot freeze a primary cwd that delegate redirects per task."""
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    monkeypatch.chdir(tmp_path)
+    cwd = tmp_path if spelling == "absolute" else Path(".")
+    dispatcher = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=cwd)
+    monkeypatch.setattr(dispatcher, "_run", lambda *_a, **_k: pytest.fail("must refuse before a worker call"))
+    with pytest.raises(DispatchError, match="pass an existing isolated Git worktree"):
+        dispatcher.compose(PROMPT)
+
+
 def test_real_composition_outside_a_worktree_adds_no_block(tmp_path: Path):
     plain = tmp_path / "plain"
     plain.mkdir()

@@ -11690,6 +11690,38 @@ def test_dispatch_read_only_isolates_explicit_primary_cwd(tmp_tasks_dir, tmp_pat
     assert state["worktree_base_sha"] == base_sha
 
 
+def test_seed_readonly_dispatch_argv_passes_real_dispatch_binding(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#10025 R1-F1: check the record cmd_dispatch actually writes, with a real detached checkout."""
+    from scripts.review.seeds import adjudicate as adj
+    from tests.review.seeds.fixtures import Env, finding, mechanical_seed
+    from tests.review.seeds.test_adjudicate import Case
+
+    case = Case(Env(tmp_path / "measurement"), mechanical_seed("seed-a1"), [finding("F-01", "BLOCKER")])
+    main, _ = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(adj, "_delegate_module", lambda: delegate)
+    monkeypatch.setenv("LU_TASKS_DIR", str(case.env.tasks))
+    # The initial fixture record must not stand in for the real dispatch.
+    (case.env.tasks / f"{case.task_id}.json").unlink()
+    monkeypatch.chdir(main)
+    _patch_worker_popen(monkeypatch)
+    base_sha = delegate._resolve_sha(main)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base_sha)
+    argv = adj.dispatch_argv(case.task_file, case.task_id, "codex", model="gpt-6.1-sol")
+    parsed = delegate.build_parser().parse_args(argv[2:])
+
+    assert delegate.cmd_dispatch(parsed) == 0
+    state = delegate._read_state(delegate._state_path(case.task_id))
+    checkout = delegate._auto_worktree_path("codex", case.task_id)
+    assert checkout.is_dir() and state["worktree_branch"] is None
+    assert state["prompt_sha256"] != state["effective_prompt_sha256"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["worktree_sparse"]["full_checkout"] is True
+    assert adj.check_dispatch_binding(
+        case.unit_id, case.review_id, case.attempt_id, case.task_id, case.env.tasks, case.env.root
+    ) == {"model": "gpt-6.1-sol", "harness": "codex", "family": "openai"}
+
+
 def test_dispatch_default_read_only_isolates_dirty_primary_checkout(
     tmp_tasks_dir,
     tmp_path,

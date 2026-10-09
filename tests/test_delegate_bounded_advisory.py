@@ -1458,10 +1458,14 @@ def test_b1_the_unchanged_spawned_worker_of_a_real_dispatch_reaches_the_provider
     assert spy.calls == 1
 
 
-@pytest.mark.parametrize("task_id", ["codex-review", "codex/review", "review/part", "review"])
-def test_primary_read_only_binding_accepts_only_its_automatic_worktree(tmp_path, task_id):
+@pytest.mark.parametrize("task_id,component", [
+    ("codex-review", "review"), ("codex/review", "review"), ("review/part", "review-part"),
+    ("review", "review"), ("codex-../review part", "review-part"), ("./-", "task"), ("", "task"),
+])
+def test_primary_read_only_binding_accepts_only_its_automatic_worktree(tmp_path, task_id, component):
     """#10025: primary redirection keeps cwd binding exact, including task-id normalization."""
-    expected = delegate._auto_worktree_path("codex", task_id, repo_root=tmp_path)
+    expected = tmp_path.resolve() / ".worktrees" / "dispatch" / "codex" / component
+    assert delegate._auto_worktree_path("codex", task_id, repo_root=tmp_path) == expected
     execution = dict.fromkeys(bounded_advisory.EXECUTION_FIELDS)
     execution.update(agent="codex", mode="read-only", cwd=str(expected))
     admitted = {"repo_root": str(tmp_path), "admitted_execution": dict(execution)}

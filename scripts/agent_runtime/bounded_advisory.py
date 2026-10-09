@@ -70,6 +70,7 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from scripts.orchestration.worktree_paths import automatic_worktree_path
 from scripts.review.model_catalog import (
     ADVISOR_ROUTE,
     BoundedExecutionPolicy,
@@ -899,14 +900,7 @@ def _is_primary_read_only_worktree(
         or not isinstance(agent, str)
     ):
         return False
-    for prefix in (f"{agent}-", f"{agent}/"):
-        if task_id.startswith(prefix):
-            task_id = task_id[len(prefix) :]
-            break
-    # Same task-id normalization as delegate._auto_worktree_path; accept no
-    # other checkout merely because it is recorded in admitted_execution.
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("./-") or "task"
-    expected = Path(root).resolve() / ".worktrees" / "dispatch" / agent / safe
+    expected = automatic_worktree_path(agent, task_id, repo_root=Path(root))
     return _same_cwd(str(expected), execution.get("cwd")) and _same_cwd(
         record.get("worktree_path"),
         execution.get("cwd"),

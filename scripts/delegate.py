@@ -228,6 +228,7 @@ from scripts.orchestration import (
     task_record_store,
     worker_leftovers,
     worktree_claims,
+    worktree_paths,
     worktree_prep,
 )
 from scripts.orchestration.dead_worker_state import (
@@ -1296,10 +1297,7 @@ def _normalize_task_id(agent: str, task_id: str) -> str:
     when the caller accidentally prefixed the agent name (our own tools
     often do — task-ids like ``codex-1472-foo`` are common).
     """
-    for prefix in (f"{agent}-", f"{agent}/"):
-        if task_id.startswith(prefix):
-            return task_id[len(prefix) :]
-    return task_id
+    return worktree_paths.normalize_task_id(agent, task_id)
 
 
 def _runtime_tmp_lease_name(task_id: str) -> str:
@@ -1824,12 +1822,8 @@ def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = No
     still cannot retarget this path — use ``--repo`` or the manual ``--cwd``
     flow (:func:`_resolve_cross_repo_binding_error`).
     """
-    normalized = _normalize_task_id(agent, task_id)
-    # Slashes are fine in branch names but not in a single path component,
-    # so flatten them here (task_id ``foo/bar`` → path ``foo-bar``).
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip("./-") or "task"
-    root = Path(repo_root).resolve() if repo_root is not None else _REPO_ROOT
-    return root / ".worktrees" / "dispatch" / agent / safe
+    root = Path(repo_root) if repo_root is not None else _REPO_ROOT
+    return worktree_paths.automatic_worktree_path(agent, task_id, repo_root=root)
 
 
 # ``git worktree add`` bounds, configurable in scripts/config.py (#8663). Tests

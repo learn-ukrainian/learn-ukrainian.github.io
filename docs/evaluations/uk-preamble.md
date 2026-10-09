@@ -87,6 +87,9 @@ re-labels it as the harness set object; nothing is normalised or repaired.
   --language-lane --rules-seat core --cwd <worker cwd>` and
   `--research-task-family` taken from the task kind (`ukrainian-review` for
   review and judge, `ukrainian-authoring` for writing), for every seat. It
+  requires an existing isolated Git worktree for `--worker-cwd` when invoked
+  from the primary checkout. Primary cwd is refused before dispatch: automatic
+  per-task worktrees would invalidate the fixed frame shared by paired arms. It
   does not pass `--worktree`, `--lifecycle-file`, `--advisory-task` or any
   other `--research-*` flag. The family classifies a Ukrainian task so a
   Flash dispatch is not refused as a bounded fallback. Pointer-selecting
