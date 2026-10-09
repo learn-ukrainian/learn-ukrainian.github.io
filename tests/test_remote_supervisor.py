@@ -369,7 +369,16 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     lease = _open_supervisory_driver(supervisor)
     before = supervisor.remote.stream(lease.stream_id)
     thread = "019e6063-c3da-78d1-acaa-4cd684a08786"
-    monkeypatch.setattr(_ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}))
+    rollout = tmp_path / f"rollout-fixture-{thread}.jsonl"
+    records = [
+        {"type": "session_meta", "payload": {"id": thread, "cwd": str(tmp_path)}},
+        {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "fixture-turn"}},
+        {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "fixture-turn"}},
+    ]
+    rollout.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
+    monkeypatch.setattr(
+        _ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}, rollout=rollout),
+    )
     send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
     monkeypatch.setattr(_ui_codex, "send", send)
     start = Mock(side_effect=AssertionError("live lease forbids launcher"))
