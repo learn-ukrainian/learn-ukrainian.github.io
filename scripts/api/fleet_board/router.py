@@ -1,4 +1,4 @@
-"""Fleet board v1 routes: index, schema, roster, budget, operations, snapshots, and PRs."""
+"""Fleet board v1 routes."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from collections.abc import Callable, Sequence
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Path, Query, Request
+from fastapi.responses import JSONResponse
 
 from ..monitor_context import MonitorContext, get_ctx
 from . import prs as prs_api
@@ -16,6 +17,7 @@ from .file_sources import load_backups, load_downloads, load_harness, load_harne
 from .http_sources import empty_stats, load_alerts, load_links, load_stats
 from .roster import empty_roster, load_roster
 from .sources import SourceReport, collect_source_reports, overlay_source, read_location, report
+from .view import load_board
 
 router = APIRouter()
 
@@ -106,6 +108,9 @@ def respond(
     try:
         chosen = _sources() if sources is None else tuple(sources)
         return envelope(name, data, chosen)
+
+
+        return envelope(name, data, _sources() if sources is None else sources)
     except Exception:
         try:
             generated_at = utc_timestamp()
@@ -167,6 +172,70 @@ def read_budget(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         data = unknown_budget()
         source = report("routing_budget", "unavailable")
     return respond("budget", data, overlay_source(source))
+
+
+_ROLES = frozenset({"driver", "worker", "bot"})
+
+
+def _loaded(name: str, data: dict[str, Any]):
+    try:
+        board = load_board()
+    except Exception:
+        return None, respond(name, data, (report("board", "unavailable"),))
+    return board, None
+
+
+def _json(body: dict[str, Any], status_code: int = 200) -> JSONResponse:
+    return JSONResponse(status_code=status_code, content=body)
+
+
+@router.get("/now", name="now", response_model=None)
+def read_now() -> JSONResponse:
+    board, failed = _loaded("now", {"attention": [], "epics": []})
+    if failed is not None or board is None:
+        return _json(failed or respond("now", {"attention": [], "epics": []}))
+    return _json(respond("now", {"attention": board.attention, "epics": board.epics}, board.sources))
+
+
+@router.get("/epics", name="epics", response_model=None)
+def read_epics() -> JSONResponse:
+    board, failed = _loaded("epics", {"epics": []})
+    if failed is not None or board is None:
+        return _json(failed or respond("epics", {"epics": []}))
+    return _json(respond("epics", {"epics": board.epics}, board.sources))
+
+
+@router.get("/epics/{epic}", name="epic", response_model=None)
+def read_epic(epic: str) -> JSONResponse:
+    board, failed = _loaded("epic", None)
+    if failed is not None or board is None:
+        return _json(failed or respond("epic", None))
+    match = next((item for item in board.epics if item["epic"] == epic), None)
+    if match is None:
+        return _json(respond("epic", None, board.sources), 404)
+    return _json(respond("epic", match, board.sources))
+
+
+@router.get("/agents", name="agents", response_model=None)
+def read_agents(role: str | None = Query(default=None)) -> JSONResponse:
+    board, failed = _loaded("agents", {"agents": []})
+    if failed is not None or board is None:
+        return _json(failed or respond("agents", {"agents": []}))
+    if role is not None and role not in _ROLES:
+        return _json(respond("agents", {"agents": []}, board.sources), 400)
+    agents = board.agents if role is None else [item for item in board.agents if item["role"] == role]
+    return _json(respond("agents", {"agents": agents}, board.sources))
+
+
+@router.get("/agents/{agent_id}", name="agent", response_model=None)
+def read_agent(agent_id: str) -> JSONResponse:
+    board, failed = _loaded("agent", None)
+    if failed is not None or board is None:
+        return _json(failed or respond("agent", None))
+    match = next((item for item in board.agents if item["agent_id"] == agent_id), None)
+    if match is None:
+        return _json(respond("agent", None, board.sources), 404)
+    return _json(respond("agent", match, board.sources))
 
 
 @router.get("/alerts", name="alerts")

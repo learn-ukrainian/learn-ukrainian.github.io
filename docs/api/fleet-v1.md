@@ -1,10 +1,10 @@
 # Fleet board API v1
 
 Read-only JSON API mounted at `/api/fleet/v1`. Responses share one envelope.
-The index and schema describe every registered route. Operations, snapshot
-routes and the pull-request pipeline read optional locations and degrade
-inside the envelope. Existing unversioned fleet routes, including
-`/api/state/routing-budget`, are unchanged.
+The index and schema describe every registered route. The now, epic, and agent
+routes report who is doing what. Operations, snapshot routes and the pull-request
+pipeline read optional locations and degrade inside the envelope. Existing
+unversioned fleet routes, including `/api/state/routing-budget`, are unchanged.
 
 ## Envelope
 
@@ -21,9 +21,9 @@ Each source row is `{name, status, age_s, error}`.
 
 | Status | Meaning |
 | --- | --- |
-| `ok` | The index saw a set variable, or a data route completed a read. `age_s` is null when the route did not read the location. |
+| `ok` | The source was read and is fresh, or a live collector returned. On the index route, `ok` means only that the variable is set. `age_s` is the age of a completed read, and null when that route did not read the location. |
 | `stale` | A read is older than its freshness window, or a refresh failed or timed out and a cached payload is being served. `age_s` is the age of that result. |
-| `unavailable` | The read failed with nothing cached, or the status check failed. `error` is the token `unavailable`. |
+| `unavailable` | The read or collector failed with nothing cached, freshness is unknown, or the status check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
 The schema rejects a row whose status disagrees with `age_s` or `error`.
@@ -117,6 +117,71 @@ response is that older result, the `routing_budget` source is `stale`, and
 `age_s` is the age of the cached result. A failure with nothing cached is
 `unavailable`, with null measurements, and HTTP 200. This route does not
 change the response of `/api/state/routing-budget`.
+
+### `GET /api/fleet/v1/now`
+
+`schema` is `fleet.v1.now`. `data.attention` is the needs-attention list,
+worst first: dead drivers, stuck drivers, red foundations, green
+approved pull requests that are still not queued, firing alerts, then
+usage near the limit. `data.epics` is the epic list in snapshot order.
+
+### `GET /api/fleet/v1/epics`
+
+`schema` is `fleet.v1.epics`. `data.epics` is the same epic list.
+
+### `GET /api/fleet/v1/epics/{epic}`
+
+`schema` is `fleet.v1.epic`. `data` is one epic. An unknown id is HTTP 404
+and `data` is null.
+
+### `GET /api/fleet/v1/agents`
+
+`schema` is `fleet.v1.agents`. `data.agents` lists drivers, workers, and
+bots. `?role=bot` (also `driver` or `worker`) keeps that role. An unknown
+role is HTTP 400 and `data.agents` is empty.
+
+### `GET /api/fleet/v1/agents/{agent_id}`
+
+`schema` is `fleet.v1.agent`. `data` is one agent. An unknown id is HTTP
+404 and `data` is null.
+
+## State
+
+Every epic, driver, worker, and bot state is one of `working`, `idle`,
+`stuck`, `dead`, `paused`, or `off`, and every one has `state_reason`.
+
+Liveness is the boolean `pid_alive` on the roster snapshot or, when the
+harness snapshot has that field for the same agent, the harness value.
+The delegate collector's alive flag can also mark a seat dead, including
+a derived-dead row that the active listing omits. Screen text is ignored,
+so a dead process stays dead when captured text looks busy. A missing
+`pid_alive` is null. It is not treated as false.
+
+`paused` and `off` come from the roster `intended` value (`paused`,
+`off`, or `postponed`). A live seat with `idle_min` of at least 30 while
+`intended` is `running` is `stuck`. Other working signals come from an
+explicit `activity` value of `working` or `idle`, from an active delegate
+task, or from a fresh occupancy record whose occupant status is itself
+`working` or `idle`. Those signals do not come from screen text. Presence
+without a status is not activity. A stale occupancy observation does not
+change seat state, and that source is `stale`.
+
+Emitted strings use the same public-text bound as epic registry labels.
+A string that fails that bound is replaced by a redaction token. An
+identity that fails it is omitted.
+
+## Snapshots
+
+`FLEET_ROSTER_SNAPSHOT` and `FLEET_HARNESS_SNAPSHOT` are JSON objects
+with `generated_at` and `interval_s`. The roster object carries `epics`,
+and may carry `bots`, `foundations`, `prs`, `alerts`, and `usage`. The
+harness object carries `agents` keyed by agent id, with optional
+`pid_alive`, `idle_min`, and `activity`. Unknown numbers in those
+records stay null and are never reported as zero.
+
+The now route also consults the in-process delegate and occupancy
+collectors. A collector failure sets that source to `unavailable` and
+does not change the HTTP status.
 
 ### `GET /api/fleet/v1/alerts`
 

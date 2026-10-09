@@ -42,6 +42,11 @@ def test_index_lists_every_registered_v1_route() -> None:
     assert listed == {
         ("GET", "/api/fleet/v1"),
         ("GET", "/api/fleet/v1/budget"),
+        ("GET", "/api/fleet/v1/agents"),
+        ("GET", "/api/fleet/v1/agents/{agent_id}"),
+        ("GET", "/api/fleet/v1/epics"),
+        ("GET", "/api/fleet/v1/epics/{epic}"),
+        ("GET", "/api/fleet/v1/now"),
         ("GET", "/api/fleet/v1/alerts"),
         ("GET", "/api/fleet/v1/links"),
         ("GET", "/api/fleet/v1/prs"),
@@ -67,6 +72,9 @@ def test_schema_validates_the_index_response(monkeypatch: pytest.MonkeyPatch) ->
     document = schema.json()["data"]["endpoints"]["fleet.v1.index"]
     Draft202012Validator(document).validate(index.json())
     Draft202012Validator(schema.json()["data"]["endpoints"]["fleet.v1.schema"]).validate(schema.json())
+    assert set(schema.json()["data"]["endpoints"]) == {
+        item["schema"] for item in index.json()["data"]["endpoints"]
+    }
 
 
 def test_schema_rejects_a_source_row_that_disagrees_with_its_status(monkeypatch: pytest.MonkeyPatch) -> None:

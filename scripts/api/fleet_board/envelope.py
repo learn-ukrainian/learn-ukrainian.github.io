@@ -59,6 +59,165 @@ _INDEX_DATA: dict[str, Any] = {
     },
 }
 
+_NULL_STRING = {"type": ["string", "null"]}
+_NULL_BOOL = {"type": ["boolean", "null"]}
+_NULL_INT = {"type": ["integer", "null"], "minimum": 0}
+
+_STATE = {"enum": ["working", "idle", "stuck", "dead", "paused", "off"]}
+
+_TASK: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["kind", "number", "title"],
+    "properties": {
+        "kind": {"enum": ["issue", "pr", "none"]},
+        "number": {"type": ["integer", "null"], "minimum": 1},
+        "title": _NULL_STRING,
+    },
+}
+
+_DRIVER: dict[str, Any] = {
+    "type": ["object", "null"],
+    "additionalProperties": False,
+    "required": ["agent_id", "cli", "model", "harness", "pid_alive"],
+    "properties": {
+        "agent_id": {"type": "string", "minLength": 1},
+        "cli": _NULL_STRING,
+        "model": _NULL_STRING,
+        "harness": _NULL_STRING,
+        "pid_alive": _NULL_BOOL,
+    },
+}
+
+_WORKER: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["agent_id", "cli", "model", "task", "state", "state_reason", "since"],
+    "properties": {
+        "agent_id": {"type": "string", "minLength": 1},
+        "cli": _NULL_STRING,
+        "model": _NULL_STRING,
+        "task": _NULL_STRING,
+        "state": _STATE,
+        "state_reason": {"type": "string", "minLength": 1},
+        "since": _NULL_STRING,
+    },
+}
+
+_EPIC: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "epic",
+        "title",
+        "focus",
+        "parent",
+        "layer",
+        "intended",
+        "state",
+        "state_reason",
+        "since",
+        "driver",
+        "task",
+        "workers",
+    ],
+    "properties": {
+        "epic": {"type": "string", "minLength": 1},
+        "title": _NULL_STRING,
+        "focus": _NULL_STRING,
+        "parent": _NULL_STRING,
+        "layer": _NULL_INT,
+        "intended": _NULL_STRING,
+        "state": _STATE,
+        "state_reason": {"type": "string", "minLength": 1},
+        "since": _NULL_STRING,
+        "driver": _DRIVER,
+        "task": _TASK,
+        "workers": {"type": "array", "items": _WORKER},
+    },
+}
+
+_AGENT: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "agent_id",
+        "role",
+        "epic",
+        "cli",
+        "model",
+        "task",
+        "state",
+        "state_reason",
+        "last_seen",
+    ],
+    "properties": {
+        "agent_id": {"type": "string", "minLength": 1},
+        "role": {"enum": ["driver", "worker", "bot"]},
+        "epic": _NULL_STRING,
+        "cli": _NULL_STRING,
+        "model": _NULL_STRING,
+        "task": _NULL_STRING,
+        "state": _STATE,
+        "state_reason": {"type": "string", "minLength": 1},
+        "last_seen": _NULL_STRING,
+    },
+}
+
+_ATTENTION: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["severity", "kind", "title", "summary", "target"],
+    "properties": {
+        "severity": {"enum": ["bad", "warn"]},
+        "kind": {
+            "enum": [
+                "dead_driver",
+                "stuck_driver",
+                "red_foundation",
+                "unqueued_pr",
+                "alert",
+                "usage",
+            ]
+        },
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "target": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["type", "id"],
+            "properties": {
+                "type": {"enum": ["epic", "foundation", "pr", "alert", "usage"]},
+                "id": {"type": "string", "minLength": 1},
+            },
+        },
+    },
+}
+
+_NOW_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["attention", "epics"],
+    "properties": {
+        "attention": {"type": "array", "items": _ATTENTION},
+        "epics": {"type": "array", "items": _EPIC},
+    },
+}
+
+_EPICS_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["epics"],
+    "properties": {"epics": {"type": "array", "items": _EPIC}},
+}
+
+_AGENTS_DATA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["agents"],
+    "properties": {"agents": {"type": "array", "items": _AGENT}},
+}
+
 _SCHEMA_DATA: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -428,6 +587,16 @@ def endpoint_schema(schema_id: str) -> dict[str, Any]:
         return _envelope_schema(schema_id, _ROSTER_DATA)
     if schema_id == "fleet.v1.budget":
         return _envelope_schema(schema_id, _BUDGET_DATA)
+    if schema_id == "fleet.v1.now":
+        return _envelope_schema(schema_id, _NOW_DATA)
+    if schema_id == "fleet.v1.epics":
+        return _envelope_schema(schema_id, _EPICS_DATA)
+    if schema_id == "fleet.v1.epic":
+        return _envelope_schema(schema_id, {"anyOf": [_EPIC, {"type": "null"}]})
+    if schema_id == "fleet.v1.agents":
+        return _envelope_schema(schema_id, _AGENTS_DATA)
+    if schema_id == "fleet.v1.agent":
+        return _envelope_schema(schema_id, {"anyOf": [_AGENT, {"type": "null"}]})
     if schema_id == "fleet.v1.prs":
         return _envelope_schema(schema_id, _PRS_DATA)
     if schema_id == "fleet.v1.pr":
