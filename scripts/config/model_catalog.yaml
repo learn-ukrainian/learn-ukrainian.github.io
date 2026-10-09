@@ -1551,20 +1551,6 @@ seats:
         effort: high
         invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model {wire_id} --effort high
 roles:
-  # Stable defaults for launcher consumers; concrete pins stay on the seats.
-  # Interactive Claude and both Grok modes preserve session selection, so they
-  # have no fixed model-default role.
-  launcher_codex_default:
-    role: openai_frontier_coder
-  launcher_claude_driver_default:
-    routes: [anthropic_authority/native]
-    cardinality: one
-  launcher_cursor_default:
-    routes: [xai_reviewer/cursor_fallback]
-    cardinality: one
-  # Interactive Gemini only; the driver defaults to Pro, not bounded_fallback.
-  launcher_gemini_default:
-    role: bounded_fallback
   routine_mechanical:
     routes: [mechanical_worker/native, anthropic_practical/native]
     required_model_roles: [routine_mechanical]

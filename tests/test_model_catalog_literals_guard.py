@@ -2,27 +2,41 @@
 
 The allowlist is a reviewed inventory, never a file or scope wildcard. Migration
 debt remains explicit until the owning #9302 consumer packet removes it. Counts
-include model IDs embedded in docstrings, help, commands and f-string segments.
+include model-shaped tokens embedded in docstrings, help, commands and f-string
+segments. Exact context and spelling prevent documentation/variant exemptions
+from covering executable routing pins. Comments are not string literals.
 """
 
 from __future__ import annotations
 
 import ast
 import re
-import subprocess
 from collections import Counter
-from copy import deepcopy
 from pathlib import Path, PurePosixPath
 from typing import Any
 
 import pytest
 import yaml
 
+from scripts.review.model_catalog import canonical_model_id
+
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIELDS = frozenset({"path", "scope", "id", "count", "kind", "reason"})
-KINDS = frozenset({"adapter_identity", "frozen_identity", "documentation", "migration_debt"})
+FIELDS = frozenset({"path", "scope", "context", "id", "count", "kind", "reason"})
+KINDS = frozenset(
+    {
+        "adapter_identity",
+        "frozen_identity",
+        "documentation",
+        "migration_debt",
+        "uncatalogued_identity",
+        "non_model_label",
+    }
+)
+CONTEXTS = frozenset({"docstring", "expression"})
+# Broad shapes catch future/retired IDs independently of the current catalog.
+MODEL_SHAPE = r"(?:gpt|claude|gemini|grok|glm|gemma|laguna|kimi|composer|deepseek|qwen|llama|mistral)-[a-z0-9](?:[a-z0-9.\-]*[a-z0-9])?"
 SCOPE = re.compile(r"(?:<module>|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)\Z")
 GENERIC_LANE_ALIASES = frozenset({"pool", "glm", "gemma"})
 
@@ -56,25 +70,41 @@ def _identities(catalog: dict[str, Any]) -> set[str]:
 def _pattern(identities: set[str]) -> re.Pattern[str]:
     assert identities, "catalog has no model identities"
     choices = "|".join(re.escape(identity) for identity in sorted(identities, key=lambda x: (-len(x), x)))
-    return re.compile(rf"(?<![\w.-])(?:{choices})(?![\w/:-]|\.[\w])")
+    return re.compile(
+        rf"(?<![\w.-])(?:{MODEL_SHAPE}|{choices})(?![\w/:-]|\.[\w])",
+        re.IGNORECASE,
+    )
 
 
-def _scan(root: Path, identities: set[str]) -> Counter[tuple[str, str, str]]:
+def _scan(root: Path, identities: set[str]) -> Counter[tuple[str, str, str, str]]:
     pattern = _pattern(identities)
-    counts: Counter[tuple[str, str, str]] = Counter()
+    counts: Counter[tuple[str, str, str, str]] = Counter()
 
     class Visitor(ast.NodeVisitor):
         def __init__(self, relative: str) -> None:
             self.relative = relative
             self.scopes: list[str] = []
+            self.docstrings: set[int] = set()
+
+        def mark_docstring(self, node: ast.Module | ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) -> None:
+            if node.body and isinstance(node.body[0], ast.Expr):
+                value = node.body[0].value
+                if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                    self.docstrings.add(id(value))
+
+        def visit_Module(self, node: ast.Module) -> None:
+            self.mark_docstring(node)
+            self.generic_visit(node)
 
         def visit_Constant(self, node: ast.Constant) -> None:
             if isinstance(node.value, str):
                 scope = ".".join(self.scopes) or "<module>"
                 for match in pattern.finditer(node.value):
-                    counts[self.relative, scope, match.group()] += 1
+                    context = "docstring" if id(node) in self.docstrings else "expression"
+                    counts[self.relative, scope, context, match.group()] += 1
 
         def visit_FunctionDef(self, node: ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) -> None:
+            self.mark_docstring(node)
             # Decorators, annotations and defaults execute in the enclosing scope.
             for field, value in ast.iter_fields(node):
                 if field != "body":
@@ -100,11 +130,15 @@ def _scan(root: Path, identities: set[str]) -> Counter[tuple[str, str, str]]:
     return counts
 
 
-def _allowlist(raw: Any, identities: set[str]) -> Counter[tuple[str, str, str]]:
+def _allowlist(
+    raw: Any, identities: set[str], catalog: dict[str, Any] | None = None
+) -> Counter[tuple[str, str, str, str]]:
     assert isinstance(raw, dict) and set(raw) == {"schema_version", "entries"}, "invalid allowlist document"
-    assert raw["schema_version"] == "model-literals-allowlist.v1", "unsupported allowlist schema"
+    assert raw["schema_version"] == "model-literals-allowlist.v2", "unsupported allowlist schema"
     assert isinstance(raw["entries"], list), "entries must be a list"
-    counts: Counter[tuple[str, str, str]] = Counter()
+    counts: Counter[tuple[str, str, str, str]] = Counter()
+    pattern = _pattern(identities)
+    source = catalog if catalog is not None else {"models": {model: {} for model in identities}}
     for entry in raw["entries"]:
         assert isinstance(entry, dict) and set(entry) == FIELDS, f"entry requires exactly {sorted(FIELDS)}: {entry!r}"
         for field in FIELDS - {"count"}:
@@ -123,12 +157,18 @@ def _allowlist(raw: Any, identities: set[str]) -> Counter[tuple[str, str, str]]:
             and all(char.isprintable() for char in entry["path"])
         ), f"path must name one scripts Python file: {entry['path']!r}"
         assert SCOPE.fullmatch(entry["scope"]), "scope must be an exact AST scope"
-        assert entry["id"] in identities, f"unknown catalog identity: {entry['id']}"
+        assert entry["context"] in CONTEXTS, "context must be docstring or expression"
+        assert pattern.fullmatch(entry["id"]), f"invalid model token: {entry['id']}"
+        canonical = canonical_model_id(entry["id"], source)
+        if entry["id"] not in identities and canonical is None:
+            assert entry["kind"] in {"uncatalogued_identity", "documentation", "non_model_label"}, (
+                f"uncatalogued token requires a precise exemption kind: {entry['id']}"
+            )
         assert type(entry["count"]) is int and entry["count"] > 0, "count must be a positive integer"
         assert entry["kind"] in KINDS, f"unknown exemption kind: {entry['kind']}"
         if entry["kind"] == "migration_debt":
             assert "#9302" in entry["reason"], "migration debt must name its owning issue"
-        key = entry["path"], entry["scope"], entry["id"]
+        key = entry["path"], entry["scope"], entry["context"], entry["id"]
         assert key not in counts, f"duplicate exemption: {key}"
         counts[key] = entry["count"]
     return counts
@@ -138,8 +178,8 @@ def _assert_inventory(actual: Counter, allowed: Counter) -> None:
     unexempted = actual - allowed
     stale = allowed - actual
     assert not unexempted and not stale, (
-        f"unexempted model literals (path, scope, id): {dict(sorted(unexempted.items()))}\n"
-        f"stale or overbroad exemptions (path, scope, id): {dict(sorted(stale.items()))}"
+        f"unexempted model literals (path, scope, context, id): {dict(sorted(unexempted.items()))}\n"
+        f"stale or overbroad exemptions (path, scope, context, id): {dict(sorted(stale.items()))}"
     )
 
 
@@ -147,13 +187,14 @@ def test_scripts_model_literals_are_exactly_allowlisted() -> None:
     catalog = yaml.load((REPO_ROOT / "scripts/config/model_catalog.yaml").read_text(), Loader=_UniqueLoader)
     identities = _identities(catalog)
     raw = yaml.load((REPO_ROOT / "scripts/config/model_literals_allowlist.yaml").read_text(), Loader=_UniqueLoader)
-    _assert_inventory(_scan(REPO_ROOT, identities), _allowlist(raw, identities))
+    _assert_inventory(_scan(REPO_ROOT, identities), _allowlist(raw, identities, catalog))
 
 
 def _entry(**updates: Any) -> dict[str, Any]:
     return {
         "path": "scripts/router.py",
         "scope": "route",
+        "context": "expression",
         "id": "gpt-99-test",
         "count": 1,
         "kind": "adapter_identity",
@@ -163,7 +204,7 @@ def _entry(**updates: Any) -> dict[str, Any]:
 
 
 def _document(*entries: dict[str, Any]) -> dict[str, Any]:
-    return {"schema_version": "model-literals-allowlist.v1", "entries": list(entries)}
+    return {"schema_version": "model-literals-allowlist.v2", "entries": list(entries)}
 
 
 def test_identity_inventory_includes_retired_and_wire_ids_but_not_lane_aliases() -> None:
@@ -209,10 +250,13 @@ class Adapter:
 ''')
     assert _scan(tmp_path, {"gpt-99-test", "gpt-99-test-high"}) == Counter(
         {
-            ("scripts/router.py", "<module>", "gpt-99-test"): 3,
-            ("scripts/router.py", "route", "gpt-99-test"): 3,
-            ("scripts/router.py", "route.nested", "gpt-99-test"): 1,
-            ("scripts/router.py", "Adapter", "gpt-99-test-high"): 1,
+            ("scripts/router.py", "<module>", "docstring", "gpt-99-test"): 1,
+            ("scripts/router.py", "<module>", "expression", "gpt-99-test"): 2,
+            ("scripts/router.py", "route", "docstring", "gpt-99-test"): 2,
+            ("scripts/router.py", "route", "expression", "gpt-99-test"): 1,
+            ("scripts/router.py", "route.nested", "expression", "gpt-99-test"): 1,
+            ("scripts/router.py", "Adapter", "expression", "gpt-99-test-high"): 1,
+            ("scripts/router.py", "Adapter.method", "expression", "gpt-99-testish"): 1,
         }
     )
 
@@ -226,6 +270,7 @@ class Adapter:
         {"path": "scripts//router.py"},
         {"path": "scripts/router.py\n"},
         {"scope": "*"},
+        {"context": "comment"},
         {"id": "unknown-model"},
         {"count": True},
         {"count": 0},
@@ -311,7 +356,11 @@ def test_model_boundaries_distinguish_versions_from_sentence_punctuation() -> No
         "gpt-99-test-high",
         "gpt-99-test",
     ]
-    assert not pattern.findall("gpt-99-testing gpt-99-test-extra prefix-gpt-99-test gpt-99-test.json")
+    assert pattern.findall("gpt-99-testing gpt-99-test-extra prefix-gpt-99-test gpt-99-test.json") == [
+        "gpt-99-testing",
+        "gpt-99-test-extra",
+        "gpt-99-test.json",
+    ]
 
 
 @pytest.mark.parametrize(
@@ -328,152 +377,70 @@ def test_prefixed_model_ids_are_inventoried(tmp_path: Path, literal: str, identi
     scripts.mkdir()
     (scripts / "router.py").write_text(f"MODEL = {literal!r}\n")
     actual = _scan(tmp_path, {identity, identity.split("/")[-1]})
-    assert actual == Counter({("scripts/router.py", "<module>", identity): 1})
+    assert actual == Counter({("scripts/router.py", "<module>", "expression", identity): 1})
     with pytest.raises(AssertionError, match="unexempted model literals"):
         _assert_inventory(actual, Counter())
 
 
 @pytest.mark.parametrize(
-    "role,transport,provider,mode",
+    "literal,canonical",
     [
-        ("launcher_codex_default", "native_codex", "codex", "interactive"),
-        ("launcher_codex_default", "native_codex", "codex", "driver"),
-        ("launcher_claude_driver_default", "native_claude", "claude", "driver"),
-        ("launcher_cursor_default", "cursor", "cursor", "interactive"),
-        ("launcher_cursor_default", "cursor", "cursor", "driver"),
-        ("launcher_gemini_default", "agy", "gemini", "interactive"),
+        ("claude-opus-5-6", "claude-opus-5"),
+        ("gpt-7-sol", None),
+        ("gemini-2.5-flash", None),
+        ("GPT-6.1-Sol", "gpt-6.1-sol"),
+        ("grok-4.6-tools", "grok-4.6"),
+        ("glm-99-flash", "glm-5.3"),
+        ("gemma-99-31b-it", "google-ais/gemma-4-31b-it"),
+        ("laguna-xs-99", "poolside/laguna-xs-2.1"),
+        ("kimi-k99", None),
+        ("composer-99", None),
+        ("deepseek-v99-pro", None),
+        ("qwen-99-plus", None),
+        ("llama-99-instruct", None),
+        ("mistral-99-large", None),
     ],
 )
-def test_shell_launcher_defaults_resolve_active_catalog_holders(
-    role: str,
-    transport: str,
-    provider: str,
-    mode: str,
-) -> None:
-    from scripts.review.model_catalog import canonical_model_id, load_model_catalog, resolve_role
-
-    catalog = load_model_catalog()
-    rows = [
-        row
-        for row in resolve_role(role, catalog=catalog, purpose="inspect", transport=transport).candidates
-        if not row.exclusion_reasons
-    ]
-    assert len(rows) == 1 and catalog["models"][rows[0].model_id]["lifecycle"] == "active"
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source scripts/lib/launcher_roles.sh; launcher_role_model "$@"',
-            "launcher-test",
-            str(REPO_ROOT),
-            role,
-            transport,
-        ],
-        cwd=REPO_ROOT,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.strip() == rows[0].wire_id
-    default = subprocess.run(
-        [
-            "bash",
-            "-c",
-            "source scripts/lib/launcher_core.sh; unset LAUNCHER_MODEL; "
-            'LC_PROVIDER="$1"; LC_MODE="$2"; launcher_defaults; printf "%s" "$LC_MODEL"',
-            "launcher-test",
-            provider,
-            mode,
-        ],
-        cwd=REPO_ROOT,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert default.returncode == 0, default.stderr
-    assert canonical_model_id(default.stdout, catalog) == rows[0].model_id
+def test_unknown_case_and_suffix_literals_fail_closed(tmp_path: Path, literal: str, canonical: str | None) -> None:
+    catalog = yaml.safe_load((REPO_ROOT / "scripts/config/model_catalog.yaml").read_text())
+    identities = _identities(catalog)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/router.py").write_text(f"MODEL = {literal!r}\n")
+    actual = _scan(tmp_path, identities)
+    assert actual == Counter({("scripts/router.py", "<module>", "expression", literal): 1})
+    assert canonical_model_id(literal, catalog) == canonical
+    # Broad aliases can resolve uncatalogued tokens; exact spelling must still fail.
+    # Even a known canonical ID's exemption cannot cover a different spelling.
+    allowed = Counter({("scripts/router.py", "<module>", "expression", canonical): 1}) if canonical else Counter()
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(actual, allowed)
 
 
-@pytest.mark.parametrize("provider,mode", [("claude", "interactive"), ("grok", "interactive"), ("grok", "driver")])
-def test_session_selected_launchers_have_no_fixed_catalog_default(provider: str, mode: str) -> None:
-    from scripts.review.model_catalog import load_model_catalog
-
-    assert f"launcher_{provider}_default" not in load_model_catalog()["roles"]
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            "source scripts/lib/launcher_core.sh; unset LAUNCHER_MODEL; "
-            'LC_PROVIDER="$1"; LC_MODE="$2"; launcher_defaults; printf "%s" "$LC_MODEL"',
-            "launcher-test",
-            provider,
-            mode,
-        ],
-        cwd=REPO_ROOT,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert not result.stdout
+@pytest.mark.parametrize("scope", ["<module>", "route", "Adapter"])
+def test_docstring_exemption_cannot_mask_expression(tmp_path: Path, scope: str) -> None:
+    (tmp_path / "scripts").mkdir()
+    source = tmp_path / "scripts/router.py"
+    wrapper = {"<module>": "", "route": "def route():\n", "Adapter": "class Adapter:\n"}[scope]
+    indent = "    " if wrapper else ""
+    source.write_text(wrapper + indent + '"""gpt-99-test"""\n')
+    identities = {"gpt-99-test"}
+    allowed = _allowlist(_document(_entry(scope=scope, context="docstring", kind="documentation")), identities)
+    _assert_inventory(_scan(tmp_path, identities), allowed)
+    source.write_text(wrapper + indent + 'MODEL = "gpt-99-test"\n')
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(_scan(tmp_path, identities), allowed)
 
 
-def test_launcher_role_helper_can_be_sourced_by_bare_filename() -> None:
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source launcher_roles.sh; launcher_role_model "$1" launcher_codex_default native_codex',
-            "launcher-test",
-            str(REPO_ROOT),
-        ],
-        cwd=REPO_ROOT / "scripts/lib",
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stderr
-    assert result.stdout.strip()
+def test_variants_resolve_but_allowlist_keeps_exact_spelling() -> None:
+    catalog = yaml.safe_load((REPO_ROOT / "scripts/config/model_catalog.yaml").read_text())
+    for literal in ("GPT-6.1-Sol", "grok-4.6-tools"):
+        allowed = _allowlist(_document(_entry(id=literal)), _identities(catalog), catalog)
+        assert allowed == Counter({("scripts/router.py", "route", "expression", literal): 1})
 
 
-@pytest.mark.parametrize(
-    "args",
-    [
-        [],
-        ["unknown_role"],
-        ["designated_authorities"],
-        ["launcher_codex_default", "cursor"],
-        ["role", "transport", "extra"],
-    ],
-)
-def test_shell_launcher_default_errors_fail_closed(args: list[str]) -> None:
-    result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            'source scripts/lib/launcher_roles.sh; launcher_role_model "$@"',
-            "launcher-test",
-            *([str(REPO_ROOT), *args] if args else []),
-        ],
-        cwd=REPO_ROOT,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert result.returncode == 2 and not result.stdout and result.stderr
-
-
-def test_launcher_role_follows_holder_rotation_without_changing_the_default() -> None:
-    from scripts.review.model_catalog import CATALOG_PATH, resolve_role
-
-    catalog = yaml.safe_load(CATALOG_PATH.read_text())
-    old = catalog["seats"]["openai_frontier"]["model_id"]
-    replacement = deepcopy(catalog["models"][old])
-    replacement["aliases"] = []
-    replacement["runtime_model_ids"] = ["gpt-99-test"]
-    replacement["routing_wire_ids"] = {"native_codex": "gpt-99-test"}
-    catalog["models"]["gpt-99-test"] = replacement
-    catalog["seats"]["openai_frontier"]["model_id"] = "gpt-99-test"
-    result = resolve_role("launcher_codex_default", catalog=catalog, purpose="inspect")
-    assert [row.wire_id for row in result.candidates] == ["gpt-99-test"]
+@pytest.mark.parametrize("kind", ["uncatalogued_identity", "documentation", "non_model_label"])
+def test_uncatalogued_tokens_require_precise_kinds(kind: str) -> None:
+    allowed = _allowlist(_document(_entry(id="claude-future-label", kind=kind)), {"gpt-99-test"})
+    assert allowed == Counter({("scripts/router.py", "route", "expression", "claude-future-label"): 1})
+    with pytest.raises(AssertionError, match="precise exemption kind"):
+        _allowlist(_document(_entry(id="claude-future-label")), {"gpt-99-test"})
