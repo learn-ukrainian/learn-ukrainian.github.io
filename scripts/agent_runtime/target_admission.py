@@ -32,6 +32,7 @@ from contextvars import ContextVar
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from .kimi_admission import (
@@ -469,7 +470,7 @@ def _resolve_review_target(
         resolve_reviewer,
     )
     from scripts.review.security_paths import effective_review_risk
-    from scripts.review.subject_seat import prepare_subject_exclusion
+    from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
     from .telemetry import _default_model_for
 
@@ -554,6 +555,14 @@ def _resolve_review_target(
         author_family = None
     if profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
+        exclusion = subject_exclusion_reason(
+            SimpleNamespace(name=seat, route=seat, family=family, concrete_model=concrete, transport=seat),
+            seats=subject.seats, families=subject.families, evidence=subject.evidence,
+        )
+        if exclusion:
+            raise ReviewAdmissionRefused(
+                f"REVIEW_ROUTE_REFUSED: {exclusion}"
+            )
     else:
         # A Cursor seat is admitted only at its exact pinned slug: the adapter
         # sends the requested string unchanged, so a bracket suffix

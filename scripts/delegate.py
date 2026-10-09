@@ -15829,6 +15829,18 @@ def _admit_dispatch_target(
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
     review_dispatch = _dispatch_is_review_typed(args)
+    subjects = flag_paths("subject_seat")
+    subject_families = flag_paths("subject_family")
+    if subjects or subject_families:
+        from scripts.review.subject_seat import prepare_subject_exclusion
+
+        subject = prepare_subject_exclusion(
+            subject_seats=frozenset(subjects), subject_families=frozenset(subject_families)
+        )
+        if subject.fail_closed_reason:
+            return f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}", None
+        if not review_dispatch and getattr(args, "mode", None) not in {"workspace-write", "danger"}:
+            return "REVIEW_ROUTE_REFUSED: subject flags require a review or write-dispatch review admission", None
 
     def collect_review_paths() -> tuple[str, ...]:
         try:
@@ -15865,8 +15877,8 @@ def _admit_dispatch_target(
                 if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
                 else ()
             ),
-            review_subject_seats=frozenset(flag_paths("subject_seat")),
-            review_subject_families=frozenset(flag_paths("subject_family")),
+            review_subject_seats=frozenset(subjects),
+            review_subject_families=frozenset(subject_families),
             review_facts=(
                 collect_review_facts
                 if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
@@ -16307,6 +16319,14 @@ def _resolve_agent_with_budget_guard(
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
+    initial_review_substitution = (
+        review_select is not None
+        and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
+    )
+    if initial_review_substitution and not (isinstance(agents.get(requested), Mapping) and agents[requested]):
+        raise BudgetGuardRefuseError(
+            f"REVIEW_ROUTE_REFUSED: substitute --agent {requested} has no usable budget snapshot; refusing before spawn"
+        )
 
     # An empty ledger is only unknown when the explicit subscription refresh also
     # yielded no authoritative weekly data. Never quietly fail open here.
@@ -16454,11 +16474,19 @@ def _resolve_agent_with_budget_guard(
 
         capacity_exclusions: dict[str, str] = {}
         for candidate in REVIEW_CANDIDATES.values():
-            info = agents.get(candidate.route, {}) or {}
+            info = agents.get(candidate.route)
+            if candidate.route != requested and not (isinstance(info, Mapping) and info):
+                capacity_exclusions[candidate.name] = "substitute has no usable budget snapshot"
+                continue
+            info = info if isinstance(info, Mapping) else {}
             blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
-        review_snapshot = {**payload, "review_capacity_exclusions": capacity_exclusions}
+        review_snapshot = {
+            **payload,
+            "agents": {lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            "review_capacity_exclusions": capacity_exclusions,
+        }
         sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
             if not needs_action:
@@ -16479,8 +16507,14 @@ def _resolve_agent_with_budget_guard(
                 )
             print(note, file=sys.stderr)
             return requested
-        sub_info = agents.get(sub, {}) or {}
-        sub_dict = sub_info if isinstance(sub_info, dict) else {}
+        sub_info = agents.get(sub)
+        if not (isinstance(sub_info, Mapping) and sub_info):
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: substitute --agent {sub} has no usable budget snapshot; refusing before spawn"
+            )
+        sub_dict = dict(sub_info)
+        # #10016: the primary and substitute both use this allowance rule;
+        # pace/reset-reserve writer routing cannot override review hard gates.
         sub_blocked, sub_reason = review_capacity_action(sub, sub_dict, diags, chosen)
         if sub_blocked:
             raise BudgetGuardRefuseError(
@@ -17609,7 +17643,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SEAT",
         help=(
             "Seat governed by the change (repeatable); excluded by the reviewer resolver, and by "
-            "write-dispatch review admission (#9739). Default: none. "
+            "write-dispatch review admission (#9739). Requires a review or write-capable mode; "
+            "unknown seats fail closed. Default: none. "
             "Example: --subject-seat codex for a shared adapter change."
         ),
     )
@@ -17620,7 +17655,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="FAMILY",
         help=(
             "Family governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
-            "Unknown families fail closed. Default: none. Example: --subject-family openai."
+            "Also used by write-dispatch review admission. Requires a review or write-capable mode; "
+            "unknown families fail closed. Default: none. Example: --subject-family openai."
         ),
     )
     d.add_argument(
