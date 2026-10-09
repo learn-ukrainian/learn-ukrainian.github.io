@@ -46,7 +46,7 @@ def _may_guard(command: str) -> bool:
     probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
     return bool(
         ("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
-        or ("--admin" in probe)
+        or (("gh" in probe or re.search(r"\bpr\s+merge\b", probe)) and "--admin" in probe)
         or re.search(r"(?:^|[\s;{])gh\s+[^;\n]*\$", probe)
         or re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$|\bgh\s+alias\s)", probe)
     )
@@ -246,10 +246,21 @@ def main() -> int:
         return 0
     try:
         rows = read_commands(
-            command, cwd=payload.get("cwd") or os.getcwd(), consumer_check=_merge_guard._check_consumer
+            command,
+            cwd=payload.get("cwd") or os.getcwd(),
+            consumer_check=lambda *args: _merge_guard._check_consumer(
+                *args, eval_guarded=bool(_merge_guard._may_merge(command, include_branch=False))
+            ),
         )
         segments = [row.argv for row in rows]
     except Exception as exc:
+        if (
+            isinstance(exc, ShellParseError)
+            and str(exc) in {"Bash parse error", "ambiguous heredoc delimiter", "reserved word parsed as an argument"}
+            and not _merge_guard._may_merge(command, include_branch=False)
+        ):
+            # Unrelated malformed branch syntax is the branch guard's scope.
+            return 0
         sys.stderr.write(
             _block_msg(
                 f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}; repair: {REPAIR}"

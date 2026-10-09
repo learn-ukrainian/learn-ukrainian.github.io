@@ -60,7 +60,7 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _may_merge(command: str) -> bool:
+def _may_merge(command: str, *, include_branch: bool = True) -> bool:
     # The shell drops quotes and backslashes before executing a command.
     # Include Bash dollar quoting and numeric ANSI-C escapes in the raw gate.
     # This is only a conservative prefilter; the pinned AST decides execution.
@@ -77,7 +77,11 @@ def _may_merge(command: str) -> bool:
     # A dynamic program can run the literal operation without spelling `gh`.
     # Likewise, dynamic GH operation words may expand to `pr merge`.
     return (
-        bool("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
+        bool(
+            include_branch
+            and "git" in re.sub(r"\$git\b", "", probe)
+            and re.search(r"\b(?:checkout|switch|branch)\b", probe)
+        )
         or bool(re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$)", probe))
         or (("gh" in probe or "scripts.publish" in probe) and "pr" in probe and re.search(r"\bmerge\b", probe))
         or bool(re.search(r"\bpr\s+merge\b", probe) or re.search(r"(?:^|[\s;|&(])(?:gh|/[^\s]+/gh)\s+[^\n;]*\$", probe))
@@ -201,10 +205,14 @@ _UNPARSED = ["gh", "pr", "merge", UNREADABLE]
 _invoked_start = invoked_start
 
 
-def _check_consumer(argv: list[str], source: str, guarded_source: bool, *, candidate=_may_merge) -> None:
+def _check_consumer(
+    argv: list[str], source: str, guarded_source: bool, *, candidate=_may_merge, eval_guarded: bool = True
+) -> None:
     """Account for visible code by its reader, never by quotation alone."""
     utility = Path(argv[0]).name
-    if utility == "eval" and guarded_source:
+    # Eval may change the cwd of a later operation, so scope this refusal
+    # to the entire submitted command rather than only eval's operands.
+    if utility == "eval" and guarded_source and eval_guarded:
         raise ShellParseError("eval cannot establish merge argv or directory")
     if utility in {"source", "."} and guarded_source:
         raise ShellParseError("visible sourced payload cannot establish execution")
@@ -289,7 +297,16 @@ def _check_consumer(argv: list[str], source: str, guarded_source: bool, *, candi
             for arg in argv[1:]
         ):
             raise ShellParseError("Git executor consumer cannot establish execution")
-        if argv[1:2] in [
+        git_args = argv[1:]
+        while git_args and git_args[0].startswith("-"):
+            option, *git_args = git_args
+            if option in {"-C", "-c", "--git-dir", "--work-tree", "--namespace"}:
+                git_args = git_args[1:]
+            elif option not in {"--no-pager", "--paginate", "--bare"} and not option.startswith(
+                ("--git-dir=", "--work-tree=", "--namespace=")
+            ):
+                raise ShellParseError("unclassified Git global option")
+        if git_args[:1] in [
             ["commit"],
             ["log"],
             ["show"],
@@ -830,8 +847,22 @@ def main() -> int:
     # The AST reader carries each invocation's shell-scoped cwd, including
     # subshells and literal shell payloads, so PR selectors use that repository.
     try:
-        segments = read_commands(command, cwd=payload.get("cwd") or os.getcwd(), consumer_check=_check_consumer)
+        segments = read_commands(
+            command,
+            cwd=payload.get("cwd") or os.getcwd(),
+            consumer_check=lambda *args: _check_consumer(
+                *args, eval_guarded=bool(_may_merge(command, include_branch=False))
+            ),
+        )
     except Exception as exc:
+        if (
+            isinstance(exc, ShellParseError)
+            and str(exc) in {"Bash parse error", "ambiguous heredoc delimiter", "reserved word parsed as an argument"}
+            and not _may_merge(command, include_branch=False)
+        ):
+            # A malformed unrelated branch command belongs to the branch
+            # guard; no merge candidate is present to judge or refuse here.
+            return 0
         sys.stderr.write(
             _block_msg(
                 f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}",

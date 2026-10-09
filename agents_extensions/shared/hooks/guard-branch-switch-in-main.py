@@ -60,9 +60,18 @@ def _may_guard(command: str) -> bool:
         return True  # unreadable escape: let the full parser refuse it
     probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
     return bool(
-        ("gh" in re.sub(r"\$gh\b", "", probe) and re.search(r"\bpr\s+merge\b", probe))
+        ("gh" in probe and re.search(r"\bpr\s+checkout\b", probe))
+        or (
+            re.search(r"\b(?:checkout|switch|branch)\b|\bworktree\s+add\b", probe)
+            and ("git" in probe or "$" in probe)
+        )
+        or (
+            "gh" in probe
+            and re.search(r"\bpr\s+merge\b", probe)
+            and re.search(r"(?:^|[\s;])(?:source|\.)\s", probe)
+        )
         or re.search(
-            r"\b(?:checkout|switch|branch)\b|\bworktree\s+add\b|--pre(?:=|\s)|--config-env|\bmergetool\b", probe
+            r"--pre(?:=|\s)|--config-env|\bmergetool\b|\bgh\s+alias\s", probe
         )
         or re.search(r"(?:^|[\s;{])gh\s+[^;\n]*\$", probe)
     )

@@ -86,7 +86,7 @@ EXPECTED_ADMISSION_FLIPS = {
             "gh pr checkout",  # real admission guards gh checkout as well
             "gh pr checkout 4849",
             "git branch -d merged-ok; echo done",  # reserved-word refusal (#9484)
-            BASELINE_COMMANDS[1416],  # usage text, not executable Bash
+            'eval "git branch -D x"',  # re-evaluation cannot establish branch argv
         )
     },
 }
@@ -140,6 +140,37 @@ def test_all_literal_commands_match_real_admission_expectations() -> None:
         if was_blocked != is_blocked
     }
     assert changed == EXPECTED_ADMISSION_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
+
+
+def test_unrelated_operation_text_does_not_engage_other_guards() -> None:
+    commands = [
+        " && git branch -D stale-branch",
+        "git -C . branch -D stale-branch",
+        "git -C . checkout -b topic",
+        'eval "git branch -D x"',
+        "cat <<'NOEND'\nbody > fake\ngit branch -D main",
+        "git branch -d merged-ok; echo done",
+    ]
+    head = _probe(HOOK_DIR, commands)
+    assert not any(head["admin_merge"])
+    assert not any(head["pr_merge"])
+    branch_data = ["branch-name", "checkout topic", "--delete-branch", "gh pr merge 5"]
+    head = _probe(HOOK_DIR, branch_data)
+    assert not any(head["branch_switch_in_main"])
+
+
+def test_shared_candidate_refusals_remain_fail_closed() -> None:
+    commands = [
+        "source <(echo gh pr merge 5 --admin)",
+        "strace git checkout -b topic",
+        "git -c alias.co='!git checkout -b topic' co",
+        "rg --pre git git file",
+        "{ gh pr merge 5 --admin",
+    ]
+    head = _probe(HOOK_DIR, commands)
+    assert all(head["admin_merge"])
+    assert all(head["pr_merge"])
+    assert all(head["branch_switch_in_main"][:-1])
 
 
 def test_head_only_benign_literals_have_no_new_blocks() -> None:
