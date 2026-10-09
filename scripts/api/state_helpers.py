@@ -164,6 +164,9 @@ if TYPE_CHECKING:
     from .monitor_context import MonitorContext
 
 _ttl_cache: dict[str, tuple[float, object]] = {}
+_ttl_cache_lock = threading.Lock()
+# prefix -> the only key still allowed to publish under that prefix.
+_retained: dict[str, str] = {}
 _inflight_futures: dict[str, concurrent.futures.Future] = {}
 _inflight_lock = threading.Lock()
 _ttl_clock: Callable[[], float] = time.monotonic
@@ -197,26 +200,42 @@ def ctx_scoped_ttl_key(ctx: MonitorContext, *parts: object) -> str:
 
 def cache_get(key: str, ttl: float) -> object | None:
     """Return cached value if still within TTL, else None."""
-    entry = _ttl_cache.get(key)
-    if entry and (_ttl_clock() - entry[0]) < ttl:
+    now = _ttl_clock()
+    with _ttl_cache_lock:
+        entry = _ttl_cache.get(key)
+    if entry and (now - entry[0]) < ttl:
         return entry[1]
     return None
 
 
 def cache_get_with_age(key: str, ttl: float) -> tuple[object, float] | None:
     """Return cached value and age if still within TTL, else None."""
-    entry = _ttl_cache.get(key)
+    now = _ttl_clock()
+    with _ttl_cache_lock:
+        entry = _ttl_cache.get(key)
     if entry is None:
         return None
-    age = _ttl_clock() - entry[0]
+    age = now - entry[0]
     if age < ttl:
         return entry[1], age
     return None
 
 
+def _generation_superseded(key: str) -> bool:
+    """True when a newer generation has replaced this key under its prefix."""
+    return any(key.startswith(prefix) and key != current for prefix, current in _retained.items())
+
+
 def cache_set(key: str, value: object) -> None:
-    """Store a value in the TTL cache."""
-    _ttl_cache[key] = (_ttl_clock(), value)
+    """Store a value in the TTL cache.
+
+    A generation that ``cache_retain`` already replaced does not publish again.
+    """
+    now = _ttl_clock()
+    with _ttl_cache_lock:
+        if _generation_superseded(key):
+            return
+        _ttl_cache[key] = (now, value)
 
 
 def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
@@ -261,20 +280,28 @@ def cache_peek(key: str) -> object | None:
 
 def cache_get_stored(key: str) -> tuple[object, float] | None:
     """Return a stored value and how long it has been stored, ignoring TTL."""
-    entry = _ttl_cache.get(key)
+    now = _ttl_clock()
+    with _ttl_cache_lock:
+        entry = _ttl_cache.get(key)
     if entry is None:
         return None
-    return entry[1], _ttl_clock() - entry[0]
+    return entry[1], now - entry[0]
 
 
 def cache_retain(prefix: str, key: str) -> int:
-    """Drop every other entry under ``prefix`` so a new generation replaces the old one."""
+    """Drop every other entry under ``prefix`` so a new generation replaces the old one.
+
+    Later ``cache_set`` calls for a replaced key are ignored, including a compute
+    that was already in flight when the generation changed.
+    """
     if not prefix:
         return 0
-    stale = [item for item in _ttl_cache if item.startswith(prefix) and item != key]
-    for item in stale:
-        _ttl_cache.pop(item, None)
-    return len(stale)
+    with _ttl_cache_lock:
+        _retained[prefix] = key
+        stale = [item for item in _ttl_cache if item.startswith(prefix) and item != key]
+        for item in stale:
+            _ttl_cache.pop(item, None)
+        return len(stale)
 
 
 _lead_tasks: set[asyncio.Task] = set()
@@ -397,10 +424,21 @@ def cache_invalidate(prefix: str = "") -> int:
     the number of entries removed. Useful for ``?fresh=true`` bypass
     paths and for tests that want a clean slate between cases.
     """
-    keys = [k for k in _ttl_cache if k.startswith(prefix)]
-    for key in keys:
-        _ttl_cache.pop(key, None)
-    return len(keys)
+    with _ttl_cache_lock:
+        keys = [k for k in _ttl_cache if k.startswith(prefix)]
+        for key in keys:
+            _ttl_cache.pop(key, None)
+        if prefix == "":
+            _retained.clear()
+        else:
+            dropped = [
+                item
+                for item, current in _retained.items()
+                if item.startswith(prefix) or current.startswith(prefix)
+            ]
+            for item in dropped:
+                _retained.pop(item, None)
+        return len(keys)
 
 
 # ==================== CURRICULUM LOADING ====================

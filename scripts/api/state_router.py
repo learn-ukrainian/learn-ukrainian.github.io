@@ -2238,23 +2238,26 @@ def _aged_routing_budget(payload: object, age_s: float) -> object:
     """Publish the real age of a stored routing snapshot without adding keys.
 
     Within the stale threshold the recommendation stays, marked stale. Past
-    that threshold the snapshot must not authorize a lane.
+    that threshold the snapshot must not authorize a lane. The threshold is
+    compared to source age plus time spent in this cache.
     """
     if not isinstance(payload, dict):
         return payload
     served = dict(payload)
     diagnostics = payload.get("diagnostics")
     threshold = ROUTING_BUDGET_MAX_AGE_S
+    reported_age = age_s
     if isinstance(diagnostics, dict):
         diagnostics = dict(diagnostics)
         if isinstance(diagnostics.get("stale_threshold_s"), (int, float)):
             threshold = float(diagnostics["stale_threshold_s"])
         prior = diagnostics.get("data_age_s")
         extra = float(prior) if isinstance(prior, (int, float)) else 0.0
-        diagnostics["data_age_s"] = round(extra + age_s, 1)
+        reported_age = extra + age_s
+        diagnostics["data_age_s"] = round(reported_age, 1)
         diagnostics["stale"] = True
         served["diagnostics"] = diagnostics
-    if age_s <= threshold:
+    if reported_age <= threshold:
         return served
     return _withdraw_routing_authorization(served)
 

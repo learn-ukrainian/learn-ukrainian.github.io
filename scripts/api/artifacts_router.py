@@ -149,14 +149,14 @@ async def html_artifacts(
         types = ("html", "md")
 
     resolved = resolve_context(ctx)
+    # One JSON part, so a colon inside a filter cannot collide with another filter.
     cache_key = ctx_scoped_ttl_key(
         resolved,
         "artifacts-html",
-        class_ or "",
-        date_from or "",
-        status or "",
-        author or "",
-        ",".join(types),
+        json.dumps(
+            [class_ or "", date_from or "", status or "", author or "", list(types)],
+            separators=(",", ":"),
+        ),
     )
     return await cache_get_or_compute_async(
         cache_key,

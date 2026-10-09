@@ -316,6 +316,118 @@ def test_expired_routing_budget_reports_age_and_withdraws_authorization(
     assert withdrawn["ranked_by_headroom"] == []
 
 
+def _routing_snapshot(data_age_s: float) -> dict:
+    return {
+        "generated_at": "2026-01-01T00:00:00Z",
+        "agents": {"codex": {"eligible": True, "status": "cool"}},
+        "recommendation": {
+            "primary_agent_for_code": "codex",
+            "rationale": "fresh",
+            "warnings": [],
+        },
+        "diagnostics": {"stale": False, "data_age_s": data_age_s, "stale_threshold_s": 900},
+        "ranked_by_headroom": [{"lane": "codex"}],
+    }
+
+
+def test_cumulative_source_age_withdraws_routing_authorization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Source age plus cache residence is the age compared to the threshold."""
+    clock = {"t": 1_000.0}
+    calls = {"n": 0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def compute(**_kwargs):
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise RuntimeError("refresh failed")
+        return _routing_snapshot(890)
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = _mount(tmp_path, state_router.router, "/api/state")
+
+    async def scenario() -> dict:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.status_code == 200
+            assert first.json()["recommendation"]["primary_agent_for_code"] == "codex"
+            clock["t"] += 20
+            aged = await client.get("/api/state/routing-budget")
+        return aged.json()
+
+    body = asyncio.run(scenario())
+    assert body["diagnostics"]["stale"] is True
+    assert body["diagnostics"]["data_age_s"] == 910
+    assert set(body["diagnostics"]) == {"stale", "data_age_s", "stale_threshold_s"}
+    assert body["recommendation"]["primary_agent_for_code"] is None
+    assert body["agents"]["codex"]["eligible"] is False
+    assert body["ranked_by_headroom"] == []
+
+
+def test_cumulative_source_age_under_threshold_keeps_authorization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = {"t": 1_000.0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def compute(**_kwargs):
+        return _routing_snapshot(800)
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = _mount(tmp_path, state_router.router, "/api/state")
+
+    async def scenario() -> dict:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.status_code == 200
+            clock["t"] += 20
+            aged = await client.get("/api/state/routing-budget")
+        return aged.json()
+
+    body = asyncio.run(scenario())
+    assert body["diagnostics"]["stale"] is True
+    assert body["diagnostics"]["data_age_s"] == 820
+    assert body["recommendation"]["primary_agent_for_code"] == "codex"
+    assert body["agents"]["codex"]["eligible"] is True
+    assert body["ranked_by_headroom"] == [{"lane": "codex"}]
+
+
+def test_artifact_filters_with_colons_do_not_share_a_cache_entry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: list[tuple[object, object]] = []
+
+    def collect(**kwargs):
+        seen.append((kwargs.get("status"), kwargs.get("author")))
+        return {"status": kwargs.get("status"), "author": kwargs.get("author"), "artifacts": []}
+
+    monkeypatch.setattr(artifacts_router, "collect_html_artifacts", collect)
+    app = _mount(tmp_path, artifacts_router.router, "/api/artifacts")
+
+    async def scenario() -> tuple[dict, dict]:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get(
+                "/api/artifacts/html",
+                params={"status": "draft", "author": "team:alpha"},
+            )
+            second = await client.get(
+                "/api/artifacts/html",
+                params={"status": "draft:team", "author": "alpha"},
+            )
+        return first.json(), second.json()
+
+    one, two = asyncio.run(scenario())
+    assert seen == [("draft", "team:alpha"), ("draft:team", "alpha")]
+    assert one["author"] == "team:alpha"
+    assert two["author"] == "alpha"
+    assert one["status"] == "draft"
+    assert two["status"] == "draft:team"
+
+
 def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls = {"n": 0}
 

@@ -161,6 +161,52 @@ def test_sync_and_async_callers_share_one_flight():
         release.set()
 
 
+def test_cache_retain_tolerates_concurrent_inserts():
+    prefix = "race:"
+    state_helpers.cache_set(prefix + "old", 1)
+    errors: list[BaseException] = []
+    stop = threading.Event()
+
+    def writer() -> None:
+        index = 0
+        while not stop.is_set():
+            state_helpers.cache_set(f"other:{index}", index)
+            index += 1
+
+    def retainer() -> None:
+        for generation in range(200):
+            try:
+                state_helpers.cache_retain(prefix, f"{prefix}gen-{generation}")
+            except BaseException as exc:
+                errors.append(exc)
+
+    thread = threading.Thread(target=writer)
+    thread.start()
+    try:
+        retainer()
+    finally:
+        stop.set()
+        thread.join(timeout=2)
+    assert errors == []
+    assert not thread.is_alive()
+
+
+def test_replaced_generation_does_not_publish_again():
+    state_helpers.cache_set("gen:1", {"v": 1})
+    assert state_helpers.cache_retain("gen:", "gen:2") == 1
+    state_helpers.cache_set("gen:1", {"v": 1})
+    assert state_helpers.cache_get_stored("gen:1") is None
+    state_helpers.cache_set("gen:2", {"v": 2})
+    stored = state_helpers.cache_get_stored("gen:2")
+    assert stored is not None
+    assert stored[0] == {"v": 2}
+    state_helpers.cache_invalidate("gen:")
+    state_helpers.cache_set("gen:1", {"v": 3})
+    restored = state_helpers.cache_get_stored("gen:1")
+    assert restored is not None
+    assert restored[0] == {"v": 3}
+
+
 def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     from scripts.api import state_router
     from scripts.api.monitor_context import fixture_context
