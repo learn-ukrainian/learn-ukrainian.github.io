@@ -64,6 +64,9 @@ def _seed_read_only_checkout_fixture(repo: Path, monkeypatch) -> None:
     )
     (repo / ".gitignore").write_text(
         ".agent/\n"
+        ".mcp/servers/message-broker/*.log\n"
+        "scratch/\n"
+        ".cache/\n"
         "batch_state/\n"
         ".pytest_cache/\n"
         ".pytest_breadcrumbs/\n"
@@ -211,7 +214,7 @@ def test_read_only_worktree_ignores_concurrent_primary_writes(tmp_tasks_dir, tmp
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
     paths = (
-        ".claude/x.md",
+        ".claude/test-epic/briefs/example/review-0000.md",
         ".venv/lib/python3.12/site-packages/package/new.py",
     )
 
@@ -284,9 +287,18 @@ def test_read_only_explicit_primary_still_fails_checkout_writes(path, tmp_tasks_
     assert f"read-only checkout mutation detected: {path}" in _kept_diagnostics(state["task_id"])
 
 
-@pytest.mark.parametrize("path", ["tracked.txt", ".claude/x.md"])
+@pytest.mark.parametrize(
+    "path",
+    [
+        "tracked.txt",
+        ".claude/x.md",
+        "scratch/review.py",
+        ".cache/review.json",
+        ".mcp/servers/message-broker/scratch.log",
+    ],
+)
 def test_read_only_worktree_still_fails_own_writes(path, tmp_tasks_dir, tmp_path, monkeypatch):
-    """Tracked and untracked writes in the task's worktree are attributable."""
+    """#8516/#10025: tracked, untracked and ignored leaks still fail."""
     primary = (tmp_path / "primary").resolve()
     primary.mkdir()
     _seed_read_only_checkout_fixture(primary, monkeypatch)
@@ -323,6 +335,118 @@ def test_read_only_worktree_still_fails_own_writes(path, tmp_tasks_dir, tmp_path
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [path]
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_read_only_worker_ignores_concurrent_broker_watcher_log(
+    existing,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """#10025: a separate process writing the known ignored log is runtime noise."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    relative = ".mcp/servers/message-broker/watcher.log"
+    log = checkout / relative
+    log.parent.mkdir(parents=True)
+    if existing:
+        log.write_text("baseline\n", encoding="utf-8")
+    task_id = "concurrent-watcher"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
+
+    def concurrent_writer(*_args, **_kwargs):
+        subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import sys; from pathlib import Path; "
+                "p = Path(sys.argv[1]); "
+                "p.open('a', encoding='utf-8').write('watcher update\\n')",
+                str(log),
+            ],
+            check=True,
+            timeout=30,
+        )
+        return _finalize_mock_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=concurrent_writer):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="grok",
+            prompt="Review without editing.",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+        )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["read_only_mutation_paths"] == []
+    assert log.read_text(encoding="utf-8").endswith("watcher update\n")
+    if not existing:
+        assert relative in state["read_only_ignored_mutation_paths"]
+
+
+def test_coordinator_artifacts_stay_outside_read_only_worktree(tmp_path, monkeypatch):
+    from scripts.orchestration import curriculum_coordinator as coordinator
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    config = coordinator.load_config()
+    runtime = coordinator._runtime_root(checkout, config, None)
+    assert runtime == primary / config["runtime_root"]
+    before, error = delegate._read_only_checkout_snapshot(checkout)
+    assert error is None
+    with coordinator._lock(runtime):
+        ledger = coordinator._ledger_path(runtime, "clc-" + "a" * 24)
+        coordinator._atomic_write_json(ledger, {"fixture": True})
+    assert ledger.is_file()
+    assert (runtime / "coordinator.lock").is_file()
+    assert not (checkout / config["runtime_root"]).exists()
+    after, error = delegate._read_only_checkout_snapshot(checkout)
+    assert error is None
+    assert after == before
+    # A coordinator-shaped scratch write is still a mutation, not a new exemption.
+    scratch = "scratch/.coordinator.json.123.tmp"
+    assert delegate._read_only_mutation_paths({}, {scratch: "!! new"}) == [scratch]
+
+
+def test_watcher_log_exemption_is_exact_and_never_exempts_tracked_edits():
+    relative = ".mcp/servers/message-broker/watcher.log"
+    assert delegate._is_read_only_runtime_state_path(relative)
+    for path in (
+        "watcher.log",
+        "other/watcher.log",
+        ".mcp/servers/other/watcher.log",
+        relative + ".bak",
+        ".mcp/servers/message-broker/scratch.log",
+    ):
+        assert not delegate._is_read_only_runtime_state_path(path)
+    assert delegate._read_only_mutation_paths({}, {relative: "!! new"}) == []
+    assert delegate._read_only_mutation_paths({relative: "!! old"}, {relative: "!! new"}) == []
+    assert delegate._read_only_mutation_paths({relative: "tracked old"}, {relative: " M new"}) == [relative]
 
 
 @pytest.mark.parametrize("edit", ["overwrite", "append"])

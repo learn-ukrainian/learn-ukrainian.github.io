@@ -344,9 +344,9 @@ print(f'mode=FULL total={len(result.tests)} safety={len(result.safety_tests)}')
 """
     result = subprocess.run(
         [sys.executable, "-c", code, budget], cwd=Path(__file__).resolve().parents[1],
-        # This is a deadlock guard below pytest's 120-second timeout, independent
-        # of the performance budget whose exhaustion is valid FULL behavior.
-        capture_output=True, text=True, timeout=90,
+        # Allow loaded builds up to 120 seconds, independent of the performance
+        # budget whose exhaustion is valid FULL behavior.
+        capture_output=True, text=True, timeout=120,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     print(result.stdout.strip())

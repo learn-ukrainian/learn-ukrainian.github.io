@@ -1009,7 +1009,10 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
 
     sha = "a" * 40
     other = "b" * 40
-    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+    payload = json.dumps({
+        "baseRefName": "main", "baseRefOid": sha,
+        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
+    })
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
@@ -1032,6 +1035,8 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
             "agy",
             "--task-id",
             "agy-pr-pin-mismatch",
+            "--review-profile",
+            "ukrainian",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
             "--owned-path",
@@ -1058,7 +1063,10 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
     from scripts import delegate
 
     sha = "a" * 40
-    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+    payload = json.dumps({
+        "baseRefName": "main", "baseRefOid": sha,
+        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
+    })
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
@@ -1081,6 +1089,8 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
             "agy",
             "--task-id",
             "agy-pr-pin-no-branch",
+            "--review-profile",
+            "ukrainian",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
             "--owned-path",
