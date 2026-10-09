@@ -420,7 +420,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and handles ordinary advice (#9275 envelope unchanged). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Driver seat through `start-gemini-driver.sh` (2026-10-08 approval): the driver defaults to `gemini-3.1-pro-high` and also accepts `gemini-3.8-flash-high`. As a worker it is not a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is the worker default and deep pin (2026-09-22: 3.8 Flash High outperforms 3.1 Pro) |
-  | **cursor** | `grok-4.7-high` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
+  | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -428,7 +428,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
   | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
   | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-  | cursor | grok-4.7-high | high | gpt-6.1-sol | high |
+  | cursor | grok-4.7 (wire: grok-4.7-high) | high | gpt-6.1-sol | high |
   | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
 

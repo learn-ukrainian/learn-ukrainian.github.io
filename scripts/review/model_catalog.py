@@ -1103,8 +1103,16 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
             f"model {text!r} runs only a delegate-admitted write implementation dispatch "
             f"({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); {fix}"
         )
-    canonical = resolve_catalog_model_id(text, catalog) or text
-    if text not in pins and canonical not in pins:
+    wire_pins = set()
+    for p in pins:
+        if p == "grok-4.7":
+            wire_pins.add("grok-4.7-high")
+        else:
+            wire_pins.add(p)
+
+    is_composer_bracket = text.startswith("composer-2.5[") and text.endswith("]")
+
+    if text not in wire_pins and not is_composer_bracket and text != "grok-4.7":
         return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
     return None
 
