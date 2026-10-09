@@ -11786,16 +11786,9 @@ def _dispatch(
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-    from scripts.review.model_catalog import apply_cursor_model_pins, is_cursor_auto_selector, retired_model_refusal
+    from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
-    if getattr(args, "agent", None) == "cursor":
-        try:
-            args.model = apply_cursor_model_pins(getattr(args, "model", None))
-        except Exception as exc:
-            print(f"❌ dispatch refused: {exc}", file=sys.stderr)
-            return 2
-
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
     if retired_refusal:
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)

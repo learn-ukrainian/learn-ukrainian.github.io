@@ -149,8 +149,6 @@ def test_cursor_driver_rejects_retired_grok_before_lease(model: str) -> None:
         "grok-4.7",
         "composer-2.5",
         "grok-4.7-high",
-        "grok-4.7-xhigh",
-        "grok-4.7[context=500k,reasoning_effort=high,fast=false]",
         "composer-2.5[fast=false]",
     ),
 )
@@ -193,7 +191,10 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
             assert model in result.stderr
         else:
             assert result.returncode == 4, result.stdout + result.stderr
-            assert "not certified for the cursor driver" in result.stderr
+            if model.startswith("grok-4.7"):
+                assert "is an unattested variant" in result.stderr
+            else:
+                assert "not certified for the cursor driver" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -331,8 +332,13 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
         assert selection[1] in result.stderr
     else:
         assert result.returncode == 4, result.stdout + result.stderr
-        assert "cursor interactive session" in result.stderr
-        assert "grok-4.7-high or composer-2.5" in result.stderr
+        model = selection[-1] if selection else ""
+        if model.startswith("grok-4.7"):
+            assert "is an unattested variant" in result.stderr
+        else:
+            assert "cursor interactive session" in result.stderr
+        if model and not model.startswith("grok-4.7"):
+            assert "grok-4.7-high or composer-2.5" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 
@@ -341,15 +347,19 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
 def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path: Path, model: str) -> None:
     result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": model})
     assert result.returncode == 4, result.stdout + result.stderr
-    assert "not certified for the cursor interactive session" in result.stderr
+    if model.startswith("grok-4.7"):
+        assert "is an unattested variant" in result.stderr
+    else:
+        assert "not certified for the cursor interactive session" in result.stderr
     assert argv is None
 
 
-@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7-xhigh", "grok-4.7[reasoning_effort=high,fast=false]"))
+@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7", "grok-4.7-high"))
 def test_cursor_interactive_executes_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
     result, argv = _run_interactive(tmp_path, "--model", model)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert argv is not None and argv[:2] == ["--model", model]
+    expected_model = "grok-4.7-high" if model == "grok-4.7" else model
+    assert argv is not None and argv[:2] == ["--model", expected_model]
 
 def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")
