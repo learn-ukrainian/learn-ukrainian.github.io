@@ -367,6 +367,9 @@ session_supervisor_start_inbox_watch() {
   trap 'LC_SUPERVISORY_EVENT=1' USR1
   (
     trap - EXIT INT TERM HUP USR1
+    # The watcher checks the same harness CLI before claiming a restart. These
+    # values come from the initial provider argv, never from the wake body.
+    export LC_DRIVER_PROVIDER_COMMAND LC_DRIVER_PROVIDER_EXECUTABLE
     exec 216<&-
     exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
   ) >&217 217>&- &
@@ -421,6 +424,27 @@ session_supervisor_stop_inbox_watch() {
   exec 216<&- 217>&-
   # The name was unlinked at creation. Never delete a replacement at that name.
   LC_SUPERVISORY_WAKE_FILE=""
+}
+
+# Resolve before stopping the predecessor. Keep the original harness executable
+# (e.g. claude for Codex's Claude-Code harness), not the provider label (#10096).
+session_supervisor_preflight_successor() {
+  local binary="${LC_DRIVER_PROVIDER_COMMAND:-}" candidate directory
+  candidate="${LC_DRIVER_PROVIDER_EXECUTABLE:-}"
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="$(type -P -- "$binary")" || candidate=""
+  fi
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="${HOME}/.local/bin/$binary"
+  fi
+  if [ -z "$binary" ] || [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    echo "Error: provider-cli-unavailable: successor CLI '${binary:-unknown}' is not executable; restore it in PATH or ~/.local/bin and retry the supervisory wake. Predecessor retained." >&2
+    return 3
+  fi
+  directory="$(cd -- "$(dirname -- "$candidate")" && pwd)" || return 3
+  # The public successor entrypoint and adapter still resolve the CLI by name.
+  # Carry the validated directory across exec, including paths with spaces.
+  export PATH="$directory${PATH:+:$PATH}"
 }
 
 session_supervisor_stop_provider_for_wake() {

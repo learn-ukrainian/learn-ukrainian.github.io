@@ -455,7 +455,7 @@ def register_channel_commands(subparsers: Any) -> None:
         help=(
             "Required when a review is addressed to agy/gemini "
             "(channel reviews, or --review). code is refused "
-            "(Gemini reviews Ukrainian only, never code). "
+            "(the bridge refuses code review; native AGY admits low/medium risk code reviews). "
             "Ukrainian content review must pass ukrainian."
         ),
     )
@@ -643,7 +643,7 @@ def register_channel_commands(subparsers: Any) -> None:
         help=(
             "Required when a review discussion includes agy/gemini "
             "(--review, or channel reviews). code is refused "
-            "(Gemini reviews Ukrainian only, never code). "
+            "(the bridge refuses code review; native AGY admits low/medium risk code reviews). "
             "Ukrainian content review must pass ukrainian."
         ),
     )

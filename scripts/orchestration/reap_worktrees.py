@@ -1175,6 +1175,95 @@ def _path_contains(parent: Path, child: Path) -> bool:
     return True
 
 
+def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("/proc")) -> str | None:
+    """An empty lsof selection is proof only with a complete process view.
+
+    Inaccessible process FDs/maps can be silently omitted by lsof. Require
+    readable procfs entries; platforms without this visibility proof retain
+    foreign checkouts. Process exits and closed FDs during the scan are safe.
+    """
+    unavailable = "open-file activity probe unavailable; foreign checkout preserved"
+    try:
+        # Linux UAPI PID_NS_INIT_INO (include/uapi/linux/nsfs.h), also used
+        # by systemd. Comparing self with PID 1 alone accepts nested namespaces.
+        initial_pid_namespace = f"pid:[{0xEFFFFFFC}]"
+        if any(
+            str((proc_root / process / "ns" / "pid").readlink()) != initial_pid_namespace
+            for process in ("self", "1")
+        ):
+            return unavailable
+        proc_mounts = 0
+        for line in (proc_root / "self" / "mountinfo").read_text(encoding="utf-8").splitlines():
+            fields = line.split()
+            separator = fields.index("-")
+            mountpoint = fields[4]
+            if mountpoint == str(proc_root):
+                proc_mounts += 1
+                options = set(fields[5].split(",")) | set(fields[separator + 3].split(","))
+                if (
+                    fields[3] != "/" or fields[separator + 1] != "proc"
+                    or any(option.split("=", 1)[0] in {"hidepid", "subset", "pidns"} for option in options)
+                ):
+                    return unavailable
+            elif mountpoint.startswith(f"{proc_root}/"):
+                component = mountpoint[len(str(proc_root)) + 1:].split("/", 1)[0]
+                if component.isdigit() or component in {"self", "thread-self"}:
+                    return unavailable
+        if proc_mounts != 1:
+            return unavailable
+        processes = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
+        if not processes:
+            return unavailable
+        for process in processes:
+            if time.monotonic() >= deadline:
+                return "open-file activity probe timed out; foreign checkout preserved"
+            try:
+                for fd in (process / "fd").iterdir():
+                    if time.monotonic() >= deadline:
+                        return "open-file activity probe timed out; foreign checkout preserved"
+                    try:
+                        fd.readlink()
+                    except FileNotFoundError:
+                        continue
+                (process / "maps").read_bytes()
+            except FileNotFoundError:
+                if process.exists():
+                    return unavailable
+    except (OSError, ValueError, IndexError):
+        return unavailable
+    if time.monotonic() >= deadline:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    return None
+
+
+def _open_file_activity_reason(worktree: Path, *, timeout: float | None = None) -> str | None:
+    """Prove no open or mapped files in a foreign checkout; never expose paths.
+
+    No FD filter: lsof includes memory mappings as well as ordinary FDs.
+    Cross nested mount points, but do not follow symlinks outside the tree.
+    lsof exits 1 for an empty selection; diagnostics invalidate that proof.
+    The shared runner also clips this probe to the locked-region deadline.
+    """
+    budget = _effective_timeout(15 if timeout is None else timeout)
+    assert budget is not None
+    deadline = time.monotonic() + budget
+    try:
+        proc = _run(
+            ["lsof", "+w", "-n", "-P", "-F", "p", "+D", str(worktree), "-x", "f"],
+            cwd=worktree.parent,
+            timeout=budget,
+        )
+    except subprocess.TimeoutExpired:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    except (OSError, subprocess.SubprocessError):
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    if any(re.fullmatch(r"p[0-9]+", line) for line in (proc.stdout or "").splitlines()):
+        return "live process has open or mapped files inside foreign checkout"
+    if proc.returncode != 1 or (proc.stdout or "").strip() or (proc.stderr or "").strip():
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    return _open_file_probe_visibility_reason(deadline)
+
+
 def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
     return _dispatch_task_id_for_path(repo_root, info.path)
 
@@ -2624,6 +2713,11 @@ def _foreign_checkout_reason(
         timeout=timeout,
     ):
         return None
+    activity = _open_file_activity_reason(info.path, timeout=timeout)
+    if activity is not None:
+        if attention is not None:
+            attention.append(activity)
+        return None
     return _FOREIGN_CHECKOUT_REASON
 
 
@@ -2680,12 +2774,16 @@ def _review_checkout_recheck(
     if errors:
         return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
     if klass == "foreign":
+        attention: list[str] = []
         fresh_reason = _foreign_checkout_reason(
             repo_root=repo_root,
             info=fresh,
             active_ids=current_active_ids,
+            attention=attention,
             timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
         )
+        if attention:
+            return attention[0]
     else:
         fresh_reason = _review_checkout_reason(
             repo_root=repo_root,
@@ -3151,10 +3249,45 @@ def _released_reuse_claim_proven_settled(
     return None
 
 
+def _continuation_head_is_merged(
+    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+) -> bool:
+    """Prove an exact PR head, or a detached cohort's complete earlier lineage.
+
+    Ancestry is admitted only with a clean checkout and a done successor at
+    that checkout head. Every current record must have a complete identity
+    and a recorded commit contained in it; missing Git objects fail closed.
+    Commit-search membership alone is never a PR-head proof.
+    """
+    if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
+        return False
+    if pr.head_sha == info.head:
+        return True
+    branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
+    return bool(
+        info.detached
+        and branch.returncode == 0
+        and branch.stdout.strip() == "HEAD"
+        and _worktree_clean(info.path) is True
+        and _pr_matches_worktree_head(info, pr)
+        and any(
+            member.get("worktree_reused") is True
+            and member.get("status") == "done"
+            and member.get("final_branch_head_commit") == info.head
+            for _, member in cohort
+        )
+        and all(
+            _needs_finalize_claim_identity(member) is not None
+            and _sha_is_ancestor(info.path, member["final_branch_head_commit"], info.head)
+            for _, member in cohort
+        )
+    )
+
+
 def _merged_reuse_claim_proven_settled(
     repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
 ) -> list[tuple[Path, dict[str, Any]]] | None:
-    """Settle a keep-false creator via a done successor's exact merged head.
+    """Settle a keep-false creator via a done successor contained in a merged PR.
 
     This is merge evidence, not retention release. Existing release receipts
     continue through their original verifier; ignored bytes still pass the
@@ -3183,14 +3316,19 @@ def _merged_reuse_claim_proven_settled(
         head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
         if head.returncode != 0:
             return None
+        branch = worktree_claims.checked_out_branch(worktree)
+        info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
         for _, successor in cohort:
             if (
                 successor.get("worktree_reused") is True
                 and successor.get("status") == "done"
                 and successor.get("final_branch_head_commit") == head.stdout.strip()
-                and _needs_finalize_claim_proven_settled(repo_root, successor) is not None
+                and _needs_finalize_claim_identity(successor) is not None
             ):
-                return matches
+                states, error = _query_pr_states(repo_root, successor["worktree_branch"])
+                pr = _best_pr(states)
+                if error is None and _continuation_head_is_merged(info, pr, cohort):
+                    return matches
     except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError, AttributeError):
         pass
     return None
@@ -3199,7 +3337,7 @@ def _merged_reuse_claim_proven_settled(
 def _record_merged_reuse_proof(
     repo_root: Path, info: WorktreeInfo, pr: PullRequestState | None, *, tasks_dir: Path
 ) -> dict[str, Any] | None:
-    """Record exact merged-head proof under the caller's worktree lock.
+    """Record merged-head containment proof under the caller's worktree lock.
 
     Task locks follow the worktree lock. The complete cohort is re-read before
     publishing; preservation still handles all ignored output independently.
@@ -3216,14 +3354,15 @@ def _record_merged_reuse_proof(
     path, creator = ignored_task_output.reused_worktree_creator(
         matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
     )
-    if pr is None or pr.state != "MERGED" or pr.head_sha != info.head or pr.head_from_commit_search:
+    if not _continuation_head_is_merged(info, pr, cohort):
         if any(
             isinstance(member.get("preserved_artifacts"), dict)
             and member["preserved_artifacts"].get("retention_release")
             for _, member in matches
         ):
             return None  # Preserve #9940's explicit receipt-release path.
-        raise ValueError("continuation requires an exact merged PR head")
+        raise ValueError("continuation requires a proven merged PR head containing the checkout")
+    assert pr is not None
     if any(
         not isinstance(member.get(key), str) or not member[key].strip()
         for _, member in matches
@@ -3242,10 +3381,21 @@ def _record_merged_reuse_proof(
         "owner": creator["task_id"],
         "run_nonce": creator["run_nonce"],
         "head_sha": info.head,
+        "pr_head_sha": pr.head_sha,
+        "head_relation": "exact" if pr.head_sha == info.head else "ancestor",
         "pr_number": pr.number,
         "pr_state": pr.state,
         "clean": True,
-        "members": [{"task_id": member["task_id"], "run_nonce": member["run_nonce"]} for _, member in cohort],
+        "members": [
+            {
+                "task_id": member["task_id"],
+                "run_nonce": member["run_nonce"],
+                "branch": member.get("worktree_branch"),
+                "head_sha": member.get("final_branch_head_commit"),
+                "pid": member["pid"],
+            }
+            for _, member in cohort
+        ],
     }
     with contextlib.ExitStack() as stack:
         for member_path, member in sorted(matches):
@@ -3264,6 +3414,9 @@ def _record_merged_reuse_proof(
         head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
         if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
             raise ValueError("checkout changed before merged-head proof")
+        ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir)
+        if not _continuation_head_is_merged(info, pr, cohort):
+            raise ValueError("continuation ancestry changed before merged-head proof")
         reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
     return proof
 
@@ -3472,13 +3625,8 @@ def _reap_qualified_worktree(
                     and member["preserved_artifacts"].get("retention_release")
                     for _, member in matches
                 )
-                if not released and (
-                    pr_state is None
-                    or pr_state.state != "MERGED"
-                    or pr_state.head_sha != info.head
-                    or pr_state.head_from_commit_search
-                ):
-                    raise ValueError("continuation requires an exact merged PR head")
+                if not released and not _continuation_head_is_merged(info, pr_state, cohort):
+                    raise ValueError("continuation requires a proven merged PR head containing the checkout")
         except (OSError, ValueError, RuntimeError) as exc:
             return ReapResult(
                 path=str(info.path),

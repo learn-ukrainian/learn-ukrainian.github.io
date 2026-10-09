@@ -8,13 +8,15 @@ from pathlib import Path
 
 import pytest
 
+from tests._host_path_guard import assert_no_host_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "fetch_ulif_20k.py"
 
 
-def test_source_has_no_baked_ops_home_defaults() -> None:
-    assert "/home/ops" not in DRIVER.read_text(encoding="utf-8")
+def test_source_has_no_baked_home_defaults() -> None:
+    assert_no_host_paths(DRIVER.read_text(encoding="utf-8"))
 
 
 def test_work_dir_flag_is_required() -> None:

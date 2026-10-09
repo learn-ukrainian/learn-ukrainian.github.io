@@ -1,7 +1,8 @@
 """Anti-leak guard for curriculum-upgrade public files from #7999.
 
-Detector needles stay in this test. Production curriculum, audit, and spec
-files must not bake a host checkout or interpreter path.
+Needles come from tests/_host_path_guard.py (generic home-directory patterns
+plus the deployment's own). Production curriculum, audit, and spec files must
+not bake a host checkout or interpreter path.
 """
 
 from __future__ import annotations
@@ -10,17 +11,11 @@ from pathlib import Path
 
 import pytest
 
+from tests._host_path_guard import host_path_lines
+
 pytestmark = [pytest.mark.reads_content, pytest.mark.repo_wide]
 
 ROOT = Path(__file__).resolve().parents[1]
-
-# Reject-sample needles for the anti-leak detector. Do not copy these into
-# public curriculum, audit, or operator-spec files.
-_HOST_RUN_ROOT_NEEDLES = (
-    "/home/ops",
-    "/home/ubuntu",
-    "/Users/krisztiankoos",
-)
 
 _PUBLIC_TREES = (
     Path("docs/epics/curriculum-upgrade-phase1-spec.md"),
@@ -47,7 +42,9 @@ def test_curriculum_upgrade_public_files_have_no_baked_host_run_root() -> None:
     leaked: list[str] = []
     for path in files:
         text = path.read_text(encoding="utf-8")
-        for needle in _HOST_RUN_ROOT_NEEDLES:
-            if needle in text:
-                leaked.append(f"{path.relative_to(ROOT)} contains {needle}")
+        lines = host_path_lines(text)
+        if lines:
+            leaked.append(
+                f"{path.relative_to(ROOT)}: home directory at line(s) {', '.join(map(str, lines))}"
+            )
     assert not leaked, "baked host run-root still present:\n" + "\n".join(leaked)

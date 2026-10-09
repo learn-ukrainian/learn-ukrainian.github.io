@@ -969,3 +969,117 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
     command = " ".join(key)
     assert agy._read_only_killed_command(f"{command} {group} {operands}")
     assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
+
+
+
+def test_agy_impl_8771_timer_kill_not_excused_fails_incomplete(tmp_path):
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="Timer: 20s, Prompt: Wait for tests"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _reply("I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."),
+        ],
+    )
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git push"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _reply("git push killed"),
+        ],
+    )
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker):
+    import hashlib
+    import json
+
+    from scripts.agent_runtime.adapters import agy
+    from scripts.delegate import _compose_dispatch_prompt
+
+    mocker.patch("scripts.agent_runtime.adapters.agy.shutil.which", return_value="/fake/agy")
+    mocker.patch("scripts.agent_runtime.adapters.agy._agy_version", return_value=(1, 2, 9))
+    mocker.patch("pathlib.Path.is_file", return_value=True)
+
+    adapter = agy.AgyAdapter()
+    base_prompt = "Do some work."
+
+    for mode in ["workspace-write", "danger"]:
+        prompt = _compose_dispatch_prompt(
+            base_prompt,
+            worktree_path=None,
+            mode=mode,
+            sparse_telemetry=None,
+            delegate_commits=False,
+            research_block="",
+            advisory_block="",
+            advisory_block_kind=None,
+            rules_seat=None,
+            agent="agy",
+        )
+        assert "WRITE MODE CONTRACT" in prompt
+        assert base_prompt in prompt
+
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+        plan = adapter.build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="test",
+            session_id=None,
+            tool_config={},
+        )
+        payload = json.loads(plan.stdin_payload)
+        sent_prompt = payload["message"]["content"][0]["text"]
+
+        assert sent_prompt == prompt
+        assert hashlib.sha256(sent_prompt.encode("utf-8")).hexdigest() == effective_prompt_sha256
+
+    # Test read-only
+    prompt_read = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="read-only",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_read
+
+    # Test review_route exclusion
+    prompt_review = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="workspace-write",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+        review_route=True,
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_review

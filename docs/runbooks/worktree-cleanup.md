@@ -21,6 +21,12 @@ do not delete it while a task might be active. After the normal merged-PR guards
 pass, the P0 reaper removes the entire disposable worktree, including ignored
 environment residue.
 
+## Shared node_modules (npm shim)
+
+Dispatch worktrees receive `node_modules` and `site/node_modules` as symlinks into the primary checkout. The agent runtime provides an `npm` (and `npx`) shim that intercepts destructive commands to protect the shared tree.
+
+Every npm/npx call through the shim runs with umask 022 to prevent the tree from becoming group-writable. The refusal message from the ACP adapter prints the exact corrective command class.
+
 ## Safety contract
 
 Every Git-based worktree removal preserves ignored output at the sole raw
@@ -131,7 +137,9 @@ No new lock or state authority is introduced.
 
 Continuation rounds keep the checkout's creator as its owner (#10008). Even
 without retention intent, attribution requires exactly one creator and settled
-reused successors on the same resolved checkout and checked-out branch.
+reused successors on the same resolved checkout and branch. With no retention
+intent, a positively verified detached HEAD may use the common recorded branch;
+an unknown branch probe or conflicting recorded branches still refuses attribution.
 `session_env` attribution is accepted through those recorded bindings; it does
 not grant a successor ownership. A terminal timestamped `--force-new` archive
 is excluded from creator attribution only when its same-task canonical
@@ -148,15 +156,21 @@ runs after add attempts and can snapshot an existing HEAD. Without explicit
 no-creation evidence they remain ambiguous and never grant ownership.
 Infra owns this attribution residual.
 
-For a keep-false continuation cohort, exact merged-PR-head equality plus a
+For a keep-false continuation cohort, merged-PR-head containment plus a
 clean checkout permits the common reaper to record `worktree_reap_proof`
 (`merged-reuse-reap.v1`) on the creator and `merged_head_proof` in its removal
-receipt. The proof records the PR, head, creator/run and cohort runs; the
-worktree lock precedes task-state locks and all identities are rechecked.
+receipt. The proof records the PR, checkout head, PR head, their relation,
+creator/run and cohort identities. The worktree lock precedes task-state locks
+and all identities are rechecked.
 The head must come from a branch or PR-number lookup; a commit-search hit
 only proves commit membership and is refreshed by number before taking locks.
 A `needs_finalize` creator additionally requires a done successor whose
-recorded head is that merged head, with every recorded process proven absent.
+recorded head is the checkout head, with every recorded process proven absent.
+An earlier checkout head qualifies only when detached and proven to be an
+ancestor of the authoritative merged PR head. Every current cohort record must
+have a complete task/run/process identity and a commit contained in the checkout
+head. Unknown Git objects, divergent commits, unmerged PRs and live or unknown
+processes retain the tree. This proof does not release retention intent.
 This extra owner proof applies only to cohorts of at least two current records;
 single-record trees retain their existing behavior. Its status remains unchanged.
 Removal uses no force flag for this cohort and still checks the delete target;
@@ -464,6 +478,25 @@ record, detached HEAD for the detached classes) before removal, and
   `.worktrees/`, strictly under `/tmp`, `/var/tmp`, `$TMPDIR` or a
   `scratchpad` directory. Reason `foreign registered checkout`. Any other
   outside path is still reported as `outside repo .worktrees/`.
+  Qualification and the locked removal recheck also require a bounded
+  `lsof +D` probe with no open file descriptors or mapped files inside the
+  checkout, including nested mount points. An unavailable probe, warning,
+  error or timeout preserves the checkout. An empty selection also requires
+  readable process FD and mapping entries in procfs; partial visibility or
+  a platform without that proof preserves it. Negative proof additionally
+  requires the initial PID namespace and an unrestricted procfs mount;
+  nested namespaces, filtered procfs mounts and process-entry overmounts
+  preserve the checkout. Unprivileged runs that cannot inspect every process
+  retain all foreign checkouts, including idle ones. Infra owns this cleanup
+  residual until a complete process view is available through an authorized
+  execution context; this check never changes host permissions.
+  Its refusal reason contains no
+  file paths. This probe complements the existing cwd and lock checks.
+  Long readers such as backups should take `git worktree lock --reason
+  "long reader" <checkout>` before reading and `git worktree unlock
+  <checkout>` after they finish. Hold the lock for the entire read, including
+  gaps between opened files: a point-in-time activity probe cannot protect
+  future reads. Unlock only the lock that the reader owns.
 
 ### Interrupted `git worktree add` (#8663)
 

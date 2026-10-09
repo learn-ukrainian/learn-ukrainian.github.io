@@ -73,7 +73,7 @@ def _doc_router_rows(text: str) -> dict[str, int]:
     section = _section(text, "## Per-router inventory", "## Summary accounting")
     rows = {}
     for line in section.splitlines():
-        match = re.match(r"^\| `([a-z_]+)\.py`(?: \(`[a-z_]+`\))? \| (.+) \|$", line)
+        match = re.match(r"^\| `([a-z_.]+)\.py`(?: \(`[a-z_]+`\))? \| (.+) \|$", line)
         if match:
             rows[match.group(1)] = int(match.group(2).split(" | ")[-2])
     return rows

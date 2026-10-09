@@ -211,6 +211,7 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
+    "test_driver_runtime_state_is_preserved": (),
     "test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs": (
         "agents_extensions/shared/skills/drive-epic",
     ),
@@ -1104,7 +1105,7 @@ def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
     assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
-    assert 'ORPHAN_PATHS_CODEX="settings.local.json retired-skills"' in shared
+    assert 'ORPHAN_PATHS_CODEX="settings.local.json retired-skills $ORPHAN_PATHS_RUNTIME"' in shared
     assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
 
@@ -1467,6 +1468,32 @@ def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
     for epic in ("atlas-epic", "hist-epic"):
         handoff = repo / ".claude" / epic / "CLAUDE-DRIVER-HANDOFF.md"
         assert handoff.exists(), f".claude/{epic}/ was wiped by rsync --delete"
+
+
+def test_driver_runtime_state_is_preserved(tmp_path: Path) -> None:
+    """Driver runtime files in deploy targets survive deploy and never block it.
+
+    Runtime state (dispatch briefs, handoff notes, pinned driver state) may live
+    in .claude/, .codex/ and .gemini/. It is gitignored and machine-local, so the
+    preflight guard must not abort on it and rsync --delete must keep it.
+    """
+    repo = _init_checkout(tmp_path)
+    runtime = []
+    for target, source in ((".claude", "agents_extensions/shared"), (".codex", "agents_extensions/shared"),
+                           (".gemini", "gemini_extensions")):
+        # */briefs: a briefs dir under any source-owned directory of the target.
+        owned = sorted(p.name for p in (repo / source).iterdir() if p.is_dir() and p.name != "briefs")
+        assert owned, f"{source} has no directory"
+        for rel in ("briefs/cf-1.md", f"{owned[0]}/briefs/b.md", "handoff-note.md", "DRIVER-STATE.md"):
+            path = repo / target / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(f"{target}/{rel} runtime\n", encoding="utf-8")
+            runtime.append(path)
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, deploy_result.stdout + deploy_result.stderr
+    for path in runtime:
+        assert path.exists(), f"{path.relative_to(repo)} was wiped by deploy"
 
 
 @pytest.mark.repo_wide
