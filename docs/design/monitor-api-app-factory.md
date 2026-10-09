@@ -166,14 +166,14 @@ against the actual router set — codex's review caught that this is not filing-
 undercounted the router set itself (said 33) and silently dropped `build_events_router` from the
 step table. Later revisions still miscounted (43, then a table that omitted `batch_router` and
 `cluster_router`). The numbers below come from an AST walk of `scripts/api/main.py`, not from
-`grep` and not by hand, and `tests/test_monitor_api_app_factory_doc.py` recomputes them on every
+`grep` and not by hand, and `tests/api/test_app_factory_doc_router_count.py` recomputes them on every
 run and compares them with this document, so they cannot drift again. `main.py` makes 48
 `include_router` calls registering **47 distinct router objects**: 46 imported router modules
 plus `core_router`, which is defined in `main.py` itself. Only `docs_router` is registered twice
-(at `/artifacts` and `/files`); every other router is registered once. Six of the 45 imported
+(at `/artifacts` and `/files`); every other router is registered once. Six of the 46 imported
 modules are the largest and mix several concerns internally (`fleet_router.py` 2,677 lines,
 `state_router.py` 3,096, `comms_router.py` 2,119, `runtime_router.py` 1,776, `route_contracts.py`
-1,400, `dashboard_router.py` 1,061 — together roughly 46% of the 26,547 lines in the 45 router
+1,400, `dashboard_router.py` 1,061 — together roughly 46% of the lines in the 46 router
 modules). Naming one of these a "family" by itself is not precise enough to file a bounded
 sub-issue from, and lumping several together is worse. Guessing a finer split without reading
 what's actually inside those six files would just move the same ambiguity to a smaller-looking

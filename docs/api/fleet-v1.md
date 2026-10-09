@@ -25,6 +25,9 @@ Each source row is `{name, status, age_s, error}`.
 | `unavailable` | The status check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
+The schema rejects a row whose status disagrees with `age_s` or `error`.
+`not_configured` requires both to be null. `unavailable` requires a null age
+and the error token `unavailable`. `ok` and `stale` require a null error.
 A failed source changes that row's status. The HTTP status stays 200.
 Exception text is not copied into the response.
 
