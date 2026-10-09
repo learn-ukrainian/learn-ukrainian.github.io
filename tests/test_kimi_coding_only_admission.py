@@ -932,19 +932,30 @@ def test_kimi_refusal_surfaces_invalid_alternative_seat_data(monkeypatch, catalo
     from scripts.review import model_catalog
 
     monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: catalog)
-    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="MODEL_CATALOG_INVALID"):
-        kimi_admission.format_refusal("kimi", ["review dispatches"])
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    assert "MODEL_CATALOG_INVALID" in message and "review dispatches" in message
 
 
-def test_kimi_alternative_seats_does_not_hide_unexpected_catalog_errors(monkeypatch):
+def test_kimi_refusal_formats_unexpected_catalog_errors_without_raising(monkeypatch):
     from scripts.review import model_catalog
 
     def unexpected():
         raise RuntimeError("unexpected catalog bug")
 
     monkeypatch.setattr(model_catalog, "load_model_catalog", unexpected)
-    with pytest.raises(RuntimeError, match="unexpected catalog bug"):
-        kimi_admission.format_refusal("kimi", ["review dispatches"])
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    assert "MODEL_CATALOG_INVALID" in message and "RuntimeError" in message
+    assert "unexpected catalog bug" not in message
+
+
+def test_9386_kimi_refusal_handles_empty_alternative_catalog(monkeypatch):
+    from scripts.review import model_catalog
+
+    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda: {
+        "models": {}, "review_candidates": {}, "orchestrator_seats": {}, "review_scheduler": {"endpoints": {}},
+    })
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    assert "MODEL_CATALOG_INVALID" in message and "review dispatches" in message
 
 
 # --- delegate dispatch admission --------------------------------------------------

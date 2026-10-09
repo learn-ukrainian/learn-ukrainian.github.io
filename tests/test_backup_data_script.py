@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner.durable_mirror import DurableMirrorError, require_durable
+from tests._host_path_guard import FIXTURE_HOME
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "backup-data.sh"
@@ -1867,7 +1868,7 @@ def _snapshot(
             "time": time,
             "hostname": "learn-ukrainian",
             "tags": [*tags, f"lu-part-{part}"],
-            "paths": ["/home/ops/learn-ukrainian"],
+            "paths": [f"{FIXTURE_HOME}/learn-ukrainian"],
         }
         for part in parts
     ]

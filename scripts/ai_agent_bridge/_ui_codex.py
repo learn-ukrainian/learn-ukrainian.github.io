@@ -50,10 +50,15 @@ the relative form (`from ._ui_codex import send`):
 from __future__ import annotations
 
 import argparse
+import codecs
+import hashlib
 import json
+import os
+import re
 import subprocess
 import sys
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -61,10 +66,277 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+import ijson
+
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
 
 CODEX_SESSIONS_ROOT = Path.home() / ".codex" / "sessions"
 DEFAULT_TIMEOUT_S = 1800  # 30 min — covers most multi-turn dispatches
+
+
+# Wire names observed in installed CLI rollouts; task_* are v1 wire names for
+# TurnStarted/TurnComplete in codex-rs/protocol/src/protocol.rs.
+_TURN_START = frozenset({"task_started", "turn_started"})
+_TURN_END = frozenset({"task_complete", "turn_complete", "turn_aborted"})
+_READ_CHUNK = 64 * 1024
+_CACHE_GUARD_BYTES = 4096
+_STABLE_READ_ATTEMPTS = 3
+
+
+class _RolloutRecord:
+    """Validate one JSON record, retaining only bounded strings and two types.
+
+    ijson validates grammar. The lexical filter validates every string's escapes
+    and UTF-8, but replaces long strings with an empty string before ijson sees
+    them: its normal string events would otherwise allocate the entire body.
+    No lifecycle decision is made from text, key order or a record prefix.
+    """
+
+    def __init__(self) -> None:
+        self.depth = 0
+        self.payload_depth = None
+        self.key = None
+        self.outer_type = None
+        self.payload_type = None
+        self.seen = set()
+        self.has_content = False
+        self.in_string = False
+        self.escape = False
+        self.unicode_left = 0
+        self.string = bytearray()
+        self.long_string = False
+        self.number_length = 0
+        self.decoder = codecs.getincrementaldecoder("utf-8")()
+        self.target = self._events()
+        self.parser = ijson.basic_parse_coro(self.target)
+
+    @ijson.coroutine
+    def _events(self):
+        while True:
+            event, value = (yield)
+            if event == "map_key":
+                self.key = value
+                if (self.depth == 1 and value in {"type", "payload"}) or (
+                    self.depth == self.payload_depth and value == "type"
+                ):
+                    identity = (self.depth, value)
+                    if identity in self.seen:
+                        raise ValueError("duplicate lifecycle field")
+                    self.seen.add(identity)
+                continue
+            if event in {"start_map", "start_array"}:
+                if self.depth == 0 and event != "start_map":
+                    raise ValueError("rollout record is not an object")
+                if self.depth == 1 and self.key == "payload" and event == "start_map":
+                    self.payload_depth = 2
+                self.depth += 1
+                if self.depth > 256:
+                    raise RecursionError("rollout JSON nesting exceeds decoder safety limit")
+            elif event in {"end_map", "end_array"}:
+                if self.depth == self.payload_depth:
+                    self.payload_depth = None
+                self.depth -= 1
+            elif self.depth == 0:
+                raise ValueError("rollout record is not an object")
+            elif event == "string" and self.key == "type":
+                if self.depth == 1:
+                    self.outer_type = value
+                elif self.depth == self.payload_depth:
+                    self.payload_type = value
+            self.key = None
+
+    def feed(self, data: bytes) -> None:
+        self.decoder.decode(data)  # Strict validation, including skipped bodies.
+        output = bytearray()
+        index = 0
+        while index < len(data):
+            byte = data[index]
+            if not self.in_string:
+                self.has_content |= byte not in b" \t\r"
+                if byte == 34:
+                    self.in_string = True
+                    self.string = bytearray(b'"')
+                    self.long_string = False
+                    self.number_length = 0
+                else:
+                    output.append(byte)
+                    if byte in b"0123456789.eE+-":
+                        self.number_length += 1
+                        if self.number_length > 4300:
+                            raise ValueError("rollout numeric token exceeds decoder safety limit")
+                    else:
+                        self.number_length = 0
+                index += 1
+                continue
+            # Skip ordinary string spans in bulk, with bounded capture. This
+            # regex only locates JSON string delimiters/escapes/control bytes.
+            if not self.escape and not self.unicode_left:
+                special = _STRING_SPECIAL.search(data, index)
+                end = special.start() if special else len(data)
+                if end > index:
+                    if not self.long_string:
+                        if len(self.string) + end - index <= 256:
+                            self.string.extend(data[index:end])
+                        else:
+                            self.long_string = True
+                            self.string.clear()
+                    index = end
+                    if index == len(data):
+                        break
+                    byte = data[index]
+            if not self.long_string:
+                self.string.append(byte)
+                if len(self.string) > 256:
+                    self.long_string = True
+                    self.string.clear()
+            if self.unicode_left:
+                if byte not in b"0123456789abcdefABCDEF":
+                    raise ValueError("invalid JSON unicode escape")
+                self.unicode_left -= 1
+            elif self.escape:
+                if byte == ord("u"):
+                    self.unicode_left = 4
+                elif byte not in b'"\\/bfnrt':
+                    raise ValueError("invalid JSON escape")
+                self.escape = False
+            elif byte == 92:
+                self.escape = True
+            elif byte == 34:
+                self.in_string = False
+                if self.long_string:
+                    output.extend(b'""')
+                elif b"\\u" in self.string:
+                    # The streaming backend may reject lone surrogate escapes.
+                    # Decode bounded strings using JSON's escape grammar, then
+                    # replace unpaired code units before passing them on. They
+                    # cannot match the ASCII lifecycle keys or event names.
+                    output.extend(json.dumps(json.loads(self.string), ensure_ascii=False).encode("utf-8", errors="replace"))
+                else:
+                    output.extend(self.string)
+                self.string.clear()
+            elif byte < 32:
+                raise ValueError("unescaped control byte in JSON string")
+            index += 1
+        if output:
+            self.parser.send(bytes(output))
+
+    def finish(self) -> str | None:
+        self.decoder.decode(b"", final=True)
+        if self.in_string:
+            raise ValueError("unterminated JSON string")
+        try:
+            if self.has_content:
+                self.parser.close()  # Reject incomplete/malformed records before deciding.
+        finally:
+            self.target.close()
+        return self.payload_type if self.outer_type == "event_msg" else None
+
+
+_STRING_SPECIAL = re.compile(br'["\\\x00-\x1f]')
+
+
+class RolloutReader:
+    """Forward incremental lifecycle reader for one live rollout, bounded memory.
+
+    Keep this instance across watcher polls. Partial records remain in the
+    streaming parser; a decoder failure remains BUSY until file replacement or
+    truncation. Inode change, truncation, same-size rewrites and changes to the
+    cached prefix fingerprint reset the cache. The fingerprint samples the head
+    and bytes immediately before the cached offset, keeping append polls bounded.
+    ``after_read`` is a deterministic race-test hook, never a sleep or a clock.
+    """
+
+    def __init__(self, *, after_read: Callable[[], None] | None = None) -> None:
+        self.after_read = after_read
+        self.path = None
+        self.signature = None
+        self.offset = 0
+        self.state = (True, "no_lifecycle_event")
+        self.record = None
+        self.error = None
+        self.guard_offset = 0
+        self.guard_digest = None
+
+    def _reset(self, path, signature):
+        if self.record is not None:
+            self.record.target.close()
+        self.path = path
+        self.signature = signature
+        self.offset = 0
+        self.state = (True, "no_lifecycle_event")
+        self.record = None
+        self.error = None
+        self.guard_offset = 0
+        self.guard_digest = None
+
+    @staticmethod
+    def _prefix_fingerprint(stream, offset):
+        """Hash two bounded cached-history spans without reparsing old records."""
+        stream.seek(0)
+        head = stream.read(min(offset, _CACHE_GUARD_BYTES))
+        stream.seek(max(0, offset - _CACHE_GUARD_BYTES))
+        boundary = stream.read(min(offset, _CACHE_GUARD_BYTES))
+        return hashlib.sha256(head + boundary).digest()
+
+    def ready(self, path: Path) -> tuple[bool, str]:
+        if self.error and self.error.startswith("read_error:"):
+            self._reset(path, None)  # Transient I/O faults are retried on the next poll.
+        try:
+            for _ in range(_STABLE_READ_ATTEMPTS):
+                with path.open("rb") as stream:
+                    before = os.fstat(stream.fileno())
+                    signature = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+                    if self.path != path or self.signature is None or (
+                        signature[:2] != self.signature[:2] or before.st_size < self.signature[2]
+                        or (signature[2] == self.signature[2] and signature[3] != self.signature[3])
+                        or (self.guard_digest is not None and self._prefix_fingerprint(stream, self.guard_offset) != self.guard_digest)
+                    ):
+                        self._reset(path, signature)
+                    stream.seek(self.offset)
+                    while self.offset < before.st_size and self.error is None:
+                        data = stream.read(min(_READ_CHUNK, before.st_size - self.offset))
+                        if not data:
+                            break
+                        self.offset += len(data)
+                        pieces = data.split(b"\n")
+                        for index, piece in enumerate(pieces):
+                            if piece:
+                                if self.record is None:
+                                    self.record = _RolloutRecord()
+                                self.record.feed(piece)
+                            if index < len(pieces) - 1 and self.record is not None:
+                                kind = self.record.finish()
+                                if kind in _TURN_START:
+                                    self.state = (False, f"start_event:{kind}")
+                                elif kind in _TURN_END:
+                                    self.state = (True, f"end_event:{kind}")
+                                self.record = None
+                    self.guard_digest = self._prefix_fingerprint(stream, self.offset)
+                    self.guard_offset = self.offset
+                    if self.after_read:
+                        self.after_read()
+                    after = path.stat()
+                    final = (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
+                    self.signature = signature
+                    if final != signature or (self.offset != before.st_size and self.error is None):
+                        continue
+                    if self.error:
+                        return False, self.error
+                    if self.record is not None:
+                        return False, "partial_final_line"
+                    return self.state
+            return False, "rollout_changing"
+        except Exception as exc:
+            if self.record is not None:
+                self.record.target.close()
+            # No diagnostics contain transcript bodies, paths or decoder text.
+            self.error = f"decode_error:{type(exc).__name__}" if not isinstance(exc, OSError) else f"read_error:{type(exc).__name__}"
+            return False, self.error
+
+
+def rollout_is_ready(path: Path, *, reader: RolloutReader | None = None) -> tuple[bool, str]:
+    """Fail closed unless a stable complete rollout has no unmatched start."""
+    return (reader or RolloutReader()).ready(path)
 
 
 @dataclass(frozen=True)
@@ -74,6 +346,7 @@ class LiveSession:
     thread_id: str
     cwd: Path
     environment: dict[str, str] = field(repr=False)
+    rollout: Path | None = None
 
 
 def find_live_session(lease: dict) -> LiveSession | None:
@@ -108,7 +381,7 @@ def find_live_session(lease: dict) -> LiveSession | None:
                     path = Path(opened.path)
                     if not path.name.startswith("rollout-") or path.suffix != ".jsonl":
                         continue
-                    with path.open(encoding="utf-8") as handle:
+                    with path.open("rb") as handle:
                         metadata = json.loads(handle.readline())
                     if metadata.get("type") != "session_meta":
                         continue
@@ -117,8 +390,8 @@ def find_live_session(lease: dict) -> LiveSession | None:
                     cwd = Path(payload["cwd"])
                     if not cwd.is_absolute():
                         continue
-                    matches[thread_id] = LiveSession(thread_id, cwd, environment)
-            except (psutil.Error, OSError, ValueError, KeyError, TypeError):
+                    matches[thread_id] = LiveSession(thread_id, cwd, environment, rollout=path)
+            except (psutil.Error, OSError, ValueError, KeyError, TypeError, RecursionError):
                 continue
     except psutil.Error:
         return None
@@ -171,6 +444,7 @@ def send(
     cwd: Path | None = None,
     timeout_s: int = DEFAULT_TIMEOUT_S,
     environment: dict[str, str] | None = None,
+    before_resume: Callable[[], None] | None = None,
 ) -> dict:
     """Send a prompt to a running Codex Desktop UI session via `codex exec resume`.
 
@@ -187,6 +461,7 @@ def send(
             directory's git state — important when targeting a worktree.
         timeout_s: max wall-clock for the codex subprocess (default 30 min).
         environment: inherited driver environment when resuming a leased thread.
+        before_resume: optional final admission check immediately before spawning.
 
     Returns:
         dict with:
@@ -202,6 +477,8 @@ def send(
 
     start = datetime.now(UTC)
     try:
+        if before_resume is not None:
+            before_resume()
         proc = subprocess.run(
             ["codex", "exec", "resume", "--json", "--disable", "apps", thread_id, "-"],
             input=framed_message,

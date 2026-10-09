@@ -106,7 +106,7 @@ from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..jsonl import jsonl_lines
-from ..result import AgyAttempt, ParseResult
+from ..result import AgyAttempt, AgyProviderFault, ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -167,6 +167,44 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+
+# Match the diagnostic header, never status/cancellation tokens inside its message.
+_PROVIDER_DIAGNOSTIC_RE = re.compile(
+    r"^(?:agy_stream_result_error:\s*)?"
+    r"(?P<kind>API error \(attempt \d+\)|Eligibility check failed):\s*"
+    r"(?P<load>failed to get load code assist response:\s*)?"
+    r"(?P<status>[A-Z_]+) \(code (?P<code>\d+)\)(?::[^\n]*)?$"
+)
+
+
+def parse_agy_provider_fault(*texts: str | None) -> AgyProviderFault | None:
+    """Parse recorded AGY diagnostic lines; permanent statuses win conflicts.
+
+    Raw terminal error fields and sanitized task excerpts use the same grammar.
+    Unknown prose, nested quoted statuses and malformed protocol are not signals.
+    """
+    found: list[AgyProviderFault] = []
+    for text in texts:
+        if not isinstance(text, str):
+            continue
+        for line in text.splitlines():
+            if match := _PROVIDER_DIAGNOSTIC_RE.fullmatch(line):
+                kind = "api_error" if match["kind"].startswith("API") else "eligibility"
+                if match["load"]:
+                    kind = "load_code_assist"
+                found.append(AgyProviderFault(kind, match["status"], int(match["code"])))
+            elif re.fullmatch(
+                r"(?:agy_stream_result_error:\s*)?The stream was interrupted\."
+                r"(?: Please continue the task you were working on\.)?", line
+            ):
+                found.append(AgyProviderFault("stream_interrupted"))
+            elif line == "agy_stream_output_invalid: missing terminal result":
+                found.append(AgyProviderFault("missing_terminal_result"))
+    # A permanent provider diagnostic must not become replayable because the
+    # same process also failed to emit a terminal result.
+    return next((fault for fault in found if not fault.transient), found[0] if found else None)
+
+
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
 _AGY_VERSION_PROBE_TIMEOUT_S = 15
@@ -1109,11 +1147,34 @@ class AgyAdapter:
             result = dataclasses.replace(
                 result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
             )
+        # The provider error owns terminal diagnostics; protocol evidence comes
+        # only from our stream parser, not a model/tool-authored excerpt.
+        stream_problem = _stream_result(stdout)[1] if plan and "stream-json" in plan.cmd else None
+        fault = parse_agy_provider_fault(result.provider_error_text, stderr, stream_problem) if not result.ok else None
+        if fault and fault.status:
+            code = provider_failure_code("", fault.status)
+            result = dataclasses.replace(result, failure_code=code, rate_limited=code == "rate_limited")
+        attempt = _attempt_evidence(bound, result, plan)
+        # Missing output is transient only without another attributed cause.
+        # The adapter uses provider_error (or schema result_invalid) for an
+        # otherwise unexplained missing result; every more specific code,
+        # provider error text, denial or incomplete-run reason takes priority.
+        if (
+            fault and fault.kind == "missing_terminal_result"
+            and (
+                result.provider_error_text
+                or result.failure_code not in {None, "provider_error", "result_invalid"}
+                or attempt.completion_reason in AGY_INCOMPLETE_RUN_REASONS
+                or any((attempt.denied_command_count, attempt.denied_file_read_count, attempt.denied_mcp_count))
+            )
+        ):
+            fault = None
         return dataclasses.replace(
             result,
+            agy_provider_fault=fault,
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
-            agy_attempt=_attempt_evidence(bound, result, plan),
+            agy_attempt=attempt,
         )
 
     def _parse_response(
@@ -1168,6 +1229,14 @@ class AgyAdapter:
             and stream_problem is not None
             and stream_problem.startswith("agy_stream_result_error")
             else provider_stderr_error(stderr_text)
+            or "\n".join(
+                match.group(0)
+                for match in re.finditer(
+                    r"^(?:Error:|agy:)\s*(?:unsupported|unknown|invalid) model\b[^\r\n]*$",
+                    stderr_text,
+                    re.IGNORECASE | re.MULTILINE,
+                )
+            )
             if returncode != 0 or not stdout_response
             else ""
         )
@@ -1326,7 +1395,8 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         excused = set()
     from ..sources_read_only import sources_tool_sets
 
-    known_sources = set().union(*sources_tool_sets())
+    read_only_sources, persisting_sources = sources_tool_sets()
+    known_sources = set(read_only_sources) | set(persisting_sources)
     # Current AGY emits planner intents followed by GENERIC result slots in
     # FIFO order; a planner's step index is not its tool result's step index.
     pending: list[tuple[str, str]] = []
@@ -1338,7 +1408,16 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
     background_tasks: set[str] = set()
     sources: set[str] = set()
     unknown_execution = False
+    side_effects: set[str] = set()
+    read_only_tools = {
+        "view_file", "view_file_outline", "view_code_item", "list_dir",
+        "grep_search", "find_by_name", "read_url_content", "search_web",
+    }
     for position, event in enumerate(events):
+        if event.get("tool_calls") and not (
+            event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL"
+        ):
+            side_effects.add(f"unattributed_intent:{position}")
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             sources.update(
                 name
@@ -1347,16 +1426,36 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
             )
             for call in event.get("tool_calls") or []:
                 if not isinstance(call, Mapping):
+                    side_effects.add(f"unknown:{position}")
                     continue
                 key = json.dumps(call, sort_keys=True, ensure_ascii=False, default=str)
+                name = str(call.get("name") or "")
+                safe = name in read_only_tools
+                if name == "call_mcp_tool":
+                    args = call.get("args")
+                    safe = (
+                        isinstance(args, Mapping)
+                        and _decode_jsonish(args.get("ServerName")) == "sources"
+                        and _decode_jsonish(args.get("ToolName")) in read_only_sources
+                    )
+                elif name.startswith(("mcp_sources_", "mcp__sources__")):
+                    prefix = "mcp_sources_" if name.startswith("mcp_sources_") else "mcp__sources__"
+                    target = name.removeprefix(prefix)
+                    safe = target in read_only_sources
+                if not safe:
+                    # Include unresolved intents too: an absent result cannot
+                    # establish that the tool did not run before the fault.
+                    side_effects.add(key)
                 if not any(key == waiting_key for waiting_key, _ in pending):
-                    pending.append((key, str(call.get("name") or "")))
-        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE"}:
+                    pending.append((key, name))
+        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE", "MCP_TOOL"}:
             continue
         step = _event_step_index(event)
         slot = step if step is not None else position
         content = str(event.get("content") or "")
         tool = pending.pop(0)[1] if pending else None
+        if tool is None:
+            side_effects.add(f"unknown_result:{position}")
         command_result = tool == "run_command"
         deny_rule = (
             event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
@@ -1395,6 +1494,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         excused_kill_count=len(excused),
         unexcused_kill_count=max(0, len(killed) - len(excused)),
         unknown_command_count=sum(command == "<unknown command>" for command in killed),
+        side_effect_tool_count=len(side_effects),
         denied_command_count=len(denied_steps),
         denied_file_read_count=len(denied_file_reads),
         denied_mcp_count=len(denied_mcp),
