@@ -5,12 +5,17 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import pickle
 import runpy
 import shutil
 import subprocess
 import sys
+from contextlib import contextmanager
+from copy import deepcopy
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -21,6 +26,51 @@ FIXTURE = Path(__file__).resolve().parents[1] / "fixtures/routing_baseline"
 BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes()))
 INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
+
+# Keep the frozen capture script byte-pinned. Apply the cache only inside its
+# fresh subprocess, leaving production catalog validation unchanged.
+CAPTURE_RUNNER = """
+import runpy
+import sys
+source = sys.argv[sys.argv.index("--source-root") + 1]
+sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
+cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
+sys.argv = sys.argv[1:]
+capture = runpy.run_path(sys.argv[0])
+original = capture["capture"]
+def cached_capture(*args, **kwargs):
+    # Enter only after main has installed its hermetic environment.
+    with cached_capture_reads():
+        return original(*args, **kwargs)
+capture["main"].__globals__["capture"] = cached_capture
+capture["main"]()
+"""
+
+
+@contextmanager
+def cached_capture_reads():
+    """Reuse validated catalog inputs and parser construction in one capture.
+
+    Key validation by exact content, and return independent copies so mutations
+    cannot reuse stale proof or change cached results. Production is untouched.
+    """
+    from scripts import delegate
+    from scripts.review import model_catalog
+
+    validate = model_catalog.validate_catalog
+    cache = {}
+
+    def cached(data):
+        key = pickle.dumps(data, protocol=pickle.HIGHEST_PROTOCOL)
+        if key not in cache:
+            cache[key] = deepcopy(validate(data))
+        return deepcopy(cache[key])
+
+    with (
+        patch.object(model_catalog, "validate_catalog", cached),
+        patch.object(delegate, "build_parser", lru_cache(maxsize=1)(delegate.build_parser)),
+    ):
+        yield
 
 
 CAPACITY_FIXTURE = Path(__file__).parent / "fixtures"
@@ -152,6 +202,8 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     result = subprocess.run(
         [
             sys.executable,
+            "-c",
+            CAPTURE_RUNNER,
             str(FIXTURE / "capture.py"),
             "--source-root",
             str(source),
@@ -178,12 +230,70 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     )
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
-    assert actual.keys() == BASELINE.keys()
-    assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
-    for surface in BASELINE:
-        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
+    assert_frozen_surfaces(actual)
     assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
+
+
+def assert_frozen_surfaces(actual):
+    assert actual.keys() == BASELINE.keys()
+    for surface in BASELINE:
+        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
+    assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
+
+
+@pytest.mark.parametrize("surface", BASELINE)
+def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
+    actual = dict(REVIEW_CAPACITY_BASELINE)
+    actual[surface] = {"mutated": True}
+    with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
+        assert_frozen_surfaces(actual)
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_capture_catalog_cache_revalidates_mutations_and_restores_validator(monkeypatch, mocker, fail):
+    from scripts import delegate
+    from scripts.review import model_catalog
+
+    catalog = deepcopy(load_model_catalog())
+    validator = mocker.Mock(wraps=model_catalog.validate_catalog)
+    monkeypatch.setattr(model_catalog, "validate_catalog", validator)
+    parser_factory = mocker.Mock(wraps=delegate.build_parser)
+    monkeypatch.setattr(delegate, "build_parser", parser_factory)
+
+    def exercise():
+        with cached_capture_reads():
+            first = model_catalog.validate_catalog(catalog)
+            first["models"].clear()
+            assert model_catalog.validate_catalog(deepcopy(catalog))["models"] == catalog["models"]
+            assert validator.call_count == 1
+            catalog["schema_version"] = "invalid"
+            with pytest.raises(model_catalog.ModelCatalogError):
+                model_catalog.validate_catalog(catalog)
+            assert validator.call_count == 2
+            parser = delegate.build_parser()
+            args = parser.parse_args(["dispatch", "--agent", "codex", "--task-id", "one", "--prompt", "first"])
+            args.task_id = "mutated"
+            fresh = delegate.build_parser().parse_args(
+                ["dispatch", "--agent", "claude", "--task-id", "two", "--prompt", "second"]
+            )
+            assert (fresh.agent, fresh.task_id, fresh.prompt) == ("claude", "two", "second")
+            assert parser_factory.call_count == 1
+            if fail:
+                raise RuntimeError("capture failed")
+
+    if fail:
+        with pytest.raises(RuntimeError, match="capture failed"):
+            exercise()
+    else:
+        exercise()
+    assert model_catalog.validate_catalog is validator
+    assert delegate.build_parser is parser_factory
+    with cached_capture_reads():
+        model_catalog.validate_catalog(load_model_catalog())
+        delegate.build_parser()
+    assert validator.call_count == 3
+    assert parser_factory.call_count == 2
 
 
 def test_capture_environment_controls_lookup_and_version_probes(tmp_path):
@@ -277,6 +387,8 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     result = subprocess.run(
         [
             sys.executable,
+            "-c",
+            CAPTURE_RUNNER,
             str(FIXTURE / "capture.py"),
             "--configuration",
             "no-cli",
