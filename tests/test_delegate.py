@@ -11932,6 +11932,147 @@ def test_default_read_only_dispatch_uses_detached_worktree(tmp_tasks_dir, tmp_pa
     assert head.returncode == 1
 
 
+@pytest.fixture
+def held_branch_repo(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A real held branch with a distinct head and a local fetch source."""
+    main, holder = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
+    monkeypatch.chdir(main)
+    env = delegate._sanitized_git_env()
+
+    def git(cwd, *args):
+        return subprocess.run(
+            ["git", "-C", str(cwd), *args],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+            timeout=30,
+        ).stdout.strip()
+
+    (holder / "tracked.txt").write_text("branch head\n")
+    git(holder, "commit", "-qam", "branch head\n\nX-Agent: codex/gpt-6.1-sol")
+    pinned = git(holder, "rev-parse", "HEAD")
+    assert pinned != git(main, "rev-parse", "HEAD")
+    git(main, "remote", "add", "origin", str(main))
+    # A reviewer must neither release the writer's checkout nor change its bytes.
+    (holder / "tracked.txt").write_text("writer in progress\n")
+    delegate._write_state_atomic(
+        delegate._state_path("task-1"),
+        {"task_id": "task-1", "agent": "codex", "status": "running", "worktree_path": str(holder)},
+    )
+    _patch_worker_popen(monkeypatch)
+    return main, holder, pinned, git
+
+
+@pytest.mark.parametrize("worktree_arg", [None, "auto", "explicit"])
+def test_pinned_read_only_review_detaches_from_held_branch(held_branch_repo, monkeypatch, worktree_arg):
+    """#10302: dispatch starts at the exact pin without attaching or releasing the held branch."""
+    main, holder, pinned, git = held_branch_repo
+    task_id = "held-branch-review"
+    checkout = main / ".worktrees" / "dispatch" / "codex" / task_id
+    if worktree_arg == "explicit":
+        worktree_arg = str(checkout)
+    monkeypatch.setattr(
+        delegate,
+        "_release_stale_branch_holders",
+        lambda **_kwargs: pytest.fail("a detached review must not release branch holders"),
+    )
+    args = _write_args(
+        task_id=task_id,
+        mode="read-only",
+        type="review",
+        worktree=worktree_arg,
+        branch="codex/task-1",
+        pinned_head=pinned,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "spawning"
+    assert state["worktree_path"] == state["cwd"] == str(checkout)
+    assert state["pinned_head"] == state["worktree_base_sha"] == pinned
+    assert state["worktree_branch"] is None
+    assert git(checkout, "rev-parse", "HEAD") == pinned
+    assert git(checkout, "rev-parse", "--abbrev-ref", "HEAD") == "HEAD"
+    assert (checkout / "tracked.txt").read_text() == "branch head\n"
+    assert delegate._branch_worktree_paths("codex/task-1") == [holder]
+    assert git(holder, "rev-parse", "HEAD") == pinned
+    assert (holder / "tracked.txt").read_text() == "writer in progress\n"
+
+
+def test_detached_branch_checkout_requires_resolved_pin(held_branch_repo):
+    main, holder, pinned, git = held_branch_repo
+    checkout = main / ".worktrees" / "dispatch" / "codex" / "unresolved-review"
+    with pytest.raises(ValueError, match="requires a resolved pinned head"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="unresolved-review",
+            raw_path=str(checkout),
+            branch="codex/task-1",
+            detached=True,
+        )
+    assert not checkout.exists()
+    assert delegate._branch_worktree_paths("codex/task-1") == [holder]
+    assert git(holder, "rev-parse", "HEAD") == pinned
+
+
+def test_pinned_read_only_review_dry_run_keeps_explicit_path(held_branch_repo):
+    main, holder, pinned, _git = held_branch_repo
+    checkout = main / ".worktrees" / "dispatch" / "codex" / "custom-review-path"
+    args = _write_args(
+        task_id="held-branch-dry-run",
+        mode="read-only",
+        type="review",
+        worktree=str(checkout),
+        branch="codex/task-1",
+        pinned_head=pinned,
+        dry_run=True,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path(args.task_id))
+    assert state["status"] == "dry_run"
+    assert state["worktree_path"] == state["cwd"] == str(checkout)
+    assert state["pinned_head"] == pinned
+    assert state["worktree_branch"] is None
+    assert not checkout.exists()
+    assert delegate._branch_worktree_paths("codex/task-1") == [holder]
+
+
+@pytest.mark.parametrize(
+    ("mode", "pin"),
+    [
+        ("read-only", False),
+        ("workspace-write", False),
+        ("workspace-write", True),
+        ("danger", False),
+        ("danger", True),
+    ],
+)
+def test_held_branch_attachment_still_refuses(held_branch_repo, capsys, mode, pin):
+    """#10302: write modes and unpinned read-only attachment keep the holder refusal."""
+    main, holder, pinned, git = held_branch_repo
+    task_id = "held-branch-attach"
+    args = _write_args(
+        task_id=task_id,
+        mode=mode,
+        worktree="auto",
+        branch="codex/task-1",
+        pinned_head=pinned if pin else None,
+    )
+
+    assert delegate.cmd_dispatch(args) == 1
+    assert "already checked out" in capsys.readouterr().err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "failed"
+    assert not (main / ".worktrees" / "dispatch" / "codex" / task_id).exists()
+    assert delegate._branch_worktree_paths("codex/task-1") == [holder]
+    assert git(holder, "rev-parse", "HEAD") == pinned
+    assert (holder / "tracked.txt").read_text() == "writer in progress\n"
+
+
 def test_read_only_primary_opt_in_requires_cwd(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     main, _ = _init_repo_with_worktree(tmp_path)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)

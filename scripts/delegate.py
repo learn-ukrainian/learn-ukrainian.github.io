@@ -9143,7 +9143,11 @@ def _ensure_worktree(
     worktree_path = _helper_worktree_path(raw_path, validated_path)
     requested_branch = _validate_branch_reuse_name(branch) if branch else None
     if detached and requested_branch:
-        raise ValueError("detached worktree cannot attach a branch")
+        if resolved_base_sha is None:
+            raise ValueError("detached branch review requires a resolved pinned head")
+        # The branch identified the review target during base resolution. This
+        # checkout uses only that immutable SHA, so its holders are irrelevant.
+        requested_branch = None
     worktree_branch = None if detached else requested_branch or _derive_worktree_branch(agent, task_id)
     layout = _classify_worktree_layout(worktree_path)
     telemetry: dict[str, Any] = {
@@ -12496,9 +12500,18 @@ def _dispatch(
     if primary_read_only_cwd:
         args.cwd = None
         validated_cwd = None
-    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
+    detached_read_only = args.mode == "read-only" and not args.cwd and (
+        not worktree_arg
+        or (
+            requested_branch
+            and pinned_head
+            # Preserve explicit existing-worktree validation/reuse. Fresh
+            # pinned reviews need a commit checkout, never branch attachment.
+            and not (validated_worktree and validated_worktree.exists())
+        )
+    )
     if detached_read_only:
-        worktree_arg = "auto"
+        worktree_arg = worktree_arg or "auto"
 
     if not fleet_repo.default and not worktree_arg and not args.cwd:
         print(
@@ -13151,7 +13164,9 @@ def _dispatch(
         if detached_read_only:
             # A dry-run describes the eventual checkout without fetching the
             # base or creating a worktree. Both can spawn git subprocesses.
-            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+            dry_run_worktree = validated_worktree or _auto_worktree_path(
+                dispatch_agent, task_id, repo_root=target_repo_root
+            )
         elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
