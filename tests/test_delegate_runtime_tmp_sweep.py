@@ -406,6 +406,9 @@ def test_dispatch_survives_runtime_tmp_backfill_write_failure(
     monkeypatch,
 ):
     """Dispatch must proceed when orphan-sweep marker backfill is best-effort."""
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
+
+    isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
     monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
     _seed_legacy_running_lease(tmp_path, tmp_tasks_dir)
     original_write = delegate._write_runtime_tmp_task_id_marker

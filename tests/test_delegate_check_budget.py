@@ -169,6 +169,9 @@ def _dispatch_args(*extra: str):
 
 
 def _patch_spawn(monkeypatch, tmp_path):
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
+
+    isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: _FakeProc())
     monkeypatch.setattr(delegate, "_session_stream_store", lambda: _session_stream_store(tmp_path))

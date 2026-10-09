@@ -1090,6 +1090,16 @@ per-lane models (`wave_models: null`), so dispatch admission enforces the allowl
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
+**Read-only isolation (#10025):** without a target, read-only dispatches use a
+detached dispatch worktree. An explicit `--cwd` at the primary root also gets a
+detached worktree. Other `--cwd` targets must resolve inside a registered added
+worktree; unregistered targets are refused before task creation or worker spawn.
+This keeps other drivers' primary-checkout brief edits outside the task's
+mutation snapshot. The known broker runtime log
+`.mcp/servers/message-broker/watcher.log` is exempt only while untracked or ignored.
+Tracked edits there still fail, as do task-created scratch files, `.cache/` output,
+and other ignored MCP files under the #8516 guard.
+
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
 `danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
 defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets

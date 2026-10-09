@@ -871,6 +871,48 @@ def _same_cwd(left: Any, right: Any) -> bool:
     return isinstance(left, str) and isinstance(right, str) and Path(left).resolve() == Path(right).resolve()
 
 
+def _is_primary_read_only_worktree(
+    admitted: Mapping[str, Any],
+    args: Mapping[str, Any],
+    record: Mapping[str, Any],
+    execution: Mapping[str, Any],
+) -> bool:
+    """#10025: a bound primary-root read runs in its exact automatic detached checkout."""
+    root = admitted.get("repo_root")
+    task_id = record.get("task_id")
+    agent = execution.get("agent")
+    if (
+        execution.get("mode") != "read-only"
+        or args.get("branch")
+        or args.get("pr")
+        or record.get("worktree_branch") is not None
+        or not (
+            _same_cwd(args.get("cwd"), root)
+            or (
+                record.get("read_only_primary_cwd") is True
+                and isinstance(args.get("cwd"), str)
+                and not Path(args["cwd"]).is_absolute()
+            )
+        )
+        or not isinstance(root, str)
+        or not isinstance(task_id, str)
+        or not isinstance(agent, str)
+    ):
+        return False
+    for prefix in (f"{agent}-", f"{agent}/"):
+        if task_id.startswith(prefix):
+            task_id = task_id[len(prefix) :]
+            break
+    # Same task-id normalization as delegate._auto_worktree_path; accept no
+    # other checkout merely because it is recorded in admitted_execution.
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", task_id).strip("./-") or "task"
+    expected = Path(root).resolve() / ".worktrees" / "dispatch" / agent / safe
+    return _same_cwd(str(expected), execution.get("cwd")) and _same_cwd(
+        record.get("worktree_path"),
+        execution.get("cwd"),
+    )
+
+
 def _require_execution(
     admitted: Mapping[str, Any],
     args: Mapping[str, Any],
@@ -885,7 +927,8 @@ def _require_execution(
     one recorded at admission, and each that a dispatch argument sets must
     equal that bound argument, whose digest the envelope binds. The cwd is
     always compared: with the admitted cwd, with the recorded worktree, and with
-    a bound ``--cwd`` when no worktree was requested.
+    a bound ``--cwd`` when no worktree was requested. A read-only primary-root
+    binding must instead resolve to its exact automatic detached worktree.
     """
     recorded = admitted.get("admitted_execution")
     if not isinstance(recorded, dict) or set(recorded) != set(EXECUTION_FIELDS):
@@ -905,8 +948,14 @@ def _require_execution(
     if worktree is not None and not _same_cwd(str(worktree), execution["cwd"]):
         mismatches.append(f"cwd {execution['cwd']!r} is not the admitted worktree {worktree!r}")
     bound_cwd = args.get("cwd")
-    if not args.get("worktree") and bound_cwd and not _same_cwd(str(bound_cwd), execution["cwd"]):
-        mismatches.append(f"cwd {execution['cwd']!r} is not the bound --cwd {bound_cwd!r}")
+    if not args.get("worktree") and bound_cwd:
+        if execution.get("mode") == "read-only" and (
+            _same_cwd(str(bound_cwd), admitted.get("repo_root")) or record.get("read_only_primary_cwd") is True
+        ):
+            if not _is_primary_read_only_worktree(admitted, args, record, execution):
+                mismatches.append("cwd is not the automatic worktree of the bound primary --cwd")
+        elif not _same_cwd(str(bound_cwd), execution["cwd"]):
+            mismatches.append(f"cwd {execution['cwd']!r} is not the bound --cwd {bound_cwd!r}")
     if mismatches:
         raise AdvisoryRefused(EXECUTION_MISMATCH, "; ".join(mismatches))
 
