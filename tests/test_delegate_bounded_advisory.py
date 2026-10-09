@@ -789,8 +789,11 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
 
 
 @pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
-def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
+def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch):
     """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
+    if agent == "cursor":
+        import scripts.agent_runtime.adapters.claude as claude_module
+        monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     rc = _dispatch(
         _argv(
             "--advisory-role",
@@ -798,6 +801,29 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
             "--advisory-binding",
             "a" * 64,
             agent=agent,
+            model=model,
+            task_id=_advisor_id(),
+        )
+    )
+    _assert_refused(
+        env,
+        capsys,
+        rc,
+        ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED),
+        task_id=_advisor_id(),
+    )
+
+
+@pytest.mark.parametrize("model", ["grok-4.7-high", "composer-2.5"])
+def test_advisor_role_refuses_non_advisor_cursor_pins(env, capsys, model):
+    """Approved Cursor pins reach the advisory gate without a Claude-route refusal."""
+    rc = _dispatch(
+        _argv(
+            "--advisory-role",
+            "bounded_advisory_envelope",
+            "--advisory-binding",
+            "a" * 64,
+            agent="cursor",
             model=model,
             task_id=_advisor_id(),
         )

@@ -289,3 +289,32 @@ catalog changes only `orchestrator_seats.agy.note`. Reviewer, role, approval,
 capacity, dispatch, adapter, registry, fallback, routing-holder and
 source-contract surfaces are identical. Any other difference blocks
 regeneration.
+
+
+## Cursor wire pin and allowlist (#10205)
+
+Both configurations were regenerated with the documented `capture.py` command
+against this checkout, using the test module's scoped `CAPTURE_RUNNER` cache.
+The existing `routing-10016.json.gz` reviewer overlay was compared separately;
+the frozen reviewer surface remains unchanged. No input or occurrence bytes
+changed, and `capture.py` remains byte-pinned.
+
+The host-CLI adapter rows 56–59 change only the Cursor `--model` argument and
+its requested-model telemetry from `grok-4.7` to `grok-4.7-high`. No-CLI adapter
+rows are unchanged because binary resolution fails before invocation.
+
+In both configurations, dispatch rows 2, 6, 10, 14, 22, 26, 30, 456, 458,
+460, 462, 464, 466, 468, 470, 472, 474, 480, 482, 484, 486, 488, 490,
+492, 494, 500, 504, 508, 516, 520 and 524 now normalize bare Grok in
+worker argv or refuse models outside the approved Cursor allowlist. Catalog
+identities remain unchanged. With a native Claude CLI, Claude fallback models
+receive `CURSOR_CLAUDE_REFUSED`; without it, unapproved fallback models receive
+`CURSOR_MODEL_NOT_APPROVED`. No-CLI probe diagnostics for unapproved models
+also disappear because adapter admission now precedes binary resolution.
+
+Launcher rows 42 and 47 normalize an explicit bare Grok selection to the high
+wire pin. Rows 41 and 46 preserve exit 4 and add the correct typed Claude
+refusal with the native CLI, or the allowlist refusal without it. All other
+launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
+holder and source-contract surfaces remain identical. Any other difference
+blocks regeneration.

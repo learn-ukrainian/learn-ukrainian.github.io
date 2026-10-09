@@ -1171,7 +1171,7 @@ def test_an_admitted_route_substitutes_after_the_original_request_is_gated(no_sp
         delegate.main([*argv, "--prompt", "Look at it."])
     refusal, _start, target = gated.value.args[0]
     assert refusal is None
-    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7"]
+    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7-high"]
     assert seen["agent"] == "codex" and seen["fallbacks"].get("codex") == "cursor"
 
 
