@@ -169,6 +169,9 @@ def _dispatch_args(*extra: str):
 
 
 def _patch_spawn(monkeypatch, tmp_path):
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
+
+    isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: _FakeProc())
     monkeypatch.setattr(delegate, "_session_stream_store", lambda: _session_stream_store(tmp_path))
@@ -1694,7 +1697,7 @@ def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, 
     assert "--model grok-4.7 (catalog default; gpt-6.1-sol has no mapping)" in err
     argv = _worker_argv(commands)
     assert "--agent" in argv and argv[argv.index("--agent") + 1] == "cursor"
-    assert "--model" in argv and argv[argv.index("--model") + 1] == "grok-4.7"
+    assert "--model" in argv and argv[argv.index("--model") + 1] == "grok-4.7-high"
     assert "gpt-6.1-sol" not in argv
     state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
     assert state["agent"] == "cursor"
@@ -1721,7 +1724,7 @@ def test_budget_sub_without_explicit_model_uses_catalog_default(monkeypatch, tmp
     assert "--model grok-4.7 (catalog default)" in err
     assert "has no mapping" not in err
     argv = _worker_argv(commands)
-    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    assert argv[argv.index("--model") + 1] == "grok-4.7-high"
     state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
     assert state["substitution"]["requested_model"] is None
     assert state["substitution"]["actual_model"] == "grok-4.7"
@@ -1737,7 +1740,7 @@ def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tm
     err = capsys.readouterr().err
     assert "--model grok-4.7 (catalog default; not-a-fleet-model has no mapping)" in err
     argv = _worker_argv(commands)
-    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    assert argv[argv.index("--model") + 1] == "grok-4.7-high"
     state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
     assert state["substitution"]["requested_model"] == "not-a-fleet-model"
     assert state["substitution"]["actual_model"] == "grok-4.7"
@@ -1745,18 +1748,20 @@ def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tm
 
 
 def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, capsys):
+    import scripts.agent_runtime.adapters.claude as claude_module
+
+    monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     commands = _capture_worker_commands(monkeypatch, tmp_path)
 
     rc = delegate.cmd_dispatch(_codex_dispatch("--model", "claude-opus-5-5"))
 
-    assert rc == 0
+    assert rc == 2
     err = capsys.readouterr().err
     assert "--model claude-opus-5-5-high (mapped from claude-opus-5-5)" in err
-    argv = _worker_argv(commands)
-    assert argv[argv.index("--model") + 1] == "claude-opus-5-5-high"
-    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
-    assert state["substitution"]["model_resolution"] == "mapped"
-    assert state["substitution"]["actual_model"] == "claude-opus-5-5-high"
+    assert "CURSOR_CLAUDE_REFUSED" in err
+    assert "native Claude CLI" in err
+    assert not any("_worker" in command for command in commands)
+    assert not (tmp_path / "tasks" / "probe-8855.json").exists()
 
 
 def test_budget_sub_refuses_unmapped_model_the_substitute_rejects(monkeypatch, tmp_path, capsys):

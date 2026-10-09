@@ -61,15 +61,25 @@ REQUEST_TIMEOUT_S = 600
 OUT_DIR = PROJECT_ROOT / "audit" / "2026-05-23-composer-2.5-cursor-judge-calibration"
 
 
-def _require_approved_model(model: str) -> None:
-    """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin."""
+def _require_approved_model(model: str) -> str:
+    """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin. Returns normalized wire model."""
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
-    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+    from scripts.review.model_catalog import (
+        ModelCatalogError,
+        apply_cursor_model_pins,
+        cursor_non_dispatch_model_refusal,
+    )
 
-    refusal = cursor_non_dispatch_model_refusal(model)
+    try:
+        wire_model = apply_cursor_model_pins(model)
+    except ModelCatalogError as exc:
+        raise SystemExit(f"cursor_judge_calibration: refused: {exc}") from exc
+
+    refusal = cursor_non_dispatch_model_refusal(wire_model)
     if refusal:
         raise SystemExit(f"cursor_judge_calibration: refused: {refusal}")
+    return str(wire_model)
 
 
 def call_cursor(prompt: str, model: str) -> dict:
@@ -82,7 +92,7 @@ def call_cursor(prompt: str, model: str) -> dict:
     workspace trust acknowledgement otherwise. We pass it because the judge
     prompt does NOT instruct the model to read or write any files.
     """
-    _require_approved_model(model)
+    model = _require_approved_model(model)
     from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
 
     cursor_bin = resolve_cursor_agent_binary()
@@ -152,7 +162,7 @@ def main() -> int:
         help="Limit to first N cases (smoke test). Default: all 12.",
     )
     args = parser.parse_args()
-    _require_approved_model(args.model)
+    args.model = _require_approved_model(args.model)
 
     cases = pull_calibration_cases()
     print(f"Loaded {len(cases)} calibration cases from working tree:{CALIBRATION_BLOB}")
