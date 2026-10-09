@@ -901,6 +901,32 @@ entry has a batch-state-relative path, bytes, age in days and `report_only` acti
 Owners use this list to decide disposition; the one-off report never removes
 these files. Scheduled public summaries expose their count and total bytes.
 
+## Worker-held runtime scratch (#10000)
+
+Keep held patches, handoffs and diagnostics in the dispatch worktree's
+`batch_state/reports/` and cite each file in the final response. If a worker
+holds a file under its runtime temporary root instead, delegate preserves
+absolute file citations (including Markdown links, code spans, file URIs and
+line-number suffixes), runtime-root relative code spans or links, and
+`$TMPDIR/<file>` citations, before removing the lease.
+Task records may also declare `held_work` as a list of runtime-root relative or
+absolute file paths. Unreferenced scratch remains disposable.
+
+Both worker exit and the terminal orphan sweep copy cited regular files to
+`batch_state/preserved/<task-id>/held-<attempt>/`. The task's
+`preserved_held_work` receipt names that repository-relative `location` and
+each relative file path, size and SHA-256. The adjacent `.manifest.json`
+contains the same receipt, including `retrieval_proof_sha256`; retrieve files
+by joining the primary repository, `location`, and the entry's `path`.
+Preserved copies survive later runtime and worktree reaping.
+
+The existing 256 MiB preservation cap applies. Symlink citations, traversal,
+missing declarations, failed copy or retrieval, and failed manifest or task
+metadata publication refuse runtime deletion with
+`runtime_tmp_held_work_preservation_failed`. The worker records this in
+`tmp_reap_error`; orphan sweeps include the typed reason in `error_details`.
+The original lease remains available for the accountable driver's disposition.
+
 ## Task-owned scratch for large ad-hoc runs (#8738)
 
 Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA
