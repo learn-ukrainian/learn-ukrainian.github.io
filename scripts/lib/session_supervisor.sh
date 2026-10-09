@@ -423,6 +423,27 @@ session_supervisor_stop_inbox_watch() {
   LC_SUPERVISORY_WAKE_FILE=""
 }
 
+# Resolve before stopping the predecessor. Keep the original harness executable
+# (e.g. claude for Codex's Claude-Code harness), not the provider label (#10096).
+session_supervisor_preflight_successor() {
+  local binary="${LC_DRIVER_PROVIDER_COMMAND:-}" candidate directory
+  candidate="${LC_DRIVER_PROVIDER_EXECUTABLE:-}"
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="$(type -P -- "$binary")" || candidate=""
+  fi
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="${HOME}/.local/bin/$binary"
+  fi
+  if [ -z "$binary" ] || [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    echo "Error: provider-cli-unavailable: successor CLI '${binary:-unknown}' is not executable; restore it in PATH or ~/.local/bin and retry the supervisory wake. Predecessor retained." >&2
+    return 3
+  fi
+  directory="$(cd -- "$(dirname -- "$candidate")" && pwd)" || return 3
+  # The public successor entrypoint and adapter still resolve the CLI by name.
+  # Carry the validated directory across exec, including paths with spaces.
+  export PATH="$directory${PATH:+:$PATH}"
+}
+
 session_supervisor_stop_provider_for_wake() {
   local attempt
   kill -TERM "$LC_DRIVER_CHILD_PID" 2>/dev/null || true

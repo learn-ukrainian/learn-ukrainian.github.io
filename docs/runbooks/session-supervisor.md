@@ -120,6 +120,14 @@ Both clear the delivery, stop the provider, close the predecessor's existing
 lease, then attempt one status publication before returning the original
 non-zero status. Neither executes a successor.
 
+Before stopping the provider or releasing its lease for a wake, the launcher
+preflights the successor CLI. It checks the executable recorded at provider
+startup, then the current PATH, then `~/.local/bin`, using the actual harness
+command rather than the provider label. It carries the resolved directory in
+PATH through successor exec. If no executable is available, preflight returns
+3 with `provider-cli-unavailable` and a repair hint; the launcher retains the
+predecessor and its lease and resumes inbox supervision.
+
 Before clearing `SESSION_STREAM_*` for a supervisory successor, the launcher
 captures the predecessor generation in
 `LC_SUPERVISORY_PREDECESSOR_GENERATION`. If the successor fails to start its
