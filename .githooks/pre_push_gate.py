@@ -45,26 +45,21 @@ from pathlib import Path
 GATE_VERSION = 1
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
-MAX_TEST_PROCESSES = 2  # xdist workers, the approved ceiling
+MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
 ADMISSION_WAIT_S = 300.0
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
 CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
-# A registered module whose recorded CI cost exceeds this cannot fit the run budget (the eight
-# test_docs_find_lookups parts and test_docs_catalogue_coverage alone cost ~2900 s). It is deferred to
-# CI explicitly and recorded on every run, never dropped silently. Function entries always run.
-# Measured 2026-10-09 on a loaded host: the registry still took 17.5 min on one process at a 120 s cap.
+# Registered modules exceeding the cost threshold are explicitly deferred to CI
+# and recorded on every run. Function entries always run.
 HEAVY_MODULE_S = 60.0
 DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
-# Modules the tracked durations table lacks.  Measured with --durations=0 on 2026-10-09 (load average
-# 16): test_source_ingest_entrypoints alone was 359 of 893 CPU-seconds and, being one file, the
-# critical path of the two-worker run.
-MEASURED_COST_S = {"tests/test_source_ingest_entrypoints.py": 359.0}
+# Keep existing CI deferrals until the tracked durations table supplies a row.
+CI_DEFERRED_MODULES = frozenset({"tests/test_source_ingest_entrypoints.py"})
 # Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
-# tree, not for a defect (measured: tests/conftest.py's sparse skip covers only data/projects and
-# data/lexicon).  Deferred to CI only while the worktree is sparse and the tree is absent.
+# tree, not for a defect. Deferred to CI only while the worktree is sparse and the tree is absent.
 SPARSE_TREE_NODES = {
     "curriculum": (
         "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
@@ -223,14 +218,17 @@ def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tu
         durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         durations = {}
-    durations = {**MEASURED_COST_S, **durations} if isinstance(durations, dict) else dict(MEASURED_COST_S)
+    durations = durations if isinstance(durations, dict) else {}
     absent = {
         node for tree, tree_nodes in SPARSE_TREE_NODES.items() if tree_is_partial(root, tree) for node in tree_nodes
     }
 
     def deferred(node: str) -> bool:
         cost = durations.get(node)
-        heavy = "::" not in node and isinstance(cost, int | float) and cost > HEAVY_MODULE_S
+        heavy = "::" not in node and (
+            (isinstance(cost, int | float) and cost > HEAVY_MODULE_S)
+            or (node not in durations and node in CI_DEFERRED_MODULES)
+        )
         return heavy or node in absent
 
     return tuple(n for n in nodes if not deferred(n)), tuple(n for n in nodes if deferred(n))
@@ -530,11 +528,25 @@ def run_pre_commit_stage(plan: Plan, root: Path, launcher: str, config: str, dea
         raise GateOutcome("pre_commit_failed", tail(output), failing=hooks)
 
 
+def test_process_limit() -> int:
+    """Read the configured process ceiling; invalid configuration refuses validation."""
+    value = os.environ.get(MAX_TEST_PROCESSES_ENV, "1")
+    try:
+        if re.fullmatch(r"[0-9]+", value) is None or int(value) < 1:
+            raise ValueError
+        return int(value)
+    except ValueError:
+        raise GateOutcome(
+            "invalid_configuration", f"{MAX_TEST_PROCESSES_ENV} must be a positive integer", incomplete=True
+        ) from None
+
+
 def parallel_options() -> list[str]:
-    """Two xdist workers (the ceiling) when xdist is importable; whole files stay on one worker."""
-    if importlib.util.find_spec("xdist") is None:
+    """Use configured parallelism when available; keep whole files together."""
+    limit = test_process_limit()
+    if limit == 1 or importlib.util.find_spec("xdist") is None:
         return []
-    return ["-n", str(MAX_TEST_PROCESSES), "--dist", "loadfile"]
+    return ["-n", str(limit), "--dist", "loadfile"]
 
 
 def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> str:
@@ -765,6 +777,7 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         )
 
     try:
+        test_process_limit()  # refuse invalid configuration even when a receipt would skip testing
         updates = [
             u
             for u in parse_updates(sys.stdin.read() if stdin is None else stdin)

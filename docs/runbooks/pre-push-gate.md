@@ -27,17 +27,21 @@ Stages 2 and 3 run as one pytest process. Importer-closure selection
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
 | `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
-| `validation_incomplete` | 75 | Not validated and not green: `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `invalid_configuration`, `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
 ## Bounds
 
 One admitted gate per repository at a time (lock under the Git common dir), admission wait 300 s, one run
-budget of 600 s shared by every ref update of the push, two test workers (ceiling). Each update is validated
+budget of 600 s shared by every ref update of the push. Each update is validated
 with its own base. Command output goes to a file, and after every command the gate kills any descendant
 that inherited its run token (10 s cleanup bound), so a detached child cannot stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and
 `LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only shorten these.
+
+`LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES` sets the test process ceiling as a positive integer.
+The default is 1 (single process); invalid values refuse validation, including receipt reuse.
+Parallel execution requires xdist and keeps whole files together.
 
 ## Receipts
 

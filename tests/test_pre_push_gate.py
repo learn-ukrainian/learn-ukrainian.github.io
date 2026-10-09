@@ -6,6 +6,7 @@ import fcntl
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -375,7 +376,6 @@ def test_environment_can_shorten_but_never_lengthen_a_bound(monkeypatch: pytest.
     assert gate.bounded("X_BOUND", 600.0) == 5.0
     monkeypatch.setenv("X_BOUND", "nonsense")
     assert gate.bounded("X_BOUND", 600.0) == 600.0
-    assert gate.MAX_TEST_PROCESSES == 2
 
 
 # ---- exact outgoing commit --------------------------------------------------------------------------------
@@ -639,7 +639,9 @@ def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path) -
     assert _measurements(repo)[-1]["deferred_to_ci"] == ["tests/test_invariant.py"]
 
 
-def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(tmp_path: Path) -> None:
+def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     nodes = ("tests/a.py", "tests/b.py::test_fast", "tests/c.py")
     _write(tmp_path, gate.DURATIONS_FILE, json.dumps({"tests/a.py": 500, "tests/b.py": 900, "tests/c.py": 5}))
 
@@ -647,8 +649,14 @@ def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(tmp
     assert gate.defer_to_ci(nodes, tmp_path / "nowhere") == (nodes, ())
     _write(tmp_path, gate.DURATIONS_FILE, "[1, 2]")
     assert gate.defer_to_ci(nodes, tmp_path) == (nodes, ())
-    measured = next(iter(gate.MEASURED_COST_S))  # measured locally where the durations table has no row
-    assert gate.defer_to_ci((measured,), tmp_path) == ((), (measured,))
+    deferred = "tests/test_synthetic.py"
+    monkeypatch.setattr(gate, "CI_DEFERRED_MODULES", frozenset({deferred}))
+    assert gate.defer_to_ci((deferred, deferred + "::test_example"), tmp_path) == (
+        (deferred + "::test_example",),
+        (deferred,),
+    )
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps({deferred: 0}))
+    assert gate.defer_to_ci((deferred,), tmp_path) == ((deferred,), ())
 
 
 def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
@@ -689,20 +697,62 @@ def test_sparse_deferrals_name_real_registry_entries() -> None:
         assert set(tree_nodes) <= set(registry)
 
 
-def test_pytest_runs_on_at_most_two_xdist_workers_kept_by_file() -> None:
-    options = gate.parallel_options()
+def test_pytest_defaults_to_a_single_process(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv(gate.MAX_TEST_PROCESSES_ENV, raising=False)
+    assert gate.test_process_limit() == 1
+    assert gate.parallel_options() == []
 
-    assert options == ["-n", "2", "--dist", "loadfile"]  # xdist is a project dependency
-    assert int(options[1]) <= gate.MAX_TEST_PROCESSES
+
+def test_pytest_uses_configured_parallelism_kept_by_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "3")
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: object())
+    assert gate.parallel_options() == ["-n", "3", "--dist", "loadfile"]
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: None)
+    assert gate.parallel_options() == []
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, "1")
+    assert gate.parallel_options() == []
 
 
-def test_measured_cost_rows_name_registered_heavy_modules() -> None:
+@pytest.mark.parametrize(
+    "value",
+    ["", "0", "-1", "1.5", "nan", "inf", "auto", " 3", "+3", "٣", "9" * 5000],
+    ids=["empty", "zero", "negative", "decimal", "nan", "infinite", "auto", "space", "sign", "unicode", "oversized"],
+)
+def test_invalid_process_configuration_refuses_even_without_xdist(value: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(gate.MAX_TEST_PROCESSES_ENV, value)
+    monkeypatch.setattr(gate.importlib.util, "find_spec", lambda name: None)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.parallel_options()
+    assert raised.value.reason == "invalid_configuration"
+    assert raised.value.incomplete
+    assert raised.value.detail == f"{gate.MAX_TEST_PROCESSES_ENV} must be a positive integer"
+
+
+def test_invalid_process_configuration_cannot_reuse_a_green_receipt(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+    assert _run_gate(repo).returncode == 0
+    receipts = _receipts(repo)
+    assert receipts
+    result = _run_gate(repo, extra_env={gate.MAX_TEST_PROCESSES_ENV: "invalid"})
+    assert result.returncode == gate.EXIT_INCOMPLETE
+    assert _verdict(result)["reason"] == "invalid_configuration"
+    assert _receipts(repo) == receipts
+
+
+def test_explicit_ci_deferrals_name_registered_modules_without_timings() -> None:
     registry, _ = gate.load_registry(REPO_ROOT)
-    durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
+    assert isinstance(gate.CI_DEFERRED_MODULES, frozenset)
+    assert set(registry) >= gate.CI_DEFERRED_MODULES
+    assert all("::" not in module for module in gate.CI_DEFERRED_MODULES)
 
-    for module, cost in gate.MEASURED_COST_S.items():
-        assert module in registry and cost > gate.HEAVY_MODULE_S
-        assert module not in durations, "the durations table now has a row; drop the local measurement"
+
+def test_public_gate_material_omits_operational_measurements() -> None:
+    text = GATE_PATH.read_text(encoding="utf-8") + (REPO_ROOT / "docs/runbooks/pre-push-gate.md").read_text(
+        encoding="utf-8"
+    )
+    assert not re.search(r"(?i)load.average|cpu.seconds|loaded.host|measured[^\n]*\d", text)
+    assert not re.search(r"(?i)(?:\d+|two) (?:test |xdist )?workers", text)
 
 
 # ---- review round 1: every ref update, sparse tests, untracked inputs, bounded cleanup -----------------------
@@ -892,7 +942,7 @@ def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
     head = _commit(repo, "green test", "tests/test_new.py")
     (repo / "tests/test_invariant.py").unlink()
     _git(repo, "update-index", "--skip-worktree", "tests/test_invariant.py")
-    monkeypatch.setattr(gate, "MEASURED_COST_S", {"tests/test_invariant.py": gate.HEAVY_MODULE_S + 1})
+    monkeypatch.setattr(gate, "CI_DEFERRED_MODULES", frozenset({"tests/test_invariant.py"}))
     update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
 
     plan = gate.build_plan(update, repo)
