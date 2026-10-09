@@ -160,11 +160,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "f74b23c4e494751935f713cdbc649a527ce14b2f041801aeececa75529ef2430:1",
     ),
     (
-        "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "e1c4f4e4369dffd4e0c9c4d51d4d082c8789721e879d22ebfee6aef3a4cfce06:1 fd09128afff7fbca3c1a089afb3da98cc077f4d947a5bfe8c3b22846fbebda45:1",
-    ),
-    (
         "scripts/lexicon/curriculum_atlas_intake.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "9f8c849f6397c57001976e5f13b13a4a2b2fd84c86e94b9d7532d15692114bcf:1 e9c2b41d5f26e6d8bf4102ed118299a0e9d80b5f5ba5172b557dffa3ed66c7b1:1",

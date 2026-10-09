@@ -10,12 +10,14 @@ Usage:
 
 import argparse
 import hashlib
+import math
 import os
 import re
 import sys
 import tempfile
 import time
 from collections.abc import Callable
+from itertools import chain
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -48,9 +50,278 @@ DOWNLOAD_CHUNK_SIZE = 1024 * 1024
 # Polite crawl delay (seconds between requests)
 CRAWL_DELAY = 2.0
 
+# Local command-line acquisition policy; intentionally no shared network layer.
+USER_AGENT = (
+    "LearnUkrainianBot/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+_access_stopped = False
+_robots_delays: dict[str, float] = {}
+_robots_states: dict[str, dict | None] = {}
+_request_times: dict[str, float] = {}
+
+
+class AccessStopped(RuntimeError):
+    """A source denied acquisition; no later network request is allowed this run."""
+
+
+def _check_access(status: int, headers: object, body: str = "") -> None:
+    global _access_stopped
+    fields = {str(k).lower(): str(v).lower().strip() for k, v in headers.items()}
+    lowered = body[:8000].lower()
+    challenged = fields.get("cf-mitigated") == "challenge" or any(
+        marker in lowered for marker in (
+            "checking your browser", "cf-browser-verification", "cf_chl_", "cf-chl-",
+            "attention required! | cloudflare", "enable javascript and cookies to continue",
+        )
+    ) or bool(re.search(r"<title[^>]*>\s*just a moment", lowered))
+    if _access_stopped or status in {403, 429} or challenged:
+        _access_stopped = True
+        raise AccessStopped("Source access denied or challenged; acquisition stopped for this run")
+
+
+def _robots_stop(reason: str) -> None:
+    global _access_stopped
+    _access_stopped = True
+    raise AccessStopped(reason)
+
+
+def _robots_token(header: str) -> bytes:
+    """Derive the RFC product token from the identification actually sent."""
+    raw = header.encode("utf-8").lower()
+    end = 0
+    while end < len(raw) and (97 <= raw[end] <= 122 or raw[end] in b"_-"):
+        end += 1
+    if not end:
+        _robots_stop("robots_configuration")
+    return raw[:end]
+
+
+def _robots_parse(body: bytes, header: str) -> dict:
+    """Admit raw records under the adopted #8999 fail-closed contract."""
+    token = _robots_token(header)
+    product = header.encode("utf-8").split(b"/", 1)[0].lower()
+    unresolved = len(body) > 512000 or b"\x00" in body or body.startswith(
+        (b"\xff\xfe", b"\xfe\xff", b"\x00\x00\xfe\xff")
+    )
+    if body.startswith(b"\xef\xbb\xbf"):
+        body = body[3:]
+    groups, rfc_groups = [], []
+    agents, rules, delays = [], [], []
+    rfc_agents, rfc_rules, rfc_delays = [], [], []
+    rfc_directives = False
+    orphan = []
+    seen_agent = directives = False
+    # Only CR/LF delimit records: bytes.splitlines would also split CTLs.
+    for line in body.replace(b"\r\n", b"\n").replace(b"\r", b"\n").split(b"\n"):
+        line = line.split(b"#", 1)[0]
+        start = 0
+        while start < len(line) and line[start] in b" \t\v\f":
+            start += 1
+        end = start
+        while end < len(line) and (
+            65 <= line[end] <= 90 or 97 <= line[end] <= 122 or line[end] in b"_-"
+        ):
+            end += 1
+        key = line[start:end].lower()
+        if key not in (b"user-agent", b"allow", b"disallow", b"crawl-delay"):
+            continue  # Other records never end a group.
+        colon = end
+        while colon < len(line) and line[colon] in b" \t":
+            colon += 1
+        if any(o not in b" \t" for o in line[:start]) or line[colon:colon + 1] != b":":
+            unresolved = True  # Structural failure applies to the whole file.
+            continue
+        value = line[colon + 1:].strip(b" \t")
+        if key == b"user-agent":
+            seen_agent = True
+            if directives:
+                groups.append((agents, rules, delays))
+                agents, rules, delays, directives = [], [], [], False
+            if rfc_directives:
+                rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
+                rfc_agents, rfc_rules, rfc_delays, rfc_directives = [], [], [], False
+            value = value.lower()
+            rfc_agents.append(value)
+            leading = 0
+            while leading < len(value) and (97 <= value[leading] <= 122 or value[leading] in b"_-"):
+                leading += 1
+            if value == b"*" or value == token:
+                agents.append(value)
+            elif value.startswith(b"*") or value[:leading] == token or value in product:
+                unresolved = True
+                agents.append(value)
+            else:
+                agents.append(value)
+        elif key in (b"allow", b"disallow", b"crawl-delay"):
+            directives = bool(agents)
+            if key == b"crawl-delay":
+                if agents:
+                    try:
+                        delay = float(value)
+                    except ValueError:
+                        continue
+                    if math.isfinite(delay) and delay >= 0:
+                        delays.append(delay)
+                        rfc_delays.append(delay)
+                continue
+            # Only Allow/Disallow end the RFC user-agent run, even if empty or malformed.
+            rfc_directives = bool(rfc_agents)
+            malformed = False
+            if value:
+                try:
+                    value.decode("utf-8", errors="strict")
+                except UnicodeDecodeError:
+                    malformed = True
+                malformed |= any(o <= 32 or o == 127 for o in value) or value[:1] not in (b"/", b"*")
+                malformed |= any(
+                    o == 37 and (i + 2 >= len(value) or any(h not in b"0123456789abcdefABCDEF" for h in value[i + 1:i + 3]))
+                    for i, o in enumerate(value)
+                )
+                malformed |= key == b"allow" and b"$" in value[:-1]
+            if key == b"allow" and (malformed or not seen_agent):
+                continue
+            if malformed or value:
+                # None records an unresolved Disallow, selected only with its group.
+                rule = (key == b"allow", None if malformed else value)
+                (rules if seen_agent else orphan).append(rule)
+                if seen_agent:
+                    rfc_rules.append(rule)
+    rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
+    groups.append((agents, rules, delays))
+    selected = [g for g in groups if token in g[0]] or [g for g in groups if b"*" in g[0]]
+    effective = orphan + [rule for _names, values, _delays in selected for rule in values]
+    rfc_selected = [g for g in rfc_groups if token in g[0]] or [g for g in rfc_groups if b"*" in g[0]]
+    rfc_effective = orphan + [rule for _names, values, _delays in rfc_selected for rule in values]
+    unresolved |= any(value is None for _allow, value in effective + rfc_effective)
+    state = {"rules": rfc_effective, "unresolved": unresolved,
+             "delay": max((d for _names, _rules, values in rfc_selected for d in values), default=0.0)}
+    # Legacy grouping only conserves denials; identical lists need two evaluations.
+    if effective != rfc_effective:
+        state["legacy_rules"] = effective
+    return state
+
+
+def _robots_crawl_delay(body: str) -> float:
+    """The same exact group selection drives both permission and pacing."""
+    return _robots_parse(body.encode("utf-8"), USER_AGENT)["delay"]
+
+
+def _robots_canonical(raw: bytes, *, rule: bool, reading: int) -> tuple[str, bool, int]:
+    """R1 uses atomic escape tokens; R2 uses encoded canonical characters."""
+    result = []
+    anchored = False
+    specificity = 0
+    i = 0
+    unreserved = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+    reserved = b":/?#[]@!&'()+,;="
+    while i < len(raw):
+        octet = raw[i]
+        if octet == 37 and i + 2 < len(raw) and all(h in b"0123456789abcdefABCDEF" for h in raw[i + 1:i + 3]):
+            octet = int(raw[i + 1:i + 3], 16)
+            escaped = octet not in unreserved
+            i += 3
+        else:
+            final = i == len(raw) - 1
+            i += 1
+            if rule and octet == 42:
+                result.append("*")
+                specificity += 1
+                continue
+            if rule and octet == 36 and final:
+                anchored = True
+                specificity += 1
+                continue
+            escaped = octet not in unreserved and (reading == 2 or octet not in reserved)
+        if escaped:
+            result.append(chr(0xE000 + octet) if reading == 1 else f"%{octet:02X}")
+            specificity += 3
+        else:
+            result.append(chr(octet))
+            specificity += 1
+    return "".join(result), anchored, specificity
+
+
+def _robots_match(pattern: str, anchored: bool, target: str) -> bool:
+    """Leftmost segment matching, O(pattern length * target length), no backtracking."""
+    segments = pattern.split("*")
+    if not target.startswith(segments[0]):
+        return False
+    position = len(segments[0])
+    if len(segments) == 1:
+        return not anchored or position == len(target)
+    for segment in segments[1:-1]:
+        found = target.find(segment, position)
+        if found < 0:
+            return False
+        position = found + len(segment)
+    last = segments[-1]
+    if anchored:
+        return len(target) - len(last) >= position and target.endswith(last)
+    return target.find(last, position) >= 0
+
+
+def _robots_target(url: str) -> bytes:
+    # Preserve params, a bare question mark, and the exact query; remove fragment.
+    target = url.split("#", 1)[0]
+    if "://" in target:
+        target = target.split("://", 1)[1]
+        cut = min((p for p in (target.find("/"), target.find("?")) if p >= 0), default=len(target))
+        target = target[cut:]
+    if not target.startswith("/"):
+        target = "/" + target
+    return target.encode("utf-8")
+
+
+def _robots_check_target(url: str) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    state = _robots_states.get(origin)
+    if state is None or state["unresolved"]:
+        _robots_stop("robots_unresolved")
+    target = _robots_target(url)
+    path = target.split(b"?", 1)[0]
+    if _robots_canonical(path, rule=False, reading=1)[0] == "/robots.txt":
+        return
+    decisions = []
+    rule_sets = [state["rules"]]
+    if "legacy_rules" in state:
+        rule_sets.append(state["legacy_rules"])
+    for rules in rule_sets:
+        for reading in (1, 2):
+            canonical = _robots_canonical(target, rule=False, reading=reading)[0]
+            top = []
+            best = -1
+            for allow, value in rules:
+                pattern, anchored, specificity = _robots_canonical(value, rule=True, reading=reading)
+                if _robots_match(pattern, anchored, canonical):
+                    if specificity > best:
+                        top, best = [], specificity
+                    if specificity == best:
+                        top.append((allow, pattern, anchored))
+            allows = {(pattern, anchored) for allow, pattern, anchored in top if allow}
+            denies = {(pattern, anchored) for allow, pattern, anchored in top if not allow}
+            decisions.append("allow" if not top or (allows and denies <= allows) else "disallow" if not allows else "ambiguous")
+    if not all(d == "allow" for d in decisions):
+        _robots_stop("robots_disallowed" if all(d == "disallow" for d in decisions) else "robots_ambiguous")
+
+
+def _wait_for_request(url: str, floor: float = 0.0) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    delay = max(floor, _robots_delays.get(origin, 0.0))
+    previous = _request_times.get(origin)
+    if previous is not None:
+        remaining = delay - (time.monotonic() - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+    _request_times[origin] = time.monotonic()
+
+
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "User-Agent": USER_AGENT,
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 
@@ -65,6 +336,80 @@ class DownloadValidationError(ValueError):
     """Raised when a streamed response cannot be retained as a PDF."""
 
     pass
+
+
+def _request(url: str, *, session=None, method: str = "get", robots: bool = True,
+             follow_redirects: bool = True, **kwargs):
+    """Check and pace every HTTP hop, including form and PDF requests."""
+    _check_access(0, {})
+    _robots_token(HEADERS["User-Agent"])
+    for _hop in range(9 if robots else 11):
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            _robots_stop("robots_unreachable: unsupported scheme")
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if robots and origin not in _robots_states:
+            _robots_states[origin] = None
+            _robots_delays[origin] = 0.0
+            try:
+                response = _request(f"{origin}/robots.txt", session=session, robots=False, timeout=30)
+                try:
+                    status = response.status_code
+                    state = _robots_parse(response.content, HEADERS["User-Agent"]) if 200 <= status < 300 else _robots_parse(b"", HEADERS["User-Agent"])
+                    _robots_states[origin] = state
+                    _robots_delays[origin] = state["delay"]
+                finally:
+                    _safe_close(response)
+            except requests.RequestException as exc:
+                _robots_stop(f"robots_unreachable: {type(exc).__name__}")
+        if robots:
+            prepared = requests.Request(method, url, params=kwargs.get("params")).prepare().url
+            _robots_check_target(prepared)
+        _wait_for_request(url, CRAWL_DELAY)
+        sender = getattr(session or requests, method)
+        response = sender(url, headers=HEADERS, allow_redirects=False, **kwargs)
+        try:
+            status = getattr(response, "status_code", 200)
+            _check_access(status, getattr(response, "headers", {}))
+            # Do not hydrate PDF streams to inspect an HTML page.
+            if not kwargs.get("stream"):
+                _check_access(status, getattr(response, "headers", {}), response.text)
+            elif status >= 300 or "text/html" in _header(response, "Content-Type").lower():
+                # Inspect at most one bounded prefix before errors/redirects or
+                # confirmation parsing, then replay it into the existing stream.
+                stream = response.iter_content(chunk_size=8192)
+                prefix: list[bytes] = []
+                size = 0
+                for chunk in stream:
+                    prefix.append(chunk)
+                    size += len(chunk)
+                    if size >= 8000:
+                        break
+                saved_prefix = b"".join(prefix)
+                _check_access(status, getattr(response, "headers", {}), saved_prefix[:8000].decode("utf-8", errors="replace"))
+                # Replay the prefix together so PDF magic split across transport
+                # chunks is still visible to the existing retention validator.
+                response.iter_content = lambda chunk_size, saved=saved_prefix, rest=stream: chain((saved,), rest)
+            if robots:
+                response.raise_for_status()
+            location = _header(response, "Location")
+            if follow_redirects and status in {301, 302, 303, 307, 308} and location:
+                url = urljoin(url, location)
+                _safe_close(response)
+                kwargs.pop("params", None)
+                if status == 303 or (status in {301, 302} and method == "post"):
+                    method = "get"
+                    kwargs.pop("data", None)
+                continue
+            if not robots and not (200 <= status < 300 or 400 <= status < 500):
+                _robots_stop("robots_unreachable")
+            return response
+        except BaseException:
+            _safe_close(response)
+            raise
+    if not robots:
+        _robots_stop("robots_unreachable: redirect limit")
+    raise requests.TooManyRedirects("Acquisition exceeded redirect limit")
 
 
 def transliterate_ua(text: str) -> str:
@@ -274,10 +619,10 @@ def extract_pdf_links(slug: str, author: str, grade: int, target_year: int | Non
     url = f"{BASE_URL}/{slug}.html"
     print(f"  Fetching: {url}")
 
-    resp = requests.get(url, headers=HEADERS, timeout=30)
-    resp.raise_for_status()
+    resp = _request(url, timeout=30)
 
     soup = BeautifulSoup(resp.text, "html.parser")
+    _safe_close(resp)
 
     # Title guard (hard)
     title_tag = soup.find("title")
@@ -405,9 +750,9 @@ def extract_shkola_pdf_links(
 
     session = requests.Session()
     session.headers.update(HEADERS)
-    response = session.get(page_url, timeout=30)
-    response.raise_for_status()
+    response = _request(page_url, session=session, timeout=30)
     soup = BeautifulSoup(response.text, "html.parser")
+    _safe_close(response)
     title_tag = soup.find("title")
     title_text = title_tag.get_text(strip=True) if title_tag else ""
     title_norm = normalize_whitespace(title_text)
@@ -437,12 +782,11 @@ def extract_shkola_pdf_links(
             continue
 
         endpoint = urljoin(getattr(response, "url", page_url), form.get("action") or "")
-        redirect = session.post(
-            endpoint,
+        redirect = _request(
+            endpoint, session=session, method="post", follow_redirects=False,
             data={"vslink": button["value"]},
             timeout=30,
             stream=True,
-            allow_redirects=False,
         )
         try:
             redirect.raise_for_status()
@@ -611,6 +955,7 @@ def _retain_response(
         digest = hashlib.sha256()
         total = 0
         first_nonempty = b""
+        access_prefix = b""
         with temporary.open("wb") as handle:
             for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
                 if not chunk:
@@ -619,6 +964,9 @@ def _retain_response(
                     raise DownloadValidationError("response yielded text instead of bytes")
                 if not first_nonempty:
                     first_nonempty = bytes(chunk)
+                if not first_nonempty.startswith(PDF_SIGNATURE):
+                    access_prefix += chunk[:max(0, 8000 - len(access_prefix))]
+                    _check_access(200, {}, access_prefix.decode("utf-8", errors="ignore"))
                 total += len(chunk)
                 if max_size_bytes is not None and total > max_size_bytes:
                     raise DownloadValidationError(
@@ -684,7 +1032,7 @@ def download_pdf(
         return False
 
     print(f"  Downloading: {dest.name}...")
-    resp = requests.get(url, headers=HEADERS, timeout=120, stream=True)
+    resp = _request(url, timeout=120, stream=True)
     try:
         resp.raise_for_status()
         return _retain_response(
@@ -727,7 +1075,7 @@ def download_from_gdrive(
     session.headers.update(HEADERS)
 
     # Step 1: Initial request
-    resp = session.get(url, params={"export": "download", "id": drive_id}, stream=True, timeout=120)
+    resp = _request(url, session=session, params={"export": "download", "id": drive_id}, stream=True, timeout=120)
     resp.raise_for_status()
 
     # Check if we got the confirmation page
@@ -736,7 +1084,39 @@ def download_from_gdrive(
     confirm_url = url
     content_type = resp.headers.get("Content-Type", "")
     if "text/html" in content_type:
-        html_content = resp.text
+        # Read confirmation HTML through the bounded stream, never Response.text.
+        # The first 8 KiB is sufficient for the established challenge markers.
+        html_bytes = bytearray()
+        try:
+            stream = resp.iter_content(chunk_size=8192)
+            for chunk in stream:
+                html_bytes.extend(chunk)
+                _check_access(resp.status_code, resp.headers, html_bytes[:8000].decode("utf-8", errors="replace"))
+                if html_bytes.startswith(PDF_SIGNATURE):
+                    # Content-Type can label a valid PDF as HTML. Identify it
+                    # before applying the confirmation-only cap, then retain
+                    # the inspected bytes and this same remaining iterator.
+                    resp.iter_content = lambda chunk_size, saved=bytes(html_bytes), rest=stream: chain((saved,), rest)
+                    try:
+                        return _retain_response(
+                            resp,
+                            dest,
+                            retained_store=retained_store or retained_root,
+                            max_size_bytes=max_size_bytes,
+                            invalid_detail=_invalid_pdf_title,
+                        )
+                    finally:
+                        _safe_close(resp)
+                limit = min(DOWNLOAD_CHUNK_SIZE, max_size_bytes or DOWNLOAD_CHUNK_SIZE)
+                if len(html_bytes) > limit:
+                    raise DownloadValidationError("confirmation HTML exceeds response limit")
+            html_content = html_bytes.decode("utf-8", errors="replace")
+            # A non-confirmation response still goes through PDF validation.
+            # Replay every inspected byte, including a mislabeled valid PDF.
+            resp.iter_content = lambda chunk_size, saved=bytes(html_bytes): iter((saved,))
+        except BaseException:
+            _safe_close(resp)
+            raise
 
         # 1. Parse HTML using BeautifulSoup
         soup = BeautifulSoup(html_content, "html.parser")
@@ -797,7 +1177,7 @@ def download_from_gdrive(
         if uuid_token:
             params["uuid"] = uuid_token
         _safe_close(resp)
-        resp = session.get(confirm_url, params=params, stream=True, timeout=120)
+        resp = _request(confirm_url, session=session, params=params, stream=True, timeout=120)
         resp.raise_for_status()
 
     try:
@@ -924,6 +1304,8 @@ def main():
             except TitleGuardError:
                 # Expected-vs-actual warning printed inside extract_pdf_links
                 time.sleep(CRAWL_DELAY)
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"  ERROR fetching page: {e}")
                 time.sleep(CRAWL_DELAY)
@@ -939,6 +1321,8 @@ def main():
                     )
                     if pdfs:
                         print(f"  Using Shkola fallback: {fallback_page_url}")
+                except AccessStopped:
+                    raise
                 except Exception as exc:
                     print(f"  WARNING: fallback page failed: {exc}")
 
@@ -995,6 +1379,8 @@ def main():
                         retained_store=retained_store,
                         max_size_bytes=args.max_size_bytes,
                     )
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"  WARNING: primary download failed for {filename}: {e}")
                 downloaded = None
@@ -1019,6 +1405,8 @@ def main():
                             )
                         print(f"  Used same-page mirror: {alternate['label']}")
                         break
+                    except AccessStopped:
+                        raise
                     except Exception as alternate_error:
                         print(f"  WARNING: same-page mirror failed: {alternate_error}")
                 if downloaded is None:
@@ -1054,6 +1442,8 @@ def main():
                                 )
                             print(f"  Used Shkola fallback: {fallback_page_url}")
                             break
+                        except AccessStopped:
+                            raise
                         except Exception as fallback_error:
                             print(f"  WARNING: fallback download failed: {fallback_error}")
                 if downloaded is None:

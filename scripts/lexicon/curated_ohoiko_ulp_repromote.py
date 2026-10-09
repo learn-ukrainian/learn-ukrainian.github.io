@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from collections.abc import Mapping, Sequence
@@ -58,8 +59,8 @@ DEFAULT_INVENTORY = PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/oh
 DEFAULT_DECISIONS = (
     PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml"
 )
-DEFAULT_CANDIDATES = Path("/tmp/atlas-ohoiko-ulp-curated-candidates.json")
-DEFAULT_PLAN = Path("/tmp/atlas-ohoiko-ulp-curated-plan.json")
+CANDIDATES_FILENAME = "atlas-ohoiko-ulp-curated-candidates.json"
+PLAN_FILENAME = "atlas-ohoiko-ulp-curated-plan.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 SOURCE_ID = "ohoiko-ulp-curated-2026-07-19-bulk"
@@ -398,6 +399,17 @@ def build_candidates(inventory_path: Path, out: Path) -> Path:
     return out
 
 
+def _temp_output(filename: str) -> Path:
+    """Resolve an artifact under caller-owned scratch without taking cleanup ownership."""
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        raise ValueError("Set TMPDIR to caller-owned scratch or provide explicit temporary output paths")
+    root = Path(tmpdir)
+    if not root.is_absolute() or not root.is_dir():
+        raise ValueError("TMPDIR must be an existing absolute directory")
+    return root / filename
+
+
 def apply_plan(
     *,
     candidates: Path,
@@ -405,13 +417,15 @@ def apply_plan(
     manifest: Path,
     fingerprint: Path,
     write: bool,
+    plan_out: Path | None = None,
 ) -> dict[str, Any]:
+    plan_out = plan_out if plan_out is not None else _temp_output(PLAN_FILENAME)
     plan = planner.build_promotion_plan(
         candidates_path=candidates,
         decision_files=[decisions],
         manifest_path=manifest,
     )
-    planner.write_plan(plan, DEFAULT_PLAN)
+    planner.write_plan(plan, plan_out)
     print("plan", plan["counts"], flush=True)
     if not write:
         return {"plan": plan["counts"], "wrote": False}
@@ -465,24 +479,63 @@ def apply_plan(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--inventory-out", type=Path, default=DEFAULT_INVENTORY)
-    p.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS)
-    p.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES)
-    p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    p.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
-    p.add_argument("--ulp-min-freq", type=int, default=3, help="Min ULP token frequency to include")
-    p.add_argument("--skip-ulp", action="store_true", help="Only Ohoiko books (1000 words + 500 verbs)")
-    p.add_argument("--write-inventory", action="store_true")
-    p.add_argument("--write-decisions", action="store_true")
+    p = argparse.ArgumentParser(
+        description="Build curated Ohoiko/ULP inventories and promotion plans. Use --apply to plan; --write publishes.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.lexicon.curated_ohoiko_ulp_repromote --write-inventory --write-decisions\n"
+            "  .venv/bin/python -m scripts.lexicon.curated_ohoiko_ulp_repromote --apply --report\n"
+            "Outputs: inventory/decision YAML; --apply writes candidate/plan JSON; --write updates manifest/fingerprint.\n"
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "Artifacts remain until the caller's scratch lifecycle ends; explicit output paths retain caller ownership.\n"
+            "Exit codes: 0 success; 2 invalid arguments; other failures propagate. Related: #9702; source-inventory promotion."
+        ),
+    )
+    p.add_argument(
+        "--inventory-out", type=Path, default=DEFAULT_INVENTORY, help=f"Inventory YAML (default: {DEFAULT_INVENTORY})"
+    )
+    p.add_argument(
+        "--decisions-out", type=Path, default=DEFAULT_DECISIONS, help=f"Decision YAML (default: {DEFAULT_DECISIONS})"
+    )
+    p.add_argument("--candidates-out", type=Path, help=f"Candidate JSON (default: $TMPDIR/{CANDIDATES_FILENAME})")
+    p.add_argument("--plan-out", type=Path, help=f"Plan JSON outside the repository (default: $TMPDIR/{PLAN_FILENAME})")
+    p.add_argument(
+        "--manifest", type=Path, default=DEFAULT_MANIFEST, help=f"Manifest JSON (default: {DEFAULT_MANIFEST})"
+    )
+    p.add_argument(
+        "--fingerprint",
+        type=Path,
+        default=DEFAULT_FINGERPRINT,
+        help=f"Fingerprint JSON (default: {DEFAULT_FINGERPRINT})",
+    )
+    p.add_argument("--ulp-min-freq", type=int, default=3, help="Min ULP token frequency to include (default: 3)")
+    p.add_argument(
+        "--skip-ulp", action="store_true", help="Only Ohoiko books (1000 words + 500 verbs; default: include ULP)"
+    )
+    p.add_argument("--write-inventory", action="store_true", help="Write inventory YAML (default: no write)")
+    p.add_argument(
+        "--write-decisions", action="store_true", help="Write decision and inventory YAML (default: no write)"
+    )
     p.add_argument("--apply", action="store_true", help="Build candidates + promotion plan")
     p.add_argument("--write", action="store_true", help="Write manifest (requires --apply)")
-    p.add_argument("--report", action="store_true")
+    p.add_argument(
+        "--report", action="store_true", help="Print application summary JSON with --apply (default: no report)"
+    )
     return p
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.apply:
+        try:
+            if args.candidates_out is None:
+                args.candidates_out = _temp_output(CANDIDATES_FILENAME)
+            if args.plan_out is None:
+                args.plan_out = _temp_output(PLAN_FILENAME)
+        except ValueError as exc:
+            parser.error(str(exc))
     assert "ohoiko" in CURATED_SOURCE_FAMILIES and "ulp" in CURATED_SOURCE_FAMILIES
 
     book_rows = collect_book_headwords()
@@ -520,6 +573,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             manifest=args.manifest,
             fingerprint=args.fingerprint,
             write=args.write,
+            plan_out=args.plan_out,
         )
         if args.report:
             print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
