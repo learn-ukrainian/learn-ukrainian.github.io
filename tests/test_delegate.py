@@ -18833,6 +18833,104 @@ def test_run_worker_auto_finalize_with_only_owned_changes_is_done(tmp_tasks_dir,
     assert state["status"] == "done"
 
 
+@pytest.mark.parametrize("finalize_failure", [None, "unavailable", "push_failed", "no_owned_paths"])
+@pytest.mark.parametrize("worktree_reused", [False, True])
+def test_run_worker_branch_continuation_finalizes_owned_changes_or_reports_failure(
+    tmp_tasks_dir, tmp_path, monkeypatch, finalize_failure, worktree_reused
+):
+    """#10077: an earlier pushed commit cannot mask uncommitted continuation work."""
+    _sanitize_git_env_for_test(monkeypatch)
+    task_id = "branch-continuation"
+    branch = "codex/original-dispatch"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    artifact = worktree / "artifact.txt"
+    artifact.write_text("original dispatch\n", encoding="utf-8")
+    _git_out(worktree, "add", "artifact.txt")
+    _git_out(worktree, "commit", "-m", "original dispatch")
+    _git_out(worktree, "push", "-u", "origin", branch)
+    original_head = delegate._resolve_sha(worktree)
+    artifact.write_text("continuation changes\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "worktree_base_sha": original_head,
+            "worktree_reused": worktree_reused,
+            "owned_paths": [] if finalize_failure == "no_owned_paths" else ["artifact.txt"],
+            "keep_worktree": True,
+        },
+    )
+    if finalize_failure == "unavailable":
+        def unavailable(**_kwargs):
+            raise OSError("finalize unavailable")
+
+        monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", unavailable)
+    elif finalize_failure == "push_failed":
+        # Use the real push path against a missing local repository.
+        _git_out(worktree, "remote", "set-url", "--push", "origin", str(tmp_path / "missing.git"))
+
+    result = Result(
+        ok=True,
+        agent="codex",
+        model="gpt-6.1-sol",
+        mode="danger",
+        response="",
+        stderr_excerpt=None,
+        duration_s=0.1,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=0,
+    )
+    with patch("agent_runtime.runner.invoke", return_value=result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="continue the existing branch",
+            mode="danger",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            effort="high",
+            keep_worktree=True,
+        )
+
+    state = delegate._read_state(state_path)
+    assert state is not None
+    remote_head = _git_out(worktree, "ls-remote", "origin", f"refs/heads/{branch}").split()[0]
+    if finalize_failure is None:
+        assert rc == 0
+        assert state["status"] == "done"
+        assert state["needs_finalize"] is False
+        assert state["auto_finalize"]["ok"] is True
+        assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
+        assert state["auto_finalize"]["pr_url"] is None
+        assert remote_head == delegate._resolve_sha(worktree) != original_head
+        assert _git_out(worktree, "show", "HEAD:artifact.txt") == "continuation changes\n"
+        assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["artifact.txt"]
+        assert _git_out(worktree, "status", "--porcelain") == ""
+    else:
+        assert rc == 1
+        assert state["status"] == "needs_finalize"
+        assert state["needs_finalize"] is True
+        assert state["worktree_dirty_on_exit"] is True
+        assert remote_head == delegate._resolve_sha(worktree) == original_head
+        assert artifact.read_text(encoding="utf-8") == "continuation changes\n"
+        if finalize_failure == "unavailable":
+            assert state["finalize_error"] == "finalize_failed, OSError"
+            assert state["auto_finalize"] is None
+        elif finalize_failure == "push_failed":
+            assert state["auto_finalize"]["ok"] is False
+            assert state["auto_finalize"]["error"].startswith("auto_finalize_push_failed")
+        else:
+            assert state["auto_finalize"]["ok"] is False
+            assert state["auto_finalize"]["error"] == "no_owned_paths_declared"
+
+
 def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_path, monkeypatch):
     """AC-03: no --owned-path means no auto-finalize commit; the task needs a human."""
     _sanitize_git_env_for_test(monkeypatch)
