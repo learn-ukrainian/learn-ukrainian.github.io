@@ -30,6 +30,62 @@ from scripts.session_supervisor import (
 from tests.helpers.restore_import_state import restore_import_state
 
 
+@pytest.mark.parametrize("resolution", ["recorded", "local-bin", "path", "missing", "non-executable", "directory"])
+def test_successor_preflight_resolves_executable_with_stripped_pane_path(
+    tmp_path: Path, resolution: str, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
+    home = tmp_path / "home"
+    cli = (home / ".local/bin" if resolution == "local-bin" else tmp_path / "cli with spaces") / "fixture-cli"
+    cli.parent.mkdir(parents=True)
+    if resolution == "directory":
+        cli.mkdir()
+    elif resolution != "missing":
+        cli.write_text("#!/bin/sh\nprintf 'provider-found\\n'\n", encoding="utf-8")
+        cli.chmod(0o644 if resolution == "non-executable" else 0o755)
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(helper))}
+LC_DRIVER_PROVIDER_COMMAND=fixture-cli
+LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli)) if resolution != 'local-bin' else "''"}
+session_supervisor_preflight_successor || exit $?
+fixture-cli
+"""
+    env = {**os.environ, "HOME": str(home), "PATH": os.defpath}
+    if resolution == "path":
+        env["PATH"] = f"{cli.parent}{os.pathsep}{os.defpath}"
+        script = script.replace(f"LC_DRIVER_PROVIDER_EXECUTABLE={shlex.quote(str(cli))}", "LC_DRIVER_PROVIDER_EXECUTABLE=/missing/cli")
+    result = subprocess.run(["/bin/bash", "-c", script], env=env, capture_output=True, text=True, timeout=15)
+    if resolution in {"missing", "non-executable", "directory"}:
+        assert result.returncode == 3
+        assert "provider-cli-unavailable" in result.stderr
+        assert "~/.local/bin" in result.stderr
+        assert "Predecessor retained" in result.stderr
+    else:
+        assert result.returncode == 0, result.stderr
+        assert result.stdout == "provider-found\n"
+
+    from scripts.ai_agent_bridge._inbox_watch import preflight_supervisory_successor
+
+    for key in ("HOME", "PATH"):
+        monkeypatch.setenv(key, env[key])
+    monkeypatch.setenv("LC_DRIVER_PROVIDER_COMMAND", "fixture-cli")
+    monkeypatch.setenv("LC_DRIVER_PROVIDER_EXECUTABLE", str(cli) if resolution != "local-bin" else "")
+    assert preflight_supervisory_successor() is (result.returncode == 0)
+
+
+@pytest.mark.parametrize("failure", [OSError("unavailable"), subprocess.TimeoutExpired("bash", 30)])
+def test_watcher_preflight_probe_failure_retains_restart(monkeypatch, capsys, failure) -> None:
+    from scripts.ai_agent_bridge import _inbox_watch
+
+    def fail(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(_inbox_watch.subprocess, "run", fail)
+    assert not _inbox_watch.preflight_supervisory_successor()
+    assert "restart retained for retry" in capsys.readouterr().err
+
+
 def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path: Path) -> None:
     helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
     successor = tmp_path / "start-codex-driver.sh"

@@ -399,7 +399,7 @@ def test_mixed_family_at_lower_risk_keeps_a_third_family(repo, tasks, monkeypatc
     repo.publish()
     fact = facts(repo, tasks, writer=OPUS)
 
-    assert selected(fact, "medium") == "grok-4.7"
+    assert selected(fact, "medium") == "gemini-3.8-flash-high"
     receipt = record_verdict(
         monkeypatch, tmp_path, repo, agent="cursor", model="auto", review_risk="medium", **GROK_RECEIPT
     )
@@ -441,9 +441,14 @@ def test_cursor_auto_incoming_writer_adds_only_cursor_family(repo, tasks):
 
     assert auto.incoming_family == "cursor"
     assert auto.excluded_families == {"anthropic", "openai", "cursor"}
-    # Native Grok remains eligible when Cursor Auto joins the authors.
-    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "grok-4.7"
-    assert selected(auto, "medium") == "grok-4.7"
+    # AGY remains independent; native Grok also remains eligible while its
+    # Cursor transport cannot review a Cursor-authored branch.
+    assert selected(facts(repo, tasks, writer=OPUS), "medium") == "gemini-3.8-flash-high"
+    resolution = recorder.structural_review_route(auto, risk="medium")
+    assert resolution.selected.name == "gemini-3.8-flash-high"
+    trace = {entry.name: entry for entry in resolution.trace}
+    assert trace["grok-4.7"].status == "eligible"
+    assert trace["grok-4.7-cursor-fallback"].status == "excluded"
 
 
 @pytest.mark.parametrize(
@@ -943,6 +948,9 @@ def test_cursor_auto_writer_refuses_where_only_the_cursor_seat_could_review(boun
     repo.commit(OPUS)
     repo.commit(SOL)
     repo.commit(GROK)
+    # AGY is now a low/medium-risk reviewer, so it must also be an author
+    # before only the excluded Cursor review transport remains.
+    repo.commit("agy/gemini-3.8-flash-high")
     repo.publish()
     pass_card = {"issues": [9739], "warnings": {}, "allow_warn_reason": None}
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_args, **_kwargs: (None, pass_card))

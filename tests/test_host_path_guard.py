@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
 from scripts.opsec import needles as nd
 from tests import _host_path_guard as guard
 
@@ -95,3 +96,103 @@ def test_default_mode_reads_the_deployment_file(monkeypatch: pytest.MonkeyPatch,
     finally:
         for cached in (guard._deployment_needles, guard.host_path_re, guard.checkout_path_re):
             cached.cache_clear()
+
+
+def test_template_lines_cover_named_and_placeholder_homes() -> None:
+    text = "\n".join(
+        (
+            f"{guard.FIXTURE_HOME}/<checkout>",
+            "/".join(("", "home", "<user>", "repo")),
+            f"{MAC_HOME}/<project>",
+            f"{DEPLOY_HOME}/<checkout>",
+            f"{guard.FIXTURE_HOME}/plain",
+            "<home>/<checkout>",
+        )
+    )
+    assert guard.host_template_lines(text, needles=GENERIC) == [1, 2, 3]
+    assert guard.host_template_lines(text, needles=DEPLOYED) == [1, 2, 3, 4]
+
+
+def test_template_failure_reports_lines_without_matched_text() -> None:
+    with pytest.raises(AssertionError) as caught:
+        guard.assert_no_host_templates(f"x\n{DEPLOY_HOME}/<checkout>", "doc.md", needles=DEPLOYED)
+    assert "line(s) 2" in str(caught.value)
+    assert "fixture" not in str(caught.value)
+
+
+def test_host_aliases_share_the_sanitizer_source() -> None:
+    if guard.HOST_ALIASES is not _CANONICAL_ALIASES:
+        raise AssertionError("host aliases must reuse the sanitizer's alias set")
+
+
+def test_host_facts_report_all_kinds_and_deduplicate_lines() -> None:
+    aliases = sorted(guard.HOST_ALIASES)
+    ip = ".".join(("192", "0", "2", "10"))
+    addon = "/".join(("", "opt", aliases[0], "bin"))
+    text = f"intro\n{' '.join(aliases)}\n{ip} {ip}\n\tHostName fixture.example\n{addon}\n{aliases[0]}"
+    assert guard.host_fact_lines(text) == {
+        "host alias": [2, 5, 6],
+        "non-loopback IPv4": [3],
+        "SSH HostName": [4],
+        "add-on install tree": [5],
+    }
+
+
+@pytest.mark.parametrize("index", range(len(guard.HOST_ALIASES)))
+def test_host_facts_find_each_alias_and_its_install_tree(index: int) -> None:
+    alias = sorted(guard.HOST_ALIASES)[index]
+    tree = "/".join(("", "opt", alias))
+    assert guard.host_fact_lines(f"{tree}\n{tree}/bin") == {
+        "host alias": [1, 2],
+        "add-on install tree": [1, 2],
+    }
+
+
+@pytest.mark.parametrize("octets", [("10", "0", "0", "1"), ("0", "0", "0", "0"), ("203", "0", "113", "5")])
+def test_host_facts_reject_valid_non_loopback_ipv4(octets: tuple[str, ...]) -> None:
+    ip = ".".join(octets)
+    assert guard.host_fact_lines(f"first\nhttps://{ip}:8000/path\n{ip}.") == {"non-loopback IPv4": [2, 3]}
+
+
+@pytest.mark.parametrize(
+    "octets",
+    [
+        ("127", "0", "0", "1"),
+        ("127", "255", "255", "255"),
+        ("999", "0", "0", "1"),
+        ("10", "000", "0", "1"),
+        ("1", "2", "3", "4", "5"),
+    ],
+)
+def test_host_facts_ignore_loopback_and_invalid_ipv4(octets: tuple[str, ...]) -> None:
+    text = ".".join(octets)
+    assert guard.host_fact_lines(text) == {}
+    guard.assert_no_host_facts(text)
+
+
+@pytest.mark.parametrize("directive", ["HostName fixture.example", "\t hostname fixture.example", "HOSTNAME=fixture.example"])
+def test_host_facts_find_ssh_hostname_directives(directive: str) -> None:
+    assert guard.host_fact_lines(f"first\n{directive}") == {"SSH HostName": [2]}
+
+
+def test_host_facts_ignore_clean_text_and_hostname_mentions() -> None:
+    text = "relative/path\n# HostName placeholder\nexplain HostName here\nHostNameSuffix value\n/opt/fixture-addon/bin"
+    assert guard.host_fact_lines(text) == {}
+    guard.assert_no_host_facts(text)
+
+
+def test_host_fact_failure_reports_all_kinds_without_matched_values() -> None:
+    alias = sorted(guard.HOST_ALIASES)[0]
+    ip = ".".join(("192", "0", "2", "10"))
+    text = f"intro\n{alias}\n{ip}\nHostName fixture.example\n/opt/{alias}/bin"
+    with pytest.raises(AssertionError) as caught:
+        guard.assert_no_host_facts(text, "sample.conf")
+    assert str(caught.value) == (
+        "sample.conf: host alias at line(s) 2, 5; non-loopback IPv4 at line(s) 3; "
+        "SSH HostName at line(s) 4; add-on install tree at line(s) 5"
+    )
+
+
+def test_host_fact_failure_uses_default_label() -> None:
+    with pytest.raises(AssertionError, match=r"^text: SSH HostName at line\(s\) 1$"):
+        guard.assert_no_host_facts("HostName fixture.example")

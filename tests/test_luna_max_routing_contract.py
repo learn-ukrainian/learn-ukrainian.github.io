@@ -1,7 +1,7 @@
 """Contracts for fleet routing and the Codex subagent default.
 
 The fleet catalog's bounded workers are GPT-6 Luna at high. Codex's native
-subagent default matches that scouting seat. Neither selection makes Luna a
+subagent default is Sol; explicit Luna profiles retain that scouting seat. Neither selection makes Luna a
 formal reviewer. Large structural assertions stay in ``test_model_catalog.py``.
 """
 
@@ -18,11 +18,11 @@ SHARED_DOCTRINE = REPO_ROOT / "docs" / "best-practices" / "fleet-shared-doctrine
 ROLE_SCORECARD = REPO_ROOT / "docs" / "best-practices" / "fleet-role-scorecard.md"
 
 
-def test_codex_source_config_defaults_subagents_to_luna_high() -> None:
+def test_codex_source_config_defaults_subagents_to_sol_high() -> None:
     config = tomllib.loads(CODEX_PROJECT_CONFIG.read_text(encoding="utf-8"))
 
     agents = config["agents"]
-    assert agents["default_subagent_model"] == "gpt-6-luna"
+    assert agents["default_subagent_model"] == "gpt-6.1-sol"
     assert agents["default_subagent_reasoning_effort"] == "high"
 
 

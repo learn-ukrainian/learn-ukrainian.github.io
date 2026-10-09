@@ -29,6 +29,9 @@ def _tokenize(line: str) -> list[str] | None:
         # Real operators were separated while quote context was still available.
         lexer = shlex.shlex(line, posix=True)
         lexer.whitespace_split = True
+        # Bash comments were removed at word boundaries by preprocessing.
+        # shlex's default would also truncate ordinary words like feat#x.
+        lexer.commenters = ""
         return list(lexer)
     except ValueError:
         return None
@@ -57,6 +60,7 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
     buf: list[str] = []
     quote: str | None = None
     escaped = False
+    word_start = 0
     i = 0
     while i < len(line):
         ch = line[i]
@@ -73,9 +77,8 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
         elif ch in "'\"":
             buf.append(ch)
             quote = ch
-        elif ch == "#" and (not buf or buf[-1].isspace()):
+        elif ch == "#" and word_start == len(buf):
             # Comment punctuation has no scope or redirect meaning.
-            buf.extend(line[i:])
             break
         elif line.startswith("&&", i):
             # Bash reads &&>file as the AND-list operator followed by >file,
@@ -83,18 +86,27 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
             pieces.append(("text", "".join(buf)))
             pieces.append(("separator", "&&"))
             buf = []
+            word_start = 0
             i += 2
             continue
         elif redirect := _REDIRECT_OPERATOR.match(line, i):
             # An unquoted numeric word glued to a redirect is a descriptor,
             # whereas `5 >file` retains 5 as a command argument.
             raw = "".join(buf)
-            descriptor = re.search(r"(?<!\S)(?:[0-9]+|\{[A-Za-z_][A-Za-z0-9_]*\})$", raw)
+            word = raw[word_start:]
+            number = word.lstrip("0") or "0"
+            # Bash's NUMBER token uses a signed 32-bit descriptor range.
+            # Compare decimal text to avoid converting unbounded input to int.
+            descriptor = bool(re.fullmatch(r"[0-9]+", word)) and (
+                len(number) < 10 or (len(number) == 10 and number <= "2147483647")
+            )
+            descriptor |= bool(re.fullmatch(r"\{[A-Za-z_][A-Za-z0-9_]*\}", word))
             if descriptor and not redirect.group().startswith("&"):
-                raw = raw[: descriptor.start()]
+                raw = raw[:word_start]
             pieces.append(("text", raw))
             pieces.append(("redirect", redirect.group()))
             buf = []
+            word_start = 0
             i = redirect.end()
             continue
         elif ch in "();|&":
@@ -102,8 +114,11 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
             kind = "open" if ch == "(" else "close" if ch == ")" else "separator"
             pieces.append((kind, ch))
             buf = []
+            word_start = 0
         else:
             buf.append(ch)
+            if ch.isspace():
+                word_start = len(buf)
         i += 1
     pieces.append(("text", "".join(buf)))
     return pieces

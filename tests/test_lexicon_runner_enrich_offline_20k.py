@@ -307,8 +307,8 @@ def test_launch_enrich_sh_is_executable_and_documents_caps() -> None:
     path = ROOT / "scripts" / "lexicon" / "runner" / "launch_enrich.sh"
     assert path.is_file()
     text = path.read_text(encoding="utf-8")
-    assert "MemoryHigh=1536M" in text
-    assert "MemoryMax=2048M" in text
+    assert 'MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"' in text
+    assert 'MemoryMax="${JOB_MEMORY_MAX_MIB}M"' in text
     assert "enrich_offline_20k.py" in text
     assert "candidate-ulif-reduce.json" in text
     assert "finalize" in text.lower() or "pin-flip" in text.lower()

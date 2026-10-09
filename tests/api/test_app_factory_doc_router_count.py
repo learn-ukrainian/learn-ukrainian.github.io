@@ -69,7 +69,7 @@ def _step_table_modules() -> list[str]:
     for scope in rows:
         # Drop trailing parentheticals ("(20 modules; ...)", "(own step; ...)", "(mounted ...)").
         scope = re.sub(r"\([^)]*\)", "", scope)
-        names += re.findall(r"`([a-z_]+)\.py`", scope)
+        names += re.findall(r"`([a-z_.]+)\.py`", scope)
     return names
 
 
@@ -113,7 +113,7 @@ def test_step_table_lists_every_imported_router_module_once() -> None:
 def test_step_12_module_count_matches_its_listing() -> None:
     row = next(line for line in DOC.read_text(encoding="utf-8").splitlines() if line.startswith("| 12 |"))
     claimed = int(re.search(r"\((\d+) modules;", row).group(1))
-    assert claimed == len(re.findall(r"`[a-z_]+\.py`", row))
+    assert claimed == len(re.findall(r"`[a-z_.]+\.py`", row))
 
 
 # --- docs/design/monitor-api-router-inventory.md -------------------------------------
@@ -123,6 +123,28 @@ _HTTP_VERB = r"(?:get|post|put|delete|patch|websocket|head|options)"
 
 def _inventory_text() -> str:
     return INVENTORY.read_text(encoding="utf-8")
+
+
+def _router_source(module: str) -> Path:
+    """File that holds a mounted router's handlers.
+
+    A single-file router is ``scripts/api/<module>.py``. A package router is
+    imported as a dotted module whose file is ``router.py`` inside the package.
+    """
+    if module == "main":
+        return MAIN_PY
+    relative = Path(*module.split("."))
+    file_path = (API_DIR / relative).with_suffix(".py")
+    if file_path.is_file():
+        return file_path
+    package_router = API_DIR / relative / "router.py"
+    if package_router.is_file():
+        return package_router
+    return file_path
+
+
+def _router_repo_path(module: str) -> str:
+    return _router_source(module).relative_to(REPO_ROOT).as_posix()
 
 
 def _decorator_count(path: Path, variable: str = "router") -> int:
@@ -156,7 +178,7 @@ def _inventory_rows() -> dict[str, list[str]]:
     rows: dict[str, list[str]] = {}
     section = _inventory_text().split("## Per-router inventory", 1)[1].split("## Global OPSEC seams", 1)[0]
     for line in section.splitlines():
-        match = re.match(r"^\| `([a-z_]+)\.py`(?: \(`[a-z_]+`\))? \| (.+) \|$", line)
+        match = re.match(r"^\| `([a-z_.]+)\.py`(?: \(`[a-z_]+`\))? \| (.+) \|$", line)
         if match:
             assert match.group(1) not in rows, f"duplicate inventory row for {match.group(1)}"
             rows[match.group(1)] = [cell.strip() for cell in match.group(2).split(" | ")]
@@ -186,7 +208,9 @@ def test_inventory_states_exact_router_counts() -> None:
     assert f"### Total router-module count — **{facts['distinct']}** distinct router objects" in text
     assert f"# {facts['registrations']} {facts['distinct']} ['docs_router']" in text
     assert "Only `docs_router` is registered twice" in text
-    assert f"| Distinct router objects (45 imported modules + `core_router`) | {facts['distinct']} |" in text
+    assert (
+        f"| Distinct router objects ({n_modules} imported modules + `core_router`) | {facts['distinct']} |" in text
+    )
     assert f"| Router registrations (`include_router` calls) | {facts['registrations']} |" in text
 
 
@@ -194,7 +218,7 @@ def test_inventory_route_counts_match_the_decorators_and_the_sweep_registry() ->
     facts = _main_router_facts()
     text = _inventory_text()
     expected = sum(
-        _decorator_count(API_DIR / f"{module}.py") for module in facts["router_module"].values() if module != "main"
+        _decorator_count(_router_source(module)) for module in facts["router_module"].values() if module != "main"
     ) + _decorator_count(MAIN_PY, "core_router")
     assert f"**{expected}** decorator sum" in text
     assert f"**{FROZEN_HTTP_OPERATION_COUNT}** OpenAPI HTTP ops + **{FROZEN_WEBSOCKET_ROUTE_COUNT}** WebSocket" in text
@@ -212,7 +236,7 @@ def test_inventory_has_exactly_one_row_per_mounted_router_module() -> None:
         f"{sorted(set(rows) - expected)}"
     )
     for stem in rows:
-        assert (API_DIR / f"{stem}.py").is_file(), f"inventory row for a file that does not exist: {stem}.py"
+        assert _router_source(stem).is_file(), f"inventory row for a module that does not exist: {stem}"
 
 
 def test_inventory_mount_prefixes_match_main() -> None:
@@ -260,7 +284,7 @@ def test_inventory_router_map_matches_main_and_names_no_missing_file() -> None:
     block = re.search(r"ROUTER_MAP = (\{.*?\n\})", _inventory_text(), re.DOTALL)
     assert block, "ROUTER_MAP block not found in the inventory"
     router_map = ast.literal_eval(block.group(1))
-    expected = {router: f"scripts/api/{module}.py" for router, module in facts["router_module"].items()}
+    expected = {router: _router_repo_path(module) for router, module in facts["router_module"].items()}
     assert router_map == expected
     for path in router_map.values():
         assert (REPO_ROOT / path).is_file(), f"ROUTER_MAP names a file that does not exist: {path}"
