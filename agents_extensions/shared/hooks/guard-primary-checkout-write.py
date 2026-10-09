@@ -27,8 +27,8 @@ Covered write surfaces
 * ``apply_patch`` and Codex ``Edit`` / ``Write`` aliases — file paths parsed from
   the ``*** Add/Update/Delete File:`` / ``*** Move to:`` headers of the patch
   body (issue #4447 verified Codex CLI fires PreToolUse for ``apply_patch``).
-* ``Bash`` — write-capable redirection (including ``>&`` file operands and
-  ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations,
+* ``Bash`` / ``Monitor`` (``tool_input.command``) — write-capable redirection
+  (including ``>&`` file operands and ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations,
   removed ``mv`` / ``rsync --remove-source-files`` sources, direct filesystem
   mutators (``rm``, ``unlink``, ``rmdir``, ``truncate``, ``shred``, ``chmod``,
   ``chown``, ``touch``), and in-place editors (``sed -i`` / ``perl -i``).
@@ -2514,6 +2514,9 @@ def main() -> int:
     tool_name = _tool_name(payload)
     if not tool_name:
         return 0
+    # Monitor executes tool_input.command just like Bash; its timeout and
+    # description fields do not change shell target extraction.
+    is_shell_tool = tool_name in {"Bash", "Monitor"}
 
     if "tool_input" in payload and not isinstance(payload["tool_input"], dict):
         return _block_uncertain("malformed_tool_input")
@@ -2522,7 +2525,7 @@ def main() -> int:
     cwd = _payload_cwd(payload)
     command = ""
 
-    if tool_name == "Bash":
+    if is_shell_tool:
         raw_command = tool_input.get("command", "")
         if not isinstance(raw_command, str):
             return _block_uncertain("malformed_hook_command")
@@ -2542,7 +2545,7 @@ def main() -> int:
     # Git commands mutate outside shell redirections/write-tool payloads, so
     # retain their parsed intents for the primary-checkout containment pass.
     git_intents: list[dict[str, object]] = []
-    if tool_name == "Bash" and command:
+    if is_shell_tool and command:
         try:
             git_intents = bash_git_write_intents(command, cwd=cwd)
         except Exception:
@@ -2565,7 +2568,7 @@ def main() -> int:
     except Exception:
         return _block_uncertain("undecidable_cwd")
 
-    if tool_name == "Bash":
+    if is_shell_tool:
         try:
             raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
         except ShellPreprocessLimit:
@@ -2573,7 +2576,7 @@ def main() -> int:
 
     # --- #5396: git-mediated mutations against the primary worktree ----------
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
-    if tool_name == "Bash" and command and not allow_primary_git:
+    if is_shell_tool and command and not allow_primary_git:
         try:
             for intent in git_intents:
                 if intent.get("allowlisted"):
@@ -2627,7 +2630,7 @@ def main() -> int:
     try:
         decisions: list[tuple[str, object]] = []
         for raw in raw_targets:
-            if tool_name == "Bash":
+            if is_shell_tool:
                 # Words were expanded from same-command assignments (#5404 /
                 # #8500); any unknown value blocks (_bash_path_decision).
                 decision = _bash_path_decision(raw, cwd, wc, main_root)

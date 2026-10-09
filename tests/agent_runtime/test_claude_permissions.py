@@ -16,6 +16,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -119,7 +120,8 @@ def test_claude_worker_modes_install_guards(mode: str, tmp_path: Path) -> None:
     assert "--bare" not in plan.cmd
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     hooks = settings["hooks"]["PreToolUse"]
-    assert {"Bash", "Write|Edit|MultiEdit"} <= {group["matcher"] for group in hooks}
+    for tool in ("Bash", "Monitor", "Write", "Edit", "MultiEdit"):
+        assert any(re.fullmatch(group["matcher"], tool) for group in hooks), tool
     commands = [hook["command"] for group in hooks for hook in group["hooks"]]
     tracked_hooks = Path(__file__).resolve().parents[2] / "agents_extensions/shared/hooks"
     for name in (

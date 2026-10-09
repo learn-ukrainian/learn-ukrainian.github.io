@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -62,7 +63,7 @@ def _bash_python_hooks() -> tuple[str, ...]:
     names = {
         Path(hook["command"]).name
         for group in settings["hooks"]["PreToolUse"]
-        if group["matcher"] == "Bash"
+        if re.fullmatch(group["matcher"], "Bash")
         for hook in group["hooks"]
         if hook["command"].endswith(".py")
     }

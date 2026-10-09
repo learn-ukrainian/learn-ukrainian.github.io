@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Put the shared gh shim first for Claude Bash tools; routing only."""
+"""Put the shared gh shim first for Claude Bash/Monitor tools; routing only."""
 
 from __future__ import annotations
 
@@ -69,7 +69,7 @@ def invokes_gh(command: str) -> bool:
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
-        if payload.get("tool_name") != "Bash":
+        if payload.get("tool_name") not in {"Bash", "Monitor"}:
             return 0
         root = next(parent for parent in Path(__file__).resolve().parents if (parent / "scripts/opsec").is_dir())
         sys.path.insert(0, str(root))
