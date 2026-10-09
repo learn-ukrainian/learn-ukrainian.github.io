@@ -134,10 +134,18 @@ source "$1" && launcher_selector_stream "$2"
           || HYDRATION_RC=$?
       fi
       if [ "$HYDRATION_RC" -eq 0 ]; then
+        # The lane goal file is the operator-maintained state; a stream boundary
+        # can lag behind it, so the goal file wins when the two disagree.
+        GOAL_REL=".claude/${SESSION_EPIC}-epic/DRIVER-STATE.md"
+        if [ -f "$PROJECT_DIR/$GOAL_REL" ]; then
+          BOUNDARY_RULE="Lane goal file: $GOAL_REL. It outranks the capsule's next_drive_boundary: where they conflict, follow the goal file and record a corrected next_action in the stream. Native Codex still owns compaction."
+        else
+          BOUNDARY_RULE="Native Codex still owns compaction; continue only from the capsule's next_drive_boundary."
+        fi
         CONTEXT="CODEX FLEET-DRIVER HYDRATION
 $HYDRATION
 Shadow diary: $DIARY_REL
-Native Codex still owns compaction; continue only from the capsule's next_drive_boundary."
+$BOUNDARY_RULE"
       else
         CONTEXT="CODEX FLEET-DRIVER HYDRATION BLOCKED
 ${HYDRATION:-Hydration helper unavailable.}
