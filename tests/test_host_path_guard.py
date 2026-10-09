@@ -95,3 +95,25 @@ def test_default_mode_reads_the_deployment_file(monkeypatch: pytest.MonkeyPatch,
     finally:
         for cached in (guard._deployment_needles, guard.host_path_re, guard.checkout_path_re):
             cached.cache_clear()
+
+
+def test_template_lines_cover_named_and_placeholder_homes() -> None:
+    text = "\n".join(
+        (
+            f"{guard.FIXTURE_HOME}/<checkout>",
+            "/".join(("", "home", "<user>", "repo")),
+            f"{MAC_HOME}/<project>",
+            f"{DEPLOY_HOME}/<checkout>",
+            f"{guard.FIXTURE_HOME}/plain",
+            "<home>/<checkout>",
+        )
+    )
+    assert guard.host_template_lines(text, needles=GENERIC) == [1, 2, 3]
+    assert guard.host_template_lines(text, needles=DEPLOYED) == [1, 2, 3, 4]
+
+
+def test_template_failure_reports_lines_without_matched_text() -> None:
+    with pytest.raises(AssertionError) as caught:
+        guard.assert_no_host_templates(f"x\n{DEPLOY_HOME}/<checkout>", "doc.md", needles=DEPLOYED)
+    assert "line(s) 2" in str(caught.value)
+    assert "fixture" not in str(caught.value)

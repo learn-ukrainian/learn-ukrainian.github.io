@@ -15,6 +15,7 @@ from scripts.projects.open_model_data.v4_open_weight_learning_study import (
     OPERATOR_EXCLUDED_RESIDUALS,
     assert_no_private_host_paths,
 )
+from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 STUDY_DIR = Path("data/projects/open_model_data/study")
@@ -151,4 +152,4 @@ def test_privacy_host_paths_clean() -> None:
                 assert_no_private_host_paths(json.loads(line))
 
     with pytest.raises(ValueError, match="Prohibited host path detected"):
-        assert_no_private_host_paths({"test": "/home/ops/secret"})
+        assert_no_private_host_paths({"test": f"{FIXTURE_HOME}/secret"})

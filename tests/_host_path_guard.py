@@ -40,6 +40,13 @@ def checkout_path_re(needles: Needles | None = None) -> re.Pattern[str]:
     return re.compile(pattern + r"(?:/projects)?/learn-ukrainian")
 
 
+@lru_cache(maxsize=8)
+def host_template_re(needles: Needles | None = None) -> re.Pattern[str]:
+    """A home-directory path template: ``/home/<user>`` or ``<any home>/<placeholder>``."""
+    pattern = home_dir_pattern(_deployment_needles() if needles is None else needles)
+    return re.compile(rf"(?:{pattern}|(?<![\w.-])(?:/home|/Users))/<")
+
+
 def _lines(pattern: re.Pattern[str], text: str, home_root: str | None = None) -> list[int]:
     lines = {
         text.count("\n", 0, match.start()) + 1
@@ -72,3 +79,12 @@ def assert_no_host_paths(text: str, where: str = "text", *, needles: Needles | N
 
 def assert_no_checkout_paths(text: str, where: str = "text", *, needles: Needles | None = None) -> None:
     _fail(where, "checkout under a home directory", checkout_path_lines(text, needles=needles))
+
+
+def host_template_lines(text: str, *, needles: Needles | None = None) -> list[int]:
+    """1-based line numbers of home-directory path templates in ``text``."""
+    return _lines(host_template_re(needles), text)
+
+
+def assert_no_host_templates(text: str, where: str = "text", *, needles: Needles | None = None) -> None:
+    _fail(where, "home-directory path template", host_template_lines(text, needles=needles))
