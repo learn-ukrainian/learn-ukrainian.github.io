@@ -6811,6 +6811,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
         manifest_path=manifest,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout_root=tmp_path,
     )
     expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     rows = [("sources", "stdio", "enabled", " ".join([expected["command"], *expected["args"]])), *extra_rows]
@@ -6899,6 +6900,42 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     env = build_agent_env(provider="agy", overrides=invocation.env_overrides)
     assert env["HOME"] == str(plan.agy_home)
     assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
+
+
+def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir, tmp_path, monkeypatch):
+    token = tmp_path / "fixture-token"
+    token.write_text("fixture")
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
+    lease = tmp_path / "runtime-lease"
+    lease.mkdir()
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    task_id = "worker-agy-permission-home"
+    record = {"task_id": task_id, "review": True, "review_profile": "ukrainian", **_agy_ukrainian_exemption("read-only")}
+    record["advisory_exemption"]["review_profile"] = "ukrainian"
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    monkeypatch.setattr(
+        delegate, "_reap_runtime_tmp_lease", lambda *_args: {"tmp_bytes_freed": 0, "tmp_reap_error": None}
+    )
+
+    def invoke(*_args, **kwargs):
+        home = Path(kwargs["tool_config"]["agy_home_override"])
+        settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())["permissions"]
+        assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({checkout})"]
+        assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
+        return _codex_worker_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=invoke):
+        assert delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="review with mcp__sources__verify_word",
+            mode="read-only",
+            cwd_str=str(checkout),
+            model=None,
+            hard_timeout=60,
+            runtime_tmp_root=str(lease),
+        ) == 0
 
 
 def _agy_token_link(plan):

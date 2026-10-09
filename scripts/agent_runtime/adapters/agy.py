@@ -893,7 +893,7 @@ class AgyAdapter:
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
         if review_route:
-            _write_review_permissions(tc, mode=mode, session_id=session_id)
+            _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
@@ -1618,7 +1618,7 @@ def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial
     return AgyHeadlessPermissionDenial(kind, target)
 
 
-def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:
+def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None, cwd: Path) -> None:
     """Write a fresh scoped allow set; refuse requirements or config drift first.
 
     ``agy_required_permissions`` is a list of exact action(target) resources
@@ -1643,7 +1643,7 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
         for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
     )
     try:
-        expected = agy_review_settings(None if permission_only else access)
+        expected = agy_review_settings(None if permission_only else access, checkout_root=cwd)
     except (OSError, ValueError, SyntaxError, StopIteration):
         raise AgyReviewPermissionError("agy_review_permissions_tool_inventory_unavailable") from None
     allow = set(expected["permissions"]["allow"])
