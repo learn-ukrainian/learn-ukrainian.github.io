@@ -10071,12 +10071,16 @@ def _run_worker(
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
-                and mode == "read-only"
-                and (state.get("review") or require_review_verdict or review_id is not None)
+                and (
+                    _dispatch_is_review_typed(argparse.Namespace(**state))
+                    or require_review_verdict
+                    or review_id is not None
+                )
             ):
-                tool_config["review_profile"] = state.get("review_profile")
+                tool_config["review_profile"] = state.get("review_profile") or "code"
                 if (
-                    state.get("review_profile") == "ukrainian"
+                    mode == "read-only"
+                    and tool_config["review_profile"] in {"ukrainian", "code"}
                     and mcp_config_path is None
                     and review_id is None
                     and attempt_id is None
@@ -11695,6 +11699,14 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
+
     if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
@@ -11955,6 +11967,15 @@ def _dispatch(
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    # Reviewer resolution and budget substitution can change the seat after
+    # the original-request guard. Enforce the same boundary on the final route.
+    if (
+        dispatch_agent in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
@@ -15539,8 +15560,13 @@ def _worker_route_argv(target: AdmittedTarget) -> list[str]:
 
     target = require_admitted(target)
     argv = ["--agent", target.recipient]
-    if target.model:
-        argv.extend(["--model", target.model])
+    model = target.model
+    if target.recipient == "cursor":
+        from scripts.review.model_catalog import apply_cursor_model_pins
+
+        model = apply_cursor_model_pins(model)
+    if model:
+        argv.extend(["--model", model])
     return argv
 
 
@@ -15854,6 +15880,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError
 
     def flag_paths(attr: str) -> list[str]:
@@ -15865,6 +15892,18 @@ def _admit_dispatch_target(
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
     review_dispatch = _dispatch_is_review_typed(args)
+    subjects = flag_paths("subject_seat")
+    subject_families = flag_paths("subject_family")
+    if subjects or subject_families:
+        from scripts.review.subject_seat import prepare_subject_exclusion
+
+        subject = prepare_subject_exclusion(
+            subject_seats=frozenset(subjects), subject_families=frozenset(subject_families)
+        )
+        if subject.fail_closed_reason:
+            return f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}", None
+        if not review_dispatch and getattr(args, "mode", None) not in {"workspace-write", "danger"}:
+            return "REVIEW_ROUTE_REFUSED: subject flags require a review or write-dispatch review admission", None
 
     def collect_review_paths() -> tuple[str, ...]:
         try:
@@ -15901,8 +15940,8 @@ def _admit_dispatch_target(
                 if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
                 else ()
             ),
-            review_subject_seats=frozenset(flag_paths("subject_seat")),
-            review_subject_families=frozenset(flag_paths("subject_family")),
+            review_subject_seats=frozenset(subjects),
+            review_subject_families=frozenset(subject_families),
             review_facts=(
                 collect_review_facts
                 if review_dispatch and (getattr(args, "review_profile", None) or "code") in {"code", "infra"}
@@ -15924,7 +15963,9 @@ def _admit_dispatch_target(
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
         args._mechanical_admitted_scope = mechanical_task
-    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+        if target.recipient == "cursor":
+            apply_cursor_model_pins(target.model)
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError, ModelCatalogError) as exc:
         return str(exc), None
     return None, target
 
@@ -16343,6 +16384,14 @@ def _resolve_agent_with_budget_guard(
     is_stale = bool(diags.get("stale", False))
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
+    initial_review_substitution = (
+        review_select is not None
+        and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
+    )
+    if initial_review_substitution and not (isinstance(agents.get(requested), Mapping) and agents[requested]):
+        raise BudgetGuardRefuseError(
+            f"REVIEW_ROUTE_REFUSED: substitute --agent {requested} has no usable budget snapshot; refusing before spawn"
+        )
 
     # An empty ledger is only unknown when the explicit subscription refresh also
     # yielded no authoritative weekly data. Never quietly fail open here.
@@ -16490,11 +16539,19 @@ def _resolve_agent_with_budget_guard(
 
         capacity_exclusions: dict[str, str] = {}
         for candidate in REVIEW_CANDIDATES.values():
-            info = agents.get(candidate.route, {}) or {}
+            info = agents.get(candidate.route)
+            if candidate.route != requested and not (isinstance(info, Mapping) and info):
+                capacity_exclusions[candidate.name] = "substitute has no usable budget snapshot"
+                continue
+            info = info if isinstance(info, Mapping) else {}
             blocked, cause = review_capacity_action(candidate.route, info, diags, candidate.concrete_model)
             if blocked:
                 capacity_exclusions[candidate.name] = cause
-        review_snapshot = {**payload, "review_capacity_exclusions": capacity_exclusions}
+        review_snapshot = {
+            **payload,
+            "agents": {lane: info if isinstance(info, Mapping) else {} for lane, info in agents.items()},
+            "review_capacity_exclusions": capacity_exclusions,
+        }
         sub, chosen = review_select(review_snapshot, requested if needs_action else "")
         if sub == requested and chosen == requested_model:
             if not needs_action:
@@ -16515,8 +16572,14 @@ def _resolve_agent_with_budget_guard(
                 )
             print(note, file=sys.stderr)
             return requested
-        sub_info = agents.get(sub, {}) or {}
-        sub_dict = sub_info if isinstance(sub_info, dict) else {}
+        sub_info = agents.get(sub)
+        if not (isinstance(sub_info, Mapping) and sub_info):
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: substitute --agent {sub} has no usable budget snapshot; refusing before spawn"
+            )
+        sub_dict = dict(sub_info)
+        # #10016: the primary and substitute both use this allowance rule;
+        # pace/reset-reserve writer routing cannot override review hard gates.
         sub_blocked, sub_reason = review_capacity_action(sub, sub_dict, diags, chosen)
         if sub_blocked:
             raise BudgetGuardRefuseError(
@@ -17592,8 +17655,9 @@ def build_parser() -> argparse.ArgumentParser:
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected. "
-            "On agy/gemini this also requires --review-profile ukrainian, and "
-            "a --branch target must be a Ukrainian-content diff."
+            "On agy/gemini this also requires --review-profile code or ukrainian. "
+            "Native AGY code review requires low or medium risk and resolver admission; "
+            "Ukrainian review targets must be Ukrainian-content diffs."
         ),
     )
     d.add_argument(
@@ -17602,8 +17666,9 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
-            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
+            "Native AGY admits code at low or medium risk through the reviewer resolver, "
+            "excluding security-sensitive paths; infra is refused. "
+            "Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(
@@ -17645,7 +17710,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SEAT",
         help=(
             "Seat governed by the change (repeatable); excluded by the reviewer resolver, and by "
-            "write-dispatch review admission (#9739). Default: none. "
+            "write-dispatch review admission (#9739). Requires a review or write-capable mode; "
+            "unknown seats fail closed. Default: none. "
             "Example: --subject-seat codex for a shared adapter change."
         ),
     )
@@ -17656,7 +17722,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="FAMILY",
         help=(
             "Family governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
-            "Unknown families fail closed. Default: none. Example: --subject-family openai."
+            "Also used by write-dispatch review admission. Requires a review or write-capable mode; "
+            "unknown families fail closed. Default: none. Example: --subject-family openai."
         ),
     )
     d.add_argument(

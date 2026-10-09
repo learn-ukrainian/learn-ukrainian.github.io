@@ -777,10 +777,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(
                     f"review_candidates.{name}.transport_fallback_for must reference a primary transport of the same model"
                 )
-        if model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy":
+        if (model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy") and (
+            candidate.get("route") != "agy"
+            or transport_raw != "agy"
+            or models[model_id]["family"] != "google"
+        ):
             raise ModelCatalogError(
-                f"review_candidates.{name} violates operator 2026-09-25: "
-                "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+                f"review_candidates.{name}: Gemini code review requires the native AGY route (#10073)"
             )
         if models[model_id]["lifecycle"] not in {"active", "fallback"}:
             raise ModelCatalogError(f"review candidate {name!r} must reference an active or fallback model")
@@ -982,6 +985,56 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     return model_id
 
 
+
+def apply_cursor_model_pins(model: str | None, catalog: dict[str, Any] | None = None) -> str | None:
+    """Apply Cursor harness model rules: Grok pinning, Claude refusal, and explicit allowlist."""
+    if not model:
+        return None
+
+    text = str(model).strip()
+    text_lower = text.casefold()
+
+    if is_cursor_auto_selector(text):
+        return text
+
+    if "grok-4.7" in text_lower:
+        if text_lower == "grok-4.7" or text_lower == "grok-4.7-high":
+            text = "grok-4.7-high"
+            text_lower = "grok-4.7-high"
+        else:
+            raise ModelCatalogError(
+                f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
+                "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
+            )
+
+    source = catalog or load_model_catalog()
+    model_id = canonical_model_id(text, source)
+    is_claude = bool(model_id and source["models"][model_id]["family"] == "anthropic")
+    # Native Claude CLI aliases are not all catalog aliases (notably Haiku).
+    is_claude = is_claude or any(
+        candidate.split("[", 1)[0].split("-", 1)[0] in {"claude", "opus", "sonnet", "fable", "haiku"}
+        for candidate in _model_id_candidates(text_lower)
+    )
+    if is_claude:
+        from scripts.agent_runtime.adapters.claude import _default_claude_bin
+        if _default_claude_bin():
+            raise ModelCatalogError(
+                f"CURSOR_CLAUDE_REFUSED: Claude models ({text}) must use the native Claude CLI "
+                "while it is available. (operator decision #10205)"
+            )
+
+    allowed_pins = set(cursor_pinned_models(catalog))
+    allowed_pins.update({"grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
+
+    if text not in allowed_pins:
+        raise ModelCatalogError(
+            f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
+            f"Approved pins: {sorted(allowed_pins)} (operator decision #10205)"
+        )
+
+    return text
+
+
 def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
     """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
     if "roles" not in catalog:
@@ -1045,8 +1098,14 @@ def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ..
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     source = catalog or load_model_catalog()
     seat = source["orchestrator_seats"]["cursor"]
-    pin = seat["model_id"]  # load_model_catalog resolves the authored role reference; explicit snapshots stay explicit.
-    return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
+    pin = seat["model_id"]
+
+    def _gen():
+        for model in seat["auto_allowlist"]:
+            if model and model != pin:
+                yield model
+
+    return (pin, *_gen()) if pin else tuple(_gen())
 
 
 def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
@@ -1067,8 +1126,10 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
             f"model {text!r} runs only a delegate-admitted write implementation dispatch "
             f"({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); {fix}"
         )
-    if text not in pins:
-        return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
+    try:
+        apply_cursor_model_pins(text, catalog)
+    except ModelCatalogError as exc:
+        return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}; {exc}"
     return None
 
 

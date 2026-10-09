@@ -577,8 +577,8 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(ordinary_review_scope, env, capsys):
-    """#9538: --review-profile code types the dispatch as a code review, which Gemini never performs."""
+def test_m16_gemini_flash_code_review_with_ukrainian_family_is_refused(ordinary_review_scope, env, capsys):
+    """#10073 admits code review; a conflicting language classification still refuses."""
     rc = _dispatch(
         _argv(
             "--branch",
@@ -591,7 +591,7 @@ def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(o
             model=None,
         )
     )
-    _assert_refused(env, capsys, rc, "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile code")
+    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
 
 
 def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
@@ -610,7 +610,7 @@ def test_m16_ukrainian_review_profile_in_write_mode_without_family_is_refused(en
     rc = _dispatch(
         _argv("--mode", "workspace-write", "--worktree", "--review-profile", "ukrainian", agent="agy", model=None)
     )
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
+    _assert_refused(env, capsys, rc, "agy_review_permissions_require_read_only")
 
 
 @pytest.mark.parametrize(
@@ -786,8 +786,11 @@ def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, 
 
 
 @pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
-def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
+def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch):
     """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
+    if agent == "cursor":
+        import scripts.agent_runtime.adapters.claude as claude_module
+        monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     rc = _dispatch(
         _argv(
             "--advisory-role",
@@ -795,6 +798,29 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
             "--advisory-binding",
             "a" * 64,
             agent=agent,
+            model=model,
+            task_id=_advisor_id(),
+        )
+    )
+    _assert_refused(
+        env,
+        capsys,
+        rc,
+        ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED),
+        task_id=_advisor_id(),
+    )
+
+
+@pytest.mark.parametrize("model", ["grok-4.7-high", "composer-2.5"])
+def test_advisor_role_refuses_non_advisor_cursor_pins(env, capsys, model):
+    """Approved Cursor pins reach the advisory gate without a Claude-route refusal."""
+    rc = _dispatch(
+        _argv(
+            "--advisory-role",
+            "bounded_advisory_envelope",
+            "--advisory-binding",
+            "a" * 64,
+            agent="cursor",
             model=model,
             task_id=_advisor_id(),
         )

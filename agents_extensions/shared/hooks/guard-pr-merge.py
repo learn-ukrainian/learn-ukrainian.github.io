@@ -27,6 +27,7 @@ protection actually changes.
 SCOPE, stated honestly: this is a discipline gate, not a sandbox. It matches the shapes a
 careless merge actually takes — direct, wrapper-prefixed, `bash -c` wrapped, and xargs-fed
 `gh pr merge`, in gh's real flag spellings — and fails closed on what it cannot read. It
+refuses `eval` in merge commands because its re-evaluation can change both argv and cwd. It
 cannot stop an agent that sets out to evade it: `gh api -X PUT repos/{o}/{r}/pulls/{n}/merge`
 never says "gh pr merge" at all, and neither does a Python script hitting the REST API.
 Nothing matching on Bash commands can close that, so the job is to make the CARELESS path
@@ -272,7 +273,7 @@ def _skip_wrapper_options(wrapper: str, seg: list[str], i: int) -> int:
 
 
 def _skip_command_prefix(seg: list[str], i: int) -> int:
-    """Advance past wrappers (and their flags), assignments, and ``{``.
+    """Advance past wrappers (and their flags), assignments, ``{`` and ``!``.
 
     Thus `nice -n 10 gh pr merge` reaches `gh`, rather than stopping on the
     wrapper option (#4878).
@@ -281,7 +282,7 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
         tok = seg[i]
         if tok in _WRAPPERS:
             i = _skip_wrapper_options(tok, seg, i + 1)
-        elif tok == "{" or _is_env_assignment(tok):
+        elif tok in {"{", "!"} or _is_env_assignment(tok):
             i += 1
         else:
             break
@@ -411,13 +412,13 @@ def _is_cd_flag(tok: str) -> bool:
     return len(tok) >= 2 and tok[0] == "-" and set(tok[1:]) <= _CD_FLAG_CHARS
 
 
-def _cd_target(seg: list[str]):
+def _cd_target(seg: list[str], cwd: str | None = None, cwd_unreadable: bool = False):
     """The literal directory a `cd` segment changes into, expanded.
 
     Returns None when the segment is not a cd; _CD_UNREADABLE when it is a cd the
     guard cannot statically resolve (variable/substitution/`cd -`). A bare `cd` goes
-    to $HOME, as the shell does. Relative paths resolve against the hook process's
-    cwd — the same base the real command's cd uses.
+    to $HOME, as the shell does. Relative paths resolve against the current
+    shell scope's cwd, including any preceding literal cd.
 
     Options are stepped over rather than matched literally, and `--` ends them: reading
     `cd -- /tmp`'s target as `--` (or `cd -LP /tmp`'s as `-LP`) would resolve a path that
@@ -448,7 +449,12 @@ def _cd_target(seg: list[str]):
     target = rest[0]
     if target == "-" or "$" in target or "`" in target:
         return _CD_UNREADABLE
-    return os.path.abspath(os.path.expanduser(target))
+    target = os.path.expanduser(target)
+    if not os.path.isabs(target):
+        if cwd_unreadable:
+            return _CD_UNREADABLE
+        target = os.path.join(cwd or os.getcwd(), target)
+    return os.path.abspath(target)
 
 
 class _JudgedSegment(NamedTuple):
@@ -501,7 +507,7 @@ def _judged_segments(
         if kind == "unreadable":
             cwd_unreadable = True
             continue
-        target = _cd_target(argv)
+        target = _cd_target(argv, cwd, cwd_unreadable)
         if target is _CD_UNREADABLE:
             cwd_unreadable = True
         elif target is not None:
@@ -509,6 +515,12 @@ def _judged_segments(
             # target no longer matters now that a readable cd has overwritten it.
             cwd, cwd_unreadable = target, False
         out.append(_JudgedSegment(argv, cwd, cwd_unreadable))
+        invoked, _ = _invoked_start(argv)
+        if argv[invoked : invoked + 1] == ["eval"]:
+            # eval joins and reparses its operands in this shell, potentially
+            # changing both argv and cwd. Refuse rather than guess either.
+            out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
+            continue
         payload = _shell_c_payload(argv)
         if not payload:
             continue
@@ -555,7 +567,7 @@ def _merge_args(seg: list[str]) -> list[str] | None:
             j += 1
     elif seg[i : i + 3] == ["gh", "pr", "merge"]:
         args = seg[i + 3 :]
-    elif i > 0 and not via_xargs:
+    elif i > 0 and not via_xargs and any(tok != "!" for tok in seg[:i]):
         # A known wrapper brought its own options/operands (`sudo -u bot gh pr merge`,
         # `env -i gh pr merge`), so the command does not begin at `i`. Find it instead of
         # letting the merge through unjudged. Only wrapper-prefixed segments are scanned,
@@ -903,8 +915,8 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
     if _UNREADABLE_MARKER in args:
         return _block_msg(
             "this merge's target cannot be read from the command itself",
-            "The PR is not named here — it arrives on stdin (`xargs`), or is buried under more\n"
-            "layers of `bash -c` than this guard unwraps. Judging the current branch's PR\n"
+            "The target arrives on stdin (`xargs`), is re-evaluated by `eval`, or is buried\n"
+            "under more layers of `bash -c` than this guard unwraps. Judging the current branch's PR\n"
             "instead would verify one PR while gh merges another. Run the merge with the PR\n"
             "named explicitly (`gh pr merge <number> ...`).",
         )

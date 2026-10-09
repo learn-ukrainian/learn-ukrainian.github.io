@@ -380,6 +380,7 @@ NOT_REPO_WIDE.update(
             "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
             "test_tracked_mirror_resolves_each_deploy_source",
             "test_claude_epic_dirs_are_preserved",
+            "test_driver_runtime_state_is_preserved",
             "test_tracked_agents_skill_declared_orphan_is_skipped",
             "test_tracked_claude_glob_orphan_is_skipped",
             "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",

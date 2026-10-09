@@ -41,7 +41,7 @@ SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
 SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
-PARSER_VERSION = "sum20_official_v3"
+PARSER_VERSION = "sum20_official_v4"
 QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
@@ -182,35 +182,69 @@ def _has_reference_target(entry: _Node, root: _Node) -> bool:
 
 
 def _has_phrase_reference(entry: _Node, root: _Node) -> bool:
-    """Recognize the source-only phrase-reference shape observed at wordid 172."""
-    shape = (
-        ("ENTRY", None),
-        ("WORD", "ENTRY"),
-        ("LPART", "ENTRY"),
-        ("PHRF", "ENTRY"),
-        ("PHRSYM", "PHRF"),
-        ("PHRASE", "PHRF"),
-        ("PHRTXT", "PHRASE"),
-        ("LINK", "PHRASE"),
-        ("LINKTXT", "LINK"),
-    )
-    # Inspect the whole article: orphan fields, foreign entries, embedded
-    # LINKENTRY targets and even empty definition markers invalidate this shape.
-    nodes = list(_walk(root, stop_classes=frozenset()))
-    fields: dict[str, _Node] = {}
-    for class_name, parent_class in shape:
-        matches = [node for node in nodes if class_name in _classes(node)]
-        if len(matches) != 1 or not _node_text(matches[0]):
+    """Recognize owned source-only phrase references observed at 172 and 461."""
+    # Counts apply to direct owners, not flattened article-wide fields. A group
+    # may contain further groups, each with its own marker and phrases. BUX is
+    # optional reference formatting, never a group or phrase marker.
+    child_limits: dict[str, dict[str, tuple[int, int | None]]] = {
+        "ENTRY": {"WORD": (1, 1), "LPART": (1, 1), "PHRF": (1, None)},
+        "PHRF": {"PHRSYM": (1, 1), "PHRASE": (1, None), "PHRF": (0, None)},
+        "PHRASE": {"PHRTXT": (1, 1), "LINK": (1, 1)},
+        "LINK": {"LINKTXT": (1, 1)},
+        "LINKTXT": {"BUX": (0, 1)},
+        "WORD": {},
+        "LPART": {},
+        "PHRSYM": {},
+        "PHRTXT": {},
+        "BUX": {},
+    }
+    owned: set[int] = set()
+    phrase_references: set[tuple[str, str]] = set()
+
+    def validate(field: _Node, class_name: str) -> bool:
+        if _classes(field) != {class_name} or not _node_text(field):
             return False
-        field = matches[0]
-        if _classes(field) != {class_name}:
+        if class_name == "LINKTXT" and not any(
+            _clean_text(child) if isinstance(child, str) else not _classes(child) and _node_text(child)
+            for child in field.children
+        ):
+            # A formatting index alone is not a reference target.
             return False
-        if parent_class is not None and not any(child is field for child in fields[parent_class].children):
-            return False
-        fields[class_name] = field
-    if fields["ENTRY"] is not entry:
+        owned.add(id(field))
+        limits = child_limits[class_name]
+        children: dict[str, list[_Node]] = {name: [] for name in limits}
+        for child in field.children:
+            if not isinstance(child, _Node) or not _classes(child):
+                continue
+            classes = _classes(child)
+            if len(classes) != 1 or not classes <= limits.keys():
+                return False
+            children[next(iter(classes))].append(child)
+        for name, (minimum, maximum) in limits.items():
+            matches = children[name]
+            if len(matches) < minimum or (maximum is not None and len(matches) > maximum):
+                return False
+            if not all(validate(child, name) for child in matches):
+                return False
+        if class_name == "PHRASE":
+            reference = (
+                _node_text(children["PHRTXT"][0]),
+                _node_text(_all_with_class(children["LINK"][0], "LINKTXT")[0]),
+            )
+            # Reject repeated complete units, including duplicated whole groups.
+            # Distinct phrases may reference the same target; no lexical
+            # normalization or target-text-only uniqueness is appropriate here.
+            if reference in phrase_references:
+                return False
+            phrase_references.add(reference)
+        return True
+
+    if not validate(entry, "ENTRY"):
         return False
-    return all(not _classes(node) or any(node is field for field in fields.values()) for node in nodes)
+    # Inspect the whole article, including classed descendants inside unclassed
+    # formatting: orphan fields, foreign/linked entries and definition markers
+    # cannot supply or hide evidence outside the validated ownership tree.
+    return all(not _classes(node) or id(node) in owned for node in _walk(root, stop_classes=frozenset()))
 
 
 def normalize_sum20_lookup(value: str) -> str:

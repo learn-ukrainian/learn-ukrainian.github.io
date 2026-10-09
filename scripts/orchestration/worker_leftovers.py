@@ -463,11 +463,17 @@ class ProcFsReader:
         raw = self._read(pid, "status")
         if raw is None:
             return None
-        for line in raw.decode("utf-8", errors="replace").splitlines():
-            if line.startswith("Uid:"):
+        # Only LF separates proc status records; Name bytes must stay in Name.
+        for line in raw.split(b"\n"):
+            if line.startswith(b"Uid:"):
                 fields = line.split()
                 if len(fields) >= 2 and fields[1].isdigit():
-                    return int(fields[1])
+                    try:
+                        return int(fields[1])
+                    except ValueError:
+                        pass
+                # The first physical Uid record is authoritative, even if unusable.
+                raise ScanUnknown(f"/proc/{pid}/status has an unusable Uid line")
         raise ScanUnknown(f"/proc/{pid}/status has no Uid line")
 
     def dispatch_task_id(self, pid: int) -> str | None:

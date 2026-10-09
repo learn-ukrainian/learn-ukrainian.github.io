@@ -33,6 +33,7 @@ from scripts.projects.open_model_data.v4_differential_soviet_miner import (
     validate_no_private_host_paths,
     verify_in_vesum,
 )
+from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 CANDIDATE_SCHEMA_PATH = CONTRACTS_DIR / "v1_differential_soviet_candidate.schema.json"
@@ -340,7 +341,7 @@ def test_opsec_no_private_host_paths() -> None:
     validate_no_private_host_paths(clean_data)
 
     dirty_samples = [
-        {"path": "/home/ops/learn-ukrainian/data"},
+        {"path": f"{FIXTURE_HOME}/learn-ukrainian/data"},
         {"path": "/home/ubuntu/repo"},
         {"path": "/Users/developer/project"},
         {"ip": f"{192}.{168}.1.1"},

@@ -100,6 +100,43 @@ def approved_review_baseline(baseline):
 
 
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
+GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
+GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+APPROVED_BASELINE = {**REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"]}
+APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
+    assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "4b16188c215c068f232d4c11ddc661c6dc67788a762c8d4b5c691aad562a2ffe"
+    )
+    assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
+    assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
+    def key(value):
+        return json.dumps(value, sort_keys=True)
+    for surface in ("roles", "reviewer"):
+        new_inputs = {key(row) for row in APPROVED_INPUTS[surface]}
+        assert all(key(row) in new_inputs for row in INPUTS[surface])
+    receipts = dict(zip(map(key, APPROVED_INPUTS["reviewer"]), APPROVED_BASELINE["reviewer"], strict=True))
+    for inputs, before in zip(INPUTS["reviewer"], REVIEW_CAPACITY_BASELINE["reviewer"], strict=True):
+        after = receipts[key(inputs)]
+        if before == after:
+            continue
+        old, new = deepcopy(before), deepcopy(after)
+        assert isinstance(old["value"], dict) and isinstance(new["value"], dict)
+        chosen = new["value"]["selected"]
+        if chosen != old["value"]["selected"]:
+            assert inputs["risk"] in {"low", "medium"}
+            assert inputs["review_profile"] == "code"
+            assert chosen["name"] == "gemini-3.8-flash-high"
+        new["value"]["trace"] = [row for row in new["value"]["trace"] if row["family"] != "google"]
+        for receipt in (old, new):
+            for row in receipt["value"]["trace"]:
+                if row["status"] == "selected":
+                    row["status"] = "eligible"
+            for field in ("selected", "fail_closed_reason", "substitution_note"):
+                receipt["value"].pop(field, None)
+        assert old == new, inputs
 
 
 @pytest.mark.parametrize("configuration", ["", "no-cli"])
@@ -180,16 +217,16 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10146 Gemini driver launcher and catalog revision of both
+# Literal digests bind the #10205 Cursor wire pin and allowlist revision of both
 # configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "SHA256SUMS": "37128e156002545c2559a1323d13c850882d487f85412fe0e26cb770867d8094",
-    "SPEC.md": "a79d27e53aebc1c90f3d73a53401078a66451b79a4afaa02861bf6cbe31c18a6",
-    "baseline.json.gz": "1588c162c68390bbf49192979e3c316479161f67b72a1207c8e694fdf1c0e29e",
+    "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
+    "SPEC.md": "c6328c73fcadf69137f55838c32fc377783fe2ef6b8f01b6abe8b3eabed67763",
+    "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
-    "no-cli/SHA256SUMS": "1e3106d119e2e1a66a685f60273079335aa94492acfa96ea8dec7b5c8b97cd10",
-    "no-cli/baseline.json.gz": "526ed2951d6b6b3fa6a4b6e4e2e42125f639291521c6f92737822a47a74fbf58",
+    "no-cli/SHA256SUMS": "84c5dd2df2295b189bbced8d23026c6b263b37128da1d7fc5f560a853c12a1f4",
+    "no-cli/baseline.json.gz": "94cb4f113d95c2538172058bc48e29d47e81561675278647f036c87f3c9d6919",
     "no-cli/inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
     "no-cli/occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
     "occurrences.json.gz": "8ca9e434a36e330dab713ddcc8c2c368c18e31666ee18bef2de2505b15aa12c7",
@@ -218,7 +255,7 @@ def test_frozen_hashes_and_matrix_denominator():
 
 
 def test_legacy_catalog_equals_approved_routing_baseline():
-    assert expanded_legacy_view() == BASELINE["catalog"]
+    assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
 
 
 @pytest.mark.parametrize("entrypoint,args", [
@@ -286,14 +323,14 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
     for surface in BASELINE:
-        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
+        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
@@ -327,7 +364,7 @@ def main():
 
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = dict(REVIEW_CAPACITY_BASELINE)
+    actual = dict(APPROVED_BASELINE)
     actual[surface] = {"mutated": True}
     with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
         assert_frozen_surfaces(actual)
@@ -461,7 +498,7 @@ def test_capture_preserves_success_and_streams(capsys):
 
 
 def test_capture_matrix_is_frozen():
-    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == INPUTS["reviewer"]
+    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == APPROVED_INPUTS["reviewer"]
 
 
 def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
@@ -490,14 +527,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    for name in ("inputs.json", "occurrences.json.gz"):
-        assert (output / name).read_bytes() == (expected / name).read_bytes(), name
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
+    assert (output / "occurrences.json.gz").read_bytes() == (expected / "occurrences.json.gz").read_bytes()
     for row in (output / "SHA256SUMS").read_text().splitlines():
         digest, name = row.split()
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_review_baseline(original)
+    assert actual == {**approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"]}
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

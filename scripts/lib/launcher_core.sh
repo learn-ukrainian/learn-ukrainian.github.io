@@ -795,27 +795,35 @@ launcher_validate_cursor_pin() {
     launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN or composer-2.5)."
     exit 4
   fi
+  local normalized
+  if ! normalized="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+try:
+    print(apply_cursor_model_pins(sys.argv[2]) or "")
+except ModelCatalogError as exc:
+    print(str(exc), file=sys.stderr)
+    sys.exit(4)
+' "$LC_ROOT" "$LC_MODEL")"; then
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    exit 4
+  fi
+  LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation)."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
     exit 4
   fi
 }
 
-# Cursor CLI model ids: bare certified pins, effort variants such as
-# grok-4.7-high, and bracket overrides such as
-# grok-4.7[context=500k,reasoning_effort=high,fast=false]. Auto, Fast variants
-# and previous generations are not certified.
+# Cursor CLI model ids: bare certified pins and bracket overrides such as
+# composer-2.5[fast=false]. Auto, Fast variants and previous generations are not certified.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    grok-4.7|composer-2.5) return 0 ;;
-    grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
+    composer-2.5|composer-2.5\[fast=false\]|grok-4.7-high) return 0 ;;
   esac
-  [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
-  # A bracket override may only switch Fast off.
-  local rest="${model//fast=false,/}"
-  rest="${rest//fast=false]/]}"
-  [[ "$rest" != *fast=* ]]
+  return 1
 }
 
 launcher_prepare_driver_identity() {
@@ -1130,6 +1138,12 @@ launcher_exec_command() {
 
   local provider_rc=0
   local close_rc=0
+  # Record the executable while the initial provider's PATH is still available.
+  LC_DRIVER_PROVIDER_COMMAND="${1##*/}"
+  LC_DRIVER_PROVIDER_EXECUTABLE="$(type -P -- "$1")" || LC_DRIVER_PROVIDER_EXECUTABLE=""
+  if [ -n "$LC_DRIVER_PROVIDER_EXECUTABLE" ]; then
+    LC_DRIVER_PROVIDER_EXECUTABLE="$(cd -- "$(dirname -- "$LC_DRIVER_PROVIDER_EXECUTABLE")" && pwd)/${LC_DRIVER_PROVIDER_EXECUTABLE##*/}"
+  fi
   LC_DRIVER_CHILD_PID=""
   LC_DRIVER_LEASE_CLOSED=0
   LC_DRIVER_RENEW_PID=""
@@ -1190,6 +1204,16 @@ launcher_exec_command() {
       if [ -n "${LC_SUPERVISORY_WATCH_PID:-}" ] && ! kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null; then
         wake_rc=0
         session_supervisor_read_wake || wake_rc=$?
+        if [ "$wake_rc" -eq 0 ] && ! session_supervisor_preflight_successor; then
+          # A refused successor must leave the provider and lease alive. Resume
+          # inbox supervision so a later wake can retry after the CLI is fixed.
+          LC_SUPERVISORY_DELIVERY=""
+          session_supervisor_stop_inbox_watch
+          if session_supervisor_start_inbox_watch; then
+            continue
+          fi
+          wake_rc=1
+        fi
         if [ "$wake_rc" -ne 76 ]; then
           watcher_finished=1
           provider_rc=$wake_rc

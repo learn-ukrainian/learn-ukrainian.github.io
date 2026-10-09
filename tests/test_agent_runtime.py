@@ -300,7 +300,7 @@ def test_new_acpx_fleet_entries_are_direct_only(seat, adapter, model):
 def test_cursor_entry_is_well_formed():
     entry = get_agent_entry("cursor")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
-    # Default pin is grok-4.7 (#8464); catalog Cursor seat remains auto.
+    # Registry defaults name the catalog identity; the adapter pins the wire (#10205).
     assert entry["default_model"] == "grok-4.7"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
@@ -392,7 +392,7 @@ def test_load_adapter_codex():
 def test_load_adapter_cursor():
     adapter = _load_adapter("cursor")
     assert adapter.name == "cursor"
-    assert adapter.default_model == "grok-4.7"
+    assert adapter.default_model == "grok-4.7-high"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -1910,6 +1910,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     Deliver stdout synchronously through the real reader function on a controlled poll tick,
     including after the old fixture's finite clock sequence would freeze.
     """
+    from threading import get_ident
     from unittest.mock import MagicMock
 
     from agent_runtime.watchdog import _stdout_streamer
@@ -1958,9 +1959,12 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     # must not consume a finite sequence and leave late stdout at frozen time.
     base_time = 1000.0
     simulated_now = base_time
+    caller_thread = get_ident()
+    real_monotonic = time.monotonic
+    real_sleep = time.sleep
 
     def fake_monotonic():
-        return simulated_now
+        return simulated_now if get_ident() == caller_thread else real_monotonic()
 
     watchdog_state = WatchdogState(start_time=base_time, last_activity=base_time)
     poll_ticks = 0
@@ -1974,6 +1978,10 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     def poll_tick(_interval):
         nonlocal poll_ticks, simulated_now
+        # The time module is shared by telemetry/background threads. Their
+        # sleeps must not advance this test's simulated runner poll counter.
+        if get_ident() != caller_thread:
+            return real_sleep(_interval)
         poll_ticks += 1
         # A broken fixture must fail in bounded simulated ticks, never hang CI.
         assert poll_ticks <= stdout_delay_ticks + 3, "early reap exceeded bounded poll ticks"

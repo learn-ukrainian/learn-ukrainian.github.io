@@ -299,6 +299,35 @@ def test_delegate_launches_only_the_admitted_route():
         delegate._worker_route_argv("kimi")
 
 
+@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
+def test_delegate_worker_argv_normalizes_the_cursor_wire_pin(model):
+    import delegate
+
+    (target,) = resolve_and_admit(("cursor",), mode="read-only", model=model)
+    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7-high"]
+    assert target.model == model  # The admitted catalog identity is preserved.
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [("opus", "CURSOR_CLAUDE_REFUSED"), ("haiku", "CURSOR_CLAUDE_REFUSED"),
+     ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
+     ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED")],
+)
+def test_delegate_dispatch_refuses_invalid_cursor_pins(model, code, monkeypatch):
+    import delegate
+    import scripts.agent_runtime.adapters.claude as claude_module
+
+    monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "cursor", "--model", model, "--mode", "read-only",
+         "--task-id", "cursor-pin-test", "--prompt", "fixture", "--dry-run"]
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="cursor", trees=None)
+    assert target is None
+    assert refusal.startswith(code + ":")
+
+
 def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
     """Makes the documented probe-before-final-gate limitation unreachable by data.
 
