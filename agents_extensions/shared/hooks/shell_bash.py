@@ -782,6 +782,11 @@ def read_commands(
                 payload = None
                 for i, arg in enumerate(selected[1:], 1):
                     if arg.startswith("-") and "c" in arg[1:] and not arg.startswith("--"):
+                        # Each packed -o/-O consumes an option name before the
+                        # command string. Refuse rather than judge that name
+                        # as code and silently miss the executable payload.
+                        if "o" in arg[1:] or "O" in arg[1:]:
+                            raise ShellParseError("packed shell -c with -o/-O cannot establish execution payload")
                         payload = selected[i + 1] if i + 1 < len(selected) else UNREADABLE
                         # Shells keep processing options after -c, including --
                         # and -o/-O/+o/+O with values. Do not parse an option as
@@ -803,7 +808,7 @@ def read_commands(
                             payload = literal(here_strings[-1].named_children[-1]) or UNREADABLE
             if payload is None and guarded_source:
                 raise ShellParseError("opaque shell input cannot establish execution payload")
-            if utility in _SHELLS and any(a in {"-P", "-O", "+O", "-o", "+o"} for a in selected[1:]):
+            if utility in _SHELLS and any(re.fullmatch(r"[-+][a-zA-Z]*[PoO][a-zA-Z]*", a) for a in selected[1:]):
                 directory_options_unknown = True
                 execution_states = {None}
             if payload is not None:

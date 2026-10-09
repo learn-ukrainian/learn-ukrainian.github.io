@@ -335,6 +335,37 @@ def _run(monkeypatch, command: str, *, pr: str | None = "5", failing=()) -> int:
 
 
 @pytest.mark.parametrize(
+    "shell_options",
+    [
+        "bash -oc errexit",
+        "bash -co errexit",
+        "bash -Oc extglob",
+        "bash -cO extglob",
+        "bash -xco errexit",
+        "bash -xcO extglob",
+        "bash -ooc errexit nounset",
+        "bash -oOc errexit extglob",
+        "sh -co errexit",
+        "sh -oc errexit",
+    ],
+)
+def test_issue_9484_packed_shell_c_options_blocked(monkeypatch, shell_options):
+    command = f"{shell_options} 'gh pr merge 5 --admin'"
+    with pytest.raises(guard.ShellParseError, match="packed shell -c with -o/-O"):
+        guard.read_commands(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
+@pytest.mark.parametrize("option", ["-xo errexit", "+xo errexit", "-xO extglob", "+xO extglob"])
+def test_issue_9484_packed_shell_options_invalidate_directory(monkeypatch, option):
+    command = f"bash {option} -c 'gh pr merge 5 --admin'"
+    merges = [row for row in guard.read_commands(command) if guard._admin_merge_args(row.argv) is not None]
+    assert len(merges) == 1
+    assert merges[0].cwd_unreadable
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
     "seg,is_admin",
     [
         (["gh", "pr", "merge", "--admin"], True),

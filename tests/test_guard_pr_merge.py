@@ -1074,6 +1074,38 @@ def test_shell_c_merge_blocks_end_to_end(monkeypatch):
 
 
 @pytest.mark.parametrize(
+    "shell_options",
+    [
+        "bash -oc errexit",
+        "bash -co errexit",
+        "bash -Oc extglob",
+        "bash -cO extglob",
+        "bash -xco errexit",
+        "bash -xcO extglob",
+        "bash -ooc errexit nounset",
+        "bash -oOc errexit extglob",
+        "sh -co errexit",
+        "sh -oc errexit",
+    ],
+)
+@pytest.mark.parametrize("admin", ["", " --admin"])
+def test_issue_9484_packed_shell_c_options_blocked(monkeypatch, recording_bash, shell_options, admin):
+    command = f"{shell_options} 'gh pr merge 5{admin}'"
+    assert b"pr\0merge\0" + b"5\0" in recording_bash(command)
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize("option", ["-xo errexit", "+xo errexit", "-xO extglob", "+xO extglob"])
+def test_issue_9484_packed_shell_options_invalidate_directory(monkeypatch, option):
+    command = f"bash {option} -c 'gh pr merge 5'"
+    merges = [row for row in guard.read_commands(command) if guard._merge_args(row.argv) is not None]
+    assert len(merges) == 1
+    assert merges[0].cwd_unreadable
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
     "args,expected",
     [
         (["5", "--squash"], "5"),
