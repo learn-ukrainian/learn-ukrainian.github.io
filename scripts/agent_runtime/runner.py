@@ -3511,6 +3511,13 @@ def _invoke_impl(
         # primary checkout, regardless of how the caller assembled cwd.
         _ensure_write_cwd_isolated(cwd, mode=mode, agent_name=agent_name)
     effective_cwd = cwd or Path.cwd()
+    if agent_name == "agy":
+        # Reject known unsatisfiable reads before headroom/failover or any
+        # provider execution. Adapter planning repeats this gate for direct
+        # callers; neither gate expands the native permission profile (#10334).
+        from .adapters.agy import validate_agy_read_only_paths
+
+        validate_agy_read_only_paths(prompt, mode=mode, cwd=effective_cwd, tool_config=tool_config)
     current_run_id()
     current_session_id()
 

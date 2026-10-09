@@ -922,22 +922,14 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
-        review_route = bool(
-            tc.get("review_profile") in {"ukrainian", "code"}
-            or review_isolation
-            or tc.get("review_attempt_boundary")
-            or tc.get("review_access")
-            or tc.get("review_id")
-            or tc.get("attempt_id")
-            or tc.get("reviewer_tools")
-            or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
-        )
+        review_route = _agy_review_route(tc)
         if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
         if review_route:
+            validate_agy_read_only_paths(prompt, mode=mode, cwd=cwd, tool_config=tc)
             _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
@@ -1511,6 +1503,75 @@ class AgyReviewPermissionError(ValueError):
     def __init__(self, reason: str) -> None:
         self.reason = reason
         super().__init__(reason)
+
+
+def _agy_review_route(tc: Mapping[str, Any]) -> bool:
+    """Identify the routes whose native file grant is the checkout only."""
+    return bool(
+        tc.get("review_profile") in {"ukrainian", "code"}
+        or tc.get("review_isolation")
+        or tc.get("review_attempt_boundary")
+        or tc.get("review_access")
+        or tc.get("review_id")
+        or tc.get("attempt_id")
+        or tc.get("reviewer_tools")
+        or (tc.get("strict_mcp_config") and tc.get("agy_home_override"))
+    )
+
+
+# Literal POSIX path references, including quoted paths with spaces. This is
+# requirement admission, not a permission boundary or inference about prose:
+# native permissions still decide undeclared/model-generated tool requests.
+# URI tokens are consumed whole so their slash components are not file paths.
+_PROMPT_PATH_TOKEN_RE = re.compile(
+    r"[a-zA-Z][a-zA-Z0-9+.-]*://[^\s`\"'<>]+"
+    r"|\[[^\]\n]*\]\((?P<link>[^)\n]+)\)"
+    r"|`(?P<code>[^`\n]+)`|\"(?P<double>[^\"\n]+)\"|'(?P<single>[^'\n]+)'"
+    r"|(?P<bare>[^\s`\"'<>]+)"
+)
+_LITERAL_FILE_PATH_RE = re.compile(r"(?:/|~/|\.\.?/|[\w.-]+/|[\w.-]+\.[\w-]+$)")
+
+
+def validate_agy_read_only_paths(
+    prompt: str, *, mode: str, cwd: Path, tool_config: Mapping[str, Any] | None = None
+) -> None:
+    """Refuse explicit file requirements outside the existing native grant.
+
+    Scoped reviews grant recursive read_file(cwd), not the enclosing primary
+    checkout or the caller's home. --add-dir selects a workspace; it is not a
+    permission grant. Never widen settings based on untrusted prompt text.
+    Unknown/implicit requirements remain under the native permission checks.
+    """
+    tc = tool_config or {}
+    if mode != "read-only" or not _agy_review_route(tc):
+        return
+    try:
+        root = cwd.resolve()
+        workspace = tc.get("repo_read_root") or tc.get("review_snapshot_root") or cwd
+        if Path(workspace).resolve() != root:
+            raise AgyReviewPermissionError("agy_read_only_workspace_mismatch")
+        for token in _PROMPT_PATH_TOKEN_RE.finditer(prompt):
+            raw = next((part for part in token.groups() if part is not None), token.group())
+            # Code/quoted spans can themselves contain a Markdown link.
+            if link := re.fullmatch(r"\[[^\]\n]*\]\(([^)\n]+)\)", raw):
+                raw = link[1]
+            # A quoted/code span may contain a command rather than just a path.
+            parts = [raw] if _LITERAL_FILE_PATH_RE.match(raw) else raw.split()
+            for part in parts:
+                part = part.strip("([]{},;")
+                if not _LITERAL_FILE_PATH_RE.match(part) or "://" in part:
+                    continue
+                part = re.sub(r":\d+(?::\d+)?$", "", part.rstrip(".,;)]}"))
+                if any(unicodedata.category(c) in {"Cc", "Cf", "Zl", "Zp"} for c in part):
+                    raise AgyReviewPermissionError("agy_read_only_path_unverifiable")
+                path = Path(part).expanduser()
+                target = path if path.is_absolute() else root / path
+                if not target.resolve().is_relative_to(root):
+                    raise AgyReviewPermissionError("agy_read_only_path_outside_workspace")
+    except AgyReviewPermissionError:
+        raise
+    except (OSError, RuntimeError, ValueError, TypeError):
+        raise AgyReviewPermissionError("agy_read_only_path_unverifiable") from None
 
 
 class AgyHeadlessPermissionDenial(NamedTuple):

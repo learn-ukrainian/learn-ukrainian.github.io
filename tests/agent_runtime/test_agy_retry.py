@@ -13,6 +13,141 @@ from scripts.agent_runtime.result import AgyAttempt, ParseResult
 
 ELIGIBILITY_503 = "Eligibility check failed: UNAVAILABLE (code 503)"
 
+# Recorded AGY client notice: the placeholder is not an observed target.
+READ_FILE_AUTO_DENIAL = (
+    'jetski: no output produced — a tool required the "read_file" permission that headless mode cannot prompt for, '
+    'so it was auto-denied. Add read_file(<target>) to permissions.allow in settings.json.'
+)
+
+
+@pytest.mark.parametrize(
+    "reference",
+    [
+        "absolute", "relative-parent", "normalized-parent", "home", "symlink",
+        "markdown-link", "line-number", "quoted-space", "command-span",
+    ],
+)
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
+def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_path, monkeypatch, reference, profile):
+    from scripts.agent_runtime.adapters import agy
+
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    outside = tmp_path / "evidence with spaces.txt"
+    outside.write_text("fixture evidence")
+    link = workspace / "outside.txt"
+    link.symlink_to(outside)
+    references = {
+        "absolute": str(tmp_path / "evidence.txt"),
+        "relative-parent": "../evidence.txt",
+        "normalized-parent": "docs/../../evidence.txt",
+        "home": "~/evidence.txt",
+        "symlink": "outside.txt",
+        "markdown-link": f"[evidence]({tmp_path / 'evidence.txt'})",
+        "line-number": f"{tmp_path / 'evidence.txt'}:12:3",
+        "quoted-space": str(outside),
+        "command-span": f"cat {tmp_path / 'evidence.txt'}",
+    }
+    home = tmp_path / "scoped-home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    config = {"review_profile": profile, "agy_home_override": str(home)}
+    probe = Mock()
+    monkeypatch.setattr(agy, "_require_background_wait_support", probe)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *_: tmp_path / "agy.log")
+    adapter = agy.AgyAdapter()
+    denial = agy._headless_permission_denial(READ_FILE_AUTO_DENIAL)
+    assert denial.permission_kind == "read_file"
+    assert denial.permission_target is None
+    # This first build fails on main: the outside requirement is currently admitted.
+    with pytest.raises(agy.AgyReviewPermissionError) as refused:
+        adapter.build_invocation(
+            prompt=f"Read `{references[reference]}` and report the first line.", mode="read-only", cwd=workspace,
+            model=None, task_id="10334-read", session_id=None, tool_config=config,
+        )
+    assert refused.value.reason == "agy_read_only_path_outside_workspace"
+    assert str(outside) not in str(refused.value)
+    probe.assert_not_called()
+    settings = home / ".gemini" / "antigravity-cli" / "settings.json"
+    assert not settings.exists()
+
+    # The compensating gate preserves recursive entitled workspace reads and
+    # the native profile. URLs are not misparsed as filesystem requirements.
+    plan = adapter.build_invocation(
+        prompt=f'Read `docs/evidence.txt`, "{workspace / "evidence with spaces.txt"}", '
+        f'and `{workspace / "docs" / ".." / "evidence.txt"}`. See https://example.org/guide.',
+        mode="read-only", cwd=workspace, model=None, task_id="10334-read", session_id=None, tool_config=config,
+    )
+    permissions = json.loads(settings.read_text())["permissions"]
+    assert [rule for rule in permissions["allow"] if rule.startswith("read_file(")] == [f"read_file({workspace})"]
+    assert "command(*)" in permissions["deny"]
+    assert "write_file(*)" in permissions["deny"]
+    assert "--sandbox" in plan.cmd
+    assert "--dangerously-skip-permissions" not in plan.cmd
+
+
+@pytest.mark.parametrize("marker", ["review_access", "review_id", "attempt_id", "reviewer_tools", "strict_mcp_config"])
+def test_agy_every_scoped_review_route_checks_file_requirements(tmp_path, monkeypatch, marker):
+    from scripts.agent_runtime.adapters import agy
+
+    monkeypatch.setattr(agy, "_require_background_wait_support", Mock())
+    config = {marker: "isolated", "agy_home_override": str(tmp_path / "home")}
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_read_only_path_outside_workspace"):
+        agy.AgyAdapter().build_invocation(
+            prompt="Read `../evidence.txt`.", mode="read-only", cwd=tmp_path, model=None,
+            task_id="10334-read", session_id=None, tool_config=config,
+        )
+
+
+@pytest.mark.parametrize("override", ["repo_read_root", "review_snapshot_root"])
+def test_agy_add_dir_cannot_substitute_for_a_read_grant(tmp_path, monkeypatch, override):
+    from scripts.agent_runtime.adapters import agy
+
+    home = tmp_path / "home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    monkeypatch.setattr(agy, "_require_background_wait_support", Mock())
+    monkeypatch.setattr(agy, "_build_log_path", lambda *_: tmp_path / "agy.log")
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_read_only_workspace_mismatch"):
+        agy.AgyAdapter().build_invocation(
+            prompt="Read `docs/evidence.txt`.", mode="read-only", cwd=tmp_path, model=None,
+            task_id="10334-read", session_id=None,
+            tool_config={"review_profile": "ukrainian", "agy_home_override": str(home), override: str(tmp_path.parent)},
+        )
+
+
+@pytest.mark.parametrize("reference", ["./unsafe\u202efile.txt", "./loop.txt"])
+def test_agy_unverifiable_literal_path_refuses_with_no_private_target(tmp_path, monkeypatch, reference):
+    from scripts.agent_runtime.adapters import agy
+
+    (tmp_path / "loop.txt").symlink_to("loop.txt")
+    home = tmp_path / "home"
+    (home / ".gemini" / "antigravity-cli").mkdir(parents=True)
+    monkeypatch.setattr(agy, "_require_background_wait_support", Mock())
+    monkeypatch.setattr(agy, "_build_log_path", lambda *_: tmp_path / "agy.log")
+    with pytest.raises(agy.AgyReviewPermissionError, match=r"^agy_read_only_path_unverifiable$"):
+        agy.AgyAdapter().build_invocation(
+            prompt=f"Read `{reference}`.", mode="read-only", cwd=tmp_path, model=None,
+            task_id="10334-read", session_id=None,
+            tool_config={"review_profile": "ukrainian", "agy_home_override": str(home)},
+        )
+
+
+def test_agy_read_requirement_refuses_before_runner_headroom_or_failover(tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters import agy
+
+    adapter = SimpleNamespace(default_model="gemini-3.8-flash-high", supported_modes={"read-only"})
+    monkeypatch.setattr(runner, "_load_adapter", lambda *_: adapter)
+    headroom, failover, execute = Mock(return_value=(False, "fixture")), Mock(return_value=None), Mock()
+    monkeypatch.setattr(runner, "has_headroom", headroom)
+    monkeypatch.setattr(runner, "load_failover_chain", failover)
+    monkeypatch.setattr(runner, "_execute_invocation_once", execute)
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_read_only_path_outside_workspace"):
+        runner._invoke_impl(
+            "agy", "Read `../evidence.txt`.", cwd=tmp_path, tool_config={"review_profile": "ukrainian"},
+        )
+    headroom.assert_not_called()
+    failover.assert_not_called()
+    execute.assert_not_called()
+
 
 def _outcome(*, pre_model=True, ok=False, stderr=ELIGIBILITY_503, reason=None, kill=None, commands=(), duration=2):
     return runner._ExecutionOutcome(
