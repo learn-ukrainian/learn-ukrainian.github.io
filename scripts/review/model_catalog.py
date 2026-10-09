@@ -1103,7 +1103,8 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
             f"model {text!r} runs only a delegate-admitted write implementation dispatch "
             f"({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); {fix}"
         )
-    if text not in pins:
+    canonical = resolve_catalog_model_id(text, catalog) or text
+    if text not in pins and canonical not in pins:
         return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
     return None
 
