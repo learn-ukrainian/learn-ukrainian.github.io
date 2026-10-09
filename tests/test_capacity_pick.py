@@ -498,13 +498,13 @@ def test_pick_order_known_headroom_ranks_before_unknown_headroom():
     assert _ranked(rows) == ["agy", "codex"]
 
 
-def test_pick_order_status_still_outranks_headroom_and_cool_cursor_still_leads():
+def test_pick_order_status_still_outranks_headroom_without_cursor_override():
     rows = [
         _pick_row("agy", "warm", 99.0, 0),
         _pick_row("kimi", "cool", 60.0, 4),
         _pick_row("cursor", "cool", 30.0, 1),
     ]
-    assert _ranked(rows) == ["cursor", "kimi", "agy"]
+    assert _ranked(rows) == ["kimi", "cursor", "agy"]
 
 
 _WS_NOW = datetime(2026, 10, 7, 18, 0, tzinfo=UTC)

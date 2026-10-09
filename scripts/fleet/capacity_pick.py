@@ -75,9 +75,9 @@ _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
 # is_avoid_lane() already force-excludes them from `pick`, this ordering only
 # affects stable table/tie-break display among AVOID rows.
 _CODE_LANE_PRIORITY = {
-    "cursor": 0,
-    "codex": 1,
-    "claude": 2,
+    "codex": 0,
+    "claude": 1,
+    "cursor": 2,
     "grok": 3,
     "kimi": 4,
     "gemini": 5,
@@ -561,9 +561,8 @@ def _write_success_demoted(row: Mapping[str, Any]) -> bool:
 def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Cool/idle first; AVOID lanes last with pick=AVOID.
 
-    Within a status, an authenticated cool Cursor still leads (operator
-    2026-08-26, same rule as the Monitor recommendation). Every other lane
-    ranks by routing-budget plan headroom in :data:`_HEADROOM_BAND_PCT` bands
+    Within a status, every lane ranks by routing-budget plan headroom in
+    :data:`_HEADROOM_BAND_PCT` bands, per the 2026-10-09 resource-policy order
     (one band lower when its row carries a ``write_success`` demotion), then by
     fewest in flight, then by the static lane priority.
     """
@@ -592,12 +591,10 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             # UNKNOWN — stale/advisory: after every row with verified capacity (A5, #9740).
             status_rank = 7.5
         reserve_priority = 0 if row.get("reset_reserve_eligible") else 1
-        cursor_lead = 0 if lane_name == "cursor" else 1
         return (
             avoid,
             reserve_priority,
             status_rank,
-            cursor_lead,
             headroom_key,
             flight_key,
             lane_rank,
@@ -881,8 +878,8 @@ def main(argv: list[str] | None = None) -> int:
             "(healthy | unhealthy | unknown). `remaining%` is the tightest plan window. A pace deficit read\n"
             "from a stale snapshot shows `unknown` with `UNKNOWN — stale/advisory`: ranked after every\n"
             "verified row, never a cooler seat, never --strict success. Unknown load prints `—` (JSON null).\n"
-            "Pick order: heat first; a cool Cursor leads; then plan headroom in 10-point bands, fewest in\n"
-            "flight, static lane rank. A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
+            "Pick order: heat first; then plan headroom in 10-point bands, fewest in flight, static lane\n"
+            "rank (Codex, Claude, Cursor first). A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
             "(JSON `write_success`). DeepSeek (prepaid API) is shown but never picked.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
