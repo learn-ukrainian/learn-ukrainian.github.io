@@ -340,11 +340,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "b3aa9a5d42617c0b68719c98f3fb48d2bf30b2aebbc3b71ba0ae3b0746329db8:1",
     ),
     (
-        "scripts/run_otaman_serial_12_15.sh",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "433059757576352a06e4e678e581a952380dbabbd81badf9bc7084cf99dcc9e9:1 9d4bb2b778d6ac6a4016f91a4f182b23fdb84255dec2beab53382b7a00def690:1",
-    ),
-    (
         "scripts/storage/artifacts.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "6872c6f40a0d28e1e45ac21457f6f8cb21877564cbbeb4571d6300fdbcfe9000:1 7c04326230eb9f14f45d886e4c20be927c2a43dd057153afafa96777ad76ff3c:1 cf16324e1d49563de02f3f93814b70da371b6174ec5edd79d4d0d51ecfc24fe6:1",
