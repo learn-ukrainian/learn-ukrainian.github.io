@@ -215,8 +215,8 @@ def test_ordinary_errors_do_not_latch_a_denial(server, status):
 @pytest.mark.parametrize("module", MODULES)
 @pytest.mark.parametrize("body,expected", [
     ("User-agent: *\nCrawl-delay: 1.25", 1.25),
-    ("User-agent: Other\nCrawl-delay: 99\nUser-agent: *\nCrawl-delay: 2.75", 2.75),
-    ("User-agent: *\nCrawl-delay: 99\nUser-agent: LearnUkrainianBot\nCrawl-delay: 1.25", 1.25),
+    ("User-agent: Other\nCrawl-delay: 99\nUser-agent: *\nCrawl-delay: 2.75", 99),
+    ("User-agent: *\nCrawl-delay: 99\nUser-agent: LearnUkrainianBot\nCrawl-delay: 1.25", 99),
     ("User-agent: LearnUkrainianBot\nDisallow: /x\nCrawl-delay: .75\nUser-agent: learnukrainianbot\nCrawl-delay: 3.5", 3.5),
     ("User-agent: *\nCrawl-delay: nan\nCrawl-delay: inf\nCrawl-delay: -1\nCrawl-delay: wrong", 0),
     ("User-agent: Other\nCrawl-delay: 5", 0),
@@ -1762,3 +1762,159 @@ def test_textbook_main_default_store_and_argument_validation(monkeypatch, tmp_pa
     else:
         textbook.main()
         assert "Selected 0 books" in capsys.readouterr().out
+
+
+# Literal author expectations for the adopted grouping amendment. Advice cases
+# (including corrected E5a/b) are disclosed controls, never fresh held-outs.
+CD_OWN = b"User-agent: learnukrainianbot\n"
+CD_GROUP_CONTROLS = [
+    ("E1", CD_OWN + b"Crawl-delay: 1\nUser-agent: *\nDisallow: /", "/x", AMBIGUOUS, 1, None),
+    ("E2a", group(b"Crawl-delay: 5", b"Disallow: /x"), "/y", ALLOW, 5, None),
+    ("E2b", group(b"Crawl-delay: 5", b"Disallow: /x"), "/x", DENY, 5, None),
+    ("E3", CD_OWN + b"Crawl-delay: 2\nDisallow: /p", "/q", ALLOW, 2, None),
+    ("E4", CD_OWN + b"Crawl-delay: 1\nHost: example.org\n# note\n\nCrawl-delay: 3\nUser-agent: *\nDisallow: /", "/x", AMBIGUOUS, 3, None),
+    ("E5a", b"User-agent: a\nCrawl-delay: 1\n" + CD_OWN + b"Crawl-delay: 2\nUser-agent: c\nDisallow: /p", "/p", UNRESOLVED, 2, None),
+    ("E5b", b"User-agent: a\nCrawl-delay: 1\n" + CD_OWN + b"Crawl-delay: 2\nUser-agent: c\nDisallow: /p", "/q", UNRESOLVED, 2, None),
+    ("E5c", b"User-agent: zz\nCrawl-delay: 1\n" + CD_OWN + b"Crawl-delay: 2\nUser-agent: c\nDisallow: /p", "/p", AMBIGUOUS, 2, None),
+    ("E5d", b"User-agent: zz\nCrawl-delay: 1\n" + CD_OWN + b"Crawl-delay: 2\nUser-agent: c\nDisallow: /p", "/q", ALLOW, 2, None),
+    ("E6a", b"Crawl-delay: 9\nUser-agent: *\nDisallow: /p", "/q", ALLOW, 0, None),
+    ("E6b", b"Crawl-delay: 9\nUser-agent: *\nDisallow: /p", "/p", DENY, 0, None),
+    ("E7", b"Crawl-delay: 9\n" + CD_OWN + b"User-agent: *\nDisallow: /", "/x", DENY, 0, None),
+    *[("E8" + label, CD_OWN + b"Crawl-delay: " + value + b"\nUser-agent: *\nDisallow: /", "/x", AMBIGUOUS, delay, None)
+      for label, value, delay in [("a", b"", 0), ("b", b"abc", 0), ("c", b"inf", 0),
+                                  ("d", b"-1", 0), ("e", b"nan", 0), ("f", b"1,5", 0), ("g", b"0.25", .25)]],
+    ("E9", CD_OWN + b"Crawl-delay 1\nUser-agent: *\nDisallow: /", "/x", UNRESOLVED, 0, None),
+    ("E10a", CD_OWN + b"Crawl-delay: 1\nDisallow: /p\nUser-agent: *\nDisallow: /", "/x", ALLOW, 1, None),
+    ("E10b", CD_OWN + b"Crawl-delay: 1\nDisallow: /p\nUser-agent: *\nDisallow: /", "/p", DENY, 1, None),
+    ("E10c", CD_OWN + b"Crawl-delay: 1\nAllow: /\nUser-agent: *\nDisallow: /", "/x", ALLOW, 1, None),
+    ("E10d", CD_OWN + b"Crawl-delay: 1\nDisallow:\nUser-agent: *\nDisallow: /", "/x", ALLOW, 1, None),
+    ("E10e", CD_OWN + b"Allow: nope\nUser-agent: *\nDisallow: /", "/x", ALLOW, 0, None),
+    ("E10f", CD_OWN + b"Crawl-delay: 1\nDisallow: nope\nUser-agent: *\nAllow: /", "/x", UNRESOLVED, 1, None),
+    ("E11a", group(b"Crawl-delay: 10", b"User-agent: AhrefsBot", b"Disallow: /"), "/x", AMBIGUOUS, 10, None),
+    ("E11b", b"User-agent: AhrefsBot\nCrawl-delay: 10\nUser-agent: *\nDisallow: /admin", "/x", ALLOW, 10, None),
+    ("E11c", b"User-agent: AhrefsBot\nCrawl-delay: 10\nUser-agent: *\nDisallow: /admin", "/admin", DENY, 10, None),
+    ("E12a", b"User-agent: LearnUkrainianBot/1.0\nCrawl-delay: 1\nUser-agent: *\nAllow: /", "/x", UNRESOLVED, 1, None),
+    ("E12b", b"User-agent: learn\nCrawl-delay: 1\nUser-agent: *\nAllow: /", "/x", UNRESOLVED, 1, None),
+    ("E12c", b"User-agent: googlebot\nCrawl-delay: 1\nUser-agent: *\nDisallow: /p", "/q", ALLOW, 1, None),
+    ("E13", group(b"Crawl-delay: 99", b"User-agent: LearnUkrainianBot", b"Crawl-delay: 1.25"), "/x", ALLOW, 99, None),
+    ("E14a", b"User-agent: Other\nCrawl-delay: 99\nUser-agent: *\nCrawl-delay: 2.75", "/x", ALLOW, 99, None),
+    ("E14b", b"User-agent: Other\nCrawl-delay: 99\nDisallow: /o\nUser-agent: *\nCrawl-delay: 2.75", "/x", ALLOW, 2.75, None),
+    ("E15", CD_OWN + b"Crawl-delay: 1\nUser-agent: otherbot\nAllow: /private\n" + CD_OWN + b"Disallow: /private", "/private", AMBIGUOUS, 1, None),
+    ("E16a", group(b"Crawl-delay: 10", b"User-agent: Googlebot", b"Allow: /search", b"User-agent: *", b"Disallow: /search"), "/search", AMBIGUOUS, 10, None),
+    ("E16b", group(b"Crawl-delay: 10", b"User-agent: Googlebot", b"Allow: /search/books", b"User-agent: *", b"Disallow: /search"), "/search/books/1", AMBIGUOUS, 10, None),
+    ("E17", CD_OWN + b"Crawl-delay: 1\nUser-agent: *\nDisallow: /\n" + CD_OWN + b"Disallow: /p", "/p", DENY, 1, None),
+    ("E18", CD_OWN + b"Crawl-delay: 1\nUser-agent: otherbot\nDisallow: nope\nUser-agent: *\nAllow: /", "/x", UNRESOLVED, 1, None),
+    ("E19a", CD_OWN + b"Crawl-delay: 1\nUser-agent: *\nDisallow: /a%2Fb", "/a/b", AMBIGUOUS, 1, None),
+    ("E19b", CD_OWN + b"Crawl-delay: 1\nUser-agent: *\nDisallow: /a%2Fb", "/a%2Fb", AMBIGUOUS, 1, None),
+    ("E20", group(b"Disallow: /", b"User-agent: LearnUkrainianBot", b"Crawl-delay: 1", b"Disallow: /private"), "/public", ALLOW, 1, None),
+    ("E21", b"User-agent: learn-ukrainian-sum\nCrawl-delay: 1\nUser-agent: *\nDisallow: /", "/x", AMBIGUOUS, 1, SUM_HEADER),
+    ("E22", CD_OWN + b"Request-rate: 1/5\nUser-agent: *\nDisallow: /", "/x", DENY, 0, None),
+    ("E23", b"User-agent: otherbot\nSitemap: https://source.test/s\n" + CD_OWN + b"Disallow: /", "/x", DENY, 0, None),
+    ("E24", CD_OWN + b"User-agent: *\nCrawl-delay: 1\nDisallow: /", "/x", DENY, 1, None),
+    ("E25", CD_OWN + b"Crawl-delay: 1\n\nUser-agent: *\nDisallow: /", "/x", AMBIGUOUS, 1, None),
+    ("E26", CD_OWN + b"Crawl-delay: 1\nUser-agent: *\nDisallow: /", "/robots.txt", ALLOW, 1, None),
+    ("E27", group(b"Crawl-delay: 4", b"User-agent: otherbot", b"Allow: /"), "/x", ALLOW, 4, None),
+]
+
+
+@pytest.mark.parametrize("case,body,target,expected,delay,header", CD_GROUP_CONTROLS, ids=[r[0] for r in CD_GROUP_CONTROLS])
+def test_adopted_dual_grouping_literal_matrix(server, monkeypatch, case, body, target, expected, delay, header):
+    module = server.module
+    if header:
+        monkeypatch.setattr(module, "USER_AGENT", header)
+        if module is textbook:
+            monkeypatch.setitem(textbook.HEADERS, "User-Agent", header)
+    state = module._robots_parse(body, module.USER_AGENT)
+    assert state["delay"] == delay
+    server.robots = body
+    url = "https://source.test" + target
+    if expected == ALLOW:
+        server.fetch(url)
+        assert not module._access_stopped
+        assert len(server.source_calls()) == (0 if target == "/robots.txt" else 1)
+    else:
+        with pytest.raises(module.AccessStopped, match=expected):
+            server.fetch(url)
+        assert module._access_stopped and server.source_calls() == []
+        before = list(server.calls)
+        with pytest.raises(module.AccessStopped):
+            server.fetch("https://other.test/later")
+        assert server.calls == before
+        assert not list(server.tmp_path.glob("page-*.html"))
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"i-group-{module.__name__}-{case}.json").write_text(json.dumps({
+            "case": case, "expected": expected, "delay": delay,
+            "state": repr(state), "requests": server.calls, "latched": module._access_stopped,
+            "not_held_out": True,
+        }))
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("shape", ["many-rules", "many-wildcards"])
+def test_four_group_reading_evaluations_hostile_shape_under_five_seconds(module, shape, monkeypatch):
+    import time
+    bodies = {
+        "many-rules": b"User-agent: *\n" + b"Disallow: /*a*a*a*a*b\n" * (512000 // 22),
+        "many-wildcards": group(b"Disallow: /" + b"*a" * ((512000 - 40) // 2) + b"b"),
+    }
+    # Retain the original near-limit body intact: prepending group records
+    # would correctly exceed the admission bound. Compose a worst-case state
+    # from two actually parsed inputs, keeping the full hostile rules in both
+    # lists. This is a conservative evaluation stress bound, not a larger
+    # admitted robots file or a replacement for the literal grouping matrix.
+    evaluations = []
+    original = module._robots_canonical
+    def canonical(raw, *, rule, reading):
+        if not rule and raw.endswith(b"a" * 8000):
+            evaluations.append(reading)
+        return original(raw, rule=rule, reading=reading)
+    monkeypatch.setattr(module, "_robots_canonical", canonical)
+    start = time.perf_counter()
+    hostile = module._robots_parse(bodies[shape], module.USER_AGENT)
+    state = module._robots_parse(group(b"Crawl-delay: 1", b"User-agent: otherbot", b"Allow: /unused"), module.USER_AGENT)
+    assert "legacy_rules" in state and not state["unresolved"] and not hostile["unresolved"]
+    state["rules"].extend(hostile["rules"])
+    state["legacy_rules"].extend(hostile["rules"])
+    module._robots_states["https://h.test"] = state
+    module._robots_check_target("https://h.test/" + "a" * 8000)
+    elapsed = time.perf_counter() - start
+    assert evaluations == [1, 1, 2, 1, 2]  # robots-path exception, then four evaluations
+    assert elapsed < 5, (shape, elapsed)
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"i-hostile-{module.__name__}-{shape}.json").write_text(json.dumps({
+            "shape": shape, "seconds": elapsed, "evaluations": evaluations[1:], "composed_worst_case_state": True,
+            "payload_octets": len(bodies[shape]), "under_five_seconds": elapsed < 5,
+        }))
+
+
+@pytest.mark.parametrize("module", MODULES)
+def test_admitted_grouped_hostile_file_four_evaluations(module, monkeypatch):
+    import time
+    prefix = group(b"Crawl-delay: 1", b"User-agent: otherbot", b"Allow: /unused") + b"User-agent: *\n"
+    rule = b"Disallow: /*a*a*a*a*b\n"
+    # A separate maximal admitted grouped file; the original hostile fixtures
+    # and their full-payload stress checks above remain unchanged.
+    body = prefix + rule * ((512000 - len(prefix)) // len(rule))
+    assert 511900 <= len(body) <= 512000
+    readings = []
+    original = module._robots_canonical
+    def canonical(raw, *, rule, reading):
+        if not rule and raw.endswith(b"a" * 8000):
+            readings.append(reading)
+        return original(raw, rule=rule, reading=reading)
+    monkeypatch.setattr(module, "_robots_canonical", canonical)
+    start = time.perf_counter()
+    state = module._robots_parse(body, module.USER_AGENT)
+    assert not state["unresolved"] and "legacy_rules" in state
+    module._robots_states["https://h.test"] = state
+    module._robots_check_target("https://h.test/" + "a" * 8000)
+    elapsed = time.perf_counter() - start
+    assert readings == [1, 1, 2, 1, 2] and elapsed < 5
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"i-admitted-hostile-{module.__name__}.json").write_text(json.dumps({
+            "body_octets": len(body), "seconds": elapsed, "evaluations": readings[1:],
+            "actual_admitted_file": True, "under_five_seconds": elapsed < 5,
+        }))

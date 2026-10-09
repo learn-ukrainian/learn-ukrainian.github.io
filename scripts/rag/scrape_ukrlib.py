@@ -882,8 +882,10 @@ def _robots_parse(body: bytes, header: str) -> dict:
     )
     if body.startswith(b"\xef\xbb\xbf"):
         body = body[3:]
-    groups = []
+    groups, rfc_groups = [], []
     agents, rules, delays = [], [], []
+    rfc_agents, rfc_rules, rfc_delays = [], [], []
+    rfc_directives = False
     orphan = []
     seen_agent = directives = False
     # Only CR/LF delimit records: bytes.splitlines would also split CTLs.
@@ -912,7 +914,11 @@ def _robots_parse(body: bytes, header: str) -> dict:
             if directives:
                 groups.append((agents, rules, delays))
                 agents, rules, delays, directives = [], [], [], False
+            if rfc_directives:
+                rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
+                rfc_agents, rfc_rules, rfc_delays, rfc_directives = [], [], [], False
             value = value.lower()
+            rfc_agents.append(value)
             leading = 0
             while leading < len(value) and (97 <= value[leading] <= 122 or value[leading] in b"_-"):
                 leading += 1
@@ -933,7 +939,10 @@ def _robots_parse(body: bytes, header: str) -> dict:
                         continue
                     if math.isfinite(delay) and delay >= 0:
                         delays.append(delay)
+                        rfc_delays.append(delay)
                 continue
+            # Only Allow/Disallow end the RFC user-agent run, even if empty or malformed.
+            rfc_directives = bool(rfc_agents)
             malformed = False
             if value:
                 try:
@@ -952,12 +961,21 @@ def _robots_parse(body: bytes, header: str) -> dict:
                 # None records an unresolved Disallow, selected only with its group.
                 rule = (key == b"allow", None if malformed else value)
                 (rules if seen_agent else orphan).append(rule)
+                if seen_agent:
+                    rfc_rules.append(rule)
+    rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
     groups.append((agents, rules, delays))
     selected = [g for g in groups if token in g[0]] or [g for g in groups if b"*" in g[0]]
     effective = orphan + [rule for _names, values, _delays in selected for rule in values]
-    unresolved |= any(value is None for _allow, value in effective)
-    return {"rules": effective, "unresolved": unresolved,
-            "delay": max((d for _names, _rules, values in selected for d in values), default=0.0)}
+    rfc_selected = [g for g in rfc_groups if token in g[0]] or [g for g in rfc_groups if b"*" in g[0]]
+    rfc_effective = orphan + [rule for _names, values, _delays in rfc_selected for rule in values]
+    unresolved |= any(value is None for _allow, value in effective + rfc_effective)
+    state = {"rules": rfc_effective, "unresolved": unresolved,
+             "delay": max((d for _names, _rules, values in rfc_selected for d in values), default=0.0)}
+    # Legacy grouping only conserves denials; identical lists need two evaluations.
+    if effective != rfc_effective:
+        state["legacy_rules"] = effective
+    return state
 
 
 def _robots_crawl_delay(body: str) -> float:
@@ -1043,22 +1061,26 @@ def _robots_check_target(url: str) -> None:
     if _robots_canonical(path, rule=False, reading=1)[0] == "/robots.txt":
         return
     decisions = []
-    for reading in (1, 2):
-        canonical = _robots_canonical(target, rule=False, reading=reading)[0]
-        top = []
-        best = -1
-        for allow, value in state["rules"]:
-            pattern, anchored, specificity = _robots_canonical(value, rule=True, reading=reading)
-            if _robots_match(pattern, anchored, canonical):
-                if specificity > best:
-                    top, best = [], specificity
-                if specificity == best:
-                    top.append((allow, pattern, anchored))
-        allows = {(pattern, anchored) for allow, pattern, anchored in top if allow}
-        denies = {(pattern, anchored) for allow, pattern, anchored in top if not allow}
-        decisions.append("allow" if not top or (allows and denies <= allows) else "disallow" if not allows else "ambiguous")
-    if decisions != ["allow", "allow"]:
-        _robots_stop("robots_disallowed" if decisions == ["disallow", "disallow"] else "robots_ambiguous")
+    rule_sets = [state["rules"]]
+    if "legacy_rules" in state:
+        rule_sets.append(state["legacy_rules"])
+    for rules in rule_sets:
+        for reading in (1, 2):
+            canonical = _robots_canonical(target, rule=False, reading=reading)[0]
+            top = []
+            best = -1
+            for allow, value in rules:
+                pattern, anchored, specificity = _robots_canonical(value, rule=True, reading=reading)
+                if _robots_match(pattern, anchored, canonical):
+                    if specificity > best:
+                        top, best = [], specificity
+                    if specificity == best:
+                        top.append((allow, pattern, anchored))
+            allows = {(pattern, anchored) for allow, pattern, anchored in top if allow}
+            denies = {(pattern, anchored) for allow, pattern, anchored in top if not allow}
+            decisions.append("allow" if not top or (allows and denies <= allows) else "disallow" if not allows else "ambiguous")
+    if not all(d == "allow" for d in decisions):
+        _robots_stop("robots_disallowed" if all(d == "disallow" for d in decisions) else "robots_ambiguous")
 
 
 def _wait_for_request(url: str, floor: float = 0.0) -> None:
