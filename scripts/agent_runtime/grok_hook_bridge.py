@@ -215,6 +215,18 @@ def _driver_preflight(source_root: Path) -> int:
 
 
 def main() -> int:
+    if sys.argv[1:] == ["--help"]:
+        print(
+            "Usage: grok_hook_bridge.py GUARD | --driver MATCHER | --driver-preflight ROOT\n"
+            "Translate native Grok PreToolUse stdin JSON and run tracked fleet guards.\n"
+            "Use as a native hook bridge or launcher preflight, never to launch a provider.\n"
+            "--driver requires launcher identity; --driver-preflight reads inspection stdin JSON.\n"
+            "Outputs: guard stdout/stderr; preflight only validates, writes no files.\n"
+            "Exit codes: 0 allowed; 2 denied or invalid input.\n"
+            "Related: docs/runbooks/grok-session-canary.md\n"
+            "Example: grok_hook_bridge.py --driver 'Bash|run_terminal_command|run_terminal_cmd'"
+        )
+        return 0
     try:
         if len(sys.argv) == 3 and sys.argv[1] in {"--driver", "--driver-preflight"}:
             try:

@@ -562,3 +562,18 @@ launcher_adapter_preflight
     assert result.stderr == ""
     if mode == "driver":
         assert "would require a trusted folder" in result.stdout
+
+
+def test_bridge_help_is_offline_and_does_not_read_hook_input(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["grok_hook_bridge.py", "--help"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO("invalid hook input"))
+    def refuse_spawn(*args, **kwargs):
+        pytest.fail("help must not execute a guard or provider")
+    monkeypatch.setattr(subprocess, "run", refuse_spawn)
+    assert bridge.main() == 0
+    output = capsys.readouterr()
+    assert "Usage:" in output.out
+    assert "--driver-preflight ROOT" in output.out
+    assert "Exit codes: 0 allowed; 2 denied" in output.out
+    assert output.err == ""
+    assert sys.stdin.tell() == 0

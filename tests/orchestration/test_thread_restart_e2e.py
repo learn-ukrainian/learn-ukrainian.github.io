@@ -146,7 +146,7 @@ def init_repo(
     git(primary, "config", "user.email", "e2e@example.invalid")
     git(primary, "config", "user.name", "Thread Restart E2E")
     (primary / ".gitignore").write_text(
-        ".agent/\n.codex/\n.claude/\n.agents/\n.gemini/\n.venv\n__pycache__/\n",
+        ".agent/\n.codex/\n.claude/\n.agents/\n.gemini/\n.grok/\n.venv\n__pycache__/\n",
         encoding="utf-8",
     )
     (primary / "tracked.txt").write_text("canonical\n", encoding="utf-8")
@@ -201,6 +201,8 @@ def init_repo(
                 "scripts/launchers/grok.sh",
                 "scripts/orchestration/codex_transport_health.py",
                 "scripts/agent_runtime/bounded_command.py",
+                "scripts/agent_runtime/grok_hook_bridge.py",
+                "agents_extensions/grok/hooks/driver.json",
                 "scripts/config/issue_streams.yaml",
                 "scripts/config/launcher_stream_aliases.tsv",
                 "agents_extensions/codex/hooks.json",
@@ -413,7 +415,9 @@ def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str
         "set -e\n"
         "mkdir -p .codex/hooks\n"
         "cp agents_extensions/codex/hooks.json .codex/hooks.json\n"
-        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n",
+        "cp agents_extensions/shared/hooks/session-setup.sh .codex/hooks/session-setup.sh\n"
+        "mkdir -p .grok/hooks\n"
+        "cp agents_extensions/grok/hooks/driver.json .grok/hooks/driver.json\n",
         encoding="utf-8",
     )
     fake_npm.chmod(0o755)
@@ -423,7 +427,27 @@ def launcher_environment(tmp_path: Path, *providers: str) -> tuple[dict[str, str
     for provider, marker in started.items():
         executable = fake_home_bin / executable_names.get(provider, provider)
         executable.write_text(
-            f"#!/bin/bash\ntouch {os.fspath(marker)!r}\n"
+            "#!/bin/bash\n"
+            + (f"""if [ "${{1:-}}" = inspect ]; then
+  exec {sys.executable!r} - <<'PY_INSPECT'
+import json
+from pathlib import Path
+root = Path.cwd()
+profile = root / ".grok/hooks/driver.json"
+groups = json.loads(profile.read_bytes())["hooks"]["PreToolUse"]
+print(json.dumps({{
+    "projectRoot": str(root), "projectTrusted": True,
+    "hooks": [{{
+        "event": "pre_tool_use", "hookType": "command",
+        "matcher": group["matcher"], "target": group["hooks"][0]["command"],
+        "source": {{"type": "project", "path": str(profile.parent)}},
+        "compatibilityStatus": "enabled",
+    }} for group in groups],
+}}))
+PY_INSPECT
+fi
+""" if provider == "grok" else "")
+            + f"touch {os.fspath(marker)!r}\n"
             'if [ "${LAUNCHER_TEST_HOLD_PROVIDER:-0}" = 1 ]; then read -r; fi\n',
             encoding="utf-8",
         )
@@ -1589,20 +1613,24 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
     store = seed_driver_stream(primary, stream_id="epic:5703", close=True)
     env, started = launcher_environment(tmp_path, "grok")
     provider = Path(env["HOME"]) / ".local/bin/grok"
+    # Keep native inspection separate from the deliberately failing session.
+    inspect_stub = provider.read_text().split("touch ", 1)[0]
     command = [primary / "start-grok-driver.sh", "devops"]
     if failure == "approval-required":
         # The synthetic provider models an unavailable consent decision. It
-        # rejects unless the configured approval arguments arrive unchanged,
-        # then refuses the operation; the launcher must propagate that refusal.
+        # verifies an allowlisted argument arrives unchanged with the native
+        # session binding, then refuses; the launcher must propagate the refusal.
         provider.write_text(
-            '#!/bin/bash\n[ "$#" = 3 ] && [ "$1" = --approval-mode ] && [ "$2" = required ] || exit 99\n'
-            'case "$3" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
+            inspect_stub
+            + '[ "$#" = 6 ] && [ "$1" = --session-id ] && [ "$2" = "$LU_GROK_DRIVER_SESSION_ID" ] '
+            '&& [ "$3" = --no-leader ] && [ "$4" = --rules ] && [ "$6" = --no-subagents ] || exit 99\n'
+            '[ -n "$5" ] || exit 99\n'
             "echo approval-required >&2\nexit 23\n",
             encoding="utf-8",
         )
-        command += ["--", "--approval-mode", "required"]
+        command += ["--", "--no-subagents"]
     else:
-        provider.write_text("#!/bin/bash\nexit 17\n", encoding="utf-8")
+        provider.write_text(inspect_stub + "exit 17\n", encoding="utf-8")
 
     with epics_monitor_stub(store) as monitor_url:
         env["LU_MONITOR_LOOPBACK"] = monitor_url
@@ -1621,7 +1649,7 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
 
         # A subsequent ordinary launch can acquire immediately, without a TTL
         # wait or a force-release repair of the failed provider's generation.
-        provider.write_text("#!/bin/bash\nexit 0\n", encoding="utf-8")
+        provider.write_text(inspect_stub + "exit 0\n", encoding="utf-8")
         retried = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
         assert retried.returncode == 0, retried.stderr + retried.stdout
         after_retry = store.dump_stream("epic:5703")
