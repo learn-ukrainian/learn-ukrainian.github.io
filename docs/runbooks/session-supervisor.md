@@ -245,12 +245,15 @@ scripts/ai_agent_bridge/inbox_watch.sh <codex-slot> --wake-driver codex --epic <
 Codex wake mode resumes an unread bridge message into the live thread when
 that seat's lease is active and the UI rollout is ready. A rollout is ready
 when it has no open turn. To determine state, the watcher reads the tail of
-the rollout file backwards in chunks up to a cap. If the state cannot be
-determined within the cap, or if an incomplete final JSON line is found,
-the pane fails closed (unknown/busy) and waits for the next poll.
-An unmatched historical turn start left by a crashed or aborted resume process
-keeps the pane busy until the rollout has no writes for 10 minutes, at which
-point it is considered stale and the pane becomes ready again.
+the rollout file backwards in chunks up to a 16 MiB cap. The FIRST lifecycle event
+found going backward decides the readiness: `task_started` or `turn_started` means BUSY;
+`task_complete`, `turn_complete`, or `turn_aborted` means READY (with or without a turn id).
+Non-lifecycle lines are skipped. A line longer than 1 MiB is treated as an opaque
+non-lifecycle record and skipped without parsing. The pane fails closed (unknown/busy)
+and waits for the next poll on: a malformed or truncated line BEFORE a lifecycle event,
+invalid UTF-8 anywhere in the scanned window, the total cap reached without finding
+a lifecycle event, or an unreadable file. A crashed unmatched start stays BUSY
+(the normal launcher path handles dead leases).
 
 Without `--wake-driver`, the watcher only prints
 notifications. One poll becomes one `codex exec resume` turn, with the unread

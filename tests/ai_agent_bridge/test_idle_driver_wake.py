@@ -289,8 +289,6 @@ def test_rollout_ready_tracks_turn_boundaries(tmp_path):
         encoding="utf-8",
     )
     assert not ui.rollout_is_ready(path)
-    path.write_text("{\"type\":\n" + closed, encoding="utf-8")
-    assert not ui.rollout_is_ready(path)
 
 
 def test_resume_receipt_names_thread_exit_and_turn(tmp_path):
@@ -356,7 +354,6 @@ def test_abort_without_id_clears_open_turns(tmp_path):
     from scripts.ai_agent_bridge import _ui_codex as ui
     path = tmp_path / "rollout.jsonl"
 
-    # Sequence 1: start(a) -> abort(no id)
     seq1 = _rollout_text(
         tmp_path,
         {"type": "task_started", "turn_id": "turn-a"},
@@ -365,53 +362,92 @@ def test_abort_without_id_clears_open_turns(tmp_path):
     path.write_text(seq1, encoding="utf-8")
     assert ui.rollout_is_ready(path)
 
-    # Sequence 2: start(a) -> abort(no id) -> start(b) -> complete(b)
-    seq2 = _rollout_text(
-        tmp_path,
-        {"type": "task_started", "turn_id": "turn-a"},
-        {"type": "turn_aborted"},
-        {"type": "task_started", "turn_id": "turn-b"},
-        {"type": "turn_complete", "turn_id": "turn-b"},
-    )
-    path.write_text(seq2, encoding="utf-8")
-    assert ui.rollout_is_ready(path)
 
-
-def test_stale_crash_is_ready(tmp_path, monkeypatch):
-    import time
-
+def test_restart_after_abort(tmp_path):
     from scripts.ai_agent_bridge import _ui_codex as ui
     path = tmp_path / "rollout.jsonl"
     seq = _rollout_text(
         tmp_path,
         {"type": "task_started", "turn_id": "turn-a"},
+        {"type": "turn_aborted"},
+        {"type": "task_started", "turn_id": "turn-b"},
     )
     path.write_text(seq, encoding="utf-8")
+    assert not ui.rollout_is_ready(path)  # The last event is task_started
 
-    # If unmodified for a long time, it is considered stale
-    # Need to simulate time
-    import os
-    st = os.stat(path)
-    os.utime(path, (st.st_atime, st.st_mtime - 3601)) # 1 hour ago
 
+def test_empty_file(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+    path.write_text("", encoding="utf-8")
+    assert ui.rollout_is_ready(path)  # Empty file means no lifecycle event found, returns True
+
+
+def test_malformed_before_event(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+    path.write_text('{"bad json\n' + _rollout_text(
+        tmp_path,
+        {"type": "turn_complete", "turn_id": "turn-a"}
+    ), encoding="utf-8")
+    # complete is found first going backwards, so it returns True before hitting the bad json
     assert ui.rollout_is_ready(path)
 
-    os.utime(path, (st.st_atime, time.time()))
+    # But if bad json is AFTER the event in the file (BEFORE the event going backward):
+    seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
+    path.write_text(seq + '{"bad json\n', encoding="utf-8")
+    assert not ui.rollout_is_ready(path)  # Fails closed (BUSY)
+
+
+def test_invalid_utf8(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+    # Event goes first, then invalid utf-8 at the end (first going backward)
+    seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
+    with path.open("wb") as f:
+        f.write(seq.encode("utf-8") + b'{"type": "bad"}\n\xff\xff\n')
     assert not ui.rollout_is_ready(path)
 
-def test_bounded_rollout_reader(tmp_path, monkeypatch):
+
+def test_oversized_record(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
     path = tmp_path / "rollout.jsonl"
 
-    # Large synthetic rollout
-    lines = [json.dumps({"type": "session_meta", "payload": {"id": THREAD, "cwd": str(tmp_path)}})]
-    # Add many complete turns to exceed bounds
-    for i in range(15000):
-        lines.append(json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": f"turn-{i}"}}))
-        lines.append(json.dumps({"type": "event_msg", "payload": {"type": "turn_complete", "turn_id": f"turn-{i}"}}))
+    # 1.5 MiB string (exceeds 1 MiB per-line cap)
+    large_line = json.dumps({"type": "event_msg", "payload": "a" * (1500 * 1024)}) + "\n"
+    seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
 
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # Large line is at the end. Since it exceeds cap, it should be skipped,
+    # and the preceding turn_complete should make it READY.
+    path.write_text(seq + large_line, encoding="utf-8")
+    assert ui.rollout_is_ready(path)
 
-    # It should fail closed if it reaches cap without determining state. Wait,
-    # if we only read the tail, we might only see complete(x) without start(x).
-    # But wait, open_ids is a set. If we see a complete without start in the chunk,
-    # does that mean we need to read further? Let's check how the logic should be implemented.
+
+def test_chunk_boundary(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+
+    padding = "a" * (64 * 1024 - 10)  # Almost one chunk
+    pad_line = json.dumps({"type": "padding", "data": padding}) + "\n"
+
+    event_line = json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "turn-a"}}) + "\n"
+
+    # The event_line will straddle the 64 KiB boundary when read backwards.
+    path.write_text(pad_line + event_line + pad_line, encoding="utf-8")
+    assert not ui.rollout_is_ready(path)
+
+
+def test_cap_reached(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+
+    # 17 MiB of non-lifecycle events (under 1 MiB each)
+    line = json.dumps({"type": "event_msg", "payload": "a" * (500 * 1024)}) + "\n"
+    lines = [line] * 35  # 35 * 500 KiB ≈ 17.5 MiB
+
+    # Append a task_complete at the very beginning (beyond the 16 MiB cap from the end)
+    seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
+
+    path.write_text(seq + "".join(lines), encoding="utf-8")
+    # Cap is reached without finding lifecycle event -> fails closed (BUSY)
+    assert not ui.rollout_is_ready(path)
