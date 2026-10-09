@@ -10071,12 +10071,16 @@ def _run_worker(
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
-                and mode == "read-only"
-                and (state.get("review") or require_review_verdict or review_id is not None)
+                and (
+                    _dispatch_is_review_typed(argparse.Namespace(**state))
+                    or require_review_verdict
+                    or review_id is not None
+                )
             ):
-                tool_config["review_profile"] = state.get("review_profile")
+                tool_config["review_profile"] = state.get("review_profile") or "code"
                 if (
-                    state.get("review_profile") in {"ukrainian", "code"}
+                    mode == "read-only"
+                    and tool_config["review_profile"] in {"ukrainian", "code"}
                     and mcp_config_path is None
                     and review_id is None
                     and attempt_id is None
@@ -11963,6 +11967,15 @@ def _dispatch(
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    # Reviewer resolution and budget substitution can change the seat after
+    # the original-request guard. Enforce the same boundary on the final route.
+    if (
+        dispatch_agent in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
