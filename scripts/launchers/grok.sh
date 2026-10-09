@@ -3,7 +3,21 @@
 launcher_adapter_validate() {
   # shellcheck disable=SC2153 # LC_MODE is supplied by launcher_core.sh.
   if [ "$LC_MODE" = driver ] && [ "$LC_HARNESS" = grok ]; then
-    local forwarded forwarded_name
+    local forwarded forwarded_name context_variable
+    # Refuse ambient context overrides rather than silently ignoring operator
+    # settings. Inspection and the session must share the launcher-owned root,
+    # config/hook sources, trust decision and process tree. Names only: never
+    # reflect inline config or other environment values into diagnostics.
+    for context_variable in \
+      GROK_CONFIG GROK_CONFIG_PATH GROK_HOME GROK_WORKSPACE_ROOT \
+      GROK_FOLDER_TRUST GROK_LEADER_SOCKET GROK_MANAGED_CONFIG_URL \
+      GROK_CLAUDE_HOOKS_ENABLED GROK_CURSOR_HOOKS_ENABLED GROK_CODEX_HOOKS_ENABLED \
+      GROK_CAMPAIGNS GROK_CAMPAIGNS_OVERRIDE __GROK_HOOKS_MASK___; do
+      if [[ -v "$context_variable" ]]; then
+        launcher_error "Grok driver environment override '$context_variable' is refused: project root, config/hook sources, folder trust and leader mode are launcher-bound. Unset this variable and retry."
+        exit 2
+      fi
+    done
     for forwarded in "${LC_FORWARD_ARGS[@]}"; do
       case "$forwarded" in
         # No value-taking flags, positional prompts, subcommands or aliases:
@@ -71,6 +85,13 @@ launcher_adapter_exec() {
   if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_exec; return; fi
   local cmd=(grok)
   if [ "$LC_MODE" = driver ]; then
+    # The provider discovers project hooks from its working directory. Pin
+    # the actual process (and dry-run) to the checkout that passed inspection,
+    # even when the launcher was invoked outside it or in a linked worktree.
+    if ! cd -- "$LC_ROOT"; then
+      launcher_error 'Grok driver launch: cannot enter the inspected checkout; restore the checkout and retry.'
+      return 2
+    fi
     export LU_GROK_SOURCE_ROOT="$LC_ROOT"
     export LU_GROK_PROJECT_PYTHON="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
     LU_GROK_DRIVER_SESSION_ID="$("$LU_GROK_PROJECT_PYTHON" -c 'import uuid; print(uuid.uuid4())')" || return 2

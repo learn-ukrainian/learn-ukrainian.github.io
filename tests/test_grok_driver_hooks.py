@@ -418,6 +418,12 @@ def test_worker_path_denies_truncated_input(monkeypatch):
         "disabled",
         "invalid_json",
         "inspect_failed",
+        "wrong_project_root",
+        "missing_project_root",
+        "relative_project_root",
+        "invalid_project_root",
+        "empty_project_root",
+        "project_root_alias",
     ],
 )
 def test_driver_launcher_preflight_requires_discovered_trusted_profile(monkeypatch, tmp_path, condition):
@@ -431,6 +437,7 @@ def test_driver_launcher_preflight_requires_discovered_trusted_profile(monkeypat
         deployed.write_bytes(b"{}" if condition == "drift" else source.read_bytes())
     profile = json.loads(source.read_text())
     inspection = {
+        "projectRoot": str(root),
         "projectTrusted": condition != "untrusted",
         "hooks": [
             {
@@ -451,12 +458,27 @@ def test_driver_launcher_preflight_requires_discovered_trusted_profile(monkeypat
         inspection["hooks"][0]["target"] = "true"
     elif condition == "disabled":
         inspection["hooks"][0]["compatibilityStatus"] = "disabled"
+    elif condition == "wrong_project_root":
+        inspection["projectRoot"] = str(tmp_path)
+    elif condition == "missing_project_root":
+        inspection.pop("projectRoot")
+    elif condition == "relative_project_root":
+        inspection["projectRoot"] = "checkout"
+    elif condition == "invalid_project_root":
+        inspection["projectRoot"] = []
+    elif condition == "empty_project_root":
+        inspection["projectRoot"] = ""
+    elif condition == "project_root_alias":
+        alias = tmp_path / "checkout-alias"
+        alias.symlink_to(root, target_is_directory=True)
+        inspection["projectRoot"] = str(alias)
     fixture = tmp_path / "inspect.json"
     fixture.write_text("not-json" if condition == "invalid_json" else json.dumps(inspection))
     # Exercise validation directly as well as the launcher wiring below.
     # Native command failure is handled by the shell before validation.
     monkeypatch.setattr(sys, "stdin", io.StringIO(fixture.read_text()))
-    if condition == "ok":
+    accepted = condition in {"ok", "project_root_alias"}
+    if accepted:
         assert bridge._driver_preflight(root) == 0
     elif condition != "inspect_failed":
         with pytest.raises(ValueError, match="Grok driver preflight"):
@@ -484,14 +506,16 @@ launcher_adapter_preflight
         text=True,
         timeout=30,
     )
-    assert result.returncode == (0 if condition == "ok" else 2), result.stdout + result.stderr
-    if condition != "ok":
+    assert result.returncode == (0 if accepted else 2), result.stdout + result.stderr
+    if not accepted:
         assert "Grok driver preflight" in result.stderr
         assert (
             "trust"
             if condition == "untrusted"
             else "grok inspect --json"
             if condition in {"invalid_json", "inspect_failed"}
+            else "projectRoot"
+            if condition.endswith("project_root")
             else "npm run agents:deploy"
         ) in result.stderr
 

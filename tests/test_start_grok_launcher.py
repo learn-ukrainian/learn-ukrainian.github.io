@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -87,6 +88,135 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     result = run_launcher("start-grok.sh", "--", "--reasoning", "high")
     assert result.returncode == 0, result.stderr
     assert "--reasoning high" in result.stdout
+
+
+DRIVER_CONTEXT_OVERRIDES = (
+    "GROK_CONFIG", "GROK_CONFIG_PATH", "GROK_HOME", "GROK_WORKSPACE_ROOT",
+    "GROK_FOLDER_TRUST", "GROK_LEADER_SOCKET", "GROK_MANAGED_CONFIG_URL",
+    "GROK_CLAUDE_HOOKS_ENABLED", "GROK_CURSOR_HOOKS_ENABLED", "GROK_CODEX_HOOKS_ENABLED",
+    "GROK_CAMPAIGNS", "GROK_CAMPAIGNS_OVERRIDE", "__GROK_HOOKS_MASK___",
+)
+
+
+@pytest.mark.parametrize("variable", DRIVER_CONTEXT_OVERRIDES)
+@pytest.mark.parametrize("value", ["private-override-value", ""])
+def test_grok_driver_refuses_context_environment_overrides(variable: str, value: str) -> None:
+    result = run_launcher("start-grok-driver.sh", "--epic", "infra", env={variable: value})
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert variable in result.stderr
+    assert "launcher-bound" in result.stderr
+    assert "private-override-value" not in result.stdout + result.stderr
+    assert "would deploy" not in result.stdout
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
+
+
+def test_grok_interactive_preserves_context_environment_overrides() -> None:
+    result = run_launcher("start-grok.sh", env={key: "fixture" for key in DRIVER_CONTEXT_OVERRIDES})
+    assert result.returncode == 0, result.stderr
+    assert "would exec grok" in result.stdout
+
+
+def test_grok_driver_help_describes_pinned_launch_without_positional_prompts() -> None:
+    result = run_launcher("start-grok-driver.sh", "--help")
+    assert result.returncode == 0, result.stderr
+    assert "[PROMPT" not in result.stdout
+    assert "positional prompts" in result.stdout
+    assert "inspected checkout" in result.stdout
+    assert "GROK_CONFIG_PATH" in result.stdout
+
+
+@pytest.mark.parametrize("launch_site", ["outside", "linked_worktree", "missing_checkout"])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_grok_driver_exec_pins_inspected_checkout(tmp_path: Path, launch_site: str, dry_run: bool) -> None:
+    root = tmp_path / "checkout with spaces"
+    root.mkdir()
+    if launch_site == "linked_worktree":
+        subprocess.run(["git", "init", "-q", "-b", "main", str(root)], check=True, timeout=15)
+        subprocess.run(
+            ["git", "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+             "commit", "--allow-empty", "-q", "-m", "Fixture"],
+            cwd=root, check=True, capture_output=True, timeout=15,
+        )
+        launch_cwd = root / ".worktrees/dispatch/fixture/linked"
+        subprocess.run(["git", "worktree", "add", "-q", "-b", "fixture", str(launch_cwd)],
+                       cwd=root, check=True, capture_output=True, timeout=15)
+        assert (launch_cwd / ".git").is_file()
+        assert not (launch_cwd / ".grok").exists()
+    else:
+        launch_cwd = tmp_path / "outside"
+        launch_cwd.mkdir()
+    repo = Path(__file__).resolve().parents[1]
+    profile_path = Path("agents_extensions/grok/hooks/driver.json")
+    profile_bytes = (repo / profile_path).read_bytes()
+    for relative in (profile_path, Path(".grok/hooks/driver.json")):
+        destination = root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(profile_bytes)
+    bridge = root / "scripts/agent_runtime/grok_hook_bridge.py"
+    bridge.parent.mkdir(parents=True)
+    bridge.write_bytes((repo / "scripts/agent_runtime/grok_hook_bridge.py").read_bytes())
+    inspection = {
+        "projectRoot": str(root), "projectTrusted": True,
+        "hooks": [
+            {"event": "pre_tool_use", "hookType": "command", "matcher": group["matcher"],
+             "target": group["hooks"][0]["command"],
+             "source": {"type": "project", "path": str(root / ".grok/hooks")}}
+            for group in json.loads(profile_bytes)["hooks"]["PreToolUse"]
+        ],
+    }
+    binary = tmp_path / "bin/grok"
+    binary.parent.mkdir()
+    binary.write_text(
+        '#!/bin/sh\n'
+        'if [ "${1:-}" = inspect ]; then\n'
+        '  printf "inspect-cwd=%s\\n" "$PWD" >&2\n'
+        '  printf "%s" "$FIXTURE_INSPECTION"\n'
+        'else\n'
+        '  printf "exec-cwd=%s\\nsource-root=%s\\n" "$PWD" "$LU_GROK_SOURCE_ROOT"\n'
+        'fi\n',
+    )
+    binary.chmod(0o755)
+    if launch_site == "missing_checkout":
+        root = tmp_path / "absent checkout"
+    # Exercise inspection plus the core's real final exec, without deployment,
+    # provider calls or launcher-owned lease changes. Missing root models the
+    # checkout disappearing after inspection and before final exec.
+    script = """
+set -euo pipefail
+source "$FIXTURE_REPO/scripts/lib/launcher_core.sh"
+source "$FIXTURE_REPO/scripts/launchers/grok.sh"
+LC_HARNESS=grok LC_MODE=driver LC_ROOT="$FIXTURE_CHECKOUT"
+LC_DURABLE_HELPER_ROOT="$FIXTURE_HELPER_ROOT"
+LC_MODEL='' LC_EFFORT='' LC_RULES_CORE='' LC_DRY_RUN="$FIXTURE_DRY_RUN"
+LC_AUTH_SOURCE=fixture LC_DRIVER_LEASE_ENABLED=0
+LC_FORWARD_ARGS=()
+launcher_adapter_validate
+if [ "$FIXTURE_SITE" != missing_checkout ]; then launcher_adapter_preflight; fi
+launcher_adapter_exec
+printf 'adapter-cwd=%s\\n' "$PWD"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script], cwd=launch_cwd,
+        env={**os.environ, "PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+             "FIXTURE_REPO": str(repo), "FIXTURE_CHECKOUT": str(root),
+             "FIXTURE_HELPER_ROOT": str(Path(sys.executable).parents[2]),
+             "FIXTURE_DRY_RUN": str(int(dry_run)), "FIXTURE_SITE": launch_site,
+             "FIXTURE_INSPECTION": json.dumps(inspection)},
+        capture_output=True, text=True, timeout=15,
+    )
+    if launch_site == "missing_checkout":
+        assert result.returncode == 2, result.stdout + result.stderr
+        assert "cannot enter the inspected checkout" in result.stderr
+        assert "exec-cwd=" not in result.stdout
+        assert "would exec" not in result.stdout
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        if dry_run:
+            assert f"adapter-cwd={root}\n" in result.stdout
+        else:
+            assert f"inspect-cwd={root}" in result.stderr
+            assert f"exec-cwd={root}\nsource-root={root}\n" in result.stdout
 
 
 def _run_grok_driver_adapter(flag: str) -> subprocess.CompletedProcess[str]:

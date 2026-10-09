@@ -5,7 +5,7 @@
 
 launcher_usage() {
   local name="start-${LC_PROVIDER}${LC_MODE:+-${LC_MODE}}.sh"
-  local driver_mode provider_env example_three
+  local driver_mode provider_env example_three prompt_usage=' [PROMPT ...]'
   if [ "$LC_MODE" = "interactive" ]; then
     name="start-${LC_PROVIDER}.sh"
   fi
@@ -39,8 +39,11 @@ launcher_usage() {
     *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
+  if [ "$LC_PROVIDER:$LC_MODE" = grok:driver ]; then
+    prompt_usage=''
+  fi
   cat <<EOF
-Usage: ./${name} [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]
+Usage: ./${name} [OPTIONS]${prompt_usage} [-- PROVIDER_ARGS ...]
 
 Launch ${LC_PROVIDER} through the approved provider adapter. Use a -driver
 entrypoint only for an epic-driving session; interactive launchers never claim leases.
@@ -100,6 +103,20 @@ Examples:
   LAUNCHER_DRY_RUN=1 ./${name} --model ${LC_MODEL:-MODEL}
   $example_three
 EOF
+  if [ "$LC_PROVIDER:$LC_MODE" = grok:driver ]; then
+    cat <<'EOF'
+
+Native Grok driver:
+  Runs from the inspected checkout; positional prompts and subcommands are refused.
+  After --, only --debug, --fullscreen, --minimal, --no-alt-screen,
+  --disable-web-search and --no-subagents are accepted (no values).
+  Refuses ambient context overrides, even empty values: GROK_CONFIG,
+  GROK_CONFIG_PATH, GROK_HOME, GROK_WORKSPACE_ROOT, GROK_FOLDER_TRUST,
+  GROK_LEADER_SOCKET, GROK_MANAGED_CONFIG_URL, GROK_CLAUDE_HOOKS_ENABLED,
+  GROK_CURSOR_HOOKS_ENABLED, GROK_CODEX_HOOKS_ENABLED, GROK_CAMPAIGNS,
+  GROK_CAMPAIGNS_OVERRIDE and __GROK_HOOKS_MASK___. Unset them before launch.
+EOF
+  fi
   if [ "$LC_PROVIDER" = grok ] || [ "$LC_PROVIDER" = codex ]; then
     cat <<'EOF'
 

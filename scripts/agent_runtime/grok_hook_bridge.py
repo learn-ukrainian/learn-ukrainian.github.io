@@ -172,6 +172,17 @@ def _driver_preflight(source_root: Path) -> int:
         raise ValueError(
             "Grok driver preflight: grok inspect --json returned invalid output; rerun grok inspect --json."
         ) from exc
+    inspected_root = inspection.get("projectRoot")
+    if (
+        not isinstance(inspected_root, str)
+        or not inspected_root
+        or not Path(inspected_root).is_absolute()
+        or Path(inspected_root).resolve() != source_root.resolve()
+    ):
+        raise ValueError(
+            "Grok driver preflight: projectRoot does not resolve to the launcher checkout. "
+            "Unset project/config environment overrides and rerun grok inspect --json in this checkout, then retry."
+        )
     if inspection.get("projectTrusted") is not True:
         raise ValueError(
             "Grok driver preflight: folder is not trusted. Run grok in this checkout and accept the folder-trust prompt, then retry."

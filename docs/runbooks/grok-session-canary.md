@@ -206,9 +206,35 @@ agent definitions and leader options cannot redirect a session after its
 project passed preflight. Model and effort remain launcher options before the
 separator. Interactive forwarding is unchanged.
 
+Native driver usage is `start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]`;
+there is no positional prompt. The launcher changes to its own checkout before
+the final exec (and in dry-run), refusing if it cannot enter that directory.
+Invocation from an unrelated directory or a linked worktree therefore keeps
+the session in the checkout whose hooks were inspected.
+
+Before deployment or inspection, native drivers refuse these environment
+overrides, including explicitly empty values:
+
+| Variables | Context affected |
+| --- | --- |
+| `GROK_CONFIG`, `GROK_CONFIG_PATH` | Inline or file config overlays. |
+| `GROK_HOME`, `GROK_WORKSPACE_ROOT` | Config home or workspace root. |
+| `GROK_FOLDER_TRUST`, `GROK_LEADER_SOCKET` | Folder trust or leader selection. |
+| `GROK_MANAGED_CONFIG_URL` | Managed config source. |
+| `GROK_CLAUDE_HOOKS_ENABLED`, `GROK_CURSOR_HOOKS_ENABLED`, `GROK_CODEX_HOOKS_ENABLED` | Compatibility hook sources. |
+| `GROK_CAMPAIGNS`, `GROK_CAMPAIGNS_OVERRIDE` | Remote config patches. |
+| `__GROK_HOOKS_MASK___` | Reserved internal hook marker, conservatively refused. |
+
+This refusal keeps ambient overrides from selecting a different hook context
+for the running session. Diagnostics name only the variable, never its value;
+unset the named variable before retrying. The list was checked against the
+installed client's help, embedded configuration documentation and hook symbols. Interactive
+launches retain their environment behavior.
+
 Before launching a native driver, the launcher deploys agent extensions,
-refuses a failed deployment, then requires `projectTrusted: true`
-from `grok inspect --json`, both discovered `pre_tool_use` matchers from the
+refuses a failed deployment, then requires `projectRoot` from
+`grok inspect --json` to be an absolute path resolving to the launcher's source
+checkout, `projectTrusted: true`, both discovered `pre_tool_use` matchers from the
 project profile, and byte equality between the deployed profile and its source.
 It refuses launch with the missing condition and remedy; it never grants
 folder trust. Deployment refuses symlinked `.grok` or `.grok/hooks` targets.
