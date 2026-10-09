@@ -166,6 +166,7 @@ def test_ok_reply_still_requires_full_lesson_payload():
 @pytest.fixture
 def module_build(tmp_path, monkeypatch):
     plan = _plan()
+    pack, words = {}, {}
     slug = "sounds-letters-and-hello"
     ev = tmp_path / "curriculum/l2-uk-en/evidence/a1"
     plans = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
@@ -181,7 +182,7 @@ def module_build(tmp_path, monkeypatch):
     }
     hashes = yaml.safe_load(_raw(1))["inputs"]
     hashes["style_card_sha256"] = hashlib.sha256((cards / "a1.md").read_bytes()).hexdigest()
-    monkeypatch.setattr(cli, "_load_lesson_data", lambda *a, **kw: (plan, plan["lessons"][0], {}, {}, paths))
+    monkeypatch.setattr(cli, "_load_lesson_data", lambda *a, **kw: (plan, plan["lessons"][0], pack, words, paths))
     monkeypatch.setattr(cli, "_compute_input_hashes", lambda *a: dict(hashes))
     monkeypatch.setattr(cli, "_load_cited_records", lambda *a: {})
     monkeypatch.setattr(module, "planned_state", lambda *a, **kw: object())
@@ -201,6 +202,13 @@ def module_build(tmp_path, monkeypatch):
         successful=False,
         prompt="fixture prompt",
     ):
+        nonlocal plan, pack, words
+        if successful:
+            from tests.build.test_fresh_runner import _fixture
+
+            # Accounting success needs a complete lesson; gap replies remain
+            # the unchanged failure fixtures above.
+            complete_draft, plan, pack, words = _fixture()
         monkeypatch.setattr(module, "render_lesson_prompt", lambda *a, **kw: prompt)
 
         def writer(**kw):
@@ -210,13 +218,23 @@ def module_build(tmp_path, monkeypatch):
             assert kw["inputs"]["prompt_sha256"] == kw["prompt_sha256"]
             if not successful:
                 assert len(calls) <= 2, "a repeated evidence gap must stop before a third writer call"
-            raw = _raw(1 if successful else len(calls))
-            if invalid_second and len(calls) == 2:
-                raw = raw.replace("status: evidence_gap", "status: unknown")
-            draft = parse_and_validate_reply(raw, "a1", plan_activity_types=kw["plan_activity_types"])
+            if successful:
+                draft = copy.deepcopy(complete_draft)
+                draft["lesson"]["module"] = f"a1/{slug}"
+            else:
+                raw = _raw(len(calls))
+                if invalid_second and len(calls) == 2:
+                    raw = raw.replace("status: evidence_gap", "status: unknown")
+                draft = parse_and_validate_reply(raw, "a1", plan_activity_types=kw["plan_activity_types"])
             # Only the synthetic tree's input identity differs from the real reply.
             draft["inputs"] = dict(hashes)
             lock.write(state / "lesson-1.draft.yaml", lock.yaml_bytes(draft))
+            if successful:
+                lock.write(state / "lesson-1.writer.yaml", lock.yaml_bytes({
+                    "task_id": f"synthetic-gap-success-{len(calls)}", "attempt": kw["attempt"],
+                    "writer": kw["writer"], "model": kw["model"], "effort": "high",
+                    "prompt_sha256": kw["prompt_sha256"],
+                }))
 
         return module.build_module(
             "a1", slug, repo_root=tmp_path, lesson_n=1, writer_seat=writer_seat, writer_dispatch=writer, runner=runner
@@ -326,21 +344,16 @@ def test_changed_inputs_start_fresh_failure_series(tmp_path, changed_key, termin
     assert record_failure(path, "sample", 1, failure, changed)["regenerations"] == 1
 
 
-def test_module_rewrite_after_success_starts_each_call_at_one(module_build):
+def test_module_rewrite_after_success_starts_each_call_at_one(module_build, monkeypatch):
     build, state, calls = module_build
 
     def successful_runner(*args, **kw):
+        from tests.build.test_fresh_source_coverage import evaluated_writer_sources
+        summary = evaluated_writer_sources(monkeypatch, *args[:3], **kw)
         expected = kw["expected_inputs"]
         inputs = {key: expected["style_card_sha256" if key == "card_sha256" else key] for key in INPUT_KEYS}
         inputs["draft_sha256"] = hashlib.sha256((state / "lesson-1.draft.yaml").read_bytes()).hexdigest()
         record_success(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1, inputs)
-        from scripts.build.fresh.source_coverage import coverage_summary, obligations
-        forms, evidence, pinned, report_only = obligations(
-            kw["draft"], kw["plan"], kw["pack"], kw["words"], *args[:3], provenance={"spans": []})
-        keys = {"form:" + form for form in forms}
-        for identity in evidence.values():
-            keys.update([identity] if isinstance(identity, str) else identity)
-        summary = coverage_summary(forms, evidence, keys, code=None, pinned=pinned, report_only=report_only)
         return {"passed": True, "manifest_sha256": "a" * 64,
                 "checks": [{"check": 5, "status": "passed", "details": {"writer_sources": summary}}]}
 

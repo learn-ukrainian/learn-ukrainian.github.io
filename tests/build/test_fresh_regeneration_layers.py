@@ -32,6 +32,9 @@ def context(tmp_path, monkeypatch):
         key: "a" * 64
         for key in ("plan_sha256", "pack_lock", "words_lock", "lesson_lock_entry_sha256", "learner_state_sha256")
     }
+    draft["lesson"]["module"] = f"{level}/{slug}"
+    draft["inputs"].update({key: hashes[key] for key in ("plan_sha256", "pack_lock", "words_lock")})
+    draft["inputs"]["style_card_sha256"] = hashlib.sha256((tmp_path / "docs/style-cards/a1.md").read_bytes()).hexdigest()
     monkeypatch.setattr(cli, "_load_lesson_data", lambda *a, **kw: (plan, plan["lessons"][0], pack, words, paths))
     monkeypatch.setattr(cli, "_compute_input_hashes", lambda *a: hashes.copy())
     monkeypatch.setattr(cli, "_load_cited_records", lambda *a: {})
@@ -49,6 +52,11 @@ def context(tmp_path, monkeypatch):
     def delivered_writer(**kw):
         dispatches.append(kw["attempt"])
         lock.write(kw["output_dir"] / "lesson-1.draft.yaml", lock.yaml_bytes(draft))
+        lock.write(kw["output_dir"] / "lesson-1.writer.yaml", lock.yaml_bytes({
+            "task_id": f"synthetic-writer-{len(dispatches)}", "attempt": kw["attempt"],
+            "writer": kw["writer"], "model": kw["model"], "effort": "high",
+            "prompt_sha256": kw["prompt_sha256"],
+        }))
 
     def build(runner, writer_dispatch=delivered_writer):
         return module.build_module(
@@ -59,6 +67,7 @@ def context(tmp_path, monkeypatch):
             writer_seat="codex:gpt-6.1-sol",
             writer_dispatch=writer_dispatch,
             runner=runner,
+            runner_kwargs={"fixture_monkeypatch": monkeypatch},
         )
 
     return SimpleNamespace(
@@ -74,16 +83,10 @@ def _inputs(kw):
 
 def _success(*a, **kw):
     inputs = _inputs(kw)
+    from tests.build.test_fresh_source_coverage import evaluated_writer_sources
+    summary = evaluated_writer_sources(kw["fixture_monkeypatch"], *a[:3], **kw)
     inputs["draft_sha256"] = hashlib.sha256((kw["state_dir"] / "lesson-1.draft.yaml").read_bytes()).hexdigest()
     regeneration.record_success(kw["state_dir"] / "lesson-1.regeneration.yaml", a[1], 1, inputs)
-    from scripts.build.fresh.source_coverage import coverage_summary, obligations
-    forms, evidence, pinned, report_only = obligations(
-        kw["draft"], kw["plan"], kw["pack"], kw["words"], a[0], a[1], a[2]
-    )
-    keys = {"form:" + form for form in forms}
-    for identity in evidence.values():
-        keys.update([identity] if isinstance(identity, str) else identity)
-    summary = coverage_summary(forms, evidence, keys, code=None, pinned=pinned, report_only=report_only)
     return {"passed": True, "manifest_sha256": "b" * 64,
             "checks": [{"check": 5, "status": "passed", "details": {"writer_sources": summary}}]}
 
@@ -341,6 +344,13 @@ def test_passed_runner_without_coverage_is_incomplete(context):
     assert not report['complete']
     assert report['lessons'][0]['writer_sources']['code'] == 'writer_sources_not_evaluated'
     assert report['lessons'][0]['writer_sources']['forms']['covered'] is None
+    summary = report['lessons'][0]['writer_sources']
+    assert summary['forms']['required'] > 0 and summary['evidence']['required'] > 0
+    for group in ('forms', 'evidence'):
+        for field in ('covered', 'missing', 'covered_sha256', 'missing_sha256'):
+            assert summary[group][field] is None
+    assert summary['noncredited_calls'] is None
+    assert yaml.safe_load((context.state / 'module.build.yaml').read_text()) == report
 
 
 def test_later_attempt_writer_stop_does_not_reuse_previous_coverage(context):
@@ -423,6 +433,7 @@ def test_module_real_runner_writes_truthful_coverage(context, monkeypatch, mode)
         raise ValueError('synthetic assembly engine failure')
 
     def actual_runner(*a, **kw):
+        kw.pop('fixture_monkeypatch')
         kw['draft']['lesson'] = {'module': f'{a[0]}/{a[1]}', 'n': a[2]}
         kw['draft']['inputs'].update({k: v for k, v in kw['expected_inputs'].items()
                                     if k in kw['draft']['inputs']})

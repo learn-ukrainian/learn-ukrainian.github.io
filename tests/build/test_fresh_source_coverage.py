@@ -170,7 +170,8 @@ def search(tool, key, value, *, query="synthetic query"):
     )
 
 
-def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, expected_inputs=None, n=1, prompt_bytes=None):
+def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, expected_inputs=None, n=1,
+                prompt_bytes=None, writer_meta=None):
     """Explicit fake-seat receipt through the production harvester; no gate bypass."""
     state.mkdir(parents=True, exist_ok=True)
     tasks = state / "tasks"
@@ -211,29 +212,27 @@ def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, exp
                 calls.append(search("search_style_guide", "id", value))
             elif kind == "url":
                 calls.append(search("search_resources", "url", value))
-    task_id = "synthetic-writer-1"
-    sidecar = tasks / f"{task_id}.tool_calls.json"
-    sidecar.write_text(json.dumps({"tool_calls": calls}, ensure_ascii=False))
+    meta = dict(writer_meta) if writer_meta is not None else {
+        "task_id": "synthetic-writer-1", "attempt": 1, "writer": "codex",
+        "model": "synthetic-model", "effort": "high", "prompt_sha256": prompt_hash,
+    }
+    assert meta["prompt_sha256"] == prompt_hash
+    task_id = meta["task_id"]
+    from scripts.delegate import _persist_sources_tool_calls
+
+    task_path = tasks / f"{task_id}.json"
     task = {
         "task_id": task_id,
         "status": "done",
-        "agent": "codex",
-        "model": "synthetic-model",
-        "effort": "high",
-        "prompt_sha256": inputs["prompt_sha256"],
-        "tool_calls_file": str(sidecar),
-        "tool_calls_sha256": hashlib.sha256(sidecar.read_bytes()).hexdigest(),
+        "agent": meta["writer"],
+        "model": meta["model"],
+        "effort": meta["effort"],
+        "prompt_sha256": meta["prompt_sha256"],
+        **_persist_sources_tool_calls(task_path, calls),
     }
-    (tasks / f"{task_id}.json").write_text(json.dumps(task))
-    meta = {
-        "task_id": task_id,
-        "attempt": 1,
-        "writer": "codex",
-        "model": task["model"],
-        "effort": "high",
-        "prompt_sha256": task["prompt_sha256"],
-    }
-    (state / f"lesson-{n}.prompt.md").write_bytes(prompt)
+    task_path.write_text(json.dumps(task))
+    prompt_name = f"lesson-{n}.attempt-{meta['attempt']}.prompt.md" if meta.get("base_prompt_sha256") else f"lesson-{n}.prompt.md"
+    (state / prompt_name).write_bytes(prompt)
     (state / f"lesson-{n}.writer.yaml").write_text(yaml.safe_dump(meta))
     draft_file = state / f"lesson-{n}.draft.yaml"
     draft_file.write_bytes(lock.yaml_bytes(draft))
@@ -243,8 +242,54 @@ def seal_writer(state, monkeypatch, draft, plan, pack, words, *, calls=None, exp
     return task, inputs
 
 
+def evaluated_writer_sources(monkeypatch, level, slug, n, **kw):
+    """Evaluate bound synthetic results for accounting runners, never saved approval."""
+    state = kw["state_dir"]
+    meta = yaml.safe_load((state / f"lesson-{n}.writer.yaml").read_text())
+    prompt_name = f"lesson-{n}.attempt-{meta['attempt']}.prompt.md" if meta.get("base_prompt_sha256") else f"lesson-{n}.prompt.md"
+    seal_writer(state, monkeypatch, kw["draft"], kw["plan"], kw["pack"], kw["words"],
+                expected_inputs=kw["expected_inputs"], n=n, writer_meta=meta,
+                prompt_bytes=(state / prompt_name).read_bytes())
+    summary = coverage.check_coverage(kw["draft"], kw["plan"], kw["pack"], kw["words"], level, slug, n,
+                                      state_dir=state, expected_inputs=kw["expected_inputs"])
+    assert summary["code"] is None, summary
+    return summary
+
+
 def check(state, fixture, **kwargs):
     return coverage.check_coverage(*fixture, "a1", "sample-slug", 1, state_dir=state, **kwargs)
+
+
+def test_explicit_fake_writer_attempts_are_bound_and_previous_receipt_is_stale(tmp_path, monkeypatch):
+    fixture = _fixture()
+    state = tmp_path / "state"
+    receipt_path = state / "lesson-1.writer_tool_calls.json"
+    previous_receipt = None
+    previous_files = {}
+    for attempt in (1, 2):
+        prompt = f"Synthetic attempt {attempt}.\n".encode()
+        meta = {
+            "task_id": f"synthetic-attempt-{attempt}", "attempt": attempt, "writer": "codex",
+            "model": f"synthetic-model-{attempt}", "effort": "high",
+            "prompt_sha256": hashlib.sha256(prompt).hexdigest(),
+        }
+        task, _ = seal_writer(state, monkeypatch, *fixture, prompt_bytes=prompt, writer_meta=meta)
+        receipt = json.loads(receipt_path.read_text())
+        assert yaml.safe_load((state / "lesson-1.writer.yaml").read_text()) == meta
+        assert all(receipt[key] == value for key, value in meta.items())
+        assert task["agent"] == meta["writer"] and task["model"] == meta["model"]
+        assert Path(task["tool_calls_file"]).suffix == ".tool_calls"
+        assert check(state, fixture)["code"] is None
+        assert all(path.read_bytes() == raw for path, raw in previous_files.items())
+        if previous_receipt is not None:
+            receipt_path.write_bytes(previous_receipt)
+            assert check(state, fixture)["code"] == "writer_sources_binding_mismatch"
+            receipt_path.write_text(json.dumps(receipt))
+            assert check(state, fixture)["code"] is None
+        previous_receipt = receipt_path.read_bytes()
+        previous_files = {path: path.read_bytes() for path in (
+            Path(task["tool_calls_file"]), state / "tasks" / f"{meta['task_id']}.json"
+        )}
 
 
 @pytest.mark.parametrize(
@@ -869,7 +914,7 @@ def test_nonorthography_required_forms_and_expansion_match_rejected_head(encodin
     assert coverage.obligations(*fixture, "a1", "sample-slug", 1)[0] == required
 
 
-@pytest.mark.parametrize('state', ['archived', 'missing', 'tampered', 'wrong_run', 'rotated'])
+@pytest.mark.parametrize('state', ['archived', 'legacy', 'missing', 'tampered', 'wrong_run', 'rotated'])
 def test_direct_reader_reverifies_relocated_sidecar(tmp_path, monkeypatch, state):
     from scripts.delegate import _persist_sources_tool_calls
     fixture = _fixture()
@@ -877,19 +922,15 @@ def test_direct_reader_reverifies_relocated_sidecar(tmp_path, monkeypatch, state
     task, _ = seal_writer(directory, monkeypatch, *fixture)
     tasks = directory / 'tasks'
     record = tasks / (task['task_id'] + '.json')
-    calls = json.loads(Path(task['tool_calls_file']).read_text())['tool_calls']
-    task.update(_persist_sources_tool_calls(record, calls))
-    record.write_text(json.dumps(task))
-    meta = yaml.safe_load((directory / 'lesson-1.writer.yaml').read_text())
-    # Refresh the receipt only to bind the production persistence bytes.
-    _, inputs = seal_writer(directory, monkeypatch, *fixture, calls=calls)
-    task.update(_persist_sources_tool_calls(record, calls))
-    record.write_text(json.dumps(task))
-    coverage.harvest_receipt(directory, 1, level='a1', slug='sample-slug', inputs=inputs,
-        meta=meta, task=task, draft_file=directory / 'lesson-1.draft.yaml')
-    legacy = tasks / (task['task_id'] + '.tool_calls.json')
-    legacy.unlink()
     paired = record.with_suffix('.tool_calls')
+    assert Path(task['tool_calls_file']) == paired
+    if state == 'legacy':
+        legacy = tasks / (task['task_id'] + '.tool_calls.json')
+        paired.replace(legacy)
+        task['tool_calls_file'] = str(legacy)
+        record.write_text(json.dumps(task))
+        assert check(directory, fixture)['code'] is None
+        return
     if state == 'archived':
         archive = tasks / 'archive'
         archive.mkdir()

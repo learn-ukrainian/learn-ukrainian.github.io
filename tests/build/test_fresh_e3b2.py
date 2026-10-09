@@ -1004,16 +1004,28 @@ def test_module_writer_budget_counts_only_delivered_content(
 
     def delivered_writer(**kw):
         attempts.append(kw["attempt"])
+        draft["lesson"]["module"] = f"{level}/{slug}"
+        draft["inputs"].update({key: kw["inputs"][key] for key in ("plan_sha256", "pack_lock", "words_lock")})
+        draft["inputs"]["style_card_sha256"] = kw["inputs"]["card_sha256"]
         lock.write(state / "lesson-1.draft.yaml", lock.yaml_bytes(draft))
+        lock.write(state / "lesson-1.writer.yaml", lock.yaml_bytes({
+            "task_id": f"synthetic-delivered-{len(attempts)}", "attempt": kw["attempt"],
+            "writer": kw["writer"], "model": kw["model"], "effort": "high",
+            "prompt_sha256": kw["prompt_sha256"],
+        }))
 
     def passing_runner(*a, **kw):
+        from tests.build.test_fresh_source_coverage import evaluated_writer_sources
+
+        summary = evaluated_writer_sources(monkeypatch, *a[:3], **kw)
         record_success(
             ledger_path,
             slug,
             1,
             {**inputs, "draft_sha256": hashlib.sha256((state / "lesson-1.draft.yaml").read_bytes()).hexdigest()},
         )
-        return {"passed": True, "manifest_sha256": "b" * 64}
+        return {"passed": True, "manifest_sha256": "b" * 64,
+                "checks": [{"check": 5, "status": "passed", "details": {"writer_sources": summary}}]}
 
     report = module.build_module(
         level,
@@ -1188,8 +1200,9 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
             # One non-error partial result credits an unrelated synthetic item,
             # but lacks the fixture's sole required form and W identity.
             tool_calls = [verification([*verified, "synthetic-other"], missing=verified)]
-        sidecar = tasks / f"{task_id}.tool_calls.json"
-        sidecar.write_text(json.dumps({"tool_calls": tool_calls}, ensure_ascii=False), encoding="utf-8")
+        from scripts.delegate import _persist_sources_tool_calls
+
+        task_path = tasks / f"{task_id}.json"
         task = {
             "task_id": task_id,
             "status": "done",
@@ -1197,10 +1210,9 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
             "model": meta["model"],
             "effort": meta["effort"],
             "prompt_sha256": meta["prompt_sha256"],
-            "tool_calls_file": str(sidecar),
-            "tool_calls_sha256": hashlib.sha256(sidecar.read_bytes()).hexdigest(),
+            **_persist_sources_tool_calls(task_path, tool_calls),
         }
-        (tasks / f"{task_id}.json").write_text(json.dumps(task), encoding="utf-8")
+        task_path.write_text(json.dumps(task), encoding="utf-8")
         coverage.harvest_receipt(
             state_dir, n, level=level, slug=slug, inputs=kw["inputs"], meta=meta, task=task, draft_file=draft_path
         )
