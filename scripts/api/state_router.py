@@ -33,6 +33,7 @@ import asyncio
 import json
 import logging
 import math
+import os
 import re
 import threading
 from collections.abc import Mapping
@@ -134,6 +135,7 @@ from .state_helpers import (
     cache_get_stored,
     cache_get_with_age,
     cache_invalidate,
+    cache_retain,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -2297,6 +2299,26 @@ def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
 # ==================== ENDPOINTS ====================
 
 
+def _tasks_content_token(tasks_dir: Path) -> str:
+    """Generation for task JSON files: count plus the newest mtime."""
+    try:
+        directory = os.stat(tasks_dir)
+    except OSError:
+        return "missing"
+    newest = directory.st_mtime_ns
+    count = 0
+    try:
+        with os.scandir(tasks_dir) as entries:
+            for entry in entries:
+                if not entry.name.endswith(".json"):
+                    continue
+                count += 1
+                newest = max(newest, entry.stat(follow_symlinks=False).st_mtime_ns)
+    except OSError:
+        return f"unreadable:{directory.st_mtime_ns}"
+    return f"{count}:{newest}"
+
+
 @router.get("/routing-budget")
 async def routing_budget(
     fresh_codexbar: bool = Query(False),
@@ -2312,7 +2334,11 @@ async def routing_budget(
     """
     if fresh_codexbar:
         trigger_background_refresh()
-    cache_key = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+    prefix = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+    # In-place task rewrites do not change the directory mtime. Stamp the
+    # newest task file so a new excerpt is not served from the previous snapshot.
+    cache_key = f"{prefix}:{_tasks_content_token(ctx.roots.batch_state_dir / 'tasks')}"
+    cache_retain(f"{prefix}:", cache_key)
 
     def _compute() -> dict[str, Any]:
         return compute_routing_budget(
