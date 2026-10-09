@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import textwrap
 from pathlib import Path
@@ -111,6 +112,33 @@ def _invoke(binary: Path, cwd: Path, mode: str) -> runner.Result:
             tool_config={"cmd_prefix": [str(binary)]},
             hard_timeout=60,
         )
+
+
+@pytest.mark.parametrize("wrapper", [claude.run_headless_claude, claude.popen_headless_claude])
+@pytest.mark.parametrize("explicit_base_env", [False, True])
+def test_headless_spawn_disables_advisor_in_child(
+    fake_claude, monkeypatch: pytest.MonkeyPatch, wrapper, explicit_base_env: bool
+) -> None:
+    """Both spawn paths force the advisor off without changing the parent's environment."""
+    binary, dump = fake_claude
+    monkeypatch.setenv(ADVISOR_SWITCH, "0")
+    base_env = dict(os.environ) if explicit_base_env else None
+    kwargs = {"base_env": base_env, "stdout": subprocess.PIPE, "stderr": subprocess.PIPE}
+    if wrapper is claude.run_headless_claude:
+        process = wrapper([str(binary), "-p", "inspect"], timeout=10, **kwargs)
+    else:
+        with wrapper([str(binary), "-p", "inspect"], **kwargs) as process:
+            process.communicate(timeout=10)
+
+    assert process.returncode == 0
+    seen = json.loads(dump.read_text(encoding="utf-8"))
+    assert seen["env"][ADVISOR_SWITCH] == "1"
+    assert seen["env"][SWITCH] == "1"
+    assert os.environ[ADVISOR_SWITCH] == "0"
+    assert SWITCH not in os.environ
+    if base_env is not None:
+        assert base_env[ADVISOR_SWITCH] == "0"
+        assert SWITCH not in base_env
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
