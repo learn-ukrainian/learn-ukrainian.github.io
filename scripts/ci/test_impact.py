@@ -1,8 +1,8 @@
 """Conservative, execution-free Python import impact analysis.
 
-Inventory, parse and resource failures force FULL globally. Runtime uncertainty
-is scoped to the affected dependency closure; unrelated command runners do not
-disable selection. Shell intermediaries participate without being executed.
+Inventory, parse, resource and unresolved runtime loads force FULL globally.
+An opaque load can reach changed code without a statically visible edge.
+Shell intermediaries participate without being executed.
 This module does not enable selection in the full-suite workflow.
 """
 
@@ -22,7 +22,20 @@ from multiprocessing import get_context
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
-BUILD_BUDGET_SECONDS = 10.0
+_MAX_PARSER_WORKERS = 8
+
+
+def _build_budget_seconds(cpu_count: int | None) -> float:
+    """Keep the eight-worker 10-second allowance on smaller CI runners.
+
+    Parsing is CPU-bound. Two-core runners receive 40 seconds rather than
+    being judged against the throughput of the eight-worker development pool.
+    The elapsed-time guard still forces FULL when this bounded limit is hit.
+    """
+    return 10.0 * _MAX_PARSER_WORKERS / min(_MAX_PARSER_WORKERS, max(1, cpu_count or 1))
+
+
+BUILD_BUDGET_SECONDS = _build_budget_seconds(os.cpu_count())
 _REFERENCE = re.compile(r"(?:scripts|tests|agents_extensions)(?:[/.][A-Za-z_]\w*)+(?:\.py)?")
 _BARE_REFERENCE = re.compile(r"[A-Za-z_]\w*(?:[/.][A-Za-z_]\w*)*(?:\.(?:py|sh))?")
 _SHELL_REFERENCE = re.compile(r"(?:[A-Za-z_][\w-]*/)*[A-Za-z_][\w-]*\.sh\b")
@@ -129,29 +142,32 @@ def _name(node: ast.AST) -> str:
 
 def _nodes(tree: ast.AST) -> Iterable[ast.AST]:
     """Visit dependencies and literals, avoiding millions of terminal AST leaves."""
-    relevant = (ast.Import, ast.ImportFrom, ast.Constant, ast.Attribute, ast.Name, ast.Assign, ast.AnnAssign, ast.Call)
+    relevant = {ast.Import, ast.ImportFrom, ast.Attribute, ast.Assign, ast.AnnAssign, ast.Call}
     pending = [tree]
     while pending:
         node = pending.pop()
+        kind = type(node)
         # Documentation can cite another executable without loading it. Skip
         # inert string expressions (including docstrings), not runtime values.
-        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
+        if kind is ast.Expr and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
             continue
-        if isinstance(node, ast.Constant):
+        if kind is ast.Constant:
             if isinstance(node.value, str):
                 yield node
             continue
-        if isinstance(node, ast.Name):
+        if kind is ast.Name:
             yield node
             continue
-        if isinstance(node, relevant) and (
-            not isinstance(node, ast.Attribute) or node.attr in _LOADERS or node.attr == "repo_wide"
+        if kind in relevant and (
+            kind is not ast.Attribute or node.attr in _LOADERS or node.attr == "repo_wide"
         ):
             yield node
         for child_field in node._fields:
             value = getattr(node, child_field)
             if isinstance(value, list):
-                pending.extend(child for child in value if isinstance(child, ast.AST) and child._fields and not isinstance(child, ast.alias))
+                # AST sequence fields contain nodes (aliases and terminal
+                # operators have no relevant descendants). Filter on pop.
+                pending.extend(child for child in value if isinstance(child, ast.AST))
             elif isinstance(value, ast.AST) and value._fields:
                 pending.append(value)
 
@@ -227,16 +243,20 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             if isinstance(target, ast.Name) and node.value is not None:
                 assignments[target.id].append(node.value)
 
+    # All command references feed the same file-level edge sets. Visiting an
+    # assigned argv expression once is enough, even if many commands use it.
+    # A per-call visited set repeatedly traversed large shared fixture values.
+    command_nodes: set[int] = set()
+
     def command_shell_paths(command: ast.AST | None) -> set[str]:
         """Follow argv constants and assigned Path components without executing."""
         refs: set[str] = set()
         pending = [command] if command is not None else []
-        visited: set[int] = set()
         while pending:
             current = pending.pop()
-            if id(current) in visited:
+            if id(current) in command_nodes:
                 continue
-            visited.add(id(current))
+            command_nodes.add(id(current))
             if isinstance(current, ast.Name):
                 pending.extend(assignments.get(current.id, ()))
             elif isinstance(current, ast.Constant) and isinstance(current.value, str):
@@ -416,20 +436,19 @@ class ImportGraph:
         return self.reached_files(changed) & self.tests
 
     def selection_reasons(self, paths: Iterable[str]) -> list[str]:
-        """Scope uncertainty to affected sources, including changed tests.
+        """Fail closed on unknown edges, even outside the known reverse closure.
 
-        Already selected tests and their support files execute opaque loads. Those
-        calls cannot introduce additional test importers of the changed source.
-        An opaque load in a changed test itself still fails closed.
+        Neither an opaque test nor a helper needs a visible import of changed
+        code. Restricting uncertainty to known edges assumes the very dependency
+        the parser could not resolve. Already selected loaders do not prove
+        that other importers are covered either.
         """
-        changed = set(paths)
         return sorted(set(self.reasons).union(*(
-            self.uncertainty.get(path, ()) for path in self.reached_files(changed)
-            if not path.startswith("tests/") or path in changed
+            errors for errors in self.uncertainty.values()
         )))
 
     def impacted_tests(self, changed: Iterable[str]) -> dict:
-        """FULL on affected uncertainty or a changed module without tests."""
+        """FULL on unresolved uncertainty or a changed module without tests."""
         paths = sorted(set(changed))
         reasons = self.selection_reasons(paths)
         for path in paths:
@@ -493,6 +512,11 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
             for parent in modules.get(".".join(parts[:index]), ())
             if parent.endswith("/__init__.py")
         }
+    # Pytest imports a test's regular parent packages during collection, even
+    # when the test has no explicit import of its own package initializer.
+    for test in tests:
+        for parent in package_parents[test]:
+            dependents[parent].add(test)
 
     def add(importer: str, name: str, *, required: bool = False) -> None:
         # Bare words such as 'main', 'config' and 'test' are ordinary data,
@@ -512,7 +536,7 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
     # Largest files first avoid a long final parser chunk on this repository's
     # uneven source sizes. Cap workers at available CPUs and eight processes.
     items = sorted(sources.items(), key=lambda item: len(item[1]), reverse=True)
-    workers = min(8, os.cpu_count() or 1)
+    workers = min(_MAX_PARSER_WORKERS, os.cpu_count() or 1)
     # Bounded local CPU workers, no provider calls or source execution.
     # Small fixture graphs stay in-process; large graphs return compact records.
     try:

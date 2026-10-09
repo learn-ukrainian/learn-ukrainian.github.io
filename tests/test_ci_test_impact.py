@@ -116,17 +116,16 @@ def test_transitive_import_through_local_src_layout_package():
     "__import__('scripts', fromlist=names)",
     "from importlib import import_module as load\nload(target)\nfrom unrelated import function as load",
 ])
-def test_uncertainty_is_scoped_to_reached_sources(source):
+def test_opaque_loads_fail_closed_without_a_static_edge(source):
     result = graph({
         "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
         "scripts/unrelated.py": source,
     })
     selection = result.impacted_tests(["scripts/target.py"])
-    assert not selection["full_suite"]
-    assert not selection["reasons"]
+    assert selection["full_suite"]
+    assert selection["reasons"]
     assert selection["tests"] == ["tests/test_use.py"]
-    # Once the uncertain source imports the changed module, uncertainty is
-    # relevant even if that source has no separately named test of its own.
+    # Adding a known edge must not change the conservative outcome.
     result = graph({
         "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
         "scripts/consumer.py": "import scripts.target\n" + source,
@@ -208,10 +207,15 @@ def test_candidate_union_and_full_fallback_in_ci_suite():
 
 
 def test_build_budget_fails_closed(monkeypatch):
-    clock = iter([0.0, 11.0, 11.0])
+    clock = iter([0.0, impact.BUILD_BUDGET_SECONDS + 1, impact.BUILD_BUDGET_SECONDS + 1])
     monkeypatch.setattr(impact.time, "monotonic", lambda: next(clock))
     result = graph({"scripts/target.py": ""})
     assert "graph-build-budget-exceeded" in result.reasons
+
+
+@pytest.mark.parametrize("cores,budget", [(None, 80.0), (1, 80.0), (2, 40.0), (4, 20.0), (8, 10.0), (64, 10.0)])
+def test_build_budget_scales_with_parser_capacity(cores, budget):
+    assert impact._build_budget_seconds(cores) == budget
 
 
 def test_parser_worker_failure_fails_closed(monkeypatch):
@@ -258,27 +262,26 @@ def test_full_repository_build_budget_and_sol_dependency():
     # The subprocess is awaited, uses this test interpreter, and never runs tests.
     code = """
 from scripts.ci.test_impact import BUILD_BUDGET_SECONDS, build_graph
-from scripts.ci.classify_changes import SELECTED_CANDIDATE_CEILING, build_selected_candidates
+from scripts.ci.classify_changes import build_selected_candidates
 result = build_graph()
 assert result.build_seconds < BUILD_BUDGET_SECONDS, result.build_seconds
 changed = ['scripts/ai_agent_bridge/_inbox_watch.py']
 selection = result.impacted_tests(changed)
-assert not selection['full_suite'], (len(selection['reasons']), selection['reasons'][:5])
+assert not result.reasons, result.reasons
+assert selection['full_suite'], 'real repository opaque loads must fail closed'
+assert result.uncertainty
 candidates = build_selected_candidates(changed, result.dependents, impact_graph=result)
-assert candidates is not None
-assert 'tests/test_remote_supervisor.py' in candidates
-assert result.safety_tests <= set(candidates)
-assert len(candidates) < SELECTED_CANDIDATE_CEILING
-assert len(candidates) < len(result.tests)
+assert candidates is None
+assert 'tests/test_remote_supervisor.py' in selection['tests']
 assert {'tests/test_git_hooks.py', 'tests/test_assert_primary_on_main.py'} <= result.test_dependents(
     ['scripts/guardrails/assert_primary_on_main.py']
 )
 print(f'graph_seconds={result.build_seconds:.3f}')
-print(f'selected={len(candidates)} total={len(result.tests)} safety={len(result.safety_tests)}')
+print(f'mode=FULL total={len(result.tests)} safety={len(result.safety_tests)}')
 """
     result = subprocess.run(
         [sys.executable, "-c", code], cwd=Path(__file__).resolve().parents[1],
-        capture_output=True, text=True, timeout=30,
+        capture_output=True, text=True, timeout=impact.BUILD_BUDGET_SECONDS + 10,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     print(result.stdout.strip())
@@ -333,24 +336,24 @@ def test_known_commands_with_dynamic_arguments_do_not_force_full(source):
     assert not result.impacted_tests(["scripts/target.py"])["full_suite"]
 
 
-def test_selected_tests_can_execute_their_opaque_loads():
+def test_selected_tests_do_not_excuse_opaque_loads():
     result = graph({
         "scripts/target.py": "",
         "tests/test_use.py": "import scripts.target\n__import__(name)",
     })
     assert result.impacted_tests(["scripts/target.py"])["tests"] == ["tests/test_use.py"]
-    assert not result.impacted_tests(["scripts/target.py"])["full_suite"]
+    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
     assert result.impacted_tests(["tests/test_use.py"])["full_suite"]
 
 
-def test_selected_test_support_can_execute_opaque_loads():
+def test_selected_test_support_does_not_excuse_opaque_loads():
     result = graph({
         "scripts/target.py": "",
         "tests/helpers.py": "import scripts.target\n__import__(name)",
         "tests/test_use.py": "import tests.helpers",
     })
     selection = result.impacted_tests(["scripts/target.py"])
-    assert not selection["full_suite"]
+    assert selection["full_suite"]
     assert selection["tests"] == ["tests/test_use.py"]
     assert result.impacted_tests(["tests/helpers.py"])["full_suite"]
 
@@ -414,3 +417,64 @@ def test_local_parser_pool_matches_in_process_graph():
     sources.update({f"scripts/filler_{index}.py": "" for index in range(40)})
     large = graph(sources)
     assert large.impacted_tests(["scripts/target.py"]) == small.impacted_tests(["scripts/target.py"])
+
+
+@pytest.mark.parametrize("loader_path,consumer", [
+    ("tests/test_dynamic.py", ""),
+    ("tests/helpers.py", "from tests import helpers"),
+    ("scripts/loader.py", "from scripts import loader"),
+    ("tests/conftest.py", ""),
+    ("tests/__init__.py", ""),
+])
+@pytest.mark.parametrize("load", [
+    "import importlib\nimportlib.import_module(name)",
+    "import runpy\nrunpy.run_module(name)",
+    "import runpy\nrunpy.run_path(name)",
+])
+def test_opaque_test_dependencies_outside_changed_closure(loader_path, consumer, load):
+    sources = {
+        "scripts/target.py": "",
+        "tests/test_static.py": "import scripts.target",
+        "tests/test_other.py": consumer,
+        SAFETY_NET: "",
+        loader_path: load,
+    }
+    result = graph(sources)
+    # There is deliberately no resolvable edge from target to this loader.
+    assert loader_path not in result.reached_files(["scripts/target.py"])
+    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
+    assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=result) is None
+
+
+def test_test_package_initializers_are_implicit_dependencies():
+    result = graph({
+        "scripts/target.py": "",
+        "tests/__init__.py": "",
+        "tests/ci/__init__.py": "import scripts.target",
+        "tests/ci/test_one.py": "",
+        "tests/ci/nested/__init__.py": "",
+        "tests/ci/nested/test_two.py": "",
+        "tests/test_outside.py": "",
+        "tests/civil/test_outside.py": "",
+    })
+    expected = ["tests/ci/nested/test_two.py", "tests/ci/test_one.py"]
+    for path in ("scripts/target.py", "tests/ci/__init__.py"):
+        assert result.impacted_tests([path]) == {"full_suite": False, "tests": expected, "reasons": []}
+    assert result.test_dependents(["tests/__init__.py"]) == result.tests
+
+
+def test_repeated_command_assignments_keep_all_edges_and_terminate_cycles():
+    result = graph({
+        "scripts/one.py": "", "scripts/two.py": "",
+        "scripts/one.sh": '"$PY" scripts/one.py',
+        "scripts/two.sh": '"$PY" scripts/two.py',
+        "scripts/consumer.py": (
+            "import subprocess\nshared = ['bash', 'scripts/one.sh']\n"
+            "cycle = [cycle, shared]\n"
+            "subprocess.run(cycle)\n"
+            "subprocess.run(['bash', shared, 'scripts/two.sh'])\n"
+        ),
+        "tests/test_use.py": "import scripts.consumer",
+    })
+    for path in ("scripts/one.py", "scripts/two.py"):
+        assert result.test_dependents([path]) == {"tests/test_use.py"}

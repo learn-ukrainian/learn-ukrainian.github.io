@@ -33,9 +33,9 @@ class CandidateTests(unittest.TestCase):
         self.sources["tests/test_indirect.py"] = ""
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
-    def test_scoped_uncertainty_fails_closed(self):
+    def test_uncertainty_outside_reverse_closure_fails_closed(self):
         self.sources["tests/test_loader.py"] = "__import__(target)"
-        self.assertIsNotNone(self.select(["scripts/tool.py"]))
+        self.assertIsNone(self.select(["scripts/tool.py"]))
         self.sources["scripts/loader.py"] = "import scripts.tool\n__import__(target)"
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
