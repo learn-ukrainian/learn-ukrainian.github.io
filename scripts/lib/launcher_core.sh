@@ -14,8 +14,9 @@ launcher_usage() {
       driver_mode="  driver       No certified ${LC_PROVIDER} driver entrypoint is available."
       ;;
     *)
-      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs the
-               provider canary, then injects the drive-epic binding."
+      driver_mode="  driver       Validates a certified model and lane, claims its lease, runs a
+               semantic canary where available (otherwise reports not run),
+               then injects the drive-epic binding."
       ;;
   esac
   case "$LC_PROVIDER" in
@@ -1351,6 +1352,7 @@ launcher_publication_path() {
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
+  LC_PROVIDER_CANARY_RAN=0
   shift 2
   # Consumed by session_supervisor_exec_successor in the sourced helper.
   # shellcheck disable=SC2034
