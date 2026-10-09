@@ -116,7 +116,7 @@ Token prices under
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity. The Cursor review endpoint is
-formal only for the models it pins (`grok-4.7` today); other third-party non-Anthropic models Cursor
+formal only for the models it pins (`grok-4.7-high` today); other third-party non-Anthropic models Cursor
 exposes may be added under the same runtime attestation rules (#9488).
 
 A dispatch is review-typed when it passes any of `--require-review-verdict`,
@@ -139,12 +139,12 @@ is historical evidence only; live seats and ladders come from the catalog.
 
 **Unknown-Auto AUTHORS (Cursor Auto) — allowlist-union family (#6955):** when the author ran
 `cursor:auto` and reports `resolved_model=unknown`, the resolver attributes the author to the
-**allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead
+**allowlist-union family {xAI, Moonshot}** (`grok-4.7-high` [xAI] | `composer-2.5` [Moonshot]) instead
 of unattested-harness-with-quorum. Cursor-authored PRs require a **single** cross-family reviewer
 from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, or GLM under local-only egress),
 superseding the #6489 dual-family quorum as the default for unknown-Auto PRs (#6489 quorum remains
 valid as fallback history). A declared `author_family` against an auto attestation is a fail-closed
-conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.7` authorship) remains
+conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.7-high` authorship) remains
 the primary provenance path.
 
 **Designated approval (operator decisions 2026-10-03, #9583, #9616):** a new architecture,
@@ -431,6 +431,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | cursor | grok-4.7 | high | gpt-6.1-sol | high |
   | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
+  *(Note: for the `cursor` seat, the catalog identity is `grok-4.7`, the Cursor CLI wire argument is `grok-4.7-high`.)*
 
   **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
   not for routine queue grind. Machine fields: `escalate_model_id` / `escalate_effort` /
@@ -438,9 +439,9 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
 ### Cursor driver seat — identity contract and attestation (#6952 / #6955)
 
-* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed. A missing or any other role is unclassified and refused. `scripts/delegate.py` admits it only on that positive evidence and records the admission; the Cursor adapter refuses Auto without it and in `plan` or `ask` mode. The driver seat (`start-cursor-driver.sh` → `scripts/lib/launcher_core.sh`), interactive Cursor sessions launched through the same launcher (not a typed implementation dispatch, so no Auto exception; default `grok-4.7-high`), and ACP consults and discussions (`acpx-cursor-shadow`) pin `grok-4.7` or `composer-2.5`. A review on Cursor runs the approved concrete model the reviewer resolver selects (`closeout_cli resolve-reviewer`), never Auto. Catalog: `orchestrator_seats.cursor.model_id: grok-4.7`, `auto_scope: write_implementation_dispatch_with_green_dor`.
-* **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat pinned to the concrete `grok-4.7` (launcher `grok-4.7-high`). A Cursor driver session still requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/delegate.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
-* **Unknown-Auto resolves to allowlist-union family {xAI, Moonshot}:** When an admitted Auto coding dispatch (`cursor:auto`) reports `resolved_model=unknown`, its identity resolves to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum.
+* **Auto scope (operator decision 2026-09-30, #9274):** Cursor Auto runs only a well-defined coding task: a dispatch typed `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue card that is not review-typed. A missing or any other role is unclassified and refused. `scripts/delegate.py` admits it only on that positive evidence and records the admission; the Cursor adapter refuses Auto without it and in `plan` or `ask` mode. The driver seat (`start-cursor-driver.sh` → `scripts/lib/launcher_core.sh`), interactive Cursor sessions launched through the same launcher (not a typed implementation dispatch, so no Auto exception; default `grok-4.7-high`), and ACP consults and discussions (`acpx-cursor-shadow`) pin `grok-4.7` or `composer-2.5`. A review on Cursor runs the approved concrete model the reviewer resolver selects (`closeout_cli resolve-reviewer`), never Auto. Catalog: `orchestrator_seats.cursor.model_id: grok-4.7` (Cursor wire argument `grok-4.7-high`), `auto_scope: write_implementation_dispatch_with_green_dor`.
+* **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat pinned to the concrete `grok-4.7` (launcher and Cursor wire argument `grok-4.7-high`). A Cursor driver session still requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/delegate.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
+* **Unknown-Auto resolves to allowlist-union family {xAI, Moonshot}:** When an admitted Auto coding dispatch (`cursor:auto`) reports `resolved_model=unknown`, its identity resolves to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7-high` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum.
   * **Cursor-authored PRs:** Require a **single** cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, or GLM under local-only egress). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (#6489 quorum remains valid as fallback history).
   * **Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}.
   * **Validity condition:** The union bound holds strictly while the Auto allowlist contract holds (~30-day catalog refresh; lint enforces the pair). Allowlist rotation invalidates the bound (refresh first).

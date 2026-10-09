@@ -14,7 +14,7 @@ def test_call_cursor_refuses_before_spawn(monkeypatch, model):
     monkeypatch.setattr(
         calibration.subprocess, "run", lambda *_a, **_k: pytest.fail("spawned the provider before refusing")
     )
-    with pytest.raises(SystemExit, match=r"cursor_judge_calibration: refused: .*\(cursor_"):
+    with pytest.raises(SystemExit, match=r"cursor_judge_calibration: refused: .*(CURSOR_|cursor_)"):
         calibration.call_cursor("judge this", model)
 
 

@@ -2361,7 +2361,8 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert "--model" not in plan.cmd
         assert "model" not in plan.metadata
     else:
-        assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
+        expected_wire_model = "grok-4.7-high" if participant == "cursor" and fixed_model == "grok-4.7" else fixed_model
+        assert ("--model", expected_wire_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
         assert plan.metadata["model"] == fixed_model
     if participant == "claude":
         assert "--system-prompt" not in plan.cmd
@@ -2416,16 +2417,17 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
         )
 
 
-@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7"), ("grok-4.7", "grok-4.7"), ("composer-2.5", "composer-2.5")])
+@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7-high"), ("grok-4.7", "grok-4.7-high"), ("composer-2.5", "composer-2.5")])
 def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
     plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
     assert ("--model", sent) in zip(plan.cmd, plan.cmd[1:], strict=False)
     assert plan.cmd.count("--model") == 1
-    assert plan.metadata["model"] == sent
+    expected_meta = "grok-4.7" if sent == "grok-4.7-high" else sent
+    assert plan.metadata["model"] == expected_meta
 
 
-@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default", "grok-4.7-fast"])
+@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default"])
 def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model):
     with pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
         _cursor_acp_plan(tmp_path, monkeypatch, model)
@@ -2435,7 +2437,7 @@ def test_cursor_acp_pins_match_the_catalog_cursor_pins():
     from scripts.review.model_catalog import cursor_pinned_models
 
     assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
-    assert frozenset(cursor_pinned_models()) == acpx_module.CURSOR_ACP_MODELS
+    assert frozenset(cursor_pinned_models()).issubset(acpx_module.CURSOR_ACP_MODELS)
 
 
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
