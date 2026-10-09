@@ -7,6 +7,7 @@ from typing import Any
 
 import yaml
 
+from scripts.curriculum.validate.loader import read_plan_text, retirement_record
 from scripts.ingest.resource_catalogue_ingest import MAX_HITS, ResourceCatalogueMissingError
 
 from .sources import Sources
@@ -27,10 +28,11 @@ def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[s
         "queries": [],
         "notes": [],
     }
+    retirement_record(plan_path.parent)
     if not plan_path.is_file():
         result.update(status="not_checked", notes=[{"code": "catalogue_plan_unavailable"}])
         return result
-    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    plan = yaml.safe_load(read_plan_text(plan_path))
     if not isinstance(plan, dict) or not isinstance(plan.get("lessons"), list):
         raise ValueError("catalogue_plan_invalid: expected lesson plan with lessons list")
     words = yaml.safe_load(words_path.read_text(encoding="utf-8")) if words_path.is_file() else {}

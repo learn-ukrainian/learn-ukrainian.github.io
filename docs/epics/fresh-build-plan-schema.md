@@ -412,7 +412,7 @@ this contract and fails a1_recap_migration_required; #10108 owns retirement.
 A2+ retains C7/C8 and admits no A1 task field. No draft schema changes are required.
 English context, instructions and observable criteria may quote taught Ukrainian as teacher
 metalanguage, not learner print or inventory evidence; review confirms each quoted form
-and construction is taught before the step (historical D4 superseded by arc section 8).
+and construction is taught before the step (historical D4 superseded by arc section 9).
 
 ## 3. Evidence pack
 

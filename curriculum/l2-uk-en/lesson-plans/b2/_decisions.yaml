@@ -147,7 +147,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-plan-schema.md
     line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
-  doc_sha256: a22b9608b1dfbdda7a0b188b4527b2423a3e0ca107e4a48d20a1d5a397e641f1
+  doc_sha256: fce1d2abbeed170213ee95a4f4da5345225313e08efc25db4a18a5580fc4cde0
   section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
   text: |
     ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)

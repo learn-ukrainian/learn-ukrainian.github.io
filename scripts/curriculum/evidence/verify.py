@@ -17,6 +17,8 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.curriculum.validate import codes as plan_codes
+from scripts.curriculum.validate.loader import PlanError, read_plan_text, retirement_record
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
@@ -67,6 +69,7 @@ def verify_words_store(
         Path(evidence_dir) if evidence_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/evidence" / level
     )
     plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+    retirement_record(plans_base)
 
     binding_context = sense_bindings.Context.read(level, evidence_base)
     store_path = evidence_base / "_words.yaml"
@@ -753,6 +756,13 @@ def verify_pack(
     report: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Verify integrity of a module evidence pack against sources, locks, and State Standard."""
+    plans_base = (
+        Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+    )
+    retirement_record(plans_base)
+    plan_path = plans_base / f"{slug}.yaml"
+    if plan_path.is_file():
+        read_plan_text(plan_path)
     if strict and offline:
         return {
             "status": "failed",
@@ -938,13 +948,9 @@ def verify_pack(
                     )
 
         # 4. Texts
-        plans_base = (
-            Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
-        )
-        plan_path = plans_base / f"{slug}.yaml"
         quote_refs = {}
         try:
-            plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+            plan_doc = yaml.safe_load(read_plan_text(plan_path))
             if not isinstance(plan_doc, dict):
                 raise ValueError("plan must be a mapping")
             quote_refs = publication.quoted_records(plan_doc)
@@ -972,6 +978,10 @@ def verify_pack(
                     errors.append(
                         f"{codes.SOURCE_UNAVAILABLE}: {level}/{slug}: word-store gloss gate: {type(exc).__name__}"
                     )
+        except PlanError as exc:
+            if exc.code != plan_codes.PLAN_NOT_FOUND:
+                raise
+            errors.append(f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {exc.code}")
         except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
             errors.append(
                 f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"

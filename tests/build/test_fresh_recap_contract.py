@@ -479,11 +479,12 @@ def test_task_cyrillic_is_allowed_in_print_and_english_scaffolding():
     assert not _cyrillic_allowed(("lessons", 0, "steps", 0, "task", "id"))
 
 
-def test_tracked_a1_selector_and_payload():
-    band = compute_lesson_immersion_band("a1", 1, 1, 0)
-    payload = compute_immersion_payload("a1", 1, 1, 0)
-    assert band.band_key == payload.band_key == "a1-m01-03"
-    assert band.advisory_uk_share == payload.advisory_uk_share == (0, 15)
+@pytest.mark.parametrize("position,key,share", [(1, "a1-orientation", None), (2, "a1-m01-03", (0, 15))])
+def test_tracked_a1_selector_and_payload(position, key, share):
+    band = compute_lesson_immersion_band("a1", position, 1, 0)
+    payload = compute_immersion_payload("a1", position, 1, 0)
+    assert band.band_key == payload.band_key == key
+    assert band.advisory_uk_share == payload.advisory_uk_share == share
     assert payload.structural_targets == {}
 
 

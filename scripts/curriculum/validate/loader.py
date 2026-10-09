@@ -238,10 +238,21 @@ def check_plan_slug(plan_path: Path, slug: str, plan: dict) -> None:
 
 
 def read_plan_text(plan_path: Path) -> str:
-    """The plan file's raw text, for the U+0301/U+0300 scan (rule 7)."""
+    """Read ordinary plan text, refusing retired bytes before decoding content.
+
+    Raw-text consumers share eligibility with ``load_plan`` without conflating
+    that gate with their own publication, integrity or review checks.
+    """
+    record = retirement_record(plan_path.parent)
     if not plan_path.is_file():
         raise PlanError(codes.PLAN_NOT_FOUND, f"plan file {plan_path} does not exist")
-    return plan_path.read_text(encoding="utf-8")
+    raw = plan_path.read_bytes()
+    if _retired_bytes(plan_path, raw, record):
+        raise PlanError(codes.PLAN_RETIRED, f"{plan_path.stem} is explicitly retired at its exact SHA-256")
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise PlanError(codes.PLAN_YAML_INVALID, f"{plan_path} is not valid UTF-8: {error}") from error
 
 
 def sha256_of(path: Path) -> str:

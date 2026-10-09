@@ -96,7 +96,8 @@ def synthetic_arc_loader(level: str) -> list[ArcPosition]:
 
 def test_a1_immersion_payload_early():
     """Early A1: English narration, dialogue in Ukrainian, all 7 roles present."""
-    payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=10)
+    # Position 1 explicitly declares orientation; position 2 uses ordinary vocabulary bands.
+    payload = compute_immersion_payload("a1", arc_position=2, lesson_n=1, cumulative_core_count=10)
     assert isinstance(payload, ImmersionPayload)
     assert payload.band_key == "a1-m01-03"
     assert payload.advisory_uk_share == (0, 15)

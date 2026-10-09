@@ -1255,3 +1255,40 @@ def test_sum11_cannot_be_a_broadened_counterevidence_search(world):
         settle.validate_reply(
             world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
         )
+
+
+@pytest.mark.parametrize("record_kind", ["retired", "malformed", "replacement"])
+def test_prepare_plan_uses_exact_byte_retirement_before_context_or_writes(tmp_path, record_kind, monkeypatch):
+    from scripts.curriculum.validate.loader import PlanError
+
+    document = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
+    document.parent.mkdir(parents=True)
+    document.write_text(_PLAN, encoding="utf-8")
+    world = _world(tmp_path, document, "c" * 64, scope={"lesson": 1, "step": "s1"},
+                   lesson_n=None, prepare=False)
+    record = {
+        "retirement_schema": 1,
+        "plans": [{"slug": "fixture-module", "old_position": 1,
+                   "sha256": hashlib.sha256(document.read_bytes()).hexdigest()}],
+        "routes": [],
+    }
+    (document.parent / "_retired.yaml").write_text(
+        "invalid: true" if record_kind == "malformed" else yaml.safe_dump(record)
+    )
+    if record_kind == "replacement":
+        document.write_text(_PLAN + "\n", encoding="utf-8")
+    before = {p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    kwargs = dict(db_path=world.db_path, document_path=document, prior_ledger=world.prior_ledger,
+                  review_id="settle-R", attempt_id="settle-A", manifest_path=world.manifest,
+                  prompt_path=world.prompt, repo_root=tmp_path)
+    if record_kind == "replacement":
+        settle.prepare(world.item_id, **kwargs)
+        manifest = yaml.safe_load(world.manifest.read_text())
+        assert manifest["inputs"]["document"]["sha256"] == hashlib.sha256(document.read_bytes()).hexdigest()
+        assert _prepared_spans(world)[0]["context"] == "s1\nfirst step only"
+    else:
+        monkeypatch.setattr(settle, "_original_finding", lambda *args: pytest.fail("finding read before retirement"))
+        with pytest.raises(PlanError, match="plan_retired" if record_kind == "retired" else "retirement_record_invalid"):
+            settle.prepare(world.item_id, **kwargs)
+        assert not world.manifest.exists() and not world.prompt.exists()
+        assert {p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before

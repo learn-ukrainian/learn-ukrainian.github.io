@@ -26,6 +26,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.assemble import component_props_from_jsx
 from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.curriculum.evidence.lock import atomic_write
+from scripts.curriculum.validate.loader import read_plan_text
 from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
@@ -567,7 +568,6 @@ def prepare(
     root = repo_root.resolve()
     with closing(db.connect(db_path)) as conn:
         item = _item(conn, item_id)
-        finding = _original_finding(conn, item)
         expected = (
             f"{TREE}/lesson-plans/{item['level']}/{item['slug']}.yaml"
             if item["lesson_n"] is None
@@ -576,7 +576,12 @@ def prepare(
         actual = _safe_path(document_path, root)
         if actual != expected:
             raise SettleError(f"document path is {actual}; expected {expected}")
-        document_bytes = document_path.read_bytes()
+        document_bytes = (
+            read_plan_text(document_path).encode("utf-8")
+            if item["lesson_n"] is None
+            else document_path.read_bytes()
+        )
+        finding = _original_finding(conn, item)
         scope = finding.get("scope")
         provenance = None
         if item["lesson_n"] is not None and _is_lesson_scope(scope) and isinstance(scope.get("activity"), str):

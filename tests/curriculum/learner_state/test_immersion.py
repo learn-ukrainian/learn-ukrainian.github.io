@@ -31,7 +31,9 @@ pytestmark = pytest.mark.reads_content
 )
 def test_a1_band_parametrised_seven_knees(count: int, expected_key: str) -> None:
     """A1 band derives from cumulative count using the seven editorial vocabulary thresholds, matching compute_immersion_band."""
-    band = compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=count)
+    ordinary = load_arc("a1")[1]
+    assert ordinary.band_key is None
+    band = compute_lesson_immersion_band("a1", arc_position=ordinary.position, lesson_n=1, cumulative_core_count=count)
     assert band.band_key == expected_key
     assert band.source == "ulp_vocab"
     assert codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED in band.not_checked
@@ -258,7 +260,8 @@ def test_a1_invalid_count_keeps_named_error(count) -> None:
 
 @pytest.mark.parametrize("count", [0, 100])
 def test_a1_only_explicit_orientation_has_no_share(count: int) -> None:
-    ordinary = load_arc("a1")[0]
+    ordinary = load_arc("a1")[1]
+    assert ordinary.band_key is None
     declared = replace(ordinary, position=17, band_key="a1-orientation")
     band = compute_lesson_immersion_band(
         "a1", 17, 2, count, arc_loader=lambda _: [ordinary, declared], waiver="explicit waiver",
