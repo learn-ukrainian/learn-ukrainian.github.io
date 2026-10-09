@@ -273,14 +273,14 @@ def test_stop_allows_clean_report_with_workers_and_wakeup(driver):
 def test_stop_continues_on_question(driver):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "Option A or option B for #10117. Which should I take?"))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "question" in out["reason"]
 
 
 def test_stop_continues_on_listed_plan(driver):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET + 1)
     out = _stop(driver, _transcript(driver, "Status done.\n\n## Next steps\n- rebase #10197"))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "actions you have not done" in out["reason"]
 
 
@@ -288,14 +288,14 @@ def test_stop_continues_below_min_workers_counting_only_own_seat(driver):
     _workers(driver, "gemini-infra", 2)
     assert driver_state.running_workers("gemini-infra") == 2
     out = _stop(driver, _transcript(driver, "All good."))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "below the privately configured target" in out["reason"]
 
 
 def test_stop_requires_wakeup_when_fully_idle(driver):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "All good."), fully_idle=True)
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "schedule" in out["reason"]
 
 
@@ -310,7 +310,7 @@ def test_stop_caps_consecutive_continues(driver):
     transcript = _transcript(driver, "Which should I take?")
     for _ in range(2):
         results = [_stop(driver, transcript) for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES + 1)]
-        assert all(r.get("decision") == "deny" for r in results[:-1])
+        assert all(r.get("decision") == "continue" for r in results[:-1])
         assert results[-1] == {
             "decision": "allow",
             "reason": "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
@@ -335,7 +335,7 @@ def test_preinvocation_never_changes_stop_retry_counter(driver, state, oversized
         assert (counter.read_text() if counter.exists() else None) == before
         result = _stop(driver, transcript)
         if attempt < driver_state.MAX_CONSECUTIVE_CONTINUES:
-            assert result["decision"] == "deny"
+            assert result["decision"] == "continue"
             assert counter.read_text() == str(attempt + 1)
         else:
             assert result == {
@@ -421,7 +421,7 @@ def test_stop_refuses_unsafe_counter_directory(driver, state, monkeypatch, unsaf
         else:
             directory.chmod(0o777)
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "counter unavailable" in out["reason"]
     assert list(directory.iterdir()) == []
 
@@ -479,7 +479,7 @@ def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, caps
         if operation == "unlink":
             assert counter.read_text(encoding="utf-8") == "0"
         return
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "counter unavailable" in out["reason"]
     assert "question" in out["reason"]
 
@@ -499,7 +499,7 @@ def test_stop_cap_resets_without_unlink(driver, state, monkeypatch):
     transcript = _transcript(driver, "Which should I take?")
     assert _stop(driver, transcript)["decision"] == "allow"
     assert counter.read_text(encoding="utf-8") == "0"
-    assert _stop(driver, transcript)["decision"] == "deny"
+    assert _stop(driver, transcript)["decision"] == "continue"
     assert counter.read_text(encoding="utf-8") == "1"
 
 
@@ -523,7 +523,7 @@ def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(drive
     monkeypatch.setattr(Path, "write_text", original)
     assert _stop(driver, transcript)["decision"] == "allow"
     assert counter.read_text(encoding="utf-8") == "0"
-    assert _stop(driver, transcript)["decision"] == "deny"
+    assert _stop(driver, transcript)["decision"] == "continue"
 
 
 def test_stop_counter_failure_preserves_all_policy_reasons(driver, state, monkeypatch):
@@ -538,13 +538,13 @@ def test_stop_counter_failure_preserves_all_policy_reasons(driver, state, monkey
 
     monkeypatch.setattr(Path, "write_text", denied)
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "below the privately configured target" in out["reason"]
     assert "question" in out["reason"]
     assert "counter unavailable" in out["reason"]
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "Work verified."), fully_idle=True)
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "nothing is armed to wake you" in out["reason"]
     assert "counter unavailable" in out["reason"]
 
@@ -553,7 +553,7 @@ def test_stop_corrupt_counter_fails_closed(driver, state):
     counter = driver_state._counter_path(state, "c1")
     counter.write_text("invalid", encoding="utf-8")
     out = _stop(driver, _transcript(driver, "Which should I take?"))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "counter unavailable" in out["reason"]
 
 
@@ -563,7 +563,7 @@ def test_stop_ignores_errors_and_non_drivers(driver, monkeypatch):
         payload = {"workspacePaths": [str(driver)], "transcriptPath": str(transcript), "terminationReason": reason}
         assert driver_state.cmd_agy_stop_hook(json.dumps(payload)) == {"decision": "allow"}
     payload["terminationReason"] = "model_stop"
-    assert driver_state.cmd_agy_stop_hook(json.dumps(payload))["decision"] == "deny"
+    assert driver_state.cmd_agy_stop_hook(json.dumps(payload))["decision"] == "continue"
     monkeypatch.delenv(driver_state.STATE_ENV)
     assert _stop(driver, transcript) == {"decision": "allow"}
 
@@ -604,7 +604,7 @@ def test_stop_does_not_accept_embedded_escalation_marker(driver, prefix):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     text = prefix + "CTO-ESCALATION: is needed. I will run the remaining actions next."
     out = _stop(driver, _transcript(driver, text))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "actions you have not done" in out["reason"]
 
 
@@ -617,7 +617,7 @@ def test_stop_unknown_worker_target_does_not_force_continuation(driver, monkeypa
     _workers(driver, "gemini-infra", 0)
     assert driver_state.minimum_workers() is None
     assert _stop(driver, _transcript(driver, "Work verified.")) == {"decision": "allow"}
-    assert _stop(driver, _transcript(driver, "I will run the remaining actions next."))["decision"] == "deny"
+    assert _stop(driver, _transcript(driver, "I will run the remaining actions next."))["decision"] == "continue"
 
 
 def test_worker_target_is_read_at_call_time(driver, monkeypatch):
@@ -625,7 +625,7 @@ def test_worker_target_is_read_at_call_time(driver, monkeypatch):
     transcript = _transcript(driver, "Work verified.")
     assert _stop(driver, transcript) == {"decision": "allow"}
     monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET + 1))
-    assert _stop(driver, transcript)["decision"] == "deny"
+    assert _stop(driver, transcript)["decision"] == "continue"
 
 
 def test_running_workers_uses_shared_store_from_linked_worktree(tmp_path, monkeypatch):
@@ -703,6 +703,9 @@ def test_rendered_envelope_exact_boundary(state):
         "I'll check back when the armed wait fires.",
         "I will not run more checks; verification completed.",
         "Pending actions: completed; all checks passed.",
+        "Next steps: done — merged #123.",
+        "Next steps: done – merged #123.",
+        "Next steps: done - merged #123.",
     ],
 )
 def test_question_plan_detector_allows_reports_quotes_and_armed_waits(driver, text):
@@ -722,6 +725,7 @@ def test_question_plan_detector_allows_reports_quotes_and_armed_waits(driver, te
         "I will fix the remaining defect.",
         "Please choose a path.",
         "I'll check the remaining failures.",
+        "I’ll merge after CI.",
         "I'll check back when the armed wait fires. I will fix any failures.",
         "Plan: dispatch the remaining worker.",
         "## Plan\n- Dispatch the remaining worker.",
@@ -730,7 +734,7 @@ def test_question_plan_detector_allows_reports_quotes_and_armed_waits(driver, te
 def test_question_plan_detector_preserves_authored_actions(driver, text):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     assert driver_state.ends_on_question_or_plan(text) is not None
-    assert _stop(driver, _transcript(driver, text))["decision"] == "deny"
+    assert _stop(driver, _transcript(driver, text))["decision"] == "continue"
 
 
 @pytest.mark.parametrize(
@@ -749,7 +753,7 @@ def test_quoted_or_embedded_escalation_never_exempts_worker_gate(driver, prefix,
     _workers(driver, "gemini-infra", 0)
     text = prefix + "CTO-ESCALATION: approval required" + suffix
     out = _stop(driver, _transcript(driver, text))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "below the privately configured target" in out["reason"]
 
 
@@ -840,7 +844,7 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
         record.write_text(json.dumps(data))
     assert driver_state.running_workers("gemini-infra") is None
     out = _stop(driver, _transcript(driver, "Work verified."))
-    assert out["decision"] == "deny"
+    assert out["decision"] == "continue"
     assert "live worker count is unknown" in out["reason"]
 
 

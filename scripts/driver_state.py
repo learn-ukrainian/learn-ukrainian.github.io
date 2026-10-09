@@ -218,13 +218,13 @@ _QUESTION_RE = re.compile(
     re.IGNORECASE,
 )
 _PLAN_RE = re.compile(
-    r"\bi('ll| will)\s+(?:(?:now|next|then)\s+)?"
+    r"\bi([’']ll| will)\s+(?:(?:now|next|then)\s+)?"
     r"(dispatch|rebase|start|run|open|fix|merge|enqueue|commit|push|implement|update|"
     r"check(?!\s+back\s+when\s+the\s+armed\s+wait\s+fires\b)|verify)\b",
     re.IGNORECASE | re.MULTILINE,
 )
 _PLAN_HEADING_RE = re.compile(r"^(?:#+\s*)?(next (steps?|actions?)|plan|pending actions?)(?:\s*:\s*(.*)|\s*)$", re.I)
-_NO_PENDING_ACTION_RE = re.compile(r"^(?:none|nothing|complete|completed|done)\b(?:\s*[.!;]|\s*$)", re.I)
+_NO_PENDING_ACTION_RE = re.compile(r"^(?:none|nothing|complete|completed|done)\b(?:\s*[.!;—–-]|\s*$)", re.I)
 
 
 def _message_prose(text: str) -> str:
@@ -458,7 +458,7 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     except (OSError, ValueError):
         reasons.append("continuation counter unavailable")
     return {
-        "decision": "deny",
+        "decision": "continue",
         "reason": (
             "DRIVER-STATE standing decision policy: "
             + "; ".join(reasons)
