@@ -517,8 +517,12 @@ def build_cost_windows(
             phase=phase,
             since=since,
         )
-        runtime_calls = count_runtime_calls(days=days, now=current_time, usage_dir=usage_dir)
+        unreadable = {"files": 0, "lines": 0, "records": 0}
+        runtime_calls = count_runtime_calls(days=days, now=current_time, usage_dir=usage_dir, unreadable=unreadable)
         window["runtime_calls_total"] = runtime_calls
+        window["unreadable"] = unreadable
+        if any(unreadable.values()):
+            window["warnings"].append(f"Runtime usage data is incomplete: unreadable usage records {unreadable}.")
         ledger_empty = window["records_total"] == 0 and runtime_calls > 0
         window["ledger_empty"] = ledger_empty
         if ledger_empty:

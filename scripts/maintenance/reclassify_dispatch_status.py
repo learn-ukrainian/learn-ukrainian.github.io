@@ -194,13 +194,14 @@ def reclassify_rate_limited_tasks(
     tasks_dir: Path | None = None,
     usage_dir: Path = DEFAULT_USAGE_DIR,
     dry_run: bool = False,
-) -> dict[str, list[tuple[str, str]]]:
+) -> dict[str, Any]:
     tasks_dir = tasks_dir or default_tasks_dir()
-    usage_by_task_id = _load_usage_by_task_id(usage_dir)
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+    usage_by_task_id = _load_usage_by_task_id(usage_dir, unreadable=unreadable)
     changes: list[tuple[str, str]] = []
     skipped: list[tuple[str, str]] = []
     if not tasks_dir.exists():
-        return {"changed": changes, "skipped": skipped}
+        return {"changed": changes, "skipped": skipped, "unreadable": unreadable}
 
     for task_path in iter_task_records(tasks_dir, include_archive=True):
         outcome = _reclassify_task(
@@ -215,7 +216,7 @@ def reclassify_rate_limited_tasks(
             changes.append((task_id, detail))
         else:
             skipped.append((task_id, detail))
-    return {"changed": changes, "skipped": skipped}
+    return {"changed": changes, "skipped": skipped, "unreadable": unreadable}
 
 
 def main() -> int:
@@ -246,6 +247,9 @@ def main() -> int:
     )
     changed = outcomes["changed"]
     skipped = outcomes["skipped"]
+    unreadable = outcomes["unreadable"]
+    if any(unreadable.values()):
+        print(f"Unreadable usage records: {unreadable}")
 
     for task_id, detail in changed:
         print(f"{task_id}: {detail}")

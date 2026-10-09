@@ -108,6 +108,8 @@ def test_empty_everything_is_not_flagged(tmp_path, monkeypatch):
     for window in payload["windows"].values():
         assert window["runtime_calls_total"] == 0
         assert window["ledger_empty"] is False
+        assert window["unreadable"] == {"files": 0, "lines": 0, "records": 0}
+        assert not any("unreadable" in warning for warning in window["warnings"])
 
 
 def test_missing_usage_dir_is_not_flagged(tmp_path, monkeypatch):
@@ -155,6 +157,31 @@ def test_malformed_usage_lines_are_skipped(tmp_path, monkeypatch):
 
     assert payload["windows"]["last_7_days"]["runtime_calls_total"] == 1
     assert payload["windows"]["last_7_days"]["ledger_empty"] is True
+    for window in payload["windows"].values():
+        assert window["unreadable"] == {"files": 0, "lines": 2, "records": 0}
+        assert any("unreadable usage records" in warning and "'lines': 2" in warning for warning in window["warnings"])
+
+
+def test_unreadable_usage_counts_are_scoped_to_each_cost_window(tmp_path):
+    curriculum = tmp_path / "curriculum"
+    curriculum.mkdir()
+    usage_dir = tmp_path / "api_usage"
+    usage_dir.mkdir()
+    (usage_dir / "usage_codex-delegate_2026-08-22.jsonl").write_bytes(b'{}\n\xff\n{}\n')
+    (usage_dir / "usage_codex-delegate_2026-08-10.jsonl").write_bytes(b'not-json\n[]\n{}\n')
+    (usage_dir / "usage_codex-delegate_2026-07-01.jsonl").mkdir()
+
+    payload = cost_report.build_cost_windows(root=curriculum, usage_dir=usage_dir, now=_NOW)
+
+    for key, calls, files, lines in [
+        ("last_7_days", 2, 0, 1),
+        ("last_30_days", 3, 0, 3),
+        ("all_time", 3, 1, 3),
+    ]:
+        window = payload["windows"][key]
+        assert window["runtime_calls_total"] == calls
+        assert window["unreadable"] == {"files": files, "lines": lines, "records": 0}
+        assert any(str(window["unreadable"]) in warning for warning in window["warnings"])
 
 
 def test_cost_report_cli_still_runs():

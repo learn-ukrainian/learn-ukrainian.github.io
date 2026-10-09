@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -23,12 +24,58 @@ def test_reclassify_walks_hot_then_archived_records(tmp_path, monkeypatch):
         return ("skipped", path.stem, "probe")
 
     monkeypatch.setattr(rds, "_reclassify_task", probe)
-    monkeypatch.setattr(rds, "_load_usage_by_task_id", lambda _usage_dir: {})
+    monkeypatch.setattr(rds, "_load_usage_by_task_id", lambda _usage_dir, **_kwargs: {})
 
     outcome = rds.reclassify_rate_limited_tasks(tasks_dir=tasks, usage_dir=tmp_path / "usage", dry_run=True)
 
     assert seen == ["hot.json", "archive/old.json"]
     assert outcome["skipped"] == [("hot", "probe"), ("old", "probe")]
+    assert outcome["unreadable"] == {"files": 0, "lines": 0, "records": 0}
+
+
+@pytest.mark.parametrize("tasks_exist", [False, True])
+def test_reclassify_outcomes_surface_unreadable_usage(tmp_path, tasks_exist):
+    tasks = tmp_path / "tasks"
+    if tasks_exist:
+        tasks.mkdir()
+    usage = tmp_path / "usage"
+    usage.mkdir()
+    (usage / "usage_codex-delegate_2026-08-22.jsonl").write_bytes(b'{}\n\xff\nnot-json\n[]\n{}\n')
+    (usage / "usage_codex-delegate_2026-08-21.jsonl").mkdir()
+
+    outcomes = rds.reclassify_rate_limited_tasks(tasks_dir=tasks, usage_dir=usage, dry_run=True)
+
+    assert outcomes == {"changed": [], "skipped": [], "unreadable": {"files": 1, "lines": 3, "records": 0}}
+
+
+@pytest.mark.parametrize("corrupt", [False, True])
+@pytest.mark.parametrize("summary", ["empty", "dry_run", "changed"])
+def test_main_prints_nonzero_unreadable_usage_in_each_summary(tmp_path, monkeypatch, capsys, corrupt, summary):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    if summary != "empty":
+        (tasks / "task.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(rds, "_reclassify_task", lambda *_args, **_kwargs: ("changed", "task", "probe"))
+    usage = tmp_path / "usage"
+    usage.mkdir()
+    (usage / "usage_codex-delegate_2026-08-22.jsonl").write_bytes(b'{}\n\xff\n{}\n' if corrupt else b'{}\n')
+    argv = ["reclassify_dispatch_status.py", "--tasks-dir", str(tasks), "--usage-dir", str(usage)]
+    if summary == "dry_run":
+        argv.append("--dry-run")
+    monkeypatch.setattr(sys, "argv", argv)
+
+    assert rds.main() == 0
+
+    output = capsys.readouterr().out
+    if corrupt:
+        assert "Unreadable usage records: {'files': 0, 'lines': 1, 'records': 0}" in output
+    else:
+        assert "Unreadable usage records" not in output
+    assert {
+        "empty": "No task states changed.",
+        "dry_run": "Dry run only. Proposed changes: 1",
+        "changed": "Changed: 1",
+    }[summary] in output
 
 
 # #9275: a rate-limit false positive becomes ``done`` only for a delivery-only
