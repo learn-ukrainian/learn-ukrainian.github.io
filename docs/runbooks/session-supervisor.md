@@ -35,6 +35,35 @@ On clean exit the launcher (or a wrapper) calls the matching lifecycle action:
 `SESSION_STREAM_*` envelope. Fencing is enforced by
 `agents_extensions.shared.session_streams`; a stale envelope is refused.
 
+Drivers can render a fresh capsule from their launcher-provided environment
+without renewing the lease:
+
+```bash
+.venv/bin/python -m scripts.session_supervisor capsule --role driver --stream <stream-id>
+```
+
+This command reads the exact `SESSION_STREAM_*` lease and reconciles it with
+Monitor's active lease and expiry. A mismatch or expired lease is refused;
+the command makes no claim, heartbeat, release or recovery call. Workers still
+receive no lease in `capsule --role worker`.
+
+The supported Codex hydration command is also read-only:
+
+```bash
+.venv/bin/python -m scripts.session_canary.codex_lane hydrate --epic <epic> --stream <stream-id>
+```
+
+It preserves the launcher's Codex identity (including `codex-core`) when
+reconciling the full environment lease; another provider's identity is refused.
+
+Codex, Gemini and GLM hydration retry a blocked capsule only when every failure
+cause is a timeout or connection failure. Each of at most three attempts has
+its own unchanged 500 ms budget, with 50 ms between retries. The final capsule
+keeps the v1.3 schema and per-attempt timing; `hydration_attempts: <count>` is
+reported on stderr. Lease mismatch, expiry, unsafe evidence, malformed data
+and invalid stream or lane identifiers block immediately. A degraded capsule
+whose critical evidence permits execution is returned without retrying.
+
 ### Close-failure observability
 
 `scripts/lib/launcher_core.sh`'s `launcher_close_driver_lease` retries the
