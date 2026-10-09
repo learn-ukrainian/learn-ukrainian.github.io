@@ -29,7 +29,7 @@ hook rejects an oversized rendered envelope visibly, without clipping goals.
 turn on a question or a plan, with fewer of its own workers running than the
 private ``LU_DRIVER_MIN_WORKERS`` target, or with nothing armed to wake it.
 An absent or invalid target is unknown and cannot force a worker-count continuation. In those cases it returns
-``{"decision": "deny", "reason": ...}`` and AGY re-enters the loop with the
+``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
 per-conversation counter caps consecutive continuations when its private storage
@@ -472,7 +472,7 @@ def cmd_agy_pretool_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     tool = (payload.get("toolCall") or {}).get("name")
     if tool != "ask_question":
-        return {"decision": "ask"}
+        return {"decision": "allow"}
     if _driver_session(payload) is None:
         return {"decision": "allow"}
     return {

@@ -572,7 +572,7 @@ def test_pretool_denies_ask_question_only_for_drivers(driver, monkeypatch):
     call = {"toolCall": {"name": "ask_question"}, "workspacePaths": [str(driver)]}
     assert driver_state.cmd_agy_pretool_hook(json.dumps(call))["decision"] == "deny"
     other = {"toolCall": {"name": "run_command"}, "workspacePaths": [str(driver)]}
-    assert driver_state.cmd_agy_pretool_hook(json.dumps(other)) == {"decision": "ask"}
+    assert driver_state.cmd_agy_pretool_hook(json.dumps(other)) == {"decision": "allow"}
     monkeypatch.delenv(driver_state.STATE_ENV)
     assert driver_state.cmd_agy_pretool_hook(json.dumps(call)) == {"decision": "allow"}
 
