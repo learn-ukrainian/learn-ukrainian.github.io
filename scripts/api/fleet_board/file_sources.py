@@ -11,13 +11,16 @@ from typing import Any
 
 from .sources import SourceReport, read_location, report
 from .values import (
+    DOWNLOAD_ALIASES,
+    DRIVER_ALIASES,
+    UNLISTED,
     Outcome,
     _age,
+    _alias,
     _cached_call,
     _done,
     _env,
     _json_number,
-    _name,
     _number,
     _timestamp,
     _token,
@@ -57,10 +60,12 @@ def _read_json_file(path: Path) -> object:
     return json.loads(raw.decode("utf-8"))
 
 
-def _backup_piece(directory: Path, filename: str) -> tuple[object | None, bool]:
+def _backup_piece(directory: Path, filename: str) -> tuple[dict[str, Any] | None, bool]:
     try:
         payload = _read_json_file(directory / filename)
     except Exception:
+        return None, False
+    if not isinstance(payload, dict):
         return None, False
     return payload, True
 
@@ -173,7 +178,10 @@ def _stalled(stamp: str | None, now: datetime, limit: float) -> bool | None:
 def _pct(done: int | float | None, total: int | float | None) -> int | float | None:
     if done is None or total is None or float(total) <= 0:
         return None
-    return _json_number(round(float(done) / float(total) * 100, 1))
+    value = float(done) / float(total) * 100
+    if not math.isfinite(value):
+        return None
+    return _json_number(round(value, 1))
 
 
 def _download_items(payload: object, now: datetime, limit: float) -> list[dict[str, Any]]:
@@ -187,7 +195,7 @@ def _download_items(payload: object, now: datetime, limit: float) -> list[dict[s
     for row in rows:
         if not isinstance(row, dict):
             continue
-        source = _name(row.get("source"))
+        source = _alias(row.get("source"), DOWNLOAD_ALIASES)
         if source is None:
             continue
         done = _optional_number(row, "done")
@@ -252,7 +260,7 @@ def _drivers(payload: object) -> list[dict[str, Any]]:
     for row in rows:
         if not isinstance(row, dict):
             continue
-        agent_id = _name(row.get("agent_id"))
+        agent_id = _alias(row.get("agent_id"), DRIVER_ALIASES)
         if agent_id is None:
             continue
         own = _timestamp(row.get("measured_at")) if "measured_at" in row else None
@@ -297,7 +305,7 @@ def load_harness(environ: Mapping[str, str] | None = None) -> Outcome:
 def load_harness_driver(agent_id: str, environ: Mapping[str, str] | None = None) -> Outcome:
     """One driver from the harness snapshot. Unknown ids are null."""
     drivers, reports = _load_drivers(_env(environ))
-    if drivers is None:
+    if drivers is None or agent_id == UNLISTED:
         return {"driver": None}, reports
     found = next((row for row in drivers if row["agent_id"] == agent_id), None)
     return {"driver": found}, reports

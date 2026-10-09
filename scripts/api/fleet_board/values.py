@@ -13,8 +13,19 @@ from typing import Any
 from .cache import CACHE, CACHE_TTL_S
 from .sources import SourceReport, report
 
-_NAME = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,63}\Z")
 _TOKEN = re.compile(r"[a-z0-9_-]{1,32}\Z")
+
+# Snapshot identifiers are published only through these approved aliases.
+# Any other identifier, however well formed, becomes UNLISTED.
+DOWNLOAD_ALIASES: Mapping[str, str] = {}
+DRIVER_ALIASES: Mapping[str, str] = {
+    "claude": "claude",
+    "codex": "codex",
+    "cursor": "cursor",
+    "grok-bot": "grok-bot",
+    "qa-engineer": "qa-engineer",
+}
+UNLISTED = "unlisted"
 
 Outcome = tuple[dict[str, Any], tuple[SourceReport, ...]]
 
@@ -55,13 +66,11 @@ def _json_number(value: float) -> int | float:
     return value
 
 
-def _name(value: object) -> str | None:
+def _alias(value: object, approved: Mapping[str, str]) -> str | None:
+    """Approved public alias, ``UNLISTED`` for any other string, ``None`` for non-strings."""
     if not isinstance(value, str):
         return None
-    text = value.strip()
-    if _NAME.fullmatch(text):
-        return text
-    return None
+    return approved.get(value.strip(), UNLISTED)
 
 
 def _token(value: object) -> str | None:
@@ -106,6 +115,10 @@ def _cached_call(
         if found is None:
             raise
         return found[0], "stale", found[1]
-    if cacheable(value):
-        CACHE.store(key, value)
+    if not cacheable(value):
+        # An incomplete refresh must not replace a complete cached snapshot.
+        if found is None:
+            return value, "miss", 0.0
+        return found[0], "stale", found[1]
+    CACHE.store(key, value)
     return value, "miss", 0.0
