@@ -43,36 +43,19 @@ CAUSE_LABELS: tuple[str, ...] = (
 )
 
 _CAUSE_PATTERNS: tuple[tuple[str, str], ...] = (
-    ("worktree preparation", "worktree preparation"),
+    ("cancellation", "agy_background_task_canceled"),
+    ("unconfirmed", "agy_background_task_unconfirmed"),
     ("permission denied", "agy_headless_permission_denied"),
     ("permission denied", "permission_denied"),
     ("permission denied", "permission denied"),
-    ("unconfirmed", "agy_background_task_unconfirmed"),
-    ("cancellation", "agy_background_task_canceled"),
     ("read-only checkout mutation", "read-only checkout mutation"),
+    ("worktree preparation", "worktree preparation"),
     ("output token cutoff", "output token limit"),
     ("output token cutoff", "cut off because it exceeded"),
     ("transient provider fault", "UNAVAILABLE (code 503)"),
     ("transient provider fault", "The stream was interrupted."),
     ("transient provider fault", "agy_stream_output_invalid: missing terminal result"),
 )
-
-_LEADING_PREFIXES: dict[str, tuple[str, ...]] = {
-    "worktree preparation": ("worktree preparation",),
-    "permission denied": ("agy_headless_permission_denied", "permission denied", "permission_denied"),
-    "unconfirmed": ("agy_background_task_unconfirmed",),
-    "cancellation": ("agy_background_task_canceled",),
-    "read-only checkout mutation": ("read-only checkout mutation",),
-    "output token cutoff": ("agy_stream_result_error: your previous response was cut off",),
-    "transient provider fault": (
-        "agy_stream_result_error: api error",
-        "agy_stream_result_error: eligibility check failed",
-        "agy_stream_result_error: the stream was interrupted",
-        "agy_stream_output_invalid: missing terminal result",
-        "the stream was interrupted",
-        "api error (attempt",
-    ),
-}
 
 _TEXT_FIELDS = ("last_error", "failure_code", "stderr_excerpt", "returncode_reason")
 _AGENTS = frozenset({"agy", "gemini"})
@@ -87,29 +70,19 @@ def classify_failure(record: Mapping[str, Any]) -> str:
             parts.append(value)
     text = "\n".join(parts)
     lowered = text.lower()
-    matches: list[str] = []
-    for label, needle in _CAUSE_PATTERNS:
-        if label not in matches and (needle in text or needle.lower() in lowered):
-            matches.append(label)
-    if not matches:
-        return "other"
-    if len(matches) == 1:
-        return matches[0]
+
     last_error = record.get("last_error")
-    if isinstance(last_error, str):
-        led = _leading_cause(last_error, matches)
-        if led is not None:
-            return led
-    return matches[0]
-
-
-def _leading_cause(last_error: str, matches: list[str]) -> str | None:
-    text = last_error.lstrip().lower()
-    for label in matches:
-        for prefix in _LEADING_PREFIXES.get(label, ()):
-            if text.startswith(prefix):
+    if isinstance(last_error, str) and last_error.strip():
+        last_error_lower = last_error.lower()
+        for label, needle in _CAUSE_PATTERNS:
+            if needle in last_error or needle.lower() in last_error_lower:
                 return label
-    return None
+
+    for label, needle in _CAUSE_PATTERNS:
+        if needle in text or needle.lower() in lowered:
+            return label
+
+    return "other"
 
 
 def _parse_instant(value: str) -> datetime:

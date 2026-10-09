@@ -88,6 +88,20 @@ def _record(**fields):
             },
             "cancellation",
         ),
+        (
+            {
+                "last_error": "agy_stream_result_error: eligibility check failed: PERMISSION_DENIED (code 403)",
+                "stderr_excerpt": "UNAVAILABLE (code 503)",
+            },
+            "permission denied",
+        ),
+        (
+            {
+                "last_error": "agy_background_task_canceled",
+                "stderr_excerpt": "worktree preparation failed",
+            },
+            "cancellation",
+        ),
     ],
 )
 def test_every_cause_class_is_classified_from_record_fields(fields, cause):

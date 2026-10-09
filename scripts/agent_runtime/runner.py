@@ -1649,8 +1649,9 @@ def _execute_invocation_plan(
     )
     # Receipt attempts cannot replay, so they need no Git snapshot.
     # In particular, do not spawn a Git probe before the boundary can refuse.
-    # Write modes snapshot so a transient fault can prove the workspace is unchanged.
-    before = _agy_git_state(cwd) if not receipt else None
+    # A read-only mode takes the snapshot to verify no side effects occurred.
+    # Write modes no longer snapshot, relying instead on command execution counts (#10206).
+    before = _agy_git_state(cwd) if not receipt and mode == "read-only" else None
     elapsed = 0.0
     execution: _ExecutionOutcome | None = None
     while True:
@@ -1700,7 +1701,7 @@ def _execute_invocation_plan(
         )
         errors = (execution.stderr_text, parse.provider_error_text or "")
         transient = any(
-            re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
+            re.search(r"^(?:agy_stream_result_error:\s*)?Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
             for text in errors
             for line in text.splitlines()
         )
@@ -1713,9 +1714,8 @@ def _execute_invocation_plan(
         provider_fault = None
         if not cancellation and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS:
             provider_fault = classify_agy_transient_provider_fault(
-                execution.stderr_text,
                 parse.provider_error_text,
-                parse.stderr_excerpt,
+                parse.failure_code,
             )
         if not cancellation and not eligibility and not provider_fault:
             return finish(execution)
@@ -1724,12 +1724,21 @@ def _execute_invocation_plan(
             budget.reroute_reason = "agy_retry_exhausted"
             return finish(execution)
         # Cancellation and pre-model eligibility never replay a write.
-        # A transient provider fault replays a write only when Git is unchanged.
+        # A transient provider fault replays a write only when we have affirmative
+        # evidence that no commands were executed, leaving no side effects. Unknown execution
+        # counts as unsafe.
         if provider_fault and not cancellation and not eligibility:
-            if mode != "read-only" and (before is None or _agy_git_state(cwd) != before):
+            if not execution.process_group_exited:
                 budget.retry_disposition = "unsafe_replay"
                 budget.reroute_reason = "unsafe_replay"
                 return finish(execution)
+            if mode != "read-only":
+                attempt = parse.agy_attempt
+                safe = attempt is not None and attempt.executed_command_count == 0 and attempt.unknown_command_count == 0 and attempt.kill_count == 0
+                if not safe:
+                    budget.retry_disposition = "unsafe_replay"
+                    budget.reroute_reason = "unsafe_replay"
+                    return finish(execution)
         elif mode != "read-only":
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
@@ -1771,14 +1780,7 @@ def _execute_invocation_plan(
             budget.retry_disposition = "deadline_exhausted"
             budget.reroute_reason = "deadline_exhausted"
             return finish(execution)
-        write_changed = (
-            bool(provider_fault)
-            and not cancellation
-            and not eligibility
-            and mode != "read-only"
-            and (before is None or _agy_git_state(cwd) != before)
-        )
-        replay_blocked = (cancellation and _agy_git_state(cwd) != before) or write_changed
+        replay_blocked = cancellation and (before is None or _agy_git_state(cwd) != before)
         if replay_blocked or not _agy_receipt_ledger_empty(tool_config):
             cleanup = getattr(adapter, "cleanup_invocation", None)
             if cleanup is not None:

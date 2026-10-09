@@ -176,12 +176,12 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
 # pre-model gate in the runner. A different eligibility failure blocks this
 # class, so a nearby 503 is not treated as the cause.
 TRANSIENT_PROVIDER_FAULT = "transient_provider_fault"
-_EXACT_PRE_MODEL_ELIGIBILITY_503 = re.compile(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)")
-_ELIGIBILITY_UNAVAILABLE_503 = re.compile(r"Eligibility check failed:.*UNAVAILABLE \(code 503\)")
-_OTHER_ELIGIBILITY_FAILURE = re.compile(r"Eligibility check failed:")
-_API_UNAVAILABLE_503 = re.compile(r"API error \(attempt \d+\): UNAVAILABLE \(code 503\)")
-_STREAM_INTERRUPTED = re.compile(r"The stream was interrupted\.")
-_MISSING_TERMINAL_RESULT = re.compile(r"agy_stream_output_invalid: missing terminal result")
+_EXACT_PRE_MODEL_ELIGIBILITY_503 = re.compile(r"^(?:agy_stream_result_error:\s*)?Eligibility check failed:\s*UNAVAILABLE \(code 503\)")
+_ELIGIBILITY_UNAVAILABLE_503 = re.compile(r"^(?:agy_stream_result_error:\s*)?Eligibility check failed:.*UNAVAILABLE \(code 503\)")
+_OTHER_ELIGIBILITY_FAILURE = re.compile(r"^(?:agy_stream_result_error:\s*)?Eligibility check failed:")
+_API_UNAVAILABLE_503 = re.compile(r"^(?:agy_stream_result_error:\s*)?API error \(attempt \d+\): UNAVAILABLE \(code 503\)")
+_STREAM_INTERRUPTED = re.compile(r"^(?:agy_stream_result_error:\s*)?The stream was interrupted\.")
+_MISSING_TERMINAL_RESULT = re.compile(r"^agy_stream_output_invalid: missing terminal result")
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 
 
