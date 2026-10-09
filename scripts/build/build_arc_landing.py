@@ -50,12 +50,15 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
 from scripts.curriculum.arc.loader import ArcPosition, load_arc
 from scripts.curriculum.validate.loader import PlanError, check_plan_slug, load_plan
+
+if TYPE_CHECKING:
+    from scripts.curriculum.evidence.sense_cli import LocalReceiptInputs
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -181,7 +184,9 @@ def _approved(path: Path) -> bool:
     return doc is not None and doc.get("verdict") == "APPROVE"
 
 
-def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
+def _module_verdict_reviewed(
+    roots: Roots, slug: str, *, receipt_inputs: LocalReceiptInputs | None = None, sources_instance: Any = None
+) -> bool:
     """Whether ``module-verdict.yaml`` says APPROVE, trusted only when nothing can show it stale.
 
     A local run has a findings database (``scripts.review.findings_db.db_path``): recompute the
@@ -209,7 +214,13 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     conn = findings_db.connect(db_file)
     try:
         problems = fixloop.module_verdict_problems(
-            conn, roots.level, slug, root=roots.repo, params=findings_db.load_parameters()
+            conn,
+            roots.level,
+            slug,
+            root=roots.repo,
+            params=findings_db.load_parameters(),
+            receipt_inputs=receipt_inputs,
+            sources_instance=sources_instance,
         )
     finally:
         conn.close()
@@ -218,18 +229,32 @@ def _module_verdict_reviewed(roots: Roots, slug: str) -> bool:
     return True
 
 
-def position_state(roots: Roots, slug: str, plan: dict[str, Any] | None, built: list[int]) -> str:
+def position_state(
+    roots: Roots,
+    slug: str,
+    plan: dict[str, Any] | None,
+    built: list[int],
+    *,
+    receipt_inputs: LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> str:
     """Highest state whose predicate holds with every lower predicate holding."""
     if plan is None or not _approved(roots.state / slug / "plan-review.yaml"):
         return "planned"
     if built != _lesson_numbers(plan):
         return "plan_reviewed"
-    if not _module_verdict_reviewed(roots, slug):
+    if not _module_verdict_reviewed(roots, slug, receipt_inputs=receipt_inputs, sources_instance=sources_instance):
         return "built"
     return "reviewed"
 
 
-def build_record(roots: Roots, arc_position: ArcPosition) -> dict[str, Any]:
+def build_record(
+    roots: Roots,
+    arc_position: ArcPosition,
+    *,
+    receipt_inputs: LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> dict[str, Any]:
     slug = arc_position.slug
     plan = _load_module_plan(roots, slug)
     built = _built_lessons(roots, slug, plan) if plan is not None else []
@@ -249,7 +274,9 @@ def build_record(roots: Roots, arc_position: ArcPosition) -> dict[str, Any]:
         "lesson_numbers": _lesson_numbers(plan) if plan is not None else [],
         "lesson_titles": [str(lesson["title"]) for lesson in plan["lessons"]] if plan is not None else [],
         "scope": _scope_record(roots, slug),
-        "state": position_state(roots, slug, plan, built),
+        "state": position_state(
+            roots, slug, plan, built, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+        ),
         "previous_edition_href": (
             f"/{PREVIOUS_EDITION_TRACK.format(level=roots.level)}/{slug}/" if previous_page.is_file() else None
         ),
@@ -304,9 +331,18 @@ def render_level_status(text: str, level: str, planned: int) -> str:
     return pattern.sub(lambda match: f"{match.group('head')}{planned}", text, count=1)
 
 
-def generated_files(roots: Roots, arc: list[ArcPosition]) -> dict[Path, str]:
+def generated_files(
+    roots: Roots,
+    arc: list[ArcPosition],
+    *,
+    receipt_inputs: LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> dict[Path, str]:
     """Every output file (path -> exact text) for the level, in arc order."""
-    records = [build_record(roots, arc_position) for arc_position in arc]
+    records = [
+        build_record(roots, arc_position, receipt_inputs=receipt_inputs, sources_instance=sources_instance)
+        for arc_position in arc
+    ]
     files: dict[Path, str] = {
         roots.data_json: render_json(roots.level, records),
         roots.docs / "index.mdx": render_landing(roots.level, records),
@@ -344,16 +380,35 @@ def orphan_pages(roots: Roots, arc: list[ArcPosition]) -> list[Path]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    from scripts.curriculum.evidence import sense_cli
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate fresh-arc landing data and pages from current module state.\n"
+            "Use --check for read-only freshness checks; --write regenerates landing outputs."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.build.build_arc_landing a1 --check
+  .venv/bin/python -m scripts.build.build_arc_landing a1 --write
+  .venv/bin/python -m scripts.build.build_arc_landing a1 --check --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+Outputs: --write updates arc JSON, landing/module index.mdx and level-status.yaml;
+  --check writes nothing. Receipt options verify existing local proof, never issue it.
+Exit codes: 0 = outputs written/current; 1 = stale/orphan outputs. Invalid state raises an error.
+  A current committed projection without a findings database is not fresh private certification.
+Related: scripts.review.fixloop; docs/runbooks/reference-sense-bindings.md; #10103.
+""",
+    )
     parser.add_argument("level", help="level whose arc to render, e.g. a1")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true", help="write the generated files")
     mode.add_argument("--check", action="store_true", help="fail when a generated file is stale")
+    sense_cli.add_receipt_arguments(parser)
     args = parser.parse_args(argv)
 
     roots = Roots(REPO_ROOT, args.level)
     arc = load_arc(args.level)
-    files = generated_files(roots, arc)
+    files = generated_files(roots, arc, receipt_inputs=sense_cli.receipt_inputs(args))
     if args.write:
         write_files(files)
         print(f"wrote {len(files)} files for {args.level}")

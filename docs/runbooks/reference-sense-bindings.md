@@ -380,11 +380,17 @@ hold: lesson, closure, review, provenance and public-integrity gates still bind.
 Writing promotion/review/verdict artifacts changes the clean HEAD; use the
 external issuance procedure on that new HEAD before subsequent private use.
 
-`scripts/build/build_arc_landing.py::_module_verdict_reviewed` is a separate
-consumer: with a local findings database it calls `module_verdict_problems`
-without runtime inputs; without the database it reads the tracked verdict.
-Its integration remains with the landing/runtime owner and accountable driver,
-not a claim of delivery by the consumer plumbing above.
+`scripts/build/build_arc_landing.py` forwards explicit optional `receipt_inputs`
+and `sources_instance` through `generated_files`, `build_record`, `position_state`
+and `_module_verdict_reviewed` to `module_verdict_problems` when a local findings
+database exists. Its CLI accepts the same receipt options above (including
+`--receipt-base`) for `--check` and `--write`. Missing or invalid inputs refuse
+private-backed fresh admission; public-only checks need no private credentials.
+Without a findings database, the existing tracked-verdict rule is unchanged:
+an `APPROVE` projection is trusted, not certified as fresh private proof.
+Runtime objects and paths are not landing output fields. This forwarding
+mechanism does not establish genuine private replay or independent exact-head
+evaluation/CF; those remain with the runtime owner and accountable driver.
 
 Authenticated coverage removes only the covered private-commitment warnings.
 Unrelated public errors, reviewed-provenance notices and other warnings remain,

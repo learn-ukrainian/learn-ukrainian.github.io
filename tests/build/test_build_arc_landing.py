@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -12,6 +15,15 @@ import yaml
 from scripts.build import build_arc_landing as gen
 from scripts.build import build_landing_pages
 from scripts.curriculum.arc.loader import ArcPosition, load_arc
+from tests.curriculum.evidence.conftest import synthetic_kaikki_side_db as synthetic_kaikki_side_db
+from tests.curriculum.evidence.conftest import synthetic_sources as synthetic_sources
+from tests.curriculum.evidence.conftest import synthetic_vesum as synthetic_vesum
+from tests.curriculum.evidence.test_reference_sense import assert_runtime_absent, mutate_consumer, runtime_receipt_args
+from tests.curriculum.evidence.test_reference_sense import authenticated_replay as authenticated_replay
+from tests.curriculum.evidence.test_reference_sense import book_bound as book_bound
+from tests.curriculum.evidence.test_reference_sense import bound as bound
+from tests.curriculum.evidence.test_reference_sense import consumer_world as consumer_world
+from tests.curriculum.evidence.test_reference_sense import reviewed_receipt_lifecycle as reviewed_receipt_lifecycle
 
 pytestmark = pytest.mark.reads_content
 
@@ -377,3 +389,338 @@ def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: 
 def test_built_state_label_is_the_accurate_ukrainian_phrase() -> None:
     chrome = (REPO_ROOT / "site/src/lib/i18n/chrome.ts").read_text(encoding="utf-8")
     assert "'arc.state.built': 'уроки підготовлено'," in chrome
+
+
+@pytest.fixture
+def landing_world(consumer_world, request):
+    """Real complete private checker; synthetic plan/lesson reviews are engine inputs only.
+
+    Reuse the existing Git/HMAC/reselection fixture. Add a titled plan and a
+    current synthetic lesson manifest/projection, never replace the checker,
+    freshness, fingerprint or module-verdict computation with an all-green stub.
+    The inherited fixture substitutes pedagogical validation only.
+    """
+    from scripts.build.fresh import closure, plan_promote
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.curriculum.evidence import lock, pack, words
+    from scripts.curriculum.evidence import sense_bindings as bindings
+    from scripts.review import findings_db, fixloop, record
+
+    w = consumer_world
+    w.roots = gen.Roots(w.repo, LEVEL)
+    w.arc = _arc("synthetic")
+    private = getattr(request, "param", "private") == "private"
+    plan_path = w.plans / "synthetic.yaml"
+    plan = yaml.safe_load(plan_path.read_bytes())
+    plan["title"] = "Synthetic module"
+    plan["lessons"][0]["title"] = "Synthetic lesson"
+    _write_yaml(plan_path, plan)
+    _scope(w.roots, "synthetic")
+    w.roots.level_status.parent.mkdir(parents=True, exist_ok=True)
+    w.roots.level_status.write_text(LEVEL_STATUS)
+    if not private:
+
+        def commit_public():
+            bindings.git(w.repo, "add", ".")
+            bindings.git(w.repo, "commit", "-qm", "Synthetic public landing artifacts")
+
+        w.commit_reissue = commit_public
+        bindings.write(w.evidence / bindings.BINDINGS, LEVEL, {})
+        word_request = w.inputs.receipt.parent / "word-request.yaml"
+        requested = yaml.safe_load(word_request.read_bytes())
+        requested["words"][0]["want"] = "W-001"
+        _write_yaml(word_request, requested)
+        words.build_words(
+            LEVEL,
+            word_request,
+            evidence_dir=w.evidence,
+            sources_instance=w.api,
+            mcp_commit="a" * 40,
+        )
+        pack.build_pack(
+            LEVEL,
+            "synthetic",
+            w.inputs.receipt.parent / "pack-request.yaml",
+            evidence_dir=w.evidence,
+            sources_instance=w.api,
+            offline=True,
+        )
+    report_path = w.directory / pm.VALIDATE_REPORT_NAME
+    report = json.loads(report_path.read_bytes())
+    report["inputs"] = {path: hashlib.sha256((w.repo / path).read_bytes()).hexdigest() for path in report["inputs"]}
+    report_path.write_bytes(pm.json_bytes(report))
+    w.commit_reissue()
+    runtime = w.runtime if private else {"sources_instance": w.api}
+    w.manifest, w.digest = pm.write_plan_manifest(LEVEL, "synthetic", repo_root=w.repo, **runtime)
+    w.commit_reissue()
+    # The existing return builder closes over the old manifest; update its
+    # synthetic return and terminal hash to the newly generated manifest.
+    w.review, w.record_kwargs = w.make_return()
+    review = yaml.safe_load(w.review.read_bytes())
+    review["attempt"]["manifest_sha256"] = w.digest
+    data = yaml.safe_dump(review).encode()
+    w.review.write_bytes(data)
+    task_path = w.record_kwargs["tasks_dir"] / "accepted.json"
+    task = json.loads(task_path.read_bytes())
+    task["review_attempt"]["manifest_sha256"] = w.digest
+    Path(task["result_file"]).write_bytes(data)
+    task["result_sha256"] = hashlib.sha256(data).hexdigest()
+    task_path.write_text(json.dumps(task))
+    assert record.record_return(w.review, **w.record_kwargs, **runtime).accepted
+    w.commit_reissue()
+    assert not plan_promote.promote_plan(LEVEL, "synthetic", repo_root=w.repo, **runtime)["already_promoted"]
+    w.commit_reissue()
+    _lesson_built(w.roots, "synthetic", 1)
+    page = w.roots.docs / "synthetic/1.mdx"
+    lesson = {
+        "kind": "lesson",
+        "level": LEVEL,
+        "slug": "synthetic",
+        "lesson": 1,
+        "inputs": {
+            "lesson": {
+                "path": page.relative_to(w.repo).as_posix(),
+                "sha256": hashlib.sha256(page.read_bytes()).hexdigest(),
+            }
+        },
+    }
+    content = lock.yaml_bytes(lesson)
+    digest = hashlib.sha256(content).hexdigest()
+    history = w.directory / f"manifests/lesson-1/{digest}.yaml"
+    history.parent.mkdir(parents=True)
+    history.write_bytes(content)
+    (w.directory / "lesson-1.manifest.yaml").write_bytes(content)
+    (w.directory / "lesson-1.manifest.sha256").write_text(digest + "\n")
+    conn = findings_db.connect(w.db)
+    try:
+        # A synthetic accepted review row and its exact projection are inputs
+        # to the real complete checker, not a language/reviewer approval claim.
+        row = dict(findings_db.latest_accepted(conn, LEVEL, "synthetic", "plan", None))
+        row.update(
+            kind="lesson", lesson_n=1, review_id="synthetic-lesson", attempt_id="lesson-1", manifest_sha256=digest
+        )
+        findings_db.insert_attempt(conn, row)
+        _write_yaml(
+            w.directory / "lesson-1.verdict.yaml",
+            fixloop.projection_document(findings_db.latest_accepted(conn, LEVEL, "synthetic", "lesson", 1)),
+        )
+        closure.compute_closure(
+            LEVEL, "synthetic", [{"n": 1}], repo_root=w.repo, state_dir=w.directory, site_dir=page.parent
+        )
+        w.commit_reissue()
+        w.params = findings_db.load_parameters()
+        w.verdict, w.verdict_path = fixloop.compute_and_write_module_verdict(
+            conn, LEVEL, "synthetic", root=w.repo, params=w.params, **runtime
+        )
+        assert w.verdict["verdict"] == "APPROVE", w.verdict["holds"]
+        assert w.verdict["holds"] == []
+        w.commit_reissue()
+        assert fixloop.module_verdict_problems(conn, LEVEL, "synthetic", root=w.repo, params=w.params, **runtime) == []
+    finally:
+        conn.close()
+    w.runtime = runtime
+    w.private = private
+    return w
+
+
+def _landing_routes(w, runtime):
+    plan = gen._load_module_plan(w.roots, "synthetic")
+    return (
+        lambda: gen._module_verdict_reviewed(w.roots, "synthetic", **runtime),
+        lambda: gen.position_state(w.roots, "synthetic", plan, [1], **runtime),
+        lambda: gen.build_record(w.roots, w.arc[0], **runtime),
+        lambda: gen.generated_files(w.roots, w.arc, **runtime),
+    )
+
+
+def _landing_snapshot(w):
+    """Tracked projections and outputs plus findings rows; no runtime input serialization."""
+    from scripts.review import findings_db
+
+    files = {
+        p.relative_to(w.repo).as_posix(): p.read_bytes()
+        for folder in (w.directory, w.roots.docs, w.repo / "site/src/data")
+        for p in folder.rglob("*")
+        if p.is_file()
+    }
+    conn = findings_db.connect(w.db)
+    try:
+        rows = {
+            table: [dict(r) for r in conn.execute(f"SELECT * FROM {table}")]
+            for table in ("attempts", "findings", "settle_items")
+        }
+    finally:
+        conn.close()
+    return files, rows
+
+
+@pytest.mark.parametrize("landing_world", ["private", "public"], indirect=True)
+def test_complete_checker_landing_positive_and_cli_privacy(landing_world, monkeypatch, capsys):
+    from scripts.curriculum.evidence import sense_cli
+    from scripts.review import fixloop
+
+    w = landing_world
+    original = fixloop.module_verdict_problems
+    seen = []
+
+    def capture(*args, **kwargs):
+        seen.append((kwargs["receipt_inputs"], kwargs["sources_instance"]))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(fixloop, "module_verdict_problems", capture)
+    reviewed, state, record, files = [call() for call in _landing_routes(w, w.runtime)]
+    assert reviewed is True and state == "reviewed" and record["state"] == "reviewed"
+    assert json.loads(files[w.roots.data_json])["positions"][0]["state"] == "reviewed"
+    expected = w.inputs if w.private else None
+    assert seen == [(expected, w.api)] * 4
+    assert_runtime_absent(w.inputs, record, list(files.values()), w.verdict, w.manifest)
+    gen.write_files(files)  # Synthetic repository only.
+    monkeypatch.setattr(gen, "REPO_ROOT", w.repo)
+    monkeypatch.setattr(gen, "load_arc", lambda level: w.arc)
+    # Commit synthetic outputs before exact-head receipt authentication.
+    w.commit_reissue()
+    before = _landing_snapshot(w)
+    flags = runtime_receipt_args(w.inputs) if w.private else []
+    assert gen.main([LEVEL, "--check", *flags]) == 0
+    output = capsys.readouterr()
+    assert "generated files are current" in output.out
+    assert_runtime_absent(w.inputs, output.out, output.err)
+    assert seen[-1][0] == expected and seen[-1][1] is None
+    assert _landing_snapshot(w) == before
+    if not w.private:
+        monkeypatch.setattr(
+            sense_cli, "verify_local_receipt", lambda *a, **kw: pytest.fail("public proof needs no receipt")
+        )
+        assert gen._module_verdict_reviewed(w.roots, "synthetic", sources_instance=w.api)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing_runtime",
+        "head",
+        "tampered_receipt",
+        "wrong_identity",
+        "bindings_drift",
+        "cached_success",
+        "private_input",
+        "partial_runtime",
+        "unsafe_source_error",
+    ],
+)
+def test_complete_checker_landing_refusals_do_not_write(landing_world, change, monkeypatch, capsys):
+    from dataclasses import replace
+
+    w = landing_world
+    if change == "partial_runtime":
+        inputs = replace(w.inputs, receipt=None)
+    elif change == "unsafe_source_error":
+        inputs = w.inputs
+
+        def unavailable(*args, **kwargs):
+            raise ValueError(f"synthetic private body {w.inputs.private_input} {w.inputs.key_file}")
+
+        monkeypatch.setattr(w.api, "gloss_rows", unavailable)
+    else:
+        inputs = mutate_consumer(w, change)
+    runtime = {"receipt_inputs": inputs, "sources_instance": w.api}
+    before = _landing_snapshot(w)
+    for call in _landing_routes(w, runtime):
+        with pytest.raises(ValueError, match="APPROVE but is stale") as caught:
+            call()
+        assert_runtime_absent(w.inputs, str(caught.value))
+        assert "synthetic private body" not in str(caught.value)
+        assert _landing_snapshot(w) == before
+    monkeypatch.setattr(gen, "REPO_ROOT", w.repo)
+    monkeypatch.setattr(gen, "load_arc", lambda level: w.arc)
+    flags = runtime_receipt_args(inputs) if inputs is not None else []
+    # Both CLI modes compute admission before writing any generated output.
+    for mode in ("--check", "--write"):
+        with pytest.raises(ValueError, match="APPROVE but is stale") as caught:
+            gen.main([LEVEL, mode, *flags])
+        output = capsys.readouterr()
+        assert_runtime_absent(w.inputs, str(caught.value), output.out, output.err)
+        assert "synthetic private body" not in str(caught.value) + output.out + output.err
+        assert _landing_snapshot(w) == before
+
+
+def test_authentic_landing_inputs_preserve_other_holds(landing_world):
+    from scripts.review import findings_db, fixloop
+
+    w = landing_world
+    conn = findings_db.connect(w.db)
+    try:
+        conn.execute("UPDATE attempts SET verdict='REVISE' WHERE kind='lesson'")
+        fresh = fixloop.compute_module_verdict(conn, LEVEL, "synthetic", root=w.repo, params=w.params, **w.runtime)
+        assert fresh["verdict"] != "APPROVE"
+        assert "verdict_projection_stale" in {hold["code"] for hold in fresh["holds"]}
+        assert "plan_not_promoted" not in {hold["code"] for hold in fresh["holds"]}
+    finally:
+        conn.close()
+    before = _landing_snapshot(w)
+    with pytest.raises(ValueError, match="APPROVE but is stale"):
+        gen.generated_files(w.roots, w.arc, **w.runtime)
+    assert _landing_snapshot(w) == before
+
+
+@pytest.mark.parametrize("verdict", [None, "HOLD", "REVISE", "APPROVE"])
+def test_no_database_projection_does_not_verify_runtime(root, verdict, monkeypatch):
+    from scripts.curriculum.evidence import sense_cli
+    from scripts.review import fixloop
+
+    _plan(root, "synthetic", 1)
+    _review(root, "synthetic", "plan-review.yaml")
+    _lesson_built(root, "synthetic", 1)
+    if verdict is not None:
+        _review(root, "synthetic", "module-verdict.yaml", verdict)
+    monkeypatch.setattr(fixloop, "module_verdict_problems", lambda *a, **kw: pytest.fail("no database recomputation"))
+    monkeypatch.setattr(
+        sense_cli, "verify_local_receipt", lambda *a, **kw: pytest.fail("no fresh private certification")
+    )
+    inputs = sense_cli.LocalReceiptInputs(root.repo / "unavailable-private", key_id="unavailable")
+    state = gen.build_record(root, _arc("synthetic")[0], receipt_inputs=inputs, sources_instance=object())["state"]
+    assert state == ("reviewed" if verdict == "APPROVE" else "built")
+    assert gen.generated_files(root, _arc("synthetic"), receipt_inputs=inputs, sources_instance=object()) == (
+        gen.generated_files(root, _arc("synthetic"))
+    )
+
+
+def test_cli_help_and_partial_receipt_forwarding(root, monkeypatch, capsys):
+    from scripts.curriculum.evidence import sense_cli
+
+    with pytest.raises(SystemExit) as caught:
+        gen.main(["--help"])
+    assert caught.value.code == 0
+    help_text = capsys.readouterr().out
+    for option in ("--private-input", "--key-file", "--key-id", "--receipt", "--receipt-base"):
+        assert option in help_text
+    assert "Outputs:" in help_text and "Exit codes:" in help_text and "Related:" in help_text
+    original = gen.generated_files
+    seen = []
+
+    def capture(*args, **kwargs):
+        seen.append(kwargs["receipt_inputs"])
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(gen, "generated_files", capture)
+    assert _run_main(monkeypatch, root, "--check", "--key-id", "partial") == 1
+    assert seen[-1] == sense_cli.LocalReceiptInputs(key_id="partial")
+    assert _run_main(monkeypatch, root, "--check", "--receipt-base", "explicit-base") == 1
+    assert seen[-1] == sense_cli.LocalReceiptInputs(base="explicit-base")
+
+
+def test_import_keeps_minimal_ci_dependencies():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; from scripts.build import build_arc_landing; "
+            "assert 'scripts.curriculum.evidence.sense_cli' not in sys.modules; "
+            "assert 'scripts.review.fixloop' not in sys.modules",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
