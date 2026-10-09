@@ -11695,6 +11695,14 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
+
     if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2

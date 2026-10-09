@@ -885,7 +885,7 @@ class AgyAdapter:
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
         review_route = bool(
-            (mode == "read-only" and tc.get("review_profile") in {"ukrainian", "code"})
+            tc.get("review_profile") in {"ukrainian", "code"}
             or review_isolation
             or tc.get("review_attempt_boundary")
             or tc.get("review_access")
@@ -1010,7 +1010,11 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
-                "agy_permission_profile_id": "ukrainian-review-command-denial-v3" if review_route else None,
+                "agy_permission_profile_id": (
+                    "code-review-command-denial-v1"
+                    if tc.get("review_profile") == "code"
+                    else "ukrainian-review-command-denial-v3" if review_route else None
+                ),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,

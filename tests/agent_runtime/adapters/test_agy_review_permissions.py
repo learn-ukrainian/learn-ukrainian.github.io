@@ -519,6 +519,23 @@ def test_model_response_cannot_supply_permission_denial(monkeypatch):
 
 
 @pytest.mark.parametrize("profile", ["ukrainian", "code"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_review_profile_rejects_write_mode_before_probe(tmp_path, scoped, monkeypatch, profile, mode):
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permissions_require_read_only"):
+        agy.AgyAdapter().build_invocation(
+            prompt="Review the supplied plan.",
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="permissions",
+            session_id=None,
+            tool_config={"review_profile": profile, "agy_home_override": str(scoped)},
+        )
+    assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
+
+
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
 def test_trusted_review_profile_requires_scoped_home_before_probe(tmp_path, monkeypatch, profile):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
     with pytest.raises(agy.AgyReviewPermissionError, match="require_scoped_home"):
@@ -534,12 +551,18 @@ def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatc
     assert plan.metadata["agy_permission_profile_id"] is None
 
 
-@pytest.mark.parametrize("profile", ["ukrainian", "code"])
-def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped, profile):
+@pytest.mark.parametrize(
+    ("profile", "profile_id"),
+    [
+        ("ukrainian", "ukrainian-review-command-denial-v3"),
+        ("code", "code-review-command-denial-v1"),
+    ],
+)
+def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped, profile, profile_id):
     plan = build(tmp_path, {"review_profile": profile, "agy_home_override": str(scoped)})
     assert "--sandbox" in plan.cmd
     assert "--dangerously-skip-permissions" not in plan.cmd
-    assert plan.metadata["agy_permission_profile_id"] == "ukrainian-review-command-denial-v3"
+    assert plan.metadata["agy_permission_profile_id"] == profile_id
     rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert "command(*)" in rules["deny"]
     assert "read_file(*)" not in rules["deny"]

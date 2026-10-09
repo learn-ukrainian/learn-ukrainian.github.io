@@ -10661,6 +10661,28 @@ def _write_args(**overrides):
 # --- _resolve_write_cwd_error unit tests (deterministic policy) -------------
 
 
+@pytest.mark.parametrize("agent", ["agy", "gemini"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize(
+    "review_flags",
+    [
+        {"review": True},
+        {"type": "review"},
+        {"require_review_verdict": True},
+        {"review_profile": "code"},
+        {"review_profile": "ukrainian"},
+        {"review_attempt": "attempt"},
+        {"review_author_model": "gpt-6.1-sol"},
+        {"review_risk": "low"},
+        {"pr": 10243},
+    ],
+)
+def test_agy_review_dispatch_rejects_write_mode_before_admission(monkeypatch, capsys, agent, mode, review_flags):
+    monkeypatch.setattr(delegate, "dispatch_args_sha256", lambda *a: pytest.fail("dispatch admission"))
+    assert delegate.cmd_dispatch(_write_args(agent=agent, mode=mode, **review_flags)) == 2
+    assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
+
+
 def test_write_guard_allows_read_only_repo_root():
     assert (
         delegate._resolve_write_cwd_error(
