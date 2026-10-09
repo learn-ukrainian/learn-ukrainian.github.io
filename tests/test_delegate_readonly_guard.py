@@ -214,7 +214,7 @@ def test_read_only_worktree_ignores_concurrent_primary_writes(tmp_tasks_dir, tmp
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(checkout)})
     paths = (
-        ".claude/infra-epic/briefs/2026-10-07/review-10005.md",
+        ".claude/test-epic/briefs/example/review-0000.md",
         ".venv/lib/python3.12/site-packages/package/new.py",
     )
 
