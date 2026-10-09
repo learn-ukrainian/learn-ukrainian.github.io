@@ -578,6 +578,14 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
                 "scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None
             )
         if agent == "agy":
+            settings = json.loads(
+                (Path(boundary.tool_config["agy_home_override"]) / ".gemini/antigravity-cli/settings.json").read_text()
+            )["permissions"]
+            assert [r for r in settings["allow"] if r.startswith("read_file(")] == [
+                f"read_file({boundary.workspace})"
+            ]
+            assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
+            assert "command(*)" in settings["deny"] and "write_file(*)" in settings["deny"]
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
         plan = adapter.build_invocation(
             prompt="probe",

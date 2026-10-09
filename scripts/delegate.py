@@ -10060,7 +10060,9 @@ def _run_worker(
 
                     if runtime_tmp_root is None:
                         raise ValueError("agy_review_permissions_require_scoped_home")
-                    tool_config["agy_home_override"] = str(prepare_agy_permission_home(Path(runtime_tmp_root)))
+                    tool_config["agy_home_override"] = str(
+                        prepare_agy_permission_home(Path(runtime_tmp_root), checkout_root=Path(cwd_str))
+                    )
             if agent in {"agy", "gemini"} and mcp_config_path is not None and attempt_id is not None:
                 from scripts.agent_runtime.review_mcp import review_ledger_path
 
@@ -13265,6 +13267,7 @@ def _dispatch(
                 harness=requested_harness or dispatch_agent,
                 review_access=review_access,
                 review_contract=review_contract,
+                checkout_root=worktree_path or Path(args.cwd or _REPO_ROOT),
             )
         except (ReviewIsolationError, ValueError, FileExistsError, WorktreeLockError) as exc:
             stdout_fd.close()

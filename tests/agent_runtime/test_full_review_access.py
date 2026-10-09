@@ -303,7 +303,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
             tool_config=boundary.tool_config,
         )
         settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
-        assert json.loads(settings.read_bytes()) == agy_review_settings(access)
+        assert json.loads(settings.read_bytes()) == agy_review_settings(access, checkout_root=boundary.workspace)
         assert settings.stat().st_mode & 0o777 == 0o600
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd
