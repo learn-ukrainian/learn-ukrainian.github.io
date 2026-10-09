@@ -195,7 +195,25 @@ def test_refusal_keeps_every_source(holder, monkeypatch, kind, reason, capsys):
     assert reason in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("failure", ["partial_copy", "receipt", "race_new", "race_bytes", "race_head", "race_branch", "race_claim", "race_liveness", "corrupt_archive", "keep", "total_cap"])
+@pytest.mark.parametrize("scratch", [False, True])
+def test_unavailable_open_file_proof_gates_only_scratch(holder, monkeypatch, scratch, capsys):
+    """Clean pushed holders ignore the /proc open-file proof; scratch still refuses."""
+    _primary, path, _branch, _record = holder
+    monkeypatch.setattr(
+        reap_worktrees, "_open_file_activity_reason",
+        lambda _path: "open-file activity probe unavailable; foreign checkout preserved",
+    )
+    if scratch:
+        (path / "pytest_out.txt").write_text("keep these bytes")
+    assert release(holder) == ([] if scratch else [path])
+    if scratch:
+        assert path.exists() and (path / "pytest_out.txt").read_text() == "keep these bytes"
+        assert "open-file activity probe unavailable" in capsys.readouterr().err
+    else:
+        assert not path.exists()
+
+
+@pytest.mark.parametrize("failure", ["partial_copy","receipt", "race_new", "race_bytes", "race_head", "race_branch", "race_claim", "race_liveness", "corrupt_archive", "keep", "total_cap"])
 def test_archive_and_final_recheck_failures_delete_nothing(holder, monkeypatch, failure, capsys):
     primary, path, _branch, record = holder
     (path / "pytest_out.txt").write_text("first")
