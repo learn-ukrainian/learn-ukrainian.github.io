@@ -8226,6 +8226,25 @@ def _validate_existing_worktree(
 _PROVISIONED_DATABASE_LINKS = ("data/vesum.db", "data/sources.db")
 
 
+def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path) -> None:
+    """Remove a reused worktree's database links that resolve to the primary databases (#9421).
+
+    A read-only dispatch must carry no such link: a symlink cannot be made
+    read-only, so a write through it lands in the primary database. Links to
+    anything else stay. Never touches the main checkout itself, whose own
+    database entries are the primary.
+    """
+    if worktree_path.resolve() == main_repo_root.resolve():
+        return
+    for relative_path in _PROVISIONED_DATABASE_LINKS:
+        target = worktree_path / relative_path
+        # Non-strict resolution also matches a dangling link, whose write
+        # would create the primary database.
+        if target.is_symlink() and target.resolve() == (main_repo_root / relative_path).resolve():
+            target.unlink()
+            print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
+
+
 def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
@@ -8259,17 +8278,15 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
         )
         return
 
-    for relative_path in (*_PROVISIONED_DATABASE_LINKS, "node_modules", "site/node_modules"):
+    if read_only:
+        _withdraw_primary_database_links(worktree_path, main_repo_root)
+    for relative_path in (
+        *(() if read_only else _PROVISIONED_DATABASE_LINKS),
+        "node_modules",
+        "site/node_modules",
+    ):
         source = main_repo_root / relative_path
         target = worktree_path / relative_path
-        if read_only and relative_path in _PROVISIONED_DATABASE_LINKS:
-            # Non-strict resolution also matches a dangling link, whose write
-            # would create the primary database.
-            if target.is_symlink() and target.resolve() == source.resolve():
-                target.unlink()
-                print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
-            continue
-
         # ``source.exists()`` follows symlinks and returns False for a looping
         # source, so a self-referential root ``node_modules`` is skipped here
         # rather than copied into the worktree.
@@ -13252,6 +13269,10 @@ def _dispatch(
                 sparse_include=sparse_include,
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
+            if args.mode == "read-only":
+                # Still under the worktree lock: a link an earlier write-capable
+                # dispatch provisioned must not reach the worker (#9421).
+                _withdraw_primary_database_links(resolved_wt, _REPO_ROOT)
 
     # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
     # gate and the check above already hold this; this re-check under the worktree lock

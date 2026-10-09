@@ -16377,6 +16377,68 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_branch"] is not None
 
 
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_spawn(
+    tmp_tasks_dir, tmp_path, monkeypatch, mode
+):
+    """#9421: a read-only --cwd reuse withdraws primary database links under the lock, before spawn."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    (main / ".git" / "info" / "exclude").write_text("*.db\n", encoding="utf-8")
+    (main / "data").mkdir()
+    for name in ("vesum.db", "sources.db"):
+        with contextlib.closing(sqlite3.connect(main / "data" / name)) as conn, conn:
+            conn.execute("CREATE TABLE primary_rows (value TEXT)")
+    other = tmp_path / "elsewhere.db"
+    other.touch()
+    # An earlier write-capable dispatch provisioned both links; a link to anything else must stay.
+    delegate._provision_data_symlinks(dispatch_wt, main)
+    before = {name: (main / "data" / name).read_bytes() for name in ("vesum.db", "sources.db")}
+    (dispatch_wt / "data" / "other.db").symlink_to(other)
+    at_spawn: list[list[str]] = []
+    withdrawals: list[bool] = []
+    real_withdraw = delegate._withdraw_primary_database_links
+
+    def withdraw(worktree, main_repo_root):
+        withdrawals.append(_worktree_lock_is_free(worktree))
+        real_withdraw(worktree, main_repo_root)
+
+    monkeypatch.setattr(delegate, "_withdraw_primary_database_links", withdraw)
+    real_popen = delegate.subprocess.Popen
+
+    def fake_popen(cmd, *a, **k):
+        if cmd and Path(str(cmd[0])).name == "git":
+            return real_popen(cmd, *a, **k)
+        at_spawn.append(sorted(p.name for p in (dispatch_wt / "data").iterdir() if p.is_symlink()))
+        if mode == "read-only":
+            # The worker's relative write lands in the worktree, never the primary.
+            for name in ("vesum.db", "sources.db"):
+                with contextlib.closing(sqlite3.connect(dispatch_wt / "data" / name)) as conn, conn:
+                    conn.execute("CREATE TABLE worker_write (value TEXT)")
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
+        return _GuardFakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    rc = delegate.cmd_dispatch(_write_args(task_id=f"cwd-ro-links-{mode}", mode=mode, cwd=str(dispatch_wt)))
+
+    assert rc == 0
+    assert delegate._read_state(delegate._state_path(f"cwd-ro-links-{mode}"))["worktree_reused"] is True
+    assert len(at_spawn) == 1
+    if mode == "read-only":
+        assert withdrawals == [False]
+        assert at_spawn == [["other.db"]]
+        for name in ("vesum.db", "sources.db"):
+            assert not (dispatch_wt / "data" / name).is_symlink()
+            assert (main / "data" / name).read_bytes() == before[name]
+    else:
+        assert withdrawals == []
+        assert at_spawn == [["other.db", "sources.db", "vesum.db"]]
+    assert (dispatch_wt / "data" / "other.db").resolve() == other.resolve()
+
+
 #: A --review-attempt prompt must print the ids its seat echoes (#8996); these match rev-test / att-test.
 _MATCHING_ATTEMPT_PROMPT = (
     "### Return Schema Template:\n```yaml\nreview_schema: 1\nkind: lesson\nattempt:\n"
