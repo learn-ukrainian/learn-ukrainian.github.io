@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import subprocess
 import sys
 from pathlib import Path
@@ -814,6 +815,90 @@ from provider import cmd
 subprocess.run(cmd)
 """))
     assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+
+
+@pytest.mark.parametrize("elapsed", [0.5, 1.0])
+def test_parse_cache_persists_after_budget_decision(tmp_path, monkeypatch, elapsed):
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target"}
+    cache = impact.ParseCache(tmp_path)
+    events = []
+    now = 0.0
+
+    def clock():
+        nonlocal now
+        events.append("clock")
+        measured = now
+        now += elapsed
+        return measured
+
+    put = cache.put
+
+    def slow_put(key, record):
+        nonlocal now
+        events.append("put")
+        now += 2.0
+        put(key, record)
+
+    monkeypatch.setattr(impact.time, "monotonic", clock)
+    monkeypatch.setattr(impact, "BUILD_BUDGET_SECONDS", 1.0)
+    monkeypatch.setattr(cache, "put", slow_put)
+    result = impact.build_graph(sources=sources, cache=cache)
+    assert events == ["clock", "clock", "put", "put"]
+    assert result.build_seconds == elapsed
+    assert result.reasons == (("graph-build-budget-exceeded",) if elapsed >= 1.0 else ())
+    assert result.impacted_tests(["scripts/target.py"])["full_suite"] == (elapsed >= 1.0)
+    restored = impact.ParseCache(tmp_path)
+    for path, source in sources.items():
+        assert restored.get(restored.key(path, source), path) == impact._scan_source((path, source))
+
+
+@pytest.mark.parametrize("elapsed", [0.5, 1.0])
+@pytest.mark.parametrize("error", [errno.EROFS, errno.ENOSPC])
+@pytest.mark.parametrize("failure_site", ["replace", "put"])
+def test_parse_cache_persistence_failure_preserves_graph_and_budget(tmp_path, monkeypatch, elapsed, error, failure_site):
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target"}
+    now = 0.0
+
+    def clock():
+        nonlocal now
+        measured = now
+        now += elapsed
+        return measured
+
+    monkeypatch.setattr(impact.time, "monotonic", clock)
+    monkeypatch.setattr(impact, "BUILD_BUDGET_SECONDS", 1.0)
+    expected = impact.build_graph(sources=sources, cache=impact.ParseCache())
+    now = 0.0
+    attempted = []
+
+    def fail_write(source, destination):
+        nonlocal now
+        attempted.append(destination)
+        now += 2.0
+        raise OSError(error, "cache persistence unavailable")
+
+    cache = impact.ParseCache(tmp_path)
+    monkeypatch.setattr(impact.os if failure_site == "replace" else cache, failure_site, fail_write)
+    actual = impact.build_graph(sources=sources, cache=cache)
+    assert len(attempted) == len(sources)
+    assert actual == expected
+    assert actual.impacted_tests(["scripts/target.py"]) == expected.impacted_tests(["scripts/target.py"])
+    assert not list(tmp_path.iterdir())
+
+
+def test_parse_cache_worker_failure_does_not_persist_partial_records(tmp_path, monkeypatch):
+    sources = {f"scripts/source_{index}.py": "" for index in range(33)}
+    cache = impact.ParseCache(tmp_path)
+
+    def fail_map(executor, scan, items, *, chunksize):
+        yield scan(items[0])
+        raise RuntimeError("worker unavailable after one parsed record")
+
+    monkeypatch.setattr(impact.ProcessPoolExecutor, "map", fail_map)
+    result = impact.build_graph(sources=sources, cache=cache)
+    assert result.reasons == ("parser-worker-error",)
+    assert not list(tmp_path.iterdir())
+    assert all(cache.get(cache.key(path, source), path) is None for path, source in sources.items())
 
 
 def test_parse_cache_reuses_immutable_records_and_keeps_budget(monkeypatch):

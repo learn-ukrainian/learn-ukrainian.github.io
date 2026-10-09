@@ -763,7 +763,8 @@ def build_graph(
     Extraction is cached by path/content; inventory, resolution, uncertainty and
     elapsed-time budget checks are recomputed on every build, including hits.
     A cold/evicted CI cache still parses every source and can exceed the budget
-    under CPU contention. Persistence reduces parsing, never the FULL guard.
+    under CPU contention. Best-effort persistence follows the budget decision;
+    storage latency cannot force FULL, and interruption only loses cache reuse.
     """
     started = time.monotonic()
     reasons: set[str] = set()
@@ -855,8 +856,6 @@ def build_graph(
             parsed = [_scan_source(item) for item in items]
     except (OSError, RuntimeError, ValueError):
         return ImportGraph(dependents, tests, set(), ("parser-worker-error",), time.monotonic() - started)
-    for record in parsed:
-        cache.put(keys[record[0]], record)
     records.extend(parsed)
     for path, imports, load_paths, errors, safety in records:
         for error in errors:
@@ -893,10 +892,16 @@ def build_graph(
     elapsed = time.monotonic() - started
     if elapsed >= BUILD_BUDGET_SECONDS:
         reasons.add("graph-build-budget-exceeded")
-    return ImportGraph(
+    result = ImportGraph(
         dependents, tests, safety_tests, tuple(sorted(reasons)), elapsed,
         {path: tuple(sorted(errors)) for path, errors in uncertainty.items()},
     )
+    # Freeze the graph and budget outcome before optional cache writes. A failed
+    # parser returns above, so no partially extracted records are persisted.
+    for record in parsed:
+        with suppress(OSError):
+            cache.put(keys[record[0]], record)
+    return result
 
 
 def get_impacted_tests(changed_files: Iterable[str], *, root: Path = ROOT, graph: ImportGraph | None = None) -> dict:
