@@ -284,7 +284,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "cursor": {
         "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
-        "default_model": "grok-4.7-high",
+        "default_model": "grok-4.7",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
