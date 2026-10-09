@@ -4078,6 +4078,7 @@ def _branch_holder_activity_reason(
     task_id: str | None,
     task_state: dict[str, Any] | None,
     complete: bool = False,
+    open_files: bool = False,
 ) -> str | None:
     """Return why a branch holder cannot be released while activity is possible.
 
@@ -4131,13 +4132,13 @@ def _branch_holder_activity_reason(
         except (OSError, ValueError):
             continue
         return f"live process cwd={cwd}"
-    if complete:
+    if open_files:
         try:
-            open_files = reap_worktrees._open_file_activity_reason(path)
+            open_file_reason = reap_worktrees._open_file_activity_reason(path)
         except Exception as exc:
             return f"open-file activity probe unavailable ({type(exc).__name__})"
-        if open_files is not None:
-            return open_files
+        if open_file_reason is not None:
+            return open_file_reason
     return None
 
 
@@ -4159,11 +4160,14 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
     if unparseable is not None:
         return False, unparseable
     task_id, task_state = _task_state_for_worktree(path)
+    # The open-file proof gates only scratch: an unavailable /proc proof must
+    # not block a clean, pushed, terminal holder.
     activity = _branch_holder_activity_reason(
         path,
         task_id=task_id,
         task_state=task_state,
         complete=True,
+        open_files=not clean,
     )
     if activity is not None:
         return False, activity
