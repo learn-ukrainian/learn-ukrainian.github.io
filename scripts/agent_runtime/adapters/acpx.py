@@ -183,7 +183,7 @@ CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
-CURSOR_ACP_MODEL = "grok-4.7-high"
+CURSOR_ACP_MODEL = "grok-4.7"
 CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "composer-2.5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
@@ -2621,7 +2621,11 @@ class _AcpxDiscussionAdapter:
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
-            cmd.extend(["--model", model or self.default_model])
+            cmd_model = model or self.default_model
+            if self.name == "acpx-cursor-shadow":
+                from scripts.review.model_catalog import apply_cursor_model_pins
+                cmd_model = apply_cursor_model_pins(cmd_model)
+            cmd.extend(["--model", cmd_model])
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
             custom_metadata: dict[str, Any] = {}
