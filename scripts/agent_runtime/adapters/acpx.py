@@ -184,7 +184,7 @@ CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"
-CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "composer-2.5"})
+CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
@@ -1480,19 +1480,42 @@ def _require_local_claude_acp_adapter(
             f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} is missing",
             failure_code="acp_adapter_missing",
         ) from exc
-    if (
-        not stat.S_ISDIR(package_stat.st_mode)
-        or not stat.S_ISREG(manifest_stat.st_mode)
-        or package_stat.st_uid != os.getuid()
-        or manifest_stat.st_uid != os.getuid()
-        or package_stat.st_mode & 0o022
-        or manifest_stat.st_mode & 0o022
-        or len(manifest_bytes) > _CLAUDE_ACP_MANIFEST_LIMIT_BYTES
-    ):
+    def _check_artifact(
+        name: str,
+        artifact_path: Path,
+        artifact_stat: os.stat_result,
+        expected_dir: bool,
+        size_limit: int | None = None,
+        actual_size: int | None = None,
+    ) -> None:
+        try:
+            rel_path = artifact_path.relative_to(node_modules.parent).as_posix()
+        except ValueError:
+            rel_path = artifact_path.name
+
+        mode_oct = oct(stat.S_IMODE(artifact_stat.st_mode))
+
+        if expected_dir and not stat.S_ISDIR(artifact_stat.st_mode):
+            reason = "not a directory"
+        elif not expected_dir and not stat.S_ISREG(artifact_stat.st_mode):
+            reason = "not a regular file"
+        elif artifact_stat.st_uid != os.getuid():
+            reason = "owner"
+        elif artifact_stat.st_mode & 0o022:
+            reason = "group-or-world writable"
+        elif size_limit is not None and actual_size is not None and actual_size > size_limit:
+            reason = "size"
+        else:
+            return
+
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} ownership/mode/size is unsafe",
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} {name} failed check: {reason} ({rel_path}, mode {mode_oct}) - clear group/other write bits on this path; reinstall under umask 022",
             failure_code="acp_adapter_incompatible",
         )
+
+    _check_artifact("package directory", package_root, package_stat, expected_dir=True)
+    _check_artifact("manifest", manifest_path, manifest_stat, expected_dir=False, size_limit=_CLAUDE_ACP_MANIFEST_LIMIT_BYTES, actual_size=len(manifest_bytes))
+
     try:
         manifest = json.loads(manifest_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -1541,16 +1564,15 @@ def _require_local_claude_acp_adapter(
             f"{adapter_label}: project-local Claude ACP adapter executable is missing",
             failure_code="acp_adapter_missing",
         ) from exc
-    if (
-        not stat.S_ISREG(bin_stat.st_mode)
-        or bin_stat.st_uid != os.getuid()
-        or bin_stat.st_mode & 0o022
-        or not resolved_bin.is_relative_to(resolved_root)
-    ):
+
+    _check_artifact("executable", bin_path, bin_stat, expected_dir=False)
+
+    if not resolved_bin.is_relative_to(resolved_root):
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local Claude ACP adapter executable is unsafe",
+            f"{adapter_label}: project-local Claude ACP adapter executable resolves outside package",
             failure_code="acp_adapter_incompatible",
         )
+
     return {
         "claude_acp_adapter_version": version,
         "claude_acp_compatibility": CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT,
@@ -2579,6 +2601,13 @@ class _AcpxDiscussionAdapter:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None or {self.fixed_model!r}"
             )
+        if self.name == "acpx-cursor-shadow":
+            from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+
+            try:
+                model = apply_cursor_model_pins(model or self.default_model)
+            except ModelCatalogError as exc:
+                raise AcpxShadowRefusalError(f"{type(self).__name__}: {exc}") from exc
         if self.allowed_models and model is not None and model not in self.allowed_models:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
@@ -2621,7 +2650,8 @@ class _AcpxDiscussionAdapter:
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
-            cmd.extend(["--model", model or self.default_model])
+            cmd_model = model or self.default_model
+            cmd.extend(["--model", cmd_model])
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
             custom_metadata: dict[str, Any] = {}

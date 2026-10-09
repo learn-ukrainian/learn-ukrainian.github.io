@@ -273,7 +273,7 @@ were removed in #8520):</p>
 same-route model plus <code>--override-reason</code> for an exceptional operator pin,
 for example <code>--reviewer claude --model claude-opus-5-5</code> or
 <code>--reviewer codex --model gpt-6.1-sol</code>.</li>
-<li><code>kimi</code> remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). <code>agy</code> is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
+<li><code>kimi</code> remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). <code>agy</code> refuses code review through this bridge. Native AGY dispatch admits low/medium risk code reviews; high/critical, infra and security reviews exclude Gemini. GLM-5.3 is
 <strong>LOCAL-ONLY</strong> / China egress and requires the matching egress policy.</li>
 <li><code>--no-claude-available</code> is a deprecated compatibility hint and never routes.</li>
 <li>Do <strong>not</strong> identify the reviewer as “Hermes”; record model + family + harness.</li>
@@ -405,9 +405,9 @@ agent.</strong> Per channel conventions:</p>
 <li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews &quot;Review request for #NNN&quot; --to codex</code></li>
 <li>Apply feedback or argue back in writing</li>
 <li>Commit only after the review is CLEAN or BLOCKING is resolved</li>
-<li>Commit message includes <code>Reviewed-By: &lt;non-Gemini reviewer&gt; (task-id)</code> trailer</li>
+<li>Commit message includes <code>Reviewed-By: &lt;qualified cross-family reviewer&gt; (task-id)</code> trailer</li>
 </ol>
-<p>Gemini reviews Ukrainian only, never code (operator 2026-09-25). A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Code review uses a non-Gemini seat.</p>
+<p>The AGY bridge reviews Ukrainian content only. Native AGY dispatch through <code>delegate.py</code> admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.</p>
 <p>This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.</p>
 <h2>Spawned-agent env hygiene</h2>

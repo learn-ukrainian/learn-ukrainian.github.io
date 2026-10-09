@@ -57,9 +57,12 @@ Before **every** implement `delegate.py dispatch`:
    also refuse dispatch unless that override is supplied. PR references are
    skipped after API resolution. Briefs without issue references are not gated.
    Opening or editing an issue updates one advisory checker comment.
-3. **Default bounded work:** a `gpt-6.1-sol` advisory **envelope** (the Sol advisor @ high,
-   `--advisory-role bounded_advisory_envelope`) → bounded **worker(s)** dispatched with
-   `--advisory-task` — not a Sonnet/Terra fixation solo. There is no direct bounded dispatch
+3. **Default eligible code worker:** Sol @ high, per the 2026-10-09 resource-policy order.
+   Use Claude workers through the native Claude CLI as heavily as their subscription
+   allows, within task fit and hard gates. Cursor Grok or Gemini routes are language-free
+   overflow only, admitted by live catalog and capacity evidence. Explicit Luna and bounded
+   Flash workers still require a Sol advisory **envelope** (`--advisory-role
+   bounded_advisory_envelope`) bound through `--advisory-task`. There is no direct bounded dispatch
    (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
    Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
    `fleet-driver-routing.md` §2.

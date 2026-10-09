@@ -38,7 +38,7 @@ def _lease_payload() -> dict[str, object]:
         "generation": 1,
         "fencing_token": 1,
         "heartbeat_at": "2026-08-23T00:00:00Z",
-        "expires_at": "2026-08-23T00:15:00Z",
+        "expires_at": "2099-01-01T00:00:00Z",
         "ttl_seconds": 900,
         "version": 1,
         "holder": {
@@ -369,8 +369,23 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     lease = _open_supervisory_driver(supervisor)
     before = supervisor.remote.stream(lease.stream_id)
     thread = "019e6063-c3da-78d1-acaa-4cd684a08786"
-    monkeypatch.setattr(_ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}))
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    rollout = tmp_path / f"rollout-fixture-{thread}.jsonl"
+    records = [
+        {"type": "session_meta", "payload": {"id": thread, "cwd": str(tmp_path)}},
+        {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "fixture-turn"}},
+        {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "fixture-turn"}},
+    ]
+    rollout.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
+    monkeypatch.setattr(
+        _ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}, rollout=rollout),
+    )
+    def resume(**kwargs):
+        kwargs["before_resume"]()
+        with rollout.open("a") as stream:
+            for kind in ("task_started", "task_complete"):
+                stream.write(json.dumps({"type": "event_msg", "payload": {"type": kind, "turn_id": "resume"}}) + "\n")
+        return {"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]}
+    send = Mock(side_effect=resume)
     monkeypatch.setattr(_ui_codex, "send", send)
     start = Mock(side_effect=AssertionError("live lease forbids launcher"))
     assert wake_driver_once(
@@ -382,6 +397,36 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     assert "pending work" in send.call_args.kwargs["message"]
     start.assert_not_called()
     assert supervisor.remote.stream(lease.stream_id) == before
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+
+
+@pytest.mark.parametrize("already_prepared", [False, True])
+def test_unavailable_restart_cli_does_not_claim_or_replay_delivery(supervisory_cycle, already_prepared):
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    now = datetime.now(UTC)
+    if already_prepared:
+        consume_supervisory_event(service, supervisor, lease, now=now.isoformat())
+    original = service.get_delivery(did)
+    capsule = supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    for tick in range(1, 5):
+        assert consume_supervisory_event(
+            service, supervisor, lease, now=(now + timedelta(seconds=61 * tick)).isoformat(),
+            restart_preflight=lambda: False,
+        ) is None
+        assert service.get_delivery(did) == original
+        assert supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease).digest == capsule.digest
+    request = consume_supervisory_event(
+        service, supervisor, lease, now=(now + timedelta(seconds=305)).isoformat(), restart_preflight=lambda: True,
+    )
+    assert request.delivery_id == did
+    assert service.get_delivery(did).attempt_count == (2 if already_prepared else 1)
+    assert service.supervisory_delivery_status(did) == "live_driver_consumed"
     assert supervisor.close_driver(role="driver", lease=lease) == "closed"
 
 
@@ -803,3 +848,87 @@ def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cyc
         assert reopened.supervisory_delivery_status(did) == "refused"
         assert supervisor.close_driver(role="driver", lease=later) == "closed"
     assert len(starts) == 1
+
+
+@pytest.mark.parametrize("case", ["matching", "mismatch", "expired", "malformed-expiry", "missing-expiry", "worker"])
+def test_capsule_cli_uses_environment_lease_read_only(monkeypatch, capsys, case) -> None:
+    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+
+    values = {
+        "SESSION_STREAM_ID": "epic:7178",
+        "SESSION_STREAM_SESSION_ID": "session-client",
+        "SESSION_STREAM_LEASE_ID": "lease-client",
+        "SESSION_STREAM_GENERATION": "1",
+        "SESSION_STREAM_FENCING_TOKEN": "1",
+        "SESSION_STREAM_AGENT": "codex",
+        "SESSION_STREAM_HARNESS": "codex-cli",
+        "SESSION_STREAM_INSTANCE_ID": "client-instance",
+        "SESSION_STREAM_PROCESS_ID": "1234",
+        "LU_MONITOR_HOST_ID": "client-host",
+    }
+    for key, value in values.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.delenv("SESSION_STREAM_TASK_ID", raising=False)
+    monkeypatch.delenv("SESSION_STREAM_HOLDER_KIND", raising=False)
+    current = _lease_payload()
+    current["session_state"] = "open"
+    if case == "mismatch":
+        current["fencing_token"] = 2
+    elif case == "expired":
+        current["expires_at"] = "2000-01-01T00:00:00Z"
+    elif case == "malformed-expiry":
+        current["expires_at"] = "invalid"
+    elif case == "missing-expiry":
+        current["expires_at"] = None
+
+    class FakeRemote:
+        _lease_payload = staticmethod(RemoteEpicClient._lease_payload)
+        digest_from_response = staticmethod(RemoteEpicClient.digest_from_response)
+
+        def __init__(self):
+            self.reads = []
+            self.mutations = []
+
+        def stream(self, stream_id, *, digest_limit):
+            self.reads.append(stream_id)
+            return {
+                "stream_id": stream_id,
+                "lease": current,
+                "digest": {
+                    "stream_id": stream_id,
+                    "limit": digest_limit,
+                    "high_water_entry_id": 0,
+                    "pinned": [],
+                    "recent": [],
+                },
+            }
+
+        def claim(self, **kwargs):
+            self.mutations.append("claim")
+            pytest.fail("capsule must not claim")
+
+        def heartbeat(self, *args, **kwargs):
+            self.mutations.append("heartbeat")
+            pytest.fail("capsule must not heartbeat")
+
+        def release(self, *args, **kwargs):
+            self.mutations.append("release")
+            pytest.fail("capsule must not release")
+
+    remote = FakeRemote()
+    monkeypatch.setattr("scripts.session_supervisor.RemoteEpicClient", lambda: remote)
+    before = lease_from_environment()
+    role = "worker" if case == "worker" else "driver"
+    rc = main(["capsule", "--role", role, "--stream", "epic:7178"])
+    output = capsys.readouterr()
+    assert rc == (0 if case in {"matching", "worker"} else 4)
+    assert remote.reads == [before.stream_id]
+    assert remote.mutations == []
+    assert lease_from_environment() == before
+    if rc == 0:
+        payload = json.loads(output.out)
+        assert payload["identity"]["role"] == role
+        assert (payload["identity"]["lease"] is None) == (role == "worker")
+    else:
+        assert output.out == ""
+        assert "LEASE LOST" in output.err

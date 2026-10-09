@@ -36,6 +36,11 @@ DEFAULT_COUNTS = {
 }
 
 
+# #10073 adds a native low/medium seat outside Google-authored work.
+DEFAULT_COUNTS = {family: seats + (["gemini-3.8-flash-high"] if family != "google" else [])
+                  for family, seats in DEFAULT_COUNTS.items()}
+
+
 def _findings(captured):
     return [json.loads(line) for line in captured.err.splitlines() if line.startswith("{")]
 
@@ -190,7 +195,7 @@ def test_retired_route_never_counts_even_if_pin_eligible_on_ladder(monkeypatch, 
     assert pinned.status == "eligible"
     results = check_bench_health(routing_snapshot={"glm": "healthy"})
     assert all("glm-5.3" not in seats for seats in results.values())
-    assert results["anthropic"] == ["openai_frontier", NATIVE_GROK, GROK]
+    assert results["anthropic"] == DEFAULT_COUNTS["anthropic"]
     # Removing Sol and both Grok routes leaves zero seats; still list the retired route.
     assert (
         main(
@@ -216,7 +221,7 @@ def test_bench_health_preserves_egress_gate(policy, monkeypatch):
     results = check_bench_health(routing_snapshot={}, data_egress_policy=policy)
     assert all("glm-5.3" not in seats for seats in results.values())
     assert all("openai_frontier" not in seats for seats in results.values())
-    assert results["anthropic"] == [NATIVE_GROK, GROK]
+    assert results["anthropic"] == [NATIVE_GROK, GROK, "gemini-3.8-flash-high"]
     pinned = evaluate_candidate(
         REVIEW_CANDIDATES["glm-5.3"],
         ResolverInputs(
@@ -248,13 +253,13 @@ def test_bench_health_preserves_capacity_gate(status, reason, route, names, caps
     results = check_bench_health(routing_snapshot=data)
     assert all(not names.intersection(seats) for seats in results.values())
     # Native Grok supplies the second Anthropic seat when Codex is unavailable.
-    assert main([], routing_snapshot=data) == (0 if route == "codex" else 1)
+    assert main([], routing_snapshot=data) == 0
     for finding in _findings(capsys.readouterr()):
         for name in names:
             if REVIEW_CANDIDATES[name].family != finding["author_family"]:
                 assert finding["excluded_seats"][name] == reason
     assert results["anthropic"] == (
-        [NATIVE_GROK, GROK] if route == "codex" else ["openai_frontier", NATIVE_GROK, GROK]
+        [NATIVE_GROK, GROK, "gemini-3.8-flash-high"] if route == "codex" else DEFAULT_COUNTS["anthropic"]
     )
     # Check exclusion reasons even when Grok admission prevents a CLI shortfall.
     _, excluded = bench_health._bench_inventory(

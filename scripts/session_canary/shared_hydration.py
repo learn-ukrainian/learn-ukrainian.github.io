@@ -8,6 +8,7 @@ does not stop a driver whose critical lease evidence remains sound.
 
 from __future__ import annotations
 
+import errno
 import http.client
 import json
 import os
@@ -20,6 +21,7 @@ import time
 from collections.abc import Sequence
 from contextlib import suppress
 from datetime import UTC, datetime
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -128,6 +130,34 @@ _CAPSULE_VALIDATOR = Draft202012Validator(HYDRATION_CAPSULE_V1_SCHEMA, format_ch
 
 class HydrationSanitizationError(ValueError):
     """Raised without echoing an unsafe value into a capsule or diagnostic."""
+
+
+class EvidenceFailure(StrEnum):
+    """Schema-compatible cause codes; no exception messages enter retry policy."""
+
+    TIMEOUT = "stream-evidence-timeout"
+    CONNECTION = "stream-evidence-connection-failure"
+    INVALID = "stream-evidence-invalid"
+
+
+class HydrationTransportError(LookupError):
+    """Keep the read transport's LookupError contract and a typed retry cause."""
+
+    def __init__(self, failure: EvidenceFailure) -> None:
+        super().__init__("Monitor stream unavailable")
+        self.failure = failure
+
+
+def _evidence_failure(exc: BaseException) -> EvidenceFailure:
+    if isinstance(exc, HydrationTransportError):
+        return exc.failure
+    if isinstance(exc, TimeoutError):
+        return EvidenceFailure.TIMEOUT
+    if isinstance(exc, (ConnectionError, socket.gaierror)):
+        return EvidenceFailure.CONNECTION
+    if isinstance(exc, OSError) and exc.errno in {errno.ENETUNREACH, errno.EHOSTUNREACH, errno.ETIMEDOUT}:
+        return EvidenceFailure.CONNECTION
+    return EvidenceFailure.INVALID
 
 
 def _utc_now() -> str:
@@ -306,6 +336,7 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
             # the socket that was connected when the request was sent.
             request_socket.settimeout(seconds)
             chunk = response.read(min(_STREAM_READ_CHUNK_BYTES, _MAX_STREAM_RESPONSE_BYTES + 1 - len(body)))
+            remaining()
             if not chunk:
                 if response.length not in (None, 0):
                     raise LookupError("Monitor stream response incomplete")
@@ -322,7 +353,19 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
         if not isinstance(payload, dict):
             raise LookupError("Monitor stream response malformed")
         return payload
-    except (http.client.HTTPException, OSError, TimeoutError, json.JSONDecodeError) as exc:
+    except (TimeoutError, ConnectionError, socket.gaierror) as exc:
+        failure = EvidenceFailure.TIMEOUT if time.monotonic() >= deadline else _evidence_failure(exc)
+        raise HydrationTransportError(failure) from exc
+    except http.client.HTTPException as exc:
+        # The deadline watchdog can interrupt a read with an HTTP exception.
+        if time.monotonic() >= deadline:
+            raise HydrationTransportError(EvidenceFailure.TIMEOUT) from exc
+        raise LookupError("Monitor stream unavailable") from exc
+    except OSError as exc:
+        if _evidence_failure(exc) != EvidenceFailure.INVALID:
+            raise HydrationTransportError(_evidence_failure(exc)) from exc
+        raise LookupError("Monitor stream unavailable") from exc
+    except json.JSONDecodeError as exc:
         raise LookupError("Monitor stream unavailable") from exc
     finally:
         if watchdog is not None:
@@ -408,7 +451,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
     except (ValueError, TypeError):
         fields["stream_id"] = _unavailable("invalid-stream-id")
 
-    if fields["stream_id"]["status"] == "ok":
+    if fields["stream_id"]["status"] == "ok" and fields["driver_identity"]["status"] == "ok":
         try:
             evidence = _collect_stream_evidence(stream_id, deadline=deadline)
             identity = evidence["driver_identity"]
@@ -422,7 +465,8 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
             degradations.append("unsafe-stream-evidence")
             for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
-        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, TypeError, ValueError):
+        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, TypeError, ValueError) as exc:
+            degradations.append(_evidence_failure(exc).value)
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("stream-evidence-unavailable")
 
@@ -444,3 +488,35 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
     }
     _validate_capsule(capsule)
     return capsule
+
+
+def _retryable_capsule(capsule: dict[str, Any]) -> bool:
+    """Retry only blocked capsules whose complete cause set is transient."""
+    if capsule.get("blocked") is not True:
+        return False
+    failures = {capsule[field]["reason"] for field in CRITICAL_FIELDS if capsule[field]["status"] != "ok"}
+    causes = set(capsule.get("degradation_reasons", ()))
+    return (
+        bool(causes)
+        and failures <= {"stream-evidence-unavailable", "deadline-exceeded"}
+        and causes
+        <= {
+            "deadline-exceeded",
+            EvidenceFailure.TIMEOUT,
+            EvidenceFailure.CONNECTION,
+        }
+    )
+
+
+def build_hydration_capsule_with_retry(stream_id: str, lane_name: str) -> tuple[dict[str, Any], int]:
+    """Try at most three complete 500 ms capsules, with 50 ms between retries.
+
+    The final capsule keeps the unchanged schema and per-attempt timing;
+    callers report the separate attempt count on stderr.
+    """
+    for attempt in range(1, 4):
+        capsule = build_hydration_capsule(stream_id, lane_name)
+        if attempt == 3 or not _retryable_capsule(capsule):
+            return capsule, attempt
+        time.sleep(0.050)
+    raise AssertionError("unreachable hydration attempt")  # pragma: no cover

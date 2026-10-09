@@ -117,4 +117,6 @@ real_tool="$(_real_binary "$tool" "$pinned")" || {
   exit 127
 }
 
+umask 022
+
 exec "$real_tool" "$@"

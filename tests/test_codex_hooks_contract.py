@@ -94,6 +94,19 @@ def _manifest() -> dict:
     return json.loads(HOOKS_CONFIG.read_text(encoding="utf-8"))
 
 
+def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> None:
+    result = subprocess.run(
+        ["bash", str(POST_COMPACT_HOOK)], cwd=tmp_path,
+        env={**os.environ, "GROK_AGENT": "grok", "SESSION_EPIC": "", "CODEX_COMPACT_SESSION_START": ""},
+        capture_output=True, text=True, timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    context = json.loads(result.stdout)["additionalContext"]
+    assert "default eligible code worker = Sol high" in context
+    assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
+    assert "default bounded work = Sol advisory envelope" not in context
+
+
 def test_codex_manifest_uses_only_supported_result_event() -> None:
     hooks = _manifest()["hooks"]
 
@@ -119,7 +132,7 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     assert config["agents"] == {
         "enabled": True,
         "max_concurrent_threads_per_session": 3,
-        "default_subagent_model": "gpt-6-luna",
+        "default_subagent_model": "gpt-6.1-sol",
         "default_subagent_reasoning_effort": "high",
         "interrupt_message": True,
     }

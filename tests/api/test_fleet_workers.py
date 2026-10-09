@@ -25,6 +25,7 @@ from scripts.api.occupancy_local import OccupancyRead, _marker_fresh
 from scripts.api.project_state_router import reset_local_document_cache
 from scripts.api.project_state_sanitize import ProjectStateValidationError
 from scripts.api.project_state_store import get_stored_report, reset_project_state_store
+from tests import _host_path_guard as guard
 
 client = TestClient(app, raise_server_exceptions=False)
 loop_client = TestClient(
@@ -36,7 +37,7 @@ loop_client = TestClient(
 
 _PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = guard.HOST_ALIASES
 
 SHA_MAIN = "a" * 40
 SHA_HEAD = "c" * 40

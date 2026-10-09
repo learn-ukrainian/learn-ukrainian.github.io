@@ -23,6 +23,7 @@ from scripts.projects.open_model_data.v4_verify_trajectory_claims import (
     CoTClaimVerifier,
     run_claim_verifier,
 )
+from tests._host_path_guard import FIXTURE_HOME
 
 
 @pytest.fixture(scope="module")
@@ -1170,7 +1171,7 @@ def test_hard_rejection_opsec_private_host_path_in_trajectory(
             ],
         },
         "reasoning_steps": [
-            "1. За даними з /home/ops/secret_data.txt термін пилосмок підтверджено.",  # OPSEC violation!
+            f"1. За даними з {FIXTURE_HOME}/secret_data.txt термін пилосмок підтверджено.",  # OPSEC violation!
         ],
         "final_response": "Правильна відповідь для тестування.",
     }

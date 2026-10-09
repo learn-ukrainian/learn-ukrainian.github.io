@@ -234,10 +234,10 @@ lookups:
      expect: [scripts/audit/check_adrs.py],
      verify: [{path: scripts/audit/check_adrs.py, contains: 'Stale Proposed'}]}
   - {id: N38, kind: process, source: 'issue #9364',
-     question: 'Where do we refuse to send code changes to the Google-family reviewer and allow it to review only Ukrainian learner content?',
+     question: 'Where does the bridge refuse code review by the Google-family reviewer while native dispatch may admit it, and Ukrainian learner content review stays allowed?',
      query: 'Gemini reviewer refuse code review Ukrainian learner content only',
      expect: [scripts/ai_agent_bridge/_agy.py],
-     verify: [{path: scripts/ai_agent_bridge/_agy.py, contains: 'Gemini reviews Ukrainian only, never code'}]}
+     verify: [{path: scripts/ai_agent_bridge/_agy.py, contains: 'ACP callers leave ``native_code_review`` false'}]}
   - {id: N39, kind: process, source: 'docs/epics/fresh-build-build-program.md',
      question: 'Before we pay for a lesson-writing model call, where do we check that every example, quote and video the plan needs has an evidence record?',
      query: 'preflight evidence record check before writer call',

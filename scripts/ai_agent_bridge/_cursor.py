@@ -52,13 +52,23 @@ def cursor_default_model() -> str:
 
 
 def _require_approved_cursor_model(model: str | None) -> str:
-    """Return ``model`` when it is a concrete approved Cursor pin; otherwise exit with the typed refusal."""
-    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+    """Return the wire model when it is a concrete approved Cursor pin; otherwise exit with the typed refusal."""
+    from scripts.review.model_catalog import (
+        ModelCatalogError,
+        apply_cursor_model_pins,
+        cursor_non_dispatch_model_refusal,
+    )
 
-    refusal = cursor_non_dispatch_model_refusal(model)
+    try:
+        wire_model = apply_cursor_model_pins(model)
+    except ModelCatalogError as exc:
+        raise SystemExit(f"ask-cursor: refused: {exc}") from exc
+
+    # The normalized wire model must pass the strict pin approval check.
+    refusal = cursor_non_dispatch_model_refusal(wire_model)
     if refusal:
         raise SystemExit(f"ask-cursor: refused: {refusal}")
-    return str(model)
+    return str(wire_model)
 
 
 def ask_cursor(

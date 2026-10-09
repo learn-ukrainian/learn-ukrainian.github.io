@@ -35,6 +35,35 @@ On clean exit the launcher (or a wrapper) calls the matching lifecycle action:
 `SESSION_STREAM_*` envelope. Fencing is enforced by
 `agents_extensions.shared.session_streams`; a stale envelope is refused.
 
+Drivers can render a fresh capsule from their launcher-provided environment
+without renewing the lease:
+
+```bash
+.venv/bin/python -m scripts.session_supervisor capsule --role driver --stream <stream-id>
+```
+
+This command reads the exact `SESSION_STREAM_*` lease and reconciles it with
+Monitor's active lease and expiry. A mismatch or expired lease is refused;
+the command makes no claim, heartbeat, release or recovery call. Workers still
+receive no lease in `capsule --role worker`.
+
+The supported Codex hydration command is also read-only:
+
+```bash
+.venv/bin/python -m scripts.session_canary.codex_lane hydrate --epic <epic> --stream <stream-id>
+```
+
+It preserves the launcher's Codex identity (including `codex-core`) when
+reconciling the full environment lease; another provider's identity is refused.
+
+Codex, Gemini and GLM hydration retry a blocked capsule only when every failure
+cause is a timeout or connection failure. Each of at most three attempts has
+its own unchanged 500 ms budget, with 50 ms between retries. The final capsule
+keeps the v1.3 schema and per-attempt timing; `hydration_attempts: <count>` is
+reported on stderr. Lease mismatch, expiry, unsafe evidence, malformed data
+and invalid stream or lane identifiers block immediately. A degraded capsule
+whose critical evidence permits execution is returned without retrying.
+
 ### Close-failure observability
 
 `scripts/lib/launcher_core.sh`'s `launcher_close_driver_lease` retries the
@@ -119,6 +148,14 @@ A missing/unreadable wake descriptor or empty delivery reports
 Both clear the delivery, stop the provider, close the predecessor's existing
 lease, then attempt one status publication before returning the original
 non-zero status. Neither executes a successor.
+
+Before stopping the provider or releasing its lease for a wake, the launcher
+preflights the successor CLI. It checks the executable recorded at provider
+startup, then the current PATH, then `~/.local/bin`, using the actual harness
+command rather than the provider label. It carries the resolved directory in
+PATH through successor exec. If no executable is available, preflight returns
+3 with `provider-cli-unavailable` and a repair hint; the launcher retains the
+predecessor and its lease and resumes inbox supervision.
 
 Before clearing `SESSION_STREAM_*` for a supervisory successor, the launcher
 captures the predecessor generation in
@@ -213,6 +250,15 @@ transient watcher exit (76) restarts the watcher under the same lease; USR1 alon
 never authorizes a wake. Permanent watcher failures still stop the provider
 without authorizing a successor.
 
+Before claiming or preparing a current-generation restart, the live watcher
+checks the successor CLI using the launcher's recorded harness executable,
+current PATH, and `~/.local/bin` fallback. If unavailable, it leaves the delivery
+unchanged and retries at the watcher poll interval. The launcher repeats this
+check before stopping the predecessor. If the CLI disappears after preparation,
+the restarted watcher checks it before replaying or reclaiming the delivery;
+the predecessor and lease remain live, and failed CLI checks spend no delivery
+attempts. Restoring the executable lets the same wake proceed.
+
 Exact lease close retries Monitor failures with exponential backoff from 1 second
 up to 30 seconds for ten minutes (override: `LC_DRIVER_CLOSE_RETRY_SECONDS`). It
 logs `waiting for Monitor API to recover (close attempt N)` without remote stderr.
@@ -243,9 +289,11 @@ scripts/ai_agent_bridge/inbox_watch.sh grok-atlas --wake-driver grok --epic atla
 
 Run it in an existing persistent host terminal or service allocation. The
 watcher does not install another service or make an offline host available.
-It checks at most 64 pending events per tick and invokes only the selected
-existing launcher. The launcher remains the sole process/lease supervisor.
-An active remote lease prevents startup; unknown authority fails closed.
+It checks at most 64 pending supervisory events per tick. Offline events invoke
+only the selected existing launcher; ordinary unread Codex inbox rows can resume
+an idle live thread as described below. The launcher remains the sole
+process/lease supervisor. An active remote lease prevents launcher startup;
+unknown authority fails closed.
 
 For a clean restart, launcher-owned consumption records the exact generation
 before preparing a durable stream handoff. The process loop must stop and reap
@@ -264,6 +312,214 @@ second start. A later generation requires a new explicitly targeted event.
 
 All certified provider driver entrypoints, including Claude, use the common
 launcher lease boundary before starting their provider adapters.
+
+### Live Codex inbox readiness (#10133)
+
+With `--wake-driver codex`, unread ordinary bridge rows for an occupied Codex
+lease are coalesced into one `codex exec resume` turn, oldest message first.
+The watcher discovers the exact lease owner's Codex process and open rollout,
+checks the inherited lease envelope, and reconciles remote authority again.
+It never launches a second driver, types into tmux, signals the live process,
+or claims, renews or releases its lease. Wake mode off only notifies.
+
+Readiness comes from a forward streaming scan of complete rollout JSONL
+records, with a cached byte offset and last lifecycle state across polls.
+Cold start scans the file once; inode replacement, observed truncation,
+same-size rewrites, or changes to the cached prefix fingerprint reset the cache.
+That fingerprint samples up to 4 KiB at the head and 4 KiB immediately before
+the cached offset, detecting in-place rewrites that grow while preserving
+bounded reads on normal append polls. It does not detect every possible edit
+between those samples. Lifecycle records are append-only; the fingerprint detects deviations at its sampled spans.
+No record or file size cap limits the scan.
+Long message strings are validated and skipped with bounded memory; JSON grammar,
+escapes, UTF-8 and nesting are validated before a record can decide readiness.
+Lone surrogate escapes in strings are tolerated; they cannot supply ASCII
+lifecycle names. Raw invalid UTF-8 and malformed escapes still fail closed.
+Only the top-level `type="event_msg"` and its direct `payload.type` count.
+`payload.id`, nested envelopes and type-like text inside strings do not count.
+
+The last lifecycle event decides: `task_started` / `turn_started` is BUSY;
+`task_complete` / `turn_complete` / `turn_aborted` is READY. An abort closes the
+turn even without a turn ID; a later start supersedes that abort. A complete
+valid rollout with no lifecycle event has no recorded open turn. The installed
+CLI's rollout vocabulary was verified against its own events and the
+[upstream EventMsg protocol](https://github.com/openai/codex/blob/2351d9e1b608e6f9d9a3699b71d7eb39ee41cfa4/codex-rs/protocol/src/protocol.rs#L1511-L1522):
+`task_*` are the v1 wire names; `turn_started` and `turn_complete` are aliases,
+and `turn_aborted` follows the enum's snake-case encoding.
+
+Fail-closed reasons include:
+
+- `start_event:<type>`: an unmatched start, regardless of its age. There is **no
+  time-based staleness escape**. A crashed driver ends through lease/session
+  expiry and the normal launcher recovery path.
+- `partial_final_line`: any record without its terminating newline, even if
+  its current bytes happen to form valid JSON. An append can complete it.
+- `decode_error:<exception>`: malformed JSON anywhere in the scanned history,
+  duplicate lifecycle fields, invalid UTF-8, invalid string escapes, decoder
+  failures, nesting beyond 256 containers, or numeric tokens longer than 4,300
+  bytes. These last two are decoder safety limits, not record size limits.
+  Decoder faults remain BUSY until the rollout is replaced or truncated.
+- `read_error:<exception>`: missing or unreadable rollout; retried next poll.
+- `rollout_changing`: after each scan, device/inode, size and modification time
+  are checked again. Appends are rescanned, up to three passes. A file still
+  changing remains BUSY and is retried next poll.
+- `rollout_unavailable`: discovery did not provide an exact rollout path.
+
+BUSY reports `codex_wake_busy:<reason>`. A missing binary
+reports `codex_resume_error:FileNotFoundError`. Other resume exceptions are UNKNOWN. The supervisory loop catches ordinary
+wake exceptions, emits `wake_error`, and leaves rows unread. In `--once` mode
+refusal, OVERLAP or UNKNOWN exits with status 2; a successful one-shot poll exits
+0. Daemon mode keeps running. Wake mode off still only notifies. Only a CLEAN,
+successful resume advances the in-memory cursor; the live driver still records
+durable inbox consumption.
+
+Readiness is checked after lease reconciliation and message framing and again
+immediately before spawning the resume subprocess. The pre-send READY/BUSY
+rules above are unchanged. **The window between that last check and resume
+attaching remains open. Prevention is not provided.**
+
+### Post-resume overlap detection (#10217)
+
+After each returned resume, the watcher incrementally reads the exact discovered
+rollout again, including records appended after the process exited but before
+this read. Separate tracking preserves open turn IDs, or a starts-minus-ends
+count where IDs are absent. A repeated start for the same open ID does not
+create a second turn. A second distinct or idless start while a turn is open
+records an overlap even if a later completion makes the readiness reducer READY.
+Historical overlaps before the final pre-send observation do not by themselves
+flag the new wake. The detector emits a `codex-wake.v1` JSON event:
+
+- `CLEAN`: stable, valid lifecycle evidence of a completed wake, with no observed
+  overlap and no remaining open turn, plus successful resume stdout evidence.
+- `OVERLAP`: another turn starts while one is open. This is detected and reported;
+  the watcher does not interrupt, signal, cancel or undo either turn.
+- `UNKNOWN`: `decode_error`, `read_error`, `rollout_changing`,
+  `partial_final_line`, resume termination not evidenced, missing wake lifecycle,
+  remaining open turns, ambiguous lifecycle/IDs, replaced/reset rollout, or
+  unsuccessful resume evidence. Missing evidence is never CLEAN. At most 1,024
+  simultaneous IDs are retained; exceeding this safety bound is UNKNOWN.
+
+For OVERLAP and UNKNOWN, the watcher saves the event in its ignored per-seat
+`inbox-watch-<slot>.wake.json` file beside its existing pid/lock file, under the
+same exclusive watcher lock. An atomic, mode-0600 write replaces the file and
+fsyncs the file and directory. Receipts are keyed by message ID and a hash of
+the native thread and rollout identity (hashed path, device and inode); the
+receipt also records byte offset, turn IDs and start/end and open counts.
+The cursor remains in memory. No inbox row, attachment or database schema is
+changed, and no new message bus is introduced. Sender attachment data is never
+selected or interpreted by the watcher: a sender-supplied `codex_wake` key of
+any type, including a forged OVERLAP or CLEAN receipt, cannot retain a wake.
+This also holds for rows inserted outside `send_message`.
+
+A later poll, including a fresh watcher process or a changed rollout, refuses
+to resume a message with retained evidence even if readiness now looks READY.
+A retained row holds back the entire unread batch, including later plain-text
+attachments. The existing watcher notify/log path names the message ID and
+status: notification-only mode emits `INBOX-WATCH id=<id> codex_wake=<status>`
+with its reason, and wake mode logs the body-free JSON event with `message_ids`
+and status plus `wake_error:codex_wake:<status>:retained_event`. No message body
+or absolute host path is printed in these retained-event notices. The driver
+reads its unchanged inbox attachment, reconciles the logged attempt, and then
+consumes the row with the existing command:
+
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <id>
+```
+
+The next poll ignores and garbage-collects watcher receipts for acked or deleted
+messages, permitting later rows to proceed. Corrupted watcher-owned receipts
+refuse safely with `retained_receipt_invalid`; that reason never comes from a
+sender attachment. If the entire state file is unreadable or unparseable, every
+unread row is held until reconciliation; after all unread rows are acked or
+deleted, the next poll replaces the corrupt state with an empty receipt map.
+Unrecognized receipt fields are omitted from diagnostics. Inbox reading keeps
+its existing attachment presentation; no receipt wrapper or receipt hash enters
+`read_message` or its redaction path.
+
+Watcher-state write failure reports UNKNOWN and stops the watcher with status 2
+because retaining a receipt is impossible; it never retries that resume in the
+same process. A restart after that failure can re-run the resume if no receipt
+was persisted. Ordinary OVERLAP and UNKNOWN receipts keep daemon mode running.
+
+Detection covers the observed rollout only. It cannot detect a start appended
+after the post-resume scan, an unrecorded turn, or an arbitrary historical rewrite
+outside the fingerprint samples. It does not certify work or prove delivery in
+the visible TUI. CLEAN cannot tie the one recorded turn to the wake turn. The
+existing pre-send READY gate still accepts `start A, start B, end A` with B open:
+it uses the last lifecycle event, unchanged by this fix. These are known limits,
+not additional readiness guarantees.
+[#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217)
+tracks prevention, waiting on an upstream Codex turn start that refuses while a
+turn is open (compare-and-set/fail-if-active, externally reachable). Owner:
+`claude-monitor`. No bridge-only lock closes this attach window.
+
+Run the deterministic final-recheck refusal probe (no live resume):
+
+```bash
+.venv/bin/python -m pytest -q tests/ai_agent_bridge/test_wake_overlap_detection.py::test_once_final_recheck_refusal_exits_two_without_resume
+```
+
+It calls the watcher with `--once`, starts a fake turn during lease reconciliation,
+and asserts status 2, an unread row, `codex_wake_busy:start_event`, and no resume
+spawn. Post-resume race/unknown/replay probes are in the same test module.
+
+#### Manual throwaway-session receipt
+
+The following creates a fresh, isolated Codex session and resumes only the UUID
+returned by that creation. Run it from a dispatch checkout using the configured
+project interpreter (replace `.venv/bin/python` with that interpreter when
+shared). It uses the existing managed `$TMPDIR`, and asserts the rollout's
+recorded working directory is the throwaway directory before resuming. It never
+accepts a production thread ID. This receipt proves resume/readiness behavior;
+it does not certify a production lease or atomic admission. Do not run a receipt
+against a live production driver.
+
+```bash
+.venv/bin/python - <<'PY'
+import json
+import os
+import subprocess
+import tempfile
+from pathlib import Path
+from scripts.ai_agent_bridge import _ui_codex as ui
+
+with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"], prefix="wake-receipt-") as scratch:
+    subprocess.run(["git", "init", "-q", scratch], check=True)
+    first = subprocess.run(
+        ["codex", "exec", "--json", "--disable", "apps", "--skip-git-repo-check", "-"],
+        input="Reply exactly RECEIPT-START. Do not run tools.", cwd=scratch,
+        capture_output=True, text=True, timeout=180, check=True,
+    )
+    events = [json.loads(line) for line in first.stdout.splitlines() if line.strip()]
+    thread = next(event["thread_id"] for event in events if event["type"] == "thread.started")
+    assert any(event["type"] == "turn.completed" for event in events)
+    rollout = ui.find_session_file(thread)
+    assert rollout is not None
+    with rollout.open("rb") as stream:
+        metadata = json.loads(stream.readline())
+    assert metadata["payload"]["id"] == thread
+    assert Path(metadata["payload"]["cwd"]).resolve() == Path(scratch).resolve()
+    reader = ui.RolloutReader()
+    def check_ready():
+        ready, reason = ui.rollout_is_ready(rollout, reader=reader)
+        assert ready, reason
+    check_ready()
+    before = rollout.stat().st_size
+    result = ui.send(
+        thread, "Reply exactly RECEIPT-RESUMED. Do not run tools.",
+        cwd=Path(scratch), timeout_s=180, before_resume=check_ready,
+    )
+    types = [event["type"] for event in result["events"]]
+    assert result["exit_code"] == 0
+    assert types.count("turn.started") == types.count("turn.completed") == 1
+    assert not {"turn.failed", "error"}.intersection(types)
+    assert result["final_message"] == "RECEIPT-RESUMED"
+    assert rollout.stat().st_size > before
+    check_ready()
+    print(json.dumps({"schema": "codex-wake-receipt.v1", "same_thread": True,
+                      "new_turns": 1, "ready_after_resume": True}))
+PY
+```
 
 ## Related
 

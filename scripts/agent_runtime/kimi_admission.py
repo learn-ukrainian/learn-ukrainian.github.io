@@ -833,12 +833,14 @@ def _alternative_seats() -> str:
                 if models.get(entry["model_id"], {}).get("family") in {"anthropic", "openai", "xai"}
             }
         )
+        if not reviewers or not consults:
+            raise ValueError("alternative seats missing")
     except ImportError:  # Refusal remains available when the catalog module is unavailable.
         reviewers, consults = ["claude", "codex"], ["claude", "codex", "grok"]
-    except (ValueError, KeyError, TypeError) as exc:
-        raise KimiAdmissionRefused(
-            f"ROUTING REFUSED: MODEL_CATALOG_INVALID: cannot resolve alternative seats ({type(exc).__name__})"
-        ) from exc
+    except Exception as exc:
+        # Formatting is also used outside an admission try/except. Keep the
+        # original refusal and expose catalog failure without its private text.
+        return f"MODEL_CATALOG_INVALID: cannot resolve alternative seats ({type(exc).__name__})"
     return (
         f"reviews → {', '.join(reviewers)} (per the reviewer resolver); "
         f"consults and discussions → {', '.join(consults[:-1])}, or {consults[-1]}; "

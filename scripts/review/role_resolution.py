@@ -262,7 +262,7 @@ def validate_role_catalog(catalog: dict[str, Any]) -> None:
                     raise ModelCatalogError(f"roles.{role} introduces a route outside the existing risk ladder")
                 from scripts.review.family_exclusions import family_exclusion
 
-                if family_exclusion(family=model["family"], route=route["route"], transport=route["transport"]):
+                if family_exclusion(family=model["family"], route=route["route"], transport=route["transport"], risk=risk):
                     raise ModelCatalogError(f"roles.{role} violates code-review family exclusions")
                 if refusal := risk_reviewer_refusal(model_id, risk, catalog):
                     raise ModelCatalogError(f"roles.{role}: {refusal}")
