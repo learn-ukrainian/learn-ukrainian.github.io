@@ -10,9 +10,13 @@ from __future__ import annotations
 
 import ast
 import gc
+import hashlib
+import json
 import os
 import re
 import subprocess
+import sys
+import tempfile
 import time
 from collections import defaultdict, deque
 from collections.abc import Iterable, Mapping
@@ -24,6 +28,107 @@ from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
 _MAX_PARSER_WORKERS = 8
+_PARSE_CACHE_VERSION = 1
+# Bind records to the actual scanner implementation and Python parser. No manual
+# version bump is needed when dependency extraction changes.
+_PARSER_CACHE_ID = hashlib.sha256(
+    Path(__file__).read_bytes() + repr(sys.version_info[:3]).encode(),
+).hexdigest()
+
+
+class ParseCache:
+    """Cache immutable extraction records, never resolved dependency graphs.
+
+    With no directory this is process-local. Pass a managed runtime directory,
+    or set LU_TEST_IMPACT_CACHE_DIR, for reuse across processes/CI cache restores.
+    Directory ownership and CI restore/save policy belong to the caller. Missing,
+    corrupt or unwritable storage is a cache miss, not graph uncertainty.
+    """
+
+    def __init__(self, directory: Path | None = None):
+        self.directory = directory
+        self._records: dict[str, tuple] = {}
+
+    def key(self, path: str, source: bytes | str) -> str:
+        # Relative imports, conftests, test markers and diagnostics depend on
+        # the path. Hash current bytes (including unstaged/untracked overlays),
+        # not the index's potentially stale blob SHA. ast.parse distinguishes
+        # Unicode input from bytes with encoding cookies, so retain that type.
+        identity = json.dumps([
+            _PARSE_CACHE_VERSION, _PARSER_CACHE_ID, path, isinstance(source, str),
+        ], ensure_ascii=True).encode()
+        content = source.encode("utf-8", errors="surrogatepass") if isinstance(source, str) else source
+        return hashlib.sha256(identity + b"\0" + content).hexdigest()
+
+    def get(self, key: str, path: str) -> tuple | None:
+        if (record := self._records.get(key)) is not None:
+            return record
+        if self.directory is None:
+            return None
+        try:
+            with (self.directory / (key + ".json")).open("rb") as stream:
+                raw = stream.read(8 * 1024 * 1024 + 1)
+            if len(raw) > 8 * 1024 * 1024:
+                return None
+            envelope = json.loads(raw)
+            if not isinstance(envelope, dict) or envelope.get("version") != _PARSE_CACHE_VERSION or envelope.get("key") != key:
+                return None
+            record = envelope.get("record")
+            payload = json.dumps(record, separators=(",", ":"), ensure_ascii=True).encode()
+            if envelope.get("digest") != hashlib.sha256(payload).hexdigest():
+                return None
+            if not isinstance(record, list) or len(record) != 5 or record[0] != path or type(record[4]) is not bool:
+                return None
+            if not isinstance(record[1], list) or any(
+                not isinstance(pair, list) or len(pair) != 2
+                or not isinstance(pair[0], str) or type(pair[1]) is not bool
+                for pair in record[1]
+            ):
+                return None
+            if any(not isinstance(values, list) or any(not isinstance(value, str) for value in values) for values in record[2:4]):
+                return None
+            frozen = (path, frozenset(map(tuple, record[1])), frozenset(record[2]), frozenset(record[3]), record[4])
+            self._remember(key, frozen)
+            return frozen
+        except (OSError, ValueError, UnicodeError, RecursionError):
+            return None
+
+    def _remember(self, key: str, record: tuple) -> None:
+        # Bound process memory on repeated edits/queries without retaining ASTs.
+        if len(self._records) >= 8192:
+            self._records.clear()
+        self._records[key] = record
+
+    def put(self, key: str, record: tuple) -> None:
+        path, imports, load_paths, reasons, safety = record
+        frozen = (path, frozenset(imports), frozenset(load_paths), frozenset(reasons), safety)
+        self._remember(key, frozen)
+        if self.directory is None:
+            return
+        data = [path, sorted(imports), sorted(load_paths), sorted(reasons), safety]
+        payload = json.dumps(data, separators=(",", ":"), ensure_ascii=True).encode()
+        envelope = json.dumps({
+            "version": _PARSE_CACHE_VERSION, "key": key, "record": data,
+            "digest": hashlib.sha256(payload).hexdigest(),
+        }, ensure_ascii=True).encode()
+        temporary = None
+        try:
+            self.directory.mkdir(parents=True, exist_ok=True)
+            # Same-directory unique files + atomic replacement let concurrent
+            # shards publish complete records without locks or partial reads.
+            with tempfile.NamedTemporaryFile(dir=self.directory, suffix=".tmp", delete=False) as stream:
+                temporary = Path(stream.name)
+                stream.write(envelope)
+            os.replace(temporary, self.directory / (key + ".json"))
+        except OSError:
+            pass
+        finally:
+            if temporary is not None:
+                with suppress(OSError):
+                    temporary.unlink(missing_ok=True)
+
+
+_DEFAULT_PARSE_CACHE = ParseCache()
 
 
 def _build_budget_seconds(cpu_count: int | None) -> float:
@@ -645,13 +750,18 @@ class ImportGraph:
         }
 
 
-def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None = None) -> ImportGraph:
+def build_graph(
+    root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None = None,
+    cache: ParseCache | None = None,
+) -> ImportGraph:
     """Index all local Python modules without importing or executing any source.
 
     Bare names resolve against every matching local module suffix: ambiguous sys.path
     precedence increases selection rather than discarding possible importers.
     Regular package initializers, scoped conftests and literal pytest plugins
     contribute edges too. Parse and I/O failures are terminal FULL reasons.
+    Extraction is cached by path/content; inventory, resolution, uncertainty and
+    elapsed-time budget checks are recomputed on every build, including hits.
     """
     started = time.monotonic()
     reasons: set[str] = set()
@@ -715,7 +825,19 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
 
     # Largest files first avoid a long final parser chunk on this repository's
     # uneven source sizes. Cap workers at available CPUs and eight processes.
-    items = sorted(sources.items(), key=lambda item: len(item[1]), reverse=True)
+    if cache is None:
+        directory = os.environ.get("LU_TEST_IMPACT_CACHE_DIR")
+        cache = ParseCache(Path(directory)) if directory else _DEFAULT_PARSE_CACHE
+    keys = {path: cache.key(path, source) for path, source in sources.items()}
+    records = []
+    missing = []
+    for path, source in sources.items():
+        record = cache.get(keys[path], path)
+        if record is None:
+            missing.append((path, source))
+        else:
+            records.append(record)
+    items = sorted(missing, key=lambda item: len(item[1]), reverse=True)
     workers = min(_MAX_PARSER_WORKERS, _available_cpu_count())
     # Bounded local CPU workers, no provider calls or source execution.
     # Small fixture graphs stay in-process; large graphs return compact records.
@@ -724,11 +846,14 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
             # ASTs have no parent cycles. Refcounting reclaims each file's AST;
             # avoid repeated cyclic-GC traversals in these short-lived workers.
             with ProcessPoolExecutor(max_workers=workers, mp_context=get_context("fork"), initializer=gc.disable) as executor:
-                records = list(executor.map(_scan_source, items, chunksize=4))
+                parsed = list(executor.map(_scan_source, items, chunksize=4))
         else:
-            records = [_scan_source(item) for item in items]
+            parsed = [_scan_source(item) for item in items]
     except (OSError, RuntimeError, ValueError):
         return ImportGraph(dependents, tests, set(), ("parser-worker-error",), time.monotonic() - started)
+    for record in parsed:
+        cache.put(keys[record[0]], record)
+    records.extend(parsed)
     for path, imports, load_paths, errors, safety in records:
         for error in errors:
             if error.startswith("parse-error:"):

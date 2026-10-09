@@ -272,7 +272,7 @@ def test_parser_worker_failure_fails_closed(monkeypatch):
         raise RuntimeError("worker unavailable")
 
     monkeypatch.setattr(impact, "_scan_source", fail)
-    assert graph({"scripts/target.py": ""}).reasons == ("parser-worker-error",)
+    assert impact.build_graph(sources={"scripts/target.py": ""}, cache=impact.ParseCache()).reasons == ("parser-worker-error",)
 
 
 def test_inventory_failure_fails_closed(monkeypatch):
@@ -814,3 +814,202 @@ from provider import cmd
 subprocess.run(cmd)
 """))
     assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+
+
+def test_parse_cache_reuses_immutable_records_and_keeps_budget(monkeypatch):
+    cache = impact.ParseCache()
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target"}
+    cold = impact.build_graph(sources=sources, cache=cache)
+
+    def fail(item):
+        raise AssertionError("warm cache must not parse")
+
+    monkeypatch.setattr(impact, "_scan_source", fail)
+    cold.dependents["scripts/target.py"].clear()
+    warm = impact.build_graph(sources=sources, cache=cache)
+    assert warm.test_dependents(["scripts/target.py"]) == {"tests/test_use.py"}
+    monkeypatch.setattr(impact, "BUILD_BUDGET_SECONDS", 1e-12)
+    assert impact.build_graph(sources=sources, cache=cache).reasons == ("graph-build-budget-exceeded",)
+
+
+def test_parse_cache_edit_rename_delete_and_inventory_resolution(tmp_path, monkeypatch):
+    cache = impact.ParseCache(tmp_path)
+    sources = {
+        "scripts/one/target.py": "", "scripts/two/target.py": "",
+        "scripts/one/consumer.py": "from . import target",
+        "tests/test_use.py": "import scripts.one.consumer",
+    }
+    impact.build_graph(sources=sources, cache=cache)
+    scan = impact._scan_source
+    parsed = []
+
+    def record(item):
+        parsed.append(item[0])
+        return scan(item)
+
+    monkeypatch.setattr(impact, "_scan_source", record)
+    sources["scripts/one/consumer.py"] = "import scripts.two.target"
+    edited = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert parsed == ["scripts/one/consumer.py"]
+    assert not edited.test_dependents(["scripts/one/target.py"])
+    assert edited.test_dependents(["scripts/two/target.py"]) == {"tests/test_use.py"}
+    parsed.clear()
+    sources["scripts/one/consumer.py"] = "from . import target"
+    sources["scripts/two/consumer.py"] = sources.pop("scripts/one/consumer.py")
+    sources["tests/test_use.py"] = "import scripts.two.consumer"
+    renamed = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert set(parsed) == {"scripts/two/consumer.py", "tests/test_use.py"}
+    assert "scripts/one/consumer.py" not in renamed.dependents
+    assert not renamed.test_dependents(["scripts/one/target.py"])
+    assert renamed.test_dependents(["scripts/two/target.py"]) == {"tests/test_use.py"}
+    # Direct imports make the missing leaf a required local dependency. Cache
+    # that record first, then remove only its target from the inventory.
+    sources["scripts/two/consumer.py"] = "import scripts.two.target"
+    impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    parsed.clear()
+    sources.pop("scripts/two/target.py")
+    deleted = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert parsed == []
+    assert "scripts/two/target.py" not in deleted.dependents
+    assert deleted.uncertainty["scripts/two/consumer.py"]
+    assert deleted.impacted_tests(["scripts/two/target.py"])["full_suite"]
+
+
+@pytest.mark.parametrize("damage", ["truncated", "checksum", "shape", "key", "path", "version"])
+def test_parse_cache_corruption_is_a_miss(tmp_path, monkeypatch, damage):
+    import hashlib
+    import json
+
+    sources = {"tests/test_use.py": "import scripts.target"}
+    expected = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    entry = next(tmp_path.rglob("*.json"))
+    if damage == "truncated":
+        entry.write_text("{")
+    else:
+        envelope = json.loads(entry.read_text())
+        if damage == "checksum":
+            envelope["record"][1] = []
+        elif damage == "shape":
+            envelope["record"][1] = [["scripts.target", 1]]
+        elif damage == "key":
+            envelope["key"] = "wrong"
+        elif damage == "path":
+            envelope["record"][0] = "tests/test_other.py"
+        else:
+            envelope["version"] += 1
+        if damage in {"shape", "path"}:
+            payload = json.dumps(envelope["record"], separators=(",", ":"), ensure_ascii=True).encode()
+            envelope["digest"] = hashlib.sha256(payload).hexdigest()
+        entry.write_text(json.dumps(envelope))
+    parsed = []
+    scan = impact._scan_source
+
+    def record(item):
+        parsed.append(item[0])
+        return scan(item)
+
+    monkeypatch.setattr(impact, "_scan_source", record)
+    actual = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert parsed == ["tests/test_use.py"]
+    assert actual.dependents == expected.dependents
+    assert actual.uncertainty == expected.uncertainty
+    # The corrupt entry is replaced by a valid record.
+    parsed.clear()
+    impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert parsed == []
+
+
+def test_parse_cache_unavailable_storage_is_optional(tmp_path):
+    tmp_path.joinpath("not-a-directory").write_text("unavailable")
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target"}
+    result = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path / "not-a-directory"))
+    assert result.reasons == ()
+    assert result.test_dependents(["scripts/target.py"]) == {"tests/test_use.py"}
+
+
+def test_parse_cache_concurrent_process_writers(tmp_path):
+    code = """
+import sys
+from pathlib import Path
+from scripts.ci import test_impact as impact
+sources = {'scripts/target.py': '', 'tests/test_use.py': 'import scripts.target'}
+for _ in range(32):
+    cache = impact.ParseCache(Path(sys.argv[1]))
+    for path, source in sources.items():
+        # Force writes on every iteration, even after another process warms
+        # the directory. Readers must never observe partial publications.
+        cache.put(cache.key(path, source), impact._scan_source((path, source)))
+    result = impact.build_graph(sources=sources, cache=impact.ParseCache(Path(sys.argv[1])))
+    assert not result.reasons
+    assert result.test_dependents(['scripts/target.py']) == {'tests/test_use.py'}
+"""
+    processes = [subprocess.Popen([sys.executable, "-c", code, str(tmp_path)]) for _ in range(4)]
+    try:
+        for process in processes:
+            assert process.wait(timeout=30) == 0
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.kill()
+            process.wait()
+    assert len(list(tmp_path.rglob("*.json"))) == 2
+    assert not list(tmp_path.rglob("*.tmp"))
+
+
+def test_parse_cache_environment_and_parser_identity(tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_TEST_IMPACT_CACHE_DIR", str(tmp_path))
+    sources = {"tests/test_cache_env.py": "import scripts.target"}
+    impact.build_graph(sources=sources)
+    scan = impact._scan_source
+    parsed = []
+
+    def record(item):
+        parsed.append(item[0])
+        return scan(item)
+
+    monkeypatch.setattr(impact, "_scan_source", record)
+    impact.build_graph(sources=sources)
+    assert parsed == []
+    monkeypatch.setattr(impact, "_PARSER_CACHE_ID", "changed-parser")
+    impact.build_graph(sources=sources)
+    assert parsed == ["tests/test_cache_env.py"]
+    parsed.clear()
+    # Identical encoded bytes do not imply identical ast.parse semantics:
+    # encoding cookies apply only to bytes, not Unicode input.
+    sources = {path: source.encode() for path, source in sources.items()}
+    impact.build_graph(sources=sources)
+    assert parsed == ["tests/test_cache_env.py"]
+
+
+def test_parse_cache_full_repository_cold_warm_equivalence(tmp_path):
+    code = """
+import sys
+from dataclasses import asdict
+from pathlib import Path
+from scripts.ci import test_impact as impact
+sources = impact.read_sources()
+# Equality checks are independent of elapsed-time selection; budget boundaries
+# retain their own tests, including the real runner budget in this module.
+impact.BUILD_BUDGET_SECONDS = 120
+uncached = impact.build_graph(sources=sources, cache=impact.ParseCache())
+cold = impact.build_graph(sources=sources, cache=impact.ParseCache(Path(sys.argv[1])))
+def fail(item):
+    raise AssertionError('persistent warm build must not parse any source')
+impact._scan_source = fail
+warm = impact.build_graph(sources=sources, cache=impact.ParseCache(Path(sys.argv[1])))
+def semantic(graph):
+    result = asdict(graph)
+    result.pop('build_seconds')
+    return result
+assert not cold.reasons, cold.reasons
+assert semantic(uncached) == semantic(cold) == semantic(warm)
+assert cold.uncertainty
+assert cold.uncertain_tests() == cold.tests
+print(f'cache_equivalence files={len(cold.dependents)} cold={cold.build_seconds:.3f} warm={warm.build_seconds:.3f}')
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code, str(tmp_path)], cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, timeout=90,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    print(result.stdout.strip())
