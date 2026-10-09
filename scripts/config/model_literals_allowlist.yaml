@@ -4175,14 +4175,14 @@ entries:
   scope: <module>
   context: expression
   id: gpt-6-luna
-  count: 4
+  count: 3
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/deploy_codex_home.py
   scope: <module>
   context: expression
   id: gpt-6.1-sol
-  count: 5
+  count: 6
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/docs/find.py

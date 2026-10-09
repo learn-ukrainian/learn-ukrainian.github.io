@@ -517,7 +517,7 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 - v1.9: 2026-09-23 (#8565). Refreshed active model roles: GPT-6 Sol coding/review,
   Luna routine/scout, Astra hard advisory; Opus 5.5 hard Claude-lane coding; Gemini
   3.8 Flash Ukrainian/well-defined work. Historical evaluations remain labeled as such.
-- v1.8: 2026-08-13 (Cursor Ultra month + DeepSeek Pro hard-implement pin). Prefer `--agent cursor` for mechanical + ordinary infra/code implement through ~2026-09-13; Flash everyday / Pro @ high = hard implement only; roster + §2b updated; CF/`auto` and LANGUAGE-LANES exclusions unchanged.
+- v1.8 (superseded): 2026-08-13. Cursor allocation and DeepSeek routing refresh; roster + §2b updated. Current routing follows the live catalog and §2/§2b.
 - v1.7: 2026-08-12 (#5737). Clarified agy/gemini-flash **worker-vs-orchestrator** boundary: complete task briefs, no self-decomposition into serial micro-PRs; roster Status + §2b updated.
 - v1.4: 2026-07-16 by Codex. Added native Kimi K3 as a subscription lane; its exact context size remains unpublished in current provider docs.
 - v1.2: 2026-05-18 by orchestrator (Claude inline). Added §8 Ranking-by-role with quality+cost view per user request. Added Qwen-3.6 row to §2 roster (newly wired). Updated §4.1 runner-ups to reflect the codex `tool_calls_total=0` retraction (PR #1907, 2026-05-13). Added DeepSeek + Qwen to writer Open slots pending bakeoff. Excluded Kimi K2 per user direction.
