@@ -2361,8 +2361,9 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert "--model" not in plan.cmd
         assert "model" not in plan.metadata
     else:
-        assert ("--model", fixed_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
-        assert plan.metadata["model"] == fixed_model
+        expected_wire_model = "grok-4.7-high" if participant == "cursor" and fixed_model == "grok-4.7" else fixed_model
+        assert ("--model", expected_wire_model) in zip(plan.cmd, plan.cmd[1:], strict=False)
+        assert plan.metadata["model"] == expected_wire_model
     if participant == "claude":
         assert "--system-prompt" not in plan.cmd
         assert plan.metadata["effort"] == "high"
@@ -2416,7 +2417,15 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
         )
 
 
-@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7"), ("grok-4.7", "grok-4.7"), ("composer-2.5", "composer-2.5")])
+@pytest.mark.parametrize(
+    ("model", "sent"),
+    [
+        (None, "grok-4.7-high"),
+        ("grok-4.7", "grok-4.7-high"),
+        ("grok-4.7-high", "grok-4.7-high"),
+        ("composer-2.5", "composer-2.5"),
+    ],
+)
 def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
     plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
@@ -2425,17 +2434,56 @@ def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, mod
     assert plan.metadata["model"] == sent
 
 
-@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default", "grok-4.7-fast"])
-def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model):
-    with pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        ("auto", "adapter_refused"),
+        ("Auto", "adapter_refused"),
+        ("cursor:auto", "adapter_refused"),
+        ("default", "adapter_refused"),
+        ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
+    ],
+)
+def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model, code):
+    message = "allowed pins" if code == "adapter_refused" else code
+    with pytest.raises(AcpxShadowRefusalError, match=message) as raised:
         _cursor_acp_plan(tmp_path, monkeypatch, model)
+    assert raised.value.failure_code == "adapter_refused"
+
+
+def test_cursor_acp_variant_refusal_writes_typed_usage_record(tmp_path, monkeypatch):
+    from scripts.agent_runtime import runner
+
+    records = []
+    monkeypatch.setattr(runner, "resolve_and_admit", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(runner, "get_agent_entry", lambda _name: {"direct_only": True, "cli_available": False})
+    monkeypatch.setattr(
+        runner, "_invoke_impl", lambda *_args, **kwargs: _cursor_acp_plan(tmp_path, monkeypatch, kwargs["model"])
+    )
+    monkeypatch.setattr(runner, "write_record", records.append)
+
+    with pytest.raises(AcpxShadowRefusalError, match="CURSOR_UNATTESTED_GROK_VARIANT"):
+        runner._invoke_direct_only(
+            "acpx-cursor-shadow",
+            "ping",
+            cwd=tmp_path,
+            model="grok-4.7-fast",
+            task_id="t-cursor-refusal",
+            tool_config={},
+            initiator="codex",
+        )
+
+    assert len(records) == 1
+    assert records[0]["failure_code"] == "adapter_refused"
+    assert records[0]["outcome"] == "error"
+    assert records[0]["model"] == "grok-4.7-fast"
 
 
 def test_cursor_acp_pins_match_the_catalog_cursor_pins():
     from scripts.review.model_catalog import cursor_pinned_models
 
     assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
-    assert frozenset(cursor_pinned_models()) == acpx_module.CURSOR_ACP_MODELS
+    assert frozenset(cursor_pinned_models()).issubset(acpx_module.CURSOR_ACP_MODELS)
 
 
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):

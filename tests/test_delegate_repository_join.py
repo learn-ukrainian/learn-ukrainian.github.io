@@ -176,6 +176,32 @@ def test_dispatch_dry_run_stamps_repository(tmp_tasks_dir, tmp_path, monkeypatch
     ):
         monkeypatch.setattr(delegate, warn, lambda: None)
     target = _git_repo_with_origin(tmp_path / "sibling", f"https://github.com/{PUBLIC_REPO}.git")
+    # #10025: the attribution target is an added checkout, not a shared primary.
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(target),
+            "-c",
+            "user.name=Test",
+            "-c",
+            "user.email=test@example.com",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture",
+        ],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    worktree = tmp_path / "target-worktree"
+    subprocess.run(
+        ["git", "-C", str(target), "worktree", "add", "--detach", str(worktree)],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -188,7 +214,7 @@ def test_dispatch_dry_run_stamps_repository(tmp_tasks_dir, tmp_path, monkeypatch
             "--prompt",
             "review the PR",
             "--cwd",
-            str(target),
+            str(worktree),
             "--dry-run",
         ],
     )

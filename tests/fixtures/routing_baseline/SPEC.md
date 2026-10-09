@@ -1,5 +1,24 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Worker resource-policy overlay (#10263)
+
+The 2026-10-09 resource-policy order is represented by the hash-pinned
+`routing-10263.json.gz` overlay, applied after the review-capacity and Gemini
+overlays for both CLI configurations. It replaces only the `fallbacks`
+surface. The decompressed comparison removes `post_2026_06_15_hard_rule`,
+adds `worker_resource_policy`, and removes the substitution whose
+`currently_uses` is `linear_pipeline.invoke_writer(writer='claude-tools')`.
+All remaining fields and substitution rows are identical. The replacement
+states the Sol default, native Claude eligibility and language-free overflow
+policy; it introduces no writer recommendation.
+
+The historical compressed baselines, input matrices, occurrence census,
+capture driver and checksum manifests remain byte-identical. Independent
+literal digests in `tests/review/test_model_catalog.py` pin this overlay and
+the updated specification; its scope test checks the exact decompressed
+difference against both historical fallback surfaces. Fresh full captures
+must still reproduce every other approved surface unchanged.
+
 The pinned source-contract/occurrence census is
 `dae3d752426d6c11c5dc82260ec07ae8164e7730`. The host-independent executable
 capture was reproduced from `019dcde544fe93f5aecf6d0deb6b2fd7352f339b`, the
@@ -289,3 +308,32 @@ catalog changes only `orchestrator_seats.agy.note`. Reviewer, role, approval,
 capacity, dispatch, adapter, registry, fallback, routing-holder and
 source-contract surfaces are identical. Any other difference blocks
 regeneration.
+
+
+## Cursor wire pin and allowlist (#10205)
+
+Both configurations were regenerated with the documented `capture.py` command
+against this checkout, using the test module's scoped `CAPTURE_RUNNER` cache.
+The existing `routing-10016.json.gz` reviewer overlay was compared separately;
+the frozen reviewer surface remains unchanged. No input or occurrence bytes
+changed, and `capture.py` remains byte-pinned.
+
+The host-CLI adapter rows 56–59 change only the Cursor `--model` argument and
+its requested-model telemetry from `grok-4.7` to `grok-4.7-high`. No-CLI adapter
+rows are unchanged because binary resolution fails before invocation.
+
+In both configurations, dispatch rows 2, 6, 10, 14, 22, 26, 30, 456, 458,
+460, 462, 464, 466, 468, 470, 472, 474, 480, 482, 484, 486, 488, 490,
+492, 494, 500, 504, 508, 516, 520 and 524 now normalize bare Grok in
+worker argv or refuse models outside the approved Cursor allowlist. Catalog
+identities remain unchanged. With a native Claude CLI, Claude fallback models
+receive `CURSOR_CLAUDE_REFUSED`; without it, unapproved fallback models receive
+`CURSOR_MODEL_NOT_APPROVED`. No-CLI probe diagnostics for unapproved models
+also disappear because adapter admission now precedes binary resolution.
+
+Launcher rows 42 and 47 normalize an explicit bare Grok selection to the high
+wire pin. Rows 41 and 46 preserve exit 4 and add the correct typed Claude
+refusal with the native CLI, or the allowlist refusal without it. All other
+launchers, dispatch rows, catalog, registry, capacity, role, approval, fallback,
+holder and source-contract surfaces remain identical. Any other difference
+blocks regeneration.

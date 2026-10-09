@@ -13,7 +13,10 @@ classifies the task, so a Ukrainian review or writing dispatch is not refused
 as a bounded fallback. ``--worktree``, ``--lifecycle-file``, ``--advisory-task``
 and the pointer-selecting research flags are not passed: those pointers are
 resolved per dispatch from a changing registry. Delegate still wraps the
-prompt: when ``--cwd`` lies in a registered worktree it adds its worktree
+prompt: a primary checkout is refused before dispatch because delegate would
+redirect every task to a different automatic checkout, invalidating the paired
+frame. Pass one existing isolated worktree as ``--worker-cwd``. When ``--cwd``
+lies in a registered worktree it adds its worktree
 block (whose sparse-checkout note depends on paths the prompt names) and then
 the rules core again in front of it. ``DelegateComposer`` computes that
 composition with delegate's own functions, without spawning anything, so every
@@ -204,7 +207,7 @@ class DelegateComposer:
     """Delegate's composition of a read-only ``--cwd`` dispatch, computed in-process without spawning anything.
 
     Mirrors ``cmd_dispatch`` for this harness's flags: the cwd is validated and
-    resolved as delegate does; a cwd inside a registered worktree gets the
+    resolved as delegate does; it must be inside a registered worktree and gets the
     worktree block, with the sparse-checkout exclusions delegate would apply
     there (computed from ``git ls-tree`` without changing the checkout); then
     ``_compose_dispatch_prompt`` builds the final prompt. A record that departs
@@ -215,10 +218,20 @@ class DelegateComposer:
         validated, error = delegate._validate_caller_path("--cwd", str(cwd), resolve=delegate._resolve_cwd_path)
         if validated is None:
             raise DispatchError(error or f"--cwd {cwd} refused")
+        if validated == delegate._REPO_ROOT.resolve():
+            raise DispatchError(
+                "primary --worker-cwd would redirect each read-only task to a different automatic worktree; "
+                "pass an existing isolated Git worktree with --worker-cwd to preserve the paired frame"
+            )
         self.delegate = delegate
         self.rules_seat = rules_seat
         self.worktree: Path | None = delegate._resolve_verified_worktree_path(validated)
-        self.cwd = str(self.worktree or validated)
+        if self.worktree is None:
+            raise DispatchError(
+                "--worker-cwd must resolve inside a registered added Git worktree; "
+                "pass an existing isolated Git worktree with --worker-cwd"
+            )
+        self.cwd = str(self.worktree)
 
     def _sparse(self, prompt: str) -> dict[str, Any]:
         """The sparse-checkout telemetry delegate's worktree block reads (exclusions only; nothing applied)."""

@@ -503,6 +503,7 @@ def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
 
 def _dispatched_worker_prompt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, extra: list[str]) -> tuple[dict, str]:
     from scripts import delegate
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
 
     written: list[str] = []
 
@@ -515,6 +516,7 @@ def _dispatched_worker_prompt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, e
 
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     task_id = "rules-core-" + hashlib.sha256(" ".join(extra).encode()).hexdigest()[:8]
+    isolate_dispatch_repo(monkeypatch, tmp_path / task_id, delegate)
     args = delegate.build_parser().parse_args(
         ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra]
     )
@@ -529,9 +531,13 @@ def _dispatched_worker_prompt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, e
 
 def test_delegate_dispatch_leads_with_the_core(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     state, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
-    assert state["prompt_blocks"] == ["rules_core"]
+    assert state["prompt_blocks"] == ["rules_core", "worktree"]
+    assert state["read_only_primary_cwd"] is True
+    assert state["cwd"] == state["worktree_path"]
     assert state["effective_prompt_sha256"] == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
-    assert prompt == rules_core.core_block("core") + "\n\nthe source prompt"
+    assert prompt.startswith(rules_core.core_block("core") + "\n\n")
+    assert prompt.endswith("the source prompt")
+    assert prompt.count(rules_core.core_block("core")) == 1
     _assert_core(prompt, "core", "delegate-dispatch")
 
 

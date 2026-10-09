@@ -228,6 +228,7 @@ from scripts.orchestration import (
     task_record_store,
     worker_leftovers,
     worktree_claims,
+    worktree_paths,
     worktree_prep,
 )
 from scripts.orchestration.dead_worker_state import (
@@ -1296,10 +1297,7 @@ def _normalize_task_id(agent: str, task_id: str) -> str:
     when the caller accidentally prefixed the agent name (our own tools
     often do — task-ids like ``codex-1472-foo`` are common).
     """
-    for prefix in (f"{agent}-", f"{agent}/"):
-        if task_id.startswith(prefix):
-            return task_id[len(prefix) :]
-    return task_id
+    return worktree_paths.normalize_task_id(agent, task_id)
 
 
 def _runtime_tmp_lease_name(task_id: str) -> str:
@@ -1824,12 +1822,8 @@ def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = No
     still cannot retarget this path — use ``--repo`` or the manual ``--cwd``
     flow (:func:`_resolve_cross_repo_binding_error`).
     """
-    normalized = _normalize_task_id(agent, task_id)
-    # Slashes are fine in branch names but not in a single path component,
-    # so flatten them here (task_id ``foo/bar`` → path ``foo-bar``).
-    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip("./-") or "task"
-    root = Path(repo_root).resolve() if repo_root is not None else _REPO_ROOT
-    return root / ".worktrees" / "dispatch" / agent / safe
+    root = Path(repo_root) if repo_root is not None else _REPO_ROOT
+    return worktree_paths.automatic_worktree_path(agent, task_id, repo_root=root)
 
 
 # ``git worktree add`` bounds, configurable in scripts/config.py (#8663). Tests
@@ -5547,6 +5541,10 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     if _is_read_only_runtime_telemetry_path(path):
         return True
     normalized = _normalize_read_only_relpath(path)
+    # The shared broker watcher can append while a review runs (#10025).
+    # Exempt its log only; other ignored MCP files remain mutation targets.
+    if normalized == ".mcp/servers/message-broker/watcher.log":
+        return True
     # `pip`/setuptools can regenerate these Git-ignored package outputs while
     # a reviewer runs tests. They are build residue, not review edits (#9213).
     if _is_read_only_package_build_path(normalized):
@@ -11711,6 +11709,18 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
+    # Diagnose the required profile before route admission defaults to code
+    # review and checks its explicit risk.
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and getattr(args, "require_review_verdict", False)
+        and not getattr(args, "review_profile", None)
+    ):
+        from scripts.ai_agent_bridge._agy import gemini_review_profile_error
+
+        print(f"❌ {gemini_review_profile_error(None)}", file=sys.stderr)
+        return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -11868,7 +11878,7 @@ def _dispatch(
     # worker prompt. Every later step uses the resolved paths returned here,
     # never the caller's strings. An explicit --worktree PATH must stay inside
     # the dispatching agent's own dispatch subtree; --cwd keeps its documented
-    # read-only-primary and sibling-repo flows. Read-only git lookups between
+    # isolated read-only and sibling-repo flows. Read-only git lookups between
     # here and the worktree lock (the write-mode worktree check, the cursor
     # review check, --preflight-triage) may run git in the validated path; the
     # path is re-checked after the lock, before any step that changes it.
@@ -12280,6 +12290,15 @@ def _dispatch(
             file=sys.stderr,
         )
         return 2
+    # Explicit primary-root callers need the same isolation as the default
+    # read-only flow (#10025). Keep their dispatch working without snapshotting
+    # other drivers' local edits in that shared checkout.
+    primary_read_only_cwd = (
+        args.mode == "read-only" and not worktree_arg and validated_cwd == target_repo_root
+    )
+    if primary_read_only_cwd:
+        args.cwd = None
+        validated_cwd = None
     detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
     if detached_read_only:
         worktree_arg = "auto"
@@ -12296,8 +12315,8 @@ def _dispatch(
     # root without --repo used to create the worktree in the primary while the
     # shell cwd said otherwise.
     cross_repo_error = _resolve_cross_repo_binding_error(
-        worktree_arg=worktree_arg,
-        cwd_arg=args.cwd,
+        worktree_arg=None if primary_read_only_cwd else worktree_arg,
+        cwd_arg=str(target_repo_root) if primary_read_only_cwd else args.cwd,
         requested_branch=requested_branch,
         target_repo_root=target_repo_root,
     )
@@ -12314,9 +12333,22 @@ def _dispatch(
         print(acp_runtime_error, file=sys.stderr)
         return 2
 
-    # Write-capable modes (workspace-write / danger) must resolve to a verified
-    # added worktree — never the primary checkout (#4445). An explicit read-only
-    # --cwd may still select the primary checkout. Evaluated before side effects.
+    # An explicit read-only cwd must also be isolated (#10025): snapshotting
+    # the primary checkout attributes concurrent driver edits to this task.
+    if (
+        args.mode == "read-only"
+        and validated_cwd is not None
+        and _resolve_verified_worktree_path(validated_cwd) is None
+    ):
+        print(
+            "❌ read-only --cwd requires a verified added worktree; "
+            "omit --cwd for an automatic detached dispatch worktree, or use --worktree.",
+            file=sys.stderr,
+        )
+        return 2
+
+    # Write-capable modes must resolve to a verified added worktree (#4445).
+    # Evaluated before side effects.
     write_cwd_error = _resolve_write_cwd_error(
         mode=args.mode,
         worktree_arg=worktree_arg,
@@ -13028,6 +13060,8 @@ def _dispatch(
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_state.update(_authoring_review_state_fields(args, authoring_admission))
             dry_run_state.update(advisory_admission.state_fields())
+            if primary_read_only_cwd:
+                dry_run_state["read_only_primary_cwd"] = True
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
                 runtime_tmp_namespace_root,
@@ -13237,6 +13271,10 @@ def _dispatch(
             print(changed_error, file=sys.stderr)
             return 1
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
+        if args.mode == "read-only" and resolved_wt is None:
+            discard_logs()
+            print(f"❌ read-only cwd {candidate_cwd} is no longer a registered worktree", file=sys.stderr)
+            return 1
         if resolved_wt:
             try:
                 worktree_locks.enter_context(worktree_lock(resolved_wt))
@@ -13543,6 +13581,8 @@ def _dispatch(
             harness=requested_harness,
         )
         initial_state.update(advisory_admission.state_fields(research_block=research_block, execution=worker_execution))
+        if primary_read_only_cwd:
+            initial_state["read_only_primary_cwd"] = True
         # #9275: the envelope admitted at route resolution must still be the
         # advisor's canonical result now, just before the worker is spawned.
         try:
@@ -14437,13 +14477,14 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review.
+    """True when a PR target or any review flag types this dispatch as a review.
 
     ``--review-author-model`` and ``--review-risk`` exist only for reviewer
     resolution, so either one types the dispatch as a (code-profile) review.
     """
     return (
         bool(getattr(args, "review", False))
+        or getattr(args, "pr", None) is not None
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
@@ -15560,8 +15601,13 @@ def _worker_route_argv(target: AdmittedTarget) -> list[str]:
 
     target = require_admitted(target)
     argv = ["--agent", target.recipient]
-    if target.model:
-        argv.extend(["--model", target.model])
+    model = target.model
+    if target.recipient == "cursor":
+        from scripts.review.model_catalog import apply_cursor_model_pins
+
+        model = apply_cursor_model_pins(model)
+    if model:
+        argv.extend(["--model", model])
     return argv
 
 
@@ -15875,6 +15921,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError
 
     def flag_paths(attr: str) -> list[str]:
@@ -15957,7 +16004,9 @@ def _admit_dispatch_target(
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
         args._mechanical_admitted_scope = mechanical_task
-    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+        if target.recipient == "cursor":
+            apply_cursor_model_pins(target.model)
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError, ModelCatalogError) as exc:
         return str(exc), None
     return None, target
 
@@ -17529,7 +17578,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Runtime mode (default: read-only). Read-only rejects write-shaped "
         "prompts; workspace-write and danger "
         "require a verified dispatch worktree (bare --worktree, or --cwd "
-        "pointing at an existing added worktree); read-only may run from repo root.",
+        "pointing at an existing added worktree); read-only defaults to an isolated detached worktree.",
     )
     d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
     d.add_argument(
@@ -17570,9 +17619,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--cwd",
         default=None,
         help="Working directory for the worker (read-only defaults to a detached dispatch worktree; "
-        "pass --cwd explicitly to use the primary checkout). "
-        "For workspace-write/danger it must be a verified added "
-        "worktree, never the primary checkout — prefer --worktree. "
+        "an explicit primary root also gets a detached worktree). "
+        "Other --cwd targets must be verified added worktrees. "
+        "Workspace-write/danger may never use the primary checkout — prefer --worktree. "
         "Sibling-repo flow: prefer `--repo KEY --worktree`, or manual "
         "`git worktree add` then `--cwd <that-worktree>` without `--worktree`.",
     )
@@ -17681,6 +17730,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
+            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )
