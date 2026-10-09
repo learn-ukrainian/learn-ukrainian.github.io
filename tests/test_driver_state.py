@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import io
 import json
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -136,7 +138,6 @@ def driver(state, tmp_path, monkeypatch):
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "gemini-infra")
     monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET))
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "batch_state" / "tasks"))
-    monkeypatch.setattr(driver_state.tempfile, "gettempdir", lambda: str(tmp_path / "tmp"))
     return tmp_path
 
 
@@ -197,9 +198,163 @@ def test_stop_allows_cto_escalation(driver):
 def test_stop_caps_consecutive_continues(driver):
     _workers(driver, "gemini-infra", 0)
     transcript = _transcript(driver, "Which should I take?")
-    results = [_stop(driver, transcript) for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES + 1)]
-    assert all(r.get("decision") == "continue" for r in results[:-1])
-    assert results[-1] == {}
+    for _ in range(2):
+        results = [_stop(driver, transcript) for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES + 1)]
+        assert all(r.get("decision") == "continue" for r in results[:-1])
+        assert results[-1] == {}
+
+
+def test_counter_private_round_trip_and_epic_isolation(state, tmp_path):
+    counter = driver_state._counter_path(state, "synthetic-conversation")
+    assert counter.parent == state.parent / "stop-counters"
+    assert stat.S_IMODE(counter.parent.stat().st_mode) == 0o700
+    assert counter.parent.stat().st_uid == driver_state.os.geteuid()
+    assert driver_state._bump_counter(state, "synthetic-conversation") == 1
+    assert driver_state._bump_counter(state, "synthetic-conversation") == 2
+    other = tmp_path / "other-epic" / "DRIVER-STATE.md"
+    other.parent.mkdir()
+    assert driver_state._bump_counter(other, "synthetic-conversation") == 1
+    driver_state._reset_counter(state, "synthetic-conversation")
+    assert counter.read_text(encoding="utf-8") == "0"
+    driver_state._reset_counter(state, "synthetic-conversation")
+    assert driver_state._bump_counter(state, "synthetic-conversation") == 1
+
+
+@pytest.mark.parametrize("unsafe", ["foreign-owner", "shared", "symlink"])
+def test_stop_refuses_unsafe_counter_directory(driver, state, monkeypatch, unsafe):
+    directory = state.parent / "stop-counters"
+    if unsafe == "symlink":
+        target = driver / "synthetic-target"
+        target.mkdir(mode=0o700)
+        directory.symlink_to(target, target_is_directory=True)
+    else:
+        directory.mkdir(mode=0o700)
+        if unsafe == "foreign-owner":
+            monkeypatch.setattr(driver_state.os, "geteuid", lambda: directory.stat().st_uid + 1)
+        else:
+            directory.chmod(0o777)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "continue"
+    assert "counter unavailable" in out["reason"]
+    assert list(directory.iterdir()) == []
+
+
+@pytest.mark.parametrize("operation,ending", [
+    (operation, ending)
+    for operation in ("mkdir", "lstat", "read_text", "write_text", "unlink")
+    for ending in ("question", "clean", "escalation", "cap")
+    if not (operation == "read_text" and ending in ("clean", "escalation"))
+    and not (operation == "unlink" and ending == "question")
+])
+def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, capsys, operation, ending):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    content = {
+        "question": "Which should I take?",
+        "clean": "Work verified.",
+        "escalation": "CTO-ESCALATION: approval required.",
+        "cap": "Which should I take?",
+    }[ending]
+    transcript = _transcript(driver, content)
+    counter = driver_state._counter_path(state, "synthetic-conversation")
+    counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES if ending == "cap" else 0), encoding="utf-8")
+    original = getattr(Path, operation)
+
+    def denied(path, *args, **kwargs):
+        if path in (counter, counter.parent):
+            raise PermissionError("synthetic counter storage is unwritable")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, operation, denied)
+    monkeypatch.setattr(driver_state.sys, "stdin", io.StringIO(json.dumps({
+        "conversationId": "synthetic-conversation",
+        "workspacePaths": [str(driver)],
+        "transcriptPath": str(transcript),
+        "terminationReason": "NO_TOOL_CALL",
+    })))
+    assert driver_state.main(["agy-stop-hook"]) == 0
+    out = json.loads(capsys.readouterr().out)
+    if ending in ("clean", "escalation") or operation == "unlink":
+        assert out == {}
+        if operation == "unlink":
+            assert counter.read_text(encoding="utf-8") == "0"
+        return
+    assert out["decision"] == "continue"
+    assert "counter unavailable" in out["reason"]
+    assert "question" in out["reason"]
+
+
+def test_stop_cap_resets_without_unlink(driver, state, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES), encoding="utf-8")
+    original = Path.unlink
+
+    def denied(path, *args, **kwargs):
+        if path == counter:
+            raise PermissionError("synthetic counter cannot be unlinked")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "unlink", denied)
+    transcript = _transcript(driver, "Which should I take?")
+    assert _stop(driver, transcript) == {}
+    assert counter.read_text(encoding="utf-8") == "0"
+    assert _stop(driver, transcript)["decision"] == "continue"
+    assert counter.read_text(encoding="utf-8") == "1"
+
+
+def test_stop_cap_reset_write_failure_continues_until_reset_succeeds(driver, state, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES), encoding="utf-8")
+    original = Path.write_text
+
+    def denied(path, data, *args, **kwargs):
+        if path == counter and data == "0":
+            raise PermissionError("synthetic counter reset is unwritable")
+        return original(path, data, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", denied)
+    transcript = _transcript(driver, "Which should I take?")
+    for _ in range(2):
+        out = _stop(driver, transcript)
+        assert out["decision"] == "continue"
+        assert "question" in out["reason"]
+        assert "counter unavailable" in out["reason"]
+    monkeypatch.setattr(Path, "write_text", original)
+    assert _stop(driver, transcript) == {}
+    assert counter.read_text(encoding="utf-8") == "0"
+    assert _stop(driver, transcript)["decision"] == "continue"
+
+
+def test_stop_counter_failure_preserves_all_policy_reasons(driver, state, monkeypatch):
+    _workers(driver, "gemini-infra", 0)
+    counter = driver_state._counter_path(state, "c1")
+    original = Path.write_text
+
+    def denied(path, *args, **kwargs):
+        if path == counter:
+            raise PermissionError("synthetic counter storage is unwritable")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", denied)
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "continue"
+    assert "below the privately configured target" in out["reason"]
+    assert "question" in out["reason"]
+    assert "counter unavailable" in out["reason"]
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    out = _stop(driver, _transcript(driver, "Work verified."), fully_idle=True)
+    assert out["decision"] == "continue"
+    assert "nothing is armed to wake you" in out["reason"]
+    assert "counter unavailable" in out["reason"]
+
+
+def test_stop_corrupt_counter_fails_closed(driver, state):
+    counter = driver_state._counter_path(state, "c1")
+    counter.write_text("invalid", encoding="utf-8")
+    out = _stop(driver, _transcript(driver, "Which should I take?"))
+    assert out["decision"] == "continue"
+    assert "counter unavailable" in out["reason"]
 
 
 def test_stop_ignores_errors_and_non_drivers(driver, monkeypatch):

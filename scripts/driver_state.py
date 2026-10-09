@@ -32,8 +32,10 @@ An absent or invalid target is unknown and cannot force a worker-count continuat
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
-per-conversation counter caps consecutive continuations so the hook can never
-spin the agent forever. ``agy-pretool-hook`` denies the interactive
+per-conversation counter caps consecutive continuations when its private storage
+is available; counter errors preserve required continuation while allowing
+clean reports and escalations to stop.
+``agy-pretool-hook`` denies the interactive
 ``ask_question`` tool for driver sessions: nobody answers it in a driver pane.
 Standard library only, so it runs from a linked worktree without a venv.
 """
@@ -41,12 +43,13 @@ Standard library only, so it runs from a linked worktree without a venv.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 from scripts.common.jsonl import jsonl_lines
@@ -277,24 +280,28 @@ def running_workers(initiator: str) -> int | None:
     return count
 
 
-def _counter_path(conversation_id: str) -> Path:
+def _counter_path(state: Path, conversation_id: str) -> Path:
+    directory = state.parent / "stop-counters"
+    directory.mkdir(mode=0o700, exist_ok=True)
+    info = directory.lstat()
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid() or info.st_mode & 0o077:
+        raise PermissionError("continuation counter directory must be private and owned by the current user")
     safe = re.sub(r"[^A-Za-z0-9_-]", "_", conversation_id or "unknown")[:80]
-    return Path(tempfile.gettempdir()) / "lu-driver-state" / f"stop-{safe}.count"
+    return directory / f"stop-{safe}.count"
 
 
-def _bump_counter(conversation_id: str) -> int:
-    path = _counter_path(conversation_id)
+def _bump_counter(state: Path, conversation_id: str) -> int:
+    path = _counter_path(state, conversation_id)
     try:
         value = int(path.read_text(encoding="utf-8").strip() or "0") + 1
-    except (OSError, ValueError):
+    except FileNotFoundError:
         value = 1
-    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(str(value), encoding="utf-8")
     return value
 
 
-def _reset_counter(conversation_id: str) -> None:
-    _counter_path(conversation_id).unlink(missing_ok=True)
+def _reset_counter(state: Path, conversation_id: str) -> None:
+    _counter_path(state, conversation_id).write_text("0", encoding="utf-8")
 
 
 def cmd_agy_stop_hook(stdin_text: str) -> dict:
@@ -308,7 +315,8 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
         return {}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
     if text.lstrip().startswith(ESCALATION_MARKER):
-        _reset_counter(conversation)
+        with contextlib.suppress(OSError):
+            _reset_counter(path, conversation)
         return {}
     reasons = []
     seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
@@ -324,11 +332,15 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
             "nothing is armed to wake you; start a background `delegate.py wait` or set a `schedule` timer, then end the turn"
         )
     if not reasons:
-        _reset_counter(conversation)
+        with contextlib.suppress(OSError):
+            _reset_counter(path, conversation)
         return {}
-    if _bump_counter(conversation) > MAX_CONSECUTIVE_CONTINUES:
-        _reset_counter(conversation)
-        return {}
+    try:
+        if _bump_counter(path, conversation) > MAX_CONSECUTIVE_CONTINUES:
+            _reset_counter(path, conversation)
+            return {}
+    except (OSError, ValueError):
+        reasons.append("continuation counter unavailable")
     return {
         "decision": "continue",
         "reason": (
