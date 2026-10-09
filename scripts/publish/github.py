@@ -337,6 +337,8 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     else:
         return None
     path = recovery.ledger_path(cwd)
+    if run is None and not fields.get("recovery") and recovery.queue_removal_is_old(path, number, head, removals):
+        return None
     prior = recovery.first_attempt(path, dest, number, head)
     if prior:
         raise gate.PublishBlocked(recovery.spent_reason(prior))

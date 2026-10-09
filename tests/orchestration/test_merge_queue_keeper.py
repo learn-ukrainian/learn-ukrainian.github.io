@@ -697,7 +697,7 @@ def test_unknown_fresh_read_leaves_queued_untouched(tmp_path: Path, monkeypatch:
 def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub(pr(headRefOid=HEAD_B))
     fake.check_rows = checks(HEAD_B)
-    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    fake.events = [{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     path = tmp_path / "state.json"
     path.write_text(
         json.dumps({"queued": {"42": HEAD_A}, "drops": {f"42:{HEAD_A}": 2}, "observed": "2026-09-23T00:00:00Z"})
@@ -745,7 +745,7 @@ def test_red_merge_group_drop_with_green_branch_checks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, granted: bool
 ) -> None:
     fake = FakeGitHub()
-    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    fake.events = [{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     fake.run_rows = [
         {
             "id": 123,
@@ -767,6 +767,7 @@ def test_red_merge_group_drop_with_green_branch_checks(
     comments = [body for action, body in fake.actions if action == "comment"]
     state = json.loads(path.read_text())
     assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert state["drop_events"][f"42:{HEAD_A}"] == [987]
     assert state["failures"][0]["job"] == "pytest"
     if granted:
         assert mutations(fake) == ["enqueue"]
@@ -1459,3 +1460,21 @@ def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch
     assert failed and "reason=requeue-unknown" in lines[0]
     assert any("FAILED: RECOVERY_RECORD_UNAVAILABLE" in line for line in lines)
     assert "enqueue" not in mutations(fake)
+
+
+def test_multiple_removals_cannot_be_bound_to_one_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub(pr(headRefOid=HEAD_B))
+    fake.events = [{"id": event_id, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}
+                   for event_id in (987, 988)]
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+    run(fake, path, monkeypatch)
+    assert json.loads(path.read_text())["drop_events"][f"42:{HEAD_A}"] == []
+
+
+@pytest.mark.parametrize("drop_events", [[], {"42:head": [0]}, {"42:head": "unknown"}])
+def test_malformed_drop_event_binding_is_refused(tmp_path: Path, drop_events: Any) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "drop_events": drop_events}))
+    with pytest.raises(keeper.KeeperError, match="keeper state malformed"):
+        keeper.run(FakeGitHub(), path, apply=True)

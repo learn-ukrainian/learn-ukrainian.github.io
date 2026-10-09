@@ -63,6 +63,33 @@ def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
     return None
 
 
+def queue_removal_is_old(path: Path, number: int, head: str, events: list[dict]) -> bool:
+    """Exempt an initial enqueue only when the latest removal IDs belong to other heads.
+
+    The keeper binds one observed removal event to its previously queued head.
+    Commit dates or a later observation alone cannot establish that binding.
+    Missing/ambiguous attribution supplies no exemption.
+    """
+    try:
+        state = json.loads((path.parent.parent / "batch_state/merge_queue_keeper.json").read_text())
+        known = state["drop_events"]
+        times = [datetime.fromisoformat(event["created_at"].replace("Z", "+00:00")) for event in events]
+        if not times or any(time.tzinfo is None for time in times):
+            return False
+        latest_time = max(times)
+        latest = [event for event, time in zip(events, times, strict=True) if time == latest_time]
+        if any(type(event.get("id")) is not int or event["id"] <= 0 for event in latest):
+            return False
+        latest_ids = {event["id"] for event in latest}
+        current = f"{number}:{head}"
+        other_ids = {event_id for key, ids in known.items()
+                     if key.startswith(f"{number}:") and key != current and SHA.fullmatch(key.split(":", 1)[1])
+                     for event_id in ids if type(event_id) is int and event_id > 0}
+        return latest_ids <= other_ids and latest_ids.isdisjoint(known.get(current, []))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return False
+
+
 def spent_reason(attempt: dict) -> str:
     """A typed refusal names the first attempt without exposing local paths."""
     return (

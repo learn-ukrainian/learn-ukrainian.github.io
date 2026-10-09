@@ -89,7 +89,7 @@ class Transport:
                 data = [comments]
             elif endpoint.endswith("/timeline"):
                 data = (
-                    [[{"event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
+                    [[{"id": 987, "event": "removed_from_merge_queue", "created_at": "2026-10-09T11:00:00Z"}]]
                     if self.removed
                     else [[]]
                 )
@@ -354,3 +354,46 @@ def test_future_commit_date_cannot_refund_same_head(setup):
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_ALLOWANCE_SPENT"):
         recover(setup, "direct")
     assert len(transport.writes) == 1
+
+
+@pytest.mark.parametrize("settled", [True, False])
+def test_old_head_removal_does_not_spend_new_head_initial_enqueue(setup, settled):
+    root, transport = setup
+    recover(setup, "run-rerun")
+    (root / "batch_state").mkdir()
+    state_path = root / "batch_state/merge_queue_keeper.json"
+    state = {"observed": "2026-10-09T12:00:00Z" if settled else "2026-10-09T10:00:00Z",
+             "drops": {f"42:{HEAD}": 1}, "queued": {}, "undiagnosed": {},
+             "drop_events": {f"42:{HEAD}": [987]} if settled else {}}
+    state_path.write_text(json.dumps(state))
+    transport.head, transport.proof = NEW_HEAD, None
+    if settled:
+        recover(setup, "direct")
+        assert len(transport.writes) == 2
+        assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, NEW_HEAD) is None
+        # Once this head is itself ejected, it gets its own single recovery.
+        state["drops"][f"42:{NEW_HEAD}"] = 1
+        state["drop_events"][f"42:{NEW_HEAD}"] = [987]
+        state_path.write_text(json.dumps(state))
+        transport.proof = evidence(NEW_HEAD)
+        recover(setup, "direct")
+        assert len(transport.writes) == 3
+    else:
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
+            recover(setup, "direct")
+        assert len(transport.writes) == 1
+    transport.head, transport.proof = HEAD, evidence()
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_ALLOWANCE_SPENT"):
+        recover(setup, "direct")
+
+
+def test_unobserved_removal_never_uses_an_older_drop(setup):
+    root, transport = setup
+    (root / "batch_state").mkdir()
+    (root / "batch_state/merge_queue_keeper.json").write_text(json.dumps({
+        "observed": "2099-01-01T00:00:00Z", "drops": {f"42:{HEAD}": 1},
+        "drop_events": {f"42:{HEAD}": [986]}, "queued": {}, "undiagnosed": {}}))
+    transport.head, transport.proof = NEW_HEAD, None
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, "direct")
+    assert transport.writes == []
