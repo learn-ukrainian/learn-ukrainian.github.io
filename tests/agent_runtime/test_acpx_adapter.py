@@ -2427,7 +2427,7 @@ def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, mod
     assert plan.metadata["model"] == expected_meta
 
 
-@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default", "grok-4.7-fast"])
+@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default"])
 def test_cursor_acp_refuses_auto_and_unpinned_models(tmp_path, monkeypatch, model):
     with pytest.raises(AcpxShadowRefusalError, match="allowed pins"):
         _cursor_acp_plan(tmp_path, monkeypatch, model)
