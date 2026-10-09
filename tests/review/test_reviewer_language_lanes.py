@@ -147,8 +147,8 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_can_use_gemini_when_primary_lanes_are_unhealthy():
-    """#10073: native AGY joins non-language medium-risk infra review."""
+def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
+    """#10073 admits native AGY code review only; infra keeps a qualified fallback."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -159,8 +159,8 @@ def test_pure_infra_change_can_use_gemini_when_primary_lanes_are_unhealthy():
         ),
     )
     assert resolution.selected is not None
-    assert resolution.selected.concrete_model == "gemini-3.8-flash-high"
-    assert resolution.selected.transport == "agy"
+    assert resolution.selected.concrete_model == "grok-4.7"
+    assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
     assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     dark = resolve_reviewer(
         ResolverInputs(

@@ -66,6 +66,67 @@ def resolved_route_test_target(ordinary_review_repo, monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {"agents": {}, "diagnostics": {"stale": False}})
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_cmd_dispatch_native_agy_code_pr_review(ordinary_review_repo, tmp_path, monkeypatch, risk):
+    """PR verdict reviews pass both profile checks and real resolver admission."""
+    from scripts.review import target_resolution
+    from tests.ai_agent_bridge import test_agy_review_profile
+    from tests.test_delegate import _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ordinary_review_repo)
+    monkeypatch.chdir(ordinary_review_repo)
+    monkeypatch.setattr(test_agy_review_profile, "_OWNED_PATH", "ordinary.py")
+    head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ordinary_review_repo, text=True, timeout=30,
+    ).strip()
+    payload = json.dumps({
+        "number": 42, "baseRefName": "main", "baseRefOid": head,
+        "headRefName": "ordinary-review", "headRefOid": head, "isCrossRepository": False,
+    })
+    monkeypatch.setattr(
+        target_resolution, "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    monkeypatch.setattr(
+        "scripts.common.github_client.run",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    argv = [
+        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high",
+        "--mode", "read-only", "--task-id", "native-agy-review", "--pr", "42",
+        "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk,
+        "--owned-path", "ordinary.py",
+        "--prompt", "Review the PR.",
+    ]
+    args = delegate.build_parser().parse_args(
+        test_agy_review_profile._with_sol_envelope(monkeypatch, tmp_path, argv)
+    )
+    validate_effort = delegate._validate_dispatch_effort
+    checks = []
+
+    class PassedReviewAdmission(Exception):
+        pass
+
+    def stop_after_profile_checks(agent, effort):
+        validate_effort(agent, effort)
+        checks.append(agent)
+        # The second check follows both profile gates and resolver admission,
+        # including final-model resolution. Stop before launch side effects.
+        if len(checks) == 2:
+            raise PassedReviewAdmission
+
+    monkeypatch.setattr(delegate, "_validate_dispatch_effort", stop_after_profile_checks)
+    with pytest.raises(PassedReviewAdmission):
+        delegate.cmd_dispatch(args)
+    assert checks == ["agy", "agy"]
+    assert args.model == "gemini-3.8-flash-high"
+    assert args.pinned_head == head
+    assert args._review_admission_head == head
+    assert not delegate._state_path(args.task_id).exists()
+
+
 @pytest.mark.parametrize("outcome", ["published", "refused", "crashed", "spawn-failed"])
 @pytest.mark.parametrize("access", ["full", "isolated"])
 def test_review_dispatch_protects_preparation_then_publishes_or_releases(tmp_path, monkeypatch, outcome, access):

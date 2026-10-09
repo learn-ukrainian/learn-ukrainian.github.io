@@ -726,7 +726,9 @@ def test_catalog_refuses_gemini_on_other_review_transport():
 def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():
     candidates = load_model_catalog()["review_candidates"]
     assert {"code", "infra"} == VALID_REVIEW_PROFILES
-    assert all(set(candidate["review_profiles"]) == VALID_REVIEW_PROFILES for candidate in candidates.values())
+    for name, candidate in candidates.items():
+        expected = {"code"} if name == "gemini-3.8-flash-high" else VALID_REVIEW_PROFILES
+        assert set(candidate["review_profiles"]) == expected
     assert candidates["composer-2.5"]["model_id"] == "composer-2.5"
 
 

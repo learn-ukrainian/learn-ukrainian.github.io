@@ -105,8 +105,9 @@ def test_review_admission_preserves_anchor_manifest_and_dynamic_digest():
     assert "native CLI and Cursor with runtime model attestation" in sentence
     assert "never for xAI authors or its own subject seat" in sentence
     assert "operator decision 2026-10-05, #9769" in sentence
-    assert "AGY: native low/medium code review" in sentence
-    assert "no high/critical/security" in sentence
+    assert "Native AGY admits low or medium risk code review." in sentence
+    assert "Infra, high, critical and security reviews exclude Gemini." in sentence
+    assert "Ukrainian reviews need Sources MCP." in sentence
     assert "Apply hard filters before quality; execute the returned invocation" in sentence
     assert "Grok reviews: no sandbox, shell, tests or scripts; tracked-file reads only (#9987)." in sentence
     assert "Execution-dependent reviews use Opus 5.5/Sol 6.1; Grok briefs: diff/CI evidence, no execution requests." in sentence

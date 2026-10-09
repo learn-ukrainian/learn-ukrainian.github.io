@@ -92,7 +92,7 @@ APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
     assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
-        "e397875d12488c783f2edac83ac76fdb52d05cbf965a5cf54e288901ebdaaa25"
+        "4b16188c215c068f232d4c11ddc661c6dc67788a762c8d4b5c691aad562a2ffe"
     )
     assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
     assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
@@ -111,6 +111,7 @@ def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
         chosen = new["value"]["selected"]
         if chosen != old["value"]["selected"]:
             assert inputs["risk"] in {"low", "medium"}
+            assert inputs["review_profile"] == "code"
             assert chosen["name"] == "gemini-3.8-flash-high"
         new["value"]["trace"] = [row for row in new["value"]["trace"] if row["family"] != "google"]
         for receipt in (old, new):

@@ -1539,7 +1539,7 @@ seats:
     routes:
       native:
         legacy_name: gemini-3.8-flash-high
-        review_profiles: [code, infra]
+        review_profiles: [code]
         capabilities: [code_review]
         health_keys: [agy, gemini]
         route: agy

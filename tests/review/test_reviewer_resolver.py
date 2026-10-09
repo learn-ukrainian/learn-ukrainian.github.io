@@ -21,7 +21,7 @@ def test_gemini_risk_boundary(profile, risk, entrypoint):
         if entrypoint == "pin":
             inputs = replace(inputs, pinned_candidate=GEMINI.name, pressure_override_reason="boundary test")
         eligible = resolve_reviewer(inputs, ladder=((GEMINI,),)).selected is not None
-    assert eligible == (risk in {"low", "medium"})
+    assert eligible == (profile == "code" and risk in {"low", "medium"})
 
 
 @pytest.mark.parametrize("risk", ["low", "medium"])

@@ -17592,8 +17592,9 @@ def build_parser() -> argparse.ArgumentParser:
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected. "
-            "On agy/gemini this also requires --review-profile ukrainian, and "
-            "a --branch target must be a Ukrainian-content diff."
+            "On agy/gemini this also requires --review-profile code or ukrainian. "
+            "Native AGY code review requires low or medium risk and resolver admission; "
+            "Ukrainian review targets must be Ukrainian-content diffs."
         ),
     )
     d.add_argument(
@@ -17602,8 +17603,9 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
-            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
+            "Native AGY admits code at low or medium risk through the reviewer resolver, "
+            "excluding security-sensitive paths; infra is refused. "
+            "Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(

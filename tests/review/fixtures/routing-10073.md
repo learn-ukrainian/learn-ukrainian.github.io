@@ -8,7 +8,9 @@ The reviewer matrix grows from 1,480 to 1,504 inputs; the role matrix grows from
 840 to 870. Every historical input is retained. The regression test compares
 each historical review receipt and verifies that existing non-Google candidates
 retain their eligibility, scores, and provenance. A changed selection must be
-Gemini at low or medium risk. Separate boundary tests cover high/critical risk,
+Gemini for the code profile at low or medium risk; infra review is excluded.
+The review-fix recapture updates only catalog and Google reviewer receipts;
+non-Google eligibility and provenance remain unchanged. Separate boundary tests cover high/critical risk,
 security paths, author independence, native endpoint identity, and exact-head
 verdict publication and consumption.
 

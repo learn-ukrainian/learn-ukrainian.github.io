@@ -27,15 +27,25 @@ def test_missing_profile_names_the_flag() -> None:
     assert "ukrainian" in message
 
 
-def test_code_profile_cites_the_operator_rule() -> None:
+def test_bridge_code_profile_requires_native_dispatch() -> None:
     message = gemini_review_profile_error("code")
     assert message is not None
     assert "gemini_code_review_forbidden" in message
-    assert "Gemini reviews Ukrainian only, never code" in message
+    assert "Code review requires native AGY dispatch at low or medium risk" in message
 
 
 def test_ukrainian_profile_is_allowed() -> None:
     assert gemini_review_profile_error("ukrainian") is None
+
+
+@pytest.mark.parametrize("profile", ["code", " CODE ", "ukrainian"])
+def test_native_profile_check_allows_explicit_code_review(profile) -> None:
+    assert gemini_review_profile_error(profile, native_code_review=True) is None
+
+
+@pytest.mark.parametrize("profile", [None, "", "infra", "unknown"])
+def test_native_profile_check_refuses_missing_or_unsupported_profiles(profile) -> None:
+    assert "--review-profile" in gemini_review_profile_error(profile, native_code_review=True)
 
 
 @pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
@@ -110,7 +120,7 @@ def test_ask_agy_code_profile_is_refused() -> None:
         review_profile="code",
         background=False,
     )
-    with pytest.raises(SystemExit, match="Gemini reviews Ukrainian only, never code"):
+    with pytest.raises(SystemExit, match="Code review requires native AGY dispatch"):
         _handle_acp_compat(args, "agy")
 
 
