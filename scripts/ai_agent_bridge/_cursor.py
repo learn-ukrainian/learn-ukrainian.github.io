@@ -64,9 +64,7 @@ def _require_approved_cursor_model(model: str | None) -> str:
     except ModelCatalogError as exc:
         raise SystemExit(f"ask-cursor: refused: {exc}") from exc
 
-    # Use wire_model for validation and fallback to canonical if needed.
-    # Actually, if we just pass wire_model to cursor_non_dispatch_model_refusal
-    # and we modify it to accept both.
+    # The normalized wire model must pass the strict pin approval check.
     refusal = cursor_non_dispatch_model_refusal(wire_model)
     if refusal:
         raise SystemExit(f"ask-cursor: refused: {refusal}")

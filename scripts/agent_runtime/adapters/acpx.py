@@ -2579,10 +2579,19 @@ class _AcpxDiscussionAdapter:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None or {self.fixed_model!r}"
             )
-        if self.allowed_models and model is not None and model not in self.allowed_models:
-            raise AcpxShadowRefusalError(
-                f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
-            )
+        if self.allowed_models and model is not None:
+            check_model = model
+            if self.name == "acpx-cursor-shadow":
+                from scripts.review.model_catalog import apply_cursor_model_pins
+                # This raises ModelCatalogError for unattested variants
+                _ = apply_cursor_model_pins(model)
+                if check_model == "grok-4.7-high":
+                    check_model = "grok-4.7"
+
+            if check_model not in self.allowed_models:
+                raise AcpxShadowRefusalError(
+                    f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
+                )
         if self.fixed_effort is not None and effort not in {None, self.fixed_effort}:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: effort={effort!r} rejected; caller may only pass None or {self.fixed_effort!r}"
