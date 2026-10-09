@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 import yaml
 
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
+from scripts.hygiene.lint_source_db_writable_connects import classify_store_source
 from scripts.lexicon import curated_textbook_jsonl_repromote as textbook
 
 
@@ -231,6 +233,33 @@ def test_help_documents_scratch_lifetime_and_overrides(capsys):
     help_text = capsys.readouterr().out
     for text in ("--candidates-out", "--plan-out", "TMPDIR", "caller owns cleanup", "--apply --write", "Exit codes:"):
         assert text in help_text
+    assert "Textbook database (default data/sources.db; example" in help_text
+    assert "./textbooks.db)" in help_text
+
+
+def test_db_argument_preserves_frozen_store_path_fingerprint():
+    source = Path(textbook.__file__).read_text(encoding="utf-8")
+    findings = classify_store_source(source, "scripts/lexicon/curated_textbook_jsonl_repromote.py")
+    # Independently frozen before #9702: adding CLI help must not change access.
+    assert [(finding.kind, finding.scope, finding.fingerprint, finding.occurrence) for finding in findings] == [
+        ("store_path", "main", "71aa39ff10ce219804b8bbb3342ca0dc431982c2c71b81faceb657ff4c8d17aa", 0)
+    ]
+
+
+@pytest.mark.parametrize("explicit", [False, True], ids=["default-db", "explicit-db"])
+def test_db_argument_keeps_default_and_explicit_paths(tmp_path, monkeypatch, explicit):
+    seen = []
+    monkeypatch.setattr(textbook, "iter_db_texts", lambda path: seen.append(path) or [])
+    monkeypatch.setattr(textbook, "mine_headwords", lambda texts, **kwargs: [])
+    db_path = tmp_path / "textbooks.db"
+    argv = ["--from-db", "--db", str(db_path)] if explicit else ["--from-db"]
+    assert textbook.main(argv) == 0
+    assert len(seen) == 1
+    if explicit:
+        assert seen[0] == db_path
+    else:
+        assert seen[0].parent == textbook.PROJECT_ROOT / "data"
+        assert seen[0].name == "sources.db"
 
 
 def test_write_without_apply_does_not_create_scratch_or_publish(tmp_path, monkeypatch, pipeline):

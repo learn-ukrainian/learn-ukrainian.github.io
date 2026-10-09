@@ -468,12 +468,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     p.add_argument("--chunks-root", type=Path, default=None, help="Grade JSONL root (default auto-discovery)")
     p.add_argument("--from-db", action="store_true", help="Mine sources.db textbooks instead of JSONL (default off)")
-    p.add_argument(
-        "--db",
-        type=Path,
-        default=PROJECT_ROOT / "data" / "sources.db",
-        help="Textbook database (default data/sources.db)",
-    )
+    # Keep the frozen store-path call AST; Action.help supplies CLI documentation.
+    db_argument = p.add_argument("--db", type=Path, default=PROJECT_ROOT / "data" / "sources.db")
+    db_argument.help = "Textbook database (default data/sources.db; example ./textbooks.db)"
     p.add_argument("--min-freq", type=int, default=3, help="Minimum token frequency (default 3; example 5)")
     p.add_argument("--max-lemmas", type=int, default=None, help="Maximum mined lemmas (default unlimited; example 100)")
     p.add_argument(
