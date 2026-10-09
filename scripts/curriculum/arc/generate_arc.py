@@ -13,7 +13,8 @@ mapping, parsed from the document's §7 band table (tables only — prose in §7
 fails generation): a top-level ``immersion_bands`` list of
 ``{start, end, band_key}`` ranges plus a per-position ``band_key`` filled from
 those ranges, validated against IMMERSION_POLICIES in scripts/config.py.
-A1 has neither key: its band is ULP-derived.
+A1 declares ``a1-orientation`` only at position 1; ordinary positions retain
+vocabulary-selected immersion and no per-position key.
 """
 
 from __future__ import annotations
@@ -471,7 +472,9 @@ def render_arc_yaml(doc_bytes: bytes, doc_rel_path: str, level: str = "a1") -> s
         },
         "est_lessons_total": sum(record["est_lessons"] for record in records),
     }
-    if level != "a1":
+    if level == "a1":
+        records[0]["band_key"] = "a1-orientation"
+    else:
         manifest_slugs = _manifest_slugs(level)
         document_slugs = [record["slug"] for record in records]
         if document_slugs != manifest_slugs:
@@ -507,8 +510,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Non-A1 levels additionally carry the immersion band mapping parsed from the document's §7 "
             "band table (| Positions | Band key | Advisory Ukrainian share |): a top-level immersion_bands "
             "list of {start, end, band_key} ranges and a per-position band_key filled from those ranges, "
-            "validated against IMMERSION_POLICIES in scripts/config.py. A1 has neither key (its band is "
-            "ULP-derived).\n"
+            "validated against IMMERSION_POLICIES in scripts/config.py. A1 declares a1-orientation "
+            "only at position 1; ordinary positions retain vocabulary-selected immersion.\n"
             "Use it after the arc document changes; never edit _arc.yaml by hand — the committed YAML must be "
             "byte-identical to a fresh run of this generator."
         ),

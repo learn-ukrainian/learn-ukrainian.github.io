@@ -15,6 +15,7 @@ positions:
   skills: []
   standard_line_refs: []
   letters: []
+  band_key: a1-orientation
 - position: 2
   slug: sounds-letters-and-hello
   est_lessons: 5

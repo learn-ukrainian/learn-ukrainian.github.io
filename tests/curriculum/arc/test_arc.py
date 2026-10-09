@@ -225,6 +225,38 @@ def test_loader_roundtrip() -> None:
     assert positions[44].standard_line_refs == [(489, 493)]
 
 
+def test_generated_a1_orientation_loads_all_55_positions(tmp_path: Path) -> None:
+    generated = tmp_path / "_arc.yaml"
+    generated.write_text(generate_arc.generate_yaml(ARC_DOC), encoding="utf-8")
+    positions = loader.load_arc("a1", arc_path=generated)
+    assert [p.position for p in positions] == list(range(1, 56))
+    assert [(p.position, p.band_key) for p in positions if p.band_key is not None] == [(1, "a1-orientation")]
+    assert len([p for p in positions if p.band_key is None]) == 54
+    assert sum(p.est_lessons for p in positions) == 162
+
+
+@pytest.mark.parametrize(
+    "position, band_key",
+    [(1, "a1-m01-03"), (1, "unknown"), (1, ""), (2, "a1-orientation"), (2, "a1-m01-03"), (55, "a1-orientation")],
+)
+def test_loader_rejects_invalid_a1_band_declarations(tmp_path: Path, position: int, band_key: str) -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    data["positions"][position - 1]["band_key"] = band_key
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
+        loader.load_arc("a1", arc_path=invalid)
+
+
+def test_loader_still_rejects_a1_immersion_bands(tmp_path: Path) -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    data["immersion_bands"] = [{"start": 1, "end": 55, "band_key": "a1-orientation"}]
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match=re.escape("fails schemas/arc.schema.json")):
+        loader.load_arc("a1", arc_path=invalid)
+
+
 def test_loader_raises_on_stale_source_sha256(tmp_path: Path) -> None:
     stale = tmp_path / "_arc.yaml"
     text = ARC_YAML.read_text(encoding="utf-8")
