@@ -7,10 +7,14 @@ No network calls — all API responses are mocked.
 
 from __future__ import annotations
 
+import sqlite3
 import sys
 import time
+from contextlib import closing
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -22,16 +26,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 class TestWikiCache:
     """Test SQLite cache operations."""
 
-    def setup_method(self, method):
+    @pytest.fixture(autouse=True)
+    def _setup_cache(self, tmp_path, request):
         from rag.wiki_cache import WikiCache
 
-        # Use temp file for each test
-        self.db_path = Path(f"/tmp/test_wiki_cache_{id(method)}.db")
+        self.db_path = tmp_path / "wiki_cache.db"
         self.cache = WikiCache(db_path=self.db_path, ttl=3600)
-
-    def teardown_method(self, method):
-        self.cache.close()
-        self.db_path.unlink(missing_ok=True)
+        request.addfinalizer(self.cache.close)
 
     def test_put_and_get(self):
         self.cache.put("summary", "Тарас Шевченко", '{"title": "Шевченко"}')
@@ -41,11 +42,12 @@ class TestWikiCache:
     def test_miss_returns_none(self):
         assert self.cache.get("summary", "Не існує") is None
 
-    def test_expired_returns_none(self):
+    def test_expired_returns_none(self, request):
         from rag.wiki_cache import WikiCache
 
         # Create cache with 1-second TTL
         short_cache = WikiCache(db_path=self.db_path, ttl=1)
+        request.addfinalizer(short_cache.close)
         short_cache.put("summary", "Test", "data")
         # Manually backdate the entry
         short_cache._conn.execute(
@@ -113,11 +115,12 @@ class TestWikiCache:
         self.cache.put("summary", "Київ", "new")
         assert self.cache.get("summary", "Київ") == "new"
 
-    def test_negative_cache_expires_after_negative_ttl(self):
+    def test_negative_cache_expires_after_negative_ttl(self, request):
         """Negative entries expire after negative_ttl, while positive entries persist (#9016)."""
         from rag.wiki_cache import NEGATIVE_SENTINEL, WikiCache
 
         cache = WikiCache(db_path=self.db_path, ttl=30 * 86400, negative_ttl=10)
+        request.addfinalizer(cache.close)
         cache.put("summary", "Positive", "valid article")
         cache.put_negative("summary", "Negative")
 
@@ -141,12 +144,13 @@ class TestWikiCache:
         assert deleted == 1
         assert cache.get("summary", "Positive") == "valid article"
 
-    def test_default_negative_ttl_expiry(self, tmp_path):
+    def test_default_negative_ttl_expiry(self, tmp_path, request):
         """Default-constructed WikiCache() expires negative entries after DEFAULT_NEGATIVE_TTL (#9016)."""
         from rag.wiki_cache import DEFAULT_NEGATIVE_TTL, NEGATIVE_SENTINEL, WikiCache
 
         db_file = tmp_path / "default_wiki_cache.db"
         cache = WikiCache(db_path=db_file)
+        request.addfinalizer(cache.close)
         assert cache.negative_ttl == DEFAULT_NEGATIVE_TTL
         assert cache.negative_ttl == 3600
 
@@ -173,7 +177,43 @@ class TestWikiCache:
         deleted = cache.clear_expired()
         assert deleted == 1
         assert cache.get("summary", "Positive") == "valid article"
-        cache.close()
+
+    @pytest.mark.parametrize("response", ["first test", "second test"])
+    def test_database_and_sidecars_stay_in_test_directory(self, tmp_path, request, response):
+        """Real simultaneous caches keep their files and data isolated (#9702)."""
+        from rag.wiki_cache import WikiCache
+
+        peer_path = tmp_path / "peer" / "wiki_cache.db"
+        peer = WikiCache(db_path=peer_path, ttl=3600)
+        request.addfinalizer(peer.close)
+
+        assert self.cache.get("summary", "Isolation") is None
+        self.cache.put("summary", "Isolation", response)
+        peer.put("summary", "Isolation", "peer response")
+        assert self.cache.get("summary", "Isolation") == response
+        assert peer.get("summary", "Isolation") == "peer response"
+
+        for cache, db_path, expected in (
+            (self.cache, tmp_path / "wiki_cache.db", response),
+            (peer, peer_path, "peer response"),
+        ):
+            actual_path = Path(cache._conn.execute("PRAGMA database_list").fetchone()[2])
+            assert actual_path == db_path
+            assert actual_path.is_relative_to(tmp_path)
+            assert cache._conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+            for suffix in ("", "-wal", "-shm"):
+                assert Path(f"{db_path}{suffix}").is_file()
+            with closing(sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True)) as reader:
+                assert reader.execute(
+                    "SELECT response FROM wiki_cache WHERE title = ?", ("Isolation",)
+                ).fetchone() == (expected,)
+
+            cache.close()
+            with pytest.raises(sqlite3.ProgrammingError, match="closed database"):
+                cache._conn.execute("SELECT 1")
+            assert db_path.is_file()
+            assert not Path(f"{db_path}-wal").exists()
+            assert not Path(f"{db_path}-shm").exists()
 
 
 # ── source_query new functions ───────────────────────────────────
