@@ -377,17 +377,43 @@ message IDs, start/end and open counts, overlap turn IDs, and rollout identity
 (device, inode, byte offset and hashed path); no transcript or local path is
 logged. A later poll, including a fresh watcher process, sees this receipt and
 refuses to resume those messages again, even if the rollout now looks READY.
-The live driver must reconcile the attempt and acknowledge the row using the
-existing consumption path. Incompatible non-object attachment data refuses the
-wake: the watcher cannot safely attach a receipt to that record. Database write
-failure reports UNKNOWN and stops the watcher with status 2 because retaining a
-receipt is impossible; it never retries that resume in the same process. Ordinary
-OVERLAP and UNKNOWN receipts keep daemon mode running.
+The live driver must read the message and reconcile the attempt, then consume
+the row with the existing command:
+
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <id>
+```
+
+The receipt stays on the row; consumption removes it from subsequent unread
+polls and lets later rows proceed. A retained row holds back the entire unread
+batch, including later plain-text attachments.
+
+Plain text, empty data, malformed JSON and JSON arrays/scalars carry no receipt
+and wake normally. A JSON object without a `codex_wake` key also wakes normally.
+Only an object with a valid `codex-wake.v1` OVERLAP or UNKNOWN receipt counts as
+retained. An explicit `codex_wake` key with a malformed receipt, unknown status
+or invalid allowed field refuses with `retained_receipt_invalid`, without
+resuming or consuming the row. Unrecognized receipt fields are omitted from
+diagnostics. When adding a receipt, existing object fields remain intact;
+non-object attachments are wrapped as `{"raw": <original text>, "codex_wake":
+<receipt>}` using the bridge's existing attachment convention. The original text,
+including JSON serialization and empty strings, is readable through
+`ask_attachment()` and the inbox message reader. No schema change is needed.
+
+Database write failure reports UNKNOWN and stops the watcher with status 2
+because retaining a receipt is impossible; it never retries that resume in the
+same process. A restart after that failure can re-run the resume because no
+receipt was persisted. Ordinary OVERLAP and UNKNOWN receipts keep daemon mode
+running.
 
 Detection covers the observed rollout only. It cannot detect a start appended
 after the post-resume scan, an unrecorded turn, or an arbitrary historical rewrite
 outside the fingerprint samples. It does not certify work or prove delivery in
-the visible TUI. [#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217)
+the visible TUI. CLEAN cannot tie the one recorded turn to the wake turn. The
+existing pre-send READY gate still accepts `start A, start B, end A` with B open:
+it uses the last lifecycle event, unchanged by this fix. These are known limits,
+not additional readiness guarantees.
+[#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217)
 tracks prevention, waiting on an upstream Codex turn start that refuses while a
 turn is open (compare-and-set/fail-if-active, externally reachable). Owner:
 `claude-monitor`. No bridge-only lock closes this attach window.

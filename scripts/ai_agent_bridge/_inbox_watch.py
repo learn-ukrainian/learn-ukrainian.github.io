@@ -487,6 +487,7 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
                     if isinstance(exc, CodexWakeError):
                         print(json.dumps(exc.event, sort_keys=True), file=sys.stderr, flush=True)
                     reason = str(exc) if str(exc).startswith(("codex_wake_busy:", "codex_resume_error:", "codex_wake:")) else type(exc).__name__
+                    reason = reason.partition("; inbox retained")[0]
                     print(f"inbox watcher: wake_error:{reason}; inbox retained", file=sys.stderr, flush=True)
                     if once or isinstance(exc, CodexWakePersistenceError):
                         return 2
@@ -596,7 +597,7 @@ class CodexWakeError(RuntimeError):
 
     def __init__(self, event: dict, *, retained: bool = False):
         self.event = event
-        reason = "retained_event" if retained else event["reason"]
+        reason = "retained_event" if retained and event["reason"] != "retained_receipt_invalid" else event["reason"]
         super().__init__(f"codex_wake:{event['status']}:{reason}; inbox retained for live-driver reconciliation")
 
 
@@ -605,22 +606,21 @@ class CodexWakePersistenceError(CodexWakeError):
 
 
 def _wake_event(data: str | None) -> dict | None:
-    """Read only the dedicated event; unrelated attachment data is untouched."""
+    """Non-object attachments carry no receipt; invalid explicit claims refuse."""
     if not data:
         return None
-    incompatible = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "inbox_data_incompatible"}
     try:
         metadata = json.loads(data)
     except (ValueError, TypeError):
-        return incompatible
+        return None
     if not isinstance(metadata, dict):
-        return incompatible
+        return None
     if "codex_wake" not in metadata:
         return None
     event = metadata["codex_wake"]
-    if not isinstance(event, dict) or event.get("schema") != "codex-wake.v1" or event.get("status") not in {"OVERLAP", "UNKNOWN"}:
-        return {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "invalid_retained_event"}
-    invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "invalid_retained_event"}
+    invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "retained_receipt_invalid"}
+    if not isinstance(event, dict) or event.get("schema") != "codex-wake.v1" or event.get("status") not in ("OVERLAP", "UNKNOWN"):
+        return invalid
     if not re.fullmatch(r"[a-z_]+(?::[A-Za-z]+)?", str(event.get("reason", ""))):
         return invalid
     safe = {key: event[key] for key in ("schema", "status", "reason")}
@@ -660,7 +660,8 @@ def record_codex_wake(events: list[InboxEvent], report: dict) -> None:
     """Attach one retained receipt to each existing inbox row, atomically.
 
     No schema migration, second store or acknowledgment. Preserve unrelated
-    attachments; refuse an incompatible record rather than replace its data.
+    object fields; wrap non-object attachments in the existing ``raw`` field
+    consumed by ``ask_attachment``. The original serialized text stays intact.
     """
     try:
         with sqlite3.connect(f"{_config.DB_PATH.resolve().as_uri()}?mode=rw", uri=True) as conn:
@@ -671,11 +672,11 @@ def record_codex_wake(events: list[InboxEvent], report: dict) -> None:
                 if row is None:
                     raise RuntimeError("codex_wake:UNKNOWN:inbox_record_missing; cannot attach retained event")
                 try:
-                    data = json.loads(row[0]) if row[0] else {}
-                except (ValueError, TypeError) as exc:
-                    raise RuntimeError("codex_wake:UNKNOWN:inbox_data_incompatible; cannot attach retained event") from exc
+                    data = json.loads(row[0]) if row[0] is not None else {}
+                except (ValueError, TypeError):
+                    data = {"raw": row[0]}
                 if not isinstance(data, dict):
-                    raise RuntimeError("codex_wake:UNKNOWN:inbox_data_incompatible; cannot attach retained event")
+                    data = {"raw": row[0]}
                 data["codex_wake"] = report
                 conn.execute("UPDATE messages SET data = ? WHERE id = ?", (json.dumps(data, sort_keys=True), event.message_id))
     except (OSError, sqlite3.Error, RuntimeError) as exc:
