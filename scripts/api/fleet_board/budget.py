@@ -9,7 +9,6 @@ source status ``stale`` and its age. Missing percentages stay null.
 from __future__ import annotations
 
 import math
-import re
 import threading
 import time
 from collections.abc import Callable, Mapping
@@ -20,14 +19,13 @@ from typing import Any
 
 from .. import state_router
 from ..monitor_context import MonitorContext
-from ..subscription_usage import compute_usage_pace
-from .envelope import TIMESTAMP_PATTERN
+from ..subscription_usage import _parse_resets_at_any, compute_usage_pace
+from .envelope import utc_timestamp
 from .sources import SourceReport, report
 
 SOURCE_NAME = "routing_budget"
 BUDGET_TTL_S = 15.0
 BUDGET_DEADLINE_S = 2.0
-_TIMESTAMP = re.compile(TIMESTAMP_PATTERN)
 
 
 @dataclass(frozen=True)
@@ -76,9 +74,13 @@ def _number(raw: Any) -> float | None:
 
 
 def _timestamp(raw: Any) -> str | None:
-    if not isinstance(raw, str) or _TIMESTAMP.fullmatch(raw) is None:
+    """Normalize a supported reset instant to whole-second UTC."""
+    if isinstance(raw, bool) or not isinstance(raw, (str, int, float)):
         return None
-    return raw
+    parsed = _parse_resets_at_any(raw)
+    if parsed is None:
+        return None
+    return utc_timestamp(parsed)
 
 
 def unknown_budget() -> dict[str, Any]:

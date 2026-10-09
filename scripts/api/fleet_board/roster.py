@@ -16,6 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from ..opsec_scan import scan_text
 from .envelope import TIMESTAMP_PATTERN
 from .sources import SourceReport, report
 
@@ -24,6 +25,16 @@ STALE_INTERVAL_MULTIPLIER = 2
 _TIMESTAMP = re.compile(TIMESTAMP_PATTERN)
 _TOKEN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 _LOCATION = re.compile(r"://|^/|^\\\\|[A-Za-z0-9.-]+:\d{2,5}")
+# A slash, a home prefix, a drive prefix, or a UNC prefix. Ordinary words that
+# contain a slash between letters stay publishable.
+_ABSOLUTE = re.compile(r"(?<![A-Za-z0-9])(?:\\\\|//|~[/\\\\]|[A-Za-z]:[\\\\/]|/)")
+# Dotted names whose labels start with a letter and whose last label is letters only.
+_HOSTNAME = re.compile(
+    r"(?i)(?<![A-Za-z0-9_-])"
+    r"(?:[A-Za-z](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+"
+    r"[A-Za-z]{2,63}"
+    r"(?![A-Za-z0-9_-])"
+)
 _TEXT_LIMIT = 400
 _KNOWN_STATES = frozenset({"working", "idle", "stuck", "dead", "paused", "off"})
 _FOUNDATION_ORDER = {"codebase": 0, "data": 1}
@@ -71,7 +82,11 @@ def _public_text(raw: Any) -> str | None:
     if not isinstance(raw, str):
         return None
     text = raw.strip()
-    if not text or len(text) > _TEXT_LIMIT or _LOCATION.search(text) is not None:
+    if not text or len(text) > _TEXT_LIMIT:
+        return None
+    if _LOCATION.search(text) is not None or _ABSOLUTE.search(text) is not None:
+        return None
+    if _HOSTNAME.search(text) is not None or scan_text(text):
         return None
     return text
 

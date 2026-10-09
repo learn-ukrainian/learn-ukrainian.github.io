@@ -103,7 +103,7 @@ subscription lane from the existing routing-budget compute:
 | `used_pct` | Weekly used percent. Null when the compute has no weekly figure. A measured zero stays zero. |
 | `elapsed_pct` | Percent of the weekly window that has elapsed. Null when it cannot be computed. |
 | `pace` | Pace stage from the existing weekly pace function, or null when used percent is unknown. |
-| `reset_at` | Weekly reset timestamp, or null |
+| `reset_at` | Weekly reset instant in UTC with whole seconds, or null |
 | `recommendation` | The lane status already computed for that subscription, or null |
 
 The route keeps a result for 15 seconds and waits at most 2 seconds for a

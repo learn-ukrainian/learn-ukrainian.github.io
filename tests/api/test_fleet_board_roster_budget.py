@@ -201,6 +201,56 @@ def test_roster_projects_layers_flags_foundations_and_alerts(tmp_path, monkeypat
     assert roster_source["error"] is None
 
 
+def test_roster_omits_unpublished_text(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    slash = chr(47)
+    backslash = chr(92)
+    hidden_path = slash + "abs" + slash + "token"
+    hidden_drive = chr(67) + ":" + backslash + "data"
+    hidden_unc = backslash * 2 + "share" + backslash + "name"
+    hidden_address = ".".join(("10", "1", "2", "3"))
+    hidden_name = "api" + "." + "internal"
+    clean = "after a corpus load"
+    body = {
+        "generated_at": STAMP,
+        "interval_s": 60,
+        "epics": [
+            {
+                "epic": "codebase",
+                "layer": 0,
+                "restart_condition": "reload after " + hidden_path,
+                "state": "idle",
+            }
+        ],
+        "foundations": [
+            {
+                "foundation": "codebase",
+                "red": False,
+                "reasons": [
+                    "because " + hidden_address,
+                    "stored on " + hidden_drive,
+                    "opened at " + hidden_unc,
+                    clean,
+                ],
+            }
+        ],
+        "alerts": [{"name": "foundation", "summary": "notice " + hidden_name}],
+    }
+    response, _client_unused = _roster(tmp_path, monkeypatch, body)
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    epic = data["layers"][0]["epics"][0]
+    assert epic["restart_condition"] is None
+    assert data["foundation_status"][0]["reasons"] == [clean]
+    assert data["active_alerts"][0]["summary"] is None
+    for hidden in (hidden_path, hidden_drive, hidden_unc, hidden_address, hidden_name):
+        assert hidden not in response.text
+    assert "reload after" not in response.text
+    assert "because " not in response.text
+    assert "notice " not in response.text
+    assert clean in response.text
+
+
 def test_roster_schema_accepts_the_response(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     response, client = _roster(tmp_path, monkeypatch, _sample_snapshot())
     schema = client.get("/api/fleet/v1/schema")
@@ -346,6 +396,30 @@ def test_budget_projects_weekly_pace_and_leaves_unknown_null(tmp_path, monkeypat
     assert source["age_s"] == 0
     document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]["fleet.v1.budget"]
     Draft202012Validator(document).validate(body)
+
+
+def test_budget_normalizes_offset_and_fractional_resets(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _freeze_now(monkeypatch)
+    payload = _budget_payload()
+    payload["agents"]["claude"]["codexbar"]["weekly_resets_at"] = "2026-10-12T02:00:00+02:00"
+    payload["agents"]["codex"]["resets_at"] = "2026-10-12T00:00:00.250000Z"
+    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **kwargs: payload)
+    response = _client(tmp_path).get("/api/fleet/v1/budget")
+
+    assert response.status_code == 200
+    rows = {row["subscription"]: row for row in response.json()["data"]["subscriptions"]}
+    reading = compute_usage_pace(12.5, RESET, now=NOW)
+    assert reading is not None
+    assert rows["claude"]["reset_at"] == RESET
+    assert rows["claude"]["elapsed_pct"] == pytest.approx(reading["expected_pct"])
+    assert rows["claude"]["pace"] == reading["stage"]
+    codex_reading = compute_usage_pace(30.0, RESET, now=NOW)
+    assert codex_reading is not None
+    assert rows["codex"]["reset_at"] == RESET
+    assert rows["codex"]["elapsed_pct"] == pytest.approx(codex_reading["expected_pct"])
+    assert rows["codex"]["pace"] == codex_reading["stage"]
+    document = _client(tmp_path).get("/api/fleet/v1/schema").json()["data"]["endpoints"]["fleet.v1.budget"]
+    Draft202012Validator(document).validate(response.json())
 
 
 def test_budget_agrees_with_routing_budget_used_pct(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
