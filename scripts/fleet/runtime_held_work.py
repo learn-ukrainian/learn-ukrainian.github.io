@@ -44,6 +44,7 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
     Markdown links, code spans, quotes, file URIs and line-number suffixes
     share the existing named-artifact token conventions. Delimited relative
     citations and held_work names are interpreted within the runtime root.
+    Invalid prose tokens are ignored; explicit declarations remain strict.
     """
     text = "\n".join(
         [
@@ -57,10 +58,22 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
             ),
         ]
     )
-    tokens = re.findall(
-        r"[`\"']([^`\"'\n]+)[`\"']|\[[^\]\n]*\]\((<[^>\n]+>|[^)]+)\)|<([^>\n]+)>|([^\s`\"'<>(),;]+)", text
+    token_pattern = re.compile(
+        # Unicode letters on both sides make an apostrophe prose, not a delimiter.
+        r"(?P<quote>[`\"]|(?<![^\W\d_])'|'(?![^\W\d_]))"
+        r"(?P<quoted>[^\n]+?)(?!(?<=[^\W\d_])'(?=[^\W\d_]))(?P=quote)"
+        r"|\[[^\]\n]*\]\((?P<link><[^>\n]+>|[^)]+)\)"
+        r"|<(?P<angle>[^>\n]+)>|(?P<bare>[^\s`\"'<>(),;]+)"
     )
-    candidates = [(next(part for part in match if part), False, any(match[:3])) for match in tokens]
+    candidates = []
+    segments = [text]
+    for segment in segments:
+        for match in token_pattern.finditer(segment):
+            quoted, link, angle, bare = (match[name] for name in ("quoted", "link", "angle", "bare"))
+            candidates.append((quoted or link or angle or bare, False, bare is None))
+            if quoted is not None:
+                # A quoted sentence can contain a bare absolute path or nested citation.
+                segments.append(quoted)
     declared = record.get("held_work", [])
     if not isinstance(declared, list) or any(not isinstance(path, str) or not path for path in declared):
         raise HeldWorkPreservationError()
@@ -72,6 +85,10 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
         if candidate.startswith("file://"):
             candidate = candidate[7:]
         candidate = unquote(candidate)
+        if not candidate or "\x00" in candidate:
+            if explicit:
+                raise HeldWorkPreservationError()
+            continue
         for variable in ("$TMPDIR/", "${TMPDIR}/", "$LU_RUNTIME_TMP_ROOT/", "${LU_RUNTIME_TMP_ROOT}/"):
             if candidate.startswith(variable):
                 candidate = str(root / candidate[len(variable) :])
@@ -86,7 +103,9 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
         elif not explicit and not relative_citation:
             continue
         if not path.parts or ".." in path.parts:
-            raise HeldWorkPreservationError()
+            if explicit:
+                raise HeldWorkPreservationError()
+            continue
         names.add(path.as_posix())
     return sorted(names)
 
@@ -95,8 +114,8 @@ def preserve(root: Path, *, primary: Path, record: Mapping[str, Any], response: 
     """Copy selected regular files and prove retrieval before authorizing deletion.
 
     The existing cap, no-follow descriptor walks, verified copy and retrieval
-    verifier apply. Missing prose citations are ignored; declarations must
-    exist. No arbitrary scratch inventory or symlink target is copied.
+    verifier apply. Missing prose citations and directory mentions are ignored;
+    declarations must name files. No scratch inventory or symlink target is copied.
     """
     try:
         names = cited_paths(root, record, response)
@@ -117,7 +136,13 @@ def preserve(root: Path, *, primary: Path, record: Mapping[str, Any], response: 
                         if name in declared_names:
                             raise HeldWorkPreservationError() from None
                         continue
+                    except ComponentOpenError as exc:
+                        if name not in declared_names and exc.kind == "non-directory":
+                            continue
+                        raise
                     os.close(leaf_fd)
+                    if stat.S_ISDIR(info.st_mode) and name not in declared_names:
+                        continue
                     if not stat.S_ISREG(info.st_mode):
                         raise HeldWorkPreservationError()
                     total += info.st_size

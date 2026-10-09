@@ -129,6 +129,7 @@ def test_unreferenced_files_reaped_without_preservation(lease, tmp_path):
         "[held](<{root}/sub/held patch.txt>)",
         "<file://{root}/sub/held%20patch.txt>",
         "'{root}/sub/held patch.txt'",
+        '"{root}/sub/held patch.txt"',
         "`$TMPDIR/sub/held patch.txt`",
         "`$LU_RUNTIME_TMP_ROOT/sub/held patch.txt`",
         "`sub/held patch.txt`",
@@ -138,11 +139,86 @@ def test_unreferenced_files_reaped_without_preservation(lease, tmp_path):
 def test_citation_formats_and_empty_file(lease, tmp_path, citation):
     root, namespace, record = lease
     (root / "sub").mkdir()
+    (root / "sub/held").mkdir()
     (root / "sub/held patch.txt").touch()
     result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=citation.format(root=root))
     assert result["tmp_reap_error"] is None
     location, _ = _retrieve(tmp_path, record)
     assert (location / "sub/held patch.txt").read_bytes() == b""
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        "The worker's patch is `{root}/readers.patch`; it isn't committed.",
+        "It isn't committed: {root}/readers.patch. I couldn't finish.",
+        "The worker's patch is '{root}/readers.patch'; it couldn't be pushed.",
+        '"The worker\'s patch is {root}/readers.patch and isn\'t committed."',
+        "'The worker's patch is $TMPDIR/readers.patch and couldn't be pushed.'",
+        '`The worker\'s patch is "{root}/readers.patch" and isn\'t committed.`',
+        '"Held ${{TMPDIR}}/readers.patch and couldn\'t finish."',
+        '"{root}/readers.patch couldn\'t be pushed."',
+    ],
+)
+def test_apostrophe_prose_preserves_cited_patch(lease, tmp_path, response):
+    root, namespace, record = lease
+    (root / "readers.patch").write_text("held patch")
+    result = delegate._reap_runtime_tmp_lease(
+        root, namespace, task_record=record, response=response.format(root=root)
+    )
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    location, manifest = _retrieve(tmp_path, record)
+    assert manifest["count"] == 1
+    assert (location / "readers.patch").read_text() == "held patch"
+
+
+@pytest.mark.parametrize("citation", ["'readers.patch\"", '"readers.patch`', "`readers.patch'"])
+def test_quote_delimiters_must_match(lease, citation):
+    root, _, _ = lease
+    assert held.cited_paths(root, {}, citation) == []
+
+
+@pytest.mark.parametrize("with_patch", [False, True])
+@pytest.mark.parametrize("structured", [False, True])
+def test_harmless_report_paths_allow_cleanup(lease, tmp_path, with_patch, structured):
+    root, namespace, record = lease
+    outside = tmp_path / "outside.patch"
+    outside.write_text("must not copy")
+    (root / "sub").mkdir()
+    (root / "disposable").write_text("scratch")
+    report = (
+        "Paths: `.`, `..`, [runbook](../docs/runbook.md), `{root}`, `$TMPDIR/`, "
+        "`${TMPDIR}/`, `$LU_RUNTIME_TMP_ROOT/`, `${LU_RUNTIME_TMP_ROOT}/`, "
+        f"`{root}`, `{root}/`, `{root}/../../outside.patch`, "
+        "`sub/../readers.patch`, `../outside.patch`, `bad\x00name`, "
+        "`sub`, `disposable/child`, `disposable/../child`."
+    )
+    if with_patch:
+        (root / "readers.patch").write_text("held patch")
+        report += f" Held [patch](<{root}/readers.patch>)."
+    if structured:
+        record["report"] = {"text": report}
+        report = ""
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=report)
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    assert outside.read_text() == "must not copy"
+    if with_patch:
+        location, manifest = _retrieve(tmp_path, record)
+        assert manifest["count"] == 1
+        assert (location / "readers.patch").read_text() == "held patch"
+    else:
+        assert not (tmp_path / "batch_state/preserved").exists()
+
+
+def test_explicit_directory_declaration_refuses_cleanup(lease):
+    root, namespace, record = lease
+    (root / "sub").mkdir()
+    record["held_work"] = ["sub"]
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response="")
+    assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
+    assert root.exists()
 
 
 @pytest.mark.parametrize("declaration", ["readers.patch", "absolute"])
@@ -169,7 +245,8 @@ def test_held_work_refuses_symlinks_and_boundary_attacks(lease, tmp_path, attack
         (root / "attack").symlink_to(outside, target_is_directory=True)
         response = f"`{root}/attack/private.patch`"
     elif attack == "traversal":
-        response = f"`{root}/../../outside/private.patch`"
+        record["held_work"] = [str(root / "../../outside/private.patch")]
+        response = ""
     else:
         record["held_work"] = [str(root) + "-other/private.patch"]
         response = ""
@@ -249,6 +326,12 @@ def test_structured_report_and_deliverable_citations(lease, tmp_path):
         "patch",
         [None],
         ["../outside"],
+        ["."],
+        [".."],
+        [""],
+        ["$TMPDIR/"],
+        ["${TMPDIR}/"],
+        ["bad\x00name"],
     ],
 )
 def test_invalid_or_missing_declaration_refuses_cleanup(lease, declaration):
