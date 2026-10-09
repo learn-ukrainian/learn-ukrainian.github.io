@@ -642,10 +642,10 @@ def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(tmp
     nodes = ("tests/a.py", "tests/b.py::test_fast", "tests/c.py")
     _write(tmp_path, gate.DURATIONS_FILE, json.dumps({"tests/a.py": 500, "tests/b.py": 900, "tests/c.py": 5}))
 
-    assert gate.defer_heavy_modules(nodes, tmp_path) == (("tests/b.py::test_fast", "tests/c.py"), ("tests/a.py",))
-    assert gate.defer_heavy_modules(nodes, tmp_path / "nowhere") == (nodes, ())
+    assert gate.defer_to_ci(nodes, tmp_path) == (("tests/b.py::test_fast", "tests/c.py"), ("tests/a.py",))
+    assert gate.defer_to_ci(nodes, tmp_path / "nowhere") == (nodes, ())
     _write(tmp_path, gate.DURATIONS_FILE, "[1, 2]")
-    assert gate.defer_heavy_modules(nodes, tmp_path) == (nodes, ())
+    assert gate.defer_to_ci(nodes, tmp_path) == (nodes, ())
 
 
 def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
@@ -657,8 +657,33 @@ def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
 
 def test_the_real_registry_fits_the_run_budget_once_heavy_modules_are_deferred() -> None:
     nodes, _ = gate.load_registry(REPO_ROOT)
-    run, deferred = gate.defer_heavy_modules(nodes, REPO_ROOT)
+    run, deferred = gate.defer_to_ci(nodes, REPO_ROOT)
     durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
 
     assert deferred, "the docs lookup modules are expected to be deferred"
     assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.RUN_BUDGET_S
+
+
+def test_entries_that_read_a_tree_the_sparse_worktree_omits_are_deferred_only_there(repo: Path) -> None:
+    node = gate.SPARSE_TREE_NODES["curriculum"][0]
+    nodes = (node, "tests/other.py")
+
+    assert gate.defer_to_ci(nodes, repo) == (nodes, ())  # not sparse: CI-equivalent full checkout runs it
+    _git(repo, "config", "core.sparseCheckout", "true")
+    assert gate.defer_to_ci(nodes, repo) == (("tests/other.py",), (node,))  # sparse and tree absent
+    (repo / "curriculum").mkdir()
+    assert gate.defer_to_ci(nodes, repo) == (nodes, ())  # sparse but the tree is present
+
+
+def test_sparse_deferrals_name_real_registry_entries() -> None:
+    registry, _ = gate.load_registry(REPO_ROOT)
+
+    for tree_nodes in gate.SPARSE_TREE_NODES.values():
+        assert set(tree_nodes) <= set(registry)
+
+
+def test_pytest_runs_on_at_most_two_xdist_workers_kept_by_file() -> None:
+    options = gate.parallel_options()
+
+    assert options == ["-n", "2", "--dist", "loadfile"]  # xdist is a project dependency
+    assert int(options[1]) <= gate.MAX_TEST_PROCESSES

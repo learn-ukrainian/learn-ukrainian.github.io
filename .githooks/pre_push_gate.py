@@ -29,6 +29,7 @@ import ast
 import contextlib
 import fcntl
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -43,7 +44,7 @@ from pathlib import Path
 GATE_VERSION = 1
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
-MAX_TEST_PROCESSES = 2  # the gate runs one pytest process; this is the ceiling, not a target
+MAX_TEST_PROCESSES = 2  # xdist workers, the approved ceiling
 ADMISSION_WAIT_S = 300.0
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
@@ -51,8 +52,19 @@ RECEIPT_TTL_S = 3600.0
 # A registered module whose recorded CI cost exceeds this cannot fit the run budget (the eight
 # test_docs_find_lookups parts and test_docs_catalogue_coverage alone cost ~2900 s). It is deferred to
 # CI explicitly and recorded on every run, never dropped silently. Function entries always run.
-HEAVY_MODULE_S = 120.0
+# Measured 2026-10-09 on a loaded host: the registry still took 17.5 min on one process at a 120 s cap.
+HEAVY_MODULE_S = 60.0
 DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
+# Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
+# tree, not for a defect (measured: tests/conftest.py's sparse skip covers only data/projects and
+# data/lexicon).  Deferred to CI only while the worktree is sparse and the tree is absent.
+SPARSE_TREE_NODES = {
+    "curriculum": (
+        "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
+        "tests/curriculum/evidence/test_lessons_lock.py::test_committed_lesson_lock_is_fresh",
+        "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
+    ),
+}
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
@@ -177,24 +189,34 @@ def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
     return nodes, f"v{GATE_VERSION}-{digest}"
 
 
-def defer_heavy_modules(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """Split ``nodes`` into ``(run_here, deferred_to_ci)`` by the tracked per-file CI durations.
+def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Split ``nodes`` into ``(run_here, deferred_to_ci)``; every deferral is recorded by the caller.
 
-    Only whole-module entries are deferred; an unknown duration runs.  A missing or unreadable
-    durations file defers nothing, so the time budget stays the only bound.
+    Two reasons defer an entry.  A whole module whose tracked CI duration exceeds ``HEAVY_MODULE_S``
+    cannot fit the budget (function entries and unknown durations run).  An entry that reads a tree
+    a sparse worktree omits cannot pass here; it defers only while sparse-checkout is on and the
+    tree is absent, so a full checkout runs it.
     """
     try:
         durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return nodes, ()
+        durations = {}
     if not isinstance(durations, dict):
-        return nodes, ()
+        durations = {}
+    sparse = (git_ok("config", "--get", "core.sparseCheckout", cwd=root) or "").strip() == "true"
+    absent = {
+        node
+        for tree, tree_nodes in SPARSE_TREE_NODES.items()
+        if sparse and not (root / tree).is_dir()
+        for node in tree_nodes
+    }
 
-    def heavy(node: str) -> bool:
+    def deferred(node: str) -> bool:
         cost = durations.get(node)
-        return "::" not in node and isinstance(cost, int | float) and cost > HEAVY_MODULE_S
+        heavy = "::" not in node and isinstance(cost, int | float) and cost > HEAVY_MODULE_S
+        return heavy or node in absent
 
-    return tuple(n for n in nodes if not heavy(n)), tuple(n for n in nodes if heavy(n))
+    return tuple(n for n in nodes if not deferred(n)), tuple(n for n in nodes if deferred(n))
 
 
 def outgoing_base(update: Update, root: Path) -> str:
@@ -235,7 +257,7 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     registry, version = load_registry(root)
     present = tuple(node for node in registry if (root / node.split("::", 1)[0]).is_file())
     missing = tuple(node for node in registry if node not in present)
-    present, deferred = defer_heavy_modules(present, root)
+    present, deferred = defer_to_ci(present, root)
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
     return Plan(head, tree, base, version, present, changed_tests, changed, missing, deferred)
 
@@ -400,11 +422,30 @@ def run_pre_commit_stage(plan: Plan, root: Path, launcher: str, config: str, dea
         raise GateOutcome("pre_commit_failed", tail(output), failing=hooks)
 
 
+def parallel_options() -> list[str]:
+    """Two xdist workers (the ceiling) when xdist is importable; whole files stay on one worker."""
+    if importlib.util.find_spec("xdist") is None:
+        return []
+    return ["-n", str(MAX_TEST_PROCESSES), "--dist", "loadfile"]
+
+
 def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> str:
     if not plan.node_ids:
         return "no tests selected"
     code, output = run_bounded(
-        ["bash", launcher, "-m", "pytest", *plan.node_ids, "-rfE", "-q", "--tb=short", "-p", "no:cacheprovider"],
+        [
+            "bash",
+            launcher,
+            "-m",
+            "pytest",
+            *plan.node_ids,
+            "-rfE",
+            "-q",
+            "--tb=short",
+            "-p",
+            "no:cacheprovider",
+            *parallel_options(),
+        ],
         cwd=root,
         deadline=deadline,
         label="pytest stage",
