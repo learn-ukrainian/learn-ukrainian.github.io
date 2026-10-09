@@ -151,7 +151,7 @@
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "sha256": "6a4a864bf00f7c0efd8c83505f2913baad33385b258e9bbf8fa0d9af464f3146"
+        "sha256": "be15bd4841c6342204cca4cfa33195f637cc967645a727a0113964ec831c5c93"
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
