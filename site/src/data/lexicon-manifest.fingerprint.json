@@ -47,7 +47,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "cc79dc9bf5762e93e6fa5fa5b9e6d958b275aa74da5248851ceda5cdcbb66979"
+        "sha256": "34ec60c8c11d6a79fbb1c1ee4cd33baddecf4f096b48bd02f233106b972a31ed"
       },
       {
         "path": "scripts/lexicon/build_fmu_booster_inventory.py",
@@ -172,6 +172,10 @@
       {
         "path": "scripts/lexicon/derived_en_fallback.py",
         "sha256": "0db60aea4658f7a8616066b5c8f1c1bd1d4bc4baf6c9556b72cf69ec61df1208"
+      },
+      {
+        "path": "scripts/lexicon/dispose_published_records.py",
+        "sha256": "f8c2269afc9ad6508fc33924b303cdeb65bd0b2eed27e2c2aa9a9e3607b1366f"
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
@@ -326,6 +330,10 @@
         "sha256": "d77f66b55198f8fdb9742481360043fafd860b2f4dbc58775476d68124e863cf"
       },
       {
+        "path": "scripts/lexicon/published_record_dispositions.py",
+        "sha256": "4f1872398d1762fe389dd53e62c6aa3f9cf7544469f4db4e89f43ea33f91d907"
+      },
+      {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
         "sha256": "b198057deb985cbca702e4bdb24a999946a80d484366b29ee842d01b64e6588d"
       },
@@ -395,7 +403,7 @@
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
-        "sha256": "f341934a1f7f428ca2a97b596c7b1dea539978ccd38edf2a1f16c0d576cdc570"
+        "sha256": "4dd5db63076438f63fbfeddfa521a6bff4a3d19d7d58cda7f2c59a355835f11f"
       },
       {
         "path": "scripts/lexicon/verify_synonym_pairs.py",

@@ -50,6 +50,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon.manifest_io import GATE_REJECTED, SOURCE_WITHDRAWN_UNVERIFIED, load_manifest
+from scripts.lexicon.published_record_dispositions import DispositionError, load_dispositions
 from scripts.lexicon.source_attribution import cites_soviet_dictionary
 
 # DEFINITIVELY cross-domain auto-translation junk that must never be a synonym.
@@ -255,6 +256,11 @@ def run(
     shrink_allowlist_path: Path | None = None,
 ) -> int:
     manifest = load_manifest(manifest_path)
+    try:
+        load_dispositions().validate_manifest(manifest)
+    except DispositionError as exc:
+        print(f"=== DISPOSITION GATE: {exc} — do NOT commit ===")
+        return 2
     entries = manifest.get("entries", [])
     cov = coverage(entries)
 

@@ -20,6 +20,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon import promote_grow_candidates as promote
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lexicon.published_record_dispositions import load_dispositions
 
 WORKFLOW_ID = "source_inventory_approved_promotion_plan.v1"
 DEFAULT_CANDIDATES = review.DEFAULT_OUT
@@ -330,6 +331,7 @@ def _read_candidate_payload(path: Path) -> dict[str, Any]:
 
 
 def _approved_decisions(paths: Sequence[Path]) -> list[ApprovedDecision]:
+    authority = load_dispositions()
     approved: list[ApprovedDecision] = []
     for path in paths:
         payload = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -337,6 +339,8 @@ def _approved_decisions(paths: Sequence[Path]) -> list[ApprovedDecision]:
             raise SourceInventoryError(f"{path}: expected mapping")
         for row in payload.get("decisions", []):
             if not isinstance(row, Mapping) or row.get("decision") != "approve_for_publish":
+                continue
+            if authority.holds_source_key(str(row["source_inventory"]["key"])):
                 continue
             approved.append(
                 ApprovedDecision(

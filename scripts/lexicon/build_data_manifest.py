@@ -250,15 +250,20 @@ def _entry_lemma(entry: dict) -> str | None:
     return None
 
 
-def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
+def _load_built_vocab(module: dict[str, str | int], *, _authority=None) -> list[dict]:
     """Return list of lemma records from a built ``vocabulary.yaml``."""
+    from scripts.lexicon.published_record_dispositions import load_dispositions
+
+    authority = _authority if _authority is not None else load_dispositions()
     path = CURRICULUM_ROOT / str(module["track"]) / str(module["slug"]) / "vocabulary.yaml"
     if not path.exists():
         return []
     raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or []
     out: list[dict] = []
-    for entry in raw:
+    for index, entry in enumerate(raw):
         if not isinstance(entry, dict):
+            continue
+        if authority.withhold_built_row(module, index, entry):
             continue
         lemma = _entry_lemma(entry)
         if not lemma:
@@ -270,6 +275,7 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
                 "pos": entry.get("pos"),
                 "ipa": entry.get("ipa") or None,
                 "source": "built_vocabulary",
+                "_disposition_origin": {"track": module["track"], "module_slug": module["slug"], "index_zero_based": index},
             }
         )
     return out
@@ -410,6 +416,8 @@ def _merge_lemma_records(
     by_lemma: dict[str, dict],
     module: dict[str, str | int],
     records: list[dict],
+    *,
+    _authority=None,
 ) -> None:
     """Fold lemma records from one module into the shared registry.
 
@@ -419,6 +427,11 @@ def _merge_lemma_records(
     usage is deduped on (track, module_num, slug) — keeping the highest-signal
     context (built > seed/test sources).
     """
+    from scripts.lexicon.published_record_dispositions import load_dispositions
+
+    authority = _authority if _authority is not None else load_dispositions()
+    for record in records:
+        authority.guard_built_record(module, record)
     track = str(module["track"])
     module_num = int(module["module_num"])
     slug = str(module["slug"])
@@ -571,9 +584,12 @@ def _resolve_slug_collisions(by_lemma: dict[str, dict]) -> None:
 
 def build_manifest() -> dict:
     """Build the manifest dict and return it (caller writes to disk)."""
+    from scripts.lexicon.published_record_dispositions import load_dispositions
+
+    authority = load_dispositions()
     by_lemma: dict[str, dict] = {}
     modules = _vocabulary_modules()
-    raw_records_by_module = [(module, _load_built_vocab(module)) for module in modules]
+    raw_records_by_module = [(module, _load_built_vocab(module, _authority=authority)) for module in modules]
     taught_lemma_keys = {_lemma_key(rec["lemma"]) for _module, records in raw_records_by_module for rec in records}
 
     for module, raw_records in raw_records_by_module:
@@ -585,13 +601,14 @@ def build_manifest() -> dict:
                     built_records.extend(res)
                 else:
                     built_records.append(res)
-        _merge_lemma_records(by_lemma, module, built_records)
+        _merge_lemma_records(by_lemma, module, built_records, _authority=authority)
 
     _merge_seed_records(by_lemma)
     _merge_heritage_seed_records(by_lemma)
     _resolve_slug_collisions(by_lemma)
 
     entries = sorted(by_lemma.values(), key=lambda e: e["lemma"])
+    load_dispositions().validate_manifest({"entries": entries})
     return {
         "version": "0.1",
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),

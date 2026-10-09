@@ -24,6 +24,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon import promote_grow_candidates as promote
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
+from scripts.lexicon.published_record_dispositions import load_dispositions
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 WORKFLOW_ID = "source_inventory_existing_provenance_overlay.v1"
@@ -36,6 +37,12 @@ def apply_existing_provenance_overlay(
     *,
     source_family: str | None = None,
 ) -> dict[str, Any]:
+    authority = load_dispositions()
+    for decision in approved_decisions:
+        authority.guard_plan_rows([{"source_inventory_key": decision.source_key}])
+        match = candidate_index.get(decision.source_key)
+        if match is not None:
+            authority.guard_entry(match.entry)
     entries = manifest.get("entries")
     if not isinstance(entries, list):
         raise SourceInventoryError("manifest entries must be list")
@@ -207,6 +214,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             source_family=args.source_family,
         )
         if args.write and result["counts"]["updated_entries"]:
+            load_dispositions().validate_manifest(manifest)
             promote._refresh_manifest_metadata(manifest)
             promote._validate_before_write(manifest, args.manifest, promote.verify_prospective_manifest)
             promote._write_json_atomically(args.manifest, manifest)
