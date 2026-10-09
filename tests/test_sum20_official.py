@@ -59,6 +59,27 @@ WORDID36_HTML = (
 )
 
 
+# Verbatim primary article from the cached wordid 172 HTTP 200 response.
+# Response: 20506 bytes, SHA-256
+# 8cbbce1587e37a9977f0f60208cef5466829caa14050ffdaf1eb70695da2b584.
+# Article: 429 UTF-8 bytes, SHA-256
+# 19fad8367cd02f70bf0b8f6f8bc5afb9d77748c1e476d06c30ef3f15c90d6034.
+WORDID172_HTML = (
+    "<article>\r\n"
+    "            \r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "\r\n"
+    "<div>\r\n"
+    '     <div class="ENTRY"> <div class="WORD">А́ВГІЇВ</div><div class="LPART"><b>,</b> ієва, ієве:</div> <div class="PHRF"><div class="PHRSYM">&#9671;</div> <div class="PHRASE"><div class="PHRTXT">А́вгієві ста́йні (коню́шні)</div> <div class="LINK">див. <div class="LINKTXT">ста́йня</div>.</div></div></div>\r\n'
+    "    \r\n"
+    "</div>\r\n"
+    " \r\n"
+    "        </article>"
+)
+
+
 @pytest.mark.parametrize(
     ("wordid", "stressed_headword"),
     [
@@ -120,6 +141,22 @@ def test_parser_preserves_verbatim_wordid36_reference_without_borrowing_fields()
     assert "Від свого заснування" in article.article_text
 
 
+def test_parser_preserves_verbatim_wordid172_phrase_reference() -> None:
+    article = parse_sum20_article(WORDID172_HTML, 172)
+
+    assert article.wordid == 172
+    assert article.headword == "АВГІЇВ"
+    assert article.stressed_headword == "А́ВГІЇВ"
+    assert article.normalized_lookup_key == "авгіїв"
+    assert article.grammar == "ієва, ієве:"
+    assert article.pos == ""
+    assert article.article_html == WORDID172_HTML
+    assert len(article.article_html.encode("utf-8")) == 429
+    assert article.content_sha256 == "19fad8367cd02f70bf0b8f6f8bc5afb9d77748c1e476d06c30ef3f15c90d6034"
+    assert article.article_text == "А́ВГІЇВ , ієва, ієве: ◇ А́вгієві ста́йні (коню́шні) див. ста́йня ."
+    assert article.senses == article.citations == []
+
+
 # Synthetic ownership sentinels exercise markup contracts, not language claims.
 PRIMARY_WORD = '<div class="WORD">PRIMARY</div>'
 REFERENCE = '<div class="LINK">see <span class="LINKTXT">tárget</span>.</div>'
@@ -132,6 +169,100 @@ TARGET_ENTRY = (
     '<div class="ENTRY"><div class="WORD">TARGET</div><div class="LPART">target grammar</div>' + TARGET_SENSE + "</div>"
 )
 LINKED = '<div class="LINKENTRY">' + TARGET_ENTRY + "</div>"
+
+PHRASE_FIELDS = {
+    "LPART": '<div class="LPART">primary grammar</div>',
+    "PHRSYM": '<div class="PHRSYM">◇</div>',
+    "PHRTXT": '<div class="PHRTXT">primary phrase</div>',
+    "LINKTXT": '<div class="LINKTXT">target</div>',
+}
+PHRASE_FIELDS["LINK"] = '<div class="LINK">see ' + PHRASE_FIELDS["LINKTXT"] + ".</div>"
+PHRASE_FIELDS["PHRASE"] = '<div class="PHRASE">' + PHRASE_FIELDS["PHRTXT"] + PHRASE_FIELDS["LINK"] + "</div>"
+PHRASE_FIELDS["PHRF"] = '<div class="PHRF">' + PHRASE_FIELDS["PHRSYM"] + PHRASE_FIELDS["PHRASE"] + "</div>"
+PHRASE_REFERENCE_HTML = (
+    '<article><div class="ENTRY">' + PRIMARY_WORD + PHRASE_FIELDS["LPART"] + PHRASE_FIELDS["PHRF"] + "</div></article>"
+)
+
+
+def test_phrase_reference_preserves_primary_fields_with_inline_formatting() -> None:
+    source = PHRASE_REFERENCE_HTML.replace("primary phrase", "<b>primary</b> phrase")
+    article = parse_sum20_article(source, 172)
+
+    assert article.headword == "PRIMARY"
+    assert article.grammar == "primary grammar"
+    assert article.pos == ""
+    assert article.article_html == source
+    assert article.article_text == "PRIMARY primary grammar ◇ primary phrase see target ."
+    assert article.senses == article.citations == []
+
+
+@pytest.mark.parametrize("class_name", PHRASE_FIELDS)
+@pytest.mark.parametrize("mutation", ["missing", "empty", "misplaced", "multiple"])
+def test_phrase_reference_rejects_incomplete_or_ambiguous_fields(class_name: str, mutation: str) -> None:
+    field = PHRASE_FIELDS[class_name]
+    if mutation == "empty":
+        source = PHRASE_REFERENCE_HTML.replace(field, f'<div class="{class_name}"> </div>')
+    elif mutation == "multiple":
+        source = PHRASE_REFERENCE_HTML.replace(field, field + field)
+    else:
+        source = PHRASE_REFERENCE_HTML.replace(field, "")
+        if mutation == "misplaced":
+            source = source.replace("</article>", field + "</article>")
+
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 172)
+
+
+@pytest.mark.parametrize("class_name", ["INTF", "INTN", "FORMULA"])
+@pytest.mark.parametrize("placement", ["primary", "phrase", "reference"])
+def test_phrase_reference_rejects_even_empty_owned_definition_markers(class_name: str, placement: str) -> None:
+    marker = f'<div class="{class_name}"> </div>'
+    anchor = {"primary": PRIMARY_WORD, "phrase": PHRASE_FIELDS["PHRTXT"], "reference": PHRASE_FIELDS["LINKTXT"]}[
+        placement
+    ]
+    source = PHRASE_REFERENCE_HTML.replace(anchor, anchor + marker)
+
+    with pytest.raises(Sum20ParseError, match="no definition senses"):
+        parse_sum20_article(source, 172)
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        '<div class="ENTRY"></div>',
+        TARGET_ENTRY,
+        '<div class="LINKENTRY"></div>',
+        '<div class="LINKENTRY">' + PHRASE_FIELDS["LINK"] + "</div>",
+        LINKED,
+        LINKED.replace(">TARGET<", ">MISMATCH<"),
+        '<div class="ILL"><div class="ILLTXT">orphan citation</div></div>',
+    ],
+    ids=[
+        "empty-foreign-entry",
+        "defined-foreign-entry",
+        "empty-target",
+        "foreign-reference",
+        "matching-defined-target",
+        "mismatched-defined-target",
+        "orphan-citation",
+    ],
+)
+@pytest.mark.parametrize("placement", ["outside", "inside"])
+def test_phrase_reference_rejects_foreign_or_extra_evidence(extra: str, placement: str) -> None:
+    if placement == "inside":
+        source = PHRASE_REFERENCE_HTML.replace(PRIMARY_WORD, PRIMARY_WORD + extra)
+    else:
+        source = PHRASE_REFERENCE_HTML.replace("</article>", extra + "</article>")
+
+    with pytest.raises(Sum20ParseError):
+        parse_sum20_article(source, 172)
+
+
+@pytest.mark.parametrize("class_name", PHRASE_FIELDS)
+def test_phrase_reference_rejects_combined_evidence_classes(class_name: str) -> None:
+    source = PHRASE_REFERENCE_HTML.replace(f'class="{class_name}"', f'class="{class_name} OTHER"')
+    with pytest.raises(Sum20ParseError, match="no definition senses"):
+        parse_sum20_article(source, 172)
 
 
 @pytest.mark.parametrize("layout", ["sibling", "reordered", "nested", "wrapped", "nested-in-link"])
@@ -419,6 +550,81 @@ def test_ingest_reference_stores_only_primary_fields_and_stops_on_malformed(
             assert row == ("АБІССИНЕЦЬ", "", "", WORDID36_HTML)
         else:
             assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize("valid", [True, False], ids=["cached-172", "malformed-172"])
+def test_ingest_phrase_reference_advances_only_the_valid_source_unit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, valid: bool
+) -> None:
+    db_path = tmp_path / "staging.db"
+    with sqlite3.connect(db_path) as conn:
+        ensure_sum20_official_schema(conn)
+        conn.execute("UPDATE sum20_crawl_checkpoint SET last_wordid = 171")
+    source = WORDID172_HTML if valid else WORDID172_HTML.replace('class="PHRTXT"', 'class="OTHER"')
+    session = _FakeSession([_FakeResponse(200, source)])
+    requested: list[int] = []
+
+    def offline_fetch(wordid: int, **kwargs: object) -> FetchOutcome:
+        requested.append(wordid)
+        return fetch_sum20_wordid(wordid, session=session, **kwargs)
+
+    monkeypatch.setattr(sum20_official_ingest, "fetch_sum20_wordid", offline_fetch)
+    counts = sum20_official_ingest.ingest_wordids(db_path, limit=1 if valid else 2, delay_s=0, retries=0)
+
+    assert requested == [172]
+    assert counts == {
+        "ok": int(valid),
+        "unchanged": 0,
+        "not_found": 0,
+        "transient_error": 0,
+        "parse_error": int(not valid),
+    }
+    assert counts.exit_code == (0 if valid else 4)
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint").fetchone()[0] == (172 if valid else 171)
+        assert conn.execute("SELECT wordid, status FROM sum20_crawl_outcomes").fetchone() == (
+            172,
+            "ok" if valid else "parse_error",
+        )
+        assert conn.execute("SELECT COUNT(*) FROM sum20_senses").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM sum20_citations").fetchone()[0] == 0
+        if valid:
+            row = conn.execute(
+                "SELECT wordid, headword, stressed_headword, grammar, pos, definition_text, article_html, article_text,"
+                " content_sha256, parser_version FROM sum20_articles"
+            ).fetchone()
+            assert row == (
+                172,
+                "АВГІЇВ",
+                "А́ВГІЇВ",
+                "ієва, ієве:",
+                "",
+                "",
+                WORDID172_HTML,
+                "А́ВГІЇВ , ієва, ієве: ◇ А́вгієві ста́йні (коню́шні) див. ста́йня .",
+                "19fad8367cd02f70bf0b8f6f8bc5afb9d77748c1e476d06c30ef3f15c90d6034",
+                official_module.PARSER_VERSION,
+            )
+        else:
+            assert conn.execute("SELECT COUNT(*) FROM sum20_articles").fetchone()[0] == 0
+
+
+def test_official_phrase_reference_row_has_no_definition_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    db_path = tmp_path / "sources.db"
+    with sqlite3.connect(db_path) as conn:
+        ensure_sum20_official_schema(conn)
+        upsert_sum20_article(conn, parse_sum20_article(WORDID172_HTML, 172), fetched_at="2026-10-09T00:00:00+00:00")
+    records = sources_db.query_sum20("авгіїв", db_path=db_path)
+    assert len(records) == 1
+    assert records[0]["senses"] == records[0]["citations"] == []
+    assert records[0]["article_text"] == "А́ВГІЇВ , ієва, ієве: ◇ А́вгієві ста́йні (коню́шні) див. ста́йня ."
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    assert enrich_manifest_module._sum20_official_definition_card("авгіїв") is None
+    # The general consumer has an independent fallback; keep it unavailable
+    # offline so this regression proves only the ingested source unit's output.
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_base_lemma", lambda *_args: None)
+    assert enrich_manifest_module._sum20_definition_card("авгіїв") is None
 
 
 def test_official_reference_row_has_no_definition_card(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
