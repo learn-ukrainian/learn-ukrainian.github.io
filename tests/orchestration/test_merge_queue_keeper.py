@@ -69,8 +69,12 @@ def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
         "failure_evidence": "Runner outage in linked job log",
         "unrelated_to_diff": "Runner failed before checkout",
     }
-    return {"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(data) + " -->",
-            "user": {"login": "driver"}, "author_association": "MEMBER"}
+    return {
+        "id": 789,
+        "body": "<!-- ci-recovery-evidence " + json.dumps(data) + " -->",
+        "user": {"login": "driver"},
+        "author_association": "MEMBER",
+    }
 
 
 class FakeGitHub:
@@ -143,7 +147,11 @@ class FakeGitHub:
         transport.removal_failure = self.removal_read_failure
         if self.events:
             transport.removal_history = [
-                {"beforeCommit": event.get("beforeCommit", {"oid": HEAD_A}), "createdAt": event["created_at"]}
+                {
+                    "beforeCommit": event.get("beforeCommit", {"oid": HEAD_A}),
+                    "createdAt": event["created_at"],
+                    "reason": event.get("reason"),
+                }
                 for event in sorted(self.events, key=lambda event: event["created_at"])
             ]
 
@@ -154,8 +162,13 @@ class FakeGitHub:
 
         try:
             reservation = publisher._prepare_recovery(
-                "pr-merge", {"number": number, "match_head": head, "recovery": recovery_attempt},
-                self.repository, self.root, {}, sender, queue=True,
+                "pr-merge",
+                {"number": number, "match_head": head, "recovery": recovery_attempt},
+                self.repository,
+                self.root,
+                {},
+                sender,
+                queue=True,
             )
             if reservation:
                 path, pr_number, sha, action, evidence = reservation
@@ -1294,6 +1307,36 @@ def test_gate_never_requeues_a_squash_text_revoke(tmp_path: Path, monkeypatch: p
         assert ("reason=ready" in lines[0]) is enqueued, (squash, lines)
 
 
+@pytest.mark.parametrize("blocker", ["hold", "squash-text-blocked"])
+def test_keeper_manual_dequeue_then_fix_reenqueues_without_ci_failure_proof(tmp_path, monkeypatch, blocker):
+    path = tmp_path / "state.json"
+    gate_path = _gate(tmp_path, {})
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    if blocker == "hold":
+        queued.fresh["labels"] = [{"name": "hold"}]
+    else:
+        queued.squash = True
+    lines, failed = gated(queued, path, monkeypatch, gate_path)
+    assert not failed and f"#42 revoked: {blocker}" in lines
+    assert ("dequeue", "PR_node_42") in queued.actions
+
+    fixed = FakeGitHub()
+    fixed.comments_rows = [fixed.comments_rows[0]]  # Approval, no CI recovery evidence.
+    fixed.events = [
+        {
+            "event": "removed_from_merge_queue",
+            "created_at": "2026-10-09T11:00:00Z",
+            "beforeCommit": None,
+            "reason": "manual",
+        }
+    ]
+    lines, failed = gated(fixed, path, monkeypatch, gate_path)
+    assert not failed and "#42 enqueued" in lines
+    assert ("enqueue", (42, HEAD_A)) in fixed.actions
+    assert not recovery.ledger_path(fixed.root).exists()
+    assert not json.loads(path.read_text()).get("requeued")
+
+
 def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {}, "requeued": {f"7:{HEAD_A}": "x", f"42:{HEAD_A}": "y"}}))
@@ -1483,6 +1526,7 @@ def test_shared_rerun_record_holds_keeper_recovery(tmp_path: Path, monkeypatch: 
 def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     def unavailable(*args: Any) -> None:
         raise gate.PublishBlocked("RECOVERY_RECORD_UNAVAILABLE")
+
     monkeypatch.setattr(recovery, "first_attempt", unavailable)
     path = tmp_path / "state.json"
     _dropped_state(path)
@@ -1495,8 +1539,10 @@ def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch
 
 def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub(pr(headRefOid=HEAD_B))
-    fake.events = [{"id": event_id, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}
-                   for event_id in (987, 988)]
+    fake.events = [
+        {"id": event_id, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}
+        for event_id in (987, 988)
+    ]
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
     run(fake, path, monkeypatch)
@@ -1506,7 +1552,9 @@ def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monk
 
 
 @pytest.mark.parametrize("drop_events", [[], {"42:head": [0]}, {"42:head": "unknown"}, {f"42:{HEAD_A}": [987]}])
-def test_obsolete_drop_event_state_is_ignored(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drop_events: Any) -> None:
+def test_obsolete_drop_event_state_is_ignored(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drop_events: Any
+) -> None:
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {}, "drop_events": drop_events}))
     fake = FakeGitHub()
@@ -1516,7 +1564,10 @@ def test_obsolete_drop_event_state_is_ignored(tmp_path: Path, monkeypatch: pytes
     assert "drop_events" not in json.loads(path.read_text())
 
 
-@pytest.mark.parametrize("cause", ["unbound", "manual-dequeue", "red-checks", "changed-verdict", "hold-label", "blocked-squash", "predates-deploy"])
+@pytest.mark.parametrize(
+    "cause",
+    ["unbound", "manual-dequeue", "red-checks", "changed-verdict", "hold-label", "blocked-squash", "predates-deploy"],
+)
 def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, monkeypatch, cause):
     path = tmp_path / "state.json"
     old = FakeGitHub(pr(isInMergeQueue=True))
@@ -1537,8 +1588,13 @@ def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, mo
         assert "dequeue" in mutations(old)
     fresh = FakeGitHub(pr(headRefOid=HEAD_B))
     fresh.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", HEAD_B)]
-    fresh.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A},
-                     "created_at": "2020-01-01T00:00:00Z" if cause == "predates-deploy" else "2026-09-23T00:00:01Z"}]
+    fresh.events = [
+        {
+            "event": "removed_from_merge_queue",
+            "beforeCommit": {"oid": HEAD_A},
+            "created_at": "2020-01-01T00:00:00Z" if cause == "predates-deploy" else "2026-09-23T00:00:01Z",
+        }
+    ]
     _, failed = run(fresh, path, monkeypatch)
     assert not failed
     assert "enqueue" in mutations(fresh)
@@ -1547,8 +1603,9 @@ def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, mo
 
 def test_publisher_requires_recovery_for_unobserved_current_head_removal(tmp_path, monkeypatch):
     fake = FakeGitHub()
-    fake.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A},
-                    "created_at": "2026-09-23T00:00:01Z"}]
+    fake.events = [
+        {"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A}, "created_at": "2026-09-23T00:00:01Z"}
+    ]
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert failed

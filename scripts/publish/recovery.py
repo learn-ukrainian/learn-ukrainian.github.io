@@ -14,6 +14,8 @@ from scripts.opsec.prepublish import PublishBlocked
 
 MARKER = re.compile(r"<!-- ci-recovery-evidence\s+(\{.*?\})\s*-->", re.S)
 SHA = re.compile(r"[0-9a-f]{40}\Z")
+NON_CI_REMOVAL_REASONS = {"manual", "merge_conflict"}
+CI_REMOVAL_REASONS = {"failed_checks", "timeout"}
 
 
 def ledger_path(cwd: Path) -> Path:
@@ -66,16 +68,17 @@ def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
 def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
     """Check every GitHub removal, requiring complete, readable pagination.
 
-    For a nullable removal commit, a later GitHub force-push event at this
-    head can establish that the removal predates its push. A known same-SHA
-    removal remains recovery; pushing the same SHA cannot refund an allowance.
-    Commit author/committer dates cannot establish push time.
+    Manual removals (including keeper holds) and merge conflicts are not CI
+    recovery. They can have a null commit and need no failed-run evidence.
+    Null CI removals conservatively require recovery at the current head unless
+    a later GitHub force-push proves they predate it. Known same-SHA failures
+    remain recovery; commit author/committer dates cannot establish push time.
     """
     try:
         pages = data if isinstance(data, list) else [data]
         if not pages:
             raise ValueError
-        total, count, at_head, cursors = None, 0, False, set()
+        at_head, cursors = False, set()
         for index, page in enumerate(pages):
             if page.get("errors"):
                 raise ValueError
@@ -84,22 +87,17 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
                 raise ValueError
             removals = pull["removals"]
             nodes, info = removals["nodes"], removals["pageInfo"]
-            if not isinstance(nodes, list) or type(removals["totalCount"]) is not int or removals["totalCount"] < 0:
-                raise ValueError
-            if total is None:
-                total = removals["totalCount"]
-            if removals["totalCount"] != total or type(info["hasNextPage"]) is not bool:
+            # GitHub totalCount includes other timeline item types even with
+            # itemTypes filtering. Only pageInfo establishes completeness.
+            if not isinstance(nodes, list) or type(info["hasNextPage"]) is not bool:
                 raise ValueError
             if info["hasNextPage"] != (index < len(pages) - 1):
                 raise ValueError
             cursor = info["endCursor"]
-            if nodes:
+            if nodes or info["hasNextPage"]:
                 if not isinstance(cursor, str) or not cursor or cursor in cursors:
                     raise ValueError
                 cursors.add(cursor)
-            elif info["hasNextPage"]:
-                raise ValueError
-            count += len(nodes)
             pushes = pull["pushes"]["nodes"]
             if not isinstance(pushes, list) or len(pushes) > 1:
                 raise ValueError
@@ -114,17 +112,21 @@ def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
                 removed_at = datetime.fromisoformat(event["createdAt"].replace("Z", "+00:00"))
                 if removed_at.tzinfo is None:
                     raise ValueError
+                reason = event.get("reason")
+                if reason in NON_CI_REMOVAL_REASONS:
+                    continue
                 commit = event["beforeCommit"]
                 if commit is None:
                     if pushed_head == head and pushed_at > removed_at:
+                        continue
+                    if reason in CI_REMOVAL_REASONS:
+                        at_head = True
                         continue
                     raise ValueError
                 removed_head = commit["oid"]
                 if not isinstance(removed_head, str) or not SHA.fullmatch(removed_head):
                     raise ValueError
                 at_head |= removed_head == head
-        if count != total:
-            raise ValueError
         return at_head
     except (ValueError, KeyError, TypeError, AttributeError):
         raise PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None

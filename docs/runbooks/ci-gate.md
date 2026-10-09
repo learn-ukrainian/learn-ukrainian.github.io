@@ -436,12 +436,15 @@ authenticated login with OWNER, MEMBER or COLLABORATOR association, matching
 the verdict author filter. Retain any keeper requeue grant.
 
 The publisher pages through all GitHub `RemovedFromMergeQueueEvent.beforeCommit.oid`
-values: any removal naming the current head makes enqueue a recovery. Removals
-only at other heads permit normal initial enqueue without spending the new head's allowance,
-including manual dequeue, keeper revocation and removals predating deployment.
-A later GitHub head force-push event can establish that a removal with a nullable
-commit predates the current head's push; commit dates and keeper-local removal
-history cannot. Before normal initial enqueue, the publisher also checks the
+values, using `pageInfo` rather than `totalCount` to establish completeness.
+Manual and `merge_conflict` removals are exempt from CI recovery, including at
+the current head and with a null commit; manual removals include keeper revocations.
+Other removals naming the current head make enqueue a recovery. CI removals
+(`failed_checks` or `timeout`) with a null commit count as at-head unless a later
+GitHub force-push event proves they predate the current head's push. Removals
+only at other heads permit normal initial enqueue without spending the new head's allowance.
+Commit dates and keeper-local removal history cannot establish push time.
+Before normal initial enqueue, the publisher also checks the
 durable record for a prior re-enqueue at that head; a branch-run rerun alone
 does not block initial enqueue. Returning to the same SHA never refunds a spent
 recovery allowance, even when the latest removal names another head.

@@ -50,6 +50,8 @@ class Transport:
         self.removal_failure = False
         self.removal_history = None
         self.removal_page_size = 100
+        self.removal_reason = "removed by actor"
+        self.timeline_count = None
         self.removal_reads = []
         self.pushes = []
         self.associations = None
@@ -72,23 +74,45 @@ class Transport:
                 self.removal_reads.append(payload)
                 if self.removal_failure:
                     return subprocess.CompletedProcess(argv, 1, "", "lookup failed")
-                events = self.removal_history if self.removal_history is not None else [{
-                    "beforeCommit": {"oid": self.removal_head,
-                                     "committedDate": "2099-01-01T00:00:00Z" if self.future_commit else "2026-10-09T10:00:00Z"} if self.removal_head else None,
-                    "createdAt": self.removal_date, "reason": "removed by actor",
-                }] if self.removed else []
+                events = (
+                    self.removal_history
+                    if self.removal_history is not None
+                    else [
+                        {
+                            "beforeCommit": {
+                                "oid": self.removal_head,
+                                "committedDate": "2099-01-01T00:00:00Z"
+                                if self.future_commit
+                                else "2026-10-09T10:00:00Z",
+                            }
+                            if self.removal_head
+                            else None,
+                            "createdAt": self.removal_date,
+                            "reason": self.removal_reason,
+                        }
+                    ]
+                    if self.removed
+                    else []
+                )
                 if "first:100" in query:
                     start = int(payload["variables"].get("cursor") or 0)
-                    nodes = events[start:start + self.removal_page_size]
+                    nodes = events[start : start + self.removal_page_size]
                     end = start + len(nodes)
-                    removals = {"nodes": nodes, "totalCount": len(events), "pageInfo": {
-                        "hasNextPage": end < len(events), "endCursor": str(end) if nodes else None,
-                    }}
+                    removals = {
+                        "nodes": nodes,
+                        "totalCount": self.timeline_count if self.timeline_count is not None else len(events),
+                        "pageInfo": {
+                            "hasNextPage": end < len(events),
+                            "endCursor": str(end) if nodes else None,
+                        },
+                    }
                 else:
                     # Preserve the old API's latest-only response for baseline proof.
                     removals = {"nodes": events[-1:]}
                 pull = {"headRefOid": self.head, "pushes": {"nodes": self.pushes}, "removals": removals}
-                return subprocess.CompletedProcess(argv, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
+                return subprocess.CompletedProcess(
+                    argv, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), ""
+                )
             data = {
                 "data": {
                     "repository": {
@@ -102,7 +126,9 @@ class Transport:
                 }
             }
         elif argv[1] == "api":
-            endpoint = next(arg for arg in argv if arg.startswith("repos/") or arg.split("?", 1)[0] == "user").split("?", 1)[0]
+            endpoint = next(arg for arg in argv if arg.startswith("repos/") or arg.split("?", 1)[0] == "user").split(
+                "?", 1
+            )[0]
             if endpoint.endswith("/comments"):
                 approval = {
                     "body": build_comment(
@@ -121,8 +147,14 @@ class Transport:
                 }
                 comments = [approval]
                 if self.proof is not None:
-                    comments.append({"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->",
-                                     "user": {"login": self.proof_login}, "author_association": self.proof_association})
+                    comments.append(
+                        {
+                            "id": 789,
+                            "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->",
+                            "user": {"login": self.proof_login},
+                            "author_association": self.proof_association,
+                        }
+                    )
                 data = [comments]
             elif endpoint.endswith("/timeline"):
                 data = (
@@ -131,8 +163,9 @@ class Transport:
                     else [[]]
                 )
                 if self.future_commit:
-                    data[0].append({"event": "committed", "sha": self.head,
-                                    "committer": {"date": "2099-01-01T00:00:00Z"}})
+                    data[0].append(
+                        {"event": "committed", "sha": self.head, "committer": {"date": "2099-01-01T00:00:00Z"}}
+                    )
             elif endpoint.endswith("/jobs"):
                 data = [{"jobs": [{"id": job, "conclusion": "failure"} for job in self.failed_ids]}]
             elif endpoint.endswith("/runs/123"):
@@ -144,9 +177,9 @@ class Transport:
                     "event": self.event,
                     "head_branch": "gh-readonly-queue/main/pr-42-abcdef",
                     "run_attempt": self.attempt,
-                    "pull_requests": self.associations if self.associations is not None else ([]
-                    if self.event == "merge_group"
-                    else [{"number": 42, "head": {"sha": self.head}}]),
+                    "pull_requests": self.associations
+                    if self.associations is not None
+                    else ([] if self.event == "merge_group" else [{"number": 42, "head": {"sha": self.head}}]),
                 }
             elif endpoint.endswith("/pulls/42"):
                 self.pull_reads += 1
@@ -221,7 +254,9 @@ def test_paths_share_allowance_and_preserve_old_head(setup, first, second):
     assert len(transport.writes) == 2
 
 
-@pytest.mark.parametrize("action,flag", [("direct", False), ("direct", True), ("keeper-initial", False), ("keeper", True)])
+@pytest.mark.parametrize(
+    "action,flag", [("direct", False), ("direct", True), ("keeper-initial", False), ("keeper", True)]
+)
 def test_old_head_after_new_head_dequeue_cannot_refund_reenqueue(setup, action, flag):
     _, transport = setup
     # Initial H1 enqueue, followed by an ejection and its one allowed recovery.
@@ -415,7 +450,10 @@ def test_ledger_path_shared_across_linked_worktrees(tmp_path):
     )
     linked = tmp_path / "linked"
     subprocess.run(
-        ["git", "-C", str(root), "worktree", "add", "--detach", str(linked)], check=True, capture_output=True, timeout=30
+        ["git", "-C", str(root), "worktree", "add", "--detach", str(linked)],
+        check=True,
+        capture_output=True,
+        timeout=30,
     )
     assert pub.recovery.ledger_path(root) == pub.recovery.ledger_path(linked)
 
@@ -447,8 +485,10 @@ def test_pull_request_run_uses_pr_head_not_tested_merge_sha(setup):
 
 def test_malformed_posted_evidence_refuses(setup):
     module = pub.recovery
-    comments = [{"id": 1, "body": "<!-- ci-recovery-evidence {bad json} -->"},
-                {"id": 2, "body": "<!-- ci-recovery-evidence {\"job_ids\":[]} -->"}]
+    comments = [
+        {"id": 1, "body": "<!-- ci-recovery-evidence {bad json} -->"},
+        {"id": 2, "body": '<!-- ci-recovery-evidence {"job_ids":[]} -->'},
+    ]
     for comment in comments:
         comment.update(user={"login": "driver"}, author_association="MEMBER")
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
@@ -482,8 +522,9 @@ def test_old_removal_allows_successive_new_heads_without_local_binding(setup, ac
         transport.removal_date = "2020-01-01T00:00:00Z"
     if history == "multiple":
         (root / "batch_state").mkdir()
-        (root / "batch_state/merge_queue_keeper.json").write_text(json.dumps({
-            "drop_events": {f"42:{HEAD}": [986]}, "requeued": {}}))
+        (root / "batch_state/merge_queue_keeper.json").write_text(
+            json.dumps({"drop_events": {f"42:{HEAD}": [986]}, "requeued": {}})
+        )
     for head in (NEW_HEAD, "d" * 40):
         transport.head = head
         recover(setup, action)
@@ -521,7 +562,9 @@ def test_untrusted_recovery_comment_is_rejected(setup, login, association):
 
 
 @pytest.mark.parametrize("event", ["push", "schedule"])
-@pytest.mark.parametrize("status,conclusion", [("completed", "failure"), ("completed", "success"), ("in_progress", None)])
+@pytest.mark.parametrize(
+    "status,conclusion", [("completed", "failure"), ("completed", "success"), ("in_progress", None)]
+)
 def test_non_pr_failed_runs_keep_rerun_behavior(setup, event, status, conclusion):
     root, transport = setup
     transport.event, transport.associations, transport.proof = event, [], None
@@ -541,10 +584,16 @@ def test_trusted_recovery_authors_are_accepted(setup, association):
     assert len(transport.writes) == 1
 
 
-@pytest.mark.parametrize("event,associations", [
-    ("pull_request", []), ("pull_request_target", []), ("merge_group", []),
-    ("push", [{"number": 42}, {"number": 43}]), ("push", "unknown"),
-])
+@pytest.mark.parametrize(
+    "event,associations",
+    [
+        ("pull_request", []),
+        ("pull_request_target", []),
+        ("merge_group", []),
+        ("push", [{"number": 42}, {"number": 43}]),
+        ("push", "unknown"),
+    ],
+)
 def test_ambiguous_pr_runs_still_refuse(setup, event, associations):
     _, transport = setup
     transport.event, transport.associations = event, associations
@@ -570,14 +619,44 @@ def test_ambiguous_pr_runs_still_refuse(setup, event, associations):
 
 
 def removal_observation():
-    return {"data": {"repository": {"pullRequest": {
-        "headRefOid": HEAD, "pushes": {"nodes": []}, "removals": {"nodes": [{
-            "beforeCommit": {"oid": HEAD}, "createdAt": "2026-10-09T11:00:00Z", "reason": None,
-        }], "totalCount": 1, "pageInfo": {"hasNextPage": False, "endCursor": "1"}},
-    }}}}
+    return {
+        "data": {
+            "repository": {
+                "pullRequest": {
+                    "headRefOid": HEAD,
+                    "pushes": {"nodes": []},
+                    "removals": {
+                        "nodes": [
+                            {
+                                "beforeCommit": {"oid": HEAD},
+                                "createdAt": "2026-10-09T11:00:00Z",
+                                "reason": None,
+                            }
+                        ],
+                        "totalCount": 1,
+                        "pageInfo": {"hasNextPage": False, "endCursor": "1"},
+                    },
+                }
+            }
+        }
+    }
 
 
-@pytest.mark.parametrize("cause", ["graphql-errors", "missing-pull", "moved-head", "null-commit", "bad-sha", "bad-date", "naive-date", "null-nodes", "count-mismatch", "null-pushes", "bad-push-date"])
+@pytest.mark.parametrize(
+    "cause",
+    [
+        "graphql-errors",
+        "missing-pull",
+        "moved-head",
+        "null-commit",
+        "bad-sha",
+        "bad-date",
+        "naive-date",
+        "null-nodes",
+        "null-pushes",
+        "bad-push-date",
+    ],
+)
 def test_unreadable_removal_data_refuses_with_typed_reason(cause):
     data = removal_observation()
     pull = data["data"]["repository"]["pullRequest"]
@@ -598,8 +677,6 @@ def test_unreadable_removal_data_refuses_with_typed_reason(cause):
         event["createdAt"] = "2026-10-09T11:00:00"
     elif cause == "null-nodes":
         pull["removals"]["nodes"] = None
-    elif cause == "count-mismatch":
-        pull["removals"]["nodes"].append(dict(event))
     elif cause == "null-pushes":
         pull["pushes"]["nodes"] = None
     else:
@@ -608,12 +685,15 @@ def test_unreadable_removal_data_refuses_with_typed_reason(cause):
         pub.recovery.queue_removal_at_head(data, HEAD)
 
 
-@pytest.mark.parametrize("pushed_head,pushed_at,expected", [
-    (HEAD, "2026-10-09T12:00:00Z", True),
-    (HEAD, "2026-10-09T10:00:00Z", True),
-    (HEAD, "2026-10-09T11:00:00Z", True),
-    (NEW_HEAD, "2026-10-09T12:00:00Z", True),
-])
+@pytest.mark.parametrize(
+    "pushed_head,pushed_at,expected",
+    [
+        (HEAD, "2026-10-09T12:00:00Z", True),
+        (HEAD, "2026-10-09T10:00:00Z", True),
+        (HEAD, "2026-10-09T11:00:00Z", True),
+        (NEW_HEAD, "2026-10-09T12:00:00Z", True),
+    ],
+)
 def test_push_timestamps_do_not_change_known_removal_head(pushed_head, pushed_at, expected):
     data = removal_observation()
     data["data"]["repository"]["pullRequest"]["pushes"]["nodes"] = [
@@ -633,10 +713,19 @@ def test_removal_history_checks_every_event(matching_head):
 
 
 @pytest.mark.parametrize("action", ["direct", "keeper-initial"])
-@pytest.mark.parametrize("cause", [
-    "truncated", "missing-page-info", "bad-next-page", "repeated-cursor", "count-changed", "count-truncated",
-    "second-page-unreadable", "second-page-errors", "second-page-head-moved", "second-page-null-commit", "page-cap",
-])
+@pytest.mark.parametrize(
+    "cause",
+    [
+        "missing-page-info",
+        "bad-next-page",
+        "repeated-cursor",
+        "second-page-unreadable",
+        "second-page-errors",
+        "second-page-head-moved",
+        "second-page-null-commit",
+        "page-cap",
+    ],
+)
 def test_incomplete_removal_history_refuses_without_mutation(setup, action, cause):
     root, transport = setup
     transport.head, transport.proof = NEW_HEAD, None
@@ -658,21 +747,15 @@ def test_incomplete_removal_history_refuses_without_mutation(setup, action, caus
         pull = data["data"]["repository"]["pullRequest"]
         removals = pull["removals"]
         info = removals["pageInfo"]
-        if cause == "truncated":
-            info["hasNextPage"] = False
-        elif cause == "missing-page-info":
+        if cause == "missing-page-info":
             del removals["pageInfo"]
         elif cause == "bad-next-page":
             info["hasNextPage"] = "false"
-        elif cause == "count-truncated":
-            removals["totalCount"] = 3
         elif cause == "page-cap":
             info.update(hasNextPage=True, endCursor=str(len(transport.removal_reads)))
         elif second:
             if cause == "repeated-cursor":
                 info.update(hasNextPage=True, endCursor="1")
-            elif cause == "count-changed":
-                removals["totalCount"] = 3
             elif cause == "second-page-unreadable":
                 return subprocess.CompletedProcess(argv, 1, "", "lookup failed")
             elif cause == "second-page-errors":
@@ -686,14 +769,22 @@ def test_incomplete_removal_history_refuses_without_mutation(setup, action, caus
     with pytest.MonkeyPatch.context() as patches:
         # The shared helper exercises the real publisher through each adapter.
         if action == "direct":
+
             def invoke():
                 return pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=sender)
+
             error = gate.PublishBlocked
         else:
             client = keeper.GitHub(root, "unit/public")
-            patches.setattr(keeper, "request_run", lambda request, **kwargs: pub.request_run(request, runner=sender, env={}, **kwargs))
+            patches.setattr(
+                keeper,
+                "request_run",
+                lambda request, **kwargs: pub.request_run(request, runner=sender, env={}, **kwargs),
+            )
+
             def invoke():
                 return client.enqueue(42, NEW_HEAD)
+
             error = keeper.KeeperError
         with pytest.raises(error, match="RECOVERY_REMOVAL_UNKNOWN"):
             invoke()
@@ -710,6 +801,123 @@ def test_verified_push_after_nullable_removal_allows_initial_enqueue(setup):
     recover(setup, "direct")
     assert len(transport.writes) == 1
     assert not pub.recovery.ledger_path(root).exists()
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
+@pytest.mark.parametrize("removed", [False, True])
+def test_timeline_total_includes_unrelated_events(setup, action, removed):
+    root, transport = setup
+    transport.timeline_count = 7
+    transport.removed = removed
+    transport.removal_head = NEW_HEAD
+    transport.proof = None
+    recover(setup, action)
+    assert len(transport.writes) == 1
+    assert not pub.recovery.ledger_path(root).exists()
+
+
+def test_timeline_count_can_change_between_complete_pages(setup):
+    _, transport = setup
+    transport.removal_page_size = 1
+    transport.removal_history = [
+        {"beforeCommit": {"oid": NEW_HEAD}, "createdAt": "2026-10-09T11:00:00Z"},
+        {"beforeCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"},
+    ]
+    base_sender = transport.__call__
+
+    def sender(argv, **kwargs):
+        transport.timeline_count = 7 + len(transport.removal_reads)
+        return base_sender(argv, **kwargs)
+
+    root, _ = setup
+    pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=sender)
+    assert len(transport.removal_reads) == 2
+    assert len(transport.writes) == 1
+
+
+def test_empty_filtered_page_with_continuation_reads_later_removal(setup):
+    root, transport = setup
+    transport.removal_page_size = 1
+    transport.timeline_count = 7
+    transport.removal_history = [
+        {"beforeCommit": {"oid": NEW_HEAD}, "createdAt": "2026-10-09T11:00:00Z"},
+        {"beforeCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"},
+    ]
+
+    def sender(argv, **kwargs):
+        result = transport(argv, **kwargs)
+        if argv[1:5] == ["api", "--method", "POST", "graphql"]:
+            payload = json.loads(Path(argv[6]).read_text())
+            if "timelineItems" in payload["query"] and "cursor" not in payload["variables"]:
+                data = json.loads(result.stdout)
+                data["data"]["repository"]["pullRequest"]["removals"]["nodes"] = []
+                return subprocess.CompletedProcess(argv, 0, json.dumps(data), "")
+        return result
+
+    pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=sender)
+    assert len(transport.removal_reads) == 2
+    assert len(transport.writes) == 1
+    assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper-initial", "keeper"])
+@pytest.mark.parametrize("reason", ["manual", "merge_conflict"])
+@pytest.mark.parametrize("removed_head", [None, HEAD, NEW_HEAD])
+@pytest.mark.parametrize("current_head", [HEAD, NEW_HEAD])
+def test_non_ci_removal_does_not_require_failure_evidence(setup, action, reason, removed_head, current_head):
+    root, transport = setup
+    transport.removal_reason = reason
+    transport.removal_head = removed_head
+    transport.timeline_count = 7
+    transport.proof = None
+    transport.head = current_head
+    # No force-push evidence: ordinary pushes after these removals stay usable.
+    recover(setup, action)
+    assert len(transport.writes) == 1
+    assert not pub.recovery.ledger_path(root).exists()
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper"])
+@pytest.mark.parametrize("proof", [True, False])
+@pytest.mark.parametrize("reason", ["failed_checks", "timeout"])
+def test_null_ci_removal_requires_normal_recovery_evidence(setup, action, proof, reason):
+    root, transport = setup
+    transport.removal_head = None
+    transport.removal_reason = reason
+    if proof:
+        recover(setup, action)
+        assert len(transport.writes) == 1
+        assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
+    else:
+        transport.proof = None
+        error = keeper.KeeperError if action == "keeper" else gate.PublishBlocked
+        with pytest.raises(error, match="RECOVERY_EVIDENCE_MISSING"):
+            recover(setup, action)
+        assert transport.writes == []
+
+
+def test_manual_removal_cannot_hide_an_earlier_ci_failure(setup):
+    _, transport = setup
+    transport.removal_page_size = 1
+    transport.removal_history = [
+        {"beforeCommit": {"oid": HEAD}, "createdAt": "2026-10-09T11:00:00Z", "reason": "failed_checks"},
+        {"beforeCommit": None, "createdAt": "2026-10-09T12:00:00Z", "reason": "manual"},
+    ]
+    transport.proof = None
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, "direct")
+    assert transport.writes == []
+
+
+def test_manual_removal_does_not_refund_spent_reenqueue(setup):
+    _, transport = setup
+    recover(setup, "direct")
+    transport.removal_head = None
+    transport.removal_reason = "manual"
+    transport.proof = None
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_ALLOWANCE_SPENT"):
+        recover(setup, "direct")
+    assert len(transport.writes) == 1
 
 
 def test_same_head_push_never_refunds_a_spent_allowance(setup):
