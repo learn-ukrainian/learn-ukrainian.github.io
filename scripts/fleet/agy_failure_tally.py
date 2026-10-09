@@ -29,6 +29,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.adapters.agy import TRANSIENT_PROVIDER_FAULT, classify_agy_transient_provider_fault
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 
 CAUSE_LABELS: tuple[str, ...] = (
@@ -52,9 +53,6 @@ _CAUSE_PATTERNS: tuple[tuple[str, str], ...] = (
     ("worktree preparation", "worktree preparation"),
     ("output token cutoff", "output token limit"),
     ("output token cutoff", "cut off because it exceeded"),
-    ("transient provider fault", "UNAVAILABLE (code 503)"),
-    ("transient provider fault", "The stream was interrupted."),
-    ("transient provider fault", "agy_stream_output_invalid: missing terminal result"),
 )
 
 _TEXT_FIELDS = ("last_error", "failure_code", "stderr_excerpt", "returncode_reason")
@@ -81,6 +79,9 @@ def classify_failure(record: Mapping[str, Any]) -> str:
     for label, needle in _CAUSE_PATTERNS:
         if needle in text or needle.lower() in lowered:
             return label
+
+    if classify_agy_transient_provider_fault(text) == TRANSIENT_PROVIDER_FAULT:
+        return "transient provider fault"
 
     return "other"
 
