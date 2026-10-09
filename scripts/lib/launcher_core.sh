@@ -810,7 +810,7 @@ launcher_validate_cursor_pin() {
     exit 4
   fi
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation)."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat. Approved pins: composer-2.5, composer-2.5[fast=false], grok-4.7-high (operator decision #10205)."
     exit 4
   fi
 }
@@ -820,13 +820,9 @@ launcher_validate_cursor_pin() {
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    composer-2.5|grok-4.7-high) return 0 ;;
+    composer-2.5|composer-2.5\[fast=false\]|grok-4.7-high) return 0 ;;
   esac
-  [[ "$model" =~ ^composer-2\.5\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
-  # A bracket override may only switch Fast off.
-  local rest="${model//fast=false,/}"
-  rest="${rest//fast=false]/]}"
-  [[ "$rest" != *fast=* ]]
+  return 1
 }
 
 launcher_prepare_driver_identity() {

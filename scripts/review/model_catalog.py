@@ -984,21 +984,25 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
 
 
 def apply_cursor_model_pins(model: str | None) -> str | None:
-    """Apply Cursor harness model rules: Grok pinning and Claude refusal."""
+    """Apply Cursor harness model rules: Grok pinning, Claude refusal, and explicit allowlist."""
     if not model:
         return None
 
     text = str(model).strip()
     text_lower = text.casefold()
 
+    if is_cursor_auto_selector(text):
+        return text
+
     if "grok-4.7" in text_lower:
         if text_lower == "grok-4.7" or text_lower == "grok-4.7-high":
-            return "grok-4.7-high"
-
-        raise ModelCatalogError(
-            f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
-            "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
-        )
+            text = "grok-4.7-high"
+            text_lower = "grok-4.7-high"
+        else:
+            raise ModelCatalogError(
+                f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
+                "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
+            )
 
     from learn_ukrainian_v4_runtime.identity import resolve_family
     if resolve_family(text_lower) == "anthropic":
@@ -1008,9 +1012,18 @@ def apply_cursor_model_pins(model: str | None) -> str | None:
                 f"CURSOR_CLAUDE_REFUSED: Claude models ({text}) must use the native Claude CLI "
                 "while it is available. (operator decision #10205)"
             )
-        return text
+
+    allowed_pins = set(cursor_pinned_models())
+    allowed_pins.update({"grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
+
+    if text not in allowed_pins:
+        raise ModelCatalogError(
+            f"CURSOR_MODEL_NOT_APPROVED: model {text!r} is not an approved Cursor pin. "
+            f"Approved pins: {sorted(allowed_pins)} (operator decision #10205)"
+        )
 
     return text
+
 
 def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
     """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
