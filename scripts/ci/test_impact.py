@@ -1,7 +1,7 @@
 """Conservative, execution-free Python import impact analysis.
 
-Inventory, parse, resource and unresolved runtime loads force FULL globally.
-An opaque load can reach changed code without a statically visible edge.
+Inventory, parse and resource failures force FULL globally. Opaque runtime
+loads conservatively select every test that can reach the loading file.
 Shell intermediaries participate without being executed.
 This module does not enable selection in the full-suite workflow.
 """
@@ -17,6 +17,7 @@ import time
 from collections import defaultdict, deque
 from collections.abc import Iterable, Mapping
 from concurrent.futures import ProcessPoolExecutor
+from contextlib import suppress
 from dataclasses import dataclass, field
 from multiprocessing import get_context
 from pathlib import Path, PurePosixPath
@@ -35,7 +36,35 @@ def _build_budget_seconds(cpu_count: int | None) -> float:
     return 10.0 * _MAX_PARSER_WORKERS / min(_MAX_PARSER_WORKERS, max(1, cpu_count or 1))
 
 
-BUILD_BUDGET_SECONDS = _build_budget_seconds(os.cpu_count())
+def _available_cpu_count() -> int:
+    """Respect process affinity and container quotas before the host count."""
+    process_count = getattr(os, "process_cpu_count", lambda: None)() or os.cpu_count()
+    limits = [max(1, process_count or 1)]
+    with suppress(AttributeError, OSError):
+        limits.append(max(1, len(os.sched_getaffinity(0))))
+    try:
+        # Unified cgroups can impose quotas at any ancestor of this process.
+        membership = Path("/proc/self/cgroup").read_text()
+        relative = next(line[3:] for line in membership.splitlines() if line.startswith("0::"))
+        base = Path("/sys/fs/cgroup")
+        current = base / relative.lstrip("/")
+        if ".." not in current.parts:
+            while True:
+                try:
+                    quota, period = (current / "cpu.max").read_text().split()
+                except FileNotFoundError:
+                    quota, period = "max", "1"
+                if quota != "max":
+                    limits.append(max(1, int(quota) // int(period)))
+                if current == base:
+                    break
+                current = current.parent
+    except (OSError, ValueError, StopIteration, ZeroDivisionError):
+        pass
+    return min(limits)
+
+
+BUILD_BUDGET_SECONDS = _build_budget_seconds(_available_cpu_count())
 _REFERENCE = re.compile(r"(?:scripts|tests|agents_extensions)(?:[/.][A-Za-z_]\w*)+(?:\.py)?")
 _BARE_REFERENCE = re.compile(r"[A-Za-z_]\w*(?:[/.][A-Za-z_]\w*)*(?:\.(?:py|sh))?")
 _SHELL_REFERENCE = re.compile(r"(?:[A-Za-z_][\w-]*/)*[A-Za-z_][\w-]*\.sh\b")
@@ -140,12 +169,16 @@ def _name(node: ast.AST) -> str:
     return ""
 
 
-def _nodes(tree: ast.AST) -> Iterable[ast.AST]:
+def _nodes(tree: ast.AST) -> Iterable[tuple[ast.AST, tuple[int, ...]]]:
     """Visit dependencies and literals, avoiding millions of terminal AST leaves."""
-    relevant = {ast.Import, ast.ImportFrom, ast.Attribute, ast.Assign, ast.AnnAssign, ast.Call}
-    pending = [tree]
+    relevant = {
+        ast.Import, ast.ImportFrom, ast.Attribute, ast.Assign, ast.AnnAssign,
+        ast.AugAssign, ast.For, ast.Call, ast.arg, ast.ClassDef,
+        ast.FunctionDef, ast.AsyncFunctionDef, ast.Global, ast.Nonlocal,
+    }
+    pending = [(tree, ())]
     while pending:
-        node = pending.pop()
+        node, scope = pending.pop()
         kind = type(node)
         # Documentation can cite another executable without loading it. Skip
         # inert string expressions (including docstrings), not runtime values.
@@ -153,23 +186,31 @@ def _nodes(tree: ast.AST) -> Iterable[ast.AST]:
             continue
         if kind is ast.Constant:
             if isinstance(node.value, str):
-                yield node
+                yield node, scope
             continue
         if kind is ast.Name:
-            yield node
+            yield node, scope
             continue
         if kind in relevant and (
             kind is not ast.Attribute or node.attr in _LOADERS or node.attr == "repo_wide"
         ):
-            yield node
+            yield node, scope
+        nested_scope = (id(node), *scope) if isinstance(
+            node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)
+        ) else scope
         for child_field in node._fields:
             value = getattr(node, child_field)
+            child_scope = nested_scope
+            if nested_scope != scope and child_field not in {"body", "args"}:
+                child_scope = scope
+            elif isinstance(node, ast.arguments) and child_field in {"defaults", "kw_defaults"}:
+                child_scope = scope[1:]
             if isinstance(value, list):
                 # AST sequence fields contain nodes (aliases and terminal
                 # operators have no relevant descendants). Filter on pop.
-                pending.extend(child for child in value if isinstance(child, ast.AST))
+                pending.extend((child, child_scope) for child in value if isinstance(child, ast.AST))
             elif isinstance(value, ast.AST) and value._fields:
-                pending.append(value)
+                pending.append((value, child_scope))
 
 
 def _scan_source(item: tuple[str, bytes | str]) -> tuple:
@@ -205,8 +246,10 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
         reasons.add(f"parse-error:{path}")
         return path, imports, load_paths, reasons, safety
     groups: dict[type, list[ast.AST]] = defaultdict(list)
-    for node in _nodes(tree):
+    node_scopes: dict[int, tuple[int, ...]] = {}
+    for node, scope in _nodes(tree):
         groups[type(node)].append(node)
+        node_scopes[id(node)] = scope
     aliases: dict[str, str] = {}
 
     def bind(alias: str, name: str) -> None:
@@ -237,11 +280,110 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
     }
     groups[ast.Name] = [node for node in groups[ast.Name] if node.id in loader_names]
     assignments: dict[str, list[ast.AST]] = defaultdict(list)
+    bindings: dict[tuple[int, ...], dict[str, list[ast.AST]]] = defaultdict(lambda: defaultdict(list))
+    classes = {id(node) for node in groups[ast.ClassDef]}
+    redirected = {(node_scopes[id(node)], name) for node in groups[ast.Global] + groups[ast.Nonlocal] for name in node.names}
+
+    def assign(node: ast.AST, name: str, value: ast.AST) -> None:
+        assignments[name].append(value)
+        bindings[node_scopes[id(node)]][name].append(value)
+        if (node_scopes[id(node)], name) in redirected:
+            # Mutations of enclosing state need interprocedural ordering proof.
+            # Keep every matching scope uncertain rather than borrowing a literal.
+            for scope in (node_scopes[id(node)][index:] for index in range(1, len(node_scopes[id(node)]) + 1)):
+                bindings[scope][name].append(ast.Constant(value=None))
+
     for node in groups[ast.Assign] + groups[ast.AnnAssign]:
         targets = node.targets if isinstance(node, ast.Assign) else [node.target]
         for target in targets:
             if isinstance(target, ast.Name) and node.value is not None:
-                assignments[target.id].append(node.value)
+                assign(node, target.id, node.value)
+
+    # Retain unknown rebindings in the lexical scope. A local parameter cannot
+    # borrow a module-level literal, nor obscure a literal in another function.
+    unknown = ast.Constant(value=None)
+    for node in groups[ast.FunctionDef] + groups[ast.AsyncFunctionDef] + groups[ast.ClassDef]:
+        assign(node, node.name, unknown)
+    for node in groups[ast.Import] + groups[ast.ImportFrom]:
+        for alias in node.names:
+            assign(node, alias.asname or alias.name.split(".")[0], unknown)
+    for node in groups[ast.arg]:
+        assign(node, node.arg, unknown)
+    for node in groups[ast.AugAssign]:
+        if isinstance(node.target, ast.Name):
+            assign(node, node.target.id, unknown)
+    for node in groups[ast.Assign]:
+        for target in node.targets:
+            if isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name):
+                assign(node, target.value.id, unknown)
+    for node in groups[ast.Call]:
+        if isinstance(node.func, ast.Attribute) and node.func.attr in {
+            "append", "extend", "insert", "pop", "remove", "clear", "reverse", "sort",
+        } and isinstance(node.func.value, ast.Name):
+            assign(node, node.func.value.id, unknown)
+
+    def lookup(name: str, scope: tuple[int, ...]) -> tuple[tuple[int, ...], list[ast.AST]]:
+        for index in range(len(scope) + 1):
+            current = scope[index:]
+            if index and current and current[0] in classes:
+                # Methods resolve free names in enclosing functions/modules,
+                # never the class attribute namespace.
+                continue
+            if name in bindings[current]:
+                return current, bindings[current][name]
+        return (), [unknown]
+
+    def values(node: ast.AST | None, scope: tuple[int, ...], seen: frozenset = frozenset()) -> list[ast.AST]:
+        if isinstance(node, ast.Name):
+            current, expressions = lookup(node.id, scope)
+            key = (current, node.id)
+            if key in seen or len(seen) >= 32:
+                return [unknown]
+            result = []
+            for expr in expressions:
+                result.extend(values(expr, current, seen | {key}))
+                if len(result) > 64:
+                    return [unknown]
+            return result
+        return [node if node is not None else unknown]
+
+    for node in sorted(groups[ast.For], key=lambda item: item.lineno):
+        if isinstance(node.target, ast.Name):
+            for iterable in values(node.iter, node_scopes[id(node)]):
+                for value in iterable.elts if isinstance(iterable, (ast.Tuple, ast.List)) else [unknown]:
+                    assign(node, node.target.id, value)
+
+    def prefixes(node: ast.AST | None, scope: tuple[int, ...], seen: frozenset = frozenset()) -> set[tuple[str | None, ...]]:
+        """Resolve up to executable/-m/target, retaining every unknown branch."""
+        if isinstance(node, ast.Name):
+            current, expressions = lookup(node.id, scope)
+            key = (current, node.id)
+            if key in seen or len(seen) >= 32:
+                return {(None,)}
+            result = set()
+            for expr in expressions:
+                result.update(prefixes(expr, current, seen | {key}))
+                if len(result) > 64:
+                    return {(None,)}
+            return result
+        if isinstance(node, (ast.Tuple, ast.List)):
+            result: set[tuple[str | None, ...]] = {()}
+            for item in node.elts:
+                parts = prefixes(item.value, scope, seen) if isinstance(item, ast.Starred) else {
+                    prefix[:1] for prefix in prefixes(item, scope, seen)
+                }
+                result = {(left + right)[:3] for left in result for right in parts}
+                if len(result) > 64:
+                    return {(None,)}
+                if all(len(prefix) == 3 for prefix in result):
+                    break
+            return result
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return {(node.value,)}
+        name = _name(node)
+        first, _, rest = name.partition(".")
+        name = aliases.get(first, first) + ("." + rest if rest else "")
+        return {(name,)} if name in {"sys.executable", "sys._base_executable"} else {(None,)}
 
     # All command references feed the same file-level edge sets. Visiting an
     # assigned argv expression once is enough, even if many commands use it.
@@ -335,11 +477,11 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             targets = node.targets if isinstance(node, ast.Assign) else [node.target]
             if any(isinstance(target, ast.Name) and target.id == "pytest_plugins" for target in targets):
                 value = node.value
-                values = value.elts if isinstance(value, (ast.List, ast.Tuple)) else [value]
-                if not all(isinstance(item, ast.Constant) and isinstance(item.value, str) for item in values):
+                plugin_values = value.elts if isinstance(value, (ast.List, ast.Tuple)) else [value]
+                if not all(isinstance(item, ast.Constant) and isinstance(item.value, str) for item in plugin_values):
                     reasons.add(f"nonliteral-pytest-plugins:{path}")
                 else:
-                    for item in values:
+                    for item in plugin_values:
                         add(path, item.value, required=True)
         elif isinstance(node, ast.Call):
             name = _name(node.func)
@@ -365,39 +507,49 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             }:
                 argv = node.args[0] if node.args else next((kw.value for kw in node.keywords if kw.arg == "args"), None)
                 load_paths.update(command_shell_paths(argv))
+                # A shell string can contain pipelines, substitutions or a
+                # second interpreter; its first token is not an argv proof.
+                if any(isinstance(value, ast.Constant) and isinstance(value.value, str)
+                       for value in values(argv, node_scopes[id(node)])):
+                    reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
                 # Arguments to git and other known non-Python executables do
                 # not become opaque Python loads merely by using variables.
                 # Literal module/script targets remain resolvable even when
                 # later command arguments are dynamic.
-                args = argv.elts if isinstance(argv, (ast.List, ast.Tuple)) else []
-                executable = args[0] if args else None
-                literal = executable.value if isinstance(executable, ast.Constant) else None
-                python = _name(executable) in {"sys.executable", "sys._base_executable"} or (
-                    isinstance(literal, str) and PurePosixPath(literal).name.startswith("python")
-                )
-                if python:
-                    target = args[2] if len(args) > 2 and isinstance(args[1], ast.Constant) and args[1].value == "-m" else (
-                        args[1] if len(args) > 1 else None
+                for args in prefixes(argv, node_scopes[id(node)]):
+                    executable = args[0] if args else None
+                    python = executable in {"sys.executable", "sys._base_executable"} or (
+                        executable is not None and PurePosixPath(executable).name.startswith("python")
                     )
-                    if not isinstance(target, ast.Constant) or not isinstance(target.value, str):
+                    if python:
+                        index = 2 if len(args) > 1 and args[1] == "-m" else 1
+                        target = args[index] if len(args) > index else None
+                        if target is None or target.startswith("-"):
+                            reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
+                        elif index == 2:
+                            add(path, target, required=True)
+                        elif target.endswith(".py"):
+                            load_paths.add(target)
+                        else:
+                            reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
+                    elif executable is None:
                         reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
-                elif not isinstance(literal, str):
-                    reasons.add(f"nonliteral-subprocess:{path}:{node.lineno}")
             if leaf not in _LOADERS:
                 continue
             index, keyword, is_path = _LOADERS[leaf]
             target = node.args[index] if len(node.args) > index else next(
                 (kw.value for kw in node.keywords if kw.arg == keyword), None,
             )
-            if not isinstance(target, ast.Constant) or not isinstance(target.value, str):
-                reasons.add(f"dynamic-import:{path}:{node.lineno}")
-            elif target.value.startswith("."):
-                # A runtime package parameter cannot be inferred from the caller.
-                reasons.add(f"relative-runtime-import:{path}:{node.lineno}")
-            elif is_path:
-                load_paths.add(target.value)
-            else:
-                add(path, target.value, required=True)
+            for value in values(target, node_scopes[id(node)]):
+                if not isinstance(value, ast.Constant) or not isinstance(value.value, str):
+                    reasons.add(f"dynamic-import:{path}:{node.lineno}")
+                elif value.value.startswith("."):
+                    # A runtime package parameter cannot be inferred from the caller.
+                    reasons.add(f"relative-runtime-import:{path}:{node.lineno}")
+                elif is_path:
+                    load_paths.add(value.value)
+                else:
+                    add(path, value.value, required=True)
             if leaf == "__import__":
                 fromlist = node.args[3] if len(node.args) > 3 else next(
                     (kw.value for kw in node.keywords if kw.arg == "fromlist"), None,
@@ -435,20 +587,23 @@ class ImportGraph:
         """Return tests in the dependency closure."""
         return self.reached_files(changed) & self.tests
 
-    def selection_reasons(self, paths: Iterable[str]) -> list[str]:
-        """Fail closed on unknown edges, even outside the known reverse closure.
+    def uncertain_tests(self) -> set[str]:
+        """Opaque loads may reach any change; include their known test consumers.
 
-        Neither an opaque test nor a helper needs a visible import of changed
-        code. Restricting uncertainty to known edges assumes the very dependency
-        the parser could not resolve. Already selected loaders do not prove
-        that other importers are covered either.
+        An unreachable production loader cannot execute in a statically known
+        test. Any opaque test entry point is itself included in this closure.
+        Shared conftests/package initializers naturally widen it to their scope.
         """
-        return sorted(set(self.reasons).union(*(
-            errors for errors in self.uncertainty.values()
-        )))
+        return self.test_dependents(self.uncertainty)
+
+    def selection_reasons(self, paths: Iterable[str]) -> list[str]:
+        """Global failures stay FULL; unknown loads contaminate their consumers."""
+        if self.tests and self.uncertain_tests() == self.tests:
+            return sorted(set(self.reasons).union(*self.uncertainty.values()))
+        return list(self.reasons)
 
     def impacted_tests(self, changed: Iterable[str]) -> dict:
-        """FULL on unresolved uncertainty or a changed module without tests."""
+        """Include opaque consumers; FULL if uncertainty covers the whole suite."""
         paths = sorted(set(changed))
         reasons = self.selection_reasons(paths)
         for path in paths:
@@ -460,7 +615,7 @@ class ImportGraph:
             reasons.append("no-changed-modules")
         return {
             "full_suite": bool(reasons),
-            "tests": sorted(self.test_dependents(paths)),
+            "tests": sorted(self.test_dependents(paths) | self.uncertain_tests()),
             "reasons": sorted(set(reasons)),
         }
 
@@ -536,7 +691,7 @@ def build_graph(root: Path = ROOT, *, sources: Mapping[str, bytes | str] | None 
     # Largest files first avoid a long final parser chunk on this repository's
     # uneven source sizes. Cap workers at available CPUs and eight processes.
     items = sorted(sources.items(), key=lambda item: len(item[1]), reverse=True)
-    workers = min(_MAX_PARSER_WORKERS, os.cpu_count() or 1)
+    workers = min(_MAX_PARSER_WORKERS, _available_cpu_count())
     # Bounded local CPU workers, no provider calls or source execution.
     # Small fixture graphs stay in-process; large graphs return compact records.
     try:

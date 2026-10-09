@@ -116,21 +116,28 @@ def test_transitive_import_through_local_src_layout_package():
     "__import__('scripts', fromlist=names)",
     "from importlib import import_module as load\nload(target)\nfrom unrelated import function as load",
 ])
-def test_opaque_loads_fail_closed_without_a_static_edge(source):
+def test_opaque_loads_contaminate_only_reachable_tests(source):
     result = graph({
         "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
         "scripts/unrelated.py": source,
     })
     selection = result.impacted_tests(["scripts/target.py"])
-    assert selection["full_suite"]
-    assert selection["reasons"]
+    assert not selection["full_suite"]
+    assert not selection["reasons"]
+    assert result.uncertainty["scripts/unrelated.py"]
+    assert not result.uncertain_tests()
     assert selection["tests"] == ["tests/test_use.py"]
-    # Adding a known edge must not change the conservative outcome.
+    # A consumer that may execute the opaque loader is always included.
     result = graph({
         "scripts/target.py": "", "tests/test_use.py": "import scripts.target",
         "scripts/consumer.py": "import scripts.target\n" + source,
+        "tests/test_dynamic.py": "import scripts.consumer",
+        "tests/test_outside.py": "",
     })
-    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
+    selection = result.impacted_tests(["scripts/target.py"])
+    assert not selection["full_suite"]
+    assert selection["tests"] == ["tests/test_dynamic.py", "tests/test_use.py"]
+    assert result.uncertain_tests() == {"tests/test_dynamic.py"}
 
 
 def test_parse_error_anywhere_forces_full():
@@ -203,6 +210,10 @@ def test_candidate_union_and_full_fallback_in_ci_suite():
         SAFETY_NET, "tests/test_target_by_name.py", "tests/test_use.py",
     ]
     sources["scripts/consumer.py"] = "import scripts.target\n__import__(module)"
+    assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=graph(sources)) == [
+        SAFETY_NET, "tests/test_target_by_name.py", "tests/test_use.py",
+    ]
+    sources["tests/conftest.py"] = "import scripts.consumer"
     assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=graph(sources)) is None
 
 
@@ -442,8 +453,15 @@ def test_opaque_test_dependencies_outside_changed_closure(loader_path, consumer,
     result = graph(sources)
     # There is deliberately no resolvable edge from target to this loader.
     assert loader_path not in result.reached_files(["scripts/target.py"])
-    assert result.impacted_tests(["scripts/target.py"])["full_suite"]
-    assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=result) is None
+    selection = result.impacted_tests(["scripts/target.py"])
+    if loader_path in {"tests/conftest.py", "tests/__init__.py"}:
+        assert selection["full_suite"]
+        assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=result) is None
+    else:
+        expected = {"tests/test_static.py", SAFETY_NET}
+        expected.add(loader_path if impact.is_test_file(loader_path) else "tests/test_other.py")
+        assert not selection["full_suite"]
+        assert set(build_selected_candidates(["scripts/target.py"], sources, impact_graph=result)) == expected
 
 
 def test_test_package_initializers_are_implicit_dependencies():
@@ -478,3 +496,197 @@ def test_repeated_command_assignments_keep_all_edges_and_terminate_cycles():
     })
     for path in ("scripts/one.py", "scripts/two.py"):
         assert result.test_dependents([path]) == {"tests/test_use.py"}
+
+
+@pytest.mark.parametrize('command', [
+    "cmd = ['git', *args]\nsubprocess.run(cmd)",
+    "git_args = ['git', '-C', root]\nsubprocess.run([*git_args, 'status'])",
+    "prefix = []\nsubprocess.run([*prefix, 'git', *args])",
+    "for cmd in (['git', 'status'], ['git', 'diff']):\n    subprocess.run(cmd)",
+    "cmd = ['git', 'status']\ncmd = ['git', 'diff']\nsubprocess.run(cmd)",
+    "def first(cmd):\n    return cmd\ndef second():\n    cmd = ['git', 'status']\n    subprocess.run(cmd)",
+])
+def test_assigned_starred_and_loop_commands_resolve_executables(command):
+    record = impact._scan_source(('scripts/consumer.py', 'import subprocess\n' + command))
+    assert not record[3]
+
+
+@pytest.mark.parametrize('command', [
+    "cmd = [sys.executable, '-m', 'scripts.target', value]\nsubprocess.run(cmd)",
+    "prefix = [sys.executable, '-m']\nsubprocess.run([*prefix, 'scripts.target', value])",
+    "target = 'scripts.target'\ncmd = [sys.executable, '-m', target]\nsubprocess.run(cmd)",
+    "for cmd in ([sys.executable, '-m', 'scripts.target'],):\n    subprocess.run(cmd)",
+])
+def test_resolved_python_argv_keeps_target_edges(command):
+    result = graph({
+        'scripts/target.py': '',
+        'scripts/consumer.py': 'import subprocess, sys\n' + command,
+        'tests/test_use.py': 'import scripts.consumer',
+        'tests/test_outside.py': '',
+    })
+    assert not result.uncertainty
+    assert result.impacted_tests(['scripts/target.py']) == {
+        'full_suite': False, 'tests': ['tests/test_use.py'], 'reasons': [],
+    }
+
+
+@pytest.mark.parametrize('command', [
+    'subprocess.run([*prefix, "git", "status"])',
+    'cmd = ["git", "status"]\ncmd = unknown\nsubprocess.run(cmd)',
+    'cmd = ["git", "status"]\ncmd[0] = unknown\nsubprocess.run(cmd)',
+    'cmd = ["git", "status"]\ncmd.insert(0, unknown)\nsubprocess.run(cmd)',
+    'cmd = ["git", "status"]\ncmd += unknown\nsubprocess.run(cmd)',
+    'cmd = [cmd]\nsubprocess.run(cmd)',
+    'cmd = ["git", "status"]\ndef run(cmd):\n    subprocess.run(cmd)',
+    'subprocess.run([sys.executable, "-c", source])',
+    'subprocess.run([sys.executable, "-m", module])',
+])
+def test_unknown_argv_branches_remain_uncertain(command):
+    record = impact._scan_source(('scripts/consumer.py', 'import subprocess, sys\n' + command))
+    assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+
+
+def test_literal_loop_imports_resolve_in_their_lexical_scope():
+    source = """
+import importlib
+ALIASES = ('scripts.one', 'scripts.two')
+def unrelated(alias):
+    return alias
+def fixture():
+    for alias in ALIASES:
+        importlib.import_module(alias)
+"""
+    result = graph({
+        'scripts/one.py': '', 'scripts/two.py': '',
+        'tests/nested/conftest.py': source, 'tests/nested/test_use.py': '',
+        'tests/test_outside.py': '',
+    })
+    assert not result.uncertainty
+    for changed in ('scripts/one.py', 'scripts/two.py'):
+        assert result.impacted_tests([changed]) == {
+            'full_suite': False, 'tests': ['tests/nested/test_use.py'], 'reasons': [],
+        }
+
+
+@pytest.mark.parametrize('source', [
+    "ALIASES = names\nfor alias in ALIASES:\n    importlib.import_module(alias)",
+    "target = 'scripts.target'\ndef load(target):\n    importlib.import_module(target)",
+    "target = 'scripts.target'\ntarget = unknown\nimportlib.import_module(target)",
+    "target = target\nimportlib.import_module(target)",
+])
+def test_dynamic_loop_imports_and_parameter_shadowing_remain_uncertain(source):
+    record = impact._scan_source(('scripts/consumer.py', 'import importlib\n' + source))
+    assert any(reason.startswith('dynamic-import:') for reason in record[3])
+
+
+def test_scoped_uncertainty_includes_transitive_consumers_outside_change_closure():
+    result = graph({
+        'scripts/target.py': '', 'scripts/opaque.py': '__import__(name)',
+        'tests/helpers.py': 'import scripts.opaque',
+        'tests/test_dynamic.py': 'import tests.helpers',
+        'tests/test_static.py': 'import scripts.target',
+        'tests/test_outside.py': '',
+    })
+    assert 'scripts/opaque.py' not in result.reached_files(['scripts/target.py'])
+    assert result.impacted_tests(['scripts/target.py']) == {
+        'full_suite': False, 'tests': ['tests/test_dynamic.py', 'tests/test_static.py'], 'reasons': [],
+    }
+
+
+@pytest.mark.parametrize('process,host,affinity,quota,expected', [
+    (4, 32, 16, 'max 100000', 4),
+    (None, 32, 2, 'max 100000', 2),
+    (8, 32, 16, '200000 100000', 2),
+    (8, 32, 16, '50000 100000', 1),
+    (None, None, None, None, 1),
+    (None, 8, None, 'invalid', 8),
+])
+def test_available_cpu_count_respects_process_affinity_and_cgroup(monkeypatch, process, host, affinity, quota, expected):
+    monkeypatch.setattr(impact.os, 'process_cpu_count', lambda: process, raising=False)
+    monkeypatch.setattr(impact.os, 'cpu_count', lambda: host)
+
+    def affinity_for(pid):
+        assert pid == 0
+        if affinity is None:
+            raise OSError('unavailable')
+        return set(range(affinity))
+
+    def read(path, *args, **kwargs):
+        if str(path) == '/proc/self/cgroup':
+            return '0::/worker\n'
+        if quota is None:
+            raise OSError('unavailable')
+        return quota
+
+    monkeypatch.setattr(impact.os, 'sched_getaffinity', affinity_for, raising=False)
+    monkeypatch.setattr(impact.Path, 'read_text', read)
+    assert impact._available_cpu_count() == expected
+
+
+def test_available_cpu_count_honors_parent_quota_with_missing_leaf(monkeypatch):
+    monkeypatch.setattr(impact.os, 'process_cpu_count', lambda: 8, raising=False)
+    monkeypatch.setattr(impact.os, 'sched_getaffinity', lambda pid: set(range(8)), raising=False)
+
+    def read(path, *args, **kwargs):
+        if str(path) == '/proc/self/cgroup':
+            return '0::/worker/child\n'
+        if str(path) == '/sys/fs/cgroup/worker/child/cpu.max':
+            raise FileNotFoundError('not mounted')
+        return '200000 100000' if str(path) == '/sys/fs/cgroup/worker/cpu.max' else 'max 100000'
+
+    monkeypatch.setattr(impact.Path, 'read_text', read)
+    assert impact._available_cpu_count() == 2
+
+
+@pytest.mark.parametrize('source', [
+    "aliases = ['scripts.target']\naliases.append(name)\nfor alias in aliases:\n    importlib.import_module(alias)",
+    "target = 'scripts.target'\ndef mutate():\n    global target\n    target = name\nimportlib.import_module(target)",
+    "target = name\nclass Scope:\n    target = 'scripts.target'\n    def load(self):\n        importlib.import_module(target)",
+    "target = 'scripts.target'\ndef target():\n    pass\nimportlib.import_module(target)",
+])
+def test_mutated_loop_and_enclosing_names_keep_unknown_imports(source):
+    record = impact._scan_source(('scripts/consumer.py', 'import importlib\n' + source))
+    assert any(reason.startswith('dynamic-import:') for reason in record[3])
+
+
+def test_literal_defaults_resolve_in_enclosing_scope():
+    record = impact._scan_source(('scripts/consumer.py', """
+import importlib
+target = 'scripts.target'
+def use(target=importlib.import_module(target)):
+    return target
+"""))
+    assert not record[3]
+    assert ('scripts.target', True) in record[1]
+
+
+def test_static_resolution_fails_closed_at_branch_and_depth_limits():
+    source = 'import subprocess\n' + '\n'.join(f"cmd = ['git', '{index}']" for index in range(65))
+    source += '\nsubprocess.run(cmd)'
+    record = impact._scan_source(('scripts/consumer.py', source))
+    assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+    source = "import importlib\ntarget0 = 'scripts.target'\n"
+    source += '\n'.join(f'target{index} = target{index - 1}' for index in range(1, 34))
+    source += '\nimportlib.import_module(target33)'
+    record = impact._scan_source(('scripts/consumer.py', source))
+    assert any(reason.startswith('dynamic-import:') for reason in record[3])
+
+
+@pytest.mark.parametrize('command', [
+    'subprocess.run("git status && python -m " + module, shell=True)',
+    'cmd = "git status && python -c code"\nsubprocess.run(cmd, shell=True)',
+    'subprocess.getoutput("git status; python -m scripts.target")',
+])
+def test_shell_command_strings_do_not_borrow_argv_executable_proof(command):
+    record = impact._scan_source(('scripts/consumer.py', 'import subprocess\n' + command))
+    assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+
+
+def test_import_rebinding_does_not_borrow_literal_argv():
+    record = impact._scan_source(('scripts/consumer.py', """
+import subprocess
+cmd = ['git', 'status']
+from provider import cmd
+subprocess.run(cmd)
+"""))
+    assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])

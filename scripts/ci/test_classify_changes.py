@@ -33,10 +33,29 @@ class CandidateTests(unittest.TestCase):
         self.sources["tests/test_indirect.py"] = ""
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
-    def test_uncertainty_outside_reverse_closure_fails_closed(self):
+    def test_uncertainty_outside_reverse_closure_includes_opaque_consumers(self):
         self.sources["tests/test_loader.py"] = "__import__(target)"
-        self.assertIsNone(self.select(["scripts/tool.py"]))
+        expected = [SAFETY_NET, "tests/test_indirect.py", "tests/test_loader.py", "tests/test_tool.py"]
+        self.assertEqual(self.select(["scripts/tool.py"]), expected)
         self.sources["scripts/loader.py"] = "import scripts.tool\n__import__(target)"
+        self.assertEqual(self.select(["scripts/tool.py"]), expected)
+        self.sources["tests/test_loader_user.py"] = "import scripts.loader"
+        self.assertEqual(self.select(["scripts/tool.py"]), sorted([*expected, "tests/test_loader_user.py"]))
+
+    def test_test_only_includes_opaque_consumers(self):
+        self.sources["tests/test_loader.py"] = "__import__(target)"
+        self.assertEqual(self.select(["tests/test_tool.py"]), [
+            SAFETY_NET, "tests/test_loader.py", "tests/test_tool.py",
+        ])
+
+    def test_shared_opaque_loader_still_requires_full(self):
+        self.sources["tests/conftest.py"] = "__import__(target)"
+        self.assertIsNone(self.select(["scripts/tool.py"]))
+
+    def test_opaque_consumer_union_obeys_ceiling(self):
+        self.sources.update({
+            f"tests/test_opaque_{index}.py": "__import__(target)" for index in range(SELECTED_CANDIDATE_CEILING)
+        })
         self.assertIsNone(self.select(["scripts/tool.py"]))
 
     def test_existing_full_triggers(self):

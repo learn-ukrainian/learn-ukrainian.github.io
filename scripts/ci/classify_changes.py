@@ -96,6 +96,9 @@ def build_selected_candidates(
         candidates.update(impact["tests"])
     # Test-only changes may import other test files; include those dependents.
     candidates.update(graph.test_dependents(candidates))
+    # Opaque test entry points can load changed code without a visible edge.
+    # Select their consumers even for a test-only change.
+    candidates.update(graph.uncertain_tests())
     if graph.selection_reasons(paths):
         return None
     candidates.update(graph.safety_tests)
