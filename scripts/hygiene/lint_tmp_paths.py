@@ -75,11 +75,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "617d3a036e07eadeb84980092b677ac198b0c802285c30fe1020ce2b27080cee:1 be728736e627a1fe9034557e5f4b839e232aefbe6de70cacf37b9a46353377a2:1 d9f92ff18db2ae9f804524579c4f24bbc70505b90eaa79f40549db82445e41d0:1",
     ),
     (
-        "scripts/audit/private_teacher_lesson_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "0bd4dbd46ccb77be5b46cf9a1ab6162f885c36fb87933709cd1c6df22bdc5627:1 348c816e0bf8ed584e0c377f2087353d99531d70f52266c6e93e01b8f941e94d:1 849b6f9f881509130f7fa8223838c2527ec8c43453feb482c7d42f8afabb33bc:1",
-    ),
-    (
         "scripts/audit/sum11_sovietization_scan.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "8e756caf7dc8d194a6469f8a6ddc616f8842bb1c4a045a283175af69c1e2ef17:1",
@@ -193,11 +188,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/lexicon/ohoiko_atlas_intake.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "6259b63f6334678937c60097eca3bd376e5a532b96113507d06e5a59ed647064:1 ce32a4b965f82d15d41fe17b4f260582330699f220c1bf15cf7422377027c54f:1",
-    ),
-    (
-        "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "10a3a4cd651bc83d437bc9c09de38abed6ad09e10dfa956d8a3edb8d1341b037:1 99cd7d8bb58ce7cd047156dea2032f79748b6722ab2121dafe488adb6e9ab10f:1 b1d4aaae9f32e168851b019fe1b8eed696a405a7f38243aefc1ea647190c3a5c:1 da04cf400ed4a7cbc32d39e279d26f07212821a83e11e79ca2bb525fb70fd3ce:1 e181fbdac56f3be72194b321c062d5b3385748667785fe4ff21ad122af11d980:1",
     ),
     (
         "scripts/lexicon/runner/generate_pr1_fixture.py",
