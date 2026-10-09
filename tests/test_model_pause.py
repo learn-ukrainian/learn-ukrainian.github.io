@@ -125,3 +125,30 @@ def test_messaging_admission_ignores_pauses(tmp_path, monkeypatch) -> None:
     with contextlib.suppress(Exception):  # other gates may refuse; the pause gate must not
         ta.resolve_and_admit(["claude"], mode="bridge")
     assert called == []
+
+
+def test_every_dispatch_admission_caller_opts_in() -> None:
+    import ast
+    from pathlib import Path
+
+    tree = ast.parse(Path("scripts/delegate.py").read_text(encoding="utf-8"))
+    funcs = {"_admit_dispatch_target": 0, "_admit_kimi_worker": 0, "_admit_worker": 0}
+    hits = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            for call in ast.walk(node):
+                if isinstance(call, ast.Call) and getattr(call.func, "id", "") == "resolve_and_admit":
+                    flag = any(k.arg == "new_dispatch" for k in call.keywords)
+                    hits.append((node.name, flag))
+    assert hits and all(flag for _name, flag in hits), hits
+    del funcs
+
+
+def test_dispatch_admission_refuses_a_paused_model(tmp_path, monkeypatch) -> None:
+    from scripts.agent_runtime import target_admission as ta
+
+    policy = tmp_path / "p.json"
+    policy.write_text(json.dumps({"pauses": [{"pattern": "claude-opus-*", "until": "2999-01-01T00:00:00Z"}]}))
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    with pytest.raises(mp.ModelPausedRefused):
+        ta._refuse_paused(["claude-opus-5-5"])
