@@ -4,7 +4,7 @@
   "frozen_at": "2026-10-03T21:31:26Z",
   "implementation_head": "621fd45b34b183e3a1b30713aa92d5388c042d5f",
   "sha256": {
-    "docs/design/guard-hooks-understood-forms.md": "9469f6fc98061f3c3815d25557eff474594b3077d00e108f254699f2545a95c6",
+    "docs/design/guard-hooks-understood-forms.md": "fe966e13acacc1b86e1b555d67e0ef0b6b792e0c571d553e75af54dce4c55a5c",
     "tests/fixtures/guard_bash_oracle.json": "4dca12089ddf5b04d98f0ba93d08454001411b68ce9b11f6080716916ba8d19d",
     "tests/fixtures/guard_bash_traffic.json": "cb9fd3eaca8752c585dda62efc0210d99d349d2ef5ba7c08a6ec533611c25e57",
     "tests/fixtures/guard_bash_understood_traffic.json": "98caa660a1f163d7bdb38a7dcad929823bdffb6ce651a91289f766d4002c2d0b",
