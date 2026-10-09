@@ -275,11 +275,13 @@ def test_unsupported_risk_fails_closed():
 
 
 def test_critical_uses_authority_while_routine_uses_practical_defaults():
-    # #9394: OpenAI author gets Opus at critical; #9538: high is Opus too;
+    # OpenAI author gets Opus at critical (allowed case a);
+    # high falls back to Grok 4.7 before escalating to Opus (#611, #612);
     # the practical defaults at medium and low remain Sonnet.
-    for risk in ("critical", "high"):
-        resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
-        assert resolution.selected.name == "claude-opus-5-5", risk
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
+    assert resolution.selected.name == "claude-opus-5-5"
+    resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
+    assert resolution.selected.name == "grok-4.7"
     for risk in ("medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
         assert resolution.selected.name == "claude-sonnet-5-5", risk
@@ -309,25 +311,32 @@ def test_critical_anthropic_author_gets_astra_as_formal_gate():
     assert resolution.selected.concrete_model == "gpt-6.1-sol"
 
 
-def test_high_risk_openai_author_gets_opus_not_sonnet_or_fable():
+def test_high_risk_openai_author_gets_grok_before_escalating_to_opus():
+    # Per #611, #612: fallback prefers Grok 4.7 before escalating to Opus for standard high-risk reviews.
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
-    assert resolution.selected.name == "claude-opus-5-5"
-    assert resolution.selected.transport == "native_claude"
-    # Astra remains same-family advisory context, never this author’s CF gate.
+    assert resolution.selected.name == "grok-4.7"
+    assert resolution.selected.transport == "native_grok"
+    # Astra/Sol remains same-family advisory context, never this author's CF gate.
     assert next(entry for entry in resolution.trace if entry.name == "openai_frontier").status == "advisory_only"
 
 
-def test_high_risk_ladder_leaves_sonnet_out_so_opus_wins_the_openai_author_seat():
+def test_high_risk_ladder_prefers_grok_and_escalates_to_opus_when_grok_unavailable():
+    # Standard high-risk OpenAI author gets Grok 4.7:
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
-    assert resolution.selected.name == "claude-opus-5-5"
-    assert resolution.selected.suitability_rank == 3
-    assert "claude-sonnet-5-5" not in {item.name for item in resolution.trace}
-    # At medium the practical ladder still lets Sonnet's closer fit beat Opus.
+    assert resolution.selected.name == "grok-4.7"
+    # When Grok is unavailable, it escalates to Opus:
+    escalated = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="high",
+            routing_snapshot={"grok": "unhealthy", "cursor": "unhealthy"},
+        )
+    )
+    assert escalated.selected.name == "claude-opus-5-5"
+    assert "escalated to claude-opus-5-5" in escalated.substitution_note
+    # At medium the practical ladder still lets Sonnet's closer fit beat Opus:
     medium = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"))
     assert medium.selected.name == "claude-sonnet-5-5"
-    opus = next(item for item in medium.trace if item.name == "claude-opus-5-5")
-    assert opus.status == "eligible"
-    assert opus.suitability_rank == 4
 
 
 @pytest.mark.parametrize(
@@ -415,9 +424,10 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
     assert resolution.selected.health == "degraded"
 
 
-def test_high_risk_kimi_author_gets_claude_not_composer():
+def test_high_risk_kimi_author_gets_sol_not_composer():
+    # Sol is default CF reviewer across standard code/infra reviews (#611, #612).
     resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
-    assert resolution.selected.name == "claude-opus-5-5"
+    assert resolution.selected.name == "openai_frontier"
     composer = evaluate_candidate(REVIEW_CANDIDATES["composer-2.5"], ResolverInputs(author_model="kimi-code/k3", risk="medium"))
     assert composer.status == "excluded"
     assert "same family" in composer.reason
@@ -1571,11 +1581,9 @@ _AUTHOR_MODELS = {
 @pytest.mark.parametrize("profile", ["code", "infra"])
 def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     if risk == "critical":
-        expected = "gpt-6.1-sol" if family == "anthropic" else "claude-opus-5-5"
+        expected = "claude-opus-5-5" if family == "openai" else "gpt-6.1-sol"
     elif risk == "high":
-        expected = (
-            "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
-        )
+        expected = "grok-4.7" if family == "openai" else "gpt-6.1-sol"
     else:
         expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile))
@@ -1619,8 +1627,10 @@ def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallba
             expected = "grok-4.7"
     elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
         expected = "openai_frontier"
-    elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
+    elif risk == "critical" and author == "gpt-6.1-sol":
         expected = "claude-opus-5-5"
+    elif risk == "high" and author == "gpt-6.1-sol":
+        expected = "grok-4.7-cursor-fallback" if state == "native-down-authorities-up" else "grok-4.7"
     elif author == "gpt-6.1-sol":
         expected = "claude-sonnet-5-5"
     else:
@@ -1699,9 +1709,13 @@ _HIGH_DENOMINATOR = {
         ("gpt-6.1-sol" if sol == "healthy" else "grok-4.7")
         if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
         else (
-            "gpt-6.1-sol"
-            if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" and profile == "code"
-            else "claude-opus-5-5"
+            "grok-4.7"
+            if author in {"gpt-6.1-sol", "gpt-6-luna"}
+            else (
+                ("gpt-6.1-sol" if sol == "healthy" else "claude-opus-5-5")
+                if author == "grok-4.7"
+                else ("gpt-6.1-sol" if sol == "healthy" else "grok-4.7")
+            )
         )
     )
     for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.1-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
@@ -2263,3 +2277,125 @@ def test_cursor_family_exclusion_allows_other_families(family):
 
     candidate = replace(OPENAI_FRONTIER, family=family)
     assert _author_family_exclusion(candidate, "cursor", None) is None
+
+
+# --- CTO routing cost fix tests (#611, #612) ---------------------------------
+
+
+def test_sol_default_cf_reviewer_for_all_standard_code_infra():
+    """Ensure gpt-6.1-sol is ranked ahead of claude-opus-5-5 for all standard code/infra reviews."""
+    for profile in ("code", "infra"):
+        for risk in ("low", "medium", "high", "critical"):
+            # Non-OpenAI authors: Sol is independent and must be selected by default
+            res = resolve_reviewer(ResolverInputs(author_model="grok-4.7", risk=risk, review_profile=profile))
+            assert res.selected.name == "openai_frontier", f"Failed for {profile}/{risk}"
+            assert res.selected.concrete_model == "gpt-6.1-sol"
+
+
+def test_opus_allowed_for_critical_risk():
+    """Opus allowed case (a): critical risk."""
+    res = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="critical", review_profile="code"))
+    assert res.selected.name == "claude-opus-5-5"
+    assert res.selected.concrete_model == "claude-opus-5-5"
+
+
+def test_opus_allowed_for_ukrainian_content():
+    """Opus allowed case (b): Ukrainian-content reviews."""
+    res = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="medium",
+            changed_paths=("curriculum/l2-uk-en/a1/01.md",),
+        )
+    )
+    assert res.selected.name == "claude-opus-5-5"
+
+
+def test_opus_allowed_for_contested_reviews():
+    """Opus allowed case (c): contested reviews."""
+    res = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="medium",
+            contested=True,
+        )
+    )
+    assert res.selected.name == "claude-opus-5-5"
+
+
+def test_opus_allowed_for_google_author_when_sol_unavailable():
+    """Opus allowed case (d): PRs authored by Google-family models when Sol is unavailable."""
+    # When Sol is healthy, Sol is default for Google authors:
+    healthy_res = resolve_reviewer(ResolverInputs(author_model="gemini-3.8-flash-high", risk="high"))
+    assert healthy_res.selected.name == "openai_frontier"
+
+    # When Sol is unavailable, Opus is allowed as authority (preferred over Grok):
+    res = resolve_reviewer(
+        ResolverInputs(
+            author_model="gemini-3.8-flash-high",
+            risk="high",
+            routing_snapshot={"codex": "unhealthy"},
+        )
+    )
+    assert res.selected.name == "claude-opus-5-5"
+
+
+def test_opus_demoted_and_escalates_only_when_practical_fallbacks_down():
+    """When Sol is excluded/down in standard reviews, fallback prefers Grok/Sonnet before escalating to Opus."""
+    # At high risk: Sol excluded for OpenAI author -> fallback prefers Grok 4.7
+    res_high = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
+    assert res_high.selected.name == "grok-4.7"
+
+    # At high risk with Grok unavailable: escalates to Opus
+    res_high_esc = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="high",
+            routing_snapshot={"grok": "unhealthy", "cursor": "unhealthy"},
+        )
+    )
+    assert res_high_esc.selected.name == "claude-opus-5-5"
+    assert "escalated to claude-opus-5-5" in res_high_esc.substitution_note
+
+    # At medium risk: Sol excluded for OpenAI author -> fallback prefers Sonnet 5.5
+    res_med = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"))
+    assert res_med.selected.name == "claude-sonnet-5-5"
+
+    # At medium risk with Sonnet and Grok down: escalates to Opus
+    res_med_esc = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-6.1-sol",
+            risk="medium",
+            routing_snapshot={"claude-sonnet-5-5": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy"},
+        )
+    )
+    assert res_med_esc.selected.name == "claude-opus-5-5"
+    assert "escalated to claude-opus-5-5" in res_med_esc.substitution_note
+
+
+def test_closeout_cli_contested_flag_passes_to_resolver(tmp_path):
+    """The --contested flag on resolve-reviewer passes contested=True to ResolverInputs."""
+    import json
+    import subprocess
+    import sys
+
+    state_file = tmp_path / "review.json"
+    state_file.write_text("{}", encoding="utf-8")
+    cmd = [
+        sys.executable,
+        "-m",
+        "scripts.review.closeout_cli",
+        "--state-file",
+        str(state_file),
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--risk",
+        "medium",
+        "--contested",
+        "--owned-path",
+        "scripts/review/closeout_cli.py",
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=30)
+    out = json.loads(proc.stdout)
+    assert out["selected"]["name"] == "claude-opus-5-5"

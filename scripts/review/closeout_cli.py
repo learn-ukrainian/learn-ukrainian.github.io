@@ -479,6 +479,7 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         "isolation_required": args.isolation_required,
         "routing_snapshot": routing_snapshot,
         "author_family": args.author_family,
+        "contested": bool(getattr(args, "contested", False)),
     }
     if facts is not None:
         inputs = facts.resolver_inputs(risk=args.risk, review_profile=args.review_profile, **common)
@@ -923,6 +924,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Mark Ukrainian language, culture, or heritage work outside known paths. "
             "Default: false. Example: use for an off-tree Ukrainian culture change."
+        ),
+    )
+    p_reviewer.add_argument(
+        "--contested",
+        action="store_true",
+        help=(
+            "Mark review as contested, admitting authority models for non-critical code/infra. "
+            "Default: false."
         ),
     )
     p_reviewer.set_defaults(func=_cmd_resolve_reviewer)

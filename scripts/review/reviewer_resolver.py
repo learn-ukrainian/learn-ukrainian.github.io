@@ -441,6 +441,8 @@ class ResolverInputs:
     # Selection excludes the whole set. ``author_model``/``author_family`` may
     # add to it but never replace or shrink it. Empty keeps single-author mode.
     author_families: frozenset[str] = field(default_factory=frozenset)
+    # Contested review admits authority models even for non-critical code/infra (#611).
+    contested: bool = False
 
 
 def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
@@ -460,6 +462,29 @@ def complete_author_families(inputs: ResolverInputs, single_family: str) -> froz
     ):
         return None
     return frozenset(members)
+
+
+def is_opus_authority_permitted(inputs: ResolverInputs) -> bool:
+    """Check if Claude Opus 5.5 is permitted as an authority reviewer.
+
+    Per CTO routing cost directives (#611, #612):
+    Opus should only be selected as an authority reviewer for:
+    (a) critical-risk reviews
+    (b) Ukrainian-content reviews
+    (c) contested reviews
+    (d) PRs authored by Google-family models
+    """
+    if (inputs.risk or "").strip().casefold() == "critical":
+        return True
+    if is_ukrainian_content_change(inputs):
+        return True
+    if getattr(inputs, "contested", False):
+        return True
+    author_family = resolve_author_family(inputs.author_model, inputs.author_family)
+    authors = complete_author_families(inputs, author_family)
+    if authors and "google" in authors:
+        return True
+    return author_family == "google"
 
 
 @dataclass(frozen=True)
@@ -701,6 +726,10 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
         return None
     roles = candidate.suitability_roles or candidate.model_roles
     rank = next((rank for rank, role in enumerate(ordered_roles) if role in roles), None)
+    if profile == "infra" and risk == "high" and candidate.concrete_model == "gpt-6.1-sol":
+        rank = 1
+    if (getattr(inputs, "contested", False) or is_ukrainian_content_change(inputs)) and candidate.concrete_model == "claude-opus-5-5":
+        rank = 0
     requested_role = (inputs.requested_role or "").strip()
     if requested_role:
         return 0 if rank is not None and requested_role in candidate.model_roles else None
@@ -830,21 +859,37 @@ def evaluate_candidate(
             capacity=capacity,
         )
 
-    if is_ukrainian_content_change(inputs) and candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason="Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini",
-            health=health,
-            capacity=capacity,
-        )
+    if is_ukrainian_content_change(inputs):
+        if candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason="Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini",
+                health=health,
+                capacity=capacity,
+            )
+        if candidate.concrete_model.startswith("claude-sonnet-"):
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason="Claude Ukrainian review requires Opus 5.5 by core.md P2",
+                health=health,
+                capacity=capacity,
+            )
     if inputs.subject_seats or inputs.subject_families:
         # The Grok model governs both admitted transports (#9769).
         subject_families = inputs.subject_families
@@ -1079,13 +1124,15 @@ def evaluate_candidate(
 
 
 def _best_eligible(
-    eligible_by_fit_and_tier: dict[tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]],
+    eligible_by_fit_and_tier: dict[
+        tuple[bool, bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
+    ],
     *,
     exclude_families: frozenset[str] = frozenset(),
 ) -> tuple[ReviewerCandidate, CandidateResult, int] | None:
-    """Pick the best eligible entry: primary before last resort, then suitability and tier,
-    plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
-    dual-family quorum path pick a second seat outside the first seat's
+    """Pick the best eligible entry: primary before last resort, non-escalated before escalated,
+    then suitability and tier, plan-backed before credit-backed, deterministic selection_score inside it.
+    ``exclude_families`` lets the dual-family quorum path pick a second seat outside the first seat's
     family without relaxing the fit-before-pressure ordering. An eligible
     same-model primary transport precedes its declared fallback."""
     filtered = {
@@ -1104,7 +1151,18 @@ def _best_eligible(
     if not filtered:
         return None
     best_fit_and_tier = min(filtered)
-    return min(filtered[best_fit_and_tier], key=lambda item: item[1].selection_score or ())
+
+    def _selection_key(item: tuple[ReviewerCandidate, CandidateResult, int]) -> tuple:
+        cand, res, _ = item
+        score = res.selection_score or ()
+        if not score:
+            return (1 if cand.concrete_model == "claude-opus-5-5" else 0,)
+        # score is (rank, pressure, load_unknown, normalized_load, headroom, inflight, failures, tie_break)
+        # Sol is default CF reviewer over Opus; only deprioritize Opus
+        opus_penalty = 1 if cand.concrete_model == "claude-opus-5-5" else 0
+        return (*score[:-1], opus_penalty, score[-1])
+
+    return min(filtered[best_fit_and_tier], key=_selection_key)
 
 
 def resolve_reviewer(
@@ -1314,8 +1372,9 @@ def resolve_reviewer(
     # weaker model over a better task fit.
     # A credit-backed near-cap seat (#9517) ranks after every plan-backed seat
     # of equal standing (same last-resort flag, suitability and tier).
+    # Non-permitted Opus seats are demoted to escalation fallback (#611, #612).
     eligible_by_fit_and_tier: dict[
-        tuple[bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
+        tuple[bool, bool, int, int, bool], list[tuple[ReviewerCandidate, CandidateResult, int]]
     ] = {}
     tier_for_candidate = {
         name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier] for name, candidate in REVIEW_CANDIDATES.items()
@@ -1360,8 +1419,11 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
+                is_opus = candidate.concrete_model == "claude-opus-5-5"
+                escalation_fallback = is_opus and not is_opus_authority_permitted(inputs)
                 fit_key = (
                     candidate.last_resort,
+                    escalation_fallback,
                     result.suitability_rank or 0,
                     tier_for_candidate[candidate.name],
                     result.credit is not None,
@@ -1506,6 +1568,10 @@ def resolve_reviewer(
             substitution_notes.append(
                 f"selected {selected.name} on lane {selected.route} past its plan cap: {credit_lane.DRAW_NOT_VERIFIED}; "
                 f"credit-period allowlist [{', '.join(selected.credit['allowed_models'])}]"
+            )
+        if selected.name.startswith("claude-opus-5-5") and not is_opus_authority_permitted(inputs):
+            substitution_notes.append(
+                f"escalated to {selected.name}: primary reviewer and practical fallbacks unavailable"
             )
 
     pace_retention_available = pace_retention_available and eligible_quota_buckets <= excluded_quota_buckets
