@@ -18,13 +18,8 @@ from urllib.parse import quote
 
 import requests
 
-# Package entrypoints also need scripts/ first: the repository's audit/ tree
-# otherwise resolves as a namespace package instead of scripts/audit/.
-_scripts_dir = Path(__file__).resolve().parents[1]
-if str(_scripts_dir) not in sys.path:
-    sys.path.insert(0, str(_scripts_dir))
-
 try:
+    from scripts.audit.sum11_sovietization_scan import classify_entry
     from scripts.lib.readonly_sqlite import SQLiteConnection
 except ModuleNotFoundError as exc:
     # Script execution puts the script directory on sys.path, so the
@@ -32,12 +27,11 @@ except ModuleNotFoundError as exc:
     # import failure must propagate.
     if exc.name != "scripts":
         raise
+    _scripts_dir = Path(__file__).resolve().parents[1]
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from audit.sum11_sovietization_scan import classify_entry  # type: ignore[no-redef]
     from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
-
-try:
-    from audit.sum11_sovietization_scan import classify_entry
-except ImportError:  # pragma: no cover - direct package import fallback
-    from scripts.audit.sum11_sovietization_scan import classify_entry
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
 DEFAULT_USER_AGENT = (

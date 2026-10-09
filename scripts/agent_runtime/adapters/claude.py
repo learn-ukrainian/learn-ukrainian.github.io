@@ -176,10 +176,14 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # foreground. Monitor, ScheduleWakeup, CronCreate and Workflow stay available
 # under it and still start or schedule work past the turn, so they are denied
 # by name; a settings deny removes them in dontAsk, bypass and default modes.
-# env_sanitize allowlists the variable for the claude provider, and for kimi
-# only from adapter overrides. KimiccHarness reuses both constants; every
+# Advisor calls are also disabled for every headless spawn (#10083).
+# env_sanitize allowlists the background variable for the claude provider,
+# and for kimi only from adapter overrides. KimiccHarness reuses both constants; every
 # other headless run is spawned by ``run_headless_claude``/``popen_headless_claude``.
-HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+HEADLESS_BACKGROUND_ENV = {
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
 _DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
 # The wrappers build the child environment and run the argv directly.
@@ -239,8 +243,9 @@ def run_headless_claude(
     A print-mode run ends with its final turn, so background work it started
     would be lost. The child environment is a copy of ``base_env`` exactly
     (the ambient environment only when it is omitted, so a caller's
-    exclusions hold), with ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` set
-    last; the argv gains the background-tool denies. ``env``, ``shell`` and
+    exclusions hold), with ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` and
+    ``CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`` set last; the argv gains the
+    background-tool denies. ``env``, ``shell`` and
     ``executable`` are refused: the argv runs directly. ``timeout`` is
     required, so every run is bounded; every other keyword passes to
     ``subprocess.run`` unchanged.
@@ -442,7 +447,7 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build hook settings from tracked sources in this checkout."""
+    """Build worker hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
@@ -463,7 +468,8 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
-    return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
+    settings: dict[str, Any] = {"hooks": {"PreToolUse": groups}}
+    return json.dumps(settings, separators=(",", ":"))
 
 
 def _headless_worker_settings(*, publish_guard: bool) -> str:
@@ -552,7 +558,7 @@ class ClaudeAdapter:
     name: str = "claude"
     default_model: str = "claude-sonnet-5-5"
     # Operator 2026-08-13: headless/print defaults to high when the caller
-    # omits effort; interactive start-claude.sh keeps empty (last session).
+    # omits effort; interactive start-claude.sh leaves effort to the session.
     default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 

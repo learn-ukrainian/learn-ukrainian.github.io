@@ -202,7 +202,11 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
    skip this order.
 1. Independent cross-family exact-head review **APPROVE** on the tip.
 2. Open the PR, then run `scripts/review/record_cf_verdict.py` to bind the completed
-   review, reviewed head, and author qualification; require **CI Gate green** on that **same** head.
+   review, reviewed head, and author qualification in a **PR comment bound to the head SHA**,
+   with reviewer model/family/harness provenance. GitHub rejects API approval reviews
+   from the shared bot identity when it also authored the PR; do not use
+   `gh pr review --approve` for this publication. The comment records independent
+   cross-family review, not self-approval. Require **CI Gate green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
 voids both approval and CI; re-establish both on the new head. Automated merge pipelines cannot replace review gates; enqueue

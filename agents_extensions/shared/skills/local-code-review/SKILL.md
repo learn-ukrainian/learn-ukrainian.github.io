@@ -21,8 +21,12 @@ working tree never substitutes for reviewing a requested commit or PR.
 
 For the review of record, use `scripts/review/record_cf_verdict.py` after the
 toolful review settles. It posts a PR comment bound to the exact head, with
-model/family/harness provenance; the shared GitHub identity cannot approve its
-own PR through `gh pr review --approve`. See `workflow.md` § Merge policy.
+model/family/harness provenance. GitHub rejects an API approval review when the
+shared bot identity also authored the PR (`gh pr review --approve` uses that API).
+Post the verdict as a PR comment bound to the reviewed head SHA, not as an
+approval review. The comment must still come from an independent cross-family
+reviewer; a shared posting identity does not establish independence. See
+`workflow.md` § Merge policy.
 
 ## Execute
 

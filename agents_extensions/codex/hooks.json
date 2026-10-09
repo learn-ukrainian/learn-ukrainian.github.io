@@ -25,7 +25,7 @@
           {
             "type": "command",
             "command": "CODEX_COMPACT_SESSION_START=1 bash \"$(git rev-parse --show-toplevel)/.codex/hooks/post-compact.sh\"",
-            "timeout": 10,
+            "timeout": 15,
             "statusMessage": "Hydrating bound fleet-driver context",
             "additionalContextLimit": 800
           }

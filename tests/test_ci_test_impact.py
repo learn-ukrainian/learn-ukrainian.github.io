@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import subprocess
 import sys
-import warnings
 from pathlib import Path
 
 import pytest
@@ -225,6 +224,44 @@ def test_build_budget_fails_closed(monkeypatch):
     assert "graph-build-budget-exceeded" in result.reasons
 
 
+@pytest.mark.parametrize("elapsed", [0.5, 1.0, 1.5])
+def test_build_budget_controls_selection_at_boundary(monkeypatch, elapsed):
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target", SAFETY_NET: ""}
+    monkeypatch.setattr(impact, "BUILD_BUDGET_SECONDS", 1.0)
+    clock = iter([0.0, elapsed])
+    monkeypatch.setattr(impact.time, "monotonic", lambda: next(clock))
+    result = graph(sources)
+    selection = result.impacted_tests(["scripts/target.py"])
+    candidates = build_selected_candidates(["scripts/target.py"], sources, impact_graph=result)
+    assert result.build_seconds == elapsed
+    assert selection["tests"] == ["tests/test_use.py"]
+    if elapsed >= 1.0:
+        assert result.reasons == ("graph-build-budget-exceeded",)
+        assert selection == {
+            "full_suite": True, "tests": ["tests/test_use.py"], "reasons": ["graph-build-budget-exceeded"],
+        }
+        assert candidates is None
+    else:
+        assert result.reasons == ()
+        assert not selection["full_suite"]
+        assert selection["reasons"] == []
+        assert candidates == [SAFETY_NET, "tests/test_use.py"]
+
+
+def test_tiny_build_budget_forces_full_selection(monkeypatch):
+    # No opaque imports: FULL must be caused by the injected budget alone.
+    monkeypatch.setattr(impact, "BUILD_BUDGET_SECONDS", 1e-12)
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target", SAFETY_NET: ""}
+    result = graph(sources)
+    assert result.build_seconds >= impact.BUILD_BUDGET_SECONDS
+    assert result.reasons == ("graph-build-budget-exceeded",)
+    assert not result.uncertainty
+    assert result.impacted_tests(["scripts/target.py"]) == {
+        "full_suite": True, "tests": ["tests/test_use.py"], "reasons": ["graph-build-budget-exceeded"],
+    }
+    assert build_selected_candidates(["scripts/target.py"], sources, impact_graph=result) is None
+
+
 @pytest.mark.parametrize("cores,budget", [(None, 80.0), (1, 80.0), (2, 40.0), (4, 20.0), (8, 10.0), (64, 10.0)])
 def test_build_budget_scales_with_parser_capacity(cores, budget):
     assert impact._build_budget_seconds(cores) == budget
@@ -269,24 +306,32 @@ def test_sources_include_sparse_blobs_unstaged_changes_and_new_modules(tmp_path)
     assert impact.build_graph(tmp_path).reasons == ("source-inventory-error",)
 
 
-def test_full_repository_build_budget_and_sol_dependency():
-    # Measure the production invocation separately from pytest tracing/coverage.
+@pytest.mark.parametrize("budget", ["runner", "tiny"])
+def test_full_repository_build_budget_and_sol_dependency(budget):
+    # Check the production contract separately from pytest tracing/coverage.
+    # Contended runners may exhaust the selection budget; that must mean FULL,
+    # while the graph still contains the known dependencies in either case.
     # The subprocess is awaited, uses this test interpreter, and never runs tests.
-    # A loaded runner exceeds the wall-clock budget; that is a warning, not a
-    # failure. The Sol dependency and the rest of the graph stay hard checks.
-    # The wait is long enough for that loaded build to finish.
     code = """
-from scripts.ci.test_impact import BUILD_BUDGET_SECONDS, build_graph
+import sys
+from scripts.ci import test_impact as impact
 from scripts.ci.classify_changes import build_selected_candidates
-result = build_graph()
-if result.build_seconds >= BUILD_BUDGET_SECONDS:
-    print(f'WARNING: graph build {result.build_seconds:.3f}s exceeded budget {BUILD_BUDGET_SECONDS}s')
-reasons = tuple(reason for reason in result.reasons if reason != 'graph-build-budget-exceeded')
-assert not reasons, reasons
+if sys.argv[1] == 'tiny':
+    # Inventory subprocesses keep their normal I/O timeout. Inject the budget
+    # only for graph construction so this exercises the elapsed-time fallback.
+    sources = impact.read_sources()
+    impact.BUILD_BUDGET_SECONDS = 1e-12
+    result = impact.build_graph(sources=sources)
+else:
+    result = impact.build_graph()
 changed = ['scripts/ai_agent_bridge/_inbox_watch.py']
 selection = result.impacted_tests(changed)
+expected_reasons = ('graph-build-budget-exceeded',) if result.build_seconds >= impact.BUILD_BUDGET_SECONDS else ()
+assert result.reasons == expected_reasons, result.reasons
+assert set(result.reasons) <= set(selection['reasons'])
 assert selection['full_suite'], 'real repository opaque loads must fail closed'
 assert result.uncertainty
+assert result.uncertain_tests() == result.tests, 'shared opaque loads must cover every test'
 candidates = build_selected_candidates(changed, result.dependents, impact_graph=result)
 assert candidates is None
 assert 'tests/test_remote_supervisor.py' in selection['tests']
@@ -294,18 +339,17 @@ assert {'tests/test_git_hooks.py', 'tests/test_assert_primary_on_main.py'} <= re
     ['scripts/guardrails/assert_primary_on_main.py']
 )
 print(f'graph_seconds={result.build_seconds:.3f}')
+print(f'budget_seconds={impact.BUILD_BUDGET_SECONDS} reasons={result.reasons}')
 print(f'mode=FULL total={len(result.tests)} safety={len(result.safety_tests)}')
 """
     result = subprocess.run(
-        [sys.executable, "-c", code], cwd=Path(__file__).resolve().parents[1],
+        [sys.executable, "-c", code, budget], cwd=Path(__file__).resolve().parents[1],
+        # Allow loaded builds up to 120 seconds, independent of the performance
+        # budget whose exhaustion is valid FULL behavior.
         capture_output=True, text=True, timeout=120,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    output = result.stdout.strip()
-    print(output)
-    for line in output.splitlines():
-        if line.startswith("WARNING:"):
-            warnings.warn(line, UserWarning, stacklevel=1)
+    print(result.stdout.strip())
 
 
 def test_safety_baseline_fits_but_ceiling_still_applies():

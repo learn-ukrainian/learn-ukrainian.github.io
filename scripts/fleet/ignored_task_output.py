@@ -670,6 +670,7 @@ def preserve_worktree_artifacts(
     tasks_dir: Path,
     task_record: Mapping[str, Any] | None = None,
     repo_root: Path | None = None,
+    extra_files: list[str] | None = None,
 ) -> tuple[bool, str, dict[str, Any] | None]:
     """Mandatory preservation and retention gate, under the remover's lock.
 
@@ -690,6 +691,13 @@ def preserve_worktree_artifacts(
         "next_condition": "establish canonical task attribution and verified retrieval",
     }
     absent: list[dict[str, str]] = []
+
+    def output_files() -> list[str]:
+        names = _ignored_output_files(worktree, primary, record, absent=absent)
+        for name in extra_files or []:
+            artifacts._relative_parts(worktree / name, worktree)
+        return sorted(set(names + (extra_files or [])))
+
     try:
         worktree = worktree.resolve(strict=True)
         primary = primary.resolve(strict=True)
@@ -702,7 +710,7 @@ def preserve_worktree_artifacts(
         members = matching_worktree_records(worktree, tasks_dir, repo_root=repo_root, publish_cache=False)
         kept = any(member.get("keep_worktree") for _, member in members)
 
-        files = _ignored_output_files(worktree, primary, record, absent=absent)
+        files = output_files()
         if not files and not absent and not kept:
             return True, "", None
         identity = record.get("task_id")
@@ -779,7 +787,7 @@ def preserve_worktree_artifacts(
             metadata["next_condition"] = "owner repairs failed retrieval and verifies all bytes"
             metadata["retrieval_proof_sha256"] = verify_retrieval(primary, metadata)
             if (
-                files != _ignored_output_files(worktree, primary, record, absent=absent)
+                files != output_files()
                 or _content_digest(worktree, files) != digest
             ):
                 raise ValueError("ignored output changed during preservation")
@@ -790,6 +798,7 @@ def preserve_worktree_artifacts(
                 with location.with_suffix(".manifest.json").open("x", encoding="utf-8") as manifest:
                     json.dump(metadata, manifest, sort_keys=True)
                     manifest.write("\n")
+            metadata["manifest_path"] = location.with_suffix(".manifest.json").relative_to(primary).as_posix()
         if kept:
             metadata["next_condition"] = (
                 "existing owner releases retention after proven retrieval via post_task_reap --release-retention"
@@ -821,6 +830,8 @@ def preserve_worktree_artifacts(
             if metadata["retention_disposition"] != "retained":
                 metadata["next_condition"] = "none"
             current["preserved_artifacts"] = metadata
+            if extra_files is not None:
+                current["branch_holder_archive"] = metadata
             current.pop("artifact_preservation_error", None)
             artifacts.reaper_lifecycle._atomic_write(record_path, current)
         if isinstance(task_record, dict) and _record_matches_worktree(task_record, worktree, repo_root=repo_root):

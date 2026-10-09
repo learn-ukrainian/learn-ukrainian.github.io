@@ -153,6 +153,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
     "tests/review/test_prompts.py::test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_shipped_templates",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
+    "tests/test_agent_definitions.py::test_reserved_agent_inventory",
     "tests/test_agent_seat_onboarding_docs.py::test_live_driver_diagnostics_never_claim_again",
     "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
     "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
