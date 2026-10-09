@@ -1184,6 +1184,33 @@ def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("
     """
     unavailable = "open-file activity probe unavailable; foreign checkout preserved"
     try:
+        # Linux UAPI PID_NS_INIT_INO (include/uapi/linux/nsfs.h), also used
+        # by systemd. Comparing self with PID 1 alone accepts nested namespaces.
+        initial_pid_namespace = f"pid:[{0xEFFFFFFC}]"
+        if any(
+            str((proc_root / process / "ns" / "pid").readlink()) != initial_pid_namespace
+            for process in ("self", "1")
+        ):
+            return unavailable
+        proc_mounts = 0
+        for line in (proc_root / "self" / "mountinfo").read_text(encoding="utf-8").splitlines():
+            fields = line.split()
+            separator = fields.index("-")
+            mountpoint = fields[4]
+            if mountpoint == str(proc_root):
+                proc_mounts += 1
+                options = set(fields[5].split(",")) | set(fields[separator + 3].split(","))
+                if (
+                    fields[3] != "/" or fields[separator + 1] != "proc"
+                    or any(option.split("=", 1)[0] in {"hidepid", "subset", "pidns"} for option in options)
+                ):
+                    return unavailable
+            elif mountpoint.startswith(f"{proc_root}/"):
+                component = mountpoint[len(str(proc_root)) + 1:].split("/", 1)[0]
+                if component.isdigit() or component in {"self", "thread-self"}:
+                    return unavailable
+        if proc_mounts != 1:
+            return unavailable
         processes = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
         if not processes:
             return unavailable
@@ -1202,7 +1229,7 @@ def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("
             except FileNotFoundError:
                 if process.exists():
                     return unavailable
-    except OSError:
+    except (OSError, ValueError, IndexError):
         return unavailable
     if time.monotonic() >= deadline:
         return "open-file activity probe timed out; foreign checkout preserved"

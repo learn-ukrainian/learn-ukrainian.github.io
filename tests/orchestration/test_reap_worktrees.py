@@ -6991,6 +6991,9 @@ def test_open_file_probe_empty_selection_and_locked_timeout(
 @pytest.mark.parametrize("state", [
     "idle", "missing_root", "empty", "fd_denied", "maps_denied",
     "closed_fd", "exited", "live_missing_maps", "timeout",
+    "nested_namespace", "nested_proc_namespace", "missing_namespace",
+    "hidepid", "subset", "pidns", "missing_mount", "malformed_mount",
+    "wrong_fs", "partial_proc", "overmounted_pid",
 ])
 def test_open_file_probe_visibility_fails_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str,
@@ -7000,6 +7003,28 @@ def test_open_file_probe_visibility_fails_closed(
     if state != "missing_root":
         proc_root.mkdir()
     if state not in {"missing_root", "empty"}:
+        (proc_root / "self" / "ns").mkdir(parents=True)
+        if state != "missing_namespace":
+            (proc_root / "self" / "ns" / "pid").symlink_to(
+                "pid:[12345]" if state == "nested_namespace" else "pid:[4026531836]",
+            )
+        (proc_root / "1" / "ns").mkdir(parents=True)
+        (proc_root / "1" / "ns" / "pid").symlink_to(
+            "pid:[12345]" if state == "nested_proc_namespace" else "pid:[4026531836]",
+        )
+        (proc_root / "1" / "fd").mkdir()
+        (proc_root / "1" / "maps").write_bytes(b"")
+        options = {"hidepid": "rw,hidepid=2", "subset": "rw,subset=pid", "pidns": "rw,pidns=123"}.get(state, "rw")
+        fs_type = "tmpfs" if state == "wrong_fs" else "proc"
+        root = "/123" if state == "partial_proc" else "/"
+        mountinfo = f"50 42 0:24 {root} {proc_root} rw - {fs_type} proc {options}\n"
+        if state == "overmounted_pid":
+            mountinfo += f"51 50 0:25 / {proc_root}/123 rw - tmpfs tmpfs rw\n"
+        if state == "malformed_mount":
+            mountinfo = "unreadable mount record\n"
+        elif state == "missing_mount":
+            mountinfo = ""
+        (proc_root / "self" / "mountinfo").write_text(mountinfo, encoding="utf-8")
         (process / "fd").mkdir(parents=True)
         (process / "fd" / "3").symlink_to(tmp_path / "outside.txt")
         if state != "live_missing_maps":
@@ -7039,6 +7064,28 @@ def test_open_file_probe_visibility_fails_closed(
         assert reason is not None
         assert ("timed out" if state == "timeout" else "unavailable") in reason
         assert str(tmp_path) not in reason
+
+
+@pytest.mark.skipif(shutil.which("bwrap") is None, reason="namespace reproduction needs bwrap")
+def test_foreign_checkout_reader_outside_pid_namespace_is_not_assumed_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    code = (
+        "import sys; from pathlib import Path; from scripts.orchestration import reap_worktrees as rw; "
+        "print(rw._open_file_activity_reason(Path(sys.argv[1])))"
+    )
+    # The reader is the parent pytest process, invisible in bwrap's PID namespace.
+    with (worktree / "README.md").open("rb"):
+        result = _REAL_RUN(
+            ["bwrap", "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc",
+             "--unshare-pid", "--die-with-parent", "--", sys.executable, "-c", code, str(worktree)],
+            cwd=Path.cwd(), capture_output=True, text=True, timeout=20,
+        )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "open-file activity probe unavailable; foreign checkout preserved"
+    assert str(tmp_path) not in result.stdout
 
 
 def test_foreign_scratch_root_never_covers_the_repository_or_its_root(

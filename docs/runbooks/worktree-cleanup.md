@@ -456,7 +456,14 @@ record, detached HEAD for the detached classes) before removal, and
   checkout, including nested mount points. An unavailable probe, warning,
   error or timeout preserves the checkout. An empty selection also requires
   readable process FD and mapping entries in procfs; partial visibility or
-  a platform without that proof preserves it. Its refusal reason contains no
+  a platform without that proof preserves it. Negative proof additionally
+  requires the initial PID namespace and an unrestricted procfs mount;
+  nested namespaces, filtered procfs mounts and process-entry overmounts
+  preserve the checkout. Unprivileged runs that cannot inspect every process
+  retain all foreign checkouts, including idle ones. Infra owns this cleanup
+  residual until a complete process view is available through an authorized
+  execution context; this check never changes host permissions.
+  Its refusal reason contains no
   file paths. This probe complements the existing cwd and lock checks.
   Long readers such as backups should take `git worktree lock --reason
   "long reader" <checkout>` before reading and `git worktree unlock
