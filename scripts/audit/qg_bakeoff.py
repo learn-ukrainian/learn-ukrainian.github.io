@@ -14,6 +14,7 @@ import argparse
 import contextlib
 import hashlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -1070,7 +1071,13 @@ def preflight_subscription_bare_routes(routes: Sequence[llm_reviewer_dispatch.Re
         try:
             from scripts.agent_runtime.usage import has_headroom
 
-            ok, reason = has_headroom(agent, route.reviewer_model_id)
+            unreadable = {"files": 0, "lines": 0, "records": 0}
+            ok, reason = has_headroom(agent, route.reviewer_model_id, unreadable=unreadable)
+            if any(unreadable.values()):
+                logging.getLogger(__name__).warning(
+                    "Bakeoff headroom check for %s/%s: unreadable usage records %s",
+                    agent, route.reviewer_model_id, unreadable,
+                )
         except Exception as exc:  # pragma: no cover - degraded local preflight only
             failures.append(f"{agent}: headroom check failed: {type(exc).__name__}: {exc}")
         else:
