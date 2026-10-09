@@ -245,13 +245,14 @@ def consume_supervisory_event(
 
 def wake_driver_once(
     service: AuthorityService, remote: RemoteEpicClient, *, stream_id: str, launcher: Path, epic: str, run=None,
-    inbox_events: list[InboxEvent] | None = None,
+    inbox_events: list[InboxEvent] | None = None, readiness_reader=None,
 ) -> bool:
     """Resume a live Codex inbox turn, or launch a fenced offline supervisor event."""
     require_supervisory_api(service)
     if inbox_events:
         from . import _ui_codex
 
+        readiness_reader = readiness_reader or _ui_codex.RolloutReader()
         current = remote.stream(stream_id).get("lease")
         if (
             launcher.name != "start-codex-driver.sh"
@@ -262,6 +263,11 @@ def wake_driver_once(
         live = _ui_codex.find_live_session(current)
         if live is None:
             raise RuntimeError("live Codex thread unavailable for codex exec resume; wake refused")
+        if live.rollout is None:
+            raise RuntimeError("codex_wake_busy:rollout_unavailable")
+        ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+        if not ready:
+            raise RuntimeError(f"codex_wake_busy:{reason}")
         # Thread discovery may race a rollover. Reconcile remote authority before
         # sending; neither discovery nor resume may claim or modify this lease.
         latest = remote.stream(stream_id).get("lease")
@@ -270,20 +276,39 @@ def wake_driver_once(
             latest.get(key) != current.get(key) for key in identity
         ):
             return False
+        inbox_events = sorted(inbox_events, key=lambda event: event.message_id)
         message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
             f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
             for event in inbox_events
         )
-        result = _ui_codex.send(
-            thread_id=live.thread_id, message=message, cwd=live.cwd,
-            environment=live.environment,
-            bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
-        )
-        event_types = {event.get("type") for event in result["events"]}
-        if result["exit_code"] != 0 or not {"turn.started", "turn.completed"} <= event_types or (
-            event_types & {"turn.failed", "error"}
+        # Final readiness check after lease reconciliation and message framing.
+        # The attach window after this check remains the #10217 residual.
+        def check_ready():
+            ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+            if not ready:
+                raise RuntimeError(f"codex_wake_busy:{reason}")
+        check_ready()
+        try:
+            result = _ui_codex.send(
+                thread_id=live.thread_id, message=message, cwd=live.cwd,
+                environment=live.environment,
+                bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
+                before_resume=check_ready,
+            )
+        except RuntimeError as exc:
+            if str(exc).startswith("codex_wake_busy:"):
+                raise
+            raise RuntimeError(f"codex_resume_error:{type(exc).__name__}; inbox retained") from exc
+        except Exception as exc:
+            raise RuntimeError(f"codex_resume_error:{type(exc).__name__}; inbox retained") from exc
+        event_types = [event.get("type") for event in result["events"]]
+        if (
+            result["exit_code"] != 0
+            or event_types.count("turn.started") != 1
+            or event_types.count("turn.completed") != 1
+            or {"turn.failed", "error"}.intersection(event_types)
         ):
-            raise RuntimeError("live Codex resume failed; inbox retained for reconciliation")
+            raise RuntimeError("codex_resume_error:failed; live Codex resume failed; inbox retained for reconciliation")
         return True
     # Old-generation events remain unacknowledged until a live driver reconciles
     # them. They must not hide a newer actionable wake while the driver is offline.
@@ -373,6 +398,8 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
     lock = acquire_watcher_lock(agent)
     conn: SQLiteConnection | None = None
     last_seen = 0
+    from ._ui_codex import RolloutReader
+    readiness_reader = RolloutReader()
     try:
         if provider == "codex":
             conn = open_readonly_db(_config.DB_PATH)
@@ -381,12 +408,17 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
             require_supervisory_api(service)
             while True:
                 events = poll_once(conn, agent, last_seen) if conn is not None else []
-                if events and wake_driver_once(
-                    service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
-                ):
-                    last_seen = events[-1].message_id
-                else:
-                    wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                try:
+                    if events and wake_driver_once(
+                        service, remote, stream_id=stream_id, launcher=launcher, epic=epic,
+                        inbox_events=events, readiness_reader=readiness_reader,
+                    ):
+                        last_seen = max(event.message_id for event in events)
+                    else:
+                        wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                except Exception as exc:
+                    reason = str(exc) if str(exc).startswith(("codex_wake_busy:", "codex_resume_error:")) else type(exc).__name__
+                    print(f"inbox watcher: wake_error:{reason}; inbox retained", file=sys.stderr, flush=True)
                 if once:
                     return
                 time.sleep(interval_seconds)
