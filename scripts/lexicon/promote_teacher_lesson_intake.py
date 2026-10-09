@@ -16,7 +16,7 @@ never used as an English gloss.
 Run from the repository root after building an explicit VESUM shadow database::
 
     .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
-      --vesum-db /tmp/vesum-shadow.db --apply --write --report
+      --vesum-db "$TMPDIR/vesum-shadow.db" --apply --write --report
 """
 
 from __future__ import annotations
@@ -158,9 +158,9 @@ DEFAULT_CURATED_INVENTORY = (
 )
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
-DEFAULT_CANDIDATES = Path("/tmp/atlas-private-teacher-lesson-candidates.json")
-DEFAULT_DECISIONS = Path("/tmp/atlas-private-teacher-lesson-decisions.yaml")
-DEFAULT_PLAN = Path("/tmp/atlas-private-teacher-lesson-plan.json")
+CANDIDATES_FILENAME = "atlas-private-teacher-lesson-candidates.json"
+DECISIONS_FILENAME = "atlas-private-teacher-lesson-decisions.yaml"
+PLAN_FILENAME = "atlas-private-teacher-lesson-plan.json"
 MEMBERSHIP_SOURCE_TAG = "teacher_inventory"
 
 # The ledger's original inventory path contains the private contributor's name.
@@ -610,6 +610,17 @@ def _resumable_journal(journal_path: Path, manifest: Path) -> dict[str, Any] | N
     return record
 
 
+def _temp_output(filename: str) -> Path:
+    """Resolve caller-owned scratch at call time; the caller owns its lifetime."""
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        raise ValueError("Set TMPDIR to caller-owned scratch or provide explicit temporary output paths")
+    root = Path(tmpdir)
+    if not root.is_absolute() or not root.is_dir():
+        raise ValueError("TMPDIR must be an existing absolute directory")
+    return root / filename
+
+
 def promote(
     *,
     full_decisions: Path,
@@ -623,7 +634,11 @@ def promote(
     write: bool,
     allow_held: bool = False,
     resume_staged: bool = False,
+    plan_out: Path | None = None,
 ) -> dict[str, Any]:
+    plan_out = planner.resolve_ephemeral_plan_output_path(
+        plan_out if plan_out is not None else _temp_output(PLAN_FILENAME)
+    )
     candidates, decisions, report = _build_rows(full_decisions, curated_inventory, manifest, vesum_db, sources_db)
     payload = build_payload(
         total_delta=len(candidates),
@@ -640,7 +655,7 @@ def promote(
         decision_files=[decisions_out],
         manifest_path=manifest,
     )
-    planner.write_plan(plan, DEFAULT_PLAN)
+    planner.write_plan(plan, plan_out)
     if plan["counts"]["missing_candidates"]:
         raise RuntimeError(f"promotion plan has {plan['counts']['missing_candidates']} missing candidates")
     if write and report["held_without_english_anchor"] and not allow_held:
@@ -920,10 +935,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "Example: .venv/bin/python "
             "scripts/lexicon/promote_teacher_lesson_intake.py "
-            "--vesum-db /tmp/vesum-shadow.db --apply --report\n"
-            "Outputs: candidate and decision files; --write also updates the manifest and fingerprint.\n"
+            "--vesum-db \"$TMPDIR/vesum-shadow.db\" --apply --report\n"
+            "Outputs: candidate JSON, decision YAML and plan JSON; --write also updates the manifest and fingerprint.\n"
+            "Omitted temporary paths resolve under the current existing absolute TMPDIR. Caller owns cleanup "
+            "and must retain the same scratch lifecycle through membership consumption; separate task_scratch "
+            "invocations cannot share implicit artifacts. Explicit paths take precedence.\n"
+            "Promotion consumes reviewed ledgers, never unreviewed intake JSON. It replaces the intake "
+            "candidate basename only after consuming the reviewed inputs; retain intake with an explicit override.\n"
             "Exit codes: 0 on success; nonzero on missing inputs, held rows, or failed gates.\n"
             "Related: #9151 reviewed teacher-lesson intake and promotion plan."
         ),
@@ -962,14 +982,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--candidates-out",
         type=Path,
-        default=DEFAULT_CANDIDATES,
-        help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})",
+        help=f"Candidate JSON output (default: $TMPDIR/{CANDIDATES_FILENAME})",
     )
     parser.add_argument(
         "--decisions-out",
         type=Path,
-        default=DEFAULT_DECISIONS,
-        help=f"Decision YAML output (default: {DEFAULT_DECISIONS})",
+        help=f"Decision YAML output (default: $TMPDIR/{DECISIONS_FILENAME})",
+    )
+    parser.add_argument(
+        "--plan-out", type=Path,
+        help=f"Local plan JSON outside the repository (default: $TMPDIR/{PLAN_FILENAME}); retained after failure.",
     )
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
@@ -1001,8 +1023,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--decisions-in",
         type=Path,
-        default=DEFAULT_DECISIONS,
-        help="Decisions ledger to read for --emit-membership (defaults to --decisions-out's default path)",
+        help=f"Decisions ledger for --emit-membership (default: $TMPDIR/{DECISIONS_FILENAME}; explicit --decisions-out is independent)",
     )
     parser.add_argument(
         "--membership-in",
@@ -1039,7 +1060,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.emit_membership:
         membership_payload, membership_report = build_teacher_lesson_membership(
-            decisions_path=args.decisions_in,
+            decisions_path=args.decisions_in if args.decisions_in is not None else _temp_output(DECISIONS_FILENAME),
             manifest_path=args.manifest,
             membership_in=args.membership_in,
         )
@@ -1060,11 +1081,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         fingerprint=args.fingerprint,
         vesum_db=args.vesum_db,
         sources_db=args.sources_db,
-        candidates_out=args.candidates_out,
-        decisions_out=args.decisions_out,
+        candidates_out=args.candidates_out if args.candidates_out is not None else _temp_output(CANDIDATES_FILENAME),
+        decisions_out=args.decisions_out if args.decisions_out is not None else _temp_output(DECISIONS_FILENAME),
         write=args.write,
         allow_held=args.allow_held,
         resume_staged=args.resume_staged,
+        plan_out=args.plan_out,
     )
     if args.report:
         print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
