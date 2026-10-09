@@ -187,7 +187,7 @@ AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 
 _AGY_ERROR_LINE_RE = re.compile(
     r"^(?P<kind>agy_stream_result_error|agy_stream_output_invalid):\s*"
-    r"(?:API error \(attempt \d+\):\s*|Eligibility check failed:[^:]*:\s*)?"
+    r"(?:API error \(attempt \d+\):\s*|Eligibility check failed:\s*(?:failed to get [a-z ]+ response:\s*)?)?"
     r"(?:(?P<status>[A-Z_]+) \(code (?P<code>\d+)\)|(?P<msg>.*))"
 )
 

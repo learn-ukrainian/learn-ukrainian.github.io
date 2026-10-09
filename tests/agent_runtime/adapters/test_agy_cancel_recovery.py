@@ -969,3 +969,31 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
     command = " ".join(key)
     assert agy._read_only_killed_command(f"{command} {group} {operands}")
     assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
+import pytest
+
+
+@pytest.mark.parametrize(
+    "tool",
+    [
+        "write_to_file",
+        "replace_file_content",
+        "multi_replace_file_content",
+    ]
+)
+def test_write_tools_count_as_side_effecting(tmp_path, tool):
+    events = [
+        _prompt(),
+        _event(
+            "PLANNER_RESPONSE",
+            "",
+            source="MODEL",
+            step_index=1,
+            tool_calls=[{"name": tool, "args": {}}],
+        ),
+        _event("GENERIC", "Success", status="DONE", step_index=2),
+        _reply("Complete reply."),
+    ]
+    result = _parse(tmp_path, events)
+    assert result.ok
+    assert result.agy_attempt.side_effect_tool_count == 1
+    assert result.agy_attempt.evidence_complete is True
