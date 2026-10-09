@@ -785,7 +785,7 @@ launcher_validate_cursor_pin() {
     launcher_error "CURSOR_UNATTESTED_GROK_VARIANT: model '${LC_MODEL}' is an unattested variant. Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
     exit 4
   fi
-  if [[ "${LC_MODEL}" == claude-* ]] || [[ "${LC_MODEL}" == *fable* ]]; then
+  if [[ "${LC_MODEL}" == claude-* ]] || [[ "${LC_MODEL}" == *fable* ]] || [[ "${LC_MODEL}" == *opus* ]] || [[ "${LC_MODEL}" == *sonnet* ]] || [[ "${LC_MODEL}" == *haiku* ]]; then
     # Pass LC_ROOT securely through sys.argv to avoid command injection.
     # We treat an execution error as "native CLI unavailable" (failing open for the model fallback)
     # because if the CLI cannot be probed, the Cursor route should still function as a fallback (#10205).
