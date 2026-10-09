@@ -26,7 +26,7 @@ Stages 2 and 3 run as one pytest process. Importer-closure selection
 | green | 0 | Push proceeds; a receipt is written. |
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
-| `validation_incomplete` | 75 | Not validated and not green: `admission_timeout`, `timeout`, `registry_unavailable`, pytest without a verdict. The branch is preserved; return to the driver. Never retry blindly. |
+| `validation_incomplete` | 75 | Not validated and not green: `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 

@@ -462,7 +462,9 @@ def test_the_real_registry_loads_by_ast_and_matches_the_module() -> None:
 
     nodes, _ = gate.load_registry(REPO_ROOT)
 
-    expected = gate.dedupe_node_ids([*marker.KNOWN_REPO_WIDE_MODULES, *marker.KNOWN_REPO_WIDE_FUNCTIONS])
+    expected = gate.dedupe_node_ids(
+        [gate.pytest_node_id(node) for node in (*marker.KNOWN_REPO_WIDE_MODULES, *marker.KNOWN_REPO_WIDE_FUNCTIONS)]
+    )
     assert nodes == expected
 
 
@@ -581,3 +583,36 @@ def test_worker_closeout_text_carries_the_gate_and_merge_main_rules() -> None:
 
     source = Path(delegate.__file__).read_text(encoding="utf-8")
     assert "validation_incomplete" in source and "git merge-tree" in source
+
+
+def test_registry_class_methods_become_pytest_node_ids() -> None:
+    assert gate.pytest_node_id("tests/t.py::TestA.test_b") == "tests/t.py::TestA::test_b"
+    assert gate.pytest_node_id("tests/t.py::test_b") == "tests/t.py::test_b"
+    assert gate.pytest_node_id("tests/t.py") == "tests/t.py"
+
+
+def test_every_real_registry_node_id_is_collectable() -> None:
+    """The registry is only as good as pytest's ability to resolve each id it names."""
+    nodes, _ = gate.load_registry(REPO_ROOT)
+
+    result = subprocess.run(
+        [str(PYTHON), "-m", "pytest", *nodes, "--collect-only", "-q", "-p", "no:cacheprovider"],
+        capture_output=True,
+        check=False,
+        cwd=REPO_ROOT,
+        env=_env(),
+        text=True,
+        timeout=300,
+    )
+
+    assert result.returncode == 0, result.stdout[-3000:] + result.stderr[-2000:]
+
+
+def test_a_pytest_run_without_a_verdict_is_validation_incomplete(repo: Path) -> None:
+    _write(repo, "tests/test_repo_wide_marker_invariant.py", REGISTRY.replace("::test_scan", "::test_missing"))
+    _commit(repo, "registry names a test that does not exist", "tests")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_INCOMPLETE
+    assert _verdict(result)["reason"] == "pytest_error"

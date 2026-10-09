@@ -130,6 +130,12 @@ def dedupe_node_ids(node_ids: tuple[str, ...] | list[str]) -> tuple[str, ...]:
     return tuple(sorted(node for node in unique if "::" not in node or node.split("::", 1)[0] not in files))
 
 
+def pytest_node_id(registered: str) -> str:
+    """The registry writes a class method as ``file::Class.method``; pytest wants ``file::Class::method``."""
+    path, separator, rest = registered.partition("::")
+    return f"{path}{separator}{rest.replace('.', '::')}"
+
+
 def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
     """Read the registry literals by AST (no import) and return ``(node_ids, version)``.
 
@@ -160,7 +166,7 @@ def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
     missing = [name for name in REGISTRY_NAMES if name not in found]
     if missing:
         raise GateOutcome("registry_unavailable", f"{REGISTRY_FILE} lacks {', '.join(missing)}", incomplete=True)
-    nodes = dedupe_node_ids([node for name in REGISTRY_NAMES for node in found[name]])
+    nodes = dedupe_node_ids([pytest_node_id(node) for name in REGISTRY_NAMES for node in found[name]])
     digest = hashlib.sha256(json.dumps([GATE_VERSION, nodes]).encode()).hexdigest()[:16]
     return nodes, f"v{GATE_VERSION}-{digest}"
 
@@ -381,9 +387,7 @@ def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> 
         return match[-1].strip("= ") if match else "pytest passed"
     if code == 1 or failing:
         raise GateOutcome("tests_failed", tail(output), failing=failing)
-    raise GateOutcome(
-        "validation_incomplete", f"pytest exited {code} without a verdict\n{tail(output)}", incomplete=True
-    )
+    raise GateOutcome("pytest_error", f"pytest exited {code} without a verdict\n{tail(output)}", incomplete=True)
 
 
 class Shadow:
