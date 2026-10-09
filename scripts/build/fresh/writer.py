@@ -21,6 +21,7 @@ from __future__ import annotations
 import datetime
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
@@ -46,7 +47,6 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
-from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.orchestration.task_record_store import locate_task_record
@@ -152,21 +152,21 @@ def _run_harness(cmd: list[str], *, timeout: int) -> subprocess.CompletedProcess
 
 def strip_markdown_fence(text: str) -> str:
     """Strip an enclosing Markdown code fence (e.g. ```yaml ... ``` or ``` ... ```)."""
-    s = text.lstrip(" \t\r\n")
-    if not s:
+    if not text.strip(" \t\r\n"):
         return ""
-    if s.startswith("```"):
-        # YAML accepts CR and CRLF framing; Unicode separators belong to the
-        # scalar and must reach the YAML parser unchanged.
-        lines = jsonl_lines(s.replace("\r\n", "\n").replace("\r", "\n"))[1:]
+    # Keep physical line endings and Unicode separators in the payload intact.
+    lines = re.findall(r"[^\r\n]*(?:\r\n|\r|\n|$)", text)
+    start = 0
+    while not lines[start].strip(" \t\r\n"):
+        start += 1
+    if lines[start].strip(" \t\r\n").startswith("```"):
         end = len(lines)
-        while end and not lines[end - 1].strip(" \t"):
+        while end > start + 1 and not lines[end - 1].strip(" \t\r\n"):
             end -= 1
-        if end and lines[end - 1].strip(" \t") == "```":
-            # Keep the LF preceding the closing fence: block scalar chomping
-            # depends on it. Discard only the fence and exterior whitespace.
-            lines = [*lines[:end - 1], ""]
-        return "\n".join(lines)
+        if end > start + 1 and lines[end - 1].strip(" \t\r\n") == "```":
+            # Only framing is discarded; payload blank lines control chomping.
+            return "".join(lines[start + 1:end - 1])
+        return "".join(lines[start + 1:])
     return text
 
 

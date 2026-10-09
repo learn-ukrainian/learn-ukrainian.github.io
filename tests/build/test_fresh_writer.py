@@ -928,3 +928,63 @@ def test_writer_yaml_empty_and_malformed(text):
             yaml.safe_load(cleaned)
     else:
         assert yaml.safe_load(cleaned) is None
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"], ids=["LF", "CRLF", "CR"])
+@pytest.mark.parametrize("exterior_blanks", [0, 1, 3])
+@pytest.mark.parametrize("payload_blanks", [0, 1, 3])
+@pytest.mark.parametrize("chomping", ["|", "|-", "|+"])
+@pytest.mark.parametrize("padding", ["", " \t"])
+def test_writer_fence_exterior_lines_preserve_payload(ending, exterior_blanks, payload_blanks, chomping, padding):
+    body = f"value: {chomping}{ending}  x{ending}" + ending * payload_blanks
+    exterior = (padding + ending) * exterior_blanks
+    framed = f"{exterior}  ```yaml{ending}{body}```{exterior}"
+    cleaned = strip_markdown_fence(framed)
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+@pytest.mark.parametrize("scalar", ['"alpha{separator}beta"', "|+\n  alpha{separator}  beta\n\n"])
+def test_writer_unicode_scalar_bytes_preserved(separator, scalar):
+    body = "value: " + scalar.format(separator=separator) + "\n"
+    cleaned = strip_markdown_fence(f"```yaml\r\n{body}```\r\n \t\r\n\r\n")
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("fenced", [False, True])
+def test_writer_uniform_indentation_and_literal_backticks_preserved(fenced):
+    body = "  first: one\n  value: |+\n    ```\n    tail\n\n"
+    text = f" \n```yaml\n{body}```\n\n" if fenced else body
+    cleaned = strip_markdown_fence(text)
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == {"first": "one", "value": "```\ntail\n\n"}
+
+
+def test_writer_first_line_only_indentation_remains_malformed():
+    # Accepted low residual: do not repair malformed padding by corrupting valid indentation.
+    body = "  first: one\nsecond: two\n"
+    for text in (body, f"```yaml\n{body}```\n\n"):
+        assert strip_markdown_fence(text) == body
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(strip_markdown_fence(text))
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+def test_writer_unterminated_fence_keeps_payload(ending):
+    body = f"value: |+{ending}  x{ending}{ending}{ending}"
+    cleaned = strip_markdown_fence(f" \t{ending}```yaml{ending}{body}")
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("text", ["```yaml", "```yaml\n```\n\n"])
+def test_writer_empty_fence(text):
+    assert strip_markdown_fence(text) == ""
+
+
+@pytest.mark.parametrize("text", ["```yaml\nvalue: [\n", "```yaml\nvalue: x\n```broken\n\n"])
+def test_writer_malformed_fenced_yaml_still_fails(text):
+    with pytest.raises(yaml.YAMLError):
+        yaml.safe_load(strip_markdown_fence(text))
