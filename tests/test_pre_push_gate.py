@@ -864,3 +864,73 @@ def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
 
     assert code == 3
     assert "out" in output and "err" in output
+
+
+# ---- review round 2: absent invariants fail closed, shadow descendants are bounded ----------------------
+
+
+def test_an_unchanged_registered_invariant_the_sparse_worktree_lacks_is_validation_incomplete(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green test", "tests/test_new.py")
+    _git(repo, "sparse-checkout", "set", "--no-cone", "/*", "!/tests/test_invariant.py")
+    assert not (repo / "tests/test_invariant.py").exists()
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_INCOMPLETE
+    verdict = _verdict(result)
+    assert verdict["outcome"] == "validation_incomplete"
+    assert verdict["reason"] == "registry_entries_unmaterialized"
+    assert "tests/test_invariant.py" in result.stderr
+    assert _receipts(repo) == []
+
+
+def test_an_absent_registered_file_with_an_approved_deferral_is_not_incomplete(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    head = _commit(repo, "green test", "tests/test_new.py")
+    (repo / "tests/test_invariant.py").unlink()
+    _git(repo, "update-index", "--skip-worktree", "tests/test_invariant.py")
+    monkeypatch.setattr(gate, "MEASURED_COST_S", {"tests/test_invariant.py": gate.HEAVY_MODULE_S + 1})
+    update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
+
+    plan = gate.build_plan(update, repo)
+
+    assert plan is not None and plan.deferred_to_ci == ("tests/test_invariant.py",)
+    assert "tests/test_invariant.py" not in plan.node_ids
+
+
+_SHADOW_DETACHED = (
+    "import json, subprocess, sys\n"
+    "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
+    "open({pid_file!r}, 'w').write(str(child.pid))\n"
+    "{tail}"
+)
+_SHADOW_ANSWER = "print(json.dumps({'components': [], 'fallback_reasons': [], 'selected_tests': []}))\n"
+
+
+@pytest.mark.parametrize("ending", ["success", "timeout", "abandon"])
+def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    pid_file = tmp_path / "shadow-child.pid"
+    tail = _SHADOW_ANSWER if ending == "success" else "import time\ntime.sleep(300)\n"
+    _install_shadow(repo, _SHADOW_DETACHED.format(pid_file=str(pid_file), tail=tail))
+    monkeypatch.setattr(gate, "SHADOW_BUDGET_S", 3.0 if ending == "timeout" else 60.0)
+    plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
+    shadow = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh"))
+    for _ in range(200):  # the selector must have spawned its child before the ending is exercised
+        if pid_file.exists() and pid_file.read_text(encoding="utf-8"):
+            break
+        time.sleep(0.05)
+    started = time.monotonic()
+
+    if ending == "abandon":
+        shadow.abandon()
+    else:
+        result = shadow.finish()
+        assert result["status"] == ("recorded" if ending == "success" else "unavailable")
+
+    assert time.monotonic() - started < 25.0
+    assert _gone(int(pid_file.read_text(encoding="utf-8")))

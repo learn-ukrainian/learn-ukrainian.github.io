@@ -119,7 +119,6 @@ class Plan:
     registry_nodes: tuple[str, ...]
     changed_tests: tuple[str, ...]
     changed_paths: tuple[str, ...]
-    missing_registry_entries: tuple[str, ...] = ()
     deferred_to_ci: tuple[str, ...] = ()
     node_ids: tuple[str, ...] = field(init=False)
 
@@ -297,11 +296,17 @@ def build_plan(update: Update, root: Path) -> Plan | None:
             incomplete=True,
         )
     registry, version = load_registry(root)
-    present = tuple(node for node in registry if (root / node.split("::", 1)[0]).is_file())
-    missing = tuple(node for node in registry if node not in present)
-    present, deferred = defer_to_ci(present, root)
+    runnable, deferred = defer_to_ci(registry, root)
+    absent = tuple(dict.fromkeys(node.split("::", 1)[0] for node in runnable if not (root / node.split("::", 1)[0]).is_file()))
+    if absent:  # only the recorded deferrals above may skip a registered invariant; an absent file may not
+        raise GateOutcome(
+            "registry_entries_unmaterialized",
+            "registered invariant files are missing from this worktree (sparse-checkout or a stale registry): "
+            f"{', '.join(absent)}; run `git sparse-checkout add tests` and push again",
+            incomplete=True,
+        )
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, version, present, changed_tests, changed, missing, deferred)
+    return Plan(head, tree, base, version, runnable, changed_tests, changed, deferred)
 
 
 # ---- receipts -------------------------------------------------------------
@@ -431,6 +436,23 @@ def sweep_descendants(token: str, deadline: float) -> None:
         time.sleep(0.05)
 
 
+def terminate_run(process: subprocess.Popen[str], token: str) -> bool:
+    """Kill the process group, sweep the token's descendants and reap, all within ``CLEANUP_BUDGET_S``.
+
+    Returns whether the process was reaped; never raises, so it is safe on every cleanup path.
+    """
+    deadline = time.monotonic() + CLEANUP_BUDGET_S
+    if process.poll() is None:
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(process.pid, signal.SIGKILL)
+    sweep_descendants(token, deadline)
+    try:
+        process.wait(timeout=max(0.0, deadline - time.monotonic()))
+    except subprocess.TimeoutExpired:
+        return False
+    return True
+
+
 def run_bounded(command: list[str], *, cwd: Path, deadline: float, label: str) -> tuple[int, str]:
     """Run in its own process group; on budget exhaustion kill the group and report incomplete.
 
@@ -555,11 +577,12 @@ class Shadow:
     def __init__(self, plan: Plan, root: Path, launcher: str):
         self.output = tempfile.TemporaryFile(mode="w+")  # noqa: SIM115 - closed in finish()
         self.deadline = time.monotonic() + SHADOW_BUDGET_S
+        self.token = uuid.uuid4().hex
         try:
             self.process: subprocess.Popen[str] | None = subprocess.Popen(
                 ["bash", launcher, "-m", "scripts.ci.pre_push_shadow", "--paths", *plan.changed_paths],
                 cwd=root,
-                env=clean_environment(),
+                env={**clean_environment(), RUN_TOKEN_ENV: self.token},
                 stdin=subprocess.DEVNULL,
                 stdout=self.output,
                 stderr=subprocess.DEVNULL,
@@ -576,9 +599,9 @@ class Shadow:
             try:
                 self.process.wait(timeout=max(0.0, self.deadline - time.monotonic()))
             except subprocess.TimeoutExpired:
-                os.killpg(self.process.pid, signal.SIGKILL)
-                self.process.wait()
+                terminate_run(self.process, self.token)
                 return {"status": "unavailable", "detail": "shadow time budget exhausted"}
+            terminate_run(self.process, self.token)  # the selector exited; its detached descendants must not outlive it
             if self.process.returncode != 0:
                 return {"status": "unavailable", "detail": f"exit {self.process.returncode}"}
             self.output.seek(0)
@@ -598,9 +621,8 @@ class Shadow:
             self.output.close()
 
     def abandon(self) -> None:
-        if self.process is not None and self.process.poll() is None:
-            os.killpg(self.process.pid, signal.SIGKILL)
-            self.process.wait()
+        if self.process is not None:
+            terminate_run(self.process, self.token)
         self.output.close()
 
 
@@ -648,7 +670,6 @@ def validate(
         base=plan.base,
         nodes=len(plan.node_ids),
         registry_version=plan.registry_version,
-        missing_registry_entries=list(plan.missing_registry_entries),
         deferred_to_ci=list(plan.deferred_to_ci),
     )
     state = state_dir(root)
