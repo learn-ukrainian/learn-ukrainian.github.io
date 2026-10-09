@@ -297,6 +297,9 @@ def resolve_and_admit(
                            task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(requested[1])
+    if review_dispatch:
+        for requested_seat in requested[0]:
+            _require_agy_code_review_risk(requested_seat, review_risk, review_profile or "code")
     # Target reads follow the original-request gates, but precede every
     # candidate evaluation, route probe and substitution.
     if (review_profile or "code") in {"code", "infra"}:

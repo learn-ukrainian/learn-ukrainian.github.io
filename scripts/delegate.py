@@ -17857,7 +17857,8 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
-            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
+            "Mandatory for requested or substituted AGY code reviews, including seat defaults and aliases, "
+            "even without author metadata; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )
