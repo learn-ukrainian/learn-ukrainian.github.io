@@ -33,9 +33,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 274
+FROZEN_HTTP_OPERATION_COUNT = 276
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "bce4809b1e9ed09462cc8bdf259066897c27e11c3e757a1bf0a1545a661c2047"
+FROZEN_DENOMINATOR_SHA256 = "17e513b3c279ecde66289f3cd4aba4e4dd593ba461dd7e9b313c007a7d71eea8"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -326,7 +326,7 @@ def assert_frozen_denominator(app: Any) -> None:
 def _path_value(name: str) -> str:
     if name in {"stream_id", "epic"}:
         return "epic:9999"
-    if name in {"page_num", "num", "message_id", "image_id", "start", "end", "upload_seq"}:
+    if name in {"page_num", "num", "number", "message_id", "image_id", "start", "end", "upload_seq"}:
         return "1"
     if name in {"filename"}:
         return "missing-opsec-fixture.json"
