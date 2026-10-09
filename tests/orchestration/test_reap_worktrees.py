@@ -15,6 +15,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
 
 import pytest
 
@@ -27,6 +28,7 @@ from tests.worktree_prep_helpers import exited_process_identity, half_built_prep
 
 _REAL_RUN = subprocess.run
 _REAL_OPEN_FILE_ACTIVITY_REASON = rw._open_file_activity_reason
+_REAL_ACTIVE_TASK_IDS = rw._active_task_ids
 _REPO_TEMPLATE: Path | None = None
 
 
@@ -1464,6 +1466,191 @@ def test_terminal_dispatch_class_reaps_only_explicit_terminal_task(
 
     assert result.action == "removed"
     assert result.reason == "settled dispatch task-id=terminal-scheduled status=failed"
+    assert not worktree.exists()
+
+
+def _probe_fixture(repo, monkeypatch, failure, *, status="done", pid=None):
+    """Use the actual HTTP probe with a bound local record and controlled failure."""
+    import urllib.request
+
+    task_id = "probe-fallback"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    record = {"task_id": task_id, "worktree_path": str(worktree), "status": status, "pid": pid}
+    task_file = repo / "batch_state" / "tasks" / f"{task_id}.json"
+    task_file.parent.mkdir(parents=True, exist_ok=True)
+    task_file.write_text(json.dumps(record))
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {branch: []})
+    return worktree, task_file, record
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize(
+    "failure",
+    [ValueError("bad payload"), RuntimeError("probe broke"), HTTPError("monitor", 503, "unavailable", {}, None)],
+)
+def test_active_probe_failure_is_typed_in_skip_and_journal(tmp_path, monkeypatch, apply, failure):
+    repo = init_repo(tmp_path)
+    worktree, _, _ = _probe_fixture(repo, monkeypatch, failure)
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set()), worktree)
+    assert result.action == "skipped"
+    assert "active_task_probe_invalid_response" in result.reason
+    assert type(failure).__name__ in result.reason
+    assert str(failure) in result.reason
+    rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    assert any(row["event"] == "skip" and row["reason"] == result.reason for row in rows)
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("failure", [TimeoutError("monitor timed out"), URLError("connection refused")])
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("pid", [None, 5_000_299])
+def test_active_probe_transport_fallback_reaps_settled_checkout(tmp_path, monkeypatch, failure, apply, pid):
+    repo = init_repo(tmp_path)
+    worktree, _, _ = _probe_fixture(repo, monkeypatch, failure, pid=pid)
+    if pid is not None:
+        real_kill = os.kill
+
+        def dead_task(target, sig):
+            if target == pid:
+                raise ProcessLookupError("worker exited")
+            return real_kill(target, sig)
+
+        monkeypatch.setattr(os, "kill", dead_task)
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), include_terminal_dispatches=True),
+        worktree,
+    )
+    assert result.action == ("removed" if apply else "would_remove"), result.reason
+    assert worktree.exists() is not apply
+    rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    fallback = [row for row in rows if row["event"] == "activity-probe-fallback"]
+    assert len(fallback) >= (2 if apply else 1)
+    assert all(type(failure).__name__ in row["reason"] and row["source"] == "local_task_record" for row in fallback)
+
+
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), URLError("offline"), ValueError("bad response")])
+@pytest.mark.parametrize("status", ["running", "spawning", "done", "failed"])
+def test_active_probe_failure_never_reaps_live_task(tmp_path, monkeypatch, failure, status):
+    repo = init_repo(tmp_path)
+    worktree, _, _ = _probe_fixture(repo, monkeypatch, failure, status=status, pid=os.getpid())
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), include_terminal_dispatches=True),
+        worktree,
+    )
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize(
+    "unsafe",
+    ["missing", "malformed", "identity", "binding", "no_binding", "pid", "nonterminal", "permission", "pid_error"],
+)
+def test_active_probe_fallback_retains_uncertain_record(tmp_path, monkeypatch, unsafe):
+    repo = init_repo(tmp_path)
+    worktree, task_file, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
+    if unsafe == "missing":
+        task_file.unlink()
+    elif unsafe == "malformed":
+        task_file.write_text("{broken")
+    else:
+        if unsafe == "identity":
+            record["task_id"] = "other"
+        elif unsafe == "binding":
+            record["worktree_path"] = str(repo)
+        elif unsafe == "no_binding":
+            record.pop("worktree_path")
+        elif unsafe == "pid":
+            record["pid"] = "not a PID"
+        elif unsafe == "nonterminal":
+            record["status"] = "running"
+        else:
+            record["pid"] = 5_000_299
+            real_kill = os.kill
+
+            def uncertain_pid(target, sig):
+                if target == record["pid"]:
+                    raise PermissionError("not signalable") if unsafe == "permission" else OSError("PID probe failed")
+                return real_kill(target, sig)
+
+            monkeypatch.setattr(os, "kill", uncertain_pid)
+        task_file.write_text(json.dumps(record))
+    result = result_for(rw.reap_worktrees(repo_root=repo, live_cwds=set(), include_terminal_dispatches=True), worktree)
+    assert result.action == "skipped"
+    assert "active_task_probe_timeout" in result.reason
+    assert "local_task_" in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("payload", [{}, {"tasks": None}, {"tasks": [None]}, {"tasks": [{}]}, []])
+def test_active_probe_rejects_malformed_http_payload(monkeypatch, payload):
+    import urllib.request
+
+    response = contextlib.nullcontext(type("Response", (), {"read": lambda _: json.dumps(payload).encode()})())
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *_args, **_kwargs: response)
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    probe = rw._read_active_task_probe()
+    assert isinstance(probe, rw._ActiveTaskProbeFailure)
+    assert "ValueError" in probe.reason
+    assert not probe.fallback_allowed
+
+
+def test_active_probe_reads_working_monitor(monkeypatch):
+    import urllib.request
+
+    response = contextlib.nullcontext(type("Response", (), {"read": lambda _: b'{"tasks": [{"task_id": "live"}]}'})())
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *_args, **_kwargs: response)
+    assert _REAL_ACTIVE_TASK_IDS() == {"live"}
+
+
+def test_active_probe_failure_is_safe_for_delegation_caller(tmp_path, monkeypatch):
+    from scripts import delegate
+
+    repo = init_repo(tmp_path)
+    worktree, _, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
+    monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
+    reason = delegate._branch_holder_activity_reason(worktree, task_id=record["task_id"], task_state=record)
+    assert reason == "activity probes unavailable (_ActiveTaskProbeFailure)"
+
+
+@pytest.mark.parametrize("change", ["live_pid", "binding", "lease"])
+def test_active_probe_fallback_rechecks_merged_checkout_under_lock(tmp_path, monkeypatch, change):
+    repo = init_repo(tmp_path)
+    worktree, task_file, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
+    patch_gh(monkeypatch, {"codex/probe-fallback": [{"number": 10301, "state": "MERGED"}]})
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def attach_after_qualification(*args, **kwargs):
+        refusal = real_guard(*args, **kwargs)
+        if change == "live_pid":
+            record["pid"] = os.getpid()
+        elif change == "binding":
+            record["worktree_path"] = str(repo)
+        else:
+            record["lease_state"] = "active"
+        task_file.write_text(json.dumps(record))
+        return refusal
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", attach_after_qualification)
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    assert result.action == "skipped", result.reason
+    assert "local_task_" in result.reason or "active worker lease" in result.reason
+    assert worktree.exists()
+
+
+def test_active_probe_fallback_reaps_merged_checkout(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree, _, _ = _probe_fixture(repo, monkeypatch, URLError("offline"))
+    patch_gh(monkeypatch, {"codex/probe-fallback": [{"number": 10301, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    assert result.action == "removed", result.reason
     assert not worktree.exists()
 
 
@@ -6741,6 +6928,9 @@ _OLD_PR = 9237
 def _no_default_foreign_scratch_roots(monkeypatch: pytest.MonkeyPatch) -> None:
     """pytest's own tmp_path lives under /tmp; only the #9129 tests opt in to scratch roots."""
     monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: ())
+    # Monitor state is controlled per test; HTTP/fallback tests restore the
+    # real probe explicitly rather than depending on the host's live service.
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     # Safety-class tests use a known empty process snapshot. Probe tests below
     # restore the real implementation rather than depending on host activity.
     monkeypatch.setattr(rw, "_open_file_activity_reason", lambda _path, *, timeout=None: None)
