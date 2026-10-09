@@ -168,8 +168,13 @@ role and are not a last resort for any of them.
   `model: claude-opus-5-5`, so Ukrainian writing/judgment seats never inherit
   the routine interactive model. `infra-orchestrator` pins
   `model: claude-sonnet-5-5`, matching its frontmatter. This infra-orchestrator
-  subagent is the approved exception to `core.md`'s security-code "never Sonnet"
-  rule; other security-code seats retain that restriction. The advisor is strictly
+  subagent has an approved router-only exception (CTO decision, 2026-10-09):
+  it never writes or reviews security code; it routes every security-code worker
+  and every security-code review to `claude-opus-5-5` (Opus); review independence
+  still binds: Opus-authored security code is reviewed by the resolver's
+  `--risk critical` cross-family seat, never Sonnet. Security code
+  (hooks, launchers, credentials, admission, sandbox) is never written or reviewed
+  on Sonnet. The advisor is strictly
   for interactive Claude sessions; headless runs omit `advisorModel` and set
   `CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1`. Subagents inherit the configured advisor
   and apply the pairing check against their own model. Route reserved subagent

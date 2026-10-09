@@ -37,7 +37,7 @@ Policy here; facts: `scripts/config/model_catalog.yaml`; changes need `model-ass
 | Advice, new design | `claude-opus-5-5` · `gpt-6.1-sol` | — |
 | Hard or accountable code | `gpt-6.1-sol` · `claude-opus-5-5` | Cursor `grok-4.7` · Kimi |
 | Bounded code, recon (Sol envelope first) | `gpt-6-luna` | `gemini-3.8-flash-high` |
-| Security code (hooks, launchers, credentials, admission, sandbox) | `claude-opus-5-5` · `gpt-6.1-sol`; review `--risk critical` | never Sonnet |
+| Security code (hooks, launchers, credentials, admission, sandbox) | `claude-opus-5-5` · `gpt-6.1-sol`; review `--risk critical` | never written or reviewed on Sonnet |
 | Mechanical lockfile/pointer/smoke | `claude-haiku-5-5` | `claude-sonnet-5-5` |
 | Classification/triage; read-only recon/search | `claude-haiku-5-5` (recon peer: Luna) | — |
 | Routine code, English prose | `claude-sonnet-5-5` | `gpt-6.1-sol` |

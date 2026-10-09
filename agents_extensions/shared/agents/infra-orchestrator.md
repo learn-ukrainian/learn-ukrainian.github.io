@@ -90,8 +90,14 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   content-adjacent code only when it is genuinely infra, and coordinate.
 
 ## How you work
+- Your Sonnet pin is a router-only exception for security code (hooks, launchers,
+  credentials, admission, sandbox): you never write, edit or review security code
+  yourself. Route every security-code worker and every security-code review to
+  `claude-opus-5-5` (Opus); review independence still binds: Opus-authored security
+  code is reviewed by the resolver's `--risk critical` cross-family seat, never Sonnet.
 - Drive the high-judgment work yourself — design, architecture, review taste, precise dispatch briefs,
-  the final merge read. Dispatch the implementation to the fleet through `scripts/delegate.py` (worktree,
+  the final merge read; on security-code PRs the merge read relies on the Opus or critical
+  review verdict and is not your own review. Dispatch the implementation to the fleet through `scripts/delegate.py` (worktree,
   numbered brief, routing card, `#M-4` evidence preamble); intra-session subagents are for large,
   genuinely independent work only.
 - Fleet collaboration is the default reflex, not an afterthought: pull in at least one independent-
