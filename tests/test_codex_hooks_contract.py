@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime import codex_hook_policy
+from scripts.agent_runtime.adapters.codex import CodexAdapter
 from scripts.agent_runtime.codex_hook_policy import (
     ENFORCE_VENV_TIMEOUT,
     LOCAL_BASH_GUARDS,
@@ -105,6 +106,84 @@ def test_grok_post_compact_reminder_uses_sol_worker_default(tmp_path: Path) -> N
     assert "default eligible code worker = Sol high" in context
     assert "explicit Luna/Flash bounded routes require a Sol advisory envelope" in context
     assert "default bounded work = Sol advisory envelope" not in context
+
+
+@pytest.mark.parametrize("session_id", [None, "worker-thread"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_id, mode):
+    primary, worktree = _make_linked_worktree(tmp_path)
+    assert not (worktree / ".codex").exists()
+    plan = CodexAdapter().build_invocation(
+        prompt="test", mode=mode, cwd=worktree, model=None, task_id=None,
+        session_id=session_id,
+        tool_config={"codex_home_override": str(tmp_path / "private-home"), "disable_features": ["hooks"]},
+    )
+    try:
+        overrides = [plan.cmd[index + 1] for index, arg in enumerate(plan.cmd) if arg == "-c"]
+        config = tomllib.loads(next(value for value in overrides if value.startswith("hooks.PreToolUse=")))
+        groups = config["hooks"]["PreToolUse"]
+        toggles = [arg for index, arg in enumerate(plan.cmd[:-1])
+                   if arg in {"--enable", "--disable"} and plan.cmd[index + 1] == "hooks"]
+        assert toggles == ["--disable", "--enable"]
+        assert "--dangerously-bypass-hook-trust" in plan.cmd
+        runner = groups[0]["hooks"][0]
+        assert shlex.split(runner["command"]) == ["bash", str(ENTRY), "pre-tool-use"]
+        assert groups[0]["matcher"] == _manifest()["hooks"]["PreToolUse"][0]["matcher"]
+        assert runner["timeout"] == 45
+        # Freeze the independent shared-settings denominator, including the
+        # shared guard absent from the original Codex runner.
+        shared = json.loads((REPO_ROOT / "agents_extensions/shared/settings.json").read_text())
+        expected = {
+            Path(shlex.split(hook["command"])[-1]).name
+            for group in shared["hooks"]["PreToolUse"]
+            for hook in group["hooks"]
+            if ".claude/hooks/" in hook["command"]
+        }
+        actual = {name for name, _ in (*LOCAL_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)}
+        actual.add("enforce-venv.sh")
+        actual.update(Path(shlex.split(hook["command"])[-1]).name for group in groups[1:] for hook in group["hooks"])
+        assert actual == expected
+        for tool in ("Write", "apply_patch", "Bash"):
+            payload = {
+                "hook_event_name": "PreToolUse", "cwd": str(worktree), "tool_name": tool,
+                "tool_input": {"file_path": str(primary / "README.md"),
+                               "command": f"echo forbidden > {shlex.quote(str(primary / 'README.md'))}",
+                               "patch": f"*** Begin Patch\n*** Update File: {primary / 'README.md'}\n@@\n-hook test\n+forbidden\n*** End Patch"},
+            }
+            completed = subprocess.run(
+                shlex.split(runner["command"]), cwd=worktree, input=json.dumps(payload),
+                text=True, capture_output=True, check=False, timeout=30,
+            )
+            assert completed.returncode == 2, completed.stderr
+            assert "guard-primary-checkout-write" in completed.stderr
+        assert (primary / "README.md").read_text() == "hook test\n"
+    finally:
+        plan.output_file.unlink()
+
+
+def test_codex_config_encoder_round_trips_nested_hook_tables():
+    value = {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": 'echo "quoted"',
+                                                            "timeout": 45, "async": False}]}]}
+    assert tomllib.loads("hooks=" + CodexAdapter._encode_config_value(value))["hooks"] == value
+
+
+@pytest.mark.parametrize("defect", ["missing-runner", "empty-groups", "foreign-command"])
+def test_worker_hook_binding_fails_closed_on_unavailable_or_changed_runner(monkeypatch, defect):
+    from scripts.agent_runtime.adapters import codex
+
+    manifest = _manifest()
+    if defect == "empty-groups":
+        manifest["hooks"]["PreToolUse"] = []
+    elif defect == "foreign-command":
+        manifest["hooks"]["PreToolUse"][0]["hooks"][0]["command"] = "true"
+    read_text = Path.read_text
+    is_file = Path.is_file
+    monkeypatch.setattr(Path, "read_text", lambda path, *a, **kw:
+                        json.dumps(manifest) if path == HOOKS_CONFIG else read_text(path, *a, **kw))
+    monkeypatch.setattr(Path, "is_file", lambda path:
+                        False if defect == "missing-runner" and path == ENTRY else is_file(path))
+    with pytest.raises(RuntimeError, match="Codex worker PreToolUse"):
+        codex._worker_hook_flags()
 
 
 def test_codex_manifest_uses_only_supported_result_event() -> None:

@@ -38,6 +38,7 @@ import logging
 import os
 import re
 import selectors
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -75,6 +76,43 @@ _EXCERPT_CHARS = 500
 
 class CodexReviewConfigError(ValueError):
     """A review's config provenance cannot establish its MCP boundary."""
+
+
+def _worker_hook_flags() -> list[str]:
+    """Bind tracked pre-tool policy, independent of deployed project discovery.
+
+    Codex supports inline hooks through TOML CLI overrides. Non-managed hooks
+    require trust even for session flags; this harness vets its tracked sources
+    and uses the documented automation trust flag (learn.chatgpt.com/docs/hooks).
+    """
+    from scripts.agent_runtime.codex_hook_policy import LOCAL_BASH_GUARDS, MERGE_GUARDS, PRIMARY_WRITE_GUARD
+
+    from .claude import _worker_guard_settings
+
+    root = Path(__file__).resolve().parents[3]
+    manifest = _json.loads((root / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
+    groups = manifest["hooks"]["PreToolUse"]
+    entry = root / "scripts/agent_runtime/codex_hook_entry.sh"
+    if not entry.is_file() or not groups:
+        raise RuntimeError("Codex worker PreToolUse guards unavailable")
+    for group in groups:
+        for hook in group["hooks"]:
+            expected = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
+            if hook["command"] != expected:
+                raise RuntimeError("Codex worker PreToolUse runner has an unsupported form")
+            hook["command"] = shlex.join(["bash", str(entry), "pre-tool-use"])
+
+    # Reuse the tracked shared-settings reader. Keep the deterministic Codex
+    # runner, adding shared guards it does not already execute (#10305).
+    covered = {name for name, _ in (*LOCAL_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)} | {"enforce-venv.sh"}
+    for group in _json.loads(_worker_guard_settings())["hooks"]["PreToolUse"]:
+        missing = [hook for hook in group["hooks"] if Path(shlex.split(hook["command"])[-1]).name not in covered]
+        if missing:
+            groups.append({**group, "hooks": missing})
+    return [
+        "--enable", "hooks", "--dangerously-bypass-hook-trust",
+        "-c", "hooks.PreToolUse=" + CodexAdapter._encode_config_value(groups),
+    ]
 
 
 def _codex_config_layers(
@@ -507,6 +545,11 @@ class CodexAdapter:
         # enables toggles.
         cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
+        if not tc.get("review_isolation"):
+            # Sealed reviews run in an OS sandbox without tracked hook mounts.
+            # Ordinary workers, including scoped homes and resumes, bind last
+            # so caller feature toggles cannot disable this safety boundary.
+            cmd.extend(_worker_hook_flags())
         mcp_servers = tc.get("mcp_servers")
         sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
         sources_defined = isinstance(sources, dict) and bool(sources.get("command") or sources.get("url"))
@@ -661,9 +704,15 @@ class CodexAdapter:
 
     @staticmethod
     def _encode_config_value(value: Any) -> str:
-        """Encode a Python scalar/list into a TOML-compatible literal."""
+        """Encode a scalar, array or inline table into a TOML-compatible literal."""
         if isinstance(value, tuple):
             value = list(value)
+        if isinstance(value, dict):
+            return "{" + ",".join(
+                f"{_json.dumps(key)}={CodexAdapter._encode_config_value(nested)}" for key, nested in value.items()
+            ) + "}"
+        if isinstance(value, list):
+            return "[" + ",".join(CodexAdapter._encode_config_value(nested) for nested in value) + "]"
         return _json.dumps(value)
 
     def parse_response(
