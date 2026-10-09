@@ -242,6 +242,34 @@ def assert_frozen_surfaces(actual):
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
+def test_capture_runner_activates_and_restores_scoped_caches(tmp_path):
+    source = Path(__file__).resolve().parents[2]
+    capture = tmp_path / "capture.py"
+    capture.write_text('''from scripts import delegate
+from scripts.review import model_catalog
+
+original_validator = model_catalog.validate_catalog
+original_parser = delegate.build_parser
+
+def capture():
+    assert model_catalog.validate_catalog is not original_validator
+    assert delegate.build_parser is not original_parser
+    print("caches active")
+
+def main():
+    capture()
+    assert model_catalog.validate_catalog is original_validator
+    assert delegate.build_parser is original_parser
+    print("caches restored")
+''')
+    result = subprocess.run(
+        [sys.executable, "-c", CAPTURE_RUNNER, str(capture), "--source-root", str(source)],
+        cwd=tmp_path, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "caches active\ncaches restored\n"
+
+
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
     actual = dict(REVIEW_CAPACITY_BASELINE)

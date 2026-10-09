@@ -516,7 +516,7 @@
   "tests/review/test_fixloop.py": 100.373,
   "tests/review/test_full_review_access.py": 0.0,
   "tests/review/test_integration_check.py": 351.799,
-  "tests/review/test_model_catalog.py": 121.064,
+  "tests/review/test_model_catalog.py": 122.524,
   "tests/review/test_plan_review_validator.py": 26.469,
   "tests/review/test_prompt_structural_rules.py": 0.97,
   "tests/review/test_prompts.py": 59.823,
