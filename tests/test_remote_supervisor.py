@@ -394,7 +394,10 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
         inbox_events=[InboxEvent(1, "fixture-sender", "fixture-request", "pending work")],
     )
     assert send.call_args.kwargs["thread_id"] == thread
-    assert "pending work" in send.call_args.kwargs["message"]
+    assert send.call_args.kwargs["message"].endswith("Message IDs:\n1")
+    assert "pending work" not in send.call_args.kwargs["message"]
+    assert "fixture-sender" not in send.call_args.kwargs["message"]
+    assert "fixture-request" not in send.call_args.kwargs["message"]
     start.assert_not_called()
     assert supervisor.remote.stream(lease.stream_id) == before
     assert supervisor.close_driver(role="driver", lease=lease) == "closed"
