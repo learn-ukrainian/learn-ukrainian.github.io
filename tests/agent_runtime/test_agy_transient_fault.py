@@ -25,12 +25,22 @@ NON_TRANSIENT = "agy_stream_result_error: INVALID_ARGUMENT (code 400): request f
 MIXED_UNRELATED_503 = (
     "API error (attempt 1): UNAVAILABLE (code 503)\nEligibility check failed: PERMISSION_DENIED (code 403)"
 )
+ELIGIBILITY_403_QUOTING_503 = (
+    "agy_stream_result_error: Eligibility check failed: PERMISSION_DENIED (code 403): UNAVAILABLE (code 503)"
+)
+API_503_QUOTING_CANCELED = (
+    "agy_stream_result_error: API error (attempt 1): UNAVAILABLE (code 503): agy_background_task_canceled"
+)
+INVALID_ARG_QUOTING_503 = (
+    "agy_stream_result_error: INVALID_ARGUMENT (code 400): request failed UNAVAILABLE (code 503)"
+)
 
 RECORDED = (
     pytest.param(API_503, id="api-503"),
     pytest.param(INTERRUPTED, id="stream-interrupted"),
     pytest.param(MISSING_TERMINAL, id="missing-terminal-result"),
     pytest.param(LOAD_CODE_ASSIST_503, id="load-code-assist-503"),
+    pytest.param(API_503_QUOTING_CANCELED, id="api-503-quoting-canceled"),
 )
 
 
@@ -73,6 +83,8 @@ def test_recorded_signatures_are_transient_provider_faults(excerpt):
         "UNAVAILABLE (code 503)",
         "agy_background_task_canceled API error (attempt 1): UNAVAILABLE (code 503)",
         NON_TRANSIENT,
+        ELIGIBILITY_403_QUOTING_503,
+        INVALID_ARG_QUOTING_503,
     ],
 )
 def test_classifier_leaves_owned_and_non_transient_text_alone(text):
