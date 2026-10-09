@@ -72,7 +72,8 @@
     "api:logs": "tail -f logs/api.log",
     "build:starlight": "npm run build --prefix site",
     "build:starlight:full": "npm run build:full --prefix site",
-    "dev:starlight": "npm run dev --prefix site"
+    "dev:starlight": "npm run dev --prefix site",
+    "postinstall": "chmod -R go-w node_modules/@agentclientprotocol/claude-agent-acp || true"
   },
   "repository": {
     "type": "git",
