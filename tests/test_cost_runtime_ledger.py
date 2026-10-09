@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -184,17 +186,48 @@ def test_unreadable_usage_counts_are_scoped_to_each_cost_window(tmp_path):
         assert any(str(window["unreadable"]) in warning for warning in window["warnings"])
 
 
+@pytest.mark.parametrize("scripts_on_path", [False, True])
+def test_usage_import_preserves_redactor_identity(scripts_on_path):
+    root = Path(__file__).resolve().parent.parent
+    probe = """
+import importlib
+import sys
+sys.path.insert(0, sys.argv[1])
+redactor = importlib.import_module(sys.argv[2])
+usage = importlib.import_module(sys.argv[3])
+assert usage.redact_text is redactor.redact_text
+assert usage.redact_value is redactor.redact_value
+"""
+    result = subprocess.run(
+        [
+            sys.executable, "-I", "-c", probe,
+            str(root / "scripts" if scripts_on_path else root),
+            "secret_redactor" if scripts_on_path else "scripts.secret_redactor",
+            "agent_runtime.usage" if scripts_on_path else "scripts.agent_runtime.usage",
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 def test_cost_report_cli_still_runs():
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
     result = subprocess.run(
         [str(project_python()), "scripts/analytics/cost_report.py", "--all", "--json"],
         cwd=Path(__file__).resolve().parent.parent,
+        env=env,
         capture_output=True,
         text=True,
         check=False,
         timeout=30,
     )
 
-    assert result.returncode == 0
+    assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert "records_total" in payload
 
