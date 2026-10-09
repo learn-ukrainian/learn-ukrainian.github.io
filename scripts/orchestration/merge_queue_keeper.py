@@ -62,6 +62,12 @@ SLOW_INTERVAL_SECONDS = 300
 INTERVAL_SLACK_SECONDS = 15
 # Gate holds the keeper reports without a PR comment: the drop comment already says why.
 QUIET_GATE_REASONS = frozenset({"requeue-pending"})
+# A queue removal whose failing jobs also failed another PR's merge_group run in
+# the failure window is a queue-wide failure, not this head's: the head returns
+# to the queue without counting a drop or spending a requeue, up to this many
+# times per head. Aggregate jobs only mirror other jobs and never attribute.
+SHARED_FAILURE_REQUEUE_LIMIT = 3
+AGGREGATE_JOBS = frozenset({"CI Gate"})
 
 
 class KeeperError(RuntimeError):
@@ -427,6 +433,8 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if drop_key in previous.get("shared_pass", {}):
+        return None
     if drop_key in previous.get("requeued", {}):
         return "requeue-spent"
     if drop_key in previous.get("undiagnosed", {}):
@@ -596,6 +604,24 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     )
 
 
+def _shared_failure(failures: Any, failed_jobs: list[str], number: int) -> list[int]:
+    """Other PRs whose merge_group runs failed every non-aggregate job of this removal.
+
+    Empty when this removal has no non-aggregate failing job or any of them is
+    new to the failure window, so the drop stays attributed to this head.
+    """
+    jobs = [job for job in failed_jobs if job not in AGGREGATE_JOBS]
+    if not jobs or not isinstance(failures, list):
+        return []
+    others: dict[str, set[int]] = defaultdict(set)
+    for item in failures:
+        if isinstance(item, dict) and isinstance(item.get("pr"), int) and item["pr"] != number:
+            others[str(item.get("job"))].add(item["pr"])
+    if not all(others.get(job) for job in jobs):
+        return []
+    return sorted(set().union(*(others[job] for job in jobs)))
+
+
 def run(
     gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
 ) -> tuple[list[str], bool]:
@@ -657,9 +683,20 @@ def run(
                 detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
-                    previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
-                    if dropped_head == head:
-                        drops = previous["drops"][drop_key]
+                    shared_count = previous.setdefault("shared_requeues", {})
+                    shared = _shared_failure(previous.get("failures"), failed_jobs, number)
+                    if shared and int(shared_count.get(prior_drop_key, 0)) < SHARED_FAILURE_REQUEUE_LIMIT:
+                        shared_count[prior_drop_key] = int(shared_count.get(prior_drop_key, 0)) + 1
+                        previous.setdefault("shared_pass", {})[prior_drop_key] = observed
+                        detail += (
+                            " The same jobs also failed merge_group runs of "
+                            + ", ".join(f"#{n}" for n in shared)
+                            + "; not counted against this head."
+                        )
+                    else:
+                        previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
+                        if dropped_head == head:
+                            drops = previous["drops"][drop_key]
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError:
@@ -792,7 +829,9 @@ def run(
                 else:
                     queued_now[key] = head
                     lines.append(f"#{number} enqueued")
-                if grants is not None and drops >= 1:
+                if previous.get("shared_pass", {}).pop(drop_key, None) is not None:
+                    lines.append(f"#{number} requeued after a queue-wide failure")
+                elif grants is not None and drops >= 1:
                     previous.setdefault("requeued", {})[drop_key] = observed
                 estimated_remaining -= 30
             if (
@@ -814,7 +853,7 @@ def run(
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("requeued", "squash_revoked", "undiagnosed"):
+        for name in ("requeued", "squash_revoked", "undiagnosed", "shared_pass", "shared_requeues"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers

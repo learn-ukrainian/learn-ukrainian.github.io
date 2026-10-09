@@ -76,6 +76,52 @@ _SCHEMA_DATA: dict[str, Any] = {
     },
 }
 
+_NULL_S: dict[str, Any] = {"type": ["string", "null"]}
+_NULL_N: dict[str, Any] = {"type": ["number", "null"]}
+
+
+def _obj(required: list[str], properties: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": required,
+        "properties": properties,
+    }
+
+
+_ALERT = _obj(
+    ["name", "severity", "summary", "starts_at", "state"],
+    {"name": _NULL_S, "severity": _NULL_S, "summary": _NULL_S, "starts_at": _NULL_S, "state": _NULL_S},
+)
+_STAT = _obj(
+    ["name", "value", "status"],
+    {
+        "name": {"enum": ["disk_pct", "memory_pct", "drivers_live", "probe_status"]},
+        "value": _NULL_N,
+        "status": {"enum": ["ok", "unavailable"]},
+    },
+)
+_LINK = _obj(
+    ["name", "href"],
+    {"name": {"enum": ["overview", "fleet"]}, "href": {"type": "string", "minLength": 1}},
+)
+
+_DATA_SCHEMAS: dict[str, dict[str, Any]] = {
+    "fleet.v1.alerts": _obj(["alerts"], {"alerts": {"type": "array", "items": _ALERT}}),
+    "fleet.v1.stats": _obj(
+        ["stats"],
+        {
+            "stats": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": _STAT,
+            }
+        },
+    ),
+    "fleet.v1.links": _obj(["links"], {"links": {"type": "array", "items": _LINK}}),
+}
+
 
 def utc_timestamp(moment: datetime | None = None) -> str:
     """UTC timestamp with a ``Z`` suffix and whole seconds."""
@@ -341,4 +387,4 @@ def endpoint_schema(schema_id: str) -> dict[str, Any]:
         return _envelope_schema(schema_id, _PRS_DATA)
     if schema_id == "fleet.v1.pr":
         return _envelope_schema(schema_id, _PR_DATA)
-    return _envelope_schema(schema_id, {"type": "object"})
+    return _envelope_schema(schema_id, _DATA_SCHEMAS.get(schema_id, {"type": "object"}))

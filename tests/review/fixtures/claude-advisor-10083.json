@@ -1,0 +1,41 @@
+{
+  "adapter_rows": [
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22
+  ],
+  "env_overrides": {
+    "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1"
+  },
+  "launcher_rows": [
+    4,
+    9,
+    14,
+    19,
+    24,
+    29,
+    34,
+    39,
+    44,
+    49,
+    54,
+    59,
+    64,
+    69
+  ],
+  "launcher_help_replacements": [
+    {
+      "before": "                             gemini-3.8-flash-high. Claude\n                             interactive / Grok: omit to keep last TUI/session model.\n",
+      "after": "                             gemini-3.8-flash-high. Claude interactive: omit to use\n                             project settings (Sonnet 5.5). Grok: omit to keep\n                             last TUI/session model.\n"
+    },
+    {
+      "before": "                             for Claude interactive/Grok = last session).\n",
+      "after": "                             for Claude interactive = project settings (Sonnet 5.5);\n                             empty for Grok = last session).\n"
+    }
+  ]
+}

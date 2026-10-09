@@ -663,6 +663,7 @@ def test_pr_detail_path_value_is_int_valid_and_not_rejected(isolated_fixture: Is
     records = {record.key: record for record in registry.build_registry(api_main.app)}
     record = records["GET /api/fleet/v1/prs/{number}"]
     number = record.path_params()["number"]
+    assert number == registry._path_value("number") == "1"
     assert number.isdigit() and int(number) >= 1
     client = TestClient(api_main.app, raise_server_exceptions=False)
     response = client.get(_path_for_record(record), params=dict(record.query), headers=dict(record.headers))

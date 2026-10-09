@@ -219,10 +219,10 @@ After a PR merges, do **not** leave dispatch worktrees forever:
 
 ```bash
 # Safe default (dry-run):
-.venv/bin/python scripts/orchestration/reap_worktrees.py
+.venv/bin/python -m scripts.orchestration.reap_worktrees
 
 # Recommended post-merge cleanup (dirty worktrees are preserved):
-.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged
+.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged
 ```
 
 `--merged` restricts cleanup to exact merged-PR heads and enables branch

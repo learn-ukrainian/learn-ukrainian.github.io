@@ -223,8 +223,10 @@ def test_release_stale_branch_holders_guard_timeout_refuses_removal(
     assert [cmd[:2] for cmd in timed_out] == [["git", "ls-files"]]
 
     err = capsys.readouterr().err
-    assert f"ℹ️  branch 'feature' held by {holder} not auto-releasable (artifact preservation failed: " in err
-    assert "timed out after 30 seconds; refusing worktree removal)" in err
+    assert (
+        f"ℹ️  branch 'feature' held by {holder} not auto-releasable "
+        "(scratch_release_refused:TimeoutExpired:unknown)"
+    ) in err
     assert "failed to release stale branch holder" not in err
     assert "🌲 released stale branch holder" not in err
     assert (holder / ".git").is_dir()

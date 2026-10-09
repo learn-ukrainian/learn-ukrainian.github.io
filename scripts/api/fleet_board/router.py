@@ -1,9 +1,9 @@
-"""Fleet board v1 routes."""
+"""Fleet board v1 routes: index, schema, roster, budget, operations, and PRs."""
 
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Path, Query, Request
@@ -12,6 +12,7 @@ from ..monitor_context import MonitorContext, get_ctx
 from . import prs as prs_api
 from .budget import load_budget, unknown_budget
 from .envelope import endpoint_schema, envelope, utc_timestamp
+from .http_sources import empty_stats, load_alerts, load_links, load_stats
 from .roster import empty_roster, load_roster
 from .sources import SourceReport, collect_source_reports, overlay_source, read_location, report
 
@@ -79,6 +80,20 @@ def _sources() -> tuple[SourceReport, ...]:
         return collect_source_reports()
     except Exception:
         return (report("sources", "unavailable"),)
+
+
+def _publish(
+    schema_name: str,
+    source_name: str,
+    empty: Callable[[], dict[str, Any]],
+    loader: Callable[[], tuple[dict[str, Any], tuple[SourceReport, ...]]],
+) -> dict[str, Any]:
+    """Run one loader. A bug becomes ``unavailable`` and HTTP 200."""
+    try:
+        data, reports = loader()
+        return envelope(schema_name, data, reports)
+    except Exception:
+        return envelope(schema_name, empty(), (report(source_name, "unavailable"),))
 
 
 def respond(
@@ -151,6 +166,21 @@ def read_budget(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         data = unknown_budget()
         source = report("routing_budget", "unavailable")
     return respond("budget", data, overlay_source(source))
+
+
+@router.get("/alerts", name="alerts")
+def read_alerts() -> dict[str, Any]:
+    return _publish("alerts", "alerts", lambda: {"alerts": []}, load_alerts)
+
+
+@router.get("/stats", name="stats")
+def read_stats() -> dict[str, Any]:
+    return _publish("stats", "stats", empty_stats, load_stats)
+
+
+@router.get("/links", name="links")
+def read_links() -> dict[str, Any]:
+    return _publish("links", "links", lambda: {"links": []}, load_links)
 
 
 @router.get("/prs", name="prs")

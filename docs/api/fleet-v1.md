@@ -19,16 +19,19 @@ Each source row is `{name, status, age_s, error}`.
 
 | Status | Meaning |
 | --- | --- |
-| `ok` | The source was read, or a route that does not read it found the variable set. `age_s` is null until a route has read the source. |
-| `stale` | A read source is older than twice its snapshot interval, or a budget refresh did not finish in time and an older result is being served. `age_s` is how old that result is. |
-| `unavailable` | The read or status check failed. `error` is the token `unavailable`. |
+| `ok` | The index saw a set variable, or a data route completed a read. `age_s` is null when the route did not read the location. |
+| `stale` | A read is older than its freshness window, or a refresh failed or timed out and a cached payload is being served. `age_s` is the age of that result. |
+| `unavailable` | The read failed with nothing cached, or the status check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
 The schema rejects a row whose status disagrees with `age_s` or `error`.
 `not_configured` requires both to be null. `unavailable` requires a null age
 and the error token `unavailable`. `ok` and `stale` require a null error.
 A failed source changes that row's status. The HTTP status stays 200.
-Exception text is not copied into the response.
+Exception text is not copied into the response. Each external read stops at
+an overall deadline of two seconds and uses a short cache. The index reports
+whether each variable is set; it does not read the location, so its `age_s`
+stays null. Data routes report the source they actually read.
 
 ## Configuration
 
@@ -112,6 +115,29 @@ response is that older result, the `routing_budget` source is `stale`, and
 `age_s` is the age of the cached result. A failure with nothing cached is
 `unavailable`, with null measurements, and HTTP 200. This route does not
 change the response of `/api/state/routing-budget`.
+
+### `GET /api/fleet/v1/alerts`
+
+`FLEET_ALERTMANAGER_URL`. Server-side read of Alertmanager v2 alerts.
+Each item publishes `name`, `severity`, `summary`, `starts_at`, and `state`.
+A name is kept only when it is a plain identifier, and a summary is kept as
+plain text. Other fields are dropped. Unset or blank is `not_configured`.
+
+### `GET /api/fleet/v1/stats`
+
+`FLEET_PROMETHEUS_URL`. Four fixed instant queries: disk percent, memory
+percent, live drivers, and API probe status. Names are `disk_pct`,
+`memory_pct`, `drivers_live`, and `probe_status`. A query parameter on
+this route is ignored. One failed query marks that stat `unavailable` and
+leaves the others in place. When every query fails, a cached payload is
+served as `stale`; with nothing cached the source is `unavailable`. Series
+labels are not returned.
+
+### `GET /api/fleet/v1/links`
+
+`FLEET_GRAFANA_URL`. Fixed dashboard links for `overview` and `fleet`,
+built from that base. Userinfo and query strings on the base are not
+copied into the link.
 
 ### `GET /api/fleet/v1/prs`
 
