@@ -271,3 +271,159 @@ def test_final_proof_and_non_force_removal_hold_attachment_lock(holder, monkeypa
     monkeypatch.setattr(worktree_claims, "git_worktree_remove", removing)
     assert release(holder) == [path]
     assert seen == ["proof", "proof", "remove"]
+
+
+@pytest.mark.parametrize("race", ["replacement", "bytes", "symlink", "restore_failure", "restore_conflict", "receipt_failure"])
+def test_final_stat_rename_race_refuses_and_preserves_replacement(holder, monkeypatch, tmp_path, capsys, race):
+    """#10227: replacement after the last source stat must never be unlinked."""
+    primary, path, _branch, record = holder
+    (path / "pytest_out.txt").write_bytes(b"first")
+    (path / "second.patch").write_bytes(b"archived")
+    replacement = tmp_path / "replacement"
+    if race == "symlink":
+        replacement.symlink_to("source.txt")
+    else:
+        replacement.write_bytes(b"replacement")
+    unlink = worktree_artifacts.unlink_archived_regular_files
+    real_stat, real_link, real_rename = os.stat, os.link, os.rename
+    armed = False
+    injected = False
+
+    def raced_stat(name, *args, **kwargs):
+        nonlocal injected
+        info = real_stat(name, *args, **kwargs)
+        if armed and not injected and name == "second.patch" and kwargs.get("dir_fd") is not None:
+            injected = True
+            if race == "bytes":
+                (path / "second.patch").write_bytes(b"replaced")
+                os.utime(path / "second.patch", ns=(info.st_atime_ns, info.st_mtime_ns))
+            else:
+                real_rename(replacement, path / "second.patch")
+        return info
+
+    def restore_link(source, destination, **kwargs):
+        if str(source).startswith(".release-") and destination == "second.patch":
+            if race in {"restore_failure", "receipt_failure"}:
+                raise OSError("injected restore failure")
+            if race == "restore_conflict":
+                (path / "second.patch").write_bytes(b"new arrival")
+        return real_link(source, destination, **kwargs)
+
+    def before_delete(root, entries, *, recheck):
+        def checked():
+            nonlocal armed
+            recheck()
+            armed = True
+        with monkeypatch.context() as patch:
+            patch.setattr(os, "stat", raced_stat)
+            patch.setattr(os, "link", restore_link)
+            unlink(root, entries, recheck=checked)
+
+    monkeypatch.setattr(worktree_artifacts, "unlink_archived_regular_files", before_delete)
+    if race == "receipt_failure":
+        def failed_receipt(*_args, **_kwargs):
+            raise OSError("injected receipt failure")
+        monkeypatch.setattr(ignored_task_output, "_update_bound_task_record", failed_receipt)
+    assert release(holder) == []
+    assert injected and path.exists()
+    assert (path / "pytest_out.txt").read_bytes() == b"first"
+    output = capsys.readouterr().err
+    saved = json.loads(record.read_text())
+    assert (primary / saved["branch_holder_archive"]["location"] / "second.patch").read_bytes() == b"archived"
+    if race in {"restore_failure", "restore_conflict", "receipt_failure"}:
+        if race == "receipt_failure":
+            assert '"receipt_recorded": false' in output
+            private = next(path.glob(".release-*"))
+            receipt = {"kind": "source_restore_failed", "paths": [{"source": "second.patch", "private": private.name}]}
+        else:
+            receipt = saved["branch_holder_release_refusal"]
+        assert receipt["kind"] == "source_restore_failed"
+        assert len(receipt["paths"]) == 1
+        names = receipt["paths"][0]
+        assert names["source"] == "second.patch"
+        assert names["private"].startswith(".release-")
+        assert (path / names["private"]).read_bytes() == b"replacement"
+        assert all(names[key] in output for key in ("source", "private"))
+        if race == "restore_conflict":
+            assert (path / "second.patch").read_bytes() == b"new arrival"
+    elif race == "symlink":
+        assert (path / "second.patch").is_symlink()
+        assert os.readlink(path / "second.patch") == "source.txt"
+        assert "source_changed" in output
+        assert not list(path.glob(".release-*"))
+    else:
+        assert (path / "second.patch").read_bytes() == (b"replaced" if race == "bytes" else b"replacement")
+        assert "source_changed" in output
+        assert not list(path.glob(".release-*"))
+
+
+def test_ignored_output_is_archived_once_with_scratch(holder, monkeypatch):
+    primary, path, _branch, record = holder
+    (path / "pytest_out.txt").write_bytes(b"scratch")
+    (path / "ignored").mkdir()
+    (path / "ignored/log.txt").write_bytes(b"ignored")
+    copy = worktree_artifacts._copy_verified
+    copied = []
+    preserve = ignored_task_output.preserve_worktree_artifacts
+    extras = []
+
+    def preserving(*args, **kwargs):
+        if "extra_files" in kwargs:
+            extras.append(kwargs["extra_files"])
+        return preserve(*args, **kwargs)
+
+    def copying(source, destination, **kwargs):
+        copied.append(source.relative_to(path).as_posix())
+        return copy(source, destination, **kwargs)
+
+    monkeypatch.setattr(worktree_artifacts, "_copy_verified", copying)
+    monkeypatch.setattr(ignored_task_output, "preserve_worktree_artifacts", preserving)
+    assert release(holder) == [path]
+    assert copied.count("ignored/log.txt") == 1
+    assert extras == [["pytest_out.txt"]]
+    saved = json.loads(record.read_text())
+    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]
+    assert len(list((primary / "batch_state/preserved/finished").glob("*.manifest.json"))) == 1
+
+
+
+def test_staging_failure_restores_every_source_before_refusing(holder, monkeypatch, capsys):
+    _primary, path, _branch, _record = holder
+    (path / "pytest_out.txt").write_bytes(b"first")
+    (path / "second.patch").write_bytes(b"second")
+    rename = os.rename
+
+    def failed_rename(source, destination, **kwargs):
+        if source == "second.patch" and str(destination).startswith(".release-"):
+            raise OSError("injected staging failure")
+        return rename(source, destination, **kwargs)
+
+    monkeypatch.setattr(os, "rename", failed_rename)
+    assert release(holder) == []
+    assert (path / "pytest_out.txt").read_bytes() == b"first"
+    assert (path / "second.patch").read_bytes() == b"second"
+    assert not list(path.glob(".release-*"))
+    assert "scratch_release_refused" in capsys.readouterr().err
+
+
+
+def test_generated_output_exempt_from_archive_is_not_explicitly_unlinked(holder, monkeypatch):
+    primary, path, _branch, record = holder
+    (primary / ".git/info/exclude").write_text("site/dist/\n")
+    generated = path / "site/dist/page.html"
+    generated.parent.mkdir(parents=True)
+    generated.write_bytes(b"regenerable")
+    (path / "pytest_out.txt").write_bytes(b"scratch")
+    unlink = worktree_artifacts.unlink_archived_regular_files
+    seen = []
+
+    def unlinking(root, entries, *, recheck):
+        seen.extend(entry["path"] for entry in entries)
+        return unlink(root, entries, recheck=recheck)
+
+    monkeypatch.setattr(worktree_artifacts, "unlink_archived_regular_files", unlinking)
+    assert release(holder) == [path]
+    assert seen == ["pytest_out.txt"]
+    saved = json.loads(record.read_text())
+    assert saved["branch_holder_archive"]["count"] == 1
+    assert saved["preserved_artifacts"] == saved["branch_holder_archive"]

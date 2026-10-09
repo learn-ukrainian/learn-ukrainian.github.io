@@ -11,6 +11,7 @@ import shlex
 import stat
 import subprocess
 import tempfile
+import uuid
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
@@ -345,8 +346,16 @@ def _fingerprint(path: Path, *, root: Path) -> tuple[int, str]:
     return len(walked.payload), hashlib.sha256(walked.payload).hexdigest()
 
 
+class ArtifactReleaseRefusal(ValueError):
+    """Typed recovery receipt containing only source-relative names."""
+
+    def __init__(self, paths: list[dict[str, str]]) -> None:
+        self.receipt = {"kind": "source_restore_failed", "paths": paths}
+        super().__init__("source_restore_failed")
+
+
 def unlink_archived_regular_files(root: Path, entries: list[Mapping[str, Any]], *, recheck: Callable[[], None]) -> None:
-    """Recheck the whole holder, preflight every source, then fd-relative unlink.
+    """Recheck, stage the whole set, verify moved bytes, then fd-relative unlink.
 
     Called only under the attachment/removal lock after verified retrieval.
     No link traversal, path normalization or recursive directory deletion.
@@ -372,9 +381,9 @@ def unlink_archived_regular_files(root: Path, entries: list[Mapping[str, Any]], 
                 or _fingerprint(root / entry["path"], root=root) != (entry["size"], entry["sha256"])
             ):
                 raise ValueError("source_changed")
-            leaves.append((parent_fd, parts[-1], info))
+            leaves.append((parent_fd, parts[-1], info, fd, entry))
         # Validate the entire set once more before the first deletion.
-        for parent_fd, name, info in leaves:
+        for parent_fd, name, info, _fd, _entry in leaves:
             current = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
             if (
                 current.st_mode != info.st_mode or current.st_nlink != 1 or current.st_size != info.st_size
@@ -382,8 +391,57 @@ def unlink_archived_regular_files(root: Path, entries: list[Mapping[str, Any]], 
                 != (info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns)
             ):
                 raise ValueError("source_changed")
-        for parent_fd, name, _info in leaves:
-            os.unlink(name, dir_fd=parent_fd)
+        staged = []
+        try:
+            for parent_fd, name, info, fd, entry in leaves:
+                # Reserve a private leaf exclusively; rename moves the leaf
+                # itself, including a raced symlink, without following it.
+                private = ".release-" + uuid.uuid4().hex
+                reserve = os.open(private, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600, dir_fd=parent_fd)
+                os.close(reserve)
+                try:
+                    os.rename(name, private, src_dir_fd=parent_fd, dst_dir_fd=parent_fd)
+                except OSError:
+                    os.unlink(private, dir_fd=parent_fd)
+                    raise
+                staged.append((parent_fd, name, private, entry["path"]))
+                moved = os.stat(private, dir_fd=parent_fd, follow_symlinks=False)
+                # rename updates ctime; compare inode, mode, links, size and
+                # mtime, then hash the still-open original descriptor again.
+                if (
+                    (moved.st_dev, moved.st_ino, moved.st_mode, moved.st_nlink, moved.st_size, moved.st_mtime_ns)
+                    != (info.st_dev, info.st_ino, info.st_mode, 1, info.st_size, info.st_mtime_ns)
+                ):
+                    raise ValueError("source_changed")
+                os.lseek(fd, 0, os.SEEK_SET)
+                payload = _read_regular(fd)
+                if (len(payload), hashlib.sha256(payload).hexdigest()) != (entry["size"], entry["sha256"]):
+                    raise ValueError("source_changed")
+            # A later staging operation may race an earlier moved file too.
+            # Revalidate the complete private set before the first unlink.
+            for (parent_fd, _name, private, _path), (_parent, _original, info, fd, entry) in zip(staged, leaves, strict=True):
+                moved = os.stat(private, dir_fd=parent_fd, follow_symlinks=False)
+                if (moved.st_dev, moved.st_ino, moved.st_mode, moved.st_nlink) != (info.st_dev, info.st_ino, info.st_mode, 1):
+                    raise ValueError("source_changed")
+                os.lseek(fd, 0, os.SEEK_SET)
+                payload = _read_regular(fd)
+                if (len(payload), hashlib.sha256(payload).hexdigest()) != (entry["size"], entry["sha256"]):
+                    raise ValueError("source_changed")
+        except (OSError, ValueError):
+            failures = []
+            for parent_fd, name, private, path in reversed(staged):
+                try:
+                    # Restore without overwriting a new arrival at the source
+                    # name. link+unlink also moves a raced symlink itself.
+                    os.link(private, name, src_dir_fd=parent_fd, dst_dir_fd=parent_fd, follow_symlinks=False)
+                    os.unlink(private, dir_fd=parent_fd)
+                except OSError:
+                    failures.append({"source": path, "private": (Path(path).parent / private).as_posix()})
+            if failures:
+                raise ArtifactReleaseRefusal(failures) from None
+            raise
+        for parent_fd, _name, private, _path in staged:
+            os.unlink(private, dir_fd=parent_fd)
 
 
 def _write_verified_bytes(payload: bytes, destination: Path) -> None:

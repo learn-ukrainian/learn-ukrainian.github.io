@@ -230,12 +230,26 @@ records `branch_holder_archive` on the canonical task. Hand-off output includes
 the repository-relative `manifest_path`, `content_sha256` and
 `retrieval_proof_sha256`. Archive or receipt failure deletes nothing. Claims,
 liveness, task/run identity, HEAD and the complete inventory are rechecked;
-every scratch source's identity and bytes are revalidated before the first
-descriptor-relative, no-follow unlink. Non-force worktree removal then uses
-the existing common boundary. Dry-run neither archives nor unlinks.
+every receipt-covered regular source is renamed descriptor-relatively to an exclusively
+reserved private name in its own directory, without following links. The moved
+inode must match the open source descriptor and its bytes must match the archived
+digest. The entire private set is revalidated before the first unlink. A mismatch
+restores staged names without overwriting any new arrivals and refuses release.
+A failed restoration retains the bytes under the private name and records typed
+`source_restore_failed` evidence with both repository-relative names in
+`branch_holder_release_refusal`. Archived ignored output is retired in the same
+verified pass, so the common boundary does not archive it again or replace the
+receipt; existing regenerable-output exemptions remain unchanged.
+Non-force worktree removal then uses the existing common boundary. Dry-run
+neither archives nor unlinks.
 
 This lock coordinates cooperating attachment/removal callers; it cannot freeze
 an unrelated filesystem writer or a new process after the final absence probe.
+Replacement at an ordinary source name between final stat and staging is now
+caught and preserved. An unrelated writer targeting a private staging name can
+still race its reservation/rename or final verification/unlink; an inode writer
+can also change bytes after final private-set verification. The attachment lock
+does not exclude unrelated writers from those windows.
 Git still refuses new ordinary untracked/modified files at non-force removal;
 already archived scratch remains retrievable if removal fails. Unknown state
 always refuses release. This slice adds no probe retry, identity bypass,

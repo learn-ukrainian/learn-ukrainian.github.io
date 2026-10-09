@@ -4222,7 +4222,7 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
             return False, "scratch_owner_unknown"
         ok, refusal, receipt = ignored_task_output.preserve_worktree_artifacts(
             path, primary=_REPO_ROOT, tasks_dir=tasks_dir(), task_id=owner["task_id"],
-            repo_root=_REPO_ROOT, extra_files=[entry["path"] for entry in inventory["paths"]],
+            repo_root=_REPO_ROOT, extra_files=[entry["path"] for entry in scratch],
         )
         if not ok or receipt is None:
             return False, refusal or "archive_receipt_missing"
@@ -4251,9 +4251,24 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
                 raise ValueError("holder_changed_before_delete")
             ignored_task_output.verify_retrieval(_REPO_ROOT, receipt)
 
-        worktree_artifacts.unlink_archived_regular_files(path, scratch, recheck=recheck)
+        # Retire only receipt-covered entries, including ignored output, so
+        # the common boundary does not archive it again. Its regenerable
+        # output exemptions remain outside this explicit unlink pass.
+        archived_names = {entry["path"] for entry in receipt["paths"]}
+        archived = [entry for entry in inventory["paths"] if entry["path"] in archived_names]
+        worktree_artifacts.unlink_archived_regular_files(path, archived, recheck=recheck)
         return True, detail + "; archive=" + json.dumps(archive_receipt, sort_keys=True)
     except Exception as exc:
+        if isinstance(exc, worktree_artifacts.ArtifactReleaseRefusal):
+            recovery = dict(exc.receipt)
+            try:
+                recovery["receipt_recorded"] = ignored_task_output._update_bound_task_record(
+                    record_path, path, {"branch_holder_release_refusal": exc.receipt},
+                    repo_root=_REPO_ROOT, expected_record=owner,
+                )
+            except (OSError, ValueError):
+                recovery["receipt_recorded"] = False
+            return False, "scratch_release_refused:" + json.dumps(recovery, sort_keys=True)
         kind = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[a-z_]+", str(exc)) else "unknown"
         return False, f"scratch_release_refused:{type(exc).__name__}:{kind}"
 
