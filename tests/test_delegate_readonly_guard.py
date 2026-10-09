@@ -400,6 +400,39 @@ def test_read_only_worker_ignores_concurrent_broker_watcher_log(
         assert relative in state["read_only_ignored_mutation_paths"]
 
 
+def test_coordinator_artifacts_stay_outside_read_only_worktree(tmp_path, monkeypatch):
+    from scripts.orchestration import curriculum_coordinator as coordinator
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _seed_read_only_checkout_fixture(primary, monkeypatch)
+    checkout = tmp_path / "worktree"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    config = coordinator.load_config()
+    runtime = coordinator._runtime_root(checkout, config, None)
+    assert runtime == primary / config["runtime_root"]
+    before, error = delegate._read_only_checkout_snapshot(checkout)
+    assert error is None
+    with coordinator._lock(runtime):
+        ledger = coordinator._ledger_path(runtime, "clc-" + "a" * 24)
+        coordinator._atomic_write_json(ledger, {"fixture": True})
+    assert ledger.is_file()
+    assert (runtime / "coordinator.lock").is_file()
+    assert not (checkout / config["runtime_root"]).exists()
+    after, error = delegate._read_only_checkout_snapshot(checkout)
+    assert error is None
+    assert after == before
+    # A coordinator-shaped scratch write is still a mutation, not a new exemption.
+    scratch = "scratch/.coordinator.json.123.tmp"
+    assert delegate._read_only_mutation_paths({}, {scratch: "!! new"}) == [scratch]
+
+
 def test_watcher_log_exemption_is_exact_and_never_exempts_tracked_edits():
     relative = ".mcp/servers/message-broker/watcher.log"
     assert delegate._is_read_only_runtime_state_path(relative)
