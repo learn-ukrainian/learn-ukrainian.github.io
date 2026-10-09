@@ -37,7 +37,8 @@
   }
 
   function parseRoute(hash) {
-    const raw = hash && hash.charAt(0) === "#" ? hash.slice(1) : (hash || "/home");
+    const fragment = hash || "#/home";
+    const raw = fragment.charAt(0) === "#" ? fragment.slice(1) : fragment;
     const splitAt = raw.indexOf("?");
     const path = splitAt === -1 ? raw : raw.slice(0, splitAt);
     const query = splitAt === -1 ? "" : raw.slice(splitAt + 1);
@@ -368,16 +369,18 @@
     return `<ul class="fb-source-list">${items.join("")}</ul>`;
   }
 
-  function staleState(sources, ageMs) {
+  function staleState(sources, ageMs, refreshFailed) {
     const sourceStale = (sources || []).some((row) => row && row.status === "stale");
     const ageStale = typeof ageMs === "number" && ageMs > STALE_MS;
-    return { sourceStale, ageStale, stale: sourceStale || ageStale };
+    const failed = !!refreshFailed;
+    return { sourceStale, ageStale, refreshFailed: failed, stale: sourceStale || ageStale || failed };
   }
 
   function staleMessage(state) {
     const parts = [];
     if (state.ageStale) parts.push("The last successful refresh was over 2 minutes ago.");
     if (state.sourceStale) parts.push("A source is stale.");
+    if (state.refreshFailed) parts.push("The last refresh failed; values below are from an earlier refresh.");
     if (!parts.length) return "";
     return parts.join(" ") + " Values below may be out of date.";
   }
@@ -404,13 +407,17 @@
     return options.ageMs;
   }
 
+  function optionFlag(options, key) {
+    return !!(options && options[key]);
+  }
+
   function renderHome(model, params, options) {
     const query = params instanceof URLSearchParams ? params : new URLSearchParams(params || "");
     const epics = Array.isArray(model.epics) ? model.epics : [];
     const attention = Array.isArray(model.attention) ? model.attention : [];
     const sources = model.sources || [];
     const filtered = filterEpics(epics, query);
-    const banner = staleBanner(staleState(sources, ageOption(options)));
+    const banner = staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")));
     const cards = filtered.map(cardHtml).join("") || `<p class="fb-empty">No epics match these filters.</p>`;
     const attn = attention.map(attentionItem).join("") || `<p class="fb-empty">Nothing needs attention.</p>`;
     const roster = panel(
@@ -516,15 +523,26 @@
       ${phaseActions()}`;
   }
 
+  function agentsCurrent(epicEnvelope, agentsEnvelope, options) {
+    if (optionFlag(options, "agentsFailed")) return false;
+    const agentsAt = Date.parse(agentsEnvelope && agentsEnvelope.generated_at);
+    if (Number.isNaN(agentsAt)) return false;
+    const epicAt = Date.parse(epicEnvelope && epicEnvelope.generated_at);
+    if (Number.isNaN(epicAt)) return true;
+    return agentsAt >= epicAt;
+  }
+
   function renderEpic(epicEnvelope, agentsEnvelope, options) {
     const sources = mergeSources(epicEnvelope, agentsEnvelope);
-    const banner = staleBanner(staleState(sources, ageOption(options)));
+    const banner = staleBanner(staleState(sources, ageOption(options), optionFlag(options, "failed")));
     const epic = epicEnvelope && epicEnvelope.data;
     if (!epic || typeof epic !== "object") {
       return `${banner}<p class="fb-empty">This epic is not on the board.</p>${sourceList(sources)}`;
     }
     const agentsData = agentsEnvelope && agentsEnvelope.data;
-    const agents = agentsData && Array.isArray(agentsData.agents) ? agentsData.agents : null;
+    const agents = agentsData && Array.isArray(agentsData.agents) && agentsCurrent(epicEnvelope, agentsEnvelope, options)
+      ? agentsData.agents
+      : null;
     const workers = agents
       ? agents.filter((agent) => agent && agent.epic === epic.epic && agent.role === "worker")
       : (Array.isArray(epic.workers) ? epic.workers : []);
@@ -547,7 +565,7 @@
   function renderPrs(params, sources, options) {
     const query = params instanceof URLSearchParams ? params : new URLSearchParams(params || "");
     const selected = query.get("pr");
-    const banner = staleBanner(staleState(sources || [], ageOption(options)));
+    const banner = staleBanner(staleState(sources || [], ageOption(options), optionFlag(options, "failed")));
     const extra = selected
       ? `<p class="fb-sub">Selected PR #${esc(selected)}. Detail arrives in a later slice.</p>`
       : "";
@@ -596,6 +614,14 @@
   function updatedLabel(age) {
     if (age == null) return "waiting";
     return agoLabel(age);
+  }
+
+  function routeSlots(route) {
+    return route && route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+  }
+
+  function routeFailed(failures, route) {
+    return routeSlots(route).some((slot) => !!(failures && failures[slot]));
   }
 
   function routeKey(route) {
@@ -659,15 +685,17 @@
     if (!responseCurrent(ticket, state.generation, state.route)) return state;
     const nextSnapshot = Object.assign({}, state.snapshot);
     const freshAt = Object.assign({}, state.freshAt);
-    const slots = state.route && state.route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
-    slots.forEach((slot) => {
+    const failures = Object.assign({}, state.failures);
+    routeSlots(state.route).forEach((slot) => {
       const prior = slot === "epic" && nextSnapshot.epicId !== state.route.epicId ? null : nextSnapshot[slot];
-      const adopted = adoptPayload(slot, prior, incoming ? incoming[slot] : null);
+      const body = incoming ? incoming[slot] : null;
+      const adopted = adoptPayload(slot, prior, body);
       nextSnapshot[slot] = adopted.body;
+      failures[slot] = !body;
       if (adopted.fresh) freshAt[slot] = now;
     });
     if (state.route && state.route.view === "epic") nextSnapshot.epicId = state.route.epicId;
-    return { generation: state.generation, route: state.route, snapshot: nextSnapshot, freshAt };
+    return { generation: state.generation, route: state.route, snapshot: nextSnapshot, freshAt, failures };
   }
 
   const api = {
@@ -689,6 +717,8 @@
     homeModel,
     routeKey,
     responseCurrent,
+    routeSlots,
+    routeFailed,
     adoptPayload,
     displayedAge,
     commitBoard,
@@ -704,6 +734,7 @@
 
   const snapshot = { now: null, epics: null, epic: null, epicId: "", agents: null };
   const freshAt = { now: 0, epics: 0, epic: 0, agents: 0 };
+  const failures = { now: false, epics: false, epic: false, agents: false };
   let refreshGen = 0;
   let appliedKey = "";
   let openAgentId = null;
@@ -794,7 +825,7 @@
 
   function syncStamp(route) {
     const age = ageMs();
-    const state = staleState(viewSources(route), age);
+    const state = staleState(viewSources(route), age, routeFailed(failures, route));
     const ago = document.getElementById("fb-ago");
     const label = document.getElementById("fb-stamp-label");
     const stamp = document.getElementById("fb-stamp");
@@ -817,7 +848,11 @@
     const selection = drafting ? document.activeElement.selectionStart : null;
     const y = window.scrollY;
     const sources = viewSources(route);
-    const options = { ageMs: ageMs() };
+    const options = {
+      ageMs: ageMs(),
+      failed: routeFailed(failures, route),
+      agentsFailed: !!failures.agents,
+    };
     let html;
     if (route.view === "epic") {
       const data = snapshot.epic && snapshot.epic.data;
@@ -900,7 +935,7 @@
       const current = parseRoute(location.hash || "#/home");
       if (responseCurrent(ticket, refreshGen, current)) {
         const committed = commitBoard(
-          { generation: refreshGen, route: current, snapshot, freshAt },
+          { generation: refreshGen, route: current, snapshot, freshAt, failures },
           ticket,
           incoming,
           Date.now(),
@@ -911,7 +946,10 @@
         Object.keys(freshAt).forEach((key) => {
           freshAt[key] = committed.freshAt[key] || 0;
         });
-        const slots = current.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+        Object.keys(failures).forEach((key) => {
+          failures[key] = !!committed.failures[key];
+        });
+        const slots = routeSlots(current);
         const anyBody = slots.some((slot) => incoming[slot]);
         const anyShown = slots.some((slot) => snapshot[slot]);
         failed = !anyBody && !anyShown;

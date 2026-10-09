@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import os
+import re
 from collections.abc import Mapping
 from typing import Any
 
@@ -22,6 +23,37 @@ from .sources import SourceReport, report
 STATES = frozenset({"working", "idle", "stuck", "dead", "paused", "off"})
 STUCK_IDLE_MIN = 30.0
 ACTIVITY_TOKENS = frozenset({"working", "idle"})
+PUBLIC_REDACTED = "[redacted]"
+# Prose and enum tokens: letters, digits, spaces, underscores and light punctuation,
+# including Ukrainian apostrophes, quotes, guillemets and stress marks.
+# Everything else (slashes, percent signs, at signs, symbols, emoji) fails closed.
+_PUBLIC_SHAPE_RE = re.compile(
+    r"(?:[^\W_]|[ _.,:;'\"\u2019\u201c\u201d\u02bc\u00ab\u00bb\u2013\u2014()#!?\-\u0301])+"
+)
+# Word edges where an underscore separates words, so "ssh_key" and "build_box" match.
+_EDGE_L = r"(?<![^\W_])"
+_EDGE_R = r"(?![^\W_])"
+# Capacity figures: a number with a unit, or a capacity word.
+_PUBLIC_CAPACITY_RE = re.compile(
+    rf"(?i)\d[\d.,]*\s*(?:%|pct{_EDGE_R}|percent{_EDGE_R}|slots?{_EDGE_R}|seats?{_EDGE_R}"
+    rf"|tokens?{_EDGE_R}|requests?{_EDGE_R}|rpm{_EDGE_R}|tpm{_EDGE_R}|[kmgt]i?b{_EDGE_R}|bytes?{_EDGE_R})"
+    rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|hard[ _-]stop|rate[ _-]limit){_EDGE_R}"
+    rf"|{_EDGE_L}\d+\s+of\s+\d+{_EDGE_R}"
+)
+# Security mechanisms: auth, keys, network controls, privilege.
+_PUBLIC_SECURITY_RE = re.compile(
+    rf"(?i){_EDGE_L}(?:2fa|mfa|otp|totp|oauth2?|saml|sso|kerberos|ldap|tls|ssl|certs?|certificates?"
+    rf"|passphrases?|passwords?|credentials?|keychain|cookies?|sudo|sshd?|authorized[_ ]keys|pubkeys?"
+    rf"|private[_ -]keys?|hmac|csrf|cors|firewalls?|iptables|ufw|selinux|apparmor|fail2ban|vpn"
+    rf"|wireguard|allow ?lists?|white ?lists?|block ?lists?|deny ?lists?|api[_ -]?keys?"
+    rf"|session[_ -]?tokens?|bearer|root (?:access|login|shell)){_EDGE_R}"
+)
+# Machine names: host words, or a letter run glued to a digit (buildbox7, gpu01).
+# Hyphenated agent ids such as driver-kept or worker-2 stay publishable.
+_PUBLIC_HOST_RE = re.compile(
+    rf"(?i){_EDGE_L}(?:hostname|host|server|machine|localhost|vps|nas|laptop|workstation|desktop|box|runner)s?{_EDGE_R}"
+    r"|[a-z]{3,}\d"
+)
 
 
 def load_delegate_health() -> SourceReport:
@@ -125,17 +157,36 @@ def activity_token(value: object) -> str | None:
     return None
 
 
+def _publishable(projected: str) -> bool:
+    if not _PUBLIC_SHAPE_RE.fullmatch(projected):
+        return False
+    return not any(
+        pattern.search(projected)
+        for pattern in (_PUBLIC_CAPACITY_RE, _PUBLIC_SECURITY_RE, _PUBLIC_HOST_RE)
+    )
+
+
 def text(value: object) -> str | None:
-    """Project one emitted string through the epic-registry public-text bound."""
+    """Project one emitted string through the publication text boundary.
+
+    The epic-registry bound runs first. Then only prose shapes pass, and no
+    capacity figure, machine name, or security-mechanism detail. Anything
+    else becomes ``[redacted]``.
+    """
     if not isinstance(value, str):
         return None
-    return _response_registry_text(value)
+    projected = _response_registry_text(value)
+    if projected is None or projected == PUBLIC_REDACTED:
+        return projected
+    if _publishable(projected):
+        return projected
+    return PUBLIC_REDACTED
 
 
 def seat_id(value: object) -> str | None:
     """An identity string. A redacted value is omitted rather than published."""
     projected = text(value)
-    if not projected or projected == "[redacted]":
+    if not projected or projected == PUBLIC_REDACTED:
         return None
     return projected
 

@@ -555,3 +555,101 @@ test("shipped files and the fixture carry no hosts, absolute urls, or session na
   assertClean(js, "js");
   assertClean(JSON.stringify({ nowEnvelope, epicsEnvelope, agentsEnvelope }), "fixture");
 });
+
+test("a failed endpoint keeps cached data but flags the refresh as failed", () => {
+  const home = FB.parseRoute("#/home");
+  const key = { generation: 1, key: FB.routeKey(home) };
+  const cachedNow = {
+    schema: "fleet.v1.now",
+    generated_at: "2026-10-09T12:00:00Z",
+    data: { attention: [], epics: [{ epic: "cedar", title: "Cedar" }] },
+    sources: [{ name: "roster_snapshot", status: "ok", age_s: 1, error: null }],
+  };
+  let state = {
+    generation: 1,
+    route: home,
+    snapshot: { now: null, epics: null, epic: null, epicId: "", agents: null },
+    freshAt: { now: 0, epics: 0, epic: 0, agents: 0 },
+    failures: { now: false, epics: false, epic: false, agents: false },
+  };
+  state = FB.commitBoard(state, key, { now: cachedNow, epics: null }, 1000);
+  assert.equal(state.failures.now, false);
+  assert.equal(state.failures.epics, true);
+
+  state = FB.commitBoard(state, key, { now: null, epics: null }, 2000);
+  assert.equal(state.failures.now, true);
+  assert.equal(state.snapshot.now.data.epics[0].title, "Cedar");
+  assert.equal(state.snapshot.now.sources[0].status, "ok");
+  assert.equal(state.freshAt.now, 1000);
+  assert.equal(FB.routeFailed(state.failures, home), true);
+
+  const failed = FB.renderHome(
+    FB.homeModel(state.snapshot.now, state.snapshot.epics),
+    new URLSearchParams(),
+    { ageMs: 1000, failed: FB.routeFailed(state.failures, home) },
+  );
+  assert.match(failed, /last refresh failed/);
+  assert.match(failed, /Cedar/);
+  const quiet = FB.renderHome(
+    FB.homeModel(state.snapshot.now, state.snapshot.epics),
+    new URLSearchParams(),
+    { ageMs: 1000, failed: false },
+  );
+  assert.doesNotMatch(quiet, /last refresh failed/);
+
+  state = FB.commitBoard(state, key, { now: cachedNow, epics: null }, 3000);
+  assert.equal(state.failures.now, false);
+  assert.equal(state.freshAt.now, 3000);
+});
+
+test("epic workers come from the current epic when agents fail or are older", () => {
+  const epic = {
+    schema: "fleet.v1.epic",
+    generated_at: "2026-10-09T12:00:00Z",
+    sources,
+    data: {
+      ...cedar,
+      epic: "birch",
+      title: "Birch",
+      workers: [{
+        agent_id: "worker-fresh",
+        cli: "cli-a",
+        model: "model-z",
+        task: "fresh task",
+        state: "idle",
+        state_reason: "idle",
+        since: "2026-10-09T09:00:00Z",
+      }],
+    },
+  };
+  const cachedAgents = {
+    schema: "fleet.v1.agents",
+    generated_at: "2026-10-09T12:00:00Z",
+    data: {
+      agents: [{
+        agent_id: "worker-cached",
+        role: "worker",
+        epic: "birch",
+        cli: "cli-a",
+        model: "model-z",
+        task: "cached task",
+        state: "idle",
+        state_reason: "idle",
+        since: "2026-10-09T08:00:00Z",
+      }],
+    },
+    sources,
+  };
+  const failed = FB.renderEpic(epic, cachedAgents, { ageMs: 0, agentsFailed: true });
+  assert.match(failed, /worker-fresh/);
+  assert.doesNotMatch(failed, /worker-cached/);
+
+  const older = { ...cachedAgents, generated_at: "2026-10-09T11:00:00Z" };
+  const olderRendered = FB.renderEpic(epic, older, { ageMs: 0, agentsFailed: false });
+  assert.match(olderRendered, /worker-fresh/);
+  assert.doesNotMatch(olderRendered, /worker-cached/);
+
+  const current = FB.renderEpic(epic, cachedAgents, { ageMs: 0, agentsFailed: false });
+  assert.match(current, /worker-cached/);
+  assert.doesNotMatch(current, /worker-fresh/);
+});

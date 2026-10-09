@@ -736,6 +736,89 @@ def test_emitted_strings_follow_the_public_text_bound(monkeypatch: pytest.Monkey
     assert "Kept" in body
 
 
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "Burst 85% used",
+        "3 of 8 slots free",
+        "quota 300 left",
+        "12 requests queued",
+        "headroom for 4 seats",
+        "gpu 16 GB free",
+    ],
+)
+def test_capacity_figures_are_redacted(probe: str) -> None:
+    assert activity_mod.text(probe) == "[redacted]"
+
+
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "buildbox7 is slow",
+        "gpu01 queue backed up",
+        "build_box2 restart",
+        "vps reboot pending",
+        "ops server down",
+        "lab laptop offline",
+    ],
+)
+def test_machine_names_are_redacted(probe: str) -> None:
+    assert activity_mod.text(probe) == "[redacted]"
+
+
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "rotate 2fa seed",
+        "oauth refresh stuck",
+        "firewall rule changed",
+        "ssh_key missing",
+        "allowlist entry added",
+        "sudo rights revoked",
+        "api key expired",
+    ],
+)
+def test_security_mechanism_details_are_redacted(probe: str) -> None:
+    assert activity_mod.text(probe) == "[redacted]"
+
+
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "path/with/slash",
+        "50 % cpu",
+        "user@example",
+        "emoji \U0001F600",
+        "a=b",
+    ],
+)
+def test_unlisted_shapes_fail_closed(probe: str) -> None:
+    assert activity_mod.text(probe) == "[redacted]"
+
+
+@pytest.mark.parametrize(
+    "probe",
+    [
+        "Kept",
+        "plain focus",
+        "driver-kept",
+        "worker-2",
+        "claude-opus-5-5",
+        "not_queued",
+        "Epic #4387",
+        "A1 M03",
+        "Пояснення: вступ “ок” «1»",
+    ],
+)
+def test_plain_labels_stay_publishable(probe: str) -> None:
+    assert activity_mod.text(probe) == probe
+
+
+def test_redacted_summary_drops_the_seat_identity() -> None:
+    assert activity_mod.seat_id("buildbox7") is None
+    assert activity_mod.seat_id("driver-kept") == "driver-kept"
+
+
 def test_malformed_epic_keeps_sibling_records(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     roster = {
         "generated_at": FRESH,

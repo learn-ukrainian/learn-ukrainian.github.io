@@ -42,6 +42,9 @@ _RFC3339_RE = re.compile(
 )
 _EPIC_RE = re.compile(r"(?i)(?<![A-Za-z0-9_])epic:[0-9]+(?![A-Za-z0-9_])")
 _API_ROUTE_RE = re.compile(r"(?i)(?<![A-Za-z0-9_])/api(?:/[^\s\"'<>]*)?")
+# A client-side hash route such as "#/home" never reaches the filesystem. Only a
+# bare route name is exempt; "#/home/..." still carries a path tail and is scanned.
+_HASH_ROUTE_RE = re.compile(r"(?<![A-Za-z0-9_])#/[a-z][a-z0-9_-]*(?=[\s\"'`<>),;]|$)")
 _ISO_DURATION_RE = re.compile(
     r"(?<![A-Za-z0-9_])-?P"
     r"(?=(?:[0-9]+(?:\.[0-9]+)?[YMWD]|T[0-9]+(?:\.[0-9]+)?[HMS]))"
@@ -269,7 +272,7 @@ def _protected_spans(text: str) -> tuple[tuple[int, int], ...]:
     """Return spans for identifiers and syntax that are intentionally safe."""
     spans = [
         (match.start(), match.end())
-        for pattern in (_SHA_RE, _RFC3339_RE, _EPIC_RE, _API_ROUTE_RE, _ISO_DURATION_RE)
+        for pattern in (_SHA_RE, _RFC3339_RE, _EPIC_RE, _API_ROUTE_RE, _HASH_ROUTE_RE, _ISO_DURATION_RE)
         for match in pattern.finditer(text)
     ]
     if not spans:
