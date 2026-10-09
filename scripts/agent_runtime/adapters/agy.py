@@ -788,9 +788,9 @@ def unknown_model_suggestion(model: str) -> str:
 
 
 _WRITE_MODE_PROMPT_CONTRACT = (
-    "\n\n[WRITE MODE CONTRACT: Tests, pushes, and other long commands MUST run in the foreground to completion. "
-    "Do not start any timer, wait, or background task. "
-    "Send your final reply ONLY after everything is pushed and verified.]"
+    "\n\n[WRITE MODE CONTRACT: Do not start timers or waits. "
+    "If a command becomes a background task, track it to confirmed completion (poll its status) before replying. "
+    "Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]"
 )
 
 
@@ -929,8 +929,6 @@ class AgyAdapter:
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
 
         final_prompt = prompt
-        if mode in ("workspace-write", "danger") and not review_route:
-            final_prompt += _WRITE_MODE_PROMPT_CONTRACT
 
         stdin_payload = (
             json.dumps(
