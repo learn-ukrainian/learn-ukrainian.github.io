@@ -973,148 +973,73 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
 
 
 def test_agy_impl_8771_timer_kill_not_excused_fails_incomplete(tmp_path):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
-    log = tmp_path / "attempt.log"
-    log.write_text("Print mode: conversation=00000000-0000-0000-0000-000000000000\n")
-    events = [
-        {"type": "USER_INPUT", "content": "Wait for tests"},
-        {
-            "type": "GENERIC",
-            "status": "RUNNING",
-            "content": "Created At: 2026-10-09T08:18:14Z\nTool is running as a background task with task id: task-1\nTask Description: Timer: 20s, Prompt: Wait for tests\nTask logs are available at: ...",
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "RUNNING",
-            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "DONE",
-            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
-        },
-        {
-            "type": "SYSTEM_MESSAGE",
-            "source": "SYSTEM",
-            "status": "DONE",
-            "content": "\n\n<SYSTEM_MESSAGE>\n[Message] timestamp=X sender=task-1 priority=X content=Task id \"task-1\" was canceled with result: Tool execution was canceled"
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "DONE",
-            "content": "I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes.",
-        },
-    ]
-    brain_dir = tmp_path / "brain" / "00000000-0000-0000-0000-000000000000" / ".system_generated" / "logs"
-    brain_dir.mkdir(parents=True)
-    with open(brain_dir / "transcript.jsonl", "w") as f:
-        for event in events:
-            f.write(json.dumps(event) + "\n")
-
-    plan = InvocationPlan(
-        cmd=["agy"],
-        cwd=tmp_path,
-        env_overrides={agy._AGY_LOG_ENV: str(log)},
-        metadata={
-            agy._TRANSCRIPT_BASELINE_KEY: {"conversation_id": "00000000-0000-0000-0000-000000000000", "offset": 0},
-            "parent_read_root": str(tmp_path),
-            "agy_app_data_root": str(tmp_path),
-            "agy_app_data_path": str(tmp_path),
-        }
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="Timer: 20s, Prompt: Wait for tests"),
+            _kill(),
+            _canceled(_TASK_2),
+            _reply("I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."),
+        ],
     )
-
-    stdout = json.dumps({"event": "result", "result": {"status": "DONE", "response": "I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."}}) + "\n"
-
-    result = agy.AgyAdapter().parse_response(
-        stdout=stdout,
-        stderr="",
-        returncode=0,
-        output_file=None,
-        plan=plan,
-    )
-
     assert not result.ok
     assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
 
 
 def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
-    from scripts.agent_runtime.adapters.base import InvocationPlan
-    log = tmp_path / "attempt.log"
-    log.write_text("Print mode: conversation=00000000-0000-0000-0000-000000000000\n")
-    events = [
-        {"type": "USER_INPUT", "content": "Run git push"},
-        {
-            "type": "GENERIC",
-            "status": "RUNNING",
-            "content": "Created At: 2026-10-09T08:18:14Z\nTool is running as a background task with task id: task-1\nTask Description: git push\nTask logs are available at: ...",
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "RUNNING",
-            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "DONE",
-            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
-        },
-        {
-            "type": "SYSTEM_MESSAGE",
-            "source": "SYSTEM",
-            "status": "DONE",
-            "content": "\n\n<SYSTEM_MESSAGE>\n[Message] timestamp=X sender=task-1 priority=X content=Task id \"task-1\" was canceled with result: Tool execution was canceled"
-        },
-        {
-            "type": "PLANNER_RESPONSE",
-            "source": "MODEL",
-            "status": "DONE",
-            "content": "git push killed",
-        },
-    ]
-    brain_dir = tmp_path / "brain" / "00000000-0000-0000-0000-000000000000" / ".system_generated" / "logs"
-    brain_dir.mkdir(parents=True)
-    with open(brain_dir / "transcript.jsonl", "w") as f:
-        for event in events:
-            f.write(json.dumps(event) + "\n")
-
-    plan = InvocationPlan(
-        cmd=["agy"],
-        cwd=tmp_path,
-        env_overrides={agy._AGY_LOG_ENV: str(log)},
-        metadata={
-            agy._TRANSCRIPT_BASELINE_KEY: {"conversation_id": "00000000-0000-0000-0000-000000000000", "offset": 0},
-            "parent_read_root": str(tmp_path),
-            "agy_app_data_root": str(tmp_path),
-            "agy_app_data_path": str(tmp_path),
-        }
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git push"),
+            _kill(),
+            _canceled(_TASK_2),
+            _reply("git push killed"),
+        ],
     )
-
-    stdout = json.dumps({"event": "result", "result": {"status": "DONE", "response": "git push killed"}}) + "\n"
-
-    result = agy.AgyAdapter().parse_response(
-        stdout=stdout,
-        stderr="",
-        returncode=0,
-        output_file=None,
-        plan=plan,
-    )
-
     assert not result.ok
     assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
 
 
-def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path):
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker):
+    import hashlib
+    import json
+
+    from scripts.agent_runtime.adapters import agy
+    from scripts.delegate import _compose_dispatch_prompt
+
+    mocker.patch("scripts.agent_runtime.adapters.agy.shutil.which", return_value="/fake/agy")
+    mocker.patch("scripts.agent_runtime.adapters.agy._agy_version", return_value=(1, 2, 9))
+    mocker.patch("pathlib.Path.is_file", return_value=True)
+
     adapter = agy.AgyAdapter()
     base_prompt = "Do some work."
 
     for mode in ["workspace-write", "danger"]:
+        prompt = _compose_dispatch_prompt(
+            base_prompt,
+            worktree_path=None,
+            mode=mode,
+            sparse_telemetry=None,
+            delegate_commits=False,
+            research_block="",
+            advisory_block="",
+            advisory_block_kind=None,
+            rules_seat=None,
+            agent="agy",
+        )
+        assert "WRITE MODE CONTRACT" in prompt
+        assert base_prompt in prompt
+
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
         plan = adapter.build_invocation(
-            prompt=base_prompt,
+            prompt=prompt,
             mode=mode,
             cwd=tmp_path,
             model=None,
@@ -1124,34 +1049,37 @@ def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path):
         )
         payload = json.loads(plan.stdin_payload)
         sent_prompt = payload["message"]["content"][0]["text"]
-        assert "WRITE MODE CONTRACT" in sent_prompt
-        assert sent_prompt.startswith(base_prompt)
 
-    plan_read = adapter.build_invocation(
-        prompt=base_prompt,
-        mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="test",
-        session_id=None,
-        tool_config={},
-    )
-    payload_read = json.loads(plan_read.stdin_payload)
-    sent_prompt_read = payload_read["message"]["content"][0]["text"]
-    assert "WRITE MODE CONTRACT" not in sent_prompt_read
-    assert sent_prompt_read == base_prompt
+        assert sent_prompt == prompt
+        assert hashlib.sha256(sent_prompt.encode("utf-8")).hexdigest() == effective_prompt_sha256
 
-    agy_home = tmp_path / "agy_home"
-    (agy_home / ".gemini" / "antigravity-cli").mkdir(parents=True, exist_ok=True)
-    plan_review = adapter.build_invocation(
-        prompt=base_prompt,
+    # Test read-only
+    prompt_read = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
         mode="read-only",
-        cwd=tmp_path,
-        model=None,
-        task_id="test",
-        session_id=None,
-        tool_config={"review_isolation": True, "review_access": "isolated", "review_attempt_boundary": True, "review_write_root": str(tmp_path), "agy_home_override": str(agy_home), "mcp_server_names": ["sources"]},
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
     )
-    payload_review = json.loads(plan_review.stdin_payload)
-    sent_prompt_review = payload_review["message"]["content"][0]["text"]
-    assert "WRITE MODE CONTRACT" not in sent_prompt_review
+    assert "WRITE MODE CONTRACT" not in prompt_read
+
+    # Test review_route exclusion
+    prompt_review = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="workspace-write",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+        review_route=True,
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_review
