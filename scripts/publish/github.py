@@ -303,14 +303,14 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
 
     if verb == "run-rerun":
         run = fetch("run", number=fields["number"])
-        if (
-            not isinstance(run, dict)
-            or run.get("id") != fields["number"]
-            or run.get("status") != "completed"
-            or run.get("conclusion") not in {"failure", "cancelled", "timed_out", "action_required"}
-        ):
+        if not isinstance(run, dict) or run.get("id") != fields["number"]:
+            raise gate.PublishBlocked("RECOVERY_RUN_INVALID: run identity required")
+        associations = run.get("pull_requests")
+        event = run.get("event")
+        if associations == [] and isinstance(event, str) and event and event not in {"pull_request", "pull_request_target", "merge_group"}:
+            return None
+        if run.get("status") != "completed" or run.get("conclusion") not in {"failure", "cancelled", "timed_out", "action_required"}:
             raise gate.PublishBlocked("RECOVERY_RUN_INVALID: completed failed run required")
-        associations = run.get("pull_requests", [])
         if isinstance(associations, list) and len(associations) == 1:
             number = associations[0].get("number")
         elif run.get("event") == "merge_group":
@@ -328,17 +328,20 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
         action = "run-rerun"
     elif queue or fields.get("recovery"):
         number, head = fields["number"], fields["match_head"]
-        timeline = fetch("timeline", number=number)
-        removals = [event for event in timeline if event.get("event") == "removed_from_merge_queue"]
-        if not fields.get("recovery") and not removals:
-            return None
+        try:
+            removal = fetch("queue-removal", number=number)
+            at_head = recovery.queue_removal_at_head(removal, head)
+        except github_client.GitHubRateLimited:
+            raise
+        except gate.PublishBlocked:
+            raise gate.PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None
         run = None
         action = "re-enqueue"
     else:
         return None
-    path = recovery.ledger_path(cwd)
-    if run is None and not fields.get("recovery") and recovery.queue_removal_is_old(path, number, head, removals):
+    if run is None and not at_head:
         return None
+    path = recovery.ledger_path(cwd)
     prior = recovery.first_attempt(path, dest, number, head)
     if prior:
         raise gate.PublishBlocked(recovery.spent_reason(prior))
@@ -347,7 +350,7 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     if not isinstance(login, str) or lookup_verdict(comments, head, login).state != "APPROVED":
         raise gate.PublishBlocked("RECOVERY_APPROVAL_MISSING: exact-head recorded approval required")
     evidence = recovery.evidence_from_comments(
-        comments, number, head, run_id=fields["number"] if run is not None else None
+        comments, number, head, authenticated_login=login, run_id=fields["number"] if run is not None else None
     )
     failed_run = run if run is not None else fetch("run", number=evidence["run_id"])
     if (type(failed_run.get("run_attempt")) is not int or failed_run["run_attempt"] < 1
@@ -802,6 +805,7 @@ DIAGNOSTIC_READS = {
 }
 REST_COMPAT_READS = {'budget', 'issue-scope', 'subissues', 'subissues-next', 'default-head', 'pr-bases', 'issue-parent'}
 GQL_READS = {
+    "queue-removal": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid removals:timelineItems(last:1,itemTypes:[REMOVED_FROM_MERGE_QUEUE_EVENT]){nodes{... on RemovedFromMergeQueueEvent{beforeCommit{oid} createdAt reason}}} pushes:timelineItems(last:1,itemTypes:[HEAD_REF_FORCE_PUSHED_EVENT]){nodes{... on HeadRefForcePushedEvent{afterCommit{oid} createdAt}}}}}}",
     "queue-status": "\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",

@@ -63,31 +63,48 @@ def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
     return None
 
 
-def queue_removal_is_old(path: Path, number: int, head: str, events: list[dict]) -> bool:
-    """Exempt an initial enqueue only when the latest removal IDs belong to other heads.
+def queue_removal_at_head(data: dict, head: str) -> bool:
+    """Use GitHub's latest removal SHA, never keeper-local observation history.
 
-    The keeper binds one observed removal event to its previously queued head.
-    Commit dates or a later observation alone cannot establish that binding.
-    Missing/ambiguous attribution supplies no exemption.
+    For a nullable removal commit, a later GitHub force-push event at this
+    head can establish that the removal predates its push. A known same-SHA
+    removal remains recovery; pushing the same SHA cannot refund an allowance.
+    Commit author/committer dates cannot establish push time.
     """
     try:
-        state = json.loads((path.parent.parent / "batch_state/merge_queue_keeper.json").read_text())
-        known = state["drop_events"]
-        times = [datetime.fromisoformat(event["created_at"].replace("Z", "+00:00")) for event in events]
-        if not times or any(time.tzinfo is None for time in times):
+        if data.get("errors"):
+            raise ValueError
+        pull = data["data"]["repository"]["pullRequest"]
+        if pull["headRefOid"] != head:
+            raise ValueError
+        nodes = pull["removals"]["nodes"]
+        if not isinstance(nodes, list) or len(nodes) > 1:
+            raise ValueError
+        if not nodes:
             return False
-        latest_time = max(times)
-        latest = [event for event, time in zip(events, times, strict=True) if time == latest_time]
-        if any(type(event.get("id")) is not int or event["id"] <= 0 for event in latest):
-            return False
-        latest_ids = {event["id"] for event in latest}
-        current = f"{number}:{head}"
-        other_ids = {event_id for key, ids in known.items()
-                     if key.startswith(f"{number}:") and key != current and SHA.fullmatch(key.split(":", 1)[1])
-                     for event_id in ids if type(event_id) is int and event_id > 0}
-        return latest_ids <= other_ids and latest_ids.isdisjoint(known.get(current, []))
-    except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return False
+        event = nodes[0]
+        removed_at = datetime.fromisoformat(event["createdAt"].replace("Z", "+00:00"))
+        if removed_at.tzinfo is None:
+            raise ValueError
+        commit = event["beforeCommit"]
+        removed_head = None if commit is None else commit["oid"]
+        if commit is not None and (not isinstance(removed_head, str) or not SHA.fullmatch(removed_head)):
+            raise ValueError
+        pushes = pull["pushes"]["nodes"]
+        if not isinstance(pushes, list) or len(pushes) > 1:
+            raise ValueError
+        if pushes:
+            push = pushes[0]
+            pushed_at = datetime.fromisoformat(push["createdAt"].replace("Z", "+00:00"))
+            if pushed_at.tzinfo is None:
+                raise ValueError
+            if commit is None and (push.get("afterCommit") or {}).get("oid") == head and pushed_at > removed_at:
+                return False
+        if commit is None:
+            raise ValueError
+        return removed_head == head
+    except (ValueError, KeyError, TypeError, AttributeError):
+        raise PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None
 
 
 def spent_reason(attempt: dict) -> str:
@@ -97,10 +114,19 @@ def spent_reason(attempt: dict) -> str:
     )
 
 
-def evidence_from_comments(comments: list, number: int, head: str, *, run_id: int | None = None) -> dict:
+def evidence_from_comments(
+    comments: list, number: int, head: str, *, authenticated_login: str, run_id: int | None = None
+) -> dict:
     """Require the written evidence to already exist on this PR and exact head."""
+    from scripts.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, _author_login, _field
+
     for comment in reversed(comments):
         if not isinstance(comment, dict) or type(comment.get("id")) is not int or comment["id"] <= 0:
+            continue
+        if (
+            _author_login(comment) != authenticated_login
+            or _field(comment, "author_association", "authorAssociation") not in TRUSTED_ASSOCIATIONS
+        ):
             continue
         for match in MARKER.finditer(str(comment.get("body", ""))):
             try:

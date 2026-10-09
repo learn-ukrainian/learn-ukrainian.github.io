@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from threading import Barrier
 
 import pytest
@@ -38,10 +39,19 @@ class Transport:
         self.proof = evidence()
         self.approved = True
         self.attempt = 1
+        self.status = "completed"
+        self.conclusion = "failure"
         self.event = "merge_group"
         self.failed_ids = [456]
         self.removed = True
         self.future_commit = False
+        self.removal_head = HEAD
+        self.removal_date = "2026-10-09T11:00:00Z"
+        self.removal_failure = False
+        self.pushes = []
+        self.associations = None
+        self.proof_login = "driver"
+        self.proof_association = "MEMBER"
         self.failure = False
         self.moved = False
         self.pull_reads = 0
@@ -53,6 +63,16 @@ class Transport:
         elif argv[1:3] == ["pr", "checks"]:
             data = []
         elif argv[1:5] == ["api", "--method", "POST", "graphql"]:
+            query = json.loads(Path(argv[6]).read_text())["query"]
+            if "timelineItems" in query:
+                if self.removal_failure:
+                    return subprocess.CompletedProcess(argv, 1, "", "lookup failed")
+                pull = {"headRefOid": self.head, "pushes": {"nodes": self.pushes}, "removals": {"nodes": [{
+                    "beforeCommit": {"oid": self.removal_head,
+                                     "committedDate": "2099-01-01T00:00:00Z" if self.future_commit else "2026-10-09T10:00:00Z"} if self.removal_head else None,
+                    "createdAt": self.removal_date, "reason": "removed by actor",
+                }] if self.removed else []}}
+                return subprocess.CompletedProcess(argv, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
             data = {
                 "data": {
                     "repository": {
@@ -85,7 +105,8 @@ class Transport:
                 }
                 comments = [approval]
                 if self.proof is not None:
-                    comments.append({"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->"})
+                    comments.append({"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(self.proof) + " -->",
+                                     "user": {"login": self.proof_login}, "author_association": self.proof_association})
                 data = [comments]
             elif endpoint.endswith("/timeline"):
                 data = (
@@ -101,15 +122,15 @@ class Transport:
             elif endpoint.endswith("/runs/123"):
                 data = {
                     "id": 123,
-                    "status": "completed",
-                    "conclusion": "failure",
+                    "status": self.status,
+                    "conclusion": self.conclusion,
                     "head_sha": TESTED,
                     "event": self.event,
                     "head_branch": "gh-readonly-queue/main/pr-42-abcdef",
                     "run_attempt": self.attempt,
-                    "pull_requests": []
+                    "pull_requests": self.associations if self.associations is not None else ([]
                     if self.event == "merge_group"
-                    else [{"number": 42, "head": {"sha": self.head}}],
+                    else [{"number": 42, "head": {"sha": self.head}}]),
                 }
             elif endpoint.endswith("/pulls/42"):
                 self.pull_reads += 1
@@ -142,7 +163,7 @@ def recover(setup, action):
     root, transport = setup
     if action == "run-rerun":
         return pub.publish(action, number=123, repo="unit/public", cwd=root, env={}, runner=transport)
-    if action == "keeper":
+    if action in {"keeper", "keeper-initial"}:
         client = keeper.GitHub(root, "unit/public")
         # Use the real keeper adapter and real publisher, with only the transport replaced.
         with pytest.MonkeyPatch.context() as patches:
@@ -151,7 +172,7 @@ def recover(setup, action):
                 "request_run",
                 lambda request, **kwargs: pub.request_run(request, runner=transport, env={}, **kwargs),
             )
-            return client.enqueue(42, transport.head, **({"recovery_attempt": True} if hasattr(pub, "recovery") else {}))
+            return client.enqueue(42, transport.head, **({"recovery_attempt": True} if action == "keeper" else {}))
     return pub.publish("pr-merge", number=42, repo="unit/public", cwd=root, env={}, runner=transport)
 
 
@@ -168,10 +189,12 @@ def test_paths_share_allowance_and_preserve_old_head(setup, first, second):
         recover(setup, second)
     assert len(transport.writes) == 1
     transport.head = NEW_HEAD
+    transport.removal_head = NEW_HEAD
     transport.proof = evidence(NEW_HEAD)
     recover(setup, second)
     assert len(transport.writes) == 2
     transport.head = HEAD
+    transport.removal_head = HEAD
     transport.proof = evidence()
     with pytest.raises(error, match="RECOVERY_ALLOWANCE_SPENT"):
         recover(setup, second)
@@ -334,8 +357,10 @@ def test_malformed_posted_evidence_refuses(setup):
     module = pub.recovery
     comments = [{"id": 1, "body": "<!-- ci-recovery-evidence {bad json} -->"},
                 {"id": 2, "body": "<!-- ci-recovery-evidence {\"job_ids\":[]} -->"}]
+    for comment in comments:
+        comment.update(user={"login": "driver"}, author_association="MEMBER")
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
-        module.evidence_from_comments(comments, 42, HEAD)
+        module.evidence_from_comments(comments, 42, HEAD, authenticated_login="driver")
 
 
 def test_legacy_state_corruption_fails_closed(setup):
@@ -356,44 +381,183 @@ def test_future_commit_date_cannot_refund_same_head(setup):
     assert len(transport.writes) == 1
 
 
-@pytest.mark.parametrize("settled", [True, False])
-def test_old_head_removal_does_not_spend_new_head_initial_enqueue(setup, settled):
+@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
+@pytest.mark.parametrize("history", ["unbound", "keeper-revoked", "manual-dequeue", "multiple", "predates-deploy"])
+def test_old_removal_allows_successive_new_heads_without_local_binding(setup, action, history):
     root, transport = setup
+    transport.proof = None
+    if history == "predates-deploy":
+        transport.removal_date = "2020-01-01T00:00:00Z"
+    if history == "multiple":
+        (root / "batch_state").mkdir()
+        (root / "batch_state/merge_queue_keeper.json").write_text(json.dumps({
+            "drop_events": {f"42:{HEAD}": [986]}, "requeued": {}}))
+    for head in (NEW_HEAD, "d" * 40):
+        transport.head = head
+        recover(setup, action)
+        assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, head) is None
+    assert len(transport.writes) == 2
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
+def test_current_head_removal_requires_recovery_even_without_local_binding(setup, action):
+    _, transport = setup
+    transport.proof = None
+    error = keeper.KeeperError if action == "keeper-initial" else gate.PublishBlocked
+    with pytest.raises(error, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, action)
+    assert transport.writes == []
+
+
+@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
+def test_removal_read_failure_is_typed_and_never_mutates(setup, action):
+    _, transport = setup
+    transport.removal_failure = True
+    error = keeper.KeeperError if action == "keeper-initial" else gate.PublishBlocked
+    with pytest.raises(error, match="RECOVERY_REMOVAL_UNKNOWN"):
+        recover(setup, action)
+    assert transport.writes == []
+
+
+@pytest.mark.parametrize("login,association", [("outsider", "NONE"), ("outsider", "MEMBER"), ("driver", "NONE")])
+def test_untrusted_recovery_comment_is_rejected(setup, login, association):
+    _, transport = setup
+    transport.proof_login, transport.proof_association = login, association
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
+        recover(setup, "run-rerun")
+    assert transport.writes == []
+
+
+@pytest.mark.parametrize("event", ["push", "schedule"])
+@pytest.mark.parametrize("status,conclusion", [("completed", "failure"), ("completed", "success"), ("in_progress", None)])
+def test_non_pr_failed_runs_keep_rerun_behavior(setup, event, status, conclusion):
+    root, transport = setup
+    transport.event, transport.associations, transport.proof = event, [], None
+    transport.status, transport.conclusion = status, conclusion
+    transport.attempt = 3
     recover(setup, "run-rerun")
-    (root / "batch_state").mkdir()
-    state_path = root / "batch_state/merge_queue_keeper.json"
-    state = {"observed": "2026-10-09T12:00:00Z" if settled else "2026-10-09T10:00:00Z",
-             "drops": {f"42:{HEAD}": 1}, "queued": {}, "undiagnosed": {},
-             "drop_events": {f"42:{HEAD}": [987]} if settled else {}}
-    state_path.write_text(json.dumps(state))
-    transport.head, transport.proof = NEW_HEAD, None
-    if settled:
-        recover(setup, "direct")
-        assert len(transport.writes) == 2
-        assert pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, NEW_HEAD) is None
-        # Once this head is itself ejected, it gets its own single recovery.
-        state["drops"][f"42:{NEW_HEAD}"] = 1
-        state["drop_events"][f"42:{NEW_HEAD}"] = [987]
-        state_path.write_text(json.dumps(state))
-        transport.proof = evidence(NEW_HEAD)
-        recover(setup, "direct")
-        assert len(transport.writes) == 3
+    assert len(transport.writes) == 1
+    assert "--failed" in transport.writes[0]
+    assert not pub.recovery.ledger_path(root).exists()
+
+
+@pytest.mark.parametrize("association", ["OWNER", "MEMBER", "COLLABORATOR"])
+def test_trusted_recovery_authors_are_accepted(setup, association):
+    _, transport = setup
+    transport.proof_association = association
+    recover(setup, "run-rerun")
+    assert len(transport.writes) == 1
+
+
+@pytest.mark.parametrize("event,associations", [
+    ("pull_request", []), ("pull_request_target", []), ("merge_group", []),
+    ("push", [{"number": 42}, {"number": 43}]), ("push", "unknown"),
+])
+def test_ambiguous_pr_runs_still_refuse(setup, event, associations):
+    _, transport = setup
+    transport.event, transport.associations = event, associations
+    if event == "merge_group":
+        # A merge-group branch must identify its PR even without REST associations.
+        original = transport.__call__
+
+        def sender(argv, **kwargs):
+            result = original(argv, **kwargs)
+            if any("/runs/123?" in arg for arg in argv):
+                run = json.loads(result.stdout)
+                run["head_branch"] = "unknown"
+                result.stdout = json.dumps(run)
+            return result
+
+        root, _ = setup
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_PR_UNKNOWN"):
+            pub.publish("run-rerun", number=123, repo="unit/public", cwd=root, env={}, runner=sender)
     else:
-        with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
-            recover(setup, "direct")
-        assert len(transport.writes) == 1
-    transport.head, transport.proof = HEAD, evidence()
+        with pytest.raises(gate.PublishBlocked, match="RECOVERY_PR_UNKNOWN"):
+            recover(setup, "run-rerun")
+    assert transport.writes == []
+
+
+def removal_observation():
+    return {"data": {"repository": {"pullRequest": {
+        "headRefOid": HEAD, "pushes": {"nodes": []}, "removals": {"nodes": [{
+            "beforeCommit": {"oid": HEAD}, "createdAt": "2026-10-09T11:00:00Z", "reason": None,
+        }]},
+    }}}}
+
+
+@pytest.mark.parametrize("cause", ["graphql-errors", "missing-pull", "moved-head", "null-commit", "bad-sha", "bad-date", "naive-date", "null-nodes", "multiple-nodes", "null-pushes", "bad-push-date"])
+def test_unreadable_removal_data_refuses_with_typed_reason(cause):
+    data = removal_observation()
+    pull = data["data"]["repository"]["pullRequest"]
+    event = pull["removals"]["nodes"][0]
+    if cause == "graphql-errors":
+        data["errors"] = [{"message": "partial response"}]
+    elif cause == "missing-pull":
+        data["data"]["repository"]["pullRequest"] = None
+    elif cause == "moved-head":
+        pull["headRefOid"] = NEW_HEAD
+    elif cause == "null-commit":
+        event["beforeCommit"] = None
+    elif cause == "bad-sha":
+        event["beforeCommit"]["oid"] = "unknown"
+    elif cause == "bad-date":
+        event["createdAt"] = "unknown"
+    elif cause == "naive-date":
+        event["createdAt"] = "2026-10-09T11:00:00"
+    elif cause == "null-nodes":
+        pull["removals"]["nodes"] = None
+    elif cause == "multiple-nodes":
+        pull["removals"]["nodes"].append(dict(event))
+    elif cause == "null-pushes":
+        pull["pushes"]["nodes"] = None
+    else:
+        pull["pushes"]["nodes"] = [{"afterCommit": {"oid": HEAD}, "createdAt": "unknown"}]
+    with pytest.raises(gate.PublishBlocked, match="RECOVERY_REMOVAL_UNKNOWN"):
+        pub.recovery.queue_removal_at_head(data, HEAD)
+
+
+@pytest.mark.parametrize("pushed_head,pushed_at,expected", [
+    (HEAD, "2026-10-09T12:00:00Z", True),
+    (HEAD, "2026-10-09T10:00:00Z", True),
+    (HEAD, "2026-10-09T11:00:00Z", True),
+    (NEW_HEAD, "2026-10-09T12:00:00Z", True),
+])
+def test_push_timestamps_do_not_change_known_removal_head(pushed_head, pushed_at, expected):
+    data = removal_observation()
+    data["data"]["repository"]["pullRequest"]["pushes"]["nodes"] = [
+        {"afterCommit": {"oid": pushed_head}, "createdAt": pushed_at},
+    ]
+    assert pub.recovery.queue_removal_at_head(data, HEAD) is expected
+
+
+def test_verified_push_after_nullable_removal_allows_initial_enqueue(setup):
+    root, transport = setup
+    transport.removal_head, transport.proof = None, None
+    transport.pushes = [{"afterCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
+    recover(setup, "direct")
+    assert len(transport.writes) == 1
+    assert not pub.recovery.ledger_path(root).exists()
+
+
+def test_same_head_push_never_refunds_a_spent_allowance(setup):
+    _, transport = setup
+    recover(setup, "run-rerun")
+    transport.pushes = [{"afterCommit": {"oid": HEAD}, "createdAt": "2026-10-09T12:00:00Z"}]
     with pytest.raises(gate.PublishBlocked, match="RECOVERY_ALLOWANCE_SPENT"):
         recover(setup, "direct")
+    assert len(transport.writes) == 1
 
 
-def test_unobserved_removal_never_uses_an_older_drop(setup):
+@pytest.mark.parametrize("action", ["direct", "keeper-initial"])
+@pytest.mark.parametrize("removed", [False, True])
+def test_branch_rerun_does_not_block_normal_initial_enqueue(setup, action, removed):
     root, transport = setup
-    (root / "batch_state").mkdir()
-    (root / "batch_state/merge_queue_keeper.json").write_text(json.dumps({
-        "observed": "2099-01-01T00:00:00Z", "drops": {f"42:{HEAD}": 1},
-        "drop_events": {f"42:{HEAD}": [986]}, "queued": {}, "undiagnosed": {}}))
-    transport.head, transport.proof = NEW_HEAD, None
-    with pytest.raises(gate.PublishBlocked, match="RECOVERY_EVIDENCE_MISSING"):
-        recover(setup, "direct")
-    assert transport.writes == []
+    transport.event = "pull_request"
+    recover(setup, "run-rerun")
+    transport.removed = removed
+    transport.removal_head = NEW_HEAD
+    transport.proof = None
+    recover(setup, action)
+    assert len(transport.writes) == 2
+    prior = pub.recovery.first_attempt(pub.recovery.ledger_path(root), "github.com/unit/public", 42, HEAD)
+    assert prior["action"] == "run-rerun"

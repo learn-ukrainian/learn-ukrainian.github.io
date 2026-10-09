@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,7 @@ import pytest
 from scripts.opsec import prepublish as gate
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import Verdict
+from scripts.publish import github as publisher
 from scripts.publish import recovery
 from scripts.review.record_cf_verdict import build_comment
 from tests.opsec_fixtures import CATALOG, TOKEN
@@ -67,7 +69,8 @@ def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
         "failure_evidence": "Runner outage in linked job log",
         "unrelated_to_diff": "Runner failed before checkout",
     }
-    return {"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(data) + " -->"}
+    return {"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(data) + " -->",
+            "user": {"login": "driver"}, "author_association": "MEMBER"}
 
 
 class FakeGitHub:
@@ -83,9 +86,13 @@ class FakeGitHub:
         self.queue_enabled = True
         self.remaining = 3000
         self.membership_result = True
-        self.comments_rows: list[dict[str, Any]] = [recovery_comment(self.row["headRefOid"])]
+        self.comments_rows: list[dict[str, Any]] = [
+            recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", self.row["headRefOid"]),
+            recovery_comment(self.row["headRefOid"]),
+        ]
         self.actions: list[tuple[str, Any]] = []
         self.fail_removal = False
+        self.removal_read_failure = False
         self.events: list[dict[str, Any]] = []
         self.run_rows: list[dict[str, Any]] = []
         self.job_rows: list[dict[str, Any]] = []
@@ -126,12 +133,34 @@ class FakeGitHub:
         return self.file_rows
 
     def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
-        if recovery_attempt:
-            try:
-                evidence = recovery.evidence_from_comments(self.comments_rows, number, head)
-                recovery.consume(recovery.ledger_path(self.root), self.repository, number, head, "re-enqueue", evidence)
-            except gate.PublishBlocked as exc:
-                raise keeper.KeeperError(str(exc)) from exc
+        # Every enqueue traverses the real publisher removal check, even when
+        # the keeper has never observed a drop or set recovery_attempt.
+        from tests.test_ci_recovery import Transport
+
+        transport = Transport()
+        transport.head = head
+        transport.removed = bool(self.events)
+        transport.removal_failure = self.removal_read_failure
+        if self.events:
+            latest = max(self.events, key=lambda event: event["created_at"])
+            transport.removal_head = (latest.get("beforeCommit") or {"oid": HEAD_A})["oid"]
+            transport.removal_date = latest["created_at"]
+
+        def sender(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
+            if any("/comments?" in arg for arg in argv):
+                return subprocess.CompletedProcess(argv, 0, json.dumps([self.comments_rows]), "")
+            return transport(argv, **kwargs)
+
+        try:
+            reservation = publisher._prepare_recovery(
+                "pr-merge", {"number": number, "match_head": head, "recovery": recovery_attempt},
+                self.repository, self.root, {}, sender, queue=True,
+            )
+            if reservation:
+                path, pr_number, sha, action, evidence = reservation
+                recovery.consume(path, self.repository, pr_number, sha, action, evidence)
+        except gate.PublishBlocked as exc:
+            raise keeper.KeeperError(str(exc)) from exc
         self.actions.append(("enqueue", (number, head)))
 
     def membership(self, number: int) -> bool:
@@ -1142,6 +1171,7 @@ def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.M
     _dropped_state(path)
     gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}})
     fake = FakeGitHub()
+    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     gated(fake, path, monkeypatch, gate)
     assert ("enqueue", (42, HEAD_A)) in fake.actions
     state = json.loads(path.read_text())
@@ -1439,7 +1469,7 @@ def test_per_head_state_cleanup_preserves_only_open_prs(tmp_path: Path, name: st
 
 def test_shared_rerun_record_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub()
-    evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A)
+    evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A, authenticated_login="driver")
     recovery.consume(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A, "run-rerun", evidence)
     path = tmp_path / "state.json"
     _dropped_state(path)
@@ -1478,3 +1508,52 @@ def test_malformed_drop_event_binding_is_refused(tmp_path: Path, drop_events: An
     path.write_text(json.dumps({"queued": {}, "drops": {}, "drop_events": drop_events}))
     with pytest.raises(keeper.KeeperError, match="keeper state malformed"):
         keeper.run(FakeGitHub(), path, apply=True)
+
+
+@pytest.mark.parametrize("cause", ["unbound", "manual-dequeue", "red-checks", "changed-verdict", "hold-label", "blocked-squash", "predates-deploy"])
+def test_publisher_allows_new_head_after_unbound_or_revoked_removal(tmp_path, monkeypatch, cause):
+    path = tmp_path / "state.json"
+    old = FakeGitHub(pr(isInMergeQueue=True))
+    if cause in {"red-checks", "changed-verdict", "hold-label", "blocked-squash"}:
+        verdict = "APPROVED"
+        if cause == "red-checks":
+            old.check_rows = checks(conclusion="failure")
+        elif cause == "changed-verdict":
+            verdict = "CHANGES_REQUESTED"
+        elif cause == "hold-label":
+            old.fresh["labels"] = [{"name": "hold"}]
+        else:
+            old.squash = True
+        run(old, path, monkeypatch, verdict=verdict)
+        assert "dequeue" in mutations(old)
+    elif cause == "manual-dequeue":
+        old.dequeue("PR_node_42")
+        assert "dequeue" in mutations(old)
+    fresh = FakeGitHub(pr(headRefOid=HEAD_B))
+    fresh.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", HEAD_B)]
+    fresh.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A},
+                     "created_at": "2020-01-01T00:00:00Z" if cause == "predates-deploy" else "2026-09-23T00:00:01Z"}]
+    _, failed = run(fresh, path, monkeypatch)
+    assert not failed
+    assert "enqueue" in mutations(fresh)
+    assert recovery.first_attempt(recovery.ledger_path(fresh.root), fresh.repository, 42, HEAD_B) is None
+
+
+def test_publisher_requires_recovery_for_unobserved_current_head_removal(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    fake.events = [{"event": "removed_from_merge_queue", "beforeCommit": {"oid": HEAD_A},
+                    "created_at": "2026-09-23T00:00:01Z"}]
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert failed
+    assert "enqueue" not in mutations(fake)
+    assert any("RECOVERY_EVIDENCE_MISSING" in line for line in lines)
+
+
+def test_publisher_removal_read_failure_refuses_initial_keeper_enqueue(tmp_path, monkeypatch):
+    fake = FakeGitHub()
+    fake.removal_read_failure = True
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert failed
+    assert "enqueue" not in mutations(fake)
+    assert any("RECOVERY_REMOVAL_UNKNOWN" in line for line in lines)
