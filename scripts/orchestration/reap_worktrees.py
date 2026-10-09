@@ -3553,13 +3553,21 @@ def _reap_qualified_worktree(
             pr_state = fresh
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
-        reaper_lifecycle.mark_reap_pending(
+        if not reaper_lifecycle.mark_reap_pending(
             repo_root,
             worktree_path=info.path,
             branch=info.branch,
             head=expected_head,
             task_id=_dispatch_task_id(repo_root, info),
-        )
+        ):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="active reap reservation",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
         pending_marked = True
 
         # Network proofs before the per-worktree lock. ``ls-remote``, ``gh``,
@@ -4097,6 +4105,20 @@ def reap_worktrees(
         raise RuntimeError("process-CWD activity probe unavailable; cleanup skipped")
 
     with _ReapLock(repo_root):
+        if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+            # Release only reservations; every deletion still passes the normal
+            # activity, ownership, cleanliness and exact merged-head proofs below.
+            pending = reaper_lifecycle._read_mapping(reaper_lifecycle.pending_path(repo_root)).get("paths")
+            if isinstance(pending, dict) and pending:
+                control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+                lock_dir = worktree_claims.repository_lock_dir(control_root)
+                for raw_path in pending:
+                    target = Path(raw_path)
+                    if not target.is_absolute() or not is_under_worktrees(repo_root, target):
+                        continue
+                    if targets is not None and target.resolve() not in targets:
+                        continue
+                    reaper_lifecycle.recover_orphaned_reap_pending(repo_root, target, lock_dir=lock_dir)
         worktree_listing = list_git_worktrees(repo_root)
         for info in worktree_listing:
             if targets is not None and info.path.resolve() not in targets:

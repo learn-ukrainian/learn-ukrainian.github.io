@@ -9,6 +9,7 @@ import shutil
 import signal
 import sqlite3
 import subprocess
+import sys
 import threading
 import time
 from datetime import UTC, datetime
@@ -26,6 +27,240 @@ from tests.worktree_prep_helpers import exited_process_identity, half_built_prep
 
 _REAL_RUN = subprocess.run
 _REPO_TEMPLATE: Path | None = None
+
+
+def _reserve_in_exited_process(repo: Path, worktree: Path) -> dict[str, Any]:
+    """Leave a real interrupted-after-mark reservation owned by a dead PID."""
+    proc = _REAL_RUN(
+        [
+            sys.executable,
+            "-c",
+            "from pathlib import Path; import sys; "
+            "from scripts.orchestration.reaper_lifecycle import mark_reap_pending; "
+            "assert mark_reap_pending(Path(sys.argv[1]), worktree_path=Path(sys.argv[2]), "
+            "branch='codex/orphan', head=None, task_id=None)",
+            str(repo),
+            str(worktree),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    return json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"][str(worktree.resolve())]
+
+
+def _replace_pending_entry(repo: Path, worktree: Path, entry: Any) -> None:
+    reaper_lifecycle._atomic_write(
+        reaper_lifecycle.pending_path(repo),
+        {"schema_version": "worktree-reaper-pending.v1", "paths": {str(worktree.resolve()): entry}},
+    )
+
+
+def test_orphan_reservation_recovered_and_reaped(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    entry = _reserve_in_exited_process(repo, worktree)
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    rows = [json.loads(row) for row in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    recovery = next(row for row in rows if row["event"] == "reservation-recovery")
+    assert recovery["reservation"] == entry
+    assert recovery["decision"] == "release for normal safety evaluation"
+    assert recovery["reason"] == "holding PID absent"
+    assert next(i for i, row in enumerate(rows) if row["event"] == "reservation-recovery") < next(
+        i for i, row in enumerate(rows) if row["event"] == "reap"
+    )
+
+
+@pytest.mark.parametrize("unsafe", ["dirty", "unmerged", "active"])
+def test_orphan_release_keeps_normal_safety_guards(tmp_path, monkeypatch, unsafe):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    if unsafe == "dirty":
+        (worktree / "README.md").write_text("changed\n")
+    patch_gh(monkeypatch, {"codex/orphan": [] if unsafe == "unmerged" else [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds={worktree} if unsafe == "active" else set()),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+@pytest.mark.parametrize("holder", ["live", "permission", "unknown", "locked", "legacy_locked"])
+def test_orphan_recovery_never_steals_live_or_unverifiable_reservation(tmp_path, monkeypatch, holder):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    entry = _reserve_in_exited_process(repo, worktree)
+    if holder == "live":
+        entry["pid"] = os.getpid()
+    elif holder in {"permission", "unknown"}:
+
+        def refuse_probe(*_args):
+            raise PermissionError() if holder == "permission" else OSError("probe unavailable")
+
+        monkeypatch.setattr(reaper_lifecycle.os, "kill", refuse_probe)
+    elif holder == "legacy_locked":
+        entry.pop("pid")
+    entry["marked_at"] = "2000-01-01T00:00:00Z"
+    _replace_pending_entry(repo, worktree, entry)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+    lock = worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo))
+    with lock if holder in {"locked", "legacy_locked"} else contextlib.nullcontext():
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "active reap reservation"
+    assert worktree.exists()
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert '"event": "reservation-recovery"' not in reaper_lifecycle.journal_path(repo).read_text()
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        {"marked_at": "2000-01-01T00:00:00Z"},
+        {"marked_at": "2999-01-01T00:00:00Z"},
+        {"marked_at": "2000-01-01T00:00:00"},
+        {"marked_at": "invalid"},
+        {"pid": 0},
+        {"pid": -1},
+        {"pid": True},
+        {"pid": "123"},
+        {"pid": 2**64},
+        None,
+    ],
+)
+def test_orphan_legacy_and_malformed_reservations(tmp_path, monkeypatch, entry):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _replace_pending_entry(repo, worktree, entry)
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    should_recover = entry == {"marked_at": "2000-01-01T00:00:00Z"}
+    assert (result.action == "removed") == should_recover
+    assert worktree.exists() != should_recover
+    assert reaper_lifecycle.is_reap_pending(repo, worktree) != should_recover
+
+
+@pytest.mark.parametrize("mode", ["dry_run", "disabled", "other_target"])
+def test_orphan_recovery_respects_mode_and_target(tmp_path, monkeypatch, mode):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+    if mode == "disabled":
+        monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+    rw.reap_worktrees(
+        repo_root=repo,
+        apply=mode != "dry_run",
+        live_cwds=set(),
+        target_paths=[repo / ".worktrees" / "other"] if mode == "other_target" else None,
+    )
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert worktree.exists()
+
+
+def test_orphan_recovery_after_tree_removed(tmp_path):
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "already-removed"
+    _reserve_in_exited_process(repo, worktree)
+    rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), target_paths=[worktree])
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    assert not worktree.exists()
+    assert '"event": "reservation-recovery"' in reaper_lifecycle.journal_path(repo).read_text()
+
+
+def test_orphan_journal_failure_keeps_reservation(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+
+    def fail_journal(*_args, **_kwargs):
+        raise OSError("journal unavailable")
+
+    monkeypatch.setattr(reaper_lifecycle, "append_journal", fail_journal)
+    with pytest.raises(OSError, match="journal unavailable"):
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert worktree.exists()
+
+
+def test_pending_mark_refuses_existing_and_clear_requires_owner(tmp_path):
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "orphan"
+    entry = _reserve_in_exited_process(repo, worktree)
+    assert not reaper_lifecycle.mark_reap_pending(repo, worktree_path=worktree, branch=None, head=None, task_id=None)
+    reaper_lifecycle.clear_reap_pending(repo, worktree)
+    assert json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"][str(worktree)] == entry
+
+
+@pytest.mark.parametrize("corrupt", ["not json", "[]", '{"paths": []}'])
+def test_pending_mutation_refuses_corrupt_state(tmp_path, corrupt):
+    repo = init_repo(tmp_path)
+    path = reaper_lifecycle.pending_path(repo)
+    path.parent.mkdir(parents=True)
+    path.write_text(corrupt)
+    with pytest.raises(ValueError):
+        reaper_lifecycle.mark_reap_pending(
+            repo, worktree_path=repo / ".worktrees" / "orphan", branch=None, head=None, task_id=None
+        )
+    assert path.read_text() == corrupt
+
+
+def test_pending_writers_share_stable_lock_across_replace(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    first, second = [repo / ".worktrees" / name for name in ("first", "second")]
+    replaced = threading.Event()
+    release = threading.Event()
+    finished = threading.Event()
+    errors = []
+    real_write = reaper_lifecycle._atomic_write
+
+    def hold_after_replace(path, payload):
+        real_write(path, payload)
+        if str(first) in payload["paths"] and str(second) not in payload["paths"]:
+            replaced.set()
+            assert release.wait(5)
+
+    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", hold_after_replace)
+
+    def mark(path):
+        try:
+            assert reaper_lifecycle.mark_reap_pending(repo, worktree_path=path, branch=None, head=None, task_id=None)
+        except Exception as exc:
+            errors.append(exc)
+        finally:
+            if path == second:
+                finished.set()
+
+    writer = threading.Thread(target=mark, args=(first,))
+    contender = threading.Thread(target=mark, args=(second,))
+    writer.start()
+    try:
+        assert replaced.wait(5)
+        contender.start()
+        assert not finished.wait(0.1)
+    finally:
+        release.set()
+        writer.join(5)
+        if contender.ident is not None:
+            contender.join(5)
+    assert not errors
+    assert not writer.is_alive() and not contender.is_alive()
+    assert set(json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"]) == {str(first), str(second)}
 
 
 def git_env() -> dict[str, str]:
