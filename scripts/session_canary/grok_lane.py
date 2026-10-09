@@ -46,6 +46,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -60,33 +61,68 @@ if str(ROOT) not in sys.path:
 from scripts.session_canary import handoff_select
 
 
-def _infra_harness_stream_id(repo_root: Path | None = None) -> str:
-    """Live infra stream id from the issue-stream registry (infra-harness anchor)."""
-    from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+class StreamResolutionError(ValueError):
+    """A lane selector could not be resolved by the launcher SSOT."""
 
-    return stream_anchor_id("infra-harness", repo_root or ROOT)
+    reason = "unresolved-stream-selector"
+
+    def __init__(self, selector: str) -> None:
+        super().__init__(f"{self.reason}: {selector!r}; pass --stream epic:N")
+
+
+def resolve_stream_id(epic: str, explicit: str | None = None) -> str:
+    """CLI stream, launcher environment, then the shell selector SSOT."""
+    stream = explicit or os.environ.get("SESSION_STREAM_ID")
+    if stream:
+        return stream
+    selector = epic.strip().lower()
+    try:
+        result = subprocess.run(
+            ["bash", "-c", 'source "$1" && launcher_selector_stream "$2"',
+             "lane-stream", str(ROOT / "scripts/lib/handoff_identity.sh"), selector],
+            capture_output=True, text=True, timeout=1, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise StreamResolutionError(selector) from exc
+    if result.returncode != 0 or not result.stdout.strip():
+        raise StreamResolutionError(selector)
+    return result.stdout.strip()
+
+
+def _stream_id(args: argparse.Namespace) -> str:
+    return resolve_stream_id(args.epic, getattr(args, "stream", None))
 
 
 def _epic_stream_defaults() -> dict[str, str]:
-    infra = _infra_harness_stream_id()
-    return {
-        "atlas": "epic:4387",
-        "practice": "epic:4387",
-        "practice-hub": "epic:4387",
-        "harness": infra,
-        "infra": infra,
-        "devops": "epic:5703",
-        "hramatka": "epic:4542",
-        "folk": "epic:2836",
-        "seminars-folk": "epic:2836",
-        "bio": "epic:4431",
-        "seminars-bio": "epic:4431",
-    }
+    """Compatibility export for Kimi, derived entirely from the shell SSOT."""
+    result = subprocess.run(
+        ["bash", "-c", '''
+source "$1" || exit 1
+{
+  _launcher_registry_stream_keys
+  _launcher_registry_stream_keys | sed 's/^/infra./'
+  awk -F '\t' '!/^#/ && NF == 3 { print $1 }' "$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
+} | while IFS= read -r selector; do
+  stream=$(launcher_selector_stream "$selector") || exit 1
+  printf '%s\t%s\n' "$selector" "$stream"
+done
+''', "lane-defaults", str(ROOT / "scripts/lib/handoff_identity.sh")],
+        capture_output=True, text=True, timeout=2, check=True,
+    )
+    return dict(line.split("\t", 1) for line in result.stdout.splitlines())
 
 
-# Epic slug → default stream id (aligned with start-grok.sh). Infra/harness
-# derive from issue_streams.yaml so epic succession needs no canary edit.
-EPIC_STREAM_DEFAULTS: dict[str, str] = _epic_stream_defaults()
+def __getattr__(name: str) -> dict[str, str]:
+    """Load the Kimi compatibility table on first use, not at import.
+
+    Post-compact hydration is killed when the whole process overruns its
+    deadline. Importing a lane must not spend that budget on this scan.
+    """
+    if name != "EPIC_STREAM_DEFAULTS":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    defaults = _epic_stream_defaults()
+    globals()["EPIC_STREAM_DEFAULTS"] = defaults
+    return defaults
 
 DEFAULT_PASS_RATIO = 0.8
 DEFAULT_SIM_THRESHOLD = 0.75
@@ -502,13 +538,7 @@ def select_board_handoff(
 def cmd_mint(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
-    stream_id = (args.stream or EPIC_STREAM_DEFAULTS.get(epic) or "").strip()
-    if not stream_id:
-        print(
-            f"error: no stream for epic {epic!r}; pass --stream epic:N",
-            file=sys.stderr,
-        )
-        return 1
+    stream_id = _stream_id(args)
 
     explicit = _resolve_handoff_override(repo, getattr(args, "handoff", None))
     loaded = _load_ranked(repo, epic, preferred=getattr(args, "preferred", None))
@@ -760,12 +790,14 @@ def cmd_score(args: argparse.Namespace) -> int:
             context_tokens=int(args.context_tokens),
             pass_ratio=pass_ratio,
         )
-        stream_id = EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+        stream_id = None
         meta_path = out_dir / "mint_meta.json"
         if meta_path.is_file():
             import contextlib
             with contextlib.suppress(json.JSONDecodeError, OSError):
                 stream_id = json.loads(meta_path.read_text(encoding="utf-8")).get("stream_id") or stream_id
+
+        stream_id = resolve_stream_id(epic, getattr(args, "stream", None) or stream_id)
 
         if verdict == "FAIL-HANDOFF":
             next_drive = _split_csv_lines(getattr(args, "next_drive", "") or "")
@@ -894,7 +926,7 @@ def emit_hydrate_capsule(
     from scripts.session_canary import diary as diary_mod
 
     epic = epic.strip().lower()
-    stream_id = (stream_id or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
+    stream_id = resolve_stream_id(epic, stream_id)
     # Auto-hydrate passes handoff=None so this resolves the recorded path.
     # An explicit handoff is this invocation only and is not stored.
     explicit = handoff
@@ -1027,7 +1059,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 def cmd_protocol(args: argparse.Namespace) -> int:
     """Print the agent-facing protocol (paste into cold-start / after compact)."""
     epic = args.epic.strip().lower()
-    stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+    stream = _stream_id(args)
     canary = f".claude/{epic}-epic/canary"
     handoff = f".claude/{epic}-epic/INTERIM-DRIVER-HANDOFF.md"
     text = f"""## Grok lane session canary + diary (operational)
@@ -1133,7 +1165,7 @@ def cmd_stamp(args: argparse.Namespace) -> int:
 
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
-    stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+    stream = _stream_id(args)
     preferred = getattr(args, "preferred", None)
     out_dir = Path(args.out_dir) if getattr(args, "out_dir", None) else None
     path = _bound_handoff_path(
@@ -1176,7 +1208,7 @@ def cmd_handback(args: argparse.Namespace) -> int:
 
     repo = Path(args.repo).resolve()
     epic = args.epic.strip().lower()
-    stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
+    stream = _stream_id(args)
     preferred = getattr(args, "preferred", None)
     out_dir = Path(args.out_dir) if getattr(args, "out_dir", None) else None
     path = _bound_handoff_path(
@@ -1364,7 +1396,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    return int(args.func(args))
+    try:
+        return int(args.func(args))
+    except StreamResolutionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

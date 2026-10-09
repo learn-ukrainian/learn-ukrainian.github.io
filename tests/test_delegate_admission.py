@@ -6,6 +6,7 @@ probe; no test allocates memory, generates load, or spawns a worker.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import resource
@@ -71,7 +72,17 @@ def _running_record(tasks: Path, task_id: str, *, pid: int, mode: str = "workspa
     return path
 
 
-def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "adm-probe"):
+def _lease_task_id(prefix: str) -> str:
+    """One lease task id for this case. A shared id names one shared lease directory (#9927)."""
+    current = os.environ.get("PYTEST_CURRENT_TEST", prefix)
+    node = current.split(" ", 1)[0]
+    digest = hashlib.sha256(node.encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}-{digest}"
+
+
+def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str | None = None):
+    if task_id is None:
+        task_id = _lease_task_id("adm-probe")
     argv = [
         "dispatch",
         "--agent",
@@ -88,14 +99,34 @@ def _dry_run_args(*extra: str, mode: str = "workspace-write", task_id: str = "ad
         *extra,
     ]
     if mode != "read-only":
-        argv.append("--worktree")
+        # A write dispatch declares its scope (#9739); an ordinary path keeps a new branch unprotected.
+        argv.extend(("--worktree", "--owned-path", "scripts/example.py"))
     return delegate.build_parser().parse_args(argv)
 
 
+def _pin_origin_main_to_head(monkeypatch) -> None:
+    """Give write-dispatch review admission (#9739) a canonical default branch at the checkout's own HEAD.
+
+    Admission observes the default branch and the open PRs on GitHub (A7);
+    here that is HEAD and none, so the dispatch is a fresh branch with no
+    commits of its own and these tests check host admission, not the network
+    or the runner's clone depth (tests/test_authoring_review_feasibility.py
+    covers authored branches against a real remote). The dry-run worktree base
+    is that HEAD too.
+    """
+    from tests.test_authoring_review_feasibility import pin_review_target
+
+    head = _git(delegate._REPO_ROOT, "rev-parse", "HEAD")
+    pin_review_target(monkeypatch, head)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head)
+
+
 def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args())
+    args = _dry_run_args()
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == delegate._ADMISSION_REFUSED_EXIT == 3
     refusal = [line for line in capsys.readouterr().err.splitlines() if "admission" in line]
@@ -104,10 +135,11 @@ def test_dispatch_refuses_a_write_worker_at_the_cap_with_one_line(tasks_dir, mon
         "(DISPATCH_MAX_LIVE_WRITE_WORKERS=0). Wait for a worker to finish or for the host to recover, raise the "
         'threshold through the named environment variable, or pass --force-admission "<reason>" to override.'
     ]
-    assert not delegate._state_path("adm-probe").exists()
+    assert not delegate._state_path(args.task_id).exists()
 
 
 def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     monkeypatch.setattr(
         dispatch_admission,
         "probe_host",
@@ -119,7 +151,7 @@ def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_dry_run_args(mode="danger")) == 3
 
     err = capsys.readouterr().err
-    assert "MemAvailable 1.0 GiB is below the floor of 6 GiB" in err
+    assert "MemAvailable 1.0 GiB is below the floor of 8.5 GiB" in err
     assert "load 2.50 per CPU" in err
 
 
@@ -139,11 +171,12 @@ def test_force_admission_records_the_reason(tasks_dir, monkeypatch, capsys):
     _stub_worktree(monkeypatch, tasks_dir)
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "0")
 
-    rc = delegate.cmd_dispatch(_dry_run_args("--force-admission", "hotfix #1234 while one worker drains"))
+    args = _dry_run_args("--force-admission", "hotfix #1234 while one worker drains")
+    rc = delegate.cmd_dispatch(args)
 
     assert rc == 0
     assert "overridden by --force-admission ('hotfix #1234 while one worker drains')" in capsys.readouterr().err
-    state = delegate._read_state(delegate._state_path("adm-probe"))
+    state = delegate._read_state(delegate._state_path(args.task_id))
     assert state is not None
     admission = state["admission"]
     assert admission["admitted"] is False
@@ -173,6 +206,7 @@ def test_admission_sweeps_dead_workers_to_crashed_and_frees_their_slot(tasks_dir
 
 
 def test_dry_run_reports_dead_workers_without_marking_them(tasks_dir, monkeypatch, capsys):
+    _pin_origin_main_to_head(monkeypatch)
     dead = _running_record(tasks_dir, "dead-writer", pid=424242)
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
 
@@ -210,6 +244,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
+        owned_path=["scripts/example.py"],
     )
 
 
@@ -239,6 +274,9 @@ def _stub_worktree(monkeypatch, tasks: Path):
         lambda **_kwargs: (wt, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
     )
     monkeypatch.setattr(delegate, "_resolve_sha", lambda *_args, **_kwargs: "abc1234")
+    # Git is stubbed, so branch authorship cannot be enumerated; these tests
+    # cover host admission. Authoring-review admission has its own tests (#9739).
+    monkeypatch.setattr(delegate, "_authoring_review_admission", lambda *_args, **_kwargs: None)
 
 
 def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, capsys):
@@ -254,13 +292,112 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-live")) == 0
 
     assert len(spawned) == 1
-    assert "🚦 dispatch admission: admitted — live write workers 0/12" in capsys.readouterr().err
+    assert "🚦 dispatch admission: admitted — live write workers 0/2" in capsys.readouterr().err
     state = delegate._read_state(delegate._state_path("adm-live"))
     assert state is not None
     assert state["admission"]["admitted"] is True
     assert state["admission"]["forced"] is False
     assert state["admission"]["mem_available_gib"] == 64.0
     assert (tasks_dir / dispatch_admission.LOCK_FILE_NAME).is_file()
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger", "read-only"])
+@pytest.mark.parametrize(
+    "research_paths,owned_paths,conflicts",
+    [
+        (["tests/**"], ["tests/test_incoming.py"], False),
+        (["tests/test_incoming.py"], ["tests/test_holder.py"], True),
+    ],
+    ids=["broad-research-disjoint-writer", "narrow-research-overlapping-writer"],
+)
+def test_dispatch_ownership_uses_commit_scope(
+    tasks_dir, monkeypatch, capsys, mode, research_paths, owned_paths, conflicts
+):
+    """#10015: real ownership admission ignores research classification in both directions."""
+    import sqlite3
+
+    from scripts.guardrails import delegate_ownership as ownership
+
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("DELEGATE_OWNERSHIP_MODE", "refuse")
+    pid = os.getpid()
+    state_dir = Path(os.environ["LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"])
+    _running_record(state_dir, "holder", pid=pid)
+    holder = ownership.admit_write_paths(
+        task_id="holder", mode="workspace-write", owned_paths=["tests/test_holder.py"], pid=pid
+    )
+    assert holder.admitted
+    admissions = []
+    real_admit = ownership.admit_write_paths
+
+    def capture_admission(**kwargs):
+        result = real_admit(**kwargs)
+        admissions.append(result)
+        return result
+
+    monkeypatch.setattr(ownership, "admit_write_paths", capture_admission)
+    spawned = []
+
+    class _Proc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: spawned.append(cmd) or _Proc())
+    args = _live_danger_args(tasks_dir, "ownership-incoming")
+    args.mode = mode
+    args.owned_path = owned_paths
+    args.research_owned_path = research_paths
+
+    rc = delegate.cmd_dispatch(args)
+
+    refused = conflicts and mode != "read-only"
+    err = capsys.readouterr().err
+    assert rc == (2 if refused else 0), err
+    assert len(admissions) == 1
+    assert admissions[0].skipped is (mode == "read-only")
+    assert admissions[0].admitted is (not refused)
+    assert bool(admissions[0].conflicts) is refused
+    assert len([cmd for cmd in spawned if "_worker" in cmd]) == (0 if refused else 1)
+    state = delegate._read_state(delegate._state_path(args.task_id))
+    if refused:
+        assert "write-path ownership refused" in err
+        assert state is None
+    else:
+        assert state["owned_paths"] == owned_paths
+    with sqlite3.connect(os.environ["LEARN_UKRAINIAN_OWNERSHIP_LEDGER"]) as conn:
+        rows = conn.execute("SELECT claim_json, pid FROM write_claims WHERE task_id = ?", (args.task_id,)).fetchall()
+    if refused or mode == "read-only":
+        assert rows == []
+    else:
+        assert [json.loads(claim)["raw"] for claim, _pid in rows] == owned_paths
+        assert [claim_pid for _claim, claim_pid in rows] == [_Proc.pid]
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_dispatch_without_commit_scope_refuses_before_ownership(tasks_dir, monkeypatch, capsys, mode):
+    """Research paths cannot replace the required --owned-path at authoring admission."""
+    from scripts.guardrails import delegate_ownership as ownership
+
+    real_authoring_admission = delegate._authoring_review_admission
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(delegate, "_authoring_review_admission", real_authoring_admission)
+    monkeypatch.setattr(
+        ownership, "admit_write_paths", lambda **_kwargs: pytest.fail("ownership must not run without commit scope")
+    )
+    monkeypatch.setattr(
+        delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("an unscoped writer must not spawn")
+    )
+    args = _live_danger_args(tasks_dir, "ownership-unscoped")
+    args.mode = mode
+    args.owned_path = None
+    args.research_owned_path = ["tests/**"]
+
+    assert delegate.cmd_dispatch(args) == 2
+
+    err = capsys.readouterr().err
+    assert delegate.AUTHORING_REVIEW_SCOPE_UNKNOWN in err
+    assert "write dispatch declares no --owned-path" in err
+    assert not delegate._state_path(args.task_id).exists()
 
 
 def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(tasks_dir, monkeypatch, capsys):
@@ -315,6 +452,124 @@ def _scratch_repo(root: Path) -> Path:
     _git(repo, "init", "-q", "-b", "main")
     _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "base")
     return repo
+
+
+def _mechanical_canary_args(*extra: str):
+    return delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--model", "claude-haiku-5-5",
+        "--task-id", "haiku-mechanical-canary", "--mode", "read-only", "--dry-run",
+        "--research-task-family", "mechanical_classification",
+        "--research-owned-path", "package-lock.json",
+        "--prompt", "Classify the lockfile format. Read only.", *extra,
+    ])
+
+
+def _lockfile_repo(root: Path, content: str = '{"lockfileVersion": 3}') -> Path:
+    repo = _scratch_repo(root)
+    (repo / "package-lock.json").write_text(content, encoding="utf-8")
+    _git(repo, "add", "package-lock.json")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "-m", "lockfile")
+    return repo
+
+
+def _content_gate(args, repo: Path, *, cwd: Path | None = None):
+    return delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: (request.seat, request.model, "explicit"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=cwd,
+    )
+
+
+@pytest.mark.parametrize("explicit_cwd", [False, True])
+@pytest.mark.parametrize("family", ["mechanical_classification", "readonly_recon", "routine_mechanical"])
+def test_readonly_mechanical_without_worktree_reads_checkout_and_commit(tmp_path, monkeypatch, explicit_cwd, family):
+    repo = _lockfile_repo(tmp_path)
+    args = _mechanical_canary_args("--research-task-family", family)
+
+    def write_resolver_must_not_run(*args, **kwargs):
+        pytest.fail("read-only mechanical task reached Kimi's write-only tree resolver")
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", write_resolver_must_not_run)
+    # An explicit cwd wins over the default checkout, including when the default
+    # cannot be read. Both the on-disk and committed content readers are real.
+    refusal, start, target = _content_gate(
+        args, tmp_path / "unavailable" if explicit_cwd else repo, cwd=repo if explicit_cwd else None,
+    )
+    assert refusal is None and start is None
+    assert target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("unsafe_tree", ["disk", "commit"])
+def test_readonly_mechanical_without_worktree_checks_both_content_trees(tmp_path, unsafe_tree):
+    safe, unsafe = '{"lockfileVersion": 3}', '{"name": "Україна"}'
+    repo = _lockfile_repo(tmp_path, unsafe if unsafe_tree == "commit" else safe)
+    (repo / "package-lock.json").write_text(unsafe if unsafe_tree == "disk" else safe, encoding="utf-8")
+    refusal, start, target = _content_gate(_mechanical_canary_args(), repo)
+    assert "owned content must be plain UTF-8 without Cyrillic" in refusal
+    assert start is None and target is None
+
+
+def test_readonly_mechanical_unreadable_checkout_reports_resolution_stage(tmp_path):
+    refusal, start, target = _content_gate(_mechanical_canary_args(), tmp_path / "missing")
+    assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (RuntimeError) (#9996)"
+    assert start is None and target is None
+
+
+@pytest.mark.parametrize("unsafe", [False, True])
+def test_substituted_readonly_mechanical_route_checks_checkout_without_worktree(tmp_path, unsafe):
+    repo = _lockfile_repo(tmp_path, '{"name": "Україна"}' if unsafe else '{"lockfileVersion": 3}')
+    args = _mechanical_canary_args("--model", "claude-sonnet-5-5")
+    refusal, start, target = delegate._kimi_dispatch_gate(
+        args, agent=args.agent, route=lambda request: ("claude", "claude-haiku-5-5", "test-substitution"),
+        repo_role="public-monorepo", target_repo_root=repo, validated_worktree=None, validated_cwd=None,
+    )
+    assert start is None
+    if unsafe:
+        assert "owned content must be plain UTF-8 without Cyrillic" in refusal and target is None
+    else:
+        assert refusal is None and target.model == "claude-haiku-5-5"
+
+
+@pytest.mark.parametrize("selector", ["--worktree", "--branch"])
+def test_readonly_mechanical_with_worktree_keeps_start_tree_resolution(tmp_path, monkeypatch, selector):
+    from scripts.agent_runtime.kimi_admission import worktree_trees
+
+    repo = _lockfile_repo(tmp_path)
+    commit = _git(repo, "rev-parse", "HEAD")
+    calls = []
+
+    def start_trees(args, **kwargs):
+        calls.append(args)
+        return worktree_trees(repo), commit
+
+    monkeypatch.setattr(delegate, "_kimi_start_trees", start_trees)
+    extra = (selector,) if selector == "--worktree" else (selector, "existing-branch")
+    args = _mechanical_canary_args(*extra)
+    refusal, start, target = _content_gate(args, repo)
+    assert refusal is None and target.model == "claude-haiku-5-5"
+    assert start == commit and calls == [args]
+
+
+@pytest.mark.parametrize("agent,model,path", [
+    ("kimi", "kimi-code/k3", "site/src/components/LiveStatus.tsx"),
+    ("claude", "claude-haiku-5-5", "package-lock.json"),
+])
+def test_write_content_gate_without_worktree_still_refuses(tmp_path, agent, model, path):
+    args = _mechanical_canary_args(
+        "--agent", agent, "--model", model, "--mode", "workspace-write",
+        "--research-task-family", "routine_mechanical", "--research-owned-path", path, "--owned-path", path,
+    )
+    # Remove the canary's research path when checking Kimi's narrower allowlist.
+    args.research_owned_path = [path]
+    refusal, start, target = _content_gate(args, tmp_path)
+    assert refusal and start is None and target is None
+    if agent == "kimi":
+        assert "ROUTING REFUSED: KIMI CODING-ONLY" in refusal and "ValueError" in refusal
+        with pytest.raises(ValueError, match="workspace-write without a dispatch worktree"):
+            delegate._kimi_start_trees(
+                args, agent=agent, target_repo_root=tmp_path, validated_worktree=None, validated_cwd=None,
+            )
+    else:
+        assert refusal == "MECHANICAL_TASK_REFUSED: task input unavailable at tree resolution (ValueError) (#9996)"
 
 
 def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:
@@ -532,8 +787,9 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/12, "
-        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50); "
+        "admission (write dispatch): would admit now | live write workers 1/2, "
+        "MemAvailable 64.0 GiB (floor 8.5 GiB), load 0.00 per CPU (limit 1.00), "
+        "lu.slice pool check skipped (test host); "
         "1 record(s) dead pid, not counted: gone"
     )
 
@@ -544,3 +800,24 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     assert admission["line"].startswith("admission (write dispatch): would REFUSE now: live write workers 1/1")
     # capacity_pick only reports; marking dead records crashed is dispatch's job.
     assert json.loads(dead.read_text(encoding="utf-8"))["status"] == "running"
+
+
+def test_live_dispatch_admitted_line_shows_a_skipped_pool_check(tasks_dir, tmp_path, monkeypatch, capsys):
+    """delegate.py configures no logging, so the pool skip reason must be on the admitted line (#9975)."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setenv("LU_SLICE_CGROUP", str(tmp_path / "absent" / "lu.slice"))
+
+    class _Proc:
+        pid = 13580
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **_kwargs: _Proc())
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-pool-skip")) == 0
+
+    admitted = [line for line in capsys.readouterr().err.splitlines() if "dispatch admission: admitted" in line]
+    assert len(admitted) == 1
+    assert "lu.slice pool check skipped (lu.slice memory.current unavailable: " in admitted[0]
+    state = delegate._read_state(delegate._state_path("adm-pool-skip"))
+    assert state is not None
+    assert "memory.current unavailable" in state["admission"]["pool_check_skipped"]

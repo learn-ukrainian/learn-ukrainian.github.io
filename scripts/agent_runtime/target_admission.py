@@ -23,6 +23,8 @@ the backstop.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
@@ -30,6 +32,7 @@ from contextvars import ContextVar
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from .kimi_admission import (
@@ -66,6 +69,60 @@ class SubstituteUnavailable(Exception):
 
 class ReviewAdmissionRefused(Exception):
     """A review cannot retain its requested identity or resolve an eligible substitute."""
+
+
+def mechanical_scope_digest(scope: Mapping[str, Any]) -> str:
+    """Bind the persisted worker inputs to the dispatch's mechanical scope (#10079)."""
+    inputs = {key: value for key, value in scope.items() if key != "sha256"}
+    return hashlib.sha256(json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def mechanical_worker_scope(
+    record: Mapping[str, Any], *, mode: str, model: str | None, prompt: str,
+) -> dict[str, Any]:
+    """Recheck mechanical-only scope against the stdin prompt, never the source file."""
+    from scripts.review.model_catalog import canonical_model_id, load_model_catalog
+
+    from .mechanical_admission import MechanicalAdmissionRefused
+
+    catalog = load_model_catalog()
+    substitution = record.get("substitution") or {}
+    models = (model, record.get("model"), substitution.get("requested_model"), substitution.get("actual_model"))
+    if not any(
+        (identity := canonical_model_id(pin, catalog))
+        and "mechanical_only" in catalog["models"][identity]["roles"]
+        for pin in models
+    ):
+        return {}
+
+    scope = record.get("mechanical_task")
+    if scope is None:
+        return {}  # The mechanical gate refuses an unclassified mechanical model.
+    try:
+        if not isinstance(scope, dict) or scope.get("sha256") != mechanical_scope_digest(scope):
+            raise ValueError("scope changed")
+        if scope["mode"] != mode or record["mode"] != mode:
+            raise ValueError("mode changed")
+        if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != record["effective_prompt_sha256"]:
+            raise ValueError("executed prompt changed")
+        # Keep the admitted source fields required, but the file is no longer an
+        # execution input. The effective digest includes dispatcher-added blocks.
+        for key in ("task_prompt", "prompt_file", "prompt_file_sha256"):
+            scope[key]
+        return {
+            "task_family": scope["family"],
+            "task_role": scope["role"],
+            "paths": scope["paths"],
+            "language_lane": scope["language_lane"],
+            "research_track": scope["track"],
+            "review": scope["review"],
+            "task_prompt": prompt,
+            "prompt_file": None,
+        }
+    except (KeyError, TypeError, ValueError, OSError) as exc:
+        raise MechanicalAdmissionRefused(
+            "MECHANICAL_TASK_REFUSED: persisted admission inputs changed or are unavailable (#10079)"
+        ) from exc
 
 
 ReviewSelector = Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]]
@@ -168,6 +225,10 @@ def resolve_and_admit(
     review_changed_paths: tuple[str, ...] | Callable[[], tuple[str, ...]] = (),
     review_subject_seats: frozenset[str] = frozenset(),
     review_subject_families: frozenset[str] = frozenset(),
+    review_facts: Any = None,
+    task_family: str | None = None,
+    task_role: str | None = None,
+    task_prompt: str | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -215,6 +276,10 @@ def resolve_and_admit(
     For code/infra profiles, ``review_changed_paths`` may collect paths lazily
     after original-request gates; its result is shared by every subsequent
     reviewer evaluation. Ukrainian content review never invokes the collector.
+    ``review_facts`` (a ``record_cf_verdict.BranchReviewFacts``, or a callable
+    returning one, collected at the same point) supplies the target's complete
+    authorship and protected scope; reviewer evaluation then excludes every
+    author family, not only ``review_author_model``'s (#9739).
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -223,6 +288,13 @@ def resolve_and_admit(
     requested = _gate_names(seats, models)
     refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
     review_activity = review_dispatch or mode == REVIEW_MODE or bool(gate.get("review"))
+    from .mechanical_admission import refuse_mechanical_task
+
+    mechanical_scope = {key: gate[key] for key in (
+        "paths", "language_lane", "research_track", "prompt_file", "trees"
+    ) if key in gate}
+    refuse_mechanical_task(requested[1], mode=mode, task_family=task_family,
+                           task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(requested[1])
     # Target reads follow the original-request gates, but precede every
@@ -230,8 +302,11 @@ def resolve_and_admit(
     if (review_profile or "code") in {"code", "infra"}:
         if callable(review_changed_paths):
             review_changed_paths = review_changed_paths()
+        if callable(review_facts):
+            review_facts = review_facts()
     else:
         review_changed_paths = ()
+        review_facts = None
 
     fallbacks: Mapping[str, str] = {}
     if route is not None and fallbacks_path is not None:
@@ -242,6 +317,7 @@ def resolve_and_admit(
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
         approved_review_targets: set[tuple[str, str | None]] = set()
+        admitted_review_models: dict[str, str | None] = {}
         review_seat = name
         retired_model_resolution = None
         if review_dispatch:
@@ -271,6 +347,7 @@ def resolve_and_admit(
             requested_seat: str = review_seat,
             requested_model: str | None = review_model,
             approved: set[tuple[str, str | None]] = approved_review_targets,
+            admitted_models: dict[str, str | None] = admitted_review_models,
         ) -> tuple[str, str | None]:
             selected = _resolve_review_target(
                 requested_seat,
@@ -281,13 +358,17 @@ def resolve_and_admit(
                 attempt=review_attempt,
                 snapshot=snapshot,
                 budget_seat=budget_seat,
+                budget_model=admitted_models.get(budget_seat),
                 budget_substitute=fallbacks.get(budget_seat),
                 owned_paths=review_owned_paths,
                 changed_paths=review_changed_paths,
                 subject_seats=review_subject_seats,
                 subject_families=review_subject_families,
+                facts=review_facts,
             )
+            _require_agy_code_review_risk(selected[0], review_risk, review_profile or "code")
             approved.add(selected)
+            admitted_models[selected[0]] = selected[1]
             return selected
 
         if review_dispatch:
@@ -320,6 +401,8 @@ def resolve_and_admit(
             if holder != recipient:
                 recipient, reason = holder, f"slot:{recipient}"
         resolved.append((recipient, target_model, reason))
+        if review_dispatch:
+            _require_agy_code_review_risk(recipient, review_risk, review_profile or "code")
         if review_dispatch and (recipient, target_model) not in approved_review_targets:
             raise ReviewAdmissionRefused(
                 "REVIEW_ROUTE_REFUSED: resolved review identity was not admitted by the reviewer resolver"
@@ -331,6 +414,8 @@ def resolve_and_admit(
     )
     if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
+        refuse_mechanical_task(final[1], mode=mode, task_family=task_family,
+                               task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
     with _minting():
@@ -346,6 +431,15 @@ def _refuse_non_review_models(models: Iterable[str | None]) -> None:
             raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {refusal}")
 
 
+def _require_agy_code_review_risk(seat: str, risk: str | None, profile: str) -> None:
+    """Require the caller's risk declaration before admitting AGY code review."""
+    if seat == "agy" and profile == "code" and risk not in {"low", "medium", "high", "critical"}:
+        raise ReviewAdmissionRefused(
+            "REVIEW_ROUTE_REFUSED: AGY code review requires an explicit --review-risk; "
+            "supply --review-risk with one of: low, medium, high, critical"
+        )
+
+
 def _resolve_review_target(
     seat: str,
     model: str | None,
@@ -356,19 +450,24 @@ def _resolve_review_target(
     attempt: bool,
     snapshot: Mapping[str, Any] | None,
     budget_seat: str,
+    budget_model: str | None = None,
     budget_substitute: str | None = None,
     owned_paths: tuple[str, ...] = (),
     changed_paths: tuple[str, ...] = (),
     subject_seats: frozenset[str] = frozenset(),
     subject_families: frozenset[str] = frozenset(),
+    facts: Any = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
     A snapshot means the budget guard requires a substitute. Without both trusted
     inputs, only intrinsic eligibility can be proven and the requested identity is
     retained. This does not attest cross-family independence for those legacy calls.
-    An existing attempt's seat AND model are immutable.
+    An existing attempt's seat AND model are immutable. ``facts`` (complete branch
+    authorship and scope, #9739) stand in for a single ``author_model``; a given
+    ``author_model`` is added to them, never substituted.
     """
+    from scripts.review.capacity import review_capacity_action
     from scripts.review.model_catalog import risk_reviewer_refusal
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
@@ -383,27 +482,40 @@ def _resolve_review_target(
         resolve_reviewer,
     )
     from scripts.review.security_paths import effective_review_risk
-    from scripts.review.subject_seat import prepare_subject_exclusion
+    from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
     from .telemetry import _default_model_for
 
+    _require_agy_code_review_risk(seat, risk, profile)
     requested_model = model or _default_model_for(seat) or ""
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")
     # The seat's registered pin reviews too when no model is named (#9583).
     _refuse_non_review_models((requested_model,))
-    # Composer/Kimi never review. Grok is admitted only as the resolver's
-    # runtime-attested Cursor seat (#9488); native Grok is excluded there.
+    if attempt and seat in {"grok", "grok-build"}:
+        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+
+        # Native Grok model admission (#9769) does not prove the attempt
+        # boundary (#8517). Refuse before budget probes or attempt setup.
+        detail = UNSUPPORTED_HARNESS_REASONS[seat]
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
+        )
+    # Composer/Kimi never review. Native and Cursor Grok require runtime
+    # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
-    if profile != "ukrainian":
-        forbidden.add("google")
-    trusted = bool(author_model and risk)
+    if profile == "ukrainian":
+        facts = None
+    trusted = bool((author_model or facts is not None) and risk)
     if profile != "code" and (author_model or risk):
         raise ReviewAdmissionRefused(
             "REVIEW_ROUTE_REFUSED: --review-author-model and --review-risk support the code profile only; "
             "Ukrainian reviews use --review-profile ukrainian without these flags"
         )
-    if attempt and snapshot is not None:
+    attempt_blocked, _ = review_capacity_action(
+        seat, ((snapshot or {}).get("agents") or {}).get(seat, {}), (snapshot or {}).get("diagnostics"), requested_model
+    )
+    if attempt and snapshot is not None and budget_seat and attempt_blocked:
         if budget_substitute and budget_substitute != budget_seat:
             detail = (
                 f"review attempt refused: agent substitution from {budget_seat} to {budget_substitute} "
@@ -419,23 +531,49 @@ def _resolve_review_target(
     )
     if subject.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}")
-    inputs = ResolverInputs(
-        author_model=author_model or "",
-        review_profile=profile,
-        domain=profile,
-        risk=effective_review_risk(risk or "medium", changed_paths, owned_paths, profile=profile),
-        routing_snapshot=snapshot if trusted else None,
-        owned_paths=owned_paths,
-        changed_paths=changed_paths,
-        subject_seats=subject.seats,
-        subject_families=subject.families,
-        subject_evidence=subject.evidence,
-    )
-    author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
-    if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
+    if facts is not None:
+        # The shared calculation already holds the declared owned paths and
+        # explicit subjects it was collected with, plus every changed path.
+        inputs = facts.resolver_inputs(
+            risk=effective_review_risk(risk or "medium", facts.changed_paths, facts.scope_paths, profile=profile),
+            review_profile=profile,
+            author_model=author_model or "",
+            routing_snapshot=snapshot,
+        )
+    else:
+        inputs = ResolverInputs(
+            author_model=author_model or "",
+            review_profile=profile,
+            domain=profile,
+            risk=effective_review_risk(risk or "medium", changed_paths, owned_paths, profile=profile),
+            routing_snapshot=snapshot,
+            owned_paths=owned_paths,
+            changed_paths=changed_paths,
+            subject_seats=subject.seats,
+            subject_families=subject.families,
+            subject_evidence=subject.evidence,
+        )
+    author_family = resolve_author_family(author_model or "") if trusted and author_model else UNKNOWN_AUTHOR_FAMILY
+    if (
+        trusted
+        and author_model
+        and author_family in UNRESOLVED_AUTHOR_FAMILIES
+        and not (author_family == UNKNOWN_AUTHOR_FAMILY and facts is not None and facts.existing_families)
+    ):
         raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
+    if facts is not None:
+        # evaluate_candidate reads the complete set from ``inputs``.
+        author_family = None
     if profile == "ukrainian":
         eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
+        exclusion = subject_exclusion_reason(
+            SimpleNamespace(name=seat, route=seat, family=family, concrete_model=concrete, transport=seat),
+            seats=subject.seats, families=subject.families, evidence=subject.evidence,
+        )
+        if exclusion:
+            raise ReviewAdmissionRefused(
+                f"REVIEW_ROUTE_REFUSED: {exclusion}"
+            )
     else:
         # A Cursor seat is admitted only at its exact pinned slug: the adapter
         # sends the requested string unchanged, so a bracket suffix
@@ -461,7 +599,10 @@ def _resolve_review_target(
         raise ReviewAdmissionRefused(
             f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail}{risk_note} (#8517)"
         )
-    if eligible and (snapshot is None or not trusted):
+    lane_info = (snapshot.get("agents") or {}).get(seat, {}) if snapshot else {}
+    blocked, _ = review_capacity_action(seat, lane_info, (snapshot or {}).get("diagnostics"), requested_model)
+    eligible = eligible and not blocked
+    if eligible and (snapshot is None or not budget_seat or not trusted or attempt):
         return seat, model
     if not trusted:
         hint = (
@@ -479,10 +620,18 @@ def _resolve_review_target(
         tuple(candidate for candidate in rung if candidate.family not in forbidden)
         for rung in REVIEW_LADDERS[inputs.risk]
     )
+    # The budget guard may be checking a reviewer already substituted during
+    # initial admission. Its allowance and credit allowlist belong to that
+    # admitted seat/model, independently of the original request.
+    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
+    budget_model = budget_model or (requested_model if budget_seat == seat else _default_model_for(budget_seat))
+    budget_blocked, _ = review_capacity_action(
+        budget_seat, lane_info, (snapshot or {}).get("diagnostics"), budget_model
+    )
     resolution = resolve_reviewer(
         inputs,
         ladder=ladder,
-        excluded_quota_buckets=frozenset({budget_seat}) if snapshot else frozenset(),
+        excluded_quota_buckets=frozenset({budget_seat}) if snapshot and budget_blocked else frozenset(),
     )
     if resolution.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
@@ -491,18 +640,7 @@ def _resolve_review_target(
     # bucket leaves no eligible substitute, retain the already cross-family,
     # snapshot-validated reviewer only when its lane still has capacity.
     # Health, circuit, subject, suitability and near-cap gates remain binding.
-    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
-    lane_status = (
-        (lane_info.get("interactive") or {}).get("status") or lane_info.get("status")
-        if budget_seat == "claude"
-        else lane_info.get("status")
-    )
-    if (
-        selected is None
-        and snapshot is not None
-        and lane_status in {"cool", "warm"}
-        and not (lane_info.get("runtime") or {}).get("headroom_blocked")
-    ):
+    if selected is None and snapshot is not None and not budget_blocked:
         if eligible and seat == budget_seat:
             return seat, model
         # The initial admission may already have replaced a same-family request.
@@ -633,7 +771,8 @@ def _slot_holder(
     except Exception as exc:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: slot resolver failed for '{agent}' ({type(exc).__name__}: {exc}) — queued at identity",
+            f"⚠️ channel-bridge: slot resolver failed for the {_slot_label(agent, static_agents)} "
+            f"({type(exc).__name__}: {exc}) — queued at its identity",
         )
         return agent
     if res.has_holder:
@@ -641,9 +780,23 @@ def _slot_holder(
     if warn_if_unheld:
         _warn(
             warnings,
-            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder (queued at {res.queue_location})",
+            f"⚠️ channel-bridge: recipient {_slot_label(agent, static_agents, res.area_id)} has no live holder "
+            f"({res.reason or 'no-live-holder'}); queued in its channels DB delivery queue",
         )
     return agent
+
+
+def _slot_label(agent: str, static_agents: Collection[str], area_id: str | None = None) -> str:
+    """A slot's name for log text, built from trusted tables only (#9739).
+
+    The seat prefix comes from ``static_agents`` and the area from the fleet
+    taxonomy (``resolve_slot_holder``), so ``grok-infra`` reads ``grok slot in
+    area 'infra'``. The caller's slot string itself never reaches a log, which
+    CodeQL's ``py/clear-text-logging-sensitive-data`` flagged as secret data.
+    """
+    seat = max((name for name in static_agents if agent.startswith(f"{name}-")), key=len, default=None)
+    label = f"{seat} slot" if seat else "slot with an unregistered seat prefix"
+    return f"{label} in area '{area_id}'" if area_id else label
 
 
 def _warn(warnings: list[str] | None, message: str) -> None:

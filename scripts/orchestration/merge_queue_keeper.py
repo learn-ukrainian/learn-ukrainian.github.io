@@ -18,6 +18,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.github_client import GitHubRateLimited
 from scripts.gh_merge_queue_status import extract_pr_number
 from scripts.opsec.prepublish import (
     PublishBlocked,
@@ -34,6 +35,33 @@ MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 SHA = re.compile(r"[0-9a-f]{40}\Z")
+# Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
+# the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
+# check stands in for Analyze only when every changed file is an npm or pip/uv
+# lockfile or package.json, whoever authored the PR: anyone with write access
+# can push code to a dependabot branch, and github-actions bumps edit workflows.
+CODEQL_CHECK = "CodeQL"
+# GitHub's code-scanning app; both its id and its reserved slug must match.
+CODEQL_APP_ID = 57789
+CODEQL_APP = "github-advanced-security"
+CODEQL_PASSING = frozenset({"success", "neutral"})
+DEPENDENCY_FILES = frozenset({"package-lock.json", "package.json", "uv.lock"})
+REQUIREMENTS_FILE = re.compile(r"requirements[\w.-]*\.txt\Z")
+# GitHub's PR-files endpoint stops at this many files without saying so.
+PR_FILES_LIMIT = 3000
+# A head the merge queue ejected is re-enqueued at most once, and only with
+# a ``grant`` decision for ``"<pr>:<head>"`` in this JSON file (written by
+# the operator's flake prover). Without a configured file, no grant exists.
+REQUEUE_GATE_ENV = "MQ_KEEPER_REQUEUE_GATE"
+# Slow mode: ``--apply`` skips a run that starts within this many seconds of
+# the last recorded run, so a frequent timer can be throttled without a unit edit.
+MIN_INTERVAL_ENV = "MQ_KEEPER_MIN_INTERVAL_SECONDS"
+SLOW_FLAG_ENV = "MQ_KEEPER_SLOW_FLAG"
+SLOW_INTERVAL_SECONDS = 300
+# Timer jitter allowance so a throttled minute timer still runs on the fifth minute.
+INTERVAL_SLACK_SECONDS = 15
+# Gate holds the keeper reports without a PR comment: the drop comment already says why.
+QUIET_GATE_REASONS = frozenset({"requeue-pending"})
 
 
 class KeeperError(RuntimeError):
@@ -62,6 +90,9 @@ class GitHub:
             )
         except subprocess.TimeoutExpired as exc:
             raise KeeperError("GitHub request timed out") from exc
+        observation = getattr(result, "github_result", None)
+        if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+            raise GitHubRateLimited(observation.reset_at)
         if result.returncode:
             raise KeeperError((result.stderr or result.stdout or "GitHub request failed").strip()[:500])
         return result.stdout
@@ -121,7 +152,13 @@ class GitHub:
         queues = {branch: repo.get(f"q{i}") is not None for i, branch in enumerate(sorted(branches))}
         if any(f"q{i}" not in repo for i in range(len(branches))):
             raise KeeperError("queue configuration unknown")
-        return {"prs": prs["nodes"], "queues": queues, "remaining": rate["remaining"], "cost": rate["cost"]}
+        return {
+            "prs": prs["nodes"],
+            "queues": queues,
+            "remaining": rate["remaining"],
+            "cost": rate["cost"],
+            "reset_at": rate.get("resetAt"),
+        }
 
     def comments(self, number: int) -> list[dict[str, Any]]:
         return self.paged(Request("read-comments", repo=self.repository, number=number))
@@ -136,6 +173,19 @@ class GitHub:
         ):
             raise KeeperError("check-runs page incomplete")
         return data["check_runs"]
+
+    def files(self, number: int) -> list[dict[str, Any]]:
+        """Every changed file of a PR; raises when the list may be truncated or incomplete."""
+        pull = self.json(Request("read-pull", repo=self.repository, number=number))
+        changed = pull.get("changed_files") if isinstance(pull, dict) else None
+        if type(changed) is not int:
+            raise KeeperError("PR changed-file count unknown")
+        if changed >= PR_FILES_LIMIT:
+            raise KeeperError("PR file list truncated")
+        rows = self.paged(Request("read-pr-files", repo=self.repository, number=number))
+        if len(rows) >= PR_FILES_LIMIT or len(rows) != changed:
+            raise KeeperError("PR file list incomplete")
+        return rows
 
     def current(self, number: int) -> dict[str, Any]:
         row = self.json(
@@ -255,7 +305,31 @@ def _hold(row: Mapping[str, Any]) -> bool | None:
     return bool(HOLD_TITLE.search(title) or any(item["name"].casefold() in HOLD_LABELS for item in labels))
 
 
-def _check_state(checks: list[dict[str, Any]], head: str) -> str:
+def _latest(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
+
+
+def _codeql_rows(checks: list[dict[str, Any]], head: str) -> list[dict[str, Any]]:
+    """Top-level CodeQL check runs at ``head`` from GitHub code scanning (not a same-named workflow job)."""
+    return [
+        row
+        for row in checks
+        if isinstance(row, dict)
+        and row.get("head_sha") == head
+        and row.get("name") == CODEQL_CHECK
+        and isinstance(row.get("app"), dict)
+        and row["app"].get("id") == CODEQL_APP_ID
+        and row["app"].get("slug") == CODEQL_APP
+    ]
+
+
+def _check_state(checks: list[dict[str, Any]], head: str, *, dependency_update: bool = False) -> str:
+    """``ok``, a pending reason or ``CI-red-<check>`` for ``CI Gate`` plus CodeQL at ``head``.
+
+    CodeQL evidence is the ``Analyze (…)`` runs. A PR with none of them waits
+    (``CodeQL-pending``) unless ``dependency_update`` is set, in which case the
+    completed top-level CodeQL check must be success or neutral (#9921).
+    """
     names: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in checks:
         if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
@@ -263,18 +337,50 @@ def _check_state(checks: list[dict[str, Any]], head: str) -> str:
         names[row["name"]].append(row)
     required = ["CI Gate", *(name for name in names if name.startswith("Analyze ("))]
     pending: str | None = "CodeQL-pending" if len(required) == 1 else None
+    if pending and dependency_update:
+        codeql = _codeql_rows(checks, head)
+        latest = _latest(codeql) if codeql else None
+        if latest is not None and latest.get("status") == "completed":
+            if latest.get("conclusion") not in CODEQL_PASSING:
+                return f"CI-red-{CODEQL_CHECK}"
+            pending = None
     for name in required:
         rows = names.get(name, [])
         if not rows:
             pending = pending or f"CI-pending-{name}"
             continue
-        row = max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
+        row = _latest(rows)
         if row.get("status") != "completed":
             pending = pending or f"CI-pending-{name}"
             continue
         if row.get("conclusion") != "success":
             return f"CI-red-{name}"
     return pending or "ok"
+
+
+def _dependency_file(path: Any) -> bool:
+    if not isinstance(path, str) or not path:
+        return False
+    name = path.rsplit("/", 1)[-1]
+    return name in DEPENDENCY_FILES or bool(REQUIREMENTS_FILE.fullmatch(name))
+
+
+def _dependency_update(gh: GitHub, number: int) -> bool:
+    """Whether the PR changes only lockfiles and package.json; the author never matters."""
+    files = gh.files(number)
+    return bool(files) and all(
+        _dependency_file(row.get("filename"))
+        and ("previous_filename" not in row or _dependency_file(row.get("previous_filename")))
+        for row in files
+    )
+
+
+def _evaluate_checks(gh: GitHub, number: int, head: str, checks: list[dict[str, Any]]) -> str:
+    """:func:`_check_state`, reading the file list only when a PR has no ``Analyze`` runs but a CodeQL check."""
+    state = _check_state(checks, head)
+    if state != "CodeQL-pending" or not _codeql_rows(checks, head):
+        return state
+    return _check_state(checks, head, dependency_update=_dependency_update(gh, number))
 
 
 def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
@@ -300,6 +406,89 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
     return "ready"
 
 
+def _requeue_grants(path: Path | None) -> dict[str, dict[str, Any]] | None:
+    """Requeue decisions keyed ``"<pr>:<head>"``, or None when no file is configured.
+
+    A missing, unreadable or malformed decision file grants nothing, so a
+    keeper holds every ejected head instead of guessing.
+    """
+    if path is None:
+        return None
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(data, dict) or data.get("version") != 1 or not isinstance(data.get("requeue"), dict):
+        return {}
+    return {key: value for key, value in data["requeue"].items() if isinstance(key, str) and isinstance(value, dict)}
+
+
+def _requeue_hold(
+    drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
+) -> str | None:
+    """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if drop_key in previous.get("requeued", {}):
+        return "requeue-spent"
+    if drop_key in previous.get("undiagnosed", {}):
+        return "requeue-unknown"
+    if drops < 1:
+        return None
+    if grants is None:
+        return "requeue-pending"
+    decision = grants.get(drop_key, {}).get("decision")
+    if decision == "grant":
+        return None
+    return "requeue-denied" if decision == "deny" else "requeue-pending"
+
+
+def _gate_hold(
+    gh: GitHub,
+    number: int,
+    head: str,
+    drops: int,
+    grants: dict[str, dict[str, Any]] | None,
+    previous: Mapping[str, Any],
+) -> str | None:
+    """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
+    drop_key = f"{number}:{head}"
+    if (
+        grants is not None
+        and drop_key in previous.get("squash_revoked", {})
+        and gh.squash_blocked(number, head) is not False
+    ):
+        return "squash-text-blocked"
+    return _requeue_hold(drop_key, drops, grants, previous)
+
+
+def _min_interval(environ: Mapping[str, str]) -> int:
+    """Seconds an ``--apply`` run must wait after the last one (0 = every timer tick)."""
+    seconds = 0
+    raw = environ.get(MIN_INTERVAL_ENV, "").strip()
+    if raw:
+        try:
+            seconds = max(0, int(raw))
+        except ValueError:
+            seconds = SLOW_INTERVAL_SECONDS
+    flag = environ.get(SLOW_FLAG_ENV, "").strip()
+    if flag and Path(flag).exists():
+        seconds = max(seconds, SLOW_INTERVAL_SECONDS)
+    return seconds
+
+
+def _throttled(state_path: Path, seconds: int, now: datetime | None = None) -> bool:
+    """True when the last recorded run is younger than ``seconds`` (minus timer slack)."""
+    if seconds <= 0:
+        return False
+    try:
+        observed = datetime.fromisoformat(json.loads(state_path.read_text())["observed"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+    if observed.tzinfo is None:
+        return False
+    elapsed = ((now or datetime.now(UTC)) - observed).total_seconds()
+    return 0 <= elapsed < seconds - INTERVAL_SLACK_SECONDS
+
+
 def _load(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {"queued": {}, "drops": {}}
@@ -312,6 +501,9 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("queued"), dict)
         or not isinstance(data.get("drops"), dict)
         or not isinstance(data.get("approved", {}), dict)
+        or not isinstance(data.get("requeued", {}), dict)
+        or not isinstance(data.get("undiagnosed", {}), dict)
+        or not isinstance(data.get("squash_revoked", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -404,18 +596,26 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     )
 
 
-def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str], bool]:
+def run(
+    gh: GitHub, state_path: Path, *, apply: bool = False, requeue_gate: Path | None = None
+) -> tuple[list[str], bool]:
     branches = gh.branch_names()
     snap = gh.snapshot(branches)
     lines: list[str] = []
     failed = False
     estimated_remaining = snap["remaining"]
     budget = estimated_remaining - 30 >= FLOOR
+    if not budget:
+        return [
+            f"GraphQL budget stop: skipped remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR} reset_at={snap.get('reset_at')}"
+        ], False
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
     approved_now: dict[str, str] = {}
     login = gh.identity()
     observed = datetime.now(UTC).isoformat()
+    grants = _requeue_grants(requeue_gate)
+    open_numbers = {str(pr.get("number")) for pr in snap["prs"]}
     for pr in snap["prs"]:
         number, head, node_id = pr.get("number"), pr.get("headRefOid"), pr.get("id")
         if not isinstance(number, int) or not isinstance(head, str) or not isinstance(node_id, str):
@@ -433,7 +633,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             comments = gh.comments(number)
             verdict = lookup_verdict(comments, head, login)
             check_rows = gh.checks(head)
-            checks = _check_state(check_rows, head)
+            checks = _evaluate_checks(gh, number, head, check_rows)
         except KeeperError:
             comments, verdict, checks, check_rows = [], Verdict("unknown"), "CI-unknown", []
             comment_safe = False
@@ -447,17 +647,29 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         detail = ""
         failed_jobs: list[str] = []
         if dropped:
+            dropped_head = previous["queued"][key]
+            previous.setdefault("undiagnosed", {}).setdefault(f"{number}:{dropped_head}", previous.get("observed", ""))
+        else:
+            dropped_head = head
+        prior_drop_key = f"{number}:{dropped_head}"
+        if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs = _drop_detail(gh, number, head, previous.get("observed", ""))
+                detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
-                    dropped_head = previous["queued"][key]
-                    prior_drop_key = f"{number}:{dropped_head}"
+                    previous["undiagnosed"].pop(prior_drop_key)
                     previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
                     if dropped_head == head:
                         drops = previous["drops"][drop_key]
+                else:
+                    detail = " Queue removal diagnosis unknown."
             except KeeperError:
                 detail = " Queue removal diagnosis unknown."
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
+        if reason == "ready" and queued is not True and not armed:
+            try:
+                reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+            except KeeperError:
+                reason = "requeue-unknown"
         rollup = [
             {
                 "name": item.get("name"),
@@ -528,7 +740,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                         approved_before = True
                         approved_now[key] = head
                 try:
-                    current_checks = _check_state(gh.checks(head), head)
+                    current_checks = _evaluate_checks(gh, number, head, gh.checks(head))
                 except KeeperError:
                     current_checks = "CI-unknown"
                 reason = (
@@ -536,6 +748,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     if verdict_lookup_ok
                     else "fresh-evidence-unknown"
                 )
+                if reason == "ready" and queued is not True and not armed:
+                    reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -562,6 +776,8 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                     lines.append(f"#{number} revoked: {revoke}")
                     if queued is True:
                         queued_now.pop(key, None)
+                    if revoke == "squash-text-blocked":
+                        previous.setdefault("squash_revoked", {})[drop_key] = observed
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
@@ -576,14 +792,17 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 else:
                     queued_now[key] = head
                     lines.append(f"#{number} enqueued")
+                if grants is not None and drops >= 1:
+                    previous.setdefault("requeued", {})[drop_key] = observed
                 estimated_remaining -= 30
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
+                and reason not in QUIET_GATE_REASONS
                 and comment_safe
                 and (_ever_approved(comments, login) or dropped)
             ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
-            elif dropped and detail and comment_safe:
+            elif reason != "ready" and dropped and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
             for job in failed_jobs:
                 previous.setdefault("failures", []).append({"job": job, "pr": number, "at": observed})
@@ -595,6 +814,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
+        for name in ("requeued", "squash_revoked", "undiagnosed"):
+            if name in previous:
+                previous[name] = {
+                    item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
+                }
         cutoff = datetime.now(UTC) - timedelta(hours=24)
         failures = [
             item
@@ -620,8 +844,6 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 failed = True
                 lines.append(f"flaky-test issue FAILED: {exc}")
         _save(state_path, previous)
-    if not budget:
-        lines.append(f"GraphQL budget stop: remaining={snap['remaining']} cost={snap['cost']} floor={FLOOR}")
     return lines, failed
 
 
@@ -629,7 +851,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nExit codes: 0 success/lock overlap; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  .venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nEnvironment: MQ_KEEPER_REQUEUE_GATE=<decision file> re-enqueues an ejected head once, only with a grant; MQ_KEEPER_MIN_INTERVAL_SECONDS or an existing MQ_KEEPER_SLOW_FLAG file (300 s) throttles --apply.\nExit codes: 0 success/lock overlap/slow-mode skip; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
@@ -650,9 +872,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = args.repo_root.resolve()
     lock_path = root / "batch_state/locks/merge_queue_keeper.lock"
+    gate_value = os.environ.get(REQUEUE_GATE_ENV, "").strip()
+    requeue_gate = Path(gate_value) if gate_value else None
     if not args.apply:
         try:
-            lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=False)
+            lines, failed = run(
+                GitHub(root, args.repo),
+                root / "batch_state/merge_queue_keeper.json",
+                apply=False,
+                requeue_gate=requeue_gate,
+            )
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1
@@ -666,8 +898,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         except BlockingIOError:
             print("merge queue keeper: overlap, skipped")
             return 0
+        state_path = root / "batch_state/merge_queue_keeper.json"
+        interval = _min_interval(os.environ)
+        if _throttled(state_path, interval):
+            print(f"merge queue keeper: slow mode, skipped interval={interval}s")
+            return 0
         try:
-            lines, failed = run(GitHub(root, args.repo), root / "batch_state/merge_queue_keeper.json", apply=args.apply)
+            lines, failed = run(GitHub(root, args.repo), state_path, apply=args.apply, requeue_gate=requeue_gate)
+        except GitHubRateLimited as exc:
+            print(f"merge queue keeper: skipped reset_at={exc.reset_at}")
+            return 0
         except KeeperError as exc:
             print(f"merge queue keeper failed: {exc}")
             return 1

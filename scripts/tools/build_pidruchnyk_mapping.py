@@ -7,7 +7,6 @@ Contact: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
 from __future__ import annotations
 
 import argparse
-import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -16,6 +15,25 @@ from urllib.parse import urljoin
 import requests
 import yaml
 from bs4 import BeautifulSoup
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -105,7 +123,7 @@ def source_file_category(source_file: str) -> str | None:
 
 def load_source_files(db_path: Path) -> list[str]:
     """Load the distinct textbook source_file IDs from SQLite."""
-    conn = sqlite3.connect(str(db_path))
+    conn = _open_readonly(str(db_path))
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file FROM textbooks ORDER BY source_file"

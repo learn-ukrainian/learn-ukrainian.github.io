@@ -40,10 +40,13 @@ def _infra_harness_stream_id() -> str:
 INFRA_STREAM_ID = _infra_harness_stream_id()
 
 
-def test_area_assignments_have_no_gemini_driver_slots() -> None:
+def test_area_assignments_give_gemini_a_driver_slot_wherever_codex_has_one() -> None:
     assignments = yaml.safe_load((_REPO_ROOT / "scripts/config/area_assignments.yaml").read_text())
     slots = [slot for area in assignments["assignments"].values() for slot in area.get("slots", [])]
-    assert not [slot for slot in slots if slot.startswith("gemini-")]
+    codex_lanes = {slot.removeprefix("codex-") for slot in slots if slot.startswith("codex-")}
+    gemini_lanes = {slot.removeprefix("gemini-") for slot in slots if slot.startswith("gemini-")}
+    assert codex_lanes
+    assert gemini_lanes == codex_lanes
 
 
 # ---------------------------------------------------------------------------
@@ -332,7 +335,7 @@ def test_launcher_static_selector_wiring(launcher: str) -> None:
         # Drivers validate selectors before provider preflight or CLI invocation.
         ("start-claude-driver.sh", "invalid_selector_xyz", 2),
         ("start-codex-driver.sh", "invalid_selector_xyz", 2),
-        ("start-gemini-driver.sh", "invalid_selector_xyz", 4),
+        ("start-gemini-driver.sh", "invalid_selector_xyz", 2),
         ("start-grok-driver.sh", "invalid_selector_xyz", 2),
         ("start-cursor-driver.sh", "invalid_selector_xyz", 2),
     ],
@@ -360,10 +363,7 @@ def test_hermetic_launcher_unknown_selector_fails_closed_contract(
         f"Launcher {launcher} with arg {unknown_arg} returned rc={result.returncode}, expected {expected_rc}\n"
         f"stdout: {result.stdout}\nstderr: {result.stderr}"
     )
-    if launcher == "start-gemini-driver.sh":
-        assert "AGY/Gemini is not a planning, design or driver seat" in result.stderr
-    else:
-        assert "unknown lane selector" in result.stderr.lower() or "invalid" in result.stderr.lower()
+    assert "unknown lane selector" in result.stderr.lower() or "invalid" in result.stderr.lower()
 
 
 def test_inventory_handoff_candidates_survive_missing_resolver(monkeypatch):
@@ -409,12 +409,24 @@ def test_session_setup_hook_epic_validation_contract(
     expected_token: str,
     handoff_path: str,
 ) -> None:
+    context = _run_session_setup_hook(tmp_path, session_epic)
+    _assert_epic_contract(context, expected_mode, expected_token, handoff_path)
+
+
+def _run_session_setup_hook(
+    tmp_path: Path, session_epic: str, driver_state: str | None = None
+) -> str:
     """Verify SessionStart hook validates SESSION_EPIC against launcher_selector_resolve."""
     import json
 
     hook_path = _REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
     project_dir = tmp_path / "project"
     project_dir.mkdir()
+
+    if driver_state is not None:
+        state = project_dir / ".claude" / f"{session_epic}-epic" / "DRIVER-STATE.md"
+        state.parent.mkdir(parents=True)
+        state.write_text(driver_state, encoding="utf-8")
 
     venv_bin = project_dir / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
@@ -469,8 +481,12 @@ def test_session_setup_hook_epic_validation_contract(
         data = json.loads(result.stdout)
     except json.JSONDecodeError as exc:
         pytest.fail(f"SessionStart hook stdout was not JSON ({exc}); stdout={result.stdout!r} stderr={result.stderr!r}")
-    context = data.get("hookSpecificOutput", {}).get("additionalContext", "")
+    return data.get("hookSpecificOutput", {}).get("additionalContext", "")
 
+
+def _assert_epic_contract(
+    context: str, expected_mode: str, expected_token: str, handoff_path: str
+) -> None:
     assert expected_token in context
 
     if expected_mode == "valid":
@@ -485,3 +501,19 @@ def test_session_setup_hook_epic_validation_contract(
     elif expected_mode == "empty":
         assert "ERROR: unknown SESSION_EPIC" not in context
         assert "ASSIGNED EPIC:" not in context
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_session_setup_hook_names_driver_state_as_authoritative(tmp_path: Path) -> None:
+    """A lane DRIVER-STATE.md is surfaced as the authoritative goal file."""
+    context = _run_session_setup_hook(tmp_path, "curriculum-upgrade", "# state\n")
+    assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
+    assert "Driver state (AUTHORITATIVE, read it FIRST" in context
+    assert ".claude/curriculum-upgrade-epic/DRIVER-STATE.md" in context
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+def test_session_setup_hook_omits_driver_state_when_absent(tmp_path: Path) -> None:
+    context = _run_session_setup_hook(tmp_path, "curriculum-upgrade")
+    assert "ASSIGNED EPIC: curriculum-upgrade.epic" in context
+    assert "DRIVER-STATE.md" not in context

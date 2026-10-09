@@ -12,7 +12,7 @@
 
 > **BEHAVIORAL RULES** are in `agents_extensions/shared/memory/MEMORY.md` — enforced every session. Key: finish the job (no tech debt), stop asking (just do it), test before shipping, use tracking docs, no quality shortcuts, investigate before coding, be honest.
 
-> **NON-NEGOTIABLE RULES** in `agents_extensions/shared/rules/non-negotiable-rules.md` (served at `GET /api/rules`; offline: `agents_extensions/shared/rules/_load-via-api.md`) — word count targets are MINIMUMS, all audit gates must pass, no shortcuts.
+> **NON-NEGOTIABLE RULES** in `agents_extensions/shared/rules/non-negotiable-rules.md` (served at `GET /api/rules`; offline: `agents_extensions/shared/rules/_load-via-api.md`) — legacy word count targets are MINIMUMS (fresh-build lessons: rule 4 contracts), all audit gates must pass, no shortcuts.
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
@@ -25,7 +25,7 @@
 ## Operator Contract (binding — loads without tools)
 
 The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
-(served FIRST at `GET /api/rules`; digests also in `AGENTS.md` and `GEMINI.md` § Operator
+(served FIRST at `GET /api/rules?scope=full`; digests also in `AGENTS.md` and `GEMINI.md` § Operator
 Contract). Headless `claude -p` runs may not fetch the API — this digest keeps the contract
 in-context regardless: quality over shortcuts · root-cause fixes · git/PR hygiene +
 layout A (primary non-bare on main; agents under `.worktrees/dispatch/…`; bare=bug) ·
@@ -130,7 +130,7 @@ For shared delegation, artifact hygiene, Python invocation, worktree layout, com
 | Feature | How | When |
 | --- | --- | --- |
 | `Monitor` tool | Stream stdout events as notifications | **Build monitoring — NEVER poll with ScheduleWakeup or manual loops.** How-to (command template, `--worktree` requirement, JSONL event fields, Monitor API state queries): see the `build-monitoring` skill. |
-| `/effort` | Set model effort dynamically mid-session | Levels `low` / `medium` / `high` / `xhigh` / `max`. Level names do not mean the same depth across models — re-verify per seated model. Thinking is always on for **Opus 5.5** (default Claude model and driver seat, operator 2026-09-22) and **Fable 5.1** (selectable Claude model; no advisory role); depth is effort-only. **Opus 5.5:** orchestrating / epic driving **`high`** (launcher default); routine turns **`medium`** (API default; beats Opus 5 at `high`); `low` for simple lookups; each level thinks more than on Opus 5, so lower effort before prompting for brevity. **Fable 5.1:** default **`high`**; `medium`/`low` for routine turns. **Both:** **`xhigh`** for hard debugging, large multi-file refactors, long autonomous runs — **and** for curriculum/linguistic review skills that pin `effort: xhigh` (row below; do not step those down); **`max` almost never** — after measured headroom at `xhigh`; at `xhigh`/`max` leave output-budget room for the final answer. Quirks: `high+` on simple tasks **over-gathers** (lower effort; do not prompt around it); `low` **searches less** (bump when retrieval is needed). Effort does not shorten visible output (see Concise by default). Canonical tables: `docs/best-practices/fleet-shared-doctrine.md` § Opus 5.5 and § Fable 5.1 `/effort` decision topology. |
+| `/effort` | Set model effort dynamically mid-session | Levels `low` / `medium` / `high` / `xhigh` / `max`. Level names do not mean the same depth across models — re-verify per seated model. Thinking is always on for **Opus 5.5** (default Claude model and driver seat, operator 2026-09-22) and **Fable 5.1** (selectable Claude model; no advisory role); depth is effort-only. **Opus 5.5:** orchestrating / epic driving **`high`** (launcher default); routine turns **`medium`** (API default; beats Opus 5 at `high`); `low` for simple lookups; each level thinks more than on Opus 5, so lower effort before prompting for brevity. **Fable 5.1:** default **`high`**; `medium`/`low` for routine turns. **Both:** **`xhigh`** for hard debugging, large multi-file refactors, long autonomous runs — **and** for curriculum/linguistic review skills that pin `effort: xhigh` (row below; do not step those down); **`max` almost never** — after measured headroom at `xhigh`; at `xhigh`/`max` leave output-budget room for the final answer. Quirks: `high+` on simple tasks **over-gathers** (lower effort; do not prompt around it); `low` **searches less** (bump when retrieval is needed). Effort does not shorten visible output (see Concise by default). Historical Fable 5.1 `/effort` decision topology: `docs/decisions/agent-rules-routing-history.md` § Fable 5.1 `/effort` decision topology. |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
 | `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
 | `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Set `xhigh` 2026-04-21; retained through Opus 5 — Anthropic recommends `xhigh` for coding/review and a minimum of `high` for intelligence-sensitive work. Curriculum/linguistic review stays `xhigh`: these skills judge Ukrainian content, where a miss is a durable learner error. (CODE review is the one place a cheaper first pass is defensible — Opus 5 keeps high precision *and* recall at lower effort — but that is a dispatch-routing choice, not a change to these skills.) |
@@ -148,7 +148,7 @@ Being readable and being concise are different things, and readable matters more
 short by being selective about what you include — drop details that do not change what the
 reader would do next — never by compressing prose into fragments, abbreviations, arrow chains,
 or jargon. This does not license terseness that costs clarity (`#0I`: plain language always),
-and it never applies to curriculum content, where word targets are MINIMUMS.
+and it never applies to curriculum content, where legacy word targets are MINIMUMS.
 
 The same applies to files written to disk: match the length of a written deliverable to what
 the task needs. Do not pad reports or handoffs with filler sections, redundant summaries, or

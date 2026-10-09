@@ -8,22 +8,26 @@ import re
 import unicodedata
 from pathlib import Path
 
+import pytest
+
 from scripts.guardrails.delegate_ownership import (
     ClaimKind,
     GuardMode,
     OwnershipLedger,
+    PathClaim,
     _safe_task_state_name,
     admit_write_paths,
     claims_conflict,
     env_guard_mode,
     normalize_claim,
+    owned_path_matcher,
     refusal_message,
     sanitize_for_display,
 )
 
 
-def test_normalize_file_subtree_unknown():
-    assert normalize_claim("scripts/delegate.py").kind == ClaimKind.FILE
+def test_normalize_literal_subtree_unknown():
+    assert normalize_claim("scripts/delegate.py").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/**").kind == ClaimKind.SUBTREE
     assert normalize_claim("scripts/**/*.py").kind == ClaimKind.UNKNOWN
@@ -49,6 +53,62 @@ def test_claims_conflict_matrix():
     assert claims_conflict(normalize_claim("a/x/"), sub)
     assert not claims_conflict(sub, sib)
     assert not claims_conflict(f_a, normalize_claim("a/**/*.py"))
+
+
+@pytest.mark.parametrize("directory", ["scripts/agent_runtime", "scripts/agent_runtime/", "scripts/agent_runtime/**"])
+@pytest.mark.parametrize("legacy", [False, True])
+def test_plain_directory_matches_commit_scope_and_conflicts_both_ways(directory, legacy):
+    child = "scripts/agent_runtime/runner.py"
+    parent_claim = normalize_claim(directory)
+    child_claim = normalize_claim(child)
+    if legacy:
+        parent_claim = PathClaim(directory, ClaimKind.FILE, parent_claim.norm)
+        child_claim = PathClaim(child, ClaimKind.FILE, child_claim.norm)
+    matcher = owned_path_matcher(directory)
+    assert matcher is not None and matcher(child) and matcher(parent_claim.norm)
+    assert claims_conflict(parent_claim, child_claim)
+    assert claims_conflict(child_claim, parent_claim)
+    sibling = normalize_claim("scripts/agent_runtime_other")
+    assert not matcher(sibling.norm)
+    assert not claims_conflict(parent_claim, sibling)
+    assert not claims_conflict(sibling, parent_claim)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize(
+    "held,incoming,refused,overlap",
+    [
+        ("scripts/agent_runtime", "scripts/agent_runtime/runner.py", True, True),
+        ("scripts/agent_runtime/runner.py", "scripts/agent_runtime", True, True),
+        ("scripts/agent_runtime", "scripts/agent_runtime/*.py", True, False),
+        ("scripts/agent_runtime/*.py", "scripts/agent_runtime", True, False),
+        ("scripts/agent_runtime", "scripts/agent_runtime_other", False, False),
+    ],
+)
+def test_directory_admission_with_mixed_ledger(tmp_path, legacy, held, incoming, refused, overlap):
+    ledger = OwnershipLedger(tmp_path / "ownership.sqlite3", task_state_dir=tmp_path, mode=GuardMode.REFUSE)
+    pid = os.getpid()
+    (tmp_path / "holder.json").write_text(json.dumps({"status": "running", "pid": pid}), encoding="utf-8")
+    holder = ledger.admit(task_id="holder", mode="workspace-write", owned_paths=[held], pid=pid)
+    assert holder.admitted
+    if legacy:
+        # Preserve the old row's key and shape, including FILE for a plain
+        # directory, while admitting new SUBTREE rows alongside it.
+        claim = normalize_claim(held)
+        kind = ClaimKind.FILE if claim.kind is ClaimKind.SUBTREE else claim.kind
+        with ledger._connect() as conn:
+            conn.execute(
+                "UPDATE write_claims SET claim_json = ? WHERE task_id = ?",
+                (json.dumps(PathClaim(claim.raw, kind, claim.norm).as_dict()), "holder"),
+            )
+    result = ledger.admit(task_id="incoming", mode="workspace-write", owned_paths=[incoming], pid=pid)
+    assert result.admitted is (not refused)
+    assert bool(result.conflicts) is overlap
+    if refused:
+        assert "REFUSE" in result.reason
+    if refused and not overlap:
+        assert "--owned-path" in result.reason
+        assert "--research-owned-path" not in result.reason
 
 
 def test_read_only_exempt(tmp_path: Path):
@@ -595,7 +655,8 @@ def test_unprovable_refusal_names_peer_and_is_not_called_a_conflict(tmp_path: Pa
     assert "cannot prove write-path disjointness" in reason, reason
     assert "undeclared" in reason, reason  # the blocking peer is named
     assert f"pid {pid}" in reason, reason
-    assert "--research-owned-path" in reason and "--allow-path-overlap" in reason, reason
+    assert "--owned-path" in reason and "--allow-path-overlap" in reason, reason
+    assert "--research-owned-path" not in reason, reason
 
 
 def test_real_conflict_refusal_still_reads_as_a_conflict(tmp_path: Path):
@@ -963,29 +1024,143 @@ def test_reconciliation_distinguishes_verified_replacement_from_recycled_pid(tmp
     assert len(rows2) == 0
 
 
-def test_pid_matches_task_real_process_identity(tmp_path: Path):
-    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline."""
-    import sqlite3
+_EXEC_HANDSHAKE_TIMEOUT_S = 10.0
+
+
+def _spawn_execd_sleeper(
+    *,
+    env: dict[str, str],
+    cwd: str | None = None,
+    timeout_s: float = _EXEC_HANDSHAKE_TIMEOUT_S,
+):
+    """Spawn a sleeper and return only after its new image is running.
+
+    #9808: ``Popen`` returns only after its exec-status pipe closes. Linux
+    closes that close-on-exec descriptor in ``begin_new_exec``, before the
+    new image's argument and environment pointers are installed, so a live
+    pid can have a readable but empty ``/proc/<pid>/environ`` and ``cmdline``.
+    That window is unknown identity, not the parent image. The child writes
+    one byte only after the new image is running; this blocks on that byte
+    with a bounded ``select``.
+    """
+    import select
     import subprocess
     import sys
+    import time
+
+    read_fd, write_fd = os.pipe()
+    proc = None
+    try:
+        os.set_inheritable(write_fd, True)
+        script = f"import os, time\nos.write({write_fd}, b'1')\nos.close({write_fd})\ntime.sleep(30)\n"
+        proc = subprocess.Popen(
+            [sys.executable, "-c", script],
+            env=env,
+            cwd=cwd,
+            pass_fds=(write_fd,),
+        )
+        os.close(write_fd)
+        write_fd = -1
+        deadline = time.monotonic() + timeout_s
+        got = b""
+        while b"1" not in got:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0 or proc.poll() is not None:
+                raise AssertionError(
+                    f"child pid {proc.pid} did not signal exec within {timeout_s}s (returncode={proc.poll()})"
+                )
+            readable, _, _ = select.select([read_fd], [], [], remaining)
+            if not readable:
+                raise AssertionError(f"child pid {proc.pid} did not signal exec within {timeout_s}s")
+            chunk = os.read(read_fd, 16)
+            if not chunk:
+                raise AssertionError(f"child pid {proc.pid} closed the exec handshake (returncode={proc.poll()})")
+            got += chunk
+        return proc
+    except BaseException:
+        # KeyboardInterrupt and other BaseExceptions skip ``except Exception``
+        # and used to leave the sleeper running.
+        if proc is not None and proc.poll() is None:
+            proc.kill()
+            proc.wait(timeout=5)
+        raise
+    finally:
+        if write_fd >= 0:
+            os.close(write_fd)
+        os.close(read_fd)
+
+
+def test_spawn_execd_sleeper_interrupted_handshake_reaps_child(tmp_path: Path):
+    """#9808: KeyboardInterrupt or any BaseException in the handshake reaps the child.
+
+    ``except Exception`` does not catch ``select`` being interrupted. The
+    sleeper must be killed and waited on, then the original error propagates.
+    """
+    import signal
+    import subprocess
+    from unittest.mock import patch
+
+    class _HandshakeInterrupt(BaseException):
+        pass
+
+    clean_env = {key: value for key, value in os.environ.items() if "TASK_ID" not in key}
+    spawned: list[subprocess.Popen] = []
+    real_popen = subprocess.Popen
+
+    def tracking_popen(*args, **kwargs):
+        proc = real_popen(*args, **kwargs)
+        spawned.append(proc)
+        return proc
+
+    def assert_reaped(exc_type: type[BaseException]) -> None:
+        spawned.clear()
+        with patch("subprocess.Popen", tracking_popen), patch("select.select", side_effect=exc_type):
+            try:
+                _spawn_execd_sleeper(env=clean_env, cwd=str(tmp_path))
+            except exc_type:
+                pass
+            else:
+                raise AssertionError(f"{exc_type.__name__} did not propagate")
+        assert spawned, "handshake spawned no child"
+        proc = spawned[0]
+        try:
+            assert proc.poll() is not None, "child still alive"
+            assert proc.returncode == -signal.SIGKILL
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait(timeout=5)
+
+    assert_reaped(KeyboardInterrupt)
+    assert_reaped(_HandshakeInterrupt)
+
+
+def test_pid_matches_task_real_process_identity(tmp_path: Path):
+    """#8659 / CF r5 F1: Verify _pid_matches_task using real subprocesses with environ/cmdline.
+
+    #9808: both children are sampled only after the new image signals. The
+    window after ``Popen`` returns can show empty ``environ`` and ``cmdline``;
+    that is unknown identity, not a parent-image mismatch.
+    """
+    import sqlite3
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
 
     task_id = "real-worker-task"
-
-    # Spawn real worker subprocess carrying task identity in environ
-    worker = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
-    )
-    # Spawn dummy subprocess carrying no task identity
-    dummy = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
-    )
-
+    spawned: list = []
     try:
+        # Register each child before the next spawn so a failed handshake
+        # cannot leave the earlier child running.
+        worker = _spawn_execd_sleeper(
+            env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
+        )
+        spawned.append(worker)
+        dummy = _spawn_execd_sleeper(
+            env={k: v for k, v in os.environ.items() if "TASK_ID" not in k},
+        )
+        spawned.append(dummy)
+
         assert _pid_matches_task(worker.pid, task_id) is True
         assert _pid_matches_task(worker.pid, "other-task") is False
         assert _pid_matches_task(dummy.pid, task_id) is False
@@ -1035,17 +1210,254 @@ def test_pid_matches_task_real_process_identity(tmp_path: Path):
         assert challenger_blocked.admitted is False
         assert challenger_blocked.would_refuse is True
     finally:
-        worker.terminate()
-        worker.wait()
-        dummy.terminate()
-        dummy.wait()
+        for proc in spawned:
+            proc.terminate()
+            proc.wait()
+
+
+# Holds a grandchild between fork and execve, then lets it exec on "release".
+# The supervisor image must not carry the task marker; the grandchild adds it
+# only in the execve environment.
+_FORK_BEFORE_EXEC = """
+import os
+import select
+import sys
+import time
+
+task_id = sys.argv[1]
+hold_r, hold_w = os.pipe()
+ready_r, ready_w = os.pipe()
+while ready_w < 3:
+    moved = os.dup(ready_w)
+    os.close(ready_w)
+    ready_w = moved
+os.set_inheritable(ready_w, True)
+pid = os.fork()
+if pid == 0:
+    os.close(hold_w)
+    os.close(ready_r)
+    try:
+        os.read(hold_r, 1)
+        env = os.environ.copy()
+        env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+        code = "import os, time\\nos.write(%d, b'1')\\nos.close(%d)\\ntime.sleep(60)\\n" % (ready_w, ready_w)
+        os.execve(sys.executable, [sys.executable, "-c", code], env)
+    finally:
+        os._exit(127)
+
+os.close(hold_r)
+os.close(ready_w)
+sys.stdout.buffer.write(b"%d\\n" % pid)
+sys.stdout.buffer.flush()
+try:
+    if sys.stdin.buffer.readline().strip() != b"release":
+        raise SystemExit(2)
+    os.write(hold_w, b"x")
+    os.close(hold_w)
+    hold_w = -1
+    deadline = time.monotonic() + 10
+    got = b""
+    while b"1" not in got:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            sys.stdout.buffer.write(b"timeout\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(3)
+        readable, _, _ = select.select([ready_r], [], [], remaining)
+        if not readable:
+            sys.stdout.buffer.write(b"timeout\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(3)
+        chunk = os.read(ready_r, 16)
+        if not chunk:
+            sys.stdout.buffer.write(b"closed\\n")
+            sys.stdout.buffer.flush()
+            raise SystemExit(4)
+        got += chunk
+    sys.stdout.buffer.write(b"execed\\n")
+    sys.stdout.buffer.flush()
+    if sys.stdin.buffer.readline().strip() != b"stop":
+        raise SystemExit(5)
+finally:
+    if hold_w >= 0:
+        os.close(hold_w)
+    try:
+        os.kill(pid, 15)
+    except OSError:
+        pass
+    os.waitpid(pid, 0)
+"""
+
+
+def _read_helper_line(stream_fd: int, proc, timeout_s: float) -> bytes:
+    """Read one helper stdout line, bounded, without a bare sleep."""
+    import select
+    import time
+
+    deadline = time.monotonic() + timeout_s
+    buf = bytearray()
+    while b"\n" not in buf:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise AssertionError(f"exec-window helper timed out after {timeout_s}s (returncode={proc.poll()})")
+        readable, _, _ = select.select([stream_fd], [], [], remaining)
+        if not readable:
+            raise AssertionError(f"exec-window helper timed out after {timeout_s}s (returncode={proc.poll()})")
+        chunk = os.read(stream_fd, 256)
+        if not chunk:
+            raise AssertionError(f"exec-window helper exited {proc.poll()} before a full line; got {bytes(buf)!r}")
+        buf.extend(chunk)
+    line, _, _rest = bytes(buf).partition(b"\n")
+    return line
+
+
+def _stub_task_proc(
+    root: Path,
+    pid: int,
+    *,
+    environ: bytes,
+    cmdline: bytes,
+    cwd: Path,
+) -> Path:
+    """A ``proc_root`` whose ``<pid>`` files are the supplied bytes and cwd symlink."""
+    proc_dir = root / str(pid)
+    proc_dir.mkdir(parents=True)
+    (proc_dir / "environ").write_bytes(environ)
+    (proc_dir / "cmdline").write_bytes(cmdline)
+    (proc_dir / "cwd").symlink_to(cwd)
+    return root
+
+
+def test_pid_matches_task_empty_exec_window_is_unknown(tmp_path: Path):
+    """#9808: readable but empty environ/cmdline are unknown identity, not a mismatch.
+
+    Models the window ``Popen`` can observe. Linux closes the exec-status
+    pipe in ``begin_new_exec`` before the new image's argument and
+    environment pointers are installed, so a live pid's ``environ`` and
+    ``cmdline`` read back empty. That is unavailable evidence (``None``)
+    unless another probe matches. Populated non-matching evidence is still
+    a confirmed mismatch (``False``).
+    """
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "exec-window-9808"
+    pid = os.getpid()
+    neutral = tmp_path / "neutral-cwd"
+    neutral.mkdir()
+    matched = tmp_path / task_id
+    matched.mkdir()
+    assert task_id not in neutral.resolve().parts
+
+    empty = _stub_task_proc(tmp_path / "empty-proc", pid, environ=b"", cmdline=b"", cwd=neutral)
+    assert _pid_matches_task(pid, task_id, proc_root=empty) is None
+
+    # A cmdline of only NULs has no non-empty parts: same unavailable evidence.
+    nul_cmd = _stub_task_proc(tmp_path / "nul-cmd-proc", pid, environ=b"", cmdline=b"\0\0", cwd=neutral)
+    assert _pid_matches_task(pid, task_id, proc_root=nul_cmd) is None
+
+    # Each empty probe is unavailable on its own.
+    empty_env = _stub_task_proc(
+        tmp_path / "empty-env-proc",
+        pid,
+        environ=b"",
+        cmdline=b"sleeper\0--idle\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=empty_env) is None
+    empty_cmd = _stub_task_proc(
+        tmp_path / "empty-cmd-proc",
+        pid,
+        environ=b"PATH=/usr/bin\0LANG=C\0",
+        cmdline=b"",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=empty_cmd) is None
+
+    populated = _stub_task_proc(
+        tmp_path / "populated-proc",
+        pid,
+        environ=b"PATH=/usr/bin\0LANG=C\0",
+        cmdline=b"sleeper\0--idle\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=populated) is False
+
+    # Empty identity probes do not hide a positive match from another probe.
+    by_cmd = _stub_task_proc(
+        tmp_path / "cmd-match-proc",
+        pid,
+        environ=b"",
+        cmdline=b"python\0--task-id\0" + task_id.encode() + b"\0",
+        cwd=neutral,
+    )
+    assert _pid_matches_task(pid, task_id, proc_root=by_cmd) is True
+    by_cwd = _stub_task_proc(tmp_path / "cwd-match-proc", pid, environ=b"", cmdline=b"", cwd=matched)
+    assert _pid_matches_task(pid, task_id, proc_root=by_cwd) is True
+
+
+def test_pid_matches_task_before_exec_is_parent_image(tmp_path: Path):
+    """#9808: models the matcher's response to a parent image, not the CI race.
+
+    A raw fork held before ``execve`` bypasses ``Popen``'s exec-status pipe,
+    so ``/proc`` still shows the parent image and the match is False. That is
+    not the state ``Popen`` observes: Linux closes the pipe in
+    ``begin_new_exec`` before the new argument and environment pointers are
+    installed, leaving a readable but empty ``environ`` and ``cmdline``.
+    After this child execs, the same pid matches.
+    """
+    import signal
+    import subprocess
+    import sys
+
+    from scripts.guardrails.delegate_ownership import _pid_matches_task
+
+    task_id = "before-exec-9808"
+    clean_env = {key: value for key, value in os.environ.items() if "TASK_ID" not in key}
+    proc = subprocess.Popen(
+        [sys.executable, "-c", _FORK_BEFORE_EXEC, task_id],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        cwd=str(tmp_path),
+        env=clean_env,
+        bufsize=0,
+        start_new_session=True,
+    )
+    assert proc.stdin is not None
+    assert proc.stdout is not None
+    try:
+        pid = int(_read_helper_line(proc.stdout.fileno(), proc, _EXEC_HANDSHAKE_TIMEOUT_S))
+        pre_cmd = (Path("/proc") / str(pid) / "cmdline").read_bytes()
+        pre_env = (Path("/proc") / str(pid) / "environ").read_bytes()
+        marker = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_id.encode()
+        assert marker not in pre_env.split(b"\0")
+        assert _pid_matches_task(pid, task_id) is False
+
+        proc.stdin.write(b"release\n")
+        proc.stdin.flush()
+        status = _read_helper_line(proc.stdout.fileno(), proc, _EXEC_HANDSHAKE_TIMEOUT_S)
+        assert status == b"execed", status
+        post_cmd = (Path("/proc") / str(pid) / "cmdline").read_bytes()
+        post_env = (Path("/proc") / str(pid) / "environ").read_bytes()
+        assert post_cmd != pre_cmd
+        assert marker in post_env.split(b"\0")
+        assert _pid_matches_task(pid, task_id) is True
+    finally:
+        if proc.poll() is None:
+            try:
+                proc.stdin.write(b"stop\n")
+                proc.stdin.flush()
+            except OSError:
+                pass
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            os.killpg(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=5)
 
 
 def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     """#8659 / CF r6 F1 & CF r7 F1: Unavailable evidence or denied /proc inspection preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
     from unittest.mock import patch
 
@@ -1054,8 +1466,7 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
     task_id = "unknown-proc-task"
 
     # Spawn live worker process carrying task marker
-    worker = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
+    worker = _spawn_execd_sleeper(
         env={**os.environ, "LEARN_UKRAINIAN_DISPATCH_TASK_ID": task_id},
     )
 
@@ -1127,8 +1538,6 @@ def test_pid_matches_task_unknown_proc_preserves_claim(tmp_path: Path):
 def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: Path):
     """#8659 / CF r6 F2: Working-directory matching rejects prefix/suffix substrings and preserves genuine worktrees."""
     import sqlite3
-    import subprocess
-    import sys
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
@@ -1145,24 +1554,17 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
 
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
 
-    # Spawn processes in each directory without task marker in env or cmdline
-    p_unrelated = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(unrelated_dir),
-        env=clean_env,
-    )
-    p_prefix = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(prefix_dir),
-        env=clean_env,
-    )
-    p_genuine = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(genuine_dir),
-        env=clean_env,
-    )
-
+    # The handshake returns only after the new image is running, so cwd is
+    # the requested directory. Register each child before the next spawn.
+    spawned: list = []
     try:
+        p_unrelated = _spawn_execd_sleeper(env=clean_env, cwd=str(unrelated_dir))
+        spawned.append(p_unrelated)
+        p_prefix = _spawn_execd_sleeper(env=clean_env, cwd=str(prefix_dir))
+        spawned.append(p_prefix)
+        p_genuine = _spawn_execd_sleeper(env=clean_env, cwd=str(genuine_dir))
+        spawned.append(p_genuine)
+
         # Direct _pid_matches_task checks
         assert _pid_matches_task(p_unrelated.pid, task_id) is False
         assert _pid_matches_task(p_prefix.pid, task_id) is False
@@ -1229,16 +1631,14 @@ def test_pid_matches_task_cwd_exact_component_negative_prefix_suffix(tmp_path: P
         assert ch_gen.admitted is False
         assert ch_gen.would_refuse is True
     finally:
-        for p in (p_unrelated, p_prefix, p_genuine):
-            p.terminate()
-            p.wait()
+        for proc in spawned:
+            proc.terminate()
+            proc.wait()
 
 
 def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
     """#8659 / CF r8 F1: Removed process cwd evidence is treated as unknown and preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
 
     from scripts.guardrails.delegate_ownership import _pid_matches_task
@@ -1251,11 +1651,7 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
 
     # Spawn real process with marker-free environment and command line
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
-    p = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(target_dir),
-        env=clean_env,
-    )
+    p = _spawn_execd_sleeper(env=clean_env, cwd=str(target_dir))
 
     try:
         # Before removal: cwd matches task_id exactly
@@ -1310,8 +1706,6 @@ def test_pid_matches_task_deleted_cwd_preserves_claim(tmp_path: Path):
 def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Path):
     """#8659 / CF r9 F1: Unavailable worktree_path resolution (FileNotFoundError/PermissionError) preserves claims."""
     import sqlite3
-    import subprocess
-    import sys
     import time
     from unittest.mock import patch
 
@@ -1323,11 +1717,7 @@ def test_pid_matches_task_worktree_resolution_error_preserves_claim(tmp_path: Pa
 
     # Marker-free environment and command line: environ and cmdline read cleanly without matching
     clean_env = {k: v for k, v in os.environ.items() if "TASK_ID" not in k}
-    p = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(30)"],
-        cwd=str(cwd_dir),
-        env=clean_env,
-    )
+    p = _spawn_execd_sleeper(env=clean_env, cwd=str(cwd_dir))
 
     try:
         # 1. worktree_path resolution raises FileNotFoundError

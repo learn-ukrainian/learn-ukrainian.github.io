@@ -8,7 +8,7 @@ under ``ulif_dictua_entries`` keyed by ``(normalized_query, homonym_index)``.
 
 from __future__ import annotations
 
-import sqlite3
+from scripts.lib.readonly_sqlite import SQLiteConnection
 
 ULIF_DICTUA_ENTRY_COLUMNS: tuple[str, ...] = (
     "id",
@@ -26,6 +26,7 @@ ULIF_DICTUA_ENTRY_COLUMNS: tuple[str, ...] = (
     "parser_version",
     "status",
 )
+
 
 def ulif_dictua_entries_table_sql(table_name: str = "ulif_dictua_entries") -> str:
     """CREATE TABLE statement for the homonym-safe entry identity.
@@ -65,16 +66,14 @@ CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
 )
 
 
-def ensure_runner_ulif_entries(conn: sqlite3.Connection) -> None:
+def ensure_runner_ulif_entries(conn: SQLiteConnection) -> None:
     """Create the homonym-safe entry table on a runner database.
 
     Refuses to rewrite a legacy ``ulif_entries`` table. Callers that already
     have the old ``ulif_dictua_entries`` unique-on-spelling shape must migrate
     through ``scripts.wiki.sources_db.migrate_ulif_dictua_entries``.
     """
-    legacy = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_entries'"
-    ).fetchone()
+    legacy = conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_entries'").fetchone()
     entries = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_dictua_entries'"
     ).fetchone()
@@ -88,7 +87,7 @@ def ensure_runner_ulif_entries(conn: sqlite3.Connection) -> None:
 
 
 def upsert_runner_ulif_entry(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     normalized_query: str,
     homonym_index: int,

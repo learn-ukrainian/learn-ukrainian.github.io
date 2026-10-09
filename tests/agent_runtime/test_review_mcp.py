@@ -80,14 +80,20 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
     root = tmp_path / "lease"
     root.mkdir()
-    home = review_mcp_module.prepare_agy_permission_home(root)
+    home = review_mcp_module.prepare_agy_permission_home(root, checkout_root=tmp_path)
     config = json.loads((home / ".gemini" / "config" / "mcp_config.json").read_text())
     assert set(config["mcpServers"]) == {"sources"}
     assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
-    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in readers]
-    assert settings["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+    assert settings["permissions"]["allow"] == [
+        f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    ]
+    assert settings["permissions"]["deny"] == [
+        "command(*)",
+        "write_file(*)",
+        *[f"mcp(sources/{name})" for name in sorted((set(readers) | set(writers)) - REVIEW_TOOLS)],
+    ]
     assert not any("*" in rule for rule in settings["permissions"]["allow"])
     assert not set(settings["permissions"]["allow"]) & {f"mcp(sources/{name})" for name in writers}
     assert (home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token").resolve() == (
@@ -99,7 +105,7 @@ def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_ag
 
 
 @pytest.mark.parametrize("access", ["isolated", "full"])
-def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, access):
+def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(manifest_file, tmp_path, access):
     plan = prepare_review_attempt(
         "rev-test-001",
         "att-agy-001",
@@ -107,9 +113,16 @@ def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, acc
         "agy",
         receipts_root=tmp_path / "receipts",
         review_access=access,
+        checkout_root=tmp_path,
     )
-    # Frozen pre-fix contract; do not derive this expectation from review_tools.
+    # Explicit approved #9949 contract; do not derive this expectation from review_tools.
     names = [
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
         "check_russian_shadow",
         "check_text",
         "inspect_word",
@@ -131,8 +144,12 @@ def test_receipt_attempt_permission_bytes_unchanged(manifest_file, tmp_path, acc
         names.append("search_resources")
     expected = {
         "permissions": {
-            "allow": [f"mcp(sources/{name})" for name in sorted(names)],
-            "deny": ["command(*)", "write_file(*)"],
+            "allow": [f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(names)]],
+            "deny": [
+                "command(*)",
+                "write_file(*)",
+                *[f"mcp(sources/{name})" for name in sorted(set().union(*sources_tool_sets()) - set(names))],
+            ],
         }
     }
     assert (agy_review_app_data_dir(plan.agy_home) / "settings.json").read_bytes() == json.dumps(expected).encode()
@@ -166,6 +183,20 @@ def _host_independent_umask() -> Iterator[None]:
         yield
     finally:
         os.umask(old)
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dispatch_worktrees(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Refusal regressions must fail before provisioning a real dispatch tree."""
+    ensure_worktree = delegate_cli._ensure_worktree
+
+    def ensure_fixture_worktree(**kwargs):
+        assert delegate_cli._REPO_ROOT.resolve().is_relative_to(tmp_path.resolve()), (
+            "dispatch reached real worktree provisioning"
+        )
+        return ensure_worktree(**kwargs)
+
+    monkeypatch.setattr(delegate_cli, "_ensure_worktree", ensure_fixture_worktree)
 
 
 @pytest.fixture(autouse=True)
@@ -541,11 +572,27 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
 
 @pytest.mark.parametrize("seat", ["cursor", "claude"])
 def test_delegate_dispatch_review_refuses_primary_checkout(
-    code_review_manifest: Path, capsys: pytest.CaptureFixture[str], seat: str
+    code_review_manifest: Path,
+    ordinary_review_scope: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    seat: str,
 ) -> None:
     # Cursor identity admission now precedes its dispatch worktree guard.
     # Keep that refusal covered, and exercise primary-checkout protection with
     # an eligible write-capable review seat. The Cursor adapter guard is tested above.
+    # Write-dispatch review admission (#9739) reads the target checkout's branch
+    # first, so the dispatch declares its scope and targets the fixture primary,
+    # which is on main in sync with origin/main.
+    primary = ordinary_review_scope
+    subprocess.run(
+        ["git", "-C", str(primary), "update-ref", "refs/remotes/origin/main", "HEAD"],
+        check=True,
+        capture_output=True,
+        env=delegate_cli._sanitized_git_env(),
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate_cli, "_REPO_ROOT", primary)
     rc = delegate_cli.main(
         [
             "dispatch",
@@ -558,7 +605,9 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             "--task-id",
             "review-task-primary",
             "--cwd",
-            str(delegate_cli._REPO_ROOT),
+            str(primary),
+            "--owned-path",
+            "ordinary.py",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
             "--review-access",
@@ -581,10 +630,12 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
         assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
 
 
-def test_delegate_dispatch_refuses_budget_guard_substitution(
+@pytest.mark.parametrize("remaining_pct", [None, 54.0, 10.0, 5.0])
+def test_delegate_dispatch_attempt_budget_guard_uses_allowance_reserve(
     manifest_file: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
+    remaining_pct: float | None,
 ) -> None:
     monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
     fake_budget = {
@@ -604,6 +655,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             },
         },
     }
+    if remaining_pct is not None:
+        fake_budget["agents"]["claude"]["remaining_pct"] = remaining_pct
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
     monkeypatch.setattr(
         "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
@@ -628,15 +681,25 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             "rev-001",
             "--attempt-id",
             "att-001",
+            "--dry-run",
         ]
     )
-    assert rc == 2
     captured = capsys.readouterr()
-    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
-    assert (
-        "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
-        in captured.err
-    )
+    if remaining_pct is not None and remaining_pct <= 10:
+        assert rc == 2
+        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
+        assert (
+            "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
+            in captured.err
+        )
+    else:
+        # #10016 AC-01 items 1, 2 and 5: burn/pace alone cannot exclude
+        # the selected reviewer, including immutable review attempts.
+        assert rc == 0
+        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" not in captured.err
+        assert "REVIEW_IDENTITY_SUBSTITUTED" not in captured.err
+        state = json.loads(delegate_cli._state_path("review-task-budget-sub").read_bytes())
+        assert state["agent"] == "claude" and state["substitution"] is None
 
 
 def test_delegate_dispatch_refuses_retired_alias_substitution(
@@ -837,11 +900,7 @@ def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path)
             )
 
 
-def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path) -> None:
-    primary_root = resolve_repo_root(Path(__file__), 2)
-    sources_db = primary_root / "data" / "sources.db"
-    if not sources_db.is_file():
-        pytest.skip(f"data/sources.db is absent at {sources_db}")
+def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path, requires_sources_db) -> None:
 
     plan = prepare_review_attempt(
         review_id="rev-integration-001",
@@ -879,7 +938,7 @@ def test_sources_server_stdio_integration(manifest_file: Path, tmp_path: Path) -
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
-        cwd=str(primary_root),
+        cwd=Path(__file__).resolve().parents[2],
     )
     try:
         stdout_bytes, stderr_bytes = proc.communicate(input=init_request, timeout=20)
@@ -1264,13 +1323,14 @@ def test_codex_ordinary_dispatch_has_no_scoped_home_or_url_override(tmp_path: Pa
 # --- AGY scoped-home receipts seat (#8617) --------------------------------------------
 
 
-def _prepare_agy(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-agy-001"):
+def _prepare_agy(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-agy-001", *, checkout_root=None):
     return prepare_review_attempt(
         review_id="rev-agy-001",
         attempt_id=attempt_id,
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout_root=checkout_root or tmp_path,
     )
 
 
@@ -1308,7 +1368,7 @@ def test_agy_home_layout_modes_and_single_source_config(
     from scripts.agent_runtime.review_mcp import agy_review_settings
 
     settings = app_data / "settings.json"
-    assert json.loads(settings.read_text()) == agy_review_settings("isolated")
+    assert json.loads(settings.read_text()) == agy_review_settings("isolated", checkout_root=tmp_path)
     assert stat.S_IMODE(settings.stat().st_mode) == 0o600
 
 
@@ -1521,10 +1581,10 @@ def _rewrite_agy_config(plan, mutate) -> None:
 def test_agy_gate_accepts_exactly_sources_with_padded_table(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     cwd = tmp_path / "wt"
     cwd.mkdir()
+    plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     agy_bin = _fake_agy_bin(tmp_path)
     verify_agy_review_effective_mcp(config_path=plan.config_path, cwd=cwd, env=_agy_env(plan), agy_bin=agy_bin)
     logged_cwd, logged_home, logged_app_data, logged_args = log.read_text(encoding="utf-8").strip().split("|")
@@ -1730,6 +1790,7 @@ def test_agy_gate_refusals_never_embed_home_or_app_data_values(
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=operator_home / "scoped-marker-8652" / "receipts",
+        checkout_root=tmp_path,
     )
     env = _agy_env(plan)
     app_data = Path(env["AGY_APP_DATA_DIR"])
@@ -1832,10 +1893,10 @@ def _agy_tool_config(plan, **extra) -> dict:
 def test_agy_launch_gate_runs_under_the_final_spawned_environment(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     cwd = tmp_path / "wt"
     cwd.mkdir()
+    plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     verify_agy_review_launch(
         config_path=plan.config_path,
         cwd=cwd,
@@ -1862,6 +1923,7 @@ def test_agy_launch_gate_refuses_when_the_sanitizer_would_drop_the_scoped_home(
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout_root=tmp_path,
     )
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617"):
@@ -3144,3 +3206,44 @@ def test_no_open_below_the_anchor_bypasses_the_helper() -> None:
     assert file_opens == ["fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)"]
     assert ".read_text(" not in source
     assert ".write_text(" not in source
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize("header", ["", "Required-Sources-Tools: []\n"])
+def test_tool_requirement_defaults_cannot_be_removed(access, header):
+    assert review_mcp_module.check_review_tool_requirements(header + "Review the artifact.", access) == REVIEW_TOOLS
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_tool_requirements_name_every_unsupported_tool_without_fallback(access):
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused) as caught:
+        review_mcp_module.check_review_tool_requirements(
+            'Required-Sources-Tools: ["query_ulif", "query_wikipedia", "verify_word"]', access
+        )
+    assert caught.value.code == "review_tools_unsupported"
+    assert caught.value.unsupported == ("query_ulif", "query_wikipedia")
+    assert str(caught.value) == "review_tools_unsupported: query_ulif, query_wikipedia"
+
+
+@pytest.mark.parametrize("declaration", ["not JSON", "{}", "[1]", '["../private"]'])
+def test_invalid_tool_requirements_are_typed(declaration):
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
+        review_mcp_module.check_review_tool_requirements(f"Required-Sources-Tools: {declaration}")
+
+
+def test_duplicate_tool_requirement_headers_refuse():
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tool_requirements_invalid"):
+        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []\nRequired-Sources-Tools: []")
+
+
+def test_defaults_are_requirements_not_derived_from_selected_grants(monkeypatch):
+    monkeypatch.setattr(review_mcp_module, "review_tools", lambda _access: REVIEW_TOOLS - {"verify_word"})
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported: verify_word"):
+        review_mcp_module.check_review_tool_requirements("Required-Sources-Tools: []")
+
+
+def test_declared_catalogue_tool_requires_full_access():
+    brief = 'Required-Sources-Tools: ["search_resources"]'
+    with pytest.raises(review_mcp_module.ReviewToolRequirementsRefused, match="review_tools_unsupported"):
+        review_mcp_module.check_review_tool_requirements(brief, "isolated")
+    assert "search_resources" in review_mcp_module.check_review_tool_requirements(brief, "full")

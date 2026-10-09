@@ -27,6 +27,7 @@ protection actually changes.
 SCOPE, stated honestly: this is a discipline gate, not a sandbox. It matches the shapes a
 careless merge actually takes — direct, wrapper-prefixed, `bash -c` wrapped, and xargs-fed
 `gh pr merge`, in gh's real flag spellings — and fails closed on what it cannot read. It
+refuses `eval` in merge commands because its re-evaluation can change both argv and cwd. It
 cannot stop an agent that sets out to evade it: `gh api -X PUT repos/{o}/{r}/pulls/{n}/merge`
 never says "gh pr merge" at all, and neither does a Python script hitting the REST API.
 Nothing matching on Bash commands can close that, so the job is to make the CARELESS path
@@ -113,14 +114,12 @@ except Exception as exc:
     raise SystemExit(2) from None
 
 try:
+    from scripts.ci.advisory_checks import is_advisory as is_advisory
     from scripts.publish.merge_guard import (
         _checks_json_unsupported,
         _parse_status_rollup_rows,
         parse_checks,
         readiness_reason,
-    )
-    from scripts.publish.merge_guard import (
-        _is_advisory as _is_advisory,
     )
     from scripts.publish.merge_guard import (
         _latest_rollup_rows as _latest_rollup_rows,
@@ -159,12 +158,6 @@ def _gh_env() -> dict[str, str]:
 def _decolorize(text: str) -> str:
     return _ANSI_RE.sub("", text)
 
-
-# A check is treated as merge-blocking unless its name marks it explicitly advisory.
-# Same inversion as guard-admin-merge.py, and it matters more here: an allowlist of
-# "known required" names would UNDER-block, and on a repo where GitHub marks nothing
-# required, under-blocking is the entire failure mode this hook exists to close.
-ADVISORY_NAME_MARKERS = ("advisory",)
 
 _FAIL_BUCKETS = {"fail", "failure", "error", "cancel", "canceled", "cancelled", "timed_out", "action_required"}
 _PENDING_BUCKETS = {"pending", "queued", "in_progress", "waiting", "expected"}
@@ -207,6 +200,8 @@ _invoked_start = invoked_start
 def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
     """Account for visible code by its reader, never by quotation alone."""
     utility = Path(argv[0]).name
+    if utility == "eval" and guarded_source:
+        raise ShellParseError("eval cannot establish merge argv or directory")
     if utility in {"source", "."} and guarded_source:
         raise ShellParseError("visible sourced payload cannot establish execution")
     if not _may_merge(source):
@@ -608,7 +603,7 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
     """(failing, pending) non-advisory check names, or None if undeterminable."""
     try:
         out = subprocess.run(
-            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
+            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state,workflow"],
             capture_output=True,
             env=_gh_env(),
             cwd=cwd,
@@ -702,8 +697,8 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
     if _UNREADABLE_MARKER in args:
         return _block_msg(
             "this merge's target cannot be read from the command itself",
-            "The PR is not named here — it arrives on stdin (`xargs`), or is buried under more\n"
-            "layers of `bash -c` than this guard unwraps. Judging the current branch's PR\n"
+            "The target arrives on stdin (`xargs`), is re-evaluated by `eval`, or is buried\n"
+            "under more layers of `bash -c` than this guard unwraps. Judging the current branch's PR\n"
             "instead would verify one PR while gh merges another. Run the merge with the PR\n"
             "named explicitly (`gh pr merge <number> ...`).",
         )

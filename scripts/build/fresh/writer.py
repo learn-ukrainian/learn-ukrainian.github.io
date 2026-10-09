@@ -21,6 +21,7 @@ from __future__ import annotations
 import datetime
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from collections.abc import Callable, Mapping
@@ -151,15 +152,22 @@ def _run_harness(cmd: list[str], *, timeout: int) -> subprocess.CompletedProcess
 
 def strip_markdown_fence(text: str) -> str:
     """Strip an enclosing Markdown code fence (e.g. ```yaml ... ``` or ``` ... ```)."""
-    s = text.strip()
-    if s.startswith("```"):
-        lines = s.splitlines()
-        if lines and lines[0].startswith("```"):
-            lines = lines[1:]
-        if lines and lines[-1].strip() == "```":
-            lines = lines[:-1]
-        return "\n".join(lines).strip()
-    return s
+    if not text.strip(" \t\r\n"):
+        return ""
+    # Keep physical line endings and Unicode separators in the payload intact.
+    lines = re.findall(r"[^\r\n]*(?:\r\n|\r|\n|$)", text)
+    start = 0
+    while not lines[start].strip(" \t\r\n"):
+        start += 1
+    if lines[start].strip(" \t\r\n").startswith("```"):
+        end = len(lines)
+        while end > start + 1 and not lines[end - 1].strip(" \t\r\n"):
+            end -= 1
+        if end > start + 1 and lines[end - 1].strip(" \t\r\n") == "```":
+            # Only framing is discarded; payload blank lines control chomping.
+            return "".join(lines[start + 1:end - 1])
+        return "".join(lines[start + 1:])
+    return text
 
 
 def parse_and_validate_reply(

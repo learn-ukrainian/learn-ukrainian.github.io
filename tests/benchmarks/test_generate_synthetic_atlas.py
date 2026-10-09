@@ -21,7 +21,7 @@ def _sha256(path: Path) -> str:
 
 def _sampled_slugs(path: Path) -> list[str]:
     """Compare the chosen copy sequence, independently of seed metadata."""
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         return [row[0] for row in conn.execute(
             "SELECT slug FROM articles WHERE slug LIKE '%--syn%' ORDER BY substr(slug, -7)"
@@ -134,7 +134,7 @@ def _make_source_db(path: Path, article_count: int = 24, *, varied_form_shapes: 
 
 def _export_gate_counts(db_path: Path) -> dict[str, int]:
     """The hard gates from scripts/atlas/export_runtime_shards.py."""
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         reviewed = conn.execute(
             "SELECT COUNT(*) FROM articles WHERE review_state = 'approved' AND visibility = 'public'"
@@ -163,7 +163,7 @@ def _export_gate_counts(db_path: Path) -> dict[str, int]:
 
 
 def _assert_form_targets_resolve(db_path: Path) -> int:
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         articles = {row[0] for row in conn.execute("SELECT slug FROM articles")}
         routes = conn.execute(
@@ -181,7 +181,7 @@ def _assert_form_targets_resolve(db_path: Path) -> int:
 
 
 def _form_payloads(db_path: Path) -> dict[str, dict]:
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         return {
             slug: json.loads(raw)
@@ -240,7 +240,7 @@ def test_dataset_is_marked_synthetic(tmp_path: Path) -> None:
     source = _make_source_db(tmp_path / "source.db")
     out = tmp_path / "synthetic.db"
     build_synthetic_db(source_db=source, out=out, seed=42, target_articles=60)
-    conn = sqlite3.connect(f"file:{out}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(out).resolve().as_uri()}?mode=ro", uri=True)
     try:
         metadata = dict(conn.execute("SELECT key, value_json FROM manifest_metadata"))
         assert json.loads(metadata["dataset_kind"]) == "synthetic-resample"

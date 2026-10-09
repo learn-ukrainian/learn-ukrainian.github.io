@@ -19,6 +19,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
+from scripts.common import github_client
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
@@ -580,7 +588,7 @@ def _probe_inbox_legacy(db_path: Path, agent: str) -> dict[str, Any]:
     deliveries: list[dict[str, Any]] = []
     total = 0
 
-    conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+    conn = open_readonly(db_path.resolve())
     conn.row_factory = sqlite3.Row
     try:
         if not _table_exists(conn, "deliveries"):
@@ -748,7 +756,7 @@ def _probe_gh_pr_list() -> ProbeResult:
         )
 
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             [
                 gh_bin,
                 "pr",

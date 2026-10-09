@@ -37,8 +37,8 @@ def test_roster_slots_accepted_by_validation() -> None:
     assert "grok-infra" in all_valids
     assert "claude-atlas" in all_valids
     assert "codex-devops" in all_valids
-    assert "gemini-hramatka" not in all_valids
-    assert not any(agent.startswith("gemini-") for agent in all_valids)
+    assert "gemini-hramatka" in all_valids
+    assert "gemini-infra" in all_valids
     assert "claude-folk" in all_valids
     assert "codex-corpus" in all_valids
     assert "cursor-infra" in all_valids
@@ -54,37 +54,50 @@ def test_roster_slots_accepted_by_validation() -> None:
     _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_26() -> None:
-    """Verify 20 infrastructure slots and six Ukrainian content slots remain."""
+def test_roster_slot_count_is_41() -> None:
+    """Verify 24 infrastructure, twelve Ukrainian content/data, and five core slots."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 26
-    assert len(set(slots)) == 26
+    assert len(slots) == 41
+    assert len(set(slots)) == 41
+    assert set(data["assignments"]["core"]["slots"]) == {
+        "claude-core",
+        "codex-core",
+        "gemini-core",
+        "grok-core",
+        "cursor-core",
+    }
+    assert "kimi-core" not in slots
+    assert data["assignments"]["open-model-data"]["slots"] == [
+        "claude-open-model-data",
+        "codex-open-model-data",
+        "gemini-open-model-data",
+    ]
     assert "cursor-infra" in slots
     assert "cursor-devops" in slots
     assert "cursor-corpus" in slots
     assert "cursor-atlas" in slots
     assert "claude-folk" in slots
     assert "codex-bio" in slots
-    assert "gemini-hramatka" not in slots
-    assert not any(slot.startswith("gemini-") for slot in slots)
+    assert "gemini-hramatka" in slots
+    assert "gemini-infra" in slots
 
 
 def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
-    """Seminars and hramatka have only eligible Claude and GPT driver identities."""
+    """Ukrainian content/data areas have only eligible Claude, GPT and Gemini identities."""
     assignments = yaml.safe_load(_AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8"))["assignments"]
-    for area in ("seminars", "hramatka"):
+    for area in ("seminars", "hramatka", "open-model-data"):
         slots = assignments[area]["slots"]
         assert slots, area
-        assert all(slot.split("-", 1)[0] in {"claude", "codex"} for slot in slots), (area, slots)
+        assert all(slot.split("-", 1)[0] in {"claude", "codex", "gemini"} for slot in slots), (area, slots)
 
 
 @pytest.mark.parametrize("provider", ("grok", "kimi", "cursor"))
-@pytest.mark.parametrize("lane", ("folk", "bio", "hramatka"))
+@pytest.mark.parametrize("lane", ("folk", "bio", "hramatka", "open-model-data"))
 def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: str) -> None:
     slot = f"{provider}-{lane}"
     assert slot not in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
@@ -95,14 +108,17 @@ def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: st
 
 
 def test_phantom_slots_absent_from_valid_agents() -> None:
-    """Guard test: *-harness, *-seminars, and *-core phantom slots are NOT in get_valid_agents()."""
+    """Harness/seminars slots stay absent; five registered core slots are valid."""
     valids = _channels.get_valid_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
     providers = ("claude", "codex", "gemini", "grok", "kimi", "cursor")
-    phantoms = ("harness", "seminars", "core")
+    phantoms = ("harness", "seminars")
     for provider in providers:
         for suffix in phantoms:
             phantom_slot = f"{provider}-{suffix}"
             assert phantom_slot not in valids, f"Phantom slot '{phantom_slot}' found in valid agents"
+    for core_slot in ("claude-core", "codex-core", "gemini-core", "grok-core", "cursor-core"):
+        assert core_slot in valids
+    assert "kimi-core" not in valids
 
 
 def test_unknown_slot_rejected_naming_valids() -> None:
@@ -385,13 +401,15 @@ def test_post_to_slot_with_no_live_holder_warns_and_queues(capsys: pytest.Captur
     result = _channels.post("test-slot", "user", "Hello slot", to_agents=["grok-infra"], auto_snapshot=False)
     captured = capsys.readouterr()
 
-    assert "⚠️ channel-bridge: recipient slot 'grok-infra' has no live holder" in captured.err
-    assert "channels DB delivery queue for 'grok-infra'" in captured.err
+    # #9739: the slot is named by its seat prefix and taxonomy area, never the caller's string.
+    assert "⚠️ channel-bridge: recipient grok slot in area 'infra' has no live holder" in captured.err
+    assert "queued in its channels DB delivery queue" in captured.err
+    assert "grok-infra" not in captured.err
     assert len(result["delivery_ids"]) == 1
     # #5889 item 1: bounce warning also reachable via the return dict.
     assert "warnings" in result
     assert isinstance(result["warnings"], list)
-    assert any("recipient slot 'grok-infra' has no live holder" in w for w in result["warnings"])
+    assert any("recipient grok slot in area 'infra' has no live holder" in w for w in result["warnings"])
 
 
 # ---------------------------------------------------------------------------
@@ -443,8 +461,8 @@ def test_post_bounce_warning_in_return_dict_hermetic(
     assert "warnings" in result
     assert isinstance(result["warnings"], list)
     assert len(result["warnings"]) == 1
-    assert "recipient slot 'grok-infra' has no live holder" in result["warnings"][0]
-    assert "channels DB delivery queue for 'grok-infra'" in result["warnings"][0]
+    assert "recipient grok slot in area 'infra' has no live holder (no-live-holder)" in result["warnings"][0]
+    assert "queued in its channels DB delivery queue" in result["warnings"][0]
     # Delivery still queued at the slot identity.
     assert len(result["delivery_ids"]) == 1
 
@@ -484,12 +502,12 @@ def test_post_resolver_failure_surfaces_warning_not_silent(
 
     # Item 2: resolver failure surfaced as a warning in the return dict...
     assert "warnings" in result
-    assert any("slot resolver failed for 'grok-infra'" in w for w in result["warnings"])
+    assert any("slot resolver failed for the grok slot" in w for w in result["warnings"])
     assert any("RuntimeError" in w for w in result["warnings"])
     assert any("simulated resolver/import failure" in w for w in result["warnings"])
     # ...and on stderr (visible handling, not silent).
     captured = capsys.readouterr()
-    assert "slot resolver failed for 'grok-infra'" in captured.err
+    assert "slot resolver failed for the grok slot" in captured.err
     # Delivery still queued at the slot identity (fail-open on delivery).
     assert len(result["delivery_ids"]) == 1
 

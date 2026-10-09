@@ -45,11 +45,17 @@ ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 REVIEW_TOOLS = frozenset(
     {
         "verify_words",
+        "verify_word",
+        "verify_lemma",
         "check_text",
         "inspect_word",
         "inspect_words",
         "verify_stress",
         "query_sum20",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
         "query_pravopys",
         "search_style_guide",
         "search_text",

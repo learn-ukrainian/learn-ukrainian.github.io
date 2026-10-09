@@ -16,6 +16,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase, default_database_path
 from agents_extensions.shared.session_streams.model import parse_timestamp
 from scripts.ai_agent_bridge import _channels
@@ -86,7 +93,7 @@ def _active_lease_holder(stream_epic: str, *, session_db: Path, now: datetime) -
     return holder
 
 
-def _reserve_scan(conn: sqlite3.Connection, *, now: datetime, rate_limit_seconds: int) -> bool:
+def _reserve_scan(conn: SQLiteConnection, *, now: datetime, rate_limit_seconds: int) -> bool:
     """Persistently rate-limit the scanner across independent inbox workers."""
     conn.execute("BEGIN IMMEDIATE")
     try:
@@ -117,14 +124,14 @@ def _reserve_scan(conn: sqlite3.Connection, *, now: datetime, rate_limit_seconds
         raise
 
 
-def _state_row(conn: sqlite3.Connection, stream_epic: str, span: str) -> sqlite3.Row | None:
+def _state_row(conn: SQLiteConnection, stream_epic: str, span: str) -> sqlite3.Row | None:
     return conn.execute(
         "SELECT * FROM bottleneck_alert_state WHERE stream_epic = ? AND span = ?",
         (stream_epic, span),
     ).fetchone()
 
 
-def _record_clear(conn: sqlite3.Connection, stream_epic: str, span: str) -> bool:
+def _record_clear(conn: SQLiteConnection, stream_epic: str, span: str) -> bool:
     row = _state_row(conn, stream_epic, span)
     if row is None or not bool(row["active"]):
         return False
@@ -154,7 +161,7 @@ def _requires_alert(row: sqlite3.Row | None, *, age_s: float, threshold_s: int) 
     return False, level
 
 
-def _record_delivery_failures(conn: sqlite3.Connection) -> int:
+def _record_delivery_failures(conn: SQLiteConnection) -> int:
     """Make failed alert deliveries loud once; the channel remains the record."""
     rows = conn.execute(
         """

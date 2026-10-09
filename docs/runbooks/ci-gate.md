@@ -7,6 +7,27 @@ jobs and the full non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
 Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
+The advisory Hygiene workflow keeps a separate slim environment. Its focused
+agent-config tests use pytest, PyYAML, jsonschema and psutil declared in
+`requirements.txt`, with direct and transitive dependencies constrained by all
+named `==` pins in `requirements-lock.txt` (local path requirements cannot be
+constraints).
+The shared conftest's Claude adapter pre-import needs jsonschema; its process
+guard uses psutil (#10030). Hygiene exposes `packages/v4-runtime/src` through `PYTHONPATH`.
+Before executing the focused tests, a `--setup-only` guard collects the same
+test set and runs its fixtures: `--collect-only` alone cannot detect missing
+dependencies imported during autouse setup. The guard propagates import errors;
+`tests/test_hygiene_workflow.py`, run by required CI Gate, also restricts fixture
+setup imports to the standard library, repository-local modules and Hygiene's
+installed dependency closure resolved through `importlib.metadata`. Other
+third-party imports fail even when installed in CI Gate's larger environment.
+Negative controls cover unavailable jsonschema and a fixture-time `requests`
+import in a scratch copy of the shared conftest. The scratch `tests` package
+includes the original package path so newly registered repository plugins remain visible.
+Repository imports are classified by their resolved paths (including namespace
+packages), with installed site-packages and symlinks outside the checkout excluded.
+Direct regression tests cover arbitrary module names and resolved-path boundaries.
+
 | Job | What it does |
 | --- | --- |
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
@@ -51,7 +72,7 @@ that chose *which* tests or checks a change ran is gone.
 | Static practice assets | Contracts | checks.sh |
 | Dossier word counts | Contracts | checks.sh |
 | BIO preparation capsules and holds | Contracts (inline Python) | checks.sh → `scripts/ci/bio_preparation_gate.py` |
-| Frontend build, generated-artifact drift (before test:unit re-runs hydrate), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order) |
+| Frontend build, generated-artifact drift (directly after the build), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order); one hydrate and one recorded build, reused only after verification (below) |
 | Frontend change denominator incl. backend hydrate inputs | Changes (`classify_changes`) | Frontend scope step (`frontend_change_scope.py`); completeness kept by `tests/test_frontend_denominator_invariant.py` |
 | Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on every event |
 | Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
@@ -150,6 +171,49 @@ Because the pull_request run already executes every job, reuse applies
 whenever `main` has not moved between the PR's last green run and its queue
 entry.
 
+## Frontend: one hydrate, one recorded build (#9718)
+
+The Frontend step runs `npm run hydrate` once, then
+`site/tests/helpers/ci-build-artifact.ts record` runs `astro build` once. The
+record (under `$RUNNER_TEMP`) keeps the complete build log and exit code, writes a
+fresh nonce into `dist/`, and stores the input identity: HEAD, the tracked
+working-tree diff and the content hash of every file under `site/src/data`,
+`site/public` and `data/atlas.db`, taken before the build. The build may only
+add inputs: `astro.config.mjs` creates the fallback
+`site/public/audio/pronunciation/manifest.json` when it is absent, as on a fresh
+runner. Such a file is hashed after the build, listed in the record's
+`buildCreatedInputs` and printed as `build created input: …`. A build that
+changes or removes an existing input fails verification. A failed build fails
+the step at once.
+
+The generated-artifact drift check runs directly after the build. Then:
+
+1. `npm run test:unit:ci` verifies the record, then runs the same Vitest
+   selection and excludes as `test:unit`, without a second hydrate, with
+   `--fileParallelism --maxWorkers=3`. Three workers leave one of the runner's
+   four vCPUs to the Vitest main process, matching Vitest's own default of the
+   CPU count minus one. Every test file still runs in its own isolated worker.
+2. `ci-build-artifact.ts verify` runs again, so an input a unit test changed
+   fails here.
+3. `npm run test:built-output` runs with `FRONTEND_BUILD_RECORD` set.
+   `build-renders.test.ts` verifies the record and runs its original assertions
+   on the recorded log and `dist/`, without rebuilding.
+
+Verification fails if the record, log or `dist/` is missing, the log hash or the
+`dist/` nonce differs, the build exited non-zero, or any input changed. It never
+falls back to a rebuild. Without `FRONTEND_BUILD_RECORD`, `npm test`,
+`npm run test:unit` and `npm run test:built-output` behave as before:
+self-contained, with their own hydrate and build. Outside `test:unit:ci`, unit
+test files still run one at a time (`fileParallelism: false` in
+`site/vitest.config.ts`), and `test:built-output` always does.
+
+Parallel unit files must not write shared paths. The Atlas fixture parity tests
+give `SqliteAtlasDataSource` a private empty `searchArtifactsDir` instead of
+hiding `site/src/data/lexicon-search-*.json` (#9850). Other unit files write only
+under their own temporary directories. The exception is
+`ActivityKit.contract.test.tsx`, which regenerates the `*.generated.ts` type
+files; those are imported only with `import type`, which the compiler erases.
+
 ## pytest shards
 
 - `scripts/ci/split_tests.py split` assigns the tracked `tests/**/test_*.py`
@@ -245,3 +309,120 @@ GitHub Actions no longer uses. **When the CI dependency install changes,
 update the runner script to match** — a drifted runner is a false-green risk.
 Runner ↔ CI parity is covered offline by
 `tests/ci/test_cursor_cloud_pytest_verify.py`.
+
+## Advisory component shadow (#9721 slice 6)
+
+`Component shadow (advisory)` is a separate report-only job after pytest, including red
+runs. It checks out the event head with full history, reads the full-run shard
+artifacts, and uploads an ignored `component-shadow` JSON receipt. Its failures
+are advisory and absent from CI Gate's result checks. The full pytest command,
+static shards, full tested-tree record, partition checks and needs_artifact
+reconciliation remain unchanged. This does not authorize PR narrowing; decision
+A in `plans/component-separation-9721.md` and slice 7 remain separate.
+
+The shadow uses the event base/head merge-base diff, including stacked parent
+commits and both rename sides. Empty/missing/unresolvable diffs, non-PR events,
+workflow/tool/dependency/shared changes and unresolved runtime edges select all.
+Resolved would-run files come from `components.test_files`, including importers
+and shared integration obligations. Literal file reads and Python subprocess
+targets contribute reverse edges; unknown reads/argv and sys.path changes select
+all. The receipt records changed paths, selected nodes/files, would-skip files,
+full JUnit failures, collection errors, tool/source/graph identities and artifact
+coverage problems. Collected IDs are those attested by full-run JUnit plus the
+existing pre-deselection needs_artifact lists; JUnit cannot attest other IDs
+removed by the existing marker filter. Executed IDs exclude skips and collection
+errors. No separate collection or candidate test execution is introduced.
+
+The review of record measured 14,692 unresolved edges at
+`c3695226db3b18ec0e3ab42c9a7a3221e00df69c`: 10,379 file reads, 2,427 subprocess
+calls, 1,641 `sys.path` edges, 240 dynamic loads and 5 missing imports. Receipts
+retain this attributed baseline as `review_unresolved_edge_census`, separately
+from their current `unresolved_edges`. Any unresolved edge forces full selection;
+this census therefore demonstrates a narrowing gap, not successful narrowing.
+Resolving those edges is a separate follow-up owned by the #9721 driver.
+
+Use the task-prescribed interpreter as `$P` and ignored, managed scratch as `$R`:
+
+```bash
+# Run/job metadata census only, before observing candidate selection/results.
+"$P" -m scripts.ci.component_shadow inventory --output "$R/baseline.json"
+"$P" -m scripts.ci.component_shadow register --baseline "$R/baseline.json" \
+  --minimum-narrowed-cases 1 --output "$R/registration.json"
+# After registration, acquire the complete live census through the stop date.
+"$P" -m scripts.ci.component_shadow inventory --first-attempts --created "$START..$STOP" \
+  --output "$R/receipts/runs.json"
+"$P" -m scripts.ci.component_shadow check --registration "$R/registration.json" \
+  --receipts "$R/receipts"
+```
+
+Registration refuses overwriting an existing file. It freezes the graph, source
+and tool hashes; all pytest-red PR/merge-group run IDs in the plan's baseline
+window (2026-10-03 through 2026-10-06 11:14:28 UTC); and the next 150 completed
+PR runs whose first attempt completes after registration, with at least
+30 pytest-red runs. Order is completion time then numeric run ID. Cancelled or artifact-less
+completed cases are included and remain unresolved. A paginated live run/job
+census is required: missing receipts cannot shrink the denominator. Run attempts
+beyond the first do not enter the live window. The live census uses attempt-1
+run and job metadata, so later reruns cannot erase first-attempt red cases.
+Choose `$START` early enough to include PR runs already in flight at
+registration; they count when their first attempt completes afterward. Metadata
+acquisition reads job conclusions, never candidate test IDs or artifacts.
+Registration also freezes a positive `minimum_narrowed_cases` (default 1;
+raise it with `register --minimum-narrowed-cases` before observing results).
+The checker reports narrowed red and injected case counts separately and their
+sum. Only valid, oracle-verified registered historical red cases, live pytest-red
+cases and injected controls in `selected` mode with a non-empty would-skip set
+count; green live runs and full selections do not. A zero count or a count below
+the frozen minimum stays unresolved with non-zero exit, even with zero misses.
+An absent or invalid registered minimum also stays unresolved. This minimum
+prevents a vacuous pass; it is not approval to narrow PR execution.
+
+Every skipped full-JUnit failing ID is a miss, including flaky tests. The sole
+test-failure exemption is the same ID failing in an artifact-complete, first
+attempt rerun of the event base commit under the registered tools. Produce that
+receipt using `report --kind base --candidate-run-id ID --head BASE_SHA` against
+its full-run artifacts. The base rule is frozen before candidates; no post-hoc
+flaky reclassification is accepted. A collection error outside selection always
+counts. Historical replay uses `report --kind historical --run-id ID` after
+registration; historical observation timestamps need not follow registration.
+Run the registered observer with `--root` pointing at the historical source
+checkout: its map/tool identities come from the observer, and its source census
+comes from that checkout, which may predate the tools.
+Live receipts observed before registration are refused. Keep each receipt at
+`receipts/ID.json` and its original XML files under `receipts/ID/junit/`
+(subdirectories are allowed); base reruns use their own run ID. The checker
+re-reads and hashes those files independently and refuses a disagreement with
+the receipt. The shadow artifact retains the receipt and original shard
+artifacts for 45 days, covering the 30-day live window.
+
+The driver supplies and freezes `injected_cases` separately, recording an ID,
+`coverage` labels, `expected_failure_ids` and a `registered_at` timestamp for
+each before observing its results. At least twelve distinct controls cover all eight nodes and the
+shared-fixture, dynamic-load, subprocess and stale-artifact classes. The author
+must not supply those held-out faults. The checker cannot pass until these
+controls, every historical replay and the live denominators are complete with
+zero misses. Every injected control must demonstrate its pre-registered failing
+IDs in the full JUnit. Missing, unreproducible, malformed, mismatched-tool or
+artifact-less cases remain unresolved. Receipts observed after day 30 cannot
+complete the window. After day 30 an incomplete window is inconclusive,
+with the missing-evidence residual owned by the driver; it never authorizes
+narrowing.
+
+Cost is unknown until matched measurements are supplied via `report --cost`.
+CI passes `--cost-unknown-reason
+matched-pr-queue-measurements-not-available-in-shard-artifacts` because shard
+artifacts contain test durations, not matched full PR/queue runner costs, reuse
+probability or all overheads. Receipts retain that reason rather than inventing
+cost inputs. The driver owns acquisition of matched measurements before decision A.
+Inputs are `full_pr_runner_minutes`, `full_queue_runner_minutes`,
+`reuse_probability`, `reporter_runner_minutes`, `rerun_runner_minutes`,
+`ejection_runner_minutes`, `duplicated_preparation_runner_minutes` and
+`elapsed_wait_minutes`. The projection scales PR cost by selected JUnit test
+time and adds expected queue execution and every supplied overhead. Both baseline
+and candidate use `(1 - reuse_probability) * full_queue_runner_minutes`.
+Runner-minutes and elapsed waits are separate, and projection is not a measured
+saving. The shadow job is explicitly reuse-neutral in `REUSE_NEUTRAL_JOBS`;
+`lost_reuse_runner_minutes` is zero, including full selection. The existing
+`projected_cost_after_lost_reuse` receipt key is retained for reader compatibility.
+The driver must measure combined PR/queue cost before decision A; all other
+reuse eligibility checks remain unchanged.

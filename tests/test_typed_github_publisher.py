@@ -38,7 +38,7 @@ def spy(calls):
         if (
             args[:3] == ["gh", "pr", "checks"]
             and "--json" in args
-            and args[args.index("--json") + 1] == "name,bucket,state"
+            and args[args.index("--json") + 1] == "name,bucket,state,workflow"
         ):
             return subprocess.CompletedProcess(args, 0, "[]", "")
         if (
@@ -345,14 +345,9 @@ def test_private_destination_last_selector_and_resource_url(selectors, environme
 @pytest.mark.parametrize(
     "operation,fields",
     [
-        ("issue-parent", {"number": 1}),
         ("membership", {"number": 1}),
-        ("subissues", {"number": 1}),
-        ("subissues-next", {"number": 1, "cursor": TOKEN}),
         ("queue-snapshot", {"branches": ['unit") { mutation {x} }']}),
-        ("subissue-batch", {"cursors": {1: 'unit") { mutation {x} }'}, "body_roots": {1}}),
-        ("default-head", {}),
-        ("squash-text", {"number": 1}),
+            ("squash-text", {"number": 1}),
     ],
 )
 def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
@@ -562,8 +557,11 @@ def test_real_cli_with_spy_and_raw_shim_refusal(gh_shim_sandbox, tmp_path, body)
 import sys
 from pathlib import Path
 args = sys.argv[1:]
-assert '--body-file' in args
-Path({str(output)!r}).write_bytes(Path(args[args.index('--body-file')+1]).read_bytes())
+assert '--input' in args and args[args.index('--input')+1]=='-'
+import json
+payload=json.load(sys.stdin)
+Path({str(output)!r}).write_bytes(payload['body'].encode())
+print('HTTP/2.0 201 Created\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{{}}')
 """)
     executable.chmod(0o755)
     source = tmp_path / "body.md"
@@ -635,7 +633,7 @@ def test_production_transport_retains_worker_merge_approval_guard(synthetic_opse
     assert result.returncode == 1 and not output.exists()
 
 
-def test_production_override_logs_once_and_retries_frozen_body(synthetic_opsec, tmp_path, monkeypatch):
+def test_production_override_logs_once_and_defers_frozen_write(synthetic_opsec, tmp_path, monkeypatch):
     monkeypatch.setattr(gate, "primary_root", lambda cwd=None: tmp_path)
     executable = tmp_path / "real-gh"
     state = tmp_path / "attempts"
@@ -646,14 +644,14 @@ import json,os,sys
 from pathlib import Path
 assert 'LU_OPSEC_OVERRIDE' not in os.environ
 args=sys.argv[1:]
-body=Path(args[args.index('--body-file')+1]).read_text()
+body=json.load(sys.stdin)['body']
 state=Path({str(state)!r})
 rows=json.loads(state.read_text()) if state.exists() else []
 rows.append(body)
 state.write_text(json.dumps(rows))
 Path({str(source)!r}).write_text('changed')
 if len(rows)==1:
-    print('HTTP 429 secondary rate limit',file=sys.stderr)
+    print('HTTP/2.0 429 Too Many Requests\\r\\nRetry-After: 60\\r\\n\\r\\n{{}}')
     sys.exit(1)
 """)
     executable.chmod(0o755)
@@ -672,8 +670,9 @@ if len(rows)==1:
             "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "1",
         },
     )
-    assert result.returncode == 0, result.stderr
-    assert json.loads(state.read_text()) == [TOKEN, TOKEN]
+    assert result.returncode == 75, result.stderr
+    assert json.loads(result.stdout)["error"] == "github_rate_limited"
+    assert json.loads(state.read_text()) == [TOKEN]
     log = tmp_path / "batch_state/opsec/overrides.jsonl"
     assert len(log.read_text().splitlines()) == 1 and TOKEN not in log.read_text()
 
@@ -763,6 +762,7 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
         return subprocess.CompletedProcess(args, 0, "{}", "")
 
     monkeypatch.setattr(subprocess, "run", transport)
+    monkeypatch.setattr(pub.github_client, "run", transport)
     artifact = tmp_path / "unit.gz"
     artifact.write_bytes(b"\xffunit")
 
@@ -787,12 +787,30 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
                 "repository": "unit/public",
                 "worktree_branch": "unit",
                 "worktree_base_sha": "a" * 40,
+                # The review seat's harness: the recorder qualifies the reviewer by route and model (#9739).
+                "agent": "codex",
                 "model": "gpt-6.1-sol",
                 "started_at": "2026-01-01T00:00:00+00:00",
             }
             monkeypatch.setattr(module, "_task", lambda *a: (task, "VERDICT: APPROVE\n" + TOKEN))
             monkeypatch.setattr(module, "_pr", lambda *a: {"number": 1, "headRefName": "unit", "headRefOid": "a" * 40})
-            monkeypatch.setattr(module, "author_families", lambda *a: {"anthropic"})
+            # The recorder's complete-authorship entry point (#9739): an Anthropic-authored PR.
+            facts = module.BranchReviewFacts(
+                repository="unit/public",
+                base_tip_sha="b" * 40,
+                head_sha="a" * 40,
+                merge_base_sha="b" * 40,
+                commits=(module.CommitAttribution(None, "anthropic", "trailer-model"),),
+                existing_families=frozenset({"anthropic"}),
+                incoming_writer=None,
+                incoming_family=None,
+                changed_paths=(),
+                owned_paths=(),
+                subject_seats=frozenset(),
+                subject_families=frozenset(),
+                subject_evidence=(),
+            )
+            monkeypatch.setattr(module, "pr_review_facts", lambda *a, **k: facts)
             monkeypatch.setattr(module.GitHubAdapter, "identity", lambda *a: "unit")
             monkeypatch.setattr(module.GitHubAdapter, "comments", lambda *a: [])
             module.record("unit-review", pr_number=1, task_root=tmp_path, lock_root=tmp_path / "locks")
@@ -875,7 +893,7 @@ def test_raw_entry_main_exact_admission(args, expected, tmp_path, monkeypatch, c
     from scripts.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
-    executable.write_text("#!/bin/sh\nexit 0\n")
+    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
     executable.chmod(0o755)
     monkeypatch.setattr(sys, "argv", ["entry", str(executable), str(ROOT / "scripts/agent_runtime/shims/gh"), *args])
     monkeypatch.setenv("GH_REPO", "unit/public")
@@ -887,7 +905,7 @@ def test_raw_entry_masks_unexpected_failure(tmp_path, monkeypatch, capsys):
     from scripts.opsec import gh_entry
 
     executable = tmp_path / "real-gh"
-    executable.write_text("#!/bin/sh\nexit 0\n")
+    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
     executable.chmod(0o755)
     monkeypatch.setattr(sys, "argv", ["entry", str(executable), "unit-shim", "pr", "list"])
 
@@ -943,7 +961,7 @@ def test_real_matcher_cli_overhead_median_20_writes(gh_shim_sandbox, tmp_path):
     shutil.copyfile(source / "matcher.py", tooling / "matcher.py")
     shutil.copyfile(source / "rules.json", tooling / "rules.json")
     executable = tmp_path / "real-gh"
-    executable.write_text("#!/bin/sh\nexit 0\n")
+    executable.write_text('#!/bin/sh\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{}"\n')
     executable.chmod(0o755)
     body = tmp_path / "clean.md"
     body.write_text("a" * 10_240)
@@ -1086,3 +1104,36 @@ def test_pr_creation_cannot_publish_implicit_branch_names(fields):
     with pytest.raises(gate.PublishBlocked):
         pub.publish("pr-create", repo="unit/public", title="clean", body="clean", runner=spy(calls), **fields)
     assert not calls
+
+
+def test_9794_issue_parent_read_selects_typed_parent_repository(github_transport):
+    from scripts.common.github_client import Response
+
+    issue = {
+        "number": 1,
+        "state": "open",
+        "html_url": "https://github.com/unit/public/issues/1",
+        "repository_url": "https://api.github.com/repos/unit/public",
+    }
+    parent_document = {
+        "number": 7,
+        "html_url": "https://github.com/other/stream/issues/7",
+        "repository_url": "https://api.github.com/repos/other/stream",
+    }
+
+    def transport(method, endpoint, headers, body, timeout):
+        assert method == "GET" and body is None
+        payload = parent_document if endpoint.endswith("/parent") else issue
+        return Response(200, {}, json.dumps(payload).encode())
+
+    calls = github_transport(transport)
+    result = pub.read("issue-parent", repo="unit/public", number=1, capture_output=True, text=True)
+    assert result.returncode == 0
+    parent = json.loads(result.stdout)["data"]["repository"]["issue"]["parent"]
+    assert parent["number"] == 7
+    assert parent["url"] == "https://github.com/other/stream/issues/7"
+    assert parent["repository"]["nameWithOwner"] == "other/stream"
+    assert [call[1] for call in calls] == [
+        "repos/unit/public/issues/1",
+        "repos/unit/public/issues/1/parent",
+    ]

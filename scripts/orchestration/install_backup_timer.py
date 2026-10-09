@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Install the Learn Ukrainian backup systemd user units (preview by default).
 
-Renders the learn-ukrainian-backup{,-retention}.{service,timer} templates from
-packaging/systemd/ with @REPO_ROOT@ replaced by the primary checkout, verifies
+Renders the learn-ukrainian-backup{,-retention}.{service,timer} templates and
+the learn-ukrainian-backup-alert@.service failure-alert template (started by
+the two services' OnFailure=) from packaging/systemd/ with @REPO_ROOT@
+replaced by the primary checkout, verifies
 them with systemd-analyze when available, and previews the result. Nothing is
 written unless --apply is given; --enable (with --apply) also enables and
-starts the two timers.
+starts the two timers. A symlinked unit file, or a symlink anywhere from the
+home directory down to the unit directory, is refused in both modes, and units
+are replaced by rename within the directory.
 """
 
 from __future__ import annotations
@@ -20,19 +24,21 @@ import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.common.safe_unit_install import InstallError, open_unit_dir, read_unit, write_unit
+
 TEMPLATE_DIR = PROJECT_ROOT / "packaging" / "systemd"
 UNIT_NAMES = (
     "learn-ukrainian-backup.service",
     "learn-ukrainian-backup.timer",
     "learn-ukrainian-backup-retention.service",
     "learn-ukrainian-backup-retention.timer",
+    "learn-ukrainian-backup-alert@.service",
 )
 TIMER_NAMES = tuple(name for name in UNIT_NAMES if name.endswith(".timer"))
 REPO_ROOT_PLACEHOLDER = "@REPO_ROOT@"
-
-
-class InstallError(RuntimeError):
-    """The requested unit state could not be produced."""
 
 
 def render_unit(template_path: Path, repo_root: Path) -> str:
@@ -85,15 +91,22 @@ def systemctl_user(*arguments: str) -> subprocess.CompletedProcess[str]:
 
 
 def preview(rendered: dict[str, str], unit_dir: Path) -> int:
+    dir_fd = open_unit_dir(unit_dir)
+    try:
+        installed = {name: read_unit(dir_fd, name) if dir_fd is not None else None for name in rendered}
+    finally:
+        if dir_fd is not None:
+            os.close(dir_fd)
     for name, text in rendered.items():
         destination = unit_dir / name
         print(f"--- {destination}")
-        if destination.is_file() and destination.read_text(encoding="utf-8") == text:
+        current = installed[name]
+        if current is not None and current[0] == text.encode():
             print("    (unchanged)")
             continue
-        if destination.is_file():
+        if current is not None:
             diff = difflib.unified_diff(
-                destination.read_text(encoding="utf-8").splitlines(),
+                current[0].decode("utf-8").splitlines(),
                 text.splitlines(),
                 fromfile=str(destination),
                 tofile=f"{destination} (rendered)",
@@ -107,21 +120,19 @@ def preview(rendered: dict[str, str], unit_dir: Path) -> int:
 
 
 def apply(rendered: dict[str, str], unit_dir: Path, enable: bool) -> int:
-    unit_dir.mkdir(parents=True, exist_ok=True)
+    dir_fd = open_unit_dir(unit_dir, create=True)
+    if dir_fd is None:
+        raise InstallError("unit directory vanished during installation")
     changed = []
-    for name, text in rendered.items():
-        destination = unit_dir / name
-        if (
-            destination.is_file()
-            and destination.read_text(encoding="utf-8") == text
-            and destination.stat().st_mode & 0o777 == 0o600
-        ):
-            continue
-        # User units reference a private environment file; keep the units owner-only.
-        destination.touch(mode=0o600, exist_ok=True)
-        os.chmod(destination, 0o600)
-        destination.write_text(text, encoding="utf-8")
-        changed.append(name)
+    try:
+        for name, text in rendered.items():
+            # User units reference a private environment file; keep the units owner-only.
+            if read_unit(dir_fd, name) == (text.encode(), 0o600):
+                continue
+            write_unit(dir_fd, name, text.encode(), mode=0o600)
+            changed.append(name)
+    finally:
+        os.close(dir_fd)
     reload = systemctl_user("daemon-reload")
     if reload.returncode != 0:
         raise InstallError(f"systemctl --user daemon-reload failed: {reload.stderr.strip()}")
@@ -148,7 +159,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--unit-dir",
         type=Path,
         default=Path.home() / ".config" / "systemd" / "user",
-        help="systemd user unit directory (default: ~/.config/systemd/user)",
+        help=(
+            "systemd user unit directory; no directory from home down to it may be a symlink "
+            "(default: ~/.config/systemd/user)"
+        ),
     )
     parser.add_argument("--apply", action="store_true", help="write the units and reload systemd")
     parser.add_argument(

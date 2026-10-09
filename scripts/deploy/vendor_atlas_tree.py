@@ -41,6 +41,11 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
+
 # ---------------------------------------------------------------------------
 # Scale gates (R7) — fail before the 1 GiB GitHub Pages hard cap is at risk.
 # Overridable via env; defaults are constants.
@@ -165,7 +170,7 @@ def download_release_asset(
             "Accept: application/octet-stream",
         ]
         try:
-            result = subprocess.run(
+            result = github_client.run(
                 cmd, check=False, capture_output=True, timeout=300
             )
         except subprocess.TimeoutExpired as exc:
@@ -193,7 +198,7 @@ def download_release_asset(
         headers["Authorization"] = f"Bearer {tok}"
     request = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(request, timeout=300) as response:
+        with github_client.http_open(request, timeout=300) as response:
             return response.read()
     except (OSError, urllib.error.URLError, urllib.error.HTTPError) as exc:
         raise VendorError(

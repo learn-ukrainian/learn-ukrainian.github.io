@@ -862,7 +862,12 @@ def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cu
     from scripts.ai_agent_bridge import _ask_lifecycle
 
     message_id = _cursor_review(to_model)
-    with pytest.raises(SystemExit, match=rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7 or composer-2\.5"):
+    expected = (
+        r"ask-cursor: refused: CURSOR_MODEL_NOT_APPROVED: model 'composer-2\.5-fast' is not an approved Cursor pin"
+        if code == "cursor_model_not_approved"
+        else rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7 or composer-2\.5"
+    )
+    with pytest.raises(SystemExit, match=expected):
         _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
 
     cursor_provider.assert_not_called()
@@ -893,7 +898,7 @@ def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, to_
 
     cursor_provider.assert_called_once()
     argv = cursor_provider.call_args.args[0]
-    assert argv[argv.index("--model") + 1] == to_model
+    assert argv[argv.index("--model") + 1] == ("grok-4.7-high" if to_model == "grok-4.7" else to_model)
     assert _row(message_id)[0] == 1
     replies = _replies(message_id, task_id="review-9274")
     assert [(sender, kind, content) for sender, _to, kind, content in replies] == [("cursor", "response", "LGTM")]

@@ -1,3 +1,5 @@
+The fresh path has no word or activity target: judge size by job adequacy against a guide of about 45 minutes of total learner work; counts are descriptive, with no item or time quota.
+
 # Lesson Review Prompt
 
 Kind: lesson
@@ -13,7 +15,7 @@ You evaluate whether the built lesson achieves its educational job and upholds U
 ## 1. Principles and Binding Rules
 
 1. **A reviewer judges only what a script cannot.**
-   The deterministic gates own word counts, coverage, schema validity, and activity type allowlists.
+   The deterministic gates provide descriptive word counts and own coverage, schema validity, and activity type allowlists.
    The reviewer owns whether the lesson does its job, linguistic quality, and pedagogical fit.
    A reviewer that repeats a script's check has wasted the seat; a script that claims a reviewer's judgement is an engine_or_gate finding.
 
@@ -120,12 +122,19 @@ The checkout's git history is additional context only on harnesses that grant re
 access; AGY does not.
 
 Verify every Ukrainian word, form, stress, gloss and factual claim you rely on,
-including approval-critical checks: use `verify_words` (VESUM) for forms,
-`verify_stress` for stress, `query_sum20` for meaning, `search_text` for textbook
+including approval-critical checks: use `verify_word`, `verify_words` and `verify_lemma` (VESUM) for forms,
+`verify_stress` for stress, `query_sum20` and `search_slovnyk_me` for meaning
+(respect the returned dictionary’s authority role), `search_esum` for etymology,
+`search_grinchenko_1907` for historical attestation, and `search_text` for textbook
 and corpus support, and `search_resources` for catalogue checks. For Russianism
 checks query both `search_style_guide` and `search_text` with
 `source_file='antonenko-davydovych-yak-my-hovorymo'`; check heritage before
 rejecting an unfamiliar word. `check_russian_shadow` is suspicion only.
+
+`search_definitions` (SUM-11) is available for Sovietization context only;
+it can never settle meaning, norm or stress. `query_ulif` and other Sources
+writers are unavailable on every review route, including full access. A brief
+requiring them is refused before dispatch; there is no provider retry.
 
 Only ledgered sources receipts are citable evidence. Repository, corpus,
 catalogue and permitted git reads provide context; confirm anything relied on through a

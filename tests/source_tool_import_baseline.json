@@ -1,0 +1,1179 @@
+{
+  "schema": "source-tool-import-baseline.v1",
+  "denominator": {
+    "cli_count": 412,
+    "probe_count": 824,
+    "cli_paths": [
+      "scripts/agent_runtime/acpx_pilot.py",
+      "scripts/agent_runtime/kimi_boundary.py",
+      "scripts/agent_runtime/lane_probe.py",
+      "scripts/agent_runtime/probe_fallback.py",
+      "scripts/ai_agent_bridge/__main__.py",
+      "scripts/ai_agent_bridge/_hermes_stdin.py",
+      "scripts/ai_agent_bridge/_inbox_watch.py",
+      "scripts/ai_agent_bridge/_ui_agy.py",
+      "scripts/ai_agent_bridge/_ui_codex.py",
+      "scripts/ai_agent_bridge/measure_cold_start.py",
+      "scripts/analytics/vocab_progression.py",
+      "scripts/api/occupancy_local.py",
+      "scripts/api/project_state_local.py",
+      "scripts/atlas/fill_local.py",
+      "scripts/atlas/measure_fill_enrich_divergence.py",
+      "scripts/atlas/residual_teacher_lists.py",
+      "scripts/atlas/word_card_foundation.py",
+      "scripts/audio/batch_synthesize_opus.py",
+      "scripts/audio/generate_pronunciation.py",
+      "scripts/audit/aggregate_review_findings.py",
+      "scripts/audit/alignment_audit.py",
+      "scripts/audit/apply_source_inventory_promotion.py",
+      "scripts/audit/apply_source_inventory_provenance.py",
+      "scripts/audit/atlas_entry_model_census.py",
+      "scripts/audit/atlas_hub_coverage_census.py",
+      "scripts/audit/atlas_intake_census.py",
+      "scripts/audit/atlas_source_census.py",
+      "scripts/audit/atlas_source_entry_count.py",
+      "scripts/audit/audit_atlas_poc_richness.py",
+      "scripts/audit/audit_atlas_thin_enriched.py",
+      "scripts/audit/audit_external_resources.py",
+      "scripts/audit/audit_level.py",
+      "scripts/audit/audit_module.py",
+      "scripts/audit/bakeoff_aggregate.py",
+      "scripts/audit/bakeoff_run.py",
+      "scripts/audit/bio_lit_cross_reference.py",
+      "scripts/audit/bio_readiness_ledger.py",
+      "scripts/audit/certify_module.py",
+      "scripts/audit/check_adrs.py",
+      "scripts/audit/check_atlas_intake_freeze.py",
+      "scripts/audit/check_atlas_manifest_enrichment.py",
+      "scripts/audit/check_ci_dependencies.py",
+      "scripts/audit/check_content_spelling.py",
+      "scripts/audit/check_core_bare.py",
+      "scripts/audit/check_decisions.py",
+      "scripts/audit/check_dossier_wordcount.py",
+      "scripts/audit/check_framing_compliance_changed.py",
+      "scripts/audit/check_locked_module_not_published.py",
+      "scripts/audit/check_mdx_forward_parity.py",
+      "scripts/audit/check_mdx_generation_drift.py",
+      "scripts/audit/check_mdx_source_parity.py",
+      "scripts/audit/check_module_continuity.py",
+      "scripts/audit/check_no_internal_ids.py",
+      "scripts/audit/check_no_private_source_review_exports.py",
+      "scripts/audit/check_node_modules_integrity.py",
+      "scripts/audit/check_plan.py",
+      "scripts/audit/check_postmortems.py",
+      "scripts/audit/check_primary_integrity.py",
+      "scripts/audit/check_promote_quality_changed.py",
+      "scripts/audit/check_research_registry.py",
+      "scripts/audit/check_research_registry_pilot.py",
+      "scripts/audit/check_review_issues.py",
+      "scripts/audit/check_self_symlinks.py",
+      "scripts/audit/check_static_practice_assets.py",
+      "scripts/audit/check_teacher_cloze_content.py",
+      "scripts/audit/check_teacher_deck.py",
+      "scripts/audit/check_ua_eval_public_doc_language.py",
+      "scripts/audit/check_untrusted_workflow_interpolation.py",
+      "scripts/audit/check_venv_integrity.py",
+      "scripts/audit/check_worktree_cleanup_integrity.py",
+      "scripts/audit/checks/language_salad.py",
+      "scripts/audit/classify_atlas_source_gaps.py",
+      "scripts/audit/classify_grounding_failures.py",
+      "scripts/audit/code_review_benchmark.py",
+      "scripts/audit/curriculum_manifest_canary.py",
+      "scripts/audit/curriculum_qg_harness.py",
+      "scripts/audit/cursor_judge_calibration.py",
+      "scripts/audit/damage_report.py",
+      "scripts/audit/decision_lineage.py",
+      "scripts/audit/errorcorrection_embed_scan.py",
+      "scripts/audit/finalize_activity_quality.py",
+      "scripts/audit/find_dead_code.py",
+      "scripts/audit/fix_internal_register_leakage.py",
+      "scripts/audit/fix_level_schemas.py",
+      "scripts/audit/flag_contested_calque_gold.py",
+      "scripts/audit/framing_compliance_gate.py",
+      "scripts/audit/freeze_benchmark.py",
+      "scripts/audit/generate_activity_quality_queue.py",
+      "scripts/audit/generate_daily_pool.py",
+      "scripts/audit/generate_practice_deck.py",
+      "scripts/audit/generate_search_index.py",
+      "scripts/audit/generate_sentence_inventory.py",
+      "scripts/audit/generate_source_inventory_review_candidates.py",
+      "scripts/audit/generate_tatoeba_cloze_candidates.py",
+      "scripts/audit/grok_judge_calibration.py",
+      "scripts/audit/grok_stage_runner.py",
+      "scripts/audit/grounding_shadow_compare.py",
+      "scripts/audit/grow_lexicon_from_lemmas.py",
+      "scripts/audit/grow_lexicon_from_sources.py",
+      "scripts/audit/hermes_nightly_audit.py",
+      "scripts/audit/immersion_gate_calibration.py",
+      "scripts/audit/ingest_ua_gec_gold.py",
+      "scripts/audit/judge_calibration_matrix.py",
+      "scripts/audit/layerb_apply_adjudication.py",
+      "scripts/audit/layerb_collect_emissions.py",
+      "scripts/audit/layerb_differential_replay.py",
+      "scripts/audit/layerb_judge_bridge.py",
+      "scripts/audit/layerb_label_merge.py",
+      "scripts/audit/layerb_label_scaffold.py",
+      "scripts/audit/layerb_label_union.py",
+      "scripts/audit/layerb_qualify.py",
+      "scripts/audit/layerb_shadow.py",
+      "scripts/audit/lint_agent_trailer.py",
+      "scripts/audit/lint_anti_menu.py",
+      "scripts/audit/lint_bio_dossier_xref.py",
+      "scripts/audit/lint_dispatch_brief.py",
+      "scripts/audit/lint_opsec_leaks.py",
+      "scripts/audit/lint_pr_closing_references.py",
+      "scripts/audit/lint_session_state.py",
+      "scripts/audit/lint_word_atlas.py",
+      "scripts/audit/llm_qg_canaries.py",
+      "scripts/audit/llm_qg_store.py",
+      "scripts/audit/measure_curated_membership.py",
+      "scripts/audit/measure_russicism_recall.py",
+      "scripts/audit/measure_wiki_coverage.py",
+      "scripts/audit/module_quality_audit.py",
+      "scripts/audit/module_size_policy_audit.py",
+      "scripts/audit/naturalness_check.py",
+      "scripts/audit/opencode_judge_calibration.py",
+      "scripts/audit/paronym_residual_audit.py",
+      "scripts/audit/plan_references_audit.py",
+      "scripts/audit/plan_source_inventory_promotion.py",
+      "scripts/audit/post_build_review.py",
+      "scripts/audit/practice_quality_gate.py",
+      "scripts/audit/private_teacher_lesson_intake.py",
+      "scripts/audit/probe_uk_writing_score.py",
+      "scripts/audit/qg_bakeoff.py",
+      "scripts/audit/qg_corpus_report.py",
+      "scripts/audit/qg_seat_decision.py",
+      "scripts/audit/qg_shadow_run.py",
+      "scripts/audit/qg_tier2_canary_check.py",
+      "scripts/audit/qg_tier2_disarm.py",
+      "scripts/audit/qg_workflow.py",
+      "scripts/audit/qwen_judge_calibration.py",
+      "scripts/audit/refresh_opsec_tracking_issues.py",
+      "scripts/audit/relation_residual_audit.py",
+      "scripts/audit/resolve_fixture_rights.py",
+      "scripts/audit/review_plan.py",
+      "scripts/audit/rewrite_fixture_pointers.py",
+      "scripts/audit/run_gemini_1x17_sweep.py",
+      "scripts/audit/run_subscription_1x17_sweep.py",
+      "scripts/audit/russianism_eval.py",
+      "scripts/audit/russianism_judge.py",
+      "scripts/audit/scan_activity_errors.py",
+      "scripts/audit/score_judge_calibration.py",
+      "scripts/audit/scrub_decision_ledger_keys.py",
+      "scripts/audit/secret_scan_local.py",
+      "scripts/audit/source_inventory_review_decisions.py",
+      "scripts/audit/stamp_textbook_urls.py",
+      "scripts/audit/strip_internal_resource_entries.py",
+      "scripts/audit/sum11_sovietization_scan.py",
+      "scripts/audit/text_difficulty.py",
+      "scripts/audit/track_deterministic_audit.py",
+      "scripts/audit/typesafe_citation_verifier.py",
+      "scripts/audit/ulp_fidelity_gate.py",
+      "scripts/audit/validate_atlas_conformance.py",
+      "scripts/audit/verbatim_overlap_gate.py",
+      "scripts/audit/wiki_completeness_gate.py",
+      "scripts/bakeoff/run_b1_writer.py",
+      "scripts/bakeoff/score_b1_writer_output.py",
+      "scripts/batch/batch_dispatcher.py",
+      "scripts/batch/batch_gemini_runner.py",
+      "scripts/batch/batch_otaman.py",
+      "scripts/build/activity_repair.py",
+      "scripts/build/activity_validator.py",
+      "scripts/build/build_arc_landing.py",
+      "scripts/build/build_module_direct.py",
+      "scripts/build/enrich.py",
+      "scripts/build/fresh/__main__.py",
+      "scripts/build/fresh/cli.py",
+      "scripts/build/generate_lesson_schema.py",
+      "scripts/build/promote_quality_gate.py",
+      "scripts/build/run_llm_qg_parity.py",
+      "scripts/build/typesafe_curriculum.py",
+      "scripts/build/v7_build.py",
+      "scripts/build/v7_review.py",
+      "scripts/build/verify_shippable.py",
+      "scripts/canary/kimi_oauth_canary.py",
+      "scripts/ci/bio_preparation_gate.py",
+      "scripts/ci/data_tier.py",
+      "scripts/crawl/discover_yt_by_pattern.py",
+      "scripts/curriculum/evidence/__main__.py",
+      "scripts/curriculum/evidence/lesson_lock.py",
+      "scripts/curriculum/evidence/pack.py",
+      "scripts/curriculum/evidence/verify.py",
+      "scripts/curriculum/evidence/words.py",
+      "scripts/curriculum/learner_state/__main__.py",
+      "scripts/curriculum/resolver/__main__.py",
+      "scripts/curriculum/validate/__main__.py",
+      "scripts/curriculum/validate/validate.py",
+      "scripts/debug/debug_hash.py",
+      "scripts/delegate.py",
+      "scripts/entire_context/__main__.py",
+      "scripts/etymology/bulk_ocr_gemini.py",
+      "scripts/eval/uk_preamble/__main__.py",
+      "scripts/eval/zno_nmt/__main__.py",
+      "scripts/fleet/capacity_pick.py",
+      "scripts/fleet/driver_breadth_report.py",
+      "scripts/fleet/idle_settle.py",
+      "scripts/fleet/post_task_reap.py",
+      "scripts/fleet/sibling_git.py",
+      "scripts/fleet/usage.py",
+      "scripts/fleet_comms/cli.py",
+      "scripts/generate_mdx/fill_template.py",
+      "scripts/generate_mdx/generate_curriculum_yaml.py",
+      "scripts/generate_mdx/generate_ipa.py",
+      "scripts/generate_mdx/generate_json.py",
+      "scripts/generate_mdx/generate_level_status.py",
+      "scripts/generate_mdx/generate_mdx_direct.py",
+      "scripts/generate_mdx/generate_mdx_stubs.py",
+      "scripts/generate_mdx/generate_objectives.py",
+      "scripts/generate_mdx/generate_plan_markdown.py",
+      "scripts/generate_mdx/generate_playground_data.py",
+      "scripts/generate_mdx/generate_seo.py",
+      "scripts/generate_mdx/generate_skeleton.py",
+      "scripts/generate_mdx/wire_navigation.py",
+      "scripts/generators/generate_a2_plans.py",
+      "scripts/hooks/session_start_gate.py",
+      "scripts/hygiene/branch_sweep.py",
+      "scripts/hygiene/retention_engine.py",
+      "scripts/hygiene/tmp_sweep.py",
+      "scripts/ingest/build_a1_closed_class.py",
+      "scripts/ingest/grac_frequency_ingest.py",
+      "scripts/ingest/incremental_textbook_ingest.py",
+      "scripts/ingest/slovnyk_me_ingest.py",
+      "scripts/lexicon/admit_fmu_boosters.py",
+      "scripts/lexicon/admit_stem_slice_2a.py",
+      "scripts/lexicon/admit_teacher_table.py",
+      "scripts/lexicon/admit_textbook_book_glossary.py",
+      "scripts/lexicon/apply_anchor_worksheet.py",
+      "scripts/lexicon/audit_sum11_relations.py",
+      "scripts/lexicon/backfill_course_usage.py",
+      "scripts/lexicon/build_fmu_booster_inventory.py",
+      "scripts/lexicon/build_slovnyk_mirror.py",
+      "scripts/lexicon/content_lexicon_reconciler.py",
+      "scripts/lexicon/curated_membership.py",
+      "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
+      "scripts/lexicon/curated_seed_atlas_admission.py",
+      "scripts/lexicon/curated_textbook_jsonl_repromote.py",
+      "scripts/lexicon/curriculum_atlas_intake.py",
+      "scripts/lexicon/enrich_manifest.py",
+      "scripts/lexicon/fill_slovnyk_sum20_cache.py",
+      "scripts/lexicon/generate_needs_review_ledger.py",
+      "scripts/lexicon/grow_lexicon_from_content.py",
+      "scripts/lexicon/heritage_calque_wave.py",
+      "scripts/lexicon/load_relation_candidates.py",
+      "scripts/lexicon/merge_translation_delta.py",
+      "scripts/lexicon/migrate_slovnyk_cache_v3.py",
+      "scripts/lexicon/migrate_slovnyk_cache_v4.py",
+      "scripts/lexicon/migrate_sum11_sovietization.py",
+      "scripts/lexicon/obvious_noise_classifier.py",
+      "scripts/lexicon/ohoiko_atlas_intake.py",
+      "scripts/lexicon/ohoiko_paired_headword_split.py",
+      "scripts/lexicon/park_thin_entries.py",
+      "scripts/lexicon/promote_atlas_6370_named_multiword_residual.py",
+      "scripts/lexicon/promote_grow_candidates.py",
+      "scripts/lexicon/promote_teacher_lesson_intake.py",
+      "scripts/lexicon/publish_manifest.py",
+      "scripts/lexicon/reenrich_thin_manifest_entries.py",
+      "scripts/lexicon/repair_plural_noun_aliases.py",
+      "scripts/lexicon/repair_truncated_definition_cards.py",
+      "scripts/lexicon/runner/atlas_job.py",
+      "scripts/lexicon/runner/durable_mirror.py",
+      "scripts/lexicon/runner/enrich_offline_20k.py",
+      "scripts/lexicon/runner/fetch_ulif_20k.py",
+      "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+      "scripts/lexicon/runner/finalize.py",
+      "scripts/lexicon/runner/generate_pr1_fixture.py",
+      "scripts/lexicon/runner/memory.py",
+      "scripts/lexicon/runner/memory_probe.py",
+      "scripts/lexicon/runner/reduce_ulif_20k.py",
+      "scripts/lexicon/runner/ulif_forms.py",
+      "scripts/lexicon/runner/worker.py",
+      "scripts/lexicon/teacher_deck.py",
+      "scripts/lexicon/thin_page_report.py",
+      "scripts/lexicon/tools/dump_ulif.py",
+      "scripts/lexicon/tools/import_ulif_dump.py",
+      "scripts/lexicon/tools/migrate_ulif_raw.py",
+      "scripts/lexicon/tools/report_ulif_homonym_suspects.py",
+      "scripts/lexicon/triage_needs_review.py",
+      "scripts/lexicon/ulp_taught_pair_extractor.py",
+      "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
+      "scripts/lexicon/verify_manifest.py",
+      "scripts/lexicon/verify_synonym_pairs.py",
+      "scripts/lint/lint_model_catalog.py",
+      "scripts/maintenance/batch_state_retention.py",
+      "scripts/maintenance/reclassify_dispatch_status.py",
+      "scripts/migrate/rehash_module.py",
+      "scripts/orchestration/claudex_supervisor.py",
+      "scripts/orchestration/codex_transport_health.py",
+      "scripts/orchestration/curriculum_coordinator.py",
+      "scripts/orchestration/curriculum_lifecycle_pilot.py",
+      "scripts/orchestration/curriculum_readiness.py",
+      "scripts/orchestration/dispatch_settle.py",
+      "scripts/orchestration/handoff_slot_registry.py",
+      "scripts/orchestration/install_worktree_cleanup_launchd.py",
+      "scripts/orchestration/job_host_exec.py",
+      "scripts/orchestration/merge_closeout.py",
+      "scripts/orchestration/observer_heartbeat.py",
+      "scripts/orchestration/precompact_handoff_check.py",
+      "scripts/orchestration/reap_worktrees.py",
+      "scripts/orchestration/reconcile_sweep.py",
+      "scripts/orchestration/rollover_registry_cli.py",
+      "scripts/orchestration/scheduled_worktree_cleanup.py",
+      "scripts/orchestration/stale_task_records.py",
+      "scripts/orchestration/task_family/cli.py",
+      "scripts/orchestration/thread_handoff.py",
+      "scripts/orchestration/worktree_claims.py",
+      "scripts/practice/author_densified_pairs.py",
+      "scripts/practice/densify_paradigm_from_lexemes.py",
+      "scripts/practice/typesafe_distractor_validator.py",
+      "scripts/practice_deck/publish.py",
+      "scripts/pre_commit/regen_lesson_schema.py",
+      "scripts/projects/open_model_data/adoption_cli.py",
+      "scripts/projects/open_model_data/correction_protection_consumer.py",
+      "scripts/projects/open_model_data/correction_protection_factory.py",
+      "scripts/projects/open_model_data/foundry_cli.py",
+      "scripts/projects/open_model_data/language_contact_detector.py",
+      "scripts/projects/open_model_data/model_ready_view_production.py",
+      "scripts/projects/open_model_data/phase3_evaluation_context_manifest.py",
+      "scripts/projects/open_model_data/phase3_pravopys_evaluation_context.py",
+      "scripts/projects/open_model_data/phase3_school_context_negative_recovery.py",
+      "scripts/projects/open_model_data/phase3_school_parent_section_context.py",
+      "scripts/projects/open_model_data/phase3_ua_gec_complete_context.py",
+      "scripts/projects/open_model_data/phase3_v3_prefreeze_readiness.py",
+      "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+      "scripts/projects/open_model_data/phase3_vspu_post_ingest_audit.py",
+      "scripts/projects/open_model_data/silver_evidence_factory.py",
+      "scripts/projects/open_model_data/v4_differential_soviet_miner.py",
+      "scripts/projects/open_model_data/v4_mine_uagec_calques.py",
+      "scripts/projects/open_model_data/v4_production_shards_assembly.py",
+      "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "scripts/projects/open_model_data/vesum_unattested_sample.py",
+      "scripts/rag/check_calques_m02.py",
+      "scripts/rag/query.py",
+      "scripts/rag/rag_batch_verify.py",
+      "scripts/rag/verify_extra.py",
+      "scripts/rag/verify_grammar_m02.py",
+      "scripts/rag/verify_module_1.py",
+      "scripts/rag/verify_module_1_v6.py",
+      "scripts/readings/clean_text_resolver.py",
+      "scripts/readings/generate_readings.py",
+      "scripts/readings/primary_text_demand.py",
+      "scripts/readings/textbook_curation.py",
+      "scripts/review/bench_health.py",
+      "scripts/review/closeout_cli.py",
+      "scripts/review/digest/__main__.py",
+      "scripts/review/fixloop.py",
+      "scripts/review/integration_check.py",
+      "scripts/review/model_catalog.py",
+      "scripts/review/prompts/check.py",
+      "scripts/review/prompts/render.py",
+      "scripts/review/record.py",
+      "scripts/review/record_cf_verdict.py",
+      "scripts/review/second_seat.py",
+      "scripts/review/seeds/adjudicate.py",
+      "scripts/review/seeds/score.py",
+      "scripts/review/settle.py",
+      "scripts/review/validate/__main__.py",
+      "scripts/review/validate/validate.py",
+      "scripts/scoring/calc_immersion.py",
+      "scripts/scoring/calculate_richness.py",
+      "scripts/scoring/score_track.py",
+      "scripts/session_canary/codex_lane.py",
+      "scripts/session_canary/gemini_lane.py",
+      "scripts/session_canary/glm_lane.py",
+      "scripts/session_supervisor/__init__.py",
+      "scripts/sync/promote_module.py",
+      "scripts/sync/prune_module_forensics.py",
+      "scripts/tools/agent_watcher.py",
+      "scripts/tools/check_gate.py",
+      "scripts/tools/consultation_cli.py",
+      "scripts/tools/convert_plans_v4.py",
+      "scripts/tools/extract_track_metrics.py",
+      "scripts/tools/migrate_legacy_state_to_v6.py",
+      "scripts/tools/source_images_direct.py",
+      "scripts/tools/upgrade_activity_hints.py",
+      "scripts/validate/validate_activities.py",
+      "scripts/validate/validate_html.py",
+      "scripts/validate/validate_mdx.py",
+      "scripts/validate/validate_plan_config.py",
+      "scripts/validate/validate_yaml.py",
+      "scripts/verification/bench_check_text.py",
+      "scripts/verification/stress_comparison.py",
+      "scripts/verification/verify_antonenko_citations.py",
+      "scripts/vocab/lexical_sandbox.py",
+      "scripts/wiki/benchmark.py",
+      "scripts/wiki/build_sources_db.py",
+      "scripts/wiki/compile.py",
+      "scripts/wiki/diagnostics/corpus_gaps/audit.py",
+      "scripts/wiki/diagnostics/corpus_gaps/classify.py",
+      "scripts/wiki/diagnostics/corpus_gaps/report.py",
+      "scripts/wiki/diagnostics/retrieval_bakeoff_9233.py",
+      "scripts/wiki/diagnostics/retrieval_playback.py",
+      "scripts/wiki/diagnostics/retrieval_probe_9233.py",
+      "scripts/wiki/fetch_external_sources.py",
+      "scripts/wiki/ingest_ukrainian_wiki.py",
+      "scripts/wiki/quality_gate.py",
+      "scripts/wiki/restore_literary_metadata.py",
+      "scripts/wiki/review.py",
+      "scripts/wiki/sources_db.py",
+      "scripts/wiki/ukrainian_wiki_corpus.py"
+    ],
+    "cli_paths_sha256": "900bbdd0b28271e23baf1124d57b7ec34758209452b21ead886398c1f815b650"
+  },
+  "failures": [
+    {
+      "path": "scripts/agent_runtime/acpx_pilot.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/agent_runtime/kimi_boundary.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/agent_runtime/lane_probe.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/agent_runtime/probe_fallback.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_hermes_stdin.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ai_agent_bridge/_inbox_watch.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/api/occupancy_local.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/atlas/fill_local.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/atlas/measure_fill_enrich_divergence.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/atlas/word_card_foundation.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audio/generate_pronunciation.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/audit_module.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/check_ci_dependencies.py",
+      "form": "file",
+      "failure_class": "environment_blocked_subprocess"
+    },
+    {
+      "path": "scripts/audit/classify_grounding_failures.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/decision_lineage.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/generate_daily_pool.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/generate_source_inventory_review_candidates.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grounding_shadow_compare.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grow_lexicon_from_lemmas.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/grow_lexicon_from_sources.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/immersion_gate_calibration.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/layerb_shadow.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/llm_qg_store.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/measure_curated_membership.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/measure_russicism_recall.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/plan_source_inventory_promotion.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/rewrite_fixture_pointers.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/run_gemini_1x17_sweep.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/audit/source_inventory_review_decisions.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/typesafe_citation_verifier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/audit/ulp_fidelity_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/batch/batch_dispatcher.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/batch/batch_gemini_runner.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/batch/batch_gemini_runner.py",
+      "form": "module",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/build/build_arc_landing.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/enrich.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/build/fresh/__main__.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/fresh/cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/promote_quality_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/build/verify_shippable.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/canary/kimi_oauth_canary.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/ci/bio_preparation_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ci/data_tier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/curriculum/evidence/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/evidence/lesson_lock.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/curriculum/evidence/pack.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/curriculum/evidence/verify.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/curriculum/evidence/words.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/curriculum/learner_state/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/resolver/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/validate/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/curriculum/validate/validate.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/debug/debug_hash.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/delegate.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/entire_context/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/eval/uk_preamble/__main__.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/eval/zno_nmt/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/fleet/agy_failure_tally.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/capacity_pick.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/driver_breadth_report.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/idle_settle.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/post_task_reap.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/sibling_git.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet/usage.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/fleet_comms/cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_curriculum_yaml.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_json.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_level_status.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_mdx_direct.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_plan_markdown.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_playground_data.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_seo.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/generate_mdx/generate_skeleton.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/hygiene/branch_sweep.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/hygiene/tmp_sweep.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/ingest/build_a1_closed_class.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/admit_teacher_table.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/audit_sum11_relations.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/build_fmu_booster_inventory.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/lexicon/build_slovnyk_mirror.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/curriculum_atlas_intake.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/grow_lexicon_from_content.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/obvious_noise_classifier.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/ohoiko_atlas_intake.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/atlas_job.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/finalize.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/memory.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/memory_probe.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/ulif_forms.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/runner/worker.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/lexicon/teacher_deck.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/migrate/rehash_module.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/migrate/rehash_module.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/claudex_supervisor.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/orchestration/codex_transport_health.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/handoff_slot_registry.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/observer_heartbeat.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/precompact_handoff_check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/orchestration/task_family/cli.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/orchestration/worktree_claims.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/practice/author_densified_pairs.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/projects/open_model_data/correction_protection_consumer.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/correction_protection_factory.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/foundry_cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/model_ready_view_production.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/phase3_vspu_post_ingest_audit.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/projects/open_model_data/v4_verify_trajectory_claims.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/check_calques_m02.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/query.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/rag_batch_verify.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/rag_batch_verify.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/verify_extra.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/verify_grammar_m02.py",
+      "form": "file",
+      "failure_class": "environment_blocked_network"
+    },
+    {
+      "path": "scripts/rag/verify_module_1.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/rag/verify_module_1_v6.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/closeout_cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/digest/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/review/fixloop.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/integration_check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/prompts/check.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/prompts/render.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/record.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/second_seat.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/seeds/adjudicate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/seeds/score.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/settle.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/review/validate/__main__.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/review/validate/validate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/scoring/calc_immersion.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/scoring/calculate_richness.py",
+      "form": "file",
+      "failure_class": "import_error"
+    },
+    {
+      "path": "scripts/session_supervisor/__init__.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/tools/agent_watcher.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/agent_watcher.py",
+      "form": "module",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/check_gate.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/tools/consultation_cli.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/tools/source_images_direct.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/validate/validate_activities.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/verification/stress_comparison.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/verification/verify_antonenko_citations.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/vocab/lexical_sandbox.py",
+      "form": "file",
+      "failure_class": "other_import_failure"
+    },
+    {
+      "path": "scripts/wiki/benchmark.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/compile.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/diagnostics/retrieval_playback.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/ingest_ukrainian_wiki.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/quality_gate.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/review.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/sources_db.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
+      "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+      "form": "module",
+      "failure_class": "module_not_found"
+    }
+  ]
+}

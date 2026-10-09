@@ -18,36 +18,103 @@ enqueue or re-queue.
   `discuss` with 2 to 4 enabled seats; every other participant count rejects), and
   caveman lite is style (never persisted review text).
 
-**Reviewer family is live data.** Pick the reviewer from the live Cursor Cloud
-catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
+**Reviewer family is live data.** Resolve through `closeout_cli resolve-reviewer`
+using the live model catalog and health (§6 below). Do **not** hardcode Claude
 Sonnet (or any one model). The writer's family is never eligible.
 
 **Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
 chosen from the "Code review" row of `model-assignment.md`
 (GLM from the Cloud catalog, Grok, GPT, … — never Kimi; whatever the
 live catalog lists that is outside the author's family and meets
-that Code review routing). Gemini/AGY reviews Ukrainian only, never code
-(operator 2026-09-25). **VPS drivers** may still
+that Code review routing). Native AGY admits low/medium risk code reviews through `delegate.py`;
+high/critical, infra and security reviews exclude Gemini. Ukrainian reviews
+require Sources MCP. The bridge refuses Gemini code reviews. **VPS drivers** may still
 use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
 in §7 is the same.
 
 **Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
-`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
-closed. Use lightweight direct review:
+`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones. A review
+`ask-<lane> --review` / `--type review` uses a toolful native CLI with synchronous
+dispatch/wait; the driver cannot continue meanwhile. Its legacy `--background` flag is rejected.
+ACP is only for ordinary non-review `ask-*`; use detached dispatch/wait below to settle separately.
+Ask stdout is reply text, not SHA evidence. Code/infra admission resolves the existing
+remote-tracking target and sets `pinned_head` before routing; checkout preparation fetches
+and refuses a different head. After settlement compare task `pinned_head` and actual
+`worktree_base_sha` with the current pushed branch tip; the recorder uses `worktree_base_sha`.
+
+Resolve via `closeout_cli resolve-reviewer`; use its reviewer/model, author model, and risk.
+`requires_silence_timeout` is boolean; if true, use documented seat/runtime seconds,
+pass `--silence-timeout <seconds>` explicitly (default 3600), and confirm `silence_timeout`
+in the task record. Never infer duration or reuse stale routing. `REVIEW_BRIEF` names branch/SHA
+and requests toolful code/infra review with findings under `_dispatch_wrappers.py`
+and `schemas/code-review-findings.v1.schema.json`.
 
 ```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
-# Do not enqueue or auto-merge here — landing order is §7.
+set -euo pipefail
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+PY="$PRIMARY_REPO/.venv/bin/python"
+
+# If requires_silence_timeout is true, set SILENCE_TIMEOUT_SECONDS from current
+# seat/runtime guidance and add --silence-timeout "$SILENCE_TIMEOUT_SECONDS".
+dispatch_result="$("$PY" scripts/delegate.py dispatch \
+  --agent "$REVIEW_AGENT" --model "$REVIEW_MODEL" --effort high \
+  --mode read-only --worktree --task-id "$REVIEW_TASK" \
+  --prompt-file "$REVIEW_BRIEF" --branch "$AUTHOR_BRANCH" \
+  --pinned-head "$HEAD_SHA" --require-review-verdict \
+  --review-profile code --review-author-model "$AUTHOR_MODEL" \
+  --review-risk "$REVIEW_RISK")"
+mapfile -t dispatch_lines <<<"$dispatch_result"
+REVIEW_TASK="${dispatch_lines[0]}"
+REVIEW_NONCE="${dispatch_lines[1]}"
+# Arm in a yielding tool session. Re-arm ONLY wait on client expiry.
+while true; do
+  wait_rc=0
+  wait_result="$("$PY" scripts/delegate.py wait "$REVIEW_TASK" \
+    --run-nonce "$REVIEW_NONCE" --timeout 1800)" || wait_rc=$?
+  if (( wait_rc == 0 )); then printf '%s\n' "$wait_result"; break; fi
+  if (( wait_rc == 124 )) && [[ -z "$wait_result" ]]; then
+    state="$("$PY" scripts/delegate.py status "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE")"
+    if "$PY" -c 'import json,sys; sys.exit(json.load(sys.stdin).get("status") not in ("running", "spawning", "done"))' <<<"$state"; then continue; fi
+    # A terminal state raced expiry: read its same-nonce settlement/exit code.
+    "$PY" scripts/delegate.py wait "$REVIEW_TASK" --run-nonce "$REVIEW_NONCE" --timeout 1
+    exit $?
+  fi
+  printf '%s\n' "$wait_result"
+  exit "$wait_rc"
+done
 ```
 
-This command line is unchanged, but the transport underneath it is not ACP
-(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
-route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
---worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
---no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+**Synchronous ask expiry:** its wait omits `--run-nonce`; wait rc 124 with empty stdout
+becomes wrapper `ok=false`, empty `response`, and `ask-<lane> review dispatch did not complete: status=None`.
+The outer subprocess timeout instead reports `delegate.py wait timed out at process level`
+while the original review may still be live. Either signal requires the same lookup and
+original-task wait recovery below; neither is a terminal task-record `timeout`.
+Ask itself does not expose the dispatch nonce (or rc 124 for client expiry). Set `REVIEW_TASK` to the original ask's task ID
+and `PRIMARY_REPO`/`PY` as above; query the live task record via `delegate.py status`:
+
+```bash
+set -euo pipefail
+state="$("$PY" scripts/delegate.py status "$REVIEW_TASK")"
+REVIEW_NONCE="$("$PY" -c 'import json,sys; s=json.load(sys.stdin); n=s.get("run_nonce"); (s.get("task_id")==sys.argv[1] and isinstance(n,str) and n.strip()) or sys.exit("invalid task identity/nonce"); print(n)' "$REVIEW_TASK" <<<"$state")"
+```
+
+Resume **only** the `while true` wait loop above, even for `done`; never rerun dispatch.
+Missing/invalid lookup or nonce drift refuses continuation, not a new review.
+
+Keep task ID and nonce. Wait rc 124 with `running`/`spawning` (stderr diagnostic, no stdout record)
+means client expiry: re-arm only wait. Status rejects nonce drift; `done` racing expiry gets one settlement read.
+Only terminal task-record `timeout` (stdout record) is settled failure. Settlement requires `done`, matching
+identity, attested model/family, unchanged branch/SHA, and complete reply; failure, missing/malformed
+evidence, unknown identity, or moved head is not approval.
+
+Exact-head cross-family `VERDICT: APPROVE` permits opening the PR. Then bind it:
+
+```bash
+"$PY" scripts/review/record_cf_verdict.py --task-id "$REVIEW_TASK" --pr "$PR_NUMBER"
+```
+
+Require same-SHA CI before merge; the publisher checks task, reviewer, branch,
+and PR head. Moved heads need re-review; do not enqueue/auto-merge here (§7).
 
 **Read-only review asks can be refused on brief wording (#8703).** The write-shape check
 in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
@@ -64,43 +131,14 @@ Reviewers do not re-run test suites that the PR's CI runs: review the diff, run 
 most the specific tests that reproduce a finding you are checking, and cite CI run
 ids for suite results.
 
-## §7. Merge discipline
+## §7. Landing order
 
-PRs only — never commit or merge to `main` directly.
-
-**Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03; CF-before-CI clarified 2026-09-18):** The
-forge does not enforce independent review, so the driver verifies both gates
-itself. Auto-merge / enqueue is **not** review; PRs have reached `main` that
-way with empty reviews. Drivers follow this order:
-
-0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
-   via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
-   `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
-   while CF is open or while iterating findings — CI also runs on
-   draft PRs, so a draft still burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
-   runs once on that tip.
-1. **Independent cross-family exact-head CF** — attested `resolved_model`,
-   different family from the author, APPROVE on the tip (post on the PR once
-   open, bound to that SHA).
-2. **Open the PR** → **CI Gate green** on that **same** head.
-3. **Merge queue only after both.** Enqueue then; never before.
-
-**Never auto-merge or enqueue first.** Never treat `.venv/bin/python -m scripts.publish pr-merge --auto` as a
-substitute for CF. Do **not** arm `--auto` and wait for Gate. Never enqueue a
-**draft**. Blocking CI red → never `--admin`-bypass.
-
-```bash
-# Only after §7 steps 1 and 2 on this exact head. Never --auto.
-.venv/bin/python -m scripts.publish pr-merge --number <N>
-
-# Check merge-queue status / position / ETA after enqueue (#7814 item 13):
-.venv/bin/python -m scripts.gh_merge_queue_status <pr>
-```
-
-**Never pass `--delete-branch` to `.venv/bin/python -m scripts.publish pr-merge --number <N>` while this repo uses a merge queue** —
-deleting the head ref mid-queue can close the PR without landing (known failure mode).
-The remote branch is deleted only after `gh pr view` shows `MERGED`, by §7a closeout.
+The sole ordered landing and cleanup recipe is
+`agents_extensions/shared/rules/workflow.md` § Merge policy. Follow it after
+§6's toolful exact-head cross-family settlement: approval before opening any
+PR, same-head CI before enqueue, non-draft PR, no `--auto`, `--delete-branch`
+or `--admin`, confirm MERGED, then common-reaper cleanup. A moved head voids
+both gates; missing evidence never grants approval.
 
 **Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
@@ -179,40 +217,14 @@ Missing local proof on a user-visible API/UI change is incomplete closeout. Issu
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
 cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
-## §7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
+## §7a. Post-merge cleanup is mandatory
 
-**A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
-promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
-after merge is a process defect (ENOSPC / disk full is the known failure mode).
-
-**Order after `gh pr view <N>` shows `MERGED`:**
-
-1. **Confirm** merge SHA.
-2. **`merge_closeout` first** — after all processes have left the target worktree(s), run:
-   ```bash
-   .venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
-   ```
-   This one command proves the PR is `MERGED`, finds every worktree tied to it (by
-   branch or exact merged head SHA — detached review-checkout siblings included),
-   reaps each through the P0 reaper (`--merged`/`merged_pr_only`, exact `--worktree`,
-   no second deletion hand, no `--force`), and proves the remote and local branch are
-   both gone. It exits non-zero on any residual — treat that exit as a blocker, not
-   permission to retry with `--force`.
-3. **Manual fallback only** — if `merge_closeout` cannot run, follow
-   [`worktree-cleanup.md`](../../../../../docs/runbooks/worktree-cleanup.md) for the
-   kill switch, rescue restore, and allowlisted dual paths before using
-   `git worktree remove`.
-4. **Issues** — close every issue the PR names with evidence, or post a comment after
-   the merge naming exactly what remains and what it waits on (core Definition of done).
-5. **Branches** — `merge_closeout --apply` deletes the pull request's remote and
-   local branch. A squash merge still counts: the old tip is the PR head, not a
-   commit on `main`. Agent scratch refs (`*/review-*`, `rescue/*`, `pr-*`) are not
-   a pull request head; the hygiene sweep deletes them when they have no open PR,
-   and a later review round deletes the earlier round's branch. Do not leave those
-   refs behind. Run `.venv/bin/python -m scripts.hygiene.branch_sweep --json` for the
-   session branch sweep; add `--apply` only after reviewing its receipts. Then run
-   `git fetch --prune`.
-6. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
+Follow `agents_extensions/shared/rules/workflow.md` § Merge policy /
+Post-merge cleanup. Worker exit, MERGED and the actual merge SHA, common-reaper
+exit 0 and residue-free receipts are required before the next large dispatch.
+Non-zero or SKIPPED receipts block closeout; never use `--force`. The only
+manual fallback is the one in `docs/runbooks/worktree-cleanup.md` when the
+common reaper cannot run. A squash-merge alone is not done.
 
 **After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
 (offline); triage only through its `show-keys` and `count` subcommands (never `jq`, `cat` or

@@ -49,7 +49,7 @@ Don't pattern-match on principles ("orchestrate when possible") — match the EX
 | Wiki/content writing | `delegate.py dispatch --agent gemini` (Gemini sub, unmetered) |
 | Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model <formal CF pin from model-assignment.md> --effort xhigh` (headless, separate billing) |
 | Q&A without need to commit | `ab ask-codex` / `ab ask-agy` (advisory only; current ids in `model-assignment.md` § Gemini) |
-| Single-shot code review without need to commit | `ab ask-codex` or another non-Gemini seat. Gemini reviews Ukrainian only, never code (operator 2026-09-25). Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
+| Single-shot code review without need to commit | `ab ask-codex` or another qualified cross-family seat. Native AGY admits low/medium risk code reviews through `delegate.py`; high/critical, infra and security reviews exclude Gemini. The bridge refuses Gemini code reviews. Ukrainian content review: `ab ask-agy --review --review-profile ukrainian` |
 | Search / grep / "find me X" across files | `Agent` tool with `subagent_type: Explore`, `model: "haiku"` |
 | Status check on running dispatches | Monitor API curl, never inline file scans |
 | Memory / rules / Claude-owned text | Me, inline. Claude's brain = Claude's job. Never deflect to user. |
@@ -64,9 +64,9 @@ Compound decisions = ONE table + ONE recommendation, NEVER N parallel sign-off q
 
 ## #0H — CF REVIEW MANDATORY ON EVERY PR; THEN MERGE (2026-07-27)
 **Independent cross-family (CF) formal review is ALWAYS mandatory before merge.** No exceptions for “small,” docs-only, launcher, or infra PRs. Discussion / self-review / same-family review ≠ the gate.
-- Request immediately after `.venv/bin/python -m scripts.publish pr-create` — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`, then post the verdict on the PR. Resolve the reviewer lane with `scripts.review.closeout_cli ... resolve-reviewer` (must be outside the author's model family; eligibility pins are retired with the sealed path). `--type review` routes to headless `delegate.py dispatch` WITH tools (`gh`/pytest), never tool-less ACP (2026-08-23, #7155) — a reviewer needs `gh` to ground a verdict.
+- Complete CF on the pushed branch **before** `.venv/bin/python -m scripts.publish pr-create` (draft or ready) — **lightweight direct path (sealed `review-pr` RETIRED 2026-08-07):** resolve the qualified reviewer lane/model with `scripts.review.closeout_cli ... resolve-reviewer` (outside the author's model family), then `printf '%s\n' "Cross-family review of branch <branch> at head <SHA>: verdict + code-review-findings.v1 findings." | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<id> --review --branch <branch> --to-model <resolved-model> --effort high`. This uses toolful native `delegate.py dispatch`/wait, never tool-less ACP; admission pins the branch target and checkout refuses head movement. Verify settled task `pinned_head` and `worktree_base_sha` against the unchanged pushed tip (ask stdout is reply text, not SHA evidence). Only completed qualified exact-head CF APPROVE permits PR creation; afterward post that review with `.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>`. Follow `skills/drive-epic/references/review-merge-cleanup.md` §6 for settlement, detached dispatch and route-required silence timeouts.
 - Closeout incomplete until CF is requested (and settled). Failure encoded: 2026-07-27 Grok shipped #5875 without CF review; operator had to ask.
-- After CF pass + green blocking CI: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). Hold only for CF fail or blocking CI.
+- After exact-head CF pass + green blocking CI on that same head: `.venv/bin/python -m scripts.publish pr-merge --number N` (action bias — don’t leave PRs limbo). A moved head requires fresh CF and CI; hold for CF fail or blocking CI.
 
 ## #0G — NEVER REPORT ASYNC-TASK STATE FROM MEMORY (2026-05-08)
 Before saying "task X is running / X just finished / X is at step Y", ALWAYS query `delegate.py status-or-fail X` or Monitor API `/api/delegate/active`. Memory of state from 2 minutes ago is wrong by default. Established 2026-05-08 after orchestrator reported bakeoff "Gemini mid-write" when it had finished.
@@ -143,7 +143,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **EDUCATION NOT SOFTWARE:** Real learners use these. Build ONE module → verify pedagogy → next.
 - **SEQUENCE:** One working e2e example FIRST. Never modify pipeline without tracing.
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
-- **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
+- **WORD TARGETS (legacy module workflows):** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand. Core fresh-build lessons follow their own sizing contract (`non-negotiable-rules.md` rule 4).
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
 **Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.

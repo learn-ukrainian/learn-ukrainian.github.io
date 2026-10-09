@@ -82,6 +82,7 @@ def test_install_is_verified_and_idempotent(tmp_path: Path, monkeypatch) -> None
     public = tmp_path / "public"
     private = tmp_path / "private"
     home = tmp_path / "home"
+    home.mkdir()
     for repo in (public, private):
         (repo / ".git").mkdir(parents=True)
     interpreter = public / ".venv" / "bin" / "python"

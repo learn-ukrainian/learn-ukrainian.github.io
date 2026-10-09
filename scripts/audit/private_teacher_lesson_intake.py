@@ -7,6 +7,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import re
 import sys
 import zipfile
@@ -45,9 +46,9 @@ SOURCE_FAMILY = "teacher_lesson"
 EXTRACTION_MODE = "private_document_token"
 DEFAULT_SOURCE_ID = "private-teacher-lesson-full-source"
 DEFAULT_SOURCE_TITLE = "Private teacher lesson source"
-DEFAULT_CANDIDATES_OUT = Path("/tmp/atlas-private-teacher-lesson-candidates.json")
-DEFAULT_BULK_TRIAGE_OUT = Path("/tmp/atlas-private-teacher-lesson-bulk-triage.json")
-DEFAULT_BULK_TRIAGE_REPORT_OUT = Path("/tmp/atlas-private-teacher-lesson-bulk-triage.md")
+CANDIDATES_FILENAME = "atlas-private-teacher-lesson-candidates.json"
+BULK_TRIAGE_FILENAME = "atlas-private-teacher-lesson-bulk-triage.json"
+BULK_TRIAGE_REPORT_FILENAME = "atlas-private-teacher-lesson-bulk-triage.md"
 SUPPORTED_SUFFIXES = {".csv", ".docx", ".md", ".txt", ".tsv", ".xlsx"}
 OMITTED_PUBLIC_FIELDS = (
     "raw_text",
@@ -396,12 +397,23 @@ def candidate_review_payload(result: PrivateTeacherIntakeResult) -> dict[str, An
     }
 
 
+def _temp_output(filename: str) -> Path:
+    """Resolve caller-owned scratch at call time; the caller owns its lifetime."""
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        raise ValueError("Set TMPDIR to caller-owned scratch or provide explicit temporary output paths")
+    root = Path(tmpdir)
+    if not root.is_absolute() or not root.is_dir():
+        raise ValueError("TMPDIR must be an existing absolute directory")
+    return root / filename
+
+
 def write_candidate_review_payload(
     result: PrivateTeacherIntakeResult,
-    out: Path = DEFAULT_CANDIDATES_OUT,
+    out: Path | None = None,
 ) -> Path:
     """Write local candidate metadata outside the repository."""
-    output_path = resolve_local_review_output_path(out)
+    output_path = resolve_local_review_output_path(out if out is not None else _temp_output(CANDIDATES_FILENAME))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(candidate_review_payload(result), ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -477,10 +489,10 @@ def bulk_triage_public_summary(triage: Mapping[str, Any]) -> dict[str, Any]:
 
 def write_bulk_triage_payload(
     triage: Mapping[str, Any],
-    out: Path = DEFAULT_BULK_TRIAGE_OUT,
+    out: Path | None = None,
 ) -> Path:
     """Write local bulk triage JSON outside the repository."""
-    output_path = resolve_local_review_output_path(out)
+    output_path = resolve_local_review_output_path(out if out is not None else _temp_output(BULK_TRIAGE_FILENAME))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(triage, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -491,12 +503,12 @@ def write_bulk_triage_payload(
 
 def write_bulk_triage_report(
     triage: Mapping[str, Any],
-    out: Path = DEFAULT_BULK_TRIAGE_REPORT_OUT,
+    out: Path | None = None,
     *,
     report_limit: int = 200,
 ) -> Path:
     """Write a local Markdown triage report outside the repository."""
-    output_path = resolve_local_review_output_path(out)
+    output_path = resolve_local_review_output_path(out if out is not None else _temp_output(BULK_TRIAGE_REPORT_FILENAME))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         format_bulk_triage_report(triage, report_limit=report_limit) + "\n",
@@ -1415,7 +1427,23 @@ def _validate_source_shape_expectation(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.audit.private_teacher_lesson_intake \"$SOURCE\" --bulk-triage\n"
+            "  .venv/bin/python -m scripts.audit.private_teacher_lesson_intake \"$SOURCE\" "
+            "--candidates-out \"$TMPDIR/atlas-private-teacher-lesson-candidates.json\"\n"
+            "Outputs: safe census on stdout; optional local JSON/Markdown only when output flags are set.\n"
+            "API omitted outputs use the current existing absolute TMPDIR. Caller retains artifacts "
+            "through review and consumption and owns cleanup; separate task_scratch invocations do not share them.\n"
+            "Candidate review JSON is not promotion input: review into approved ledgers first. "
+            "Promotion replaces the shared candidate basename; use an explicit path to retain an intake copy.\n"
+            "Exit codes: 0 success; 2 invalid arguments or private-source/output guards.\n"
+            "Related: docs/runbooks/word-atlas-private-teacher-source-scope.md; #9702."
+        ),
+    )
     parser.add_argument(
         "sources",
         nargs="+",
@@ -1464,7 +1492,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--candidates-out",
         type=Path,
-        help=f"Optional local candidate JSON path outside the repository (example: {DEFAULT_CANDIDATES_OUT}).",
+        help=f"Optional local candidate JSON path outside the repository (example: $TMPDIR/{CANDIDATES_FILENAME}).",
     )
     parser.add_argument(
         "--bulk-triage",
@@ -1474,14 +1502,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--triage-out",
         type=Path,
-        help=f"Optional local bulk triage JSON path outside the repository (example: {DEFAULT_BULK_TRIAGE_OUT}).",
+        help=f"Optional local bulk triage JSON path outside the repository (example: $TMPDIR/{BULK_TRIAGE_FILENAME}).",
     )
     parser.add_argument(
         "--triage-report-out",
         type=Path,
         help=(
             "Optional local bulk triage Markdown path outside the repository "
-            f"(example: {DEFAULT_BULK_TRIAGE_REPORT_OUT})."
+            f"(example: $TMPDIR/{BULK_TRIAGE_REPORT_FILENAME})."
         ),
     )
     parser.add_argument(

@@ -26,6 +26,112 @@ def _identity(*, issue: int | None = 5295) -> dict:
     )
 
 
+def _fresh_identity(**overrides) -> dict:
+    return task_identity.build_identity(**{
+        "repository": task_identity.DEFAULT_REPOSITORY,
+        "stream_epic": 4707,
+        "stream_epic_url": None,
+        "github_issue_number": 10143,
+        "github_issue_url": None,
+        "semantic_title": "Initialize fresh task lifecycle",
+        "task_family": "infra-harness",
+        "role": "driver",
+        "fresh_task_id": "native-thread-10143",
+        "terminal_goal": "merge",
+        "lifecycle_state": "active",
+        **overrides,
+    })
+
+
+def test_fresh_identity_validates_without_rollover_ancestry() -> None:
+    identity = _crash_roundtrip(_fresh_identity())
+    assert task_identity.validate_identity(identity) == identity
+    assert list(task_identity._IDENTITY_VALIDATOR.iter_errors(identity)) == []
+    assert identity["origin"] == "fresh"
+    assert identity["task_id"] == "native-thread-10143"
+    assert identity["lifecycle_state"] == "active"
+    assert set(identity).isdisjoint({"lineage_id", "generation", "predecessor_task_id", "replacement_task_id"})
+    assert set(identity["carriers"].values()) == {identity["visible_title"]}
+
+
+@pytest.mark.parametrize("task_id", ["", " ", " native-thread", "native thread", "native\nthread", "native\x00thread", "native\x7fthread", 7])
+def test_fresh_builder_rejects_malformed_native_task_ids(task_id) -> None:
+    with pytest.raises(ValueError):
+        _fresh_identity(fresh_task_id=task_id)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("lineage_id", "lineage-real"), ("lineage_id", ""),
+    ("predecessor_task_id", "thread-old"), ("replacement_task_id", "thread-new"),
+    ("generation", 1), ("generation", 0),
+    ("lifecycle_state", "confirmed"), ("lifecycle_state", ""), ("lifecycle_state", None),
+    ("lifecycle_state", "prepared"),
+    ("legacy_fallback", True), ("terminal_goal", "unknown"),
+])
+def test_fresh_builder_rejects_rollover_and_legacy_fields(field, value) -> None:
+    with pytest.raises(ValueError):
+        _fresh_identity(**{field: value})
+
+
+@pytest.mark.parametrize("field,value", [
+    ("origin", None), ("origin", "rollover"), ("task_id", None), ("task_id", ""),
+    ("task_id", "native thread"), ("task_id", "native\x00thread"), ("task_id", "native-thread\n"),
+    ("lineage_id", None), ("lineage_id", ""), ("lineage_id", "lineage-real"),
+    ("predecessor_task_id", None), ("replacement_task_id", None),
+    ("generation", 0), ("generation", 1), ("lifecycle_state", "resumed"),
+])
+def test_fresh_schema_rejects_malformed_and_mixed_envelopes(field, value) -> None:
+    identity = _fresh_identity()
+    identity[field] = value
+    assert list(task_identity._IDENTITY_VALIDATOR.iter_errors(identity))
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.validate_identity(identity)
+
+
+@pytest.mark.parametrize("field", ["origin", "task_id"])
+def test_fresh_schema_requires_explicit_origin_and_native_task_id(field) -> None:
+    identity = _fresh_identity()
+    del identity[field]
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.validate_identity(identity)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("lineage_id", None), ("lineage_id", ""), ("lineage_id", "Bad-Lineage"),
+    ("predecessor_task_id", None), ("predecessor_task_id", ""),
+    ("generation", None), ("generation", 0), ("generation", True),
+    ("origin", "fresh"), ("task_id", "native-thread"), ("lifecycle_state", "active"),
+])
+def test_rollover_schema_still_rejects_invalid_identity(field, value) -> None:
+    identity = _identity()
+    identity[field] = value
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.validate_identity(identity)
+
+
+@pytest.mark.parametrize("field", ["lineage_id", "generation", "predecessor_task_id", "replacement_task_id"])
+def test_rollover_schema_still_requires_ancestry(field) -> None:
+    identity = _identity()
+    del identity[field]
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.validate_identity(identity)
+
+
+def test_rollover_builder_still_rejects_null_lifecycle_state() -> None:
+    identity = _identity()
+    with pytest.raises(ValueError, match="schema violation"):
+        task_identity.build_identity(**{
+            key: value for key, value in identity.items()
+            if key not in {"schema_version", "visible_title", "carriers", "migration", "lifecycle_state"}
+        }, lifecycle_state=None)
+
+
+def test_fresh_identity_cannot_resume_an_unrelated_rollover() -> None:
+    identity = _fresh_identity()
+    with pytest.raises(ValueError, match="no rollover title transition"):
+        task_identity.mark_resumed(identity, _transition(identity), replacement_task_id=identity["task_id"])
+
+
 def _transition(identity: dict, harness: str = "codex-app") -> dict:
     return task_identity.new_title_transition(
         harness=harness,

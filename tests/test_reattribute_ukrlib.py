@@ -6,7 +6,6 @@ ingestion.
 """
 
 import json
-import sqlite3
 import sys
 from pathlib import Path
 from typing import ClassVar
@@ -15,6 +14,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from rag.config import LITERARY_DIR
+from scripts.lib.readonly_sqlite import open_readonly
 
 # ── Post-execution tests ─────────────────────────────────────────────
 
@@ -74,26 +74,7 @@ class TestPostNoCrossContamination:
         assert passed, "Cross-contamination detected:\n" + "\n".join(errors)
 
 
-def _literary_corpus_available() -> bool:
-    """True only when sources.db has a populated literary_texts table.
 
-    CI uses a stub sources.db without the literary corpus (#2928), so the
-    post-reattribution corpus checks below skip there and run only locally
-    against the full SQLite corpus.
-    """
-    db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
-    if not db_path.exists():
-        return False
-    try:
-        with sqlite3.connect(db_path) as conn:
-            has_table = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='literary_texts'"
-            ).fetchone()
-            if not has_table:
-                return False
-            return conn.execute("SELECT count(*) FROM literary_texts").fetchone()[0] > 0
-    except sqlite3.Error:
-        return False
 
 
 class TestPostSearchQuality:
@@ -107,16 +88,13 @@ class TestPostSearchQuality:
         ("Нечуй-Левицький І.", "Кайдашева сім'я"),
     ]
 
-    @pytest.mark.skipif(
-        not _literary_corpus_available(),
-        reason="literary_texts corpus not present (CI uses a stub sources.db; #2928)",
-    )
+    @pytest.mark.data_tier("sources", tables=("literary_texts",))
     @pytest.mark.parametrize("author,work_substr", AUTHOR_CHECKS)
-    def test_post_author_chunks_in_sources_db(self, author, work_substr):
-        db_path = Path(__file__).resolve().parents[1] / "data" / "sources.db"
+    def test_post_author_chunks_in_sources_db(self, author, work_substr, data_store_factory):
+        db_path = data_store_factory("sources", required_sqlite_tables=("literary_texts",))
         assert db_path.exists(), f"Missing source corpus DB: {db_path}"
 
-        with sqlite3.connect(db_path) as conn:
+        with open_readonly(db_path) as conn:
             count = conn.execute(
                 """
                 SELECT count(*)

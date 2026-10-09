@@ -44,6 +44,32 @@ PRACTICAL_ASTRA = replace(
 )
 
 
+@pytest.mark.parametrize("candidate,author", [(OPENAI_FRONTIER, "gpt-6.1-sol"),
+                                            (GROK_4_7_CURSOR_FALLBACK, "cursor:auto")])
+def test_explicit_red_team_allows_same_family_without_changing_default(candidate, author):
+    inputs = ResolverInputs(author_model=author, risk="medium")
+    assert evaluate_candidate(candidate, inputs).status != "eligible"
+    assert evaluate_candidate(candidate, inputs, review_mode="red_team").status == "eligible"
+
+
+def test_red_team_does_not_bypass_subject_or_risk():
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", subject_seats=frozenset({"codex"}))
+    assert evaluate_candidate(OPENAI_FRONTIER, inputs, review_mode="red_team").status == "excluded"
+    inputs = ResolverInputs(author_model="claude-sonnet-5-5", risk="critical")
+    assert evaluate_candidate(SONNET_5_5, inputs, review_mode="red_team").status == "excluded"
+
+
+def test_invalid_review_mode_fails_closed():
+    with pytest.raises(ValueError, match="unsupported review mode"):
+        evaluate_candidate(OPENAI_FRONTIER, ResolverInputs(author_model="gpt-6.1-sol"), review_mode="unknown")
+
+
+def test_unknown_candidate_cannot_self_certify_even_as_red_team():
+    candidate = replace(OPENAI_FRONTIER, family="unknown", advisory_only_for_author_families=frozenset())
+    inputs = ResolverInputs(author_model="", author_families=frozenset({"unknown"}))
+    assert evaluate_candidate(candidate, inputs, review_mode="red_team").status == "excluded"
+
+
 # Deliberately forbidden candidates exercise custom-ladder admission, never fleet seats.
 DEEPSEEK_V4_PRO = replace(
     SONNET_5_5, name="deepseek-v4-pro", concrete_model="deepseek-v4-pro", family="deepseek", route="deepseek"
@@ -55,6 +81,38 @@ DEEPSEEK_V4_1_FLASH = replace(DEEPSEEK_V4_PRO, name="deepseek-v4.1-flash", concr
 def practical_astra(monkeypatch):
     monkeypatch.setitem(REVIEW_CANDIDATES, PRACTICAL_ASTRA.name, PRACTICAL_ASTRA)
     return PRACTICAL_ASTRA
+
+
+@pytest.mark.parametrize("profile", ["code", "infra"])
+@pytest.mark.parametrize("entrypoint", ["evaluate", "pin", "custom_ladder"])
+def test_missing_critical_review_role_is_excluded(monkeypatch, profile, entrypoint):
+    candidate = replace(REVIEW_CANDIDATES["openai_frontier"], model_roles=frozenset({"strong_review"}))
+    inputs = ResolverInputs(author_model="claude-opus-5-5", review_profile=profile, risk="critical")
+    reason = f"missing required review role suitability: {profile}/critical catalog suitability"
+
+    if entrypoint == "evaluate":
+        result = evaluate_candidate(candidate, inputs)
+    else:
+        if entrypoint == "pin":
+            monkeypatch.setitem(REVIEW_CANDIDATES, candidate.name, candidate)
+            monkeypatch.setitem(
+                REVIEW_LADDERS,
+                "critical",
+                tuple(
+                    tuple(candidate if seat.name == candidate.name else seat for seat in rung)
+                    for rung in REVIEW_LADDERS["critical"]
+                ),
+            )
+            resolution = resolve_reviewer(
+                replace(inputs, pinned_candidate=candidate.name, pressure_override_reason="critical role gate probe")
+            )
+        else:
+            resolution = resolve_reviewer(inputs, ladder=((candidate,),))
+        assert resolution.selected is None
+        result = next(item for item in resolution.trace if item.name == candidate.name)
+
+    assert result.status == "excluded"
+    assert result.reason == reason
 
 
 def test_family_resolution_across_model_and_harness_aliases():
@@ -101,7 +159,9 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
     for endpoint in fleet["endpoints"]:
         policy_name = aliases.get(endpoint["name"], endpoint["name"])
         if policy_name in policy:
-            assert endpoint["formal_review_eligible"] is policy[policy_name]["formal_review_eligible"]
+            # Native worktree review does not authorize the source-blind ACP endpoint.
+            expected = policy[policy_name]["formal_review_eligible"] and policy[policy_name]["adapter_transport"] == "acp"
+            assert endpoint["formal_review_eligible"] is expected
         else:
             assert endpoint["formal_review_eligible"] is False
 
@@ -109,8 +169,8 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
 def test_family_resolution_unknown_and_bare_cursor_are_not_fabricated():
     assert resolve_family("") == "unknown"
     assert resolve_family("some-made-up-seat") == "unknown"
-    assert resolve_family("cursor") == "unknown"
-    assert resolve_family("cursor-tools") == "unknown"
+    assert resolve_family("cursor") == "cursor"
+    assert resolve_family("cursor-tools") == "cursor"
     assert resolve_family("composer") == "unknown"
 
 
@@ -124,15 +184,15 @@ def test_cursor_requires_concrete_model_identity():
     assert resolve_author_family("cursor", author_family="anthropic") == "anthropic"
 
 
-def test_cursor_auto_is_union_family():
-    # Cursor Auto / unknown-Auto resolves to the allowlist-union family {xAI, Moonshot}.
+def test_cursor_auto_is_its_own_family():
+    # Cursor Auto has its own family; unknown concrete identities remain unknown.
     assert resolve_author_family("cursor:auto") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("cursor:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor:unknown") == "unknown"
     assert resolve_author_family("cursor-auto") == CURSOR_AUTO_UNION_FAMILY
     assert resolve_author_family("cursor-tools:auto") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("cursor-tools:unknown") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("cursor-tools:unknown") == "unknown"
     assert resolve_author_family("Cursor:AUTO") == CURSOR_AUTO_UNION_FAMILY
-    assert resolve_author_family("Cursor:UNKNOWN") == CURSOR_AUTO_UNION_FAMILY
+    assert resolve_author_family("Cursor:UNKNOWN") == "unknown"
 
 
 def test_author_family_override_against_auto_attestation_is_a_conflict():
@@ -140,28 +200,28 @@ def test_author_family_override_against_auto_attestation_is_a_conflict():
     # cannot be corroborated against Auto and is a fail-closed conflict.
     assert resolve_author_family("cursor:auto", author_family="openai") == CONFLICTING_AUTHOR_FAMILY
     assert resolve_author_family("cursor-auto", author_family="anthropic") == CONFLICTING_AUTHOR_FAMILY
-    assert resolve_author_family("cursor:unknown", author_family="xai") == CONFLICTING_AUTHOR_FAMILY
+    assert resolve_author_family("cursor:auto", author_family="xai") == CONFLICTING_AUTHOR_FAMILY
     resolution = resolve_reviewer(ResolverInputs(author_model="cursor:auto", author_family="openai"))
     assert resolution.selected is None
     assert resolution.quorum == ()
     assert resolution.fail_closed_reason
 
 
-def test_unknown_auto_author_resolves_single_reviewer_outside_union():
-    for token in ("cursor:auto", "cursor:unknown", "cursor-auto"):
+def test_auto_author_resolves_single_reviewer_outside_cursor():
+    for token in ("cursor:auto", "cursor/default", "cursor-auto"):
         for risk in ("low", "medium", "high", "critical"):
             resolution = resolve_reviewer(ResolverInputs(author_model=token, risk=risk))
             assert resolution.fail_closed_reason is None, (token, risk)
             assert resolution.selected is not None, (token, risk)
-            assert resolution.selected.family not in {"xai", "moonshot"}, (token, risk)
+            assert resolution.selected.family != "cursor", (token, risk)
             assert resolution.quorum == (), (token, risk)
 
 
-def test_unknown_auto_author_excludes_xai_and_moonshot_candidates():
+def test_auto_author_excludes_cursor_transport_candidates():
     inputs = ResolverInputs(author_model="cursor:auto", risk="medium")
     resolution = resolve_reviewer(inputs)
     for entry in resolution.trace:
-        if entry.family in {"xai", "moonshot"} or entry.transport == "cursor":
+        if entry.family == "cursor" or entry.transport == "cursor":
             assert entry.status == "excluded", (entry.name, entry.family, entry.status)
 
 
@@ -327,7 +387,7 @@ def test_critical_review_never_falls_back_to_fable(author):
             routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "healthy"},
         )
     )
-    assert resolution.selected is None
+    assert resolution.selected.concrete_model == "grok-4.7"
     assert not any(entry.name.startswith("claude-fable") for entry in resolution.trace)
     pinned = resolve_reviewer(
         ResolverInputs(
@@ -358,7 +418,7 @@ def test_opus_keeps_native_claude_when_native_health_is_degraded():
 def test_high_risk_kimi_author_gets_claude_not_composer():
     resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
     assert resolution.selected.name == "claude-opus-5-5"
-    composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
+    composer = evaluate_candidate(REVIEW_CANDIDATES["composer-2.5"], ResolverInputs(author_model="kimi-code/k3", risk="medium"))
     assert composer.status == "excluded"
     assert "same family" in composer.reason
 
@@ -422,12 +482,13 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
         "agents": {
             "gemini": {"status": "hot", "health": {"healthy": True}},
             "grok": {"status": "cool", "health": {"healthy": True}},
-            "claude": {"status": "warm", "health": {"healthy": True}},
+            "claude": {"status": "warm", "remaining_pct": 45, "health": {"healthy": True}},
         },
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5-5"
-    assert resolution.selected.health == "degraded"
+    assert resolution.selected.health == "healthy"
+    assert resolution.selected.capacity.freshness == credit_lane.UNKNOWN
 
 
 def test_gemini_lane_outage_does_not_create_code_review_route():
@@ -439,10 +500,10 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5-5"
-    assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
+    assert all(entry.status == "excluded" for entry in resolution.trace if entry.concrete_model.startswith("gemini-"))
 
 
-def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
+def test_gemini_code_review_refuses_forged_endpoint_in_ladder_and_pin(monkeypatch):
     injected = replace(
         SONNET_5_5,
         name="injected-gemini",
@@ -454,11 +515,11 @@ def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch)
     inputs = ResolverInputs(author_model="codex", risk="medium")
     result = evaluate_candidate(injected, inputs)
     assert result.status == "excluded"
-    assert "operator 2026-09-25" in result.reason
+    assert "endpoint identity" in result.reason
     resolution = resolve_reviewer(inputs, ladder=((injected,),))
     assert resolution.selected is None
     assert resolution.trace[0].status == "excluded"
-    assert "Gemini reviews Ukrainian only, never code" in resolution.trace[0].reason
+    assert "endpoint identity" in resolution.trace[0].reason
     monkeypatch.setitem(REVIEW_CANDIDATES, injected.name, injected)
     pinned = resolve_reviewer(
         ResolverInputs(
@@ -523,7 +584,8 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
         ResolverInputs(
             author_model="gemini",
             risk="medium",
-            routing_snapshot={"codex": "near_cap", "cursor": "healthy"},
+            routing_snapshot={"agents": {"codex": {"status": "near_cap", "remaining_pct": 5},
+                                        "cursor": {"status": "healthy"}}, "diagnostics": {"stale": False}},
         )
     )
     assert resolution.selected is not None
@@ -545,36 +607,21 @@ def test_all_top_tier_routes_unavailable_fall_to_next_quality_tier():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="kimi-code/k3", risk="critical", routing_snapshot=snapshot)
     )
-    assert resolution.selected is None
+    assert resolution.selected.name == "grok-4.7"
 
 
-def test_native_grok_never_judges_and_cursor_grok_needs_a_healthy_cursor_lane():
-    """#9488 replaced "Grok never judges" with "native Grok never judges".
-
-    Native Grok stays excluded whatever its health; the attested Cursor seat is
-    selectable only while the Cursor lane itself is not unhealthy.
-    """
-    snapshot = {
-        "grok": "unhealthy",
-        "cursor": "healthy",
-        "claude": "unhealthy",
-        "codex": "unhealthy",
-        "agy": "unhealthy",
-        "kimi": "unhealthy",
-    }
-    injected = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="medium", routing_snapshot=snapshot),
-        ladder=((GROK_4_7, GROK_4_7_CURSOR_FALLBACK),),
-    )
+def test_native_grok_health_and_cursor_transport_fallback():
+    snapshot = {"grok": "unhealthy", "cursor": "healthy", "claude": "unhealthy", "codex": "unhealthy", "agy": "unhealthy", "kimi": "unhealthy"}
+    injected = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium", routing_snapshot=snapshot), ladder=((GROK_4_7, GROK_4_7_CURSOR_FALLBACK),))
     native = next(item for item in injected.trace if item.name == "grok-4.7")
-    assert native.status == "excluded" and "native Grok never judges" in native.reason
-    assert injected.selected is not None and injected.selected.name == "grok-4.7-cursor-fallback"
-    dark = resolve_reviewer(
-        ResolverInputs(author_model="claude", risk="medium", routing_snapshot={**snapshot, "cursor": "unhealthy"})
-    )
+    assert native.status == "excluded" and "lane health is unhealthy" in native.reason
+    assert injected.selected.name == "grok-4.7-cursor-fallback"
+    dark = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium", routing_snapshot={**snapshot, "cursor": "unhealthy"}))
     assert dark.selected is None
-    cursor = next(item for item in dark.trace if item.name == "grok-4.7-cursor-fallback")
-    assert cursor.reason == "lane health is unhealthy — route is operationally unavailable"
+    assert (
+        next(item for item in dark.trace if item.name == "grok-4.7-cursor-fallback").reason
+        == "lane health is unhealthy — route is operationally unavailable"
+    )
 
 
 def test_missing_health_signal_is_fail_open():
@@ -864,7 +911,7 @@ def test_kimi_never_receives_automatic_review_load():
             }
         }
         resolution = resolve_reviewer(
-            ResolverInputs(author_model="claude", risk="high", exact_head=f"{index:040x}"),
+            ResolverInputs(author_model="claude", risk="high", requested_role="standard_review", exact_head=f"{index:040x}"),
             runtime_state=runtime_state,
         )
         selected = resolution.selected
@@ -914,7 +961,7 @@ def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate(practical_a
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", risk="medium"),
         ladder=((sonnet, PRACTICAL_ASTRA),),
-        runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
+        runtime_state={"agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "healthy"}}, "diagnostics": {"stale": False}},
     )
     assert resolution.selected.name == "synthetic-practical-astra"
     sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5-5")
@@ -947,6 +994,40 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practica
     assert "no unreserved concurrency slot" in next(
         item.reason for item in full_credential.trace if item.name == "synthetic-practical-astra"
     )
+
+
+def test_dispatch_capacity_exclusions_do_not_change_normal_resolver_selection():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "diagnostics": {"stale": False},
+        "review_capacity_exclusions": {OPENAI_FRONTIER.name: "weekly deficit"},
+    }
+    inputs = ResolverInputs(author_model="grok-4.7", risk="critical", routing_snapshot=snapshot)
+    assert resolve_reviewer(inputs).selected.name == OPENAI_FRONTIER.name
+    exhausted = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert exhausted.selected is None
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in exhausted.fail_closed_reason
+    assert "dispatch capacity: weekly deficit" in exhausted.fail_closed_reason
+    for item in exhausted.trace:
+        assert item.name in exhausted.fail_closed_reason
+        assert item.reason in exhausted.fail_closed_reason
+
+
+def test_dispatch_capacity_uses_resolver_transport_fallback_order():
+    snapshot = {
+        "agents": {"claude": {"status": "near_cap", "remaining_pct": 5}, "codex": {"status": "cool"}},
+        "diagnostics": {"stale": False},
+        "review_capacity_exclusions": {
+            OPENAI_FRONTIER.name: "weekly deficit",
+            GROK_4_7.name: "runtime capacity unavailable",
+        },
+    }
+    inputs = ResolverInputs(author_model="claude-opus-5-5", risk="critical", routing_snapshot=snapshot)
+    result = resolve_reviewer(inputs, excluded_quota_buckets=frozenset({"claude"}))
+    assert result.selected.name == GROK_4_7_CURSOR_FALLBACK.name
+    primary = next(item for item in result.trace if item.name == GROK_4_7.name)
+    assert primary.status == "excluded"
+    assert primary.reason == "dispatch capacity: runtime capacity unavailable"
 
 
 def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
@@ -1088,55 +1169,26 @@ def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
         assert resolution.selected.family != "openai"
 
 
-def test_critical_ladder_keeps_authority_before_practical():
-    critical = REVIEW_LADDERS["critical"]
-    # #9394: Opus/Sol precede practical seats; #9583: Fable is not on the ladder.
-    assert [rung[0].name for rung in critical[:4]] == [
-        "openai_frontier",
-        "claude-opus-5-5",
-        "claude-opus-5-5-cursor-fallback",
-        "composer-2.5",
-    ]
-
-
-def test_high_ladder_holds_only_sol_and_opus_seats():
-    ladder = REVIEW_LADDERS["high"]
-    assert [[c.name for c in rung] for rung in ladder] == [
-        ["openai_frontier"],
-        ["claude-opus-5-5"],
-        ["claude-opus-5-5-cursor-fallback"],
-    ]
-    assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5"}
-
-
-def test_practical_ladder_starts_with_sol_then_opus_fallbacks():
-    for risk in ("medium", "low"):
-        ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:5]] == [
-            "openai_frontier",
-            "claude-opus-5-5",
-            "claude-opus-5-5-cursor-fallback",
-            "claude-sonnet-5-5",
-            "composer-2.5",
-        ]
+@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
+def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
+    ladder = REVIEW_LADDERS[risk]
+    assert [rung[0].name for rung in ladder[:5]] == ["openai_frontier", "claude-opus-5-5", "grok-4.7", "grok-4.7-cursor-fallback", "claude-opus-5-5-cursor-fallback"]
+    if risk == "critical":
+        assert [rung[0].name for rung in ladder[5:]] == ["composer-2.5", "pool", "pool-xs"]
+    elif risk == "high":
+        assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
+    else:
+        assert ladder[5][0].name == "claude-sonnet-5-5"
+        assert ladder[7][0].name == "gemini-3.8-flash-high"
+        assert ladder[8][0].name == "pool"
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[5][0].name == "pool"
 
 
-def test_medium_codex_author_falls_through_unavailable_opus_to_sonnet_5_5():
+def test_medium_codex_author_keeps_sonnet_ahead_of_unavailable_opus():
     ladder = REVIEW_LADDERS["medium"]
-    assert [rung[0].name for rung in ladder[:4]] == [
-        "openai_frontier",
-        "claude-opus-5-5",
-        "claude-opus-5-5-cursor-fallback",
-        "claude-sonnet-5-5",
-    ]
-    # For an OpenAI author Sol is same-family; an unavailable Opus rung
-    # must leave the practical Sonnet rung in the same position.
     without_opus = tuple(rung for rung in ladder if not rung[0].name.startswith("claude-opus-5-5"))
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"), ladder=without_opus)
-    assert resolution.selected is not None
-    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.concrete_model == "claude-sonnet-5-5"
 
 
 def test_old_sonnet_record_still_resolves_anthropic_family():
@@ -1220,7 +1272,8 @@ def test_sealed_executable_catalog_and_resolver_parity():
     assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
-            assert candidate.sealed_executable == _SEALED_REVIEW_EXECUTABLE, (
+            executable = "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+            assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
             )
             # Normal inputs pass sealed_executable hard exclusion
@@ -1235,7 +1288,8 @@ def test_sealed_executable_catalog_and_resolver_parity():
 
             # Tampered executable is rejected
             mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
-            assert _hard_exclusion_reason(mismatched, inputs) == "candidate is not bound to the sealed ACP executable"
+            expected = "native AGY review endpoint identity is invalid" if candidate.adapter_transport == "native_agy" else "candidate is not bound to the sealed ACP executable"
+            assert _hard_exclusion_reason(mismatched, inputs) == expected
 
 
 def _grok_trace(resolution):
@@ -1278,10 +1332,9 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
         ),
         ladder=(*REVIEW_LADDERS["high"], (GROK_4_7, GROK_4_7_CURSOR_FALLBACK)),
     )
-    # #9488: native Grok still never judges; the attested Cursor seat is the
-    # last resort once every Anthropic primary is unavailable.
-    assert without.selected is not None and without.selected.name == "grok-4.7-cursor-fallback"
-    assert "native Grok never judges" in _grok_trace(without)["grok-4.7"].reason
+    # #9769: native Grok is the regular fallback when Anthropic is unavailable.
+    assert without.selected.concrete_model == "grok-4.7"
+    assert _grok_trace(without)["grok-4.7"].status in {"eligible", "selected"}
 
     resolution = resolve_reviewer(
         ResolverInputs(
@@ -1382,7 +1435,8 @@ def test_resolve_reviewer_subject_seat_kimi_does_not_exclude_composer():
         ResolverInputs(
             author_model="codex",
             risk="medium",
-            owned_paths=("scripts/agent_runtime/adapters/kimi.py", "scripts/agent_runtime/adapters/kimicc.py"),
+            owned_paths=("site/src/app.ts",),
+            subject_seats=frozenset({"kimi"}),
         )
     )
     assert not [entry for entry in resolution.trace if entry.quota_bucket == "kimi"]
@@ -1414,7 +1468,7 @@ def test_resolve_reviewer_unknown_subject_seat_and_family_fail_closed():
     assert bad_seat.trace == ()
     assert "unknown subject seat" in bad_seat.fail_closed_reason
 
-    bad_family = resolve_reviewer(ResolverInputs(author_model="codex", subject_families=frozenset({"cursor"})))
+    bad_family = resolve_reviewer(ResolverInputs(author_model="codex", subject_families=frozenset({"not-a-family"})))
     assert bad_family.selected is None
     assert "unknown subject family" in bad_family.fail_closed_reason
 
@@ -1519,23 +1573,100 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     if risk == "critical":
         expected = "gpt-6.1-sol" if family == "anthropic" else "claude-opus-5-5"
     elif risk == "high":
-        # #9538: high holds only Sol and Opus; infra suitability puts Opus first
-        # for every author family Sol is not barred from.
         expected = (
-            "gpt-6.1-sol" if family == "anthropic" or (profile == "code" and family != "openai") else "claude-opus-5-5"
+            "gpt-6.1-sol" if family == "anthropic" or (family != "openai" and profile == "code") else "claude-opus-5-5"
         )
     else:
-        expected = "gpt-6.1-sol" if family == "anthropic" or family != "openai" else "claude-sonnet-5-5"
+        expected = "claude-sonnet-5-5" if family == "openai" else "gpt-6.1-sol"
     resolution = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile))
     assert resolution.fail_closed_reason is None
     assert resolution.selected.concrete_model == expected
     assert resolution.selected.family != family
 
 
+# This matrix isolates the Grok fallback; Gemini fallback is covered separately.
+_AUTHORITY_DOWN = {
+    "agy": "unhealthy",
+    "codex": "unhealthy",
+    "claude": "unhealthy",
+    "claude-opus-5-5-cursor-fallback": "unhealthy",
+}
+
+
+@pytest.mark.parametrize("author", ["gpt-6.1-sol", "claude-opus-5-5", "claude-sonnet-5-5", "grok-4.7", "kimi-code/k3"])
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+@pytest.mark.parametrize("state,snapshot,fallback", [
+    ("healthy", {"codex": "healthy", "claude": "healthy", "grok": "healthy", "cursor": "healthy"}, False),
+    ("unknown", None, False),
+    ("native-down-authorities-up", {"grok": "unhealthy"}, False),
+    ("cursor-down-authorities-up", {"cursor": "unhealthy"}, False),
+    ("authorities-down", {**_AUTHORITY_DOWN, "grok": "healthy", "cursor": "healthy"}, True),
+    ("native-degraded", {**_AUTHORITY_DOWN, "grok": "degraded", "cursor": "healthy"}, True),
+    ("native-near-cap", {**_AUTHORITY_DOWN, "grok": "near_cap", "cursor": "healthy"}, True),
+    ("native-down", {**_AUTHORITY_DOWN, "grok": "unhealthy", "cursor": "healthy"}, True),
+    ("all-down", {**_AUTHORITY_DOWN, "grok": "unhealthy", "cursor": "unhealthy"}, True),
+])
+def test_exact_review_seat_matrix(author, risk, profile, state, snapshot, fallback):
+    """Whole-ladder choices preserve other models' suitability at every risk."""
+    if fallback:
+        if author == "grok-4.7" or state == "all-down":
+            expected = None
+        elif state in {"native-near-cap", "native-down"}:
+            # Cursor's allowlist-union independence excludes Moonshot authors.
+            expected = None if author == "kimi-code/k3" else "grok-4.7-cursor-fallback"
+        else:
+            expected = "grok-4.7"
+    elif author in {"claude-opus-5-5", "claude-sonnet-5-5"}:
+        expected = "openai_frontier"
+    elif risk == "critical" or (risk == "high" and (author == "gpt-6.1-sol" or profile == "infra")):
+        expected = "claude-opus-5-5"
+    elif author == "gpt-6.1-sol":
+        expected = "claude-sonnet-5-5"
+    else:
+        expected = "openai_frontier"
+    if state == "native-near-cap":
+        snapshot = {"agents": {route: {"status": status} for route, status in snapshot.items()}, "diagnostics": {"stale": False}}
+        snapshot["agents"]["grok"]["remaining_pct"] = 5
+    result = resolve_reviewer(ResolverInputs(author_model=author, risk=risk, review_profile=profile, routing_snapshot=snapshot))
+    assert (result.selected.name if result.selected else None) == expected
+
+
+def test_medium_anthropic_author_still_selects_sol_before_grok():
+    assert (
+        resolve_reviewer(ResolverInputs(author_model="claude-opus-5-5", risk="medium")).selected.name
+        == "openai_frontier"
+    )
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+@pytest.mark.parametrize("profile", ["code", "infra"])
+def test_native_grok_precedes_cursor_across_heads_pressure_and_subject_exclusions(risk, profile):
+    # Deny the authority families as governed seats; cursor is deliberately
+    # better on every resource term, and reversed rungs cannot change fallback.
+    snapshot = {"agents": {
+        "grok": {"status": "healthy", "scheduler": {"completed_input_bytes": 999999, "quota_remaining_pct": 1}},
+        "cursor": {"status": "healthy", "scheduler": {"completed_input_bytes": 0, "quota_remaining_pct": 99}},
+    }}
+    for head in range(200):
+        inputs = ResolverInputs(
+            author_model="claude-sonnet-5-5", risk=risk, review_profile=profile,
+            subject_families=frozenset({"openai", "anthropic", "google"}),
+            routing_snapshot=snapshot, exact_head=f"{head:040x}",
+        )
+        ladder = ((GROK_4_7_CURSOR_FALLBACK,), (GROK_4_7,))
+        assert resolve_reviewer(inputs, ladder=ladder).selected.name == "grok-4.7"
+        down = {"grok": "unhealthy", "cursor": "healthy"}
+        assert (
+            resolve_reviewer(replace(inputs, routing_snapshot=down), ladder=ladder).selected.name
+            == "grok-4.7-cursor-fallback"
+        )
+
+
 @pytest.mark.parametrize("profile", ["code", "infra"])
 @pytest.mark.parametrize("primary", ["openai_frontier", "claude-opus-5-5"])
 def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
-    fallback = GROK_4_7_CURSOR_FALLBACK
+    fallback = replace(GROK_4_7_CURSOR_FALLBACK, last_resort=True)
     first = REVIEW_CANDIDATES[primary]
     inputs = ResolverInputs(author_model="gemini-3.8-flash-high", risk="medium", review_profile=profile)
     # Higher load and a reversed ladder must not put the last resort first.
@@ -1550,65 +1681,38 @@ def test_last_resort_never_beats_eligible_sol_or_opus(profile, primary):
     assert "last resort" in resolution.substitution_note
 
 
-@pytest.mark.parametrize(
-    "candidate,reason",
-    [
-        (GROK_4_7, "native Grok never judges"),
-        # #9488: the Cursor seat has no critical_review role in the catalogue.
-        (GROK_4_7_CURSOR_FALLBACK, "missing required review role suitability"),
-    ],
-)
+@pytest.mark.parametrize("candidate", [GROK_4_7, GROK_4_7_CURSOR_FALLBACK])
 @pytest.mark.parametrize("profile", ["code", "infra"])
-def test_grok_critical_review_forbidden_even_with_explicit_pin_and_custom_ladder(candidate, reason, profile):
-    inputs = ResolverInputs(
-        author_model="gpt-6.1-sol",
-        risk="critical",
-        review_profile=profile,
-        formal_review=False,
-        pinned_candidate=candidate.name,
-        pressure_override_reason="adversarial test",
-    )
+def test_grok_critical_review_admitted_with_explicit_pin_and_custom_ladder(candidate, profile):
+    inputs = ResolverInputs(author_model="gpt-6.1-sol", risk="critical", review_profile=profile, pinned_candidate=candidate.name, pressure_override_reason="admission probe")
     resolution = resolve_reviewer(inputs, ladder=((candidate,),))
-    assert resolution.selected is None
-    assert "hard eligibility gate" in resolution.fail_closed_reason
-    assert reason in resolution.trace[0].reason
+    assert resolution.selected.name == candidate.name
+    assert resolution.trace[0].status == "selected"
 
 
-_SOL_OPUS = {"gpt-6.1-sol", "claude-opus-5-5"}
-_HIGH_SEATS = {"openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"}
+_SOL_OPUS_GROK = {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
+_HIGH_SEATS = {"openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback", "grok-4.7", "grok-4.7-cursor-fallback"}
 _SOL_UNAVAILABLE = {"codex": "unhealthy"}
 # (author, Sol state, profile) -> expected concrete reviewer; None = no reviewer.
 _HIGH_DENOMINATOR = {
-    ("claude-opus-5-5", "healthy", "code"): "gpt-6.1-sol",
-    ("claude-opus-5-5", "healthy", "infra"): "gpt-6.1-sol",
-    ("claude-opus-5-5", "unavailable", "code"): None,
-    ("claude-opus-5-5", "unavailable", "infra"): None,
-    ("claude-sonnet-5-5", "healthy", "code"): "gpt-6.1-sol",
-    ("claude-sonnet-5-5", "healthy", "infra"): "gpt-6.1-sol",
-    ("claude-sonnet-5-5", "unavailable", "code"): None,
-    ("claude-sonnet-5-5", "unavailable", "infra"): None,
-    ("gpt-6.1-sol", "healthy", "code"): "claude-opus-5-5",
-    ("gpt-6.1-sol", "healthy", "infra"): "claude-opus-5-5",
-    ("gpt-6.1-sol", "unavailable", "code"): "claude-opus-5-5",
-    ("gpt-6.1-sol", "unavailable", "infra"): "claude-opus-5-5",
-    ("gpt-6-luna", "healthy", "code"): "claude-opus-5-5",
-    ("gpt-6-luna", "healthy", "infra"): "claude-opus-5-5",
-    ("gpt-6-luna", "unavailable", "code"): "claude-opus-5-5",
-    ("gpt-6-luna", "unavailable", "infra"): "claude-opus-5-5",
-    ("grok-4.7", "healthy", "code"): "gpt-6.1-sol",
-    ("grok-4.7", "healthy", "infra"): "claude-opus-5-5",
-    ("grok-4.7", "unavailable", "code"): "claude-opus-5-5",
-    ("grok-4.7", "unavailable", "infra"): "claude-opus-5-5",
-    ("composer-2.5", "healthy", "code"): "gpt-6.1-sol",
-    ("composer-2.5", "healthy", "infra"): "claude-opus-5-5",
-    ("composer-2.5", "unavailable", "code"): "claude-opus-5-5",
-    ("composer-2.5", "unavailable", "infra"): "claude-opus-5-5",
+    (author, sol, profile): (
+        ("gpt-6.1-sol" if sol == "healthy" else "grok-4.7")
+        if author in {"claude-opus-5-5", "claude-sonnet-5-5"}
+        else (
+            "gpt-6.1-sol"
+            if author in {"grok-4.7", "composer-2.5"} and sol == "healthy" and profile == "code"
+            else "claude-opus-5-5"
+        )
+    )
+    for author in ("claude-opus-5-5", "claude-sonnet-5-5", "gpt-6.1-sol", "gpt-6-luna", "grok-4.7", "composer-2.5")
+    for sol in ("healthy", "unavailable")
+    for profile in ("code", "infra")
 }
 
 
 @pytest.mark.parametrize("key", sorted(_HIGH_DENOMINATOR))
-def test_high_risk_resolves_only_to_sol_or_opus_or_to_no_reviewer(key):
-    """#9538: the denominator never reaches Sonnet, Composer, Pool or Cursor Grok."""
+def test_high_risk_resolves_to_sol_opus_or_grok(key):
+    """#9769: the denominator admits Sol, Opus and both Grok transports."""
     author, sol, profile = key
     snapshot = _SOL_UNAVAILABLE if sol == "unavailable" else None
     resolution = resolve_reviewer(
@@ -1627,12 +1731,12 @@ def test_high_risk_resolves_only_to_sol_or_opus_or_to_no_reviewer(key):
         return
     assert resolution.selected is not None
     assert resolution.selected.concrete_model == expected
-    assert resolution.selected.concrete_model in _SOL_OPUS
-    assert resolution.selected.transport in {"native_codex", "native_claude", "cursor"}
+    assert resolution.selected.concrete_model in _SOL_OPUS_GROK
+    assert resolution.selected.transport in {"native_codex", "native_claude", "native_grok", "cursor"}
 
 
 def test_high_risk_with_opus_unavailable_never_falls_back_to_sonnet():
-    snapshot = {"claude": "unhealthy", "cursor": "unhealthy"}
+    snapshot = {"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"}
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high", routing_snapshot=snapshot))
     assert resolution.selected is None
     assert {entry.name for entry in resolution.trace} == _HIGH_SEATS
@@ -1642,7 +1746,7 @@ _HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol
 
 
 @pytest.mark.parametrize("profile", ["code", "infra"])
-@pytest.mark.parametrize("name", ["claude-sonnet-5-5", "grok-4.7-cursor-fallback"])
+@pytest.mark.parametrize("name", ["claude-sonnet-5-5"])
 def test_high_risk_pin_and_custom_ladder_refuse_seats_outside_sol_and_opus(profile, name):
     """#9538: the rule is an eligibility gate, so neither a pin nor a caller ladder bypasses it."""
     author = "claude-opus-5-5" if name.startswith("grok") else "gpt-6.1-sol"
@@ -1697,7 +1801,7 @@ def test_security_diff_has_critical_floor_before_ladder_selection(risk, profile)
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high"])
-@pytest.mark.parametrize("candidate", [SONNET_5_5, GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize("candidate", [SONNET_5_5])
 def test_security_floor_cannot_be_bypassed_by_pin_custom_ladder_or_direct_evaluation(risk, candidate):
     inputs = ResolverInputs(author_model="gpt-6.1-sol", risk=risk, changed_paths=("scripts/delegate.py",))
     direct = evaluate_candidate(candidate, inputs)
@@ -1724,7 +1828,7 @@ def test_security_qualified_reviewer_unavailable_refuses_without_downgrade():
             author_model="gpt-6.1-sol",
             risk="low",
             changed_paths=("scripts/delegate.py",),
-            routing_snapshot={"claude": "unhealthy", "cursor": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy"},
         )
     )
     assert result.resolved_risk == "critical"
@@ -1742,7 +1846,8 @@ def test_security_subject_seat_exclusion_still_binds():
         )
     )
     assert result.resolved_risk == "critical"
-    assert result.selected is None and result.fail_closed_reason
+    assert result.selected.concrete_model == "grok-4.7"
+    assert all(entry.status == "excluded" for entry in result.trace if entry.family == "anthropic")
 
 
 def test_security_infra_requires_critical_review_role_even_on_custom_candidate():
@@ -1766,12 +1871,33 @@ def test_ordinary_paths_preserve_resolution(risk):
 _REAL_RATE_LIMIT_READER = credit_lane.read_recent_rate_limits
 
 
-def _credit_codex(credit: dict | None, **overrides) -> dict:
-    """A near-cap, healthy Codex routing-budget record publishing ``credit``."""
-    record = {"status": "near_cap", "health": {"healthy": True}, **overrides}
+# The probe reading a published credit leaf rests on; relief is re-checked against it (#9740 F6).
+_FRESH_PROBE = {"freshness": "fresh", "age_s": 60.0}
+
+
+def _credit_codex(credit: dict | None, *, diagnostics: dict | None = None, **overrides) -> dict:
+    """A near-cap, healthy Codex routing-budget record with a fresh probe, publishing ``credit``.
+
+    The record carries the inputs the producer computed ``credit`` from (remaining
+    allowance, raw balance and its fetch time): relief is re-decided from them (#9740).
+    """
+    evidence = credit.get("evidence") if isinstance(credit, dict) else None
+    fetched = (evidence or {}).get("credit_fetched_at") or (datetime.now(UTC) - timedelta(minutes=1)).isoformat()
+    record = {
+        "status": "near_cap",
+        "health": {"healthy": True},
+        "remaining_pct": 1.0,
+        "credit_balance": 62500.0,
+        "fetched_at": fetched,
+        **_FRESH_PROBE,
+        **overrides,
+    }
     if credit is not None:
         record["credit"] = credit
-    return {"agents": {"codex": record}}
+    snapshot: dict = {"agents": {"codex": record}, "diagnostics": {"stale": False}}
+    if diagnostics is not None:
+        snapshot["diagnostics"] = diagnostics
+    return snapshot
 
 
 def _published_credit(*, fetched_at: datetime | None = None) -> dict:
@@ -1835,10 +1961,10 @@ def test_near_cap_without_usable_credits_stays_excluded(credit):
     assert result.credit is None
 
 
-def test_flat_near_cap_map_carries_no_credit_and_stays_excluded():
+def test_flat_near_cap_map_without_allowance_stays_unknown():
     inputs = ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot={"codex": "near_cap"})
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
-    assert result.status == "excluded" and result.credit is None
+    assert result.status == "eligible" and result.health is None and result.credit is None
 
 
 def test_stale_published_credit_balance_stays_excluded():
@@ -1849,6 +1975,34 @@ def test_stale_published_credit_balance_stays_excluded():
     assert result.status == "excluded"
     assert "near cap" in result.reason and credit_lane.CREDITS_UNVERIFIED in result.reason
     assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+
+
+@pytest.mark.parametrize(
+    ("record", "diagnostics", "why"),
+    [
+        ({"freshness": "stale_last_good"}, None, "credit probe freshness=stale_last_good"),
+        ({"stale": True}, None, "credit probe freshness=fresh"),
+        ({"freshness": None, "age_s": None}, None, "credit probe freshness=missing"),
+        ({}, {"stale": True}, "routing-budget snapshot is stale"),
+    ],
+    ids=["stale-probe", "stale-flag", "missing-freshness", "stale-snapshot"],
+)
+def test_published_credit_relief_is_rechecked_against_the_full_record(record, diagnostics, why):
+    """#9740 F6: a published ``credit_balance_present`` leaf never outlives contradictory probe evidence."""
+    snapshot = _credit_codex(_published_credit(), diagnostics=diagnostics, **record)
+    result = evaluate_candidate(
+        OPENAI_FRONTIER, ResolverInputs(author_model="claude-opus-5-5", risk="high", routing_snapshot=snapshot)
+    )
+    if diagnostics == {"stale": True} or record.get("stale") or record.get("freshness") == "stale_last_good":
+        assert result.status == "eligible" and result.credit is None
+    else:
+        assert result.status == "excluded"
+        assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+        assert result.credit["reason"] == f"published credit relief not re-verified: {why}"
+    # Credit relief itself remains fail-closed, even when stale allowance is advisory.
+    relief = credit_lane.published_credit_relief("codex", snapshot["agents"]["codex"]["credit"], "gpt-6.1-sol",
+                                               record=snapshot["agents"]["codex"], snapshot_stale=bool((diagnostics or {}).get("stale")))
+    assert relief["state"] == credit_lane.CREDITS_UNVERIFIED
 
 
 def test_credit_balance_never_relaxes_hard_health_exclusion():
@@ -1885,8 +2039,9 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
     assert resolve_reviewer(inputs, ladder=ladder, runtime_state=plain).selected.name == "synthetic-practical-astra"
 
     credit_backed = {
+        "diagnostics": {"stale": False},
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit(), "scheduler": light_codex},
+            "codex": {**_credit_codex(_published_credit())["agents"]["codex"], "scheduler": light_codex},
             "claude": {"status": "healthy", "scheduler": busy_claude},
         }
     }
@@ -1896,9 +2051,10 @@ def test_credit_backed_seat_ranks_after_equal_plan_backed_seat(practical_astra):
 
     # With the plan-backed seat near cap too, the credit-backed seat is selected and the receipt says so.
     only_credit = {
+        "diagnostics": {"stale": False},
         "agents": {
-            "codex": {"status": "near_cap", "credit": _published_credit()},
-            "claude": {"status": "near_cap"},
+            "codex": _credit_codex(_published_credit())["agents"]["codex"],
+            "claude": {"status": "near_cap", "remaining_pct": 5},
         }
     }
     resolution = resolve_reviewer(inputs, ladder=ladder, runtime_state=only_credit)
@@ -1943,3 +2099,167 @@ def test_unreadable_rate_limit_evidence_denies_credit_relief(monkeypatch):
     result = evaluate_candidate(OPENAI_FRONTIER, inputs)
     assert result.status == "excluded"
     assert result.credit["state"] == credit_lane.CREDITS_UNVERIFIED
+
+
+# --- #9739: complete branch authorship ------------------------------------------------------------
+
+
+def _complete(families, *, risk="medium", author_model="", author_family=None, paths=("docs/a.md",)):
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    return resolve_reviewer(
+        ResolverInputs(
+            author_model=author_model,
+            author_family=author_family,
+            author_families=frozenset(families),
+            risk=risk,
+            changed_paths=paths,
+            owned_paths=paths,
+        )
+    )
+
+
+def test_complete_author_set_excludes_every_member_not_only_the_latest():
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    latest_only = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="medium", changed_paths=("docs/a.md",))
+    )
+    complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
+
+    assert latest_only.selected.family == "anthropic"
+    assert complete.selected.name == "gemini-3.8-flash-high"
+    reasons = {entry.name: entry.reason for entry in complete.trace}
+    assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
+    # Grok reviews at every risk (#9769); an xAI member removes it too.
+    assert _complete({"anthropic", "openai", "xai"}, risk="critical").selected is None
+
+
+def test_single_author_fields_add_to_the_complete_set_and_never_shrink_it():
+    # The single field names a family outside the set; both stay excluded.
+    resolution = _complete({"anthropic", "xai"}, author_model="gpt-6.1-sol", risk="critical")
+    assert resolution.selected is None and resolution.fail_closed_reason is None
+    # An explicit override cannot replace the set either.
+    overridden = _complete(
+        {"openai", "xai"}, author_model="claude-opus-5-5", author_family="anthropic", risk="critical"
+    )
+    assert overridden.selected is None
+
+
+@pytest.mark.parametrize(
+    "families,author_model",
+    [({"anthropic", "ambiguous"}, ""), ({"anthropic"}, "cursor")],
+)
+def test_complete_set_with_an_unresolved_member_fails_closed(families, author_model):
+    from scripts.review.reviewer_resolver import ResolverInputs, evaluate_candidate
+
+    resolution = _complete(families, author_model=author_model)
+    assert resolution.selected is None and "holds an unresolved family" in resolution.fail_closed_reason
+    inputs = ResolverInputs(author_model=author_model, author_families=frozenset(families), risk="medium")
+    assert evaluate_candidate(OPENAI_FRONTIER, inputs).status == "excluded"
+
+
+def test_cursor_auto_member_keeps_cursor_transport_restrictions():
+    resolution = _complete({"openai", "cursor"})
+    reasons = {entry.name: entry.reason for entry in resolution.trace}
+    assert "Cursor-authored work" in reasons["grok-4.7-cursor-fallback"]
+    assert resolution.selected.family == "anthropic"
+
+
+@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7, GROK_4_7_CURSOR_FALLBACK])
+@pytest.mark.parametrize("author_model", ["", "unmapped"])
+def test_unknown_committed_author_accepts_any_qualified_known_family(candidate, author_model):
+    inputs = ResolverInputs(author_model=author_model, author_families=frozenset({"unknown"}), risk="medium")
+    assert evaluate_candidate(candidate, inputs).status == "eligible"
+    selected = resolve_reviewer(inputs, ladder=((candidate,),)).selected
+    assert (selected.name, selected.family, selected.concrete_model) == (
+        candidate.name, candidate.family, candidate.concrete_model
+    )
+
+
+def test_unknown_committed_author_does_not_hide_known_author_exclusions():
+    resolution = _complete({"unknown", "anthropic"})
+    assert resolution.selected.family != "anthropic"
+    assert (
+        evaluate_candidate(
+            SONNET_5_5, ResolverInputs(author_model="", author_families=frozenset({"unknown", "anthropic"}))
+        ).status
+        == "excluded"
+    )
+
+
+def test_unknown_committed_author_does_not_hide_incoming_cursor_family():
+    inputs = ResolverInputs(author_model="cursor:auto", author_families=frozenset({"unknown", "cursor"}))
+    assert evaluate_candidate(GROK_4_7, inputs).status == "eligible"
+    assert evaluate_candidate(GROK_4_7_CURSOR_FALLBACK, inputs).status == "excluded"
+    selected = resolve_reviewer(inputs).selected
+    assert selected is not None and selected.family in {"anthropic", "openai"}
+
+
+@pytest.mark.parametrize("authors", [{"unknown"}, {"anthropic"}])
+def test_unknown_reviewer_family_is_always_refused(authors):
+    candidate = replace(OPENAI_FRONTIER, family="unknown")
+    inputs = ResolverInputs(author_model="", author_families=frozenset(authors))
+    result = evaluate_candidate(candidate, inputs)
+    assert result.status == "excluded" and "reviewer family unknown" in result.reason
+    assert resolve_reviewer(inputs, ladder=((candidate,),)).selected is None
+
+
+def test_empty_complete_set_keeps_single_author_selection_identical():
+    from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
+
+    single = ResolverInputs(author_model="claude-opus-5-5", risk="high", changed_paths=("docs/a.md",))
+    assert resolve_reviewer(single) == resolve_reviewer(replace(single, author_families=frozenset()))
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "auto",
+        "AUTO",
+        "Auto",
+        " auto ",
+        "default",
+        "DEFAULT",
+        "Default",
+        " default ",
+        "cursor:auto",
+        "CURSOR:AUTO",
+        "Cursor:Auto",
+        " cursor:auto ",
+        "cursor/auto",
+        "CURSOR/AUTO",
+        "Cursor/Auto",
+        " cursor/auto ",
+        "cursor:default",
+        "CURSOR:DEFAULT",
+        "Cursor:Default",
+        " cursor:default ",
+        "cursor/default",
+        "CURSOR/DEFAULT",
+        "Cursor/Default",
+        " cursor/default ",
+    ],
+)
+def test_cursor_auto_spelling_is_its_own_author_family(selector):
+    assert resolve_author_family(selector) == "cursor"
+    assert resolve_author_family(selector, author_family="cursor") == "cursor"
+
+
+@pytest.mark.parametrize("candidate", [SONNET_5_5, OPENAI_FRONTIER, GROK_4_7])
+def test_cursor_author_accepts_each_other_qualified_family(candidate):
+    inputs = ResolverInputs(author_model="cursor:auto", risk="medium")
+    assert evaluate_candidate(candidate, inputs).status == "eligible"
+
+
+def test_cursor_family_reviewer_cannot_certify_cursor_author():
+    candidate = replace(OPENAI_FRONTIER, family="cursor")
+    assert evaluate_candidate(candidate, ResolverInputs(author_model="cursor:auto")).status == "excluded"
+
+
+@pytest.mark.parametrize("family", ["xai", "anthropic", "openai", "google"])
+def test_cursor_family_exclusion_allows_other_families(family):
+    from scripts.review.reviewer_resolver import _author_family_exclusion
+
+    candidate = replace(OPENAI_FRONTIER, family=family)
+    assert _author_family_exclusion(candidate, "cursor", None) is None

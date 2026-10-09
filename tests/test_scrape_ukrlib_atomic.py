@@ -204,3 +204,82 @@ def test_staged_validation_rejects_invalid_json(tmp_path: Path) -> None:
 
     with pytest.raises(scrape.JsonlValidationError, match="not valid JSON"):
         scrape._validate_staged_jsonl(staged_path)
+
+
+@pytest.mark.parametrize("scenario", ["blacklisted", "done-output", "done-absent", "dry-run", "empty", "short-and-error", "bios"])
+def test_author_whole_loop_retention_resume_and_ordinary_failures(tmp_path, monkeypatch, capsys, scenario):
+    output = _configure_author_scrape(monkeypatch, tmp_path)
+    info = dict(AUTHOR_INFO)
+    if scenario == "blacklisted":
+        info["id"] = next(iter(scrape.BLACKLISTED_IDS))
+        assert scrape.scrape_author("test-author", info) == 0
+        assert not output.exists()
+        return
+    if scenario.startswith("done"):
+        monkeypatch.setattr(scrape, "is_done", lambda _slug: True)
+        if scenario == "done-output":
+            output.write_text(json.dumps(_complete_chunk(1)) + "\n")
+        assert scrape.scrape_author("test-author", info) == int(scenario == "done-output")
+        assert "Already done" in capsys.readouterr().out
+        return
+    bios = [{"tid": 3, "title": "Fixture bio"}]
+    works = [] if scenario == "empty" else [{"tid": 1, "title": "First"}, {"tid": 2, "title": "Second"}]
+    monkeypatch.setattr(scrape, "get_author_works", lambda _id: (works, bios if scenario in {"dry-run", "bios"} else []))
+    if scenario == "dry-run":
+        assert scrape.scrape_author("test-author", info, dry_run=True, include_bios=True) == 0
+        assert "[BIO]" in capsys.readouterr().out and not output.exists()
+        return
+    if scenario == "short-and-error":
+        output.write_text(json.dumps(_complete_chunk(999)) + "\n")
+        previous = output.read_bytes()
+        def fetch(tid, **_kwargs):
+            if tid == 1:
+                raise RuntimeError("ordinary fixture failure")
+            return "short", "https://source.test/?tid=2"
+        monkeypatch.setattr(scrape, "scrape_work_text", fetch)
+    monkeypatch.setattr(scrape, "chunk_text", _chunk_for_source)
+    result = scrape.scrape_author("test-author", info, include_bios=scenario == "bios")
+    if scenario in {"empty", "short-and-error"}:
+        assert result == int(scenario == "short-and-error")
+        assert (tmp_path / ".ukrlib_progress" / "test-author.done").exists()
+        if scenario == "short-and-error":
+            assert output.read_bytes() == previous
+    else:
+        assert result == 3
+        rows = [json.loads(line) for line in output.read_text().splitlines()]
+        assert rows[-1]["genre"] == "biography"
+        assert rows[-1]["source_url"] == "https://example.test/?tid=3"
+    _assert_no_staging_file(tmp_path, output)
+
+
+@pytest.mark.parametrize("scenario", ["dry", "empty", "short-error-success", "success"])
+def test_narod_whole_loop_staging_and_ordinary_failures(tmp_path, monkeypatch, capsys, scenario):
+    monkeypatch.setattr(scrape, "LITERARY_DIR", tmp_path)
+    sleeps = []
+    monkeypatch.setattr(scrape.time, "sleep", sleeps.append)
+    works = [{"genre_id": 1, "bookid": i, "title": f"Fixture {i}", "genre": "duma"} for i in range(1, 4)]
+    monkeypatch.setattr(scrape, "_build_narod_worklist", lambda: [] if scenario == "empty" else works)
+    def fetch(genre, bid):
+        if scenario == "short-error-success" and bid == 1:
+            raise RuntimeError("ordinary fixture error")
+        return ("short" if scenario == "short-error-success" and bid == 2 else "fixture " * 15), f"https://source.test/printout.php?id={genre}&bookid={bid}"
+    monkeypatch.setattr(scrape, "scrape_narod_work", fetch)
+    monkeypatch.setattr(scrape, "chunk_text", _chunk_for_source)
+    output = tmp_path / "ukrlib-narod-dumy.jsonl"
+    if scenario == "dry":
+        assert scrape.scrape_narod(dry_run=True) == 0
+        assert not output.exists() and "Fixture 1" in capsys.readouterr().out
+    elif scenario == "empty":
+        with pytest.raises(scrape.JsonlValidationError, match="no rows"):
+            scrape.scrape_narod()
+        assert not output.exists()
+        assert not list(tmp_path.glob(".*.building"))
+    else:
+        expected = 1 if scenario == "short-error-success" else 3
+        assert scrape.scrape_narod() == expected
+        rows = [json.loads(line) for line in output.read_text().splitlines()]
+        assert len(rows) == expected
+        assert all(row["author"] == scrape.NAROD_AUTHOR and row["genre"] == "duma" for row in rows)
+        assert len(sleeps) == (2 if scenario == "success" else 0)
+        assert all(value == scrape.DELAY_BETWEEN_WORKS for value in sleeps)
+        assert not list(tmp_path.glob("*.building"))

@@ -3,11 +3,17 @@
 from __future__ import annotations
 
 import contextlib
+import json
 import os
+import shlex
 import signal
 import subprocess
+import sys
 from pathlib import Path
 
+import pytest
+
+from scripts.fleet_comms.authority import AuthorityService
 from scripts.session_canary import codex_lane, gemini_lane
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +40,44 @@ def _clean_environ() -> dict[str, str]:
 def _write_executable(path: Path, body: str) -> None:
     path.write_text(body, encoding="utf-8")
     path.chmod(0o755)
+
+
+def test_wake_owner_reads_delivery_after_path_unlinked(tmp_path: Path) -> None:
+    """The watcher writes to an open file after a sibling removes its name."""
+    lib = tmp_path / "scripts/lib"
+    lib.mkdir(parents=True)
+    (lib / "session_supervisor.sh").write_text((_REPO_ROOT / "scripts/lib/session_supervisor.sh").read_text())
+    watcher = tmp_path / "scripts/ai_agent_bridge/inbox_watch.sh"
+    watcher.parent.mkdir()
+    _write_executable(watcher, '#!/usr/bin/env bash\nread -r _ < "$TEST_GATE"\nprintf "delivery-test\\n"\nexit 75\n')
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(lib / "session_supervisor.sh"))}
+LC_PROVIDER=codex
+export TEST_GATE={shlex.quote(str(tmp_path / "gate"))}
+mkfifo "$TEST_GATE"
+session_supervisor_start_inbox_watch
+rm -f "$LC_SUPERVISORY_WAKE_FILE"
+[ ! -e "$LC_SUPERVISORY_WAKE_FILE" ]
+printf 'go\\n' > "$TEST_GATE"
+session_supervisor_read_wake
+printf 'DELIVERY:%s\\n' "$LC_SUPERVISORY_DELIVERY"
+# Cleanup cannot own a sibling's replacement at the unlinked name.
+printf 'replacement\\n' > "$LC_SUPERVISORY_WAKE_FILE"
+replacement="$LC_SUPERVISORY_WAKE_FILE"
+session_supervisor_stop_inbox_watch
+[ "$(cat "$replacement")" = replacement ]
+rm -f "$replacement"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        env={**_clean_environ(), "FLEET_COMMS_ROOT": str(tmp_path / "plane")},
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "DELIVERY:delivery-test\n"
 
 
 def _supervisor_ok_body(capture: Path) -> str:
@@ -319,7 +363,7 @@ exit 1
 """
 
 
-def test_claim_without_force_prints_takeover_hint(tmp_path: Path) -> None:
+def test_claim_without_force_prints_monitor_expiry_hint(tmp_path: Path) -> None:
     project, _capture = _build_fake_project(tmp_path)
     capture = tmp_path / "live_capture.txt"
     counter = tmp_path / "open_count.txt"
@@ -339,9 +383,12 @@ claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task"
     )
     assert result.returncode == 1, result.stderr + result.stdout
     assert "already has live session" in result.stderr
-    assert "./start-grok-driver.sh --epic infra --force" in result.stderr
-    assert "scripts.session_supervisor release --role driver --force" in result.stderr
-    assert "CMD:release" not in capture.read_text(encoding="utf-8")
+    assert "handoff-status --stream epic:9999" in result.stderr
+    assert "retry the Monitor claim after expiry" in result.stderr
+    assert "--force" not in result.stderr
+    log = capture.read_text(encoding="utf-8")
+    assert "CMD:release" not in log
+    assert log.count("CMD:open") == 1
 
 
 def test_claim_with_force_releases_then_opens(tmp_path: Path) -> None:
@@ -385,7 +432,7 @@ def test_claim_force_is_ignored_on_supervisory_wake(tmp_path: Path) -> None:
     watch_dir.mkdir(parents=True)
     _write_executable(
         watch_dir / "inbox_watch.sh",
-        "#!/usr/bin/env bash\nprintf '%s\\n' '{\"session_id\":\"sess-wake\",\"generation\":4}'\n",
+        '#!/usr/bin/env bash\nprintf \'%s\\n\' \'{"session_id":"sess-wake","generation":4}\'\n',
     )
     script = f"""
 set -euo pipefail
@@ -511,7 +558,12 @@ exit 0
 
 
 def _run_launcher_wake_scenario(
-    tmp_path: Path, scenario: str, *, widen_wait_window: bool = False, timeout: int = 45,
+    tmp_path: Path,
+    scenario: str,
+    *,
+    widen_wait_window: bool = False,
+    timeout: int = 45,
+    extra_env: dict[str, str] | None = None,
 ) -> tuple[subprocess.CompletedProcess[str], list[str], float]:
     import shlex
     import sys
@@ -521,13 +573,18 @@ def _run_launcher_wake_scenario(
     lib = root / "scripts" / "lib"
     lib.mkdir(parents=True)
     for name in ("launcher_core.sh", "session_supervisor.sh"):
-        (lib / name).write_text((_REPO_ROOT / "scripts" / "lib" / name).read_text())
+        body = (_REPO_ROOT / "scripts" / "lib" / name).read_text()
+        if scenario == "wake_file_missing" and name == "session_supervisor.sh":
+            body = body.replace("session_supervisor_read_wake()", "session_supervisor_read_wake_original()")
+        (lib / name).write_text(body)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir()
     log = root / "events"
     provider_pid = root / "provider-pid"
     wait_window = root / "wait-window"
-    _write_executable(watcher, f'''#!/usr/bin/env bash
+    _write_executable(
+        watcher,
+        f"""#!/usr/bin/env bash
 while [ ! -f {shlex.quote(str(provider_pid))} ]; do sleep 0.01; done
 if [ '{widen_wait_window}' = True ]; then
   while [ ! -f {shlex.quote(str(wait_window))} ]; do sleep 0.01; done
@@ -538,9 +595,10 @@ printf 'delivery-test\\n'
 kill -USR1 "$PPID"
 if [ '{scenario}' = watcher_failure ]; then exit 2; fi
 exit 75
-''')
+""",
+    )
     provider = root / "provider.py"
-    provider.write_text(f'''import os, signal, time
+    provider.write_text(f"""import os, signal, time
 from pathlib import Path
 log = Path({str(log)!r})
 def stop(*args):
@@ -552,27 +610,33 @@ if {scenario!r} in ("normal_exit", "watcher_ignores_term"):
     time.sleep(0.1)
     stop()
 while True: time.sleep(0.01)
-''')
+""")
     successor = root / "start-codex-driver.sh"
-    _write_executable(successor, f'''#!/usr/bin/env bash
+    _write_executable(
+        successor,
+        f"""#!/usr/bin/env bash
 [ "$SESSION_SUPERVISOR_WAKE_DELIVERY" = delivery-test ] || exit 41
 [ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:9999 ] || exit 42
 [ -z "${{SESSION_STREAM_LEASE_ID:-}}" ] || exit 43
 [ "$#" = 2 ] && [ "$1" = '--fixture' ] && [ "$2" = 'two words' ] || exit 44
 printf 'successor\\n' >> {shlex.quote(str(log))}
-''')
-    script = f'''
+""",
+    )
+    script = f"""
 set -euo pipefail
-source {shlex.quote(str(lib / 'launcher_core.sh'))}
-source {shlex.quote(str(lib / 'session_supervisor.sh'))}
+source {shlex.quote(str(lib / "launcher_core.sh"))}
+source {shlex.quote(str(lib / "session_supervisor.sh"))}
 LC_ROOT={shlex.quote(str(root))}
 LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1 LC_DRY_RUN=0
 LC_DRIVER_ORIGINAL_ARGS=(--fixture 'two words')
-export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test SESSION_STREAM_GENERATION=30
 launcher_driver_renew_loop() {{ :; }}
 launcher_cursor_observer_renew_loop() {{ :; }}
 if [ '{widen_wait_window}' = True ]; then
   launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3 || true; }}
+fi
+if [ '{scenario}' = wake_file_missing ]; then
+  session_supervisor_read_wake() {{ exec 216<&-; session_supervisor_read_wake_original; }}
 fi
 launcher_close_driver_lease() {{
   if kill -0 "$(cat {shlex.quote(str(provider_pid))})" 2>/dev/null; then return 45; fi
@@ -581,7 +645,7 @@ launcher_close_driver_lease() {{
   LC_DRIVER_LEASE_CLOSED=1
 }}
 launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
-'''
+"""
     started = time.monotonic()
     # A provider or watcher can retain the pipes after bash exits. Kill the
     # entire process group on timeout so communicate can reach EOF, and surface
@@ -592,6 +656,7 @@ launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
         stderr=subprocess.PIPE,
         text=True,
         start_new_session=True,
+        env={**_clean_environ(), "FLEET_COMMS_ROOT": str(root / "fleet-plane"), **(extra_env or {})},
     ) as process:
         try:
             stdout, stderr = process.communicate(timeout=timeout)
@@ -599,11 +664,84 @@ launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
             with contextlib.suppress(ProcessLookupError):
                 os.killpg(process.pid, signal.SIGKILL)
             stdout, stderr = process.communicate()
-            raise subprocess.TimeoutExpired(
-                process.args, timeout, output=stdout, stderr=stderr
-            ) from None
+            raise subprocess.TimeoutExpired(process.args, timeout, output=stdout, stderr=stderr) from None
     result = subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
     return result, log.read_text().splitlines(), time.monotonic() - started
+
+
+def _failure_publication_fixture(tmp_path: Path, *, seed_channel: bool) -> dict[str, str]:
+    """Real Fleet CLI in a test-owned plane; the interpreter records its argv."""
+    root = tmp_path / "failure-helper"
+    bindir = root / ".venv/bin"
+    bindir.mkdir(parents=True)
+    plane = tmp_path / "failure-plane"
+    with AuthorityService(root=plane) as service:
+        if seed_channel:
+            service.create_channel("cto")
+    _write_executable(
+        bindir / "python",
+        f"""#!/usr/bin/env bash
+if [ "$1" = -m ]; then
+  printf '%s\\n' "$*" >> "$TEST_PUBLISH_ARGS"
+  [ "$2" = scripts.fleet_comms ] || exit 91
+  if [ -n "${{TEST_CLOSE_EVENTS:-}}" ]; then
+    [ "$(tail -n 1 "$TEST_CLOSE_EVENTS")" = close ] || exit 92
+  fi
+fi
+cd {shlex.quote(str(_REPO_ROOT))} || exit 93
+exec {shlex.quote(sys.executable)} "$@"
+""",
+    )
+    return {
+        "LC_DURABLE_HELPER_ROOT": str(root),
+        "FLEET_COMMS_ROOT": str(plane),
+        "SESSION_HANDOFF_AGENT": "fixture-driver",
+        "TEST_PUBLISH_ARGS": str(tmp_path / "publish-args"),
+    }
+
+
+def _assert_failure_publication(env: dict[str, str], reason: str, *, published: bool) -> None:
+    """Assert exact body, identity, key and one attempt, including failed sends."""
+    calls = Path(env["TEST_PUBLISH_ARGS"]).read_text().splitlines()
+    assert calls == [
+        "-m scripts.fleet_comms channel publish cto - --sender fixture-driver --kind status "
+        f"--idempotency-key epic:9999-30-{reason}"
+    ]
+    with AuthorityService(root=Path(env["FLEET_COMMS_ROOT"])) as service:
+        rows = service.store.connection.execute("SELECT message_id FROM comms_messages").fetchall()
+        assert len(rows) == int(published)
+        if published:
+            message = service.get_message(rows[0][0])
+            assert message.sender == "fixture-driver" and message.kind == "status"
+            assert json.loads(service.read_message_body(message.message_id)) == {
+                "stream": "epic:9999",
+                "generation": 30,
+                "reason": reason,
+            }
+        else:
+            assert service.store.connection.execute("SELECT COUNT(*) FROM authority_channels").fetchone()[0] == 0
+
+
+@pytest.mark.parametrize(
+    "reason,scenario",
+    [
+        ("wake-file-missing", "wake_file_missing"),
+        ("watcher-failed", "watcher_failure"),
+    ],
+)
+@pytest.mark.parametrize("publish_ok", [True, False])
+def test_failed_wake_publishes_after_close_and_preserves_exit(
+    tmp_path: Path,
+    reason: str,
+    scenario: str,
+    publish_ok: bool,
+) -> None:
+    env = _failure_publication_fixture(tmp_path, seed_channel=publish_ok)
+    env["TEST_CLOSE_EVENTS"] = str(tmp_path / scenario / "events")
+    result, events, _ = _run_launcher_wake_scenario(tmp_path, scenario, extra_env=env)
+    assert result.returncode == 1, result.stderr
+    assert events == ["stopped", "close"]
+    _assert_failure_publication(env, reason, published=publish_ok)
 
 
 def test_launcher_wake_process_lifecycle(tmp_path: Path) -> None:

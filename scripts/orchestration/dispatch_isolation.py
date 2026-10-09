@@ -26,9 +26,11 @@ execs the worker, so the worker's environment is the one the caller passed.
 The task records whether those variables were the caller's, derived, or not
 derivable and why (``launch_user_bus``, #9534).
 
-The byte values below match ``MemoryMax=20G`` and ``MemorySwapMax=1G`` in
-``packaging/systemd/lu-dispatch.slice``. systemd parses the ``G`` suffix in
-base 1024 (``systemd.resource-control(5)``).
+The slice limits are set per deployment in a drop-in next to the installed
+``lu-dispatch.slice`` (the unit file carries none). The probe reads the
+effective ``MemoryMax`` and ``MemorySwapMax`` from the user manager at runtime
+and uses the slice only when both are finite byte values; ``infinity`` (no
+drop-in, or a slice systemd synthesized) falls back.
 """
 
 from __future__ import annotations
@@ -51,9 +53,7 @@ from pathlib import Path
 from typing import Any
 
 SLICE_UNIT = "lu-dispatch.slice"
-MEMORY_MAX_BYTES = 20 * 1024**3
-MEMORY_SWAP_MAX_BYTES = 1 * 1024**3
-MEMORY_HIGH_BYTES = 18 * 1024**3
+LIMITS_DROPIN = "lu-dispatch.slice.d/10-limits.conf"
 
 LAUNCH_SCOPE = "scope"
 LAUNCH_FALLBACK = "popen-fallback"
@@ -822,13 +822,22 @@ def _user_manager_subtree() -> Path:
     return Path(f"/sys/fs/cgroup/user.slice/user-{uid}.slice/user@{uid}.service/cgroup.subtree_control")
 
 
+def _finite_bytes(value: str | None, *, allow_zero: bool) -> bool:
+    if value is None or not value.isdigit():
+        return False
+    return allow_zero or int(value) > 0
+
+
 def _memory_limits(props: Mapping[str, str]) -> str | None:
+    """Require finite effective limits; the values themselves are per deployment."""
     memory_max = props.get("MemoryMax")
     memory_swap = props.get("MemorySwapMax")
-    if memory_max != str(MEMORY_MAX_BYTES):
-        return f"memory-max: MemoryMax={memory_max or 'missing'}, expected {MEMORY_MAX_BYTES}"
-    if memory_swap != str(MEMORY_SWAP_MAX_BYTES):
-        return f"memory-swap-max: MemorySwapMax={memory_swap or 'missing'}, expected {MEMORY_SWAP_MAX_BYTES}"
+    if not _finite_bytes(memory_max, allow_zero=False):
+        return f"memory-max: MemoryMax={memory_max or 'missing'}, expected a finite limit from {LIMITS_DROPIN}"
+    if not _finite_bytes(memory_swap, allow_zero=True):
+        return (
+            f"memory-swap-max: MemorySwapMax={memory_swap or 'missing'}, expected a finite limit from {LIMITS_DROPIN}"
+        )
     return None
 
 

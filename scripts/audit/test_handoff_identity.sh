@@ -102,8 +102,8 @@ eq "$(handoff_identity_for_gemini_epic infra.monitor)" "gemini-monitor" "Gemini 
 eq "$(handoff_identity_for_gemini_epic open-model-data)" "gemini-open-model-data" "Gemini open-model-data → gemini-open-model-data"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
-# Grok/Kimi/Cursor: empty-roster areas keep minting {provider}-{area} to prevent
-# handoff/session collisions across concurrent lanes (#7597, #7600).
+# Grok/Kimi/Cursor identity helpers mint {provider}-{area} to prevent lane
+# collisions; the launcher gate separately rejects unregistered slots (#7597, #7600).
 eq "$(handoff_identity_for_grok_epic open-model-data)" "grok-open-model-data" "Grok open-model-data → grok-open-model-data"
 eq "$(handoff_identity_for_grok_epic monitor)" "grok-monitor" "Grok monitor → grok-monitor"
 eq "$(handoff_identity_for_grok_epic atlas)" "grok-atlas" "Grok atlas → grok-atlas"

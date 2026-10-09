@@ -193,20 +193,23 @@ def test_delegate_dor_issue_reaches_real_shim_and_checker(body, verdict, tmp_pat
     spy = tmp_path / "real-gh"
     log = tmp_path / "calls.jsonl"
     payload = {"number": 1, "title": "Fixture", "body": body, "labels": []}
-    spy.write_text(f'#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\nwith Path({str(log)!r}).open("a") as out: out.write(json.dumps(sys.argv[1:])+"\\n")\nprint({json.dumps(payload)!r})\n')
+    spy.write_text(f'#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\nwith Path({str(log)!r}).open("a") as out: out.write(json.dumps(sys.argv[1:])+"\\n")\nprint("HTTP/1.1 200 OK\\nX-RateLimit-Remaining: 100\\nX-RateLimit-Reset: 2000\\n\\n") if "--include" in sys.argv else None\nprint({json.dumps(payload)!r})\n')
     spy.chmod(0o755)
     _root, shim, _tooling = gh_shim_sandbox
     monkeypatch.setenv("PATH", str(shim.parent) + os.pathsep + os.environ["PATH"])
     monkeypatch.setenv("AGENT_REAL_GH", str(spy))
     monkeypatch.setattr(delegate, "_registered_stream_epics", lambda: frozenset())
+    # delegate anchors its checker at the primary checkout. From a worktree that
+    # file is not this branch; CI checks out the branch, so use this tree.
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ROOT)
     error, record = delegate._run_dor_preflight("Issue: #1", None, dispatch_repo="unit/public")
     assert record["issues"] == [1]
     assert bool(record["warnings"]) == (verdict == "WARN")
     assert "checker_error" not in record["warnings"].values()
     assert (error is None) == (verdict == "PASS")
     calls = [json.loads(line) for line in log.read_text().splitlines()]
-    assert any(args[:2] == ["api", "repos/unit/public/issues/1"] for args in calls)
-    assert any(args[:2] == ["issue", "view"] for args in calls)
+    assert all(args[0] == "api" and "repos/unit/public/issues/1" in args for args in calls)
+    assert any("--include" in args and "repos/unit/public/issues/1" in args for args in calls)
 
 
 def test_hook_recognises_typed_merge(monkeypatch):
@@ -220,24 +223,47 @@ def test_hook_recognises_typed_merge(monkeypatch):
 
 @pytest.mark.parametrize("caller,name,fields", [
     ("scripts/github_graphql_budget.py", "budget", {}),
-    ("scripts/gh_merge_queue_status.py", "queue-status", {"number": 1, "branch": "main"}),
+    ("scripts/gh_merge_queue_status.py", "membership", {"number": 1}),
     ("scripts/fleet/hramatka_scope_gate.py", "issue-scope", {"number": 1}),
     ("scripts/work/sources_public.py", "issue-states", {"numbers": [1, 2]}),
     ("scripts/fleet_comms/efficiency_metrics.py", "merge-facts", {"batch": [("unit/public", 1)]}),
     ("scripts/ci/cache_hygiene.py", "pr-bases", {"cursor": None}),
 ])
-def test_named_graphql_read_callers_have_fixed_documents(caller, name, fields):
+def test_named_read_callers_have_closed_endpoint_plans(caller, name, fields):
     assert (ROOT / caller).is_file()
     sent = []
     def spy(args, **kwargs):
-        sent.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
-        return subprocess.CompletedProcess(args, 0, "{}", "")
-    pub.read(name, repo="unit/public", runner=spy, env={}, **fields)
-    assert len(sent) == 1 and sent[0]["query"].lstrip().startswith("query")
-    assert "mutation" not in sent[0]["query"]
+        sent.append(args)
+        if "graphql" in args:
+            document = json.loads(Path(args[args.index("--input") + 1]).read_text())
+            assert document["query"].lstrip().startswith("query")
+            assert "mutation" not in document["query"]
+        return subprocess.CompletedProcess(args, 0, json.dumps(_named_rest_fixture(args)), "")
+    assert pub.read(name, repo="unit/public", runner=spy, env={}, **fields).returncode == 0
+    expected_counts = {"budget": 1, "membership": 1, "issue-scope": 2, "issue-states": 2, "merge-facts": 1, "pr-bases": 2}
+    assert len(sent) == expected_counts[name]
+    if name != "membership":
+        assert all("graphql" not in args and args[args.index("--method") + 1] == "GET" for args in sent)
     with pytest.raises(gate.PublishBlocked):
         pub.read(name, repo="unit/public", runner=spy, query="mutation{x}", **fields)
-    assert len(sent) == 1
+    assert len(sent) == expected_counts[name]
+
+
+def _named_rest_fixture(args):
+    endpoint = args[args.index("GET") + 1] if "GET" in args else ""
+    if endpoint == "rate_limit":
+        return {"resources": {"graphql": {"limit": 5000, "remaining": 4999, "used": 1, "reset": 2000}}}
+    if endpoint.startswith("search/issues?"):
+        return {"total_count": 0, "incomplete_results": False}
+    if "/pulls?" in endpoint:
+        return []
+    if "/pulls/" in endpoint:
+        return {"merged_at": None}
+    if endpoint.endswith("/parent"):
+        return {"number": 2, "html_url": "https://github.com/unit/public/issues/2", "repository_url": "https://api.github.com/repos/unit/public"}
+    if "/issues/" in endpoint:
+        return {"number": 1, "state": "open", "html_url": "https://github.com/unit/public/issues/1", "repository_url": "https://api.github.com/repos/unit/public", "body": "", "labels": []}
+    return {}
 
 
 @pytest.mark.parametrize("command", [
@@ -250,9 +276,10 @@ def test_named_read_shell_cli(command):
     calls = []
     def spy(args, **kwargs):
         calls.append(args)
-        return subprocess.CompletedProcess(args, 0, "{}", "")
+        return subprocess.CompletedProcess(args, 0, json.dumps(_named_rest_fixture(args)), "")
     assert pub.main(command, runner=spy) == 0
-    assert len(calls) == 1 and calls[0][:2] == ["gh", "api"]
+    assert len(calls) == (2 if "issue-states" in command else 1)
+    assert all(args[:2] == ["gh", "api"] for args in calls)
 
 
 @pytest.mark.parametrize("repo", ["unit/public", "unit/private"])
@@ -283,5 +310,5 @@ def test_review_publisher_default_uses_guarded_transport(synthetic_opsec, tmp_pa
         return subprocess.CompletedProcess(args, 0, "https://example.invalid/comment/1", "")
     monkeypatch.setattr(pub, "_run_transport", send)
     assert review_publisher.post_pr_comment(repository="unit/public", pr_number=1, body="fixture") == "https://example.invalid/comment/1"
-    assert len(calls) == 1 and calls[0][0] == "bash"
+    assert len(calls) == 1 and calls[0][1:3] == ["pr", "comment"]
     assert "--body-file" in calls[0]

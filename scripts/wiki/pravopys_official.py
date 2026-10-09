@@ -33,6 +33,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
@@ -41,12 +42,26 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PRAVOPYS_SOURCE_ID = "pravopys_2019_official"
-PARSER_VERSION = "pravopys_2019_pdf_v3"
+PARSER_VERSION = "pravopys_2019_pdf_v4"
 PRAVOPYS_TITLE = "Український правопис"
-PRAVOPYS_EDITION = (
-    "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
-)
+PRAVOPYS_EDITION = "Авторизоване видання 2019 р. — Київ: Наукова думка, 2019. 392 с. ISBN 978-966-00-1728-3"
 PRAVOPYS_APPROVALS = (
     "Схвалив Кабінет Міністрів України (Постанова № 437 від 22 травня 2019 р.)",
     "Схвалили спільною постановою Президія НАН України (протокол № 22/10 від 24 жовтня 2018 р.) "
@@ -81,9 +96,7 @@ class OfficialFile:
 
 
 ULIF_PDF_URL = "https://www.ulif.org.ua/system/files/pravopus-new.pdf"
-MON_PDF_URL = (
-    "https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf"
-)
+MON_PDF_URL = "https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf"
 
 OFFICIAL_FILES: dict[str, OfficialFile] = {
     "0d2fd75a2e9b2a412d4c8e072f6a8cac06d075a297a770fd037312054b0e501a": OfficialFile(
@@ -236,7 +249,7 @@ def restore_scripts(text: str) -> str:
     last = 0
     line_script: str | None = None
     for match in _COMPOUND_RE.finditer(text):
-        gap = text[last:match.start()]
+        gap = text[last : match.start()]
         if "\n" in gap:
             line_script = None
         out.append(gap)
@@ -244,7 +257,7 @@ def restore_scripts(text: str) -> str:
         scripts = [_part_script(part) for part in pieces[::2]]
         decided = {script for script in scripts if script in (CYRILLIC, LATIN)}
         word_script = next(iter(decided)) if len(decided) == 1 else None
-        is_ending = text[match.start() - 1:match.start()] == "-"
+        is_ending = text[match.start() - 1 : match.start()] == "-"
         inherited = word_script or (line_script if is_ending else None)
         for index, script in enumerate(scripts):
             if script in (CYRILLIC, LATIN):
@@ -504,7 +517,7 @@ def parse_toc(rows: Iterable[Row]) -> list[TocEntry]:
         text = re.sub(r"\s+", " ", text).strip()
         head = _TOC_PARAGRAPH_RE.match(text)
         if head:
-            title = text[head.end():].strip()
+            title = text[head.end() :].strip()
             entries.append(TocEntry("paragraph", int(head.group(1)), title, page))
         elif _PART_HEAD_RE.match(text) and page is None:
             entries.append(TocEntry("part", None, text, None))
@@ -601,7 +614,7 @@ def _match_listed_heading(stream: Sequence[Row | MarginLabel], start: int, toc_k
     """
     key = ""
     best = 0
-    for taken, item in enumerate(stream[start:start + _MAX_HEADING_ROWS], start=1):
+    for taken, item in enumerate(stream[start : start + _MAX_HEADING_ROWS], start=1):
         if isinstance(item, MarginLabel) or item.heading_level:
             break
         key += heading_key(item.text)
@@ -637,8 +650,9 @@ def _heading_run(
         taken = _match_listed_heading(stream, index, toc_keys)
         if not taken:
             break
-        groups.append(_HeadingGroup(BODY_SIZE_HEADING_LEVEL, [r for r in stream[index:index + taken]
-                                                               if isinstance(r, Row)]))
+        groups.append(
+            _HeadingGroup(BODY_SIZE_HEADING_LEVEL, [r for r in stream[index : index + taken] if isinstance(r, Row)])
+        )
         index += taken
     return groups, labels, index
 
@@ -841,7 +855,7 @@ def _line_end_hyphen(before: str, left: str, right: str, is_word: LexiconPredica
 
 def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
     """Exact word-form membership in VESUM (read-only, cached)."""
-    conn = sqlite3.connect(f"{vesum_db.resolve().as_uri()}?mode=ro", uri=True)
+    conn = _open_readonly(vesum_db)
     cache: dict[str, bool] = {}
 
     def is_word(form: str) -> bool:
@@ -863,15 +877,16 @@ def vesum_word_predicate(vesum_db: Path) -> LexiconPredicate:
 
 @dataclass(frozen=True)
 class ContextReading:
-    """A printed token spelled only with letters both scripts share, re-read in the script its § decides.
+    """A printed token re-read in the script its source context decides.
 
     ``restore_scripts`` cannot decide such a token from its glyphs; the
-    surrounding text of the § can.  ``count`` is the number of occurrences the
+    surrounding text can. ``paragraph`` identifies a §, section ordinal, or
+    zero-based TOC entry index in the supplied collection. ``count`` is the number of occurrences the
     pinned PDF prints, so a parse that drifts fails instead of missing one.
     """
 
     paragraph: int
-    where: str  # "rows" or "margin_labels"
+    where: str  # "rows", "margin_labels", or "title"
     printed: str
     reading: str
     count: int
@@ -879,33 +894,121 @@ class ContextReading:
 
 
 CONTEXT_READINGS: tuple[ContextReading, ...] = (
-    ContextReading(129, "rows", "-іa", "-ia", 1, "p. 159: the rule cites the foreign (Latin) ending -ia, rendered as -ія"),
-    ContextReading(34, "margin_labels", "-IР-", "-ІР-", 1, "pp. 45–46: the label names the Cyrillic suffix -ір- of the body"),
+    ContextReading(
+        129, "rows", "-іa", "-ia", 1, "p. 159: the rule cites the foreign (Latin) ending -ia, rendered as -ія"
+    ),
+    ContextReading(
+        34, "margin_labels", "-IР-", "-ІР-", 1, "pp. 45–46: the label names the Cyrillic suffix -ір- of the body"
+    ),
     # pp. 96–97 number the four declensions I, II, III, IV; III and IV are encoded in Latin.
     ContextReading(66, "rows", "І відміна", "I відміна", 1, "pp. 96–97: Roman numeral of the I declension"),
     ContextReading(66, "rows", "ІІ відміна", "II відміна", 1, "pp. 96–97: Roman numeral of the II declension"),
+    # #9638: physical source census; counts exclude derived paths/normalized copies.
+    ContextReading(35, "rows", "ХХ", "XX", 2, "p. 51: centuries"),
+    ContextReading(67, "rows", "І та ІІ", "I та II", 1, "p. 97: declension reference"),
+    ContextReading(67, "rows", "І  в і д м і н а", "I  в і д м і н а", 1, "p. 97: declension label"),
+    ContextReading(67, "rows", "ІІ  в і д м і н а", "II  в і д м і н а", 1, "p. 98: declension label"),
+    ContextReading(142, "rows", "ІІ відміни", "II відміни", 1, "p. 168: declension reference"),
+    ContextReading(144, "rows", "І відміни", "I відміни", 1, "p. 179: declension reference"),
+    ContextReading(152, "rows", "ІІ відміни", "II відміни", 1, "p. 189: declension reference"),
+    ContextReading(152, "rows", "І відміни", "I відміни", 1, "p. 189: declension reference"),
+    ContextReading(155, "rows", "158, ІІ", "158, II", 1, "p. 198: subrule reference"),
+    ContextReading(155, "rows", "163, І", "163, I", 1, "p. 199: subrule reference"),
+    ContextReading(155, "rows", "167, ІІ", "167, II", 1, "p. 199: subrule reference"),
+    ContextReading(158, "rows", "І. КОМА", "I. КОМА", 1, "p. 203: subsection label"),
+    ContextReading(158, "rows", "163, І", "163, I", 1, "p. 210: subrule reference"),
+    ContextReading(158, "rows", "158, ІІ", "158, II", 1, "p. 214: subrule reference"),
+    ContextReading(158, "rows", "161, І", "161, I", 1, "p. 221: subrule reference"),
+    ContextReading(158, "rows", "ІІ. КОМА", "II. КОМА", 1, "p. 221: subsection label"),
+    ContextReading(159, "rows", "І. КРАПКА", "I. КРАПКА", 1, "p. 226: subsection label"),
+    ContextReading(159, "rows", "ІІ. КРАПКА", "II. КРАПКА", 1, "p. 227: subsection label"),
+    ContextReading(160, "rows", "І. У ПРОСТОМУ", "I. У ПРОСТОМУ", 1, "p. 228: subsection label"),
+    ContextReading(160, "rows", "ІІ. У СКЛАДНОМУ", "II. У СКЛАДНОМУ", 1, "p. 229: subsection label"),
+    ContextReading(160, "rows", "167, І", "167, I", 1, "p. 230: subrule reference"),
+    ContextReading(161, "rows", "І. У ПРОСТОМУ", "I. У ПРОСТОМУ", 1, "p. 230: subsection label"),
+    ContextReading(161, "rows", "160, І", "160, I", 1, "p. 233: subrule reference"),
+    ContextReading(161, "rows", "158, І", "158, I", 1, "p. 234: subrule reference"),
+    ContextReading(161, "rows", "163, І", "163, I", 1, "p. 236: subrule reference"),
+    ContextReading(161, "rows", "ХХ — на початку ХХІ", "XX — на початку XXI", 1, "p. 237: centuries"),
+    ContextReading(161, "rows", "ІІ. У СКЛАДНОМУ", "II. У СКЛАДНОМУ", 1, "p. 237: subsection label"),
+    ContextReading(161, "rows", "167, І", "167, I", 1, "p. 240: subrule reference"),
+    ContextReading(161, "rows", "ІІІ. У ПРОСТОМУ", "III. У ПРОСТОМУ", 1, "p. 240: subsection label"),
+    ContextReading(161, "rows", "167, ІІ", "167, II", 1, "p. 241: subrule reference"),
+    ContextReading(162, "rows", "167, ІІ", "167, II", 1, "p. 242: subrule reference"),
+    ContextReading(162, "rows", "ІІ, п. 3, ІІІ", "II, п. 3, III", 1, "p. 242: subrule reference"),
+    ContextReading(163, "rows", "І. Круглі", "I. Круглі", 1, "p. 243: subrule label"),
+    ContextReading(163, "rows", "ІІ. У спеціальних", "II. У спеціальних", 1, "p. 245: subrule label"),
+    ContextReading(163, "rows", "ІІІ. Для вказування", "III. Для вказування", 1, "p. 246: subrule label"),
+    ContextReading(166, "rows", "161, ІІІ", "161, III", 1, "p. 249: subrule reference"),
+    ContextReading(167, "rows", "І. Для виділення", "I. Для виділення", 1, "p. 249: subrule label"),
+    ContextReading(167, "rows", "ІІ. Для оформлення", "II. Для оформлення", 1, "p. 253: subrule label"),
+    ContextReading(167, "rows", "163, ІІ, п. 3, ІІІ", "163, II, п. 3, III", 1, "p. 253: subrule reference"),
+    ContextReading(167, "rows", "ХХ", "XX", 1, "p. 254: century"),
+    ContextReading(167, "rows", "163, ІІ", "163, II", 1, "p. 254: subrule reference"),
+    ContextReading(167, "rows", "163, І", "163, I", 1, "p. 254: subrule reference"),
+    ContextReading(167, "rows", "158, І", "158, I", 1, "p. 254: subrule reference"),
+)
+
+SECTION_CONTEXT_READINGS: tuple[ContextReading, ...] = (
+    ContextReading(1, "rows", "Олександр ІІ", "Олександр II", 1, "p. 6: regnal label"),
+    ContextReading(1, "rows", "ХХ", "XX", 2, "pp. 7–8: centuries"),
+    ContextReading(1, "rows", "ХХІ", "XXI", 1, "p. 8: century"),
+    ContextReading(2, "title", "І.", "I.", 1, "p. 11: part label"),
+    ContextReading(19, "title", "ІІ.", "II.", 1, "p. 96: part label"),
+    ContextReading(25, "title", "ІІ  в і д м і н а", "II  в і д м і н а", 1, "p. 112: declension label"),
+)
+
+TOC_CONTEXT_READINGS: tuple[ContextReading, ...] = (
+    ContextReading(1, "title", "І.", "I.", 1, "p. 383: part label"),
+    ContextReading(120, "title", "ІІ.", "II.", 1, "p. 386: part label"),
+    ContextReading(126, "title", "І відміна", "I відміна", 1, "p. 386: declension label"),
+    ContextReading(142, "title", "ІІ відміна", "II відміна", 1, "p. 387: declension label"),
+    ContextReading(208, "title", "ІІІ.", "III.", 1, "p. 389: part label"),
+    ContextReading(260, "title", "І.", "I.", 1, "p. 390: subsection label"),
+    ContextReading(261, "title", "ІІ.", "II.", 1, "p. 390: subsection label"),
+    ContextReading(263, "title", "І.", "I.", 1, "p. 391: subsection label"),
+    ContextReading(264, "title", "ІІ.", "II.", 1, "p. 391: subsection label"),
+    ContextReading(266, "title", "І.", "I.", 1, "p. 391: subsection label"),
+    ContextReading(267, "title", "ІІ.", "II.", 1, "p. 391: subsection label"),
+    ContextReading(269, "title", "І.", "I.", 1, "p. 391: subsection label"),
+    ContextReading(270, "title", "ІІ.", "II.", 1, "p. 391: subsection label"),
+    ContextReading(271, "title", "ІІІ.", "III.", 1, "p. 391: subsection label"),
 )
 
 
-def apply_context_readings(
-    paragraphs: Sequence[Paragraph], readings: Sequence[ContextReading] = CONTEXT_READINGS
-) -> list[Paragraph]:
-    """Return ``paragraphs`` with every reading applied to the whole-word occurrences of its printed token."""
-    by_number = {paragraph.number: paragraph for paragraph in paragraphs}
+def apply_context_readings[T: (Paragraph, Section, TocEntry)](
+    paragraphs: Sequence[T], readings: Sequence[ContextReading] = CONTEXT_READINGS
+) -> list[T]:
+    """Apply count-checked, whole-token readings to paragraphs, sections, or TOC entries.
+
+    Sections use their stable ordinal; TOC entries use their zero-based index.
+    Readings operate on one explicit field, preserving the layout and other fields.
+    """
+    keys = [
+        item.number if isinstance(item, Paragraph) else item.ordinal if isinstance(item, Section) else index
+        for index, item in enumerate(paragraphs)
+    ]
+    by_number = dict(zip(keys, paragraphs, strict=True))
     for reading in readings:
         paragraph = by_number.get(reading.paragraph)
         if paragraph is None:
-            raise PravopysParseError(f"context reading for missing § {reading.paragraph}")
+            raise PravopysParseError(f"context reading for missing locator {reading.paragraph}")
         pattern = re.compile(rf"(?<!\w){re.escape(reading.printed)}(?!\w)")
         items = getattr(paragraph, reading.where)
-        found = sum(len(pattern.findall(item.text)) for item in items)
+        texts = [items] if isinstance(items, str) else [item.text for item in items]
+        found = sum(len(pattern.findall(text)) for text in texts)
         if found != reading.count:
             raise PravopysParseError(
-                f"§ {reading.paragraph}: {reading.printed!r} printed {found} times, expected {reading.count}"
+                f"locator {reading.paragraph}: {reading.printed!r} printed {found} times, expected {reading.count}"
             )
-        updated = [replace(item, text=pattern.sub(lambda _match, new=reading.reading: new, item.text)) for item in items]
+        updated_texts = [pattern.sub(lambda _match, new=reading.reading: new, text) for text in texts]
+        updated = (
+            updated_texts[0]
+            if isinstance(items, str)
+            else [replace(item, text=text) for item, text in zip(items, updated_texts, strict=True)]
+        )
         by_number[reading.paragraph] = replace(paragraph, **{reading.where: updated})
-    return [by_number[paragraph.number] for paragraph in paragraphs]
+    return [by_number[key] for key in keys]
 
 
 # ── Parse driver ─────────────────────────────────────────────────
@@ -919,7 +1022,9 @@ def parse_edition(pdf_path: Path, official: OfficialFile) -> ParsedEdition:
     toc_pages = restore_page_scripts(layout_pages(lines_from_pdf(pdf_path, official, TOC_FIRST_PAGE, TOC_LAST_PAGE)))
     mismatches = [(page.page, page.printed_number) for page in body_pages if page.printed_number != str(page.page)]
     toc = parse_toc(row for page in toc_pages for row in page.rows)
+    toc = apply_context_readings(toc, TOC_CONTEXT_READINGS)
     sections, paragraphs = segment_body(body_pages, toc)
+    sections = apply_context_readings(sections, SECTION_CONTEXT_READINGS)
     return ParsedEdition(sections, apply_context_readings(paragraphs), toc, mismatches)
 
 
@@ -1005,7 +1110,7 @@ CREATE TABLE IF NOT EXISTS pravopys_paragraphs (
 """
 
 
-def ensure_pravopys_schema(conn: sqlite3.Connection) -> None:
+def ensure_pravopys_schema(conn: SQLiteConnection) -> None:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(PRAVOPYS_SCHEMA_SQL)
     columns = {row[1] for row in conn.execute("PRAGMA table_info(pravopys_paragraphs)")}
@@ -1044,7 +1149,7 @@ class IngestCounts:
 
 
 def store_edition(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     parsed: ParsedEdition,
     official: OfficialFile,
     *,
@@ -1161,7 +1266,7 @@ def _dict_rows(cursor: sqlite3.Cursor) -> list[dict[str, Any]]:
     return [dict(zip(columns, row, strict=True)) for row in cursor.fetchall()]
 
 
-def pravopys_store_status(conn: sqlite3.Connection) -> dict[str, Any]:
+def pravopys_store_status(conn: SQLiteConnection) -> dict[str, Any]:
     """``{"state": "complete", **source_row}`` only when the full edition is stored."""
     tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
     if not {"pravopys_sources", "pravopys_paragraphs"} <= tables:
@@ -1198,15 +1303,17 @@ def _paragraph_record(record: dict[str, Any], source: dict[str, Any]) -> dict[st
     }
 
 
-def get_paragraph(conn: sqlite3.Connection, number: int) -> dict[str, Any] | None:
+def get_paragraph(conn: SQLiteConnection, number: int) -> dict[str, Any] | None:
     """The stored § ``number``, or None when the store is incomplete or the § does not exist."""
     status = pravopys_store_status(conn)
     if status["state"] != "complete":
         return None
-    rows = _dict_rows(conn.execute(
-        "SELECT * FROM pravopys_paragraphs WHERE source_id = ? AND number = ?",
-        (PRAVOPYS_SOURCE_ID, int(number)),
-    ))
+    rows = _dict_rows(
+        conn.execute(
+            "SELECT * FROM pravopys_paragraphs WHERE source_id = ? AND number = ?",
+            (PRAVOPYS_SOURCE_ID, int(number)),
+        )
+    )
     return _paragraph_record(rows[0], status) if rows else None
 
 
@@ -1233,7 +1340,7 @@ def _word_hits(words: list[str], stems: list[str]) -> int:
     return sum(any(_matches(word, stem) for word in words) for stem in stems)
 
 
-def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
+def search_paragraphs(conn: SQLiteConnection, topic: str, limit: int = 5) -> list[dict[str, Any]]:
     """Rank stored §§ for a topic.
 
     Top tier: every topic word is in the § title or in its heading path (the
@@ -1245,9 +1352,9 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     if status["state"] != "complete" or not stems:
         return []
     scored: list[tuple[float, int, dict[str, Any]]] = []
-    for record in _dict_rows(conn.execute(
-        "SELECT * FROM pravopys_paragraphs WHERE source_id = ?", (PRAVOPYS_SOURCE_ID,)
-    )):
+    for record in _dict_rows(
+        conn.execute("SELECT * FROM pravopys_paragraphs WHERE source_id = ?", (PRAVOPYS_SOURCE_ID,))
+    ):
         title_words = _TOKEN_RE.findall(fold_for_lookup(record["title"]))
         path_words = _TOKEN_RE.findall(fold_for_lookup(" ".join(json.loads(record["section_path"]))))
         # Unresolved line-end hyphens are indexed in both readings (``normalized_text``).
@@ -1267,8 +1374,8 @@ def search_paragraphs(conn: sqlite3.Connection, topic: str, limit: int = 5) -> l
     return [_paragraph_record(record, status) for _score, _number, record in scored[:limit]]
 
 
-def open_read_only(db_path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"{Path(db_path).resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+def open_read_only(db_path: Path) -> SQLiteConnection:
+    conn = _open_readonly(Path(db_path), check_same_thread=False)
     conn.execute("PRAGMA busy_timeout = 30000")
     return conn
 
@@ -1297,8 +1404,7 @@ def lookup_offline(topic: str, *, db_path: Path) -> dict[str, Any] | None:
             return None
         best = dict(matches[0])
         best["other_matches"] = [
-            {"section": match["section"], "title": match["title"], "locator": match["locator"]}
-            for match in matches[1:]
+            {"section": match["section"], "title": match["title"], "locator": match["locator"]} for match in matches[1:]
         ]
         return best
     finally:

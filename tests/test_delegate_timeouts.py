@@ -165,15 +165,18 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
 
 
 def _timeout_only(match: list[str], timeout_s: float):
-    """Raise TimeoutExpired for git calls starting with ``match``; run every other call for real."""
-    real_run = subprocess.run
+    """Time out the same logical Git argv at the runner seam; other calls stay real."""
+    from scripts.orchestration.execution_safe_git import run_git
+
     timed_out: list[list[str]] = []
 
-    def run(cmd, *args, **kwargs):
+    def run(args, **kwargs):
+        cmd = ["git", *args]
         if list(cmd[: len(match)]) == match:
             timed_out.append(list(cmd))
+            assert kwargs["timeout"] == timeout_s
             raise subprocess.TimeoutExpired(cmd, timeout_s)
-        return real_run(cmd, *args, **kwargs)
+        return run_git(args, **kwargs)
 
     return run, timed_out
 
@@ -185,7 +188,9 @@ def _release_holder(holder: Path, tmp_path: Path, match: list[str], timeout_s: f
         patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
         patch.dict("os.environ", {"LU_TASKS_DIR": str(tmp_path / "tasks")}),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
-        patch("subprocess.run", side_effect=side_effect),
+        patch("scripts.orchestration.reap_worktrees.safe_git", side_effect=side_effect),
+        patch("scripts.orchestration.worktree_artifacts.safe_git", side_effect=side_effect),
+        patch("scripts.orchestration.worktree_claims.safe_git", side_effect=side_effect),
     ):
         released = _release_stale_branch_holders(branch="feature", holders=[holder], dry_run=False)
     return released, timed_out
@@ -318,8 +323,10 @@ def test_push_auto_finalize_branch_timeouts(tmp_path: Path) -> None:
     assert calls[0]["timeout"] == DEFAULT_NETWORK_GIT_TIMEOUT_S
 
     with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "push"], DEFAULT_NETWORK_GIT_TIMEOUT_S)):
-        with pytest.raises(RuntimeError, match=r"git push timed out after 180\.0s"):
+        with pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, git push, TimeoutExpired$") as raised:
             _push_auto_finalize_branch(tmp_path, "feature")
+    # #9878: the public form is typed; the timeout's own words stay for the local diagnostic.
+    assert raised.value.message == "git push timed out after 180.0s"
 
 
 def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
@@ -345,7 +352,7 @@ def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
     with patch(
         "subprocess.run", side_effect=subprocess.TimeoutExpired(["gh", "pr", "create"], DEFAULT_GH_CLI_TIMEOUT_S)
     ):
-        with pytest.raises(RuntimeError, match=r"gh pr create timed out after 180\.0s"):
+        with pytest.raises(RuntimeError, match=r"^auto_finalize_pr_failed, TimeoutExpired$") as raised:
             _create_auto_finalize_pr(
                 tmp_path,
                 branch="feature",
@@ -353,6 +360,7 @@ def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
                 title="title",
                 body="body",
             )
+    assert raised.value.message == "gh pr create timed out after 180.0s"
 
 
 def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
@@ -392,7 +400,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
             owned_paths=["file.py"],
         )
         assert res.ok is False
-        assert "timed out" in str(res.error)
+        assert res.error == "auto_finalize_failed, git add, TimeoutExpired"  # #9878: typed, the step named
 
     # 3. git commit failure with restore
     with (
@@ -417,7 +425,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
             owned_paths=["file.py"],
         )
         assert res.ok is False
-        assert "git commit failed" in str(res.error)
+        assert res.error == "auto_finalize_commit_failed, exit 1"  # #9878: the hook's output stays local
 
     # 4. no --owned-path declared: nothing is staged or committed (#8991)
     with (

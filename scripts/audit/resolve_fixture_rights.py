@@ -13,12 +13,34 @@ import fnmatch
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections import Counter
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_DIR = REPO_ROOT / "tests/fixtures/qg_bakeoff"
@@ -281,14 +303,14 @@ def classify_row(claim_id: str, row_kind: str, text: str) -> str:
     return "POINTER"
 
 
-def table_columns(conn: sqlite3.Connection, table: str) -> set[str]:
+def table_columns(conn: SQLiteConnection, table: str) -> set[str]:
     try:
         return {row["name"] for row in conn.execute(f"PRAGMA table_info({table})")}
     except sqlite3.Error:
         return set()
 
 
-def table_exists(conn: sqlite3.Connection, table: str) -> bool:
+def table_exists(conn: SQLiteConnection, table: str) -> bool:
     row = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name = ?",
         (table,),
@@ -353,7 +375,7 @@ def candidate_hit(spec: TableSpec, row: sqlite3.Row, quotes: list[str], method_p
     return best
 
 
-def select_columns(spec: TableSpec, conn: sqlite3.Connection) -> str:
+def select_columns(spec: TableSpec, conn: SQLiteConnection) -> str:
     columns = table_columns(conn, spec.table)
     requested = [spec.id_col]
     requested.extend(spec.text_cols)
@@ -370,7 +392,7 @@ def select_columns(spec: TableSpec, conn: sqlite3.Connection) -> str:
 
 
 def lookup_chunk_ids(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     chunk_ids: list[str],
     quotes: list[str],
 ) -> SourceHit | None:
@@ -403,7 +425,7 @@ def lookup_chunk_ids(
 
 
 def lookup_wikipedia_titles(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     titles: list[str],
     quotes: list[str],
 ) -> SourceHit | None:
@@ -442,7 +464,7 @@ def fts_query_for_quote(quote: str, max_tokens: int) -> str:
 
 
 def lookup_fts(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     quotes: list[str],
 ) -> SourceHit | None:
     best: SourceHit | None = None
@@ -482,7 +504,7 @@ def lookup_fts(
 
 
 def lookup_substring(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     quotes: list[str],
 ) -> SourceHit | None:
     best: SourceHit | None = None
@@ -528,7 +550,7 @@ def lookup_substring(
 
 
 def resolve_hit(
-    connections: dict[str, sqlite3.Connection],
+    connections: dict[str, SQLiteConnection],
     evidence_text: str,
     row_kind: str,
 ) -> SourceHit | None:
@@ -745,9 +767,9 @@ def resolve_rows(
 ) -> list[dict[str, Any]]:
     license_entries = load_license_map(license_map)
     replace_entries = load_replace_list(replace_list)
-    connections: dict[str, sqlite3.Connection] = {
-        "sources": sqlite3.connect(sources_db),
-        "vesum": sqlite3.connect(vesum_db),
+    connections: dict[str, SQLiteConnection] = {
+        "sources": _open_readonly(sources_db),
+        "vesum": _open_readonly(vesum_db),
     }
     for conn in connections.values():
         conn.row_factory = sqlite3.Row

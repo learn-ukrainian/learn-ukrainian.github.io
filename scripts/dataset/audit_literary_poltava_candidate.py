@@ -13,7 +13,6 @@ import collections
 import hashlib
 import json
 import re
-import sqlite3
 import sys
 import unicodedata
 from pathlib import Path
@@ -23,6 +22,22 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATASET = REPO_ROOT / "data/datasets/hramatka_literary_poltava_v1/hramatka_literary_poltava_v1.jsonl"
@@ -185,8 +200,7 @@ def validate_records(records: list[dict[str, Any]]) -> tuple[list[int], dict[str
 
 
 def database_rows(path: Path, ids: list[int]) -> dict[int, dict[str, Any]]:
-    uri = f"file:{path.resolve().as_posix()}?mode=ro"
-    connection = sqlite3.connect(uri, uri=True)
+    connection = _open_readonly(path.resolve())
     try:
         columns = [row[1] for row in connection.execute("PRAGMA table_info(literary_texts)")]
         required = {"id", "chunk_id", "source_file", "work_id", "genre", "source_url"}

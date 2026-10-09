@@ -7,6 +7,7 @@ entrypoint fresh.
 """
 
 import json
+import logging
 import os
 import re
 from collections.abc import Callable
@@ -250,7 +251,13 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     from agent_runtime.usage import has_headroom
 
     effective_model = model or "gpt-6.1-sol"
-    return has_headroom("codex", effective_model)
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+    decision = has_headroom("codex", effective_model, unreadable=unreadable)
+    if any(unreadable.values()):
+        logging.getLogger(__name__).warning(
+            "Codex headroom check for %s: unreadable usage records %s", effective_model, unreadable
+        )
+    return decision
 
 
 def _normalize_codex_chain_issues(issue_refs: list[str]) -> list[int]:

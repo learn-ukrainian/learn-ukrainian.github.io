@@ -132,7 +132,12 @@ def build_parser() -> argparse.ArgumentParser:
     recover.add_argument("--scratch-root", default=None, help="override the fleet scratch root")
     recover.add_argument("--min-age-s", type=float, default=lifecycle.DEFAULT_MIN_AGE_S)
     recover.add_argument("--pressure-min-age-s", type=float, default=lifecycle.DEFAULT_PRESSURE_MIN_AGE_S)
-    recover.add_argument("--min-free-gb", type=float, default=lifecycle.DEFAULT_MIN_FREE_GB)
+    recover.add_argument(
+        "--min-free-gb",
+        type=float,
+        default=None,
+        help=f"pressure floor (default ${lifecycle.SCRATCH_MIN_FREE_ENV}, else {lifecycle.DEFAULT_MIN_FREE_GB})",
+    )
     recover.add_argument("--json", action="store_true", help="print the JSON report")
     return parser
 

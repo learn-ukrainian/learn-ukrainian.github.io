@@ -34,6 +34,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import github_client
 from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.maintenance.claude_session_scratch import sweep_sessions
@@ -420,6 +421,13 @@ def _live_origin_head(repo_root: Path, branch: str) -> tuple[str | None, str | N
     return None, None
 
 
+# Another actor (merge queue cleanup, a merged PR's branch auto-delete, a
+# driver) removed the branch between listing and deletion. The goal is
+# reached, so it is recorded as already absent, never as an error that fails
+# the unit.
+ORIGIN_HEAD_GONE = "origin HEAD disappeared during cleanup"
+
+
 def _delete_origin_branch(
     repo_root: Path,
     *,
@@ -430,7 +438,7 @@ def _delete_origin_branch(
     if live_error is not None:
         return f"cannot verify origin HEAD: {live_error}"
     if live_head is None:
-        return "origin HEAD disappeared during cleanup"
+        return ORIGIN_HEAD_GONE
     if live_head != expected_head:
         return "origin HEAD changed during cleanup"
     if branch in _checked_out_branches(repo_root):
@@ -445,6 +453,38 @@ def _delete_origin_branch(
     if proc.returncode != 0:
         return _failure(proc)
     return None
+
+
+# A rescue row that could not run because the driver GitHub identity is not
+# available to the timer. The worktree is left in place, so this is reported
+# as a hard warning instead of failing the unit on every run.
+RESCUE_IDENTITY_UNAVAILABLE = "rescue_identity_unavailable"
+
+
+def _split_rescue_errors(tasks: Any) -> tuple[int, int]:
+    """Count rescue error rows as ``(identity unavailable, any other cause)``."""
+    blocked = other = 0
+    for row in tasks if isinstance(tasks, list) else []:
+        if not isinstance(row, dict) or row.get("action") != "error":
+            continue
+        if row.get("failure_code") == RESCUE_IDENTITY_UNAVAILABLE:
+            blocked += 1
+        else:
+            other += 1
+    return blocked, other
+
+
+def rescue_warning_lines(receipt: dict[str, Any]) -> list[str]:
+    """One hard warning per repository whose rescue lacked the driver identity."""
+    lines = []
+    for repository in receipt.get("repositories") or []:
+        count = repository.get("rescue_identity_unavailable") if isinstance(repository, dict) else None
+        if count:
+            lines.append(
+                f"HARD WARNING: {count} terminal dispatch task(s) were not rescued because the driver GitHub "
+                "identity is unavailable to this run; their worktrees are retained for a manual rescue."
+            )
+    return lines
 
 
 def cleanup_stale_origin_branches(
@@ -539,7 +579,7 @@ def cleanup_stale_origin_branches(
         # Deleting the origin head without dropping the matching fetch
         # refspec is the #7121 landmine: the next bare fetch hard-fails.
         refspec_dropped = False
-        if error is None or error == "origin HEAD disappeared during cleanup":
+        if error is None or error == ORIGIN_HEAD_GONE:
             try:
                 refspec_dropped = fetch_refspecs.drop_fetch_refspec_for_branch(
                     repo_root,
@@ -548,13 +588,14 @@ def cleanup_stale_origin_branches(
             except Exception as exc:
                 if error is None:
                     error = f"origin head deleted but fetch refspec drop failed: {exc}"
+        already_absent = error == ORIGIN_HEAD_GONE
         results.append(
             {
-                "action": "error" if error else "deleted",
+                "action": "already_absent" if already_absent else ("error" if error else "deleted"),
                 "branch": branch,
                 "head_sha": head_sha,
                 "reason": reason,
-                "error": error,
+                "error": None if already_absent else error,
                 "refspec_dropped": refspec_dropped,
             }
         )
@@ -696,7 +737,7 @@ def _query_pr_by_number(
     if rest_error is None:
         return states, None
     try:
-        proc = reap_worktrees._run(
+        proc = github_client.run(
             [
                 "gh",
                 "pr",
@@ -705,11 +746,17 @@ def _query_pr_by_number(
                 "--json",
                 "number,state,headRefOid",
             ],
+            capture_output=True,
+            text=True,
             cwd=repo_root,
             timeout=30,
+            fresh=True,
         )
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
         return [], f"{rest_error}; gh pr view failed: {exc}"
+    observation = getattr(proc, "github_result", None)
+    if observation is not None and observation.error == "github_rate_limited":
+        raise github_client.GitHubRateLimited(observation.reset_at)
     if proc.returncode != 0:
         return [], f"{rest_error}; gh pr view failed: {reap_worktrees._format_failure(proc)}"
     try:
@@ -1035,7 +1082,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             payload = json.loads(rescue_proc.stdout)
             result["rescue"] = {"summary": payload.get("summary"), "tasks": payload.get("tasks")}
             if rescue_proc.returncode != 0:
-                result["errors"].append("terminal rescue reported errors")
+                blocked, other = _split_rescue_errors(payload.get("tasks"))
+                if blocked:
+                    result["rescue_identity_unavailable"] = blocked
+                if other or not blocked:
+                    result["errors"].append("terminal rescue reported errors")
         except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
             result["errors"].append("terminal rescue unavailable")
 
@@ -1144,6 +1195,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["retained_exceptions"] = counts["retained_exceptions"]
         result["by_preservation_class"] = counts["by_preservation_class"]
         result["by_owner"] = counts["by_owner"]
+    except github_client.GitHubRateLimited:
+        raise
     except RuntimeError as exc:
         result["errors"].append(str(exc))
     return result
@@ -1155,6 +1208,8 @@ def _repo_result(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     try:
         with _GitHygieneLock(repo_root):
             return _repo_result_unlocked(repo_root, apply=apply)
+    except github_client.GitHubRateLimited:
+        raise
     except RuntimeError as exc:
         result = _empty_repo_result(repo_root)
         result["errors"].append(str(exc))
@@ -1309,7 +1364,7 @@ Related:
         "--receipt-dir",
         type=Path,
         default=default_state_dir() / "receipts" / "v2",
-        help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: /tmp/hygiene-receipts",
+        help="Private receipt directory. Default: configured hygiene state receipts/v2. Example: <receipts-dir>",
     )
     parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser
@@ -1435,6 +1490,7 @@ def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> lis
     return reports
 
 
+@github_client.timer
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_roots = args.repo_root or args.default_repo_roots
@@ -1448,6 +1504,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     receipt["summary"]["errors"] += receipt["claude_session_scratch"]["summary"]["errors"]
     for line in home_session_retention_check.warning_lines(home_session_retention):
+        sys.stderr.write(f"{line}\n")
+    for line in rescue_warning_lines(receipt):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())
     public_summary = build_public_summary(receipt, receipt_path)

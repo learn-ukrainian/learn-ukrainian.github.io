@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import os
+import re
+import select
 import shlex
 import shutil
 import subprocess
+import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -32,6 +36,12 @@ while [ "$1" != -- ]; do shift; done
 shift
 [ "${FAKE_SCOPE_FAIL:-0}" = 0 ] || exit 1
 printf '0::/test/lu.slice/lu-driver.slice/%s\\n' "$unit" > "$FAKE_CGROUP"
+if [ "${FAKE_UNLINK_ENTRY:-0}" = 1 ]; then
+  rc=0
+  "$@" || rc=$?
+  rm -f "$TMPDIR"/tmp.*
+  exit "$rc"
+fi
 exec "$@"
 """)
     exe.chmod(0o755)
@@ -48,13 +58,20 @@ printf 'Id=%s\\nControlGroup=/test/lu.slice/lu-driver.slice/%s\\nSlice=lu-driver
     exe = bindir / "cat"
     exe.write_text("""#!/usr/bin/env bash
 case "$1" in
- */memory.high) printf '%s\\n' "${LU_DRIVER_MEMORY_HIGH:-6442450944}" ;;
- */memory.max) printf '%s\\n' "${LU_DRIVER_MEMORY_MAX:-9663676416}" ;;
- */memory.swap.max) printf '%s\\n' "${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}" ;;
+ */memory.high) printf '%s\\n' "${FAKE_MEMORY_HIGH:-${LU_DRIVER_MEMORY_HIGH:-2147483648}}" ;;
+ */memory.max) printf '%s\\n' "${FAKE_MEMORY_MAX:-${LU_DRIVER_MEMORY_MAX:-3221225472}}" ;;
+ */memory.swap.max) printf '%s\\n' "${FAKE_MEMORY_SWAP_MAX:-${LU_DRIVER_MEMORY_SWAP_MAX:-536870912}}" ;;
  */memory.current) printf '123456\\n' ;;
  */memory.swap.current) printf '654321\\n' ;;
  *) exec /bin/cat "$@" ;;
 esac
+""")
+    exe.chmod(0o755)
+    exe = bindir / "logger"
+    exe.write_text("""#!/usr/bin/env bash
+[ "$#" = 3 ] && [ "$1" = -t ] && [ "$2" = lu-driver ] || exit 99
+printf '%s\\n' "$3" >> "$FAKE_LOGGER_MESSAGES"
+exit "${FAKE_LOGGER_RC:-0}"
 """)
     exe.chmod(0o755)
     cgroup = tmp_path / "cgroup"
@@ -63,6 +80,11 @@ esac
         "PATH": f"{bindir}:{os.environ['PATH']}",
         "FAKE_CGROUP": str(cgroup),
         "FAKE_STARTS": str(tmp_path / "scope-starts"),
+        "FAKE_LOGGER_MESSAGES": str(tmp_path / "logger-messages"),
+        # Hermetic: never read a deployment config from the runner's home.
+        "LU_DRIVER_SCOPE_CONFIG": str(tmp_path / "no-driver-scope.env"),
+        "FLEET_COMMS_ROOT": str(tmp_path / "fleet-plane"),
+        "LC_SUPERVISORY_PREDECESSOR_GENERATION": "",
     }
 
 
@@ -86,8 +108,10 @@ def _launcher(tmp_path: Path, provider: str = "claude") -> tuple[Path, dict[str,
     env = scope_sandbox(root, tmp_path)
     core = root / "scripts/lib/launcher_core.sh"
     shutil.copy2(REPO / "scripts/lib/launcher_core.sh", core)
+    shutil.copy2(REPO / "scripts/lib/git_identity.py", root / "scripts/lib/git_identity.py")
+    env["TEST_PROJECT_PYTHON"] = sys.executable
     # Only provider/lease/preparation seams are stubbed. The full main entry,
-    # defaults, Gemini refusal, scope setup, identity and limit validation stay real.
+    # defaults, uncertified-Gemini refusal, scope setup, identity and limit validation stay real.
     core.write_text(
         core.read_text()
         + """
@@ -96,6 +120,7 @@ launcher_parse() { LC_DRY_RUN=0; LC_GOVERNOR=${TEST_GOVERNOR:-0}; LC_EPIC=devops
 launcher_drop_force_from_successor_args() { :; }
 launcher_normalize_effort() { :; }
 launcher_resolve_roots() { :; }
+launcher_project_python() { printf '%s\\n' "$TEST_PROJECT_PYTHON"; }
 launcher_publication_path() { :; }
 launcher_normalize_model() { :; }
 launcher_validate_mode() { :; }
@@ -113,7 +138,13 @@ launcher_bind_drive_epic() { :; }
     adapter.write_text("""launcher_adapter_validate() { :; }
 launcher_adapter_preflight() { :; }
 launcher_adapter_canary() { :; }
-launcher_adapter_exec() { read -r line; printf 'PROVIDER:%s\\n' "$line"; exit "${TEST_RC:-0}"; }
+launcher_adapter_exec() {
+  read -r line
+  printf 'PROVIDER:%s\\n' "$line"
+  printf 'XDIST_AUTO:%s\\n' "${PYTEST_XDIST_AUTO_NUM_WORKERS:-unset}"
+  printf 'GIT_IDENTITY:%s|%s|%s|%s\\n' "$GIT_AUTHOR_NAME" "$GIT_AUTHOR_EMAIL" "$GIT_COMMITTER_NAME" "$GIT_COMMITTER_EMAIL"
+  exit "${TEST_RC:-0}"
+}
 """)
     launcher = root / f"start-{provider}-driver.sh"
     launcher.write_text(
@@ -143,7 +174,9 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
     assert Path(env["FAKE_STARTS"]).read_text().splitlines() == ["start"]
     assert result.stdout.count("PREPARED\n") == 1
     assert "PROVIDER:stdin survives" in result.stdout
-    assert "high=6442450944 max=9663676416 swap=1073741824 oom=continue" in result.stderr
+    assert "GIT_IDENTITY:Claude|claude@local.invalid|Claude|claude@local.invalid" in result.stdout
+    # Generic fallbacks when neither the environment nor a config file sets limits.
+    assert "high=2147483648 max=3221225472 swap=536870912 oom=continue" in result.stderr
     assert "DRIVER_SCOPE_VERIFIED" in result.stderr
     assert "parent_memory_current=123456 parent_swap_current=654321" in result.stderr
 
@@ -151,16 +184,18 @@ def test_all_paths_enter_once_before_preparation(tmp_path: Path, extra: dict[str
 @pytest.mark.parametrize(
     "provider,model",
     [
-        ("gemini", "gemini-3.8-flash-high"),
+        ("gemini", "gemini-unknown"),
+        ("gemini", "gemini-3.7-flash-high"),
         ("claude", "gemini-3.8-flash-high"),
         ("claude", "gemini:gemini-3.1-pro-high"),
     ],
 )
-def test_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
+def test_uncertified_gemini_driver_refused_without_entering_scope(tmp_path: Path, provider: str, model: str) -> None:
     launcher, env = _launcher(tmp_path, provider)
     result = _run(launcher, env, LAUNCHER_MODEL=model, FAKE_BUS_FAIL="1")
     assert result.returncode == 4, result.stderr
-    assert "AGY/Gemini is not a planning, design or driver seat." in result.stderr
+    assert f"model '{model}' " in result.stderr
+    assert "(certified: gemini-3.1-pro-high, gemini-3.8-flash-high)." in result.stderr
     assert result.stdout == ""
     assert not Path(env["FAKE_STARTS"]).exists()
     assert "DRIVER_SCOPE_" not in result.stderr
@@ -192,10 +227,182 @@ def test_slice_requires_loaded_unit_file(tmp_path: Path, state: str, fragment: s
         assert "PROVIDER:" not in result.stdout
 
 
-@pytest.mark.parametrize("rc", [1, 2, 3, 4, 5, 137])
+def _assert_exit_line(stderr: str, env: dict[str, str], rc: int, forwarded: str = "none") -> None:
+    lines = [line for line in stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT")]
+    assert len(lines) == 1, stderr
+    match = re.fullmatch(
+        rf"DRIVER_SCOPE_EXIT epic=devops rc={rc} signal={forwarded} ts=(\d{{4}}-\d{{2}}-\d{{2}}T\d{{2}}:\d{{2}}:\d{{2}}Z)",
+        lines[0],
+    )
+    assert match, lines[0]
+    timestamp = datetime.strptime(match[1], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+    assert abs((datetime.now(UTC) - timestamp).total_seconds()) < 15
+    assert Path(env["FAKE_LOGGER_MESSAGES"]).read_text().splitlines() == lines
+
+
+@pytest.mark.parametrize("rc", [0, 1, 2, 3, 4, 5, 137])
 def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
     launcher, env = _launcher(tmp_path)
-    assert _run(launcher, env, TEST_RC=str(rc)).returncode == rc
+    result = _run(launcher, env, TEST_RC=str(rc), TZ="Pacific/Honolulu")
+    assert result.returncode == rc, result.stderr
+    _assert_exit_line(result.stderr, env, rc)
+
+
+@pytest.mark.parametrize("rc", [0, 130])
+def test_closed_stderr_preserves_exit_and_journal(tmp_path: Path, rc: int) -> None:
+    launcher, env = _launcher(tmp_path)
+    with subprocess.Popen(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**os.environ, **env, "TEST_RC": str(rc)},
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    ) as process:
+        assert process.stdout is not None and process.stderr is not None
+        # Preparation follows scope verification. The child then waits for
+        # stdin, so the exit write happens only after the stderr reader closes.
+        assert select.select([process.stdout], [], [], 15)[0], "preparation timed out"
+        assert process.stdout.readline() == "PREPARED\n"
+        process.stderr.close()
+        stdout, _ = process.communicate("stdin survives\n", timeout=15)
+    assert process.returncode == rc
+    assert "PROVIDER:stdin survives" in stdout
+    journal = Path(env["FAKE_LOGGER_MESSAGES"]).read_text()
+    _assert_exit_line(journal, env, rc)
+
+
+def test_forwarded_term_records_exit_once(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    adapter = launcher.parent / "scripts/launchers/claude.sh"
+    with adapter.open("a") as stream:
+        # Signal the waiting parent while this child is still running; wait for
+        # the forwarded TERM instead of exiting independently.
+        stream.write("""
+launcher_adapter_exec() {
+  trap 'exit 0' TERM
+  kill -TERM "$PPID"
+  while :; do sleep 0.1; done
+}
+""")
+    result = _run(launcher, env)
+    assert result.returncode == 143, result.stderr
+    _assert_exit_line(result.stderr, env, 143, "TERM")
+
+
+@pytest.mark.parametrize("rc", [0, 5, 137])
+def test_logger_failure_preserves_exit_and_stderr(tmp_path: Path, rc: int) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(launcher, env, TEST_RC=str(rc), FAKE_LOGGER_RC="1")
+    assert result.returncode == rc, result.stderr
+    _assert_exit_line(result.stderr, env, rc)
+
+
+def test_missing_logger_preserves_exit_and_stderr(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    bindir = Path(env["PATH"].split(os.pathsep, 1)[0])
+    (bindir / "logger").unlink()
+    # Keep the sandbox utilities available without falling back to host logger.
+    for name in ("bash", "dirname", "mktemp", "rm", "date", "id", "git"):
+        executable = shutil.which(name)
+        assert executable is not None
+        (bindir / name).symlink_to(executable)
+    env["PATH"] = str(bindir)
+    result = _run(launcher, env, TEST_RC="137")
+    assert result.returncode == 137, result.stderr
+    assert shutil.which("logger", path=env["PATH"]) is None
+    assert not Path(env["FAKE_LOGGER_MESSAGES"]).exists()
+    lines = [line for line in result.stderr.splitlines() if line.startswith("DRIVER_SCOPE_EXIT")]
+    assert len(lines) == 1, result.stderr
+    assert re.fullmatch(
+        r"DRIVER_SCOPE_EXIT epic=devops rc=137 signal=none ts=\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+        lines[0],
+    )
+
+
+@pytest.mark.parametrize("extra", [{"FAKE_SCOPE_FAIL": "1"}, {"FAKE_OOM_POLICY": "stop"}])
+def test_reaped_scope_refusal_records_exit(tmp_path: Path, extra: dict[str, str]) -> None:
+    launcher, env = _launcher(tmp_path)
+    result = _run(launcher, env, **extra)
+    assert result.returncode == 6, result.stderr
+    _assert_exit_line(result.stderr, env, 6)
+
+
+def test_entry_owner_observes_verified_after_path_unlinked(tmp_path: Path) -> None:
+    """A sibling's cleanup cannot erase the completed child's entry proof."""
+    launcher, env = _launcher(tmp_path)
+    temporary = tmp_path / "temporary"
+    temporary.mkdir()
+    result = _run(launcher, env, TMPDIR=str(temporary), FAKE_UNLINK_ENTRY="1", TEST_RC="3")
+    assert result.returncode == 3, result.stderr
+    assert "DRIVER_SCOPE_VERIFIED" in result.stderr
+    assert "scope-start-failed" not in result.stderr
+    assert "PROVIDER:stdin survives" in result.stdout
+    assert not list(temporary.iterdir())
+
+
+@pytest.mark.parametrize("publish_ok", [True, False])
+def test_failed_supervisory_successor_scope_publishes_and_preserves_exit(tmp_path: Path, publish_ok: bool) -> None:
+    from tests.test_session_supervisor_shell import _assert_failure_publication, _failure_publication_fixture
+
+    launcher, env = _launcher(tmp_path)
+    env.update(_failure_publication_fixture(tmp_path, seed_channel=publish_ok))
+    launcher.chmod(0o755)
+    helper = launcher.parent / "scripts/lib/session_supervisor.sh"
+    shutil.copy2(REPO / "scripts/lib/session_supervisor.sh", helper)
+    predecessor = tmp_path / "predecessor.sh"
+    predecessor.write_text(f"""#!/usr/bin/env bash
+set -euo pipefail
+source {shlex.quote(str(helper))}
+LC_ROOT={shlex.quote(str(launcher.parent))}
+LC_PROVIDER=claude
+LC_DRIVER_LEASE_CLOSED=1
+LC_SUPERVISORY_DELIVERY=fixture-delivery
+LC_DRIVER_ORIGINAL_ARGS=()
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=30 SESSION_STREAM_LEASE_ID=fixture-lease
+session_supervisor_exec_successor
+""")
+    result = _run(predecessor, env, FAKE_SCOPE_FAIL="1")
+    assert result.returncode == 6, result.stderr
+    assert "DRIVER_SCOPE_REFUSED reason=scope-start-failed" in result.stderr
+    assert result.stdout == ""
+    _assert_failure_publication(env, "scope-start-failed", published=publish_ok)
+
+
+@pytest.mark.parametrize(
+    "failure,generation",
+    [
+        ("FAKE_SCOPE_FAIL", ""),
+        ("FAKE_BUS_FAIL", ""),
+        ("FAKE_BUS_FAIL", "30"),
+        ("FAKE_OOM_POLICY", ""),
+        ("FAKE_OOM_POLICY", "30"),
+    ],
+)
+def test_scope_refusals_publish_only_for_captured_successor_start(
+    tmp_path: Path,
+    failure: str,
+    generation: str,
+) -> None:
+    from tests.test_session_supervisor_shell import _failure_publication_fixture
+
+    launcher, env = _launcher(tmp_path)
+    env.update(_failure_publication_fixture(tmp_path, seed_channel=True))
+    shutil.copy2(REPO / "scripts/lib/session_supervisor.sh", launcher.parent / "scripts/lib/session_supervisor.sh")
+    result = _run(
+        launcher,
+        env,
+        **{failure: "stop" if failure == "FAKE_OOM_POLICY" else "1"},
+        SESSION_SUPERVISOR_WAKE_DELIVERY="fixture-delivery",
+        SESSION_SUPERVISOR_WAKE_STREAM="epic:9999",
+        # No captured generation => ordinary failure; other refusal reasons
+        # never publish even with a captured predecessor.
+        LC_SUPERVISORY_PREDECESSOR_GENERATION=generation,
+    )
+    assert result.returncode == 6, result.stderr
+    assert result.stdout == ""
+    assert not Path(env["TEST_PUBLISH_ARGS"]).exists()
 
 
 @pytest.mark.parametrize(
@@ -206,9 +413,10 @@ def test_provider_status_preserved(tmp_path: Path, rc: int) -> None:
         ({"FAKE_OOM_POLICY": "stop"}, "unit-properties-mismatch"),
         ({"LU_DRIVER_MEMORY_MAX": "max"}, "invalid-limits"),
         ({"LU_DRIVER_MEMORY_HIGH": "5", "LU_DRIVER_MEMORY_MAX": "5"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_HIGH": "6442450945"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_MAX": "9663676417"}, "invalid-limits"),
-        ({"LU_DRIVER_MEMORY_SWAP_MAX": "1073741825"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_HIGH": "3221225473"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_MAX": "999999999999999"}, "invalid-limits"),
+        ({"LU_DRIVER_MEMORY_SWAP_MAX": "3221225473"}, "invalid-limits"),
+        ({"LU_DRIVER_PYTEST_MAX_WORKERS": "auto"}, "invalid-limits"),
     ],
 )
 def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason: str) -> None:
@@ -220,18 +428,44 @@ def test_refuse_before_preparation(tmp_path: Path, extra: dict[str, str], reason
     assert "LEASE" not in result.stdout
 
 
-def test_lower_test_limits_are_preserved(tmp_path: Path) -> None:
+def test_deployment_limits_from_environment_are_used(tmp_path: Path) -> None:
+    # Deployment values may sit above the generic fallbacks, up to MemTotal.
     launcher, env = _launcher(tmp_path)
     result = _run(
         launcher,
         env,
         LU_DRIVER_MEMORY_HIGH="3221225472",
-        LU_DRIVER_MEMORY_MAX="5368709120",
+        LU_DRIVER_MEMORY_MAX="3758096384",
         LU_DRIVER_MEMORY_SWAP_MAX="0",
     )
     assert result.returncode == 0, result.stderr
-    assert "high=3221225472 max=5368709120 swap=0 oom=continue" in result.stderr
+    assert "high=3221225472 max=3758096384 swap=0 oom=continue" in result.stderr
     assert "PROVIDER:stdin survives" in result.stdout
+
+
+def test_deployment_config_file_is_parsed_and_environment_wins(tmp_path: Path) -> None:
+    launcher, env = _launcher(tmp_path)
+    config = Path(env["LU_DRIVER_SCOPE_CONFIG"])
+    config.write_text(
+        "# deployment limits\n"
+        "LU_DRIVER_MEMORY_HIGH=2684354560\n"
+        "LU_DRIVER_MEMORY_MAX=3758096384\n"
+        "LU_DRIVER_MEMORY_SWAP_MAX=268435456\n"
+        "LU_DRIVER_PYTEST_MAX_WORKERS=6\n"
+        "LU_DRIVER_MEMORY_SWAP_MAX=$(touch pwned)\n"
+        "UNRELATED=1\n"
+    )
+    result = _run(
+        launcher,
+        env,
+        LU_DRIVER_MEMORY_HIGH="3221225472",
+        FAKE_MEMORY_MAX="3758096384",
+        FAKE_MEMORY_SWAP_MAX="268435456",
+    )
+    assert result.returncode == 0, result.stderr
+    assert "high=3221225472 max=3758096384 swap=268435456 oom=continue" in result.stderr
+    assert "XDIST_AUTO:6" in result.stdout
+    assert not (launcher.parent / "pwned").exists()
 
 
 def test_inherited_identity_is_not_reentry(tmp_path: Path) -> None:
@@ -453,3 +687,56 @@ while True:
             subprocess.run(["systemctl", "--user", "stop", unit], env=env, capture_output=True, timeout=10, check=False)
         keeper.terminate()
         keeper.communicate(timeout=10)
+
+
+@pytest.mark.parametrize(
+    ("cap", "inherited", "expected"),
+    [
+        (None, None, "2"),
+        (None, "3", "2"),
+        (None, "1", "1"),
+        ("5", None, "5"),
+        ("5", "64", "5"),
+        ("5", "abc", "5"),
+        ("5", "4", "4"),
+        ("5", "0", "0"),
+    ],
+)
+def test_driver_scope_caps_pytest_auto_workers(
+    tmp_path: Path, cap: str | None, inherited: str | None, expected: str
+) -> None:
+    launcher, env = _launcher(tmp_path)
+    extra = {} if inherited is None else {"PYTEST_XDIST_AUTO_NUM_WORKERS": inherited}
+    if cap is not None:
+        extra["LU_DRIVER_PYTEST_MAX_WORKERS"] = cap
+    base = {k: v for k, v in os.environ.items() if k != "PYTEST_XDIST_AUTO_NUM_WORKERS"}
+    result = subprocess.run(
+        ["bash", str(launcher)],
+        cwd=launcher.parent,
+        env={**base, **env, **extra},
+        input="stdin survives\n",
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    assert result.returncode == 0, result.stderr
+    assert f"XDIST_AUTO:{expected}" in result.stdout
+
+
+@pytest.mark.parametrize(
+    ("unit", "parent"), [("lu.slice", None), ("lu-dispatch.slice", "lu.slice"), ("lu-driver.slice", "lu.slice")]
+)
+def test_slice_units_are_structure_only(unit: str, parent: str | None) -> None:
+    """Slices carry accounting only; memory and swap limits come from a deployment drop-in."""
+    body = (REPO / "packaging/systemd" / unit).read_text()
+    assert "[Unit]" in body and "[Slice]" in body
+    section = body.split("[Slice]", 1)[1]
+    keys = dict(line.split("=", 1) for line in section.splitlines() if "=" in line and not line.startswith("#"))
+    assert keys == {"MemoryAccounting": "yes"}
+    assert not any(key.startswith(("Memory", "CPU", "Tasks")) and key != "MemoryAccounting" for key in keys)
+    if unit != "lu-driver.slice":
+        assert f"{unit}.d/10-limits.conf" in body
+    # systemd.slice(5): the name encodes the parent, so no Slice= line is needed.
+    assert "Slice=" not in section
+    if parent is not None:
+        assert unit.startswith(parent.removesuffix(".slice") + "-")

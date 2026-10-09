@@ -41,6 +41,8 @@ import safetensors.numpy
 from safetensors import safe_open
 from scipy.stats import beta
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import refuse_quarantined, resolve_open_model_path
 
 try:
@@ -138,10 +140,13 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
 
+_PRIVATE_HOME_RE = re.compile(home_dir_pattern(load_needles()))
+
+
 def validate_no_private_host_paths(data: Any) -> None:
     """Recursively verify that no private host paths leak into datasets or receipts."""
     forbidden_patterns = [
-        re.compile(r"/home/ops\b"),
+        _PRIVATE_HOME_RE,
         re.compile(r"/Users/\w+"),
         re.compile(r"/var/tmp/lu/"),
         re.compile(r"\b192\.168\.\d+\.\d+\b"),
@@ -149,10 +154,15 @@ def validate_no_private_host_paths(data: Any) -> None:
         re.compile(r"\b172\.(1[6-9]|2[0-9]|3[0-1])\.\d+\.\d+\b"),
     ]
 
+    # Diagnostics name only the rule number and offset: a pattern may carry
+    # deployment-configured values, and the match is the leaked value itself.
     def _check_string(s: str) -> None:
-        for pat in forbidden_patterns:
-            if pat.search(s):
-                raise ValueError(f"OPSEC VIOLATION: Private host pattern detected: {pat.pattern} in {s[:80]}")
+        for number, pat in enumerate(forbidden_patterns, 1):
+            match = pat.search(s)
+            if match:
+                raise ValueError(
+                    f"OPSEC VIOLATION: Private host pattern detected: rule {number} at offset {match.start()}"
+                )
 
     if isinstance(data, str):
         _check_string(data)
@@ -1254,8 +1264,7 @@ def get_vesum_forms_count(lemma: str, vesum_db_path: Path | None = None) -> tupl
     db_path = vesum_db_path or DEFAULT_VESUM_DB
     if db_path.exists():
         try:
-            db_uri = f"file:{db_path.resolve()}?mode=ro"
-            con = sqlite3.connect(db_uri, uri=True)
+            con = _open_readonly(db_path.resolve())
             cur = con.cursor()
             cur.execute("SELECT count(*), tags FROM forms_all WHERE lemma = ?", (lemma,))
             row = cur.fetchone()
@@ -3069,8 +3078,7 @@ def verify_pilot_canary(
     s_conn = None
     if check_sources:
         try:
-            s_uri = f"file:{s_db.resolve()}?mode=ro"
-            s_conn = sqlite3.connect(s_uri, uri=True)
+            s_conn = _open_readonly(s_db.resolve())
         except sqlite3.OperationalError:
             s_conn = None
 

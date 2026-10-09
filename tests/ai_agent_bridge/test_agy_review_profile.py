@@ -27,15 +27,38 @@ def test_missing_profile_names_the_flag() -> None:
     assert "ukrainian" in message
 
 
-def test_code_profile_cites_the_operator_rule() -> None:
+@pytest.mark.parametrize("command", ["ask-agy", "ask-gemini", "post", "discuss"])
+def test_bridge_help_distinguishes_native_code_review(command, capsys):
+    from scripts.ai_agent_bridge._cli import _build_parser
+
+    with pytest.raises(SystemExit) as exit_info:
+        _build_parser().parse_args([command, "--help"])
+    assert exit_info.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "the bridge refuses code review" in help_text
+    assert "native AGY admits low/medium risk code reviews" in help_text
+    assert "never code" not in help_text
+
+
+def test_bridge_code_profile_requires_native_dispatch() -> None:
     message = gemini_review_profile_error("code")
     assert message is not None
     assert "gemini_code_review_forbidden" in message
-    assert "Gemini reviews Ukrainian only, never code" in message
+    assert "Code review requires native AGY dispatch at low or medium risk" in message
 
 
 def test_ukrainian_profile_is_allowed() -> None:
     assert gemini_review_profile_error("ukrainian") is None
+
+
+@pytest.mark.parametrize("profile", ["code", " CODE ", "ukrainian"])
+def test_native_profile_check_allows_explicit_code_review(profile) -> None:
+    assert gemini_review_profile_error(profile, native_code_review=True) is None
+
+
+@pytest.mark.parametrize("profile", [None, "", "infra", "unknown"])
+def test_native_profile_check_refuses_missing_or_unsupported_profiles(profile) -> None:
+    assert "--review-profile" in gemini_review_profile_error(profile, native_code_review=True)
 
 
 @pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
@@ -110,7 +133,7 @@ def test_ask_agy_code_profile_is_refused() -> None:
         review_profile="code",
         background=False,
     )
-    with pytest.raises(SystemExit, match="Gemini reviews Ukrainian only, never code"):
+    with pytest.raises(SystemExit, match="Code review requires native AGY dispatch"):
         _handle_acp_compat(args, "agy")
 
 
@@ -288,6 +311,7 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     _handle_acp_compat(_review_args(pr=77), "agy")
     assert seen["target"] == "agy"
     assert seen["kwargs"]["review_profile"] == "ukrainian"
@@ -317,6 +341,7 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=88), "agy")
 
@@ -337,6 +362,7 @@ def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> 
         return subprocess.CompletedProcess(command, 1, stderr="gh unavailable")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=99), "agy")
 
@@ -366,6 +392,7 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
         return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(pr=120), "agy")
 
@@ -387,6 +414,7 @@ def test_prefixed_branch_names_are_refused_before_git(monkeypatch: pytest.Monkey
         raise AssertionError(f"prefixed branch must not reach git: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     for name in ("origin/feature", "refs/heads/feature", "github/feature", "+feature", "-feature", "feat:ure"):
         with pytest.raises(SystemExit, match="could not list changed files"):
             _handle_acp_compat(_review_args(branch=name), "agy")
@@ -484,6 +512,7 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
         return scripted(command, **kwargs)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     args = delegate.build_parser().parse_args(
         [
             "dispatch",
@@ -607,6 +636,7 @@ def test_agy_implementation_dispatch_is_not_review_gated(
 
     argv = _with_sol_envelope(monkeypatch, tmp_path, _AGY_IMPL_ARGV)
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     args = delegate.build_parser().parse_args(argv)
     assert delegate.cmd_dispatch(args) == 2
     err = capsys.readouterr().err
@@ -661,6 +691,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="differs from the pinned head SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
 
@@ -678,6 +709,7 @@ def test_pr_number_below_one_is_refused(monkeypatch: pytest.MonkeyPatch) -> None
         lambda number: ("content-branch", "e" * 40),
     )
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=0), "agy")
 
@@ -911,6 +943,7 @@ def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.Monkey
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     branch_paths = list_branch_changed_paths("feature", repo_root=".")
     assert "scripts/x.py" in branch_paths
     pr_paths = list_commit_changed_paths(_REMOTE_SHA, repo_root=".")
@@ -942,6 +975,7 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     args = delegate.build_parser().parse_args(
         [
@@ -975,7 +1009,10 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
 
     sha = "a" * 40
     other = "b" * 40
-    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+    payload = json.dumps({
+        "baseRefName": "main", "baseRefOid": sha,
+        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
+    })
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
@@ -987,6 +1024,7 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     argv = _with_sol_envelope(
         monkeypatch,
@@ -997,6 +1035,8 @@ def test_delegate_pr_pinned_head_must_match_resolved_sha(
             "agy",
             "--task-id",
             "agy-pr-pin-mismatch",
+            "--review-profile",
+            "ukrainian",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
             "--owned-path",
@@ -1023,7 +1063,10 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
     from scripts import delegate
 
     sha = "a" * 40
-    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+    payload = json.dumps({
+        "baseRefName": "main", "baseRefOid": sha,
+        "headRefName": "feature", "headRefOid": sha, "isCrossRepository": False,
+    })
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
@@ -1035,6 +1078,7 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
         raise AssertionError(command)
 
     monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("scripts.common.github_client.run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
     argv = _with_sol_envelope(
         monkeypatch,
@@ -1045,6 +1089,8 @@ def test_delegate_pr_pinned_head_requires_the_pr_branch(
             "agy",
             "--task-id",
             "agy-pr-pin-no-branch",
+            "--review-profile",
+            "ukrainian",
             "--prompt",
             "Implement the requested dispatch guard and add regression tests.",
             "--owned-path",

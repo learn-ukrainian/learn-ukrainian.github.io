@@ -16,6 +16,7 @@ import pytest
 from scripts.agent_runtime import acpx_pilot, codex_hook_probe
 from scripts.agent_runtime.adapters.acpx import AcpxAdapter
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter, _tool_calls_from_claude_session_jsonl
+from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
 from scripts.agent_runtime.jsonl import jsonl_lines
 from scripts.agent_runtime.tool_calls import parse_json_events
 
@@ -47,6 +48,47 @@ def test_tool_call_trace_keeps_records_with_unicode_line_breaks(sep):
 
     assert [event["type"] for event in events] == ["user", "tool"]
     assert events[1]["args"]["words"] == [f"кіт{sep}"]
+
+
+@UNICODE_LINE_BREAKS
+def test_grok_stream_keeps_lf_boundaries_around_unicode_line_breaks(sep):
+    """One assistant message stays one message; the next message still starts a line."""
+    first = f"opened{sep}note"
+    second = "VERDICT: APPROVE"
+    stdout = _jsonl(
+        {
+            "type": "assistant",
+            "message": {
+                "id": "msg_1",
+                "role": "assistant",
+                "content": [{"type": "text", "text": first}],
+            },
+            "session_id": "s",
+        },
+        {
+            "type": "assistant",
+            "message": {
+                "id": "msg_2",
+                "role": "assistant",
+                "content": [{"type": "text", "text": second}],
+            },
+            "session_id": "s",
+        },
+        {
+            "type": "result",
+            "subtype": "success",
+            "is_error": False,
+            "result": "ONLY-THE-LAST",
+            "stop_reason": "end_turn",
+            "session_id": "s",
+            "modelUsage": {"grok-4.7-build": {"modelCalls": 1}},
+        },
+    )
+    result = GrokBuildAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None)
+
+    assert result.ok is True
+    assert result.response == f"{first}\n{second}"
+    assert result.session_id == "s"
 
 
 @UNICODE_LINE_BREAKS

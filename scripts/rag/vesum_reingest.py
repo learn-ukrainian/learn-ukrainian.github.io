@@ -13,6 +13,7 @@ import bz2
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
 import tempfile
 import urllib.parse
@@ -21,6 +22,16 @@ from collections import Counter
 from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+
+from scripts.common import github_client
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 
 from scripts.rag.word_identity import normalize_evidence_form
 
@@ -212,7 +223,8 @@ def fetch_release_asset(lock: dict[str, object], cache_dir: Path) -> Path:
     with tempfile.NamedTemporaryFile(dir=cache_dir, prefix="vesum-download-", suffix=".part", delete=False) as temp:
         temporary_path = Path(temp.name)
     try:
-        urllib.request.urlretrieve(url, temporary_path)  # nosec B310 -- URL is pinned above.
+        with github_client.http_open(urllib.request.Request(url), timeout=60) as response, temporary_path.open("wb") as output:
+            shutil.copyfileobj(response, output)
         verify_release_asset(temporary_path, lock)
         os.replace(temporary_path, destination)
     except Exception:
@@ -616,7 +628,7 @@ def generate_fixture_manifest(
         ("vulg", "vulg"),
         ("dialect", "dialect"),
     )
-    connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    connection = open_readonly(database_path)
     connection.row_factory = sqlite3.Row
     try:
         fixtures = []

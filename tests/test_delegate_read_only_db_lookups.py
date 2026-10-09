@@ -186,6 +186,87 @@ print("opened")
 """
 
 
+@pytest.mark.parametrize("name", _DATABASES)
+@pytest.mark.parametrize("action", ["write", "read"])
+@pytest.mark.parametrize("provisioning", ["new-full", "reused-full", "reused-sparse"])
+def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
+    primary: Path, tmp_tasks_dir, name: str, action: str, provisioning: str
+) -> None:
+    """#9421: unchanged Git status must not hide a write through a restored DB link."""
+    task_id = f"review-9421-{provisioning}-{action}-{name.removesuffix('.db')}"
+    kwargs = {
+        "agent": "agy",
+        "task_id": task_id,
+        "raw_path": str(primary / ".worktrees" / "dispatch" / "agy" / task_id),
+        "resolved_base_sha": _git(primary, "rev-parse", "HEAD"),
+        "full_checkout": provisioning != "reused-sparse",
+    }
+    worktree, branch, telemetry = delegate._ensure_worktree(**kwargs)
+    if provisioning.startswith("reused"):
+        worktree, branch, telemetry = delegate._ensure_worktree(**kwargs)
+    assert telemetry["reused"] == provisioning.startswith("reused")
+    assert branch is not None
+    link = worktree / "data" / name
+    assert link.is_symlink()
+    assert link.resolve() == (primary / "data" / name).resolve()
+    before = _digest(primary / "data" / name)
+    git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
+
+    rc, state, output = _run_read_only_worker(worktree, task_id, _RELATIVE_OPEN, name, action)
+
+    assert output == "opened"
+    assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    if action == "write":
+        assert _digest(primary / "data" / name) != before
+        assert rc == 1
+        assert state["status"] == "failed"
+        assert state["read_only_mutation_paths"] == [f"data/{name}"]
+        assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    else:
+        assert _digest(primary / "data" / name) == before
+        assert rc == 0
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+
+
+@pytest.mark.parametrize("name", _DATABASES)
+def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
+    primary: Path, tmp_tasks_dir, name: str
+) -> None:
+    """#9421: retargeting a link cannot hide an earlier write to the primary DB."""
+    task_id = f"review-9421-retarget-{name.removesuffix('.db')}"
+    worktree, _, _ = delegate._ensure_worktree(
+        agent="agy",
+        task_id=task_id,
+        raw_path=str(primary / ".worktrees" / "dispatch" / "agy" / task_id),
+        resolved_base_sha=_git(primary, "rev-parse", "HEAD"),
+        full_checkout=True,
+    )
+    database = primary / "data" / name
+    before = _digest(database)
+    copy = tmp_tasks_dir / f"pre-write-{name}"
+    copy.write_bytes(database.read_bytes())
+    git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
+    worker_script = _RELATIVE_OPEN + """
+import os
+link = "data/" + sys.argv[1]
+os.unlink(link)
+os.symlink(sys.argv[3], link)
+"""
+
+    rc, state, output = _run_read_only_worker(worktree, task_id, worker_script, name, "write", str(copy))
+
+    assert output == "opened"
+    assert _digest(database) != before
+    assert (worktree / "data" / name).resolve() == copy
+    assert _digest(worktree / "data" / name) == before
+    assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == [f"data/{name}"]
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+
+
 @pytest.mark.parametrize("action", ["write", "read"])
 @pytest.mark.parametrize("name", _DATABASES)
 def test_read_only_sparse_dispatch_flags_a_relative_database_open(
@@ -203,14 +284,50 @@ def test_read_only_sparse_dispatch_flags_a_relative_database_open(
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"data/{name}"]
-    assert f"read-only checkout mutation detected: data/{name}" in state["last_error"]
-    assert str(primary / "data" / name) in state["last_error"]
-    assert "mode=ro" in state["last_error"]
+    # #9878: last_error is the typed cause; the remedy, which names the primary's absolute path, stays local.
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert str(primary) not in state["last_error"]
+    path = delegate._diagnostic_path(state["task_id"])
+    kept = "\n".join(json.loads(line)["diagnostic"] for line in path.read_text(encoding="utf-8").splitlines())
+    assert f"read-only checkout mutation detected: data/{name}" in kept
+    # The remedy is kept; its absolute path may be secret-redacted there, as long paths read as high entropy.
+    assert "must open the primary database read-only by absolute path" in kept
+    assert "mode=ro" in kept
     # The open created a separate file in the worktree; nothing reached the primary.
     created = worktree / "data" / name
     assert created.is_file() and not created.is_symlink()
     assert created.resolve() != primary_db.resolve()
     assert _digest(primary_db) == before
+
+
+@pytest.mark.parametrize("name", _DATABASES)
+def test_read_only_linked_database_snapshot_failure_cannot_settle_done(
+    primary: Path, tmp_tasks_dir, monkeypatch, name: str
+) -> None:
+    """An unreadable linked target is missing mutation evidence, never a clean checkout."""
+    task_id = f"review-9421-unreadable-{name.removesuffix('.db')}"
+    worktree = _sparse_dispatch_worktree(primary, task_id)
+    delegate._provision_data_symlinks(worktree, primary)
+    target = primary / "data" / name
+    before = _digest(target)
+    original_open = Path.open
+
+    def unreadable(path, *args, **kwargs):
+        if path == target:
+            raise PermissionError("fixture target unreadable")
+        return original_open(path, *args, **kwargs)
+
+    with monkeypatch.context() as context:
+        context.setattr(Path, "open", unreadable)
+        rc, state, output = _run_read_only_worker(worktree, task_id, _RELATIVE_OPEN, name, "read")
+
+    assert output == "opened"
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["read_only_mutation_paths"] == []
+    assert state["read_only_checkout_snapshot_error"] == f"linked database snapshot failed: data/{name}: PermissionError"
+    assert state["last_error"] == "read_only_checkout_snapshot_failed"
+    assert _digest(target) == before
 
 
 # A worker that looks words and chunks up through the real sources MCP wire

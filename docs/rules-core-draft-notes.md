@@ -162,7 +162,7 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
 | S02 | Shared project interpreter; no worktree-local recreation recipe | Assigned-interpreter contract in `AGENTS.md` |
 | S03 | A pushed deliverable is the worker's milestone, not DoD | DoD in `operator-expectations.md` and `drive-epic` |
 | S06 | Primary checkout never holds feature work | Worktree guard in `scripts/delegate.py` |
-| S11, S18 | Gemini/AGY never reviews code or infra, in any role | Code-review rule in `model-assignment.md`; dispatch review qualification in `scripts/delegate.py` |
+| S11, S18 | Native AGY admits low/medium risk code reviews; high/critical, infra and security reviews exclude Gemini; the bridge refuses code review | Code-review rule in `model-assignment.md`; dispatch review qualification in `scripts/delegate.py` |
 | S12 | No DeepSeek for any dispatch or review | Policy applied in round 3 (above) |
 | S15 | Canaries run only inside `thread-rollover` | Rollover-only startup flow in `workflow.md` |
 | S34, S35 | CF APPROVE before opening a PR; squash enqueue, no `--auto` | Landing order in `critical-rules.md` §8 and `drive-epic` |

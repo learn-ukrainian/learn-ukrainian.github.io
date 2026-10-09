@@ -5,6 +5,20 @@
 # input/output blend.
 
 models:
+  # Anthropic Haiku 5.5 base API prices; cache reads are 10% of input.
+  # https://platform.claude.com/docs/en/about-claude/pricing
+  # Base prices apply through 100,000 prompt tokens; higher band applies above it.
+  # Native Claude usage remains subscription-billed; never blend total tokens.
+  claude-haiku-5-5:
+    billing_model: subscription
+    input_usd_per_1m_tokens: 0.10
+    output_usd_per_1m_tokens: 0.50
+    cache_read_usd_per_1m_tokens: 0.01
+    base_price_max_input_tokens: 100000
+    long_context_input_usd_per_1m_tokens: 0.50
+    long_context_output_usd_per_1m_tokens: 2.50
+    long_context_cache_read_usd_per_1m_tokens: 0.05
+
   # Source: xAI Grok 4.6 model page (verified 2026-08-16, operator order #6865
   # rotation from grok-4.5): $2.00/M input, $6.00/M output for prompts under
   # 200k tokens (same base rate as 4.5); a $4.00/$12.00 long-context surcharge

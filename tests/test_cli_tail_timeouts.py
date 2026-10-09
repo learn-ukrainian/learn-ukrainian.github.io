@@ -7,6 +7,8 @@ from types import SimpleNamespace
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("github_command_boundary")
+
 from scripts.ai_agent_bridge import _channels_cli
 from scripts.bench import writer_matrix
 from scripts.etymology import bulk_ocr_gemini

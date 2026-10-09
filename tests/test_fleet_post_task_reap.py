@@ -12,6 +12,7 @@ Tests exercise the hard guards without touching the real checkout:
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import os
@@ -25,9 +26,100 @@ from typing import Any
 
 import pytest
 
+from tests.orchestration.test_interrupted_caller_matrix import hashes
+from tests.orchestration.test_interrupted_caller_matrix import interrupted_checkout as interrupted_checkout
+
+
+@pytest.fixture
+def interrupted_reap(interrupted_checkout, monkeypatch):
+    """Bind the interrupted checkout to the real post-task reap guards."""
+    repo, tree, tasks, record, result, output = interrupted_checkout
+    monkeypatch.setattr(post_task_reap, "ROOT", repo)
+    monkeypatch.setattr(post_task_reap, "_DISPATCH_WORKTREES_ROOT", repo / ".worktrees/dispatch")
+    monkeypatch.setattr(post_task_reap, "_ACP_RUNTIME_ROOT", repo / ".worktrees/dispatch/acp")
+    monkeypatch.setattr(post_task_reap, "_pid_alive", lambda _pid: False)
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/hermetic")
+    monkeypatch.setattr(post_task_reap.pr_identity, "probe_open_pr_for_branch", lambda **_kwargs: (False, None))
+    record.write_text(
+        json.dumps(
+            {
+                "task_id": "interrupted",
+                "agent": "codex",
+                "status": "done",
+                "run_nonce": "attempt",
+                "pid": 999_999_999,
+                "worktree_path": str(tree),
+                "worktree_branch": "codex/interrupted",
+                "worktree_reused": False,
+                "result_file": str(result),
+                "result_sha256": hashes([result])[0],
+            }
+        )
+    )
+    return repo, tree, tasks, record, result, output
+
+
+def _leave_regenerable_output(tree):
+    (tree / "package-lock.json").write_text('{"lockfileVersion": 3}')
+    (tree / ".gitignore").write_text("node_modules/\n__pycache__/\n")
+    _run(["git", "add", "package-lock.json", ".gitignore"], cwd=tree)
+    _run(["git", "commit", "-m", "regenerable fixture"], cwd=tree)
+    for name in ["node_modules/package/index.js", "__pycache__/module.pyc"]:
+        path = tree / name
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"regenerable")
+
+
+@pytest.mark.parametrize("status", ["failed", "cancelled", "done", "needs_finalize", "rate_limited", "unknown"])
+@pytest.mark.parametrize("regenerable", [False, True])
+def test_post_task_reap_interrupted_unique_work_retains_bytes(interrupted_reap, status, regenerable):
+    repo, tree, tasks, record, result, output = interrupted_reap
+    if regenerable:
+        _leave_regenerable_output(tree)
+    head = _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip()
+    state = json.loads(record.read_text())
+    state["status"] = status
+    record.write_text(json.dumps(state))
+    before = hashes([record, result, output])
+    for _ in range(2):
+        report = post_task_reap.post_task_reap(
+            "interrupted",
+            tasks_dir=tasks,
+            repo_root=repo,
+            apply=True,
+            include_acp_runtime=False,
+        )
+        assert report["main_worktree"]["action"] in {"skipped", "retained"}, report
+        assert report["main_worktree"]["reason"] == (
+            "task status not terminal (status=unknown)" if status == "unknown" else "unpushed_head"
+        ), report
+        assert hashes([record, result, output]) == before and tree.exists()
+        assert _run(["git", "rev-parse", "HEAD"], cwd=tree).stdout.strip() == head
+
+
+def test_post_task_reap_interrupted_pushed_regenerable_work_is_removed(interrupted_reap, monkeypatch):
+    repo, tree, tasks, _record, _result, output = interrupted_reap
+    _leave_regenerable_output(tree)
+    output.unlink()
+    _run(["git", "push", "-u", "origin", "codex/interrupted"], cwd=tree)
+    # Misclassifying either cache as unique output must block removal rather
+    # than silently copying it and allowing the control to pass.
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", 1)
+
+    report = post_task_reap.post_task_reap(
+        "interrupted", tasks_dir=tasks, repo_root=repo, apply=True, include_acp_runtime=False
+    )
+
+    assert report["main_worktree"]["action"] == "removed", report
+    assert report["main_worktree"]["reason"] == "HEAD matches origin/codex/interrupted", report
+    assert not tree.exists()
+    assert not report["main_worktree"].get("preserved_artifacts")
+    assert not (repo / "batch_state/preserved").exists()
+
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from scripts.fleet import post_task_reap
+from scripts.fleet import ignored_task_output, post_task_reap
 from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
@@ -214,6 +306,164 @@ def test_no_task_state(hermetic_reap):
     assert report["task_status"] is None
     assert report["main_worktree"]["action"] == "retained"
     assert "no task state" in report["main_worktree"]["reason"]
+
+
+@pytest.mark.parametrize("contents", ["regenerable_only", "mixed", "oversized_output", "symlink", "unpublished_manifest", "oversized_manifest"])
+def test_post_task_reap_regenerable_classification(hermetic_reap, monkeypatch, tmp_path, contents):
+    repo, tasks = hermetic_reap
+    (repo / "site").mkdir()
+    (repo / "site/package-lock.json").write_text('{"lockfileVersion": 3}')
+    (repo / ".gitignore").write_text(
+        "node_modules\n__pycache__/\n.pytest_cache/\n.ruff_cache/\n.mypy_cache/\n"
+        "site/src/data/lexicon-manifest.json\nignored/\n"
+    )
+    pointer = repo / "site/src/data/lexicon-manifest.pointer.json"
+    pointer.parent.mkdir(parents=True)
+    pointer.write_text(json.dumps({"json_sha256": hashlib.sha256(b"x" * 64).hexdigest()}))
+    _run(["git", "add", "site/package-lock.json", ".gitignore", "site/src/data/lexicon-manifest.pointer.json"], cwd=repo)
+    _run(["git", "commit", "-m", "fixture lock and ignored patterns"], cwd=repo)
+    _run(["git", "push", "origin", "main"], cwd=repo)
+    task_id = "regenerable-9828"
+    worktree = _add_dispatch_worktree(repo, "codex", task_id)
+    outside = tmp_path / "outside-output"
+    outside.mkdir()
+    (outside / "unique.txt").write_bytes(b"unique outside output")
+    if contents == "symlink":
+        (worktree / "site/node_modules").symlink_to(outside)
+    else:
+        for name in [
+            "site/node_modules/package/index.js",
+            "nested/__pycache__/module.pyc",
+            "nested/.pytest_cache/cache.bin",
+            ".ruff_cache/cache.bin",
+            ".mypy_cache/cache.bin",
+        ]:
+            path = worktree / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"x" * 64)
+        # Dependency links are skipped with the real dependency directory;
+        # removing the worktree unlinks them without deleting their targets.
+        (worktree / "site/node_modules/outside-link").symlink_to(outside)
+    if contents in {"mixed", "oversized_output"}:
+        (worktree / "ignored").mkdir()
+        (worktree / "ignored/answer.txt").write_bytes(b"answer" if contents == "mixed" else b"x" * 32)
+    unpublished = b'{"entries": ["promoted"]}'
+    if contents in {"unpublished_manifest", "oversized_manifest"}:
+        (worktree / "site/src/data/lexicon-manifest.json").write_bytes(
+            unpublished if contents == "unpublished_manifest" else b"x" * 64
+        )
+    cap = {"unpublished_manifest": 32, "symlink": 4096}.get(contents, 16)
+    monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", cap)
+    _write_task_state(tasks, task_id, "done", worktree, agent="codex")
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["main_worktree"]
+    assert (outside / "unique.txt").read_bytes() == b"unique outside output"
+    if contents == "symlink":
+        assert row["action"] == "removed" and not worktree.exists(), row
+        receipt = row["preserved_artifacts"]
+        entry = next(item for item in receipt["paths"] if item["path"] == "site/node_modules")
+        assert entry["type"] == "symlink"
+        assert entry["target"] == str(outside)
+        copied = repo / receipt["location"] / entry["path"]
+        assert copied.is_file() and not copied.is_symlink()
+        assert b"unique outside output" not in copied.read_bytes()
+        return
+    if contents in {"oversized_output", "oversized_manifest"}:
+        assert row["action"] == "skipped" and worktree.exists(), row
+        assert "exceeds preservation cap" in row["reason"]
+        assert not (repo / "batch_state/preserved").exists()
+    else:
+        assert row["action"] == "removed" and not worktree.exists(), row
+        if contents == "regenerable_only":
+            assert not row.get("preserved_artifacts")
+            assert not (repo / "batch_state/preserved").exists()
+        elif contents == "unpublished_manifest":
+            receipt = row["preserved_artifacts"]
+            assert receipt["count"] == 1 and receipt["bytes"] == len(unpublished)
+            manifest = "site/src/data/lexicon-manifest.json"
+            assert [entry["path"] for entry in receipt["paths"]] == [manifest]
+            assert (repo / receipt["location"] / manifest).read_bytes() == unpublished
+        else:
+            receipt = row["preserved_artifacts"]
+            assert receipt["count"] == 1 and receipt["bytes"] == 6
+            assert [entry["path"] for entry in receipt["paths"]] == ["ignored/answer.txt"]
+            assert (repo / receipt["location"] / "ignored/answer.txt").read_bytes() == b"answer"
+
+
+@pytest.mark.parametrize(
+    "tree_owner,tasks_owner", [("sibling", "public"), ("sibling", "sibling"), ("public", "sibling")]
+)
+@pytest.mark.parametrize("repo_hint", ["public", "sibling"])
+@pytest.mark.parametrize("cache_state", ["cold", "stale"])
+def test_retention_lookup_leaves_primaries_byte_identical(
+    hermetic_reap, tmp_path, monkeypatch, tree_owner, tasks_owner, repo_hint, cache_state
+):
+    public, _ = hermetic_reap
+    sibling = tmp_path / "sibling"
+    _init_repo(sibling)
+    roots = {"public": public, "sibling": sibling}
+    monkeypatch.setattr(post_task_reap.worktree_claims, "public_primary_root", lambda: public)
+    task_id = "retention-cache-9797"
+    worktree = _add_dispatch_worktree(roots[tree_owner], "codex", task_id)
+    tasks = roots[tasks_owner] / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    record = {
+        "task_id": task_id,
+        "status": "done",
+        "worktree_path": str(worktree),
+        "worktree_reused": False,
+        "run_nonce": "retention-cache-run",
+    }
+    (tasks / f"{task_id}.json").write_text(json.dumps(record))
+    cache = post_task_reap.ignored_task_output._identity_cache_path(tasks)
+    if cache_state == "stale":
+        cache.write_bytes(b"stale identity cache\n")
+    # Dispatch already owns this persistent lock; reap must not create it.
+    hint = roots[repo_hint]
+    with post_task_reap.worktree_claims.worktree_lock(
+        worktree, lock_dir=post_task_reap.worktree_claims.repository_lock_dir(hint)
+    ):
+        pass
+
+    def snapshot(root):
+        return {
+            str(path.relative_to(root)): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in root.rglob("*")
+            if path.is_file()
+        }
+
+    before = {name: snapshot(root) for name, root in roots.items()}
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=hint, apply=True, release_retention=True)
+    # The lookup ran, but missing retrieval proof still refuses release.
+    assert report["errors"] == ["retention release requires an existing passing retrieval receipt"]
+    assert report["main_worktree"]["action"] == "retained"
+    assert worktree.exists()
+    assert {name: snapshot(root) for name, root in roots.items()} == before
+
+
+def test_retention_lookup_publishes_for_public_tree_and_canonical_tasks(hermetic_reap, monkeypatch):
+    public, _ = hermetic_reap
+    monkeypatch.setattr(post_task_reap.worktree_claims, "public_primary_root", lambda: public)
+    task_id = "public-retention-cache-9797"
+    worktree = _add_dispatch_worktree(public, "codex", task_id)
+    tasks = public / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    (tasks / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "done",
+                "worktree_path": str(worktree),
+                "worktree_reused": False,
+                "run_nonce": "public-retention-run",
+            }
+        )
+    )
+    report = post_task_reap.post_task_reap(
+        task_id, tasks_dir=tasks, repo_root=public, apply=True, release_retention=True
+    )
+    assert report["errors"] == ["retention release requires an existing passing retrieval receipt"]
+    assert post_task_reap.ignored_task_output._identity_cache_path(tasks).is_file()
 
 
 @pytest.mark.parametrize("runtime", [False, True])
@@ -919,7 +1169,7 @@ def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
     def fail_copy(*_args):
         raise OSError("injected ACP copy failure")
 
-    monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+    monkeypatch.setattr(worktree_artifacts, "_write_verified_bytes", fail_copy)
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0]
     assert row["action"] == "retained", row
@@ -963,8 +1213,17 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     assert row["action"] == "removed", row
     assert not worktree.exists()
     assert "artifact_preservation_error" not in state
-    if preserved is None:
+    if scenario == "outbound_batch_state":
+        entry = next(item for item in state["preserved_artifacts"]["paths"] if item.get("type") == "symlink")
+        assert entry["path"] == "ignored/link" and entry["target"] == str(target)
+        copied = location / entry["path"]
+        assert copied.is_file() and not copied.is_symlink() and links.PAYLOAD not in copied.read_bytes()
+        assert state["preserved_artifacts"]["count"] == 1
+    elif preserved is None:
         assert not location.exists()
     else:
+        link_path, link_target = links.IGNORED_LINK[scenario]
         assert (location / preserved).read_bytes() == links.PAYLOAD
-        assert state["preserved_artifacts"]["count"] == 1
+        entries = {item["path"]: item for item in state["preserved_artifacts"]["paths"]}
+        assert entries[link_path]["type"] == "symlink" and entries[link_path]["target"] == link_target
+        assert state["preserved_artifacts"]["count"] == 2

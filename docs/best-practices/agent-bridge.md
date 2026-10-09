@@ -179,7 +179,7 @@ were removed in #8520):
   same-route model plus `--override-reason` for an exceptional operator pin,
   for example `--reviewer claude --model claude-opus-5-5` or
   `--reviewer codex --model gpt-6.1-sol`.
-- `kimi` remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). `agy` is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
+- `kimi` remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). `agy` refuses code review through this bridge. Native AGY dispatch admits low/medium risk code reviews; high/critical, infra and security reviews exclude Gemini. GLM-5.3 is
   **LOCAL-ONLY** / China egress and requires the matching egress policy.
 - `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.
@@ -305,9 +305,9 @@ agent.** Per channel conventions:
 3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to codex`
 4. Apply feedback or argue back in writing
 5. Commit only after the review is CLEAN or BLOCKING is resolved
-6. Commit message includes `Reviewed-By: <non-Gemini reviewer> (task-id)` trailer
+6. Commit message includes `Reviewed-By: <qualified cross-family reviewer> (task-id)` trailer
 
-Gemini reviews Ukrainian only, never code (operator 2026-09-25). A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Code review uses a non-Gemini seat.
+The AGY bridge reviews Ukrainian content only. Native AGY dispatch through `delegate.py` admits low/medium risk code reviews subject to resolver admission, scoped permissions and command denial; high/critical, infra and security reviews exclude Gemini. A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Bridge code review uses a qualified non-Gemini seat.
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.

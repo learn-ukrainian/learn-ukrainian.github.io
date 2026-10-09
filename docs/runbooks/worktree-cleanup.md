@@ -21,6 +21,12 @@ do not delete it while a task might be active. After the normal merged-PR guards
 pass, the P0 reaper removes the entire disposable worktree, including ignored
 environment residue.
 
+## Shared node_modules (npm shim)
+
+Dispatch worktrees receive `node_modules` and `site/node_modules` as symlinks into the primary checkout. The agent runtime provides an `npm` (and `npx`) shim that intercepts destructive commands to protect the shared tree.
+
+Every npm/npx call through the shim runs with umask 022 to prevent the tree from becoming group-writable. The refusal message from the ACP adapter prints the exact corrective command class.
+
 ## Safety contract
 
 Every Git-based worktree removal preserves ignored output at the sole raw
@@ -129,6 +135,49 @@ release before removal. Missing proof, changed output, corrupt copies, a reused
 checkout or mismatched owner refuses release. Dry-run never releases intent.
 No new lock or state authority is introduced.
 
+Continuation rounds keep the checkout's creator as its owner (#10008). Even
+without retention intent, attribution requires exactly one creator and settled
+reused successors on the same resolved checkout and branch. With no retention
+intent, a positively verified detached HEAD may use the common recorded branch;
+an unknown branch probe or conflicting recorded branches still refuses attribution.
+`session_env` attribution is accepted through those recorded bindings; it does
+not grant a successor ownership. A terminal timestamped `--force-new` archive
+is excluded from creator attribution only when its same-task canonical
+replacement matches the checkout, has a different run nonce, and a current
+creator remains. Ordinary archives,
+missing replacement evidence, two current creators, or a running successor
+remain ambiguous.
+All matching records, including excluded history, remain visible to retention
+checks and verified receipt release. A historical `keep_worktree` claim must
+be retrieved and released; it is never dropped by attribution filtering.
+In a continuation cohort, failed-preparation records with null PID, base SHA
+and branch do not prove that no checkout was created: the failure writer also
+runs after add attempts and can snapshot an existing HEAD. Without explicit
+no-creation evidence they remain ambiguous and never grant ownership.
+Infra owns this attribution residual.
+
+For a keep-false continuation cohort, merged-PR-head containment plus a
+clean checkout permits the common reaper to record `worktree_reap_proof`
+(`merged-reuse-reap.v1`) on the creator and `merged_head_proof` in its removal
+receipt. The proof records the PR, checkout head, PR head, their relation,
+creator/run and cohort identities. The worktree lock precedes task-state locks
+and all identities are rechecked.
+The head must come from a branch or PR-number lookup; a commit-search hit
+only proves commit membership and is refreshed by number before taking locks.
+A `needs_finalize` creator additionally requires a done successor whose
+recorded head is the checkout head, with every recorded process proven absent.
+An earlier checkout head qualifies only when detached and proven to be an
+ancestor of the authoritative merged PR head. Every current cohort record must
+have a complete task/run/process identity and a commit contained in the checkout
+head. Unknown Git objects, divergent commits, unmerged PRs and live or unknown
+processes retain the tree. This proof does not release retention intent.
+This extra owner proof applies only to cohorts of at least two current records;
+single-record trees retain their existing behavior. Its status remains unchanged.
+Removal uses no force flag for this cohort and still checks the delete target;
+ignored non-cache bytes still require verified preservation and retrieval.
+Retention intent continues to require the receipt-based retrieve/release
+sequence above; merged-head proof never clears it.
+
 ```bash
 .venv/bin/python -m scripts.fleet.post_task_reap --task-id <task-id> --release-retention --apply
 ```
@@ -180,6 +229,34 @@ preserved or discarded by the responsible driver. Scheduled branch cleanup
 retains a rescue ref with unique commits; a ref whose tip is proven contained
 in another origin ref may be removed under the existing containment rules.
 
+## Branch sweep evidence (#9909)
+
+`scripts.hygiene.branch_sweep` stays a dry run unless `--apply` is passed. A
+merged pull-request head that matches the branch tip, and a tip that is already
+an ancestor of `origin/main`, are still the only ancestry proofs. Any other
+agent or scratch branch is deleted only when one more proof holds: every commit
+that is not on `origin/main` has the same `git patch-id --stable` as a commit
+on `origin/main` since the merge base, or the issue named by the branch (or, when
+the name does not name one, by its commit messages) is closed and the merged
+pull request that closed it changed every file the branch changes. That merge
+commit has to be on `origin/main`, and the pull request has to belong to this
+repository: `source.issue.repository` must match the origin owner and name, so
+a fork pull request that names the issue is not a closer. Merged-PR evidence
+is accepted only when the branch exists on origin, the remote tip equals the
+local tip when a local ref exists, and every branch commit's committer date is
+no later than the closing merge commit's committer date. A local-only branch
+is refused, because recovery needs the tip on GitHub. `rescue/` branches can
+use only the patch-id proof. An open pull request, a registered worktree, or a
+task record that has not finished (including `spawning` and `running`) keeps
+the branch. The issue timeline is one REST read; an unreadable read keeps the
+branch. `--apply` appends one receipt line to
+`batch_state/branch-archive/evidence.jsonl` on the control-plane checkout
+before it deletes either ref, then appends a second line after the delete
+attempt with `remote_deleted`, `local_deleted`, and any error. The first line
+records the branch, tip SHA, evidence kind, evidence detail, and UTC time. It
+does not by itself claim that the deletion succeeded. While GitHub still has
+the object, `git fetch origin <tip-sha>` recovers it.
+
 The scheduled job uses
 `git worktree remove --force` only as the final deletion step after all P0
 guards and their final TOCTOU checks have passed; this removes disposable
@@ -220,7 +297,20 @@ to disable only this optional scheduled class during an incident; merged-clean
 reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
-reaps immediately. The first seven days are capped by
+reaps immediately. Apply mode also recovers interrupted reap reservations:
+new reservations record the holding PID, and recovery requires that PID to be
+absent plus acquisition of the worktree attachment lock. Live or unverifiable
+PIDs are retained regardless of age. Legacy reservations without a PID require
+a timestamp at least one hour old, the exclusive sweep lock, and the attachment
+lock. Malformed or future legacy timestamps remain reserved. A stable sidecar lock
+serializes pending-state replacements so concurrent writers cannot lose entries.
+Recovery journals `reservation-recovery` before releasing a reservation, then
+reruns the normal safety proofs; dirty, active, or unmerged trees remain refused.
+Dry runs and disabled reapers never release reservations. To recover one target,
+use the existing `reap_worktrees --apply --merged --worktree <path>` command;
+never edit `reap-pending.json` manually. Reservations for already removed trees
+can also be released; no second deletion path is used.
+The first seven days are capped by
 `LU_REAPER_MAX_REAPS_PER_DAY` (default 25); when the eligible backlog of
 fully safety-qualified worktrees exceeds the remaining daily budget, the cap
 may expand up to a hard ceiling of 2x the configured base (journaled as
@@ -252,6 +342,11 @@ refuses while another task's unfinished record names the checkout, and only
 then calls `worktree_claims.git_worktree_remove`, the repository's one raw
 `git worktree remove`. The P0 reaper's `_reap_qualified_worktree` calls that
 raw remover directly, under the same lock and claim scan.
+The shared remover checks approved deletion roots for forced removals. The
+reaper also checks them explicitly for non-force continuation cohorts, including
+approved scratch roots. Other non-force callers retain Git's ordinary removal
+rules, including sibling worktrees created by `wt.sh` and task-family cleanup
+when `TMPDIR` is unset.
 `tests/orchestration/test_worktree_removal_invariant.py` fails on any other
 removal call site under `scripts/`.
 
@@ -383,6 +478,25 @@ record, detached HEAD for the detached classes) before removal, and
   `.worktrees/`, strictly under `/tmp`, `/var/tmp`, `$TMPDIR` or a
   `scratchpad` directory. Reason `foreign registered checkout`. Any other
   outside path is still reported as `outside repo .worktrees/`.
+  Qualification and the locked removal recheck also require a bounded
+  `lsof +D` probe with no open file descriptors or mapped files inside the
+  checkout, including nested mount points. An unavailable probe, warning,
+  error or timeout preserves the checkout. An empty selection also requires
+  readable process FD and mapping entries in procfs; partial visibility or
+  a platform without that proof preserves it. Negative proof additionally
+  requires the initial PID namespace and an unrestricted procfs mount;
+  nested namespaces, filtered procfs mounts and process-entry overmounts
+  preserve the checkout. Unprivileged runs that cannot inspect every process
+  retain all foreign checkouts, including idle ones. Infra owns this cleanup
+  residual until a complete process view is available through an authorized
+  execution context; this check never changes host permissions.
+  Its refusal reason contains no
+  file paths. This probe complements the existing cwd and lock checks.
+  Long readers such as backups should take `git worktree lock --reason
+  "long reader" <checkout>` before reading and `git worktree unlock
+  <checkout>` after they finish. Hold the lock for the entire read, including
+  gaps between opened files: a point-in-time activity probe cannot protect
+  future reads. Unlock only the lock that the reader owns.
 
 ### Interrupted `git worktree add` (#8663)
 
@@ -688,7 +802,7 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
-under 15 GiB. Live and liveness-unknown paths are skipped (see below for the proof).
+below the configured pressure floor. Live and liveness-unknown paths are skipped (see below for the proof).
 
 ### Atlas/QA legacy residue (#8738)
 
@@ -870,7 +984,7 @@ A lease is reclaimed only when **all** of the following hold:
    **and** no process left in the recorded group. Any surviving member, a reused
    numeric group id, or an unreadable `/proc` preserves;
 5. the newest modification anywhere in the lease is at least 2 h old, or 30 min when
-   the scratch volume has under 15 GiB free. Pressure shortens the age gate only.
+   the scratch volume is below the configured pressure floor. Pressure shortens the age gate only.
 
 Recovery never signals a process. Deletion (both the owning wrapper's and recovery's)
 is fd-relative with `O_NOFOLLOW` and proves containment on every destructive step:

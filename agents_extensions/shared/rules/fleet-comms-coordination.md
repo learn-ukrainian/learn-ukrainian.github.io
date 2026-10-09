@@ -6,7 +6,8 @@
 **Applies to:** every standalone TUI/UI and epic-driver seat (Claude/Sonnet, Grok, Kimi, Cursor, wrappers; AGY/Gemini only as a standalone TUI seat, never an epic-driver seat) — not only agents that load a skill.
 
 This is the **shared-context SSOT** for coordination after the fleet-comms authority cutover. It is
-served in `GET /api/rules`. Launchers inject a short pointer; the **`drive-epic` skill**
+served in `GET /api/rules?scope=task:fleet-comms`, `scope=task:driver`, or `scope=full`.
+Launchers inject a short pointer; the **`drive-epic` skill**
 teaches the full method loop. Neither may invent a competing design or silently flip
 cutovers.
 
@@ -17,11 +18,11 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 
 | Layer | Role | Where |
 | --- | --- | --- |
-| **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules` + offline path |
+| **This rule** | Binding musts for every TUI/UI cold-start | `/api/rules?scope=task:fleet-comms` (or `scope=task:driver` / `scope=full`) + offline path |
 | **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
-| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
+| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules?scope=task:routing` (or `scope=full`) model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
 | **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
 **Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps/modes are
@@ -40,7 +41,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
 - For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode; agy only for bounded task-level work, never plan or design, operator decision 2026-10-03, #9584; Kimi takes web, UI and backend coding only, never plan, review or design).
-- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = toolful seat + verdict posted on the PR.
+- Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = qualified toolful approval before PR, then `record_cf_verdict.py` binding + same-head CI (drive-epic §6–§7).
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
 ## Two halves (do not conflate)
@@ -48,7 +49,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Half | Status | Surfaces |
 | --- | --- | --- |
 | **Session stream / lease** | Live | `claim_session_supervisor_env`, `SESSION_STREAM_*`, stream tail/digest, canary mint (hook-less seats) |
-| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via direct `ask-*` + PR comment (sealed `review-pr` RETIRED) |
+| **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via toolful review + `record_cf_verdict.py` (sealed `review-pr` RETIRED) |
 
 Driver launchers already claim stream leases. Drivers must **also** speak the
 message-plane + CF half. An occupied lease fails closed: do not start a second
@@ -103,15 +104,17 @@ cold-prompts; silent plane flips; “for now” cutovers.
 .venv/bin/python -m agents_extensions.shared.session_streams dual-write-status
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
-# ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (.venv/bin/python -m scripts.publish pr-comment / .venv/bin/python -m scripts.publish pr-review). Merge when CI is green.
-# Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
-# `--type review` routes to a headless native CLI WITH tools (delegate.py
-# dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
-# ACP (operator 2026-08-23, #7155) — this command line is unchanged, the
-# transport underneath it is not.
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review
+# Push the author branch, then get exact-head APPROVE before opening any PR.
+# Delegate admission pins the remote-tracking target; fetch refuses movement.
+# Compare task pinned_head/worktree_base_sha with the pushed tip, not ask stdout.
+# Ask waits synchronously without nonce; on expiry continue the same task/nonce
+# using drive-epic §6's wait recipe, never repeat this launch.
+printf '%s\n' "Review pushed branch <branch> at its resolved remote head; return verdict + findings." | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+    --task-id review-<id> --review --branch <branch>
+# Only after APPROVE matches that SHA, open the PR and bind the completed review:
+.venv/bin/python scripts/review/record_cf_verdict.py --task-id review-<id> --pr <N>
+# Then require CI on that same SHA before landing; see drive-epic §7 / §7a for cleanup.
 # SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
 # do not run it. Its commands were removed in #8520, and the snapshot flow is
 # refused with no bypass.
@@ -135,7 +138,8 @@ job/reservation state. The dashboard is read-only: its filters, search,
 details, and load-more controls never select, retry, cancel, reclaim, or reroute
 work.
 
-- Cross-family review is **direct only** (`ask-<lane>` + post verdict on the PR).
+- Cross-family review is **direct only** (qualified toolful APPROVE before PR, then
+  `record_cf_verdict.py` binding + same-head CI; drive-epic §6–§7).
   Shielded formal `review-pr` / eligibility pins are RETIRED (operator 2026-08-07).
   Route the reviewer seat by model-assignment (outside the author's family).
 
@@ -143,13 +147,15 @@ work.
 
 Every epic driver session (any harness) MUST:
 
-1. Obey this rule (via `/api/rules` or offline fallback of this file).
+1. Obey this rule (via `/api/rules?scope=task:fleet-comms`, `scope=task:driver`,
+   `scope=full`, or offline fallback of this file).
 2. Run `plane-status` before assuming message-plane availability.
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.
-4. Review of record = ONE cross-family round posted on the PR at the current head
-   (direct ask + posted verdict). **Shielded formal CF (`review-pr`, sealed MCP,
+4. Review of record = one round of direct cross-family review on the pushed branch before the PR;
+   after opening the PR, `record_cf_verdict` binds the completed review to its
+   head and author qualification. **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
    2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
    and same-family chat are still not the gate.
@@ -162,18 +168,13 @@ Every epic driver session (any harness) MUST:
      (do not invent `<model>_lane`).
 7. Provider drivers inject the **`drive-epic`** binding after their lease and
    provider canary. Interactive launchers never claim a driver lease.
-8. **Post-merge cleanup is mandatory** (operator 2026-08-07). A squash-merge is not
-   done until worktree + branch + any temp residue for that PR are reaped and
-   `df -h /` + `git worktree list` prove no zombie. Prefer
-   `scripts/orchestration/reap_worktrees.py --apply` (also sweeps review temps
-   under `$TMPDIR` and `$TMPDIR/shielded-reviews`). Do not create formal sealed
-   review trees. Session chat promises do not bind; this rule and §7a do.
-   The P0 automatic reaper is live: for a merged exact head, use
-   `.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged`;
-   `LU_REAPER_DISABLED=1` is its immediate kill switch.
-   `post_task_reap` delegates regular dispatch cleanup to that same reaper, so do not invent a
-   second deletion path. If it cannot run, follow `docs/runbooks/worktree-cleanup.md` for
-   rescue restore and the narrowly allowlisted manual fallback.
+8. **Post-merge cleanup is mandatory.** Follow the single recipe in
+   `agents_extensions/shared/rules/workflow.md` § Merge policy / Post-merge
+   cleanup: MERGED, worker exit, common-reaper exit 0 and residue-free receipts.
+   Never create formal sealed review trees, force removal or invent a second
+   deletion path. `LU_REAPER_DISABLED=1` remains the reaper's immediate kill switch.
+   If it cannot run, use only the rescue restore and narrowly allowlisted manual
+   fallback in `docs/runbooks/worktree-cleanup.md`.
 
 ## Operator launch surface (#5632)
 
@@ -183,7 +184,7 @@ Every epic driver session (any harness) MUST:
 - Gemini/AGY (Flash) is not an epic-driver seat (operator decision 2026-10-03, #9584).
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
   spends the cross-family review-of-record seat). **Live policy** is still
-  `model_catalog.orchestrator_seats` + `/api/rules`.
+  `model_catalog.orchestrator_seats` + `/api/rules?scope=task:routing` (or `scope=full`).
 - **Codex is the named alternate for the harness / infra and DevOps streams** (re-added
   2026-07-23 after HydrationCapsuleV1 changed the rollover-cost calculus). Its launcher
   fails closed before lease acquisition on ambiguous, already-resumed, or native-app
@@ -206,9 +207,11 @@ Supported fleet seats cold-start through:
 
 Discussion is never the review of record. **Shielded formal CF (`review-pr` /
 `publish-review-verdict` / sealed `lu-review-*`) is RETIRED** (operator 2026-08-07).
-Review of record = one direct cross-family `ask-*` + posted PR verdict. ACP is
-structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms owns
-durable coordination state.
+Review of record = one direct cross-family `ask-* --review --branch <name>` on
+the pushed branch before PR creation, followed after PR creation by
+`record_cf_verdict` to bind the completed review, head, and author qualification.
+ACP is structured provider transport for ordinary `ask-*` / `discuss`; fleet-comms
+owns durable coordination state.
 
 ### CF thrash ban (operator 2026-08-06; formal path retired 2026-08-07)
 
@@ -241,10 +244,13 @@ The default is two rounds and the hard maximum is three.
 `gh`/pytest/fs, so a reviewer seated there cannot ground a verdict (live
 proof: `ask-codex --review --pr 7155` ABSTAINed via ACP with `gh auth`
 unavailable; the same review via headless dispatch with tools approved).
-`ask-<lane> --review` / `--type review` / `--pr` / `--branch` therefore never
-reach `run_compat_ask` — they route to `delegate.py dispatch --agent <lane>
---worktree` (a real TUI agent with tools) and block on `delegate.py wait` for
-the result. Only non-review `ask-*` stays on ACP.
+For pre-PR CF, `ask-<lane> --review --branch <name>` uses native dispatch +
+synchronous wait. Delegate admission pins the remote-tracking target and fetch
+refuses movement; compare task SHA evidence, not reply stdout (drive-epic §6).
+Require qualified outside-family APPROVE before PR, then bind it with
+`record_cf_verdict.py` and require same-head CI. Continue an expired wait on
+the same task/nonce (§6), never repeat the launch.
+`--pr` targets an existing PR; only non-review `ask-*` stays on ACP.
 
 There is no bridge/provider-execution fallback. Unknown routes, invalid model or
 effort overrides, unavailable ACP, cancellation, timeout, and partial results are
@@ -258,7 +264,8 @@ are in the onboarding contract.
 ## Offline fallback path
 
 `agents_extensions/shared/rules/fleet-comms-coordination.md` (this file).
-Served in `GET /api/rules` (`scripts/api/rules_router.py` `RULE_SOURCES`).
+Served in `GET /api/rules?scope=task:fleet-comms` or `scope=task:driver`, and in
+`GET /api/rules?scope=full` (`scripts/api/rules_router.py` `RULE_SOURCES`).
 Onboarding contract (not served as a rules blob; linked from this rule):
 `docs/runbooks/agent-seat-onboarding.md`.
 

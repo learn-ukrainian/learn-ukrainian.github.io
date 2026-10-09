@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -14,6 +15,7 @@ from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
 from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
+from scripts.common import github_client
 
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import (
@@ -83,7 +85,7 @@ def _detect_caller_identity_from_env() -> str | None:
     handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
     if handoff_agent:
         # Phantom `{provider}-{empty-slots-area}` handoff identities (minted by
-        # pre-#7597 launchers, e.g. grok-open-model-data) resolve to the
+        # pre-#7597 launchers, e.g. grok-monitor) resolve to the
         # provider so the explicit handoff marker still beats the GROK_AGENT /
         # CLAUDE_PROJECT_DIR heuristics below.
         resolved = resolve_invocation_attribution(env={"SESSION_HANDOFF_AGENT": handoff_agent})
@@ -302,46 +304,44 @@ def _parse_usage_window(window: str) -> int:
     return windows[window]
 
 
-def _iter_codex_usage_records(window: str, entrypoint: str):
-    """Yield Codex usage records within the reporting window."""
+def _iter_codex_usage_records(window: str, entrypoint: str, *, unreadable: dict[str, int] | None = None):
+    """Yield Codex usage records within the reporting window, counting corrupt rows."""
     cutoff_ts = datetime.now(UTC).timestamp() - _parse_usage_window(window)
+    counts = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
 
     for path in runtime_usage._usage_dir().glob("usage_codex-*.jsonl"):
         try:
             if path.stat().st_mtime < cutoff_ts:
                 continue
+        except FileNotFoundError:
+            if path.is_symlink():
+                counts["files"] += 1
+            continue
         except OSError:
+            counts["files"] += 1
             continue
 
-        try:
-            with open(path, encoding="utf-8") as handle:
-                for raw in handle:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        record = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue
-                    if entrypoint != "all" and record.get("entrypoint") != entrypoint:
-                        continue
-                    ts_str = record.get("ts")
-                    if not ts_str:
-                        continue
-                    try:
-                        record_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
-                    except (TypeError, ValueError):
-                        continue
-                    if record_ts < cutoff_ts:
-                        continue
-                    yield record
-        except OSError:
-            continue
+        for record in runtime_usage._iter_usage_records(path, counts):
+            if entrypoint != "all" and record.get("entrypoint") != entrypoint:
+                continue
+            ts_str = record.get("ts")
+            if not ts_str:
+                continue
+            try:
+                record_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+            except (TypeError, ValueError):
+                continue
+            if record_ts < cutoff_ts:
+                continue
+            yield record
+    if any(counts.values()):
+        logging.getLogger(__name__).warning("Codex usage report: unreadable usage records %s", counts)
 
 
 def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
     """Aggregate usage records into a printable report."""
-    records = list(_iter_codex_usage_records(window, entrypoint))
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+    records = list(_iter_codex_usage_records(window, entrypoint, unreadable=unreadable))
     outcomes = ("ok", "error", "rate_limited", "timeout")
     by_outcome: dict[str, dict[str, object]] = {}
     by_entrypoint: dict[str, int] = {}
@@ -384,6 +384,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "window": window,
         "entrypoint": entrypoint,
         "total_calls": len(records),
+        "unreadable": {**unreadable, "total": sum(unreadable.values())},
         "total_duration_s": round(total_duration_s, 1),
         "by_outcome": by_outcome,
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
@@ -401,6 +402,7 @@ def _print_codex_usage_report(report: dict) -> None:
     print(f"Codex usage report - window: {report['window']}, entrypoint: {report['entrypoint']}")
     print("-" * 48)
     print(f"Total calls: {report['total_calls']}")
+    print(f"Unreadable usage records: {report['unreadable']}")
     print(f"Total duration: {report['total_duration_s']:.1f}s")
     print("By outcome:")
 
@@ -518,7 +520,7 @@ def _build_parser() -> argparse.ArgumentParser:
         dest="for_llm",
         default=None,
         # type= runs before choices: an already-minted phantom
-        # `{provider}-{empty-slots-area}` (e.g. grok-open-model-data, #7597)
+        # `{provider}-{empty-slots-area}` (e.g. grok-monitor, #7597)
         # normalizes to its provider so live sessions can drain.
         type=_channels.resolve_recipient_alias,
         choices=recipient_choices,
@@ -797,7 +799,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Required for a Gemini review. code is refused "
-            "(Gemini reviews Ukrainian only, never code). "
+            "(the bridge refuses code review; native AGY admits low/medium risk code reviews). "
             "Ukrainian content review must pass ukrainian."
         ),
     )
@@ -839,7 +841,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "Required with --review. code is refused "
-            "(Gemini reviews Ukrainian only, never code — operator 2026-09-25). "
+            "(the bridge refuses code review; native AGY admits low/medium risk code reviews). "
             "Ukrainian content review must pass ukrainian. "
             "Omitting the flag refuses the review and names this flag."
         ),
@@ -1553,8 +1555,9 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         "headRefName,headRefOid,isCrossRepository",
     ]
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             cmd,
+            fresh=True,
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,

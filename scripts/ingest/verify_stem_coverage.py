@@ -9,6 +9,25 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 SUBJECTS = (
     "algebra", "fizyka", "khimiya", "matematyka", "informatyka", "biolohiya", "heohrafiya",
 )
@@ -23,7 +42,7 @@ def census(db_path: Path) -> dict:
     subject start grades and integrated alternatives belong to the curriculum
     denominator, not to an observed SQLite row count.
     """
-    conn = sqlite3.connect(db_path.resolve().as_uri() + "?mode=ro", uri=True)
+    conn = _open_readonly(db_path)
     try:
         conn.execute("BEGIN")
         total = conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0]

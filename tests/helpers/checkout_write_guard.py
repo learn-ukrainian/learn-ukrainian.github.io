@@ -106,8 +106,11 @@ def _is_exempt_path(relpath: str) -> bool:
 
 
 def _is_unwatched_runtime_path(relpath: str) -> bool:
-    """Keep untracked live state out of the Git-status mutation check too."""
+    """Keep untracked live state and coverage data out of the Git-status check."""
     parts = Path(relpath).parts
+    # pytest-cov writes a root-level data file, optionally with a parallel suffix.
+    if len(parts) == 1:
+        return parts[0] == ".coverage" or parts[0].startswith(".coverage.")
     if len(parts) < 2:
         return False
     root, child = parts[:2]

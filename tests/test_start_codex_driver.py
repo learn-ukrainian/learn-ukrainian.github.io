@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.launcher_libraries import launcher_library_files
+from tests.launcher_libraries import launcher_catalog_files, launcher_library_files
 from tests.rules_core_view import (
     install_loader_bypass,
     rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
@@ -49,14 +49,48 @@ def test_launcher_library_inventory_includes_new_tracked_files(tmp_path: Path) -
     assert Path("scripts/lib/driver_scope.sh") in launcher_library_files(REPO)
 
 
+def test_launcher_catalog_inventory_follows_transitive_imports(tmp_path: Path) -> None:
+    files = {
+        "scripts/__init__.py": "",
+        "scripts/review/__init__.py": "from scripts.common import package_helper\n",
+        "scripts/review/model_catalog.py": (
+            "import sys\nfrom pathlib import Path\n"
+            "sys.path.insert(0, str(Path(__file__).resolve().parents[2]))\n"
+            "Path(__file__).resolve().parents[2].joinpath('.git/HEAD').read_text()\n"
+            "Path(__file__).resolve().parents[2].joinpath('local-state.txt').read_text()\n"
+            "def load():\n    from scripts.review.future_route import resolve\n    resolve()\n"
+            "load()\n"
+        ),
+        "scripts/review/future_route.py": (
+            "import importlib\nfrom pathlib import Path\n"
+            "importlib.import_module('scripts.common.transitive')\n"
+            "def resolve():\n"
+            "    Path(__file__).resolve().parents[1].joinpath('config/model_catalog.yaml').read_text()\n"
+        ),
+        "scripts/common/package_helper.py": "import sys\n",
+        "scripts/common/transitive.py": "from scripts.review import future_route\n",
+        "scripts/config/model_catalog.yaml": "schema_version: fixture\n",
+    }
+    for relative, body in files.items():
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(body, encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=30)
+    subprocess.run(["git", "add", *files], cwd=tmp_path, check=True, timeout=30)
+    (tmp_path / "local-state.txt").write_text("untracked local state\n", encoding="utf-8")
+    unrelated = tmp_path / "scripts/review/unrelated.py"
+    unrelated.write_text("raise RuntimeError('do not import repository code')\n", encoding="utf-8")
+
+    assert launcher_catalog_files(tmp_path) == tuple(sorted(Path(relative) for relative in files))
+
+
 def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
     """Build the minimal shared-launcher surface with observable probe and CLI stubs."""
     root = tmp_path / "repo"
     for relative in (
         "start-codex-driver.sh",
         "scripts/config/context_profiles.yaml",
-        "scripts/review/model_catalog.py",
-        "scripts/config/model_catalog.yaml",
+        *launcher_catalog_files(REPO),
         "scripts/config/launcher_stream_aliases.tsv",
         "scripts/launchers/codex.sh",
         *launcher_library_files(REPO),
@@ -104,6 +138,33 @@ printf 'CODEX_EXEC %s\\n' "$*"
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-codex-driver.sh", executable_dir
+
+
+@pytest.mark.parametrize(
+    ("arguments", "expected"),
+    [
+        (("--check-retired-model", "gpt-6.1-sol"), ""),
+        (("--resolve-kimi-model", "k3"), "kimi-code/k3\n"),
+        (("--resolve-glm-model", "glm"), "glm-5.3\n"),
+        (("--resolve-role", "bounded_advisor"), '"role": "bounded_advisor"'),
+    ],
+)
+def test_runtime_launcher_stages_catalog_command_imports(
+    tmp_path: Path, arguments: tuple[str, ...], expected: str,
+) -> None:
+    launcher, _ = _runtime_launcher(tmp_path)
+    # Isolated mode excludes PYTHONPATH and the checkout from import lookup.
+    result = subprocess.run(
+        [sys.executable, "-I", str(launcher.parent / "scripts/review/model_catalog.py"), *arguments],
+        cwd=tmp_path,
+        env=_clean_environ(),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert expected in result.stdout
 
 
 def _run_runtime_governor(

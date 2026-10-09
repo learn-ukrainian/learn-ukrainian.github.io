@@ -128,3 +128,34 @@ def test_selection_while_another_full_suite_holds_lock(tmp_path: Path, args: lis
         assert FULL_SUITE_BUSY in combined
     assert len(list(tmp_path.glob("ran-*"))) == expected_passes
     assert not (tmp_path / "ran-unmarked").exists()
+
+
+def test_session_exception_is_not_attributed_to_the_cap(tmp_path: Path) -> None:
+    """An error raised inside the session propagates with no teardown warning naming the cap.
+
+    Worker-side report: pytest's ``tmp_path`` teardown raised ``KeyError`` on a
+    ``StashKey`` after a SIGINT, and the old-style wrapper's ``get_result()``
+    made pluggy blame ``ci.pytest_dispatch_cap``.
+    """
+    scripts = (_REPO_ROOT / "scripts").as_posix()
+    (tmp_path / "boom_plugin.py").write_text(
+        "def pytest_cmdline_main(config):\n    raise KeyError('session-boom')\n",
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env.update({"PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTHONPATH": f"{scripts}{os.pathsep}{tmp_path}"})
+    for name in (DISPATCH_TASK_ENV, "PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTEST_XDIST_WORKER"):
+        env.pop(name, None)
+    completed = subprocess.run(
+        [sys.executable, "-m", "pytest", "-p", "ci.pytest_dispatch_cap", "-p", "boom_plugin", "-q"],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode != 0, combined
+    assert "session-boom" in combined, combined
+    assert "PluggyTeardownRaisedWarning" not in combined, combined

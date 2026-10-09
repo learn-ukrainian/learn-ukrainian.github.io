@@ -16,7 +16,8 @@ lessons.
 
 **Does not change.** The methodology: decolonized pedagogy, Ukrainian State Standard 2024,
 textbook and corpus grounding, VESUM and stress verification, student-aware immersion derived from
-ULP, cross-family review, word targets as minimums, every audit gate passing.
+ULP, cross-family review, and all independent correctness and coverage gates passing. Fresh lessons
+use content-based sizing under R-01/R-04; generic module audit and upgrade policies are unchanged.
 
 ## 2. Requirements
 
@@ -24,7 +25,8 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 
 ### Layout
 
-- **R-01 Lessons.** A module is split into lessons of roughly one hour of learner time each.
+- **R-01 Lessons.** A module is split into lessons sized by their job and content. About 45
+  minutes of total learner work, including the workbook, is guidance, not a gate.
 - **R-02 No lesson cap.** A module has as many lessons as its content needs. Nobody pads a module
   to reach a count or squeezes one to stay under a count.
 - **R-03 Recap close.** A module closes with a learner recap of *that* module: normally its last
@@ -32,7 +34,9 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   (so a short module is not dragged out). It is not a
   "Textbook Check", not a school-system explainer and not another presentation-practice-production
   cycle.
-- **R-04 Targets per lesson.** Word targets are set per lesson and remain minimums.
+- **R-04 Content adequacy.** A lesson covers its job, planned teaching and practice. There are
+  no fixed word, activity, item or time quotas: never reject or pad a complete lesson to meet one.
+  Optional legacy `word_target` metadata is deprecated and ignored by all gates.
 - **R-05 Previous edition stays.** The earlier edition remains reachable (`/a1-v1/` today).
 
 ### Plans
@@ -198,7 +202,7 @@ each has a proposed default that applies unless corrected.
 
 | # | Question | Proposed default |
 | --- | --- | --- |
-| Q1 | What counts toward "one hour" — reading, videos, inline activities, workbook? | All learner time in the lesson page, workbook included. The plan estimates it; a gate checks the word and activity minimums, not a clock. |
+| Q1 | What counts toward the roughly 45-minute guide — reading, videos, inline activities, workbook? | All learner work on the lesson page, workbook included. Size is judged by job and content adequacy; counts are descriptive and there is no numeric word, activity, item or time gate. |
 | Q2 | Does each lesson keep the four tabs (Урок · Словник · Вправи · Ресурси)? | Yes, per lesson; the module landing aggregates. |
 | Q3 | Is the learner state tracked per lesson rather than per module? | Yes — "has completed lessons 1..n−1" at lesson grain, including vocabulary met. |
 | Q4 | May the new arc rename, split, merge or reorder the 55 A1 modules? | Yes, where the arc review agrees; slugs of published `/a1-v1/` pages do not change. |

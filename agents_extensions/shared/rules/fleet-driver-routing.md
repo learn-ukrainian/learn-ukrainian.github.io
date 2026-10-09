@@ -20,8 +20,8 @@ marathons are not.
 **Escape:** The operator, or Opus 5.5 and Sol 6.1 agreeing (designated approval; when one authored the proposal, the other's approval completes it; any other author needs both), may waive breadth for one named
 session with a written NOTE on the issue/handoff. Cannot become the default.
 
-**Sunset review:** 2026-09-06 or when breadth report shows median driver
-breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
+**Review trigger:** when breadth report shows median driver breadth ≥3 agents
+and ≥2 tiers for 14 consecutive days. A review does not expire the standing rule.
 
 ---
 
@@ -30,7 +30,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-opus-5-5** (Opus 5.5) / **gpt-6.1-sol** (Sol 6.1 @ high); bounded envelopes use Sol only (§2) |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF only through the runtime-attested Cursor seat below critical, #9488; never a content judge) |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (code/infra CF through native CLI and Cursor at every risk with runtime attestation, operator decision 2026-10-05 (#9769); never a content judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
@@ -56,7 +56,7 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
 card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
-unclear work pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer
+unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
@@ -107,7 +107,7 @@ stampede one hot lane.
 
 **Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / k3-256k / GLM
 (`capacity_pick` + `dispatch_fallbacks: codex → cursor`); code/infra review goes to the
-`resolve-reviewer` pick, which may be the attested Cursor Grok seat below critical (#9488). A valid operator reset
+`resolve-reviewer` pick, which may be native or attested Cursor Grok at every risk (operator decision 2026-10-05, #9769). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
 

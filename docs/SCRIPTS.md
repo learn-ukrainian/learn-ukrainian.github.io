@@ -13,6 +13,51 @@ Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
 `agents_extensions/shared/rules/cli-help-standard.md`, and touched CLIs are expected to
 meet it so agents can use them without source-diving.
 
+## GRAC frequency snapshot
+
+`.venv/bin/python -m scripts.ingest.grac_frequency_ingest --db data/grac_frequency.db`
+ingests `lemma` and `word` down to the inclusive `--min-freq` (default 5).
+Use a separate local destination for probes; `--max-pages` bounds committed
+frequency bands per attribute, including any requests needed to finish a tie.
+
+The ingest requests page 1 of each descending frequency window. It fetches the
+last frequency group with equal `wlminfreq`/`wlmaxfreq`, enlarging `wlmaxitems`
+to that group's `total` when needed, and verifies the entire distinct group
+before advancing `wlmaxfreq` below it. Higher frequencies are wholly in page 1;
+no tie is split between committed windows. A truncated or changing tie halts
+without advancing the checkpoint. Items are deduplicated by `(attr, str)`;
+a wholesale earlier band violates the upper bound and halts. Completion also
+requires the stored distinct count to equal the original server `total` for the
+floor; a mismatch reports the gap and stays incomplete.
+
+Existing offset checkpoints, including page 12 with 12,000 lemma rows, replay
+once from the top automatically. No database replacement or row deletion is
+needed. Existing items retain their original provenance; new request receipts
+append after the old checkpoint. `frequency_cursor` stores the next upper
+frequency and original total; `request_bounds` records the actual request
+floor, ceiling and size. Provenance/checkpoint page numbers are receipt IDs;
+remote `wlpage` is always 1. Rows, receipts and cursor commit together.
+The three-second default delay, bounded retry/backoff and immediate 403/429
+stop policy apply to tie requests too. A reconciliation failure needs operator
+investigation; rerunning does not turn an incomplete snapshot into complete.
+
+A six-request bounded probe verified the frequency-window parameters on
+2026-10-08 (#10087):
+
+```text
+wlminfreq=9369 wlmaxfreq=9369 wlmaxitems=1000: rows=2 total=2 lastpage=1 frequencies=[9369]
+wlminfreq=5 wlmaxfreq=9368 wlmaxitems=1000: rows=1000 total=1135917 lastpage=0 min_returned=8316 max_returned=9366
+wlminfreq=5 wlmaxfreq=5 wlmaxitems=2: rows=2 total=147011 lastpage=0
+wlminfreq=5 wlmaxfreq=5 wlmaxitems=147011: rows=147011 distinct=147011 total=147011 lastpage=1
+```
+
+The first two requests tested `wlsort=w`: the first lacked `Items`, and the
+second returned `No format specified for custom frequency`. The ingest uses
+`wlsort=frq`.
+The successful exact-floor probe recovered a tie larger than the normal page
+size in one response. API/manatee versions were `open-5.71.15` and
+`2.36.7-open-2.225.8`. See #9969 for the original snapshot/read design.
+
 ## Reviewer bench health
 
 `.venv/bin/python -m scripts.review.bench_health [--profile code|infra] [--risk low|medium|high|critical]`
@@ -29,6 +74,64 @@ display `[EXPECTED single seat]`; zero seats always fails. The summaries are
 This diagnostic exception changes neither eligibility nor routing policy.
 
 For the Composer and pool exclusion evidence (AC-01), see [#9423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9423).
+
+## Routing facts (capacity and admission)
+
+`scripts.fleet.credit_lane.routing_facts(lane, record, *, model, snapshot_metadata=None, policy=None, now=None, usage_dir=None)`
+is the one reading of a routing-budget lane record (#9740). `capacity_pick`,
+`idle_settle`, the curriculum wave gate and the `delegate.py` budget guard use its
+facts before adding their own restrictions (role, risk, egress, transport, wave
+config). The reviewer scheduler uses the same plan-window reader.
+Pass `model=None` for lane inventory. It returns the tightest plan window and its
+source, snapshot/probe freshness, `health` (`healthy`, `unhealthy` or `unknown`,
+with `health_basis`), the pace deficit, credit evidence and a `capacity` class:
+`verified`, `unknown`, `unknown_stale` or `avoid`. Missing data stays `unknown`, never
+fresh or healthy.
+
+- **`UNKNOWN — stale/advisory`:** a pace deficit or weekly-pace hot label read
+  from a stale snapshot or probe is `unknown_stale`. It is history, not a current
+  refusal. `capacity_pick` ranks these rows after every row with verified capacity
+  and before AVOID rows. They never appear in `cooler_lanes` and never satisfy
+  `--strict`. Near cap, runtime-blocked hot, unhealthy, `NEED_LOGIN` and ineligible
+  lanes stay AVOID.
+- **Lane health scan:** `scripts.api.lane_health.scan_lane_health` returns a typed
+  `LaneHealthScan`. Each lane's `health_for(lane)` record carries a `basis`:
+  `recent_tasks` (computed from tasks in the window), `scan_observed_idle` (scan ran,
+  no tasks, so healthy) or `scan_unavailable` (scan failed; `healthy` and failure
+  counts are null).
+- **Unobservable load:** if the task directory cannot be read, the routing budget
+  publishes `in_flight: null` (`—` in the picker). It never publishes `0`. Unknown
+  load is not idle: `idle_settle` needs `in_flight == 0` and explicit quota
+  permission (`quota_ok: true` or a `verified` class) before it counts a lane as
+  available.
+- **Wave receipts:** the coordinator ledger `healthLane` records `healthy` as
+  `true`/`false` when known, or `null` with a required `health_basis` when unknown,
+  such as a scan error or a missing lane record. It also records the owner's
+  `freshness` (`fresh`, `stale` or `unknown`). The wave is `fresh` only when
+  `diagnostics.stale` is explicitly `false` and no relevant lane probe is stale;
+  missing staleness metadata is unknown, never fresh.
+- **Budget guard (`delegate.py --check-budget`):** on a fresh snapshot it
+  substitutes or refuses a near-cap lane (the `near_cap` status, or a credit lane's
+  tightest plan window at or below the threshold) unless the owner grants credit
+  relief for the model, whether or not the USD cost ledger has records. It
+  substitutes or refuses whenever the owner (`credit_lane.routing_facts`) keeps
+  the lane `hot`; it never clears a label itself. The owner clears a hot label
+  only when its source is weekly pace and no runtime headroom block set it:
+  either its pace is hidden below the visibility floor, or its pace reading on a
+  fresh observation finds no deficit (#9040). The status then comes from
+  remaining allowance, and the picker, reviewer resolver, wave gate and routing
+  recommendation read the same cleared status. A hot label from Cursor Auto, the
+  ledger or no source stays hot. A stale snapshot stays advisory. Lane health warnings print `demoted` for an
+  unhealthy lane and `health unknown (<basis>)` when health is unknown.
+- **Reviewer resolver and wave gate:** a near-cap candidate keeps credit relief
+  only when `credit_lane.published_credit_relief` re-decides it with
+  `lane_credit_state` over the complete published lane record: snapshot
+  staleness, probe freshness, age and stale flag, the raw balance and its fetch
+  time, and runtime rate-limit evidence. A published `credit_balance_present`
+  leaf alone is not enough.
+- **Routing recommendation:** a past-cap lane is a credit candidate only when
+  the owner's `routing_facts` for the record grant credit relief as verified
+  capacity; the published `credit` leaf is not read.
 
 ## Git hooks
 
@@ -762,8 +865,8 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 
 # 2) Full-document bulk triage — all three buckets, not just post-boundary.
 .venv/bin/python -m scripts.audit.private_teacher_lesson_intake "$SOURCE" \
-  --bulk-triage --triage-out /tmp/atlas-private-teacher-lesson-bulk-triage.json \
-  --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
+  --bulk-triage --triage-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.json" \
+  --triage-report-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.md"
 
 # 3) Set-diff the triage lemmas against every lemma already approved in
 #    registry/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
@@ -781,16 +884,28 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 # 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
   --curated-inventory registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
-  --vesum-db /tmp/vesum-shadow.db --apply --write --report
+  --vesum-db "$TMPDIR/vesum-shadow.db" --apply --write --report
 
 # 6) Fold every approved lemma that already has an Atlas route (not just the newly
 #    promoted heads) into curated-practice membership, recognition-only:
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
   --emit-membership site/src/data/lexicon-teacher-curated-membership.json \
-  --decisions-in /tmp/atlas-private-teacher-lesson-decisions.yaml \
+  --decisions-in "$TMPDIR/atlas-private-teacher-lesson-decisions.yaml" \
   --manifest site/src/data/lexicon-manifest.json \
   --membership-in site/src/data/lexicon-teacher-curated-membership.json --report
 ```
+
+Keep producer, review, promotion and membership consumption within one caller-owned
+`TMPDIR`/`task_scratch` lifecycle; separate scratch invocations do not share implicit
+artifacts. `TMPDIR` must be an existing absolute directory. Intake CLI omitted
+output flags write nothing; API omitted outputs and promotion CLI defaults use
+the current `TMPDIR`. Explicit paths override defaults, including `--plan-out`.
+Review intake candidates into approved ledgers before promotion. The intake
+review and promoter auto-merge JSON share a basename but have different schemas;
+retain an intake copy with its explicit output override if needed. Promotion
+consumes reviewed ledgers before replacing the candidate artifact. Candidate,
+decision and plan files remain for consumers after return or failed gates;
+the caller owns cleanup.
 
 Step 6 matters even when step 5 promotes zero new heads: most approved lemmas already
 have an Atlas route from an earlier batch or an unrelated source, and `--emit-membership`
@@ -976,14 +1091,20 @@ per-lane models (`wave_models: null`), so dispatch admission enforces the allowl
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 **Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
-`danger` worker when any check fails. Read-only dispatches are exempt. The defaults live in
-`scripts/config.py`, and an environment variable with the same name overrides each one:
+`danger` worker when any check fails. Read-only dispatches are exempt. Generic, conservative
+defaults live in `scripts/config.py`; the real values are deployment-configured. Each host sets
+them through the environment variable of the same name, or in a deployment env file
+(`NAME=value` lines, `$XDG_CONFIG_HOME/learn-ukrainian/dispatch-admission.env` by default, or the
+file named by `DISPATCH_ADMISSION_ENV_FILE`; empty reads none) that a session started before the
+host set its overrides still picks up. A process environment variable wins over the file (see the
+private operations docs):
 
-| Check | Refused when | Default |
-| --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
-| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
-| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
+| Check | Refused when |
+| --- | --- |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap |
+| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor |
+| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit |
+| `DISPATCH_WORKER_MEM_RESERVE_GIB` | the shared `lu.slice` pool's non-cache use plus this per-worker reserve would exceed its `memory.high` (#9975) |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
 and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
@@ -994,14 +1115,17 @@ dead worker never holds a slot. The final count, the check, and publication of t
 `spawning` record happen under one host-wide lock (`batch_state/tasks/dispatch-admission.lock`),
 so concurrent dispatches cannot all take the last slot. `--dry-run` runs the same check but
 only reports dead records. Without `/proc` (macOS) memory and CPU are reported as `unknown`,
-and only the worker cap applies. `python -m scripts.fleet.capacity_pick` prints the same
+and only the worker cap applies. The pool check reads `memory.current`, `memory.high` and
+`memory.stat` from the `lu.slice` cgroup (or `$LU_SLICE_CGROUP`) and subtracts
+`active_file`/`inactive_file`, so reclaimable page cache does not count. When those files are
+missing (CI, macOS) the check is skipped, logged, and recorded as `admission.pool_check_skipped`. `python -m scripts.fleet.capacity_pick` prints the same
 decision as its last line (JSON key `admission`). Write task records keep the `admission`
 snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
 process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
 thresholds.
 
 **Worker isolation (#8645 part C):** the detached worker runs in the user slice
-`lu-dispatch.slice` (`MemoryMax=20G`, `MemoryHigh=18G`, `MemorySwapMax=1G`) via
+`lu-dispatch.slice` (memory, high-water and swap limits set by the deployment) via
 `systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
@@ -1948,7 +2072,9 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
-# AGY — Ukrainian content review (Gemini reviews Ukrainian only, never code)
+# AGY bridge — Ukrainian content review; bridge code reviews are refused.
+# Native AGY admits low/medium risk code review through delegate.py;
+# high/critical, infra and security reviews exclude Gemini.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --review \
@@ -2104,3 +2230,23 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 ### Dispatch settle (Luna handoff)
 
 `.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
+
+## Private open-model-data review build (RB-1)
+
+`.venv/bin/python -m scripts.projects.open_model_data.review_build {build|verify} --config "$TMPDIR/request.json" --out "$TMPDIR/rb1"`
+
+Builds or re-verifies cited `review_only` records from host-local candidates and reviewed
+component specifications. The `omd-review-request.v1` JSON descriptor supplies candidate
+JSONL, catalog/register YAML paths, database store paths, per-component independent unit
+queries and frozen counts, declarative bindings, and citation compatibility/role mappings.
+See [the RB-1 design](projects/open-model-data/REVIEW_BUILD.md) and the `build.execute`,
+`bindings` and `roles` module contracts for the extension interface. Real extraction and
+attribution adapters ship with their components; the framework's synthetic adapter refuses
+unmarked sources. `--help` includes required flags, outputs and exit codes.
+
+All records, candidate accounting, attribution notices, metrics, manifest, README and error
+tracebacks stay under `--out` (directories `0700`, files `0600`); repository paths, symlinks,
+unsupported filesystems, unsafe ownership/modes and POSIX ACLs are refused. Console failures
+contain only reason codes, record ids, component ids and hashed row keys. `verify` re-runs
+all gates against pinned inputs and compares every artifact byte; it does not certify D2/D3,
+training readiness or RB-1 delivery. No network calls or database writes are performed.

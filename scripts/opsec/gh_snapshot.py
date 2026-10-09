@@ -211,6 +211,8 @@ _READ_SUFFIX = (
     r"|pulls(?:/\d+(?:/(?:reviews|commits|files))?)?"
     r"|branches(?:/" + _SEGMENT + r"(?:/protection)?)?"
     r"|commits/" + _SEGMENT + r"(?:/(?:check-runs|status|statuses))?"
+    r"|code-scanning/alerts(?:/\d+(?:/instances)?)?"
+    r"|check-runs/\d+/annotations"
     r"|actions/(?:runs(?:/\d+(?:/(?:jobs|artifacts))?)?|caches|workflows(?:/" + _SEGMENT + r"(?:/runs)?)?)"
     r"|releases(?:/(?:latest|\d+|assets/\d+|tags/" + _SEGMENT + r"))?"
     r"|compare/" + _SEGMENT + r"|deployments(?:/\d+/statuses)?|labels|milestones(?:/\d+)?)"
@@ -502,9 +504,19 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
                         or any(ord(c) < 32 or ord(c) == 127 for c in value)
                     ):
                         raise PublishBlocked("OPSEC: API read header refused; use an approved header name and value.")
+            read_path = positional[0].removeprefix("https://api.github.com/").lstrip("/")
             if all(value == "GET" for flag, value in found if flag in {"--method", "-X"}) and REST_READ_PATH.fullmatch(
-                positional[0].removeprefix("https://api.github.com/").lstrip("/")
+                read_path
             ):
+                diagnostic = re.match(r"repos/([^/]+)/([^/]+)/(?:code-scanning/|check-runs/)", read_path)
+                if diagnostic:
+                    # These new reads are scoped to the checkout's origin; GH_REPO
+                    # must not redirect the repository whose diagnostics are admitted.
+                    origin_env = {key: value for key, value in environment.items() if key != "GH_REPO"}
+                    origin = repository(cwd, origin_env, reader=reader)
+                    target = normalize_repository(f"github.com/{diagnostic[1]}/{diagnostic[2]}")
+                    if origin == "unknown" or target != origin:
+                        raise PublishBlocked("OPSEC: diagnostic read repository refused.")
                 return FrozenCommand(list(argv), "unknown", False)
             raise PublishBlocked("OPSEC: API read refused; use python -m scripts.publish read <name>.")
         found, positional = parse(argv[1:], PRIVATE_API)

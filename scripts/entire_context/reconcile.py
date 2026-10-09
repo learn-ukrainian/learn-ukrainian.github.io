@@ -13,6 +13,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import open_readonly  # type: ignore[no-redef]
+
 from .model import LinkKind, SchemaError, isoformat_z, parse_timestamp, utc_now
 from .paths import projection_path
 from .resolvers import ResolutionError, resolve_acp_conversation
@@ -100,7 +107,7 @@ def _terminal_complete_ids(
     if not db_path.is_file():
         raise ResolutionError("source_missing")
     capped = max(0, min(int(limit), MAX_RECONCILE_ROWS))
-    with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:
+    with open_readonly(db_path) as connection:
         where_latest_complete = (
             " FROM acp_conversation_events AS event"
             " WHERE event.sequence = ("

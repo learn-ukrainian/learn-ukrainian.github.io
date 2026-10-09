@@ -4,6 +4,18 @@
 Read-only reconciliation is the default.  Remote changes require the ``mutate``
 subcommand, an exact action, ``--authorize``, and an actor recorded in the
 append-only mutation receipt.
+
+Membership-reliant writes require a bounded live, repository-qualified ancestry
+read to the claimed registered root (#9794). GitHub has no parentage compare-and-
+swap: a re-parent after the final read and before the write remains a read/write
+race residual owned by claude-infra.
+
+An explicitly parentless target may instead use complete, exact body membership
+from the same invocation's live audit. These reads are fresh observations, not
+an atomic snapshot: the audit reads checklists across requests and timestamps
+the assembled report afterward. Observed contradictions are refused; unobserved
+checklist edits during traversal or between supporting reads and the write remain
+a concurrency residual owned by claude-infra, alongside the native-parent race.
 """
 
 from __future__ import annotations
@@ -144,20 +156,9 @@ def project_closeout_checks(rollup: list[Any]) -> list[Any]:
 class GhGitHubAdapter:
     """Authoritative GitHub reads and the three explicitly allowed mutations."""
 
-    def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
+    def __init__(self, repo_root: Path) -> None:
         self.repo_root = repo_root.resolve()
-        if runner is None:
-            self._run = _default_runner(self.repo_root)
-        else:
-
-            @publication_boundary(task_lifecycle.LifecycleError)
-            def checked(command, stdin=None):
-                def send(args, **kwargs):
-                    return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
-
-                return request_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
-
-            self._run = checked
+        self._run = _default_runner(self.repo_root)
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
         raw = self._run(args, stdin)
@@ -168,7 +169,21 @@ class GhGitHubAdapter:
                 f"GitHub command returned invalid JSON: {args.verb if isinstance(args, Request) else ' '.join(args[:4])}"
             ) from exc
 
-    def registered_stream_epics(self) -> list[int]:
+    def registered_stream_epics(self, repository: str | None = None) -> list[int]:
+        """Use the checkout's registry only for its resolved repository.
+
+        Init and every mutation observation pass the task identity here, so
+        both native ancestry and body fallback consume a bound registry.
+        Read-only registry inspection may omit the identity.
+        """
+        if repository is not None:
+            document = self._json(["gh", "repo", "view", "--json", "nameWithOwner"])
+            failure = task_lifecycle.repository_evidence_refusal(
+                repository, document.get("nameWithOwner") if isinstance(document, dict) else None,
+                source="issue-stream registry",
+            )
+            if failure is not None:
+                raise task_lifecycle.LifecycleError(failure)
         try:
             from scripts.orchestration import issue_stream_audit
 
@@ -199,18 +214,47 @@ class GhGitHubAdapter:
 
         try:
             return issue_stream_audit.run_audit(self.repo_root)
-        except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.TimeoutExpired) as exc:
             raise task_lifecycle.LifecycleError(
                 f"cannot run the issue-stream membership audit: {exc}"
             ) from exc
 
-    @staticmethod
-    def _owner_name(repository: str) -> tuple[str, str]:
-        try:
-            owner, name = repository.split("/", 1)
-        except ValueError as exc:
-            raise task_lifecycle.LifecycleError("repository must be owner/name") from exc
-        return owner, name
+    def read_issue_parent(self, repository: str, issue_number: int) -> dict[str, Any] | None:
+        """Read a typed, repository-qualified parent; refuse partial/unread data."""
+        document = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
+        if not isinstance(document, dict) or document.get("errors"):
+            raise task_lifecycle.LifecycleError("GitHub parent read failed")
+        data = document.get("data")
+        repository_doc = data.get("repository") if isinstance(data, dict) else None
+        if not isinstance(repository_doc, dict):
+            raise task_lifecycle.LifecycleError("GitHub parent repository is unread")
+        observed_repository = repository_doc.get("nameWithOwner")
+        if (
+            not task_lifecycle.repository_identity_valid(observed_repository)
+            or observed_repository.casefold() != repository.casefold()
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent read repository does not match")
+        issue = repository_doc.get("issue")
+        if (
+            not isinstance(issue, dict)
+            or not isinstance(issue.get("number"), int)
+            or isinstance(issue["number"], bool)
+            or issue["number"] != issue_number
+            or "parent" not in issue
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent issue is unread or malformed")
+        parent = issue["parent"]
+        if parent is None:
+            return None
+        parent_repository = parent.get("repository") if isinstance(parent, dict) else None
+        slug = parent_repository.get("nameWithOwner") if isinstance(parent_repository, dict) else None
+        number = parent.get("number") if isinstance(parent, dict) else None
+        if (
+            not task_lifecycle.repository_identity_valid(slug)
+            or not isinstance(number, int) or isinstance(number, bool) or number < 1
+        ):
+            raise task_lifecycle.LifecycleError("GitHub parent identity is malformed")
+        return {"number": number, "repository": slug}
 
     def read_issue(self, repository: str, issue_number: int) -> dict[str, Any]:
         issue = self._json(
@@ -225,10 +269,7 @@ class GhGitHubAdapter:
                 "number,state,body,url,closedAt",
             ]
         )
-        parent_doc = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
-        repository_doc = ((parent_doc or {}).get("data") or {}).get("repository") or {}
-        parent_issue = repository_doc.get("issue") or {}
-        parent = parent_issue.get("parent") or {}
+        parent = self.read_issue_parent(repository, issue_number) or {}
         return {
             "number": issue.get("number"),
             "state": str(issue.get("state") or "").upper(),
@@ -236,6 +277,7 @@ class GhGitHubAdapter:
             "url": issue.get("url"),
             "closed_at": issue.get("closedAt"),
             "parent_epic": parent.get("number"),
+            "parent_repository": parent.get("repository"),
         }
 
     def _read_pr(self, repository: str, pr_number: int) -> dict[str, Any]:
@@ -362,14 +404,18 @@ class GhGitHubAdapter:
             issue["body"],
             ledger["remaining_scope"],
         )
-        # Native GitHub parentage is conclusive on its own — present (even a
-        # mismatched) native parent must never fall through to body evidence,
-        # so it never needs a live audit. Only a missing native parent (on
-        # the lifecycle issue itself, or on the transferred-scope follow-up
-        # read above) leaves body evidence as the sole path, and that is the
-        # only case that justifies fetching the live membership snapshot.
-        needs_membership_audit = issue.get("parent_epic") is None or (
-            follow_up is not None and follow_up.get("parent_epic") is None
+        # A native parent that is a registered stream epic is conclusive on
+        # its own (even when mismatched) and never needs a live audit. A
+        # missing native parent (body path) or an unregistered native parent
+        # (native-chain path, #9783) — on the lifecycle issue itself or on the
+        # transferred-scope follow-up read above — can only be decided by the
+        # live membership snapshot, so only those cases fetch it.
+        registered_epics = self.registered_stream_epics(repository)
+        needs_membership_audit = task_lifecycle.membership_needs_audit(
+            issue.get("parent_epic"), registered_epics
+        ) or (
+            follow_up is not None
+            and task_lifecycle.membership_needs_audit(follow_up.get("parent_epic"), registered_epics)
         )
         membership_audit = self.membership_audit_report() if needs_membership_audit else None
         pr_number = ledger["pr"]["number"]
@@ -399,7 +445,7 @@ class GhGitHubAdapter:
                 deployments = self._deployments(repository, pr.get("merge_sha") or pr.get("head_sha"))
         return {
             "repository": repository,
-            "registered_stream_epics": self.registered_stream_epics(),
+            "registered_stream_epics": registered_epics,
             "membership_audit": membership_audit,
             "issue": issue,
             "pr": pr,
@@ -491,21 +537,7 @@ class StaticObservationAdapter:
         return deepcopy(self.observation)
 
 
-def _replace_checkbox(body: str, ac_id: str) -> str:
-    lines = body.splitlines()
-    needle = f"**{ac_id}**"
-    for index, line in enumerate(lines):
-        if needle in line and line.lstrip().startswith("- ["):
-            prefix = line[: len(line) - len(line.lstrip())]
-            content = line.lstrip()
-            lines[index] = prefix + "- [x]" + content[5:]
-    suffix = "\n" if body.endswith("\n") else ""
-    return "\n".join(lines) + suffix
-
-
-def evidenced_issue_body(
-    ledger: Mapping[str, Any], observation: Mapping[str, Any]
-) -> tuple[str, list[str]]:
+def evidenced_issue_body(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> tuple[str, list[str]]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
     valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
@@ -514,7 +546,7 @@ def evidenced_issue_body(
         if not criterion["applicable"]:
             continue
         if set(criterion["required_evidence"]).issubset(valid.get(criterion["id"], set())):
-            body = _replace_checkbox(body, criterion["id"])
+            body = task_lifecycle.check_ac_checkbox(body, criterion["id"])
             checked_ids.append(criterion["id"])
     return body, checked_ids
 
@@ -670,6 +702,32 @@ def record_unauthorized_mutation(
         }
 
 
+def _assert_live_memberships(
+    adapter: GhGitHubAdapter,
+    ledger: Mapping[str, Any],
+    *,
+    registered_epics: list[int] | None,
+    membership_report: Mapping[str, Any] | None,
+) -> None:
+    """Revalidate all targets using this invocation's registry and live audit."""
+    identity = ledger["identity"]
+    targets = [(identity["github_issue_number"], identity["stream_epic"])]
+    remaining = ledger["remaining_scope"]
+    if remaining["status"] == "transferred":
+        targets.append((remaining["follow_up_issue"], remaining["follow_up_stream_epic"]))
+    for issue_number, epic in targets:
+        membership = task_lifecycle.resolve_live_ancestry(
+            repository=identity["repository"], issue_number=issue_number,
+            stream_epic=epic, registered_epics=registered_epics,
+            read_parent=adapter.read_issue_parent,
+            membership_report=membership_report,
+        )
+        if not membership["valid"]:
+            raise task_lifecycle.LifecycleError(
+                f"live stream epic membership refused for #{issue_number}: {membership['reason']}"
+            )
+
+
 def perform_mutation(
     state_file: Path,
     adapter: GhGitHubAdapter,
@@ -683,9 +741,26 @@ def perform_mutation(
     with task_lifecycle.lifecycle_lock(state_file):
         ledger = task_lifecycle.load_lifecycle(state_file)
         before = adapter.observe(ledger, now=now, branch=branch, worktree=worktree)
+        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
+        try:
+            if before["github"].get("error"):
+                raise task_lifecycle.LifecycleError(f"GitHub observation failed: {before['github']['error']}")
+            _assert_live_memberships(
+                adapter, ledger,
+                registered_epics=before["github"].get("registered_stream_epics"),
+                membership_report=before["github"].get("membership_audit"),
+            )
+        except task_lifecycle.LifecycleError as exc:
+            _, failed = _record_failed_mutation(
+                state_file, ledger, operation_id=operation_id, action=action,
+                authorized_by=authorized_by, requested_at=now,
+                detail=f"mutation gate rejected the action: {exc}",
+            )
+            raise task_lifecycle.LifecycleError(
+                f"mutation blocked with durable receipt {failed['id']}: {exc}"
+            ) from exc
         ledger, before_receipt, _ = task_lifecycle.reconcile(ledger, before, now=now)
         task_lifecycle.write_lifecycle(state_file, ledger)
-        operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
 
         if prior_status == "complete" and _desired_remote_state(
@@ -844,20 +919,49 @@ def _write_and_print(path: Path, ledger: Mapping[str, Any], extra: Mapping[str, 
 
 
 def cmd_init(args: argparse.Namespace) -> int:
-    identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
+    fresh_fields = ("repository", "stream_epic", "issue", "semantic_title", "task_family", "role", "terminal_goal")
+    try:
+        if args.identity_file:
+            if any(getattr(args, field) is not None for field in fresh_fields):
+                raise task_lifecycle.LifecycleError("fresh identity options require --fresh-task-id")
+            identity = task_identity.validate_identity(_json_file(Path(args.identity_file)))
+        else:
+            missing = ["--" + field.replace("_", "-") for field in fresh_fields if getattr(args, field) is None]
+            if missing:
+                raise task_lifecycle.LifecycleError("--fresh-task-id requires " + ", ".join(missing))
+            identity = task_identity.build_identity(
+                repository=args.repository,
+                stream_epic=args.stream_epic,
+                stream_epic_url=None,
+                github_issue_number=args.issue,
+                github_issue_url=None,
+                semantic_title=args.semantic_title,
+                task_family=args.task_family,
+                role=args.role,
+                fresh_task_id=args.fresh_task_id,
+                terminal_goal=args.terminal_goal,
+                lifecycle_state="active",
+            )
+    except ValueError as exc:
+        raise task_lifecycle.LifecycleError(str(exc)) from exc
     adapter = GhGitHubAdapter(Path(args.repo_root))
     issue = adapter.read_issue(identity["repository"], identity["github_issue_number"])
-    registered_epics = adapter.registered_stream_epics()
-    # Native precedence needs no audit at all: any native parent — matching or
-    # not — decides the outcome alone in resolve_membership. Only fetch the
-    # live audit snapshot when native parentage is absent.
+    registered_epics = adapter.registered_stream_epics(identity["repository"])
+    # A native parent that is a registered stream epic decides alone in
+    # resolve_membership. Only fetch the live audit snapshot when native
+    # parentage is absent (body path) or the native parent is an unregistered
+    # sub-epic (native-chain path, #9783).
     membership_report = (
-        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
+        adapter.membership_audit_report()
+        if task_lifecycle.membership_needs_audit(issue["parent_epic"], registered_epics)
+        else None
     )
     membership = task_lifecycle.resolve_membership(
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue["parent_epic"],
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=membership_report,
     )
@@ -885,7 +989,13 @@ def cmd_init(args: argparse.Namespace) -> int:
         existing = task_lifecycle.load_lifecycle(path)
         if existing["lifecycle_id"] != ledger["lifecycle_id"]:
             raise task_lifecycle.LifecycleError("existing lifecycle ledger belongs to another identity")
+        if identity.get("origin") == "fresh" and existing["identity"] != identity:
+            raise task_lifecycle.LifecycleError("existing lifecycle ledger does not match the exact fresh task identity")
         ledger = existing
+    _assert_live_memberships(
+        adapter, ledger, registered_epics=registered_epics,
+        membership_report=membership_report,
+    )
     return _write_and_print(path, ledger)
 
 
@@ -998,73 +1108,85 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297",
+        epilog="Examples:\n  .venv/bin/python -m scripts.orchestration.task_closeout init --help\n  .venv/bin/python -m scripts.orchestration.task_closeout carrier --state-file ledger.json\n  .venv/bin/python -m scripts.orchestration.task_closeout reconcile --state-file ledger.json\nOutputs: Local lifecycle ledgers and JSON receipts; only mutate can change GitHub.\nExit codes: 0: command succeeded; >=1: refused or failed (locate: 1 if absent).\nRelated: task-identity.md, task-lifecycle-closeout.md; #9297, #10143",
     )
-    parser.add_argument("--repo-root", type=Path, default=repo_root_from_file())
+    parser.add_argument("--repo-root", type=Path, default=repo_root_from_file(), help='Repository worktree root; defaults to this checkout.')
     sub = parser.add_subparsers(dest="command", required=True)
 
-    init = sub.add_parser("init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.")
-    init.add_argument("--identity-file", required=True)
-    init.add_argument("--ac-policy", required=True)
-    init.add_argument("--author-family", required=True)
-    init.add_argument("--required-check", action="append", required=True)
-    init.add_argument("--pr", type=int)
-    init.add_argument("--state-file")
-    init.add_argument("--now")
-    init.add_argument("--reuse", action="store_true")
+    init = sub.add_parser(
+        "init", help="Snapshot authoritative issue ACs into a new lifecycle ledger.",
+        description="Initialize from a validated envelope or an exact fresh native task ID.\nFresh threads require all identity options and never resume a rollover.",
+    )
+    source = init.add_mutually_exclusive_group(required=True)
+    source.add_argument("--identity-file", help="Existing task-identity.v1 JSON envelope, e.g. identity.json.")
+    source.add_argument("--fresh-task-id", help="Exact current native thread ID; required fresh identity options follow.")
+    init.add_argument("--repository", help="Fresh identity repository, e.g. org/repo; required with --fresh-task-id.")
+    init.add_argument("--stream-epic", type=int, help="Fresh identity registered stream epic number; required with --fresh-task-id.")
+    init.add_argument("--issue", type=int, help="Fresh identity GitHub issue number; required with --fresh-task-id.")
+    init.add_argument("--semantic-title", help="Fresh identity task description; required with --fresh-task-id.")
+    init.add_argument("--task-family", help="Fresh identity lowercase task family slug; required with --fresh-task-id.")
+    init.add_argument("--role", help="Fresh identity assigned role, e.g. driver; required with --fresh-task-id.")
+    init.add_argument("--terminal-goal", choices=sorted(task_identity.TERMINAL_GOALS), help="Fresh identity completion goal; required with --fresh-task-id.")
+    init.add_argument("--ac-policy", required=True, help='JSON mapping of stable AC IDs to due states and evidence types, e.g. ac-policy.json.')
+    init.add_argument("--author-family", required=True, help='Implementation author family, e.g. codex.')
+    init.add_argument("--required-check", action="append", required=True, help='Required CI check name, e.g. CI Gate; repeat for each check.')
+    init.add_argument("--pr", type=int, help='Exact GitHub PR number; init defaults to unbound.')
+    init.add_argument("--state-file", help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    init.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
+    init.add_argument("--reuse", action="store_true", help='Reuse a ledger without resetting evidence; default refuses an existing ledger.')
     init.set_defaults(func=cmd_init)
 
     locate = sub.add_parser("locate", help="Resolve the shared ledger path from task-identity.v1.")
-    locate.add_argument("--identity-file", required=True)
+    locate.add_argument("--identity-file", required=True, help='Validated task-identity.v1 JSON envelope, e.g. identity.json.')
     locate.set_defaults(func=cmd_locate, state_file=None)
 
     bind = sub.add_parser("bind-pr", help="Bind the exact PR once; mismatched rebinding fails closed.")
-    bind.add_argument("--state-file", required=True)
-    bind.add_argument("--pr", type=int, required=True)
-    bind.add_argument("--now")
+    bind.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    bind.add_argument("--pr", type=int, required=True, help='Exact GitHub PR number; init defaults to unbound.')
+    bind.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     bind.set_defaults(func=cmd_bind_pr)
 
     evidence = sub.add_parser("add-evidence", help="Append typed current-task AC evidence.")
-    evidence.add_argument("--state-file", required=True)
-    evidence.add_argument("--ac-id", required=True)
-    evidence.add_argument("--type", choices=sorted(task_lifecycle.EVIDENCE_TYPES), required=True)
-    evidence.add_argument("--summary", required=True)
-    evidence.add_argument("--url")
-    evidence.add_argument("--commit")
+    evidence.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    evidence.add_argument("--ac-id", required=True, help='Exact stable acceptance criterion ID, e.g. AC-01.')
+    evidence.add_argument("--type", choices=sorted(task_lifecycle.EVIDENCE_TYPES), required=True, help='Typed evidence category, e.g. test.')
+    evidence.add_argument("--summary", required=True, help='Evidence or remaining-scope description; remaining-scope defaults to empty.')
+    evidence.add_argument("--url", help='Public supporting evidence URL; default omitted.')
+    evidence.add_argument("--commit", help='Exact evidence commit SHA; default omitted.')
     evidence.add_argument("--details", help="JSON object; review evidence records model families and verdict.")
-    evidence.add_argument("--now")
+    evidence.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     evidence.set_defaults(func=cmd_evidence)
 
     remaining = sub.add_parser("remaining-scope", help="Record none/open/transferred remaining scope.")
-    remaining.add_argument("--state-file", required=True)
-    remaining.add_argument("--status", choices=["none", "open", "transferred"], required=True)
-    remaining.add_argument("--summary", default="")
-    remaining.add_argument("--follow-up-issue", type=int)
-    remaining.add_argument("--follow-up-stream-epic", type=int)
-    remaining.add_argument("--evidence-id", action="append")
-    remaining.add_argument("--now")
+    remaining.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    remaining.add_argument("--status", choices=["none", "open", "transferred"], required=True, help='Remaining scope disposition: none, open, or transferred.')
+    remaining.add_argument("--summary", default="", help='Evidence or remaining-scope description; remaining-scope defaults to empty.')
+    remaining.add_argument("--follow-up-issue", type=int, help='Transferred-scope issue number; default omitted.')
+    remaining.add_argument("--follow-up-stream-epic", type=int, help='Transferred-scope registered epic number; default omitted.')
+    remaining.add_argument("--evidence-id", action="append", help='Supporting ledger evidence ID; repeat as needed; default none.')
+    remaining.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     remaining.set_defaults(func=cmd_remaining_scope)
 
     reconcile = sub.add_parser("reconcile", help="Read GitHub/Git authority and append an idempotent receipt.")
-    reconcile.add_argument("--state-file", required=True)
-    reconcile.add_argument("--branch")
-    reconcile.add_argument("--worktree")
+    reconcile.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    reconcile.add_argument("--branch", help='Exact implementation branch name; default inferred by the adapter.')
+    reconcile.add_argument("--worktree", help='Implementation worktree path; default inferred by the adapter.')
     reconcile.add_argument("--observation-file", help="Hermetic observation fixture; no live GitHub reads.")
-    reconcile.add_argument("--now")
+    reconcile.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     reconcile.set_defaults(func=cmd_reconcile)
 
     mutate = sub.add_parser("mutate", help="Explicitly authorize one narrow GitHub closeout mutation.")
-    mutate.add_argument("action", choices=["sync-acs", "arm-auto-merge", "close-issue"])
-    mutate.add_argument("--state-file", required=True)
-    mutate.add_argument("--authorize", action="store_true")
-    mutate.add_argument("--actor", required=True)
-    mutate.add_argument("--branch")
-    mutate.add_argument("--worktree")
-    mutate.add_argument("--now")
+    mutate.add_argument("action", choices=["sync-acs", "arm-auto-merge", "close-issue"], help='One remote closeout action; current-head gates still apply.')
+    mutate.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
+    mutate.add_argument("--authorize", action="store_true", help='Authorize the selected remote action; default records refusal without mutation.')
+    mutate.add_argument("--actor", required=True, help='Attribution for the narrow authorization, e.g. codex/task-id.')
+    mutate.add_argument("--branch", help='Exact implementation branch name; default inferred by the adapter.')
+    mutate.add_argument("--worktree", help='Implementation worktree path; default inferred by the adapter.')
+    mutate.add_argument("--now", help='UTC observation timestamp in ISO 8601; defaults to current UTC.')
     mutate.set_defaults(func=cmd_mutate)
 
     carrier = sub.add_parser("carrier", help="Render the exact delegation/ledger/rollover carrier.")
-    carrier.add_argument("--state-file", required=True)
+    carrier.add_argument("--state-file", required=True, help='Lifecycle JSON ledger path; init defaults to the canonical shared issue path.')
     carrier.set_defaults(func=cmd_carrier)
     return parser
 

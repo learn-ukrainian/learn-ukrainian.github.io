@@ -209,10 +209,13 @@ def _load_empty_slot_areas(assignments_path: Path | None = None) -> tuple[str, .
 
 
 def resolve_recipient_alias(agent: str, *, assignments_path: Path | None = None) -> str:
-    """Resolve a phantom ``{provider}-{empty-slots-area}`` identity to its provider.
+    """Resolve dedicated slot aliases and legacy empty-roster provider aliases.
+
+    ``codex-curriculum-upgrade`` addresses the registered ``codex-core`` slot;
+    both names keep mail separate from the bare provider inbox.
 
     Launchers used to mint SESSION_HANDOFF_AGENT names like
-    ``grok-open-model-data`` for areas whose area_assignments.yaml slots
+    ``grok-monitor`` for areas whose area_assignments.yaml slots
     roster is empty; those names were never valid inbox recipients, so
     argparse rejected them and stranded the live session (#7597). Treat such
     an already-minted name as an alias of the bare provider so the session
@@ -223,7 +226,10 @@ def resolve_recipient_alias(agent: str, *, assignments_path: Path | None = None)
     """
     if not agent:
         return agent
-    if agent in get_valid_agents(assignments_path=assignments_path):
+    valids = get_valid_agents(assignments_path=assignments_path)
+    if agent == "codex-curriculum-upgrade" and "codex-core" in valids:
+        return "codex-core"
+    if agent in valids:
         return agent
     provider, sep, area = agent.partition("-")
     if not sep or not provider or not area:

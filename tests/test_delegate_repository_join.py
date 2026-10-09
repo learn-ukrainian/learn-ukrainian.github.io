@@ -343,10 +343,20 @@ def _pr_item(projection, number: int) -> dict:
 
 
 def test_projection_delegate_tasks_count_matches_inventory(tmp_tasks_dir):
-    """Acceptance: class4 delegate_tasks count matches /api/delegate/tasks and
-    cf-pr-* tasks join onto their PR's dispatch projection."""
+    """Acceptance: class4 delegate_tasks count matches /api/delegate/tasks.
+
+    #9741 finding 5 / amendment A3: a ``cf-pr-*`` name is not an association.
+    A row with no DoR preflight stays unlinked. A preflight whose issue is
+    not in the open-issue section stays unlinked with a different reason,
+    and neither row is copied onto the pull request.
+    """
     _write_state(tmp_tasks_dir, "cf-pr-7072-kimi", repository=PUBLIC_REPO)
-    _write_state(tmp_tasks_dir, "cf-pr-7072-grok", repository=PUBLIC_REPO)
+    _write_state(
+        tmp_tasks_dir,
+        "cf-pr-7072-grok",
+        repository=PUBLIC_REPO,
+        dor_preflight={"issues": [5921], "issue_repositories": []},
+    )
 
     sections, projection = _collect_and_build()
 
@@ -357,13 +367,27 @@ def test_projection_delegate_tasks_count_matches_inventory(tmp_tasks_dir):
     assert projection["denominator"]["class4"]["delegate_tasks"] is True
 
     dispatch = _pr_item(projection, 7072)["projections"]["dispatch"]
-    assert sorted(dispatch["task_ids"]) == ["cf-pr-7072-grok", "cf-pr-7072-kimi"]
+    assert dispatch["task_ids"] == []
     assert dispatch["unresolved"] is False
+
+    unlinked = {item["remote_id"]: item for item in projection["items"] if item["resource_kind"] == "task"}
+    assert sorted(unlinked) == ["cf-pr-7072-grok", "cf-pr-7072-kimi"]
+    assert unlinked["cf-pr-7072-kimi"]["projections"]["dispatch"]["association_reason"] == (
+        "no_canonical_issue_association"
+    )
+    assert unlinked["cf-pr-7072-kimi"]["omissions"][0]["reason"] == "no_canonical_issue_association"
+    assert unlinked["cf-pr-7072-grok"]["projections"]["dispatch"]["association_reason"] == (
+        "unmatched_issue_association"
+    )
+    assert unlinked["cf-pr-7072-grok"]["omissions"][0]["reason"] == "unmatched_issue_association"
+    assert "cf-pr-7072-kimi" not in json.dumps(dispatch)
+    assert "cf-pr-7072-grok" not in json.dumps(dispatch)
 
 
 def test_projection_joins_backfilled_history_and_still_fails_closed(tmp_tasks_dir, tmp_path):
     """End-to-end #7083 regression: legacy rows reproduce count=0, the
-    backfill joins them into the projection, and foreign rows stay out."""
+    backfill admits them into the public projection, and foreign rows stay
+    out. Admission does not attach the task to a pull request by name."""
     clone = _git_repo_with_origin(tmp_path / "clone", f"https://github.com/{PUBLIC_REPO}.git")
     _write_state(tmp_tasks_dir, "cf-pr-7072-kimi", cwd=str(clone))  # legacy: no claim
     _write_state(tmp_tasks_dir, "cf-pr-7072-foreign", repository=PRIVATE_REPO)
@@ -378,7 +402,13 @@ def test_projection_joins_backfilled_history_and_still_fails_closed(tmp_tasks_di
     scoped = delegate_router.list_delegate_tasks(status="all", limit=500, repository=PUBLIC_REPO)
     assert sections["delegate_tasks"].count == scoped["total"] == 1
     dispatch = _pr_item(projection, 7072)["projections"]["dispatch"]
-    assert dispatch["task_ids"] == ["cf-pr-7072-kimi"]
+    # Repository backfill admits the row. The task name still does not attach
+    # it to the pull request (#9741 finding 5 / amendment A3).
+    assert dispatch["task_ids"] == []
+    task_rows = [item for item in projection["items"] if item["resource_kind"] == "task"]
+    assert [item["remote_id"] for item in task_rows] == ["cf-pr-7072-kimi"]
+    assert task_rows[0]["projections"]["dispatch"]["association_reason"] == "no_canonical_issue_association"
+    assert task_rows[0]["omissions"][0]["reason"] == "no_canonical_issue_association"
     # The foreign task never joins the public projection, even after backfill.
     assert json.dumps(projection).count("cf-pr-7072-foreign") == 0
     assert PRIVATE_REPO not in json.dumps(projection)

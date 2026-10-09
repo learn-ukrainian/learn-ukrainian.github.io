@@ -9,10 +9,13 @@ to this dispatch's arguments. Test names carry the frozen acceptance-matrix row
 
 from __future__ import annotations
 
+import contextvars
+import hashlib
 import json
 import os
 import subprocess
 import sys
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -24,9 +27,29 @@ from scripts.agent_runtime import bounded_advisory
 from tests.test_ask_review_admission_floor import ordinary_review_scope as ordinary_review_scope
 
 REPO_ROOT = delegate._REPO_ROOT
-WORKER_ID = "luna-worker"
-ADVISOR_ID = "sol-advisor"
 OWNED = "scripts/delegate.py"
+# Lease directory names are the task ids. One module-wide id shares a lease
+# across xdist workers (#9927). Each case gets its own worker id and advisor id.
+_LEASE_IDS: contextvars.ContextVar[tuple[str, str]] = contextvars.ContextVar("bounded_advisory_lease_ids")
+
+
+def _worker_id() -> str:
+    return _LEASE_IDS.get()[0]
+
+
+def _advisor_id() -> str:
+    return _LEASE_IDS.get()[1]
+
+
+@pytest.fixture(autouse=True)
+def _unique_bounded_lease_ids(request: pytest.FixtureRequest):
+    """Bind this case's lease task ids for the whole test, including its helpers."""
+    digest = hashlib.sha256(request.node.nodeid.encode("utf-8")).hexdigest()[:16]
+    token = _LEASE_IDS.set((f"luna-{digest}", f"sol-{digest}"))
+    yield
+    _LEASE_IDS.reset(token)
+
+
 _SEALED = object()  # _write_advisor default: seal the result as the advisor's worker does at finish
 
 
@@ -92,17 +115,27 @@ def env(monkeypatch, tmp_path):
     def health_only(url, *_args, **_kwargs):
         if "/api/health" in str(url):
             return _Health()
+        # --force-agent still probes routing-budget (#9673). Unavailable telemetry
+        # is an explicit unknown; it does not waive the envelope refusal below.
+        if "/api/state/routing-budget" in str(url):
+            raise urllib.error.URLError("budget unavailable")
         raise AssertionError(f"unexpected urlopen {url}")
 
     # Same seam as tests/test_delegate.py: the base resolver fetches and
     # resolves origin/main, which a CI checkout (shallow merge ref, no
     # origin/main) cannot. Pin it to the checkout's own HEAD so the dry-run
     # worktree plan still sees a real commit; the resolver's guard is
-    # covered in tests/test_delegate.py.
+    # covered in tests/test_delegate.py. Write-dispatch review admission
+    # (#9739 A7) observes the default branch and open PRs on GitHub: pin them
+    # to HEAD and none, a fresh branch with no commits of its own
+    # (tests/test_authoring_review_feasibility.py covers authored branches).
+    from tests.test_authoring_review_feasibility import pin_review_target
+
     head_sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30
     ).stdout.strip()
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
+    pin_review_target(monkeypatch, head_sha)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()
@@ -110,7 +143,9 @@ def env(monkeypatch, tmp_path):
     return type("_Env", (), {"tasks": tasks, "spawned": spawned, "prompts": prompts})()
 
 
-def _argv(*extra: str, agent: str = "codex", model: str | None = "gpt-6-luna", task_id: str = WORKER_ID) -> list[str]:
+def _argv(*extra: str, agent: str = "codex", model: str | None = "gpt-6-luna", task_id: str | None = None) -> list[str]:
+    if task_id is None:
+        task_id = _worker_id()
     argv = ["dispatch", "--agent", agent, "--task-id", task_id, "--prompt", "Map the parser flags."]
     if model is not None:
         argv += ["--model", model]
@@ -151,12 +186,14 @@ def _write_advisor(
     tasks: Path,
     binding: str,
     *,
-    task_id: str = ADVISOR_ID,
+    task_id: str | None = None,
     result: str | None = None,
     envelope: dict | None = None,
     seal: object = _SEALED,
     **record_overrides,
 ) -> Path:
+    if task_id is None:
+        task_id = _advisor_id()
     tasks.mkdir(parents=True, exist_ok=True)
     result_path = tasks / f"{task_id}.result"
     text = result if result is not None else _result_text(envelope or _envelope(binding))
@@ -186,12 +223,16 @@ def _dispatch(argv: list[str]) -> int:
     return delegate.cmd_dispatch(_parse(argv))
 
 
-def _worker_record(tasks: Path, task_id: str = WORKER_ID) -> dict | None:
+def _worker_record(tasks: Path, task_id: str | None = None) -> dict | None:
+    if task_id is None:
+        task_id = _worker_id()
     path = tasks / f"{task_id}.json"
     return json.loads(path.read_text()) if path.exists() else None
 
 
-def _assert_refused(env, capsys, rc: int, code: str, task_id: str = WORKER_ID) -> None:
+def _assert_refused(env, capsys, rc: int, code: str, task_id: str | None = None) -> None:
+    if task_id is None:
+        task_id = _worker_id()
     err = capsys.readouterr().err
     assert rc == 2, err
     assert code in err, err
@@ -202,7 +243,7 @@ def _assert_refused(env, capsys, rc: int, code: str, task_id: str = WORKER_ID) -
 def _admitted_luna(env, *extra: str) -> list[str]:
     argv = _argv("--owned-path", OWNED, *extra)
     _write_advisor(env.tasks, _binding(argv))
-    return [*argv, "--advisory-task", ADVISOR_ID]
+    return [*argv, "--advisory-task", _advisor_id()]
 
 
 # --- M1 -------------------------------------------------------------------
@@ -216,7 +257,7 @@ def test_m1_luna_without_advisory_task_is_refused_before_any_record(env, capsys)
 def test_m1_write_mode_luna_without_advisory_task_creates_no_worktree(env, capsys):
     rc = _dispatch(_argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED))
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "codex" / WORKER_ID).exists()
+    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "codex" / _worker_id()).exists()
 
 
 # --- M2 -------------------------------------------------------------------
@@ -226,7 +267,7 @@ def test_m1_write_mode_luna_without_advisory_task_creates_no_worktree(env, capsy
 def test_m2_advisory_task_not_done_is_refused(env, capsys, status):
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv), status=status)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.TASK_NOT_DONE)
 
 
@@ -253,7 +294,7 @@ def test_m2_missing_advisory_task_is_refused(env, capsys):
 def test_m3_advisory_task_on_wrong_model_role_or_route_is_refused(env, capsys, overrides, code):
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv), **overrides)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, code)
 
 
@@ -270,14 +311,14 @@ def test_m4_unrelated_sol_task_is_refused(env, capsys):
         advisory_route=None,
         advisory_binding_sha256=None,
     )
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.TASK_WRONG_ROLE)
 
 
 def test_m4_advisor_result_without_envelope_is_refused(env, capsys):
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv), result="I think the worker should be careful.\n")
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_MISSING)
 
 
@@ -299,7 +340,7 @@ def test_m4_incomplete_envelope_is_refused(env, capsys, mutate):
     envelope = _envelope(_binding(argv))
     mutate(envelope)
     _write_advisor(env.tasks, _binding(argv), envelope=envelope)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_INCOMPLETE)
 
 
@@ -307,7 +348,7 @@ def test_m4_two_envelopes_in_one_result_are_refused(env, capsys):
     argv = _argv("--owned-path", OWNED)
     text = _result_text(_envelope(_binding(argv)))
     _write_advisor(env.tasks, _binding(argv), result=text + text)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_MISSING)
 
 
@@ -316,7 +357,7 @@ def test_m4_forged_result_file_outside_the_canonical_result_is_refused(env, caps
     forged = tmp_path / "forged-envelope.md"
     forged.write_text(_result_text(_envelope(_binding(argv))))
     _write_advisor(env.tasks, _binding(argv), result="no envelope here\n", result_file=str(forged))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.RESULT_UNREADABLE)
 
 
@@ -356,7 +397,7 @@ def test_m5_non_positive_ceilings_or_owned_paths_outside_allowed_roots_are_refus
         extra += ["--owned-path", path]
     argv = _argv(*extra)
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), **overrides))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, code)
 
 
@@ -364,7 +405,7 @@ def test_m5_creatable_owned_path_under_an_existing_root_is_admitted(env, capsys)
     new_path = "scripts/agent_runtime/new_bounded_helper.py"
     argv = _argv("--owned-path", new_path)
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope(_binding(argv), owned_paths=[new_path]))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
 
@@ -385,23 +426,23 @@ def test_m5_creatable_owned_path_under_an_existing_root_is_admitted(env, capsys)
 def test_m6_envelope_bound_to_other_dispatch_arguments_is_refused(env, capsys, changed):
     issued_for = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(issued_for))
-    rc = _dispatch([*_argv(*changed), "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*_argv(*changed), "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
 
 
 def test_m6_mode_change_is_refused_before_any_worktree(env, capsys):
     issued_for = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(issued_for))
-    argv = _argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED, "--advisory-task", ADVISOR_ID)
+    argv = _argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED, "--advisory-task", _advisor_id())
     rc = _dispatch(argv)
     _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
-    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "codex" / WORKER_ID).exists()
+    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "codex" / _worker_id()).exists()
 
 
 def test_m6_envelope_binding_field_differs_from_the_advisor_record(env, capsys):
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv), envelope=_envelope("0" * 64))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
 
 
@@ -409,7 +450,7 @@ def test_m6_owned_path_set_must_equal_the_envelope(env, capsys):
     argv = _argv("--owned-path", OWNED)
     envelope = _envelope(_binding(argv), owned_paths=[OWNED, "tests/test_delegate.py"])
     _write_advisor(env.tasks, _binding(argv), envelope=envelope)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.OWNED_PATHS_MISMATCH)
 
 
@@ -440,7 +481,7 @@ def test_m7_advisor_result_changed_after_validation_is_refused_before_spawn(env,
 
     def admit_then_tamper(*args, **kwargs):
         admission = real_admit(*args, **kwargs)
-        tamper(env.tasks / f"{ADVISOR_ID}.result", env.tasks / f"{ADVISOR_ID}.json")
+        tamper(env.tasks / f"{_advisor_id()}.result", env.tasks / f"{_advisor_id()}.json")
         return admission
 
     monkeypatch.setattr(delegate, "_admit_advisory", admit_then_tamper)
@@ -503,7 +544,7 @@ def test_m9_force_agent_luna_without_envelope_is_refused(env, capsys):
 def test_m10_write_mode_gemini_flash_without_classification_is_refused(env, capsys):
     rc = _dispatch(_argv("--mode", "workspace-write", "--worktree", "--owned-path", OWNED, agent="agy", model=None))
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
-    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "agy" / WORKER_ID).exists()
+    assert not (REPO_ROOT / ".worktrees" / "dispatch" / "agy" / _worker_id()).exists()
 
 
 def test_m15_read_only_gemini_flash_recon_without_envelope_is_refused(env, capsys):
@@ -536,8 +577,8 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(ordinary_review_scope, env, capsys):
-    """#9538: --review-profile code types the dispatch as a code review, which Gemini never performs."""
+def test_m16_gemini_flash_code_review_with_ukrainian_family_is_refused(ordinary_review_scope, env, capsys):
+    """#10073 admits code review; a conflicting language classification still refuses."""
     rc = _dispatch(
         _argv(
             "--branch",
@@ -546,11 +587,27 @@ def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(o
             "ukrainian-authoring",
             "--review-profile",
             "code",
+            "--review-risk",
+            "low",
             agent="agy",
             model=None,
         )
     )
-    _assert_refused(env, capsys, rc, "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile code")
+    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
+
+
+def test_m16_gemini_flash_code_review_without_review_risk_is_refused(ordinary_review_scope, env, capsys):
+    rc = _dispatch(
+        _argv(
+            "--branch",
+            "review-target",
+            "--review-profile",
+            "code",
+            agent="agy",
+            model=None,
+        )
+    )
+    _assert_refused(env, capsys, rc, "AGY code review requires an explicit --review-risk")
 
 
 def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
@@ -569,7 +626,7 @@ def test_m16_ukrainian_review_profile_in_write_mode_without_family_is_refused(en
     rc = _dispatch(
         _argv("--mode", "workspace-write", "--worktree", "--review-profile", "ukrainian", agent="agy", model=None)
     )
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
+    _assert_refused(env, capsys, rc, "agy_review_permissions_require_read_only")
 
 
 @pytest.mark.parametrize(
@@ -621,6 +678,9 @@ def test_m11_write_mode_gemini_ukrainian_authoring_is_admitted(env, capsys):
         "--dry-run",
         "--research-task-family",
         "ukrainian-authoring",
+        # A write dispatch declares its scope (#9739): lesson content only.
+        "--owned-path",
+        "curriculum/l2-uk-en/a1/lesson.md",
         agent="agy",
         model=None,
     )
@@ -632,10 +692,10 @@ def test_m11_write_mode_gemini_ukrainian_authoring_is_admitted(env, capsys):
 def test_m18_read_only_gemini_flash_recon_with_bound_envelope_is_admitted(env, capsys):
     argv = _argv("--owned-path", OWNED, agent="agy", model=None)
     _write_advisor(env.tasks, _binding(argv))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
-    assert _worker_record(env.tasks)["advisory_envelope"]["advisor_task_id"] == ADVISOR_ID
+    assert _worker_record(env.tasks)["advisory_envelope"]["advisor_task_id"] == _advisor_id()
 
 
 # --- M13 / M14 --------------------------------------------------------------
@@ -647,9 +707,9 @@ def test_m13_luna_with_complete_bound_envelope_is_admitted_and_recorded(env, cap
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
     record = _worker_record(env.tasks)
-    result_path = env.tasks / f"{ADVISOR_ID}.result"
+    result_path = env.tasks / f"{_advisor_id()}.result"
     envelope = record["advisory_envelope"]
-    assert envelope["advisor_task_id"] == ADVISOR_ID
+    assert envelope["advisor_task_id"] == _advisor_id()
     assert envelope["advisor_model"] == "gpt-6.1-sol"
     assert envelope["result_path"] == str(result_path)
     assert envelope["result_sha256"] == __import__("hashlib").sha256(result_path.read_bytes()).hexdigest()
@@ -666,7 +726,7 @@ def test_m13_substitution_into_luna_with_bound_envelope_is_admitted(env, capsys,
     _substitute_into(monkeypatch, "codex", "gpt-6-luna")
     argv = _argv("--check-budget", "--owned-path", OWNED, model="gpt-6.1-sol")
     _write_advisor(env.tasks, _binding(argv))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     assert rc == 0, capsys.readouterr().err
     assert _worker_record(env.tasks)["advisory_envelope"]["requirement"] == "gpt-6-luna is the bounded worker"
 
@@ -684,7 +744,7 @@ def test_m14_non_bounded_models_without_envelope_are_unaffected(env, capsys, age
 def test_m14_advisory_task_on_a_non_bounded_dispatch_is_refused(env, capsys):
     argv = _argv("--owned-path", OWNED, model="gpt-6.1-sol")
     _write_advisor(env.tasks, _binding(argv))
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.FLAG_CONFLICT)
 
 
@@ -699,11 +759,11 @@ def test_advisor_dispatch_records_role_binding_and_output_contract(env, capsys):
         "--advisory-binding",
         binding,
         model="gpt-6.1-sol",
-        task_id=ADVISOR_ID,
+        task_id=_advisor_id(),
     )
     rc = _dispatch(argv)
     assert rc == 0, capsys.readouterr().err
-    record = _worker_record(env.tasks, ADVISOR_ID)
+    record = _worker_record(env.tasks, _advisor_id())
     assert record["advisory_role"] == "bounded_advisory_envelope"
     assert record["advisory_route"] == "execution_routing.sol_advised_bounded.advisor"
     assert record["advisory_binding_sha256"] == binding
@@ -737,13 +797,16 @@ def test_advisor_dispatch_records_role_binding_and_output_contract(env, capsys):
     ids=["advisor-on-luna", "role-without-binding", "binding-without-role", "bad-binding", "role-and-task"],
 )
 def test_advisor_flags_are_refused_when_inconsistent(env, capsys, extra, model, code):
-    rc = _dispatch(_argv(*extra, model=model, task_id=ADVISOR_ID))
-    _assert_refused(env, capsys, rc, code, task_id=ADVISOR_ID)
+    rc = _dispatch(_argv(*extra, model=model, task_id=_advisor_id()))
+    _assert_refused(env, capsys, rc, code, task_id=_advisor_id())
 
 
 @pytest.mark.parametrize("agent,model", [("claude", "claude-fable-5-1"), ("cursor", "claude-fable-5-1-thinking-high")])
-def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
+def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch):
     """#9583: the advisor is the catalog's advisor model; Fable holds no advisory role on any seat."""
+    if agent == "cursor":
+        import scripts.agent_runtime.adapters.claude as claude_module
+        monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
     rc = _dispatch(
         _argv(
             "--advisory-role",
@@ -752,10 +815,33 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model):
             "a" * 64,
             agent=agent,
             model=model,
-            task_id=ADVISOR_ID,
+            task_id=_advisor_id(),
         )
     )
-    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=ADVISOR_ID)
+    _assert_refused(
+        env,
+        capsys,
+        rc,
+        ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED),
+        task_id=_advisor_id(),
+    )
+
+
+@pytest.mark.parametrize("model", ["grok-4.7-high", "composer-2.5"])
+def test_advisor_role_refuses_non_advisor_cursor_pins(env, capsys, model):
+    """Approved Cursor pins reach the advisory gate without a Claude-route refusal."""
+    rc = _dispatch(
+        _argv(
+            "--advisory-role",
+            "bounded_advisory_envelope",
+            "--advisory-binding",
+            "a" * 64,
+            agent="cursor",
+            model=model,
+            task_id=_advisor_id(),
+        )
+    )
+    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=_advisor_id())
 
 
 def test_advisor_must_run_read_only(env, capsys):
@@ -768,10 +854,10 @@ def test_advisor_must_run_read_only(env, capsys):
         "--advisory-binding",
         "a" * 64,
         model="gpt-6.1-sol",
-        task_id=ADVISOR_ID,
+        task_id=_advisor_id(),
     )
     rc = _dispatch(argv)
-    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=ADVISOR_ID)
+    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=_advisor_id())
 
 
 # --- M12 / M13 at finalize: the envelope ceilings ------------------------------
@@ -869,7 +955,7 @@ def _admitted_worker(
     binding = bounded_advisory.binding_digest(args_sha256, prompt_sha256)
     _write_advisor(tasks, binding, envelope=_envelope(binding, owned_paths=owned, **envelope_overrides))
     validated = bounded_advisory.load_envelope(
-        ADVISOR_ID, state_path=tasks / f"{ADVISOR_ID}.json", binding_sha256=binding, repo_root=repo_root
+        _advisor_id(), state_path=tasks / f"{_advisor_id()}.json", binding_sha256=binding, repo_root=repo_root
     )
     lifecycle_prompt = ""
     if lifecycle is not None:
@@ -888,7 +974,7 @@ def _admitted_worker(
         rules_seat=None,
     )
     record = {
-        "task_id": WORKER_ID,
+        "task_id": _worker_id(),
         "mode": mode,
         "owned_paths": list(owned),
         "prompt_sha256": prompt_sha256,
@@ -914,7 +1000,7 @@ def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str], *, seed: d
     worktree = _bounded_worktree(tmp_path, monkeypatch)
     (worktree / "src").mkdir()
     _commit_and_push(worktree, files)
-    state_path = delegate._state_path(WORKER_ID)
+    state_path = delegate._state_path(_worker_id())
     record, prompt = _admitted_worker(
         tmp_path / "tasks",
         repo_root=worktree,
@@ -951,7 +1037,7 @@ def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str], *, seed: d
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
     delegate._run_worker(
-        task_id=WORKER_ID,
+        task_id=_worker_id(),
         agent="codex",
         prompt=prompt,
         mode="workspace-write",
@@ -1015,7 +1101,9 @@ def test_m12_exceeding_either_ceiling_alone_is_a_typed_failure(tmp_path, monkeyp
 
 
 def test_m12_unmeasurable_ceilings_fail_closed(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    monkeypatch.setattr(
+        delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+    )
     state = _run_bounded_worker(tmp_path, monkeypatch, {"src/a.py": "x = 1\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.CEILING_UNMEASURED
@@ -1052,7 +1140,7 @@ def test_m6_prompt_file_edited_after_the_envelope_is_refused(env, capsys, tmp_pa
     argv = _file_argv(prompt_file)
     _write_advisor(env.tasks, _binding(argv))
     prompt_file.write_text("Map the parser flags, then rewrite admission.\n")
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.BINDING_MISMATCH)
 
 
@@ -1069,7 +1157,7 @@ def test_m6_prompt_file_edited_between_admission_and_prompt_read_is_refused(env,
         return admission
 
     monkeypatch.setattr(delegate, "_admit_advisory", admit_then_edit)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     err = capsys.readouterr().err
     assert rc == 2 and "the prompt changed after advisory admission" in err, err
     assert env.spawned == [] and _worker_record(env.tasks) is None
@@ -1083,7 +1171,7 @@ def test_m6_prompt_file_envelope_is_admitted_and_binding_printed_by_content(env,
     printed = capsys.readouterr().out.strip()
     assert printed == _binding(argv)
     _write_advisor(env.tasks, printed)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     assert rc == 0, capsys.readouterr().err
     assert len(env.spawned) == 1
 
@@ -1092,7 +1180,7 @@ def test_bounded_dispatch_with_a_stdin_prompt_is_refused(env, capsys):
     argv = _argv("--owned-path", OWNED)
     argv[argv.index("--prompt") + 1] = "-"
     _write_advisor(env.tasks, "0" * 64)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.FLAG_CONFLICT)
 
 
@@ -1140,7 +1228,7 @@ def worker_env(monkeypatch, tmp_path):
 
 def _start_worker(worker_env, prompt: str, *, agent: str = "codex", model: str | None = "gpt-6-luna", **launch) -> int:
     return delegate._run_worker(
-        task_id=WORKER_ID,
+        task_id=_worker_id(),
         agent=agent,
         prompt=prompt,
         mode=launch.pop("mode", "read-only"),
@@ -1153,7 +1241,7 @@ def _start_worker(worker_env, prompt: str, *, agent: str = "codex", model: str |
 
 def _publish(worker_env, record: dict) -> Path:
     worker_env.tasks.mkdir(parents=True, exist_ok=True)
-    path = worker_env.tasks / f"{WORKER_ID}.json"
+    path = worker_env.tasks / f"{_worker_id()}.json"
     path.write_text(json.dumps({"status": "spawning", **record}))
     return path
 
@@ -1165,11 +1253,11 @@ def test_b1_hand_built_worker_for_a_bounded_model_refuses_before_any_provider_sp
     assert rc == 1
     assert bounded_advisory.ADMISSION_MISSING in err
     assert worker_env.spy.calls == 0
-    assert not (worker_env.tasks / f"{WORKER_ID}.json").exists()
+    assert not (worker_env.tasks / f"{_worker_id()}.json").exists()
 
 
 def test_b1_worker_record_without_admission_is_marked_failed_and_the_provider_never_starts(worker_env, capsys):
-    path = _publish(worker_env, {"task_id": WORKER_ID, "mode": "read-only", "owned_paths": [OWNED]})
+    path = _publish(worker_env, {"task_id": _worker_id(), "mode": "read-only", "owned_paths": [OWNED]})
     rc = _start_worker(worker_env, "bounded work")
     assert rc == 1 and worker_env.spy.calls == 0
     record = json.loads(path.read_text())
@@ -1179,8 +1267,8 @@ def test_b1_worker_record_without_admission_is_marked_failed_and_the_provider_ne
 
 
 def _tamper_result(tasks: Path) -> None:
-    result = tasks / f"{ADVISOR_ID}.result"
-    record = json.loads((tasks / f"{ADVISOR_ID}.json").read_text())
+    result = tasks / f"{_advisor_id()}.result"
+    record = json.loads((tasks / f"{_advisor_id()}.json").read_text())
     envelope = json.loads(result.read_text().split("```advisory-envelope\n", 1)[1].rsplit("\n```", 1)[0])
     result.write_text(_result_text({**envelope, "max_changed_files": 10_000, "max_non_test_loc": 10_000_000}))
     assert record["advisory_seal"]["result_sha256"] != __import__("hashlib").sha256(result.read_bytes()).hexdigest()
@@ -1252,7 +1340,7 @@ def _exempt_record(**overrides) -> dict:
         "classified_paths": [],
     }
     exemption.update(overrides)
-    return {"task_id": WORKER_ID, "mode": "read-only", "review_profile": None, "advisory_exemption": exemption}
+    return {"task_id": _worker_id(), "mode": "read-only", "review_profile": None, "advisory_exemption": exemption}
 
 
 def test_b1_gemini_worker_with_a_recorded_ukrainian_exemption_reaches_the_provider(worker_env, capsys):
@@ -1581,8 +1669,8 @@ def test_b1_updating_only_the_recorded_effective_prompt_digest_cannot_bless_an_a
 def test_b1_missing_unfinished_or_changed_advisor_evidence_refuses_at_the_worker(worker_env, capsys, advisor, code):
     """Acceptance 4: the worker re-reads the advisor evidence and refuses anything but a sealed, done envelope."""
     record, prompt = _admitted_worker(worker_env.tasks, repo_root=REPO_ROOT, owned=[OWNED])
-    advisor_record = worker_env.tasks / f"{ADVISOR_ID}.json"
-    result = worker_env.tasks / f"{ADVISOR_ID}.result"
+    advisor_record = worker_env.tasks / f"{_advisor_id()}.json"
+    result = worker_env.tasks / f"{_advisor_id()}.result"
     if advisor == "missing":
         advisor_record.unlink()
     elif advisor == "malformed":
@@ -1781,7 +1869,7 @@ def test_b2_worker_re_classifies_a_recorded_exemption_against_its_own_tree(worke
     """A symlink into code that appears after dispatch refuses at the worker, before the provider."""
     _publish(worker_env, _exempt_record(classified_paths=["docs/lessons/"]))
     rc = delegate._run_worker(
-        task_id=WORKER_ID,
+        task_id=_worker_id(),
         agent="agy",
         prompt="Review the lesson.",
         mode="read-only",
@@ -1809,7 +1897,7 @@ def test_b2_md_symlink_to_a_python_attributed_file_refuses_at_admission_and_at_t
     assert requirement is not None and "ambiguous classification" in requirement
     _publish(worker_env, _exempt_record(classified_paths=["docs/aliased/lesson.md"]))
     rc = delegate._run_worker(
-        task_id=WORKER_ID,
+        task_id=_worker_id(),
         agent="agy",
         prompt="Review the lesson.",
         mode="read-only",
@@ -1829,7 +1917,7 @@ def test_b3_envelope_replaced_after_the_advisor_finished_is_refused(env, capsys)
     argv = _argv("--owned-path", OWNED)
     _write_advisor(env.tasks, _binding(argv))
     _tamper_result(env.tasks)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, bounded_advisory.SEAL_MISMATCH)
 
 
@@ -1853,7 +1941,7 @@ def test_b3_missing_or_foreign_seal_is_refused(env, capsys, seal, code):
     elif seal == "other-envelope":
         sealed["envelope_sha256"] = "3" * 64
     _write_advisor(env.tasks, _binding(argv), result=text, seal=None if seal is None else sealed)
-    rc = _dispatch([*argv, "--advisory-task", ADVISOR_ID])
+    rc = _dispatch([*argv, "--advisory-task", _advisor_id()])
     _assert_refused(env, capsys, rc, code)
 
 
@@ -1862,11 +1950,11 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     response = _result_text(_envelope(binding))
     worker_env.spy.response = response
     worker_env.tasks.mkdir(parents=True, exist_ok=True)
-    path = worker_env.tasks / f"{ADVISOR_ID}.json"
+    path = worker_env.tasks / f"{_advisor_id()}.json"
     path.write_text(
         json.dumps(
             {
-                "task_id": ADVISOR_ID,
+                "task_id": _advisor_id(),
                 "status": "spawning",
                 "mode": "read-only",
                 "run_nonce": "advisor-run",
@@ -1877,7 +1965,7 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
         )
     )
     rc = delegate._run_worker(
-        task_id=ADVISOR_ID,
+        task_id=_advisor_id(),
         agent="codex",
         prompt="advise",
         mode="read-only",
@@ -1888,7 +1976,7 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     )
     assert rc == 0, capsys.readouterr().err
     record = json.loads(path.read_text())
-    result = worker_env.tasks / f"{ADVISOR_ID}.result"
+    result = worker_env.tasks / f"{_advisor_id()}.result"
     seal = record["advisory_seal"]
     assert seal == {
         "result_sha256": __import__("hashlib").sha256(result.read_bytes()).hexdigest(),
@@ -1899,19 +1987,19 @@ def test_b3_the_advisor_worker_seals_its_result_at_finish_and_admission_checks_i
     # The worker's record model comes from start telemetry; the gate reads the attested one.
     record["model"] = "gpt-6.1-sol"
     path.write_text(json.dumps(record))
-    loaded = bounded_advisory.load_envelope(ADVISOR_ID, state_path=path, binding_sha256=binding, repo_root=REPO_ROOT)
+    loaded = bounded_advisory.load_envelope(_advisor_id(), state_path=path, binding_sha256=binding, repo_root=REPO_ROOT)
     assert loaded.envelope["max_changed_files"] == 2
     _tamper_result(worker_env.tasks)
     with pytest.raises(bounded_advisory.AdvisoryRefused) as refused:
-        bounded_advisory.load_envelope(ADVISOR_ID, state_path=path, binding_sha256=binding, repo_root=REPO_ROOT)
+        bounded_advisory.load_envelope(_advisor_id(), state_path=path, binding_sha256=binding, repo_root=REPO_ROOT)
     assert refused.value.code == bounded_advisory.SEAL_MISMATCH
 
 
 def test_b3_a_non_advisor_worker_records_no_seal(worker_env, capsys):
-    _publish(worker_env, {"task_id": WORKER_ID, "mode": "read-only"})
+    _publish(worker_env, {"task_id": _worker_id(), "mode": "read-only"})
     rc = _start_worker(worker_env, "hello", model="gpt-6.1-sol")
     assert rc == 0, capsys.readouterr().err
-    assert "advisory_seal" not in json.loads((worker_env.tasks / f"{WORKER_ID}.json").read_text())
+    assert "advisory_seal" not in json.loads((worker_env.tasks / f"{_worker_id()}.json").read_text())
 
 
 # --- Round 3: B3 the content-exemption completion gate ---------------------------
@@ -1941,7 +2029,7 @@ def _exempt_writer_run(
     brief = "Create docs/new-lessons/generate.py that writes the lesson files, and the lessons it generates."
     rc = _dispatch(
         [
-            "dispatch", "--agent", "agy", "--task-id", WORKER_ID, "--prompt", brief, "--mode", mode,
+            "dispatch", "--agent", "agy", "--task-id", _worker_id(), "--prompt", brief, "--mode", mode,
             "--worktree", "--dry-run", "--research-task-family", "ukrainian-authoring",
             "--owned-path", "docs/new-lessons/",
         ]
@@ -1957,11 +2045,11 @@ def _exempt_writer_run(
     _git("commit", "-m", "attributes", cwd=worktree)
     _git("push", "origin", "HEAD:main", cwd=worktree)
     _git("fetch", "origin", cwd=worktree)
-    state_path = delegate._state_path(WORKER_ID)
+    state_path = delegate._state_path(_worker_id())
     delegate._write_state_atomic(
         state_path,
         {
-            "task_id": WORKER_ID,
+            "task_id": _worker_id(),
             "status": "spawning",
             "mode": mode,
             "review_profile": None,
@@ -1992,7 +2080,7 @@ def _exempt_writer_run(
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
     delegate._run_worker(
-        task_id=WORKER_ID,
+        task_id=_worker_id(),
         agent="agy",
         prompt=brief,
         mode=mode,
@@ -2067,7 +2155,9 @@ def test_b3_code_by_attributes_symlink_or_location_fails_the_exempt_completion_g
 
 
 def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    monkeypatch.setattr(
+        delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+    )
     state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.EXEMPT_CHANGES_UNMEASURED
@@ -2111,7 +2201,7 @@ def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_clas
 
 
 def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_path, monkeypatch, capsys):
-    original = delegate._worktree_diff_output
+    original = delegate._worktree_diff_read
 
     def with_residue(worktree, *args, **kwargs):
         cache = Path(worktree) / "docs" / "new-lessons" / "__pycache__"
@@ -2119,7 +2209,7 @@ def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_pa
         (cache / "gen.cpython-312.pyc").write_bytes(b"\0")
         return original(worktree, *args, **kwargs)
 
-    monkeypatch.setattr(delegate, "_worktree_diff_output", with_residue)
+    monkeypatch.setattr(delegate, "_worktree_diff_read", with_residue)
     state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
     check = state["advisory_exempt_change_check"]
     assert check["ignored_residue"] == ["docs/new-lessons/__pycache__/gen.cpython-312.pyc"]
@@ -2157,7 +2247,9 @@ _STALE_PASS = {
 def _gate_run(gate: str, verdict: str, env, tmp_path, monkeypatch, capsys, *, seed: dict | None = _STALE_PASS) -> dict:
     files, _code = _GATE_INPUTS[gate][verdict]
     if verdict == "unmeasurable":
-        monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+        monkeypatch.setattr(
+            delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+        )
     if gate == "ceiling":
         return _run_bounded_worker(tmp_path, monkeypatch, files, seed=seed)
     return _exempt_writer_run(env, tmp_path, monkeypatch, capsys, files, seed=seed)
@@ -2198,7 +2290,7 @@ def test_r5_an_interrupt_before_the_gate_is_recorded_never_persists_done(
     with pytest.raises(KeyboardInterrupt):
         _gate_run(gate, verdict, env, tmp_path, monkeypatch, capsys)
     assert fired == [point]
-    state = delegate._read_state(delegate._state_path(WORKER_ID))
+    state = delegate._read_state(delegate._state_path(_worker_id()))
     assert (state["status"], state["needs_finalize"]) == ("needs_finalize", True)
     assert state["last_error"] == delegate._INTERRUPTED_BEFORE_COMPLETION_GATES
     assert "KeyboardInterrupt" in state["finalize_error"]
@@ -2230,7 +2322,7 @@ def test_r5_an_interrupt_at_the_terminal_write_persists_the_gated_outcome_with_i
     with pytest.raises(KeyboardInterrupt):
         _gate_run(gate, verdict, env, tmp_path, monkeypatch, capsys)
     assert fired
-    state = delegate._read_state(delegate._state_path(WORKER_ID))
+    state = delegate._read_state(delegate._state_path(_worker_id()))
     check = state[_GATE_KEY[gate]]
     code = _GATE_INPUTS[gate][verdict][1]
     if code is None:
@@ -2252,7 +2344,7 @@ def test_r5_abrupt_termination_during_the_gate_leaves_a_recoverable_non_success_
     real = delegate._advisory_worker_diff
 
     def snapshot(*args, **kwargs):
-        on_disk.append(json.loads(delegate._state_path(WORKER_ID).read_text()))
+        on_disk.append(json.loads(delegate._state_path(_worker_id()).read_text()))
         return real(*args, **kwargs)
 
     monkeypatch.setattr(delegate, "_advisory_worker_diff", snapshot)

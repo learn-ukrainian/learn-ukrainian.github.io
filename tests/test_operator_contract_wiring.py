@@ -3,7 +3,8 @@
 The contract is only useful if every agent boot path actually reaches it.
 These tests pin the wiring so a refactor can't silently orphan the file:
 
-- Claude / API cold-start  -> RULE_SOURCES[0] (served first at /api/rules)
+- Full API reference      -> contract first at /api/rules?scope=full
+- Unscoped API cold-start -> binding core, with boot-file contract digests
 - Codex / cursor / opencode / hermes slot-5 -> AGENTS.md digest section
 - Deploy targets           -> excluded from .claude autoload, present in
                               .codex/.agent/.gemini rules (lock-step lists)
@@ -43,14 +44,27 @@ def test_contract_file_exists_with_all_fifteen_items() -> None:
 
 
 def test_contract_served_first_by_rules_api() -> None:
-    import sys
+    from types import SimpleNamespace
 
-    sys.path.insert(0, str(REPO / "scripts"))
-    from api.rules_router import RULE_SOURCES
+    from starlette.requests import Request
 
-    assert RULE_SOURCES[0] == CONTRACT_REL, (
-        f"operator-expectations must be the FIRST file served by /api/rules (got {RULE_SOURCES[0]!r})"
+    from scripts.api.rules_router import get_rules
+
+    request = Request({"type": "http", "headers": [], "query_string": b""})
+    ctx = SimpleNamespace(roots=SimpleNamespace(project_root=REPO))
+    contract = CONTRACT.read_text(encoding="utf-8").rstrip() + "\n"
+
+    full = get_rules(request, format="markdown", scope="full", ctx=ctx)
+    assert full.status_code == 200
+    assert full.body.decode("utf-8").startswith(contract), (
+        "operator-expectations must be the FIRST file served by /api/rules?scope=full"
     )
+
+    unscoped = get_rules(request, format="markdown", scope=None, ctx=ctx)
+    core = (REPO / "agents_extensions/shared/rules/core.md").read_text(encoding="utf-8").rstrip() + "\n"
+    assert unscoped.status_code == 200
+    assert unscoped.body.decode("utf-8").startswith(core)
+    assert not unscoped.body.decode("utf-8").startswith(contract)
 
 
 def test_agents_md_carries_binding_digest() -> None:

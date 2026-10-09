@@ -38,16 +38,6 @@
       "Bash(.venv/bin/python -m scripts.gh_merge_queue_status *)",
       "Bash(.venv/bin/python -m scripts.fleet_comms *)",
       "Bash(.venv/bin/python -m scripts.ai_agent_bridge *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python scripts/delegate.py *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_closeout *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.fleet.post_task_reap *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python scripts/orchestration/reap_worktrees.py *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.fleet.capacity_pick*)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.gh_merge_queue_status *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.fleet_comms *)",
-      "Bash(/home/ops/learn-ukrainian/.venv/bin/python -m scripts.ai_agent_bridge *)",
       "Bash(npm run agents:deploy)",
       "Bash(sudo systemctl *)",
       "Bash(sudo journalctl *)",
@@ -872,8 +862,25 @@
           },
           {
             "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-rollover-guard.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
             "command": "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks claude-code user-prompt-submit || true'",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh",
+            "timeout": 5
           }
         ]
       }

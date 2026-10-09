@@ -18,7 +18,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -26,6 +25,8 @@ from typing import Any
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 DATASET_VERSION = "v4.0.0-human-pilot-scale"
@@ -690,7 +691,7 @@ def verify_dataset(
 
 _LANGUAGE_USAGE_CACHE: dict[tuple[Path, str], dict[str, list[dict[str, Any]]]] = {}
 _EXTRACTION_INDEX_CACHE: dict[tuple[Path, str], dict[str, dict[str, Any]]] = {}
-_SOURCES_DB_CONNS: dict[Path, sqlite3.Connection] = {}
+_SOURCES_DB_CONNS: dict[Path, SQLiteConnection] = {}
 _RECORD_SCHEMA_CACHE: dict[tuple[Path, str], jsonschema.Draft202012Validator] = {}
 
 
@@ -955,7 +956,7 @@ def resolve_record_text(
 
     db_path = sources_db_path.resolve() if sources_db_path is not None else _get_sources_db_path(root)
     if db_path not in _SOURCES_DB_CONNS:
-        _SOURCES_DB_CONNS[db_path] = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        _SOURCES_DB_CONNS[db_path] = _open_readonly(db_path)
     conn = _SOURCES_DB_CONNS[db_path]
     cur = conn.cursor()
 

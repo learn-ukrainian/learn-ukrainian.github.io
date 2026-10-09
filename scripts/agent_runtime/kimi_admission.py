@@ -47,6 +47,8 @@ POLICY_LINE = (
 )
 KIMI_AGENT_IDS = frozenset({"kimi", "kimicc"})
 _POLICY = "KIMI CODING-ONLY"
+# The policy's name, for a caller that prints a typed refusal cause in place of the refusal text (#9878).
+POLICY_NAME = _POLICY
 
 # Modes. Only workspace-write implementation is admitted; the other labels
 # name the activity an entry point is about to perform.
@@ -164,7 +166,27 @@ _GIT_REDIRECT_ENV = frozenset(
 
 
 class KimiAdmissionRefused(ValueError):
-    """A Kimi seat was asked for work outside web, UI and backend coding."""
+    """A Kimi seat was asked for work outside web, UI and backend coding.
+
+    ``read_errors`` holds the exceptions of tree readers that failed: the
+    refusal text names only their class, and a caller that keeps a local
+    diagnostic record reads their messages here (#9878).
+    """
+
+    def __init__(self, message: str = "", *, read_errors: Sequence[BaseException] = ()) -> None:
+        super().__init__(message)
+        self.read_errors = tuple(read_errors)
+
+
+class TreeUnavailable(RuntimeError):
+    """A tree to read is not available, with a message its raiser built from fixed text and the caller's own ref.
+
+    The one reader error a refusal quotes; any other names only its class (#9878).
+    """
+
+
+def _read_error_reason(exc: BaseException) -> str:
+    return str(exc) if isinstance(exc, TreeUnavailable) else type(exc).__name__
 
 
 def is_kimi_model(model: str | None) -> bool:
@@ -290,7 +312,8 @@ class DirectoryTree:
     root: Path
 
     def __str__(self) -> str:
-        return f"in {self.root}"
+        # A refusal names where it read, never the host path (#9878).
+        return "in the working tree"
 
     def owned_files(self, normalized: str) -> tuple[bool, dict[str, bytes | None]]:
         is_scope, files = scope_files(normalized, repo_root=self.root)
@@ -401,14 +424,14 @@ def content_problem(data: bytes | None) -> str | None:
     return None
 
 
-def owned_scope_reasons(path: str, tree: ContentTree) -> list[str]:
+def owned_scope_reasons(path: str, tree: ContentTree, *, read_errors: list[BaseException] | None = None) -> list[str]:
     """Why an allowlisted owned path is still refused for its content or its descendants in ``tree``.
 
     Every owned file, and every file under an owned directory or glob, must be
     plain UTF-8 text without Cyrillic text or a Cyrillic file name. A directory
     or glob scope that also covers an excluded or off-allowlist file must be
     narrowed to specific files or clean subdirectories. Fails closed when the
-    tree cannot be read.
+    tree cannot be read; the reader's exception is appended to ``read_errors``.
     """
     normalized = normalize_owned_path(path)
     if normalized is None:
@@ -416,7 +439,10 @@ def owned_scope_reasons(path: str, tree: ContentTree) -> list[str]:
     try:
         is_scope, files = tree.owned_files(normalized)
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
-        return [f"owned path {normalized!r} cannot be checked for Ukrainian content {tree} ({exc})"]
+        # A reader's message can hold host paths or remote names: only its class, unless typed (#9878).
+        if read_errors is not None:
+            read_errors.append(exc)
+        return [f"owned path {normalized!r} cannot be checked for Ukrainian content {tree} ({_read_error_reason(exc)})"]
     reasons: list[str] = []
     if is_scope:
         blocked = [rel for rel in files if owned_path_reason(rel)]
@@ -671,10 +697,11 @@ def refuse_kimi_if_disallowed(
         reasons.append(f"--prompt-file {prompt_file!r} lives in agent-private state")
     if repo is not None and repo not in CODING_REPO_ROLES:
         reasons.append(f"--repo role {repo!r} is a private repository")
+    read_errors: list[BaseException] = []
     if not reasons and owned:
-        reasons.extend(_content_reasons(owned, trees))
+        reasons.extend(_content_reasons(owned, trees, read_errors))
     if reasons:
-        raise KimiAdmissionRefused(format_refusal(seat, reasons))
+        raise KimiAdmissionRefused(format_refusal(seat, reasons), read_errors=read_errors)
 
 
 def _git_env() -> dict[str, str]:
@@ -751,15 +778,24 @@ def refuse_kimi_execution(
 
 
 def _content_reasons(
-    owned: Sequence[str], trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]]
+    owned: Sequence[str],
+    trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]],
+    read_errors: list[BaseException],
 ) -> list[str]:
     try:
         resolved = trees() if callable(trees) else trees
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
-        return [f"the tree the worker starts from cannot be read for Ukrainian content ({exc})"]
+        # A reader's message can hold host paths or remote names: only its class, unless typed (#9878).
+        read_errors.append(exc)
+        return [f"the tree the worker starts from cannot be read for Ukrainian content ({_read_error_reason(exc)})"]
     if not resolved:
         return ["owned paths cannot be checked for Ukrainian content (no tree to read)"]
-    reasons = [reason for tree in resolved for path in owned for reason in owned_scope_reasons(path, tree)]
+    reasons = [
+        reason
+        for tree in resolved
+        for path in owned
+        for reason in owned_scope_reasons(path, tree, read_errors=read_errors)
+    ]
     return list(dict.fromkeys(reasons))
 
 
@@ -797,12 +833,14 @@ def _alternative_seats() -> str:
                 if models.get(entry["model_id"], {}).get("family") in {"anthropic", "openai", "xai"}
             }
         )
+        if not reviewers or not consults:
+            raise ValueError("alternative seats missing")
     except ImportError:  # Refusal remains available when the catalog module is unavailable.
         reviewers, consults = ["claude", "codex"], ["claude", "codex", "grok"]
-    except (ValueError, KeyError, TypeError) as exc:
-        raise KimiAdmissionRefused(
-            f"ROUTING REFUSED: MODEL_CATALOG_INVALID: cannot resolve alternative seats ({type(exc).__name__})"
-        ) from exc
+    except Exception as exc:
+        # Formatting is also used outside an admission try/except. Keep the
+        # original refusal and expose catalog failure without its private text.
+        return f"MODEL_CATALOG_INVALID: cannot resolve alternative seats ({type(exc).__name__})"
     return (
         f"reviews → {', '.join(reviewers)} (per the reviewer resolver); "
         f"consults and discussions → {', '.join(consults[:-1])}, or {consults[-1]}; "

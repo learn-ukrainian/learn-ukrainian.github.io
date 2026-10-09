@@ -25,6 +25,7 @@ filterwarnings = [
     "ignore::DeprecationWarning",
 ]
 markers = [
+    "data_tier(*stores, tables=()): real read-only sources/vesum inputs resolved at fixture time",
     "site_toolchain: real Astro MDX compilation; requires site/node_modules and runs in Frontend CI",
     "website: Docusaurus website integrity tests (links, frontmatter, sidebar)",
     "slow: tests that load ML models or require long execution time",
@@ -37,6 +38,7 @@ markers = [
     "reads_content: tests that read curriculum/site-content/wiki files (content CI class lane, #8399)",
     "repo_wide: tests that scan repository trees (tests/, scripts/, agents_extensions/) or run a repo lint, so import-graph selection can never pick them; always run in the selected CI tier (#8707)",
     "needs_artifact(group, rel): test requires data/<rel> from artifact group; skips when unavailable",
+    "real_claude_cli_gate: test exercises the real Claude CLI version gate; the shared stub in tests/conftest.py is not applied (#9903)",
     "rules_core_absent: pins an exact argv or prompt block order, so runs without the rules core (tests/rules_core_view.py)",
 ]
 

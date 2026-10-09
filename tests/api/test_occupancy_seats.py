@@ -18,9 +18,10 @@ from scripts.api.monitor_context import fixture_context
 from scripts.api.occupancy import router as occupancy_router
 from scripts.api.occupancy_local import write_marker
 from scripts.lexicon.runner import atlas_job
+from tests import _host_path_guard as guard
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = guard.HOST_ALIASES
 _PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 
 
@@ -33,7 +34,7 @@ def _client(tmp_path: Path) -> TestClient:
 
 @pytest.fixture(autouse=True)
 def _isolate_local_occupants(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
+    monkeypatch.setenv("ATLAS_RUN_ROOT", "/nonexistent/atlas-run-root")
     marker_root = tmp_path / "no-markers"
     marker_root.mkdir()
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(marker_root))

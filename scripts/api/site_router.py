@@ -32,6 +32,8 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Query
 
+from scripts.common import github_client
+
 from . import config as api_config
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 
@@ -142,7 +144,7 @@ def _run(
     """
     cwd = _run_cwd(cmd, ctx)
     try:
-        return subprocess.run(
+        return github_client.run(
             cmd,
             cwd=cwd,
             capture_output=True,

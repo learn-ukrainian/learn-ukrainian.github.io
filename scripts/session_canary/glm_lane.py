@@ -37,8 +37,6 @@ from scripts.agent_runtime.adapters.glm import (
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
-EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
-
 _HOLDER_AGENT = "glm"
 _HOLDER_HARNESS = "opencode-glm"
 _DEFAULT_MODEL = "glm-5.3"
@@ -243,7 +241,7 @@ def run_glm_probe(
 
 
 def _stream_id(args: argparse.Namespace) -> str:
-    return str(getattr(args, "stream", None) or EPIC_STREAM_DEFAULTS.get(args.epic, f"epic:{args.epic}"))
+    return _gl._stream_id(args)
 
 
 def _cmd_mint_glm(args: argparse.Namespace) -> int:
@@ -378,7 +376,7 @@ Stream: **{stream}** (LOCAL-ONLY: China-egress guard active)
 
 1. Mint 10 durable anchors.
 2. Score from memory (8/10 PASS threshold).
-3. PASS → emit and validate HydrationCapsuleV1 v1.2, then continue only if allowed.
+3. PASS → emit and validate HydrationCapsuleV1 v1.3, then continue only if allowed.
 4. FAIL-HANDOFF → shared handback, exact lease close, and exit.
 5. `python -m scripts.session_canary.glm_lane probe` tests real transport preconditions.
 """
@@ -445,7 +443,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--worktrees", default="")
     score.set_defaults(func=cmd_score)
 
-    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.2 hydration capsule")
+    hydrate = sub.add_parser("hydrate", help="Emit a validated v1.3 hydration capsule")
     hydrate.add_argument("--epic", required=True)
     hydrate.add_argument("--stream", default=None)
     hydrate.set_defaults(func=cmd_hydrate)
@@ -468,7 +466,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not hasattr(args, "repo") or args.repo is None:
         args.repo = ROOT
-    return int(args.func(args))
+    try:
+        return int(args.func(args))
+    except _gl.StreamResolutionError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

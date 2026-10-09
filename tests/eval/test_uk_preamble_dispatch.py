@@ -124,6 +124,35 @@ def test_dispatch_wait_attributes_the_answer_and_its_conditions(fake):
     assert not any(arg in {"--worktree", "--lifecycle-file"} for arg in dispatch_args)
 
 
+def test_review_profile_types_review_tasks_only_and_default_is_unchanged(fake):
+    dispatcher, prompt, _state = fake
+    seat = SEATS["gemini-3.8-flash-high"]
+    plain = dispatcher._dispatch_args("t-flash", seat, "review", prompt)
+    assert "--review-profile" not in plain and "--require-review-verdict" not in plain
+    dispatcher.review_profile = "ukrainian"
+    review = dispatcher._dispatch_args("t-flash", seat, "review", prompt)
+    assert review == [*plain, "--review-profile", "ukrainian", "--require-review-verdict"]
+    for kind in ("writing", "judge"):
+        other = dispatcher._dispatch_args("t-flash", seat, kind, prompt)
+        assert "--review-profile" not in other and "--require-review-verdict" not in other
+    # Delegate's own parser reads it as a target-less Ukrainian review, and the argument hash changes.
+    parsed = delegate.build_parser().parse_args(review)
+    assert parsed.review_profile == "ukrainian" and parsed.require_review_verdict is True
+    assert parsed.branch is None and parsed.pr is None
+    assert delegate._dispatch_is_review_typed(parsed) and delegate._dispatch_is_language_lane(parsed)
+    assert dispatcher.expected_args_sha256("t-flash", seat, "review", prompt) != delegate.dispatch_args_sha256(
+        delegate.build_parser().parse_args(plain)
+    )
+
+
+def test_review_profile_dry_run_carries_the_flags_to_delegate(fake):
+    dispatcher, prompt, state = fake
+    dispatcher.review_profile = "ukrainian"
+    dispatcher.preflight("t-pre-review", SEATS["gemini-3.8-flash-high"], "review", prompt)
+    dry = next(call for call in _calls(state) if "--dry-run" in call)
+    assert dry[dry.index("--review-profile") + 1] == "ukrainian" and "--require-review-verdict" in dry
+
+
 def test_flash_dispatch_carries_no_effort(fake):
     dispatcher, prompt, state = fake
     dispatcher.dispatch("t-flash", SEATS["gemini-3.8-flash-high"], "writing", prompt, force_new=True)

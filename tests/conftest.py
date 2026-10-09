@@ -16,6 +16,7 @@ import sqlite3
 import subprocess
 import sys
 import threading
+import warnings
 import weakref
 from collections.abc import Callable, Collection, Generator
 from datetime import UTC, datetime
@@ -35,10 +36,12 @@ from tests import sparse_trees
 from tests.helpers.monitor import UNREACHABLE_MONITOR_URL, UNREACHABLE_TOOL_TIMING_URL
 
 pytest_plugins = [
+    "tests.helpers.source_db_write_guard",
     "tests.helpers.checkout_write_guard",
     "tests.helpers.checkout_write_defaults",
     "tests.cursor_process_guard",
     "tests.helpers.stress_fixtures",
+    "tests.data_store_fixtures",
 ]
 
 
@@ -107,6 +110,7 @@ SESSION_IDENTITY_ENV_VARS = (
     "LEARN_UKRAINIAN_COLD_START_PROFILE",
     "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
     "LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES",
+    "LEARN_UKRAINIAN_ROLLOVER_MODE",
     "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID",
     "LEARN_UKRAINIAN_REQUESTED_MODEL_ID",
     "LEARN_UKRAINIAN_RESOLUTION_REASON",
@@ -202,6 +206,88 @@ def driver_scope_detection(monkeypatch: pytest.MonkeyPatch) -> Callable[[], bool
     return detector
 
 
+_CLAUDE_ADAPTER_ALIASES = ("scripts.agent_runtime.adapters.claude", "agent_runtime.adapters.claude")
+_STUBBED_CLAUDE_CLI_VERSION = (2, 1, 200)
+# Bridge package the rules-workflow venv does not install. The Claude adapter
+# reaches it through fleet_comms contracts; its absence is not an alias typo.
+_BRIDGE_RUNTIME = "learn_ukrainian_v4_runtime"
+# alias -> why this process last left that probe unpatched. A later successful
+# import removes the entry. The dict is the record; the warning fires once per
+# distinct reason so a runtime-less session does not warn on every test.
+_CLAUDE_GATE_IMPORT_SKIPS: dict[str, str] = {}
+
+
+def _missing_bridge_runtime(exc: ModuleNotFoundError) -> str | None:
+    """Return the missing bridge-runtime module, or None for any other import failure."""
+    missing = exc.name or ""
+    if missing == _BRIDGE_RUNTIME or missing.startswith(_BRIDGE_RUNTIME + "."):
+        return missing
+    return None
+
+
+def _record_claude_gate_skip(alias: str, missing: str) -> None:
+    """Record why ``alias`` was not patched. Warn once per distinct reason."""
+    reason = f"runtime dependency {missing!r} is absent"
+    if _CLAUDE_GATE_IMPORT_SKIPS.get(alias) == reason:
+        return
+    _CLAUDE_GATE_IMPORT_SKIPS[alias] = reason
+    warnings.warn(
+        f"Claude CLI version-probe stub skipped {alias}: {reason}",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+
+
+@pytest.fixture(autouse=True)
+def _stub_claude_cli_version_gate(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep tests independent of the installed Claude CLI version (#9903).
+
+    ``scripts.agent_runtime.adapters.claude`` and ``agent_runtime.adapters.claude``
+    are two module objects, each with its own process-cached
+    ``_probe_claude_cli_version``. The gate calls that probe through the Claude
+    module's globals at call time. ``kimicc`` copies the gate by name, so
+    replacing the gate is order-sensitive: a late import keeps the replacement
+    after teardown. Patching the probe covers every copy, including one imported
+    while the stub is active, and teardown restores the real probe for all of
+    them. This fixture does not import ``kimicc`` and does not replace the gate.
+
+    An alias whose import fails because ``learn_ukrainian_v4_runtime`` is not
+    installed is skipped and the missing module is recorded. The Claude adapter
+    reaches that package through fleet_comms contracts, and the rules-workflow
+    venv does not install it. Any other import error still propagates.
+
+    Tests marked ``real_claude_cli_gate`` keep the real probe (with their own
+    fakes) and only get fresh caches. A test that patches the gate or the probe
+    itself runs after this fixture, so its patch wins.
+    """
+    import importlib
+    import importlib.util
+
+    keep_real_probe = request.node.get_closest_marker("real_claude_cli_gate") is not None
+
+    def _stub(_cmd_prefix: tuple[str, ...]) -> tuple[int, int, int]:
+        return _STUBBED_CLAUDE_CLI_VERSION
+
+    for alias in _CLAUDE_ADAPTER_ALIASES:
+        if alias not in sys.modules and importlib.util.find_spec(alias.split(".")[0]) is None:
+            continue
+        try:
+            module = importlib.import_module(alias)
+        except ModuleNotFoundError as exc:
+            missing = _missing_bridge_runtime(exc)
+            if missing is None:
+                raise
+            _record_claude_gate_skip(alias, missing)
+            continue
+        _CLAUDE_GATE_IMPORT_SKIPS.pop(alias, None)
+        probe = getattr(module, "_probe_claude_cli_version", None)
+        if probe is not None and hasattr(probe, "cache_clear"):
+            probe.cache_clear()
+            request.addfinalizer(probe.cache_clear)
+        if probe is not None and not keep_real_probe:
+            monkeypatch.setattr(module, "_probe_claude_cli_version", _stub)
+
+
 @pytest.fixture(autouse=True)
 def dispatch_slice_probe(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     """Decouple tests from the host's ``lu-dispatch.slice`` (#8891, #9514).
@@ -251,6 +337,15 @@ def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None,
         yield
     finally:
         _LIVE_GITHUB_ALLOWED = previous
+
+
+@pytest.fixture(autouse=True)
+def _github_client_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest) -> None:
+    """New GitHub disk-cache writes remain test-owned and credential-free."""
+    monkeypatch.setenv("LU_GITHUB_CACHE_DIR", str(tmp_path / "github-cache"))
+    # The launcher backend must not bypass per-test fake CLIs on PATH.
+    if request.node.get_closest_marker("live_github") is None:
+        monkeypatch.delenv("AGENT_REAL_GH", raising=False)
 
 
 @pytest.fixture(autouse=True)
@@ -699,12 +794,9 @@ def pytest_runtest_logfinish(nodeid: str, location: tuple[str, int | None, str])
 
 def _require_data_artifact(
     relative_path: str,
-    *,
-    required_sqlite_tables: Collection[str] = (),
 ) -> Path:
     """Return a local data artifact or skip tests that cannot run without it."""
-    data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
-    artifact = data_root / relative_path
+    artifact = _REPO_ROOT / relative_path
     if not artifact.is_file():
         try:
             from scripts.guardrails.worktree_containment import resolve_main_root
@@ -717,28 +809,14 @@ def _require_data_artifact(
     if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
-    if required_sqlite_tables:
-        try:
-            with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
-                available_tables = {
-                    row[0]
-                    for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")
-                }
-        except sqlite3.Error:
-            available_tables = set()
-        missing_tables = sorted(set(required_sqlite_tables) - available_tables)
-        if missing_tables:
-            pytest.skip(
-                f"requires {relative_path} with SQLite tables: {', '.join(missing_tables)} (not provisioned in CI)"
-            )
     return artifact
 
 
 @pytest.fixture
-def requires_sources_db() -> Path:
+def requires_sources_db(data_store_factory) -> Path:
     """Skip a test requiring the complete uncommitted sources corpus database."""
-    return _require_data_artifact(
-        "data/sources.db",
+    return data_store_factory(
+        "sources",
         required_sqlite_tables=(
             "external_articles",
             "external_fts",
@@ -756,9 +834,9 @@ def requires_sources_db() -> Path:
 
 
 @pytest.fixture
-def requires_vesum_db() -> Path:
+def requires_vesum_db(data_store_factory) -> Path:
     """Skip a test requiring the uncommitted VESUM database."""
-    return _require_data_artifact("data/vesum.db", required_sqlite_tables=("forms",))
+    return data_store_factory("vesum", required_sqlite_tables=("forms",))
 
 
 @pytest.fixture
@@ -834,10 +912,20 @@ def _hermetic_dispatch_admission_host(monkeypatch):
 
     Admission reads this host's MemAvailable and load average; a busy CI runner
     or developer box must not refuse the write dispatches other tests make.
-    Admission tests monkeypatch ``probe_host`` themselves.
+    Admission tests monkeypatch ``probe_host`` themselves. The shared
+    ``lu.slice`` pool is not read unless a test sets ``LU_SLICE_CGROUP`` to a
+    fake cgroup (#9975).
     """
-    for name in ("DISPATCH_MAX_LIVE_WRITE_WORKERS", "DISPATCH_MIN_MEM_AVAILABLE_GIB", "DISPATCH_MAX_LOAD_PER_CPU"):
+    for name in (
+        "DISPATCH_MAX_LIVE_WRITE_WORKERS",
+        "DISPATCH_MIN_MEM_AVAILABLE_GIB",
+        "DISPATCH_MAX_LOAD_PER_CPU",
+        "DISPATCH_WORKER_MEM_RESERVE_GIB",
+        "LU_SLICE_CGROUP",
+    ):
         monkeypatch.delenv(name, raising=False)
+    # Never read a deployment env file from the machine running the tests.
+    monkeypatch.setenv("DISPATCH_ADMISSION_ENV_FILE", "")
     monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
 
 
@@ -1152,6 +1240,60 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     monkeypatch.setenv("LU_TASKS_DIR", str(isolated))
     _retarget_api_batch_state(monkeypatch, isolated.parent)
     return isolated
+
+
+@pytest.fixture(autouse=True)
+def _isolate_runtime_scratch_root(
+    request: pytest.FixtureRequest,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> Path:
+    """Point fleet scratch at a per-test directory (#9927).
+
+    ``LU_SCRATCH_ROOT`` is the supported creation override in
+    ``scripts.common.scratch``. ``LU_RUNTIME_TMP_BASE_ROOT`` is not: the
+    dispatcher records it for nested cleanup, and honoring it would pull
+    worker scratch back onto tmpfs. Delegate leases are
+    ``ensure_scratch_root() / "learn-ukrainian" / <task-id>``, so an unset
+    override shares ``/var/tmp/lu/learn-ukrainian/<task-id>`` across cases.
+
+    ``LU_SCRATCH_SCAN_ROOT`` is the supported scan confinement. Every test,
+    including default-resolution tests, sets it to ``tmp_path``.
+    ``scratch_scan_roots`` then omits the host default and the legacy temp
+    directory, so an orphan sweep cannot delete leases outside this test.
+    The scan variable is not a creation override. A test that sets either
+    variable itself runs after this fixture, so that value wins.
+
+    The scratch directory is not created here. An autouse mkdir under
+    ``tmp_path`` breaks tests that require an empty tmp dir (see
+    ``_isolate_write_ownership_ledger``). ``ensure_scratch_root`` creates the
+    override when a lease is actually allocated.
+
+    Tests marked ``exercises_default_scratch_root`` keep the creation
+    override unset and resolve the built-in default. Their default is a
+    private directory under ``tmp_path``, not the host's ``/var/tmp/lu``.
+    Scans stay inside ``tmp_path`` for those tests too.
+    """
+    from scripts.common import scratch
+
+    monkeypatch.setenv(scratch.SCRATCH_SCAN_ROOT_ENV_VAR, str(tmp_path))
+
+    if request.node.get_closest_marker("exercises_default_scratch_root"):
+        fake_root = tmp_path / "fake-default-scratch"
+        fake_root.mkdir()
+        monkeypatch.delenv(scratch.SCRATCH_ROOT_ENV_VAR, raising=False)
+        real_default = scratch.DEFAULT_SCRATCH_ROOT
+        monkeypatch.setattr(scratch, "DEFAULT_SCRATCH_ROOT", fake_root)
+        for module in list(sys.modules.values()):
+            if module is None or module is scratch:
+                continue
+            if getattr(module, "DEFAULT_SCRATCH_ROOT", None) is real_default:
+                monkeypatch.setattr(module, "DEFAULT_SCRATCH_ROOT", fake_root)
+        return fake_root
+
+    root = tmp_path / "runtime-scratch"
+    monkeypatch.setenv(scratch.SCRATCH_ROOT_ENV_VAR, str(root))
+    return root
 
 
 class SocketBlockedError(RuntimeError):
@@ -1893,6 +2035,12 @@ def pytest_configure(config: pytest.Config) -> None:
         "markers",
         "needs_artifact(group, rel): test requires data/<rel> from artifact group; "
         "skipped only when the artifact is absent",
+    )
+    config.addinivalue_line(
+        "markers",
+        "exercises_default_scratch_root: test resolves the built-in scratch root with "
+        "LU_SCRATCH_ROOT unset. The isolation fixture points that default at a private "
+        "directory under tmp_path instead of /var/tmp/lu (#9927)",
     )
     # The live app's request middleware defaults to 10s. Tests that drive
     # TestClient(api_main.app) and read the real decision/ADR tree have
@@ -2889,3 +3037,45 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
 from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401
+
+
+@pytest.fixture
+def github_command_boundary(monkeypatch):
+    """Caller tests replace whole GitHub commands; HTTP tests inject transport."""
+    from scripts.common import github_client
+
+    def run(args, **kwargs):
+        kwargs.pop("fresh", None)
+        return subprocess.run(args, timeout=kwargs.pop("timeout", 30), **kwargs)
+
+    monkeypatch.setattr(github_client, "run", run)
+
+
+@pytest.fixture
+def github_transport(monkeypatch):
+    """Install one HTTP transport seam while retaining the real client and readers.
+
+    The handler receives method, endpoint, headers, body and timeout. Responses
+    exercise status, headers, caching and REST reshaping exactly as production.
+    """
+    from scripts.common import github_client
+
+    constructor = github_client.GitHubClient
+
+    def install(handler):
+        calls = []
+        install.clients = []
+
+        def transport(method, endpoint, headers, body, timeout):
+            calls.append((method, endpoint, headers, body, timeout))
+            return handler(method, endpoint, headers, body, timeout)
+
+        def client(**kwargs):
+            store = constructor(**{**kwargs, "transport": transport})
+            install.clients.append(store)
+            return store
+
+        monkeypatch.setattr(github_client, "GitHubClient", client)
+        return calls
+
+    return install

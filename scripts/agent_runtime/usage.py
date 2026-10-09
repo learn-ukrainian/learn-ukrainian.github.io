@@ -32,17 +32,29 @@ builds; see ``_RATE_LIMIT_WINDOW_S`` for the full story.
 
 Issue: #1184. Supersedes standalone #1183.
 """
+
 from __future__ import annotations
 
 import contextlib
 import json
 import os
 import time
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from secret_redactor import redact_text, redact_value
+try:
+    from secret_redactor import redact_text, redact_value
+except ModuleNotFoundError as exc:
+    if exc.name != "secret_redactor":
+        raise
+    from scripts.secret_redactor import redact_text, redact_value
+
+try:
+    from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+except ImportError:  # pragma: no cover - package import path
+    from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 
 try:
     from scripts.common.repo_root import main_checkout_root
@@ -150,9 +162,7 @@ def write_record(record: dict[str, Any]) -> None:
             event_ts: float = time.time()  # safe fallback
             if ts_str:
                 with contextlib.suppress(ValueError, AttributeError):
-                    event_ts = datetime.fromisoformat(
-                        str(ts_str).replace("Z", "+00:00")
-                    ).timestamp()
+                    event_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
             existing = _RATE_LIMIT_CACHE.get(key)
             if existing is None or event_ts > existing:
                 _RATE_LIMIT_CACHE[key] = event_ts
@@ -161,6 +171,7 @@ def write_record(record: dict[str, Any]) -> None:
         # call itself already succeeded or failed at this point; we're only
         # trying to persist a telemetry row.
         import sys
+
         safe_exc = redact_text(str(exc)) or ""
         print(
             f"[usage] WARNING: failed to write record: {type(exc).__name__}: {safe_exc}",
@@ -182,6 +193,63 @@ def _utc_timestamp(value: Any) -> datetime | None:
 LANE_RUNTIME_WINDOW_S = _RATE_LIMIT_WINDOW_S
 
 
+def _gemini_telemetry_names() -> tuple[str, ...]:
+    """File prefixes for the Gemini subscription row.
+
+    Routing-budget asks for ``gemini``. Historical rows keep that prefix and
+    the live writer keeps ``agy``. ``RETIRED_AGENT_ALIASES`` is the read-only
+    fact for that retirement, the same map ``capacity_pick`` and the runtime
+    router already consult. This reader does not admit or resolve a dispatch
+    target. A map successor other than those two prefixes is included once.
+    Other retired aliases stay separate (``glm`` does not fold into ``cursor``).
+    """
+    names: list[str] = []
+    successor = RETIRED_AGENT_ALIASES.get("gemini")
+    for name in ("agy", "gemini", successor):
+        if isinstance(name, str) and name and name not in names:
+            names.append(name)
+    return tuple(names)
+
+
+def _usage_read_names(agent: str) -> tuple[str, ...]:
+    """Prefixes whose JSONL belongs to this summary request."""
+    names = _gemini_telemetry_names()
+    if str(agent).strip().lower() in names:
+        return names
+    return (agent,)
+
+
+def _usage_file_identity(file_path: Path) -> tuple[Any, ...]:
+    """Identity of one usage input so two alias names cannot count it twice.
+
+    Hard links share an inode. A symlink is the target inode after ``stat``
+    follows it. A missing target uses its resolved path, so two links to the
+    same absent file are one unreadable input.
+    """
+    try:
+        stat_result = file_path.stat()
+    except OSError:
+        try:
+            return ("unreachable", os.path.realpath(file_path))
+        except OSError:
+            return ("unreachable", os.path.normpath(str(file_path)))
+    return ("inode", stat_result.st_dev, stat_result.st_ino)
+
+
+def _lane_usage_files(root: Path, agent: str) -> list[Path]:
+    """JSONL inputs for ``agent``, each physical file at most once."""
+    seen: set[tuple[Any, ...]] = set()
+    found: list[Path] = []
+    for name in _usage_read_names(agent):
+        for file_path in root.glob(f"usage_{name}-*.jsonl"):
+            identity = _usage_file_identity(file_path)
+            if identity in seen:
+                continue
+            seen.add(identity)
+            found.append(file_path)
+    return found
+
+
 def summarize_lane_runtime(
     agent: str,
     *,
@@ -201,7 +269,14 @@ def summarize_lane_runtime(
     ``lines``: unparseable lines in a lane file; ``records``: ``rate_limited``
     records without an explicit-UTC timestamp), so "none found" stays distinct
     from "could not read". A missing file or directory is the empty case; a listed
-    symlink with a missing target is unreadable.
+    symlink with a missing target is unreadable. Line parsing is
+    ``_iter_usage_records``, the same reader burn uses, so an invalid UTF-8
+    byte is an unreadable line even inside a JSON string. The UTF-8 encoding
+    of U+FFFD is data.
+
+    The Gemini subscription name and the AGY writer are one read set
+    (``usage_agy-*`` and ``usage_gemini-*``). An input that both names reach
+    is counted once. Other lanes stay on their own prefix.
     """
     now_ts = time.time() if now is None else now
     cutoff = now_ts - float(window_s)
@@ -219,62 +294,55 @@ def summarize_lane_runtime(
     if root.is_dir():
         if not os.access(root, os.R_OK | os.X_OK):
             unreadable["files"] += 1
-        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
+        for file_path in _lane_usage_files(root, agent):
             try:
+                # Burn reads every file. Runtime still skips a file whose mtime
+                # is outside the window and does not count faults inside it.
                 if file_path.stat().st_mtime < cutoff:
                     continue
-                with open(file_path, "rb") as handle:
-                    for raw in handle:
-                        text = raw.decode("utf-8", errors="replace").strip()
-                        if not text:
-                            continue
-                        try:
-                            rec = json.loads(text)
-                        except ValueError:
-                            unreadable["lines"] += 1
-                            continue
-                        if not isinstance(rec, dict):
-                            unreadable["lines"] += 1
-                            continue
-                        outcome = str(rec.get("outcome") or "other")
-                        if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
-                            # Counted below only when the lenient parse reads it (legacy
-                            # behaviour for other callers); flagged either way.
-                            unreadable["records"] += 1
-                        ts_str = rec.get("ts")
-                        if not ts_str:
-                            continue
-                        try:
-                            ts = datetime.fromisoformat(
-                                str(ts_str).replace("Z", "+00:00")
-                            ).timestamp()
-                        except (ValueError, AttributeError, TypeError):
-                            continue
-                        if ts < cutoff:
-                            continue
-                        if outcome in counts:
-                            counts[outcome] += 1
-                        else:
-                            counts["other"] += 1
-                        if last_outcome_at is None or ts > last_outcome_at:
-                            last_outcome_at = ts
-                        if outcome == "rate_limited":
-                            rate_limit_events.append(ts)
-                            model = rec.get("model")
-                            if isinstance(model, str) and model:
-                                models_limited.add(model)
             except FileNotFoundError:
-                # A regular file (or its directory) removed after the listing held no
-                # records; a listed symlink whose target is missing is evidence that
-                # cannot be read.
+                # A regular file removed after the listing held no records. A
+                # listed symlink whose target is missing is evidence that
+                # cannot be read. The shared reader applies the same rule when
+                # the file disappears between this stat and the open.
                 if os.path.islink(file_path):
                     unreadable["files"] += 1
+                continue
             except OSError:
                 unreadable["files"] += 1
+                continue
+            for rec in _iter_usage_records(file_path, unreadable):
+                outcome = str(rec.get("outcome") or "other")
+                if outcome == "rate_limited" and _utc_timestamp(rec.get("ts")) is None:
+                    # Counted below only when the lenient parse reads it (legacy
+                    # behaviour for other callers); flagged either way.
+                    unreadable["records"] += 1
+                ts_str = rec.get("ts")
+                if not ts_str:
+                    continue
+                try:
+                    ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+                except (ValueError, AttributeError, TypeError):
+                    continue
+                if ts < cutoff:
+                    continue
+                if outcome in counts:
+                    counts[outcome] += 1
+                else:
+                    counts["other"] += 1
+                if last_outcome_at is None or ts > last_outcome_at:
+                    last_outcome_at = ts
+                if outcome == "rate_limited":
+                    rate_limit_events.append(ts)
+                    model = rec.get("model")
+                    if isinstance(model, str) and model:
+                        models_limited.add(model)
 
-    # Merge in-process cache (may be ahead of disk).
+    # Merge in-process cache (may be ahead of disk). Alias writers (agy) share
+    # the Gemini subscription cache so a just-written rate limit is not dropped.
+    read_names = _usage_read_names(agent)
     for (cached_agent, cached_model), cached_ts in list(_RATE_LIMIT_CACHE.items()):
-        if cached_agent != agent:
+        if cached_agent not in read_names:
             continue
         if cached_ts >= cutoff:
             if cached_ts not in rate_limit_events:
@@ -293,8 +361,7 @@ def summarize_lane_runtime(
         if age_s < _RECENCY_BLOCK_THRESHOLD_S:
             headroom_blocked = True
             headroom_reason = (
-                f"rate_limited {age_s}s ago "
-                f"({len(rate_limit_events)} events in last {int(window_s) // 60}min)"
+                f"rate_limited {age_s}s ago ({len(rate_limit_events)} events in last {int(window_s) // 60}min)"
             )
 
     def _iso(ts: float | None) -> str | None:
@@ -321,6 +388,47 @@ def summarize_lane_runtime(
     }
 
 
+def _iter_usage_records(file_path: Path, unreadable: dict[str, int]) -> Iterator[dict[str, Any]]:
+    """Yield JSON objects from one usage file, one line at a time.
+
+    ``summarize_lane_runtime`` and ``summarize_fleet_burn`` both use this
+    reader, so they share one UTF-8 boundary. A line that is not strict
+    UTF-8, not JSON, or not a JSON object increments ``unreadable["lines"]``
+    and is skipped. Invalid bytes are refused before JSON parsing, including
+    inside a string; they are not replaced into a value that could be
+    counted. The UTF-8 bytes of U+FFFD are valid text and stay in the row.
+    An unreadable file increments ``unreadable["files"]`` and yields nothing.
+    Neither fault is raised: rows already accepted, later rows in the same
+    file, and other files stay in the caller's totals.
+    """
+    try:
+        with open(file_path, "rb") as handle:
+            for raw in handle:
+                try:
+                    text = raw.decode("utf-8", errors="strict").strip()
+                except UnicodeDecodeError:
+                    unreadable["lines"] += 1
+                    continue
+                if not text:
+                    continue
+                try:
+                    parsed = json.loads(text)
+                except ValueError:
+                    unreadable["lines"] += 1
+                    continue
+                if not isinstance(parsed, dict):
+                    unreadable["lines"] += 1
+                    continue
+                yield parsed
+    except FileNotFoundError:
+        # A regular file removed after the listing held no rows. A listed
+        # symlink whose target is missing is evidence that cannot be read.
+        if os.path.islink(file_path):
+            unreadable["files"] += 1
+    except OSError:
+        unreadable["files"] += 1
+
+
 def _new_fleet_burn_window() -> dict[str, Any]:
     return {
         "window_s": 0,
@@ -335,7 +443,15 @@ def summarize_fleet_burn(
     usage_dir: Path | None = None,
     now: float | None = None,
 ) -> dict[str, Any]:
-    """Dispatch burn from our JSONL across 5h / 7d / 30d windows."""
+    """Dispatch burn from our JSONL across 5h / 7d / 30d windows.
+
+    Gemini and AGY share one read set, as in ``summarize_lane_runtime``.
+    One malformed line or unreadable file is reported on ``unreadable``
+    and cannot drop durations parsed from the other rows. A missing
+    directory is the empty case. A directory the process cannot list is
+    one unreadable file, the same guard runtime uses, so every window
+    stays at zero instead of a clean reading.
+    """
     now_ts = time.time() if now is None else now
     windows_s = {
         "5h": 5 * 3600,
@@ -346,42 +462,33 @@ def summarize_fleet_burn(
     for name, window_s in windows_s.items():
         buckets[name]["window_s"] = int(window_s)
 
+    unreadable = {"files": 0, "lines": 0, "records": 0}
     root = usage_dir if usage_dir is not None else _usage_dir()
     if root.is_dir():
-        for file_path in root.glob(f"usage_{agent}-*.jsonl"):
-            try:
-                with open(file_path, encoding="utf-8") as handle:
-                    for raw in handle:
-                        raw = raw.strip()
-                        if not raw:
-                            continue
-                        try:
-                            rec = json.loads(raw)
-                        except json.JSONDecodeError:
-                            continue
-                        ts_str = rec.get("ts")
-                        if not ts_str:
-                            continue
-                        try:
-                            ts = datetime.fromisoformat(
-                                str(ts_str).replace("Z", "+00:00")
-                            ).timestamp()
-                        except (ValueError, AttributeError, TypeError):
-                            continue
-                        outcome = str(rec.get("outcome") or "other")
-                        duration = rec.get("duration_s")
-                        hours = float(duration) / 3600.0 if isinstance(duration, (int, float)) else 0.0
-                        for name, window_s in windows_s.items():
-                            if ts < now_ts - window_s:
-                                continue
-                            bucket = buckets[name]
-                            counts = bucket["counts"]
-                            key = outcome if outcome in counts else "other"
-                            counts[key] += 1
-                            counts["total"] += 1
-                            bucket["hours"] = round(float(bucket["hours"]) + hours, 4)
-            except OSError:
-                continue
+        # Path.glob yields nothing when this directory cannot be listed.
+        if not os.access(root, os.R_OK | os.X_OK):
+            unreadable["files"] += 1
+        for file_path in _lane_usage_files(root, agent):
+            for rec in _iter_usage_records(file_path, unreadable):
+                ts_str = rec.get("ts")
+                if not ts_str:
+                    continue
+                try:
+                    ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+                except (ValueError, AttributeError, TypeError):
+                    continue
+                outcome = str(rec.get("outcome") or "other")
+                duration = rec.get("duration_s")
+                hours = float(duration) / 3600.0 if isinstance(duration, (int, float)) else 0.0
+                for name, window_s in windows_s.items():
+                    if ts < now_ts - window_s:
+                        continue
+                    bucket = buckets[name]
+                    counts = bucket["counts"]
+                    key = outcome if outcome in counts else "other"
+                    counts[key] += 1
+                    counts["total"] += 1
+                    bucket["hours"] = round(float(bucket["hours"]) + hours, 4)
 
     for bucket in buckets.values():
         bucket["hours"] = round(float(bucket["hours"]), 4)
@@ -390,11 +497,27 @@ def summarize_fleet_burn(
         "source": "agent_runtime_jsonl",
         "agent": agent,
         "windows": buckets,
+        "unreadable": {**unreadable, "total": sum(unreadable.values())},
     }
 
 
-def has_headroom(agent: str, model: str) -> tuple[bool, str]:
+def has_headroom(
+    agent: str,
+    model: str,
+    *,
+    unreadable: dict[str, int] | None = None,
+) -> tuple[bool, str]:
     """Check whether (agent, model) has quota headroom for a new call.
+
+    Args:
+        agent: Agent name whose ``usage_<agent>-*.jsonl`` files to scan.
+        model: Model name to filter records by.
+        unreadable: Optional ``{"files", "lines", "records"}`` counter that
+            receives the shared reader's fault counts. A line that is not
+            strict UTF-8, not JSON, or not a JSON object, and a file that
+            cannot be read, each increment the counter instead of raising
+            or being silently dropped (#9924). When omitted the counts are
+            still computed but not surfaced.
 
     Returns:
         (True, "")  — no recent rate-limit in the 15-minute window, proceed.
@@ -406,7 +529,8 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
         1. Check in-process cache first (fast path, zero I/O).
         2. Fall through to reading today's JSONL files scoped by
            (agent, model), looking for any rate_limited record within
-           the last 15 minutes.
+           the last 15 minutes, via the shared ``_iter_usage_records``
+           line reader.
 
     Window history: originally 5 hours, reduced to 15 minutes on
     2026-04-10, then to 5 minutes + min-events-to-block=2 on 2026-04-11
@@ -428,37 +552,38 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     cutoff = now - _RATE_LIMIT_WINDOW_S
     usage_dir = _usage_dir()
     rate_limit_events: list[float] = []
+    if unreadable is None:
+        unreadable = {"files": 0, "lines": 0, "records": 0}
 
     for file_path in usage_dir.glob(f"usage_{agent}-*.jsonl"):
         try:
             # Skip files whose modification time is entirely before the cutoff
             if file_path.stat().st_mtime < cutoff:
                 continue
-
-            with open(file_path, encoding="utf-8") as f:
-                for raw in f:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        rec = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue  # truncated or corrupted line; skip
-                    if rec.get("model") != model:
-                        continue
-                    if rec.get("outcome") != "rate_limited":
-                        continue
-                    ts_str = rec.get("ts")
-                    if not ts_str:
-                        continue
-                    try:
-                        ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00")).timestamp()
-                    except (ValueError, AttributeError):
-                        continue
-                    if ts >= cutoff:
-                        rate_limit_events.append(ts)
+        except FileNotFoundError:
+            # A regular file removed after the listing held no records. A
+            # listed symlink whose target is missing is evidence that cannot
+            # be read — the same rule summarize_lane_runtime applies.
+            if os.path.islink(file_path):
+                unreadable["files"] += 1
+            continue
         except OSError:
-            continue  # file disappeared mid-scan or permission denied; skip
+            unreadable["files"] += 1
+            continue
+        for rec in _iter_usage_records(file_path, unreadable):
+            if rec.get("model") != model:
+                continue
+            if rec.get("outcome") != "rate_limited":
+                continue
+            ts_str = rec.get("ts")
+            if not ts_str:
+                continue
+            try:
+                ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+            except (ValueError, AttributeError, TypeError):
+                continue
+            if ts >= cutoff:
+                rate_limit_events.append(ts)
 
     # Cross-check the in-process cache as well — its event may not be on
     # disk yet (writer race) and we'd otherwise undercount.
@@ -482,8 +607,7 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
         age_s = int(now - most_recent)
         if age_s < _RECENCY_BLOCK_THRESHOLD_S:
             return False, (
-                f"rate_limited {age_s}s ago "
-                f"({len(rate_limit_events)} events in last {_RATE_LIMIT_WINDOW_S // 60}min)"
+                f"rate_limited {age_s}s ago ({len(rate_limit_events)} events in last {_RATE_LIMIT_WINDOW_S // 60}min)"
             )
 
     return True, ""

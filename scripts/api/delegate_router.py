@@ -7,6 +7,7 @@ import contextlib
 import json
 import os
 import sqlite3
+import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -14,12 +15,21 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
 from scripts.orchestration.task_record_store import iter_task_records
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+from scripts.work.sources_public import public_repository_id
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
+from .state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 
 router = APIRouter(tags=["delegate"])
 
@@ -27,6 +37,10 @@ RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
+# Short enough that a dead pid drops off the active list quickly, long enough
+# that a burst of dashboard polls shares one directory scan.
+DELEGATE_LIST_TTL_S = 2.0
+_TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
@@ -188,7 +202,7 @@ def _task_cache_db_path(tasks_dir_str: str) -> Path:
     return Path(tasks_dir_str) / ".task_cache.sqlite3"
 
 
-def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sqlite3.Connection | None:
+def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> SQLiteConnection | None:
     try:
         conn = resolve_context(ctx)._open_db(db_path)
         conn.execute(
@@ -209,12 +223,15 @@ def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sql
                 cli_version TEXT,
                 substitution TEXT,
                 claimed_repo TEXT,
-                run_nonce TEXT
+                run_nonce TEXT,
+                linked_issues TEXT
             )
             """
         )
         with contextlib.suppress(sqlite3.OperationalError):
             conn.execute("ALTER TABLE task_cache ADD COLUMN run_nonce TEXT")
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("ALTER TABLE task_cache ADD COLUMN linked_issues TEXT")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_task_cache_mtime ON task_cache(mtime)")
         conn.commit()
         return conn
@@ -238,7 +255,7 @@ def _load_task_cache_from_db(
             """
             SELECT path, mtime, task_id, status, derived_status, pid, alive,
                    started_at, duration_s, agent, model, effort, cli_version,
-                   substitution, claimed_repo, run_nonce
+                   substitution, claimed_repo, run_nonce, linked_issues
             FROM task_cache
             """
         )
@@ -265,6 +282,7 @@ def _load_task_cache_from_db(
                 subst_str,
                 claimed_repo,
                 run_nonce,
+                linked_issues_raw,
             ) = row
             subst = None
             if subst_str:
@@ -284,6 +302,9 @@ def _load_task_cache_from_db(
                 "duration_s": duration_s,
                 "run_nonce": run_nonce,
             }
+            linked_issues = _decode_linked_issues(linked_issues_raw)
+            if linked_issues is not None:
+                summary["linked_issues"] = linked_issues
             cache[path_str] = (
                 float(mtime),
                 summary,
@@ -309,7 +330,7 @@ def _save_task_cache_entries(
             return
         conn.executemany(
             """
-            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT OR REPLACE INTO task_cache VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             records,
         )
@@ -338,6 +359,70 @@ def _delete_task_cache_entries(
         pass
 
 
+def _decode_linked_issues(raw: Any) -> list[dict[str, Any]] | None:
+    if raw is None:
+        return None
+    if isinstance(raw, list):
+        payload = raw
+    elif isinstance(raw, str):
+        try:
+            payload = json.loads(raw)
+        except (json.JSONDecodeError, TypeError):
+            return None
+    else:
+        return None
+    if not isinstance(payload, list):
+        return None
+    return payload
+
+
+def _linked_issues_from_dor(task: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Canonical issue links from a DoR-checked preflight, or None when absent.
+
+    Foreign repositories are recorded on ``issue_repositories`` and also counted
+    inside ``issues``. One canonical link is emitted only for the remainder.
+    """
+    preflight = task.get("dor_preflight")
+    if not isinstance(preflight, dict):
+        return None
+    if "issues" not in preflight and "issue_repositories" not in preflight:
+        return None
+
+    canonical = public_repository_id()
+    foreign_by_number: dict[int, list[str]] = {}
+    foreign_links: list[dict[str, Any]] = []
+    raw_foreign = preflight.get("issue_repositories") or []
+    if isinstance(raw_foreign, list):
+        for entry in raw_foreign:
+            if not isinstance(entry, dict):
+                continue
+            try:
+                number = int(entry.get("issue"))
+            except (TypeError, ValueError):
+                continue
+            repo = entry.get("repo") if isinstance(entry.get("repo"), str) else entry.get("repository")
+            if not isinstance(repo, str) or not repo or number <= 0:
+                continue
+            foreign_by_number.setdefault(number, []).append(repo)
+            foreign_links.append({"issue": number, "repository": repo})
+    counts: dict[int, int] = {}
+    raw_issues = preflight.get("issues") or []
+    if isinstance(raw_issues, list):
+        for raw_issue in raw_issues:
+            try:
+                number = int(raw_issue)
+            except (TypeError, ValueError):
+                continue
+            if number > 0:
+                counts[number] = counts.get(number, 0) + 1
+    links: list[dict[str, Any]] = []
+    for number, count in sorted(counts.items()):
+        if count - len(foreign_by_number.get(number, [])) > 0:
+            links.append({"issue": number, "repository": canonical})
+    links.extend(foreign_links)
+    return links
+
+
 def _delegate_task_rows(
     statuses: set[str] | None = None,
     *,
@@ -362,6 +447,19 @@ def _delegate_task_rows(
     history. Active queries (running, spawning, ``needs_finalize``) read the
     hot directory only: nothing in the archive can match them.
     """
+    # One scan mutates the process-wide task cache and the sidecar index.
+    # Concurrent scans used to interleave those updates and pile SQLite writes
+    # on the same file until the request timeout fired.
+    with _TASK_SCAN_LOCK:
+        return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx)
+
+
+def _delegate_task_rows_locked(
+    statuses: set[str] | None = None,
+    *,
+    repository: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> list[dict[str, Any]]:
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
     resolved = resolve_context(ctx)
@@ -418,6 +516,7 @@ def _delegate_task_rows(
             raw_status = str(task.get("status") or "")
             subst = task.get("substitution")
             run_nonce = task.get("run_nonce")
+            linked_issues = _linked_issues_from_dor(task)
             summary = {
                 "task_id": task_id,
                 "agent": task.get("agent"),
@@ -430,6 +529,8 @@ def _delegate_task_rows(
                 "duration_s": task.get("duration_s"),
                 "run_nonce": run_nonce,
             }
+            if linked_issues is not None:
+                summary["linked_issues"] = linked_issues
             cached_tuple = (
                 mtime,
                 summary,
@@ -462,6 +563,7 @@ def _delegate_task_rows(
                     subst_str,
                     claimed_repo,
                     run_nonce,
+                    json.dumps(linked_issues) if linked_issues is not None else None,
                 )
             )
 
@@ -475,21 +577,22 @@ def _delegate_task_rows(
             continue
 
         task_id = summary["task_id"]
-        rows.append(
-            {
-                "task_id": task_id,
-                "agent": summary.get("agent"),
-                "model": summary.get("model"),
-                "effort": summary.get("effort"),
-                "cli_version": summary.get("cli_version"),
-                "substitution": summary.get("substitution"),
-                "status": derived_status,
-                "started_at": summary.get("started_at"),
-                "duration_s": summary.get("duration_s"),
-                "age_s": _task_age_seconds(summary.get("started_at")),
-                "alive": alive,
-            }
-        )
+        row = {
+            "task_id": task_id,
+            "agent": summary.get("agent"),
+            "model": summary.get("model"),
+            "effort": summary.get("effort"),
+            "cli_version": summary.get("cli_version"),
+            "substitution": summary.get("substitution"),
+            "status": derived_status,
+            "started_at": summary.get("started_at"),
+            "duration_s": summary.get("duration_s"),
+            "age_s": _task_age_seconds(summary.get("started_at")),
+            "alive": alive,
+        }
+        if "linked_issues" in summary:
+            row["linked_issues"] = summary["linked_issues"]
+        rows.append(row)
 
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
@@ -601,6 +704,32 @@ def active_delegate_tasks(
     return {"total": len(active), "tasks": active}
 
 
+def _dir_token(path: Path) -> str:
+    """Cheap generation for a directory: changes when entries are added or removed."""
+    try:
+        st = os.stat(path)
+    except OSError:
+        return "missing"
+    return f"{st.st_mtime_ns}:{getattr(st, 'st_nlink', 0)}"
+
+
+def _delegate_list_cache_key(
+    ctx: MonitorContext,
+    kind: str,
+    *,
+    status: str,
+    limit: int,
+) -> str:
+    resolved = resolve_context(ctx)
+    tasks_dir = _tasks_dir(resolved)
+    prefix = ctx_scoped_ttl_key(resolved, "delegate", kind, status, limit)
+    # A new directory generation replaces the previous snapshot. Keeping every
+    # generation would retain obsolete task lists for the life of the process.
+    key = f"{prefix}:{_dir_token(tasks_dir)}:{_dir_token(tasks_dir / TASK_ARCHIVE_DIR_NAME)}"
+    cache_retain(f"{prefix}:", key)
+    return key
+
+
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal[
@@ -610,12 +739,22 @@ async def delegate_tasks(
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit, ctx=ctx)
+    cache_key = _delegate_list_cache_key(ctx, "tasks", status=status, limit=limit)
+    return await cache_get_or_compute_async(
+        cache_key,
+        DELEGATE_LIST_TTL_S,
+        lambda: list_delegate_tasks(status=status, limit=limit, ctx=ctx),
+    )
 
 
 @router.get("/active")
 async def delegate_active(ctx: MonitorContext = Depends(get_ctx)):
-    return await asyncio.to_thread(active_delegate_tasks, ctx=ctx)
+    cache_key = _delegate_list_cache_key(ctx, "active", status="active", limit=0)
+    return await cache_get_or_compute_async(
+        cache_key,
+        DELEGATE_LIST_TTL_S,
+        lambda: active_delegate_tasks(ctx=ctx),
+    )
 
 
 @router.get("/tasks/{task_id}")

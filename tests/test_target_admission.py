@@ -20,6 +20,7 @@ from scripts.agent_runtime import kimi_admission, target_admission
 from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
+    ReviewAdmissionRefused,
     SubstituteUnavailable,
     require_admitted,
     resolve_and_admit,
@@ -109,10 +110,37 @@ def test_slots_resolve_to_the_live_holder_or_keep_the_identity_with_a_warning(mo
         ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
     )
     assert (unheld.recipient, unheld.reason) == ("claude-folk", "explicit")
-    assert warnings and "has no live holder" in warnings[0]
+    assert warnings and "recipient claude slot has no live holder (no-live-holder)" in warnings[0]
+    # #9739: the caller's slot string never reaches the log text.
+    assert "claude-folk" not in warnings[0]
 
     (static,) = resolve_and_admit(("claude-infra",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS)
     assert static.recipient == "claude-infra"
+
+
+def test_slot_log_label_comes_from_the_seat_list_and_taxonomy_area():
+    # #9739: log text names a slot by its static seat prefix and taxonomy area.
+    seats = _channels.STATIC_VALID_AGENTS
+    assert target_admission._slot_label("grok-infra", seats, "infra") == "grok slot in area 'infra'"
+    assert target_admission._slot_label("claude-infra-x", seats) == "claude-infra slot"  # longest prefix
+    assert target_admission._slot_label("nobody-infra", seats) == "slot with an unregistered seat prefix"
+
+
+def test_slot_resolver_failure_warning_omits_the_caller_slot_string(monkeypatch, capsys):
+    def boom(_slot: str, **_kwargs: object) -> None:
+        raise RuntimeError("resolver down")
+
+    monkeypatch.setattr(slot_routing, "resolve_slot_holder", boom)
+    warnings: list[str] = []
+    (target,) = resolve_and_admit(
+        ("claude-folk",), mode=BRIDGE_MODE, slots=_channels.STATIC_VALID_AGENTS, warnings=warnings
+    )
+    assert target.recipient == "claude-folk"
+    expected = "slot resolver failed for the claude slot (RuntimeError: resolver down) — queued at its identity"
+    assert warnings and expected in warnings[0]
+    err = capsys.readouterr().err
+    assert expected in err
+    assert "claude-folk" not in err
 
 
 def test_compat_names_resolve_to_their_participant_and_unknown_names_fail():
@@ -233,6 +261,113 @@ def test_a_non_kimi_request_resolves_unchanged():
     assert resolve_and_admit((), mode=BRIDGE_MODE) == ()
 
 
+@pytest.mark.parametrize("model", [None, "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("risk", [None, "", "invalid"])
+@pytest.mark.parametrize("branch_facts", [False, True])
+def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, monkeypatch, model, risk, branch_facts):
+    """D1: neither legacy inputs nor complete facts may infer AGY's risk."""
+    from scripts.review.record_cf_verdict import collect_branch_review_facts
+    from tests.test_authoring_review_feasibility import REPOSITORY, SOL, mini_repo
+
+    facts = None
+    if branch_facts:
+        repo = mini_repo(tmp_path, monkeypatch)
+        repo.commit(SOL, message="review author")
+        facts = collect_branch_review_facts(
+            repository=REPOSITORY,
+            repo_root=repo.root,
+            base_tip_sha=repo.sha("origin/main"),
+            head_sha=repo.sha("feature"),
+            task_root=tmp_path / "tasks",
+        )
+        assert facts.author_families == frozenset({"openai"})
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk") as refused:
+        target_admission._resolve_review_target(
+            "agy",
+            model,
+            author_model=None,
+            risk=risk,
+            profile="code",
+            attempt=False,
+            snapshot=None,
+            budget_seat="agy",
+            facts=facts,
+        )
+    assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
+
+
+@pytest.mark.parametrize("stage", ["selection", "budget", "route", "registry"])
+def test_explicit_review_risk_selected_agy_cannot_bypass_declaration(monkeypatch, stage):
+    """D2: check risk even if an upstream selection unexpectedly returns AGY."""
+    selected = ("agy", "gemini-3.8-flash-high")
+    calls = []
+    if stage in {"selection", "budget"}:
+
+        def select(seat, model, **kwargs):
+            calls.append(kwargs["snapshot"])
+            # Exercise review_select's safety boundary for both initial and
+            # capacity/retained-candidate results, without depending on rankings.
+            return selected if stage == "selection" or kwargs["snapshot"] is not None else (seat, model)
+
+        monkeypatch.setattr(target_admission, "_resolve_review_target", select)
+
+    def route(request):
+        if stage == "budget":
+            return (*request.review_select({"agents": {}}, request.seat), "budget")
+        return (*selected, "route")
+
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk"):
+        resolve_and_admit(
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
+            route=None if stage == "registry" else route,
+            resolver=(lambda _seat: "agy") if stage == "registry" else None,
+        )
+    if stage == "budget":
+        assert calls == [None, {"agents": {}}]
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("path_kind", ["changed", "owned"])
+def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
+    """D5/D6: declared low risk never bypasses a security floor or attempt identity."""
+    paths = {f"review_{path_kind}_paths": ("scripts/delegate.py",)}
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("agy",),
+            model="gemini-3.8-flash-high",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk=risk,
+            review_attempt=True,
+            **paths,
+        )
+
+
+@pytest.mark.parametrize(
+    "seat,model,review,profile",
+    [
+        ("agy", "gemini-3.8-flash-high", True, "ukrainian"),
+        ("codex", "gpt-6.1-sol", True, "code"),
+        ("claude", "claude-opus-5-5", True, "code"),
+        ("agy", "gemini-3.8-flash-high", False, "code"),
+    ],
+)
+def test_explicit_review_risk_other_work_remains_unaffected(seat, model, review, profile):
+    """D7: omission stays valid for Ukrainian, non-AGY and ordinary work."""
+    (target,) = resolve_and_admit(
+        (seat,),
+        model=model,
+        mode="read-only",
+        review_dispatch=review,
+        review_profile=profile,
+    )
+    assert (target.recipient, target.model) == (seat, model)
+
+
 # --- only resolve_and_admit produces a target ----------------------------------------
 
 
@@ -272,6 +407,35 @@ def test_delegate_launches_only_the_admitted_route():
         delegate._worker_route_argv("kimi")
 
 
+@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high"])
+def test_delegate_worker_argv_normalizes_the_cursor_wire_pin(model):
+    import delegate
+
+    (target,) = resolve_and_admit(("cursor",), mode="read-only", model=model)
+    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7-high"]
+    assert target.model == model  # The admitted catalog identity is preserved.
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [("opus", "CURSOR_CLAUDE_REFUSED"), ("haiku", "CURSOR_CLAUDE_REFUSED"),
+     ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
+     ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED")],
+)
+def test_delegate_dispatch_refuses_invalid_cursor_pins(model, code, monkeypatch):
+    import delegate
+    import scripts.agent_runtime.adapters.claude as claude_module
+
+    monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "cursor", "--model", model, "--mode", "read-only",
+         "--task-id", "cursor-pin-test", "--prompt", "fixture", "--dry-run"]
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="cursor", trees=None)
+    assert target is None
+    assert refusal.startswith(code + ":")
+
+
 def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
     """Makes the documented probe-before-final-gate limitation unreachable by data.
 
@@ -305,3 +469,46 @@ def test_the_fallback_guard_detects_a_kimi_destination():
     assert target_admission.stored_kimi_row("cursor", "kimi-code/k3")
     assert target_admission.stored_kimi_row("cursor", "k3")
     assert not target_admission.stored_kimi_row("cursor", "composer-2.5")
+
+
+# --- #9739: runtime review admission excludes every branch author ---------------------------------
+
+
+def test_review_admission_uses_complete_branch_authorship_like_the_recorder(tmp_path, monkeypatch):
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=repo.sha("origin/main"),
+        head_sha=repo.sha("feature"),
+        task_root=tmp_path / "tasks",
+    )
+    trusted = {
+        "mode": "read-only",
+        "review_dispatch": True,
+        "review_author_model": "gpt-6.1-sol",
+        "review_risk": "medium",
+    }
+
+    # Without the facts, the latest author alone admits an earlier author's family.
+    (legacy,) = resolve_and_admit(("claude",), model="claude-opus-5-5", **trusted)
+    assert legacy.recipient == "claude"
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ROUTE_REFUSED"):
+        resolve_and_admit(("claude",), model="claude-opus-5-5", review_facts=facts, **trusted)
+    (grok,) = resolve_and_admit(("cursor",), model="grok-4.7-high", review_facts=lambda: facts, **trusted)
+    assert (grok.recipient, grok.model) == ("cursor", "grok-4.7-high")
+
+    # The recorder reaches the same verdicts on the same facts.
+    recorder._require_qualified_reviewer(
+        facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+    )
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder._require_qualified_reviewer(
+            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+        )

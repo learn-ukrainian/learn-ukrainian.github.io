@@ -12,7 +12,6 @@ startup budget.  See #4879.
 from __future__ import annotations
 
 import argparse
-import importlib
 import json
 import os
 import subprocess
@@ -22,7 +21,15 @@ import time
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
+
 from scripts.orchestration.handoff_slot_registry import registered_slots
+from scripts.utils.claude_version import run_version_probe
 
 from .registry import AGENTS, get_agent_entry
 
@@ -72,12 +79,12 @@ def _load_adapter(agent: str) -> Any:
     """
     entry = get_agent_entry(agent)
     module_name, class_name = entry["adapter"].split(":", 1)
-    adapter_class = getattr(importlib.import_module(module_name), class_name)
+    adapter_class = getattr(import_named_module(module_name), class_name)
     return adapter_class()
 
 
-def _version_command(invocation: list[str]) -> list[str]:
-    """Reduce an adapter command to its zero-cost CLI version invocation.
+def _version_prefix(invocation: list[str]) -> list[str]:
+    """Reduce an adapter command to the executable prefix its version probe runs.
 
     Most adapters start with their executable.  Claude's retained fallback is
     ``npx <package>``, whose package token is part of the executable prefix;
@@ -90,8 +97,8 @@ def _version_command(invocation: list[str]) -> list[str]:
     if executable in {"npx", "npx.cmd"}:
         if len(invocation) < 2 or not isinstance(invocation[1], str) or not invocation[1]:
             raise ValueError("npx adapter command omitted its package")
-        return [invocation[0], invocation[1], "--version"]
-    return [invocation[0], "--version"]
+        return [invocation[0], invocation[1]]
+    return [invocation[0]]
 
 
 def _probe_environment(plan: Any) -> dict[str, str]:
@@ -149,23 +156,21 @@ def probe_lane(agent: str, *, cwd: Path, timeout_seconds: int = _DEFAULT_TIMEOUT
             session_id=None,
             tool_config=None,
         )
-        command = _version_command(plan.cmd)
-        completed = subprocess.run(
-            command,
+        completed = run_version_probe(
+            _version_prefix(plan.cmd),
+            timeout=timeout_seconds,
             cwd=plan.cwd,
             env=_probe_environment(plan),
-            capture_output=True,
-            text=True,
             stdin=subprocess.DEVNULL,
-            timeout=timeout_seconds,
-            check=False,
         )
     except subprocess.TimeoutExpired:
         result["reason"] = f"version command exceeded {timeout_seconds}s"
     except Exception as exc:
         result["reason"] = f"{type(exc).__name__} while building or spawning the adapter"
     else:
-        if completed.returncode == 0:
+        if completed is None:
+            result["reason"] = "adapter command has no fixed version probe"
+        elif completed.returncode == 0:
             result["status"] = "healthy"
         else:
             result["reason"] = f"version command exited {completed.returncode}"

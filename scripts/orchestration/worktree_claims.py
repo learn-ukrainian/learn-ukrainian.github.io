@@ -33,9 +33,10 @@ from collections.abc import Callable, Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import Any, TypeGuard
 
-from scripts.common.git_context import sanitized_git_env
 from scripts.common.repo_root import main_checkout_root
 from scripts.guardrails import worktree_containment
+from scripts.orchestration.execution_safe_git import SafeGitRunner
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
@@ -71,7 +72,6 @@ RELEASED_TASK_STATUSES = frozenset(
         "cancelled",
         "crashed",
         "dry_run",
-        "reaped",
     }
 )
 
@@ -495,13 +495,12 @@ class WorktreeRemoval:
 def _git_probe(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str] | None:
     """Run a read-only git command; ``None`` when it could not run at all."""
     try:
-        return subprocess.run(
-            ["git", *args],
+        return safe_git(
+            args,
             cwd=cwd,
             capture_output=True,
             text=True,
             check=False,
-            env=sanitized_git_env(),
             timeout=_GIT_PROBE_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -531,6 +530,24 @@ def public_primary_root() -> Path:
     checkouts under a temporary directory.
     """
     return main_checkout_root(Path(__file__).resolve().parents[2])
+
+
+def identity_cache_publication_allowed(worktree: Path, tasks_dir: Path) -> bool:
+    """Publish only for the public repository's own tree and task directory.
+
+    Use the tree's Git metadata, never a caller's repo/control-root hint.
+    Sibling maintenance must leave even the public control plane unchanged
+    (#9797). Foreign or unresolvable task directories remain read-only.
+    """
+    try:
+        public = public_primary_root().resolve(strict=True)
+        return (
+            (public / ".git").is_dir()
+            and tasks_dir.resolve(strict=True) == public / "batch_state" / "tasks"
+            and main_checkout_root(worktree.resolve(strict=True)).resolve(strict=True) == public
+        )
+    except (OSError, ValueError, RuntimeError):
+        return False
 
 
 def control_plane_root(repo_root: Path) -> Path:
@@ -592,7 +609,7 @@ def git_worktree_remove(
     force: bool,
     timeout: float | None = None,
     approved_temp_roots: Iterable[Path] = (),
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
     control_root: Path | None = None,
     tasks_dir: Path | None = None,
     task_id: str | None = None,
@@ -603,8 +620,9 @@ def git_worktree_remove(
 
     Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
     pipeline call this; ``tests/orchestration/test_worktree_removal_invariant.py``
-    fails on any other caller. ``force`` first passes the delete-target guard,
-    then runs ``git worktree remove --force``, which a clean porcelain tree
+    fails on any other caller. Forced targets pass the delete-target guard;
+    the reaper explicitly guards non-force continuation-cohort targets.
+    ``force`` runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
     files, and a locked one. The removal is bounded by ``timeout`` when the
@@ -612,8 +630,8 @@ def git_worktree_remove(
     The reaper does not pass a timeout: removal keeps that 120s bound and is
     not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
-    A caller may supply ``git_runner`` to preserve its fixed executable,
-    environment and execution-safe configuration inside this chokepoint.
+    A caller may supply ``SafeGitRunner`` to pin an executable; mandatory
+    execution controls cannot be replaced by a callback.
     Ignored non-cache output is verified and preserved here for every caller
     (#9645). Failure returns a refusal without invoking destructive Git.
     The gate resolves canonical worktree-bound records itself and honors
@@ -654,18 +672,9 @@ def git_worktree_remove(
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
-        proc = (
-            git_runner(repo_root, argv[1:])
-            if git_runner is not None
-            else subprocess.run(
-                argv,
-                cwd=repo_root,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=sanitized_git_env(),
-                timeout=bound,
-            )
+        proc = safe_git(
+            argv[1:], cwd=repo_root, runner=git_runner, capture_output=True,
+            text=True, check=False, timeout=bound,
         )
     except subprocess.TimeoutExpired:
         return f"git worktree remove timed out after {bound:g}s"
@@ -696,7 +705,7 @@ def remove_unclaimed_worktree(
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
-    git_runner: Callable[[Path, list[str]], subprocess.CompletedProcess[str]] | None = None,
+    git_runner: SafeGitRunner | None = None,
     task_record: Mapping[str, Any] | None = None,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
@@ -725,8 +734,8 @@ def remove_unclaimed_worktree(
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
     caller's purpose, recorded on success. This never raises.
-    ``git_runner`` supplies the branch probe and raw removal runner for
-    closed maintenance callers; it does not bypass locks or the claim scan.
+    ``git_runner`` may pin a fixed executable for closed maintenance callers;
+    it cannot bypass execution controls, locks or the claim scan.
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -763,7 +772,10 @@ def remove_unclaimed_worktree(
             if git_runner is None:
                 branch = checked_out_branch(worktree)
             else:
-                probe = git_runner(worktree, ["symbolic-ref", "--quiet", "--short", "HEAD"])
+                probe = safe_git(
+                    ["symbolic-ref", "--quiet", "--short", "HEAD"], cwd=worktree,
+                    runner=git_runner, text=True, capture_output=True, check=False,
+                )
                 branch = probe.stdout.strip() if probe.returncode == 0 else None
             if force:
                 dirty = (dirty_probe if dirty_probe is not None else worktree_is_dirty)(worktree)
@@ -803,15 +815,24 @@ def remove_unclaimed_worktree(
         return outcome("removed", f"{reason} ({detail})" if detail else reason)
 
 
-def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path, repo_root: Path) -> str | None:
+def owner_release_refusal(
+    worktree: Path,
+    *,
+    owner_task_id: str,
+    tasks_dir: Path,
+    repo_root: Path,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
+) -> str | None:
     """Return why ``owner_task_id`` may not release ``worktree``, or ``None`` when it may.
 
     The owner's record must identify the requested task and run with a
     non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
-    ``worktree_path``, and record ``worktree_reused: false``, the proof that
+    ``worktree_path`` (or fallback ``cwd``), and record ``worktree_reused: false``, the proof that
     its dispatch created the checkout. A reused checkout belongs to its
-    creator, which reaps it.
+    creator, which reaps it. Only a ``needs_finalize`` creator may use the
+    caller's independently proven ``settled_claim``; other unfinished statuses
+    remain refused.
     """
     record_path = task_record_path(tasks_dir, owner_task_id)
     try:
@@ -828,9 +849,11 @@ def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path
     if not isinstance(nonce, str) or not nonce.strip():
         return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
     status = record.get("status")
-    if not isinstance(status, str) or status not in RELEASED_TASK_STATUSES:
+    if (not isinstance(status, str) or status not in RELEASED_TASK_STATUSES) and not (
+        status == NEEDS_FINALIZE_STATUS and settled_claim is not None and settled_claim(record)
+    ):
         return f"owner task {owner_task_id} is not finished (status {status!r}); refusing worktree removal"
-    claimed_path = record.get("worktree_path")
+    claimed_path = record.get("worktree_path") or record.get("cwd")
     if not isinstance(claimed_path, str) or not claimed_path:
         return f"owner task {owner_task_id} records no worktree_path; refusing worktree removal"
     try:

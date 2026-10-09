@@ -1,0 +1,347 @@
+"""Real Sources rejections cannot supply review or settle evidence (#9979)."""
+
+from __future__ import annotations
+
+import json
+from types import SimpleNamespace
+
+import pytest
+
+from scripts.review import settle
+from scripts.review.receipts import ledger
+from scripts.review.receipts.outcomes import classify_outcome, search_outcome
+from scripts.review.validate import codes
+from scripts.review.validate.validate import _outcome_shown
+from tests.curriculum.evidence.test_reference_sense import WORD, bindings
+from tests.curriculum.evidence.test_reference_sense import review_dispatch as review_dispatch
+from tests.review.test_r1_schema_ledger import (
+    _codes,
+    _dump,
+    _finding,
+    _layout,
+    _lesson_checks,
+    _review,
+    _run,
+    _validate,
+)
+from tests.review.test_r1_schema_ledger import server_module as server_module
+from tests.review.test_settle import World
+from tests.review.test_settle import world as world
+
+# Denominator: REVIEW_TOOLS handlers that return invalid_input. Server wrappers
+# delegate validation where noted; non-review handlers are deliberately excluded.
+# .mcp/servers/sources/server.py:
+# verify_word:2478, verify_words:2482, verify_lemma:2585 ->
+# packages/v4-runtime/src/learn_ukrainian_v4_runtime/sources_handlers.py:140,182,222
+# inspect_word:2595, inspect_words:2641, verify_stress:2684 ->
+# sources_handlers.py:278 and scripts/verification/stress.py:425,529
+# check_text:2766 -> scripts/verification/check_text.py:224-324
+# query_sum20:3508, query_pravopys:3639
+INVALID_INPUT_TOOLS = {
+    "verify_word": "word",
+    "verify_words": "words",
+    "verify_lemma": "lemma",
+    "inspect_word": "word",
+    "inspect_words": "words",
+    "verify_stress": "word",
+    "check_text": "text",
+    "query_sum20": "word",
+    "query_pravopys": "topic",
+}
+
+
+def _result(server, tool, arguments):
+    output = _run(getattr(server, f"handle_{tool}")(arguments))
+    content = output[0] if isinstance(output, tuple) else output
+    return "\n".join(item.text for item in content)
+
+
+def _receipt(world: World, tool, result, arguments):
+    return ledger.append(
+        world.own_ledger,
+        review_id="settle-R",
+        attempt_id="settle-A",
+        manifest_sha256=world.current_hash(),
+        tool=tool,
+        server_version="fixture",
+        arguments=arguments,
+        snapshots={},
+        status="ok",
+        result=result,
+    )
+
+
+@pytest.mark.parametrize("tool,key", INVALID_INPUT_TOOLS.items())
+@pytest.mark.parametrize("branch", ["evidence", "source_conflict"])
+def test_real_invalid_input_cannot_support_active_finding(server_module, tmp_path, tool, key, branch):
+    paths = _layout(tmp_path)
+    arguments = {key: [] if key == "words" else ""}
+    if tool == "check_text":
+        arguments["checks"] = []
+    result = _result(server_module, tool, arguments)
+    receipt = ledger.append(
+        paths["ledger"],
+        review_id="review-1",
+        attempt_id="attempt-1",
+        manifest_sha256=paths["digest"],
+        tool=tool,
+        server_version="fixture",
+        arguments=arguments,
+        snapshots={},
+        status="ok",
+        result=result,
+    )
+    record = ledger.lookup(paths["ledger"], receipt)
+    assert record["status"] == "ok" and record["outcome_facts"]["status"] == "error"
+    evidence = {"receipt": receipt}
+    if branch == "source_conflict":
+        valid = ledger.append(
+            paths["ledger"],
+            review_id="review-1",
+            attempt_id="attempt-1",
+            manifest_sha256=paths["digest"],
+            tool="search_text",
+            server_version="fixture",
+            arguments={"query": "fixture"},
+            snapshots={},
+            status="ok",
+            result="Valid authority excerpt.",
+        )
+        evidence = {"a": {"receipt": receipt}, "b": {"receipt": valid}}
+    finding = _finding(expected="required" if tool in {"verify_word", "query_pravopys"} else result)
+    finding.pop("evidence")
+    finding[branch] = evidence
+    _dump(
+        paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[finding],
+        ),
+    )
+    validated = _validate(paths)
+    assert not validated.ok
+    assert _codes(validated) == {codes.EVIDENCE_RECEIPT_INVALID}
+    assert _outcome_shown("error", record)
+    assert not _outcome_shown("no_hits", record)
+    assert not _outcome_shown("hits_but_no_support", record)
+
+
+def test_real_invalid_batch_cannot_prove_reviewed_binding(server_module, review_dispatch):
+    tasks, pool, task_path, _result_path, task, _verdict = review_dispatch
+    original = tasks.parent / "review-receipts/review-test/attempt-test.jsonl"
+    attempt = {**task["review_attempt"], "attempt_id": "invalid-batch"}
+    rejected = original.with_name("invalid-batch.jsonl")
+    for record in ledger.records(original):
+        arguments = record["arguments"]
+        result = record["result"]
+        if record["tool"] == "verify_words":
+            arguments = {"words": [WORD["lemma"], ""]}
+            result = _result(server_module, "verify_words", arguments)
+            assert classify_outcome("verify_words", "ok", result)["status"] == "error"
+        ledger.append(
+            rejected,
+            **attempt,
+            tool=record["tool"],
+            server_version="fixture",
+            arguments=arguments,
+            snapshots={},
+            status="ok",
+            result=result,
+        )
+    task["review_attempt"] = attempt
+    task_path.write_text(json.dumps(task))
+    with pytest.raises(ValueError, match=r"^review_sources_unproven$"):
+        bindings.reviewed_binding(WORD, pool, 1, 0, "review-test", tasks, "gpt-6.1-sol")
+
+
+@pytest.mark.parametrize("tool,key", INVALID_INPUT_TOOLS.items())
+@pytest.mark.parametrize("case", ["missing", "empty", "null", "wrong_type"])
+def test_real_invalid_input_is_rejected_and_never_settles(server_module, world, tool, key, case):
+    assert tool in ledger.REVIEW_TOOLS
+    if case == "missing":
+        arguments = {}
+    elif case == "empty":
+        # check_text accepts empty text, but rejects an empty checks selector.
+        arguments = {key: [] if key == "words" else ""}
+        if tool == "check_text":
+            arguments["checks"] = []
+    else:
+        arguments = {key: None if case == "null" else 42}
+    result = _result(server_module, tool, arguments)
+    assert "invalid_input" in result
+    receipt = _receipt(world, tool, result, arguments)
+    record = ledger.lookup(world.own_ledger, receipt)
+    assert record["outcome_facts"] == {
+        "call_status": "ok",
+        "hits": 0,
+        "status": "error",
+        "unavailable": False,
+    }
+    assert search_outcome(record["status"], record["outcome_facts"]) == "error"
+    evidence = [{"receipt": receipt, "quote": result}]
+    for outcome in ("supported_defect", "refuted"):
+        with pytest.raises(settle.SettleError, match="needs a cited receipt with hits"):
+            settle.validate_reply(world.reply(outcome, evidence), world.manifest.read_bytes(), world.own_ledger)
+    other_tool = "query_sum20" if tool == "query_pravopys" else "query_pravopys"
+    other = world.call(other_tool, "Valid authority excerpt.")
+    with pytest.raises(settle.SettleError, match="two different sources"):
+        settle.validate_reply(
+            world.reply("source_conflict", [*evidence, {"receipt": other, "quote": "Valid authority excerpt."}]),
+            world.manifest.read_bytes(),
+            world.own_ledger,
+        )
+
+
+@pytest.mark.parametrize("tool", ["verify_words", "inspect_words"])
+@pytest.mark.parametrize("words", [[""], [" "], [42], ["fixture", None], "fixture"])
+def test_real_malformed_batches_are_rejected(server_module, tool, words):
+    facts = classify_outcome(tool, "ok", _result(server_module, tool, {"words": words}))
+    assert facts["status"] == "error" and facts["hits"] == 0
+
+
+@pytest.mark.parametrize("field", ["status", "error_code", "disposition"])
+def test_structured_invalid_input_is_rejected(field):
+    facts = classify_outcome("verify_stress", "ok", json.dumps({field: "invalid_input", "matches": [{}]}))
+    assert facts["status"] == "error" and facts["hits"] == 0
+
+
+@pytest.mark.parametrize("word", ["fixture", "two words", "слово слово", "слово!"])
+def test_real_stress_oracle_rejection_summary_is_not_evidence(server_module, monkeypatch, word):
+    from scripts.verification import stress
+
+    monkeypatch.setattr(stress, "source_info", lambda: {})
+    result = _result(server_module, "verify_stress", {"word": word})
+    assert " — invalid_input:" in result
+    facts = classify_outcome("verify_stress", "ok", result)
+    assert facts["status"] == "error" and facts["hits"] == 0
+
+
+# Recorded handle_check_text output for text="слово", checks=["vesum"],
+# with a controlled VESUM miss. Its stress provenance still required
+# sources.db even though stress was not selected (#9979). Replay the real
+# handler payload so classifier coverage runs without local stores in CI.
+RECORDED_CHECK_TEXT_OUTPUT = {
+    "provenance": {
+        "stress": {
+            "dictionary": "ukrainian-word-stress (ULIF-derived)",
+            "package_version": "2.1.0",
+            "trie_entries": 2892732,
+            "trie_digest": "c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec",
+            "teaching": {
+                "dictionary": "Pohribnyi orthoepic dictionary, first-listed variant",
+                "available": True,
+                "rows": 0,
+                "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            },
+            "overrides_digest": "2d85be950b6e6943f4ac51462a8ba801d7eaedc316f35b1d25420bfc931505fb",
+            "ulif": {
+                "dictionary": "ULIF ulif_forms (homonym_checked=1)",
+                "build": {
+                    "id": 1,
+                    "state": "complete",
+                    "parser_version": "ulif-forms-v4",
+                    "total_entries": 262812,
+                    "entries_done": 262753,
+                    "entries_failed": 59,
+                    "total_forms": 4742272,
+                    "started_at": "2026-09-30T04:35:49.190706+00:00",
+                    "finished_at": "2026-09-30T06:22:48.886437+00:00",
+                    "source_fingerprint": "d1d1a93417fe55ec1be950956138089d98d3604c9a85b22603ff577cc594bf12",
+                },
+                "digest": "7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493",
+            },
+            "digest": "8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0",
+        },
+        "vesum_version": "vesum-source-unversioned",
+        "ua_gec_file_signature": None,
+        "ua_gec_dropped_skipped_kind_rows": 0,
+        "antonenko_pattern_count": 0,
+    },
+    "summary": {
+        "tokens": 1,
+        "unique_forms": 1,
+        "problems_per_check": {"vesum": 1, "stress": 0, "russian_shadow": 0, "ua_gec": 0},
+        "suspicions_count": 0,
+        "uncut_count": 1,
+        "truncated": False,
+    },
+    "problems": [
+        {"form": "слово", "check": "vesum", "detail": {"status": "no_vesum_row"}, "locations": [[None, 0, 5]]}
+    ],
+    "suspicions": [],
+}
+
+
+@pytest.mark.parametrize("tool", INVALID_INPUT_TOOLS)
+def test_populated_real_handlers_keep_their_outcomes(server_module, monkeypatch, tool):
+    """Use controlled backends and a recorded check_text handler payload."""
+    import rag.source_query as queries
+    from scripts.verification import vesum
+    from wiki import sources_db
+
+    rows = [{"lemma": "fixture", "pos": "noun", "tags": "noun"}]
+    stress = {"status": "ok", "input": "fixture", "matches": [{"stressed_form": "fixture"}]}
+    backend = SimpleNamespace(
+        verify_word=lambda *_args: rows,
+        verify_words=lambda *_args: {"fixture": rows},
+        verify_lemma=lambda *_args: rows,
+        verify_stress=lambda *_args: stress,
+        source_version=lambda: "a" * 64,
+    )
+    monkeypatch.setattr(server_module.v4_handlers, "backend", lambda: backend)
+    inspection = vesum.WordInspection("fixture", vesum.InspectionStatus.CLEAN, rows, [], [], [], "a" * 64, {})
+    monkeypatch.setattr(vesum, "inspect_word", lambda *_args, **_kwargs: inspection)
+    monkeypatch.setattr(vesum, "inspect_words", lambda *_args, **_kwargs: {"fixture": inspection})
+    monkeypatch.setattr(
+        sources_db,
+        "query_sum20",
+        lambda *_args: [
+            {
+                "stressed_headword": "fixture",
+                "pos": "noun",
+                "grammar": "noun",
+                "attribution_label": "fixture",
+                "official_url": "https://example.invalid",
+                "source_record_id": "fixture",
+                "retrieved_at": "fixture",
+                "content_sha256": "a" * 64,
+                "parser_version": "fixture",
+                "status": "ok",
+                "senses": [{"register_labels": [], "sense_order": 1, "definition": "Fixture definition."}],
+                "citations": [],
+            }
+        ],
+    )
+    monkeypatch.setattr(
+        queries,
+        "pravopys_offline",
+        lambda *_args: {
+            "status": "ok",
+            "text": "Fixture rule.",
+            "title": "fixture",
+            "section": 1,
+            "locator": "fixture",
+            "url": "https://example.invalid",
+            "file_sha256": "a" * 64,
+            "retrieved_at": "fixture",
+            "section_path": [],
+        },
+    )
+    arguments = {"word": "fixture", "words": ["fixture"], "lemma": "fixture", "topic": "fixture"}
+    if tool == "verify_stress":
+        arguments.pop("lemma")
+    result = (
+        json.dumps(RECORDED_CHECK_TEXT_OUTPUT, ensure_ascii=False)
+        if tool == "check_text"
+        else _result(server_module, tool, arguments)
+    )
+    facts = classify_outcome(tool, "ok", result)
+    assert facts == {"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False}
+
+
+@pytest.mark.parametrize("tool", ["verify_word", "query_sum20", "query_pravopys", "search_text"])
+def test_invalid_input_in_source_text_is_not_a_rejection(tool):
+    facts = classify_outcome(tool, "ok", "Found source evidence quoting invalid_input: example.")
+    assert facts["status"] == "hits_found" and facts["hits"] == 1

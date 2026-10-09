@@ -19,6 +19,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.lexicon import ulif_raw_cache
+from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 from scripts.wiki import sources_db
 
 GIB = 1024**3
@@ -141,7 +142,7 @@ def migrate(db: Path, cache: Path) -> dict:
         conn.execute(f"DROP TABLE {RAW_TABLE}")
         conn.commit()
         conn.execute("VACUUM INTO ?", (str(new),))
-        compact = sqlite3.connect(f"file:{new}?mode=ro", uri=True)
+        compact = _shared_open_readonly(new)
         try:
             if compact.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
                 raise RuntimeError("compact database integrity_check failed")
@@ -175,7 +176,7 @@ def migrate(db: Path, cache: Path) -> dict:
     except OSError:
         old.rename(db)
         raise
-    live = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    live = _shared_open_readonly(db)
     try:
         mode = str(live.execute("PRAGMA journal_mode").fetchone()[0]).lower()
         if mode != "wal":
@@ -190,7 +191,7 @@ def migrate(db: Path, cache: Path) -> dict:
 
 
 def _lookup_sample(db: Path) -> list[str]:
-    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    conn = _shared_open_readonly(db)
     try:
         rows = list(
             conn.execute(

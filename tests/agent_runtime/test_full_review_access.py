@@ -57,7 +57,8 @@ def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_
         assert agy_full_review_settings()["permissions"]["allow"] == [
             f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
         ]
-        assert agy_full_review_settings()["permissions"]["deny"] == ["command(*)", "write_file(*)"]
+        assert agy_full_review_settings()["permissions"]["deny"][:2] == ["command(*)", "write_file(*)"]
+        assert "mcp(sources/search_resources)" not in agy_full_review_settings()["permissions"]["deny"]
 
 
 def full_probe_code(targets, host_home, pinned, corpus, child_marker, abstract):
@@ -302,7 +303,7 @@ def test_agy_sources_and_command_permissions_are_projected_for_each_attempt(worl
             tool_config=boundary.tool_config,
         )
         settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
-        assert json.loads(settings.read_bytes()) == agy_review_settings(access)
+        assert json.loads(settings.read_bytes()) == agy_review_settings(access, checkout_root=boundary.workspace)
         assert settings.stat().st_mode & 0o777 == 0o600
         assert "--sandbox" in plan.cmd
         assert "--dangerously-skip-permissions" not in plan.cmd

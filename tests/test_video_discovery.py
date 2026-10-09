@@ -706,3 +706,69 @@ class TestBuildDiscoveryKeywords:
         kw = build_discovery_keywords(plan)
         # Should extract "Ukrainian letters" (minus the number)
         assert any("Ukrainian letters" in k for k in kw)
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
+def test_unicode_structured_boundary_video_title(separator):
+    from subprocess import CompletedProcess
+
+    from video_discovery import _yt_dlp_search
+
+    title = f"alpha{separator}beta"
+    reply = CompletedProcess([], 0, stdout=f"{title}\tvideo-id\tuk\n", stderr="")
+    with patch("video_discovery.subprocess.run", return_value=reply):
+        assert _yt_dlp_search("synthetic", 1, 1) == [
+            {"title": title, "url": "https://www.youtube.com/watch?v=video-id"},
+        ]
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n"])
+def test_video_records_filter_order_limit_and_unterminated(ending):
+    from subprocess import CompletedProcess
+
+    from video_discovery import _yt_dlp_search
+
+    records = ["", "malformed", "short\tid", "rejected\tr-id\tru", "first\t1\tuk", "second\t2\ten", "last\t3\tuk"]
+    reply = CompletedProcess([], 0, stdout=ending.join(records), stderr="")
+    with patch("video_discovery.subprocess.run", return_value=reply):
+        assert _yt_dlp_search("synthetic", 8, 2) == [
+            {"title": "first", "url": "https://www.youtube.com/watch?v=1"},
+            {"title": "second", "url": "https://www.youtube.com/watch?v=2"},
+        ]
+        assert _yt_dlp_search("synthetic", 8, 9)[-1] == {
+            "title": "last", "url": "https://www.youtube.com/watch?v=3",
+        }
+
+
+@pytest.mark.parametrize("stdout", ["", "\n\r\n", "malformed\nshort\tid"])
+def test_video_empty_or_malformed_records(stdout):
+    from subprocess import CompletedProcess
+
+    from video_discovery import _yt_dlp_search
+
+    reply = CompletedProcess([], 0, stdout=stdout, stderr="")
+    with patch("video_discovery.subprocess.run", return_value=reply):
+        assert _yt_dlp_search("synthetic", 1, 1) == []
+
+
+@pytest.mark.parametrize("error_kind", ["rate_limit", "timeout", "nonretryable", "missing", "called_process", "unexpected"])
+def test_video_search_failure_and_retry_contract(error_kind):
+    import subprocess
+
+    from video_discovery import _yt_dlp_search
+
+    failure = {
+        "rate_limit": subprocess.CompletedProcess([], 1, stdout="", stderr="HTTP Error 429"),
+        "timeout": subprocess.TimeoutExpired("yt-dlp", 45),
+        "nonretryable": subprocess.CompletedProcess([], 1, stdout="", stderr="invalid query"),
+        "missing": FileNotFoundError(),
+        "called_process": subprocess.CalledProcessError(1, "yt-dlp"),
+        "unexpected": RuntimeError("synthetic failure"),
+    }[error_kind]
+    with patch("video_discovery.subprocess.run", side_effect=[failure] * 3) as run, patch("time.sleep") as sleep:
+        assert _yt_dlp_search("synthetic", 3, 1, flat_playlist=True) == []
+    expected_calls = 3 if error_kind in {"rate_limit", "timeout"} else 1
+    assert run.call_count == expected_calls
+    assert sleep.call_count == expected_calls - 1
+    assert "--flat-playlist" in run.call_args.args[0]
+    assert run.call_args.args[0][-2:] == ["--playlist-end", "3"]

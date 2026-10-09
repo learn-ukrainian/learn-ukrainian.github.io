@@ -494,9 +494,10 @@ def test_quoted_merge_not_detected():
 
 
 def test_is_advisory():
-    assert guard._is_advisory("pip-audit (advisory)")
-    assert not guard._is_advisory("boundary-and-tests")
-    assert not guard._is_advisory("Test (pytest)")
+    assert guard.is_advisory("Component shadow (advisory)", workflow="CI")
+    assert not guard.is_advisory("Component shadow (advisory)")
+    assert not guard.is_advisory("boundary-and-tests", workflow="CI")
+    assert not guard.is_advisory("Test (pytest)", workflow="CI")
 
 
 def test_pr_snapshot_reads_metadata_and_checks_concurrently(monkeypatch):
@@ -678,7 +679,7 @@ def test_check_states_splits_failing_and_pending(monkeypatch):
         '[{"name":"boundary-and-tests","bucket":"fail"},'
         '{"name":"Test (pytest)","bucket":"pending"},'
         '{"name":"Lint (ruff)","bucket":"pass"},'
-        '{"name":"pip-audit (advisory)","bucket":"fail"}]'
+        '{"name":"Component shadow (advisory)","bucket":"fail","workflow":"CI"}]'
     )
     _fake_gh(monkeypatch, returncode=8, stdout=rows)
     assert guard._check_states("5") == (["boundary-and-tests"], ["Test (pytest)"])
@@ -851,6 +852,30 @@ def test_missing_check_bucket_fails_closed(monkeypatch):
     assert guard._check_states("5") is None
 
 
+@pytest.mark.parametrize("identity,allowed", [
+    ({"workflow": "CI"}, True),
+    ({"workflow": "Nightly"}, False),
+    ({}, False),
+    ({"workflowName": "CI"}, False),
+])
+def test_advisory_checks_require_workflow_identity(monkeypatch, identity, allowed):
+    name = "Component shadow (advisory)"
+    rows = [{"name": name, "bucket": "fail", **identity}]
+
+    def fake_run(cmd, **kwargs):
+        assert cmd == ["gh", "pr", "checks", "5", "--json", "name,bucket,state,workflow"]
+        return subprocess.CompletedProcess(cmd, 1, json.dumps(rows), "")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    monkeypatch.setattr(guard, "_pr_meta", lambda *_a, **_k: {"isDraft": False})
+    assert guard._check_states("5") == (([], []) if allowed else ([name], []))
+    result = guard._judge(["5", "--squash"])
+    if allowed:
+        assert result is None
+    else:
+        assert f"FAILING checks: {name}" in result
+
+
 def test_known_pass_buckets_are_green(monkeypatch):
     rows = '[{"name":"CI Gate","bucket":"pass"},{"name":"Flaky","bucket":"skipping"},{"name":"N","bucket":"neutral"}]'
     _fake_gh(monkeypatch, returncode=0, stdout=rows)
@@ -868,6 +893,17 @@ def _rollup_states(monkeypatch, rows):
 
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
     return guard._check_states("5")
+
+
+@pytest.mark.parametrize("identity,allowed", [
+    ({"workflowName": "CI"}, True),
+    ({"workflowName": "Nightly"}, False),
+    ({}, False),
+])
+def test_rollup_advisory_maps_workflow_name_explicitly(monkeypatch, identity, allowed):
+    name = "Component shadow (advisory)"
+    row = {"name": name, "status": "COMPLETED", "conclusion": "FAILURE", **identity}
+    assert _rollup_states(monkeypatch, [row]) == (([], []) if allowed else ([name], []))
 
 
 @pytest.mark.parametrize(
@@ -2131,3 +2167,89 @@ def test_issue_9484_verified_absolute_data_reader_allows(monkeypatch):
     program = shutil.which("printf")
     assert program
     assert _run(monkeypatch, f"{program} '%s' 'gh pr merge 5'") == 0
+
+
+@pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
+@pytest.mark.parametrize(
+    "command,expected",
+    [
+        ("gh pr merge 2147483648>f 6", ["2147483648", "6"]),
+        ("gh pr merge 99999999999999999999>f 6", ["99999999999999999999", "6"]),
+        (r"gh pr merge \ 5>f 6", [" 5", "6"]),
+        (r"gh pr merge \ 5 #ignored", [" 5"]),
+        ("gh pr merge '5'>f 6", ["5", "6"]),
+        ("gh pr merge 0002147483648>f 6", ["0002147483648", "6"]),
+        ("gh pr merge feat#x", ["feat#x"]),
+        ("! gh pr merge 5", ["5"]),
+        ("{fd}>f gh pr merge 5", ["5"]),
+    ],
+)
+def test_issue_9480_target_argv_matches_bash(monkeypatch, tmp_path, command, expected, suffix):
+    # A shell function records argv instead of ever invoking the GitHub CLI.
+    # Output redirects intentionally discard the oracle's output. Capture it
+    # independently on fd 3, which remains open through every suffix.
+    oracle = subprocess.run(
+        ["bash", "-c", 'exec 3>&1; gh() { printf "%s\\0" "$@" >&3; }; ' + command + suffix],
+        cwd=tmp_path,
+        capture_output=True,
+        timeout=5,
+    )
+    assert oracle.stdout.decode().split("\0")[:-1] == ["pr", "merge", *expected]
+    args = [guard._merge_args(seg.argv) for seg in guard.read_commands(command + suffix)]
+    assert [arg for arg in args if arg is not None] == [expected]
+    judged = []
+    monkeypatch.setattr(
+        guard,
+        "_pr_snapshot",
+        lambda pr, repo=None, cwd=None: judged.append(pr) or ({"isDraft": False}, (["CI Gate"], [])),
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command + suffix}})))
+    assert guard.main() == 2
+    assert judged == [expected[0]]
+
+
+@pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
+@pytest.mark.parametrize(
+    "command", ["eval 'gh pr merge 5 >f'", "eval gh pr merge 5", "bash -c \"eval 'gh pr merge 5'\""]
+)
+def test_issue_9480_eval_merge_is_refused(monkeypatch, capsys, command, suffix):
+    monkeypatch.setattr(guard, "_pr_snapshot", lambda *args, **kwargs: pytest.fail("unreadable eval reached lookup"))
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps({"tool_input": {"command": command + suffix}})))
+    assert guard.main() == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("descriptor", ["0", "5", "2147483647", "0002147483647", "{fd}"])
+def test_issue_9480_valid_descriptor_is_not_a_selector(descriptor):
+    assert guard._segments(f"gh pr merge {descriptor}>f 6") == [["gh", "pr", "merge", "6"]]
+
+
+def test_issue_9480_negated_echo_does_not_invoke_merge():
+    assert not _any_judged_merge("! echo gh pr merge 5")
+
+
+def test_issue_9480_relative_cd_cannot_clear_unknown_cwd(monkeypatch, capsys):
+    assert _run(monkeypatch, 'cd "$DIR"; cd b; gh pr merge 5') == 2
+    assert "working directory cannot be read" in capsys.readouterr().err
+    assert _judged_cwds(monkeypatch, 'cd "$DIR"; cd /known; cd b; gh pr merge 5') == [("5", "/known/b")]
+
+
+def test_issue_9480_eval_cd_cannot_launder_merge_cwd(monkeypatch, capsys):
+    assert _run(monkeypatch, "eval 'cd other'; gh pr merge 5") == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("suffix", ["", " >out", " | cat"])
+def test_issue_9480_consecutive_cd_matches_bash(monkeypatch, tmp_path, suffix):
+    (tmp_path / "a" / "b").mkdir(parents=True)
+    monkeypatch.chdir(tmp_path)
+    command = "cd a; cd b; gh pr merge 5" + suffix
+    oracle = subprocess.run(
+        ["bash", "-c", "exec 3>&1; gh() { pwd >&3; }; " + command],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    assert oracle.returncode == 0
+    assert _judged_cwds(monkeypatch, command) == [("5", oracle.stdout.strip())]

@@ -162,7 +162,7 @@ def test_ensure_practice_deck_hydrated_returns_matching_local(
     def fail_urlopen(*args, **kwargs):
         raise AssertionError("matching local practice deck should not fetch")
 
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", fail_urlopen)
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fail_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path
@@ -195,7 +195,7 @@ def test_ensure_practice_deck_hydrated_fetches_decompresses_and_writes_when_abse
         assert timeout == 60
         return io.BytesIO(gz_bytes)
 
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path
@@ -232,7 +232,7 @@ def test_ensure_practice_deck_hydrated_refuses_to_clobber_richer_local_deck(
         lexeme_count=3,
     )
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     with pytest.raises(practice_deck_io.PracticeDeckHydrationError, match="refusing to overwrite"):
         practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
@@ -267,7 +267,7 @@ def test_ensure_practice_deck_hydrated_force_restores_richer_local_deck(
     )
     _pin_defaults(monkeypatch, practice_dir, pointer_path)
     monkeypatch.setenv("ATLAS_MANIFEST_FORCE_HYDRATE", "1")
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
 
     assert practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
     assert shard_path.read_bytes() == release_content
@@ -295,7 +295,7 @@ def test_ensure_practice_deck_hydrated_raises_on_gz_sha256_mismatch(
     def fake_urlopen(request: object, timeout: int):
         return io.BytesIO(gz_bytes)
 
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
 
     with pytest.raises(RuntimeError, match="gz sha256 mismatch") as excinfo:
         practice_deck_io.ensure_practice_deck_hydrated(
@@ -332,7 +332,7 @@ def test_ensure_practice_deck_hydrated_retries_gz_sha256_mismatch_with_cache_bus
         urls.append(_request_url(request))
         return io.BytesIO(stale_gz_bytes if len(urls) == 1 else gz_bytes)
 
-    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(practice_deck_io.github_client, "http_open", fake_urlopen)
 
     assert practice_deck_io.ensure_practice_deck_hydrated(
         practice_dir=practice_dir, pointer_path=pointer_path

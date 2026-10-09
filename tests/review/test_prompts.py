@@ -530,6 +530,23 @@ def test_check_and_render_fail_on_unauthorized_file_read(tmp_path: Path, monkeyp
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("kind", ["lesson", "rereview"])
+def test_rendered_sum11_continuation_cannot_settle(tmp_path, monkeypatch, kind):
+    if kind == "rereview":
+        path, _ = _write_rereview(tmp_path, monkeypatch)
+    else:
+        path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _, _ = render_prompt(
+        path,
+        template_name="lesson-rereview" if kind == "rereview" else None,
+        repo_root=tmp_path,
+    )
+    assert (
+        "`search_definitions` (SUM-11) is available for Sovietization context only;\n"
+        "it can never settle meaning, norm or stress."
+    ) in rendered
+
+
 def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     manifest_path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _, _ = render_prompt(manifest_path, repo_root=tmp_path)
@@ -550,7 +567,21 @@ def test_rendered_prompt_contains_all_required_rules_and_sections(tmp_path: Path
     assert "inspect_word" in rendered
     assert "inspect_words" in rendered
     assert "query_sum20" in rendered
-    assert "`query_ulif`" not in rendered
+    assert (
+        "`query_ulif` and other Sources\nwriters are unavailable on every review route, including full access."
+        in rendered
+    )
+    for tool in (
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
+    ):
+        assert f"`{tool}`" in rendered
+    assert "Sovietization context only" in rendered
+    assert "it can never settle meaning, norm or stress" in rendered
     assert "verify_stress" in rendered
 
     for tool in REVIEW_TOOLS:
@@ -2328,7 +2359,9 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     original_attested_return = record.attested_return
     original_validate = review_validator.validate_review
 
-    def prepare(review_id, attempt_id, manifest_path, harness, *, receipts_root, review_access):
+    def prepare(
+        review_id, attempt_id, manifest_path, harness, *, receipts_root, review_access, checkout_root=None, **_extra_kwargs
+    ):
         ledger = receipts_root / "synthetic.jsonl"
         create_empty_ledger(ledger)
         _record(ledger, manifest=digest, result="synthetic evidence", review_id=review_id, attempt_id=attempt_id)
@@ -2399,7 +2432,7 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
 
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
-    """Frozen 1a0207b784 bytes, plus only the explicit #9625 AGY guidance."""
+    """Frozen 1a0207b784 bytes updated for #10104, plus only the explicit #9625 AGY guidance."""
     from scripts.review.prompts.render import render
 
     if kind == "plan":

@@ -70,6 +70,24 @@ from typing import Any
 
 import numpy as np
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
@@ -120,9 +138,9 @@ SUBCHUNK_RETRIEVAL_DEPTH = 200
 
 #: Per-cell encode batch sizes. Memory pressure scales with
 #: batch_size × max_length²; cell C at 8192 tokens needs a much
-#: smaller batch than cells A/B to fit a 16-32 GB unified-memory
-#: M-series Mac. Numbers chosen empirically: A=32, B=16, C=4 keeps
-#: peak workspace under ~3 GB on top of the 2.3 GB BGE-M3 model.
+#: smaller batch than cells A/B to fit a unified-memory workstation.
+#: Numbers chosen empirically: A=32, B=16, C=4 keeps peak workspace
+#: small next to the BGE-M3 model itself.
 #: Override with --batch-A / --batch-B / --batch-C if your machine
 #: has more headroom.
 DEFAULT_BATCH_SIZES = {
@@ -246,13 +264,13 @@ def policy_for_period(period: str, cell: CellConfig) -> ChunkingPolicy:
 # --- DB sampling (mirrors benchmark_embeddings) --------------------------
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection() -> SQLiteConnection:
     if not SOURCES_DB_PATH.exists():
         raise FileNotFoundError(
             f"Sources database not found at {SOURCES_DB_PATH}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(str(SOURCES_DB_PATH))
+    conn = _open_readonly(str(SOURCES_DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -671,9 +689,9 @@ def run_cell(
             }
 
             # Free the encoded sub-chunk array before the next period
-            # to keep peak RSS down on the M-series Mac. Release MPS
+            # to keep peak RSS down on the workstation. Release MPS
             # workspace explicitly — gc alone leaves it allocated and
-            # the next period's encode tips a 16 GB Mac into OOM.
+            # the next period's encode tips the workstation into OOM.
             # (Empirical: post-#1562 OOM-reboot 2026-04-25 on cell B
             # middle_ukrainian after a successful OES.)
             del sub_dense, sub_texts, sub_chunks

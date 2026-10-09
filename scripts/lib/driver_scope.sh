@@ -6,26 +6,64 @@ driver_scope_refuse() {
   return 6
 }
 
+# Generic, conservative fallbacks (bytes), not sized for any host. Each
+# deployment sets its real limits in the environment or in the config file
+# below; see docs/runbooks/driver-memory-scope.md.
+DS_FALLBACK_HIGH=2147483648
+DS_FALLBACK_MAX=3221225472
+DS_FALLBACK_SWAP=536870912
+DS_FALLBACK_PYTEST_WORKERS=2
+
+driver_scope_load_config() {
+  # KEY=VALUE lines, parsed and never sourced; the environment wins.
+  local file="${LU_DRIVER_SCOPE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/learn-ukrainian/driver-scope.env}"
+  local key value
+  [ -f "$file" ] && [ -r "$file" ] || return 0
+  while IFS='=' read -r key value || [ -n "$key" ]; do
+    case "$key" in
+      LU_DRIVER_MEMORY_HIGH|LU_DRIVER_MEMORY_MAX|LU_DRIVER_MEMORY_SWAP_MAX|LU_DRIVER_PYTEST_MAX_WORKERS) ;;
+      *) continue ;;
+    esac
+    [[ "$value" =~ ^[0-9]{1,15}$ ]] || continue
+    [ -n "${!key:-}" ] || printf -v "$key" '%s' "$value"
+  done < "$file"
+}
+
+driver_scope_mem_total() {
+  # Physical memory in bytes, the only ceiling a deployment value may not pass.
+  local key value unit
+  while read -r key value unit; do
+    [ "$key" = MemTotal: ] && [[ "$value" =~ ^[0-9]+$ ]] && { printf '%s' $((value * 1024)); return 0; }
+  done < /proc/meminfo
+  return 1
+}
+
 driver_scope_config() {
-  # One configuration point, byte values; overrides may only lower limits.
-  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-6442450944}"
-  DS_MAX="${LU_DRIVER_MEMORY_MAX:-9663676416}"
-  DS_SWAP="${LU_DRIVER_MEMORY_SWAP_MAX:-1073741824}"
-  local value
-  for value in "$DS_HIGH" "$DS_MAX" "$DS_SWAP"; do
-    [[ "$value" =~ ^[0-9]{1,12}$ ]] || { driver_scope_refuse invalid-limits; return 6; }
+  # One configuration point, byte values: environment, then config file, then
+  # the generic fallbacks. High < Max <= MemTotal and swap <= Max.
+  driver_scope_load_config
+  DS_HIGH="${LU_DRIVER_MEMORY_HIGH:-$DS_FALLBACK_HIGH}"
+  DS_MAX="${LU_DRIVER_MEMORY_MAX:-$DS_FALLBACK_MAX}"
+  DS_SWAP="${LU_DRIVER_MEMORY_SWAP_MAX:-$DS_FALLBACK_SWAP}"
+  DS_PYTEST_WORKERS="${LU_DRIVER_PYTEST_MAX_WORKERS:-$DS_FALLBACK_PYTEST_WORKERS}"
+  local value total
+  for value in "$DS_HIGH" "$DS_MAX" "$DS_SWAP" "$DS_PYTEST_WORKERS"; do
+    [[ "$value" =~ ^[0-9]{1,15}$ ]] || { driver_scope_refuse invalid-limits; return 6; }
   done
-  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_HIGH > 6442450944 || 10#$DS_MAX > 9663676416 || 10#$DS_SWAP > 1073741824 )); then
+  total="$(driver_scope_mem_total)" || { driver_scope_refuse memtotal-unreadable; return 6; }
+  if (( 10#$DS_HIGH <= 0 || 10#$DS_HIGH >= 10#$DS_MAX || 10#$DS_MAX > total || 10#$DS_SWAP > 10#$DS_MAX )); then
     driver_scope_refuse invalid-limits; return 6
   fi
   DS_HIGH=$((10#$DS_HIGH)); DS_MAX=$((10#$DS_MAX)); DS_SWAP=$((10#$DS_SWAP))
+  DS_PYTEST_WORKERS=$((10#$DS_PYTEST_WORKERS))
 }
 
 driver_scope_bus() {
   # Headless tool shells can lack the bus environment. Derive only this user's
   # owned logind directory, never another session's address.
   if [ -z "${XDG_RUNTIME_DIR+x}" ]; then
-    local runtime="/run/user/$(id -u)"
+    local runtime
+    runtime="/run/user/$(id -u)"
     if [ -d "$runtime" ] && [ ! -L "$runtime" ] && [ -O "$runtime" ] && [ -S "$runtime/bus" ]; then
       export XDG_RUNTIME_DIR="$runtime"
     fi
@@ -90,6 +128,7 @@ launcher_enter_driver_scope() {
   # another scope. No environment variable alone is evidence of containment.
   if [ "${LU_DRIVER_SCOPE_PID:-}" = "$$" ]; then
     driver_scope_verify || return 6
+    unset LC_SUPERVISORY_PREDECESSOR_GENERATION
     return 0
   fi
   local token unit entry rc=0 child pending=""
@@ -97,6 +136,14 @@ launcher_enter_driver_scope() {
   [[ "$LC_EPIC" =~ ^[A-Za-z0-9_.:-]+$ ]] || { driver_scope_refuse invalid-lane; return 6; }
   unit="lu-driver-${LC_PROVIDER}-${LC_EPIC}-${token}.scope"
   entry="$(mktemp)" || { driver_scope_refuse entry-marker-unavailable; return 6; }
+  # The waiting launcher owns the marker. Distinct read/write offsets and
+  # inherited descriptors preserve verified entry across unlink or namespaces.
+  if ! { exec 218<"$entry" 219>"/proc/self/fd/218"; }; then
+    exec 218<&- 219>&-
+    rm -f "$entry"
+    driver_scope_refuse entry-marker-unavailable; return 6
+  fi
+  rm -f "$entry"
   printf 'DRIVER_SCOPE_START unit=%s high=%s max=%s swap=%s oom=continue\n' "$unit" "$DS_HIGH" "$DS_MAX" "$DS_SWAP" >&2
   # The outside shell only waits. All preparation/leases run after verified
   # entry. Keep stdin/TTY and the existing session/process group unchanged.
@@ -105,25 +152,49 @@ launcher_enter_driver_scope() {
   trap 'pending=HUP; [ -z "${child:-}" ] || kill -HUP "$child" 2>/dev/null || true' HUP
   (
     trap - INT TERM HUP
+    exec 218<&-
     exec systemd-run --user --scope --expand-environment=no --slice=lu-driver.slice --unit="$unit" --collect --quiet \
     --property="MemoryHigh=$DS_HIGH" --property="MemoryMax=$DS_MAX" --property="MemorySwapMax=$DS_SWAP" \
     --property=OOMPolicy=continue -- bash "$LC_ROOT/scripts/lib/driver_scope.sh" \
-    --entry "$unit" "$entry" "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
+    --entry "$unit" 219 "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_SCOPE_ORIGINAL_ARGS[@]}"
   ) 0<&0 &
   child=$!
+  exec 219>&-
   [ -z "$pending" ] || kill -"$pending" "$child" 2>/dev/null || true
   while :; do
     wait "$child" && rc=0 || rc=$?
     kill -0 "$child" 2>/dev/null || break
   done
   trap - INT TERM HUP
-  if [ ! -s "$entry" ]; then
-    rm -f "$entry"
-    driver_scope_refuse scope-start-failed
-    exit 6
+  local verified=""
+  IFS= read -r verified <&218 || true
+  exec 218<&-
+  # The entry helper already reported a typed configuration/verification
+  # refusal. Preserve it; only failure to start an entry is scope-start-failed.
+  if [ "$verified" = refused ]; then
+    rc=6
+  elif [ "$verified" != verified ]; then
+    driver_scope_refuse scope-start-failed || true
+    # Only a supervisory successor carries a captured predecessor generation.
+    # This path has never claimed a lease and must never close one.
+    if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ] \
+        && [ -n "${LC_SUPERVISORY_PREDECESSOR_GENERATION:-}" ]; then
+      # shellcheck source=scripts/lib/session_supervisor.sh
+      if source "$LC_ROOT/scripts/lib/session_supervisor.sh"; then
+        session_supervisor_publish_start_failure "${SESSION_SUPERVISOR_WAKE_STREAM:-}" \
+          "$LC_SUPERVISORY_PREDECESSOR_GENERATION" scope-start-failed
+      fi
+    fi
+    rc=6
+  else
+    case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
   fi
-  rm -f "$entry"
-  case "$pending" in INT) rc=130 ;; TERM) rc=143 ;; HUP) rc=129 ;; esac
+  local exit_line
+  exit_line="DRIVER_SCOPE_EXIT epic=$LC_EPIC rc=$rc signal=${pending:-none} ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  # A closed stderr reader must not SIGPIPE the waiting launcher before the
+  # journal write or replace the child's status. Isolate the write's signal.
+  (printf '%s\n' "$exit_line" >&2) || true
+  logger -t lu-driver "$exit_line" 2>/dev/null || true
   exit "$rc"
 }
 
@@ -131,7 +202,20 @@ if [ "${1:-}" = --entry ] && [ "${BASH_SOURCE[0]}" = "$0" ]; then
   shift
   export LU_DRIVER_SCOPE_UNIT="$1" LU_DRIVER_SCOPE_PID="$$"
   entry="$2"; shift 2
-  driver_scope_config && driver_scope_verify || exit 6
-  printf 'verified\n' > "$entry"
+  if ! { driver_scope_config && driver_scope_verify; }; then
+    printf 'refused\n' >&"$entry" || true
+    exec 219>&-
+    exit 6
+  fi
+  # #9624: pytest `-n auto`/`-n logical` inside a driver scope resolves to at
+  # most the deployment's worker cap, sized with the scope's MemoryHigh. An
+  # inherited value from 0 (no xdist workers) up to the cap is kept; CI never
+  # runs through this entry.
+  inherited="${PYTEST_XDIST_AUTO_NUM_WORKERS:-}"
+  if ! [[ "$inherited" =~ ^[0-9]{1,4}$ ]] || (( 10#$inherited > DS_PYTEST_WORKERS )); then
+    export PYTEST_XDIST_AUTO_NUM_WORKERS="$DS_PYTEST_WORKERS"
+  fi
+  printf 'verified\n' >&"$entry"
+  exec 219>&-
   exec bash "$@"
 fi

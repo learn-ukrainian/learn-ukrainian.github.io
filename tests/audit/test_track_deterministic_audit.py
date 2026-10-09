@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+import os
+import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,7 +31,11 @@ def write_minimal_module(root: Path, slug: str, num: int, *, english_leak: bool 
     (root / "site" / "src" / "content" / "docs" / "b2").mkdir(parents=True, exist_ok=True)
     (root / "site" / "src" / "content" / "readings").mkdir(parents=True, exist_ok=True)
 
-    body = "This paragraph explains the entire grammar point in English before Ukrainian appears.\n" if english_leak else ""
+    body = (
+        "This paragraph explains the entire grammar point in English before Ukrainian appears.\n"
+        if english_leak
+        else ""
+    )
     (module_dir / "module.md").write_text(f"# Модуль {num}\n\n{body}**Я чекаю на автобус.**\n", encoding="utf-8")
     (module_dir / "activities.yaml").write_text(
         "- type: quiz\n"
@@ -42,8 +50,7 @@ def write_minimal_module(root: Path, slug: str, num: int, *, english_leak: bool 
         encoding="utf-8",
     )
     (module_dir / "vocabulary.yaml").write_text(
-        "- word: слово\n"
-        "  translation: word\n",
+        "- word: слово\n  translation: word\n",
         encoding="utf-8",
     )
     (curriculum / "plans" / "b2" / f"{slug}.yaml").write_text("title: Test\n", encoding="utf-8")
@@ -96,6 +103,348 @@ def base_config() -> dict:
 
 def test_parse_range() -> None:
     assert audit.parse_range("1-3") == (1, 3)
+
+
+def test_file_entrypoint_audits_real_module(tmp_path: Path) -> None:
+    """The post-build-review file entrypoint must import the shared config."""
+    root = Path(__file__).resolve().parents[2]
+    module = next(module for module in audit.select_modules("bio", None, None) if module.built)
+    output = tmp_path / "audit.json"
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/track_deterministic_audit.py",
+            "--track",
+            "bio",
+            "--slugs",
+            module.slug,
+            "--format",
+            "json",
+            "--fail-on",
+            "never",
+            "--output",
+            str(output),
+        ],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    report = json.loads(result.stdout)
+    assert json.loads(output.read_text(encoding="utf-8")) == report
+    assert report["track"] == "bio"
+    assert report["summary"]["modules_selected"] == 1
+    assert report["summary"]["modules_built"] == 1
+
+
+def test_file_entrypoint_rejects_invalid_range(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2]
+    output = tmp_path / "invalid-audit.json"
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/track_deterministic_audit.py",
+            "--track",
+            "bio",
+            "--range",
+            "not-a-range",
+            "--output",
+            str(output),
+        ],
+        cwd=root,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "Range must be N-M, got: not-a-range" in result.stderr
+    assert "ImportError" not in result.stderr
+    assert result.stdout == ""
+    assert not output.exists()
+
+
+@pytest.mark.parametrize(
+    ("entrypoint", "arguments", "exit_code", "expected_output"),
+    [
+        (
+            "scripts/tools/check_gate.py",
+            ["--help"],
+            1,
+            "Stages: skeleton, content, activities",
+        ),
+        (
+            "scripts/audit/review_plan.py",
+            None,
+            0,
+            "DRY RUN:",
+        ),
+        ("scripts/audit_module.py", ["--help"], 0, "usage: audit_module.py"),
+        ("scripts/analytics/vocab_progression.py", ["--help"], 0, "usage: vocab_progression.py"),
+        ("scripts/generators/generate_a2_plans.py", ["--help"], 0, "usage: generate_a2_plans.py"),
+        ("scripts/rag_batch_verify.py", ["--help"], 0, "usage: rag_batch_verify.py"),
+        ("scripts/validate_plan_config.py", ["--help"], 0, "usage: validate_plan_config.py"),
+    ],
+)
+@pytest.mark.repo_wide
+def test_config_consumer_file_launches_without_pythonpath(
+    tmp_path: Path, entrypoint: str, arguments: list[str], exit_code: int, expected_output: str
+) -> None:
+    """Real file launches must work even outside the repository cwd."""
+    root = Path(__file__).resolve().parents[2]
+    if entrypoint == "scripts/audit/review_plan.py":
+        plan_path = next(
+            plan_path
+            for plan_path in sorted((root / "curriculum" / "l2-uk-en" / "plans" / "a1").glob("*.yaml"))
+            if audit.read_yaml(plan_path)
+        )
+        arguments = ["a1", plan_path.stem, "--dry-run"]
+        expected_output = f"DRY RUN: {plan_path.stem}"
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, str(root / entrypoint), *arguments],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == exit_code, result.stdout + result.stderr
+    assert expected_output in result.stdout
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize(
+    ("path_order", "module_name"),
+    [
+        (["."], "scripts.audit.config"),
+        (["scripts"], "audit.config"),
+        (["scripts/audit", "scripts"], "audit.config"),
+        (["scripts/audit", "scripts"], "config"),
+    ],
+)
+def test_shared_config_resolves_real_policy_for_import_orders(
+    tmp_path: Path, path_order: list[str], module_name: str
+) -> None:
+    """Resolve the real policy for package, scripts-only and audit-first loads."""
+    root = Path(__file__).resolve().parents[2]
+    paths = [str(root / entry) for entry in path_order]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import json
+import sys
+from pathlib import Path
+
+root = Path({str(root)!r})
+sys.path = {paths!r} + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in (root, root / 'scripts', root / 'scripts/audit')
+]
+config = importlib.import_module({module_name!r})
+shared = config.shared_get_immersion_range
+assert Path(shared.__code__.co_filename).resolve() == root / 'scripts/config.py'
+assert config.get_a1_immersion_range(1) == shared('a1', 1)
+assert config.get_a2_immersion_range(4) == shared('a2', 4)
+assert config.get_b1_immersion_range(3) == shared('b1', 3)
+print(json.dumps([shared('a1', 1), shared('a2', 4), shared('b1', 3)]))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert json.loads(result.stdout) == [[40, 55], [85, 100], [100, 100]]
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize(
+    ("path_order", "module_name", "mutations"),
+    [
+        (["."], "scripts.audit.config", (43, 63, 33, 66, 29, 71)),
+        (["scripts"], "audit.config", (44, 64, 34, 67, 30, 72)),
+        (["scripts/audit", "scripts"], "audit.config", (45, 65, 35, 68, 31, 73)),
+        (["scripts/audit", "scripts"], "config", (46, 66, 36, 69, 32, 74)),
+    ],
+)
+def test_shared_policy_mutations_reach_audit_wrappers_in_real_processes(
+    tmp_path: Path, path_order: list[str], module_name: str, mutations: tuple[int, ...]
+) -> None:
+    """Audit-first file/package imports reuse the canonical mutable policy module."""
+    root = Path(__file__).resolve().parents[2]
+    paths = [str(root / entry) for entry in path_order]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import json
+from pathlib import Path
+
+root = Path({str(root)!r})
+sys_path = {paths!r}
+import sys
+sys.path = sys_path + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in (root, root / 'scripts', root / 'scripts/audit')
+]
+config = importlib.import_module({module_name!r})
+canonical = importlib.import_module('scripts.config')
+assert Path(canonical.__file__).resolve() == root / 'scripts/config.py'
+assert config._shared_config is canonical
+assert [config.get_a1_immersion_range(1), config.get_a2_immersion_range(4), config.get_b1_immersion_range(3)] == [
+    (40, 55), (85, 100), (100, 100)
+]
+a1_min, a1_max, a2_min, a2_max, b1_min, b1_max = {mutations!r}
+for family, module_num, minimum, maximum in (
+    ('a1', 1, a1_min, a1_max),
+    ('a2', 4, a2_min, a2_max),
+    ('b1', 3, b1_min, b1_max),
+):
+    band = next(band for band in canonical.IMMERSION_POLICIES[family] if module_num <= band['max_module'])
+    band['advisory_pct_min'] = minimum
+    band['advisory_pct_max'] = maximum
+assert [config.get_a1_immersion_range(1), config.get_a2_immersion_range(4), config.get_b1_immersion_range(3)] == [
+    (a1_min, a1_max), (a2_min, a2_max), (b1_min, b1_max)
+]
+print(json.dumps([a1_min, a1_max, a2_min, a2_max, b1_min, b1_max]))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert json.loads(result.stdout) == list(mutations)
+    assert result.stderr == ""
+
+
+def test_shared_policy_import_ignores_bare_config_shadow(tmp_path: Path) -> None:
+    """Qualified policy imports must not resolve an unrelated bare config module."""
+    root = Path(__file__).resolve().parents[2]
+    shadow = tmp_path / "shadow"
+    shadow.mkdir()
+    (shadow / "config.py").write_text("raise AssertionError('bare config shadow imported')\n", encoding="utf-8")
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import sys
+from pathlib import Path
+
+root = Path({str(root)!r})
+blocked = (root, root / 'scripts', root / 'scripts/audit')
+sys.path = [{str(shadow)!r}, str(root), str(root / 'scripts/audit'), str(root / 'scripts')] + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in blocked
+]
+config = importlib.import_module('scripts.audit.config')
+canonical = importlib.import_module('scripts.config')
+assert config._shared_config is canonical
+assert Path(config.shared_get_immersion_range.__code__.co_filename).resolve() == root / 'scripts/config.py'
+assert 'config' not in sys.modules
+print('bare config shadow ignored')
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout == "bare config shadow ignored\n"
+    assert result.stderr == ""
+
+
+@pytest.mark.parametrize("include_root", [False, True])
+def test_audit_first_initialization_uses_canonical_shared_policy(tmp_path: Path, include_root: bool) -> None:
+    """Audit-first initialization must resolve qualified policy and public exports."""
+    root = Path(__file__).resolve().parents[2]
+    paths = ([str(root)] if include_root else []) + [str(root / "scripts/audit"), str(root / "scripts")]
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    code = f"""
+import importlib
+import sys
+from pathlib import Path
+
+root = Path({str(root)!r})
+sys.path = {paths!r} + [
+    entry for entry in sys.path
+    if entry and Path(entry).resolve() not in (root, root / 'scripts', root / 'scripts/audit')
+]
+package = importlib.import_module('audit')
+checks = importlib.import_module('audit.checks.learner_state')
+canonical = importlib.import_module('scripts.config')
+assert Path(canonical.__file__).resolve() == root / 'scripts/config.py'
+assert checks.get_immersion_structural is canonical.get_immersion_structural
+assert canonical.get_immersion_range('a1', 1) == (40, 55)
+assert package.__all__ == ['audit_module', 'check_learner_state']
+assert package.check_learner_state is checks.check_learner_state
+assert package.audit_module is importlib.import_module('audit.core').audit_module
+assert sys.path.count(str(root)) == 1
+assert 'config' not in sys.modules
+print('canonical policy and audit exports resolved')
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.stdout == "canonical policy and audit exports resolved\n"
+    assert result.stderr == ""
+
+
+def test_audit_initialization_restores_import_paths_once(monkeypatch) -> None:
+    """Bootstrap missing paths without duplicating them on repeat initialization."""
+    import importlib
+
+    import scripts.audit as package
+
+    root = Path(__file__).resolve().parents[2]
+    scripts = root / "scripts"
+    exports = (package.audit_module, package.check_learner_state)
+    monkeypatch.setattr(sys, "path", [entry for entry in sys.path if entry not in (str(root), str(scripts))])
+
+    importlib.reload(package)
+
+    assert sys.path[0] == str(root)
+    assert sys.path.count(str(root)) == 1
+    assert sys.path.count(str(scripts)) == 1
+    assert (package.audit_module, package.check_learner_state) == exports
+
+    importlib.reload(package)
+
+    assert sys.path.count(str(root)) == 1
+    assert sys.path.count(str(scripts)) == 1
+    assert (package.audit_module, package.check_learner_state) == exports
 
 
 def test_track_audit_json_contract_and_llm_qg_exclusion(tmp_path, monkeypatch) -> None:

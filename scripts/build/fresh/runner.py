@@ -1263,7 +1263,7 @@ def check_4_activities(
     return _pass(4), form_options
 
 
-def check_6_count(expanded: dict[str, Any], target: int, words: dict[str, Any] | None = None) -> dict[str, Any]:
+def check_6_count(expanded: dict[str, Any], words: dict[str, Any] | None = None) -> dict[str, Any]:
     uk = total = 0
     records = {w["id"]: w for w in (words or {}).get("words") or []}
     for unit in expanded["units"]:
@@ -1287,11 +1287,8 @@ def check_6_count(expanded: dict[str, Any], target: int, words: dict[str, Any] |
         "urok_tokens": total,
         "ukrainian_tokens": uk,
         "ukrainian_share": round(uk / total, 6) if total else 0,
-        "word_target": target,
-        "not_checked": ["word_target_not_calibrated", "lesson_structural_minimums_not_calibrated"],
+        "not_checked": ["lesson_structural_minimums_not_calibrated"],
     }
-    if total < target:
-        return {**failure(6, "word_target_below_minimum", "writer"), "details": details}
     return _pass(6, details)
 
 
@@ -1569,7 +1566,7 @@ def run_lesson(
         )
     expanded = assembled.artifacts["expanded_doc"]
     rows.append(_pass(5))
-    row = check_6_count(expanded, lesson["word_target"], words)
+    row = check_6_count(expanded, words)
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)

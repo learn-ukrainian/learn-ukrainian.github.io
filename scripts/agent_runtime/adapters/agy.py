@@ -12,8 +12,9 @@ Known behavioral facts (verify against the installed CLI when changing transport
 - ``--input-format stream-json --output-format stream-json`` accepts one
   NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
-- Review routes write exact Sources and evidence-reading command grants in
-  their scoped home's ``settings.json``; they never skip permissions.
+- Review routes write exact Sources grants and explicit command, write
+  and non-contract Sources denials in their scoped home's ``settings.json``;
+  they never skip permissions.
   Non-review dispatches retain their existing headless permission mode.
 - Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
@@ -83,6 +84,7 @@ from __future__ import annotations
 import contextlib
 import dataclasses
 import functools
+import ipaddress
 import json
 import logging
 import os
@@ -91,6 +93,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+import unicodedata
 import urllib.parse
 import uuid
 from collections.abc import Mapping
@@ -103,7 +106,7 @@ from scripts.secret_redactor import redact_text
 
 from ..failure_codes import provider_failure_code, provider_stderr_error
 from ..jsonl import jsonl_lines
-from ..result import AgyAttempt, ParseResult
+from ..result import AgyAttempt, AgyProviderFault, ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
@@ -164,6 +167,44 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_HEADLESS_PERMISSION_DENIED,
 )
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+
+# Match the diagnostic header, never status/cancellation tokens inside its message.
+_PROVIDER_DIAGNOSTIC_RE = re.compile(
+    r"^(?:agy_stream_result_error:\s*)?"
+    r"(?P<kind>API error \(attempt \d+\)|Eligibility check failed):\s*"
+    r"(?P<load>failed to get load code assist response:\s*)?"
+    r"(?P<status>[A-Z_]+) \(code (?P<code>\d+)\)(?::[^\n]*)?$"
+)
+
+
+def parse_agy_provider_fault(*texts: str | None) -> AgyProviderFault | None:
+    """Parse recorded AGY diagnostic lines; permanent statuses win conflicts.
+
+    Raw terminal error fields and sanitized task excerpts use the same grammar.
+    Unknown prose, nested quoted statuses and malformed protocol are not signals.
+    """
+    found: list[AgyProviderFault] = []
+    for text in texts:
+        if not isinstance(text, str):
+            continue
+        for line in text.splitlines():
+            if match := _PROVIDER_DIAGNOSTIC_RE.fullmatch(line):
+                kind = "api_error" if match["kind"].startswith("API") else "eligibility"
+                if match["load"]:
+                    kind = "load_code_assist"
+                found.append(AgyProviderFault(kind, match["status"], int(match["code"])))
+            elif re.fullmatch(
+                r"(?:agy_stream_result_error:\s*)?The stream was interrupted\."
+                r"(?: Please continue the task you were working on\.)?", line
+            ):
+                found.append(AgyProviderFault("stream_interrupted"))
+            elif line == "agy_stream_output_invalid: missing terminal result":
+                found.append(AgyProviderFault("missing_terminal_result"))
+    # A permanent provider diagnostic must not become replayable because the
+    # same process also failed to emit a terminal result.
+    return next((fault for fault in found if not fault.transient), found[0] if found else None)
+
+
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
 _AGY_VERSION_PROBE_TIMEOUT_S = 15
@@ -784,6 +825,13 @@ def unknown_model_suggestion(model: str) -> str:
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
+_WRITE_MODE_PROMPT_CONTRACT = (
+    "\n\n[WRITE MODE CONTRACT: Do not start timers or waits. "
+    "If a command becomes a background task, track it to confirmed completion (poll its status) before replying. "
+    "Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]"
+)
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
@@ -875,7 +923,7 @@ class AgyAdapter:
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
         review_route = bool(
-            (mode == "read-only" and tc.get("review_profile") == "ukrainian")
+            tc.get("review_profile") in {"ukrainian", "code"}
             or review_isolation
             or tc.get("review_attempt_boundary")
             or tc.get("review_access")
@@ -890,7 +938,7 @@ class AgyAdapter:
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
             )
         if review_route:
-            _write_review_permissions(tc, mode=mode, session_id=session_id)
+            _write_review_permissions(tc, mode=mode, session_id=session_id, cwd=cwd)
 
         agy_bin = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
@@ -917,9 +965,12 @@ class AgyAdapter:
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
+
+        final_prompt = prompt
+
         stdin_payload = (
             json.dumps(
-                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
+                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": final_prompt}]}},
             )
             + "\n"
         )
@@ -997,7 +1048,11 @@ class AgyAdapter:
                 "agy_app_data_root": str(app_data_root),
                 "attempt_read_root": bool(tc.get("review_write_root")),
                 "log_read_root": str(log_read_root),
-                "agy_permission_profile_id": "ukrainian-review-command-denial-v1" if review_route else None,
+                "agy_permission_profile_id": (
+                    "code-review-command-denial-v1"
+                    if tc.get("review_profile") == "code"
+                    else "ukrainian-review-command-denial-v3" if review_route else None
+                ),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -1033,7 +1088,15 @@ class AgyAdapter:
         call_start_time: float | None = None,
     ) -> ParseResult:
         """Keep killed-command evidence on every outcome, including early refusals."""
-        bound = _invocation_transcript(plan)
+        denial = _headless_permission_denial((stderr or "").strip())
+        read_reason = None
+        try:
+            bound = _invocation_transcript(plan)
+        except (AttemptReadError, OSError):
+            if denial is None:
+                raise
+            bound = None
+            read_reason = "transcript_read_refused"
         killed, _excused = _model_killed_tasks(bound.events) if bound is not None else ([], set())
         result = self._parse_response(
             stdout=stdout,
@@ -1043,17 +1106,75 @@ class AgyAdapter:
             plan=plan,
             call_start_time=call_start_time,
         )
+        if denial is not None:
+            attempt = _headless_denial_evidence(bound, plan, denial.permission_kind, read_reason=read_reason)
+            fallback_details = {}
+            if denial.permission_target is not None and attempt.permission_target_unknown_reason in {
+                "transcript_read_refused",
+                "transcript_corrupt",
+                "transcript_unbound_or_unreadable",
+                "trigger_ambiguous",
+                "trigger_missing",
+                "tool_unknown",
+                "tool_kind_unverified",
+                "target_missing",
+            }:
+                fallback_details["permission_target_source"] = "cli_notice"
+                if (transcript_reason := attempt.permission_target_unknown_reason).startswith("transcript_"):
+                    fallback_details["transcript_read_reason"] = transcript_reason
+                target, reason, via_symlink = _sanitized_denial_target(
+                    denial.permission_target, denial.permission_kind, plan
+                )
+                attempt = dataclasses.replace(
+                    attempt, permission_target=target, permission_target_unknown_reason=reason, via_symlink=via_symlink
+                )
+            result = dataclasses.replace(
+                result,
+                agy_attempt=attempt,
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED
+                + "\n"
+                + json.dumps(
+                    {
+                        "permission_kind": attempt.permission_kind,
+                        "permission_target": attempt.permission_target,
+                        **fallback_details,
+                    }
+                ),
+            )
         if killed and not result.ok:
             reason, _, detail = (result.stderr_excerpt or "").partition("\n")
             blocked = [command for command in killed if not _read_only_killed_command(command)]
             result = dataclasses.replace(
                 result, stderr_excerpt=f"{reason}\nkilled commands: {json.dumps(blocked or killed)}\n{detail}"[:500]
             )
+        # The provider error owns terminal diagnostics; protocol evidence comes
+        # only from our stream parser, not a model/tool-authored excerpt.
+        stream_problem = _stream_result(stdout)[1] if plan and "stream-json" in plan.cmd else None
+        fault = parse_agy_provider_fault(result.provider_error_text, stderr, stream_problem) if not result.ok else None
+        if fault and fault.status:
+            code = provider_failure_code("", fault.status)
+            result = dataclasses.replace(result, failure_code=code, rate_limited=code == "rate_limited")
+        attempt = _attempt_evidence(bound, result, plan)
+        # Missing output is transient only without another attributed cause.
+        # The adapter uses provider_error (or schema result_invalid) for an
+        # otherwise unexplained missing result; every more specific code,
+        # provider error text, denial or incomplete-run reason takes priority.
+        if (
+            fault and fault.kind == "missing_terminal_result"
+            and (
+                result.provider_error_text
+                or result.failure_code not in {None, "provider_error", "result_invalid"}
+                or attempt.completion_reason in AGY_INCOMPLETE_RUN_REASONS
+                or any((attempt.denied_command_count, attempt.denied_file_read_count, attempt.denied_mcp_count))
+            )
+        ):
+            fault = None
         return dataclasses.replace(
             result,
+            agy_provider_fault=fault,
             agy_killed_commands=killed,
-            agy_pre_model_failure=_pre_model_failure(plan, stdout, bound),
-            agy_attempt=_attempt_evidence(bound, result, plan),
+            agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
+            agy_attempt=attempt,
         )
 
     def _parse_response(
@@ -1091,8 +1212,12 @@ class AgyAdapter:
                 response="",
                 failure_code="provider_policy_refusal",
                 provider_error_text="",
-                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED + "\n" + json.dumps(denial._asdict()),
-                agy_attempt=AgyAttempt(completion_reason=AGY_HEADLESS_PERMISSION_DENIED),
+                stderr_excerpt=AGY_HEADLESS_PERMISSION_DENIED,
+                agy_attempt=AgyAttempt(
+                    completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
+                    permission_kind=denial.permission_kind,
+                    permission_target="unknown",
+                ),
             )
         stream_error = str(stream_result.get("error") or "") if stream_result else ""
         # Only a failed terminal envelope owns error text. A SUCCESS result
@@ -1104,6 +1229,14 @@ class AgyAdapter:
             and stream_problem is not None
             and stream_problem.startswith("agy_stream_result_error")
             else provider_stderr_error(stderr_text)
+            or "\n".join(
+                match.group(0)
+                for match in re.finditer(
+                    r"^(?:Error:|agy:)\s*(?:unsupported|unknown|invalid) model\b[^\r\n]*$",
+                    stderr_text,
+                    re.IGNORECASE | re.MULTILINE,
+                )
+            )
             if returncode != 0 or not stdout_response
             else ""
         )
@@ -1231,7 +1364,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
 
     A command intent is not execution. Its bound result must show a task
     start or synchronous completion; missing/error results remain unknown.
-    Deny-rule signals count only in the command's bound result slot, never on
+    Deny-rule signals count only in the tool's bound result slot, never on
     model prose, Sources output or an unrelated diagnostic stream.
     """
     reason = (
@@ -1243,6 +1376,13 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         completion_reason=reason,
         failure_code=result.failure_code,
         permission_profile_id=plan.metadata.get("agy_permission_profile_id") if plan else None,
+        permission_target=result.agy_attempt.permission_target if result.agy_attempt else None,
+        permission_kind=result.agy_attempt.permission_kind if result.agy_attempt else None,
+        denied_tool_name=result.agy_attempt.denied_tool_name if result.agy_attempt else None,
+        permission_target_unknown_reason=result.agy_attempt.permission_target_unknown_reason
+        if result.agy_attempt
+        else None,
+        via_symlink=result.agy_attempt.via_symlink if result.agy_attempt else False,
     )
     if bound is None or bound.unreadable_lines:
         return base
@@ -1255,17 +1395,29 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         excused = set()
     from ..sources_read_only import sources_tool_sets
 
-    known_sources = set().union(*sources_tool_sets())
+    read_only_sources, persisting_sources = sources_tool_sets()
+    known_sources = set(read_only_sources) | set(persisting_sources)
     # Current AGY emits planner intents followed by GENERIC result slots in
     # FIFO order; a planner's step index is not its tool result's step index.
     pending: list[tuple[str, str]] = []
     denied_steps: set[int] = set()
+    denied_file_reads: set[int] = set()
+    denied_mcp: set[int] = set()
     executed_steps: set[int] = set()
     background_steps: set[int] = set()
     background_tasks: set[str] = set()
     sources: set[str] = set()
     unknown_execution = False
+    side_effects: set[str] = set()
+    read_only_tools = {
+        "view_file", "view_file_outline", "view_code_item", "list_dir",
+        "grep_search", "find_by_name", "read_url_content", "search_web",
+    }
     for position, event in enumerate(events):
+        if event.get("tool_calls") and not (
+            event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL"
+        ):
+            side_effects.add(f"unattributed_intent:{position}")
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             sources.update(
                 name
@@ -1274,24 +1426,61 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
             )
             for call in event.get("tool_calls") or []:
                 if not isinstance(call, Mapping):
+                    side_effects.add(f"unknown:{position}")
                     continue
                 key = json.dumps(call, sort_keys=True, ensure_ascii=False, default=str)
+                name = str(call.get("name") or "")
+                safe = name in read_only_tools
+                if name == "call_mcp_tool":
+                    args = call.get("args")
+                    safe = (
+                        isinstance(args, Mapping)
+                        and _decode_jsonish(args.get("ServerName")) == "sources"
+                        and _decode_jsonish(args.get("ToolName")) in read_only_sources
+                    )
+                elif name.startswith(("mcp_sources_", "mcp__sources__")):
+                    prefix = "mcp_sources_" if name.startswith("mcp_sources_") else "mcp__sources__"
+                    target = name.removeprefix(prefix)
+                    safe = target in read_only_sources
+                if not safe:
+                    # Include unresolved intents too: an absent result cannot
+                    # establish that the tool did not run before the fault.
+                    side_effects.add(key)
                 if not any(key == waiting_key for waiting_key, _ in pending):
-                    pending.append((key, str(call.get("name") or "")))
-        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE"}:
+                    pending.append((key, name))
+        if event.get("type") not in {"GENERIC", "TOOL_RESPONSE", "MCP_TOOL"}:
             continue
         step = _event_step_index(event)
         slot = step if step is not None else position
         content = str(event.get("content") or "")
-        command_result = bool(pending and pending.pop(0)[1] == "run_command")
+        tool = pending.pop(0)[1] if pending else None
+        if tool is None:
+            side_effects.add(f"unknown_result:{position}")
+        command_result = tool == "run_command"
+        deny_rule = (
+            event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
+        ) and "Matches user-configured deny rule." in content
+        if deny_rule:
+            native_denial = event.get("status") in {"ERROR", "INVALID"} and (
+                "Encountered error in step execution: permission check failed for " in content
+            )
+            # Native permission kind covers all file readers, including future
+            # tools. Exclude command and MCP outputs from supplying read hits.
+            if (
+                tool
+                and tool not in {"run_command", "call_mcp_tool"}
+                and native_denial
+                and "Permission denied for read_file(" in content
+            ):
+                denied_file_reads.add(slot)
+            elif tool == "call_mcp_tool" and native_denial and "Permission denied for mcp(" in content:
+                denied_mcp.add(slot)
         if event.get("status") == "RUNNING" and (start := _BACKGROUND_START_HEADER_RE.match(content)):
             if not start.group("timer"):
                 background_tasks.add(start.group("id"))
                 background_steps.add(slot)
         elif command_result:
-            if (
-                event.get("status") in {"ERROR", "INVALID"} or content.strip() == "Matches user-configured deny rule."
-            ) and ("Matches user-configured deny rule." in content):
+            if deny_rule:
                 denied_steps.add(slot)
             elif event.get("status") == "DONE":
                 executed_steps.add(slot)
@@ -1305,7 +1494,10 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         excused_kill_count=len(excused),
         unexcused_kill_count=max(0, len(killed) - len(excused)),
         unknown_command_count=sum(command == "<unknown command>" for command in killed),
+        side_effect_tool_count=len(side_effects),
         denied_command_count=len(denied_steps),
+        denied_file_read_count=len(denied_file_reads),
+        denied_mcp_count=len(denied_mcp),
         executed_command_count=None
         if unknown_execution
         else len(background_tasks) + len(executed_steps - background_steps),
@@ -1328,6 +1520,196 @@ class AgyHeadlessPermissionDenial(NamedTuple):
     permission_target: str | None
 
 
+_DENIAL_TARGET_ARGS = {
+    "read_file": {
+        "view_file": "AbsolutePath",
+        "view_file_outline": "AbsolutePath",
+        "view_code_item": "File",
+        "list_dir": "DirectoryPath",
+        "grep_search": "SearchPath",
+        "find_by_name": "SearchDirectory",
+    },
+    "read_url": {"read_url_content": "Url"},
+}
+
+
+def _sanitized_denial_target(target: Any, kind: str, plan: InvocationPlan | None) -> tuple[str, str | None, bool]:
+    """Keep requested workspace paths, fixed outside classes or public URL hosts.
+
+    Private names under public suffixes cannot be detected in general. File
+    classification describes the requested path; symlink resolution only sets
+    the boolean marker and is never recorded.
+    """
+    target = _decode_jsonish(target)
+    if not isinstance(target, str) or not target or len(target) > 4096:
+        return "unknown", "target_missing", False
+    if any(unicodedata.category(char) in {"Cc", "Cf", "Zl", "Zp"} for char in target):
+        return "unknown", "target_unsafe", False
+    if kind == "read_url":
+        try:
+            url = urllib.parse.urlsplit(target)
+            host = url.hostname
+            if url.scheme not in {"http", "https"} or not host:
+                return "unknown", "url_invalid", False
+            host = host.lower().removesuffix(".")
+            # All IP literals are infrastructure details, including IPv6.
+            try:
+                ipaddress.ip_address(host)
+            except ValueError:
+                pass
+            else:
+                return "unknown", "url_host_private", False
+            if len(host) > 253 or not re.fullmatch(
+                r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*", host
+            ):
+                return "unknown", "url_invalid", False
+            private_suffixes = (
+                "local",
+                "localhost",
+                "internal",
+                "lan",
+                "home.arpa",
+                "test",
+                "invalid",
+                "example",
+                "onion",
+                "alt",
+                "home",
+                "corp",
+                "mail",
+                "localdomain",
+            )
+            # WHATWG's ends-in-a-number rule sends these hosts to IPv4
+            # parsing, including invalid forms and an empty hex payload.
+            # https://url.spec.whatwg.org/#ends-in-a-number
+            if (
+                "." not in host
+                or re.fullmatch(r"(?:[0-9]+|0x[0-9a-f]*)", host.rsplit(".", 1)[-1])
+                or any(host == suffix or host.endswith("." + suffix) for suffix in private_suffixes)
+            ):
+                return "unknown", "url_host_private", False
+            return "url:" + host, None, False
+        except ValueError:
+            return "unknown", "url_invalid", False
+    if kind != "read_file" or plan is None:
+        return "unknown", "target_kind_unsupported", False
+    if "?" in target or "#" in target or "://" in target or target.startswith("~"):
+        return "unknown", "file_target_invalid", False
+    try:
+        workspace = Path(os.path.abspath(plan.cwd))
+        path = Path(target)
+        requested = path if path.is_absolute() else workspace / path
+        path = Path(os.path.abspath(requested))
+        via_symlink = requested.resolve() != path
+        if path.is_relative_to(workspace):
+            relative = path.relative_to(workspace).as_posix()
+            if redact_text(relative) != relative:
+                return "unknown", "target_unsafe", False
+            return "workspace:" + relative, None, via_symlink
+        # Dispatch worktrees identify the enclosing repository without a Git call.
+        repo_root = next((parent.parent for parent in workspace.parents if parent.name == ".worktrees"), None)
+        roots = [
+            ("repo-root", repo_root),
+            ("home", Path.home()),
+            ("home", Path(plan.env_overrides["HOME"]) if plan.env_overrides.get("HOME") else None),
+            ("tmp", Path(plan.env_overrides.get("TMPDIR") or tempfile.gettempdir())),
+            ("tmp", Path("/tmp")),
+            ("tmp", Path("/var/tmp")),
+        ]
+        roots.extend(
+            ("system", Path(root))
+            for root in ("/etc", "/usr", "/bin", "/sbin", "/lib", "/lib64", "/proc", "/sys", "/dev", "/run", "/var")
+        )
+        for label, root in roots:
+            if root is not None and path.is_relative_to(Path(os.path.abspath(root))):
+                return "outside:" + label, None, via_symlink
+        return "outside:other", None, via_symlink
+    except (OSError, RuntimeError, ValueError):
+        return "unknown", "file_target_invalid", False
+
+
+def _headless_denial_evidence(
+    bound: _TranscriptSlice | None,
+    plan: InvocationPlan | None,
+    kind: str,
+    *,
+    read_reason: str | None = None,
+) -> AgyAttempt:
+    """Pair native result slots or a unique unresolved intent; never use prose.
+
+    Read only the already-bound invocation slice, before runtime lease reaping.
+    Multiple unresolved calls do not establish which permission request fired.
+    """
+    base = AgyAttempt(
+        completion_reason=AGY_HEADLESS_PERMISSION_DENIED,
+        permission_kind=kind,
+        permission_target="unknown",
+    )
+    if bound is None or bound.unreadable_lines:
+        return dataclasses.replace(
+            base,
+            permission_target_unknown_reason=read_reason
+            or ("transcript_corrupt" if bound else "transcript_unbound_or_unreadable"),
+        )
+    pending: list[Mapping[str, Any]] = []
+    denied: list[tuple[Mapping[str, Any], str]] = []
+    for event in bound.events:
+        if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
+            denied.clear()  # A later model turn supersedes an earlier refusal.
+            calls = event.get("tool_calls")
+            for call in calls if isinstance(calls, list) else []:
+                if isinstance(call, Mapping) and call not in pending:
+                    pending.append(call)
+        elif event.get("type") in {"GENERIC", "TOOL_RESPONSE"} and pending:
+            call = pending.pop(0)
+            content = str(event.get("content") or "")
+            if (
+                event.get("status") in {"ERROR", "INVALID"}
+                and "Matches user-configured deny rule." not in content
+                and (
+                    native := re.match(
+                        r"^Encountered error in step execution: permission check failed for "
+                        + re.escape(kind)
+                        + r' "(?P<target>[^"\r\n]*)": Permission denied for '
+                        + re.escape(kind)
+                        + r"\((?P=target)\)\.",
+                        content,
+                    )
+                )
+            ):
+                denied.append((call, native.group("target")))
+    candidates = [(call, None) for call in pending] if pending else denied
+    if len(candidates) != 1:
+        return dataclasses.replace(
+            base, permission_target_unknown_reason="trigger_ambiguous" if candidates else "trigger_missing"
+        )
+    call, native_target = candidates[0]
+    name = call.get("name")
+    arg_key = _DENIAL_TARGET_ARGS.get(kind, {}).get(name) if isinstance(name, str) else None
+    if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]{0,79}", name):
+        return dataclasses.replace(base, permission_target_unknown_reason="tool_unknown")
+    # MCP/command output cannot supply file or URL permission evidence.
+    if not arg_key and (kind, name) not in {("command", "run_command"), ("mcp", "call_mcp_tool")}:
+        return dataclasses.replace(base, permission_target_unknown_reason="tool_kind_unverified")
+    args = call.get("args")
+    target, reason, via_symlink = _sanitized_denial_target(
+        native_target
+        if native_target is not None
+        else args.get(arg_key)
+        if isinstance(args, Mapping) and arg_key
+        else None,
+        kind,
+        plan,
+    )
+    return dataclasses.replace(
+        base,
+        denied_tool_name=name,
+        permission_target=target,
+        permission_target_unknown_reason=reason,
+        via_symlink=via_symlink,
+    )
+
+
 def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial | None:
     """Recognize the CLI's notice, not a model reply or generic denial text.
 
@@ -1337,7 +1719,7 @@ def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial
     """
     notice = re.search(
         r'^jetski: no output produced — a tool required the "(?P<kind>[a-z][a-z0-9_]*)'
-        r'(?:\((?P<target>[^"\r\n]*)\))?" permission that headless mode cannot prompt for, '
+        r'(?:\((?P<target>[^"]*)\))?" permission that headless mode cannot prompt for, '
         r"so it was auto-denied\.(?P<advice>[^\r\n]*)$",
         stderr_text,
         re.MULTILINE,
@@ -1350,7 +1732,7 @@ def _headless_permission_denial(stderr_text: str) -> AgyHeadlessPermissionDenial
     return AgyHeadlessPermissionDenial(kind, target)
 
 
-def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None) -> None:
+def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: str | None, cwd: Path) -> None:
     """Write a fresh scoped allow set; refuse requirements or config drift first.
 
     ``agy_required_permissions`` is a list of exact action(target) resources
@@ -1370,11 +1752,14 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
         )
     if session_id:
         raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
-    permission_only = tc.get("review_profile") == "ukrainian" and not any(
+    permission_only = tc.get("review_profile") in {"ukrainian", "code"} and not any(
         tc.get(key)
         for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
     )
-    expected = agy_review_settings(None if permission_only else access)
+    try:
+        expected = agy_review_settings(None if permission_only else access, checkout_root=cwd)
+    except (OSError, ValueError, SyntaxError, StopIteration):
+        raise AgyReviewPermissionError("agy_review_permissions_tool_inventory_unavailable") from None
     allow = set(expected["permissions"]["allow"])
     required = tc.get("agy_required_permissions", [])
     if (

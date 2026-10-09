@@ -810,8 +810,8 @@ async def list_tools() -> list[Tool]:
                         "description": (
                             "Never make a live GRAC fetch — answer only from a local frequency "
                             "cache. Returns JSON {status: attested|not_found|unavailable, entry}. "
-                            "No GRAC frequency cache table is ingested today, so this always "
-                            "returns 'unavailable' rather than making the disallowed network call."
+                            "Snapshot misses and modes without local data return 'unavailable'; "
+                            "a miss is not evidence of zero frequency."
                         ),
                     },
                 },
@@ -3168,13 +3168,6 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
     mode = args.get("mode", "frequency")
     limit = args.get("limit", 10)
 
-    if args.get("cache_only"):
-        # No GRAC frequency cache table is ingested into sources.db today
-        # (scripts/rag/source_query.py is live-only). Fail closed to
-        # "unavailable" rather than making the disallowed live fetch.
-        payload = {"status": "unavailable", "entry": None, "note": "no GRAC frequency cache table ingested"}
-        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
-
     from rag.source_query import (
         grac_collocations,
         grac_concordance,
@@ -3182,9 +3175,29 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         grac_lemma_frequency,
     )
 
+    cache_only = bool(args.get("cache_only"))
+    if cache_only:
+        # Concordance/collocations have no local snapshot. Frequency misses
+        # may be below the floor or outside a partial ingest: never report zero.
+        query_fn = {"frequency": grac_frequency, "lemma_forms": grac_lemma_frequency}.get(mode)
+        result = await asyncio.to_thread(query_fn, query, cache_only=True) if query_fn else None
+        payload = {"status": "attested" if result is not None else "unavailable", "entry": result}
+        if result is None:
+            payload["note"] = "No local snapshot entry for this mode/query; frequency absence is not zero."
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+    def source_note(result: dict) -> str:
+        if result.get("source") == "local_snapshot":
+            return (
+                f"Source: local GRAC snapshot, corpus {result['corpus']}, "
+                f"retrieved {result['retrieved_at']}, API {result['api_version']}, "
+                f"Manatee {result['manatee_version']}, minimum frequency {result['min_freq']}"
+            )
+        return "Source: live GRAC"
+
     grac_unavailable_text = (
-        f"GRAC (uacorpus.org) is unavailable for '{query}' (network error or "
-        "HTTP failure). Treat as unknown, not a negative — do not cite this "
+        f"GRAC (uacorpus.org) is unavailable for '{query}' (network/HTTP failure "
+        "or no exact frequency entry returned). Treat as unknown, not a negative — do not cite this "
         "as a zero-frequency or no-results finding."
     )
 
@@ -3197,7 +3210,7 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
                 type="text",
                 text=(
                     f"**{result['word']}**: frequency = {result['freq']:,}, "
-                    f"relative = {result['rel_freq']:.2f} per million"
+                    f"relative = {result['rel_freq']:.2f} per million\n{source_note(result)}"
                 ),
             )
         ]
@@ -3207,6 +3220,9 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         if result is None:
             return [TextContent(type="text", text=grac_unavailable_text)]
         lines = [f"Lemma '{result['lemma']}' — total frequency: {result['total_freq']:,}\n"]
+        lines.append(source_note(result))
+        if result.get("forms_available") is False:
+            lines.append("Form breakdown unavailable in the local frequency snapshot.")
         for form in result["forms"][:limit]:
             lines.append(f"- {form['word']}: {form['freq']:,} ({form['pct']:.1f}%)")
         return [TextContent(type="text", text="\n".join(lines))]

@@ -1672,7 +1672,7 @@ _PRINTED_OUTCOME_CASES: list[tuple[str, str, str | Exception, str, str]] = [
         "verify_words",
         "invalid_input: words must be a non-empty list",
         "ok",
-        "hits_but_no_support",
+        "error",
     ),
     ("empty_result", "search_text", "No results found.", "ok", "no_hits"),
     ("hits", "verify_words", "Batch verification: 1 words\nFound: 1/1\n- слово — FOUND", "ok", "hits_but_no_support"),
@@ -1772,3 +1772,69 @@ def test_ledger_records_preserve_unicode_separators(tmp_path, sep):
     assert found[0]["receipt_id"] == receipt_id
     assert found[0]["arguments"] == {"note": f"a{sep}b"}
     assert found[0]["result"] == f"c{sep}d"
+
+
+@pytest.mark.parametrize(
+    "tool",
+    [
+        "verify_word",
+        "verify_lemma",
+        "search_slovnyk_me",
+        "search_esum",
+        "search_grinchenko_1907",
+        "search_definitions",
+    ],
+)
+@pytest.mark.parametrize("has_hits", [False, True])
+def test_facet_tool_real_handler_outputs_classify_misses_and_hits(server_module, monkeypatch, tool, has_hits):
+    """Execute real server formatters against controlled empty/populated stores."""
+    from types import SimpleNamespace
+
+    from wiki import sources_db
+
+    rows = (
+        [
+            {
+                "lemma": "fixture",
+                "word_form": "fixture",
+                "pos": "noun",
+                "tags": "noun",
+                "word": "fixture",
+                "definition": "Fixture definition",
+                "etymology_text": "Fixture origin",
+            }
+        ]
+        if has_hits
+        else []
+    )
+    if tool in {"verify_word", "verify_lemma"}:
+        backend = SimpleNamespace(
+            verify_word=lambda *_args: rows,
+            verify_lemma=lambda *_args: rows,
+            source_version=lambda: "a" * 64,
+        )
+        monkeypatch.setattr(server_module.v4_handlers, "backend", lambda: backend)
+        output = _run(getattr(server_module, f"handle_{tool}")({"word": "fixture", "lemma": "fixture"}))
+    elif tool == "search_slovnyk_me":
+        monkeypatch.setattr(sources_db, "search_slovnyk_me_with_status", lambda *_args, **_kwargs: (rows, []))
+        output = _run(server_module.handle_search_slovnyk_me({"query": "fixture", "live": False}))
+    elif tool == "search_esum":
+        monkeypatch.setattr(sources_db, "search_esum", lambda *_args: rows)
+        output = _run(server_module.handle_search_esum({"query": "fixture"}))
+    else:
+        monkeypatch.setattr(sources_db, tool, lambda *_args: rows)
+        collection, label = ("sum11", "СУМ-11") if tool == "search_definitions" else ("grinchenko_dict", "Грінченко")
+        output = _run(server_module.handle_dict_search({"query": "fixture"}, collection, label))
+    content = output[0] if isinstance(output, tuple) else output
+    result = "\n".join(item.text for item in content)
+    facts = classify_outcome(tool, "ok", result)
+    assert facts["status"] == ("hits_found" if has_hits else "no_hits"), result
+    assert (facts["hits"] > 0) is has_hits
+
+
+@pytest.mark.parametrize("tool,key", [("verify_word", "matches"), ("verify_lemma", "forms")])
+@pytest.mark.parametrize("has_hits", [False, True])
+def test_facet_vesum_structured_results(tool, key, has_hits):
+    for payload in ({key: [{}] if has_hits else []}, {"result": {key: [{}] if has_hits else []}}):
+        facts = classify_outcome(tool, "ok", json.dumps(payload))
+        assert facts["status"] == ("hits_found" if has_hits else "no_hits")

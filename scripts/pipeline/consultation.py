@@ -52,20 +52,22 @@ _VALID_CONFIDENCES = {"high", "medium", "low"}
 # ---------------------------------------------------------------------------
 
 def _clean_yaml_text(text: str) -> str:
-    """Strip common LLM artifacts that break yaml.safe_load.
-
-    Gemini often wraps YAML in markdown code fences or adds stray
-    backticks. This pre-cleaning step handles those cases.
-    """
-    lines = text.strip().splitlines()
-    cleaned = []
-    for line in lines:
-        stripped = line.strip()
-        # Skip markdown code fence markers
-        if stripped.startswith("```"):
-            continue
-        cleaned.append(line)
-    return "\n".join(cleaned)
+    """Remove surrounding Markdown framing without changing YAML payload bytes."""
+    if not text.strip(" \t\r\n"):
+        return ""
+    # Split only physical lines; NEL/LS/PS and indentation belong to YAML.
+    lines = re.findall(r"[^\r\n]*(?:\r\n|\r|\n|$)", text)
+    start = 0
+    while not lines[start].strip(" \t\r\n"):
+        start += 1
+    if lines[start].strip(" \t\r\n").startswith("```"):
+        end = len(lines)
+        while end > start + 1 and not lines[end - 1].strip(" \t\r\n"):
+            end -= 1
+        if end > start + 1 and lines[end - 1].strip(" \t\r\n") == "```":
+            return "".join(lines[start + 1:end - 1])
+        return "".join(lines[start + 1:])
+    return text
 
 
 def parse_consultation(text: str) -> ConsultationResult | None:

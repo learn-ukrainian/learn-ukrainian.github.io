@@ -430,13 +430,30 @@ def read_commands(
             encoded = encoded[:begin] + replacement + encoded[end:]
         if heredoc_edits:
             tree = Parser(_LANGUAGE).parse(encoded)
-        # Grammar 0.25 mistakes Bash named descriptors for words, including
-        # an ERROR at a prefix descriptor. Repair only AST-identified words
-        # immediately glued to a redirect; quoted strings and bodies are untouched.
+        # Repair AST-identified descriptor and escaped-number lexer errors.
+        # Bash treats out-of-range descriptors as argv, whereas zero and
+        # leading-zero descriptors are redirects. Quoted strings stay untouched.
         edits = []
         pending = [tree.root_node]
         while pending:
             candidate = pending.pop()
+            if candidate.type == "file_redirect":
+                descriptor = re.match(rb"([0-9]+)[<>]", candidate.text)
+                if descriptor:
+                    digits = descriptor[1]
+                    if int(digits) > 2147483647 or digits.startswith(b"0"):
+                        replacement = b"'" + digits + b"'" if int(digits) > 2147483647 else b"1"
+                        edits.append((candidate.start_byte, candidate.start_byte + len(digits), replacement))
+            if candidate.type == "number" and candidate.parent.type == "command":
+                start = candidate.start_byte
+                if encoded[max(0, start - 2) : start] == b"\\ ":
+                    cursor = start - 2
+                    while cursor >= 0 and encoded[cursor : cursor + 1] == b"\\":
+                        cursor -= 1
+                    if (start - 2 - cursor) % 2:
+                        edits.append((start - 2, candidate.end_byte, b"' " + candidate.text + b"'"))
+                elif candidate.text == b"0" and encoded[candidate.end_byte : candidate.end_byte + 1] in {b">", b"<"}:
+                    edits.append((start, candidate.end_byte, b"1"))
             # Retain the branch guard's existing conservative admission policy
             # for case scopes and parameter parentheses; this is not a parser limit.
             if candidate.type == "case_statement" or (
@@ -515,7 +532,7 @@ def read_commands(
                 and re.fullmatch(rb"\{[A-Za-z_][A-Za-z_0-9]*\}", encoded[start : candidate.end_byte])
                 and encoded[candidate.end_byte : candidate.end_byte + 1] in {b">", b"<"}
             ):
-                edits.append((start, candidate.end_byte))
+                edits.append((start, candidate.end_byte, b" " * (candidate.end_byte - start - 1) + b"9"))
             else:
                 if candidate.type == "heredoc_redirect":
                     opener = next(c for c in candidate.named_children if c.type == "heredoc_start")
@@ -524,8 +541,8 @@ def read_commands(
                 else:
                     pending.extend(candidate.named_children)
         if edits:
-            for start, end in edits:
-                encoded = encoded[:start] + b" " * (end - start - 1) + b"9" + encoded[end:]
+            for start, end, replacement in sorted(edits, reverse=True):
+                encoded = encoded[:start] + replacement + encoded[end:]
             tree = Parser(_LANGUAGE).parse(encoded)
         if tree.root_node.has_error:
             raise ShellParseError("Bash parse error")

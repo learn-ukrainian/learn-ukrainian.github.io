@@ -26,6 +26,12 @@ SCOPES = (
 )
 # Exact approved lines: edits or new references require renewed review.
 RULE_CONTEXT_LINES = {
+    "scripts/review/prompts/lesson-review.md.j2": frozenset({
+        "`search_definitions` (SUM-11) is available for Sovietization context only;",
+    }),
+    "scripts/review/prompts/lesson-rereview.md.j2": frozenset({
+        "`search_definitions` (SUM-11) is available for Sovietization context only;",
+    }),
     # Contrast-only caveat in the review-dimension prompt and its generated template.
     "scripts/build/phases/linear-review-dim.md": frozenset({
         "C. **Sovietization flag (decolonization, naturalness).** СУМ-11 is contrast-only and may appear",
@@ -120,7 +126,7 @@ LEXICON_CONTEXT_LINES = {
         '_sum11_sovietization_risk(',
         'cols = {row[1] for row in conn.execute("PRAGMA table_info(sum11);").fetchall()}',
         'def _source_sum11_has_flag_columns(db_path: str | Path | None = None) -> bool:',
-        'def _sum11_has_flag_columns(conn: sqlite3.Connection) -> bool:',
+        'def _sum11_has_flag_columns(conn: SQLiteConnection) -> bool:',
         'def _sum11_has_flag_columns_for_db(',
         'def _sum11_sovietization_risk(definition: str, text: str) -> int:',
         'def _sum11_sovietization_risk_for_term(',

@@ -3,8 +3,9 @@
 # See #5281 / #5279 design decisions.
 #
 # Derivation rule: slots = eligible driver provider identity functions ×
-# launcher_selector_resolve lanes. Gemini's lookup function is retained for
-# compatibility, but Gemini is not a driver and has no roster slots (#9633).
+# launcher_selector_resolve lanes. Gemini drives epics through
+# start-gemini-driver.sh (2026-10-08 approval), so it holds a slot wherever
+# Codex does.
 # See scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
 # Both directions are enforced by tests/test_handoff_slot_registry.py, and the launcher
 # refuses a selector whose <provider>-<lane> slot is not listed here (#8303).
@@ -16,6 +17,7 @@ assignments:
     slots:
       - claude-infra
       - codex-infra
+      - gemini-infra
       - grok-infra
       - kimi-infra
       - cursor-infra
@@ -24,6 +26,7 @@ assignments:
     slots:
       - claude-devops
       - codex-devops
+      - gemini-devops
       - grok-devops
       - kimi-devops
       - cursor-devops
@@ -37,27 +40,43 @@ assignments:
     slots:
       - claude-corpus
       - codex-corpus
+      - gemini-corpus
       - grok-corpus
       - kimi-corpus
       - cursor-corpus
   open-model-data:
+    # Ownership split 2026-10-06 (#6321): this lane owns word-card data
+    # (store, ingestion, identities, citations, sense binding, Russification
+    # data, gates, dataset projection); Atlas owns presentation.
+    # Same Ukrainian-language provider restriction as seminars and hramatka.
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - claude-open-model-data
+      - codex-open-model-data
+      - gemini-open-model-data
   atlas:
+    # Ownership split 2026-10-06 (#6321): Atlas owns word-card presentation;
+    # open-model-data owns the underlying word-card data and gates.
     driver_agent_type: infra-orchestrator
     slots:
       - claude-atlas
       - codex-atlas
+      - gemini-atlas
       - grok-atlas
       - kimi-atlas
       - cursor-atlas
   core:
     driver_agent_type: curriculum-orchestrator
-    # Empty-roster recipient is <provider>-core. Selector curriculum-upgrade
+    # Dedicated recipient is <provider>-core. Selector curriculum-upgrade
     # mints that slot (launcher_stream_aliases.tsv, lane core, stream epic 7994).
     # Its file handoff stays .claude/curriculum-upgrade-epic/. core-quality
     # (epic 4274) is still a taxonomy alias and does not mint this slot.
-    slots: []
+    slots:
+      - claude-core
+      - codex-core
+      - gemini-core
+      - grok-core
+      - cursor-core
   seminars:
     driver_agent_type: curriculum-orchestrator
     # Operator order 2026-09-27: "only claude, gpt and gemini should be involved
@@ -73,11 +92,14 @@ assignments:
     slots:
       - claude-folk
       - codex-folk
+      - gemini-folk
       - claude-bio
       - codex-bio
+      - gemini-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
     # Same operator order applies to Ukrainian language content here.
     slots:
       - claude-hramatka
       - codex-hramatka
+      - gemini-hramatka

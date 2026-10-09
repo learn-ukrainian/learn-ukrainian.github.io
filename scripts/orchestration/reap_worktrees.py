@@ -41,7 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.common import task_store_paths
+from scripts.common import github_client, task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -54,6 +54,8 @@ from scripts.common.acp_runtime_lock import (
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_artifacts, worktree_claims, worktree_prep
+from scripts.orchestration.execution_safe_git import COMMIT_COMMANDS, REMOTE_COMMANDS, GitRefusal
+from scripts.orchestration.execution_safe_git import run_git as safe_git
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -93,6 +95,7 @@ class PullRequestState:
     number: int | None
     state: str
     head_sha: str | None = None
+    head_from_commit_search: bool = False
 
 
 @dataclass(frozen=True)
@@ -174,9 +177,22 @@ def _run(
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    if args and Path(args[0]).name == "gh":
+        # FORCE_COLOR and CLICOLOR_FORCE beat NO_COLOR and make gh wrap piped
+        # JSON in ANSI. That is not JSON, and a parse error must stay fail-closed,
+        # so every JSON gh call is uncolored instead of being repaired later.
+        env.pop("FORCE_COLOR", None)
+        env["NO_COLOR"] = "1"
+        env["CLICOLOR_FORCE"] = "0"
     timeout = _effective_timeout(timeout)
     if timeout is not None and timeout <= 0:
         raise subprocess.TimeoutExpired(args, 0)
+    if args and args[0] == "git":
+        command = args[1] if len(args) > 1 else ""
+        profile = "remote" if command in REMOTE_COMMANDS else "commit" if command in COMMIT_COMMANDS else "local"
+        return safe_git(
+            args[1:], cwd=cwd, profile=profile, capture_output=True, text=True, check=False, timeout=timeout, env=env
+        )
     return subprocess.run(
         args,
         cwd=cwd,
@@ -185,6 +201,34 @@ def _run(
         check=False,
         timeout=timeout,
         env=env,
+    )
+
+
+def _run_gh(
+    args: list[str],
+    *,
+    cwd: Path,
+    timeout: float | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Read GitHub through the shared client.
+
+    Modelled argv translates to REST. Every other shape, including
+    ``gh pr list --head`` and ``gh search prs``, falls through to native gh
+    on that client's colour-safe transport. Callers still parse stdout:
+    an empty body is unknown, and a JSON ``[]`` is no PR.
+    """
+    timeout = _effective_timeout(timeout)
+    if timeout is not None and timeout <= 0:
+        raise subprocess.TimeoutExpired(args, 0)
+    return github_client.run(
+        args,
+        cwd=cwd,
+        fresh=True,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+        env=sanitized_git_env(),
     )
 
 
@@ -438,7 +482,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "api",
@@ -456,8 +500,12 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
         return [], f"REST PR lookup failed: {exc}"
     if proc.returncode != 0:
         return [], f"REST PR lookup failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "REST PR lookup returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"REST PR lookup returned invalid JSON: {exc}"
     if not isinstance(raw_items, list) or any(not isinstance(page, list) for page in raw_items):
@@ -488,7 +536,7 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
 
 def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -509,8 +557,12 @@ def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullReq
         return [], f"gh pr list failed: {exc}"
     if proc.returncode != 0:
         return [], f"gh pr list failed: {_format_failure(proc)}"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], "gh pr list returned empty output"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         return [], f"gh pr list returned invalid JSON: {exc}"
     if not isinstance(raw_items, list):
@@ -587,7 +639,7 @@ def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullReq
         return [], "REST PR lookup failed: origin owner/repo could not be determined"
     owner, repo = slug
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "api", "-X", "GET", f"repos/{owner}/{repo}/pulls/{number}"],
             cwd=repo_root,
             timeout=30,
@@ -622,7 +674,7 @@ def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestS
 
 def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     try:
-        proc = _run(
+        proc = _run_gh(
             [
                 "gh",
                 "pr",
@@ -865,7 +917,7 @@ def _query_prs_by_head_sha(
     if not head_sha:
         return [], None
     try:
-        proc = _run(
+        proc = _run_gh(
             ["gh", "search", "prs", head_sha, "--json", "number,state"],
             cwd=repo_root,
             timeout=30,
@@ -874,8 +926,12 @@ def _query_prs_by_head_sha(
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs: {type(exc).__name__})"
     if proc.returncode != 0:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs exit {proc.returncode})"
+    # Empty stdout is not the empty list. ``[]`` is a real "no PR" answer;
+    # a blank body is an unknown guard and must not license removal.
+    if not proc.stdout:
+        return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned empty output)"
     try:
-        raw_items = json.loads(proc.stdout or "[]")
+        raw_items = json.loads(proc.stdout)
     except json.JSONDecodeError:
         return [], f"{_PR_LOOKUP_FAILED} (gh search prs returned malformed JSON)"
     if not isinstance(raw_items, list):
@@ -883,20 +939,31 @@ def _query_prs_by_head_sha(
 
     states: list[PullRequestState] = []
     for item in raw_items:
-        if not isinstance(item, dict):
-            continue
-        state = str(item.get("state") or "").upper()
-        if not state:
-            continue
-        number = item.get("number")
-        states.append(
-            PullRequestState(
-                number=number if isinstance(number, int) else None,
-                state=state,
-                head_sha=head_sha,
-            )
-        )
+        # ``[null]`` and ``[{}]`` used to be skipped, which is an empty list,
+        # and an empty list is permission to delete. Any row that is not a PR
+        # object makes the whole answer unknown.
+        parsed, err = _parse_search_pr_item(item, head_sha)
+        if err is not None or parsed is None:
+            return [], err or f"{_PR_LOOKUP_FAILED} (gh search prs returned an unusable row)"
+        states.append(parsed)
     return states, None
+
+
+def _parse_search_pr_item(item: Any, head_sha: str) -> tuple[PullRequestState | None, str | None]:
+    """Map one ``gh search prs`` row; anything else is an unknown, not an absence."""
+    if not isinstance(item, dict):
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row is not an object)"
+    raw_state = item.get("state")
+    state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+    if state not in _PR_STATES:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has an unusable state)"
+    number = item.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+        return None, f"{_PR_LOOKUP_FAILED} (gh search prs row has no usable PR number)"
+    return (
+        PullRequestState(number=number, state=state, head_sha=head_sha, head_from_commit_search=True),
+        None,
+    )
 
 
 def _pr_dict(pr_state: PullRequestState | None) -> dict[str, Any] | None:
@@ -1001,32 +1068,34 @@ def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) ->
         return listed.stdout.splitlines() if listed.returncode == 0 else [info.head]
 
     try:
+        primary = primary_checkout_root(info.path)
         if pr_state.number is None or not pr_state.head_sha:
             return unproven(local_commits(), "PR head unavailable")
         live_branch = _run(
             ["git", "ls-remote", "--heads", "origin", info.branch or ""],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if live_branch.returncode != 0:
-            return unproven(local_commits(), "origin branch probe failed")
+            detail = f": {live_branch.code}" if isinstance(live_branch, GitRefusal) else ""
+            return unproven(local_commits(), f"origin branch probe failed{detail}")
         if live_branch.stdout.strip():
             return unproven(local_commits(), "origin branch returned")
 
         fetched_pr = _run(
             ["git", "fetch", "--no-tags", "origin", f"refs/pull/{pr_state.number}/head"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_pr.returncode != 0:
             return unproven(local_commits(), "PR head fetch failed")
-        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=info.path)
+        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=primary)
         if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != pr_state.head_sha:
             return unproven(local_commits(), "fetched PR head does not match PR state")
 
         fetched_main = _run(
             ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
-            cwd=info.path,
+            cwd=primary,
             timeout=30,
         )
         if fetched_main.returncode != 0:
@@ -1104,6 +1173,95 @@ def _path_contains(parent: Path, child: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("/proc")) -> str | None:
+    """An empty lsof selection is proof only with a complete process view.
+
+    Inaccessible process FDs/maps can be silently omitted by lsof. Require
+    readable procfs entries; platforms without this visibility proof retain
+    foreign checkouts. Process exits and closed FDs during the scan are safe.
+    """
+    unavailable = "open-file activity probe unavailable; foreign checkout preserved"
+    try:
+        # Linux UAPI PID_NS_INIT_INO (include/uapi/linux/nsfs.h), also used
+        # by systemd. Comparing self with PID 1 alone accepts nested namespaces.
+        initial_pid_namespace = f"pid:[{0xEFFFFFFC}]"
+        if any(
+            str((proc_root / process / "ns" / "pid").readlink()) != initial_pid_namespace
+            for process in ("self", "1")
+        ):
+            return unavailable
+        proc_mounts = 0
+        for line in (proc_root / "self" / "mountinfo").read_text(encoding="utf-8").splitlines():
+            fields = line.split()
+            separator = fields.index("-")
+            mountpoint = fields[4]
+            if mountpoint == str(proc_root):
+                proc_mounts += 1
+                options = set(fields[5].split(",")) | set(fields[separator + 3].split(","))
+                if (
+                    fields[3] != "/" or fields[separator + 1] != "proc"
+                    or any(option.split("=", 1)[0] in {"hidepid", "subset", "pidns"} for option in options)
+                ):
+                    return unavailable
+            elif mountpoint.startswith(f"{proc_root}/"):
+                component = mountpoint[len(str(proc_root)) + 1:].split("/", 1)[0]
+                if component.isdigit() or component in {"self", "thread-self"}:
+                    return unavailable
+        if proc_mounts != 1:
+            return unavailable
+        processes = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
+        if not processes:
+            return unavailable
+        for process in processes:
+            if time.monotonic() >= deadline:
+                return "open-file activity probe timed out; foreign checkout preserved"
+            try:
+                for fd in (process / "fd").iterdir():
+                    if time.monotonic() >= deadline:
+                        return "open-file activity probe timed out; foreign checkout preserved"
+                    try:
+                        fd.readlink()
+                    except FileNotFoundError:
+                        continue
+                (process / "maps").read_bytes()
+            except FileNotFoundError:
+                if process.exists():
+                    return unavailable
+    except (OSError, ValueError, IndexError):
+        return unavailable
+    if time.monotonic() >= deadline:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    return None
+
+
+def _open_file_activity_reason(worktree: Path, *, timeout: float | None = None) -> str | None:
+    """Prove no open or mapped files in a foreign checkout; never expose paths.
+
+    No FD filter: lsof includes memory mappings as well as ordinary FDs.
+    Cross nested mount points, but do not follow symlinks outside the tree.
+    lsof exits 1 for an empty selection; diagnostics invalidate that proof.
+    The shared runner also clips this probe to the locked-region deadline.
+    """
+    budget = _effective_timeout(15 if timeout is None else timeout)
+    assert budget is not None
+    deadline = time.monotonic() + budget
+    try:
+        proc = _run(
+            ["lsof", "+w", "-n", "-P", "-F", "p", "+D", str(worktree), "-x", "f"],
+            cwd=worktree.parent,
+            timeout=budget,
+        )
+    except subprocess.TimeoutExpired:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    except (OSError, subprocess.SubprocessError):
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    if any(re.fullmatch(r"p[0-9]+", line) for line in (proc.stdout or "").splitlines()):
+        return "live process has open or mapped files inside foreign checkout"
+    if proc.returncode != 1 or (proc.stdout or "").strip() or (proc.stderr or "").strip():
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    return _open_file_probe_visibility_reason(deadline)
 
 
 def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
@@ -2068,14 +2226,16 @@ def _origin_branch_present(path: Path, branch: str | None) -> bool:
 
 
 def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
-    """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
+    """Return whether origin has ``branch``; None on failure, reporting typed refusals."""
     if not branch:
         return False
     # Called before the per-worktree lock. 30s is this probe's own cap; it is
     # not part of the locked-region deadline. The locked re-check uses the
     # local remote-tracking ref (:func:`_origin_branch_present`) instead.
-    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path, timeout=30)
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=primary_checkout_root(path), timeout=30)
     if proc.returncode != 0:
+        if isinstance(proc, GitRefusal):
+            print(f"live origin proof unavailable: {proc.code}", file=sys.stderr)
         return None
     return bool((proc.stdout or "").strip())
 
@@ -2553,6 +2713,11 @@ def _foreign_checkout_reason(
         timeout=timeout,
     ):
         return None
+    activity = _open_file_activity_reason(info.path, timeout=timeout)
+    if activity is not None:
+        if attention is not None:
+            attention.append(activity)
+        return None
     return _FOREIGN_CHECKOUT_REASON
 
 
@@ -2609,12 +2774,16 @@ def _review_checkout_recheck(
     if errors:
         return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
     if klass == "foreign":
+        attention: list[str] = []
         fresh_reason = _foreign_checkout_reason(
             repo_root=repo_root,
             info=fresh,
             active_ids=current_active_ids,
+            attention=attention,
             timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
         )
+        if attention:
+            return attention[0]
     else:
         fresh_reason = _review_checkout_reason(
             repo_root=repo_root,
@@ -2725,7 +2894,7 @@ def _qualifying_reason(
                     task_data = json.loads(task_file.read_text(encoding="utf-8"))
                     task_status = task_data.get("status")
                     if task_status in ("done", "failed", "no_deliverable") and (
-                        active_ids is None or task_id not in active_ids
+                        active_ids is not None and task_id not in active_ids
                     ):
                         task_settled = True
                 except Exception:
@@ -2975,7 +3144,7 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
-_ClaimIdentity = tuple[str, str, str]
+_ClaimIdentity = tuple[str, str, str, str, int]
 
 
 def _pid_proven_absent(record: dict[str, Any]) -> bool:
@@ -2997,10 +3166,16 @@ def _pid_proven_absent(record: dict[str, Any]) -> bool:
 
 
 def _needs_finalize_claim_identity(record: dict[str, Any]) -> _ClaimIdentity | None:
-    """Return the (task id, branch, recorded head) a settled-claim proof is bound to, if all are present."""
-    identity = (record.get("task_id"), record.get("worktree_branch"), record.get("final_branch_head_commit"))
-    if all(isinstance(part, str) and part for part in identity):
-        return identity  # type: ignore[return-value]
+    """Bind a settled-claim proof to its task, branch, head, nonce and worker PID."""
+    identity = (
+        record.get("task_id"),
+        record.get("worktree_branch"),
+        record.get("final_branch_head_commit"),
+        record.get("run_nonce"),
+    )
+    pid = record.get("pid")
+    if all(isinstance(part, str) and part for part in identity) and type(pid) is int and pid > 0:
+        return (*identity, pid)  # type: ignore[return-value]
     return None
 
 
@@ -3016,11 +3191,234 @@ def _needs_finalize_claim_proven_settled(repo_root: Path, record: dict[str, Any]
     identity = _needs_finalize_claim_identity(record)
     if identity is None or not _pid_proven_absent(record):
         return None
-    _, branch, head = identity
+    _, branch, head, _, _ = identity
     states, error = _query_pr_states(repo_root, branch)
     if error is None and any(state.state == "MERGED" and state.head_sha == head for state in states):
         return identity
     return None
+
+
+def _released_reuse_claim_proven_settled(
+    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]] | None:
+    """Prove a released creator via its exact-head merged successor, outside the lock."""
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if record.get("status") != "needs_finalize" or _needs_finalize_claim_identity(record) is None:
+            return None
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        _, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
+        if creator != record or any(member.get("keep_worktree") for _, member in matches):
+            return None
+        receipt = record["preserved_artifacts"]
+        release = receipt["retention_release"]
+        finalized = release["finalized_by"]
+        if (
+            receipt.get("retention_disposition") not in {"released", "retrieved"}
+            or receipt.get("owner") != record["task_id"]
+            or receipt.get("task_id") != record["task_id"]
+            or receipt.get("run_nonce") != record["run_nonce"]
+            or release.get("owner") != record["task_id"]
+            or release.get("run_nonce") != record["run_nonce"]
+            or not receipt.get("retrieval_proof_sha256")
+            or release.get("retrieval_proof_sha256") != receipt["retrieval_proof_sha256"]
+            or not all(_pid_proven_absent(member) for _, member in cohort)
+        ):
+            return None
+        head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+        if head.returncode != 0 or head.stdout.strip() != finalized["head_sha"]:
+            return None
+        for _, successor in cohort:
+            if (
+                successor.get("worktree_reused") is True
+                and successor.get("status") == "done"
+                and successor.get("task_id") == finalized["task_id"]
+                and successor.get("run_nonce") == finalized["run_nonce"]
+                and successor.get("final_branch_head_commit") == finalized["head_sha"]
+                and _needs_finalize_claim_proven_settled(repo_root, successor) is not None
+            ):
+                return matches
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError):
+        pass
+    return None
+
+
+def _continuation_head_is_merged(
+    info: WorktreeInfo, pr: PullRequestState | None, cohort: list[tuple[Path, dict[str, Any]]]
+) -> bool:
+    """Prove an exact PR head, or a detached cohort's complete earlier lineage.
+
+    Ancestry is admitted only with a clean checkout and a done successor at
+    that checkout head. Every current record must have a complete identity
+    and a recorded commit contained in it; missing Git objects fail closed.
+    Commit-search membership alone is never a PR-head proof.
+    """
+    if pr is None or pr.state != "MERGED" or pr.head_from_commit_search or not pr.head_sha or not info.head:
+        return False
+    if pr.head_sha == info.head:
+        return True
+    branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=info.path)
+    return bool(
+        info.detached
+        and branch.returncode == 0
+        and branch.stdout.strip() == "HEAD"
+        and _worktree_clean(info.path) is True
+        and _pr_matches_worktree_head(info, pr)
+        and any(
+            member.get("worktree_reused") is True
+            and member.get("status") == "done"
+            and member.get("final_branch_head_commit") == info.head
+            for _, member in cohort
+        )
+        and all(
+            _needs_finalize_claim_identity(member) is not None
+            and _sha_is_ancestor(info.path, member["final_branch_head_commit"], info.head)
+            for _, member in cohort
+        )
+    )
+
+
+def _merged_reuse_claim_proven_settled(
+    repo_root: Path, worktree: Path, record: dict[str, Any], *, tasks_dir: Path
+) -> list[tuple[Path, dict[str, Any]]] | None:
+    """Settle a keep-false creator via a done successor contained in a merged PR.
+
+    This is merge evidence, not retention release. Existing release receipts
+    continue through their original verifier; ignored bytes still pass the
+    mandatory preservation gate before removal.
+    """
+    from scripts.fleet import ignored_task_output
+
+    try:
+        if record.get("status") != "needs_finalize" or _needs_finalize_claim_identity(record) is None:
+            return None
+        matches = ignored_task_output.matching_worktree_records(
+            worktree, tasks_dir, repo_root=repo_root, publish_cache=False
+        )
+        cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        _, creator = ignored_task_output.reused_worktree_creator(
+            matches, worktree, repo_root=repo_root, tasks_dir=tasks_dir
+        )
+        if (
+            creator != record
+            or len(cohort) < 2
+            or any(member.get("keep_worktree") for _, member in matches)
+            or any(member.get("preserved_artifacts", {}).get("retention_release") for _, member in matches)
+            or not all(_pid_proven_absent(member) for _, member in cohort)
+        ):
+            return None
+        head = _run(["git", "rev-parse", "HEAD"], cwd=worktree)
+        if head.returncode != 0:
+            return None
+        branch = worktree_claims.checked_out_branch(worktree)
+        info = WorktreeInfo(worktree, branch, head.stdout.strip(), detached=branch is None)
+        for _, successor in cohort:
+            if (
+                successor.get("worktree_reused") is True
+                and successor.get("status") == "done"
+                and successor.get("final_branch_head_commit") == head.stdout.strip()
+                and _needs_finalize_claim_identity(successor) is not None
+            ):
+                states, error = _query_pr_states(repo_root, successor["worktree_branch"])
+                pr = _best_pr(states)
+                if error is None and _continuation_head_is_merged(info, pr, cohort):
+                    return matches
+    except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError, AttributeError):
+        pass
+    return None
+
+
+def _record_merged_reuse_proof(
+    repo_root: Path, info: WorktreeInfo, pr: PullRequestState | None, *, tasks_dir: Path
+) -> dict[str, Any] | None:
+    """Record merged-head containment proof under the caller's worktree lock.
+
+    Task locks follow the worktree lock. The complete cohort is re-read before
+    publishing; preservation still handles all ignored output independently.
+    """
+    from scripts.fleet import ignored_task_output
+    from scripts.orchestration.task_record_store import task_record_path
+
+    matches = ignored_task_output.matching_worktree_records(
+        info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+    )
+    cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+    if len(cohort) < 2 or any(member.get("keep_worktree") for _, member in matches):
+        return None
+    path, creator = ignored_task_output.reused_worktree_creator(
+        matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir
+    )
+    if not _continuation_head_is_merged(info, pr, cohort):
+        if any(
+            isinstance(member.get("preserved_artifacts"), dict)
+            and member["preserved_artifacts"].get("retention_release")
+            for _, member in matches
+        ):
+            return None  # Preserve #9940's explicit receipt-release path.
+        raise ValueError("continuation requires a proven merged PR head containing the checkout")
+    assert pr is not None
+    if any(
+        not isinstance(member.get(key), str) or not member[key].strip()
+        for _, member in matches
+        for key in ("task_id", "run_nonce")
+    ):
+        raise ValueError("continuation run identity unavailable")
+    if path not in (
+        task_record_path(tasks_dir, creator["task_id"]),
+        task_record_path(tasks_dir / "archive", creator["task_id"]),
+    ):
+        raise ValueError("continuation creator has no canonical task record")
+    if not all(_pid_proven_absent(member) for _, member in cohort):
+        raise ValueError("continuation process absence unavailable")
+    proof = {
+        "schema": "merged-reuse-reap.v1",
+        "owner": creator["task_id"],
+        "run_nonce": creator["run_nonce"],
+        "head_sha": info.head,
+        "pr_head_sha": pr.head_sha,
+        "head_relation": "exact" if pr.head_sha == info.head else "ancestor",
+        "pr_number": pr.number,
+        "pr_state": pr.state,
+        "clean": True,
+        "members": [
+            {
+                "task_id": member["task_id"],
+                "run_nonce": member["run_nonce"],
+                "branch": member.get("worktree_branch"),
+                "head_sha": member.get("final_branch_head_commit"),
+                "pid": member["pid"],
+            }
+            for _, member in cohort
+        ],
+    }
+    with contextlib.ExitStack() as stack:
+        for member_path, member in sorted(matches):
+            stack.enter_context(ignored_task_output.artifacts.task_state_lock(member_path))
+            if json.loads(member_path.read_text(encoding="utf-8")) != member:
+                raise ValueError("continuation records changed before merged-head proof")
+        if (
+            ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=repo_root, publish_cache=False
+            )
+            != matches
+        ):
+            raise ValueError("continuation cohort changed before merged-head proof")
+        if not all(_pid_proven_absent(member) for _, member in cohort):
+            raise ValueError("continuation process absence changed before merged-head proof")
+        head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+        if head.returncode != 0 or head.stdout.strip() != info.head or _worktree_clean(info.path) is not True:
+            raise ValueError("checkout changed before merged-head proof")
+        ignored_task_output.reused_worktree_creator(matches, info.path, repo_root=repo_root, tasks_dir=tasks_dir)
+        if not _continuation_head_is_merged(info, pr, cohort):
+            raise ValueError("continuation ancestry changed before merged-head proof")
+        reaper_lifecycle._atomic_write(path, dict(creator, worktree_reap_proof=proof))
+    return proof
 
 
 def _enter_dispatch_worktree_guard(
@@ -3059,18 +3457,55 @@ def _enter_dispatch_worktree_guard(
         "owner_task_id": owner_task_id,
         "owner_state_file": tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
     }
+    owner_record = _task_record(repo_root, owner_task_id) if owner_task_id else None
+    owner_attempt = None
+    owner_needs_merge_proof = False
+    if owner_record is not None and owner_record.get("status") == "needs_finalize":
+        nonce = owner_record.get("run_nonce")
+        if not isinstance(nonce, str) or not nonce or not _pid_proven_absent(owner_record):
+            return f"needs_finalize owner {owner_task_id} attempt unknown; retain until nonce and absent PID are proven"
+        owner_attempt = (nonce, owner_record.get("pid"))
+        # Single-record owners retain main's guard. Only continuation cohorts
+        # without #9940's receipt-based release need the extra merge proof.
+        from scripts.fleet import ignored_task_output
+
+        try:
+            members = ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=primary, publish_cache=False
+            )
+            owner_needs_merge_proof = len(
+                ignored_task_output._current_reuse_records(members, tasks_dir)
+            ) >= 2 and not owner_record.get("preserved_artifacts", {}).get("retention_release")
+        except (OSError, ValueError, RuntimeError):
+            return f"needs_finalize owner {owner_task_id} cohort unavailable; retain until attribution is proven"
 
     # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
     # is a network call that would otherwise hold delegate's dispatch lock.
     proven: set[_ClaimIdentity] = set()
+    reused_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
+    merged_reuse_proofs: dict[_ClaimIdentity, list[tuple[Path, dict[str, Any]]]] = {}
 
     def prove(record: dict[str, Any]) -> bool:
+        merged_reuse = _merged_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        if merged_reuse is not None:
+            identity = _needs_finalize_claim_identity(record)
+            if identity is not None:
+                merged_reuse_proofs[identity] = merged_reuse
+                return True
+        reuse = _released_reuse_claim_proven_settled(primary, info.path, record, tasks_dir=tasks_dir)
+        if reuse is not None:
+            identity = _needs_finalize_claim_identity(record)
+            if identity is not None:
+                reused_proofs[identity] = reuse
+                return True
         identity = _needs_finalize_claim_proven_settled(primary, record)
         if identity is not None:
             proven.add(identity)
         return identity is not None
 
     worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=prove, **claim_scan)
+    if owner_needs_merge_proof and not prove(owner_record):
+        return f"active task {owner_task_id} needs_finalize merge proof unavailable"
 
     try:
         stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
@@ -3082,8 +3517,56 @@ def _enter_dispatch_worktree_guard(
     def still_settled(record: dict[str, Any]) -> bool:
         # Under the lock: no network. The record must still be the one proven.
         identity = _needs_finalize_claim_identity(record)
+        if identity in merged_reuse_proofs:
+            from scripts.fleet import ignored_task_output
+
+            try:
+                current = ignored_task_output.matching_worktree_records(
+                    info.path, tasks_dir, repo_root=primary, publish_cache=False
+                )
+                head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                return bool(
+                    current == merged_reuse_proofs[identity]
+                    and head.returncode == 0
+                    and head.stdout.strip() == info.head
+                    and all(
+                        _pid_proven_absent(member)
+                        for _, member in ignored_task_output._current_reuse_records(current, tasks_dir)
+                    )
+                )
+            except (OSError, ValueError, RuntimeError):
+                return False
+        if identity in reused_proofs:
+            from scripts.fleet import ignored_task_output
+
+            try:
+                current = ignored_task_output.matching_worktree_records(
+                    info.path, tasks_dir, repo_root=primary, publish_cache=False
+                )
+                head = _run(["git", "rev-parse", "HEAD"], cwd=info.path)
+                finalized = record["preserved_artifacts"]["retention_release"]["finalized_by"]
+                return bool(
+                    current == reused_proofs[identity]
+                    and head.returncode == 0
+                    and head.stdout.strip() == finalized["head_sha"]
+                    and all(
+                        _pid_proven_absent(member)
+                        for _, member in ignored_task_output._current_reuse_records(current, tasks_dir)
+                    )
+                )
+            except (OSError, ValueError, KeyError, TypeError, RuntimeError):
+                return False
         return identity is not None and identity in proven and _pid_proven_absent(record)
 
+    if owner_attempt is not None:
+        current_owner = _task_record(repo_root, owner_task_id)
+        if (
+            current_owner is None
+            or (current_owner.get("run_nonce"), current_owner.get("pid")) != owner_attempt
+            or not _pid_proven_absent(current_owner)
+            or (owner_needs_merge_proof and not still_settled(current_owner))
+        ):
+            return f"needs_finalize owner {owner_task_id} attempt changed; retain until current attempt is qualified"
     return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
 
 
@@ -3121,6 +3604,38 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
         )
     if not apply:
+        from scripts.fleet import ignored_task_output
+
+        try:
+            control_root = control_plane_root(repo_root)
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, task_store_paths.tasks_dir(), repo_root=control_root, publish_cache=False
+            )
+            cohort = ignored_task_output._current_reuse_records(matches, task_store_paths.tasks_dir())
+            if len(cohort) > 1:
+                ignored_task_output.reused_worktree_creator(
+                    matches, info.path, repo_root=control_root, tasks_dir=task_store_paths.tasks_dir()
+                )
+                if any(member.get("keep_worktree") for _, member in matches):
+                    raise ValueError("keep_worktree intent set; retrieval and owner release required")
+                if not all(_pid_proven_absent(member) for _, member in cohort):
+                    raise ValueError("continuation process absence unavailable")
+                released = any(
+                    isinstance(member.get("preserved_artifacts"), dict)
+                    and member["preserved_artifacts"].get("retention_release")
+                    for _, member in matches
+                )
+                if not released and not _continuation_head_is_merged(info, pr_state, cohort):
+                    raise ValueError("continuation requires a proven merged PR head containing the checkout")
+        except (OSError, ValueError, RuntimeError) as exc:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"continuation ownership or retention refused: {exc}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
         action = "would_preserve_then_remove" if dirty else "would_remove"
         return ReapResult(
             path=str(info.path),
@@ -3159,15 +3674,48 @@ def _reap_qualified_worktree(
     recovery_ref: str | None = None
     dispatch_guard = contextlib.ExitStack()
     try:
+        # Search only establishes commit membership, not the actual PR head.
+        # Refresh by number before acquiring the dispatch/worktree lock.
+        if pr_state is not None and pr_state.head_from_commit_search:
+            from scripts.fleet import ignored_task_output
+
+            tasks_dir = task_store_paths.tasks_dir()
+            matches = ignored_task_output.matching_worktree_records(
+                info.path, tasks_dir, repo_root=control_plane_root(repo_root), publish_cache=False
+            )
+            cohort = ignored_task_output._current_reuse_records(matches, tasks_dir)
+        else:
+            cohort = []
+        if len(cohort) >= 2:
+            states, error = _query_pr_by_number(repo_root, pr_state.number) if pr_state.number else ([], None)
+            fresh = next((state for state in states if state.number == pr_state.number), None)
+            if error is not None or fresh is None or fresh.head_from_commit_search:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason="commit-search PR head unavailable",
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            pr_state = fresh
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
-        reaper_lifecycle.mark_reap_pending(
+        if not reaper_lifecycle.mark_reap_pending(
             repo_root,
             worktree_path=info.path,
             branch=info.branch,
             head=expected_head,
             task_id=_dispatch_task_id(repo_root, info),
-        )
+        ):
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason="active reap reservation",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
         pending_marked = True
 
         # Network proofs before the per-worktree lock. ``ls-remote``, ``gh``,
@@ -3539,16 +4087,48 @@ def _reap_qualified_worktree(
         # fraction of a second kills ``git worktree remove --force``
         # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
         # (120s). A waiter that hits its 30s lock timeout retries.
-        # Git still counts ignored residue on a clean checkout, so force is
-        # required. The shared gate preserves non-disposable output first.
+        # Legacy classes retain their force setting. Proven continuation
+        # cohorts use ordinary Git removal after mandatory preservation.
         control_root = control_plane_root(repo_root)
         preservation_receipt: dict[str, Any] = {}
+        try:
+            merged_reuse_proof = _record_merged_reuse_proof(
+                control_root, info, pr_state, tasks_dir=task_store_paths.tasks_dir()
+            )
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as exc:
+            detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"merged continuation proof unavailable: {detail}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
+        if merged_reuse_proof is not None:
+            preservation_receipt["merged_head_proof"] = merged_reuse_proof
         foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
+        target = info.path
+        if merged_reuse_proof is not None:
+            try:
+                target = assert_delete_target(info.path, repo_root=repo_root, **approval)
+            except ValueError as exc:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=reason,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                    error=f"delete guard refused worktree target: {exc}",
+                    recovery_ref=recovery_ref,
+                    preserved_artifacts=preservation_receipt or None,
+                )
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
-            info.path,
-            force=True,
+            target,
+            force=merged_reuse_proof is None,
             control_root=control_root,
             task_id=_dispatch_task_id(repo_root, info),
             tasks_dir=task_store_paths.tasks_dir(),
@@ -3673,6 +4253,20 @@ def reap_worktrees(
         raise RuntimeError("process-CWD activity probe unavailable; cleanup skipped")
 
     with _ReapLock(repo_root):
+        if apply and os.environ.get("LU_REAPER_DISABLED") != "1":
+            # Release only reservations; every deletion still passes the normal
+            # activity, ownership, cleanliness and exact merged-head proofs below.
+            pending = reaper_lifecycle._read_mapping(reaper_lifecycle.pending_path(repo_root)).get("paths")
+            if isinstance(pending, dict) and pending:
+                control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+                lock_dir = worktree_claims.repository_lock_dir(control_root)
+                for raw_path in pending:
+                    target = Path(raw_path)
+                    if not target.is_absolute() or not is_under_worktrees(repo_root, target):
+                        continue
+                    if targets is not None and target.resolve() not in targets:
+                        continue
+                    reaper_lifecycle.recover_orphaned_reap_pending(repo_root, target, lock_dir=lock_dir)
         worktree_listing = list_git_worktrees(repo_root)
         for info in worktree_listing:
             if targets is not None and info.path.resolve() not in targets:

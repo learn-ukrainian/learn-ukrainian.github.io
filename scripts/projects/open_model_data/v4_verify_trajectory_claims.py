@@ -31,6 +31,9 @@ from typing import Any
 
 import jsonschema
 
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -75,7 +78,9 @@ DEFAULT_RECEIPT_OUTPUT = resolve_open_model_path(
     "data/projects/open_model_data/trajectories/cot_claim_verification_receipt.json"
 )
 
-PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
+PRIVATE_HOST_RE = re.compile(
+    rf"(?:{home_dir_pattern(load_needles())}|/Users/|[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}})"
+)
 ACUTE_RE = re.compile(r"[\u0301\u0300]")
 CLEAN_WORD_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
 R2U_CITATION_RE = re.compile(
@@ -108,7 +113,7 @@ def validate_no_private_host_paths(data: Any) -> None:
     serialized = json.dumps(data, ensure_ascii=False)
     match = PRIVATE_HOST_RE.search(serialized)
     if match:
-        raise ValueError(f"OPSEC violation: private path detected: {match.group(0)}")
+        raise ValueError(f"OPSEC violation: private path detected at offset {match.start()}")
 
 
 class R2ULookupStatus(enum.StrEnum):
@@ -240,9 +245,9 @@ class CoTClaimVerifier:
 
     def __init__(
         self,
-        vesum_conn: sqlite3.Connection,
-        sources_conn: sqlite3.Connection,
-        ulif_conn: sqlite3.Connection | None = None,
+        vesum_conn: SQLiteConnection,
+        sources_conn: SQLiteConnection,
+        ulif_conn: SQLiteConnection | None = None,
         r2u_cache: dict[str, Any] | None = None,
         allow_network: bool = False,
     ) -> None:
@@ -1299,8 +1304,8 @@ def run_claim_verifier(
     if not sources_db.is_file():
         raise FileNotFoundError(f"Required sources database not found: {sources_db}")
 
-    vesum_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    sources_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(vesum_db)
+    sources_conn = _open_readonly(sources_db)
 
     if ulif_db is None and DEFAULT_ULIF_DB and DEFAULT_ULIF_DB.is_file():
         ulif_db = DEFAULT_ULIF_DB
@@ -1309,7 +1314,7 @@ def run_claim_verifier(
 
     ulif_conn = None
     if ulif_db and ulif_db.is_file():
-        ulif_conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
+        ulif_conn = _open_readonly(ulif_db)
 
     r2u_cache = {}
     if r2u_cache_path and r2u_cache_path.is_file():

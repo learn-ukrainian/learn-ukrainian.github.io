@@ -18,7 +18,8 @@ START = "2026-09-23T12:00:00.000001+00:00"
 
 
 def comment(
-    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False
+    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False,
+    review_mode="cross_family", family="openai",
 ):
     body = build_comment(
         sha=sha,
@@ -26,8 +27,9 @@ def comment(
         started=started,
         verdict=verdict,
         model="gpt-6.1-sol",
-        family="openai",
+        family=family,
         reply="VERDICT: APPROVE",
+        review_mode=review_mode,
     )
     return {
         "id": task,
@@ -37,6 +39,47 @@ def comment(
         "created_at": "2026-09-23T13:00:00Z",
         "updated_at": "2026-09-23T13:01:00Z" if edited else "2026-09-23T13:00:00Z",
     }
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_review_mode_round_trip_and_legacy_marker(mode):
+    item = comment(review_mode=mode)
+    marker = sweep.parse_marker(item["body"])
+    assert marker is not None
+    assert marker.get("review_mode", "cross_family") == mode
+    verdict = sweep.lookup_verdict([item], SHA, "fleet")
+    assert verdict.state == "APPROVED"
+    assert verdict.review_mode == mode
+    assert sweep.classify_pr(pr(), verdict, queued=False, observed_at=START).state == "ready"
+
+
+@pytest.mark.parametrize("case", ["missing_mode", "wrong_heading", "wrong_label", "invalid_mode", "duplicate_mode"])
+def test_red_team_marker_tampering_is_unknown(case):
+    item = comment(review_mode="red_team")
+    replacements = {
+        "missing_mode": (" review_mode=red_team", ""),
+        "wrong_heading": ("### Adversarial red-team review", "### Cross-family review"),
+        "wrong_label": ("Review mode: red_team", "Review mode: cross_family"),
+        "invalid_mode": ("review_mode=red_team", "review_mode=anything"),
+        "duplicate_mode": ("review_mode=red_team", "review_mode=red_team review_mode=red_team"),
+    }
+    item["body"] = item["body"].replace(*replacements[case])
+    assert sweep.parse_marker(item["body"]) is None
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("mode", ["cross_family", "red_team"])
+def test_unknown_reviewer_marker_never_approves(mode):
+    assert sweep.lookup_verdict([comment(review_mode=mode, family="unknown")], SHA, "fleet").state == "unknown"
+
+
+def test_red_team_keeps_trust_head_and_latest_rejection_gates():
+    assert sweep.lookup_verdict([comment(review_mode="red_team", login="outsider")], SHA, "fleet").state == "needs-CF"
+    assert sweep.lookup_verdict([comment(review_mode="red_team", sha=OTHER)], SHA, "fleet").state == "CF-stale"
+    assert sweep.lookup_verdict([comment(review_mode="red_team", edited=True)], SHA, "fleet").state == "unknown"
+    rows = [comment(review_mode="red_team"),
+            comment(task="later", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED")]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
 def pr(**updates):
@@ -87,6 +130,61 @@ def test_edited_or_unparseable_marker_makes_sha_unknown(bad):
     if bad == "malformed":
         item["body"] = item["body"].replace("verdict=APPROVED", "verdict=MAYBE")
     assert sweep.lookup_verdict([item], SHA, "fleet").state == "unknown"
+
+
+def test_keeper_format_approve_token_reads_as_approved():
+    item = comment(verdict="APPROVE")
+    assert item["body"].endswith("verdict=APPROVE model=gpt-6.1-sol family=openai -->")
+    assert sweep.parse_marker(item["body"])["verdict"] == "APPROVED"
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "APPROVED"
+    later = "2026-09-23T12:00:01.000001+00:00"
+    rows = [comment(verdict="APPROVE"), comment(task="later", started=later, verdict="BLOCKED")]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
+    assert sweep.lookup_verdict([comment(verdict="APPROVE", edited=True)], SHA, "fleet").state == "unknown"
+
+
+PR_10095_SHA = "b5a18af03c961fa4b228a3ea6669f2c11ef5f532"
+PR_10095_TRAILER = (
+    f"<!-- cf-verdict v1 sha={PR_10095_SHA} task=pravopys-9638-cf-basefix "
+    "started=2026-10-08T08:24:21.755967+00:00 verdict=APPROVE model=claude-opus-5-5 family=anthropic -->"
+)
+
+
+def unformatted(trailer=PR_10095_TRAILER, edited=False):
+    return {
+        "id": 6055900811,
+        "body": f"Exact-head review of the base fix.\n\nNo blocking findings.\n\n{trailer}",
+        "user": {"login": "fleet"},
+        "author_association": "MEMBER",
+        "created_at": "2026-10-08T08:40:00Z",
+        "updated_at": "2026-10-08T08:41:00Z" if edited else "2026-10-08T08:40:00Z",
+    }
+
+
+def test_unformatted_approve_trailer_neither_poisons_nor_approves():
+    assert sweep.parse_marker(unformatted()["body"]) is None
+    readable = comment(sha=PR_10095_SHA, task="later-review", started="2026-10-08T09:00:00.000001+00:00")
+    assert sweep.lookup_verdict([unformatted(), readable], PR_10095_SHA, "fleet").state == "APPROVED"
+    assert sweep.lookup_verdict([unformatted()], PR_10095_SHA, "fleet").state == "needs-CF"
+    with_prose = unformatted()
+    with_prose["body"] = "VERDICT: APPROVE\n" + with_prose["body"]
+    assert sweep.lookup_verdict([with_prose], PR_10095_SHA, "fleet").state == "CF-unrecorded"
+    assert sweep.lookup_verdict([unformatted(edited=True), readable], PR_10095_SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE", "BLOCKED", "CHANGES_REQUESTED"])
+def test_unformatted_non_approve_trailer_still_poisons_the_head(token):
+    item = unformatted(PR_10095_TRAILER.replace("verdict=APPROVE", f"verdict={token}"))
+    readable = comment(sha=PR_10095_SHA, task="later-review", started="2026-10-08T09:00:00.000001+00:00")
+    assert sweep.lookup_verdict([item], PR_10095_SHA, "fleet").state == "unknown"
+    assert sweep.lookup_verdict([item, readable], PR_10095_SHA, "fleet").state == "unknown"
+
+
+@pytest.mark.parametrize("token", ["APPROVES", "approve", "MAYBE"])
+def test_keeper_format_unknown_token_stays_unreadable(token):
+    keeper = comment(verdict=token)
+    assert sweep.parse_marker(keeper["body"]) is None
+    assert sweep.lookup_verdict([keeper, comment(task="other")], SHA, "fleet").state == "unknown"
 
 
 def test_lookup_failure_and_partial_data_unknown():
@@ -225,6 +323,29 @@ def test_ci_red_pending_and_ready():
     assert sweep.classify_pr(red, approved, queued=False, observed_at=START).state == "CI-red CI Gate"
     assert sweep.classify_pr(pending, approved, queued=False, observed_at=START).state == "CI-pending"
     assert sweep.classify_pr(pr(), approved, queued=False, observed_at=START).state == "ready"
+
+
+@pytest.mark.parametrize("name", ["Component shadow (advisory)"])
+@pytest.mark.parametrize("status,conclusion", [("COMPLETED", "FAILURE"), ("IN_PROGRESS", ""), ("", "")])
+def test_advisory_checks_do_not_block_readiness(name, status, conclusion):
+    item = pr()
+    item["statusCheckRollup"].append({"name": name, "status": status, "conclusion": conclusion, "workflowName": "CI"})
+    report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
+    assert report.state == "ready"
+    assert report.blockers == ()
+
+
+def test_advisory_failure_does_not_hide_other_blockers():
+    advisory = {"name": "Component shadow (advisory)", "status": "COMPLETED", "conclusion": "FAILURE", "workflowName": "CI"}
+    assert sweep._check_blockers(pr(statusCheckRollup=[advisory])) == ["CI pending CI Gate"]
+    item = pr()
+    item["statusCheckRollup"].extend([
+        advisory,
+        {"name": "Build", "status": "COMPLETED", "conclusion": "FAILURE"},
+    ])
+    report = sweep.classify_pr(item, sweep.Verdict("APPROVED"), queued=False, observed_at=START)
+    assert report.state == "CI-red Build"
+    assert report.blockers == ("CI red Build",)
 
 
 def test_moved_head_between_observation_and_queue_lookup_reports_unknown():

@@ -5,9 +5,15 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.common import github_client
 
 try:
     from scripts.entire.validate_checkpoint_routing import validate
@@ -22,10 +28,10 @@ Runner = Callable[[Sequence[str], Path], subprocess.CompletedProcess[str]]
 
 
 def _run(command: Sequence[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    return github_client.run(
         list(command),
         cwd=cwd,
-        capture_output=True,
+        fresh=True, capture_output=True,
         text=True,
         check=False,
         timeout=30,

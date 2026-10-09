@@ -1,4 +1,4 @@
-# AGY review permission grants (#9625)
+# AGY review permission grants (#9625, #10115)
 
 AGY supports per-tool `mcp(server/tool)` grants and token-prefix
 `command(prefix)` grants in `settings.json`. See the upstream
@@ -6,25 +6,30 @@ AGY supports per-tool `mcp(server/tool)` grants and token-prefix
 The adapter writes or verifies this file under the attempt's scoped
 `AGY_APP_DATA_DIR`; it never edits the user's global settings.
 
-| Route | Sources grants | Command grants |
-| --- | --- | --- |
-| Full content review | `review_tools("full")`, individually named | `cat`, `head`, `tail`, `wc` |
-| Isolated content review | `review_tools("isolated")`, individually named | `cat`, `head`, `tail`, `wc` |
-| Scoped ad hoc review | Same isolated contract | Same isolated commands |
+| Route | Sources grants | Native file grant | Command / write grants |
+| --- | --- | --- | --- |
+| Full content review | `review_tools("full")`, individually named | `read_file(<attempt checkout>)` | None |
+| Isolated content review | `review_tools("isolated")`, individually named | `read_file(<projected inputs>)` | None |
+| Scoped ad hoc review | Same isolated contract | `read_file(<review cwd>)` | None |
 
 The shared review contract checks the behavior-audited Sources reader set;
 writer tools remain outside both the exposed review catalog and the allow set.
-`search_resources` is full-only. The four command grants only read evidence.
-Their documented flag surfaces and rejection of execute-program flags are tested for every granted binary.
-Use AGY’s built-in search tool; `rg --pre` can execute a program. No Git
-command is granted: `log`, `diff` and `show` accept `--output`, which can
-overwrite scoped settings in the writable runtime directory; inspection can
-also invoke Git helpers. Dropping the grants avoids relying on settings reload
-behavior or introducing another sandbox bind. Shells,
-interpreters, unrestricted Git, MCP wildcards, and the permission bypass are
-never granted. Command grants are permission prefixes, **not a replacement for
-the existing OS review boundary**; flags on a reader can have side effects.
-The separate unsupported AGY code-review isolation route still refuses.
+`search_resources` is full-only. Native directory targets grant recursive reads;
+they need no wildcard suffix. Filesystem-root targets, wildcard targets and
+permission-rule delimiters in checkout names are refused. Every route explicitly
+denies `command(*)` and `write_file(*)`, and review launch omits
+`--dangerously-skip-permissions`.
+
+`agy_review_settings(..., checkout_root=...)` is the repository-owned generator.
+The attempt boundary writes its actual workspace path into settings when it
+creates the review home. Isolated attempts grant their projected inputs, not the
+original repository. Non-receipt reviews pass their checkout to
+`prepare_agy_permission_home`. Receipt staging homes may omit a checkout until
+the runtime boundary creates the final home. Launch compares the settings against
+the actual review cwd; a different checkout or wider allow set fails closed.
+No hand-edited global settings are required. Native permissions supplement the
+existing OS review boundary; they do not replace it. The separate unsupported
+AGY code-review isolation route still refuses.
 
 ## Production plan prompt command decisions
 
@@ -47,7 +52,7 @@ contract requires `ls`, `find`, `grep`, `rg`, a shell or Python.
 | `find` | No grant; do not invoke | `-exec`, `-delete` and `-fprint` can execute or write; use built-in discovery. |
 | `grep`, `rg` | No grant; do not invoke | Built-in search covers permitted context; `rg --pre` executes a program. |
 | Python, shells, scripts | No grant; do not invoke | Arbitrary execution is unnecessary for these content checks; deterministic reports are supplied. |
-| `cat`, `head`, `tail`, `wc` | Retain existing audited grants; production plan prompt uses built-in readers | Existing per-route flag audit remains the gate; forced-reader driver canaries still exercise `cat`. |
+| `cat`, `head`, `tail`, `wc` | No grant; do not invoke | Use native file readers within the attempt checkout. |
 | Listed Sources MCP tools | Retain exact per-tool grants | These issue the receipts required by the review contract. |
 
 The template gives explicit AGY guidance in both access modes, before the
@@ -80,8 +85,7 @@ The retained stderr logs for `plan-review-a1-p2-r3` and
 reports `mcp`. Each has empty stdout and only the literal `<target>` example.
 Their runtime directories and temporary AGY logs are no longer retained;
 the matching scoped review homes contain no conversation JSONL transcripts.
-Neither denied command could be recovered. The allow set remains the four
-simple readers above, with no guessed additions. These logs establish the
+Neither denied command could be recovered. The command allow set remains empty; checkout reads use the native file grant. These logs establish the
 refusal shape, not successful recovery of the historical reviews. The earlier
 MCP failures predate the per-tool grants from #9493; live success still needs
 a driver canary.
@@ -99,7 +103,7 @@ the checkout's `scripts` import root (for `ai_llm`) and the checkout itself.
 Set `CANARY_INITIATOR` to the driver's own trusted Source identity.
 Use a public fixture whose first non-empty plan line is suitable for an output
 comparison; never use private text. These are real provider calls, reserved for
-the accountable driver. The forced-reader routes have a 180-second hard
+the accountable driver. The native-reader routes have a 180-second hard
 timeout; `plan-template` has a 900-second limit for the full production prompt
 and its evidence checks. A failure ends that canary without a retry or provider
 substitution.
@@ -116,7 +120,6 @@ agy_review_canary() {
 import hashlib
 import json
 import os
-import shlex
 import sys
 import tempfile
 from pathlib import Path
@@ -138,7 +141,7 @@ plan_path = yaml.safe_load(manifest.read_text())["inputs"]["plan"]["path"]
 first_line = next(line for line in (root / plan_path).read_text().splitlines() if line.strip())
 prompt = (
     f"Review only the trivial content plan at {plan_path}. "
-    f"First execute cat -- {shlex.quote(plan_path)}; then call the Sources "
+    f"First read {plan_path} with the built-in file reader; then call the Sources "
     "verify_words tool with words=['стіл']. Read both results before replying. "
     "Give one English sentence assessing the plan and include "
     "CANARY_READ: followed by the exact first non-empty plan line. "
@@ -146,7 +149,7 @@ prompt = (
 )
 with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
     prepared = prepare_review_attempt(
-        "canary-9625", route, manifest, "agy", receipts_root=Path(temp), review_access=access,
+        "canary-9625", route, manifest, "agy", receipts_root=Path(temp), review_access=access, checkout_root=root,
     )
     if route == "plan-template":
         # Exact production template, without a forced first command or tool.
@@ -161,7 +164,7 @@ with tempfile.TemporaryDirectory(prefix="agy-9625-canary-") as temp:
         "review_manifest": str(manifest), "review_input_root": str(root),
     }
     if route != "plan-template":
-        tc["agy_required_permissions"] = ["command(cat)", "mcp(sources/verify_words)"]
+        tc["agy_required_permissions"] = [f"read_file({root})", "mcp(sources/verify_words)"]
     if route == "ad-hoc":
         tc.pop("review_access")  # Legacy/ad hoc callers use the isolated default.
     task_id = f"canary-9625-{route}"
@@ -226,9 +229,9 @@ agy_review_canary plan-template
 
 A passing canary needs a structurally complete native transcript, the actual
 plan line in the reply, a successful Sources tool result, and the driver's
-inspection of the one-sentence review and command result. Exit zero or the final
+inspection of the one-sentence review and native file-read result. Exit zero or the final
 marker alone is insufficient. Confirm the transcript contains the requested
-`cat` invocation and a successful result, and no permission auto-denial. Keep
+native file-read invocation and a successful result, and no permission auto-denial. Keep
 any full transcript local. For `agy_review_canary plan-template`, the actual
 `plan-review.md.j2` return must go through production's `attested_return`
 recorder before `validate_review`: extraction removes the outer fence and the
@@ -237,7 +240,7 @@ equal the rendered prompt's SHA-256. The return must contain successful
 Sources receipts, and match the driver’s independently established expected
 judgment and evidence for the pinned plan. A schema-valid verdict alone is
 insufficient; record prompt hash, reviewed head, receipt identities and semantic
-judgment without publishing input content. This run does not require `cat`
+judgment without publishing input content. This run does not require a forced native read
 or `CANARY_READ`, and supplies no `agy_required_permissions` declaration.
 A permission failure remains a blocker owned by the driver; do not widen the allow set to make an unapproved operation pass.
 

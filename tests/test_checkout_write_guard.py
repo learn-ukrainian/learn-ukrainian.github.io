@@ -22,6 +22,7 @@ from tests.helpers.checkout_write_guard import (
     CheckoutWriteError,
     CheckoutWriteGuard,
 )
+from tests.helpers.restore_import_state import restore_import_state
 
 # Explicit paths keep the behavioral contract independent of the guard policy.
 WATCHED_PATHS = [
@@ -96,33 +97,34 @@ def test_collection_file_alias_report_default(tmp_path: Path, builder) -> None:
 @pytest.mark.parametrize("filename", ["linear_pipeline.py", "extract_sections.py", "build_sources_db.py"])
 def test_late_file_alias_defaults(tmp_path: Path, filename: str, monkeypatch: pytest.MonkeyPatch) -> None:
     name = "guard_late_alias"
-    monkeypatch.delitem(sys.modules, name, raising=False)
-    module = _source_alias(filename, name)
-    if filename == "linear_pipeline.py":
-        expected = tmp_path / ".claude/agents/curriculum-writer.md"
-        assert expected == module.CLAUDE_WRITER_AGENT_TARGET
-        assert module.ensure_claude_writer_agent_deployed()["path"] == str(expected)
-        assert expected.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
-    else:
-        expected = tmp_path / "corpus_audit/section_extraction_report.md"
-        assert expected == module.DEFAULT_REPORT_PATH
-        db = tmp_path / "sections.db"
-        with sqlite3.connect(db) as conn:
-            conn.execute("""CREATE TABLE textbooks (
-                id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
-                source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
-            )""")
-        if filename == "extract_sections.py":
-            report = module.extract_sections(db)
+    with restore_import_state(name):
+        monkeypatch.delitem(sys.modules, name, raising=False)
+        module = _source_alias(filename, name)
+        if filename == "linear_pipeline.py":
+            expected = tmp_path / ".claude/agents/curriculum-writer.md"
+            assert expected == module.CLAUDE_WRITER_AGENT_TARGET
+            assert module.ensure_claude_writer_agent_deployed()["path"] == str(expected)
+            assert expected.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
         else:
-            report = module._extract_sections_with_university_grade_adapter(db)
-            manifest = tmp_path / "embeddings/manifest.db"
-            assert manifest == module.DEFAULT_MANIFEST_DB
-            module.ensure_ukrainian_wiki_manifest(module.DEFAULT_MANIFEST_DB)
-            assert manifest.is_file()
-            assert (manifest.parent / "ukrainian_wiki/shard-000001.npy").is_file()
-        assert report.total_chunks == 0
-        assert "Status: **OK**" in expected.read_text(encoding="utf-8")
+            expected = tmp_path / "corpus_audit/section_extraction_report.md"
+            assert expected == module.DEFAULT_REPORT_PATH
+            db = tmp_path / "sections.db"
+            with sqlite3.connect(db) as conn:
+                conn.execute("""CREATE TABLE textbooks (
+                    id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
+                    source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
+                )""")
+            if filename == "extract_sections.py":
+                report = module.extract_sections(db)
+            else:
+                report = module._extract_sections_with_university_grade_adapter(db)
+                manifest = tmp_path / "embeddings/manifest.db"
+                assert manifest == module.DEFAULT_MANIFEST_DB
+                module.ensure_ukrainian_wiki_manifest(module.DEFAULT_MANIFEST_DB)
+                assert manifest.is_file()
+                assert (manifest.parent / "ukrainian_wiki/shard-000001.npy").is_file()
+            assert report.total_chunks == 0
+            assert "Status: **OK**" in expected.read_text(encoding="utf-8")
 
 
 def test_default_redirect_matches_exact_file_and_restores_alias(tmp_path: Path) -> None:
@@ -409,6 +411,50 @@ def test_guard_accepts_unchanged_run_in_fixture_repo(tmp_path: Path) -> None:
         cache_file.write_text("{}", encoding="utf-8")
 
     assert guard.check() == []
+
+
+@pytest.mark.parametrize("rel", [".coverage", ".coverage.worker.12345.67890"])
+@pytest.mark.parametrize("change", ["create", "rewrite", "delete"])
+def test_guard_accepts_untracked_coverage_data(tmp_path: Path, rel: str, change: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / rel
+    if change != "create":
+        output.write_bytes(b"baseline coverage")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "delete":
+        output.unlink()
+    else:
+        output.write_bytes(b"updated coverage")
+    assert guard.check() == []
+    guard.verify()
+
+
+@pytest.mark.parametrize("rel", [".coverage", ".coverage.worker.12345.67890"])
+def test_guard_still_detects_tracked_coverage_changes(tmp_path: Path, rel: str) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / rel
+    output.write_bytes(b"baseline coverage")
+    subprocess.run(["git", "add", rel], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tracked coverage"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    output.write_bytes(b"updated coverage")
+    with pytest.raises(CheckoutWriteError, match="tracked file modified"):
+        guard.verify()
+
+
+@pytest.mark.parametrize("rel", [
+    "new_source.py", ".coveragerc", ".coverage-report.py",
+    ".coverage.worker/new_source.py", "nested/.coverage",
+])
+def test_guard_still_detects_unrelated_untracked_files(tmp_path: Path, rel: str) -> None:
+    _init_git_repo(tmp_path)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("unexpected checkout write", encoding="utf-8")
+    assert guard.check() == [f"untracked checkout file created: {rel}"]
+    with pytest.raises(CheckoutWriteError, match="untracked checkout file created"):
+        guard.verify()
 
 
 def test_guard_accounts_for_preexisting_changes_and_sparse_files(tmp_path: Path) -> None:

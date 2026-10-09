@@ -29,7 +29,6 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
-import importlib
 import json
 import logging
 import os
@@ -45,6 +44,13 @@ from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import import_named_module
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import import_named_module  # type: ignore[no-redef]
 
 from ai_llm.fallback import (
     AttemptOutcome,
@@ -104,7 +110,8 @@ from .result import ParseResult, Result
 from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
-from .usage import has_headroom, write_record
+from .usage import has_headroom as _usage_has_headroom
+from .usage import write_record
 from .watchdog import (
     WatchdogState,
     should_kill,
@@ -232,6 +239,16 @@ class CwdUnpinnedError(AgentRuntimeError):
 _CWD_PIN_READ_ONLY_AGENTS = frozenset({"agy"})
 _CWD_PIN_GRACE_ENV = "LU_DISPATCH_CWD_PIN_GRACE_S"
 _CWD_PIN_DEFAULT_GRACE_S = 45.0
+
+
+def has_headroom(agent: str, model: str, *, unreadable: dict[str, int] | None = None) -> tuple[bool, str]:
+    """Keep admission unchanged while surfacing unreadable usage evidence."""
+    if unreadable is None:
+        unreadable = {"files": 0, "lines": 0, "records": 0}
+    decision = _usage_has_headroom(agent, model, unreadable=unreadable)
+    if any(unreadable.values()):
+        _logger.warning("Headroom check for %s/%s: unreadable usage records %s", agent, model, unreadable)
+    return decision
 
 
 def _cwd_pin_grace_s() -> float:
@@ -931,7 +948,7 @@ def _load_adapter(name: str, *, allow_direct_only: bool = False) -> AgentAdapter
         candidates.append(module_path.removeprefix("scripts."))
     for candidate in candidates:
         try:
-            module = importlib.import_module(candidate)
+            module = import_named_module(candidate)
             break
         except ImportError as exc:
             import_errors.append(f"{candidate!r}: {exc}")
@@ -1570,7 +1587,7 @@ def _execute_invocation_plan(
     agy_budget: _AgyLaunchBudget | None = None,
     cli_version: str = "unknown",
 ) -> _ExecutionOutcome:
-    """Two launches maximum; cancellation and pre-model 503 share the retry."""
+    """Two launches maximum; cancellation, eligibility and provider faults share it."""
     kwargs = dict(
         agent_name=agent_name,
         adapter=adapter,
@@ -1676,11 +1693,20 @@ def _execute_invocation_plan(
             evidence.completion_reason == AGY_BACKGROUND_TASK_CANCELED
             and parse.failure_code == "provider_stream_incomplete"
         )
-        errors = (execution.stderr_text, parse.provider_error_text or "")
-        transient = any(
-            re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
-            for text in errors
-            for line in text.splitlines()
+        fault = parse.agy_provider_fault
+        # Real parses carry typed headers. Keep the exact pre-model stderr
+        # path for callers without adapter diagnostic evidence (#8771).
+        transient = (
+            fault.kind == "eligibility" and fault.transient
+            if fault is not None
+            else any(
+                re.fullmatch(
+                    r"(?:agy_stream_result_error:\s*)?Eligibility check failed:\s*"
+                    r"UNAVAILABLE \(code 503\)(?::[^\n]*)?", line
+                )
+                for text in (execution.stderr_text, parse.provider_error_text or "")
+                for line in text.splitlines()
+            )
         )
         eligibility = (
             transient
@@ -1688,13 +1714,37 @@ def _execute_invocation_plan(
             and not parse.agy_killed_commands
             and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS
         )
-        if not cancellation and not eligibility:
+        provider_fault = fault is not None and fault.transient and not cancellation
+        if not cancellation and not eligibility and not provider_fault:
             return finish(execution)
         if len(budget.attempts) >= 2:
             budget.retry_disposition = "exhausted"
             budget.reroute_reason = "agy_retry_exhausted"
             return finish(execution)
-        if mode != "read-only":
+        if provider_fault and (
+            not execution.process_group_exited
+            or evidence.completion_reason in {
+                "agy_background_task_canceled", "agy_background_task_unconfirmed",
+                "agy_background_task_abandoned", "agy_print_timeout_partial",
+                "agy_headless_permission_denied",
+            }
+        ):
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "unsafe_replay"
+            return finish(execution)
+        if provider_fault and not eligibility:
+            safe = mode == "read-only" or (
+                evidence.evidence_complete is True
+                and evidence.executed_command_count == 0
+                and evidence.side_effect_tool_count == 0
+                and evidence.unknown_command_count == 0
+                and evidence.kill_count == 0
+            )
+            if not safe:
+                budget.retry_disposition = "unsafe_replay"
+                budget.reroute_reason = "unsafe_replay"
+                return finish(execution)
+        elif mode != "read-only":
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
@@ -1742,7 +1792,10 @@ def _execute_invocation_plan(
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
-        budget.retry_reason = "incomplete_cancellation" if cancellation else "pre_model_eligibility_503"
+        budget.retry_reason = (
+            "incomplete_cancellation" if cancellation else
+            "pre_model_eligibility_503" if eligibility else "transient_provider_fault"
+        )
         budget.retry_disposition = "retried"
         kwargs.update(plan=retry_plan, session_id=None)
 
@@ -1828,7 +1881,7 @@ def _execute_invocation_once(
         # Merge guard shims are host paths outside the sandbox allowlist and
         # are not needed for evidence-only review (no gh merge). Skip them.
     else:
-        env = build_agent_env(provider=agent_name, overrides=plan.env_overrides)
+        env = build_agent_env(provider=agent_name, model=model, overrides=plan.env_overrides)
         for key in plan.env_unsets:
             env.pop(key, None)
         env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
@@ -2973,7 +3026,7 @@ def _load_worktree_containment():
         "guardrails.worktree_containment",
     ):
         try:
-            return importlib.import_module(candidate)
+            return import_named_module(candidate)
         except ImportError:
             continue
     return None

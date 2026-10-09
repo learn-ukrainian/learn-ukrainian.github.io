@@ -1,6 +1,6 @@
 # Lesson to Atlas link removals for #9002
 
-Original committed denominator: **9,237** links at `83929341df`. Current branch: **8,999 kept**, **238 removed**. This is the coverage residual for a follow-up Atlas sense or translation issue. A withheld link leaves the card readable; restore one only after confirming the article sense.
+Against the **9,237** committed links at `83929341df`, PR #9132 lists **238 removal candidates**: **236 applied**, **two unapplied**, and **9,001 baseline links retained**. This is the coverage residual for a follow-up Atlas sense or translation issue. A withheld link leaves the card readable; restore one only after confirming the article sense.
 
 **Residual:** The `варіантність` and `веснянка` removals for `folk/narodna-kultura-yak-systema.mdx` are not applied because its promote-quality score is stale since plan commit `b3fcf519`. Apply them when the folk lane regenerates or rescores the lesson.
 

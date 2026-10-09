@@ -26,14 +26,47 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
-    PROJECT_ROOT,
     LinguisticNormalizer,
     _resolve_db_path,
 )
 from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
 from scripts.storage.paths import artifact_set
+from tests.projects.open_model_data.test_decolonization_withholding import (
+    _healthy_source_schema,
+    _query_dictionary,
+)
+from tests.projects.open_model_data.test_decolonization_withholding import (
+    dictionary_probe as dictionary_probe,
+)
+
+
+@pytest.fixture
+def source_cursor_factory():
+    """Real synthetic schemas exercise SQL and row binding, rather than guessed cursor tuples."""
+    connections = []
+
+    def make(text=None):
+        conn = sqlite3.connect(":memory:")
+        connections.append(conn)
+        _healthy_source_schema(conn)
+        if text:
+            conn.execute(
+                "INSERT INTO external_articles (id,title,text,speaker,source_file) VALUES (1,'Unrelated book',?,'Unrelated author','synthetic-unrelated')",
+                (text,),
+            )
+            conn.execute(
+                "INSERT INTO textbooks VALUES (1,'Unrelated book',?,'Unrelated author','Unrelated author','synthetic-unrelated')",
+                (text,),
+            )
+        return conn.cursor()
+
+    yield make
+    for conn in connections:
+        conn.close()
+
 
 _COMPONENT_GROUP = "open_model_component_payload"
 _DECOL_REL = "projects/open_model_data/components/decolonization"
@@ -116,9 +149,14 @@ def hermetic_source_cursor():
     conn = sqlite3.connect(":memory:")
     conn.execute(
         "CREATE TABLE external_articles (id INTEGER PRIMARY KEY, title TEXT, text TEXT, "
-        "speaker TEXT, source_file TEXT, decolonization_tag TEXT)"
+        "speaker TEXT, source_file TEXT, decolonization_tag TEXT, channel_id TEXT, domain TEXT)"
     )
-    conn.execute("CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT, text TEXT)")
+    conn.execute(
+        "CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT, text TEXT, source TEXT, excerpt_full TEXT, page INTEGER)"
+    )
+    conn.execute(
+        "CREATE TABLE textbooks (id INTEGER PRIMARY KEY, title TEXT, text TEXT, author TEXT, author_uk TEXT, source_file TEXT)"
+    )
     conn.execute("CREATE VIRTUAL TABLE textbooks_fts USING fts5(title, text)")
     for case_id in ("decol_syn_032", "decol_lex_003", "decol_lex_004", "decol_lex_020", "decol_prep_020"):
         evidence = EXPLICIT_SOURCE_EVIDENCE[case_id]
@@ -130,7 +168,7 @@ def hermetic_source_cursor():
                 f"{evidence['supporting_passage']} {evidence['target_term']}",
                 evidence["authority"],
                 "fixture",
-                case_id,
+                None,
             ),
         )
     try:
@@ -307,15 +345,13 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
 
 def test_adversarial_probes_and_fail_closed(require_vesum_db, hermetic_source_cursor):
     """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment (CF-R6 Finding 1 & 3)."""
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         make_reviewer_confirmation,
         query_source_evidence,
         validate_ua_gec_phrase,
     )
 
-    v_conn = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True)
+    v_conn = open_readonly(require_vesum_db)
     v_cur = v_conn.cursor()
     s_cur = hermetic_source_cursor
 
@@ -669,8 +705,6 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
     2. Blocker 2: Non-bypassable live SQL execution on s_cur and v_cur in query_source_evidence.
     3. Blocker 3: Reviewer whitelist enforcement via ACCREDITED_INDEPENDENT_REVIEWERS and signoff cross-reference.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         ACCREDITED_INDEPENDENT_REVIEWERS,
         make_reviewer_confirmation,
@@ -723,8 +757,8 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -805,7 +839,7 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
         INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"] = orig_rev
 
 
-def test_cf_r10_remediations_regression(require_local_databases):
+def test_cf_r10_remediations_regression(require_local_databases, source_cursor_factory):
     """Verify remediation of all CF-R10 blockers.
 
     1. Blocker 1: EmptyCursor (0 rows / fetchone() returns None) fails closed with ValueError.
@@ -813,8 +847,6 @@ def test_cf_r10_remediations_regression(require_local_databases):
     3. Blocker 1: UA-GEC record validation on correction/error alignment fails closed on mismatch.
     4. Blocker 2: Accredited independent reviewer attribution across all dossiers and signoff.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import (
         ACCREDITED_INDEPENDENT_REVIEWERS,
         query_source_evidence,
@@ -823,8 +855,8 @@ def test_cf_r10_remediations_regression(require_local_databases):
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
@@ -855,40 +887,40 @@ def test_cf_r10_remediations_regression(require_local_databases):
 
     # ── 2. Empty s_cur fails closed across all authority branches ──
     # 2a. Textbook / monograph branch (Ponomariv)
-    with pytest.raises(ValueError, match="Textbook/monograph evidence missing"):
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_001",
             term="лікар",
             copy="доктор",
             auth="Олександр Пономарів «Культура слова»",
             cat_name="calque_lexical",
-            s_cur=empty_cur,
+            s_cur=source_cursor_factory(),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
 
     # 2b. Style guide branch (Antonenko-Davydovych)
-    with pytest.raises(ValueError, match="Style guide evidence missing"):
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_syn_001",
             term="брати участь",
             copy="приймати участь",
             auth="Борис Антоненко-Давидович «Як ми говоримо»",
             cat_name="calque_syntactic",
-            s_cur=empty_cur,
+            s_cur=source_cursor_factory(),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
 
     # 2c. Dictionary branch (SUM-20)
-    with pytest.raises(ValueError, match="Lexical evidence missing"):
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_002",
             term="капелюх",
             copy="шляпа",
             auth="СУМ-20",
             cat_name="calque_lexical",
-            s_cur=empty_cur,
+            s_cur=source_cursor_factory(),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
@@ -903,26 +935,16 @@ def test_cf_r10_remediations_regression(require_local_databases):
             copy="гусь",
             auth="UA-GEC (Syvokon et al., 2023)",
             cat_name="calque_lexical",
-            s_cur=empty_cur,
+            s_cur=source_cursor_factory(),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
 
     # ── 3. UnrelatedCursor fails closed on content mismatch ──
-    class UnrelatedCursor:
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return (999999, "Агротехніка", "Тракторний комбайн у полі на жнивах.")
-
-        def fetchall(self):
-            return [(999999, "Агротехніка", "Тракторний комбайн у полі на жнивах.")]
-
-    unrelated_cur = UnrelatedCursor()
+    unrelated_cur = source_cursor_factory("synthetic unrelated body")
 
     # 3a. Unrelated textbook record
-    with pytest.raises(ValueError, match="is unrelated to case"):
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_001",
             term="лікар",
@@ -935,7 +957,7 @@ def test_cf_r10_remediations_regression(require_local_databases):
         )
 
     # 3b. Unrelated SUM-20 record
-    with pytest.raises(ValueError, match="is unrelated to case"):
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_002",
             term="капелюх",
@@ -985,7 +1007,7 @@ def test_cf_r10_remediations_regression(require_local_databases):
         )
 
 
-def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
+def test_cf_r11_remediations_regression(monkeypatch, require_local_databases, source_cursor_factory):
     """Verify remediation of all CF-R11 blockers.
 
     1. Blocker 1:
@@ -1004,7 +1026,6 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
        e. invalid / missing signoff_date
     """
     import json
-    import sqlite3
 
     from scripts.projects.open_model_data.build_decolonization_cases import (
         make_reviewer_confirmation,
@@ -1014,25 +1035,15 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
     # ── 1. Blocker 1: Citation binding and Modern Dictionary Fallback ──
     # 1a. Unrelated book with token match but no curriculum/linguistic citation anchors
-    class UnrelatedBookCursor:
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return (88888, "Книга про трактори", "Тут є лікар тракторної бригади і ремонтники.")
-
-        def fetchall(self):
-            return [(88888, "Книга про трактори", "Тут є лікар тракторної бригади і ремонтники.")]
-
-    unrelated_book_cur = UnrelatedBookCursor()
-    with pytest.raises(ValueError, match="does not substantiate claimed citation"):
+    unrelated_book_cur = source_cursor_factory("synthetic unrelated body")
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_001",
             term="лікар",
@@ -1045,18 +1056,8 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
         )
 
     # 1b. Soviet SUM-11 cursor fails closed
-    class SovietSum11Cursor:
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return (11111, "СУМ-11 том 4", "КАПЕЛЮХ, а, ч. Головний убір.")
-
-        def fetchall(self):
-            return [(11111, "СУМ-11 том 4", "КАПЕЛЮХ, а, ч. Головний убір.")]
-
-    soviet_cur = SovietSum11Cursor()
-    with pytest.raises(ValueError, match="Soviet dictionary СУМ-11 is strictly forbidden"):
+    soviet_cur = source_cursor_factory("СУМ-11")
+    with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
         query_source_evidence(
             case_id="decol_lex_002",
             term="капелюх",
@@ -1178,7 +1179,7 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
         make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
 
 
-def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
+def test_cf_r12_remediations_regression(monkeypatch, require_local_databases, source_cursor_factory):
     """Verify remediation of all CF-R12 findings.
 
     1. Citation binding in query_source_evidence:
@@ -1205,25 +1206,12 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
 
     vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
     sources_db = _resolve_db_path("sources.db", REPO_ROOT)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    v_conn = open_readonly(vesum_db)
+    s_conn = open_readonly(sources_db)
     real_v_cur = v_conn.cursor()
     real_s_cur = s_conn.cursor()
 
     # ── 1. Generic tokens in unrelated book fixtures fail closed ──
-    class TractorBookWithGenericTokensCursor:
-        def __init__(self, text):
-            self._text = text
-
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return (88888, "Книга про трактори", self._text)
-
-        def fetchall(self):
-            return [(88888, "Книга про трактори", self._text)]
-
     generic_fixture_texts = [
         "Книга про трактори. Сторінка 1. Тут є лікар.",
         "Книга про трактори. Клас 5. Тут є лікар.",
@@ -1231,8 +1219,8 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
         "Книга про трактори. Lesson 3. Українська культура праці на тракторі. Тут є лікар.",
     ]
     for text in generic_fixture_texts:
-        cur = TractorBookWithGenericTokensCursor(text)
-        with pytest.raises(ValueError, match="does not substantiate claimed citation"):
+        cur = source_cursor_factory(text)
+        with pytest.raises(ValueError, match=r"(Held source|Committed source record)"):
             query_source_evidence(
                 case_id="decol_lex_001",
                 term="лікар",
@@ -1306,45 +1294,31 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
         make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
 
     # ── 4. Antonenko style guide retrieval without author name in text ──
-    class StyleGuideNoAuthorCursor:
-        def execute(self, *args, **kwargs):
-            return self
+    from scripts.projects.open_model_data import build_decolonization_cases as builder
 
-        def fetchone(self):
-            # Article without author name 'Антоненко' in head or body
-            return (
-                187,
-                "Бажаючий – що (котрий, який) бажає – охочий",
-                "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ",
-                "Часто можна натрапити на таке оголошення: Бажаючі взяти участь в екскурсії. Слід казати охочий.",
-            )
-
-        def fetchall(self):
-            return [
-                (
-                    187,
-                    "Бажаючий – що (котрий, який) бажає – охочий",
-                    "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ",
-                    "Часто можна натрапити на таке оголошення: Бажаючі взяти участь в екскурсії. Слід казати охочий.",
-                )
-            ]
-
-    sg_cur = StyleGuideNoAuthorCursor()
-    res = query_source_evidence(
-        case_id="decol_lex_004",
-        term="охочий",
-        copy="бажаючий",
-        auth="Борис Антоненко-Давидович «Як ми говоримо»",
-        cat_name="calque_lexical",
-        s_cur=sg_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
+    synthetic = {
+        "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+        "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+        "target_term": "fixture",
+        "supporting_passage": "literal synthetic passage",
+        "locus": "synthetic locus",
+    }
+    monkeypatch.setattr(builder, "EXPLICIT_SOURCE_EVIDENCE", {"synthetic": synthetic})
+    sg_cur = source_cursor_factory()
+    sg_cur.execute(
+        "INSERT INTO style_guide VALUES (187,'fixture','synthetic','Антоненко-Давидович','literal synthetic passage','',1)"
     )
-    assert res["source"] == "Борис Антоненко-Давидович «Як ми говоримо»"
-    assert "охочий" in res["supporting_passage"].lower()
+    with sqlite3.connect(":memory:") as v:
+        v.execute("CREATE TABLE forms_all (lemma,word_form,pos,tags,source_location)")
+        v.execute("INSERT INTO forms_all VALUES ('fixture','fixture','noun','','synthetic')")
+        res = query_source_evidence(
+            "synthetic", "fixture", "", synthetic["authority"], "synthetic", sg_cur, v.cursor(), []
+        )
+    assert res["status"] == "source_attested"
+    assert res["binding"]["locator"] == "style_guide:187"
 
 
-def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor) -> None:
+def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor, source_cursor_factory) -> None:
     """CF-R13 regression: verify strict author citation anchors and fail-closed behavior for unrelated books.
 
     Remediates:
@@ -1356,36 +1330,16 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
     - Lookup and binding for Ponomariv, Antonenko, and inflected forms (e.g. 'тло')
       against a controlled fixture. This does not verify source authenticity.
     """
-    import sqlite3
-
     from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
 
-    real_v_cur = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True).cursor()
+    real_v_cur = open_readonly(require_vesum_db).cursor()
     fixture_s_cur = hermetic_source_cursor
 
     # 1. TractorBookMockCursor: 'Книга про трактори' containing 'завдання' and 'граматика'
-    class TractorBookMockCursor:
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return None
-
-        def fetchall(self):
-            return [
-                (
-                    999,
-                    "Книга про трактори",
-                    "Трактор виконує завдання на полі. Граматика української мови дуже важлива.",
-                    "",
-                    "",
-                    "traktor.pdf",
-                )
-            ]
 
     with pytest.raises(
         ValueError,
-        match=r"(does not substantiate claimed citation|Textbook/monograph evidence missing)",
+        match="Held source",
     ):
         query_source_evidence(
             case_id="decol_lex_003",
@@ -1393,34 +1347,16 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
             copy="задача",
             auth="Олександр Пономарів «Культура слова»",
             cat_name="calque_lexical",
-            s_cur=TractorBookMockCursor(),
+            s_cur=source_cursor_factory("fixture from a different book"),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
 
     # 2. AvramenkoTextbookMockCursor: Avramenko textbook containing 'охочий'
-    class AvramenkoTextbookMockCursor:
-        def execute(self, *args, **kwargs):
-            return self
-
-        def fetchone(self):
-            return None
-
-        def fetchall(self):
-            return [
-                (
-                    888,
-                    "Українська мова. Підручник",
-                    "Кожен охочий учень може виконати цю вправу.",
-                    "Олександр Авраменко",
-                    "Авраменко",
-                    "avramenko_9.pdf",
-                )
-            ]
 
     with pytest.raises(
         ValueError,
-        match=r"(does not substantiate citation|Style guide evidence missing)",
+        match="Held source",
     ):
         query_source_evidence(
             case_id="decol_lex_004",
@@ -1428,7 +1364,7 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
             copy="бажаючий",
             auth="Борис Антоненко-Давидович «Як ми говоримо»",
             cat_name="calque_lexical",
-            s_cur=AvramenkoTextbookMockCursor(),
+            s_cur=source_cursor_factory("fixture from a different book"),
             v_cur=real_v_cur,
             style_guide_cache=[],
         )
@@ -1440,9 +1376,11 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
     lex_003_item = next(c for c in LEXICAL_CALQUES if c["case_id"] == "decol_lex_003")
     with pytest.raises(
         ValueError,
-        match=r"(does not substantiate claimed citation|Textbook/monograph evidence missing)",
+        match="Held source",
     ):
-        make_reviewer_confirmation(lex_003_item, "calque_lexical", real_v_cur, TractorBookMockCursor(), [])
+        make_reviewer_confirmation(
+            lex_003_item, "calque_lexical", real_v_cur, source_cursor_factory("fixture from a different book"), []
+        )
 
     # 4. Controlled database resolution for the recorded citation metadata
     res_pon = query_source_evidence(
@@ -1484,334 +1422,55 @@ def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor
     assert res_tlo["status"] == "source_attested"
 
 
-def test_cf_r14_dictionary_binding_regression(require_all_databases) -> None:
-    """CF-R14 regression: dictionary lookups must strictly bind to cited entry or phrase.
+def test_cf_r14_dictionary_binding_regression(dictionary_probe):
+    """Unrelated rows and alternate dictionaries cannot authenticate a modern credit."""
+    from scripts.projects.open_model_data.build_decolonization_cases import SourceEvidenceUnavailable
 
-    1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if СУМ-20
-       returns unrelated entry 'ПЛАВНИЙ'.
-    2. decol_prot_048 ('мова йде про', citing 'Мова') must fail closed if ULIF
-       returns unrelated surname entry 'Євдокимова'.
-    3. Live database queries must select authentic entries for 'Черга' and 'Мова'.
-    """
-    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
-
-    class PlavniyMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Simulate returning unrelated СУМ-20 record 'ПЛАВНИЙ'
-            return (999, "ПЛАВНИЙ", "який плавно рухається")
-
-        def fetchall(self) -> list:
-            return []
-
-    class YevdokymovaMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Simulate returning unrelated ULIF surname record 'Євдокимова'
-            return (888, "Євдокимова", "жіноче прізвище")
-
-        def fetchall(self) -> list:
-            return []
-
-    s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
-    v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
-    real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
-    ensure_reproducible_sum20_table(real_s_conn)
-    real_s_cur = real_s_conn.cursor()
-
-    real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
-    real_v_cur = real_v_conn.cursor()
-
-    # 1. PlavniyMockCursor must fail closed for decol_prot_047
-    with pytest.raises(
-        ValueError,
-        match=r"(does not substantiate cited entry 'Черга' or phrase 'в першу чергу'|does not substantiate claimed phrase 'в першу чергу')",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_047",
-            term="в першу чергу",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=PlavniyMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    # 2. YevdokymovaMockCursor must fail closed for decol_prot_048
-    with pytest.raises(
-        ValueError,
-        match=r"(does not substantiate cited entry 'Мова' or phrase 'мова йде про'|does not substantiate claimed phrase 'мова йде про')",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_048",
-            term="мова йде про",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=YevdokymovaMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    # 3. Live query for decol_prot_047 binds to authentic 'черга'
-    res_047 = query_source_evidence(
-        case_id="decol_prot_047",
-        term="в першу чергу",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=real_s_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
+    sources, _, _ = dictionary_probe
+    sources.execute(
+        "INSERT INTO sum20_articles VALUES (999,'UNRELATED','unrelated','unrelated definition','','https://sum20ua.com/?wordid=999','')"
     )
-    assert res_047["status"] == "source_attested"
-    assert "черг" in res_047["source"].lower() or "черг" in res_047.get("article", "").lower()
-
-    # 4. Live query for decol_prot_048 binds to authentic 'мова'
-    res_048 = query_source_evidence(
-        case_id="decol_prot_048",
-        term="мова йде про",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=real_s_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
-    )
-    assert res_048["status"] == "source_attested"
-    assert "мов" in res_048["source"].lower() or "мов" in res_048.get("article", "").lower()
+    with pytest.raises(SourceEvidenceUnavailable) as error:
+        _query_dictionary(dictionary_probe)
+    assert error.value.reason_code == "held_source_unproven"
+    # Even the identical passage in a different dictionary cannot supply the credit.
+    sources.execute("INSERT INTO ulif_dictua_entries VALUES (888,'fixture','fixture','literal synthetic passage')")
+    with pytest.raises(SourceEvidenceUnavailable) as error:
+        _query_dictionary(dictionary_probe)
+    assert error.value.reason_code == "held_source_unproven"
 
 
-def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
-    """CF-R15 regression: matching headword that lacks claimed phrase must fail closed.
+def test_cf_r15_phrase_attestation_regression(dictionary_probe):
+    """Headword/alternative/normalized matches fail; a later literal same-source witness passes."""
+    from scripts.projects.open_model_data.build_decolonization_cases import SourceEvidenceUnavailable
 
-    1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if record
-       has headword 'ЧЕРГА' but definition lacks the phrase 'в першу чергу'.
-    2. decol_prot_048 ('мова йде про', citing 'Мова') must fail closed if record
-       has headword 'МОВА' but definition lacks the phrase 'мова йде про'.
-    3. Live database queries must substantiate both headword AND phrase.
-    """
-    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
-
-    class ChergaLacksPhraseMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns matching headword 'ЧЕРГА', but definition text lacks 'в першу чергу'
-            return (777, "ЧЕРГА", "рядок людей або предметів, що вишикувалися один за одним")
-
-        def fetchall(self) -> list:
-            return []
-
-    class MovaLacksPhraseMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns matching headword 'МОВА', but definition text lacks 'мова йде про'
-            return (666, "МОВА", "здатність говорити, висловлювати думки")
-
-        def fetchall(self) -> list:
-            return []
-
-    class ChergaAlternativeOnlyMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns matching headword 'ЧЕРГА' containing only ukrainian_proper alternatives ('насамперед'), lacking 'в першу чергу'
-            return (778, "ЧЕРГА", "насамперед, найперше, передусім")
-
-        def fetchall(self) -> list:
-            return []
-
-    class MovaAlternativeOnlyMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns matching headword 'МОВА' containing only ukrainian_proper alternatives ('йдеться про'), lacking 'мова йде про'
-            return (667, "МОВА", "йдеться про щось важливе")
-
-        def fetchall(self) -> list:
-            return []
-
-    s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
-    v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
-    real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
-    ensure_reproducible_sum20_table(real_s_conn)
-    real_s_cur = real_s_conn.cursor()
-
-    real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
-    real_v_cur = real_v_conn.cursor()
-
-    # 1. Matching headword 'ЧЕРГА' lacking phrase 'в першу чергу' must fail closed
-    with pytest.raises(
-        ValueError,
-        match=r"does not substantiate claimed phrase 'в першу чергу' \(matching headword lacks the phrase\)",
+    sources, vesum, evidence = dictionary_probe
+    evidence["target_term"] = "fixture phrase"
+    evidence["supporting_passage"] = "fixture phrase literal synthetic passage"
+    vesum.execute("INSERT INTO forms_all VALUES ('phrase','phrase','noun','','synthetic')")
+    for row_id, text in enumerate(
+        [
+            "fixture",
+            "alternative phrase",
+            "FIXTURE phrase literal synthetic passage",
+            "fixture phrase literal\nsynthetic passage",
+        ],
+        start=1,
     ):
-        query_source_evidence(
-            case_id="decol_prot_047",
-            term="в першу чергу",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=ChergaLacksPhraseMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
+        sources.execute(
+            "INSERT INTO sum20_articles VALUES (?, 'FIXTURE', 'fixture', ?, '', 'https://sum20ua.com/?wordid=12', '')",
+            (row_id, text),
         )
-
-    # 2. Matching headword 'МОВА' lacking phrase 'мова йде про' must fail closed
-    with pytest.raises(
-        ValueError,
-        match=r"does not substantiate claimed phrase 'мова йде про' \(matching headword lacks the phrase\)",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_048",
-            term="мова йде про",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=MovaLacksPhraseMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    # 3. Matching headword 'ЧЕРГА' with alternative only ('насамперед') must fail closed
-    with pytest.raises(
-        ValueError,
-        match=r"does not substantiate claimed phrase 'в першу чергу' \(matching headword lacks the phrase\)",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_047",
-            term="в першу чергу",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=ChergaAlternativeOnlyMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    # 4. Matching headword 'МОВА' with alternative only ('йдеться про') must fail closed
-    with pytest.raises(
-        ValueError,
-        match=r"does not substantiate claimed phrase 'мова йде про' \(matching headword lacks the phrase\)",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_048",
-            term="мова йде про",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=MovaAlternativeOnlyMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    class TochkaLacksPhraseMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns headword 'ТОЧКА' with 'Точка зору' but lacking claimed phrase 'з точки зору'
-            return (
-                137,
-                "ТОЧКА",
-                "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
-            )
-
-        def fetchall(self) -> list:
-            return []
-
-    class TochkaAttestedMockCursor:
-        def execute(self, query: str, params: tuple = ()) -> None:
-            pass
-
-        def fetchone(self) -> tuple | None:
-            # Returns headword 'ТОЧКА' with published СУМ-20 passage containing 'з точки зору'
-            return (
-                137,
-                "ТОЧКА",
-                "ТОЧКА, -и, ж. Точка зору кого, чия — певний погляд на що-небудь, розуміння чогось: Дельфіни — надзвичайно цікавий об'єкт з точки зору біоніки, біохімії, гідромеханіки, акустики (із журн.).",
-            )
-
-        def fetchall(self) -> list:
-            return []
-
-    # 5. Matching headword 'ТОЧКА' lacking phrase 'з точки зору' must fail closed
-    with pytest.raises(
-        ValueError,
-        match=r"does not substantiate claimed phrase 'з точки зору' \(matching headword lacks the phrase\)",
-    ):
-        query_source_evidence(
-            case_id="decol_prot_053",
-            term="з точки зору",
-            copy="",
-            auth="СУМ-20",
-            cat_name="protective_authentic",
-            s_cur=TochkaLacksPhraseMockCursor(),
-            v_cur=real_v_cur,
-            style_guide_cache=[],
-        )
-
-    # 6. Matching headword 'ТОЧКА' with checked-in catalog passage substantiates 'з точки зору'
-    res_053_mock = query_source_evidence(
-        case_id="decol_prot_053",
-        term="з точки зору",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=TochkaAttestedMockCursor(),
-        v_cur=real_v_cur,
-        style_guide_cache=[],
+        with pytest.raises(SourceEvidenceUnavailable) as error:
+            _query_dictionary(dictionary_probe)
+        assert error.value.reason_code == "held_source_unproven"
+    sources.execute(
+        "INSERT INTO sum20_articles VALUES (12,'FIXTURE','fixture','fixture phrase literal synthetic passage','','https://sum20ua.com/?wordid=12','')"
     )
-    assert res_053_mock["status"] == "source_attested"
-
-    # 7. Live query for decol_prot_047 substantiates both headword and phrase
-    res_047 = query_source_evidence(
-        case_id="decol_prot_047",
-        term="в першу чергу",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=real_s_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
-    )
-    assert res_047["status"] == "source_attested"
-
-    # 8. Live query for decol_prot_048 substantiates both headword and phrase
-    res_048 = query_source_evidence(
-        case_id="decol_prot_048",
-        term="мова йде про",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=real_s_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
-    )
-    assert res_048["status"] == "source_attested"
-
-    # 9. Live query for decol_prot_053 substantiates both headword and phrase
-    res_053 = query_source_evidence(
-        case_id="decol_prot_053",
-        term="з точки зору",
-        copy="",
-        auth="СУМ-20",
-        cat_name="protective_authentic",
-        s_cur=real_s_cur,
-        v_cur=real_v_cur,
-        style_guide_cache=[],
-    )
-    assert res_053["status"] == "source_attested"
+    result = _query_dictionary(dictionary_probe)
+    assert result["status"] == "source_attested"
+    assert result["binding"]["row_id"] == 12
+    assert result["supporting_passage"] == "fixture phrase literal synthetic passage"
 
 
 @pytest.mark.needs_artifact(
@@ -1819,14 +1478,11 @@ def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
 )
 def test_cf_r20_remediations_regression(decolonization_data, require_local_databases):
     """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
-    import sqlite3
-
     from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
     from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
     from scripts.projects.open_model_data.sum20_codification_records import (
         COMMITTED_SUM20_RECORDS,
-        ensure_reproducible_sum20_table,
     )
 
     # 1. ПЛИН: published entry text has no appended '; з плином часу.'
@@ -1859,10 +1515,13 @@ def test_cf_r20_remediations_regression(decolonization_data, require_local_datab
     assert "М. Рильський" not in ev_074["supporting_passage"]
 
     # 5. Live query verification for all 3 remediated cases
-    v_conn = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    v_conn = open_readonly(VESUM_DB_PATH)
     v_cur = v_conn.cursor()
 
-    s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
+    # ensure_reproducible_sum20_table writes a connection-local TEMP table.
+    # The open stays mode=ro, so the repository file is unchanged.
+    s_conn = open_readonly(DEFAULT_SOURCES_DB)
+    s_conn.execute("PRAGMA query_only=OFF")
     ensure_reproducible_sum20_table(s_conn)
     s_cur = s_conn.cursor()
 

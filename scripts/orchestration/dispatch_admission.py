@@ -1,6 +1,6 @@
 """Host admission for write-capable delegate dispatches (#8645 part A).
 
-On 2026-09-24 a global OOM on the 15 GB / 8-core host killed the infra driver
+On 2026-09-24 a global OOM on the dispatch host killed the infra driver
 and eight workers; nothing read memory or CPU before admitting a worker
 (``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``). ``delegate.py
 dispatch`` and ``scripts.fleet.capacity_pick`` both call :func:`evaluate`, so
@@ -25,6 +25,11 @@ every check passes. Read-only dispatches are exempt.
 * **``MemAvailable``** from ``/proc/meminfo`` at or above the floor.
 * **CPU:** the 1-minute load average divided by ``os.cpu_count()`` at or below
   the limit.
+* **Shared pool headroom (#9975).** ``lu.slice`` is the capped pool drivers and
+  workers share. Its non-reclaimable use (``memory.current`` minus file cache
+  from ``memory.stat``) plus a per-worker reserve must stay at or below its
+  ``memory.high``. Missing cgroup files (CI, macOS) skip this check; the reason
+  is logged and recorded (:mod:`scripts.orchestration.pool_headroom`).
 * **Slice use is reported, not enforced.** When ``lu-dispatch.slice`` is
   active, the admission line adds its current memory against ``MemoryMax``.
   An inactive or missing slice omits that clause. The floor and the caps
@@ -60,7 +65,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import task_record_store, worktree_prep
+from scripts.orchestration import pool_headroom, task_record_store, worktree_prep
 from scripts.orchestration.dispatch_isolation import slice_usage_clause
 
 _logger = logging.getLogger(__name__)
@@ -76,6 +81,21 @@ PROC_ROOT = Path("/proc")
 ENV_MAX_LIVE_WRITE_WORKERS = "DISPATCH_MAX_LIVE_WRITE_WORKERS"
 ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
+ENV_WORKER_MEM_RESERVE_GIB = "DISPATCH_WORKER_MEM_RESERVE_GIB"
+_DEFAULT_WORKER_MEM_RESERVE_GIB = 2.5
+# Deployment env file with the same variables (``NAME=value`` or
+# ``export NAME=value`` lines). Read only for the live environment, after the
+# process environment, so a long-running session started before the host set
+# its overrides still sees them. ``DISPATCH_ADMISSION_ENV_FILE`` names another
+# file; set it to an empty value to read none.
+ENV_ADMISSION_FILE = "DISPATCH_ADMISSION_ENV_FILE"
+ADMISSION_ENV_FILE_NAME = "dispatch-admission.env"
+_THRESHOLD_ENV_NAMES = (
+    ENV_MAX_LIVE_WRITE_WORKERS,
+    ENV_MIN_MEM_AVAILABLE_GIB,
+    ENV_MAX_LOAD_PER_CPU,
+    ENV_WORKER_MEM_RESERVE_GIB,
+)
 
 # Pid-less ``spawning`` record naming the dispatcher that holds an admitted
 # slot until the worker exists (#8717).
@@ -95,6 +115,7 @@ class Thresholds:
     max_live_write_workers: int
     min_mem_available_gib: float
     max_load_per_cpu: float
+    worker_mem_reserve_gib: float = _DEFAULT_WORKER_MEM_RESERVE_GIB
 
 
 @dataclass(frozen=True)
@@ -128,6 +149,7 @@ class AdmissionDecision:
     dead_task_ids: tuple[str, ...] = ()
     swept: bool = False
     failures: tuple[str, ...] = field(default_factory=tuple)
+    pool: pool_headroom.PoolCheck | None = None
 
     @property
     def live_write_workers(self) -> int:
@@ -155,6 +177,10 @@ class AdmissionDecision:
         slice_use = slice_usage_clause()
         if slice_use:
             parts.append(slice_use)
+        # A skipped pool check is shown with its reason: delegate.py configures
+        # no logging, so this line is the operator's only visible trace (#9975).
+        if self.pool is not None:
+            parts.append(self.pool.clause())
         text = ", ".join(parts)
         if not probe.proc_available:
             text += " — /proc is not available on this platform, so only the worker cap is enforced"
@@ -179,6 +205,9 @@ class AdmissionDecision:
         probe = self.probe
         mem = probe.mem_available_gib if probe else None
         load = probe.load_per_cpu if probe else None
+        pool = self.pool
+        pool_memory = pool.memory if pool else None
+        pool_limit = pool_memory.limit if pool_memory else None
         return {
             "checked_at": datetime.now(UTC).isoformat(),
             "admitted": self.admitted,
@@ -198,6 +227,11 @@ class AdmissionDecision:
             "cpu_steal_ticks": probe.cpu_steal_ticks if probe else None,
             "cpu_total_ticks": probe.cpu_total_ticks if probe else None,
             "proc_available": probe.proc_available if probe else None,
+            "pool_nonreclaimable_gib": round(pool_memory.nonreclaimable / _GIB, 2) if pool_memory else None,
+            "pool_file_cache_gib": round(pool_memory.file_cache / _GIB, 2) if pool_memory else None,
+            "pool_limit_gib": round(pool_limit / _GIB, 2) if pool_limit is not None else None,
+            "worker_mem_reserve_gib": limits.worker_mem_reserve_gib if limits else None,
+            "pool_check_skipped": pool.skipped if pool else None,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
 
@@ -212,6 +246,7 @@ def config_defaults() -> Thresholds:
         max_live_write_workers=int(config.DISPATCH_MAX_LIVE_WRITE_WORKERS),
         min_mem_available_gib=float(config.DISPATCH_MIN_MEM_AVAILABLE_GIB),
         max_load_per_cpu=float(config.DISPATCH_MAX_LOAD_PER_CPU),
+        worker_mem_reserve_gib=float(config.DISPATCH_WORKER_MEM_RESERVE_GIB),
     )
 
 
@@ -229,9 +264,60 @@ def _env_number(env: Mapping[str, str], name: str, default: float, *, integer: b
     return value
 
 
+def admission_env_file(environ: Mapping[str, str], *, live: bool) -> Path | None:
+    """The deployment env file to read, or ``None``.
+
+    ``DISPATCH_ADMISSION_ENV_FILE`` wins (empty means none). Otherwise the live
+    environment uses ``$XDG_CONFIG_HOME/learn-ukrainian/dispatch-admission.env``
+    (the home config directory when unset); an explicit mapping without the
+    variable reads none.
+    """
+    if ENV_ADMISSION_FILE in environ:
+        raw = environ[ENV_ADMISSION_FILE].strip()
+        return Path(raw).expanduser() if raw else None
+    if not live:
+        return None
+    base = environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+    return Path(base) / "learn-ukrainian" / ADMISSION_ENV_FILE_NAME
+
+
+def read_admission_env_file(path: Path | None) -> dict[str, str]:
+    """Threshold variables from a deployment env file; missing or unreadable reads as empty."""
+    if path is None:
+        return {}
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    values: dict[str, str] = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].lstrip()
+        name, sep, value = line.partition("=")
+        name, value = name.strip(), value.strip()
+        if not sep or name not in _THRESHOLD_ENV_NAMES:
+            continue
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        values[name] = value
+    return values
+
+
 def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
-    """Config defaults, each overridden by its environment variable. Invalid values raise ``ValueError``."""
-    env = os.environ if environ is None else environ
+    """Config defaults, overridden by the deployment env file, then by the environment.
+
+    Invalid values raise ``ValueError``.
+    """
+    live = environ is None
+    process_env = os.environ if environ is None else environ
+    file_env = read_admission_env_file(admission_env_file(process_env, live=live))
+    env = {
+        **file_env,
+        **{k: v for k, v in process_env.items() if k in _THRESHOLD_ENV_NAMES and v.strip()},
+    }
     defaults = config_defaults()
     return Thresholds(
         max_live_write_workers=int(
@@ -241,6 +327,9 @@ def load_thresholds(environ: Mapping[str, str] | None = None) -> Thresholds:
             env, ENV_MIN_MEM_AVAILABLE_GIB, defaults.min_mem_available_gib, integer=False
         ),
         max_load_per_cpu=_env_number(env, ENV_MAX_LOAD_PER_CPU, defaults.max_load_per_cpu, integer=False),
+        worker_mem_reserve_gib=_env_number(
+            env, ENV_WORKER_MEM_RESERVE_GIB, defaults.worker_mem_reserve_gib, integer=False
+        ),
     )
 
 
@@ -308,8 +397,27 @@ def probe_host() -> HostProbe:
         and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
         and Path("/proc") == PROC_ROOT
     ):
-        return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=8, proc_available=True)
+        return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=64, proc_available=True)
     return read_host(PROC_ROOT)
+
+
+TEST_HOST_POOL_SKIP = "test host"
+
+
+def probe_pool(reserve_gib: float) -> pool_headroom.PoolCheck:
+    """Shared ``lu.slice`` headroom for one more worker. The seam pool tests replace.
+
+    Under pytest with the healthy-host fixture, the host's real pool is not
+    read unless ``LU_SLICE_CGROUP`` points the test at a fake cgroup.
+    """
+    reserve = int(reserve_gib * _GIB)
+    if (
+        os.environ.get("PYTEST_CURRENT_TEST")
+        and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
+        and not os.environ.get(pool_headroom.ENV_LU_SLICE_CGROUP)
+    ):
+        return pool_headroom.PoolCheck(reserve_bytes=reserve, skipped=TEST_HOST_POOL_SKIP)
+    return pool_headroom.check_pool(reserve)
 
 
 def process_alive(pid: int) -> bool:
@@ -514,6 +622,15 @@ def evaluate(
             f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPU{'' if probe.cpu_count == 1 else 's'}) is above the "
             f"limit of {limits.max_load_per_cpu:.2f} ({ENV_MAX_LOAD_PER_CPU}={limits.max_load_per_cpu:g})"
         )
+    pool = probe_pool(limits.worker_mem_reserve_gib)
+    if pool.skipped is not None:
+        # WARNING, not INFO: callers such as delegate.py configure no logging,
+        # so only WARNING and above reach stderr. The admitted line also
+        # carries the reason through summary().
+        log = _logger.debug if pool.skipped == TEST_HOST_POOL_SKIP else _logger.warning
+        log("dispatch admission: shared pool check skipped: %s", pool.skipped)
+    elif not pool.fits:
+        failures.append(f"{pool.failure()} ({ENV_WORKER_MEM_RESERVE_GIB}={limits.worker_mem_reserve_gib:g})")
     return AdmissionDecision(
         mode=mode,
         exempt=False,
@@ -524,6 +641,7 @@ def evaluate(
         dead_task_ids=tuple(str(state.get("task_id") or path.stem) for path, state in scan.dead),
         swept=on_dead is not None,
         failures=tuple(failures),
+        pool=pool,
     )
 
 

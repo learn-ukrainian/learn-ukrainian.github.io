@@ -40,8 +40,7 @@ Paths elsewhere, or whose value or resolved path contains a control, format
 
 Use the **subtree** layout for all new dispatches. The runtime prints a
 `⚠️ DEPRECATED flat worktree layout` warning on the flat form. The
-subtree layout has cleaner cleanup (`rm -rf .worktrees/dispatch/codex/`
-nukes all Codex leftovers at once) and aligns the branch name
+subtree layout supports task-attributed common-reaper cleanup and aligns the branch name
 (`codex/1657p2-verify-quote`) with the path
 (`.worktrees/dispatch/codex/1657p2-verify-quote/`).
 
@@ -80,11 +79,9 @@ create a feature branch in the main checkout. Concrete dispatch:
     # (Omit --effort to use the agent's own CLI/config default.)
 
 The main checkout (wherever the user is working) stays untouched on
-`main`. After the PR merges, `merge_closeout` (the closeout wrapper that
-invokes the P0 reaper, `reap_worktrees`) removes the dispatch worktree
-and its local and remote branch. That cleanup is not a manual user step:
-
-    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
+`main`. After the PR merges, the accountable driver follows the sole landing
+and cleanup recipe in `agents_extensions/shared/rules/workflow.md` § Merge policy.
+Cleanup uses the common reaper; it is not a manual user step.
 
 If the work truly cannot be done in a worktree (extremely rare —
 usually only repo-wide mass migrations), STOP and ask for approval
@@ -97,18 +94,10 @@ and worktree path from the task-id + agent.
 
 ## Post-merge cleanup
 
-When a worktree's PR merges to main, the worktree and its branch MUST be
-deleted. This is NOT optional — stale worktrees accumulate and pollute
-`git worktree list`. The accountable command is `merge_closeout`, which
-proves the PR is merged and reaps every worktree tied to that head through
-the P0 reaper (use `merge_closeout` / the reaper as the normal path;
-manual removal only as the contract allows):
-
-    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
-
-That removes the subtree worktree (`.worktrees/dispatch/<agent>/<task>`)
-and the branch. Older flat worktrees (`.worktrees/<name>`) are reaped the
-same way when they are registered against the merged head.
+Post-merge cleanup is mandatory. Follow [`workflow.md`](workflow.md) § Merge
+policy / Post-merge cleanup, including common-reaper receipts, worker exit,
+branch removal and the fail-closed non-zero/SKIPPED disposition. Never force
+remove a worktree or invent a second removal path.
 
 Clean `read-only` dispatch worktrees are removed automatically on any
 terminal status; clean `workspace-write` and `danger` trees are removed
@@ -117,7 +106,7 @@ are kept.
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is tracked in #4444-#4450.
+Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is in `scripts/delegate.py` and the common worktree reaper.
 
 Use the subtree layout:
 

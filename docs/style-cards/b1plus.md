@@ -94,8 +94,9 @@ the attested models for the lesson's own situation come through the evidence pac
 
 The textbook shape: a small theory step, then its practice, then the larger block (`consolidation`). A theory step is a few
 sentences that rest on the records it cites (`explains`), with the example by `ref`; then its `activity` blocks in the plan's
-order. One thing at a time. The `job`, the `rationale` and the word target are the plan's; the word target is a minimum
-(non-negotiable rules).
+order. One thing at a time. The `job` and the `rationale` are the plan's. Size the fresh lesson to its
+job and content; about 45 minutes of total learner work, including the workbook, is guidance.
+There is no word, activity, item or time quota; do not pad or reject a complete lesson for its size.
 
 ## 5. Activity rules (R-19)
 

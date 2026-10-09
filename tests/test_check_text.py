@@ -33,6 +33,7 @@ import pytest
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
@@ -92,7 +93,7 @@ def test_mcp_call_tool_dispatch(server_module, requires_vesum_db, requires_sourc
     assert payload["summary"]["tokens"] >= 3
 
 
-def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
+def test_mcp_book_calque_acceptance(server_module, requires_vesum_db, requires_sources_db):
     positive = _run(
         server_module.call_tool(
             "check_text",
@@ -127,14 +128,14 @@ def test_mcp_book_calque_acceptance(server_module, requires_vesum_db):
         "По моїй думці так не можна робити",
     ],
 )
-def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_db, text):
+def test_mcp_round2_no_firm_book_false_positives(server_module, requires_vesum_db, requires_sources_db, text):
     result = _run(server_module.call_tool("check_text", {"text": text, "checks": ["russian_shadow"]}))
     payload = json.loads(result[0].text)
     assert payload.get("status") != "error", payload
     assert not any(f["detail"].get("pattern_id") for f in payload["problems"]), payload
 
 
-def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db):
+def test_mcp_concluding_is_reported_once(server_module, requires_vesum_db, requires_sources_db):
     result = _run(
         server_module.call_tool("check_text", {"text": "Це заключна вистава", "checks": ["russian_shadow"]})
     )
@@ -768,7 +769,7 @@ def _load_textbook_fixture() -> tuple[str, str] | None:
     sources_path = _sources_path()
     if not sources_path.is_file() or not Path(VESUM_DB_PATH).is_file():
         return None
-    conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    conn = open_readonly(sources_path)
     try:
         # Minor 7: Pin by chunk_id
         cur = conn.execute(
@@ -802,7 +803,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     assert res_clean.get("status") != "error"
 
     # Provenance check (Minor 6: canonical VESUM metadata digest)
-    conn_v = sqlite3.connect(f"file:{requires_vesum_db}?mode=ro", uri=True)
+    conn_v = open_readonly(requires_vesum_db)
     cur_v = conn_v.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
     expected_vesum_digest = cur_v.fetchone()[0]
     conn_v.close()
@@ -852,7 +853,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, 
     planted_vesum_1, planted_vesum_2 = selected_absent
 
     # Deterministic multi-word UA-GEC row 3010 (F/Calque: 'написання постів')
-    conn = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
+    conn = open_readonly(requires_sources_db)
     conn.row_factory = sqlite3.Row
     try:
         cur = conn.execute("SELECT id, error, correct FROM ua_gec_errors WHERE id = 3010")

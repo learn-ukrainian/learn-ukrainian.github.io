@@ -119,6 +119,12 @@ def _finalize_mock_result(response: str = "done"):
     )()
 
 
+def _kept_diagnostics(task_id: str) -> str:
+    """The task's local diagnostic text (#9878): what a public reason field replaced."""
+    path = delegate._diagnostic_path(task_id)
+    return "\n".join(json.loads(line)["diagnostic"] for line in path.read_text(encoding="utf-8").splitlines())
+
+
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
@@ -273,7 +279,9 @@ def test_read_only_explicit_primary_still_fails_checkout_writes(path, tmp_tasks_
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [path]
-    assert state["last_error"] == f"read-only checkout mutation detected: {path}"
+    # #9878: last_error names the typed cause and its count; the paths stay in their field and the .diag.
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert f"read-only checkout mutation detected: {path}" in _kept_diagnostics(state["task_id"])
 
 
 @pytest.mark.parametrize("path", ["tracked.txt", ".claude/x.md"])
@@ -355,7 +363,8 @@ def test_read_only_worker_fails_after_changing_terminal_result(edit, tmp_tasks_d
     assert rc == 1
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"batch_state/tasks/{foreign_path.name}"]
-    assert f"batch_state/tasks/{foreign_path.name}" in state["last_error"]
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert f"batch_state/tasks/{foreign_path.name}" in _kept_diagnostics(state["task_id"])
 
 
 def test_read_only_review_ignores_sibling_task_lifecycle(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -693,9 +702,10 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
     assert state["returncode"] == -9
     assert state["returncode_reason"] == ("worker subprocess terminated by SIGKILL (returncode -9)")
     assert state["read_only_mutation_paths"] == ["tracked.txt"]
-    last_error = state["last_error"]
-    assert "worker killed: out of memory" in last_error
-    assert "read-only checkout mutation detected: tracked.txt" in last_error
+    # #7124: the guard never replaces the real failure; #9878: both are typed causes, their text stays local.
+    assert state["last_error"] == "worker_failed, exit -9; read_only_checkout_mutation, count 1"
+    assert "worker killed: out of memory" in state["stderr_excerpt"]
+    assert "read-only checkout mutation detected: tracked.txt" in _kept_diagnostics(state["task_id"])
 
 
 # ---------------------------------------------------------------------------
@@ -746,7 +756,8 @@ def test_read_only_snapshot_untracked_root_leak_fails_task_per_lane(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == ["routes_and_dash.txt"]
-    assert state["last_error"] == "read-only checkout mutation detected: routes_and_dash.txt"
+    assert state["last_error"] == "read_only_checkout_mutation, count 1"
+    assert "read-only checkout mutation detected: routes_and_dash.txt" in _kept_diagnostics(state["task_id"])
     assert state["read_only_snapshot_retention"] == "full"
 
 
@@ -797,8 +808,8 @@ def test_read_only_snapshot_ignored_scratch_leak_fails_task(
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == ["check_dead.py", "scratch/notes.txt"]
     assert state["read_only_ignored_mutation_paths"] == []
-    assert "check_dead.py" in state["last_error"]
-    assert "scratch/notes.txt" in state["last_error"]
+    assert state["last_error"] == "read_only_checkout_mutation, count 2"
+    assert "check_dead.py, scratch/notes.txt" in _kept_diagnostics(state["task_id"])
 
 
 def test_read_only_snapshot_runtime_noise_still_passes(

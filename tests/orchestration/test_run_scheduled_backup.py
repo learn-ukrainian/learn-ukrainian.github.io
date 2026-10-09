@@ -15,6 +15,7 @@ WRAPPER = REPO_ROOT / "scripts" / "orchestration" / "run_scheduled_backup.sh"
 
 SUCCESS_LOG = """\
 ==> Creating consistent SQLite snapshot: data/live.db
+==> SQLite databases backed up: 1 of 1 (pytest scratch skipped: 4, archived: 9).
 {"message_type":"status","percent_done":0.5}
 {"message_type":"summary","snapshot_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","data_added":1024}
 {"message_type":"summary","snapshot_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","data_added":2048}
@@ -540,6 +541,7 @@ def test_record_writes_success_receipt(writer_environment: tuple[dict[str, str],
         "run_id": "20260926T033000Z-ab12cd34",
         "snapshot_count": 2,
         "bytes_added": 3072,
+        "databases_backed_up": 1,
     }
     assert receipt_path.stat().st_mode & 0o777 == 0o600
 
@@ -571,6 +573,7 @@ def test_record_writes_failure_receipt_without_repository(
     assert receipt["run_id"] == "20260926T033000Z-ab12cd34"
     assert receipt["snapshot_count"] is None
     assert receipt["bytes_added"] is None
+    assert receipt["databases_backed_up"] is None
     assert receipt["started_at_utc"] == "2026-09-26T03:30:00Z"
     assert receipt["finished_at_utc"] == "2026-09-26T03:41:07Z"
 
@@ -695,7 +698,7 @@ def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
 ) -> None:
     environment, _project, fake_bin = writer_environment
     repository = "rclone:review.remote:/var/tmp/lu/nonexistent[review]"
-    password_file = "/tmp/secret[review].file"
+    password_file = "/nonexistent/secret[review].file"
     last_run = tmp_path / "last-run.json"
     fake_backup = tmp_path / "fake-backup-data.sh"
     _write_executable(

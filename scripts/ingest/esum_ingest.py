@@ -33,10 +33,31 @@ from collections.abc import Iterable
 from functools import lru_cache
 from pathlib import Path
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "data" / "raw" / "esum" / "vol1.txt"
 DEFAULT_OUTPUT = REPO / "data" / "processed" / "esum_vol1.jsonl"
-_VESUM_CONN: sqlite3.Connection | None = None
+_VESUM_CONN: SQLiteConnection | None = None
 _VESUM_CONN_UNAVAILABLE = False
 _VESUM_LEMMAS: frozenset[str] | None = None
 CYRILLIC_WORD = r"[а-яґіїєА-ЯҐІЇЄ'’]"
@@ -229,7 +250,7 @@ def _vesum_db_path() -> Path:
     return REPO / "data" / "vesum.db"
 
 
-def _vesum_conn() -> sqlite3.Connection | None:
+def _vesum_conn() -> SQLiteConnection | None:
     global _VESUM_CONN, _VESUM_CONN_UNAVAILABLE
     if _VESUM_CONN_UNAVAILABLE:
         return None
@@ -240,7 +261,7 @@ def _vesum_conn() -> sqlite3.Connection | None:
         _VESUM_CONN_UNAVAILABLE = True
         return None
     try:
-        _VESUM_CONN = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True)
+        _VESUM_CONN = _open_readonly(db_path)
     except sqlite3.Error:
         _VESUM_CONN_UNAVAILABLE = True
         return None

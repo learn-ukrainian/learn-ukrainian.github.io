@@ -721,7 +721,7 @@ def test_migration_on_a_db_copy_keeps_rows_and_flags_them_unchecked(tmp_path):
 
 
 def _sqlite_master_bytes(path: Path) -> bytes:
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"{Path(path).resolve().as_uri()}?mode=ro", uri=True)
     try:
         rows = conn.execute(
             "SELECT type, name, tbl_name, sql FROM sqlite_master ORDER BY type, name, sql"

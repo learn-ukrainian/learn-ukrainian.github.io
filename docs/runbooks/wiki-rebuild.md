@@ -286,7 +286,7 @@ restoration sources.
 ### MPS / OOM during cold-encode
 
 Cold-encode uses `--resume` + idempotent shard writes. Kill, restart
-with `--resume`, no rework. If 16 GB RAM is tight, reduce
+with `--resume`, no rework. If memory is tight, reduce
 `BENCHMARK_BATCH_SIZE` env var.
 
 ### Compile produces lower-quality output than the existing wiki

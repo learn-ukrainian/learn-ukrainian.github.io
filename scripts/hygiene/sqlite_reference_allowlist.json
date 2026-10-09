@@ -1,0 +1,1220 @@
+[
+  {
+    "path": "scripts/agent_runtime/failover.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "failover state DB",
+    "reason": "persists retry and cooldown state",
+    "calls": [
+      "sqlite3.connect(str(self.path), timeout=10.0)"
+    ]
+  },
+  {
+    "path": "scripts/ai_agent_bridge/_broker.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "persists broker messages and jobs",
+    "calls": [
+      "sqlite3.connect(str(DB_PATH))",
+      "sqlite3.connect(str(DB_PATH))"
+    ]
+  },
+  {
+    "path": "scripts/ai_agent_bridge/_db.py",
+    "reference_count": 9,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "migrates and persists broker state",
+    "calls": [
+      "sqlite3.connect(DB_PATH)",
+      "sqlite3.connect(DB_PATH)",
+      "sqlite3.connect(f'{DB_PATH.resolve().as_uri()}?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/api/agent_monitor_router.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "agent monitor DB",
+    "reason": "persists monitor configuration",
+    "calls": [
+      "sqlite3.connect(db_path, timeout=10.0)"
+    ]
+  },
+  {
+    "path": "scripts/api/hramatka_cache.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "hramatka cache DB",
+    "reason": "persists generated cache entries",
+    "calls": [
+      "sqlite3.connect(str(self.database_path), isolation_level=None, timeout=5.0)"
+    ]
+  },
+  {
+    "path": "scripts/api/resilience.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "API databases selected by connect_sqlite callers",
+    "reason": "instrumented writer connection factory for API storage",
+    "calls": [
+      "sqlite3.connect(database, *args, **kwargs)"
+    ]
+  },
+  {
+    "path": "scripts/atlas/atlas_db.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "atlas.db",
+    "reason": "creates and persists canonical Atlas entries",
+    "calls": [
+      "sqlite3.connect(db_path)",
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/atlas/fill_local.py",
+    "reference_count": 9,
+    "kind": "writer",
+    "target_db": "atlas.db",
+    "reason": "writes local enrichment output",
+    "calls": [
+      "sqlite3.connect(path)",
+      "sqlite3.connect(sources_db_path)"
+    ]
+  },
+  {
+    "path": "scripts/atlas/lexical_projection.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "temporary lexical projection DB",
+    "reason": "builds projection before atomic replacement",
+    "calls": [
+      "sqlite3.connect(temp_path)"
+    ]
+  },
+  {
+    "path": "scripts/atlas/measure_fill_enrich_divergence.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "synthetic sources fixture DB",
+    "reason": "builds hermetic benchmark input",
+    "calls": [
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/audit/checks/vocabulary.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "inserts vocabulary declarations",
+    "calls": [
+      "sqlite3.connect(db_path)",
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/audit/generate_practice_deck.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": ":memory:; atlas.db",
+    "reason": "builds hermetic query fixtures and reads Atlas",
+    "calls": [
+      "sqlite3.connect(':memory:')",
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/audit/sum11_sovietization_scan.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "backfills contextual Sovietization flags",
+    "calls": [
+      "sqlite3.connect(args.db)"
+    ]
+  },
+  {
+    "path": "scripts/audit/verbatim_overlap_gate.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "verbatim shingle index DB",
+    "reason": "builds and updates overlap index",
+    "calls": [
+      "sqlite3.connect(str(db_path), check_same_thread=False)",
+      "sqlite3.connect(str(self.db_path), check_same_thread=False)"
+    ]
+  },
+  {
+    "path": "scripts/benchmarks/generate_synthetic_atlas.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "synthetic atlas output DB",
+    "reason": "builds benchmark fixture",
+    "calls": [
+      "sqlite3.connect(out)"
+    ]
+  },
+  {
+    "path": "scripts/common/github_client.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "GitHub client cache",
+    "reason": "persists conditional GET bodies and the rate-limit budget outside source databases",
+    "calls": [
+      "sqlite3.connect(path, timeout=5)"
+    ]
+  },
+  {
+    "path": "scripts/ci/data_tier.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "disposable CI source DB copy",
+    "reason": "backs up into disposable test checkout",
+    "calls": [
+      "sqlite3.connect(source.as_uri() + '?mode=ro', uri=True, timeout=30)",
+      "sqlite3.connect(target)"
+    ]
+  },
+  {
+    "path": "scripts/control_plane/storage.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "registered control-plane store DBs",
+    "reason": "canonical storage seam for writable control-plane stores",
+    "calls": [
+      "sqlite3.connect(uri, uri=True, **sqlite_kwargs)",
+      "sqlite3.connect(str(db_path), **sqlite_kwargs)"
+    ]
+  },
+  {
+    "path": "scripts/delegate.py",
+    "reference_count": 3,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "Existing dynamic module import may expose SQLite constructors; resolve through the structural boundary in #9662.",
+    "calls": []
+  },
+  {
+    "path": "scripts/entire_context/store.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "Entire projection DB",
+    "reason": "persists rebuildable locator index",
+    "calls": [
+      "sqlite3.connect(self.db_path)"
+    ]
+  },
+  {
+    "path": "scripts/etymology/extract_cognate_forms.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "loads ESUM cognate forms",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/etymology/recover_latin_cognates.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "backfills cognate schema and rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/fleet_comms/message_plane.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "Fleet Comms plane DB",
+    "reason": "initializes/migrates durable message plane",
+    "calls": [
+      "sqlite3.connect(str(path))"
+    ]
+  },
+  {
+    "path": "scripts/hygiene/codex_rollout_reconcile.py",
+    "reference_count": 10,
+    "kind": "writer",
+    "target_db": "Codex rollout state/output DB",
+    "reason": "reconciles rollout state and writes backup destination",
+    "calls": [
+      "sqlite3.connect(_db_uri(path), uri=True, timeout=5.0)",
+      "sqlite3.connect(path, timeout=5.0)",
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/antonenko_full_book_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/apply_zno_annotations.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/backfill_lesson_sections.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/backfill_school_textbook_orphans.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/dictionary_acquisition.py",
+    "reference_count": 9,
+    "kind": "writer",
+    "target_db": "per-dictionary acquisition staging.sqlite3",
+    "reason": "Persists isolated acquisition job specification, results and events; no canonical source-store admission.",
+    "calls": [
+      "sqlite3.connect(directory / 'staging.sqlite3', timeout=1)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/dictionary_ingest.py",
+    "reference_count": 13,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/esum_load.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/goroh_etymology_ingest.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/incremental_historical_source_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path), timeout=60)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/incremental_textbook_ingest.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path), timeout=30.0)",
+      "sqlite3.connect(str(db_path), timeout=30.0)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ohoiko_books_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ohoiko_to_jsonl.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ohoiko_verbs_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/owned_books_ingest.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(args.db.resolve().as_uri() + ('?mode=ro' if args.check or args.dry_run else '?mode=rw'), uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/pohribnyi_pronunciation_ingest.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path.resolve().as_uri() + '?mode=rw', uri=True)",
+      "sqlite3.connect(args.db.resolve().as_uri() + '?mode=ro', uri=True)",
+      "sqlite3.connect(args.db.resolve().as_uri() + '?mode=rw', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/pravopys_2019_ingest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/private_teacher_lessons_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(args.db.resolve().as_uri() + '?mode=rw', uri=True, timeout=30)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/resource_catalogue_ingest.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(f'{args.db.resolve().as_uri()}?mode=rw', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/slovnyk_me_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/grac_frequency_ingest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "grac_frequency.db (--db destination)",
+    "reason": "persists GRAC frequency pages, provenance and resumable checkpoints (#9969)",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/sum20_official_ingest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/sum20_quarantine_unverified.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path, isolation_level=None)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ua_gec_ingest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ulp_lesson_notes_ingest.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/ulp_to_jsonl.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/ingest/wiktionary_etymology_ingest.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/ingest/zno_ingest.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests/backfills authenticated source rows",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/enrich_heteronyms.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "atlas.db",
+    "reason": "persists heteronym distinctions in canonical Atlas articles",
+    "calls": [
+      "sqlite3.connect(db_file)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/load_relation_candidates.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "loads relation candidate and verdict rows",
+    "calls": [
+      "sqlite3.connect(db_path)",
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/migrate_sum11_sovietization.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "migrates contextual Sovietization schema",
+    "calls": [
+      "sqlite3.connect(args.db)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/reconcile_calque_clusters.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "atlas.db",
+    "reason": "writes canonical cluster reconciliation",
+    "calls": [
+      "sqlite3.connect(self.atlas_db_path)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+    "reference_count": 19,
+    "kind": "writer",
+    "target_db": "runner ledger DB",
+    "reason": "persists resumable crawler state",
+    "calls": [
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/generate_pr1_fixture.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "synthetic sources fixture DB",
+    "reason": "builds hermetic PR1 fixture",
+    "calls": [
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/ledger.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "runner ledger DB",
+    "reason": "persists job leases and results",
+    "calls": [
+      "sqlite3.connect(self.path, isolation_level=None)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/network_cache.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "network cache DB",
+    "reason": "persists crawler responses; refuses sources DB",
+    "calls": [
+      "sqlite3.connect(self.path, isolation_level=None)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/phase_cefr.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "CEFR output DB",
+    "reason": "builds derived CEFR artifact",
+    "calls": [
+      "sqlite3.connect(output_db)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/phase_relations.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "relations output DB",
+    "reason": "builds derived relations artifact",
+    "calls": [
+      "sqlite3.connect(output_db)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/side_db.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "Balla/dmklinger/Kaikki side DBs",
+    "reason": "builds side database artifacts",
+    "calls": [
+      "sqlite3.connect(output)",
+      "sqlite3.connect(output)",
+      "sqlite3.connect(output)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/stream_manifest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "manifest spool DB",
+    "reason": "writes stream assembly spool",
+    "calls": [
+      "sqlite3.connect(dest)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/runner/ulif_forms.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "rewrites derived ULIF forms tables",
+    "calls": [
+      "sqlite3.connect(str(target_db))"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/sum20_lookup.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "write=True caches official SUM-20 articles",
+    "calls": [
+      "sqlite3.connect(db_path if write else _read_only_uri(db_path), uri=True)",
+      "sqlite3.connect(target)",
+      "sqlite3.connect(read_only_uri, uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/teacher_deck.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests private teacher lessons",
+    "calls": [
+      "sqlite3.connect(sources_db.resolve().as_uri() + '?mode=rw', uri=True, timeout=30)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/tools/dump_ulif.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "ULIF dump DB",
+    "reason": "persists resumable crawler dump",
+    "calls": [
+      "sqlite3.connect(str(self.db_path))",
+      "sqlite3.connect(str(dump_db_path))"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/tools/import_ulif_dump.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "ULIF dump DB; sources.db",
+    "reason": "imports held crawler dump into sources",
+    "calls": [
+      "sqlite3.connect(str(args.dump_db))",
+      "sqlite3.connect(str(args.sources_db))"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/tools/migrate_ulif_raw.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db; compacted sources DB",
+    "reason": "migrates and compacts ULIF raw store",
+    "calls": [
+      "sqlite3.connect(db, timeout=0)",
+      "sqlite3.connect(db, timeout=0)",
+      "sqlite3.connect(new)"
+    ]
+  },
+  {
+    "path": "scripts/lexicon/ulif_raw_cache.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "ULIF raw cache DB",
+    "reason": "persists raw crawler responses",
+    "calls": [
+      "sqlite3.connect(target, timeout=30)"
+    ]
+  },
+  {
+    "path": "scripts/migrations/2026-05-06-broker-indexes.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "adds broker indexes",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "migrates textbook author metadata",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/migrations/2026-07-06-add-subject-to-textbooks.py",
+    "reference_count": 9,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "migrates textbook subjects",
+    "calls": [
+      "sqlite3.connect(str(args.db))"
+    ]
+  },
+  {
+    "path": "scripts/mphdict/query.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "MPH sidecar DB",
+    "reason": "builds derived lookup sidecar",
+    "calls": [
+      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)",
+      "sqlite3.connect(sidecar)",
+      "sqlite3.connect(sidecar)"
+    ]
+  },
+  {
+    "path": "scripts/orchestration/thread_handoff.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "persists session handoff projection",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/orchestration/trails/store.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "trails projection DB",
+    "reason": "persists rebuildable trajectory index",
+    "calls": [
+      "sqlite3.connect(self.database_path, isolation_level=None, timeout=30)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/admit_existing_corpus.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt build_phase3_p4_pilot.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/build_decolonization_cases.py",
+    "reference_count": 1,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "Sources read opens mode=ro with a percent-encoded URI because ensure_reproducible_sum20_table creates a temp table, which query_only refuses.",
+    "calls": [
+      "sqlite3.connect(sources_path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/document_signal_manifest.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "temporary document spool DB",
+    "reason": "assembles signal accounting spool",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)",
+      "sqlite3.connect(spool_path)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_heldout_partition.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_saint_sophia_db_reconciliation.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "restores reconciled source DB from backup",
+    "calls": [
+      "sqlite3.connect(uri, uri=True)",
+      "sqlite3.connect(source_uri, uri=True)",
+      "sqlite3.connect(target)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_source_universe.py",
+    "reference_count": 6,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
+    "reference_count": 3,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "implementation hash pinned by custody receipt phase3_v2_compatibility.py; migrate only with a receipt rebinding by the open-model-data lane",
+    "calls": [
+      "sqlite3.connect(sources_db.resolve().as_uri() + '?mode=ro', uri=True)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "restores source DB from approved snapshot",
+    "calls": [
+      "sqlite3.connect(uri, uri=True, timeout=30.0)",
+      "sqlite3.connect(source_uri, uri=True)",
+      "sqlite3.connect(target)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/profile_corpus.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "corpus profiling spool DB",
+    "reason": "builds temporary corpus accounting spool",
+    "calls": [
+      "sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True)",
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "scripts/projects/open_model_data/review_build/components/__init__.py",
+    "reference_count": 2,
+    "kind": "reader_pending_migration_9662",
+    "target_db": null,
+    "reason": "Existing read-only snapshot reader or dynamic component loader on the rebased main; tracked by #9662.",
+    "calls": []
+  },
+  {
+    "path": "scripts/rag/convert_phase2.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "frequency.db",
+    "reason": "imports UberText frequencies",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/rag/migrate_add_literary_source_url.py",
+    "reference_count": 4,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "backfills literary source URLs",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/rag/scrape_wikisource.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests literary texts and rebuilds FTS",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/rag/vesum_reingest.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "VESUM shadow DB",
+    "reason": "builds shadow store and refuses live VESUM target",
+    "calls": [
+      "sqlite3.connect(temporary_path)"
+    ]
+  },
+  {
+    "path": "scripts/rag/wiki_cache.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "wiki cache DB",
+    "reason": "persists article cache",
+    "calls": [
+      "sqlite3.connect(str(self.db_path), check_same_thread=False, isolation_level='DEFERRED')"
+    ]
+  },
+  {
+    "path": "scripts/review/findings_db.py",
+    "reference_count": 42,
+    "kind": "writer",
+    "target_db": "review findings DB",
+    "reason": "persists review findings and dispositions",
+    "calls": [
+      "sqlite3.connect(path, timeout=30, isolation_level=None)"
+    ]
+  },
+  {
+    "path": "scripts/telemetry/legacy_bridge.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "writes legacy telemetry projection",
+    "calls": [
+      "sqlite3.connect(str(path), timeout=5.0)"
+    ]
+  },
+  {
+    "path": "scripts/tools/agent_watcher.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "legacy broker DB",
+    "reason": "updates watcher state",
+    "calls": [
+      "sqlite3.connect(DB_PATH)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/auto_vocab_extract.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "writes extracted vocabulary",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/populate_vocab_db.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "populates vocabulary store",
+    "calls": [
+      "sqlite3.connect(DB_PATH)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/rebuild_vocab_from_yaml.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "rebuilds vocabulary from lesson YAML",
+    "calls": [
+      "sqlite3.connect(DB_PATH)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/rebuild_vocab_simple.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "rebuilds vocabulary store",
+    "calls": [
+      "sqlite3.connect(DB_PATH)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/vocab_extract_proper.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "writes proper-noun vocabulary",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/vocab/vocab_init.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "vocabulary.db",
+    "reason": "initializes vocabulary schema",
+    "calls": [
+      "sqlite3.connect(db_path)"
+    ]
+  },
+  {
+    "path": "scripts/wiki/build_sources_db.py",
+    "reference_count": 13,
+    "kind": "writer",
+    "target_db": "sources.db; temporary rebuild DB",
+    "reason": "builds source database before atomic replacement",
+    "calls": [
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(tmp_db))",
+      "sqlite3.connect(str(db))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/diagnostics/retrieval_bakeoff_9233.py",
+    "reference_count": 10,
+    "kind": "writer",
+    "target_db": "work-dir subset/vector-cache DBs",
+    "reason": "builds hermetic retrieval artifacts",
+    "calls": [
+      "sqlite3.connect(f'{path.resolve().as_uri()}?mode=ro', uri=True)",
+      "sqlite3.connect(destination)",
+      "sqlite3.connect(target)"
+    ]
+  },
+  {
+    "path": "scripts/wiki/diagnostics/retrieval_probe_9233.py",
+    "reference_count": 15,
+    "kind": "writer",
+    "target_db": "work-dir lemma index DB",
+    "reason": "builds retrieval lemma index",
+    "calls": [
+      "sqlite3.connect(index_path)"
+    ]
+  },
+  {
+    "path": "scripts/wiki/embedding_manifest.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "embedding manifest DB",
+    "reason": "persists embedding content hashes",
+    "calls": [
+      "sqlite3.connect(str(self._db_path), check_same_thread=False)"
+    ]
+  },
+  {
+    "path": "scripts/wiki/extract_sections.py",
+    "reference_count": 7,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "builds textbook sections",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/fetch_wikipedia.py",
+    "reference_count": 3,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "caches fetched Wikipedia articles",
+    "calls": [
+      "sqlite3.connect(str(DB_PATH))",
+      "sqlite3.connect(str(DB_PATH))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/migrate_external_chunks.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "migrates external article chunks and FTS",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/quality_gate.py",
+    "reference_count": 1,
+    "kind": "writer",
+    "target_db": "wiki progress DB",
+    "reason": "persists quality gate progress",
+    "calls": [
+      "sqlite3.connect(str(PROGRESS_DB))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/restore_literary_metadata.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "restores literary metadata",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/rollback_sections.py",
+    "reference_count": 2,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "rolls back section schema",
+    "calls": [
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/sources_db.py",
+    "reference_count": 28,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "write branch migrates and ingests ULIF schema",
+    "calls": [
+      "sqlite3.connect(f'{db_path.resolve().as_uri()}?mode=ro', uri=True, check_same_thread=False)",
+      "sqlite3.connect(str(db_path), check_same_thread=False)"
+    ]
+  },
+  {
+    "path": "scripts/wiki/state.py",
+    "reference_count": 5,
+    "kind": "writer",
+    "target_db": "wiki progress DB",
+    "reason": "persists crawl progress",
+    "calls": [
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db))",
+      "sqlite3.connect(str(db))"
+    ]
+  },
+  {
+    "path": "scripts/wiki/ukrainian_wiki_corpus.py",
+    "reference_count": 6,
+    "kind": "writer",
+    "target_db": "sources.db",
+    "reason": "ingests wiki passages and migrates schema",
+    "calls": [
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db_path))",
+      "sqlite3.connect(str(db_path))"
+    ]
+  },
+  {
+    "path": "scripts/storage/topology.py",
+    "reference_count": 0,
+    "kind": "store_resolver",
+    "target_db": null,
+    "reason": "Only sanctioned store builders; legacy sources resolver pending caller migration (#9945).",
+    "functions": [
+      "resolve_store",
+      "resolve_active_sources_db"
+    ]
+  },
+  {
+    "path": "tests/test_readonly_harness_readers.py",
+    "reference_count": 4,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",
+    "calls": [
+      "sqlite3.connect(db)"
+    ]
+  },
+  {
+    "path": "tests/test_readonly_special_path_9662.py",
+    "reference_count": 8,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Reviewed hermetic scratch SQLite factory and reader boundary tests (#9945).",
+    "calls": [
+      "sqlite3.connect(':memory:')",
+      "sqlite3.connect(path)"
+    ]
+  },
+  {
+    "path": "tests/test_store_resolver.py",
+    "reference_count": 1,
+    "kind": "fixture_factory",
+    "target_db": null,
+    "reason": "Synthetic SQLite factory for resolver read-binding tests (#9945).",
+    "calls": [
+      "sqlite3.connect(path)"
+    ]
+  }
+]

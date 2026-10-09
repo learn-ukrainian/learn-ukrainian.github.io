@@ -260,7 +260,7 @@ def test_builder_verifier_pack_gate_render_and_immersion_same_string(bound, monk
     record["sense_gloss"] = "unchecked override must be ignored"
     rendered = assemble.render_unit_piece("{{gloss:W-001}}", assemble.gloss_replacer(store))
     assert rendered == "synthetic (target)"
-    count = runner.check_6_count({"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-001}}"}]}, 0, store)
+    count = runner.check_6_count({"units": [{"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-001}}"}]}, store)
     assert count["details"]["urok_tokens"] == 2
     from types import SimpleNamespace
 
@@ -863,7 +863,7 @@ def test_select_cli_mutations_and_receipt(bound, monkeypatch, capsys, mode):
             )
             return subprocess.CompletedProcess(command, int(mode == "pr_unavailable"), text)
 
-        monkeypatch.setattr(subprocess, "run", run)
+        monkeypatch.setattr(sense_cli.github_client, "run", run)
 
         def scan(*args, **kwargs):
             assert kwargs["pr_text"] == ("public public" if mode == "pr_available" else None)

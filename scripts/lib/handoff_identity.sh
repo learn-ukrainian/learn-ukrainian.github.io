@@ -261,7 +261,7 @@ launcher_require_registered_slot() {
   if [ "$rc" -eq 3 ]; then
     options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
     case "$slot" in
-      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka)
+      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka | grok-open-model-data | kimi-open-model-data | cursor-open-model-data)
         printf "selector '%s' resolves to handoff slot '%s', refused by operator order 2026-09-27: only claude, gpt and gemini should be involved in ukrainian content; no other models allowed if it is about ukrainian lang. culture, heritage.\n" \
           "$selector" "$slot" >&2
         return 1
@@ -463,9 +463,9 @@ handoff_identity_for_kimi_epic() {
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
-# Resolve legacy Gemini / Antigravity handoff identities for historical packet
-# lookup only. These are not registered driver slots; launcher_core refuses
-# AGY/Gemini driver sessions before identity resolution.
+# Echo the per-epic Gemini / Antigravity driver rollover slot (2026-10-08
+# approval). Provider-specific so a Gemini seat never adopts Claude/Codex/Grok/
+# Kimi packets.
 handoff_identity_for_gemini_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0

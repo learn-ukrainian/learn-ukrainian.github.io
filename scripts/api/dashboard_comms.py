@@ -12,6 +12,13 @@ import os
 import sqlite3
 from pathlib import Path
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from .monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
@@ -34,7 +41,7 @@ def _watcher_log_file(ctx: MonitorContext | None = None) -> Path:
     return _broker_dir(ctx) / "watcher.log"
 
 
-def ensure_broker_cols(conn: sqlite3.Connection) -> set:
+def ensure_broker_cols(conn: SQLiteConnection) -> set:
     """Cache the column names of the messages table."""
     global _BROKER_COLS
     if _BROKER_COLS is None:
@@ -50,7 +57,7 @@ def get_broker_db(ctx: MonitorContext | None = None):
     handle = resolved.stores.message_db
     if handle is None or not handle.path.exists():
         return None
-    conn = handle.connect()
+    conn = handle.connect(read_only=True)
     conn.row_factory = sqlite3.Row
     return conn
 

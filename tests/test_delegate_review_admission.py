@@ -20,9 +20,29 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_native_gemini_low_medium_review_retains_requested_seat(risk):
+    result = target_admission._resolve_review_target(
+        "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+        profile="code", attempt=False, snapshot=None, budget_seat="agy",
+    )
+    assert result == ("agy", "gemini-3.8-flash-high")
+
+
+@pytest.mark.parametrize("risk,path", [("high", "ordinary.py"), ("critical", "ordinary.py"),
+                                      ("low", ".github/workflows/ci.yml"),
+                                      ("medium", "scripts/review/reviewer_resolver.py")])
+def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
+    with pytest.raises(ReviewAdmissionRefused):
+        target_admission._resolve_review_target(
+            "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+            profile="code", attempt=True, snapshot=None, budget_seat="agy", changed_paths=(path,),
+        )
+
+
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
-    from tests.test_ask_review_admission_floor import _change, _git
+    from tests.test_ask_review_admission_floor import _git
 
     repo = tmp_path_factory.mktemp("ordinary-review")
     _git(repo, "init", "-q", "-b", "main")
@@ -33,14 +53,78 @@ def ordinary_review_repo(tmp_path_factory):
     _git(repo, "add", ".")
     _git(repo, "commit", "-qm", "base")
     _git(repo, "update-ref", "refs/remotes/origin/main", "HEAD")
-    head = _change(repo, "ordinary.py")
-    _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", head)
+    # No authored commits past the base: a trusted review's complete authorship
+    # (#9739) is then exactly its declared --review-author-model, the identity
+    # these admission tests vary. Branch authorship has its own tests.
+    _git(repo, "update-ref", "refs/remotes/origin/ordinary-review", "HEAD")
     return repo
 
 
 @pytest.fixture(autouse=True)
 def resolved_route_test_target(ordinary_review_repo, monkeypatch):
     monkeypatch.setattr(delegate, "_local_repo_root", ordinary_review_repo)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {"agents": {}, "diagnostics": {"stale": False}})
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_cmd_dispatch_native_agy_code_pr_review(ordinary_review_repo, tmp_path, monkeypatch, risk):
+    """PR verdict reviews pass both profile checks and real resolver admission."""
+    from scripts.review import target_resolution
+    from tests.ai_agent_bridge import test_agy_review_profile
+    from tests.test_delegate import _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ordinary_review_repo)
+    monkeypatch.chdir(ordinary_review_repo)
+    monkeypatch.setattr(test_agy_review_profile, "_OWNED_PATH", "ordinary.py")
+    head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ordinary_review_repo, text=True, timeout=30,
+    ).strip()
+    payload = json.dumps({
+        "number": 42, "baseRefName": "main", "baseRefOid": head,
+        "headRefName": "ordinary-review", "headRefOid": head, "isCrossRepository": False,
+    })
+    monkeypatch.setattr(
+        target_resolution, "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    monkeypatch.setattr(
+        "scripts.common.github_client.run",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    argv = [
+        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high",
+        "--mode", "read-only", "--task-id", "native-agy-review", "--pr", "42",
+        "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk,
+        "--owned-path", "ordinary.py",
+        "--prompt", "Review the PR.",
+    ]
+    args = delegate.build_parser().parse_args(
+        test_agy_review_profile._with_sol_envelope(monkeypatch, tmp_path, argv)
+    )
+    validate_effort = delegate._validate_dispatch_effort
+    checks = []
+
+    class PassedReviewAdmission(Exception):
+        pass
+
+    def stop_after_profile_checks(agent, effort):
+        validate_effort(agent, effort)
+        checks.append(agent)
+        # The second check follows both profile gates and resolver admission,
+        # including final-model resolution. Stop before launch side effects.
+        if len(checks) == 2:
+            raise PassedReviewAdmission
+
+    monkeypatch.setattr(delegate, "_validate_dispatch_effort", stop_after_profile_checks)
+    with pytest.raises(PassedReviewAdmission):
+        delegate.cmd_dispatch(args)
+    assert checks == ["agy", "agy"]
+    assert args.model == "gemini-3.8-flash-high"
+    assert args.pinned_head == head
+    assert args._review_admission_head == head
+    assert not delegate._state_path(args.task_id).exists()
 
 
 @pytest.mark.parametrize("outcome", ["published", "refused", "crashed", "spawn-failed"])
@@ -742,7 +826,8 @@ def _args(*extra, verdict=True):
 
 def _budget(*, claude="cool", codex="near_cap", cursor="cool"):
     return {
-        "agents": {"claude": {"status": claude}, "codex": {"status": codex}, "cursor": {"status": cursor}},
+        "agents": {route: {"status": status, "remaining_pct": 5 if status == "near_cap" else 60}
+                   for route, status in (("claude", claude), ("codex", codex), ("cursor", cursor))},
         "diagnostics": {"records_loaded": 5, "stale": False},
     }
 
@@ -760,6 +845,231 @@ def _admit(args, monkeypatch, budget=None):
         ),
     )
     return result, routing
+
+
+@pytest.mark.parametrize("seat,model", [("agy", None), ("agy", "gemini-3.8-flash-high"), ("gemini", None)])
+@pytest.mark.parametrize("author", [None, "gpt-6.1-sol"])
+@pytest.mark.parametrize("typing", ["verdict", "profile", "pr"])
+@pytest.mark.parametrize("force", [False, True])
+def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, model, author, typing, force):
+    """D1/D2: direct/default/alias requests refuse across dispatch entry points."""
+    flags = ["--agent", seat, "--check-budget"]
+    if author:
+        flags += ["--review-author-model", author]
+    if typing == "profile":
+        flags += ["--review-profile", "code"]
+    if typing == "pr":
+        flags += ["--pr", "42"]
+        # Isolate PR typing from GitHub transport; branch cases resolve a real local target.
+        monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", lambda _args: ("ordinary.py",))
+        monkeypatch.setattr(delegate, "_dispatch_review_facts", lambda *_args: None)
+    if force:
+        flags += ["--force-agent"]
+    args = _args(*flags, verdict=typing == "verdict")
+    args.model = model
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None,
+        route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=False, review_attempt=None),
+    )
+    assert target is None
+    assert "AGY code review requires an explicit --review-risk" in refusal
+    assert all(value in refusal for value in ("low", "medium", "high", "critical"))
+
+
+def test_explicit_review_risk_omission_dispatch_returns_nonzero(tmp_path, monkeypatch, capsys):
+    """The real CLI path refuses before review preparation, worker or state creation."""
+    from tests.test_delegate import _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
+    args = _args(
+        "--agent", "agy", "--model", "gemini-3.8-flash-high",
+        "--review-profile", "code", "--review-author-model", "gpt-6.1-sol",
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "AGY code review requires an explicit --review-risk" in capsys.readouterr().err
+    assert not (tmp_path / "tasks").exists()
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_explicit_review_risk_budget_omission_never_selects_agy(monkeypatch, risk):
+    """D2/D3: identical capacity substitutes AGY only with a declared risk."""
+    budget = _budget(claude="near_cap", codex="near_cap", cursor="near_cap")
+    budget["agents"]["agy"] = {"status": "cool", "remaining_pct": 80}
+    args = _args("--check-budget", "--review-author-model", "claude-opus-5-5")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert target is None
+    assert "--review-risk" in refusal
+    assert routing.substitution is None
+    args.review_risk = risk
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    assert routing.substitution["source"] == "reviewer-resolver"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_explicit_review_risk_direct_boundaries(monkeypatch, risk):
+    """D3/D4: low/medium retain AGY; high/critical select another family."""
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient == "agy") == (risk in {"low", "medium"})
+    assert reviewer_resolver.resolve_family(target.model) != "openai"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("boundary", ["author", "seat", "family", "capacity"])
+def test_explicit_review_risk_other_agy_exclusions(monkeypatch, risk, boundary):
+    """D6: a risk declaration cannot override independence, subjects or capacity."""
+    flags = []
+    if boundary == "seat":
+        flags += ["--subject-seat", "agy"]
+    if boundary == "family":
+        flags += ["--subject-family", "google"]
+    author = "gemini-3.8-flash-high" if boundary == "author" else "gpt-6.1-sol"
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
+                 "--review-author-model", author, "--review-risk", risk, *flags)
+    budget = _budget(codex="cool")
+    budget["agents"]["agy"] = {
+        "status": "near_cap" if boundary == "capacity" else "cool",
+        "remaining_pct": 5 if boundary == "capacity" else 80,
+    }
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert target.recipient != "agy"
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_explicit_review_risk_write_review_still_refuses(capsys, mode):
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--mode", mode,
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", "low")
+    assert delegate.cmd_dispatch(args) == 2
+    assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
+
+
+def _9959_review_args(seat, model, author, *flags):
+    return _args(
+        "--agent", seat, "--model", model,
+        "--review-author-model", author, "--review-risk", "critical",
+        *flags,
+    )
+
+
+@pytest.mark.parametrize("budget_trigger", ["flag", "environment"])
+def test_9959_xai_author_claude_deficit_selects_openai(monkeypatch, budget_trigger):
+    budget = _budget(codex="cool")
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    flags = ("--check-budget",) if budget_trigger == "flag" else ()
+    if budget_trigger == "environment":
+        monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7", *flags)
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution["actual_model"] == "gpt-6.1-sol"
+
+
+@pytest.mark.parametrize("budget_trigger", ["flag", "environment"])
+@pytest.mark.parametrize("seat,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
+def test_9959_security_pace_deficit_retains_sole_eligible_claude(monkeypatch, capsys, budget_trigger, seat, model):
+    """#9932: security fail-closed must not preempt sole-reviewer pace retention."""
+    budget = _budget(codex="cool")
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    flags = ("--check-budget",) if budget_trigger == "flag" else ()
+    if budget_trigger == "environment":
+        monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    args = _9959_review_args(
+        seat, model, "grok-4.7",
+        "--owned-path", "scripts/agent_runtime/target_admission.py",
+        "--subject-family", "openai", *flags,
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
+    if seat == "claude":
+        assert routing.substitution is None
+    else:
+        assert routing.substitution["actual_model"] == "claude-opus-5-5"
+
+
+def test_10016_security_all_reviewers_in_pace_deficit_remain_eligible(monkeypatch):
+    budget = _budget(codex="cool")
+    for seat in ("claude", "codex"):
+        budget["agents"][seat]["codexbar"] = {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 12.0,
+            "weekly_expected_pct": 40.0,
+        }
+    args = _9959_review_args(
+        "claude", "claude-opus-5-5", "grok-4.7", "--check-budget",
+        "--owned-path", "scripts/agent_runtime/target_admission.py",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution is None
+
+
+def test_9959_claude_author_deficit_does_not_replace_explicit_openai(monkeypatch):
+    budget = _budget(claude="near_cap", codex="cool")
+    args = _9959_review_args("codex", "gpt-6.1-sol", "claude-opus-5-5", "--check-budget")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution is None
+
+
+def test_9959_skips_capacity_constrained_resolver_pick(monkeypatch):
+    budget = _budget(claude="near_cap", codex="cool", cursor="near_cap")
+    budget["agents"]["grok"] = {"status": "cool"}
+    budget["agents"]["codex"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    budget["agents"]["codex"]["runtime"] = {"headroom_blocked": True}
+    args = _9959_review_args("claude", "claude-opus-5-5", "composer-2.5", "--check-budget")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("grok", "grok-4.7")
+    assert routing.substitution["actual_agent"] == "grok"
+
+
+def test_9959_no_capacity_refusal_lists_entire_resolver_trace(monkeypatch):
+    budget = _budget(claude="near_cap", codex="near_cap", cursor="near_cap")
+    budget["agents"]["grok"] = {"status": "near_cap", "remaining_pct": 5}
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7", "--check-budget")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert target is None and routing.substitution is None
+    assert "REVIEW_CAPACITY_UNAVAILABLE" in refusal
+    for rung in reviewer_resolver.REVIEW_LADDERS["critical"]:
+        for candidate in rung:
+            assert candidate.name in refusal
+    assert "near_cap" in refusal or "near cap" in refusal
+    assert "author" in refusal
+
+
+@pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
+def test_9959_explicit_eligible_pick_keeps_model_and_seat(monkeypatch, flags):
+    budget = _budget(claude="near_cap", codex="cool")
+    args = _9959_review_args("codex", "gpt-6.1-sol", "grok-4.7", *flags)
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution is None
 
 
 def test_9312_alias_explicit_model_uses_alias_resolved_identity(monkeypatch):
@@ -785,7 +1095,16 @@ def test_review_alias_model_is_resolved_once_before_selection(monkeypatch):
     assert calls == [("agy", "gemini-3.1-pro-high")]
 
 
-def test_9312_budget_substitute_is_checked_for_its_own_deficit(monkeypatch, capsys):
+def test_10016_budget_substitute_is_admitted_with_pace_only_deficit(monkeypatch, capsys):
+    resolutions = []
+    real = reviewer_resolver.resolve_reviewer
+
+    def capture(inputs, **kwargs):
+        result = real(inputs, **kwargs)
+        resolutions.append(result)
+        return result
+
+    monkeypatch.setattr(reviewer_resolver, "resolve_reviewer", capture)
     budget = _budget(claude="near_cap", codex="cool")
     budget["agents"]["codex"]["codexbar"] = {
         "will_last_to_reset": False,
@@ -804,9 +1123,12 @@ def test_9312_budget_substitute_is_checked_for_its_own_deficit(monkeypatch, caps
         "critical",
     )
     (refusal, target), routing = _admit(args, monkeypatch, budget)
-    assert refusal and "REVIEW_ROUTE_REFUSED" in refusal and "deficit" in refusal
-    assert target is None and routing.substitution is None
-    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    deficit_pick = next(item for item in resolutions[-1].trace if item.name == "openai_frontier")
+    assert deficit_pick.status == "selected"
+    assert routing.substitution["actual_agent"] == "codex"
+    assert "HARD AUTO-SUBSTITUTE" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize(
@@ -830,7 +1152,9 @@ def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
         "critical",
         *subject,
     )
-    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
+    budget = _budget(claude="near_cap", codex="cool")
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
     assert target is None and routing.substitution is None
 
@@ -890,10 +1214,114 @@ def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
     assert "--review-author-model" not in str(refused.value)
 
 
-def test_9312_merge_heading_is_followed_by_landing_policy():
-    workflow = Path("agents_extensions/shared/rules/workflow.md").read_text(encoding="utf-8")
+def test_9312_merge_heading_is_followed_by_landing_policy(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    workflow = (Path(__file__).resolve().parents[1] / "agents_extensions/shared/rules/workflow.md").read_text(
+        encoding="utf-8"
+    )
     merge = workflow.split("## Merge policy — ready PRs must not sit", 1)[1]
     assert merge.split("\n\n", 1)[1].startswith("The binding landing order")
+
+
+@pytest.mark.parametrize(
+    "subject",
+    [
+        ("--subject-seat", "agy"),
+        ("--subject-family", "google"),
+        ("--owned-path", "scripts/agent_runtime/adapters/agy.py"),
+    ],
+)
+def test_9386_ukrainian_subject_exclusion_precedes_budget(monkeypatch, subject):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("excluded seat reached budget probe"))
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian", *subject)
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None,
+        route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=True, review_attempt=None),
+    )
+    assert target is None and "subject exclusion" in refusal
+
+
+@pytest.mark.parametrize("other_seat", ["codex", "gemini"])
+def test_9386_ukrainian_unrelated_subject_keeps_requested_seat(monkeypatch, other_seat):
+    args = _args(
+        "--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "ukrainian",
+        "--subject-seat", other_seat, "--subject-family", "anthropic",
+    )
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "agy"
+
+
+@pytest.mark.parametrize("flag,value", [("--subject-seat", "codex"), ("--subject-family", "openai")])
+def test_9386_subject_flags_are_not_ignored_on_non_review_readonly_dispatch(monkeypatch, flag, value):
+    args = _args(flag, value, verdict=False)
+    refusal, target = delegate._admit_dispatch_target(args, agent=args.agent, trees=None)
+    assert target is None and "subject" in refusal and "review" in refusal
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize("flag,value", [("--subject-seat", "unknown-seat"), ("--subject-family", "unknown-family")])
+def test_9386_write_dispatch_validates_subjects_before_routing(monkeypatch, mode, flag, value):
+    args = _args("--mode", mode, flag, value, verdict=False)
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None, route=lambda _request: pytest.fail("invalid subject reached routing"),
+    )
+    assert target is None and "unknown subject" in refusal
+
+
+def test_9386_write_subject_does_not_type_dispatch_as_review():
+    args = _args("--mode", "workspace-write", "--subject-seat", "codex", verdict=False)
+    assert not delegate._dispatch_is_review_typed(args)
+    refusal, target = delegate._admit_dispatch_target(args, agent=args.agent, trees=None)
+    assert refusal is None and target.recipient == "codex"
+
+
+@pytest.mark.parametrize("missing", [None, {}, "invalid"])
+def test_9386_budget_substitute_requires_its_own_snapshot(monkeypatch, missing):
+    budget = _budget(claude="near_cap")
+    if missing is None:
+        budget["agents"].pop("codex")
+    else:
+        budget["agents"]["codex"] = missing
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}})
+    args = _9959_review_args("claude", "claude-opus-5-5", "grok-4.7")
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    assert target is None and "budget snapshot" in refusal
+
+
+@pytest.mark.parametrize("initial_substitution", [False, True])
+def test_9386_initial_review_substitute_requires_snapshot(monkeypatch, initial_substitution):
+    budget = _budget(codex="cool")
+    budget["agents"].pop("codex")
+    args = _9959_review_args(
+        "claude" if initial_substitution else "codex",
+        "claude-opus-5-5" if initial_substitution else "gpt-6.1-sol",
+        "claude-opus-5-5",
+    )
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    if initial_substitution:
+        assert target is None and "budget snapshot" in refusal
+    else:
+        assert refusal is None and target.recipient == "codex"
+
+
+@pytest.mark.parametrize("requested", ["codex", "claude"])
+@pytest.mark.parametrize("remaining", [60, 5])
+def test_9386_direct_and_substituted_codex_share_review_capacity_rule(monkeypatch, requested, remaining):
+    """#10016 supersedes pace/reset-reserve routing for reviews; both routes use allowance."""
+    budget = _budget(claude="near_cap", codex="hot", cursor="near_cap")
+    budget["agents"]["codex"].update({
+        "remaining_pct": remaining,
+        "codexbar": {"will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0},
+    })
+    budget["agents"]["grok"] = {"status": "near_cap", "remaining_pct": 5}
+    args = _9959_review_args(
+        requested, "gpt-6.1-sol" if requested == "codex" else "claude-opus-5-5", "grok-4.7",
+    )
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    if remaining == 60:
+        assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    else:
+        assert target is None and "REVIEW_CAPACITY_UNAVAILABLE" in refusal
 
 
 @pytest.mark.parametrize(
@@ -906,7 +1334,7 @@ def test_9312_merge_heading_is_followed_by_landing_policy():
     ],
 )
 def test_review_budget_without_both_trusted_inputs_keeps_requested_reviewer(monkeypatch, capsys, inputs):
-    (refusal, target), routing = _admit(_args("--check-budget", *inputs), monkeypatch)
+    (refusal, target), routing = _admit(_args("--check-budget", *inputs), monkeypatch, _budget(codex="hot"))
     assert refusal is None
     assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
     assert routing.substitution is None
@@ -914,7 +1342,8 @@ def test_review_budget_without_both_trusted_inputs_keeps_requested_reviewer(monk
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatch, risk):
+@pytest.mark.parametrize("agy_available", [False, True])
+def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatch, risk, agy_available):
     calls = []
     real = reviewer_resolver.resolve_reviewer
 
@@ -925,21 +1354,21 @@ def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatc
 
     monkeypatch.setattr(reviewer_resolver, "resolve_reviewer", capture)
     args = _args("--check-budget", "--review-author-model", "claude-opus-5-5", "--review-risk", risk)
-    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
+    budget = _budget(claude="near_cap")
+    if agy_available:
+        budget["agents"]["agy"] = {"status": "cool", "remaining_pct": 80}
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert calls and all(inputs.author_model == "claude-opus-5-5" and inputs.risk == risk for inputs, _ in calls)
-    if risk in {"critical", "high"}:
-        # Author family is excluded and both native seats are exhausted. The
-        # Cursor Grok seat has no critical_review role (#9488) and is off the
-        # high ladder (#9538), so nothing may substitute.
-        assert refusal and target is None
-        assert routing.substitution is None
-        assert calls[-1][1].selected is None
-        return
-    # #9488: the Sol-spared substitute is the attested Cursor Grok seat, sent its exact slug.
+    # #10073 adds Gemini below high risk; Grok retains high/critical review.
     assert refusal is None
-    assert (target.recipient, target.model) == ("cursor", "grok-4.7-high")
+    if risk in {"low", "medium"} and agy_available:
+        assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    else:
+        assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
     assert routing.substitution["source"] == "reviewer-resolver"
-    assert calls[-1][1].selected.name == "grok-4.7-cursor-fallback"
+    assert calls[-1][1].selected.concrete_model == (
+        "gemini-3.8-flash-high" if risk in {"low", "medium"} and agy_available else "grok-4.7"
+    )
 
 
 def _admit_cursor_review(model, author, risk):
@@ -954,14 +1383,14 @@ def _admit_cursor_review(model, author, risk):
     return refusal, target, routing
 
 
-def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeypatch):
-    """#9488: the eligible requested Cursor Grok seat keeps its identity and exact slug below high risk."""
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeypatch, risk):
+    """#9769: the eligible requested Cursor seat keeps its exact slug at every risk."""
 
-    def fail():
-        pytest.fail("an eligible requested reviewer must not probe budget without --check-budget")
-
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
-    refusal, target, routing = _admit_cursor_review("grok-4.7-high", "claude-opus-5-5", "medium")
+    reads = []
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: reads.append(True) or _budget(codex="cool"))
+    refusal, target, routing = _admit_cursor_review("grok-4.7-high", "claude-opus-5-5", risk)
+    assert reads == [True]
     assert refusal is None and (target.recipient, target.model) == ("cursor", "grok-4.7-high")
     assert routing.substitution is None
 
@@ -977,12 +1406,11 @@ def test_review_dispatch_keeps_the_cursor_grok_seat_at_its_attested_slug(monkeyp
         ("grok-4.7-high ", "claude-opus-5-5", "medium"),
         ("GROK-4.7-HIGH", "claude-opus-5-5", "medium"),
         ("grok-4.7-high", "cursor:grok-4.7", "medium"),  # Grok never reviews Grok
-        ("grok-4.7-high", "claude-opus-5-5", "high"),  # high is Sol or Opus only (#9538)
-        ("grok-4.7-high", "claude-opus-5-5", "critical"),  # no critical_review role
     ],
 )
-def test_review_dispatch_replaces_a_cursor_grok_request_outside_policy(model, author, risk):
+def test_review_dispatch_replaces_a_cursor_grok_request_outside_policy(monkeypatch, model, author, risk):
     """An ineligible requested reviewer is replaced by the resolver's choice (#9272), never kept."""
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _budget(codex="cool"))
     refusal, target, routing = _admit_cursor_review(model, author, risk)
     assert refusal is None
     assert target.recipient in {"codex", "claude"}
@@ -1195,7 +1623,8 @@ def test_the_review_worker_refuses_a_fable_pin(tmp_path):
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-fable-5-1", mode="read-only", cwd=tmp_path, review=True
     )
-    assert target is None and NO_REVIEW_ROLE in refusal
+    # #9878: the worker returns the typed cause; the catalog's refusal text is the dispatch-time gate's to print.
+    assert target is None and refusal == "review_admission_refused"
     refusal, target = delegate._kimi_worker_refusal(
         "review-9583", agent="claude", model="claude-opus-5-5", mode="read-only", cwd=tmp_path, review=True
     )
@@ -1221,10 +1650,10 @@ HIGH_RISK_RULE = "a formal review at high risk is performed only by gpt-6.1-sol,
         pytest.param((), id="author-and-risk-only"),
     ],
 )
-def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
+def test_high_risk_review_admits_grok_and_substitutes_ineligible_sonnet(
     monkeypatch, capsys, seat, model, author, expected, flags, typing
 ):
-    """#9538: every review-typed dispatch, not only a verdict-gated one, applies the high-risk reviewer rule."""
+    """#9769: review typing admits Grok and keeps the high-risk eligibility gate."""
     args = _args(
         "--agent",
         seat,
@@ -1241,10 +1670,15 @@ def test_high_risk_review_never_admits_a_seat_outside_sol_and_opus(
     assert delegate._dispatch_is_review_typed(args)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None
-    assert (target.recipient, target.model) == expected
-    assert routing.substitution["source"] == "reviewer-resolver"
-    assert routing.substitution["requested_model"] == model
-    assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
+    if seat == "cursor":
+        assert (target.recipient, target.model) == ("cursor", "grok-4.7-high")
+        assert routing.substitution is None
+        assert "REVIEW_IDENTITY_SUBSTITUTED:" not in capsys.readouterr().err
+    else:
+        assert (target.recipient, target.model) == expected
+        assert routing.substitution["source"] == "reviewer-resolver"
+        assert routing.substitution["requested_model"] == model
+        assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
@@ -1276,7 +1710,7 @@ def test_high_risk_review_without_an_author_refuses_with_the_rule(monkeypatch, v
     assert HIGH_RISK_RULE in refusal
 
 
-@pytest.mark.parametrize("seat,model", [("claude", "claude-sonnet-5-5"), ("cursor", "grok-4.7-high")])
+@pytest.mark.parametrize("seat,model", [("claude", "claude-sonnet-5-5")])
 def test_high_risk_review_attempt_refuses_with_the_rule(seat, model):
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED") as refused:
         _review_target(
@@ -1288,6 +1722,8 @@ def test_high_risk_review_attempt_refuses_with_the_rule(seat, model):
 def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monkeypatch, capsys):
     """#9538: with no permitted substitute, pace-only retention keeps an Opus seat, not Sonnet."""
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1304,6 +1740,8 @@ def test_pace_only_retention_at_high_keeps_opus_never_the_requested_sonnet(monke
         "--review-risk",
         "high",
         "--dry-run",
+        "--subject-seat",
+        "grok",
     )
     (refusal, target), _ = _admit(args, monkeypatch, budget)
     assert refusal is None
@@ -1330,7 +1768,7 @@ def test_eligible_reviewer_is_substituted_when_budget_requires_it(monkeypatch, c
 
 
 @pytest.mark.parametrize("flags", [(), ("--force-agent",)])
-@pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol"), ("grok", "grok-4.7")])
+@pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol")])
 def test_admission_identity_swap_always_prints_typed_note(monkeypatch, capsys, flags, seat, model):
     args = _args(
         "--agent",
@@ -1380,7 +1818,8 @@ def test_review_resolver_help_and_budget_notice_state_code_profile_only(monkeypa
     assert exit_info.value.code == 0
     help_text = " ".join(capsys.readouterr().out.split())
     assert help_text.count("Code profile only") >= 2
-    (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", "--check-budget"), monkeypatch)
+    assert "Mandatory for requested or substituted AGY code reviews" in help_text
+    (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", "--check-budget"), monkeypatch, _budget(codex="hot"))
     assert refusal is None and target.recipient == "codex"
     assert "code profile only" in capsys.readouterr().err
 
@@ -1426,6 +1865,8 @@ def test_review_budget_substitute_pins_resolver_model(monkeypatch):
 
 def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsys):
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1449,6 +1890,8 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
 )
 def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
     budget = _budget()
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
@@ -1477,14 +1920,15 @@ def test_explicit_reviewer_context_window_keeps_its_model(monkeypatch):
 
 @pytest.mark.parametrize(
     "seat,model",
-    [("grok", "grok-4.7"), ("cursor", "grok-4.7"), ("agy", "gemini-3.8-flash-high"), ("kimi", "kimi-code/k3")],
+    [("cursor", "grok-4.7"), ("agy", "gemini-3.8-flash-high"), ("kimi", "kimi-code/k3")],
 )
 def test_ineligible_review_refuses_before_budget_probe(monkeypatch, seat, model):
     def fail():
         pytest.fail("ineligible review must not probe budget")
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
-    args = _args("--agent", seat, "--model", model, "--check-budget")
+    risk_flags = ("--review-risk", "high") if seat == "agy" else ()
+    args = _args("--agent", seat, "--model", model, "--check-budget", *risk_flags)
     routing = delegate._DispatchRouting()
     refusal, target = delegate._admit_dispatch_target(
         args,
@@ -1576,7 +2020,13 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         worktree.mkdir()
     monkeypatch.setattr(delegate, "_validate_existing_worktree", lambda **_k: None)
     monkeypatch.setattr(delegate, "_fetch_existing_branch", lambda _b: None)
-    monkeypatch.setattr(delegate, "_require_local_branch_is_ancestor_of_origin", lambda _b: "a" * 40)
+    branch_checks = []
+
+    def require_branch(_b, *, continuation_head_sha=None, continuation_remote_sha=None):
+        branch_checks.append((_b, continuation_head_sha, continuation_remote_sha))
+        return "a" * 40
+
+    monkeypatch.setattr(delegate, "_require_local_branch_is_ancestor_of_origin", require_branch)
     monkeypatch.setattr(delegate, "_resolve_sha", lambda _p: local_head)
     kwargs = dict(
         agent="codex",
@@ -1585,19 +2035,22 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         base="main",
         branch="codex/subject",
         pinned_head_sha="a" * 40,
+        continuation_head_sha=local_head if reused else None,
+        continuation_remote_sha="a" * 40 if reused else None,
     )
     if reused and local_head != "a" * 40:
         with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
             delegate._resolve_worktree_base_sha(**kwargs)
     else:
         assert delegate._resolve_worktree_base_sha(**kwargs) == "a" * 40
+    assert branch_checks == [("codex/subject", local_head if reused else None, "a" * 40 if reused else None)]
 
 
 @pytest.mark.parametrize(
     "lane",
     [
-        {"status": "near_cap"},
-        {"status": "hot"},
+        {"status": "near_cap", "remaining_pct": 5},
+        {"status": "hot", "remaining_pct": 5},
         {"status": "cool", "health": {"healthy": False}},
         {"status": "cool", "runtime": {"headroom_blocked": True}},
         {"status": "cool", "scheduler": {"circuit_open": True}},
@@ -1605,6 +2058,8 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
 )
 def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lane):
     budget = _budget(codex="cool")
+    # Keep this a sole-reviewer retention/refusal test after Grok admission.
+    budget["agents"].update({"grok": {"status": "near_cap", "remaining_pct": 5}, "cursor": {"status": "near_cap", "remaining_pct": 5}})
     budget["agents"]["claude"] = dict(
         lane,
         codexbar={
@@ -1661,13 +2116,13 @@ def test_pace_deficit_prefers_available_cross_family_alternative(monkeypatch):
             "cool",
             False,
             None,
-            "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer on pace-only deficit.",
+            "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer on pace-only deficit.",
             "budget substitution requires --review-author-model and --review-risk (code profile only)",
         ),
         (
             "cool",
             True,
-            "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer on pace-only deficit.",
+            "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer on pace-only deficit.",
             None,
             None,
         ),
@@ -1749,6 +2204,7 @@ def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch,
         pytest.param(("--review-profile", "code"), id="profile"),
         pytest.param(("--review-author-model", "gpt-6.1-sol"), id="author"),
         pytest.param(("--review-risk", "medium"), id="risk"),
+        pytest.param(("--pr", "42"), id="pr"),
     ],
 )
 def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):
@@ -1757,7 +2213,7 @@ def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):
     assert delegate._dispatch_is_review_typed(_args(*extra, verdict=False))
 
 
-@pytest.mark.parametrize("seat,model", [("kimi", None), ("agy", "gemini-3.8-flash-high")])
+@pytest.mark.parametrize("seat,model", [("kimi", None)])
 def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_code(monkeypatch, seat, model):
     """#9538: a code-review dispatch without trusted inputs still passes reviewer admission."""
     pin = ("--model", model) if model else ()
@@ -1765,6 +2221,15 @@ def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_
     (refusal, target), _ = _admit(args, monkeypatch)
     assert target is None
     assert refusal
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_gemini_code_review_without_verdict_flag_is_admitted(monkeypatch, risk):
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "code",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, "--force-agent", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
 
 
 def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_seat(monkeypatch):
@@ -1786,3 +2251,301 @@ def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_
     (refusal, target), routing = _admit(args, monkeypatch, _budget(codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("claude", "claude-sonnet-5-5")
     assert routing.substitution is None
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_native_grok_review_keeps_identity_after_fresh_budget_probe(monkeypatch, risk):
+    reads = []
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: reads.append(True) or _budget(codex="cool"))
+    args = _args("--agent", "grok", "--model", "grok-4.7", "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    routing = delegate._DispatchRouting()
+    refusal, target = delegate._admit_dispatch_target(args, agent="grok", trees=None, route=delegate._dispatch_route(args, routing, language_lane=False, review_attempt=None))
+    assert refusal is None
+    assert (target.recipient, target.model) == ("grok", "grok-4.7")
+    assert routing.substitution is None
+    assert reads == [True]
+
+
+# --- #9739: a trusted review reads the target branch's complete authorship ------------------------
+
+
+@pytest.mark.parametrize(
+    "agent,model,admitted",
+    [("claude", "claude-opus-5-5", False), ("codex", "gpt-6.1-sol", False), ("cursor", "grok-4.7-high", True)],
+)
+def test_trusted_review_admission_excludes_every_author_of_the_branch(tmp_path, monkeypatch, agent, model, admitted):
+    from tests.test_authoring_review_feasibility import OPUS, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    args = _args(
+        "--agent",
+        agent,
+        "--model",
+        model,
+        "--branch",
+        "feature",
+        "--review-author-model",
+        "gpt-6.1-sol",
+        "--review-risk",
+        "medium",
+    )
+
+    refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
+
+    if admitted:
+        assert refusal is None and (target.recipient, target.model) == (agent, model)
+    else:
+        assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+
+
+def test_trusted_review_of_an_unattributed_branch_refuses(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(None, message="no trailer")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    args = _args("--branch", "feature", "--review-author-model", "claude-opus-5-5", "--review-risk", "medium")
+
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+
+    assert target is None and "REVIEW_TARGET_UNRESOLVED" in refusal and "X-Agent" in refusal
+
+
+@pytest.mark.parametrize("trailer", ["cursor/feature", "cursor/auto"])
+@pytest.mark.parametrize("author_model", ["cursor:feature", "cursor:auto"])
+@pytest.mark.parametrize(
+    "agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("cursor", "grok-4.7-high")]
+)
+def test_pr_pinned_review_admits_independent_routes_for_cursor_author(tmp_path, monkeypatch, trailer, author_model, agent, model):
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    head = repo.commit(trailer)
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    # Only the forge metadata is simulated; target, diff and author enumeration
+    # read the actual miniature Git history through the production paths.
+    monkeypatch.setattr(
+        target_resolution,
+        "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess(
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+        ),
+    )
+    args = _args(
+        "--agent", agent, "--model", model, "--pr", "42", "--pinned-head", head,
+        "--review-author-model", author_model, "--review-risk", "medium",
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent=agent, trees=None)
+    cursor_author = trailer == "cursor/auto" or author_model == "cursor:auto"
+    if agent == "cursor" and cursor_author:
+        assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+    else:
+        assert refusal is None and (target.recipient, target.model) == (agent, model)
+        assert args._review_admission_head == head
+
+
+def test_pr_pinned_review_refuses_unknown_reviewer_for_unknown_author(tmp_path, monkeypatch):
+    from scripts.review import target_resolution
+    from tests.test_authoring_review_feasibility import mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    head = repo.commit("cursor/feature")
+    repo.publish()
+    monkeypatch.setattr(delegate, "_local_repo_root", repo.root)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr(
+        target_resolution,
+        "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess(
+            [], 0, json.dumps({"baseRefName": "main", "baseRefOid": repo.sha("origin/main"), "headRefOid": head}), ""
+        ),
+    )
+    args = _args(
+        "--model", "unknown", "--pr", "42", "--pinned-head", head,
+        "--review-author-model", "cursor:feature", "--review-risk", "medium",
+    )
+    refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
+    assert target is None and "REVIEW_ROUTE_REFUSED" in refusal
+
+
+@pytest.mark.parametrize("route", ["formal-isolated", "formal-full", "agy-review", "agy-verdict", "agy-type"])
+@pytest.mark.parametrize("prompt_source", ["literal", "file", "stdin"])
+@pytest.mark.parametrize(
+    "header", ["", "Required-Sources-Tools: []\n", 'Required-Sources-Tools: ["query_ulif", "query_wikipedia"]\n']
+)
+def test_sources_requirements_admitted_before_any_provider_or_provisioning(
+    tmp_path, monkeypatch, capsys, route, header, prompt_source
+):
+    from importlib import import_module
+    from io import StringIO
+
+    from tests.test_delegate import _write_args
+
+    if route.startswith("formal") and prompt_source == "stdin":
+        # Render admission imports may perform local Git discovery. Load them
+        # before the stdlib Popen trap that forbids provider launches below.
+        import_module("scripts.review.prompts.check")
+
+    class AdmittedTools(Exception):
+        pass
+
+    agent = "claude" if route.startswith("formal") else "agy"
+    model = "claude-opus-5-5" if agent == "claude" else "gemini-3.8-flash-high"
+    monkeypatch.setattr(
+        delegate,
+        "_kimi_dispatch_gate",
+        lambda *_args, **_kwargs: (
+            None,
+            None,
+            SimpleNamespace(recipient=agent, model=model),
+        ),
+    )
+    monkeypatch.setattr(delegate, "_credit_period_refusal", lambda *_args: None)
+    monkeypatch.setattr(delegate, "_admit_advisory", lambda *_args, **_kwargs: delegate._AdvisoryAdmission())
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("provider must not start"))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.prepare_review_attempt", lambda **_kwargs: pytest.fail("must not provision")
+    )
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.prepare_agy_permission_home", lambda *_args: pytest.fail("must not provision")
+    )
+
+    def after_tool_admission(*_args, **_kwargs):
+        if route.startswith("formal") and prompt_source == "stdin":
+            return None  # reach the existing formal render-record admission
+        raise AdmittedTools
+
+    monkeypatch.setattr(delegate, "_cursor_auto_refusal", after_tool_admission)
+    if route.startswith("formal"):
+        (tmp_path / "manifest.yaml").write_text("review: test\n", encoding="utf-8")
+    args = _write_args(
+        agent=agent,
+        model=model,
+        mode="read-only",
+        review_profile="ukrainian",
+        prompt=header + "Review the supplied evidence.",
+        review=route == "agy-review",
+        require_review_verdict=route == "agy-verdict",
+        type="review" if route == "agy-type" else None,
+        review_attempt=str(tmp_path / "manifest.yaml") if route.startswith("formal") else None,
+        review_id="rev-tools" if route.startswith("formal") else None,
+        attempt_id="att-tools" if route.startswith("formal") else None,
+        full_checkout=route == "formal-full",
+        review_access="full" if route == "formal-full" else "isolated",
+    )
+    if prompt_source == "file":
+        prompt_file = tmp_path / "review-brief.md"
+        prompt_file.write_text(args.prompt, encoding="utf-8")
+        args.prompt_file = str(prompt_file)
+        # The file takes precedence even if both options are supplied.
+        args.prompt = "A literal brief without a declaration."
+    elif prompt_source == "stdin":
+        monkeypatch.setattr(delegate.sys, "stdin", StringIO(args.prompt))
+        args.prompt = "-"
+    if route.startswith("formal") and prompt_source == "stdin":
+        assert delegate.cmd_dispatch(args) == 2
+        assert "review_render_record_missing" in capsys.readouterr().err
+        assert delegate.sys.stdin.tell() == 0
+    elif "query_ulif" in header:
+        assert delegate.cmd_dispatch(args) == 2
+        assert "review_tools_unsupported: query_ulif, query_wikipedia" in capsys.readouterr().err
+    else:
+        with pytest.raises(AdmittedTools):
+            delegate.cmd_dispatch(args)
+
+
+@pytest.mark.parametrize("blocked", [None, "reserve", "runtime", "concurrency", "circuit"])
+def test_10016_fresh_capacity_before_every_review_without_flag(monkeypatch, blocked):
+    from tests.review.test_review_capacity_rule import snapshot
+
+    budget = snapshot()
+    if blocked == "reserve":
+        budget["agents"]["claude"]["codexbar"]["primary_remaining_pct"] = 10
+    elif blocked == "runtime":
+        budget["agents"]["claude"]["runtime"] = {"headroom_blocked": True}
+    elif blocked in {"concurrency", "circuit"}:
+        budget["agents"]["claude"]["scheduler"] = {
+            "capacity_exhausted": blocked == "concurrency", "circuit_open": blocked == "circuit",
+            "active_reserved_input_bytes": 1000,
+        }
+    reads = []
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: reads.append(True) or budget)
+    args = _9959_review_args("claude", "claude-opus-5-5", "gpt-6.1-sol", "--language-lane", "--owned-path", "scripts/lexicon/cards.py")
+    for _ in range(2):
+        routing = delegate._DispatchRouting()
+        refusal, target = delegate._admit_dispatch_target(
+            args, agent=args.agent, trees=None,
+            route=delegate._dispatch_route(args, routing, language_lane=True, review_attempt=None),
+        )
+        if blocked:
+            assert refusal and target is None
+        else:
+            assert refusal is None and (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert reads == [True, True]
+
+
+def test_10016_pace_never_removes_a_better_fit_before_ranking(monkeypatch):
+    budget = _budget(codex="hot")
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 80}
+    args = _9959_review_args("codex", "gpt-6.1-sol", "claude-opus-5-5")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution is None
+
+
+@pytest.mark.parametrize("requested_remaining", [60, 5])
+def test_10016_substituted_pace_only_reviewer_uses_its_own_capacity(monkeypatch, capsys, requested_remaining):
+    budget = _budget(codex="cool")
+    budget["agents"]["codex"]["remaining_pct"] = requested_remaining
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    budget["agents"]["grok"] = {"status": "cool", "remaining_pct": 80}
+    args = _9959_review_args("codex", "gpt-6.1-sol", "gpt-6.1-sol", "--check-budget")
+
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution["actual_model"] == "claude-opus-5-5"
+    output = capsys.readouterr().err
+    assert "REVIEW_BUDGET_RETAINED" in output
+    assert "HARD AUTO-SUBSTITUTE" not in output
+
+
+def test_10016_substituted_reviewer_credit_uses_admitted_model(monkeypatch):
+    from scripts.fleet import credit_lane
+
+    checked_models = []
+
+    def credit_relief(lane, published, model, **kwargs):
+        if lane != "codex":
+            return None
+        checked_models.append(model)
+        return {
+            "state": credit_lane.CREDIT_BALANCE_PRESENT,
+            "model_allowed": model == "gpt-6.1-sol",
+            "allowed_models": ["gpt-6.1-sol"],
+            "draw": credit_lane.DRAW_NOT_VERIFIED,
+        }
+
+    monkeypatch.setattr(credit_lane, "published_credit_relief", credit_relief)
+    budget = _budget(codex="near_cap")
+    args = _9959_review_args("claude", "claude-opus-5-5", "claude-opus-5-5", "--check-budget")
+
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert checked_models and set(checked_models) == {"gpt-6.1-sol"}

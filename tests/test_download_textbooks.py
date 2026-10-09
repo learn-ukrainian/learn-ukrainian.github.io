@@ -20,6 +20,24 @@ from scripts.crawl.download_textbooks import (
 )
 
 
+@pytest.fixture(autouse=True)
+def isolate_transport(monkeypatch):
+    from scripts.crawl import download_textbooks as transport
+    monkeypatch.setattr(transport, "_access_stopped", False)
+    # These parser/PDF fixtures have no robots response; dedicated transport
+    # tests exercise discovery separately without turning fixtures into pages.
+    monkeypatch.setattr(transport, "_robots_delays", {
+        "https://pidruchnyk.com.ua": 0.0, "https://shkola.in.ua": 0.0,
+        "https://docs.google.com": 0.0, "https://drive.google.com": 0.0,
+        "https://drive.usercontent.google.com": 0.0, "https://example.test": 0.0,
+    })
+    monkeypatch.setattr(transport, "_robots_states", {
+        origin: transport._robots_parse(b"", transport.USER_AGENT) for origin in transport._robots_delays
+    })
+    monkeypatch.setattr(transport, "_request_times", {})
+    monkeypatch.setattr(transport.time, "sleep", lambda _seconds: None)
+
+
 class MockResponse:
     def __init__(self, text, status_code=200, headers=None):
         self.text = text
@@ -135,6 +153,9 @@ def test_shkola_form_resolves_only_requested_edition_to_drive():
 
         def close(self):
             pass
+
+        def iter_content(self, chunk_size=8192):
+            yield b""
 
     class FakeSession:
         def __init__(self):

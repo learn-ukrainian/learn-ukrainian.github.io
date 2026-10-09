@@ -190,13 +190,11 @@ claim_session_supervisor_env() {
       echo "Error: session supervisor failed to claim ${stream}" >&2
       sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
       if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
-        echo "  hint: another process still holds this epic stream." >&2
+        echo "  hint: Monitor still holds a live lease for this epic stream." >&2
         echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
+        echo "  follow the holder and expiry diagnosis; retry the Monitor claim after expiry." >&2
         if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
           echo "  supervisory successor launches cannot --force; the operator flag is one-shot." >&2
-        else
-          echo "  takeover: ./${launcher} --epic ${epic} --force" >&2
-          echo "  or: .venv/bin/python -m scripts.session_supervisor release --role driver --force --stream ${stream} --actor-agent ${agent} --actor-host-id \"\$LU_MONITOR_HOST_ID\" --reason 'operator force takeover'" >&2
         fi
       fi
       return 1
@@ -316,8 +314,31 @@ EOF
 
 # These hooks are called by the existing launcher process loop. The watcher
 # may prepare a handoff, but never owns lease renewal/release or process exit.
+
+# Best-effort, privacy-safe status; callers retain their original failure code.
+# Roots/interpreter have already been resolved by the launcher. Never create a
+# channel or echo publisher diagnostics into a public status body.
+session_supervisor_publish_start_failure() {
+  local stream="$1" generation="$2" reason="$3"
+  local helper_root="${LC_DURABLE_HELPER_ROOT:-${state_root:-}}"
+  local sender="${SESSION_HANDOFF_AGENT:-${LC_DRIVER_HANDOFF:-${LC_PROVIDER:-}}}"
+  [[ "$stream" =~ ^epic:[0-9]+$ && "$generation" =~ ^[0-9]+$ ]] || return 0
+  case "$reason" in wake-file-missing|watcher-failed|scope-start-failed) ;; *) return 0 ;; esac
+  [ -n "$helper_root" ] && [ -x "$helper_root/.venv/bin/python" ] && [ -n "$sender" ] || return 0
+  # Use Python for JSON encoding and a numeric generation, not shell escaping.
+  "$helper_root/.venv/bin/python" -c \
+    'import json,sys; print(json.dumps(dict(stream=sys.argv[1], generation=int(sys.argv[2]), reason=sys.argv[3])))' \
+    "$stream" "$generation" "$reason" 2>/dev/null | \
+    "$helper_root/.venv/bin/python" -m scripts.fleet_comms channel publish cto - \
+      --sender "$sender" --kind status --idempotency-key "$stream-$generation-$reason" \
+      >/dev/null 2>&1 || true
+}
+
+# shellcheck disable=SC2034 # Failure reason consumed by launcher_core.sh.
 session_supervisor_start_inbox_watch() {
   local watcher bridge_dir
+  LC_SUPERVISORY_DELIVERY=""
+  LC_SUPERVISORY_FAILURE_REASON="watcher-failed"
   # One substitution per command. This runs while the driver INT/TERM/HUP traps
   # are installed; a nested $(...) lets bash abort the trap ("unexpected EOF
   # while looking for matching ')'") and exit 2 before the signal is forwarded
@@ -327,6 +348,18 @@ session_supervisor_start_inbox_watch() {
   watcher="$bridge_dir/inbox_watch.sh"
   [ -x "$watcher" ] || return 1
   LC_SUPERVISORY_WAKE_FILE="$(mktemp)" || return 1
+  # Separate open descriptions keep the launcher's read offset at zero. Only
+  # the launcher unlinks; lifetime then follows these descriptors, not a name
+  # that a sibling/sweep or changed namespace can remove or replace (#10071).
+  # Reopen the retained inode for writing, so an unlink between descriptor
+  # opens cannot make the watcher write a different file from the reader.
+  if ! { exec 216<"$LC_SUPERVISORY_WAKE_FILE" 217>"/proc/self/fd/216"; }; then
+    LC_SUPERVISORY_FAILURE_REASON=wake-file-missing
+    rm -f "$LC_SUPERVISORY_WAKE_FILE"
+    session_supervisor_stop_inbox_watch
+    return 1
+  fi
+  rm -f "$LC_SUPERVISORY_WAKE_FILE"
   # Read by the launcher_core.sh process wait loop.
   # shellcheck disable=SC2034
   LC_SUPERVISORY_EVENT=0
@@ -334,13 +367,22 @@ session_supervisor_start_inbox_watch() {
   trap 'LC_SUPERVISORY_EVENT=1' USR1
   (
     trap - EXIT INT TERM HUP USR1
+    # The watcher checks the same harness CLI before claiming a restart. These
+    # values come from the initial provider argv, never from the wake body.
+    export LC_DRIVER_PROVIDER_COMMAND LC_DRIVER_PROVIDER_EXECUTABLE
+    exec 216<&-
     exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
-  ) > "$LC_SUPERVISORY_WAKE_FILE" &
+  ) >&217 217>&- &
   LC_SUPERVISORY_WATCH_PID=$!
+  exec 217>&-
+  LC_SUPERVISORY_FAILURE_REASON=""
 }
 
+# shellcheck disable=SC2034 # Failure reason consumed by launcher_core.sh.
 session_supervisor_read_wake() {
   local watcher_rc=0
+  LC_SUPERVISORY_DELIVERY=""
+  LC_SUPERVISORY_FAILURE_REASON=""
   wait "$LC_SUPERVISORY_WATCH_PID" || watcher_rc=$?
   LC_SUPERVISORY_WATCH_PID=""
   if [ "$watcher_rc" -eq 76 ]; then
@@ -350,11 +392,16 @@ session_supervisor_read_wake() {
     return 76
   fi
   if [ "$watcher_rc" -ne 75 ]; then
+    LC_SUPERVISORY_FAILURE_REASON="watcher-failed"
     echo "Error: supervisory inbox watcher failed; stopping this driver closed." >&2
     return 1
   fi
-  IFS= read -r LC_SUPERVISORY_DELIVERY < "$LC_SUPERVISORY_WAKE_FILE" || return 1
-  [ -n "$LC_SUPERVISORY_DELIVERY" ] || return 1
+  if ! { IFS= read -r LC_SUPERVISORY_DELIVERY <&216; } 2>/dev/null \
+      || [ -z "$LC_SUPERVISORY_DELIVERY" ]; then
+    LC_SUPERVISORY_DELIVERY=""
+    LC_SUPERVISORY_FAILURE_REASON=wake-file-missing
+    return 1
+  fi
 }
 
 session_supervisor_stop_inbox_watch() {
@@ -374,10 +421,30 @@ session_supervisor_stop_inbox_watch() {
     LC_SUPERVISORY_WATCH_PID=""
   fi
   trap - USR1
-  if [ -n "${LC_SUPERVISORY_WAKE_FILE:-}" ]; then
-    rm -f "$LC_SUPERVISORY_WAKE_FILE"
-    LC_SUPERVISORY_WAKE_FILE=""
+  exec 216<&- 217>&-
+  # The name was unlinked at creation. Never delete a replacement at that name.
+  LC_SUPERVISORY_WAKE_FILE=""
+}
+
+# Resolve before stopping the predecessor. Keep the original harness executable
+# (e.g. claude for Codex's Claude-Code harness), not the provider label (#10096).
+session_supervisor_preflight_successor() {
+  local binary="${LC_DRIVER_PROVIDER_COMMAND:-}" candidate directory
+  candidate="${LC_DRIVER_PROVIDER_EXECUTABLE:-}"
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="$(type -P -- "$binary")" || candidate=""
   fi
+  if [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    candidate="${HOME}/.local/bin/$binary"
+  fi
+  if [ -z "$binary" ] || [ ! -f "$candidate" ] || [ ! -x "$candidate" ]; then
+    echo "Error: provider-cli-unavailable: successor CLI '${binary:-unknown}' is not executable; restore it in PATH or ~/.local/bin and retry the supervisory wake. Predecessor retained." >&2
+    return 3
+  fi
+  directory="$(cd -- "$(dirname -- "$candidate")" && pwd)" || return 3
+  # The public successor entrypoint and adapter still resolve the CLI by name.
+  # Carry the validated directory across exec, including paths with spaces.
+  export PATH="$directory${PATH:+:$PATH}"
 }
 
 session_supervisor_stop_provider_for_wake() {
@@ -400,6 +467,7 @@ session_supervisor_exec_successor() {
   [ -n "${LC_SUPERVISORY_DELIVERY:-}" ] || return 1
   export SESSION_SUPERVISOR_WAKE_DELIVERY="$LC_SUPERVISORY_DELIVERY"
   export SESSION_SUPERVISOR_WAKE_STREAM="$SESSION_STREAM_ID"
+  export LC_SUPERVISORY_PREDECESSOR_GENERATION="${SESSION_STREAM_GENERATION:-}"
   local name
   for name in ${!SESSION_STREAM_@}; do
     unset "$name"

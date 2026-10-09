@@ -508,6 +508,83 @@ def test_manifest_freezes_the_complete_plan_and_refuses_plan_drift(env, capsys):
     assert "seats" in capsys.readouterr().err
 
 
+# --------------------------------------------------------------------------- --review-profile (#9623, #8771)
+
+
+def test_review_profile_reaches_the_real_dispatcher_and_defaults_off(monkeypatch, tmp_path: Path):
+    seen: dict[str, Any] = {}
+
+    class Recorder:
+        def __init__(self, **kwargs: Any) -> None:
+            seen.update(kwargs)
+
+    monkeypatch.setattr(cli, "DelegateDispatcher", Recorder)
+    base = ["run", "--set", "s", "--results", "r", "--variant", "none", "--python", "py"]
+    cli.make_dispatcher(cli.build_parser().parse_args(base), tmp_path)
+    assert seen["review_profile"] is None
+    cli.make_dispatcher(cli.build_parser().parse_args([*base, "--review-profile", "ukrainian"]), tmp_path)
+    assert seen["review_profile"] == "ukrainian"
+    with pytest.raises(SystemExit):
+        cli.build_parser().parse_args([*base, "--review-profile", "code"])
+
+
+def test_review_profile_is_frozen_marks_review_prompts_only_and_refuses_a_changed_resume(env, capsys):
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
+    prompts = {p.name: p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md")}
+    review = [text for name, text in prompts.items() if "-review-" in name]
+    writing = [text for name, text in prompts.items() if "-writing-" in name]
+    assert review and writing
+    assert all("VERDICT: APPROVE" in text for text in review)
+    assert not any("VERDICT" in text for text in writing)
+    dispatched = len(env["fake"].dispatched)
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0  # the same value resumes
+    assert len(env["fake"].dispatched) == dispatched
+    capsys.readouterr()
+    assert cli.main(env["run"]) == 2  # dropping the value is a changed frozen term
+    assert "review_profile" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
+def test_review_gate_marker_digest_is_frozen_and_an_edited_marker_refuses_the_resume(env, capsys, monkeypatch):
+    from scripts.eval.uk_preamble import prompts
+
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 0
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert frozen["review_gate_marker_sha256"] == prompts.sha256_text(prompts.REVIEW_GATE_MARKER)
+    assert frozen["templates_sha256"] == prompts.template_fingerprint()  # the marker is outside the fingerprint
+    dispatched = len(env["fake"].dispatched)
+    capsys.readouterr()
+    monkeypatch.setattr(prompts, "REVIEW_GATE_MARKER", prompts.REVIEW_GATE_MARKER + " Edited.")
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2
+    assert "review_gate_marker_sha256" in capsys.readouterr().err
+    assert len(env["fake"].dispatched) == dispatched
+
+
+def test_default_run_manifest_and_prompts_are_unchanged_by_the_review_profile_option(env, capsys):
+    assert cli.main(env["run"]) == 0
+    frozen = read_json(env["results"] / "manifest.json")["frozen"]
+    assert "review_profile" not in frozen and "review_gate_marker_sha256" not in frozen
+    assert not any("VERDICT" in p.read_text(encoding="utf-8") for p in (env["results"] / "prompts").glob("*.md"))
+    capsys.readouterr()
+    assert cli.main([*env["run"], "--review-profile", "ukrainian"]) == 2  # adding the value to a default run
+    assert "review_profile" in capsys.readouterr().err
+
+
+def test_dry_run_with_a_review_profile_validates_every_task_and_freezes_the_value(env):
+    assert cli.main([*env["run"], "--review-profile", "ukrainian", "--dry-run"]) == 0
+    assert len(env["fake"].preflighted) == PLANNED and env["fake"].dispatched == []
+    assert read_json(env["results"] / "manifest.json")["frozen"]["review_profile"] == "ukrainian"
+
+
+def test_the_review_gate_marker_does_not_break_the_json_answer():
+    from scripts.eval.uk_preamble.prompts import validate_response
+
+    answer = '{"items": [{"id": "R1", "corrected_text": "Текст.", "corrections": [], "style_suggestions": []}]}'
+    results = validate_response("review", f"{answer}\n\nVERDICT: APPROVE\n", ["R1"])
+    assert [r.error for r in results] == [None] and results[0].entry["id"] == "R1"
+
+
 @pytest.mark.parametrize("old", [None, "uk-preamble-scoring/1"])
 def test_manifest_from_another_scoring_version_is_refused_by_run_score_and_report(env, capsys, old):
     assert cli.main(env["run"]) == 0

@@ -67,6 +67,8 @@ class FakeGitHub:
         self.job_rows: list[dict[str, Any]] = []
         self.issue_rows: list[dict[str, Any]] = []
         self.squash: bool | None = False
+        self.file_rows: list[dict[str, Any]] = [{"filename": "scripts/example.py"}]
+        self.lookups: list[str] = []
 
     def squash_blocked(self, number: int, head: str) -> bool | None:
         self.actions.append(("squash-read", (number, head)))
@@ -94,6 +96,10 @@ class FakeGitHub:
 
     def current(self, number: int) -> dict[str, Any]:
         return self.fresh
+
+    def files(self, number: int) -> list[dict[str, Any]]:
+        self.lookups.append("files")
+        return self.file_rows
 
     def enqueue(self, number: int, head: str) -> None:
         self.actions.append(("enqueue", (number, head)))
@@ -142,7 +148,7 @@ def mutations(fake: FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions if kind != "squash-read"]
 
 
-def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
+def recorded(verdict: str, started: str, head: str = HEAD_A, *, review_mode: str = "cross_family") -> dict[str, Any]:
     return {
         "body": build_comment(
             sha=head,
@@ -152,12 +158,33 @@ def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
             model="gpt-6.1-sol",
             family="openai",
             reply="VERDICT: " + verdict,
+            review_mode=review_mode,
         ),
         "user": {"login": "driver"},
         "author_association": "MEMBER",
         "created_at": "2026-09-23T13:00:00Z",
         "updated_at": "2026-09-23T13:00:00Z",
     }
+
+
+def test_prompt_bound_red_team_marker_is_accepted_by_keeper(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", review_mode="red_team")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["enqueue"]
+    assert "reason=ready" in lines[0]
+
+
+def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) -> None:
+    fake = FakeGitHub()
+    item = recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", review_mode="red_team")
+    item["body"] = item["body"].replace(" review_mode=red_team", "")
+    fake.comments_rows = [item]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=CF-unknown" in lines[0]
 
 
 def test_queued_legacy_approval_is_report_only(tmp_path: Path) -> None:
@@ -494,7 +521,7 @@ def test_drop_at_old_head_does_not_block_new_head(tmp_path: Path, monkeypatch: p
         json.dumps({"queued": {"42": HEAD_A}, "drops": {f"42:{HEAD_A}": 2}, "observed": "2026-09-23T00:00:00Z"})
     )
     run(fake, path, monkeypatch)
-    assert "enqueue" in mutations(fake)
+    assert mutations(fake) == ["enqueue"]
     state = json.loads(path.read_text())
     assert state["drops"][f"42:{HEAD_A}"] == 3
     assert f"42:{HEAD_B}" not in state["drops"]
@@ -531,7 +558,10 @@ def test_recent_rejection_overrides_approval_in_keeper(tmp_path: Path, monkeypat
     assert "CF-changes_requested" in lines[0]
 
 
-def test_queue_drop_comment_names_failing_run_and_job(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("granted", [False, True])
+def test_red_merge_group_drop_with_green_branch_checks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, granted: bool
+) -> None:
     fake = FakeGitHub()
     fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
     fake.run_rows = [
@@ -547,12 +577,29 @@ def test_queue_drop_comment_names_failing_run_and_job(tmp_path: Path, monkeypatc
     fake.job_rows = [{"name": "pytest", "conclusion": "failure"}, {"name": "ruff", "conclusion": "success"}]
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
-    run(fake, path, monkeypatch)
+    if granted:
+        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    else:
+        lines, failed = run(fake, path, monkeypatch)
+    assert not failed
     comments = [body for action, body in fake.actions if action == "comment"]
-    assert len(comments) == 1
-    assert "https://github.com/example/runs/123" in comments[0]
-    assert "failing jobs: pytest" in comments[0]
-    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+    state = json.loads(path.read_text())
+    assert state["drops"][f"42:{HEAD_A}"] == 1
+    assert state["failures"][0]["job"] == "pytest"
+    if granted:
+        assert mutations(fake) == ["enqueue"]
+        assert comments == []
+        assert f"42:{HEAD_A}" in state["requeued"]
+    else:
+        assert mutations(fake) == ["comment"]
+        assert "reason=requeue-pending" in lines[0]
+        assert "https://github.com/example/runs/123" in comments[0]
+        assert "failing jobs: pytest" in comments[0]
+        # The persisted drop still holds after the observation cycle ends.
+        again = FakeGitHub()
+        lines, failed = run(again, path, monkeypatch)
+        assert not failed and "reason=requeue-pending" in lines[0]
+        assert mutations(again) == []
 
 
 def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -634,3 +681,457 @@ def test_github_squash_blocked_is_unverified_without_a_matcher(tmp_path: Path, m
     gh = keeper.GitHub(Path("."), "unit/public")
     monkeypatch.setattr(gh, "json", lambda request: _squash_reply())
     assert gh.squash_blocked(42, HEAD_A) is None
+
+
+# --- Dependency-update PRs without Analyze runs (#8587, #9921) -----------------------------
+
+
+def codeql_only(head: str = HEAD_A, conclusion: str = "neutral", status: str = "completed") -> list[dict[str, Any]]:
+    """Check runs as GitHub reports them for a dependabot lockfile PR: CI Gate plus top-level CodeQL, no Analyze."""
+    return [
+        {
+            "name": "CI Gate",
+            "head_sha": head,
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"id": 15368, "slug": "github-actions"},
+        },
+        {
+            "name": "CodeQL",
+            "head_sha": head,
+            "status": status,
+            "conclusion": conclusion if status == "completed" else None,
+            "started_at": "2026-09-23T00:00:00Z",
+            "app": {"id": keeper.CODEQL_APP_ID, "slug": "github-advanced-security"},
+        },
+    ]
+
+
+def test_dependabot_lockfile_pr_with_neutral_codeql_and_no_analyze_is_queueable(tmp_path: Path, monkeypatch) -> None:
+    """#9921: a dependabot npm bump changing only package-lock.json, CodeQL neutral, no Analyze run."""
+    fake = FakeGitHub(pr(title="build(deps-dev): Bump a package"))
+    fake.check_rows = codeql_only()
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": "package-lock.json"}],
+        [{"filename": "site/package.json"}, {"filename": "site/package-lock.json"}],
+        [{"filename": "requirements-dev.txt"}, {"filename": ".dagger/uv.lock"}],
+    ],
+)
+def test_lockfile_only_pr_with_passing_codeql_is_queueable(tmp_path: Path, monkeypatch, files) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion="success")
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [{"filename": ".github/workflows/ci.yml"}],  # a dependabot github-actions bump
+        [{"filename": "package-lock.json"}, {"filename": "scripts/example.py"}],  # code pushed onto a bot branch
+        [{"filename": "scripts/example.py"}],
+        [{"filename": "package-lock.json"}, {"filename": "src/app.ts"}],
+        [{"filename": "package.json", "previous_filename": "scripts/build.js"}],
+        [{"filename": "pyproject.toml"}],  # not on the lockfile list
+        [{"filename": "requirements.in"}],
+        [],
+    ],
+)
+def test_pr_without_analyze_and_non_lockfile_changes_still_waits(tmp_path: Path, monkeypatch, files) -> None:
+    """Authorship never matters: only the changed files decide, so a dependabot title or author is no shortcut."""
+    fake = FakeGitHub(pr(title="build(deps): Bump something"))
+    fake.check_rows = codeql_only()
+    fake.file_rows = files
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("conclusion", ["failure", "action_required", "cancelled", "timed_out"])
+def test_failing_codeql_blocks_a_lockfile_pr(tmp_path: Path, monkeypatch, conclusion) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(conclusion=conclusion)
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert not failed
+    assert "reason=CI-red-CodeQL" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def test_running_codeql_keeps_a_lockfile_pr_pending(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only(status="in_progress")
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize(
+    "app",
+    [
+        {"id": 15368, "slug": "github-actions"},
+        {"id": 1, "slug": "github-advanced-security"},
+        {"slug": "github-advanced-security"},
+        None,
+    ],
+)
+def test_codeql_check_from_any_other_app_is_not_evidence(tmp_path: Path, monkeypatch, app) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+    fake.check_rows[1]["app"] = app
+    fake.file_rows = [{"filename": "package-lock.json"}]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=CodeQL-pending" in lines[0]
+    assert fake.lookups == []
+    assert "enqueue" not in mutations(fake)
+
+
+def test_pr_with_analyze_runs_never_reads_files(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    assert "reason=ready" in lines[0]
+    assert fake.lookups == []
+
+
+def test_file_lookup_failure_never_enqueues(tmp_path: Path, monkeypatch) -> None:
+    fake = FakeGitHub()
+    fake.check_rows = codeql_only()
+
+    def broken(_number: int) -> list[dict[str, Any]]:
+        raise keeper.KeeperError("PR file list incomplete")
+
+    fake.files = broken  # type: ignore[method-assign]
+
+    lines, _failed = run(fake, tmp_path / "state.json", monkeypatch)
+
+    # A failed evidence read is handled like a failed check read: nothing is ready.
+    assert "reason=ready" not in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def _github_files(monkeypatch, *, changed: Any, rows: list[dict[str, Any]]) -> keeper.GitHub:
+    client = keeper.GitHub(Path("."), "o/r")
+    reads: list[str] = []
+
+    def fake_json(request: Any) -> Any:
+        reads.append(request.verb)
+        assert request.verb == "read-pull"
+        return {"number": 7, "changed_files": changed}
+
+    def fake_paged(request: Any) -> list[dict[str, Any]]:
+        reads.append(request.verb)
+        assert request.verb == "read-pr-files"
+        return rows
+
+    monkeypatch.setattr(client, "json", fake_json)
+    monkeypatch.setattr(client, "paged", fake_paged)
+    client.reads = reads  # type: ignore[attr-defined]
+    return client
+
+
+def test_github_files_returns_a_complete_list(monkeypatch) -> None:
+    rows = [{"filename": "package-lock.json"}, {"filename": "package.json"}]
+    client = _github_files(monkeypatch, changed=2, rows=rows)
+
+    assert client.files(7) == rows
+    assert client.reads == ["read-pull", "read-pr-files"]  # type: ignore[attr-defined]
+
+
+@pytest.mark.parametrize("changed", [3000, 3001, 10000])
+def test_github_files_fails_closed_at_the_files_api_cap(monkeypatch, changed) -> None:
+    rows = [{"filename": f"lock{i}/package-lock.json"} for i in range(3000)]
+    client = _github_files(monkeypatch, changed=changed, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="truncated"):
+        client.files(7)
+    assert client.reads == ["read-pull"]  # type: ignore[attr-defined]
+
+
+def test_github_files_fails_closed_when_the_listing_reaches_the_cap(monkeypatch) -> None:
+    rows = [{"filename": f"lock{i}/package-lock.json"} for i in range(3000)]
+    client = _github_files(monkeypatch, changed=2999, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="incomplete"):
+        client.files(7)
+
+
+@pytest.mark.parametrize(("changed", "listed"), [(3, 2), (1, 2), (5, 0)])
+def test_github_files_fails_closed_on_a_changed_files_mismatch(monkeypatch, changed, listed) -> None:
+    rows = [{"filename": "package-lock.json"}] * listed
+    client = _github_files(monkeypatch, changed=changed, rows=rows)
+
+    with pytest.raises(keeper.KeeperError, match="incomplete"):
+        client.files(7)
+
+
+@pytest.mark.parametrize("changed", [None, "2", 2.0, True])
+def test_github_files_fails_closed_without_a_changed_files_count(monkeypatch, changed) -> None:
+    client = _github_files(monkeypatch, changed=changed, rows=[{"filename": "package-lock.json"}] * 2)
+
+    with pytest.raises(keeper.KeeperError, match="count unknown"):
+        client.files(7)
+
+
+# --- Requeue gate and slow mode ---
+
+
+def _gate(tmp_path: Path, decisions: dict[str, Any] | None = None, *, raw: str | None = None) -> Path:
+    path = tmp_path / "requeue.json"
+    if raw is not None:
+        path.write_text(raw)
+    elif decisions is not None:
+        path.write_text(json.dumps({"version": 1, "requeue": decisions}))
+    return path
+
+
+def gated(
+    fake: FakeGitHub, path: Path, monkeypatch: pytest.MonkeyPatch, gate: Path, *, apply: bool = True
+) -> tuple[list[str], bool]:
+    monkeypatch.setattr(keeper, "lookup_verdict", lambda comments, head, login: Verdict("APPROVED"))
+    monkeypatch.setattr(keeper, "_ever_approved", lambda comments, login: True)
+    return keeper.run(fake, path, apply=apply, requeue_gate=gate)
+
+
+def _dropped_state(path: Path, **extra: Any) -> None:
+    path.write_text(json.dumps({"queued": {}, "drops": {f"42:{HEAD_A}": 1}, **extra}))
+
+
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("drops", [1, 2])
+def test_without_gate_a_dropped_head_is_held(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, apply: bool, drops: int
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path, drops={f"42:{HEAD_A}": drops})
+    fake = FakeGitHub()
+    lines, failed = run(fake, path, monkeypatch, apply=apply)
+    assert not failed and "reason=requeue-pending" in lines[0]
+    assert mutations(fake) == []
+
+
+@pytest.mark.parametrize(
+    "decisions,raw",
+    [({}, None), (None, None), (None, "{not json"), (None, json.dumps({"version": 2, "requeue": {}}))],
+)
+def test_gate_holds_a_dropped_head_without_a_grant(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, decisions: dict[str, Any] | None, raw: str | None
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, decisions, raw=raw))
+    assert "enqueue" not in mutations(fake)
+    assert "comment" not in mutations(fake)
+    assert "reason=requeue-pending" in lines[0] and not failed
+
+
+def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}})
+    fake = FakeGitHub()
+    gated(fake, path, monkeypatch, gate)
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+    state = json.loads(path.read_text())
+    assert f"42:{HEAD_A}" in state["requeued"]
+    # A second ejection of the same head stays out even though the grant is still on file.
+    state["queued"] = {}
+    state["drops"][f"42:{HEAD_A}"] = 2
+    path.write_text(json.dumps(state))
+    again = FakeGitHub()
+    lines, _ = gated(again, path, monkeypatch, gate)
+    assert "enqueue" not in mutations(again)
+    assert "reason=requeue-spent" in lines[0]
+
+
+@pytest.mark.parametrize("drops", [0, 1, 2])
+@pytest.mark.parametrize("configured", [False, True])
+def test_used_grant_holds_even_without_another_recorded_drop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drops: int, configured: bool
+) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path, drops={f"42:{HEAD_A}": drops}, requeued={f"42:{HEAD_A}": "used"})
+    fake = FakeGitHub()
+    if configured:
+        lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    else:
+        lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=requeue-spent" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+@pytest.mark.parametrize("diagnosis", ["KeeperError", "empty-timeline"])
+@pytest.mark.parametrize("granted", [False, True])
+@pytest.mark.parametrize("apply", [False, True])
+def test_undiagnosed_removal_holds_unchanged_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, diagnosis: str, granted: bool, apply: bool
+) -> None:
+    path = tmp_path / "state.json"
+    since = "2026-09-23T00:00:00Z"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": since}))
+    fake = FakeGitHub()
+    if diagnosis == "KeeperError":
+
+        def unavailable(number: int) -> list[dict[str, Any]]:
+            raise keeper.KeeperError("timeline unavailable")
+
+        monkeypatch.setattr(fake, "timeline", unavailable)
+    gate = _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}} if granted else {})
+    lines, failed = gated(fake, path, monkeypatch, gate, apply=apply)
+    assert not failed and "reason=requeue-unknown" in lines[0]
+    assert "enqueue" not in mutations(fake)
+    if not apply:
+        assert mutations(fake) == []
+        assert json.loads(path.read_text())["queued"] == {"42": HEAD_A}
+        return
+
+    assert json.loads(path.read_text())["undiagnosed"][f"42:{HEAD_A}"] == since
+    again = FakeGitHub()
+    lines, failed = gated(again, path, monkeypatch, gate)
+    assert not failed and "reason=requeue-unknown" in lines[0]
+    assert "enqueue" not in mutations(again)
+
+    # A later diagnosis uses the original observation window and restores the normal grant gate.
+    diagnosed = FakeGitHub()
+    diagnosed.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    lines, failed = gated(diagnosed, path, monkeypatch, gate)
+    assert not failed
+    assert ("enqueue" in mutations(diagnosed)) is granted
+    if granted:
+        assert mutations(diagnosed) == ["enqueue"]
+    assert f"42:{HEAD_A}" not in json.loads(path.read_text())["undiagnosed"]
+
+
+def test_undiagnosed_old_head_does_not_hold_new_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
+    fake = FakeGitHub(pr(headRefOid=HEAD_B))
+    lines, failed = run(fake, path, monkeypatch)
+    assert not failed and "reason=ready" in lines[0]
+    assert mutations(fake) == ["enqueue"]
+
+
+def test_gate_denial_holds_and_comments_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "deny"}}))
+    assert "enqueue" not in mutations(fake)
+    assert "reason=requeue-denied" in lines[0]
+    assert [kind for kind in mutations(fake)] == ["comment"]
+
+
+def test_gate_grant_for_another_head_does_not_apply(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_B}": {"decision": "grant"}}))
+    assert "enqueue" not in mutations(fake)
+
+
+def test_gate_leaves_a_never_dropped_head_alone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub()
+    gated(fake, tmp_path / "state.json", monkeypatch, _gate(tmp_path, {}))
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+
+
+def test_gate_never_requeues_a_squash_text_revoke(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    gate = _gate(tmp_path, {})
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.squash = True
+    gated(queued, path, monkeypatch, gate)
+    assert ("dequeue", "PR_node_42") in queued.actions
+    assert f"42:{HEAD_A}" in json.loads(path.read_text())["squash_revoked"]
+    for squash, enqueued in ((True, False), (None, False), (False, True)):
+        fake = FakeGitHub()
+        fake.squash = squash
+        lines, _ = gated(fake, path, monkeypatch, gate, apply=False)
+        assert ("squash-read", (42, HEAD_A)) in fake.actions
+        assert ("reason=ready" in lines[0]) is enqueued, (squash, lines)
+
+
+def test_gate_state_is_pruned_to_open_prs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    path.write_text(json.dumps({"queued": {}, "drops": {}, "requeued": {f"7:{HEAD_A}": "x", f"42:{HEAD_A}": "y"}}))
+    gated(FakeGitHub(), path, monkeypatch, _gate(tmp_path, {}))
+    assert json.loads(path.read_text())["requeued"] == {f"42:{HEAD_A}": "y"}
+
+
+@pytest.mark.parametrize(
+    "environ,flag,expected",
+    [
+        ({}, False, 0),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "120"}, False, 120),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "soon"}, False, 300),
+        ({}, True, 300),
+        ({"MQ_KEEPER_MIN_INTERVAL_SECONDS": "600"}, True, 600),
+    ],
+)
+def test_min_interval(tmp_path: Path, environ: dict[str, str], flag: bool, expected: int) -> None:
+    marker = tmp_path / "slow"
+    if flag:
+        marker.write_text("")
+    env = {**environ, "MQ_KEEPER_SLOW_FLAG": str(marker)}
+    assert keeper._min_interval(env) == expected
+
+
+def test_throttled_uses_the_last_observed_run(tmp_path: Path) -> None:
+    from datetime import UTC, datetime, timedelta
+
+    now = datetime(2026, 9, 23, 12, 0, tzinfo=UTC)
+    path = tmp_path / "state.json"
+    assert keeper._throttled(path, 300, now) is False
+    for age, expected in ((60, True), (290, False), (400, False)):
+        path.write_text(json.dumps({"observed": (now - timedelta(seconds=age)).isoformat()}))
+        assert keeper._throttled(path, 300, now) is expected
+        assert keeper._throttled(path, 0, now) is False
+
+
+def test_slow_mode_skips_apply_without_network(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from datetime import UTC, datetime
+
+    state = tmp_path / "batch_state/merge_queue_keeper.json"
+    state.parent.mkdir(parents=True)
+    state.write_text(json.dumps({"queued": {}, "drops": {}, "observed": datetime.now(UTC).isoformat()}))
+    flag = tmp_path / "slow"
+    flag.write_text("")
+    monkeypatch.setenv("MQ_KEEPER_SLOW_FLAG", str(flag))
+    monkeypatch.setattr(keeper, "GitHub", lambda *args: pytest.fail("network used in slow mode"))
+    assert keeper.main(["--apply", "--repo-root", str(tmp_path)]) == 0
+
+
+def test_keeper_timer_runs_every_minute() -> None:
+    timer = Path(__file__).resolve().parents[2] / "packaging/systemd/learn-ukrainian-merge-queue-keeper.timer"
+    text = timer.read_text()
+    assert "OnCalendar=*:*:00" in text
+    assert "AccuracySec=5s" in text

@@ -49,6 +49,11 @@ Contract captured empirically from the local ``acpx@0.13.0`` install
   ``params.update.content == {"type": "text", "text": "..."}``; the terminal
   ``session/prompt`` response carries ``result.stopReason`` in
   ``{"end_turn", "max_tokens", "max_turn_requests", "refusal", "cancelled"}``.
+  Chunks of one assistant message are concatenated. A new ``messageId`` on
+  the update, or a new ``params._meta.streamStartMs`` when ``messageId`` is
+  absent, starts another message and is separated by a newline (#10005).
+  ``chunkId`` is not a message boundary. Grok 1.0.46 ACP chunks omit
+  ``messageId`` and carry the boundary on ``streamStartMs``.
 - Auth method selection under ``--auth-policy fail`` is explicit via non-secret
   per-process selectors such as ``ACPX_AUTH_CHAT_GPT=1`` (Codex ChatGPT login)
   and ``ACPX_AUTH_CACHED_TOKEN=1`` (Grok cached native login). Never invent
@@ -179,7 +184,7 @@ CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
 CURSOR_ACP_MODEL = "grok-4.7"
-CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "composer-2.5"})
+CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
@@ -1475,19 +1480,42 @@ def _require_local_claude_acp_adapter(
             f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} is missing",
             failure_code="acp_adapter_missing",
         ) from exc
-    if (
-        not stat.S_ISDIR(package_stat.st_mode)
-        or not stat.S_ISREG(manifest_stat.st_mode)
-        or package_stat.st_uid != os.getuid()
-        or manifest_stat.st_uid != os.getuid()
-        or package_stat.st_mode & 0o022
-        or manifest_stat.st_mode & 0o022
-        or len(manifest_bytes) > _CLAUDE_ACP_MANIFEST_LIMIT_BYTES
-    ):
+    def _check_artifact(
+        name: str,
+        artifact_path: Path,
+        artifact_stat: os.stat_result,
+        expected_dir: bool,
+        size_limit: int | None = None,
+        actual_size: int | None = None,
+    ) -> None:
+        try:
+            rel_path = artifact_path.relative_to(node_modules.parent).as_posix()
+        except ValueError:
+            rel_path = artifact_path.name
+
+        mode_oct = oct(stat.S_IMODE(artifact_stat.st_mode))
+
+        if expected_dir and not stat.S_ISDIR(artifact_stat.st_mode):
+            reason = "not a directory"
+        elif not expected_dir and not stat.S_ISREG(artifact_stat.st_mode):
+            reason = "not a regular file"
+        elif artifact_stat.st_uid != os.getuid():
+            reason = "owner"
+        elif artifact_stat.st_mode & 0o022:
+            reason = "group-or-world writable"
+        elif size_limit is not None and actual_size is not None and actual_size > size_limit:
+            reason = "size"
+        else:
+            return
+
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} ownership/mode/size is unsafe",
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} {name} failed check: {reason} ({rel_path}, mode {mode_oct}) - clear group/other write bits on this path; reinstall under umask 022",
             failure_code="acp_adapter_incompatible",
         )
+
+    _check_artifact("package directory", package_root, package_stat, expected_dir=True)
+    _check_artifact("manifest", manifest_path, manifest_stat, expected_dir=False, size_limit=_CLAUDE_ACP_MANIFEST_LIMIT_BYTES, actual_size=len(manifest_bytes))
+
     try:
         manifest = json.loads(manifest_bytes)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -1536,16 +1564,15 @@ def _require_local_claude_acp_adapter(
             f"{adapter_label}: project-local Claude ACP adapter executable is missing",
             failure_code="acp_adapter_missing",
         ) from exc
-    if (
-        not stat.S_ISREG(bin_stat.st_mode)
-        or bin_stat.st_uid != os.getuid()
-        or bin_stat.st_mode & 0o022
-        or not resolved_bin.is_relative_to(resolved_root)
-    ):
+
+    _check_artifact("executable", bin_path, bin_stat, expected_dir=False)
+
+    if not resolved_bin.is_relative_to(resolved_root):
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local Claude ACP adapter executable is unsafe",
+            f"{adapter_label}: project-local Claude ACP adapter executable resolves outside package",
             failure_code="acp_adapter_incompatible",
         )
+
     return {
         "claude_acp_adapter_version": version,
         "claude_acp_compatibility": CLAUDE_ACP_ADAPTER_COMPATIBILITY_CONTRACT,
@@ -1938,6 +1965,60 @@ def _build_text_agent_command(
     return command, provider_binary, observed_version
 
 
+class _AgentMessageAssembler:
+    """Join ACP text chunks on the provider's own message boundary.
+
+    Chunks with the same id, or with no id, concatenate. A changed
+    ``messageId`` or ``streamStartMs`` starts a message. Empty messages are
+    omitted so a tool-only update does not insert a blank line.
+    """
+
+    def __init__(self) -> None:
+        self._parts: list[str] = []
+        self._chunks: list[str] = []
+        self._current_id: str | None = None
+
+    def add(self, text: str, message_id: str | None) -> None:
+        if message_id is not None and self._current_id is not None and message_id != self._current_id:
+            self._flush()
+        if message_id is not None:
+            self._current_id = message_id
+        self._chunks.append(text)
+
+    def _flush(self) -> None:
+        if not self._chunks:
+            return
+        self._parts.append("".join(self._chunks))
+        self._chunks = []
+
+    def finish(self) -> str:
+        self._flush()
+        return "\n".join(part for part in self._parts if part)
+
+
+def _acp_chunk_message_id(update: dict[str, Any], params: dict[str, Any]) -> str | None:
+    """Return the provider message id for one ``agent_message_chunk``.
+
+    ``messageId`` wins when it is a non-empty string. Otherwise Grok 1.0.46
+    stamps the model-response boundary on ``params._meta.streamStartMs``.
+    A missing id continues the current message. ``chunkId`` is not an id.
+    """
+    raw = update.get("messageId")
+    if isinstance(raw, str) and raw:
+        return raw
+    meta = params.get("_meta")
+    if not isinstance(meta, dict):
+        return None
+    start = meta.get("streamStartMs")
+    if isinstance(start, bool):
+        return None
+    if isinstance(start, int):
+        return f"stream:{start}"
+    if isinstance(start, str) and start:
+        return f"stream:{start}"
+    return None
+
+
 class AcpxAdapter:
     """Adapter for one read-only, stateless ``acpx codex exec`` request.
 
@@ -2149,7 +2230,7 @@ class AcpxAdapter:
         terminal_generations: set[Any] = set()
         request_method_by_id: dict[Any, str] = {}
         duplicate_id: object | None = None
-        message_chunks: list[str] = []
+        messages = _AgentMessageAssembler()
         final_error: dict[str, Any] | None = None
         provider_failure = False
         final_stop_reason: object = _MISSING_STOP_REASON
@@ -2177,7 +2258,7 @@ class AcpxAdapter:
                         return self._closed("unrecognized agent_message_chunk content schema", stderr)
                     text = content.get("text")
                     if isinstance(text, str):
-                        message_chunks.append(text)
+                        messages.add(text, _acp_chunk_message_id(update, params))
                 elif update.get("sessionUpdate") == "usage_update":
                     usage_total, usage_error = _usage_total_from_update(update)
                     if usage_error is not None:
@@ -2354,7 +2435,7 @@ class AcpxAdapter:
                 failure_code="transport_error",
             )
 
-        response = "".join(message_chunks)
+        response = messages.finish()
         response_bytes = len(response.encode("utf-8"))
         if response_bytes > ACPX_PARSED_RESPONSE_LIMIT_BYTES:
             return self._closed(
@@ -2520,6 +2601,13 @@ class _AcpxDiscussionAdapter:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None or {self.fixed_model!r}"
             )
+        if self.name == "acpx-cursor-shadow":
+            from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+
+            try:
+                model = apply_cursor_model_pins(model or self.default_model)
+            except ModelCatalogError as exc:
+                raise AcpxShadowRefusalError(f"{type(self).__name__}: {exc}") from exc
         if self.allowed_models and model is not None and model not in self.allowed_models:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
@@ -2562,7 +2650,8 @@ class _AcpxDiscussionAdapter:
         if self.fixed_model is not None and self.forward_model_to_acpx:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
-            cmd.extend(["--model", model or self.default_model])
+            cmd_model = model or self.default_model
+            cmd.extend(["--model", cmd_model])
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
             custom_metadata: dict[str, Any] = {}

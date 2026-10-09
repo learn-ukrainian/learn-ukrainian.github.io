@@ -7,18 +7,18 @@ cross-family requirement by switching harness. Domain and data-egress
 exclusions are fail-closed: an unspecified or non-matching policy excludes
 a gated candidate, it does not admit it. Missing lane-health data is fail-open
 (no signal ≠ unhealthy, matching ``scripts/api/lane_health.py``'s convention),
-but an explicitly unhealthy route is unavailable. Degraded and near-capacity
-signals only break ties among candidates in the same quality rung; they never
-demote a model into a lower-quality rung.
+but an explicitly unhealthy route is unavailable. Weekly pace only orders
+otherwise equal fits. Fresh allowance at the reserve excludes new assignments
+unless existing verified credit relief applies; stale allowance is advisory.
 
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
-``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
-Fable holds no review role (#9583), routine ladders keep practical seats, native Grok never
-judges, and the runtime-attested Cursor Grok seat is the Sol-spared last resort
-below critical (#9488). A formal review at high risk is performed only by the
-models ``review_scheduler.risk_reviewer_models`` lists (#9538); that is an
+``_catalog_ladder``). Policy changes belong in YAML: critical admits Sol / Opus / Grok;
+Fable holds no review role (#9583); native and runtime-attested Cursor Grok are
+regular code/infra reviewers at every risk (operator decision 2026-10-05, #9769).
+A formal review at high or critical risk is performed only by the models
+``review_scheduler.risk_reviewer_models`` lists; that is an
 eligibility gate, so it binds explicit pins and custom ladders too.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
@@ -41,6 +41,7 @@ from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPO
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.fleet import credit_lane
+from scripts.review.capacity import ReviewCapacity, review_capacity
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     VALID_RISKS,
@@ -50,7 +51,7 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
     risk_reviewer_refusal,
 )
-from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
+from scripts.review.reviewer_scheduler import _route_record, circuit_exclusion_reason, selection_key
 from scripts.review.security_paths import effective_review_risk, is_security_sensitive_change
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
@@ -151,6 +152,10 @@ class ReviewerCandidate:
     quality_tier: str
     last_resort: bool = False
     model_roles: frozenset[str] = field(default_factory=frozenset)
+    # Optional subset for semantic ranking, never a grant of activity roles.
+    suitability_roles: frozenset[str] = field(default_factory=frozenset)
+    # Same-model route preference; other models retain their resource ranking.
+    transport_fallback_for: str | None = None
     health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
     # Fail-closed data-egress gate: eligible only when the caller's
@@ -187,7 +192,22 @@ _SCHEDULER_POLICY_VERSION = _SCHEDULER_POLICY["policy_version"]
 
 
 def _catalog_candidate(name: str) -> ReviewerCandidate:
-    raw = _MODEL_CATALOG["review_candidates"][name]
+    from scripts.review.role_resolution import resolve_routing_reference
+
+    if "roles" in _MODEL_CATALOG:
+        matches = [
+            (seat_name, route_name)
+            for seat_name, seat in _MODEL_CATALOG["seats"].items()
+            for route_name, route in seat["routes"].items()
+            if route.get("legacy_name") == name
+        ]
+        seat_name, route_name = matches[0]
+        raw = resolve_routing_reference(
+            {"role": "legacy_reviewers", "seat": seat_name, "route_name": route_name, "field": "candidate"},
+            _MODEL_CATALOG,
+        )
+    else:
+        raw = _MODEL_CATALOG["review_candidates"][name]
     model_id = raw["model_id"]
     model = _MODEL_CATALOG["models"][model_id]
     endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(raw["route"], {})
@@ -207,6 +227,8 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         quality_tier=model["tier"],
         last_resort=raw.get("last_resort", False),
         model_roles=frozenset(model["roles"]),
+        suitability_roles=frozenset(raw.get("suitability_roles", [])),
+        transport_fallback_for=raw.get("transport_fallback_for"),
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
         requires_data_egress_policy=raw.get("requires_data_egress_policy"),
@@ -311,8 +333,7 @@ _HEALTH_ALIASES: dict[str, str | None] = {
 
 
 def _health_rank(status: str | None) -> int:
-    # Fail-open: no signal for this lane is read as healthy, not unhealthy —
-    # matches scripts/api/lane_health.py's fail-open convention.
+    # Unknown is eligible without attesting health; this rank is ordering only.
     if status is None:
         return 0
     return _HEALTH_RANK[status]
@@ -415,6 +436,30 @@ class ResolverInputs:
     owned_paths: tuple[str, ...] = ()
     # Normalized paths that inferred a subject seat. Trace text only.
     subject_evidence: tuple[str, ...] = ()
+    # Complete branch authorship (#9739): every committed author family plus an
+    # incoming writer's (``record_cf_verdict.collect_branch_review_facts``).
+    # Selection excludes the whole set. ``author_model``/``author_family`` may
+    # add to it but never replace or shrink it. Empty keeps single-author mode.
+    author_families: frozenset[str] = field(default_factory=frozenset)
+
+
+def complete_author_families(inputs: ResolverInputs, single_family: str) -> frozenset[str] | None:
+    """The author families selection excludes, or None for invalid/conflicting attribution.
+
+    Without ``inputs.author_families`` this is just ``single_family``.
+    Unknown committed authors are reviewable by any known reviewer family (#9944).
+    """
+    if not inputs.author_families:
+        return frozenset({single_family})
+    members = set(inputs.author_families)
+    if inputs.author_model or inputs.author_family:
+        members.add(single_family)
+    if not all(
+        member in _VALID_CONCRETE_FAMILIES or member in {CURSOR_AUTO_UNION_FAMILY, UNKNOWN_AUTHOR_FAMILY}
+        for member in members
+    ):
+        return None
+    return frozenset(members)
 
 
 @dataclass(frozen=True)
@@ -430,6 +475,7 @@ class CandidateResult:
     status: CandidateStatus
     reason: str | None
     health: str | None
+    capacity: ReviewCapacity | None = None
     suitability_rank: int | None = None
     # Pure deterministic balancing receipt for eligible candidates. The tuple
     # is deliberately opaque-but-stable so ledger callers can persist the
@@ -497,8 +543,7 @@ class ReviewerResolution:
     # reviewer selected, since there is nothing reliable to diff a
     # candidate's family against.
     fail_closed_reason: str | None = None
-    # Dual-family quorum plan for an unattested-harness author (Cursor Auto:
-    # the harness attests no pinned model). ``selected`` stays None — there
+    # Dual-family quorum plan for a generic unattested-harness author. ``selected`` stays None — there
     # is no single reviewer of record; BOTH quorum seats must independently
     # return an exact-head PASS verdict. Because the seats are from distinct
     # attested families and the hidden author is at most one family, at
@@ -536,14 +581,23 @@ def _near_cap_credit(candidate: ReviewerCandidate, snapshot: Mapping[str, object
     Only a full routing-budget snapshot carries the credit state its producer
     computed with :func:`credit_lane.lane_credit_state`; a flat health map has
     none. :func:`credit_lane.published_credit_relief` re-checks the published
-    state against the local policy, the clock and the current shared runtime
-    rate-limit records.
+    state against the complete lane record (snapshot staleness, probe
+    freshness, age and stale flag; #9740 F6), the local policy, the clock and
+    the current shared runtime rate-limit records.
     """
     agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
-    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
+    record = _route_record(candidate, snapshot, prefer_route=True) if isinstance(agents, Mapping) else None
     if not isinstance(record, Mapping):
         return None
-    return credit_lane.published_credit_relief(candidate.route, record.get("credit"), candidate.concrete_model)
+    diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
+    snapshot_stale = isinstance(diagnostics, Mapping) and diagnostics.get("stale") is True
+    return credit_lane.published_credit_relief(
+        candidate.route,
+        record.get("credit"),
+        candidate.concrete_model,
+        record=record,
+        snapshot_stale=snapshot_stale,
+    )
 
 
 def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs) -> str | None:
@@ -552,6 +606,11 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
     the caller's job — this only covers filters that apply regardless."""
     if candidate.always_excluded_reason:
         return candidate.always_excluded_reason
+    # Custom ladders and pins cannot fabricate review authority for a
+    # mechanical-only catalog model, even by supplying reviewer metadata.
+    identity = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
+    if identity and "mechanical_only" in _MODEL_CATALOG["models"][identity]["roles"]:
+        return "mechanical-only catalog seats never perform review or approval (#9996)"
     if (
         inputs.review_profile.strip().casefold() in {"code", "infra"}
         and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
@@ -567,13 +626,26 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
             return "sealed endpoint identity is missing or does not match the candidate route"
         if not candidate.participant or not candidate.sealed_executable:
             return "sealed ACP participant or review executable identity is missing"
-        if candidate.adapter_transport != "acp":
+        native_agy = candidate.route == "agy" and candidate.adapter_transport == "native_agy"
+        if candidate.route == "agy" and not native_agy:
+            return "native AGY review endpoint identity is required; ACP wrapper is not a formal review route"
+        if native_agy:
+            # #10073: AGY reviews in the dispatch worktree, without the
+            # source-blind parent ACP wrapper. Other endpoints stay sealed.
+            if (
+                candidate.participant != "agy"
+                or candidate.catalog_transport != "agy"
+                or candidate.transport != "agy"
+                or candidate.sealed_executable != "scripts/delegate.py"
+            ):
+                return "native AGY review endpoint identity is invalid"
+        elif candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
-        if candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
+        if not native_agy and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
             return "candidate is not bound to the sealed ACP executable"
-        if candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
+        if not native_agy and candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
-        if ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
+        if not native_agy and ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
             return "candidate catalog transport does not match its runner-owned ACP participant"
         if candidate.transport != candidate.catalog_transport:
             return "candidate transport does not match its ACPX catalog transport"
@@ -627,7 +699,8 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
         ordered_roles = _SCHEDULER_POLICY["profile_risk_role_order"][profile][risk]
     except (KeyError, TypeError):
         return None
-    rank = next((rank for rank, role in enumerate(ordered_roles) if role in candidate.model_roles), None)
+    roles = candidate.suitability_roles or candidate.model_roles
+    rank = next((rank for rank, role in enumerate(ordered_roles) if role in roles), None)
     requested_role = (inputs.requested_role or "").strip()
     if requested_role:
         return 0 if rank is not None and requested_role in candidate.model_roles else None
@@ -649,18 +722,55 @@ def _retired_alias_target(candidate: ReviewerCandidate) -> str | None:
     return None
 
 
+def _author_family_exclusion(candidate: ReviewerCandidate, family: str, health: str | None) -> CandidateResult | None:
+    """Independence of ``candidate`` from one author ``family``: an exclusion, an advisory-only result, or None."""
+
+    def result(status: CandidateStatus, reason: str) -> CandidateResult:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status=status,
+            reason=reason,
+            health=health,
+        )
+
+    from scripts.review.family_exclusions import family_exclusion
+
+    exclusion = family_exclusion(
+        family=candidate.family,
+        route=candidate.route,
+        transport=candidate.transport,
+        author_family=family,
+        advisory_only_for_author_families=candidate.advisory_only_for_author_families,
+        union_family=CURSOR_AUTO_UNION_FAMILY,
+        union_families=CURSOR_AUTO_UNION_FAMILIES,
+    )
+    return result(*exclusion) if exclusion else None
+
+
 def evaluate_candidate(
     candidate: ReviewerCandidate,
     inputs: ResolverInputs,
     *,
     author_family: str | None = None,
+    review_mode: str = "cross_family",
 ) -> CandidateResult:
     """Evaluate one candidate against ``inputs`` independent of ladder position.
 
     Exposed directly (not just via :func:`resolve_reviewer`) so domain and
     data-egress fail-closed behavior is testable per-candidate, including for
     candidates that aren't in the default ladder (e.g. ``GLM``, ``QWEN``).
+    ``red_team`` relaxes authorship independence only; callers must first
+    validate an explicit adversarial prompt bound to the completed review.
     """
+    if review_mode not in {"cross_family", "red_team"}:
+        raise ValueError("unsupported review mode")
     # Direct dispatch admission calls this without walking a ladder. The floor
     # must bind here too, before suitability or explicit-pin evaluation.
     inputs = replace(
@@ -675,36 +785,31 @@ def evaluate_candidate(
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
     snapshot = inputs.routing_snapshot
-    agents = snapshot.get("agents") if isinstance(snapshot, Mapping) else None
-    record = agents.get(candidate.route) if isinstance(agents, Mapping) else None
-    if (
-        isinstance(record, dict)
-        and (record.get("status") == "hot" or isinstance(record.get("pace_deficit"), dict))
-        and health
-        in {
-            "healthy",
-            "degraded",
-            "near_cap",
-            None,
-        }
-    ):
-        diagnostics = snapshot.get("diagnostics") or {}
-        deficit = credit_lane.pace_deficit_state(
-            candidate.route,
-            record,
-            model=candidate.concrete_model,
-            snapshot_stale=bool(diagnostics.get("stale")),
-        )
-        if deficit["uncovered"] is True:
+    record = _route_record(candidate, snapshot, prefer_route=True)
+    diagnostics = snapshot.get("diagnostics") if isinstance(snapshot, Mapping) else None
+    capacity = review_capacity(record or {}, diagnostics if isinstance(diagnostics, Mapping) else None)
+    usage_status = str(record.get("status") or "").strip().lower()
+    if health not in {"unhealthy", "degraded_telemetry"}:
+        if capacity.near_cap:
             health = "near_cap"
-        elif deficit["status"] in {"cool", "warm"}:
-            health = _normalize_health_status(deficit["status"], label=candidate.route)
+        elif usage_status in {"cool", "warm", "hot", "near_cap"}:
+            # Usage labels are not route-health attestations. Keep the public
+            # normalizer's writer aliases; only review evaluation applies AC-01.
+            observed_health = credit_lane.health_fact(record)[0]
+            if observed_health != credit_lane.HEALTHY:
+                health = None
+            elif capacity.remaining_pct is None or capacity.freshness != credit_lane.FRESH:
+                health = "healthy"
+            else:
+                health = "degraded" if usage_status in {"warm", "hot"} else "healthy"
 
     # Catalog validation protects the installed ladders; this independent gate
     # also protects explicit pins and custom candidates before any quality prior.
     refusal = retired_model_refusal(candidate.concrete_model, _MODEL_CATALOG)
     model_id = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
     model_family = _MODEL_CATALOG["models"].get(model_id, {}).get("family")
+    if candidate.family not in _VALID_CONCRETE_FAMILIES:
+        refusal = "reviewer family unknown: a known concrete family is required"
     if candidate.family == "deepseek" or model_family == "deepseek" or candidate.route == "deepseek":
         refusal = "DeepSeek is excluded from dispatch and review by core.md P2"
     if inputs.risk.strip().casefold() == "critical" and (model_id or "").startswith("claude-sonnet-"):
@@ -722,6 +827,7 @@ def evaluate_candidate(
             status="excluded",
             reason=refusal,
             health=health,
+            capacity=capacity,
         )
 
     if is_ukrainian_content_change(inputs) and candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
@@ -737,12 +843,17 @@ def evaluate_candidate(
             status="excluded",
             reason="Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini",
             health=health,
+            capacity=capacity,
         )
     if inputs.subject_seats or inputs.subject_families:
+        # The Grok model governs both admitted transports (#9769).
+        subject_families = inputs.subject_families
+        if "cursor" in inputs.subject_seats:
+            subject_families = frozenset((*subject_families, "xai"))
         subject_reason = subject_exclusion_reason(
             candidate,
             seats=inputs.subject_seats,
-            families=inputs.subject_families,
+            families=subject_families,
             evidence=inputs.subject_evidence,
         )
         if subject_reason:
@@ -758,13 +869,15 @@ def evaluate_candidate(
                 status="excluded",
                 reason=subject_reason,
                 health=health,
+                capacity=capacity,
             )
 
-    # Operator decision 2026-10-02 (#9488): Grok reviews code and infra only
-    # through the Cursor seat whose runtime attests the concrete model. Every
-    # other gate below (independence, suitability, health) still applies to it.
-    if (candidate.family == "xai" or model_family == "xai") and not (
-        candidate.transport == "cursor" and candidate.route == "cursor"
+    # #10073: low/medium code review only through AGY. Pins, custom ladders,
+    # advisory evaluation and forged roles cannot bypass the risk boundary.
+    if (candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy") and (
+        candidate.route != "agy"
+        or inputs.risk.strip().casefold() not in {"low", "medium"}
+        or is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
     ):
         return CandidateResult(
             name=candidate.name,
@@ -776,28 +889,9 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason=(
-                "native Grok never judges: Grok reviews code and infra only through the "
-                "runtime-attested Cursor seat (core.md P2, #9488)"
-            ),
+            reason="Gemini code review requires AGY at low/medium risk and excludes security-sensitive paths (#10073)",
             health=health,
-        )
-
-    # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
-    # hard gate even for injected ladders and explicitly pinned candidates.
-    if candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy":
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason="operator 2026-09-25: Gemini reviews Ukrainian only, never code — model-assignment.md",
-            health=health,
+            capacity=capacity,
         )
 
     retired_target = _retired_alias_target(candidate)
@@ -814,61 +908,11 @@ def evaluate_candidate(
             status="excluded",
             reason=f"retired→{retired_target}",
             health=health,
+            capacity=capacity,
         )
 
-    if family == CURSOR_AUTO_UNION_FAMILY:
-        if candidate.family in CURSOR_AUTO_UNION_FAMILIES:
-            return CandidateResult(
-                name=candidate.name,
-                concrete_model=candidate.concrete_model,
-                family=candidate.family,
-                route=candidate.route,
-                transport=candidate.transport,
-                invocation=candidate.invocation,
-                quality_tier=candidate.quality_tier,
-                requires_silence_timeout=candidate.requires_silence_timeout,
-                status="excluded",
-                reason=(
-                    f"candidate family ({candidate.family}) is within author union family "
-                    f"{sorted(CURSOR_AUTO_UNION_FAMILIES)} — cross-family review requires a reviewer outside the union"
-                ),
-                health=health,
-            )
-        if candidate.transport == "cursor" or candidate.route == "cursor":
-            return CandidateResult(
-                name=candidate.name,
-                concrete_model=candidate.concrete_model,
-                family=candidate.family,
-                route=candidate.route,
-                transport=candidate.transport,
-                invocation=candidate.invocation,
-                quality_tier=candidate.quality_tier,
-                requires_silence_timeout=candidate.requires_silence_timeout,
-                status="excluded",
-                reason=(
-                    f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-                    f"for author union family {sorted(CURSOR_AUTO_UNION_FAMILIES)}"
-                ),
-                health=health,
-            )
-
-    same_family = candidate.family == family
-
-    if same_family and family in candidate.advisory_only_for_author_families:
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="advisory_only",
-            reason=f"same family as author ({family}) — advisory-only, not a formal cross-family gate",
-            health=health,
-        )
-    if same_family:
+    authors = complete_author_families(inputs, family)
+    if authors is None:
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,
@@ -879,27 +923,22 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason=f"same family as author ({family}) — cross-family review requires a different family",
+            reason="complete author family set holds an unresolved family — independence cannot be proven",
             health=health,
+            capacity=capacity,
         )
-
-    if family in CURSOR_AUTO_UNION_FAMILIES and (candidate.transport == "cursor" or candidate.route == "cursor"):
-        return CandidateResult(
-            name=candidate.name,
-            concrete_model=candidate.concrete_model,
-            family=candidate.family,
-            route=candidate.route,
-            transport=candidate.transport,
-            invocation=candidate.invocation,
-            quality_tier=candidate.quality_tier,
-            requires_silence_timeout=candidate.requires_silence_timeout,
-            status="excluded",
-            reason=(
-                f"candidate uses Cursor transport — Cursor-as-reviewer is ineligible "
-                f"against {family!r} author (within allowlist union {sorted(CURSOR_AUTO_UNION_FAMILIES)})"
-            ),
-            health=health,
-        )
+    advisory: CandidateResult | None = None
+    for author in sorted(authors):
+        # Only the recorder's prompt-bound red-team path opts into this.
+        # Qualification, risk, subject exclusions and runtime identity still bind.
+        if review_mode == "red_team" and candidate.family not in {*UNRESOLVED_AUTHOR_FAMILIES, "unknown"}:
+            continue
+        result = _author_family_exclusion(candidate, author, health)
+        if result is not None and result.status == "excluded":
+            return replace(result, capacity=capacity)
+        advisory = advisory or result
+    if advisory is not None:
+        return replace(advisory, capacity=capacity)
 
     reason = _hard_exclusion_reason(candidate, inputs)
     if not reason and inputs.formal_review:
@@ -919,6 +958,7 @@ def evaluate_candidate(
             status="excluded",
             reason=reason,
             health=health,
+            capacity=capacity,
         )
     circuit_reason = circuit_exclusion_reason(candidate, inputs.routing_snapshot)
     if circuit_reason:
@@ -934,6 +974,7 @@ def evaluate_candidate(
             status="excluded",
             reason=circuit_reason,
             health=health,
+            capacity=capacity,
         )
     if health == "degraded_telemetry":
         return CandidateResult(
@@ -948,8 +989,9 @@ def evaluate_candidate(
             status="excluded",
             reason=f"degraded_telemetry: seat snapshot for {candidate.name!r} is self-contradictory (healthy=true, status=unavailable)",
             health=health,
+            capacity=capacity,
         )
-    if health == "unhealthy":
+    if health == "unhealthy" or capacity.hard_reason:
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,
@@ -960,8 +1002,9 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason="lane health is unhealthy — route is operationally unavailable",
+            reason=capacity.hard_reason or "lane health is unhealthy — route is operationally unavailable",
             health=health,
+            capacity=capacity,
         )
     credit: dict[str, object] | None = None
     if health == "near_cap" and inputs.pinned_candidate != candidate.name:
@@ -989,6 +1032,7 @@ def evaluate_candidate(
                 status="excluded",
                 reason=reason,
                 health=health,
+                capacity=capacity,
                 credit=credit,
             )
 
@@ -1012,6 +1056,7 @@ def evaluate_candidate(
             status="excluded",
             reason=f"missing required review role suitability: {requested}",
             health=health,
+            capacity=capacity,
             credit=credit,
         )
 
@@ -1027,6 +1072,7 @@ def evaluate_candidate(
         status="eligible",
         reason=None,
         health=health,
+        capacity=capacity,
         suitability_rank=suitability_rank,
         credit=credit,
     )
@@ -1040,11 +1086,20 @@ def _best_eligible(
     """Pick the best eligible entry: primary before last resort, then suitability and tier,
     plan-backed before credit-backed, deterministic selection_score inside it. ``exclude_families`` lets the
     dual-family quorum path pick a second seat outside the first seat's
-    family without relaxing the fit-before-pressure ordering."""
+    family without relaxing the fit-before-pressure ordering. An eligible
+    same-model primary transport precedes its declared fallback."""
     filtered = {
         fit_key: kept
         for fit_key, entries in eligible_by_fit_and_tier.items()
         if (kept := [item for item in entries if item[0].family not in exclude_families])
+    }
+    # A same-model transport fallback cannot compete with its eligible primary
+    # on resource scores or head hashes. Other candidates keep their exact order.
+    primary_names = {candidate.name for entries in filtered.values() for candidate, _, _ in entries}
+    filtered = {
+        fit_key: kept
+        for fit_key, entries in filtered.items()
+        if (kept := [item for item in entries if item[0].transport_fallback_for not in primary_names])
     }
     if not filtered:
         return None
@@ -1071,10 +1126,9 @@ def resolve_reviewer(
     disambiguation, or a conflicting override). See
     :func:`resolve_author_family`.
 
-    Cursor Auto / unknown-Auto authors resolve to the allowlist-union
-    family {xAI, Moonshot}, selecting a single cross-family reviewer from
-    outside {xAI, Moonshot}. Quorum logic remains supported as fallback
-    for generic unattested harnesses.
+    Cursor Auto authors use the Cursor family and a single cross-family
+    reviewer outside Cursor. Quorum logic remains supported as fallback for
+    generic unattested harnesses.
     """
     if runtime_state is not None:
         # The state owner injects a transaction-consistent snapshot. This
@@ -1175,7 +1229,22 @@ def resolve_reviewer(
         )
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)
-    quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY
+    if inputs.author_families and complete_author_families(inputs, author_family) is None:
+        return ReviewerResolution(
+            selected=None,
+            advisory=(),
+            trace=(),
+            substitution_note=None,
+            policy_version=_SCHEDULER_POLICY_VERSION,
+            catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+            resolved_risk=risk,
+            fail_closed_reason=(
+                f"complete author family set {sorted(inputs.author_families)} (author_model="
+                f"{inputs.author_model!r}) holds an unresolved family — independence cannot be proven"
+            ),
+        )
+    # A complete author set is already concrete; the single-author fallbacks below do not apply.
+    quorum_required = author_family == UNATTESTED_AUTHOR_FAMILY and not inputs.author_families
     if quorum_required and inputs.pinned_candidate:
         return ReviewerResolution(
             selected=None,
@@ -1190,7 +1259,7 @@ def resolve_reviewer(
                 "for an unattested-harness author — two distinct-family seats must be resolved"
             ),
         )
-    if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required:
+    if author_family in UNRESOLVED_AUTHOR_FAMILIES and not quorum_required and not inputs.author_families:
         reason = {
             UNKNOWN_AUTHOR_FAMILY: (
                 f"author identity unknown — cannot resolve a model family from author_model={inputs.author_model!r}"
@@ -1231,6 +1300,13 @@ def resolve_reviewer(
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
     selected_rung_index: int | None = None
+    # Dispatch supplies the existing budget guard's per-model decisions.
+    # They only remove candidates; hard eligibility and ranking remain here.
+    capacity_exclusions = (
+        (inputs.routing_snapshot or {}).get("review_capacity_exclusions", {}) if excluded_quota_buckets else {}
+    )
+    pace_retention_available = False
+    eligible_quota_buckets: set[str] = set()
     # Last-resort candidates follow every eligible primary, after hard gates.
     # A ladder orders fallbacks, not traffic. Candidates in separate YAML
     # rungs with the same semantic suitability and catalog tier form one
@@ -1248,6 +1324,22 @@ def resolve_reviewer(
     for rung_index, rung in enumerate(active_ladder):
         for candidate in rung:
             result = evaluate_candidate(candidate, inputs, author_family=author_family)
+            if result.status == "eligible":
+                eligible_quota_buckets.add(candidate.quota_bucket)
+            if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
+                # Preserve the existing sole-reviewer pace-only retention
+                # contract. Admission can recheck all hard gates without
+                # dispatch capacity exclusions only for the sole eligible lane.
+                agents = (inputs.routing_snapshot or {}).get("agents", {})
+                info = agents.get(candidate.route, {})
+                diagnostics = (inputs.routing_snapshot or {}).get("diagnostics")
+                capacity = review_capacity(info, diagnostics)
+                pace_retention_available |= (
+                    not capacity.near_cap and not capacity.hard_reason and not capacity_exclusions.get(candidate.name)
+                )
+            capacity_reason = capacity_exclusions.get(candidate.name)
+            if result.status == "eligible" and capacity_reason:
+                result = replace(result, status="excluded", reason=f"dispatch capacity: {capacity_reason}")
             if result.status == "eligible" and candidate.quota_bucket in excluded_quota_buckets:
                 result = replace(
                     result,
@@ -1360,6 +1452,7 @@ def resolve_reviewer(
             status="selected",
             reason=None,
             health=best.health,
+            capacity=best.capacity,
             suitability_rank=best.suitability_rank,
             selection_score=best.selection_score,
             credit=best.credit,
@@ -1415,6 +1508,25 @@ def resolve_reviewer(
                 f"credit-period allowlist [{', '.join(selected.credit['allowed_models'])}]"
             )
 
+    pace_retention_available = pace_retention_available and eligible_quota_buckets <= excluded_quota_buckets
+    failure = None
+    if selected is None and capacity_exclusions and not pace_retention_available:
+        reasons = {entry.name: entry.reason or entry.status for entry in trace}
+        # Admission can restrict the ladder (e.g. code reviews exclude
+        # language-only families). Name those exclusions in the refusal too.
+        for rung in REVIEW_LADDERS.get(inputs.risk, ()):
+            for candidate in rung:
+                if candidate.name not in reasons:
+                    excluded = evaluate_candidate(candidate, inputs, author_family=author_family)
+                    reasons[candidate.name] = excluded.reason or "excluded from dispatch review ladder"
+        failure = "REVIEW_CAPACITY_UNAVAILABLE: " + "; ".join(f"{name}: {reason}" for name, reason in reasons.items())
+    elif (
+        selected is None
+        and not pace_retention_available
+        and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+    ):
+        failure = "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
+
     return ReviewerResolution(
         selected=selected,
         advisory=tuple(advisory),
@@ -1423,9 +1535,5 @@ def resolve_reviewer(
         policy_version=_SCHEDULER_POLICY_VERSION,
         catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
         resolved_risk=risk,
-        fail_closed_reason=(
-            "security-sensitive target: no eligible critical reviewer; see candidate exclusion reasons in trace"
-            if selected is None and is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
-            else None
-        ),
+        fail_closed_reason=failure,
     )

@@ -1,5 +1,4 @@
 import asyncio
-import sqlite3
 import sys
 from pathlib import Path
 
@@ -12,30 +11,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # GDrive sync, not regenerated in CI). Skip data-dependent tests when
 # the table is absent rather than fail; structural tests (list/schema)
 # still run and catch tool-registration regressions.
-_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
 
-def _ua_gec_table_present() -> bool:
-    if not _DB_PATH.exists():
-        return False
-    try:
-        conn = sqlite3.connect(_DB_PATH)
-        try:
-            row = conn.execute(
-                "SELECT name FROM sqlite_master "
-                "WHERE type IN ('table', 'view') AND name = 'ua_gec_errors_fts'",
-            ).fetchone()
-        finally:
-            conn.close()
-        return row is not None
-    except sqlite3.Error:
-        return False
 
 
-requires_ua_gec_data = pytest.mark.skipif(
-    not _ua_gec_table_present(),
-    reason="ua_gec_errors_fts not present in sources.db (CI / fresh checkout)",
-)
+
+
+requires_ua_gec_data = pytest.mark.data_tier("sources", tables=("ua_gec_errors_fts",))
 
 import importlib.util
 

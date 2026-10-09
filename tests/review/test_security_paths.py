@@ -22,6 +22,11 @@ from scripts.review.target_resolution import TargetResolutionError
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+
+
 def _git(repo: Path, *args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=repo, text=True, env=sanitized_git_env(), timeout=30)
 
@@ -104,7 +109,8 @@ def test_git_and_cli_classify_both_rename_names_and_deletions(repo, capsys, oper
         _git(repo, "mv", old, new)
         expected = {old, new}
     if mode == "commit":
-        _git(repo, "commit", "-qm", "change")
+        # A committed target is attributed by its X-Agent trailer (#9739), here the --author-model below.
+        _git(repo, "commit", "-qm", "change\n\nX-Agent: codex/gpt-6.1-sol")
         head = _git(repo, "rev-parse", "HEAD").strip()
     else:
         head = None
@@ -117,7 +123,10 @@ def test_git_and_cli_classify_both_rename_names_and_deletions(repo, capsys, oper
         target_args += ["--commit", head]
     assert main(["--state-file", str(state), *target_args]) == 0
     capsys.readouterr()
-    assert main(["--state-file", str(state), "resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low"]) == 0
+    # The probe repository has no GitHub origin, so name the repository its task records would carry.
+    resolve_args = ["resolve-reviewer", "--author-model", "gpt-6.1-sol", "--risk", "low"]
+    resolve_args += ["--repository", "learn-ukrainian/learn-ukrainian.github.io"]
+    assert main(["--state-file", str(state), *resolve_args]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["resolved_risk"] == "critical"
     assert payload["selected"]["concrete_model"] == "claude-opus-5-5"

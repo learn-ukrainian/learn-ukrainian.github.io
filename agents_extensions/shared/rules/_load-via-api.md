@@ -2,15 +2,23 @@
 
 <critical>
 
-The full agent rule set (operator-expectations · critical · non-negotiable ·
+The binding cold-start bundle is the core, at most 40,000 UTF-8 bytes:
+
+    GET /api/rules?format=markdown
+    GET /api/rules?scope=core&format=markdown
+
+Curriculum seats use `scope=content` to add `core-curriculum.md`. Other rules
+load through the task-scoped selections below, not the cold-start bundle.
+
+The full reference (operator-expectations · critical · non-negotiable ·
 workflow · fleet-comms-coordination · delegate-worktree · cli-help ·
 model-assignment · fleet-driver-routing · fleet-shared-doctrine ·
 fleet-role-scorecard) is served at:
 
-    GET /api/rules?format=markdown    (Monitor API on localhost:8765)
+    GET /api/rules?scope=full&format=markdown    (Monitor API on localhost:8765)
 
 For task intake, read `agents_extensions/shared/rules/task-scoped-reading.md`
-and load the applicable sources before acting. The endpoint is the complete
+and load the applicable sources before acting. The explicit full scope is the complete
 reference for full policy audits or cross-cutting work; it supports
 `If-None-Match` for warm-cache hits.
 

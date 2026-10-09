@@ -30,6 +30,7 @@ from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts import ledger
+from scripts.review.receipts.outcomes import classify_outcome
 from scripts.review.validate.validate import _MISSING, _leaf_texts, _plan_unit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -74,12 +75,20 @@ _TAB_BY_LABEL = _tab_by_label()
 
 # Distinct authorities, rather than distinct calls, are required for a conflict.
 # Ambiguous signal tools have no authority here and cannot establish a conflict.
+# slovnyk.me supplies dictionary evidence, ESUM etymology, and Grinchenko
+# historical attestation. search_definitions supplies Sovietization context
+# only; it must never settle meaning, norm or stress, or establish a conflict.
 SOURCES = {
+    "verify_word": "vesum",
+    "verify_lemma": "vesum",
     "verify_words": "vesum",
     "inspect_word": "vesum",
     "inspect_words": "vesum",
     "verify_stress": "stress",
     "query_sum20": "sum20",
+    "search_slovnyk_me": "slovnyk_me",
+    "search_esum": "esum",
+    "search_grinchenko_1907": "grinchenko",
     "query_ulif": "ulif",
     "query_pravopys": "pravopys",
     "search_style_guide": "style_guide",
@@ -94,7 +103,21 @@ SOURCES = {
 # The categories name the steps of the accepted contract's "The settle step".
 # A citation to a call from another category cannot stand in for the required search.
 SEARCH_TOOLS = {
-    "lemma": frozenset({"verify_words", "inspect_word", "inspect_words", "query_sum20", "query_ulif", "query_r2u"}),
+    "lemma": frozenset(
+        {
+            "verify_word",
+            "verify_lemma",
+            "verify_words",
+            "inspect_word",
+            "inspect_words",
+            "query_sum20",
+            "query_ulif",
+            "query_r2u",
+            "search_slovnyk_me",
+            "search_esum",
+            "search_grinchenko_1907",
+        }
+    ),
     "construction": frozenset({"search_text", "search_style_guide", "search_ua_gec_errors", "query_grac"}),
     "style_prose": frozenset({"search_text"}),
     "ua_gec_context": frozenset({"search_ua_gec_errors"}),
@@ -700,10 +723,16 @@ def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path)
             "antonenko-davydovych-yak-my-hovorymo"
         ):
             raise SettleError("style prose search must name the contract's source_file")
+        facts = classify_outcome(record["tool"], record["status"], record["result"])
+        if facts["status"] not in {"no_hits", "hits_found"}:
+            raise SettleError(f"broadened_search_call_unsuccessful: {category}: {facts['status']}")
         searches[category] = receipt
     outcome = reply["outcome"]
     if outcome in {"supported_defect", "refuted"} and not any(
-        record.get("status") == "ok" and record.get("outcome_facts", {}).get("hits", 0) > 0 for _, record in evidence
+        record.get("status") == "ok"
+        and record.get("tool") != "search_definitions"
+        and record.get("outcome_facts", {}).get("hits", 0) > 0
+        for _, record in evidence
     ):
         raise SettleError(f"{outcome} needs a cited receipt with hits")
     if outcome == "source_conflict":

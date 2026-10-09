@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Resumable, polite ingest for official СУМ-20 ``wordid`` article pages.
 
-This tool is intentionally bounded by default.  A detached operational run
-may opt in to a larger ``--limit`` only after the fixtures and parser are
-validated; normal builds query the resulting SQLite collection offline.
+This foreground compatibility tool writes to its selected database. It is
+bounded by default; limit zero is unbounded foreground work. For unattended
+isolated staging use scripts.ingest.dictionary_acquisition.
 """
 
 from __future__ import annotations
@@ -44,6 +44,12 @@ REPO = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO / "data" / "sources.db"
 
 
+class IngestCounts(dict[str, int]):
+    """Keep legacy count keys while carrying a lossless control exit separately."""
+
+    exit_code: int = 0
+
+
 def ingest_wordids(
     db_path: Path,
     *,
@@ -68,7 +74,7 @@ def ingest_wordids(
     db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
-    counts = {"ok": 0, "unchanged": 0, "not_found": 0, "transient_error": 0, "parse_error": 0}
+    counts = IngestCounts(ok=0, unchanged=0, not_found=0, transient_error=0, parse_error=0)
     try:
         ensure_sum20_official_schema(conn)
         wordid = start_wordid if start_wordid is not None else crawl_resume_wordid(conn)
@@ -84,10 +90,11 @@ def ingest_wordids(
             if outcome.status == "ok":
                 try:
                     article = parse_sum20_article(outcome.document_html, wordid)
-                except Sum20ParseError as exc:
+                except Sum20ParseError:
                     with conn:
-                        record_crawl_outcome(conn, wordid=wordid, status="parse_error", error_text=str(exc))
+                        record_crawl_outcome(conn, wordid=wordid, status="parse_error", error_text="unusable article")
                     counts["parse_error"] += 1
+                    counts.exit_code = 4
                     break
                 with conn:
                     changed = upsert_sum20_article(conn, article)
@@ -113,6 +120,7 @@ def ingest_wordids(
                         error_text=outcome.error_text,
                     )
                 counts[outcome.status] += 1
+                counts.exit_code = 4 if outcome.status == "parse_error" else (3 if outcome.terminal else 1)
                 break
             wordid += 1
             if (limit == 0 or attempted < limit) and delay_s > 0:
@@ -126,10 +134,22 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Ingest official sum20ua.com sequential wordid pages into sources.db. "
-            "Resumes from the durable checkpoint and never treats network failures as misses."
-        )
+            "Use for foreground direct-database ingestion; use dictionary_acquisition for unattended staging."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.ingest.sum20_official_ingest --db staging.db --start-wordid 5 --limit 8
+  .venv/bin/python -m scripts.ingest.sum20_official_ingest --db staging.db --limit 100
+Outputs: articles, four-status crawl outcomes and checkpoint written directly to --db; count summary.
+Exit codes: 0 successful range; 1 ordinary failure; 2 usage; 3 terminal HTTP/access stop; 4 parse stop.
+A terminal 3/4 outranks an earlier ordinary failure. Stops leave the failed checkpoint unchanged.
+No durable terminal restart latch: never use an unconditional restart loop.
+Related: scripts.ingest.dictionary_acquisition; docs/runbooks/dictionary-acquisition.md; #10003.
+""",
     )
-    parser.add_argument("--db", type=Path, default=DEFAULT_DB, help=f"SQLite destination (default: {DEFAULT_DB})")
+    parser.add_argument(
+        "--db", type=Path, default=DEFAULT_DB, help="SQLite destination, e.g. staging.db (default: data/sources.db)."
+    )
     parser.add_argument(
         "--start-wordid",
         type=int,
@@ -139,7 +159,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--limit",
         type=int,
         default=100,
-        help="Maximum sequential wordids to attempt (default: 100; 0 means unbounded detached run).",
+        help="Maximum sequential wordids to attempt (default: 100; 0 means unbounded foreground run).",
     )
     parser.add_argument(
         "--delay",
@@ -168,11 +188,16 @@ def main(argv: list[str] | None = None) -> int:
             retries=max(0, args.retries),
             retry_backoff_s=max(0.0, args.retry_backoff),
         )
-    except (OSError, sqlite3.Error, ValueError) as exc:
-        print(f"СУМ-20 ingest failed: {exc}", file=sys.stderr)
+    except (OSError, sqlite3.Error, ValueError):
+        print("СУМ-20 ingest failed: input or storage error", file=sys.stderr)
         return 1
     print("СУМ-20 ingest: " + ", ".join(f"{status}={count}" for status, count in counts.items()))
-    return 0
+    if counts["parse_error"]:
+        return 4
+    terminal = getattr(counts, "exit_code", 0)
+    if terminal == 3:
+        return 3
+    return 1 if counts["transient_error"] else terminal
 
 
 if __name__ == "__main__":

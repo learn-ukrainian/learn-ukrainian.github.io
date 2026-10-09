@@ -118,9 +118,18 @@ def test_scraper_fetches_have_bounds(monkeypatch) -> None:
     import scripts.rag.scrape_ukrlib as ukrlib
 
     calls: list[dict[str, object]] = []
+    urls: list[str] = []
 
-    def fake_run(_command, **kwargs):
+    def fake_run(command, **kwargs):
         calls.append(kwargs)
+        urls.append(command[-1])
+        if "--dump-header" in command:
+            Path(command[command.index("--dump-header") + 1]).write_bytes(
+                b"HTTP/1.1 200 OK\r\n\r\n"
+            )
+            body = b"" if command[-1].endswith("/robots.txt") else b"<html>text</html>"
+            Path(command[command.index("--output") + 1]).write_bytes(body)
+            return _result(stdout=b"200")
         return _result(stdout=b"<html>text</html>")
 
     monkeypatch.setattr(litopys.subprocess, "run", fake_run)
@@ -128,7 +137,8 @@ def test_scraper_fetches_have_bounds(monkeypatch) -> None:
     assert litopys.fetch_page("http://example.test")
     assert ukrlib.fetch_page("https://example.test")
 
-    assert [call["timeout"] for call in calls] == [60, 60]
+    assert urls == ["http://example.test", "https://example.test/robots.txt", "https://example.test"]
+    assert [call["timeout"] for call in calls] == [60, 60, 60]
 
 
 def test_agent_watcher_subprocesses_have_bounds(monkeypatch) -> None:

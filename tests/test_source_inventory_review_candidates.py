@@ -459,6 +459,57 @@ def test_review_workflow_defaults_outside_repo() -> None:
     assert source_inventory_candidates(records)
 
 
+@pytest.mark.parametrize("explicit", [False, True])
+def test_candidate_api_uses_current_caller_tmpdir_and_preserves_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, explicit: bool,
+) -> None:
+    caller = tmp_path / "caller"
+    caller.mkdir()
+    monkeypatch.setenv("TMPDIR", str(caller))
+    # A cached tempfile root must not override the caller's current lease.
+    monkeypatch.setattr(review.tempfile, "gettempdir", lambda: str(tmp_path / "stale"))
+    monkeypatch.setattr(review, "COMMITTED_SOURCE_INVENTORIES", ())
+    monkeypatch.setattr(review, "screen_auto_merge_lemma_validity", lambda payload: [])
+    payload = {"counts": {"auto_merge": 0, "needs_review": 0}, "auto_merge": [], "needs_review": []}
+
+    def fake_generate_candidates(**kwargs: Any) -> dict[str, Any]:
+        assert kwargs["out"].parent == (tmp_path if explicit else caller)
+        kwargs["out"].write_bytes(b"synthetic intermediate")
+        return payload
+
+    monkeypatch.setattr(review.grow, "generate_candidates", fake_generate_candidates)
+    expected = tmp_path / "override.json" if explicit else caller / review.DEFAULT_OUT.name
+    result = review.generate_review_candidates(**({"out": expected} if explicit else {}))
+    assert result["review_only"]["candidate_output"] == str(expected)
+    assert result["review_only"]["production_outputs_updated"] == []
+    assert json.loads(expected.read_bytes()) == result
+    assert expected.read_bytes() == (json.dumps(result, ensure_ascii=False, indent=2) + "\n").encode()
+    assert not list(expected.parent.glob(".*.tmp"))
+
+
+def test_default_paths_fall_back_to_system_temp_without_allocating(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
+    fallback = tmp_path / "system-temp"
+    monkeypatch.setattr(review.tempfile, "gettempdir", lambda: str(fallback))
+    assert review.default_review_output_path(review.DEFAULT_OUT.name) == fallback / review.DEFAULT_OUT.name
+    assert review.default_review_output_path(review.DEFAULT_QUEUE_REPORT_OUT.name) == (
+        fallback / review.DEFAULT_QUEUE_REPORT_OUT.name
+    )
+    assert not fallback.exists()
+
+
+def test_default_candidate_refuses_repository_tmpdir_before_generation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("TMPDIR", str(PROJECT_ROOT))
+    monkeypatch.setattr(review.grow, "generate_candidates", lambda **kwargs: pytest.fail("must not generate"))
+    with pytest.raises(SourceInventoryError, match="outside the repository"):
+        review.generate_review_candidates()
+    assert review.main([]) == 2
+
+
 @pytest.mark.parametrize("production_output", review.LIVE_ATLAS_OUTPUTS)
 def test_review_workflow_rejects_live_atlas_outputs(production_output: Path) -> None:
     with pytest.raises(SourceInventoryError, match="review-only source candidates"):

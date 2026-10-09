@@ -137,8 +137,10 @@ lookups:
      expect: [docs/runbooks/ci-gate.md],
      verify: [{path: docs/runbooks/ci-gate.md, contains: CI Gate}]}
   - {id: O05, question: 'Where are the model routing rules for each task?', kind: doc, query: model routing rules per task,
-     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml],
-     verify: [{path: agents_extensions/shared/rules/model-assignment.md, contains: review}]}
+     expect: [agents_extensions/shared/rules/model-assignment.md, scripts/config/model_catalog.yaml,
+              agents_extensions/shared/rules/catalog-routing-tables.md],
+     verify: [{path: agents_extensions/shared/rules/model-assignment.md, contains: review},
+              {path: agents_extensions/shared/rules/catalog-routing-tables.md, contains: '## Review ladders'}]}
 
   # ---------------------------------------------------------------- data stores
   - {id: L09, question: 'Where is the VESUM database and how do I query it?', kind: data_store, query: VESUM database,

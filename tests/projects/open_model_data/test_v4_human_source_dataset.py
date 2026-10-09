@@ -11,6 +11,7 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.lib.readonly_sqlite import open_readonly
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_human_source_dataset import (
     OPERATOR_EXCLUDED_RESIDUALS,
@@ -24,6 +25,7 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     resolve_record_text,
     verify_dataset,
 )
+from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 MANIFEST_PATH = resolve_open_model_path(
@@ -177,7 +179,7 @@ def test_privacy_host_paths_clean() -> None:
     assert_no_private_host_paths(receipt_data)
 
     with pytest.raises(ValueError, match="Prohibited host path detected"):
-        assert_no_private_host_paths({"bad": "/home/ops/secret"})
+        assert_no_private_host_paths({"bad": f"{FIXTURE_HOME}/secret"})
 
 
 @pytest.mark.needs_artifact(
@@ -382,7 +384,7 @@ def _has_full_sources_db() -> bool:
     for cand in candidates:
         if cand.is_file():
             try:
-                conn = sqlite3.connect(f"file:{cand.resolve()}?mode=ro", uri=True)
+                conn = open_readonly(cand.resolve())
                 cur = conn.cursor()
                 cur.execute(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literary_texts', 'textbooks')"

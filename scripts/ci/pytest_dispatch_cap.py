@@ -27,7 +27,7 @@ from __future__ import annotations
 import atexit
 import fcntl
 import os
-from collections.abc import Mapping
+from collections.abc import Generator, Mapping
 from pathlib import Path
 
 import pytest
@@ -292,14 +292,21 @@ def pytest_load_initial_conftests(early_config: pytest.Config, parser: pytest.Pa
     _reject_oversized_tx(early_config)
 
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_cmdline_main(config: pytest.Config) -> object:
+@pytest.hookimpl(wrapper=True)
+def pytest_cmdline_main(config: pytest.Config) -> Generator[None, object, object]:
     """Clamp before xdist, and take the full-suite lock before the session runs.
 
     ``pytest_cmdline_main`` runs the session and ``pytest_unconfigure`` before
     it returns, so a lock taken after ``yield`` does not cover execution.
     xdist workers already have ``workerinput`` and ``PYTEST_XDIST_WORKER`` set
     and must not take the host lock; neither does a ``--collect-only`` run.
+
+    A new-style wrapper, so an exception raised inside the session (for
+    example pytest's own ``tmp_path`` teardown ``KeyError`` after a SIGINT
+    lands during a test's setup) propagates through ``yield`` unchanged. The
+    old-style ``outcome.get_result()`` re-raised it from this plugin's
+    teardown, and pluggy reported ``PluggyTeardownRaisedWarning`` naming
+    this plugin as the culprit.
     """
     armed = not _is_xdist_worker(config) and dispatch_marker_set()
     cap_armed = armed and xdist_available()
@@ -307,11 +314,10 @@ def pytest_cmdline_main(config: pytest.Config) -> object:
         _arm_maxprocesses(config)
     if armed and is_full_suite(config) and not collection_only(config):
         _acquire_for_config(config)
-    outcome = yield
-    outcome.get_result()
-    if not cap_armed:
-        return
-    _shrink_tx(config)
+    result = yield
+    if cap_armed:
+        _shrink_tx(config)
+    return result
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:

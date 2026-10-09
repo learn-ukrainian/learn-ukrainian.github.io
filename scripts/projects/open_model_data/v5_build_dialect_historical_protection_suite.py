@@ -16,7 +16,6 @@ import hashlib
 import json
 import os
 import re
-import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -29,6 +28,8 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.dialect_protection_invariants import (
     LEMKO_BANNED_TARGET_RE,
     MAX_TOLERATED_DIALECT_CORRUPTION,
@@ -363,7 +364,7 @@ def _diversify_oes_monuments(raw: list[dict[str, Any]], quota: int) -> list[dict
     return picked[:quota]
 
 
-def mine_dialect_sentences(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
+def mine_dialect_sentences(conn: SQLiteConnection | None) -> list[dict[str, Any]]:
     """Mine 300 authentic regional dialect sentences across Southwestern, Southeastern, and Northern groups."""
     records: list[dict[str, Any]] = []
 
@@ -638,7 +639,7 @@ def mine_middle_ua_from_seeds(quota: int) -> list[dict[str, Any]]:
     return records[:quota]
 
 
-def mine_historical_sentences(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
+def mine_historical_sentences(conn: SQLiteConnection | None) -> list[dict[str, Any]]:
     """Mine 200 authentic historical sentences (100 Old East Slavic + 100 Middle Ukrainian)."""
     records: list[dict[str, Any]] = []
 
@@ -739,7 +740,7 @@ def mine_historical_sentences(conn: sqlite3.Connection | None) -> list[dict[str,
     return records
 
 
-def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
+def mine_anti_surzhyk_controls(conn: SQLiteConnection | None) -> list[dict[str, Any]]:
     """Mine 100 authentic Anti-Surzhyk Invariant Negative Controls (from literary_texts and ua_gec_errors)."""
     records: list[dict[str, Any]] = []
 
@@ -1095,10 +1096,10 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str
 
 def build_suite() -> None:
     """Build the complete 600-case Dialect & Historical Protection Suite."""
-    conn: sqlite3.Connection | None = None
+    conn: SQLiteConnection | None = None
     if DEFAULT_SOURCES_DB.exists() and DEFAULT_SOURCES_DB.stat().st_size > 0:
         print("Connecting to database at:", DEFAULT_SOURCES_DB)
-        conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+        conn = _open_readonly(DEFAULT_SOURCES_DB)
     else:
         print("sources.db unavailable; using git-grounded seeds + existing non-replaced strata")
 

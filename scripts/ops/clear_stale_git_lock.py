@@ -112,8 +112,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --apply\n\n"
+            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --dry-run\n"
+            "  .venv/bin/python -m scripts.ops.clear_stale_git_lock --repo . --apply\n\n"
             "Outputs: inspection/removal receipt to stdout; --apply removes one Git lock.\n"
             "Exit codes: 0 eligible or removed; 1 unsafe or failed.\n"
             "Related: docs/runbooks/clear-stale-git-lock.md; issues #8887 and #8874."

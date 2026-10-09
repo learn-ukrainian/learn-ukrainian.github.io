@@ -180,7 +180,13 @@ def normalize_hostname(value: str) -> str | None:
 
 def normalize_repository(value: str, host: str = "github.com") -> str:
     """Return a canonical host/owner/name, or unknown (never private by default)."""
-    value = value.strip().removesuffix(".git")
+    value = value.strip()
+    if not value.isascii():
+        return "unknown"
+    value = value.lower().removesuffix(".git")
+    # Callers may normalize before classification; another pass must not change identity.
+    if value.endswith(".git"):
+        return "unknown"
     value = re.sub(r"^git@([^:]+):", r"\1/", value)
     value = re.sub(r"^https?://", "", value)
     parts = value.split("/")
@@ -195,6 +201,10 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
 
 
 def is_private(destination: str) -> bool:
+    """Grant the exemption only to a normalized, configured private repository."""
+    destination = normalize_repository(destination)
+    if destination == "unknown":
+        return False
     return any(
         str(row.get("role", "")).startswith("private-")
         and not row.get("default")
@@ -505,4 +515,6 @@ def checked_run(args, *, runner=None, **kwargs):
     environment = internal_environment(kwargs.get("env", os.environ))
     frozen = admit(list(args[1:]), cwd=Path(kwargs.get("cwd") or Path.cwd()), environment=environment, reader=runner)
     kwargs["env"] = environment
-    return runner([args[0], *frozen.argv], **kwargs)
+    from scripts.common.github_client import command
+
+    return command([args[0], *frozen.argv], runner=runner if runner is not subprocess.run else None, **kwargs)

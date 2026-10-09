@@ -35,8 +35,6 @@ import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime depend
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 from mcp.types import CallToolRequestParams, TextContent
 
-from scripts.verification.vesum import _resolve_vesum_db_path
-
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
@@ -1477,13 +1475,10 @@ class TestCheckRussianShadowHandler:
             assert data["matches_russian"] is False
 
 
-_VESUM_DB = _resolve_vesum_db_path()
 
 
-@pytest.mark.skipif(
-    not _VESUM_DB.exists(),
-    reason="VESUM DB not present in CI sandbox — run locally for smoke coverage",
-)
+
+@pytest.mark.usefixtures("requires_vesum_db")
 class TestIntegrationSmoke:
     """Smoke tests using real database (no mocks). Skipped when data/vesum.db absent."""
 
@@ -2263,3 +2258,74 @@ def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):
     _content, envelope = result
     assert envelope["status"] == "error"
     assert envelope["error_code"] == "source_unavailable"
+
+
+@pytest.mark.parametrize("mode", ["frequency", "lemma_forms"])
+@pytest.mark.parametrize("cache_only", [True, False])
+def test_grac_snapshot_handler_offline(server_module, tmp_path, monkeypatch, mode, cache_only):
+    from scripts.ingest.grac_frequency_ingest import SCHEMA
+
+    db = tmp_path / "grac.db"
+    with sqlite3.connect(db) as conn:
+        conn.executescript(SCHEMA)
+        for attr in ("word", "lemma"):
+            conn.execute("INSERT INTO items VALUES (?, 'fixture', 42, 2.5, 1)", (attr,))
+            conn.execute("INSERT INTO provenance VALUES (?,1,'grac19a','open-5.71.15','manatee',5,1000,'2026-10-07T00:00:00+00:00',1)", (attr,))
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(db))
+    with patch("rag.source_query._get", side_effect=AssertionError("network forbidden")) as live:
+        text = _run(server_module.handle_query_grac({
+            "query": "fixture", "mode": mode, "cache_only": cache_only,
+        }))[0].text
+    live.assert_not_called()
+    if cache_only:
+        result = json.loads(text)
+        assert result["status"] == "attested"
+        assert result["entry"]["source"] == "local_snapshot"
+        assert result["entry"]["retrieved_at"] == "2026-10-07T00:00:00+00:00"
+        assert result["entry"]["api_version"] == "open-5.71.15"
+        assert result["entry"]["manatee_version"] == "manatee"
+        assert result["entry"]["min_freq"] == 5
+    else:
+        assert "42" in text and "local GRAC snapshot" in text and "2026-10-07" in text
+        assert "corpus grac19a" in text and "API open-5.71.15" in text
+        assert "Manatee manatee" in text and "minimum frequency 5" in text
+        if mode == "lemma_forms":
+            assert "Form breakdown unavailable" in text
+
+
+@pytest.mark.parametrize("mode", ["frequency", "lemma_forms", "concordance", "collocations"])
+def test_grac_cache_only_miss_does_not_fetch(server_module, tmp_path, monkeypatch, mode):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    with patch("rag.source_query._get", side_effect=AssertionError("network forbidden")) as live:
+        text = _run(server_module.handle_query_grac({"query": "missing", "mode": mode, "cache_only": True}))[0].text
+    assert json.loads(text)["status"] == "unavailable"
+    assert json.loads(text)["entry"] is None
+    live.assert_not_called()
+    assert not (tmp_path / "missing.db").exists()
+
+
+@pytest.mark.parametrize("mode,payload", [
+    ("frequency", {"Items": [{"str": "fixture", "frq": 7, "relfreq": 3.5}]}),
+    ("lemma_forms", {"Blocks": [{"Items": [{"str": "form", "frq": 7, "poc": 100}]}]}),
+])
+def test_grac_handler_live_source_after_snapshot_miss(server_module, tmp_path, monkeypatch, mode, payload):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    response = MagicMock()
+    response.json.return_value = payload
+    with patch("rag.source_query._get", return_value=response) as live:
+        text = _run(server_module.handle_query_grac({"query": "fixture", "mode": mode}))[0].text
+    live.assert_called_once()
+    assert "7" in text and "Source: live GRAC" in text
+
+
+@pytest.mark.parametrize("items", [[], [{"str": "other", "frq": 7, "relfreq": 3.5}]])
+def test_grac_handler_live_word_miss_is_unknown(server_module, tmp_path, monkeypatch, items):
+    monkeypatch.setenv("LU_GRAC_FREQUENCY_DB", str(tmp_path / "missing.db"))
+    response = MagicMock()
+    response.json.return_value = {"Items": items}
+    with patch("rag.source_query._get", return_value=response) as live:
+        text = _run(server_module.handle_query_grac({"query": "fixture", "mode": "frequency"}))[0].text
+    live.assert_called_once()
+    assert live.call_args.kwargs['params']['wlpat'] == '^(?:fixture)$'
+    assert "unknown" in text and "no exact frequency entry" in text
+    assert "frequency = 0" not in text and "Source: live GRAC" not in text

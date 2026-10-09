@@ -5,6 +5,7 @@ never lexical equivalence. Changed snapshots need later correspondence.
 """
 
 import argparse
+import copy
 import fcntl
 import hashlib
 import json
@@ -14,6 +15,7 @@ import sqlite3
 import sys
 import unicodedata
 from contextlib import ExitStack, contextmanager
+from functools import lru_cache
 from pathlib import Path
 
 import jsonschema
@@ -24,10 +26,30 @@ from scripts.curriculum.evidence.lock import atomic_write
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.promote_teacher_lesson_intake import _POS_MAP
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 ROOT = Path(__file__).resolve().parents[2]
 REGISTER = ROOT / "docs/sources/permissions-register.yaml"
 ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz"
 ROW_BASIS = "sha256 canonical UTF-8 JSON of entire literal selected row, not whole database"
+REGISTER_ENTRIES_BASIS = (
+    "sha256 canonical UTF-8 JSON of {sources: referenced register entries sorted by id, "
+    "legal_references: cited terms.legal_refs objects resolved by id and sorted by id}"
+)
 HEX = r"[0-9a-f]{64}"
 PROSE = ("note", "matched_by", "hold", "match_note")  # Provenance prose; attributes and scope labels never link.
 # Input role: (native paths whose whole field set a validator fixes, None meaning every object; excluded inventory
@@ -93,6 +115,17 @@ def load(path):
     return parse(path.read_bytes())
 
 
+@lru_cache(maxsize=2)
+def _parse_register_bytes(content):
+    """Reuse YAML parsing only; exceptions and validation are never cached."""
+    return yaml.safe_load(content)
+
+
+def load_register(path):
+    """Read fresh bytes and isolate every caller, including the first miss."""
+    return copy.deepcopy(_parse_register_bytes(path.read_bytes()))
+
+
 def write(path, value):
     # Arrays retain one complete logical record per line for inventory review.
     def render(item, depth=0):
@@ -127,7 +160,7 @@ def hex_digest(value):
 
 def readonly(stack, path):
     require(path.is_absolute() and path.is_file(), "Source DB must be an existing absolute file")
-    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    connection = _open_readonly(path)
     stack.callback(connection.close)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA query_only = ON")
@@ -431,21 +464,60 @@ def legacy_capture(raw, legacy_aliases, selection, vesum):
             "metadata_sha256": digest(metadata), "aliases": sorted(legacy_aliases, key=canonical)}
 
 
-def manifest_check(manifest):
+def register_entries_digest(register, source_ids):
+    ids = set(source_ids)
+    entries = [s for s in register["sources"] if s["id"] in ids]
+    require(len(entries) == len(ids) and {s["id"] for s in entries} == ids,
+            "Missing or duplicate referenced register source")
+    legal_ids = {ref for entry in entries for ref in entry["terms"].get("legal_refs", [])}
+    legal_refs = [ref for ref in register["legal_references"] if ref["id"] in legal_ids]
+    require(len(legal_refs) == len(legal_ids) and {ref["id"] for ref in legal_refs} == legal_ids,
+            "Missing or duplicate cited register legal reference")
+    return digest({"sources": sorted(entries, key=lambda s: s["id"]),
+                   "legal_references": sorted(legal_refs, key=lambda ref: ref["id"])})
+
+
+def register_pin_check(manifest, register, manifest_path, counts):
+    path = manifest_path.with_suffix(".register-pin.json") if manifest_path is not None else None
+    if path is None or not path.exists():
+        require(file_digest(REGISTER) == manifest["selection"]["source_register_sha256"],
+                "Register fingerprint mismatch; re-admit and re-freeze before reuse")
+        return
+    pin = load(path)
+    fields(pin, {"schema_version", "manifest_sha256", "legacy_source_register_sha256", "basis", "source_ids", "pins"})
+    require(pin["schema_version"] == "atlas-pilot-register-pin.v1" and pin["basis"] == REGISTER_ENTRIES_BASIS and
+            hex_digest(pin["manifest_sha256"]) and hex_digest(pin["legacy_source_register_sha256"]),
+            "Invalid register pin metadata")
+    require(pin["manifest_sha256"] == manifest["manifest_sha256"] and
+            pin["legacy_source_register_sha256"] == manifest["selection"]["source_register_sha256"],
+            "Register pin binding mismatch")
+    source_ids = sorted({r["source_id"] for r in manifest["selection"]["source_records"]})
+    require(pin["source_ids"] == source_ids, "Register pin source ids mismatch")
+    require(isinstance(pin["pins"], list) and pin["pins"], "Invalid register pin history")
+    for index, entry in enumerate(pin["pins"]):
+        fields(entry, {"entries_sha256", "reason", "recorded"} | ({"admission"} if index else set()))
+        require(hex_digest(entry["entries_sha256"]) and nonempty(entry["reason"]) and nonempty(entry["recorded"]),
+                "Invalid register pin history")
+        if index:
+            admission_check(entry["admission"], counts, entry["entries_sha256"])
+    require(register_entries_digest(register, source_ids) == pin["pins"][-1]["entries_sha256"],
+            "Register fingerprint mismatch; re-admit and re-freeze before reuse")
+
+
+def manifest_check(manifest, manifest_path=None):
     fields(manifest, MANIFEST_FIELDS)
     require(manifest["schema_version"] == "atlas-word-card-foundation.v1", "Unsupported frozen manifest")
     require(manifest["manifest_sha256"] == digest({k: v for k, v in manifest.items() if k != "manifest_sha256"}),
             "Changed manifest bytes/content; restore admitted freeze")
     require(manifest["rules_version"] == "rules-v1-draft" and manifest["normaliser_version"] == "norm-v1",
             "Unapproved rules or normaliser version")
-    register = yaml.safe_load(REGISTER.read_bytes())
+    register = load_register(REGISTER)
     schema(register, "permissions-register.schema.json")
-    require(file_digest(REGISTER) == manifest["selection"]["source_register_sha256"],
-            "Register fingerprint mismatch; re-admit and re-freeze before reuse")
     require(digest(manifest["selection"]) == manifest["selection_content_sha256"], "Selection content fingerprint mismatch")
     original = (json.dumps(manifest["selection"], ensure_ascii=False, indent=2) + "\n").encode()
     require(hashlib.sha256(original).hexdigest() == manifest["selection_file_sha256"], "Admitted selection bytes changed")
     counts = selection_check(manifest["selection"], {s["id"] for s in register["sources"]})
+    register_pin_check(manifest, register, manifest_path, counts)
     admission_check(manifest["admission"], counts, manifest["selection_file_sha256"])
     inventory = manifest["legacy_articles"]
     require({a["metadata"]["slug"] for a in inventory} ==
@@ -485,7 +557,7 @@ def freeze(args):
     receipt = load(receipts[0])
     require(file_digest(Path(receipt["review_report_path"])) == receipt["review_report_sha256"],
             "Admission report fingerprint mismatch")
-    register = yaml.safe_load(args.source_register.read_bytes())
+    register = load_register(args.source_register)
     schema(register, "permissions-register.schema.json")
     require(file_digest(args.source_register) == selection["source_register_sha256"], "Source register fingerprint mismatch")
     counts = selection_check(selection, {s["id"] for s in register["sources"]})
@@ -702,7 +774,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         manifest = freeze(args) if args.operation == "freeze" else load(args.manifest)
-        manifest_check(manifest)
+        manifest_check(manifest, args.manifest if args.operation != "freeze" else None)
         registry = allocate(args, manifest) if args.operation == "allocate" else (
             load(args.registry) if args.operation == "verify" else None)
         if args.operation == "verify":

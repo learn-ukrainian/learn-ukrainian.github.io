@@ -14,8 +14,11 @@ import hashlib
 import json
 import os
 import re
+import shlex
+import shutil
 import subprocess
-from collections.abc import Iterator, Mapping
+import tempfile
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime
@@ -33,6 +36,10 @@ AC_SCHEMA_VERSION = "acceptance-criteria.v1"
 OBSERVATION_SCHEMA_VERSION = "task-closeout-observation.v1"
 TERMINAL_GOALS = frozenset({"merge", "deploy", "certify"})
 DEFAULT_GIT_TIMEOUT_SECONDS = 30.0
+# GitHub's web-flow signing key, published at https://github.com/web-flow.gpg.
+# Pin the full fingerprint: signer names and unverified gpgsig headers are not proof.
+GITHUB_WEB_FLOW_FINGERPRINT = "968479A1AFF927E37D1A566BB5690EEEBB952194"
+GITHUB_WEB_FLOW_KEY_FILE = Path(__file__).with_name("github-web-flow.gpg")
 
 STATES = (
     "ISSUE_LINKED",
@@ -103,6 +110,18 @@ _AC_LIKE_CHECKBOX_RE = re.compile(r"^[-*+]\s*\[[^\]]*\]\s*[*_`]*AC(?=[^A-Za-z]|$
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
+def _match_ac_checkbox_line(line: str) -> re.Match[str] | None:
+    """The one definition of a stable-ID AC checkbox line, bold or plain.
+
+    Shared by :func:`parse_issue_acceptance_criteria` and
+    :func:`check_ac_checkbox` so the parser and the sync-acs writer can never
+    drift apart: a line the parser reads as criterion ``X`` is exactly the
+    line the writer checks off for ``X``.
+    """
+    normalized = line.strip()
+    return _AC_RE.fullmatch(normalized) or _PLAIN_AC_RE.fullmatch(normalized)
+
+
 class LifecycleError(ValueError):
     """The lifecycle ledger or requested transition violates the contract."""
 
@@ -143,11 +162,222 @@ def lifecycle_id(identity: Mapping[str, Any]) -> str:
     )
 
 
+def membership_needs_audit(native_parent_epic: int | None, registered_epics: list[int] | None) -> bool:
+    """Whether :func:`resolve_membership` must consult the live audit (#9783).
+
+    A native parent that is itself a registered stream epic decides alone
+    (accept when it is the identity's epic, refuse otherwise), so fetching a
+    live audit there would only let an unrelated audit failure mask that
+    decision. No native parent (body path) or an unregistered native parent
+    (native-chain path) can only be decided by the fresh audit.
+    """
+    if native_parent_epic is None:
+        return True
+    return isinstance(registered_epics, list) and native_parent_epic not in registered_epics
+
+
+def _fresh_membership_audit(
+    membership_report: Mapping[str, Any] | None, max_age_s: int
+) -> tuple[Mapping[str, Any] | None, str | None]:
+    """Return ``(validated_report, None)`` or ``(None, refusal_reason)``."""
+    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
+        # Same predicate as validate_membership_report (#8661): the flag must
+        # be boolean True and incomplete_nodes must be a list. A missing flag
+        # or the string "false" is unverified, not a finished traversal.
+        unread = issue_stream_audit.unread_membership_nodes(membership_report)
+        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
+        return None, f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"
+    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+    if validated_report is None:
+        return None, "fresh issue-stream membership audit evidence is missing, stale, or malformed"
+    return validated_report, None
+
+
+def _resolve_native_chain(
+    *,
+    repository: str,
+    issue_number: int,
+    stream_epic: int,
+    native_parent_epic: int,
+    membership_report: Mapping[str, Any] | None,
+    max_age_s: int,
+) -> dict[str, Any]:
+    """Accept a native descendant reached through unregistered epics (#9783).
+
+    Reuses the audit's own native-chain resolution: ``issue_stream_audit``
+    walks native sub-issues down from every registered epic (stopping at other
+    registered epics) and records ``via: "native"`` for each descendant. The
+    issue must resolve that way to exactly the identity's epic, and its live
+    native parent must resolve the same way, so the audit and the current
+    GitHub parentage agree on the chain.
+    """
+    prefix = f"native parent #{native_parent_epic} is not a registered stream epic and "
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
+    if validated_report is None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": prefix + str(failure),
+        }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(prefix + failure)
+    generated_at = validated_report.get("generated_at")
+    index = validated_report.get("effective_membership") or {}
+    evidence_digest = digest(index)
+    entry = index.get(str(issue_number))
+    parent_entry = index.get(str(native_parent_epic))
+    reason: str | None = None
+    if not isinstance(entry, dict) or entry.get("via") != "native":
+        reason = "the fresh membership audit does not resolve the issue through a native sub-issue chain"
+    elif not entry.get("unique_stream"):
+        reason = "the native sub-issue chain is multi-homed across more than one registered epic"
+    elif entry.get("epics") != [stream_epic]:
+        reason = "the native sub-issue chain reaches a different registered epic than the identity's stream epic"
+    elif not (
+        isinstance(parent_entry, dict)
+        and parent_entry.get("via") == "native"
+        and parent_entry.get("epics") == [stream_epic]
+    ):
+        reason = "the native parent is not itself a native descendant of the identity's stream epic in the fresh audit"
+    if reason is not None:
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": generated_at,
+            "digest": evidence_digest,
+            "reason": prefix + reason,
+        }
+    return {
+        "valid": True,
+        "method": "native_chain",
+        "epic": stream_epic,
+        "generated_at": generated_at,
+        "digest": evidence_digest,
+        "reason": None,
+    }
+
+
+def _membership_refusal(reason: str) -> dict[str, Any]:
+    return {
+        "valid": False, "method": None, "epic": None,
+        "generated_at": None, "digest": None, "reason": reason,
+    }
+
+
+def repository_identity_valid(repository: object) -> bool:
+    """Require a typed owner/name identity, never an issue-number inference."""
+    return isinstance(repository, str) and re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository) is not None
+
+
+def repository_evidence_refusal(repository: str, evidence_repository: object, *, source: str) -> str | None:
+    """Bind membership evidence to a typed repository, without inference."""
+    if not repository_identity_valid(repository):
+        return "task repository identity is malformed"
+    if not repository_identity_valid(evidence_repository):
+        return f"{source} repository is missing or malformed"
+    if evidence_repository.casefold() != repository.casefold():
+        return f"{source} repository does not match the task identity"
+    return None
+
+
+def resolve_live_ancestry(
+    *,
+    repository: str,
+    issue_number: int,
+    stream_epic: int,
+    registered_epics: list[int] | None,
+    read_parent: Callable[[str, int], Mapping[str, Any] | None],
+    membership_report: Mapping[str, Any] | None = None,
+    max_age_s: int = 3600,
+) -> dict[str, Any]:
+    """Read at most eight qualified parents to the first registered root (#9794).
+
+    A read failure is a refusal. The injected reader returns a qualified parent
+    with ``number`` and ``repository``, or None only after a successful target
+    read explicitly returned ``parent: null``. Only that target null permits
+    body evidence from the same invocation's live audit, repository and registry.
+    Callers carry the in-memory report; this function never audits or reads a cache.
+    """
+    if not repository_identity_valid(repository):
+        return _membership_refusal("live ancestry repository identity is malformed")
+    if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
+        return _membership_refusal("identity stream epic is absent from the registered issue-stream epics")
+    current = issue_number
+    visited = {current}
+    for _ in range(issue_stream_audit._MAX_SUBISSUE_DEPTH):
+        try:
+            parent = read_parent(repository, current)
+        except (LifecycleError, OSError, ValueError, RuntimeError, subprocess.TimeoutExpired):
+            return _membership_refusal(f"live ancestry parent of #{current} could not be read")
+        if parent is None:
+            if current != issue_number or membership_report is None:
+                return _membership_refusal(f"live ancestry parent of #{current} is missing")
+            report, failure = _fresh_membership_audit(membership_report, max_age_s)
+            if report is None:
+                return _membership_refusal(str(failure))
+            failure = repository_evidence_refusal(
+                repository, report.get("repository"), source="live body membership audit"
+            )
+            if failure is not None:
+                return _membership_refusal(failure)
+            # An unresolved root skipped its checklist. It cannot rule out a
+            # second body owner, even though the reporting audit stays complete.
+            for warning in report.get("warnings") or ():
+                if warning["code"] == "unresolved_subissue" and (
+                    warning.get("issue") in registered_epics
+                    or not isinstance(warning.get("issue"), int)
+                    or isinstance(warning.get("issue"), bool)
+                    or warning["issue"] < 1
+                ):
+                    return _membership_refusal("live body membership audit has an unresolved unread root checklist")
+            entry = report["effective_membership"].get(str(issue_number))
+            if not (
+                isinstance(entry, dict)
+                and entry.get("via") == "body"
+                and entry.get("epics") == [stream_epic]
+                and entry.get("unique_stream") is True
+            ):
+                return _membership_refusal("live body membership requires exact unique body evidence for the claimed epic")
+            return {
+                "valid": True, "method": "body", "epic": stream_epic,
+                "generated_at": report["generated_at"],
+                "digest": digest(report["effective_membership"]), "reason": None,
+            }
+        if not isinstance(parent, Mapping) or not repository_identity_valid(parent.get("repository")):
+            return _membership_refusal("live ancestry parent repository identity is malformed")
+        if parent["repository"].casefold() != repository.casefold():
+            return _membership_refusal("live ancestry crosses a repository boundary")
+        number = parent.get("number")
+        if not isinstance(number, int) or isinstance(number, bool) or number < 1:
+            return _membership_refusal("live ancestry parent number is malformed")
+        if number in visited:
+            return _membership_refusal("live ancestry is cyclic")
+        if number in registered_epics:
+            if number != stream_epic:
+                return _membership_refusal("live ancestry reaches a different registered stream epic")
+            return {
+                "valid": True, "method": "native_chain", "epic": stream_epic,
+                "generated_at": None, "digest": None, "reason": None,
+            }
+        visited.add(number)
+        current = number
+    return _membership_refusal("live ancestry exceeds the maximum sub-issue depth")
+
+
 def resolve_membership(
     *,
     issue_number: int,
     stream_epic: int,
     native_parent_epic: int | None,
+    repository: str,
+    native_parent_repository: str | None,
     registered_epics: list[int] | None,
     membership_report: Mapping[str, Any] | None,
     max_age_s: int = 3600,
@@ -160,28 +390,40 @@ def resolve_membership(
     (``task_closeout._assert_mutation_ready``) — so drift discovered by any
     one of them is enforced identically by all the others.
 
+    Native parents require typed repository identity matching ``repository``
+    case-insensitively, before any number-based branch. Snapshot agreement is
+    read-only evidence; membership-reliant writes additionally require
+    :func:`resolve_live_ancestry`, including transferred-scope follow-ups.
+    Audit evidence on either snapshot path must name the same repository.
+
     Native GitHub sub-issue parentage is authoritative and takes precedence
     over any body-derived evidence: if ``native_parent_epic`` is set at all,
-    it alone decides the outcome — a native parent that differs from
-    ``stream_epic`` is a hard rejection, never a fall-through to body
-    evidence. Only when there is NO native parent does a fresh
-    ``issue_stream_audit`` effective-membership proof get consulted, and only
-    when it resolves this exact issue to exactly one effective epic equal to
-    ``stream_epic``. That proof is sourced entirely from the epic-side
-    checklist/reference ``issue_stream_audit`` already interprets — never from
-    the child issue's own body, so a child's own ``Refs #<epic>`` prose can
-    never establish membership here.
+    the native chain alone decides the outcome, never a fall-through to body
+    evidence. A native parent equal to ``stream_epic`` is accepted; a native
+    parent that is a different registered stream epic is a hard rejection. A
+    native parent that is NOT a registered stream epic (#9783) is accepted
+    only when the fresh, complete audit resolves this exact issue — and the
+    parent — ``via: "native"`` to exactly ``stream_epic``. Only when there is
+    NO native parent does a fresh ``issue_stream_audit`` effective-membership
+    proof get consulted for body evidence, and only when it resolves this
+    exact issue to exactly one effective epic equal to ``stream_epic``. That
+    proof is sourced entirely from the epic-side checklist/reference
+    ``issue_stream_audit`` already interprets — never from the child issue's
+    own body, so a child's own ``Refs #<epic>`` prose can never establish
+    membership here.
 
     Fails **closed** — ``valid: False`` — for every failure mode: the
     identity's stream epic absent from the registry, a native parent that
-    disagrees, and (for the body path) audit evidence that is missing, stale,
-    malformed, orphaned, wrong-epic, multi-homed, or otherwise ambiguous.
+    disagrees, and (for the native-chain and body paths) audit evidence that
+    is missing, stale, malformed, incomplete, orphaned, wrong-epic,
+    multi-homed, or otherwise ambiguous.
 
     The return value always carries the four AC-PROVENANCE fields — method
-    (``"native"`` / ``"body"`` / ``None``), epic, the audit's
-    ``generated_at``, and a deterministic digest of the effective-membership
-    index that was consulted — so every caller can persist identical
-    provenance regardless of which path accepted (or rejected) the proof.
+    (``"native"`` / ``"native_chain"`` / ``"body"`` / ``None``), epic, the
+    audit's ``generated_at``, and a deterministic digest of the
+    effective-membership index that was consulted — so every caller can
+    persist identical provenance regardless of which path accepted (or
+    rejected) the proof.
     """
     if not isinstance(registered_epics, list) or stream_epic not in registered_epics:
         return {
@@ -193,6 +435,10 @@ def resolve_membership(
             "reason": "identity stream epic is absent from the registered issue-stream epics",
         }
     if native_parent_epic is not None:
+        if not repository_identity_valid(repository) or not repository_identity_valid(native_parent_repository):
+            return _membership_refusal("native parent repository identity is missing or malformed")
+        if native_parent_repository.casefold() != repository.casefold():
+            return _membership_refusal("native ancestry crosses a repository boundary")
         if native_parent_epic == stream_epic:
             return {
                 "valid": True,
@@ -202,29 +448,26 @@ def resolve_membership(
                 "digest": None,
                 "reason": None,
             }
-        return {
-            "valid": False,
-            "method": None,
-            "epic": native_parent_epic,
-            "generated_at": None,
-            "digest": None,
-            "reason": ("issue has a native parent epic that differs from the identity's exact registered stream epic"),
-        }
-    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
-        # Same predicate as validate_membership_report (#8661): the flag must
-        # be boolean True and incomplete_nodes must be a list. A missing flag
-        # or the string "false" is unverified, not a finished traversal.
-        unread = issue_stream_audit.unread_membership_nodes(membership_report)
-        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
-        return {
-            "valid": False,
-            "method": None,
-            "epic": None,
-            "generated_at": None,
-            "digest": None,
-            "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
-        }
-    validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
+        if native_parent_epic in registered_epics:
+            return {
+                "valid": False,
+                "method": None,
+                "epic": native_parent_epic,
+                "generated_at": None,
+                "digest": None,
+                "reason": (
+                    "issue has a native parent epic that differs from the identity's exact registered stream epic"
+                ),
+            }
+        return _resolve_native_chain(
+            repository=repository,
+            issue_number=issue_number,
+            stream_epic=stream_epic,
+            native_parent_epic=native_parent_epic,
+            membership_report=membership_report,
+            max_age_s=max_age_s,
+        )
+    validated_report, failure = _fresh_membership_audit(membership_report, max_age_s)
     if validated_report is None:
         return {
             "valid": False,
@@ -232,8 +475,13 @@ def resolve_membership(
             "epic": None,
             "generated_at": None,
             "digest": None,
-            "reason": "fresh issue-stream membership audit evidence is missing, stale, or malformed",
+            "reason": failure,
         }
+    failure = repository_evidence_refusal(
+        repository, validated_report.get("repository"), source="membership audit"
+    )
+    if failure is not None:
+        return _membership_refusal(failure)
     generated_at = validated_report.get("generated_at")
     index = validated_report.get("effective_membership") or {}
     evidence_digest = digest(index)
@@ -272,7 +520,7 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     seen: set[str] = set()
     for raw_line in str(body or "").splitlines():
         line = raw_line.strip()
-        match = _AC_RE.fullmatch(line) or _PLAIN_AC_RE.fullmatch(line)
+        match = _match_ac_checkbox_line(line)
         if not match:
             if _AC_LIKE_CHECKBOX_RE.match(line):
                 raise LifecycleError("malformed AC-like acceptance criterion checkbox in issue body")
@@ -293,6 +541,29 @@ def parse_issue_acceptance_criteria(body: str) -> list[dict[str, Any]]:
     if not criteria:
         raise LifecycleError("issue body has no stable-ID acceptance criteria")
     return criteria
+
+
+def check_ac_checkbox(body: str, ac_id: str) -> str:
+    """Mark the checkbox line of criterion ``ac_id`` as checked.
+
+    Uses the same line grammar as :func:`parse_issue_acceptance_criteria`
+    (through :func:`_match_ac_checkbox_line`), so bold (``**AC-01** — …``) and
+    plain (``AC-01: …`` / ``AC-01 …``) IDs are found identically, ``AC-1``
+    never matches the ``AC-10`` line, and an ID mentioned inside another
+    criterion's text is never checked. Already-checked lines, lines of other
+    criteria, indentation, and the trailing newline are preserved
+    byte-for-byte.
+    """
+    text = str(body or "")
+    lines = text.splitlines()
+    for index, raw_line in enumerate(lines):
+        match = _match_ac_checkbox_line(raw_line)
+        if match is None or match.group("id") != ac_id or match.group("checked").lower() == "x":
+            continue
+        prefix = raw_line[: len(raw_line) - len(raw_line.lstrip())]
+        content = raw_line.lstrip()
+        lines[index] = prefix + "- [x]" + content[5:]
+    return "\n".join(lines) + ("\n" if text.endswith("\n") else "")
 
 
 def ac_content_hash(criteria: list[Mapping[str, Any]]) -> str:
@@ -777,6 +1048,50 @@ def protected_paths(paths: list[str]) -> list[str]:
     )
 
 
+def _verified_publisher_merge(repo_root: Path, sha: str, parents: list[str]) -> bool:
+    """Prove a clean two-parent merge signed by the pinned GitHub publisher key."""
+    if len(parents) != 2:
+        return False
+    try:
+        gpg = shutil.which("gpg")
+        if not gpg:
+            return False
+        with tempfile.TemporaryDirectory(prefix="github-web-flow-") as key_home:
+            # An explicit home and no-options isolate both keys and configuration
+            # from the caller. Import the complete published file; the pin below
+            # still admits only the selected signing key.
+            gpg_command = [
+                gpg, "--no-options", "--homedir", key_home, "--batch",
+                "--no-autostart", "--no-auto-key-retrieve", "--no-auto-key-import",
+            ]
+            subprocess.run(
+                [*gpg_command, "--import", str(GITHUB_WEB_FLOW_KEY_FILE)],
+                capture_output=True, check=True, timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+            verifier = Path(key_home) / "verify-gpg"
+            verifier.write_text(
+                "#!/bin/sh\nexec " + shlex.join(gpg_command) + ' "$@"\n', encoding="utf-8",
+            )
+            verifier.chmod(0o700)
+            signature = _run_git(repo_root, [
+                "-c", "gpg.format=openpgp", "-c", f"gpg.program={verifier}",
+                "-c", f"gpg.openpgp.program={verifier}",
+                "show", "-s", "--format=%G?%x1f%GF", sha,
+            ])
+        # U is cryptographically valid with unknown key trust. The fingerprint
+        # pin supplies identity trust; missing, bad, expired and revoked fail.
+        if signature not in {
+            f"G\x1f{GITHUB_WEB_FLOW_FINGERPRINT}",
+            f"U\x1f{GITHUB_WEB_FLOW_FINGERPRINT}",
+        }:
+            return False
+        clean_tree = _run_git(repo_root, ["merge-tree", "--write-tree", "--no-messages", *parents])
+        return clean_tree == _run_git(repo_root, ["show", "-s", "--format=%T", sha])
+    except (LifecycleError, OSError, subprocess.SubprocessError):
+        # Conflicts, unavailable objects/keys and unsupported Git prove no exemption.
+        return False
+
+
 def observe_local_git(
     repo_root: Path,
     *,
@@ -840,15 +1155,38 @@ def observe_local_git(
             base = _run_git(root, ["merge-base", "origin/main", head_sha])
             changed_raw = _run_git(root, ["diff", "--name-only", f"{base}..{head_sha}"])
             changed_paths = [line for line in changed_raw.splitlines() if line]
-            log = _run_git(root, ["log", "--format=%H%x1f%B%x1e", f"{base}..{head_sha}"])
+            log = _run_git(root, ["log", "--format=%H%x1f%s%x1f%P%x1f%B%x1e", f"{base}..{head_sha}"])
             for record in log.split("\x1e"):
                 if not record.strip() or "\x1f" not in record:
                     continue
-                sha, message = record.strip().split("\x1f", 1)
+                sha, subject, parent_shas, message = record.strip().split("\x1f", 3)
+                parents = parent_shas.split()
                 trailers = [
                     line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")
                 ]
-                commits.append({"sha": sha, "x_agent_trailers": trailers})
+                second_parent_on_main = False
+                if len(parents) == 2:
+                    try:
+                        _run_git(root, ["merge-base", "--is-ancestor", parents[1], "origin/main"])
+                        second_parent_on_main = True
+                    except LifecycleError:
+                        # Unproven ancestry must not waive commit attribution.
+                        pass
+                verified_publisher_merge = bool(
+                    not trailers
+                    and branch
+                    and subject == f"Merge branch 'main' into {branch}"
+                    and second_parent_on_main
+                    and _verified_publisher_merge(root, sha, parents)
+                )
+                commits.append({
+                    "sha": sha,
+                    "subject": subject,
+                    "parents": parents,
+                    "second_parent_on_main": second_parent_on_main,
+                    "verified_publisher_merge": verified_publisher_merge,
+                    "x_agent_trailers": trailers,
+                })
         except LifecycleError:
             # The immutable pre-merge receipt remains the authority for hygiene
             # when squash merge/branch deletion makes the old comparison absent.
@@ -1069,6 +1407,15 @@ def _local_readiness(local: Mapping[str, Any]) -> list[str]:
         blockers.append("no task commits were available for X-Agent validation")
     for commit in commits:
         trailers = commit.get("x_agent_trailers") or []
+        if (
+            not trailers
+            and local.get("branch")
+            and commit.get("subject") == f"Merge branch 'main' into {local['branch']}"
+            and len(commit.get("parents") or []) == 2
+            and commit.get("second_parent_on_main") is True
+            and commit.get("verified_publisher_merge") is True
+        ):
+            continue
         if len(trailers) != 1 or not str(trailers[0]).split(":", 1)[-1].strip():
             blockers.append(f"commit {commit.get('sha', 'unknown')} lacks exactly one valid X-Agent trailer")
     forbidden = local.get("forbidden_paths") or []
@@ -1130,6 +1477,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
         native_parent_epic=issue.get("parent_epic"),
+        repository=identity["repository"],
+        native_parent_repository=issue.get("parent_repository"),
         registered_epics=registered_epics,
         membership_report=github.get("membership_audit"),
     )
@@ -1313,6 +1662,8 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             issue_number=remaining["follow_up_issue"],
             stream_epic=remaining["follow_up_stream_epic"],
             native_parent_epic=follow_up.get("parent_epic"),
+            repository=identity["repository"],
+            native_parent_repository=follow_up.get("parent_repository"),
             registered_epics=registered_epics,
             membership_report=github.get("membership_audit"),
         )

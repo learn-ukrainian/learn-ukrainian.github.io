@@ -28,6 +28,13 @@ from fastapi.responses import JSONResponse
 from jsonschema import Draft7Validator
 from pydantic import BaseModel, Field, field_validator
 
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
+
 from scripts.rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB_PATH
 from scripts.verification import vesum
 
@@ -123,7 +130,7 @@ class VerifyFormsRequest(BaseModel):
         return normalized
 
 
-def _connect(db_path: Path | None = None) -> sqlite3.Connection:
+def _connect(db_path: Path | None = None) -> SQLiteConnection:
     path = db_path or HRAMATKA_DB_PATH
     return connect_sqlite(str(path), timeout=5.0, isolation_level=None)
 

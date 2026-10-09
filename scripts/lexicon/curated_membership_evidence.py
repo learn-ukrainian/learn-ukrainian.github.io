@@ -8,10 +8,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.lib.readonly_sqlite import SQLiteConnection
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 
 def _key(value: str) -> str:
@@ -33,7 +40,7 @@ def _paradigm_headword(payload: dict[str, Any], lemma: str) -> str:
     return ""
 
 
-def read_checked_ulif(conn: sqlite3.Connection, lemma: str) -> list[dict[str, Any]]:
+def read_checked_ulif(conn: SQLiteConnection, lemma: str) -> list[dict[str, Any]]:
     """Return only checked homonyms, with matching lexical evidence per section."""
     rows = conn.execute(
         """SELECT id, homonym_index, canonical_headword, grammatical_label, status
@@ -74,11 +81,7 @@ def read_checked_ulif(conn: sqlite3.Connection, lemma: str) -> list[dict[str, An
                 "section_kinds": kinds,
                 "matching_synonym_terms": sorted(set(synonym_terms)),
                 "lexical_attestation": status == "ok"
-                and bool(
-                    _key(header) == _key(lemma)
-                    or paradigm_headword
-                    or synonym_terms
-                ),
+                and bool(_key(header) == _key(lemma) or paradigm_headword or synonym_terms),
             }
         )
     return result
@@ -87,7 +90,7 @@ def read_checked_ulif(conn: sqlite3.Connection, lemma: str) -> list[dict[str, An
 def refresh_registry(registry: Path, sources_db: Path) -> tuple[dict[str, Any], list[str]]:
     payload = json.loads(registry.read_text(encoding="utf-8"))
     changed = []
-    with sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True) as conn:
+    with _open_readonly(sources_db) as conn:
         for row in payload["rows"]:
             before = (
                 row.get("ulif_checked"),
@@ -128,7 +131,9 @@ def main() -> None:
     )
     parser.add_argument("--registry", type=Path, required=True, help="Reviewed reconciliation JSON path")
     parser.add_argument("--sources-db", type=Path, required=True, help="Read-only ULIF sources.db path")
-    parser.add_argument("--write", action="store_true", help="Write refreshed evidence to --registry (default: report only)")
+    parser.add_argument(
+        "--write", action="store_true", help="Write refreshed evidence to --registry (default: report only)"
+    )
     args = parser.parse_args()
     payload, changed = refresh_registry(args.registry, args.sources_db)
     if args.write:

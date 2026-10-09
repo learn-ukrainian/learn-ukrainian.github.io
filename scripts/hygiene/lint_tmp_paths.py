@@ -55,11 +55,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "d415891a4b3ba96f81f5beecb5647595a9ed895a909431274fab123231470c33:1",
     ),
     (
-        "scripts/audit/generate_source_inventory_review_candidates.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "119cb542d8ff39c42a45e6454247b93a81470ac2320465e4fe37c2faa89fdf2d:1 56273c6b69c9e2700e5602ebe426dc2034e6fd04d0f13402b8bbc11f0e8c816c:1",
-    ),
-    (
         "scripts/audit/llm_qg_canaries.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "a939a6675fa5496c893bda2351817d67ad44c4c5e604bd17a54819691882de17:1",
@@ -68,16 +63,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/audit/measure_russicism_recall.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "547197605237a25fb85383eade35b889f7201271e397345306bf205f832f083f:1 61684fe365d1dc2985819bb098dce28fc2a4f354be970581ae1ed86ae51b615d:1",
-    ),
-    (
-        "scripts/audit/plan_source_inventory_promotion.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "617d3a036e07eadeb84980092b677ac198b0c802285c30fe1020ce2b27080cee:1 be728736e627a1fe9034557e5f4b839e232aefbe6de70cacf37b9a46353377a2:1 d9f92ff18db2ae9f804524579c4f24bbc70505b90eaa79f40549db82445e41d0:1",
-    ),
-    (
-        "scripts/audit/private_teacher_lesson_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "0bd4dbd46ccb77be5b46cf9a1ab6162f885c36fb87933709cd1c6df22bdc5627:1 348c816e0bf8ed584e0c377f2087353d99531d70f52266c6e93e01b8f941e94d:1 849b6f9f881509130f7fa8223838c2527ec8c43453feb482c7d42f8afabb33bc:1",
     ),
     (
         "scripts/audit/sum11_sovietization_scan.py",
@@ -160,21 +145,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "f74b23c4e494751935f713cdbc649a527ce14b2f041801aeececa75529ef2430:1",
     ),
     (
-        "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "e1c4f4e4369dffd4e0c9c4d51d4d082c8789721e879d22ebfee6aef3a4cfce06:1 fd09128afff7fbca3c1a089afb3da98cc077f4d947a5bfe8c3b22846fbebda45:1",
-    ),
-    (
-        "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "2c1bc6ffcd7e6962acfd9fa184a823656683a456026d41ea7619ce5309e69942:1 eaabb98be0ef9424c40a9700cc3945c40b51c807bf70a55a8b83c15781739499:1",
-    ),
-    (
-        "scripts/lexicon/curriculum_atlas_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "9f8c849f6397c57001976e5f13b13a4a2b2fd84c86e94b9d7532d15692114bcf:1 e9c2b41d5f26e6d8bf4102ed118299a0e9d80b5f5ba5172b557dffa3ed66c7b1:1",
-    ),
-    (
         "scripts/lexicon/extract_book_headword_inventory.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "bcf8650e90181f4b0c7d63ca7dfa8830243e755ce3c216e5da11e243e20fd603:1",
@@ -193,16 +163,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/lexicon/obvious_noise_classifier.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "4bbef4334498b18af7c08162e18350575dbcc59224a6ef62e4d658bb4883726c:1",
-    ),
-    (
-        "scripts/lexicon/ohoiko_atlas_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "6259b63f6334678937c60097eca3bd376e5a532b96113507d06e5a59ed647064:1 ce32a4b965f82d15d41fe17b4f260582330699f220c1bf15cf7422377027c54f:1",
-    ),
-    (
-        "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "10a3a4cd651bc83d437bc9c09de38abed6ad09e10dfa956d8a3edb8d1341b037:1 99cd7d8bb58ce7cd047156dea2032f79748b6722ab2121dafe488adb6e9ab10f:1 b1d4aaae9f32e168851b019fe1b8eed696a405a7f38243aefc1ea647190c3a5c:1 da04cf400ed4a7cbc32d39e279d26f07212821a83e11e79ca2bb525fb70fd3ce:1 e181fbdac56f3be72194b321c062d5b3385748667785fe4ff21ad122af11d980:1",
     ),
     (
         "scripts/lexicon/runner/generate_pr1_fixture.py",
@@ -228,11 +188,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/orchestration/job_host_exec.py",
         "Remote context; existing exit/signal cleanup traps own these files.",
         "27aa61ac8f66a6b34cfed0dd8cf8e12e93aeb31cdea4813f6f09c6062576c8fa:1",
-    ),
-    (
-        "scripts/orchestration/scheduled_worktree_cleanup.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "32ba0ca906b425c38885c891d28c6537478f4847eed3bc9637c0803282ac0e22:1",
     ),
     (
         "scripts/orchestration/tmp_leak_sweep.py",
@@ -290,11 +245,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "2ce02a78804e0f653d1c246f7af0915633877d64122160e4cdb0ca7fd493d89a:1",
     ),
     (
-        "scripts/projects/open_model_data/v4_mine_corpus_calques.py",
-        "Legacy persistent cache producer; follow-up outside this bounded packet (#8755).",
-        "0f94bae2ff084b9f0dfd3867dcb43baf049e3f42676f5def56966ccb1c2ab6ec:1 7398e34e317e427d0397d19f494ee6fd74385952e2e1dcddd447a5543e6d715a:1",
-    ),
-    (
         "scripts/projects/open_model_data/v4_native_extraction_validation.py",
         "Legacy persistent cache producer; follow-up outside this bounded packet (#8755).",
         "a0d729591d304503954d2be13948b1efd382cb29d88c1b845667c8fd0b711f40:1",
@@ -343,11 +293,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/review/closeout_cli.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "b3aa9a5d42617c0b68719c98f3fb48d2bf30b2aebbc3b71ba0ae3b0746329db8:1",
-    ),
-    (
-        "scripts/run_otaman_serial_12_15.sh",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "433059757576352a06e4e678e581a952380dbabbd81badf9bc7084cf99dcc9e9:1 9d4bb2b778d6ac6a4016f91a4f182b23fdb84255dec2beab53382b7a00def690:1",
     ),
     (
         "scripts/storage/artifacts.py",
@@ -435,26 +380,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "5dd5fc216d5d873543123517e57dc53346e05c0f83da6de407f28477ed0a8e30:1 e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1 ea8c2c285b4106c1b154f412391fc0e20b40c23097d88aac63e3c11af584dd29:1",
     ),
     (
-        "tests/api/test_monitor_ctx_store_isolation.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "1a341ebe971748b74722073513c2b4db5765c731ae7dafd458467f7f05fe9b4e:1",
-    ),
-    (
-        "tests/api/test_occupancy.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "2b282824594231024d84ea1a1252e60dbb305f283e65924e13de6ad73ce08602:1 e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1",
-    ),
-    (
-        "tests/api/test_occupancy_seats.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "e2e6c1a4a55873b91ca0ff95b4dad4511982d562665c20cfe48d35eb7c3d632e:1",
-    ),
-    (
-        "tests/api/test_services_ops.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "fb64d2ca33729f53d2db0eb636cd1c691bc9489a67a80688547a67418430e29b:1",
-    ),
-    (
         "tests/audit/test_check_mdx_source_parity.py",
         "Existing test literal; migration outside this bounded packet (#9702).",
         "e7cf38a7d98688f51c749993fcc205a4446d87368dbe464d8755f2a3915e4531:1",
@@ -495,29 +420,9 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "a73144ec31e1e70a566534e56044cba6207bf4b5c171e2daf7ce655e7dca111a:1",
     ),
     (
-        "tests/orchestration/task_family/test_rollover_registry.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "48fed043859df7671be83d987b7dcf95728fa90ca3a09f9535f43e075158c80c:1",
-    ),
-    (
         "tests/orchestration/test_job_host_exec.py",
         "Existing test literal; migration outside this bounded packet (#8755).",
         "169d4511743538b9be608c16cfd4a86ccd75de5d018d4cffc3f6bca40b8eda67:1 35eef957e7ac6dfb323982b5acdb0d4c5ac6bc3e41dba5a3f06a0d4ed8ad76c5:1 3cac3970d6434c27592340c8750dfe8c885f88ad6d33a46e20e461d810482bb5:1 6d0a3a07137da113db85eadf897776f58b8104244fa38a91b62e2d6e12fb9290:1 78a2828693382f4e53c60d70ea534f892706f2cdc6a74b1e3ff1f4a888c3f0af:1 9668994dd3e78910e686248664fb372b4ceb8c3b3c73f7394d646d27ca2e5199:3",
-    ),
-    (
-        "tests/orchestration/test_run_scheduled_backup.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "942d7074e5d39d2bc46d1a07774d075e2d009cf8c0bde3c5d8a92a906e7edf23:1",
-    ),
-    (
-        "tests/orchestration/test_thread_handoff.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "50c329bb9275300843169565cc5c5ef82506afe6936d06edb02b3b6aef026b5e:1",
-    ),
-    (
-        "tests/orchestration/test_worker_leftovers.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "f6e785a32090588f804c467d1630e477204deaaa38ffa8c18e025b8f764f5d61:1",
     ),
     (
         "tests/pre_commit/test_check_no_bare_python.py",
@@ -788,11 +693,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "tests/test_verify_review.py",
         "Existing test literal; migration outside this bounded packet (#8755).",
         "fb04258d59aaa3da8b6cc76a5706d17904554d861e90e8560483361ced618fe8:1",
-    ),
-    (
-        "tests/test_wiki_cache.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "da1144b3844b687e4d3ca149522094a78c1bec371dd0d2cea89f1d3b3038f082:1",
     ),
 )
 

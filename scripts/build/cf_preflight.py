@@ -17,6 +17,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.common import github_client
+
 _SHA40 = re.compile(r"^[0-9a-f]{40}$", re.I)
 _APPROVE = re.compile(
     r"(?im)(?:reviewer\s+)?verdict\s*:\s*(?:approve|approved)\b"
@@ -226,9 +228,10 @@ def git_head(repo_root: Path) -> str | None:
 
 def _gh_json(args: list[str]) -> Any | None:
     try:
-        proc = subprocess.run(
+        proc = github_client.run(
             ["gh", *args],
             check=False,
+            fresh=True,
             capture_output=True,
             text=True,
             timeout=60,

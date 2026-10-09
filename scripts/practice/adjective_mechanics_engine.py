@@ -63,12 +63,27 @@ import argparse
 import hashlib
 import json
 import random
-import sqlite3
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -1907,7 +1922,7 @@ def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | Non
             "missing_forms": [],
         }
 
-    conn = sqlite3.connect(resolved_path)
+    conn = _open_readonly(resolved_path)
     cur = conn.cursor()
 
     missing_forms: list[dict[str, str]] = []
@@ -1968,7 +1983,7 @@ def verify_distractors_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Pat
         AdjectiveInterferenceType.FALSE_DERIVATION_MISSING_MUTATION,
     }
 
-    conn = sqlite3.connect(resolved_path)
+    conn = _open_readonly(resolved_path)
     cur = conn.cursor()
 
     invalid_distractors: list[dict[str, Any]] = []

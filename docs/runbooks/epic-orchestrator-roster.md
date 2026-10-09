@@ -14,11 +14,11 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 
 ---
 
-AGY/Gemini driver sessions are refused by the shared launcher before any lease,
-canary or provider execution (#9633). `start-gemini-driver.sh` remains a refusing
-compatibility stub; use standalone `start-gemini.sh` only for permitted non-driver
-work. Eligible driver seats are `claude-opus-5-5` and `gpt-6.1-sol`, with
-`grok-4.7` as the listed driver fallback.
+Gemini may drive epics (2026-10-08 approval): `./start-gemini-driver.sh --epic <lane>`
+defaults to `gemini-3.1-pro-high` and also accepts `--model gemini-3.8-flash-high`; every
+other Gemini model id is refused. Use standalone `start-gemini.sh` for non-driver work.
+The routing table below lists the recommended seat per epic; `grok-4.7` remains the
+listed driver fallback.
 
 ## Routing reminder — pick the seat, pass the epic
 

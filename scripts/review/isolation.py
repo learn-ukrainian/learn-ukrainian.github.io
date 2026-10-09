@@ -44,7 +44,7 @@ from typing import Any
 
 from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
 from scripts.common.jsonl import jsonl_lines
-from scripts.common.scratch import ensure_scratch_root, scratch_scan_roots
+from scripts.common.scratch import ScratchScanRootError, ensure_scratch_root, scratch_scan_roots
 from scripts.orchestration.thread_handoff import (
     _default_machine_id,
     _default_process_snapshot,
@@ -67,7 +67,8 @@ REVIEW_TEMP_ROOT_PREFIXES = (
 REVIEW_TEMP_ORPHAN_MAX_AGE_S = 6 * 60 * 60
 REVIEW_TEMP_ROOT_MARKER_NAME = ".lu-review-root"
 REVIEW_TEMP_ROOT_MANIFEST_NAME = ".lu-review-root.json"
-LU_REVIEW_TEMP_MIN_FREE_GB = 10.0
+# Generic fallback; the deployment sets the LU_REVIEW_TEMP_MIN_FREE_GB env var.
+LU_REVIEW_TEMP_MIN_FREE_GB = 9.5
 REVIEW_TEMP_GRACE_WINDOW_S = 60.0
 REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S = 3600.0
 _REVIEW_TEMP_ROOT_MARKER_RE = re.compile(rb"^lu-review-root-v1:[0-9a-f]{64}\n$")
@@ -525,6 +526,19 @@ def _is_disk_pressure_active(tmp_dir: Path, min_free_gb: float = LU_REVIEW_TEMP_
     return (free_bytes / (1024**3)) < min_free_gb
 
 
+def _scratch_scan_roots() -> list[Path]:
+    """Return reaper scan roots, or raise ``ScratchScanRootError`` here.
+
+    A misconfigured ``LU_SCRATCH_SCAN_ROOT`` fails at this review boundary.
+    The error names the variable and the reason, includes no filesystem path,
+    and is not chained to the resolver's traceback.
+    """
+    try:
+        return scratch_scan_roots()
+    except ScratchScanRootError as exc:
+        raise ScratchScanRootError(exc.reason) from None
+
+
 def sweep_review_temp_orphans(
     *,
     now: float | None = None,
@@ -542,7 +556,7 @@ def sweep_review_temp_orphans(
     # task-namespaced review roots. #7164: review roots now live under the
     # disk-backed fleet scratch root; scan it plus every legacy tmp base so
     # pre-change residue still drains.
-    bases = scratch_scan_roots()
+    bases = _scratch_scan_roots()
     if not bases:
         bases = [Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT", tempfile.gettempdir()))]
     current_time = time.time() if now is None else now
@@ -2410,19 +2424,45 @@ def probe_engine_help(
     cwd: Path | None = None,
 ) -> str:
     """Probe the exact binary, optionally only through the verified sandbox."""
+    program = str(binary)
+    run_env = dict(env) if env is not None else None
+    run_cwd = str(cwd) if cwd is not None else None
+    # Each probe argv is a literal: the headless-spawn rule (#9750) clears only fixed --help/--version probes.
+    probes = (
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "--help"], sandbox) if sandbox is not None else [program, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "--version"], sandbox) if sandbox is not None else [program, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+        lambda: subprocess.run(
+            wrap_argv_with_sandbox([program, "exec", "--help"], sandbox)
+            if sandbox is not None
+            else [program, "exec", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            env=run_env,
+            cwd=run_cwd,
+        ),
+    )
     chunks: list[str] = []
-    for args in ([str(binary), "--help"], [str(binary), "--version"], [str(binary), "exec", "--help"]):
-        command = wrap_argv_with_sandbox(args, sandbox) if sandbox is not None else args
+    for probe in probes:
         try:
-            proc = subprocess.run(
-                command,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=False,
-                env=dict(env) if env is not None else None,
-                cwd=str(cwd) if cwd is not None else None,
-            )
+            proc = probe()
         except (OSError, subprocess.TimeoutExpired):
             continue
         chunks.append(proc.stdout or "")
@@ -2476,7 +2516,13 @@ def build_claude_review_argv(
     model: str | None = None,
     capabilities: EngineCapabilities | None = None,
 ) -> list[str]:
-    """Argv for an isolated Claude review invocation (no write/MCP/project load)."""
+    """Argv for an isolated Claude review invocation (no write/MCP/project load).
+
+    Pure: it carries the background-tool denies (#9750) but spawns nothing;
+    ``run_claude_review`` runs it with the environment controls.
+    """
+    from scripts.agent_runtime.adapters.claude import headless_claude_argv
+
     if capabilities is not None:
         require_engine_isolation(capabilities)
     cmd = [str(binary.resolve()), "-p", "--output-format", "text"]
@@ -2495,7 +2541,40 @@ def build_claude_review_argv(
     if model:
         cmd.extend(["--model", model])
     cmd.extend(["--", prompt])
-    return cmd
+    return headless_claude_argv(cmd)
+
+
+def run_claude_review(
+    binary: Path,
+    *,
+    prompt: str,
+    json_schema: Mapping[str, Any],
+    env: Mapping[str, str],
+    timeout: float,
+    cwd: Path | None = None,
+    model: str | None = None,
+    capabilities: EngineCapabilities | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run an isolated Claude review and capture its output.
+
+    ``env`` is the reviewer's exact base environment (``build_reviewer_env``):
+    the child gets it plus the background controls only, never the ambient
+    environment, because the run ends with its final turn (#9750).
+    """
+    from scripts.agent_runtime.adapters.claude import run_headless_claude
+
+    argv = build_claude_review_argv(
+        binary, prompt=prompt, json_schema=json_schema, model=model, capabilities=capabilities
+    )
+    return run_headless_claude(
+        argv,
+        base_env=env,
+        cwd=None if cwd is None else str(cwd),
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+        check=False,
+    )
 
 
 def build_codex_review_argv(

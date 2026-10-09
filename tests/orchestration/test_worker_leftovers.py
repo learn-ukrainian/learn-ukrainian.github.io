@@ -331,7 +331,7 @@ def test_a_different_process_alone_in_the_scope_is_reported_unchanged() -> None:
     "fields",
     [
         # Same name and argv, but not under the resolved install's versions directory.
-        {"exe": Path("/tmp/evil/versions/2026.10.01-e373342/node")},
+        {"exe": Path("/nonexistent/evil/versions/2026.10.01-e373342/node")},
         # Directly in, or nested below, a version directory.
         {"exe": CURSOR_VERSIONS / "node"},
         {"exe": CURSOR_VERSION_DIR / "bin" / "node"},
@@ -996,6 +996,133 @@ def test_only_leftovers_hold_rejects_a_foreign_cwd_holder(tmp_path: Path) -> Non
 
 
 # --- the live host --------------------------------------------------------
+
+
+NON_LF_SEPARATORS = [
+    pytest.param(b"\r", id="CR"),
+    pytest.param(b"\v", id="VT"),
+    pytest.param(b"\f", id="FF"),
+    pytest.param(b"\x1c", id="FS"),
+    pytest.param(b"\x1d", id="GS"),
+    pytest.param(b"\x1e", id="RS"),
+    pytest.param("\u0085".encode(), id="NEL"),
+    pytest.param("\u2028".encode(), id="LS"),
+    pytest.param("\u2029".encode(), id="PS"),
+]
+
+
+@pytest.mark.parametrize("separator", NON_LF_SEPARATORS)
+@pytest.mark.parametrize("physical_uid", [b"Uid:\t2001\t2002\t2003\t2004\n", b""])
+def test_procfs_uid_ignores_non_lf_name_records(tmp_path: Path, separator: bytes, physical_uid: bytes) -> None:
+    proc_dir = tmp_path / "42"
+    proc_dir.mkdir()
+    (proc_dir / "status").write_bytes(b"Name:\tjob" + separator + b"Uid:\t1000\n" + physical_uid)
+    reader = wl.ProcFsReader(proc_root=tmp_path)
+
+    if physical_uid:
+        assert reader.real_uid(42) == 2001
+    else:
+        with pytest.raises(wl.ScanUnknown, match="has no Uid line"):
+            reader.real_uid(42)
+
+
+@pytest.mark.parametrize(
+    ("status", "expected"),
+    [
+        (b"Name:\tjob\nUid:\t1000\t1001\t1002\t1003\n", 1000),
+        (b"Name:\tjob\r\nUid:\t1000\t1001\t1002\t1003\r\n", 1000),
+        (b"Uid: 0", 0),
+        (b"Uid:\t00042\nUid:\t999\n", 42),
+    ],
+)
+def test_procfs_uid_preserves_valid_first_record(tmp_path: Path, status: bytes, expected: int) -> None:
+    (tmp_path / "42").mkdir()
+    (tmp_path / "42" / "status").write_bytes(status)
+
+    assert wl.ProcFsReader(proc_root=tmp_path).real_uid(42) == expected
+
+
+@pytest.mark.parametrize(
+    "token",
+    [
+        b"",
+        b" \t\r",
+        b"invalid",
+        b"+42",
+        b"-42",
+        b"4.2",
+        b"4_2",
+        b"\xff",
+        "\u00b2".encode(),
+        "\u0664\u0662".encode(),
+        "\uff14\uff12".encode(),
+        b"9" * 5000,
+    ],
+)
+def test_procfs_uid_rejects_unusable_first_record_without_falling_through(tmp_path: Path, token: bytes) -> None:
+    (tmp_path / "42").mkdir()
+    (tmp_path / "42" / "status").write_bytes(b"Uid:\t" + token + b"\nUid:\t1000\n")
+
+    with pytest.raises(wl.ScanUnknown, match="unusable Uid line"):
+        wl.ProcFsReader(proc_root=tmp_path).real_uid(42)
+
+
+def test_procfs_uid_preserves_gone_and_unreadable_contracts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    reader = wl.ProcFsReader(proc_root=tmp_path)
+    assert reader.real_uid(42) is None
+    (tmp_path / "42").mkdir()
+    assert reader.real_uid(42) is None
+    status = tmp_path / "42" / "status"
+    status.mkdir()  # An unusable status path raises OSError rather than being gone.
+    with pytest.raises(wl.ScanUnknown):
+        reader.real_uid(42)
+
+    def deny_read(_path: Path) -> bytes:
+        raise PermissionError(13, "Permission denied")
+
+    monkeypatch.setattr(Path, "read_bytes", deny_read)
+    with pytest.raises(wl.ScanUnknown, match="Permission denied"):
+        reader.real_uid(42)
+
+
+@pytest.mark.parametrize("separator", NON_LF_SEPARATORS)
+def test_stop_refuses_physical_foreign_uid_despite_name_injection(tmp_path: Path, separator: bytes) -> None:
+    proc_root = tmp_path / "proc"
+    proc_dir = proc_root / str(JOB)
+    proc_dir.mkdir(parents=True)
+    expected_uid = str(os.getuid()).encode()
+    physical_uid = str(os.getuid() + 1).encode()
+    (proc_dir / "status").write_bytes(
+        b"Name:\tjob" + separator + b"Uid:\t" + expected_uid + b"\nUid:\t" + physical_uid + b"\n"
+    )
+    fields = ["S", "0", "1", "1"] + ["0"] * 15 + ["4242"]
+    (proc_dir / "stat").write_text(f"{JOB} (job) {' '.join(fields)}")
+    (proc_dir / "cgroup").write_text(f"0::{SCOPE_CGROUP}\n")
+    (proc_root / "self").mkdir()
+    (proc_root / "self" / "cgroup").write_text("0::/outside.scope\n")
+    cgroup_root = tmp_path / "cg"
+    scope_dir = cgroup_root / SCOPE_CGROUP.lstrip("/")
+    scope_dir.mkdir(parents=True)
+    (scope_dir / "cgroup.procs").write_text(f"{JOB}\n")
+    reader = wl.ProcFsReader(proc_root=proc_root, cgroup_root=cgroup_root)
+    fake = FakeProcs()
+    opened: list[int] = []
+    ops = wl.PidfdOps(
+        open=lambda pid: opened.append(pid) or pid,
+        send=lambda fd, sig: fake.signals.append((fd, sig)),
+        close=lambda _fd: None,
+    )
+
+    result = wl.stop_leftovers(scope_of(launch_mode="scope"), reader=reader, **{**stop_kwargs(fake), "pidfd": ops})
+
+    assert result.ok is False
+    assert result.unit_stopped is False
+    assert result.unsignalled == [JOB]
+    assert [proc.pid for proc in result.survivors] == [JOB]
+    assert "refused a signal" in (result.error or "")
+    assert fake.stopped_units == []
+    assert opened == []
+    assert fake.signals == []
 
 
 def test_parse_stat_handles_spaces_and_parens_in_comm() -> None:

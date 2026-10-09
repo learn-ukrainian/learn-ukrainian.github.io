@@ -99,6 +99,7 @@ from scripts.lexicon.source_attribution import (
     WIKIDATA_LABEL,
     join_academic_source_labels,
 )
+from tests._host_path_guard import assert_no_checkout_paths
 
 
 def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
@@ -4171,8 +4172,11 @@ def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monk
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {"word": lemma, "text": "ВЕЛИ́КИЙ, а, е. протилежне малий."}}}
-        if lemma == "великий" else {},
+        lambda lemma: (
+            {"lookups": {"newsum": {"word": lemma, "text": "ВЕЛИ́КИЙ, а, е. протилежне малий."}}}
+            if lemma == "великий"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -4244,18 +4248,18 @@ def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
         "INSERT INTO sum11(word, definition) VALUES (?, ?)",
         [(lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.") for lemma, antonym in pairs.items()],
     )
-    assert all(
-        _definition_antonym_relations(conn, lemma, cache={}) == []
-        for lemma in pairs
-    )
+    assert all(_definition_antonym_relations(conn, lemma, cache={}) == [] for lemma in pairs)
 
     before_counts = {lemma: 0 for lemma in pairs}
     after_items = {
         lemma: [
-            relation["item"] for relation in _definition_antonym_relations(
+            relation["item"]
+            for relation in _definition_antonym_relations(
                 conn,
                 lemma,
-                cache={"lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}},
+                cache={
+                    "lookups": {"newsum": {"word": lemma, "text": f"Тестова дефініція; протилежне {pairs[lemma]}."}}
+                },
             )
         ]
         for lemma in pairs
@@ -4312,9 +4316,13 @@ def test_homonym_relations_require_numbering_and_an_exact_vesum_lemma(monkeypatc
         ),
     )
     _patch_synonym_vesum(monkeypatch, {"коса"})
-    cache = {"lookups": {"newsum": {
-        "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
-    }}}
+    cache = {
+        "lookups": {
+            "newsum": {
+                "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+            }
+        }
+    }
 
     assert _homonym_relations(conn, "коса", cache={}) == []  # СУМ-11 alone cannot verify a relation.
     relations = _homonym_relations(conn, "коса", cache=cache)
@@ -4350,9 +4358,17 @@ def test_homonym_relations_precompute_by_manifest_headword(monkeypatch) -> None:
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {
-            "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
-        }}} if lemma == "коса" else {},
+        lambda lemma: (
+            {
+                "lookups": {
+                    "newsum": {
+                        "text": "КОСА́¹, и, ж. Заплетене волосся. КОСА́², и, ж. Сільськогосподарське знаряддя для косіння трави."
+                    }
+                }
+            }
+            if lemma == "коса"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -4793,9 +4809,7 @@ def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
     after_numbers = {
         lemma: [
             relation["homonym_no"]
-            for relation in _homonym_relations(
-                conn, lemma, cache={"lookups": {"newsum": {"text": definition}}}
-            )
+            for relation in _homonym_relations(conn, lemma, cache={"lookups": {"newsum": {"text": definition}}})
         ]
         for lemma, (definition, _numbers) in fixtures.items()
     }
@@ -4990,9 +5004,11 @@ def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypa
     monkeypatch.setattr(
         enrich_manifest_module,
         "_read_cached_slovnyk_rows",
-        lambda lemma: {"lookups": {"newsum": {
-            "word": "кафе", "text": "КАФЕ́, невідм., с. Те саме, що кав'ярня."
-        }}} if lemma == "кафе" else {},
+        lambda lemma: (
+            {"lookups": {"newsum": {"word": "кафе", "text": "КАФЕ́, невідм., с. Те саме, що кав'ярня."}}}
+            if lemma == "кафе"
+            else {}
+        ),
     )
     conn = _conn()
     conn.execute(
@@ -5991,7 +6007,7 @@ def test_resolve_primary_checkout_matches_git_common_dir() -> None:
     # Portability is a source-code property: the module must resolve the
     # primary checkout dynamically rather than embed an operator's absolute path.
     src = Path(enrich_manifest_module.__file__).read_text(encoding="utf-8")
-    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
+    assert_no_checkout_paths(src)
 
 
 def test_morphology_filters_russian_infinitive_tsya_form(monkeypatch) -> None:
@@ -7179,3 +7195,216 @@ def test_hub_cache_only_cli_writes_offline_candidate(hub_cache, tmp_path, monkey
     with pytest.raises(FileNotFoundError):
         enrich_manifest_module.main(["--write", flag, "--output", str(missing_output)])
     assert not missing_output.exists()
+
+
+@pytest.mark.parametrize(
+    "cache",
+    [
+        None,
+        {},
+        {"schema_version": 4, "lemma": "sample", "lookup_word": "sample", "lookups": {}, "fetched_at": "invalid"},
+        {"schema_version": 4, "lemma": "sample", "lookup_word": "sample", "lookups": {}, "fetched_at": "2026-01-01"},
+    ],
+)
+def test_strict_cache_reuse_requires_provenance(cache):
+    assert not enrich_manifest_module._reusable_slovnyk_cache(cache, "sample", "sample")
+
+
+@pytest.mark.parametrize(
+    "stored_lemma,expected", [("sample", True), ("sample / alias", True), ("other", False), (None, False)]
+)
+def test_strict_cache_reuse_matches_lookup_and_filename(stored_lemma, expected):
+    cache = enrich_manifest_module._new_slovnyk_cache("sample", "sample") | {"lemma": stored_lemma}
+    assert enrich_manifest_module._reusable_slovnyk_cache(cache, "sample / sibling", "sample") is expected
+
+
+@pytest.mark.parametrize("version", [2, 4])
+def test_strict_cache_distinct_lookup_collision_preserves_bytes(monkeypatch, tmp_path, version):
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    cache = enrich_manifest_module._new_slovnyk_cache("abc:def", "abc:def") | {"schema_version": version}
+    path = enrich_manifest_module._slovnyk_cache_path("abc:def")
+    path.write_text(json.dumps(cache))
+    before = path.read_bytes()
+    calls = []
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_outcome", lambda *_args: calls.append(1))
+    outcomes = {}
+    with pytest.raises(enrich_manifest_module._SlovnykCacheCollision, match="cache filename collision") as error:
+        enrich_manifest_module._strict_slovnyk_cache("abc-def", outcomes, ("vts",))
+    assert str(error.value) == "cache filename collision between distinct lookup identities"
+    assert path.read_bytes() == before and not calls and not outcomes
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"dictionary_slug": "other"},
+        {"text": ""},
+        {"word": ""},
+        {"source_url": "https://slovnyk.me/dict/vts/other"},
+        {"source_url": "https://[invalid"},
+        {"source_url": "https://slovnyk.me/dict/vts/sample?query=1"},
+    ],
+)
+def test_strict_cache_positive_identity_rejects_invalid_rows(change):
+    row = {
+        "dictionary_slug": "vts",
+        "word": "sample",
+        "text": "synthetic",
+        "source_url": "https://slovnyk.me/dict/vts/sample",
+    }
+    assert not enrich_manifest_module._valid_slovnyk_positive(row | change, "vts", "sample")
+
+
+def test_strict_cache_rechecks_unattested_null_then_empty_200(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    path = enrich_manifest_module._slovnyk_cache_path("sample")
+    path.write_text(
+        json.dumps(enrich_manifest_module._new_slovnyk_cache("sample", "sample") | {"lookups": {"vts": None}})
+    )
+    before = path.read_bytes()
+    calls = []
+
+    def get(*_args, **_kwargs):
+        calls.append(1)
+        return SimpleNamespace(status_code=200, text="<article></article>", headers={})
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", get)
+    outcomes = {}
+    enrich_manifest_module._slovnyk_cache("sample", outcomes=outcomes, slugs=("vts", "newsum"))
+    assert outcomes["vts"].status == "parse_error"
+    assert "newsum" not in outcomes
+    assert len(calls) == 1 and path.read_bytes() == before
+
+
+def test_strict_cache_retries_then_stops_access_without_new_default_exception(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_polite_slovnyk_delay", lambda: None)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_backoff_sleep", lambda *_args: None)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("vts",))
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    calls = []
+    codes = iter([503, 503, 403, 403])
+
+    def get(*_args, **_kwargs):
+        code = next(codes)
+        calls.append(code)
+        return SimpleNamespace(status_code=code, text="unused", headers={})
+
+    monkeypatch.setattr(enrich_manifest_module.requests, "get", get)
+    outcomes = {}
+    enrich_manifest_module._slovnyk_cache("sample", outcomes=outcomes)
+    assert outcomes["vts"].status == "blocked" and outcomes["vts"].http_status == 403
+    assert calls == [503, 503, 403]
+    assert enrich_manifest_module._slovnyk_cache("sample")["lookups"] == {}
+    assert calls == [503, 503, 403, 403]
+
+
+@pytest.mark.parametrize("failure", ["serialize", "file-sync", "replace"])
+def test_atomic_slovnyk_publication_preserves_old_bytes(monkeypatch, tmp_path, failure):
+    path = tmp_path / "cache.json"
+    path.write_text('{"old":"synthetic"}\n')
+    before = path.read_bytes()
+    if failure == "serialize":
+        value = {"bad": object()}
+        error = TypeError
+    else:
+        value = {"new": "synthetic"}
+        error = OSError
+        target = "fsync" if failure == "file-sync" else "replace"
+        monkeypatch.setattr(enrich_manifest_module.os, target, lambda *_args: (_ for _ in ()).throw(OSError("private")))
+    with pytest.raises(error):
+        enrich_manifest_module._atomic_slovnyk_json(path, value)
+    assert path.read_bytes() == before
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_atomic_slovnyk_write_orders_sync_and_replace(monkeypatch, tmp_path):
+    events = []
+    replace = enrich_manifest_module.os.replace
+    fsync = enrich_manifest_module.os.fsync
+
+    def sync(fd):
+        events.append("sync")
+        fsync(fd)
+
+    def publish(source, target):
+        events.append("replace")
+        assert json.loads(source.read_text()) == {"synthetic": True}
+        replace(source, target)
+
+    monkeypatch.setattr(enrich_manifest_module.os, "fsync", sync)
+    monkeypatch.setattr(enrich_manifest_module.os, "replace", publish)
+    path = tmp_path / "nested/cache.json"
+    enrich_manifest_module._atomic_slovnyk_json(path, {"synthetic": True})
+    assert events == ["sync", "replace", "sync"]
+    assert json.loads(path.read_text()) == {"synthetic": True}
+
+
+def test_cache_store_lookup_atomic_boundary_removes_unattested_miss(monkeypatch, tmp_path):
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    cache = enrich_manifest_module._new_slovnyk_cache("sample", "sample")
+    cache["not_found"] = {"vts": {"http_status": 404, "lookup_word": "sample"}}
+    enrich_manifest_module._cache_store_lookup("sample", cache, "vts", None)
+    data = json.loads(enrich_manifest_module._slovnyk_cache_path("sample").read_text())
+    assert not enrich_manifest_module._resolved_slovnyk_lookup(data, "vts", "sample")
+    assert data["lookups"] == {"vts": None} and data["not_found"] == {}
+    cache["lookups"] = []
+    before = enrich_manifest_module._slovnyk_cache_path("sample").read_bytes()
+    enrich_manifest_module._cache_store_lookup("sample", cache, "newsum", None)
+    assert enrich_manifest_module._slovnyk_cache_path("sample").read_bytes() == before
+
+
+@pytest.mark.parametrize("evidence", [None, {}, {"vts": {"http_status": 404, "lookup_word": "other"}}])
+def test_resolved_lookup_rejects_legacy_or_wrong_identity_null(evidence):
+    cache = {"lookups": {"vts": None}, "not_found": evidence}
+    assert not enrich_manifest_module._resolved_slovnyk_lookup(cache, "vts", "sample")
+    cache["not_found"] = {"vts": {"http_status": 404, "lookup_word": "sample"}}
+    assert enrich_manifest_module._resolved_slovnyk_lookup(cache, "vts", "sample")
+    assert not enrich_manifest_module._resolved_slovnyk_lookup(cache, "vts", "")
+
+
+@pytest.mark.parametrize("caller", ["strict", "tolerant", "store"])
+def test_cache_publication_failure_preserves_previously_valid_rows(monkeypatch, tmp_path, caller):
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    monkeypatch.setattr(enrich_manifest_module, "_SLOVNYK_LOOKUP_SLUGS", ("vts", "newsum"))
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
+    row = {
+        "dictionary_slug": "vts",
+        "word": "sample",
+        "text": "synthetic existing article",
+        "source_url": "https://slovnyk.me/dict/vts/sample",
+    }
+    cache = enrich_manifest_module._new_slovnyk_cache("sample", "sample")
+    cache["lookups"] = {"vts": row}
+    path = enrich_manifest_module._slovnyk_cache_path("sample")
+    enrich_manifest_module._atomic_slovnyk_json(path, cache)
+    before = path.read_bytes()
+    monkeypatch.setattr(enrich_manifest_module.os, "replace", lambda *_args: (_ for _ in ()).throw(OSError("private")))
+    if caller == "strict":
+        monkeypatch.setattr(
+            enrich_manifest_module,
+            "_fetch_slovnyk_outcome",
+            lambda *_args: enrich_manifest_module._SlovnykOutcome("not_found", http_status=404),
+        )
+        outcomes = {}
+        enrich_manifest_module._strict_slovnyk_cache("sample", outcomes, ("vts", "newsum"))
+        assert outcomes["vts"].status == "reused" and outcomes["newsum"].status == "error"
+    elif caller == "tolerant":
+        monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args: None)
+        with pytest.raises(OSError):
+            enrich_manifest_module._slovnyk_cache("sample")
+    else:
+        with pytest.raises(OSError):
+            enrich_manifest_module._cache_store_lookup("sample", cache, "newsum", None)
+    assert path.read_bytes() == before
+    assert enrich_manifest_module._valid_slovnyk_positive(
+        json.loads(path.read_text())["lookups"]["vts"], "vts", "sample"
+    )
+    assert list(tmp_path.iterdir()) == [path]

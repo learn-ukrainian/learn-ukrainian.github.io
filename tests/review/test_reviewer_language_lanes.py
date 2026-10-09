@@ -41,6 +41,11 @@ def test_each_ukrainian_content_path_is_classified(path):
     assert is_ukrainian_content_change(ResolverInputs(author_model="codex", changed_paths=(path,)))
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    monkeypatch.setattr("scripts.fleet.credit_lane.read_routing_budget", lambda **_: None)
+
+
 def test_unrelated_paths_do_not_match_content_patterns():
     assert not is_ukrainian_content_change(
         ResolverInputs(author_model="codex", changed_paths=("scripts/review/reviewer_resolver.py", "docs/infra.md"))
@@ -73,9 +78,9 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(
         item["family"] in {"openai", "anthropic", "google"} or item["status"] == "excluded" for item in payload["trace"]
     )
-    # #9488: the attested Cursor Grok seat is on the ladder, never for Ukrainian content.
+    # #9769: both Grok transports stay excluded from Ukrainian content.
     xai = [item for item in payload["trace"] if item["family"] == "xai"]
-    assert [item["name"] for item in xai] == ["grok-4.7-cursor-fallback"]
+    assert [item["name"] for item in xai] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     assert xai[0]["status"] == "excluded"
     assert "Ukrainian-content language-lanes exclusion" in xai[0]["reason"]
     composer = next(item for item in payload["trace"] if item["name"] == "composer-2.5")
@@ -142,8 +147,8 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_lanes_are_unhealthy():
-    """#9488: native Grok never judges; the runtime-attested Cursor seat is the last resort."""
+def test_pure_infra_change_excludes_gemini_when_primary_lanes_are_unhealthy():
+    """#10073 admits native AGY code review only; infra keeps a qualified fallback."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -154,15 +159,16 @@ def test_pure_infra_change_falls_only_to_the_attested_cursor_grok_when_primary_l
         ),
     )
     assert resolution.selected is not None
-    assert (resolution.selected.name, resolution.selected.transport) == ("grok-4.7-cursor-fallback", "cursor")
-    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7-cursor-fallback"]
+    assert resolution.selected.concrete_model == "grok-4.7"
+    assert all(item.status == "excluded" for item in resolution.trace if item.family == "google")
+    assert [item.name for item in resolution.trace if item.family == "xai"] == ["grok-4.7", "grok-4.7-cursor-fallback"]
     dark = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
             review_profile="infra",
             domain="infra",
             changed_paths=("scripts/orchestration/worker.py",),
-            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "cursor": "unhealthy"},
+            routing_snapshot={"claude": "unhealthy", "codex": "unhealthy", "grok": "unhealthy", "cursor": "unhealthy", "agy": "unhealthy"},
         ),
     )
     assert dark.selected is None
@@ -186,7 +192,8 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     base_sha = git("rev-parse", "HEAD")
     source.write_text("value = 2\n", encoding="utf-8")
     git("add", ".")
-    git("commit", "-qm", "change word store")
+    # A committed target is attributed by its X-Agent trailer (#9739): a Codex author, as --author-model says.
+    git("commit", "-qm", "change word store\n\nX-Agent: codex/gpt-6.1-sol")
     head_sha = git("rev-parse", "HEAD")
     state_file = tmp_path / "review.json"
     assert (
@@ -211,7 +218,9 @@ def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
     assert state["target"]["head_sha"] == head_sha
     assert state["target"]["changed_paths"] == ["scripts/lexicon/word_store.py"]
     assert state["target_args"]["repo_root"] == str(repo.resolve())
-    assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex"]) == 0
+    # The fixture repository has no GitHub origin, so name the repository its task records would carry.
+    repository = ["--repository", "learn-ukrainian/learn-ukrainian.github.io"]
+    assert main(["--state-file", str(state_file), "resolve-reviewer", "--author-model", "codex", *repository]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["selected"]["family"] == "anthropic"
     assert any("Ukrainian-content language-lanes exclusion" in (item["reason"] or "") for item in payload["trace"])

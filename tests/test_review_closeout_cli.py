@@ -19,6 +19,13 @@ from scripts.common.git_context import sanitized_git_env
 from tests.project_python import project_python
 
 
+@pytest.fixture(autouse=True)
+def isolated_live_snapshot(monkeypatch):
+    from scripts.fleet import credit_lane
+
+    monkeypatch.setattr(credit_lane, "read_routing_budget", lambda **_kwargs: None)
+
+
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     # sanitized_git_env() strips GIT_DIR/GIT_WORK_TREE/etc — without it, running
     # this suite from inside a `git commit` pre-commit hook leaks the OUTER
@@ -316,7 +323,7 @@ def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path, monk
             assert "subject exclusion" in grok["reason"]
             assert "grok_build.py" in grok["reason"]
     else:
-        assert [entry["name"] for entry in grok_entries] == ["grok-4.7-cursor-fallback"]
+        assert [entry["name"] for entry in grok_entries] == ["grok-4.7", "grok-4.7-cursor-fallback"]
         assert grok_entries[0]["status"] == "excluded"
         assert "subject exclusion" in grok_entries[0]["reason"]
         assert "grok_build.py" in grok_entries[0]["reason"]
@@ -777,3 +784,375 @@ def test_record_cycle_rejects_negative_outstanding_count(tmp_path):
     state_after = json.loads(state_file.read_text(encoding="utf-8"))
     assert state_after == state_before
     assert state_after["cycle_outstanding_counts"] == [2]
+
+
+# --- #9739: a committed target's reviewer is chosen from its complete authorship ------------------
+
+
+def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recorder(tmp_path, monkeypatch):
+    from scripts.review import record_cf_verdict as recorder
+    from tests.test_authoring_review_feasibility import GROK, OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="first author")
+    repo.commit(SOL, message="latest author")
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    common = ("--author-model", "gpt-6.1-sol", "--repository", REPOSITORY, "--task-root", str(tasks))
+
+    medium = _run_cli(state, "resolve-reviewer", *common, "--risk", "medium")
+    payload = json.loads(medium.stdout)
+
+    # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
+    assert medium.returncode == 0, medium.stdout
+    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
+    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
+    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
+    # The recorder, from its own collection of the same Git facts, accepts that reviewer and not Opus.
+    frozen = json.loads(state.read_text())["target"]
+    facts = recorder.collect_branch_review_facts(
+        repository=REPOSITORY,
+        repo_root=repo.root,
+        base_tip_sha=frozen["base_sha"],
+        head_sha=frozen["head_sha"],
+        task_root=tasks,
+    )
+    recorder._require_qualified_reviewer(
+        facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
+    )
+    with pytest.raises(recorder.RecordError, match="not qualified"):
+        recorder._require_qualified_reviewer(
+            facts, task={"agent": "claude", "review_risk": "medium"}, model="claude-opus-5-5", family="anthropic"
+        )
+
+    # Grok reviews at every risk (#9769); an xAI author leaves no reviewer at all.
+    repo.commit(GROK, message="third author")
+    retarget = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert retarget.returncode == 0, retarget.stderr
+    critical = _run_cli(state, "resolve-reviewer", *common, "--risk", "critical")
+    assert critical.returncode == 1 and json.loads(critical.stdout)["selected"] is None
+
+
+def test_resolve_reviewer_fails_closed_on_an_unattributed_commit(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    repo.commit(None, message="no trailer")
+    state = tmp_path / "state.json"
+    _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+    )
+
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "missing explicit X-Agent" in payload["fail_closed_reason"]
+
+
+def _point_origin_head(repo) -> None:
+    repo.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+
+
+@pytest.mark.parametrize(
+    "base_name",
+    ["origin/main", "remotes/origin/main", "refs/remotes/origin/main"],
+)
+def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_path, monkeypatch, base_name):
+    """A stale frozen base plus a later main merge must not inherit main's authors (#10009)."""
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="branch author")
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        base_name,
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    frozen_base = json.loads(state.read_text(encoding="utf-8"))["target"]["base_sha"]
+
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    head = repo.sha("HEAD")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == frozen_base
+    saved["target"]["head_sha"] = head
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tasks),
+        "--risk",
+        "medium",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["branch_facts"]["existing_families"] == ["anthropic"]
+    assert payload["branch_facts"]["commits"] == 2
+    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
+    trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
+    assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
+    assert squash != head
+
+
+def test_resolve_reviewer_refuses_an_empty_review_range(tmp_path, monkeypatch):
+    """A branch whose frozen base and head are the same commit has nothing of its own to review."""
+    from tests.test_authoring_review_feasibility import REPOSITORY, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == saved["target"]["head_sha"]
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+        "--risk",
+        "medium",
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "empty review range" in payload["fail_closed_reason"]
+    assert "no commits of its own" in payload["fail_closed_reason"]
+
+
+def test_resolve_reviewer_still_refuses_a_branch_whose_only_commits_came_from_main(tmp_path, monkeypatch):
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+
+    repo.git("checkout", "-q", "trunk")
+    squash = repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    saved["target"]["head_sha"] = squash
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "missing explicit X-Agent" in payload["fail_closed_reason"]
+
+
+def test_resolve_reviewer_refuses_a_clean_main_merge_with_no_branch_commit(tmp_path, monkeypatch):
+    """A no-ff base merge is not an authored commit, so reviewer selection still refuses."""
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    state = tmp_path / "state.json"
+    target = _run_cli(
+        state,
+        "target",
+        "--mode",
+        "branch",
+        "--branch",
+        "feature",
+        "--base",
+        "origin/main",
+        "--repo-root",
+        str(repo.root),
+    )
+    assert target.returncode == 0, target.stderr
+
+    repo.git("checkout", "-q", "trunk")
+    repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    saved["target"]["head_sha"] = repo.sha("HEAD")
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tmp_path),
+    )
+    assert result.returncode == 1
+    payload = json.loads(result.stdout)
+    assert payload["selected"] is None
+    assert "branch review facts unavailable" in payload["fail_closed_reason"]
+    assert "missing explicit X-Agent" in payload["fail_closed_reason"]
+
+
+@pytest.mark.parametrize("base_name,excluded", [("main", True), ("release", False)])
+def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, monkeypatch, base_name, excluded):
+    """A frozen PR target must exclude default-branch authors, and only those."""
+    from scripts.review import target_resolution as resolution
+    from tests.test_authoring_review_feasibility import OPUS, REPOSITORY, SOL, mini_repo
+
+    repo = mini_repo(tmp_path, monkeypatch)
+    _point_origin_head(repo)
+    tasks = tmp_path / "tasks"
+    repo.commit(OPUS, message="branch author")
+    payload = {
+        "number": 10028,
+        "baseRefName": base_name,
+        "baseRefOid": repo.sha("origin/main"),
+        "headRefName": "feature",
+        "headRefOid": repo.sha("feature"),
+    }
+
+    def fake_run_gh(args, cwd, timeout=30.0):
+        return subprocess.CompletedProcess(args, 0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(resolution, "_run_gh", fake_run_gh)
+    state = tmp_path / "state.json"
+    target = _run_cli(state, "target", "--mode", "pr", "--pr", "10028", "--repo-root", str(repo.root))
+    assert target.returncode == 0, target.stderr
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target_args"]["base"] == base_name
+    assert saved["target"]["base_ref_name"] == base_name
+    frozen_base = saved["target"]["base_sha"]
+
+    repo.git("checkout", "-q", "trunk")
+    repo.commit(f"{OPUS}\nX-Agent: {SOL}", path="src/app.py", message="main squash")
+    repo.publish("trunk", to="main")
+    repo.git("checkout", "-q", "feature")
+    repo.git("merge", "-q", "--no-ff", "origin/main", "-m", "sync base")
+    saved = json.loads(state.read_text(encoding="utf-8"))
+    assert saved["target"]["base_sha"] == frozen_base
+    assert saved["target_args"]["base"] == base_name
+    saved["target"]["head_sha"] = repo.sha("HEAD")
+    state.write_text(json.dumps(saved), encoding="utf-8")
+
+    result = _run_cli(
+        state,
+        "resolve-reviewer",
+        "--author-model",
+        "gpt-6.1-sol",
+        "--repository",
+        REPOSITORY,
+        "--task-root",
+        str(tasks),
+        "--risk",
+        "medium",
+    )
+    body = json.loads(result.stdout)
+    if excluded:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert body["branch_facts"]["existing_families"] == ["anthropic"]
+        assert body["selected"]["name"] == "gemini-3.8-flash-high"
+    else:
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert body["selected"] is None
+        assert "missing explicit X-Agent" in body["fail_closed_reason"]

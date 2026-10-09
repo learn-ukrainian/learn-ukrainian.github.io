@@ -6,7 +6,7 @@ Local single-host ledger (`batch_state/tasks/write-ownership.sqlite3`) with
 exempt. REFUSE mode (default after #5645 soak) blocks conflicting writable admits;
 WARN mode admits on conflict but records would-refuse (opt-in via DELEGATE_OWNERSHIP_MODE=warn).
 
-Claims come from normalized ``--research-owned-path`` values but are stored
+Claims come from normalized ``--owned-path`` values but are stored
 separately from the fail-open research registry.
 """
 
@@ -17,12 +17,29 @@ import json
 import os
 import posixpath
 import sqlite3
+import sys
 import time
 import unicodedata
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 # Anchor ledger + task-state to the PRIMARY checkout (not a worktree copy),
 # matching scripts/delegate.py (Claude CF #5649 r12 F001).
@@ -83,6 +100,8 @@ TERMINAL_TASK_STATUSES = frozenset(
 
 
 class ClaimKind(StrEnum):
+    # Legacy ledgers used FILE for plain paths; they have the same prefix
+    # ownership as SUBTREE, including descendants, regardless of filesystem type.
     FILE = "file"
     SUBTREE = "subtree"
     UNKNOWN = "ownership_unknown"
@@ -138,12 +157,12 @@ def _posix_norm(path: str) -> str:
 
 
 def normalize_claim(raw: str) -> PathClaim:
-    """Normalize a single --research-owned-path value into a claim."""
+    """Normalize --owned-path; every literal path owns itself and its descendants."""
     text = (raw or "").strip().replace("\\", "/")
     if not text or text in {".", "./"}:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm="")
 
-    # Preserve subtree intent before normpath (which strips trailing /).
+    # Strip subtree suffixes before normpath and wildcard validation.
     is_double_star = text.endswith("/**")
     is_subtree_slash = text.endswith("/") and not is_double_star
     body = text[: -len("/**")] if is_double_star else text.rstrip("/") if is_subtree_slash else text
@@ -162,10 +181,7 @@ def normalize_claim(raw: str) -> PathClaim:
     if norm.startswith("/") or norm.startswith("../") or norm == ".." or "/../" in f"/{norm}/" or drive_qualified:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
-    if is_double_star or is_subtree_slash:
-        return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
-
-    return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
+    return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
 
 
 def owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
@@ -315,7 +331,7 @@ def refusal_message(
     parts: list[str] = []
     if self_unprovable:
         declared = ", ".join(repr(sanitize_for_display(c.raw)) for c in unknown[:3]) if unknown else "none declared"
-        parts.append(f"this task declared no comparable --research-owned-path ({declared})")
+        parts.append(f"this task declared no comparable --owned-path ({declared})")
     distinct_peers = _dedupe_peers(unprovable_peers)
     if distinct_peers:
         peers = ", ".join(_peer_label(p) for p in distinct_peers[:3])
@@ -325,22 +341,15 @@ def refusal_message(
     return (
         f"cannot prove write-path disjointness (REFUSE): {detail}. "
         "No actual path overlap was found. Fix by re-running the undeclared "
-        "dispatches with --research-owned-path, or pass "
+        "dispatches with --owned-path, or pass "
         "--allow-path-overlap '<why this is safe>'."
     )
 
 
 def claims_conflict(a: PathClaim, b: PathClaim) -> bool:
-    """Return True if two concrete claims intersect. UNKNOWN never proves overlap alone."""
+    """Compare prefix ownership, including legacy FILE rows; UNKNOWN proves no overlap."""
     if a.kind == ClaimKind.UNKNOWN or b.kind == ClaimKind.UNKNOWN:
         return False
-    if a.kind == ClaimKind.FILE and b.kind == ClaimKind.FILE:
-        return a.norm == b.norm
-    if a.kind == ClaimKind.FILE and b.kind == ClaimKind.SUBTREE:
-        return a.norm == b.norm or a.norm.startswith(b.norm + "/")
-    if a.kind == ClaimKind.SUBTREE and b.kind == ClaimKind.FILE:
-        return b.norm == a.norm or b.norm.startswith(a.norm + "/")
-    # subtree/subtree
     return a.norm == b.norm or a.norm.startswith(b.norm + "/") or b.norm.startswith(a.norm + "/")
 
 
@@ -371,11 +380,12 @@ def _pid_matches_task(
 
     Returns:
         True: Confirmed match (environ, cmdline, or cwd positively verified).
-        False: Confirmed mismatch (all probes inspected without error/denial,
-               and no task identity marker matched; or process is dead).
+        False: Confirmed mismatch (every probe returned readable, non-empty
+               evidence and no task identity marker matched; or process is dead).
         None: Unknown identity (inspection unavailable, probe missing, or denied,
-              e.g. /proc missing, FileNotFoundError, PermissionError, or cwd
-              resolution failure while process remains alive).
+              e.g. /proc missing, FileNotFoundError, PermissionError, a readable
+              but empty environ or cmdline, or cwd resolution failure while the
+              process remains alive).
               Callers must preserve claim protection when identity is unknown.
     """
     if pid <= 0:
@@ -405,26 +415,39 @@ def _pid_matches_task(
     task_bytes = task_id.encode("utf-8")
     safe_task_id = _safe_task_state_name(task_id)
 
-    # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID
+    # 1. Check environ: worker processes carry LEARN_UKRAINIAN_DISPATCH_TASK_ID.
+    # No non-empty entries is the exec window: begin_new_exec closes Popen's
+    # pipe before the new environment is installed. That is not a mismatch.
     try:
         env_raw = (proc_dir / "environ").read_bytes()
-        expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
-        if expected_env in env_raw.split(b"\0"):
-            return True
+        if not env_raw.strip(b"\0"):
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
+        else:
+            expected_env = b"LEARN_UKRAINIAN_DISPATCH_TASK_ID=" + task_bytes
+            if expected_env in env_raw.split(b"\0"):
+                return True
     except OSError:
         if not _pid_alive(pid):
             return False
         evidence_unavailable = True
 
-    # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>
+    # 2. Check cmdline: dispatchers and workers receive --task-id <task_id>.
+    # No non-empty parts is the same exec window, not a confirmed mismatch.
     try:
         cmd_raw = (proc_dir / "cmdline").read_bytes()
         parts = [p for p in cmd_raw.split(b"\0") if p]
-        for i, part in enumerate(parts):
-            if part == b"--task-id" and i + 1 < len(parts) and parts[i + 1] == task_bytes:
-                return True
-            if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
-                return True
+        if not parts:
+            if not _pid_alive(pid):
+                return False
+            evidence_unavailable = True
+        else:
+            for i, part in enumerate(parts):
+                if part == b"--task-id" and i + 1 < len(parts) and parts[i + 1] == task_bytes:
+                    return True
+                if part.startswith(b"--task-id=") and part[len(b"--task-id=") :] == task_bytes:
+                    return True
     except OSError:
         if not _pid_alive(pid):
             return False
@@ -586,7 +609,7 @@ class OwnershipLedger:
         self.process_matches_task = process_matches_task
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
+    def _connect(self, *, read_only: bool = False) -> SQLiteConnection:
         conn = cp_connect(
             StoreId.WRITE_OWNERSHIP,
             path=self.path,
@@ -622,7 +645,7 @@ class OwnershipLedger:
             )
         return conn
 
-    def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
+    def _reconcile_stale(self, conn: SQLiteConnection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
             "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"

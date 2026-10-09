@@ -12,20 +12,37 @@ import html
 import json
 import re
 import sqlite3
+import sys
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from html.parser import HTMLParser
+from pathlib import Path
 
 import requests
+
+try:
+    from scripts.lib.readonly_sqlite import SQLiteConnection
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(parent for parent in Path(__file__).resolve().parents if parent.name == "scripts")
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import SQLiteConnection  # type: ignore[no-redef]
 
 SUM20_SOURCE_ID = "sum20_official"
 SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
 SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
-PARSER_VERSION = "sum20_official_v1"
+PARSER_VERSION = "sum20_official_v4"
+QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
 _ARTICLE_RE = re.compile(r"<article\b[^>]*>.*?</article\s*>", re.IGNORECASE | re.DOTALL)
@@ -37,6 +54,7 @@ _POS_RE = re.compile(
 )
 _ADJECTIVE_ENDINGS_RE = re.compile(r",\s*[а-яіїєґ]\s*,\s*[а-яіїєґ]\.$", re.IGNORECASE)
 _BLOCK_TAGS = frozenset({"article", "div", "p", "li", "br", "h1", "h2", "h3", "tr", "td"})
+_ENTRY_BOUNDARIES = frozenset({"ENTRY", "LINKENTRY"})
 
 
 class Sum20ParseError(ValueError):
@@ -85,15 +103,21 @@ def _classes(node: _Node) -> set[str]:
     return set(node.attrs.get("class", "").split())
 
 
-def _walk(node: _Node) -> Iterable[_Node]:
+def _walk(node: _Node, *, stop_classes: frozenset[str] = _ENTRY_BOUNDARIES) -> Iterable[_Node]:
+    """Walk owned fields, pruning nested articles unless explicitly requested."""
     yield node
     for child in node.children:
-        if isinstance(child, _Node):
-            yield from _walk(child)
+        if isinstance(child, _Node) and not (_classes(child) & stop_classes):
+            yield from _walk(child, stop_classes=stop_classes)
 
 
-def _first_with_class(node: _Node, class_name: str) -> _Node | None:
-    return next((candidate for candidate in _walk(node) if class_name in _classes(candidate)), None)
+def _first_with_class(
+    node: _Node, class_name: str, *, stop_classes: frozenset[str] = _ENTRY_BOUNDARIES
+) -> _Node | None:
+    return next(
+        (candidate for candidate in _walk(node, stop_classes=stop_classes) if class_name in _classes(candidate)),
+        None,
+    )
 
 
 def _all_with_class(node: _Node, class_name: str) -> list[_Node]:
@@ -104,12 +128,14 @@ def _clean_text(value: str) -> str:
     return _SPACE_RE.sub(" ", html.unescape(value)).strip()
 
 
-def _node_text(node: _Node) -> str:
+def _node_text(node: _Node, *, include_entries: bool = False) -> str:
     parts: list[str] = []
 
     def collect(candidate: _Node | str) -> None:
         if isinstance(candidate, str):
             parts.append(candidate)
+            return
+        if candidate is not node and not include_entries and _classes(candidate) & _ENTRY_BOUNDARIES:
             return
         if candidate.tag in _BLOCK_TAGS:
             parts.append(" ")
@@ -120,6 +146,105 @@ def _node_text(node: _Node) -> str:
 
     collect(node)
     return _clean_text("".join(parts))
+
+
+def _has_reference_target(entry: _Node, root: _Node) -> bool:
+    """Require one primary reference and one matching, defined linked article."""
+    links = _all_with_class(entry, "LINK")
+    references = _all_with_class(entry, "LINKTXT")
+    if len(links) != 1 or len(references) != 1:
+        return False
+    link_references = _all_with_class(links[0], "LINKTXT")
+    if len(link_references) != 1 or link_references[0] is not references[0]:
+        return False
+    reference = _node_text(references[0])
+    if not reference:
+        return False
+    linked_containers = [node for node in _walk(root, stop_classes=frozenset()) if "LINKENTRY" in _classes(node)]
+    if len(linked_containers) != 1:
+        return False
+    linked_entries = [
+        node for node in _walk(linked_containers[0], stop_classes=frozenset({"LINKENTRY"})) if "ENTRY" in _classes(node)
+    ]
+    if len(linked_entries) != 1:
+        return False
+    target = linked_entries[0]
+    words = _all_with_class(target, "WORD")
+    if len(words) != 1 or not _node_text(words[0]):
+        return False
+    if normalize_sum20_lookup(reference) != normalize_sum20_lookup(_node_text(words[0])):
+        return False
+    for sense in _all_with_class(target, "INTF") + _all_with_class(target, "INTN"):
+        formula = _first_with_class(sense, "FORMULA")
+        if formula is not None and _node_text(formula):
+            return True
+    return False
+
+
+def _has_phrase_reference(entry: _Node, root: _Node) -> bool:
+    """Recognize owned source-only phrase references observed at 172 and 461."""
+    # Counts apply to direct owners, not flattened article-wide fields. A group
+    # may contain further groups, each with its own marker and phrases. BUX is
+    # optional reference formatting, never a group or phrase marker.
+    child_limits: dict[str, dict[str, tuple[int, int | None]]] = {
+        "ENTRY": {"WORD": (1, 1), "LPART": (1, 1), "PHRF": (1, None)},
+        "PHRF": {"PHRSYM": (1, 1), "PHRASE": (1, None), "PHRF": (0, None)},
+        "PHRASE": {"PHRTXT": (1, 1), "LINK": (1, 1)},
+        "LINK": {"LINKTXT": (1, 1)},
+        "LINKTXT": {"BUX": (0, 1)},
+        "WORD": {},
+        "LPART": {},
+        "PHRSYM": {},
+        "PHRTXT": {},
+        "BUX": {},
+    }
+    owned: set[int] = set()
+    phrase_references: set[tuple[str, str]] = set()
+
+    def validate(field: _Node, class_name: str) -> bool:
+        if _classes(field) != {class_name} or not _node_text(field):
+            return False
+        if class_name == "LINKTXT" and not any(
+            _clean_text(child) if isinstance(child, str) else not _classes(child) and _node_text(child)
+            for child in field.children
+        ):
+            # A formatting index alone is not a reference target.
+            return False
+        owned.add(id(field))
+        limits = child_limits[class_name]
+        children: dict[str, list[_Node]] = {name: [] for name in limits}
+        for child in field.children:
+            if not isinstance(child, _Node) or not _classes(child):
+                continue
+            classes = _classes(child)
+            if len(classes) != 1 or not classes <= limits.keys():
+                return False
+            children[next(iter(classes))].append(child)
+        for name, (minimum, maximum) in limits.items():
+            matches = children[name]
+            if len(matches) < minimum or (maximum is not None and len(matches) > maximum):
+                return False
+            if not all(validate(child, name) for child in matches):
+                return False
+        if class_name == "PHRASE":
+            reference = (
+                _node_text(children["PHRTXT"][0]),
+                _node_text(_all_with_class(children["LINK"][0], "LINKTXT")[0]),
+            )
+            # Reject repeated complete units, including duplicated whole groups.
+            # Distinct phrases may reference the same target; no lexical
+            # normalization or target-text-only uniqueness is appropriate here.
+            if reference in phrase_references:
+                return False
+            phrase_references.add(reference)
+        return True
+
+    if not validate(entry, "ENTRY"):
+        return False
+    # Inspect the whole article, including classed descendants inside unclassed
+    # formatting: orphan fields, foreign/linked entries and definition markers
+    # cannot supply or hide evidence outside the validated ownership tree.
+    return all(not _classes(node) or id(node) in owned for node in _walk(root, stop_classes=frozenset()))
 
 
 def normalize_sum20_lookup(value: str) -> str:
@@ -202,11 +327,16 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
     parser.feed(article_html)
     parser.close()
 
-    entry = _first_with_class(parser.root, "ENTRY")
-    if entry is None:
+    entries = [node for node in _walk(parser.root, stop_classes=frozenset({"LINKENTRY"})) if "ENTRY" in _classes(node)]
+    if not entries:
         raise Sum20ParseError("official article contains no .ENTRY")
-    word_node = _first_with_class(entry, "WORD")
-    stressed_headword = _node_text(word_node) if word_node else ""
+    if len(entries) != 1:
+        raise Sum20ParseError("official article contains ambiguous primary .ENTRY elements")
+    entry = entries[0]
+    words = _all_with_class(entry, "WORD")
+    if len(words) > 1:
+        raise Sum20ParseError("official article contains ambiguous primary headwords")
+    stressed_headword = _node_text(words[0]) if words else ""
     if not stressed_headword:
         raise Sum20ParseError("official article contains no headword")
     headword = _ACUTE_RE.sub("", stressed_headword)
@@ -241,7 +371,15 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
                 )
             )
     if not senses:
-        raise Sum20ParseError("official article contains no definition senses")
+        # Phrase references are source-only units; a matching embedded target
+        # must not let them enter through the ordinary word-reference path.
+        has_reference = (
+            _has_phrase_reference(entry, parser.root)
+            if _all_with_class(entry, "PHRF")
+            else _has_reference_target(entry, parser.root)
+        )
+        if not has_reference:
+            raise Sum20ParseError("official article contains no definition senses")
 
     return Sum20Article(
         wordid=int(wordid),
@@ -250,7 +388,7 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
         pos=pos,
         grammar=grammar,
         article_html=article_html,
-        article_text=_node_text(parser.root),
+        article_text=_node_text(parser.root, include_entries=True),
         normalized_lookup_key=normalize_sum20_lookup(headword),
         senses=senses,
         citations=citations,
@@ -272,7 +410,8 @@ CREATE TABLE IF NOT EXISTS sum20_articles (
     official_url TEXT NOT NULL,
     fetched_at TEXT NOT NULL,
     content_sha256 TEXT NOT NULL,
-    parser_version TEXT NOT NULL
+    parser_version TEXT NOT NULL,
+    quarantine_reason TEXT NOT NULL DEFAULT ''
 );
 CREATE TABLE IF NOT EXISTS sum20_senses (
     id INTEGER PRIMARY KEY,
@@ -343,10 +482,43 @@ CREATE TABLE IF NOT EXISTS sum20_crawl_outcomes (
 """
 
 
-def ensure_sum20_official_schema(conn: sqlite3.Connection) -> None:
+def ensure_sum20_official_schema(conn: SQLiteConnection) -> None:
     """Create the official СУМ-20 collection and resumable-crawl metadata."""
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SUM20_SCHEMA_SQL)
+    ensure_sum20_quarantine_column(conn)
+
+
+def ensure_sum20_quarantine_column(conn: SQLiteConnection) -> bool:
+    """Add ``sum20_articles.quarantine_reason`` to a table created before #9609; return whether it was added."""
+    columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(sum20_articles)")}
+    if not columns or QUARANTINE_COLUMN in columns:
+        return False
+    conn.execute(f"ALTER TABLE sum20_articles ADD COLUMN {QUARANTINE_COLUMN} TEXT NOT NULL DEFAULT ''")
+    return True
+
+
+def live_article_predicate(columns: Iterable[str], alias: str = "") -> str:
+    """SQL predicate that keeps only non-quarantined ``sum20_articles`` rows.
+
+    Quarantined rows stay in the table (never deleted) but no retrieval path
+    returns them.  A restored table may predate the quarantine column while retaining
+    unverified codification rows; their parser version remains excluded.
+    """
+    prefix = f"{alias}." if alias else ""
+    columns = set(columns)
+    predicates = []
+    if QUARANTINE_COLUMN in columns:
+        predicates.append(f"{prefix}{QUARANTINE_COLUMN} = ''")
+    if "parser_version" in columns:
+        predicates.append(f"{prefix}parser_version != 'v1-official-codification'")
+    return " AND ".join(predicates) or "1 = 1"
+
+
+def live_article_predicate_for(conn: SQLiteConnection | sqlite3.Cursor, alias: str = "") -> str:
+    """``live_article_predicate`` for the ``sum20_articles`` table behind a connection or cursor."""
+    rows = conn.execute("PRAGMA table_info(sum20_articles)").fetchall()
+    return live_article_predicate((str(row[1]) for row in rows), alias)
 
 
 def utc_now() -> str:
@@ -354,16 +526,21 @@ def utc_now() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
 
 
-def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
-    """Store one parsed article; return whether its content changed."""
-    fetched_at = fetched_at or utc_now()
+def upsert_sum20_article(conn: SQLiteConnection, article: Sum20Article, *, fetched_at: str | None = None) -> bool:
+    """Replace changed content or parser output, retaining row identity/quarantine.
+
+    Fresh fetches omit ``fetched_at`` to refresh retrieval provenance. Offline
+    reparses must explicitly supply the stored retrieval timestamp.
+    """
+    fetched_at = utc_now() if fetched_at is None else fetched_at
     content_sha256 = article.content_sha256
     existing = conn.execute(
-        "SELECT id, content_sha256 FROM sum20_articles WHERE wordid = ?", (article.wordid,)
+        "SELECT id, content_sha256, parser_version FROM sum20_articles WHERE wordid = ?", (article.wordid,)
     ).fetchone()
     if (
         existing is not None
         and str(existing["content_sha256"] if isinstance(existing, sqlite3.Row) else existing[1]) == content_sha256
+        and str(existing["parser_version"] if isinstance(existing, sqlite3.Row) else existing[2]) == PARSER_VERSION
     ):
         article_id = int(existing["id"] if isinstance(existing, sqlite3.Row) else existing[0])
         conn.execute("UPDATE sum20_articles SET fetched_at = ? WHERE id = ?", (fetched_at, article_id))
@@ -441,7 +618,7 @@ def upsert_sum20_article(conn: sqlite3.Connection, article: Sum20Article, *, fet
 
 
 def record_crawl_outcome(
-    conn: sqlite3.Connection,
+    conn: SQLiteConnection,
     *,
     wordid: int,
     status: str,
@@ -465,7 +642,7 @@ def record_crawl_outcome(
     )
 
 
-def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
+def advance_crawl_checkpoint(conn: SQLiteConnection, wordid: int) -> None:
     """Advance only after an unambiguous terminal outcome."""
     conn.execute(
         """
@@ -477,7 +654,7 @@ def advance_crawl_checkpoint(conn: sqlite3.Connection, wordid: int) -> None:
     )
 
 
-def crawl_resume_wordid(conn: sqlite3.Connection) -> int:
+def crawl_resume_wordid(conn: SQLiteConnection) -> int:
     """Return the next safe wordid after the durable terminal checkpoint."""
     row = conn.execute("SELECT last_wordid FROM sum20_crawl_checkpoint WHERE singleton = 1").fetchone()
     last_wordid = int(row[0]) if row else 0
@@ -489,6 +666,8 @@ class FetchOutcome:
     status: str
     document_html: str = ""
     error_text: str = ""
+    http_status: int | None = None
+    terminal: bool = False
 
 
 def _retry_delay(response: requests.Response | None, retry_backoff_s: float, attempt: int) -> float:
@@ -510,41 +689,47 @@ def fetch_sum20_wordid(
 ) -> FetchOutcome:
     """GET one official wordid with bounded exponential backoff.
 
-    A network/5xx/429 failure is always ``transient_error``.  It is never
-    translated into a missing-record result, so a resumed crawl retries it.
+    Network/408/425/429/5xx failures are bounded retries. Other non-200
+    responses stop on the first response, stored lossily as ``transient_error``
+    with numeric HTTP evidence and ``terminal=True``. Only 404 proves a miss.
     """
     client = session or requests.Session()
-    client.headers.setdefault("User-Agent", DEFAULT_USER_AGENT)
-    client.headers.setdefault("Accept", "text/html,application/xhtml+xml")
+    # A requests.Session already carries "python-requests/<version>" and
+    # "Accept: */*", so setdefault() never applied the project's identifying
+    # headers. sum20ua.com answers 403 to the python-requests agent (#5228).
+    # Replace only the library defaults; a caller's explicit header is kept.
+    if client.headers.get("User-Agent") in (None, requests.utils.default_user_agent()):
+        client.headers["User-Agent"] = DEFAULT_USER_AGENT
+    if client.headers.get("Accept") in (None, "*/*"):
+        client.headers["Accept"] = "text/html,application/xhtml+xml"
     url = official_url_for_wordid(wordid)
     last_error = ""
+    last_code = None
     for attempt in range(max(0, retries) + 1):
         response: requests.Response | None = None
         try:
-            response = client.get(url, params={"page": 0}, timeout=timeout_s)
-            if response.status_code == 404:
-                return FetchOutcome("not_found")
-            if response.status_code in {408, 425, 429} or response.status_code >= 500 or response.status_code >= 400:
-                last_error = f"HTTP {response.status_code} for {url}"
+            response = client.get(url, params={"page": 0}, timeout=timeout_s, allow_redirects=False)
+            last_code = response.status_code
+            if last_code == 404:
+                return FetchOutcome("not_found", http_status=last_code)
+            if last_code in {408, 425, 429} or 500 <= last_code <= 599:
+                last_error = f"HTTP {last_code}"
+            elif last_code != 200:
+                # Keep the four-status storage contract; terminal evidence is separate.
+                return FetchOutcome(
+                    "transient_error", error_text=f"HTTP {last_code}", http_status=last_code, terminal=True
+                )
             else:
                 try:
-                    _ = _extract_article_html(response.text)
-                except Sum20ParseError as exc:
-                    return FetchOutcome("parse_error", error_text=str(exc))
-                if not _first_with_class_from_html(response.text, "ENTRY"):
-                    return FetchOutcome("not_found")
-                return FetchOutcome("ok", document_html=response.text)
-        except requests.RequestException as exc:
-            last_error = f"{type(exc).__name__}: {exc}"
+                    parse_sum20_article(response.text, wordid)
+                except (Sum20ParseError, ValueError, TypeError, RecursionError):
+                    return FetchOutcome(
+                        "parse_error", error_text="unusable article", http_status=last_code, terminal=True
+                    )
+                return FetchOutcome("ok", document_html=response.text, http_status=last_code)
+        except requests.RequestException:
+            last_code = None
+            last_error = "network request failure"
         if attempt < max(0, retries):
             sleep(_retry_delay(response, retry_backoff_s, attempt))
-    return FetchOutcome("transient_error", error_text=last_error or "request retries exhausted")
-
-
-def _first_with_class_from_html(document_html: str, class_name: str) -> bool:
-    """Check article structure before classifying a successful request as a miss."""
-    article_html = _extract_article_html(document_html)
-    parser = _ArticleTreeParser()
-    parser.feed(article_html)
-    parser.close()
-    return _first_with_class(parser.root, class_name) is not None
+    return FetchOutcome("transient_error", error_text=last_error or "request retries exhausted", http_status=last_code)

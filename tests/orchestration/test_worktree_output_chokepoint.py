@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -52,9 +51,9 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
         public.mkdir()
         _git(public, "init", "-b", "main")
         record = primary / "batch_state/tasks/done-output.json"
+        public_tasks = public / "batch_state/tasks"
+        public_tasks.mkdir(parents=True)
         if record.exists():
-            public_tasks = public / "batch_state/tasks"
-            public_tasks.mkdir(parents=True)
             (public_tasks / record.name).write_bytes(record.read_bytes())
         # Real independent metadata and the already-established dispatch lock.
         with worktree_claims.worktree_lock(checkout, lock_dir=public / ".git" / worktree_claims.LOCK_DIR_NAME):
@@ -66,6 +65,8 @@ def remove(caller, primary, checkout, capsys, monkeypatch):
         )
         monkeypatch.setattr(sibling_git, "_registry_transport", lambda _key: "ssh")
         _git(primary, "remote", "add", "origin", "git@github.com:fixture/sibling.git")
+        # Model a fetched canonical-origin HEAD for output-preservation cases.
+        _git(primary, "update-ref", "refs/remotes/origin/main", _git(checkout, "rev-parse", "HEAD"))
         with sibling_git.git_session() as git:
             repo = sibling_git.resolve_repository("fixture", public, git)
             try:
@@ -107,7 +108,7 @@ def test_all_removers_preserve_output_or_retain_checkout(tmp_path, monkeypatch, 
         monkeypatch.setattr(ignored_task_output, "MAX_PRESERVED_BYTES", len(payload) - 1)
     if failure == "copy":
 
-        def fail_copy(*_args):
+        def fail_copy(*_args, **_kwargs):
             raise OSError("copy denied")
 
         monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)
@@ -183,6 +184,7 @@ def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tm
     source.parent.mkdir()
     source.write_bytes(b"first")
     _record(primary, "retry-9645", status="done", worktree_path=str(checkout))
+    _git(primary, "worktree", "lock", str(checkout))
     first, second = {}, {}
     with worktree_claims.worktree_lock(checkout, lock_dir=worktree_claims.repository_lock_dir(primary)):
         error = worktree_claims.git_worktree_remove(
@@ -190,9 +192,9 @@ def test_retry_after_git_refusal_reuses_identical_or_preserves_changed_output(tm
             checkout,
             force=False,
             preservation_receipt=first,
-            git_runner=lambda _root, argv: subprocess.CompletedProcess(argv, 1, "", "injected Git refusal"),
         )
         assert error and checkout.exists()
+        _git(primary, "worktree", "unlock", str(checkout))
         if changed:
             source.write_bytes(b"second")
         error = worktree_claims.git_worktree_remove(
@@ -393,7 +395,7 @@ def test_actual_boundaries_preserve_or_retain(boundary_tree, monkeypatch, bounda
         monkeypatch.setattr(
             ignored_task_output.artifacts,
             "_copy_verified",
-            lambda *_args: (_ for _ in ()).throw(OSError("injected copy failure")),
+            lambda *_args, **_kwargs: (_ for _ in ()).throw(OSError("injected copy failure")),
         )
     elif scenario == "retrieval":
         monkeypatch.setattr(
@@ -743,7 +745,7 @@ def test_record_path_spellings_publish_copy_failure(boundary_tree, monkeypatch, 
     source.parent.mkdir()
     source.write_bytes(b"uncopied output")
 
-    def fail_copy(*_args):
+    def fail_copy(*_args, **_kwargs):
         raise OSError("injected copy failure")
 
     monkeypatch.setattr(ignored_task_output.artifacts, "_copy_verified", fail_copy)

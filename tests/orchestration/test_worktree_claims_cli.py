@@ -55,6 +55,20 @@ def _remove(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, s
     return code, captured.out, captured.err
 
 
+@pytest.mark.parametrize("returncode,stdout,expected", [(0, "", False), (0, "?? new.txt\n", True), (128, "", None)])
+def test_worktree_is_dirty_uses_the_ordinary_git_probe(tmp_path, monkeypatch, returncode, stdout, expected):
+    calls = []
+
+    def runner(args, *, cwd):
+        calls.append((cwd, args))
+        return subprocess.CompletedProcess(["git", *args], returncode, stdout, "")
+
+    monkeypatch.setattr(worktree_claims, "_git_probe", runner)
+
+    assert worktree_claims.worktree_is_dirty(tmp_path) is expected
+    assert calls == [(tmp_path, ["status", "--porcelain"])]
+
+
 def test_removes_an_unclaimed_linked_worktree_and_keeps_its_branch(tmp_path, capsys):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-1")
@@ -66,6 +80,25 @@ def test_removes_an_unclaimed_linked_worktree_and_keeps_its_branch(tmp_path, cap
     assert out == f"removed: {worktree} (operator cleanup)\n"
     assert not worktree.exists()
     assert _git(primary, "branch", "--list", "codex/impl-1")
+
+
+@pytest.mark.parametrize("force", [False, True])
+def test_sibling_removal_without_tmpdir_guards_only_force(tmp_path, monkeypatch, force):
+    monkeypatch.delenv("TMPDIR", raising=False)
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "codex/sibling", tmp_path / "sibling")
+
+    result = worktree_claims.remove_unclaimed_worktree(
+        worktree, repo_root=primary, reason="sibling regression", owner_task_id=None, force=force
+    )
+
+    if force:
+        assert result.action == "error"
+        assert "delete guard refused" in result.error
+        assert worktree.exists()
+    else:
+        assert result.action == "removed", result
+        assert not worktree.exists()
 
 
 def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
@@ -351,16 +384,16 @@ def test_never_forces_a_dirty_worktree(tmp_path, capsys):
 def test_a_timed_out_removal_is_an_error_never_removed(tmp_path, capsys, monkeypatch):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-8")
-    real_run = subprocess.run
+    real_run = worktree_claims.safe_git
     timeouts: list[object] = []
 
     def fake_run(argv, *args, **kwargs):
-        if list(argv[1:3]) == ["worktree", "remove"]:
+        if list(argv[:2]) == ["worktree", "remove"]:
             timeouts.append(kwargs.get("timeout"))
             raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
         return real_run(argv, *args, **kwargs)
 
-    monkeypatch.setattr(worktree_claims.subprocess, "run", fake_run)
+    monkeypatch.setattr(worktree_claims, "safe_git", fake_run)
     code, out, _err = _remove(capsys, str(worktree), "--json")
 
     assert timeouts == [worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S]
@@ -450,7 +483,8 @@ def _wt_clean(primary: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def test_wt_sh_clean_removes_through_the_guarded_cli(tmp_path):
+def test_wt_sh_clean_removes_through_the_guarded_cli(tmp_path, monkeypatch):
+    monkeypatch.delenv("TMPDIR", raising=False)
     primary, worktree = _wt_sh_fixture(tmp_path)
 
     proc = _wt_clean(primary)

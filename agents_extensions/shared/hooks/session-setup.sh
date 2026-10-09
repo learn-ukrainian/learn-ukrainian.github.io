@@ -351,7 +351,10 @@ fi
 unset ROOT_GUARD_RC ROOT_GUARD_JSON
 
 # 6. Check MEMORY.md line count (truncated at 200 lines by system)
-MEMORY_DIR="$HOME/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/memory"
+# Claude keys its per-project directory by the checkout path with every
+# character outside [A-Za-z0-9-] replaced by '-'.
+CLAUDE_PROJECT_KEY=$(printf '%s' "$CANONICAL_ROOT" | sed 's/[^A-Za-z0-9-]/-/g')
+MEMORY_DIR="$HOME/.claude/projects/$CLAUDE_PROJECT_KEY/memory"
 MEMORY_FILE="$MEMORY_DIR/MEMORY.md"
 if [ "$IS_CODEX_SESSION" = "0" ] && [ -f "$MEMORY_FILE" ]; then
   MEMORY_LINES=$(wc -l < "$MEMORY_FILE" | tr -d ' ')
@@ -933,7 +936,15 @@ is the lane SSOT): $EPIC_HANDOFF_PATH"
     EPIC_BANNER="$EPIC_BANNER
 (No driver handoff exists yet for this epic — create it at first rollover.)"
   fi
-  unset EPIC_HANDOFF_PATH
+  # Lane goal file: the current driver state. When present it is authoritative
+  # and outranks the handoffs above and dated docs/session-state briefs.
+  DRIVER_STATE_PATH=".claude/${SESSION_EPIC}-epic/DRIVER-STATE.md"
+  if [ -f "$PROJECT_DIR/$DRIVER_STATE_PATH" ]; then
+    EPIC_BANNER="$EPIC_BANNER
+Driver state (AUTHORITATIVE, read it FIRST; where they conflict it supersedes
+the handoffs above and any dated docs/session-state brief): $DRIVER_STATE_PATH"
+  fi
+  unset EPIC_HANDOFF_PATH DRIVER_STATE_PATH
 elif [ -n "${SESSION_EPIC:-}" ] && [ "$SESSION_EPIC_VALID" = "0" ]; then
   VALID_SELECTORS_HELP=""
   if declare -f launcher_selector_help >/dev/null 2>&1; then

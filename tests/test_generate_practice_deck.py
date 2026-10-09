@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import random
 import sqlite3
 from pathlib import Path
@@ -79,6 +78,7 @@ from scripts.audit.generate_practice_deck import (
     write_pos_residual_report,
     write_shards,
 )
+from scripts.lib.readonly_sqlite import open_readonly
 
 pytestmark = pytest.mark.reads_content
 
@@ -1756,7 +1756,7 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
         from scripts.rag.config import VESUM_DB_PATH
 
         if VESUM_DB_PATH.exists():
-            conn = sqlite3.connect(str(VESUM_DB_PATH))
+            conn = open_readonly(VESUM_DB_PATH)
             cursor = conn.cursor()
     except Exception:
         cursor = None
@@ -4870,7 +4870,7 @@ def test_imperative_multi_key_acceptance_comprehensive(imperative_conn, imperati
     from scripts.rag.config import VESUM_DB_PATH
 
     if VESUM_DB_PATH.exists():
-        with sqlite3.connect(str(VESUM_DB_PATH)) as vesum_conn:
+        with open_readonly(VESUM_DB_PATH) as vesum_conn:
             # Verify робити forms in live VESUM
             robyty_slots, _, _ = generate_practice_deck._imperative_forms("робити", vesum_conn)
             assert "робімо" in robyty_slots["1pl"] and "робім" in robyty_slots["1pl"]
@@ -5305,17 +5305,14 @@ def test_heritage_judgment_cannot_reverse_the_answer_and_error() -> None:
     assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
 
 
-def _live_source_checkers() -> tuple[Any, Any]:
-    """Real sources.db / VESUM for live-registry provenance checks (skipped where the data is not hydrated)."""
-    sources_db = Path(os.environ.get("LU_SOURCES_DB", "data/sources.db"))
-    vesum_db = Path(os.environ.get("LU_VESUM_DB", "data/vesum.db"))
-    if not sources_db.exists() or not vesum_db.exists():
-        pytest.skip("data/sources.db and data/vesum.db are not available")
-    return generate_practice_deck.SqliteSourcePassages(sources_db), RealVesumVerifier(vesum_db)
+@pytest.fixture
+def live_source_checkers(requires_sources_db, requires_vesum_db) -> tuple[Any, Any]:
+    """Live-registry readers share validated fixture-time inputs."""
+    return generate_practice_deck.SqliteSourcePassages(requires_sources_db), RealVesumVerifier(requires_vesum_db)
 
 
-def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> None:
-    passages, verifier = _live_source_checkers()
+def test_live_heritage_normative_support_is_verbatim_and_names_every_frame(live_source_checkers) -> None:
+    passages, verifier = live_source_checkers
     all_pairs = [pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")]
     supported = [pair for pair in all_pairs if pair.get("currentNormSupport")]
     assert supported
@@ -5338,8 +5335,8 @@ def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> 
             assert _heritage_current_support(frame, current, verifier) is not None, (pair["calqueLabel"], frame)
 
 
-def test_live_language_review_fixes_are_source_bound() -> None:
-    passages, _ = _live_source_checkers()
+def test_live_language_review_fixes_are_source_bound(live_source_checkers) -> None:
+    passages, _ = live_source_checkers
     reviewed = {
         pair["calqueLabel"]: pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")
     }
@@ -5696,8 +5693,8 @@ def test_paronym_source_linked_gloss_ships() -> None:
     assert {item["distinction_gloss_uk"] for item in items} == {_TAKTOVNYI_SOURCED_GLOSS}
 
 
-def test_live_paronym_gloss_sources_are_verbatim_and_two_sided_or_withheld() -> None:
-    passages, verifier = _live_source_checkers()
+def test_live_paronym_gloss_sources_are_verbatim_and_two_sided_or_withheld(live_source_checkers) -> None:
+    passages, verifier = live_source_checkers
     sourced = [pair for pair in read_paronym_pairs(PARONYM_REGISTRY) if pair.get("glossSources")]
     assert sourced
     withheld = {

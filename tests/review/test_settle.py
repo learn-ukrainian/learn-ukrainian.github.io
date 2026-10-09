@@ -44,6 +44,7 @@ class World:
         result: str,
         *,
         hits: int = 1,
+        status: str = "ok",
         arguments: dict[str, Any] | None = None,
         review_id: str = "settle-R",
         attempt_id: str = "settle-A",
@@ -57,7 +58,7 @@ class World:
             server_version="fixture",
             arguments=arguments or {},
             snapshots={},
-            status="ok",
+            status=status,
             result=result,
             outcome_facts={
                 "call_status": "ok",
@@ -239,7 +240,9 @@ def test_source_conflict_refuses_a_second_source_without_hits(world: World) -> N
         settle.validate_reply(world.reply("source_conflict", evidence), world.manifest.read_bytes(), world.own_ledger)
 
 
-def _broadened(world: World) -> list[dict[str, str]]:
+def _broadened(
+    world: World, *, result: str | None = None, status: str = "ok", category_only: str | None = None
+) -> list[dict[str, str]]:
     calls = [
         ("lemma", "inspect_word", {}),
         ("construction", "search_style_guide", {}),
@@ -249,20 +252,62 @@ def _broadened(world: World) -> list[dict[str, str]]:
         ("pravopys", "query_pravopys", {}),
         ("counterevidence", "query_sum20", {}),
     ]
-    return [
-        {
-            "category": category,
-            "receipt": world.call(tool, f"{category}: no results", hits=0, arguments=arguments),
-            "quote": f"{category}: no results",
-        }
-        for category, tool, arguments in calls
-    ]
+    searches = []
+    for category, tool, arguments in calls:
+        selected = category_only is None or category == category_only
+        text = result if selected and result is not None else f"{category}: no results"
+        searches.append(
+            {
+                "category": category,
+                "receipt": world.call(tool, text, hits=0, arguments=arguments, status=status if selected else "ok"),
+                "quote": text,
+            }
+        )
+    return searches
 
 
 def test_unresolved_accepts_each_broadened_search(world: World) -> None:
     reply = world.reply("unresolved", searches=_broadened(world))
     result, receipts = settle.validate_reply(reply, world.manifest.read_bytes(), world.own_ledger)
     assert result == "unresolved" and len(receipts) == 7
+
+
+@pytest.mark.parametrize("result", ["No results found.", "Successful source excerpt."])
+def test_unresolved_accepts_successful_broadened_receipts(world: World, result: str) -> None:
+    searches = _broadened(world, result=result)
+    outcome, receipts = settle.validate_reply(
+        world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+    )
+    assert outcome == "unresolved"
+    assert receipts == [search["receipt"] for search in searches]
+
+
+@pytest.mark.parametrize("category_only", [None, *settle.SEARCH_TOOLS])
+@pytest.mark.parametrize(
+    "status,result,classified_status",
+    [
+        ("ok", "invalid_input: empty query", "error"),
+        ("ok", '{"status": "invalid_input"}', "error"),
+        ("ok", '{"error_code": "invalid_input"}', "error"),
+        ("ok", '{"disposition": "invalid_input"}', "error"),
+        ("error", "Sources call failed.", "error"),
+        ("refused", "Sources call refused.", "refused"),
+        ("ok", '{"status": "unavailable"}', "unavailable"),
+    ],
+)
+def test_unresolved_refuses_unsuccessful_broadened_receipts(
+    world: World, category_only: str | None, status: str, result: str, classified_status: str
+) -> None:
+    # World.call deliberately supplies no-hit facts: classify the stored call,
+    # rather than trusting stale or caller-supplied outcome_facts.
+    searches = _broadened(world, result=result, status=status, category_only=category_only)
+    category = category_only or "lemma"
+    with pytest.raises(
+        settle.SettleError, match=f"broadened_search_call_unsuccessful: {category}: {classified_status}"
+    ):
+        settle.validate_reply(
+            world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+        )
 
 
 def test_unresolved_refuses_missing_broadened_search(world: World) -> None:
@@ -1209,3 +1254,49 @@ def test_a_duplicate_activity_id_in_the_lesson_is_refused() -> None:
     )
     with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
         settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, two_steps)
+
+
+@pytest.mark.parametrize(
+    "tool,authority",
+    [
+        ("verify_word", "vesum"),
+        ("verify_lemma", "vesum"),
+        ("search_slovnyk_me", "slovnyk_me"),
+        ("search_esum", "esum"),
+        ("search_grinchenko_1907", "grinchenko"),
+    ],
+)
+def test_facet_tool_authorities_can_supply_lemma_and_counterevidence(world, tool, authority):
+    assert settle._source({"tool": tool}) == authority
+    assert tool in settle.SEARCH_TOOLS["lemma"]
+    assert tool in settle.SEARCH_TOOLS["counterevidence"]
+    assert (
+        settle.validate_reply(
+            world.reply("refuted", _evidence(world, tool)), world.manifest.read_bytes(), world.own_ledger
+        )[0]
+        == "refuted"
+    )
+
+
+@pytest.mark.parametrize("facet", ["meaning", "norm", "stress"])
+@pytest.mark.parametrize("outcome", ["supported_defect", "refuted", "source_conflict"])
+def test_sum11_cannot_settle_language_authority(world, facet, outcome):
+    assert "search_definitions" not in settle.SOURCES
+    assert all("search_definitions" not in tools for tools in settle.SEARCH_TOOLS.values())
+    assert settle._source({"tool": "search_definitions"}) is None
+    evidence = _evidence(world, "search_definitions", result=f"Historical {facet} contrast.")
+    if outcome == "source_conflict":
+        evidence += _evidence(world, "query_sum20", result="Modern dictionary evidence.")
+    with pytest.raises(
+        settle.SettleError, match=r"needs (a cited receipt with hits|hit receipts from two different sources)"
+    ):
+        settle.validate_reply(world.reply(outcome, evidence), world.manifest.read_bytes(), world.own_ledger)
+
+
+def test_sum11_cannot_be_a_broadened_counterevidence_search(world):
+    receipt = world.call("search_definitions", "Contrast only.")
+    searches = [{"category": "counterevidence", "receipt": receipt, "quote": "Contrast only."}]
+    with pytest.raises(settle.SettleError, match="wrong tool"):
+        settle.validate_reply(
+            world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+        )

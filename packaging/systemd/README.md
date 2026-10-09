@@ -11,15 +11,13 @@ One slice for every detached worker `scripts/delegate.py` launches (#8645). The
 driver stays outside it. A runaway worker is killed inside the slice; the driver
 and the host services are not in that cgroup.
 
-`MemoryHigh=18G` is the throttling line and `MemoryMax=20G` is the last line of
-defense. `systemd.resource-control(5)` (this host's systemd 259 man page) says to
-use `MemoryHigh=` as the main control and `MemoryMax=` only as the last line of
-defense. The CX53 reports about 30GiB usable RAM. Reserving about 6GiB for
-OS/services/drivers and a 6GiB MemAvailable floor leaves about 18GiB for workers
-at the throttling line (`30 - 6 - 6 = 18`). The 20GiB emergency ceiling allows
-2GiB above that line. `MemoryMax=` does not cap swap, so the unit also sets
-`MemorySwapMax=1G`; swap used was 0GiB on 2026-09-29 after the host upgrade.
-The limits are the unit file. There is no environment override.
+`MemoryHigh=` is the throttling line and `MemoryMax=` is the last line of
+defense, as `systemd.resource-control(5)` recommends. `MemoryMax=` does not cap
+swap, so `MemorySwapMax=` is set as well. The unit file in this directory
+carries no values: all three are set per deployment, sized for that host, in a
+limits drop-in installed next to the unit
+(`~/.config/systemd/user/lu-dispatch.slice.d/10-limits.conf`). The same holds
+for `lu.slice`. There is no environment override.
 
 Running without the slice is supported. Dispatch then prints one warning and
 starts the worker with plain `Popen`, and the task record's `launch_mode` is
@@ -36,19 +34,20 @@ All of these have to hold or dispatch will not use the slice:
 - The user manager has the memory controller:
   `/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.subtree_control`
   contains `memory`.
-- After install, `systemctl --user show -p MemoryHigh,MemoryMax,MemorySwapMax lu-dispatch.slice`
-  prints `MemoryHigh=19327352832`, `MemoryMax=21474836480`, and
-  `MemorySwapMax=1073741824` (18GiB, 20GiB, and 1GiB, base 1024). A slice name
-  systemd synthesized with `MemoryMax=infinity` does
-  not count.
+- After install, `systemctl --user show -p MemoryHigh,MemoryMax,MemorySwapMax,DropInPaths lu-dispatch.slice`
+  prints finite values and lists the limits drop-in. A slice without the
+  drop-in, or a slice name systemd synthesized, reports `MemoryMax=infinity`
+  and does not count.
 
 ### Install
 
-Immediately after merge, the driver installs the new slice from the updated
-checkout and runs `systemctl --user daemon-reload`, before dispatching more
-workers. `dispatch_isolation.py` checks that the installed `MemoryMax` equals
-the configured 20 GiB value; until the reload applies the new unit, dispatch
-falls back to plain `Popen` without the slice memory cap.
+Order matters, so the limits never lapse: first the deployment installs the
+limits drop-in and verifies with `systemctl --user show` that the effective
+values are the intended ones; only then is the value-free unit installed from
+the updated checkout, followed by `systemctl --user daemon-reload` before more
+workers are dispatched. `dispatch_isolation.py` reads the effective `MemoryMax`
+and `MemorySwapMax` at runtime and uses the slice only when both are finite;
+otherwise dispatch falls back to plain `Popen` without the slice memory cap.
 
 Do not commit a machine path. From a checkout:
 
@@ -140,8 +139,11 @@ runner, and orchestrator hosts).
 - **What it does**: the backup service runs `scripts/orchestration/run_scheduled_backup.sh`, which executes `scripts/backup-data.sh backup --execute` (restic via the rclone remote) and records the outcome in `batch_state/backups/last-run.json`. The retention service uses the same wrapper's `retention` mode to run `scripts/backup-data.sh retention --execute`, applying the operator-approved `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` policy run-aware to the `learn-ukrainian-data` tag only: completed runs are kept or dropped as a unit and snapshots are forgotten by explicit snapshot ID, so a retained receipt never loses a snapshot it references. Other snapshot families in the repository are untouched.
 - **Secrets**: both services pass `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` to the wrapper. The wrapper opens the file once, refuses a symlink, requires a regular file owned by the service user with no group/world write bit, and requires its parent directory to be owned by that user and not group/world-writable. Mode `0600` is recommended for the file. The wrapper sources shell syntax with export enabled, expanding `$HOME` and variable references that systemd `EnvironmentFile=` cannot expand. The file's last command must succeed: sourcing checks its final exit status, so a failed earlier command can be missed. Manual runs can omit `LU_BACKUP_ENV_FILE` when the environment is already populated. Validation and sourcing errors name the variable and condition without its value. The wrapper redacts the configured repository, its rclone spec without the `rclone:` prefix, and the password-file path from both services' output before it reaches the journal. An unsafe or missing configured file fails the backup and writes a failure receipt.
 - **Disk safety**: `LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging` keeps SQLite staging on the same filesystem as `data/` (gitignored; see `scripts/backup-data.sh` — databases are staged sequentially and each staged copy is deleted before the next). `Nice=15` + `IOSchedulingClass=idle` keep the run off the fast path; `TimeoutStartSec=10800` allows one hour of lock wait plus two hours for backup or retention.
-- **Data-volume guard**: the two backup services have drop-ins among the eleven in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
+- **Data-volume guard**: the two backup services have drop-ins among the thirteen in `packaging/systemd/dropins/`. Each checks the configured data volume before executing the redacting `run_scheduled_backup.sh` wrapper; a failed guard exits 78 and does not restart. Install the drop-ins as described in `docs/runbooks/storage-topology.md` before enabling the timers on a migrated data host.
 - **Failure visibility**: a failed run exits non-zero, and a failed log capture or `last-run.json` write fails the backup service even when the backup succeeded. Monitor's `/api/orient?sections=health` reports `health.backup_last_run.status`, `exit_status`, and `finished_at_utc` from that receipt, so the next morning's health glance shows a failed night. A success older than 26 hours is `stale`, covering a timer or systemd preflight failure before the wrapper starts. `unknown` means the receipt is absent, unreadable, or invalid; check the unit journal. `last-run.json` also carries start/end, run id, snapshot count, and bytes added.
+- **Failure alert (change-only)**: both services set `OnFailure=learn-ukrainian-backup-alert@%n.service`. The template runs `scripts/orchestration/backup_failure_alert.py failed <unit>`, which posts one report to the Fleet Comms `cto` channel (`--sender sre-timers --kind report`) and records the unit under `batch_state/backups/alerts/`. Later failures of the same unit stay quiet. Each service's `ExecStartPost=-... recovered %n` runs only after a successful run; it posts one recovery report when the unit was recorded as failing and clears the record. A publish that fails leaves the record unchanged, so the next run retries, and the alert unit shows as failed. `install_backup_timer.py` installs the template with the other four units.
+- **Broken symlinks**: a dangling symlink under a recovery root (`data/`, `batch_state/`, `.agent/`, `.claude/*-epic`) no longer aborts the backup. It is skipped with a `WARNING: Skipping broken symlink ...` line, excluded from the snapshot, and listed in the receipt's `exclusions` as `<path> broken symlink skipped`. Absolute or escaping symlinks that resolve still fail closed.
+- **Backend connections**: `LU_BACKUP_RCLONE_CONNECTIONS` (1-16, default 1) sets the rclone backend connection limit. `restic prune` refuses fewer than two, so prune always uses at least 2, and the retention service sets `LU_BACKUP_RCLONE_CONNECTIONS=2`.
 - **Install** (preview by default; writes only with `--apply`):
   ```bash
   .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary

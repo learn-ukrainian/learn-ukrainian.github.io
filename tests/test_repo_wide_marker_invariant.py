@@ -110,6 +110,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_session_identity_env_isolation.py",
         "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
+        "tests/test_source_ingest_entrypoints.py",
         "tests/test_subprocess_timeout_guard.py",
         "tests/test_sum11_source_guard.py",
         "tests/test_threshold_source_of_truth.py",
@@ -121,16 +122,20 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/review/test_model_catalog.py::test_frozen_artifacts_are_pinned_independently_of_manifest",
+    "tests/test_github_client_lint.py::test_scripts_have_one_github_client",
     "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
     "tests/agent_runtime/test_claude_no_background.py::test_claude_code_harness_denominator_is_complete",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/agent_runtime/test_npm_shim.py::test_shim_files_are_regular_executables",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
+    "tests/audit/test_track_deterministic_audit.py::test_config_consumer_file_launches_without_pythonpath",
     "tests/build/test_fresh_page_safety.py::test_ci_runs_site_toolchain_tests_in_required_frontend_job",
     "tests/build/test_fresh_plan_review.py::test_every_plan_manifest_of_record_in_the_repository_still_validates",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/common/test_jsonl_splitlines_guard.py::test_scripts_structured_readers_do_not_use_str_splitlines",
+    "tests/curriculum/evidence/test_lessons_lock.py::test_committed_lesson_lock_is_fresh",
     "tests/packaging/test_systemd_templates.py::test_data_volume_dropins_cover_all_services_and_preserve_commands",
     "tests/projects/open_model_data/test_k_path_literal_guard.py::test_k_path_literals_are_resolved_or_allowlisted",
     "tests/projects/open_model_data/test_quarantine.py::test_archive_import_guard_active_code",
@@ -161,6 +166,11 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_grok_bot_with_hard_exclusions",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_the_full_health_enum",
     "tests/test_driver_work_api_onboarding.py::test_skill_teaches_work_api_projection_semantics",
+    "tests/test_headless_claude_background_controls.py::test_controls_have_a_single_source",
+    "tests/test_headless_claude_background_controls.py::test_every_spawn_in_a_claude_referencing_module_is_a_wrapper_or_a_reviewed_exception",
+    "tests/test_headless_claude_background_controls.py::test_exceptions_are_live_categorised_and_justified",
+    "tests/test_headless_claude_background_controls.py::test_shell_launchers_are_proven_by_a_runner_test",
+    "tests/test_headless_claude_background_controls.py::test_wrapper_spawns_and_known_callers_are_wired",
     "tests/test_kimi_coding_only_admission.py::test_every_allowlisted_root_exists_in_the_repository",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
@@ -172,7 +182,9 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_operator_contract_wiring.py::test_epic_driver_and_v2_template_keep_prompt_adequacy_gate",
     "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
     "tests/test_review_reviewer_resolver.py::test_resolve_reviewer_classifies_every_adapter_and_reviewer_hook",
+    "tests/test_readonly_source_db_connects.py::test_repo_has_no_unallowlisted_writable_source_db_connect",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_secret_redactor_urls.py::test_ordinary_repository_corpus_is_unchanged_by_url_pass",
     "tests/test_session_streams.py::test_backslash_tracked_paths_add_no_hostname_rejections",
     "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
     "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
@@ -367,6 +379,7 @@ NOT_REPO_WIDE.update(
             "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
             "test_tracked_mirror_resolves_each_deploy_source",
             "test_claude_epic_dirs_are_preserved",
+            "test_driver_runtime_state_is_preserved",
             "test_tracked_agents_skill_declared_orphan_is_skipped",
             "test_tracked_claude_glob_orphan_is_skipped",
             "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
@@ -878,7 +891,7 @@ _CHILD_ENV_DROP = frozenset(
     }
 )
 _COLLECT_TIMEOUT_S = 90
-# Collecting the whole suite took 178s on a loaded 16-core host (2026-10-03).
+# Collecting the whole suite took 178s on a loaded host (2026-10-03).
 # One child must collect it all: a modifyitems hook sees only its own run's items.
 _EXACT_COLLECT_TIMEOUT_S = 1200
 _MARK_NAME = "repo_wide"
@@ -930,7 +943,15 @@ def _names_the_marker(source: str) -> bool:
 
 # Calls that load a module named by a string or a file path at run time.
 _DYNAMIC_LOADERS = frozenset(
-    {"import_module", "__import__", "spec_from_file_location", "SourceFileLoader", "run_path", "run_module"}
+    {
+        "import_module",
+        "import_named_module",
+        "__import__",
+        "spec_from_file_location",
+        "SourceFileLoader",
+        "run_path",
+        "run_module",
+    }
 )
 
 

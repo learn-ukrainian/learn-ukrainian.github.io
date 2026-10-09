@@ -131,7 +131,7 @@ def test_sources_guard_rejects_uri_query_forms(tmp_path: Path) -> None:
     uri_forms = [
         "sources.db?mode=ro",
         "file:sources.db?mode=ro",
-        f"file:{sources.as_posix()}?mode=ro",
+        f"{sources.as_uri()}?mode=ro",
         f"file:///{sources.as_posix().lstrip('/')}?mode=ro&immutable=1",
         "SOURCES.DB?mode=ro",
         f"file:{sources.as_posix().upper()}?mode=RO",
@@ -224,6 +224,41 @@ def test_commit_import_txn_fence_rejects_concurrent_abandon(
     assert int(n["n"]) == 0
 
 
+@pytest.mark.parametrize(
+    "open_reader",
+    [open_immutable_ro, open_sources_ro],
+    ids=["open_immutable_ro", "open_sources_ro"],
+)
+def test_guarded_reader_factories_refuse_attach_and_detach(tmp_path: Path, open_reader) -> None:
+    """Under the network guard, reader factories keep the helper's ATTACH refusal.
+
+    ``install_network_authorizer`` replaces the helper callback. Both factories
+    must still refuse ATTACH and DETACH, and ATTACH must not create a file.
+    """
+    database = tmp_path / "reader.db"
+    setup = sqlite3.connect(database)
+    setup.execute("CREATE TABLE t(x)")
+    setup.execute("INSERT INTO t VALUES (1)")
+    setup.commit()
+    setup.close()
+    attached = tmp_path / "attachment.db"
+    sources_attach = tmp_path / "sources.db"
+    with guard_network_worker():
+        reader = open_reader(database)
+        try:
+            for target in (attached, sources_attach):
+                with pytest.raises(sqlite3.DatabaseError, match="not authorized"):
+                    reader.execute("ATTACH DATABASE ? AS side", (str(target),))
+                assert not target.exists()
+            with pytest.raises(sqlite3.DatabaseError, match="not authorized"):
+                reader.execute("DETACH DATABASE main")
+            assert reader.execute("SELECT x FROM t").fetchone()[0] == 1
+        finally:
+            reader.close()
+    assert not attached.exists()
+    assert not sources_attach.exists()
+
+
 def test_network_cache_authorizer_denies_attach_sources(tmp_path: Path, monkeypatch) -> None:
     """Finding 5: ATTACH of sources.db denied on network-side connections."""
     sources = tmp_path / "sources.db"
@@ -247,7 +282,7 @@ def test_network_cache_authorizer_denies_attach_sources(tmp_path: Path, monkeypa
             cache._require().execute(f"ATTACH DATABASE '{sources.as_posix()}' AS sources")
         with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):
             cache._require().execute(
-                f"ATTACH DATABASE 'file:{sources.as_posix()}?mode=ro' AS sources"
+                f"ATTACH DATABASE '{sources.resolve().as_uri()}?mode=ro' AS sources"
             )
         if hardlink is not None:
             with pytest.raises(sqlite3.DatabaseError, match=r"not authorized|prohibited"):

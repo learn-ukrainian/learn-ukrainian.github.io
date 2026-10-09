@@ -23,7 +23,6 @@ import json
 import logging
 import os
 import re
-import select
 import subprocess
 import sys
 import time
@@ -107,22 +106,6 @@ def _clear_state():
     yield
     runner._ADAPTER_CACHE.clear()
     _reset_rate_limit_cache_for_tests()
-
-
-@pytest.fixture(autouse=True)
-def _stub_claude_cli_version_gate(monkeypatch, request):
-    """Keep Claude adapter tests deterministic unless a test probes the gate."""
-    from agent_runtime.adapters import claude as claude_adapter_mod
-
-    claude_adapter_mod._probe_claude_cli_version.cache_clear()
-    if request.node.name != "test_claude_adapter_rejects_old_cli_version":
-        monkeypatch.setattr(
-            claude_adapter_mod,
-            "_ensure_supported_claude_cli_version",
-            lambda _cmd_prefix: (2, 1, 116),
-        )
-    yield
-    claude_adapter_mod._probe_claude_cli_version.cache_clear()
 
 
 # ---------------------------------------------------------------------------
@@ -317,7 +300,7 @@ def test_new_acpx_fleet_entries_are_direct_only(seat, adapter, model):
 def test_cursor_entry_is_well_formed():
     entry = get_agent_entry("cursor")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
-    # Default pin is grok-4.7 (#8464); catalog Cursor seat remains auto.
+    # Registry defaults name the catalog identity; the adapter pins the wire (#10205).
     assert entry["default_model"] == "grok-4.7"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
@@ -409,7 +392,7 @@ def test_load_adapter_codex():
 def test_load_adapter_cursor():
     adapter = _load_adapter("cursor")
     assert adapter.name == "cursor"
-    assert adapter.default_model == "grok-4.7"
+    assert adapter.default_model == "grok-4.7-high"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -1927,6 +1910,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     Deliver stdout synchronously through the real reader function on a controlled poll tick,
     including after the old fixture's finite clock sequence would freeze.
     """
+    from threading import get_ident
     from unittest.mock import MagicMock
 
     from agent_runtime.watchdog import _stdout_streamer
@@ -1975,9 +1959,12 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     # must not consume a finite sequence and leave late stdout at frozen time.
     base_time = 1000.0
     simulated_now = base_time
+    caller_thread = get_ident()
+    real_monotonic = time.monotonic
+    real_sleep = time.sleep
 
     def fake_monotonic():
-        return simulated_now
+        return simulated_now if get_ident() == caller_thread else real_monotonic()
 
     watchdog_state = WatchdogState(start_time=base_time, last_activity=base_time)
     poll_ticks = 0
@@ -1991,6 +1978,10 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
 
     def poll_tick(_interval):
         nonlocal poll_ticks, simulated_now
+        # The time module is shared by telemetry/background threads. Their
+        # sleeps must not advance this test's simulated runner poll counter.
+        if get_ident() != caller_thread:
+            return real_sleep(_interval)
         poll_ticks += 1
         # A broken fixture must fail in bounded simulated ticks, never hang CI.
         assert poll_ticks <= stdout_delay_ticks + 3, "early reap exceeded bounded poll ticks"
@@ -3649,6 +3640,7 @@ def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
     assert "--resume" in plan.cmd
 
 
+@pytest.mark.real_claude_cli_gate
 def test_claude_adapter_rejects_old_cli_version(tmp_path):
     from agent_runtime.adapters import claude as claude_adapter_mod
 
@@ -4248,28 +4240,30 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandb
 
 
 def test_typed_publisher_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sandbox):
-    """#7472: CF of record posts as a comment while merge/--approve stay blocked."""
+    """CF comments still publish under the worker merge guard, through REST."""
     root, _shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
-    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    calls = tmp_path / "calls.jsonl"
+    fake_gh.write_text(
+        f"#!{sys.executable}\n"
+        "import json,sys\nfrom pathlib import Path\n"
+        "args = sys.argv[1:]\nbody = json.loads(sys.stdin.read())\n"
+        f"Path({str(calls)!r}).write_text(json.dumps({{'argv': args, 'body': body}}))\n"
+        "print('HTTP/1.1 201 Created\\nX-RateLimit-Remaining: 100\\nX-RateLimit-Reset: 2000000000\\n\\n'"
+        " + json.dumps({'html_url':'https://github.com/unit/public/issues/1234#issuecomment-1'}))\n"
+    )
     fake_gh.chmod(0o755)
-
     proc = subprocess.run(
         [sys.executable, "-m", "scripts.publish", "pr-comment", "--number", "1234", "--body", "VERDICT: APPROVE"],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "PATH": os.environ.get("PATH", ""),
-        },
-        check=False,
-        timeout=15,
+        cwd=root, capture_output=True, text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(fake_gh), "PATH": os.environ.get("PATH", "")},
+        check=False, timeout=15,
     )
-
-    assert proc.returncode == 0
-    assert proc.stdout.startswith("real-gh pr comment 1234 --repo unit/public --body-file ")
+    assert proc.returncode == 0, proc.stderr
+    sent = json.loads(calls.read_text())
+    assert sent["argv"][:5] == ["api", "--include", "--method", "POST", "repos/unit/public/issues/1234/comments"]
+    assert sent["body"] == {"body": "VERDICT: APPROVE"}
+    assert proc.stdout.strip() == "https://github.com/unit/public/issues/1234#issuecomment-1"
 
 
 @pytest.mark.parametrize(
@@ -4280,7 +4274,7 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     fake_gh = tmp_path / "real-gh"
     calls = tmp_path / "calls.jsonl"
     head = "a" * 40
-    metadata = {"number": 1234, "isDraft": readiness == "draft", "headRefOid": head}
+    metadata = {"number": 1234, "draft": readiness == "draft", "head": {"sha": head}}
     checks = [{"name": "CI Gate", "bucket": "fail" if readiness == "failing" else "pass"}]
     # Real gh answers the squash-text GraphQL read with GitHub's default squash subject and body.
     pull = {
@@ -4301,16 +4295,17 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
         "args = sys.argv[1:]\n"
         "record = {'argv': args}\n"
         "for flag in ('--input', '--body-file'):\n"
-        "    if flag in args: record[flag] = Path(args[args.index(flag) + 1]).read_text()\n"
+        "    if flag in args and args[args.index(flag) + 1] != '-': record[flag] = Path(args[args.index(flag) + 1]).read_text()\n"
         f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps(record) + '\\n')\n"
-        "if args[:2] == ['pr', 'view']:\n"
-        f"    print(json.dumps({metadata!r}))\n"
+        "if args[:5] == ['api', '--include', '--method', 'GET', 'repos/unit/public/pulls/1234']:\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + json.dumps({metadata!r}))\n"
         "elif args[:2] == ['pr', 'checks']:\n"
         f"    print('invalid-json' if {readiness == 'unverifiable'!r} else "
         f"json.dumps({checks!r}))\n"
-        "elif args[:4] == ['api', '--method', 'POST', 'graphql'] and "
-        "'viewerMergeBodyText(mergeType:SQUASH)' in record.get('--input', ''):\n"
-        f"    print({squash!r})\n"
+        "elif args[:5] == ['api', '--include', '--method', 'POST', 'graphql']:\n"
+        "    document = sys.stdin.read()\n"
+        "    assert 'viewerMergeBodyText(mergeType:SQUASH)' in document\n"
+        f"    print('HTTP/1.1 200 OK\\n\\n' + {squash!r})\n"
         "elif args[:2] == ['pr', 'merge']:\n"
         "    print('real-gh ' + ' '.join(args[:args.index('--body-file')]))\n"
         "else:\n"
@@ -4333,14 +4328,16 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
     )
 
     sent = [json.loads(line) for line in calls.read_text().splitlines()]
-    assert [record["argv"][:2] for record in sent[:2]] == [["pr", "view"], ["pr", "checks"]]
+    assert sent[0]["argv"][:5] == ["api", "--include", "--method", "GET", "repos/unit/public/pulls/1234"]
+    if readiness != "draft":
+        assert sent[1]["argv"][:2] == ["pr", "checks"]
     if readiness == "ready":
         assert proc.returncode == 0
         # The scanned default squash text is sent explicitly, so GitHub publishes exactly it.
         assert proc.stdout.strip() == (
             f"real-gh pr merge 1234 --repo unit/public --squash --subject=clean (#1234) --match-head-commit={head}"
         )
-        assert [record["argv"][:2] for record in sent[2:]] == [["api", "--method"], ["pr", "merge"]]
+        assert [record["argv"][:2] for record in sent[2:]] == [["api", "--include"], ["pr", "merge"]]
         assert sent[-1]["--body-file"] == "* clean"
     elif readiness.startswith("squash-"):
         assert proc.returncode != 0
@@ -4349,257 +4346,99 @@ def test_typed_publisher_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox, 
             assert "rule=synthetic-rule class=1 field=body line=1" in proc.stderr
         else:
             assert "squash text unverifiable" in proc.stderr
-        assert len(sent) == 3 and sent[-1]["argv"][:4] == ["api", "--method", "POST", "graphql"]
+        assert len(sent) == 3 and sent[-1]["argv"][:5] == ["api", "--include", "--method", "POST", "graphql"]
     else:
         assert proc.returncode != 0
         assert "OPSEC: merge" in proc.stderr
         assert len(sent) == 2
 
 
-def test_typed_publisher_retries_mocked_secondary_rate_limit_replays_scanned_stdin(tmp_path, gh_shim_sandbox):
-    """Every retry delivers the original scanned stdin snapshot."""
+@pytest.mark.parametrize("verb", ["pr-comment", "issue-comment", "pr-create"])
+def test_typed_publisher_secondary_rate_limit_is_one_typed_attempt(tmp_path, gh_shim_sandbox, verb):
+    """A live secondary limit never replays a write, even with retry variables."""
     root, _shim, _tooling = gh_shim_sandbox
-    fake_gh = tmp_path / "real-gh"
-    attempts = tmp_path / "attempts"
-    fake_gh.write_text(
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f"attempts={attempts!s}\n"
-        "count=0\n"
-        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
-        "count=$((count + 1))\n"
-        'printf \'%s\' "$count" >"$attempts"\n'
-        'body_file="${@: -1}"\n'
-        'stdin_body="$(cat "${body_file#--body-file=}")"\n'
-        'if [[ "$count" == 1 ]]; then\n'
-        "  printf 'retry-output-should-not-leak\\n'\n"
-        "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
-        "  exit 1\n"
-        "fi\n"
-        'printf \'real-gh %s stdin=%s\\n\' "$*" "$stdin_body"\n',
-        encoding="utf-8",
+    binary = tmp_path / "real-gh"
+    calls = tmp_path / "calls.jsonl"
+    binary.write_text(
+        f"#!{sys.executable}\n"
+        "import json,sys\nfrom pathlib import Path\n"
+        "args = sys.argv[1:]\nbody = sys.stdin.read()\n"
+        f"with Path({str(calls)!r}).open('a') as out: out.write(json.dumps({{'argv':args,'body':body}})+'\\n')\n"
+        "print('HTTP/1.1 403 Forbidden\\nRetry-After: 120\\nX-RateLimit-Remaining: 99\\nX-RateLimit-Reset: 2000000000\\n\\n'"
+        " + json.dumps({'message':'You have exceeded a secondary rate limit.'}))\n"
+        "sys.exit(1)\n"
     )
-    fake_gh.chmod(0o755)
-
+    binary.chmod(0o755)
+    args = ["--head", "unit-branch", "--base", "main", "--title", "clean"] if verb == "pr-create" else ["--number", "5146"]
     proc = subprocess.run(
-        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body-file", "-"],
-        input="preserved comment body\n",
-        cwd=root,
-        capture_output=True,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
-            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
-            "PATH": os.environ.get("PATH", ""),
-        },
-        check=False,
-        timeout=15,
+        [sys.executable, "-m", "scripts.publish", verb, *args, "--body-file", "-"],
+        input="preserved comment body\n", cwd=root, capture_output=True, text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary),
+             "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "3", "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
+             "PATH": os.environ.get("PATH", "")}, check=False, timeout=15,
     )
+    assert proc.returncode == 75
+    sent = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert len(sent) == 1
+    assert sent[0]["argv"][:4] == ["api", "--include", "--method", "POST"]
+    assert json.loads(sent[0]["body"])["body"] == "preserved comment body\n"
+    result = json.loads(proc.stdout)
+    assert result["error"] == "github_rate_limited"
+    assert result["reset_at"] is not None
+    assert "retrying" not in proc.stderr
 
-    assert proc.returncode == 0
-    assert attempts.read_text(encoding="utf-8") == "2"
-    assert "stdin=preserved comment body" in proc.stdout
-    assert "retry-output-should-not-leak" not in proc.stdout
-    assert "You have exceeded a secondary rate limit" not in proc.stderr
-    assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
-    assert "piped stdin was consumed" not in proc.stderr
-    assert "github_secondary_rate_limited" not in proc.stderr
 
-
-def test_typed_publisher_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path, gh_shim_sandbox):
-    """Intermediate secondary-limit output stays private until retries exhaust."""
+def test_typed_publisher_cleans_snapshots_and_child_on_sigterm(tmp_path, gh_shim_sandbox):
     root, _shim, _tooling = gh_shim_sandbox
-    fake_gh = tmp_path / "real-gh"
-    attempts = tmp_path / "attempts"
-    fake_gh.write_text(
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f"attempts={attempts!s}\n"
-        "count=0\n"
-        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
-        "count=$((count + 1))\n"
-        'printf \'%s\' "$count" >"$attempts"\n'
-        "printf 'attempt-%s-stdout\\n' \"$count\"\n"
-        "printf 'HTTP 403: secondary rate limit on attempt %s\\n' \"$count\" >&2\n"
-        "exit 1\n",
-        encoding="utf-8",
-    )
-    fake_gh.chmod(0o755)
-
-    proc = subprocess.run(
-        [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
-            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
-            "PATH": os.environ.get("PATH", ""),
-        },
-        check=False,
-        timeout=15,
-    )
-
-    assert proc.returncode == 1
-    assert attempts.read_text(encoding="utf-8") == "3"
-    assert proc.stdout == "attempt-3-stdout\n"
-    assert "attempt-1-stdout" not in proc.stdout
-    assert "attempt-2-stdout" not in proc.stdout
-    assert "secondary rate limit on attempt 1" not in proc.stderr
-    assert "secondary rate limit on attempt 2" not in proc.stderr
-    assert proc.stderr.count("github_secondary_rate_limited") == 1
-
-
-def test_typed_publisher_cleans_retry_tempfiles_on_sigterm(tmp_path, gh_shim_sandbox):
-    root, _shim, _tooling = gh_shim_sandbox
-    fake_gh = tmp_path / "real-gh"
+    binary = tmp_path / "real-gh"
     ready = tmp_path / "ready"
-    temp_dir = tmp_path / "shim-temp"
+    temp_dir = tmp_path / "publisher-temp"
     temp_dir.mkdir()
-    fake_gh.write_text(
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f"ready={ready!s}\n"
-        "printf 'ready' >\"$ready\"\n"
-        "printf 'HTTP 403: secondary rate limit.\\n' >&2\n"
-        "exit 1\n",
-        encoding="utf-8",
+    binary.write_text(
+        f"#!{sys.executable}\nimport time\nfrom pathlib import Path\n"
+        f"Path({str(ready)!r}).write_text('ready')\ntime.sleep(60)\n"
     )
-    fake_gh.chmod(0o755)
-
+    binary.chmod(0o755)
     proc = subprocess.Popen(
         [sys.executable, "-m", "scripts.publish", "issue-comment", "--number", "5146", "--body", "clean"],
-        cwd=root,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
-            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "30",
-            "PATH": os.environ.get("PATH", ""),
-            "TMPDIR": str(temp_dir),
-        },
+        cwd=root, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary), "PATH": os.environ.get("PATH", ""), "TMPDIR": str(temp_dir)},
     )
-    deadline = time.monotonic() + 60
-    while time.monotonic() < deadline:
-        if ready.exists():
-            break
-        time.sleep(0.01)
-    assert ready.exists()
-    readable, _, _ = select.select([proc.stderr], [], [], 60)
-    assert readable, "shim did not enter secondary-rate-limit backoff"
-    # The retry diagnostic is emitted immediately before the delay starts.
-    # Give the shell a scheduling turn so SIGTERM reaches active backoff code.
-    time.sleep(0.05)
-
-    proc.terminate()
-    _, stderr = proc.communicate(timeout=2)
-
-    assert proc.returncode == 143
-    assert "retrying gh in 30s" in stderr
-    assert list(temp_dir.iterdir()) == []
+    try:
+        deadline = time.monotonic() + 15
+        while not ready.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert ready.exists()
+        proc.terminate()
+        proc.communicate(timeout=5)
+        assert proc.returncode != 0
+        assert list(temp_dir.iterdir()) == []
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.communicate(timeout=5)
 
 
-def test_typed_publisher_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path, gh_shim_sandbox):
-    root, _shim, _tooling = gh_shim_sandbox
-    fake_gh = tmp_path / "real-gh"
-    attempts = tmp_path / "attempts"
-    fake_gh.write_text(
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f"attempts={attempts!s}\n"
-        "count=0\n"
-        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
-        'printf \'%s\' "$((count + 1))" >"$attempts"\n'
-        "printf 'secondary rate limit incident #403\\n' >&2\n"
-        "exit 1\n",
-        encoding="utf-8",
-    )
-    fake_gh.chmod(0o755)
-
-    proc = subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "scripts.publish",
-            "pr-create",
-            "--head",
-            "unit-branch",
-            "--base",
-            "main",
-            "--title",
-            "clean",
-            "--body",
-            "clean",
-        ],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
-            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
-            "PATH": os.environ.get("PATH", ""),
-        },
-        check=False,
-        timeout=15,
-    )
-
-    assert proc.returncode == 1
-    assert attempts.read_text(encoding="utf-8") == "1"
-    assert "throttled; retrying" not in proc.stderr
-
-
-def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path, gh_shim_sandbox):
-    """Secondary rate-limit retries must complete bounded when stdin is closed (#6869)."""
+def test_gh_shim_secondary_limit_with_closed_stdin_is_one_typed_attempt(tmp_path, gh_shim_sandbox):
     root, shim, _tooling = gh_shim_sandbox
-    fake_gh = tmp_path / "real-gh"
+    binary = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
-    fake_gh.write_text(
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f"attempts={attempts!s}\n"
-        "count=0\n"
-        '[[ -f "$attempts" ]] && count=$(cat "$attempts")\n'
-        "count=$((count + 1))\n"
-        'printf \'%s\' "$count" >"$attempts"\n'
-        'if [[ "$count" == 1 ]]; then\n'
-        "  printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\n"
-        "  exit 1\n"
-        "fi\n"
-        "printf 'real-gh %s (success)\\n' \"$*\"\n",
-        encoding="utf-8",
+    binary.write_text(
+        "#!/bin/sh\n"
+        f"printf 'called\\n' >> '{attempts}'\n"
+        "printf 'HTTP 403: You have exceeded a secondary rate limit.\\n' >&2\nexit 1\n"
     )
-    fake_gh.chmod(0o755)
-
+    binary.chmod(0o755)
     proc = subprocess.run(
         ["bash", "-c", f'exec 0<&-; "{shim}" issue list'],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        env={
-            "AGENT_NO_MERGE": "1",
-            "AGENT_REAL_GH": str(fake_gh),
-            "AGENT_GH_SECONDARY_RATE_LIMIT_RETRIES": "2",
-            "AGENT_GH_SECONDARY_RATE_LIMIT_BACKOFF_SECONDS": "0",
-            "PATH": os.environ.get("PATH", ""),
-        },
-        check=False,
-        timeout=15,
+        cwd=root, capture_output=True, text=True,
+        env={"AGENT_NO_MERGE": "1", "AGENT_REAL_GH": str(binary), "PATH": os.environ.get("PATH", "")},
+        check=False, timeout=15,
     )
-
-    assert proc.returncode == 0
-    assert attempts.read_text(encoding="utf-8") == "2"
-    assert proc.stdout.strip() == "real-gh issue list (success)"
-    assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
+    assert proc.returncode == 75
+    assert attempts.read_text().splitlines() == ["called"]
+    assert json.loads(proc.stdout)["error"] == "github_rate_limited"
+    assert "retrying" not in proc.stderr
 
 
 def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):

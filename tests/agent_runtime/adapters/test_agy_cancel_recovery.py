@@ -43,9 +43,11 @@ def _kill(task=_TASK_2, **extra):
     )
 
 
-def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0):
+def _parse(tmp_path, events, *, stderr="", envelope=None, returncode=0, profile_id=None):
     plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, events)
     plan = replace(plan, cmd=["agy", "--input-format", "stream-json", "--output-format", "stream-json"])
+    if profile_id:
+        plan = replace(plan, metadata={**plan.metadata, "agy_permission_profile_id": profile_id})
     stdout = _stream_stdout(
         envelope
         or {
@@ -151,6 +153,155 @@ def test_unreadable_evidence_reports_unknown_counts(tmp_path):
     assert not result.agy_attempt.evidence_complete
     assert result.agy_attempt.executed_command_count is None
     assert result.agy_attempt.denied_command_count is None
+    assert result.agy_attempt.denied_file_read_count is None
+    assert result.agy_attempt.denied_mcp_count is None
+
+
+def _explicit_denial(kind, target):
+    # Native GENERIC ERROR content from the AGY 1.2.17 gate probe; file target
+    # replaced with a public fixture name. No prompt or source results retained.
+    return (
+        f'Encountered error in step execution: permission check failed for {kind} "{target}": '
+        f"Permission denied for {kind}({target}). Matches user-configured deny rule."
+    )
+
+
+@pytest.mark.parametrize(
+    "tool,kind,target",
+    [
+        ("view_file", "read_file", "public-gate-input.txt"),
+        ("list_dir", "read_file", "fixture-dir"),
+        ("grep_search", "read_file", "fixture-dir"),
+        ("find_by_name", "read_file", "fixture-dir"),
+        ("future_file_reader", "read_file", "fixture-dir"),
+        ("call_mcp_tool", "mcp", "sources/verify_word"),
+    ],
+)
+def test_native_explicit_denials_count_separately_and_keep_completion(tmp_path, tool, kind, target):
+    from scripts.agent_runtime.result import AgyTelemetry
+
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": tool, "args": {}}]),
+            _event("GENERIC", _explicit_denial(kind, target), status="ERROR", step_index=9),
+            _reply("Complete reply."),
+        ],
+    )
+    assert result.ok and result.response == "Complete reply."
+    evidence = result.agy_attempt
+    assert evidence.denied_command_count == 0
+    assert evidence.executed_command_count == 0
+    assert evidence.denied_file_read_count == (kind == "read_file")
+    assert evidence.denied_mcp_count == (tool == "call_mcp_tool")
+    record = AgyTelemetry(attempts=(evidence,), accepted_attempt=1).task_fields()["agy_attempts"][0]
+    assert record["denied_file_read_count"] == evidence.denied_file_read_count
+    assert record["denied_mcp_count"] == evidence.denied_mcp_count
+    assert target not in repr(record)
+
+
+@pytest.mark.parametrize("status", ["DONE", "ERROR"])
+def test_sources_output_deny_phrase_is_not_native_permission_evidence(tmp_path, status):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": "call_mcp_tool", "args": {}}]),
+            _event("GENERIC", "Matches user-configured deny rule.", status=status),
+            _reply(_explicit_denial("mcp", "sources/verify_word")),
+        ],
+    )
+    assert result.ok
+    assert result.agy_attempt.denied_mcp_count == 0
+    assert result.agy_attempt.denied_file_read_count == 0
+
+
+@pytest.mark.parametrize("tool", [None, "run_command", "call_mcp_tool"])
+def test_read_denial_requires_a_bound_file_tool_result(tmp_path, tool):
+    events = [_prompt()]
+    if tool:
+        events.append(_event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": tool, "args": {}}]))
+    events.extend(
+        [
+            _event("GENERIC", _explicit_denial("read_file", "fixture.txt"), status="ERROR"),
+            _reply("Complete reply."),
+        ]
+    )
+    result = _parse(tmp_path, events)
+    assert result.agy_attempt.denied_file_read_count == 0
+
+
+@pytest.mark.parametrize("readable", [True, False])
+def test_file_auto_denial_target_survives_attempt_evidence_and_record(tmp_path, readable):
+    from scripts.agent_runtime.result import AgyTelemetry
+    from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
+
+    events = [_prompt(), _reply("Complete reply.")] if readable else ["unreadable"]
+    profile = "ukrainian-review-command-denial-v3"
+    result = _parse(tmp_path, events, stderr=auto_denial("read_file(evidence.txt)"), profile_id=profile)
+    assert not result.ok
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.agy_attempt.permission_target == "workspace:evidence.txt"
+    record = AgyTelemetry(attempts=(result.agy_attempt,)).task_fields()
+    assert record["agy_attempts"][0]["permission_target"] == "workspace:evidence.txt"
+    assert record["agy_attempts"][0]["permission_target_unknown_reason"] is None
+    assert record["agy_attempts"][0]["via_symlink"] is False
+    assert record["agy_attempts"][0]["permission_kind"] == "read_file"
+    assert record["agy_attempts"][0]["permission_profile_id"] == profile
+
+
+def test_mixed_denials_use_result_slots_not_planner_step_indexes(tmp_path):
+    events = [_prompt()]
+    for index, (tool, kind, target) in enumerate(
+        [
+            ("run_command", "command", "git status"),
+            ("view_file", "read_file", "public-gate-input.txt"),
+            ("call_mcp_tool", "mcp", "sources/verify_word"),
+        ]
+    ):
+        events.extend(
+            [
+                _event(
+                    "PLANNER_RESPONSE",
+                    "",
+                    source="MODEL",
+                    step_index=index + 1,
+                    tool_calls=[{"name": tool, "args": {}}],
+                ),
+                _event("GENERIC", _explicit_denial(kind, target), status="ERROR", step_index=index + 10),
+            ]
+        )
+    events.append(_reply("Complete reply."))
+    result = _parse(tmp_path, events)
+    assert result.ok
+    assert result.agy_attempt.denied_command_count == 1
+    assert result.agy_attempt.denied_file_read_count == 1
+    assert result.agy_attempt.denied_mcp_count == 1
+    assert result.agy_attempt.executed_command_count == 0
+
+
+def test_explicit_denials_do_not_supply_missing_completion_proof(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": "view_file", "args": {}}]),
+            _event("GENERIC", _explicit_denial("read_file", "fixture.txt"), status="ERROR"),
+        ],
+    )
+    assert not result.ok
+    assert result.agy_attempt.denied_file_read_count == 1
+
+
+def test_required_sources_headless_auto_denial_still_fails_typed(tmp_path):
+    from tests.agent_runtime.adapters.test_agy_review_permissions import auto_denial
+
+    result = _parse(tmp_path, [_prompt(), _reply("Complete reply.")], stderr=auto_denial("mcp(sources/verify_words)"))
+    assert not result.ok
+    assert result.failure_code == "provider_policy_refusal"
+    assert result.agy_attempt.completion_reason == agy.AGY_HEADLESS_PERMISSION_DENIED
+    assert result.agy_attempt.denied_mcp_count == 0
 
 
 @pytest.mark.parametrize(
@@ -818,3 +969,117 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
     command = " ".join(key)
     assert agy._read_only_killed_command(f"{command} {group} {operands}")
     assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
+
+
+
+def test_agy_impl_8771_timer_kill_not_excused_fails_incomplete(tmp_path):
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="Timer: 20s, Prompt: Wait for tests"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _reply("I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."),
+        ],
+    )
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
+    _TASK_2 = "06c5c5df-a2d6-42df-af4b-be7d41e983ba/task-2"
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git push"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _reply("git push killed"),
+        ],
+    )
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+    assert result.agy_attempt.completion_reason == agy.AGY_BACKGROUND_TASK_CANCELED
+
+
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path, mocker):
+    import hashlib
+    import json
+
+    from scripts.agent_runtime.adapters import agy
+    from scripts.delegate import _compose_dispatch_prompt
+
+    mocker.patch("scripts.agent_runtime.adapters.agy.shutil.which", return_value="/fake/agy")
+    mocker.patch("scripts.agent_runtime.adapters.agy._agy_version", return_value=(1, 2, 9))
+    mocker.patch("pathlib.Path.is_file", return_value=True)
+
+    adapter = agy.AgyAdapter()
+    base_prompt = "Do some work."
+
+    for mode in ["workspace-write", "danger"]:
+        prompt = _compose_dispatch_prompt(
+            base_prompt,
+            worktree_path=None,
+            mode=mode,
+            sparse_telemetry=None,
+            delegate_commits=False,
+            research_block="",
+            advisory_block="",
+            advisory_block_kind=None,
+            rules_seat=None,
+            agent="agy",
+        )
+        assert "WRITE MODE CONTRACT" in prompt
+        assert base_prompt in prompt
+
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+
+        plan = adapter.build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="test",
+            session_id=None,
+            tool_config={},
+        )
+        payload = json.loads(plan.stdin_payload)
+        sent_prompt = payload["message"]["content"][0]["text"]
+
+        assert sent_prompt == prompt
+        assert hashlib.sha256(sent_prompt.encode("utf-8")).hexdigest() == effective_prompt_sha256
+
+    # Test read-only
+    prompt_read = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="read-only",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_read
+
+    # Test review_route exclusion
+    prompt_review = _compose_dispatch_prompt(
+        base_prompt,
+        worktree_path=None,
+        mode="workspace-write",
+        sparse_telemetry=None,
+        delegate_commits=False,
+        research_block="",
+        advisory_block="",
+        advisory_block_kind=None,
+        rules_seat=None,
+        agent="agy",
+        review_route=True,
+    )
+    assert "WRITE MODE CONTRACT" not in prompt_review

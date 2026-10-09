@@ -50,7 +50,9 @@ def _audit_report(edges: dict[int, list[int]], open_numbers: list[int]) -> dict:
 
     membership = _tree_membership(roots, fetch_batch)
     issues = [{"number": n, "title": f"issue {n}"} for n in sorted(set(open_numbers) | roots)]
-    return classify(issues, registry, membership)
+    report = classify(issues, registry, membership)
+    report["repository"] = "org/repo"
+    return report
 
 
 def test_registry_lists_both_epics_in_one_stream_and_no_epic_in_two_streams():
@@ -100,13 +102,15 @@ def test_membership_and_issue_resolvers_accept_program_child_only_under_its_epic
 
 
 def test_lifecycle_resolves_program_child_to_registered_epic_natively():
-    registered = GhGitHubAdapter(ROOT, runner=lambda args, stdin: "").registered_stream_epics()
+    registered = GhGitHubAdapter(ROOT).registered_stream_epics()
     assert PARENT in registered and PROGRAM in registered
 
     result = task_lifecycle.resolve_membership(
         issue_number=CHILD,
         stream_epic=PROGRAM,
         native_parent_epic=PROGRAM,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=None,
     )
@@ -117,6 +121,8 @@ def test_lifecycle_resolves_program_child_to_registered_epic_natively():
         issue_number=CHILD,
         stream_epic=PARENT,
         native_parent_epic=PROGRAM,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=None,
     )
@@ -138,6 +144,8 @@ def test_lifecycle_resolves_program_child_through_audit_body_evidence():
         issue_number=CHILD,
         stream_epic=PROGRAM,
         native_parent_epic=None,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
@@ -147,10 +155,90 @@ def test_lifecycle_resolves_program_child_through_audit_body_evidence():
         issue_number=CHILD,
         stream_epic=PARENT,
         native_parent_epic=None,
+        repository="org/repo",
+        native_parent_repository="org/repo",
         registered_epics=registered,
         membership_report=report,
     )
     assert other["valid"] is False
+
+
+SUB_EPIC, GRANDCHILD = 8647, 9757  # unregistered sub-epic of #6943 and its child (#9783)
+
+
+def _registered() -> list[int]:
+    return sorted({e for epics in load_registry(REGISTRY_PATH).values() for e in epics})
+
+
+def test_lifecycle_accepts_native_grandchild_through_unregistered_sub_epic():
+    registered = _registered()
+    assert SUB_EPIC not in registered
+    report = _audit_report({PARENT: [SUB_EPIC], SUB_EPIC: [GRANDCHILD]}, [PARENT, PROGRAM, SUB_EPIC, GRANDCHILD])
+    report["generated_at"] = time.time()
+    assert report["effective_membership"][str(GRANDCHILD)]["via"] == "native"
+
+    ok = task_lifecycle.resolve_membership(
+        issue_number=GRANDCHILD,
+        stream_epic=PARENT,
+        native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
+        registered_epics=registered,
+        membership_report=report,
+    )
+    assert ok["valid"] is True and ok["method"] == "native_chain" and ok["epic"] == PARENT
+    assert ok["generated_at"] == report["generated_at"]
+    assert ok["digest"] == task_lifecycle.digest(report["effective_membership"])
+
+    # The chain reaches #6943 only; the nested program epic is a different owner.
+    other = task_lifecycle.resolve_membership(
+        issue_number=GRANDCHILD,
+        stream_epic=PROGRAM,
+        native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
+        registered_epics=registered,
+        membership_report=report,
+    )
+    assert other["valid"] is False and "different registered epic" in other["reason"]
+
+
+def test_lifecycle_refuses_chain_that_reaches_a_different_registered_epic():
+    """A sub-epic under the nested program #9737 belongs to #9737, never to #6943."""
+    report = _audit_report(
+        {PARENT: [PROGRAM], PROGRAM: [SUB_EPIC], SUB_EPIC: [GRANDCHILD]},
+        [PARENT, PROGRAM, SUB_EPIC, GRANDCHILD],
+    )
+    report["generated_at"] = time.time()
+    assert report["effective_membership"][str(GRANDCHILD)]["epics"] == [PROGRAM]
+
+    wrong = task_lifecycle.resolve_membership(
+        issue_number=GRANDCHILD,
+        stream_epic=PARENT,
+        native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
+        registered_epics=_registered(),
+        membership_report=report,
+    )
+    assert wrong["valid"] is False and "different registered epic" in wrong["reason"]
+
+
+def test_lifecycle_refuses_native_cycle_that_never_reaches_a_registered_epic():
+    report = _audit_report({SUB_EPIC: [GRANDCHILD], GRANDCHILD: [SUB_EPIC]}, [PARENT, SUB_EPIC, GRANDCHILD])
+    report["generated_at"] = time.time()
+    assert str(GRANDCHILD) not in report["effective_membership"]
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=GRANDCHILD,
+        stream_epic=PARENT,
+        native_parent_epic=SUB_EPIC,
+        repository="org/repo",
+        native_parent_repository="org/repo",
+        registered_epics=_registered(),
+        membership_report=report,
+    )
+    assert result["valid"] is False and "native sub-issue chain" in result["reason"]
 
 
 def test_session_stream_readers_keep_stream_epic_as_anchor():

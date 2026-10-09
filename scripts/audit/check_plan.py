@@ -24,6 +24,22 @@ from pathlib import Path
 
 import yaml
 
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
@@ -521,7 +537,7 @@ def _known_textbooks(sources_db: Path) -> list[dict[str, object]]:
             f"sources_db not found at {sources_db}. "
             "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    conn = sqlite3.connect(str(sources_db))
+    conn = _open_readonly(str(sources_db))
     try:
         rows = conn.execute(
             "SELECT DISTINCT source_file, grade, author FROM textbooks ORDER BY source_file"

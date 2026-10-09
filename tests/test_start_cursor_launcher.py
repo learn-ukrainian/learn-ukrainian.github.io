@@ -8,7 +8,6 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import yaml
 
 from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
@@ -150,8 +149,6 @@ def test_cursor_driver_rejects_retired_grok_before_lease(model: str) -> None:
         "grok-4.7",
         "composer-2.5",
         "grok-4.7-high",
-        "grok-4.7-xhigh",
-        "grok-4.7[context=500k,reasoning_effort=high,fast=false]",
         "composer-2.5[fast=false]",
     ),
 )
@@ -172,8 +169,14 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
         "cursor:auto",
         "default",
         "grok-4.7-fast",
+        "grok-4.7-low",
+        "grok-4.7-medium",
+        "grok-4.7-xhigh",
+        "grok-4.7[context=500k]",
+        "grok-4.7[fast=false]",
         "grok-4.7-high-fast",
         "composer-2.5-fast",
+        "composer-2.5[fast=true]",
         "grok-4.7[context=500k,fast=true]",
         "grok-4.7[fast=true,reasoning_effort=high]",
         "grok-4.7[fast=1]",
@@ -195,6 +198,11 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         else:
             assert result.returncode == 4, result.stdout + result.stderr
             assert "not certified for the cursor driver" in result.stderr
+            if model.startswith("grok-4.7"):
+                assert "is an unattested variant" in result.stderr
+                assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
+            else:
+                assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -297,9 +305,7 @@ def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = No
 
 def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
     """The launcher pin is orchestrator_seats.cursor model_id at its effort."""
-    seat = yaml.safe_load((REPO / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))[
-        "orchestrator_seats"
-    ]["cursor"]
+    seat = load_model_catalog()["orchestrator_seats"]["cursor"]
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert f"LC_CURSOR_SEAT_PIN={seat['model_id']}-{seat['effort']}\n" in core
 
@@ -336,6 +342,12 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
         assert result.returncode == 4, result.stdout + result.stderr
         assert "cursor interactive session" in result.stderr
         assert "grok-4.7-high or composer-2.5" in result.stderr
+        model = selection[-1] if selection else ""
+        if model.startswith("grok-4.7"):
+            assert "is an unattested variant" in result.stderr
+            assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
+        elif selection[0] != "--" and model in {"auto", "--model=Auto", "cursor:auto", "composer-2.5[fast=true]"}:
+            assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 
@@ -345,11 +357,57 @@ def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path:
     result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": model})
     assert result.returncode == 4, result.stdout + result.stderr
     assert "not certified for the cursor interactive session" in result.stderr
+    assert "grok-4.7-high or composer-2.5" in result.stderr
+    if model.startswith("grok-4.7"):
+        assert "is an unattested variant" in result.stderr
+        assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
+    else:
+        assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
 
 
-@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7-xhigh", "grok-4.7[reasoning_effort=high,fast=false]"))
+@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7", "grok-4.7-high"))
 def test_cursor_interactive_executes_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
     result, argv = _run_interactive(tmp_path, "--model", model)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert argv is not None and argv[:2] == ["--model", model]
+    expected_model = "grok-4.7-high" if model == "grok-4.7" else model
+    assert argv is not None and argv[:2] == ["--model", expected_model]
+
+def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")
+    assert result.returncode == 0, result.stderr
+    assert "--model grok-4.7-high" in result.stdout
+
+def test_cursor_refuses_claude_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Ensure native claude CLI is "found" by creating a dummy in tmp_path and putting it in PATH
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(exist_ok=True)
+    claude_bin = bin_dir / "claude"
+    claude_bin.write_text("#!/bin/sh\nexit 0", encoding="utf-8")
+    claude_bin.chmod(0o755)
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "claude-opus-5-5", env=env)
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
+
+def test_cursor_claude_refusal_does_not_trip_for_non_claude() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "composer-2.5")
+    assert result.returncode == 0, result.stderr
+    assert "--model composer-2.5" in result.stdout
+
+@pytest.mark.parametrize("model", ["opus", "sonnet", "haiku", "haiku-5-5", "claude-3-5-sonnet-20241022", "claude-fable-5-1"])
+def test_cursor_driver_refuses_claude_models(model: str, tmp_path: Path) -> None:
+    binary = tmp_path / "claude"
+    binary.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    binary.chmod(0o755)
+    result = run_launcher(
+        DRIVER, "--epic", "infra", "--model", model,
+        env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"},
+    )
+    assert result.returncode == 4, result.stderr
+    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
+    assert "native Claude CLI" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout

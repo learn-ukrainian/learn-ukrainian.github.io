@@ -38,6 +38,7 @@ import contextlib
 import hashlib
 import html
 import json
+import math
 import os
 import re
 import subprocess
@@ -47,6 +48,7 @@ import time
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import ClassVar
+from urllib.parse import urljoin, urlparse
 
 if __package__:
     from .config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
@@ -824,36 +826,368 @@ def verify_source_content(
         )
 
 
+# Local command-line acquisition policy; intentionally no shared network layer.
+USER_AGENT = (
+    "LearnUkrainianBot/1.0 "
+    "(+https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues)"
+)
+_access_stopped = False
+_robots_delays: dict[str, float] = {}
+_robots_states: dict[str, dict | None] = {}
+_request_times: dict[str, float] = {}
+
+
+class AccessStopped(RuntimeError):
+    """A source denied acquisition; no later network request is allowed this run."""
+
+
+def _check_access(status: int, headers: object, body: str = "") -> None:
+    global _access_stopped
+    fields = {str(k).lower(): str(v).lower().strip() for k, v in headers.items()}
+    lowered = body[:8000].lower()
+    challenged = fields.get("cf-mitigated") == "challenge" or any(
+        marker in lowered for marker in (
+            "checking your browser", "cf-browser-verification", "cf_chl_", "cf-chl-",
+            "attention required! | cloudflare", "enable javascript and cookies to continue",
+        )
+    ) or bool(re.search(r"<title[^>]*>\s*just a moment", lowered))
+    if _access_stopped or status in {403, 429} or challenged:
+        _access_stopped = True
+        raise AccessStopped("Source access denied or challenged; acquisition stopped for this run")
+
+
+def _robots_stop(reason: str) -> None:
+    global _access_stopped
+    _access_stopped = True
+    raise AccessStopped(reason)
+
+
+def _robots_token(header: str) -> bytes:
+    """Derive the RFC product token from the identification actually sent."""
+    raw = header.encode("utf-8").lower()
+    end = 0
+    while end < len(raw) and (97 <= raw[end] <= 122 or raw[end] in b"_-"):
+        end += 1
+    if not end:
+        _robots_stop("robots_configuration")
+    return raw[:end]
+
+
+def _robots_parse(body: bytes, header: str) -> dict:
+    """Admit raw records under the adopted #8999 fail-closed contract."""
+    token = _robots_token(header)
+    product = header.encode("utf-8").split(b"/", 1)[0].lower()
+    unresolved = len(body) > 512000 or b"\x00" in body or body.startswith(
+        (b"\xff\xfe", b"\xfe\xff", b"\x00\x00\xfe\xff")
+    )
+    if body.startswith(b"\xef\xbb\xbf"):
+        body = body[3:]
+    groups, rfc_groups = [], []
+    agents, rules, delays = [], [], []
+    rfc_agents, rfc_rules, rfc_delays = [], [], []
+    rfc_directives = False
+    orphan = []
+    seen_agent = directives = False
+    # Only CR/LF delimit records: bytes.splitlines would also split CTLs.
+    for line in body.replace(b"\r\n", b"\n").replace(b"\r", b"\n").split(b"\n"):
+        line = line.split(b"#", 1)[0]
+        start = 0
+        while start < len(line) and line[start] in b" \t\v\f":
+            start += 1
+        end = start
+        while end < len(line) and (
+            65 <= line[end] <= 90 or 97 <= line[end] <= 122 or line[end] in b"_-"
+        ):
+            end += 1
+        key = line[start:end].lower()
+        if key not in (b"user-agent", b"allow", b"disallow", b"crawl-delay"):
+            continue  # Other records never end a group.
+        colon = end
+        while colon < len(line) and line[colon] in b" \t":
+            colon += 1
+        if any(o not in b" \t" for o in line[:start]) or line[colon:colon + 1] != b":":
+            unresolved = True  # Structural failure applies to the whole file.
+            continue
+        value = line[colon + 1:].strip(b" \t")
+        if key == b"user-agent":
+            seen_agent = True
+            if directives:
+                groups.append((agents, rules, delays))
+                agents, rules, delays, directives = [], [], [], False
+            if rfc_directives:
+                rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
+                rfc_agents, rfc_rules, rfc_delays, rfc_directives = [], [], [], False
+            value = value.lower()
+            rfc_agents.append(value)
+            leading = 0
+            while leading < len(value) and (97 <= value[leading] <= 122 or value[leading] in b"_-"):
+                leading += 1
+            if value == b"*" or value == token:
+                agents.append(value)
+            elif value.startswith(b"*") or value[:leading] == token or value in product:
+                unresolved = True
+                agents.append(value)
+            else:
+                agents.append(value)
+        elif key in (b"allow", b"disallow", b"crawl-delay"):
+            directives = bool(agents)
+            if key == b"crawl-delay":
+                if agents:
+                    try:
+                        delay = float(value)
+                    except ValueError:
+                        continue
+                    if math.isfinite(delay) and delay >= 0:
+                        delays.append(delay)
+                        rfc_delays.append(delay)
+                continue
+            # Only Allow/Disallow end the RFC user-agent run, even if empty or malformed.
+            rfc_directives = bool(rfc_agents)
+            malformed = False
+            if value:
+                try:
+                    value.decode("utf-8", errors="strict")
+                except UnicodeDecodeError:
+                    malformed = True
+                malformed |= any(o <= 32 or o == 127 for o in value) or value[:1] not in (b"/", b"*")
+                malformed |= any(
+                    o == 37 and (i + 2 >= len(value) or any(h not in b"0123456789abcdefABCDEF" for h in value[i + 1:i + 3]))
+                    for i, o in enumerate(value)
+                )
+                malformed |= key == b"allow" and b"$" in value[:-1]
+            if key == b"allow" and (malformed or not seen_agent):
+                continue
+            if malformed or value:
+                # None records an unresolved Disallow, selected only with its group.
+                rule = (key == b"allow", None if malformed else value)
+                (rules if seen_agent else orphan).append(rule)
+                if seen_agent:
+                    rfc_rules.append(rule)
+    rfc_groups.append((rfc_agents, rfc_rules, rfc_delays))
+    groups.append((agents, rules, delays))
+    selected = [g for g in groups if token in g[0]] or [g for g in groups if b"*" in g[0]]
+    effective = orphan + [rule for _names, values, _delays in selected for rule in values]
+    rfc_selected = [g for g in rfc_groups if token in g[0]] or [g for g in rfc_groups if b"*" in g[0]]
+    rfc_effective = orphan + [rule for _names, values, _delays in rfc_selected for rule in values]
+    unresolved |= any(value is None for _allow, value in effective + rfc_effective)
+    state = {"rules": rfc_effective, "unresolved": unresolved,
+             "delay": max((d for _names, _rules, values in rfc_selected for d in values), default=0.0)}
+    # Legacy grouping only conserves denials; identical lists need two evaluations.
+    if effective != rfc_effective:
+        state["legacy_rules"] = effective
+    return state
+
+
+def _robots_crawl_delay(body: str) -> float:
+    """The same exact group selection drives both permission and pacing."""
+    return _robots_parse(body.encode("utf-8"), USER_AGENT)["delay"]
+
+
+def _robots_canonical(raw: bytes, *, rule: bool, reading: int) -> tuple[str, bool, int]:
+    """R1 uses atomic escape tokens; R2 uses encoded canonical characters."""
+    result = []
+    anchored = False
+    specificity = 0
+    i = 0
+    unreserved = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+    reserved = b":/?#[]@!&'()+,;="
+    while i < len(raw):
+        octet = raw[i]
+        if octet == 37 and i + 2 < len(raw) and all(h in b"0123456789abcdefABCDEF" for h in raw[i + 1:i + 3]):
+            octet = int(raw[i + 1:i + 3], 16)
+            escaped = octet not in unreserved
+            i += 3
+        else:
+            final = i == len(raw) - 1
+            i += 1
+            if rule and octet == 42:
+                result.append("*")
+                specificity += 1
+                continue
+            if rule and octet == 36 and final:
+                anchored = True
+                specificity += 1
+                continue
+            escaped = octet not in unreserved and (reading == 2 or octet not in reserved)
+        if escaped:
+            result.append(chr(0xE000 + octet) if reading == 1 else f"%{octet:02X}")
+            specificity += 3
+        else:
+            result.append(chr(octet))
+            specificity += 1
+    return "".join(result), anchored, specificity
+
+
+def _robots_match(pattern: str, anchored: bool, target: str) -> bool:
+    """Leftmost segment matching, O(pattern length * target length), no backtracking."""
+    segments = pattern.split("*")
+    if not target.startswith(segments[0]):
+        return False
+    position = len(segments[0])
+    if len(segments) == 1:
+        return not anchored or position == len(target)
+    for segment in segments[1:-1]:
+        found = target.find(segment, position)
+        if found < 0:
+            return False
+        position = found + len(segment)
+    last = segments[-1]
+    if anchored:
+        return len(target) - len(last) >= position and target.endswith(last)
+    return target.find(last, position) >= 0
+
+
+def _robots_target(url: str) -> bytes:
+    # Preserve params, a bare question mark, and the exact query; remove fragment.
+    target = url.split("#", 1)[0]
+    if "://" in target:
+        target = target.split("://", 1)[1]
+        cut = min((p for p in (target.find("/"), target.find("?")) if p >= 0), default=len(target))
+        target = target[cut:]
+    if not target.startswith("/"):
+        target = "/" + target
+    return target.encode("utf-8")
+
+
+def _robots_check_target(url: str) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    state = _robots_states.get(origin)
+    if state is None or state["unresolved"]:
+        _robots_stop("robots_unresolved")
+    target = _robots_target(url)
+    path = target.split(b"?", 1)[0]
+    if _robots_canonical(path, rule=False, reading=1)[0] == "/robots.txt":
+        return
+    decisions = []
+    rule_sets = [state["rules"]]
+    if "legacy_rules" in state:
+        rule_sets.append(state["legacy_rules"])
+    for rules in rule_sets:
+        for reading in (1, 2):
+            canonical = _robots_canonical(target, rule=False, reading=reading)[0]
+            top = []
+            best = -1
+            for allow, value in rules:
+                pattern, anchored, specificity = _robots_canonical(value, rule=True, reading=reading)
+                if _robots_match(pattern, anchored, canonical):
+                    if specificity > best:
+                        top, best = [], specificity
+                    if specificity == best:
+                        top.append((allow, pattern, anchored))
+            allows = {(pattern, anchored) for allow, pattern, anchored in top if allow}
+            denies = {(pattern, anchored) for allow, pattern, anchored in top if not allow}
+            decisions.append("allow" if not top or (allows and denies <= allows) else "disallow" if not allows else "ambiguous")
+    if not all(d == "allow" for d in decisions):
+        _robots_stop("robots_disallowed" if all(d == "disallow" for d in decisions) else "robots_ambiguous")
+
+
+def _wait_for_request(url: str, floor: float = 0.0) -> None:
+    _check_access(0, {})
+    parsed = urlparse(url)
+    origin = f"{parsed.scheme}://{parsed.netloc}"
+    delay = max(floor, _robots_delays.get(origin, 0.0))
+    previous = _request_times.get(origin)
+    if previous is not None:
+        remaining = delay - (time.monotonic() - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+    _request_times[origin] = time.monotonic()
+
+
 # ── Fetching ─────────────────────────────────────────────────────────
 
-def fetch_page(url: str, retries: int = 3) -> str:
-    """Fetch a page handling windows-1251 encoding, with retries."""
-    for attempt in range(1, retries + 1):
+def _curl_response(url: str) -> tuple[int, dict[str, str], bytes, int]:
+    """Capture status/headers separately so source bytes retain their encoding.
+
+    curl performs one hop and no internal retry: Python must inspect every
+    response before another request. Temporary metadata is never corpus data.
+    """
+    with tempfile.TemporaryDirectory() as scratch:
+        headers_path = Path(scratch) / "headers"
+        body_path = Path(scratch) / "body"
         try:
             result = subprocess.run(
-                ["curl", "-sL", "--max-time", "30", "--retry", "2",
+                ["curl", "-sS", "--globoff", "--path-as-is", "--proto", "=http,https",
+                 "--max-time", "30", "--dump-header", str(headers_path),
+                 "--output", str(body_path), "--write-out", "%{http_code}",
                  "-H", "Accept-Charset: windows-1251,utf-8",
-                 "-H", "User-Agent: Mozilla/5.0 (compatible; UkrLibScraper/1.0)",
-                 url],
-                capture_output=True,
-                timeout=60,
+                 "-H", f"User-Agent: {USER_AGENT}", url],
+                capture_output=True, timeout=60,
             )
         except subprocess.TimeoutExpired as exc:
             raise RuntimeError(f"curl timed out for {url}") from exc
-        if result.returncode == 0 and result.stdout:
+        headers: dict[str, str] = {}
+        if headers_path.exists():
+            # Frame bytes before decoding: obs-text (notably NEL) is opaque.
+            for raw_line in headers_path.read_bytes().splitlines():
+                line = raw_line.decode("iso-8859-1")
+                if line.startswith("HTTP/"):
+                    headers = {}
+                elif ":" in line:
+                    key, value = line.split(":", 1)
+                    headers[key.strip(" \t").lower()] = value.strip(" \t")
+        status = int(result.stdout.strip() or b"0")
+        body = body_path.read_bytes() if body_path.exists() else b""
+        return status, headers, body, result.returncode
+
+
+def _curl_request(url: str, *, robots: bool = True) -> tuple[int, bytes, int]:
+    _check_access(0, {})
+    _robots_token(USER_AGENT)
+    for _hop in range(9 if robots else 11):
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            _robots_stop("robots_unreachable: unsupported scheme")
+        origin = f"{parsed.scheme}://{parsed.netloc}"
+        if robots and origin not in _robots_states:
+            _robots_states[origin] = None
+            _robots_delays[origin] = 0.0
+            try:
+                status, body, rc = _curl_request(f"{origin}/robots.txt", robots=False)
+                state = _robots_parse(body if 200 <= status < 300 else b"", USER_AGENT)
+                _robots_states[origin] = state
+                _robots_delays[origin] = state["delay"]
+            except AccessStopped:
+                raise
+            except RuntimeError as exc:
+                _robots_stop(f"robots_unreachable: {type(exc).__name__}")
+        if robots:
+            _robots_check_target(url)
+        _wait_for_request(url, DELAY_BETWEEN_PAGES)
+        status, headers, body, rc = _curl_response(url)
+        _check_access(status, headers, body.decode("utf-8", errors="replace"))
+        if rc == 0 and status in {301, 302, 303, 307, 308} and headers.get("location"):
+            url = urljoin(url, headers["location"])
+            continue
+        if not robots and (rc != 0 or not (200 <= status < 300 or 400 <= status < 500)):
+            _robots_stop("robots_unreachable")
+        return status, body, rc
+    if not robots:
+        _robots_stop("robots_unreachable: redirect limit")
+    raise RuntimeError("Acquisition exceeded redirect limit")
+
+
+def fetch_page(url: str, retries: int = 3) -> str:
+    """Fetch windows-1251 content; denial stops instead of retrying or parsing."""
+    for attempt in range(1, retries + 1):
+        status, body, rc = _curl_request(url)
+        if rc == 0 and status < 400 and body:
             break
+        if 400 <= status < 500:
+            raise RuntimeError(f"HTTP {status} for {url}")
         if attempt < retries:
             wait = attempt * 3
-            print(f"    Retry {attempt}/{retries} for {url} (rc={result.returncode}), waiting {wait}s...")
+            print(f"    Retry {attempt}/{retries} for {url} (rc={rc}), waiting {wait}s...")
             time.sleep(wait)
     else:
-        raise RuntimeError(f"curl failed for {url} after {retries} attempts: rc={result.returncode} {result.stderr.decode()}")
+        raise RuntimeError(f"curl failed for {url} after {retries} attempts: rc={rc} HTTP {status}")
 
-    # Try windows-1251 first (ukrlib default)
     try:
-        return result.stdout.decode("windows-1251")
+        return body.decode("windows-1251")
     except UnicodeDecodeError:
-        return result.stdout.decode("utf-8", errors="replace")
+        return body.decode("utf-8", errors="replace")
 
 
 def get_author_works(author_id: int) -> tuple[list[dict], list[dict]]:
@@ -1236,6 +1570,8 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
                         expected_author=source_author,
                         expected_title=title,
                     )
+                except AccessStopped:
+                    raise
                 except Exception as e:
                     print(f"    ERROR: {e}")
                     continue
@@ -1403,6 +1739,8 @@ def scrape_narod(dry_run: bool = False) -> int:
             print(f"\n  [{i}/{n}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
             try:
                 text, source_url = scrape_narod_work(w["genre_id"], w["bookid"])
+            except AccessStopped:
+                raise
             except Exception as e:
                 print(f"    ERROR: {e}")
                 continue

@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 import os
 import re
-import sqlite3
 import statistics
 import sys
 import unicodedata
@@ -18,6 +17,22 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+try:
+    from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+except ModuleNotFoundError as exc:
+    # Script execution puts the script directory on sys.path, so the
+    # top-level package is absent (exc.name == "scripts"). Any other
+    # import failure must propagate.
+    if exc.name != "scripts":
+        raise
+    # lib.readonly_sqlite lives in scripts/, which file execution does not put on sys.path.
+    _scripts_dir = next(
+        parent for parent in Path(__file__).resolve().parents if parent.name == "scripts"
+    )
+    if str(_scripts_dir) not in sys.path:
+        sys.path.insert(0, str(_scripts_dir))
+    from lib.readonly_sqlite import open_readonly as _open_readonly  # type: ignore[no-redef]
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[2]
 DATA_ROOT = Path(os.environ.get("VOCAB_PROGRESSION_PROJECT_ROOT", str(SCRIPT_ROOT))).resolve()
@@ -182,7 +197,7 @@ class VesumLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"VESUM database not found at {db_path}")
-        self._conn = sqlite3.connect(str(db_path))
+        self._conn = _open_readonly(str(db_path))
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:
@@ -237,7 +252,7 @@ class PulsLookup:
     def __init__(self, db_path: Path):
         if not db_path.exists():
             raise FileNotFoundError(f"Sources database not found at {db_path}")
-        self._conn = sqlite3.connect(str(db_path))
+        self._conn = _open_readonly(str(db_path))
         self._cache: dict[str, str | None] = {}
 
     def close(self) -> None:

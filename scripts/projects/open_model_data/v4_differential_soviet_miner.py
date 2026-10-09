@@ -26,6 +26,8 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import home_dir_pattern, load_needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 
 
@@ -64,7 +66,9 @@ RECEIPT_SCHEMA = resolve_open_model_path(
 TOTAL_SUM11_RISK_POOL = 7152
 
 # Security regex: forbid private developer environments in public artifacts
-PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
+PRIVATE_HOST_RE = re.compile(
+    rf"(?:{home_dir_pattern(load_needles())}|/Users/|[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}}\.[\d]{{1,3}})"
+)
 
 
 class R2ULookupStatus(enum.StrEnum):
@@ -703,7 +707,7 @@ def validate_no_private_host_paths(data: Any) -> None:
     serialized = json.dumps(data, ensure_ascii=False)
     match = PRIVATE_HOST_RE.search(serialized)
     if match:
-        raise ValueError(f"OPSEC violation: private path detected in data: {match.group(0)}")
+        raise ValueError(f"OPSEC violation: private path detected in data at offset {match.start()}")
 
 
 def build_differential_receipt(
@@ -915,11 +919,11 @@ def run_miner(
         except Exception:
             r2u_cache = {}
 
-    conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+    conn = _open_readonly(sources_db_path.resolve())
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    vesum_conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+    vesum_conn = _open_readonly(vesum_db_path.resolve())
     vesum_cursor = vesum_conn.cursor()
 
     try:

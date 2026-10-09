@@ -11,8 +11,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
-import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     extract_root_family,
@@ -75,7 +76,7 @@ def _stems_from_zno_html(html: str) -> dict[int, str]:
 
 def load_official_zno_stems_from_sources(sources_db: Path) -> dict[int, str]:
     """Map ``zno_tasks.id`` → official ``stem``."""
-    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    conn = _open_readonly(sources_db)
     try:
         rows = conn.execute("SELECT id, stem FROM zno_tasks ORDER BY id").fetchall()
     finally:
@@ -100,6 +101,17 @@ def load_official_zno_stems_from_html(cache_dir: Path) -> dict[tuple[int, str, i
     return stems
 
 
+def default_zno_html_cache() -> Path:
+    """Reuse caller-owned scratch without allocating another task lifecycle."""
+    root = os.environ.get("TMPDIR", os.environ.get("LU_TASK_SCRATCH_DIR"))
+    if not root or not root.strip():
+        raise ValueError("ZNO HTML cache requires TMPDIR or LU_TASK_SCRATCH_DIR, or an explicit --zno-html-cache.")
+    path = Path(root)
+    if not path.is_absolute() or not path.is_dir():
+        raise ValueError("ZNO HTML cache scratch root must be an existing absolute directory.")
+    return path / "zno_cache"
+
+
 def restore_zno_stems_from_official_exam_text(
     records: list[dict[str, Any]],
     sources_db: Path | None = None,
@@ -115,7 +127,7 @@ def restore_zno_stems_from_official_exam_text(
     if db_path is not None:
         by_id = load_official_zno_stems_from_sources(db_path)
     else:
-        cache = cache_dir if cache_dir is not None else Path("/tmp/zno_cache")
+        cache = cache_dir if cache_dir is not None else default_zno_html_cache()
         by_key = load_official_zno_stems_from_html(cache)
 
     for rec in records:
@@ -270,8 +282,8 @@ def parse_textbook_contrast_tables(
     train_only_author_hashes: bool = True,
 ) -> list[dict[str, Any]]:
     """Extract explicit contrast pairs (НЕПРАВИЛЬНО -> ПРАВИЛЬНО, ❌ -> ✅) from textbook chunks."""
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
-    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_db)
+    v_conn = _open_readonly(vesum_db)
     sc = s_conn.cursor()
     vc = v_conn.cursor()
 
@@ -588,7 +600,7 @@ def parse_textbook_contrast_tables(
 
 def parse_zno_exam_tasks(sources_db: Path) -> list[dict[str, Any]]:
     """Extract all official ZNO/NMT exam tasks with distractors and keys."""
-    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    s_conn = _open_readonly(sources_db)
     sc = s_conn.cursor()
 
     rows = sc.execute(
@@ -692,21 +704,49 @@ def mine_corpus_calques(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Mine textbook contrast tables and ZNO tasks.")
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--verify-only", action="store_true", help="Verify existing output files.")
+    parser = argparse.ArgumentParser(
+        description="Mine textbook contrast tables and ZNO tasks.\n"
+        "Use with local source stores; verification reads existing artifacts without mining or fetching.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python scripts/projects/open_model_data/v4_mine_corpus_calques.py --verify-only\n"
+        "  .venv/bin/python scripts/projects/open_model_data/v4_mine_corpus_calques.py "
+        '--restore-zno-stems --output-dir "$TMPDIR/mined"\n'
+        "Outputs: mined JSONL and manifest; restoration rewrites ZNO JSONL and its manifest hash/count.\n"
+        "Source stores are read-only; HTML fallback may fetch and cache official exam pages.\n"
+        "Exit codes: 0 success; 1 verification/restoration failure; 2 invalid arguments.\n"
+        "Related: #8006, #9702; v4_mine_uagec_calques.py; v1_decolonization_mined_candidates.schema.json.",
+    )
+    parser.add_argument(
+        "--sources-db",
+        type=Path,
+        default=DEFAULT_SOURCES_DB,
+        help="Read-only sources store (default: resolved data/sources.db; example: data/sources.db).",
+    )
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=DEFAULT_VESUM_DB,
+        help="Read-only morphology store (default: resolved data/vesum.db; example: data/vesum.db).",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Mined artifact directory (default: data/projects/open_model_data/decolonization/mined; example: $TMPDIR/mined).",
+    )
+    parser.add_argument("--verify-only", action="store_true", help="Verify existing output files (default: off).")
     parser.add_argument(
         "--restore-zno-stems",
         action="store_true",
-        help="Rewrite committed ZNO stems from official zno_tasks.stem or published exam HTML.",
+        help="Rewrite existing ZNO stems from official zno_tasks.stem or published exam HTML (default: off).",
     )
     parser.add_argument(
         "--zno-html-cache",
         type=Path,
-        default=Path("/tmp/zno_cache"),
-        help="Cache directory for official zno.osvita.ua booklet HTML.",
+        default=None,
+        help="Official booklet HTML cache (default: $TMPDIR/zno_cache, or $LU_TASK_SCRATCH_DIR/zno_cache "
+        "if TMPDIR is unset; root must exist). Explicit example: $TMPDIR/official-pages.",
     )
     args = parser.parse_args()
 
