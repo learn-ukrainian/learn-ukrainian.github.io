@@ -1120,12 +1120,14 @@ def _curl_response(url: str) -> tuple[int, dict[str, str], bytes, int]:
             raise RuntimeError(f"curl timed out for {url}") from exc
         headers: dict[str, str] = {}
         if headers_path.exists():
-            for line in headers_path.read_text("iso-8859-1").splitlines():
+            # Frame bytes before decoding: obs-text (notably NEL) is opaque.
+            for raw_line in headers_path.read_bytes().splitlines():
+                line = raw_line.decode("iso-8859-1")
                 if line.startswith("HTTP/"):
                     headers = {}
                 elif ":" in line:
                     key, value = line.split(":", 1)
-                    headers[key.strip().lower()] = value.strip()
+                    headers[key.strip(" \t").lower()] = value.strip(" \t")
         status = int(result.stdout.strip() or b"0")
         body = body_path.read_bytes() if body_path.exists() else b""
         return status, headers, body, result.returncode

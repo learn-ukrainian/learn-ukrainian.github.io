@@ -9,6 +9,7 @@ import shutil
 import signal
 import sqlite3
 import subprocess
+import sys
 import threading
 import time
 from datetime import UTC, datetime
@@ -25,7 +26,242 @@ from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
+_REAL_OPEN_FILE_ACTIVITY_REASON = rw._open_file_activity_reason
 _REPO_TEMPLATE: Path | None = None
+
+
+def _reserve_in_exited_process(repo: Path, worktree: Path) -> dict[str, Any]:
+    """Leave a real interrupted-after-mark reservation owned by a dead PID."""
+    proc = _REAL_RUN(
+        [
+            sys.executable,
+            "-c",
+            "from pathlib import Path; import sys; "
+            "from scripts.orchestration.reaper_lifecycle import mark_reap_pending; "
+            "assert mark_reap_pending(Path(sys.argv[1]), worktree_path=Path(sys.argv[2]), "
+            "branch='codex/orphan', head=None, task_id=None)",
+            str(repo),
+            str(worktree),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    return json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"][str(worktree.resolve())]
+
+
+def _replace_pending_entry(repo: Path, worktree: Path, entry: Any) -> None:
+    reaper_lifecycle._atomic_write(
+        reaper_lifecycle.pending_path(repo),
+        {"schema_version": "worktree-reaper-pending.v1", "paths": {str(worktree.resolve()): entry}},
+    )
+
+
+def test_orphan_reservation_recovered_and_reaped(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    entry = _reserve_in_exited_process(repo, worktree)
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    rows = [json.loads(row) for row in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    recovery = next(row for row in rows if row["event"] == "reservation-recovery")
+    assert recovery["reservation"] == entry
+    assert recovery["decision"] == "release for normal safety evaluation"
+    assert recovery["reason"] == "holding PID absent"
+    assert next(i for i, row in enumerate(rows) if row["event"] == "reservation-recovery") < next(
+        i for i, row in enumerate(rows) if row["event"] == "reap"
+    )
+
+
+@pytest.mark.parametrize("unsafe", ["dirty", "unmerged", "active"])
+def test_orphan_release_keeps_normal_safety_guards(tmp_path, monkeypatch, unsafe):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    if unsafe == "dirty":
+        (worktree / "README.md").write_text("changed\n")
+    patch_gh(monkeypatch, {"codex/orphan": [] if unsafe == "unmerged" else [{"number": 71, "state": "MERGED"}]})
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds={worktree} if unsafe == "active" else set()),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+@pytest.mark.parametrize("holder", ["live", "permission", "unknown", "locked", "legacy_locked"])
+def test_orphan_recovery_never_steals_live_or_unverifiable_reservation(tmp_path, monkeypatch, holder):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    entry = _reserve_in_exited_process(repo, worktree)
+    if holder == "live":
+        entry["pid"] = os.getpid()
+    elif holder in {"permission", "unknown"}:
+
+        def refuse_probe(*_args):
+            raise PermissionError() if holder == "permission" else OSError("probe unavailable")
+
+        monkeypatch.setattr(reaper_lifecycle.os, "kill", refuse_probe)
+    elif holder == "legacy_locked":
+        entry.pop("pid")
+    entry["marked_at"] = "2000-01-01T00:00:00Z"
+    _replace_pending_entry(repo, worktree, entry)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+    lock = worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(repo))
+    with lock if holder in {"locked", "legacy_locked"} else contextlib.nullcontext():
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "active reap reservation"
+    assert worktree.exists()
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert '"event": "reservation-recovery"' not in reaper_lifecycle.journal_path(repo).read_text()
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        {"marked_at": "2000-01-01T00:00:00Z"},
+        {"marked_at": "2999-01-01T00:00:00Z"},
+        {"marked_at": "2000-01-01T00:00:00"},
+        {"marked_at": "invalid"},
+        {"pid": 0},
+        {"pid": -1},
+        {"pid": True},
+        {"pid": "123"},
+        {"pid": 2**64},
+        None,
+    ],
+)
+def test_orphan_legacy_and_malformed_reservations(tmp_path, monkeypatch, entry):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _replace_pending_entry(repo, worktree, entry)
+    patch_gh(monkeypatch, {"codex/orphan": [{"number": 71, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()), worktree)
+    should_recover = entry == {"marked_at": "2000-01-01T00:00:00Z"}
+    assert (result.action == "removed") == should_recover
+    assert worktree.exists() != should_recover
+    assert reaper_lifecycle.is_reap_pending(repo, worktree) != should_recover
+
+
+@pytest.mark.parametrize("mode", ["dry_run", "disabled", "other_target"])
+def test_orphan_recovery_respects_mode_and_target(tmp_path, monkeypatch, mode):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+    if mode == "disabled":
+        monkeypatch.setenv("LU_REAPER_DISABLED", "1")
+    rw.reap_worktrees(
+        repo_root=repo,
+        apply=mode != "dry_run",
+        live_cwds=set(),
+        target_paths=[repo / ".worktrees" / "other"] if mode == "other_target" else None,
+    )
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert worktree.exists()
+
+
+def test_orphan_recovery_after_tree_removed(tmp_path):
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "already-removed"
+    _reserve_in_exited_process(repo, worktree)
+    rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), target_paths=[worktree])
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+    assert not worktree.exists()
+    assert '"event": "reservation-recovery"' in reaper_lifecycle.journal_path(repo).read_text()
+
+
+def test_orphan_journal_failure_keeps_reservation(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/orphan")
+    _reserve_in_exited_process(repo, worktree)
+    before = reaper_lifecycle.pending_path(repo).read_bytes()
+
+    def fail_journal(*_args, **_kwargs):
+        raise OSError("journal unavailable")
+
+    monkeypatch.setattr(reaper_lifecycle, "append_journal", fail_journal)
+    with pytest.raises(OSError, match="journal unavailable"):
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    assert reaper_lifecycle.pending_path(repo).read_bytes() == before
+    assert worktree.exists()
+
+
+def test_pending_mark_refuses_existing_and_clear_requires_owner(tmp_path):
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "orphan"
+    entry = _reserve_in_exited_process(repo, worktree)
+    assert not reaper_lifecycle.mark_reap_pending(repo, worktree_path=worktree, branch=None, head=None, task_id=None)
+    reaper_lifecycle.clear_reap_pending(repo, worktree)
+    assert json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"][str(worktree)] == entry
+
+
+@pytest.mark.parametrize("corrupt", ["not json", "[]", '{"paths": []}'])
+def test_pending_mutation_refuses_corrupt_state(tmp_path, corrupt):
+    repo = init_repo(tmp_path)
+    path = reaper_lifecycle.pending_path(repo)
+    path.parent.mkdir(parents=True)
+    path.write_text(corrupt)
+    with pytest.raises(ValueError):
+        reaper_lifecycle.mark_reap_pending(
+            repo, worktree_path=repo / ".worktrees" / "orphan", branch=None, head=None, task_id=None
+        )
+    assert path.read_text() == corrupt
+
+
+def test_pending_writers_share_stable_lock_across_replace(tmp_path, monkeypatch):
+    repo = init_repo(tmp_path)
+    first, second = [repo / ".worktrees" / name for name in ("first", "second")]
+    replaced = threading.Event()
+    release = threading.Event()
+    finished = threading.Event()
+    errors = []
+    real_write = reaper_lifecycle._atomic_write
+
+    def hold_after_replace(path, payload):
+        real_write(path, payload)
+        if str(first) in payload["paths"] and str(second) not in payload["paths"]:
+            replaced.set()
+            assert release.wait(5)
+
+    monkeypatch.setattr(reaper_lifecycle, "_atomic_write", hold_after_replace)
+
+    def mark(path):
+        try:
+            assert reaper_lifecycle.mark_reap_pending(repo, worktree_path=path, branch=None, head=None, task_id=None)
+        except Exception as exc:
+            errors.append(exc)
+        finally:
+            if path == second:
+                finished.set()
+
+    writer = threading.Thread(target=mark, args=(first,))
+    contender = threading.Thread(target=mark, args=(second,))
+    writer.start()
+    try:
+        assert replaced.wait(5)
+        contender.start()
+        assert not finished.wait(0.1)
+    finally:
+        release.set()
+        writer.join(5)
+        if contender.ident is not None:
+            contender.join(5)
+    assert not errors
+    assert not writer.is_alive() and not contender.is_alive()
+    assert set(json.loads(reaper_lifecycle.pending_path(repo).read_text())["paths"]) == {str(first), str(second)}
 
 
 def git_env() -> dict[str, str]:
@@ -6505,6 +6741,9 @@ _OLD_PR = 9237
 def _no_default_foreign_scratch_roots(monkeypatch: pytest.MonkeyPatch) -> None:
     """pytest's own tmp_path lives under /tmp; only the #9129 tests opt in to scratch roots."""
     monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: ())
+    # Safety-class tests use a known empty process snapshot. Probe tests below
+    # restore the real implementation rather than depending on host activity.
+    monkeypatch.setattr(rw, "_open_file_activity_reason", lambda _path, *, timeout=None: None)
 
 
 def _reap_review(
@@ -6823,7 +7062,7 @@ def test_foreign_registered_checkout_outside_scratch_roots_is_only_reported(
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("problem", ["dirty", "cwd", "unpushed"])
+@pytest.mark.parametrize("problem", ["dirty", "cwd", "unpushed", "locked"])
 def test_foreign_registered_checkout_keeps_every_safety_check(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -6837,6 +7076,8 @@ def test_foreign_registered_checkout_keeps_every_safety_check(
         (worktree / "notes.txt").write_text("unsaved\n", encoding="utf-8")
     elif problem == "cwd":
         live_cwds = {worktree.resolve() / "sub"}
+    elif problem == "locked":
+        git(repo, "worktree", "lock", "--reason", "long reader", str(worktree))
     else:
         git(worktree, "commit", "--allow-empty", "-m", "local-only work")
 
@@ -6845,6 +7086,240 @@ def test_foreign_registered_checkout_keeps_every_safety_check(
     assert result.action == "skipped"
     assert result.reason != "foreign registered checkout"
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("phase", ["plan", "recheck"])
+@pytest.mark.parametrize("reader_kind", ["fd", "mapped"])
+@pytest.mark.skipif(
+    shutil.which("lsof") is None or not Path("/proc/self/fd").is_dir(),
+    reason="real reader proof needs lsof and procfs",
+)
+def test_foreign_checkout_with_reader_cwd_elsewhere_is_preserved(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, reader_kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: {tmp_path.resolve()})
+    reader_code = """
+import ctypes, os, sys
+file = open(sys.argv[1], 'rb')
+if sys.argv[2] == 'mapped':
+    libc = ctypes.CDLL(None, use_errno=True)
+    libc.mmap.restype = ctypes.c_void_p
+    libc.mmap.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int,
+                         ctypes.c_int, ctypes.c_int, ctypes.c_long]
+    address = libc.mmap(None, os.fstat(file.fileno()).st_size, 1, 2, file.fileno(), 0)
+    assert address != ctypes.c_void_p(-1).value
+    file.close()
+print('ready', flush=True)
+sys.stdin.read()
+"""
+    reader = subprocess.Popen(
+        [sys.executable, "-c", reader_code, str(worktree / "README.md"), reader_kind],
+        cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        assert reader.stdout is not None
+        assert reader.stdout.readline().strip() == "ready"
+        assert Path(os.readlink(f"/proc/{reader.pid}/cwd")) == tmp_path
+        if reader_kind == "mapped":
+            assert all(
+                os.readlink(fd) != str(worktree / "README.md")
+                for fd in Path(f"/proc/{reader.pid}/fd").iterdir()
+            )
+        if phase == "plan":
+            monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+        else:
+            original = rw._review_checkout_recheck
+
+            def recheck(*args: Any, **kwargs: Any) -> str | None:
+                monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+                return original(*args, **kwargs)
+
+            monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+        result = result_for(_reap_review(repo, monkeypatch, apply=phase == "recheck"), worktree)
+        assert result.action == "skipped"
+        expected = "live process has open or mapped files inside foreign checkout"
+        if phase == "recheck":
+            expected += "; originally qualified because foreign registered checkout"
+        assert result.reason == expected
+        assert str(tmp_path) not in result.reason
+        assert result.error is None
+        assert worktree.exists()
+    finally:
+        reader.communicate(timeout=10)
+        assert reader.returncode == 0
+
+
+@pytest.mark.parametrize("phase", ["plan", "recheck"])
+@pytest.mark.parametrize("failure", ["missing", "permission", "timeout", "warning", "error", "malformed", "partial"])
+def test_foreign_checkout_open_file_probe_failure_preserves_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, failure: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    original_run = rw._run
+
+    def run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[0] != "lsof":
+            return original_run(args, **kwargs)
+        if failure == "missing":
+            raise FileNotFoundError(str(worktree))
+        if failure == "permission":
+            raise PermissionError(str(worktree))
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+        return subprocess.CompletedProcess(
+            args, 2 if failure == "error" else 1,
+            stdout="unexpected" if failure == "malformed" else "",
+            stderr=f"cannot stat {worktree}" if failure == "warning" else "",
+        )
+
+    monkeypatch.setattr(rw, "_run", run)
+    if failure == "partial":
+        monkeypatch.setattr(
+            rw, "_open_file_probe_visibility_reason",
+            lambda _deadline: "open-file activity probe unavailable; foreign checkout preserved",
+        )
+    if phase == "plan":
+        monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+    else:
+        original = rw._review_checkout_recheck
+
+        def recheck(*args: Any, **kwargs: Any) -> str | None:
+            monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+    result = result_for(_reap_review(repo, monkeypatch, apply=phase == "recheck"), worktree)
+    assert result.action == "skipped"
+    assert "open-file activity probe" in result.reason
+    assert ("timed out" if failure == "timeout" else "unavailable") in result.reason
+    assert str(tmp_path) not in result.reason
+    assert result.error is None
+    assert worktree.exists()
+
+
+def test_open_file_probe_empty_selection_and_locked_timeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[list[str], float | None]] = []
+
+    def run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        calls.append((args, rw._effective_timeout(kwargs["timeout"])))
+        return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+
+    monkeypatch.setattr(rw, "_run", run)
+    monkeypatch.setattr(rw, "_open_file_probe_visibility_reason", lambda _deadline: None)
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 1)
+    with rw._bounded_locked_git():
+        assert _REAL_OPEN_FILE_ACTIVITY_REASON(tmp_path, timeout=15) is None
+    args, timeout = calls[0]
+    assert args == ["lsof", "+w", "-n", "-P", "-F", "p", "+D", str(tmp_path), "-x", "f"]
+    assert timeout is not None and 0 < timeout <= 1
+
+
+@pytest.mark.parametrize("state", [
+    "idle", "missing_root", "empty", "fd_denied", "maps_denied",
+    "closed_fd", "exited", "live_missing_maps", "timeout",
+    "nested_namespace", "nested_proc_namespace", "missing_namespace",
+    "hidepid", "subset", "pidns", "missing_mount", "malformed_mount",
+    "wrong_fs", "partial_proc", "overmounted_pid",
+])
+def test_open_file_probe_visibility_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str,
+) -> None:
+    proc_root = tmp_path / "proc"
+    process = proc_root / "123"
+    if state != "missing_root":
+        proc_root.mkdir()
+    if state not in {"missing_root", "empty"}:
+        (proc_root / "self" / "ns").mkdir(parents=True)
+        if state != "missing_namespace":
+            (proc_root / "self" / "ns" / "pid").symlink_to(
+                "pid:[12345]" if state == "nested_namespace" else "pid:[4026531836]",
+            )
+        (proc_root / "1" / "ns").mkdir(parents=True)
+        (proc_root / "1" / "ns" / "pid").symlink_to(
+            "pid:[12345]" if state == "nested_proc_namespace" else "pid:[4026531836]",
+        )
+        (proc_root / "1" / "fd").mkdir()
+        (proc_root / "1" / "maps").write_bytes(b"")
+        options = {"hidepid": "rw,hidepid=2", "subset": "rw,subset=pid", "pidns": "rw,pidns=123"}.get(state, "rw")
+        fs_type = "tmpfs" if state == "wrong_fs" else "proc"
+        root = "/123" if state == "partial_proc" else "/"
+        mountinfo = f"50 42 0:24 {root} {proc_root} rw - {fs_type} proc {options}\n"
+        if state == "overmounted_pid":
+            mountinfo += f"51 50 0:25 / {proc_root}/123 rw - tmpfs tmpfs rw\n"
+        if state == "malformed_mount":
+            mountinfo = "unreadable mount record\n"
+        elif state == "missing_mount":
+            mountinfo = ""
+        (proc_root / "self" / "mountinfo").write_text(mountinfo, encoding="utf-8")
+        (process / "fd").mkdir(parents=True)
+        (process / "fd" / "3").symlink_to(tmp_path / "outside.txt")
+        if state != "live_missing_maps":
+            (process / "maps").write_bytes(b"")
+    original_readlink = Path.readlink
+    original_read_bytes = Path.read_bytes
+    original_iterdir = Path.iterdir
+    original_exists = Path.exists
+
+    def readlink(path: Path) -> Path:
+        if path == process / "fd" / "3":
+            if state == "fd_denied":
+                raise PermissionError(str(path))
+            if state == "closed_fd":
+                raise FileNotFoundError(str(path))
+        return original_readlink(path)
+
+    def read_bytes(path: Path) -> bytes:
+        if state == "maps_denied" and path == process / "maps":
+            raise PermissionError(str(path))
+        return original_read_bytes(path)
+
+    def iterdir(path: Path):
+        if state == "exited" and path == process / "fd":
+            raise FileNotFoundError(str(path))
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "readlink", readlink)
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    monkeypatch.setattr(Path, "iterdir", iterdir)
+    monkeypatch.setattr(Path, "exists", lambda p: False if state == "exited" and p == process else original_exists(p))
+    deadline = time.monotonic() + (-1 if state == "timeout" else 10)
+    reason = rw._open_file_probe_visibility_reason(deadline, proc_root)
+    if state in {"idle", "closed_fd", "exited"}:
+        assert reason is None
+    else:
+        assert reason is not None
+        assert ("timed out" if state == "timeout" else "unavailable") in reason
+        assert str(tmp_path) not in reason
+
+
+@pytest.mark.skipif(shutil.which("bwrap") is None, reason="namespace reproduction needs bwrap")
+def test_foreign_checkout_reader_outside_pid_namespace_is_not_assumed_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    code = (
+        "import sys; from pathlib import Path; from scripts.orchestration import reap_worktrees as rw; "
+        "print(rw._open_file_activity_reason(Path(sys.argv[1])))"
+    )
+    # The reader is the parent pytest process, invisible in bwrap's PID namespace.
+    with (worktree / "README.md").open("rb"):
+        result = _REAL_RUN(
+            ["bwrap", "--ro-bind", "/", "/", "--dev", "/dev", "--proc", "/proc",
+             "--unshare-pid", "--die-with-parent", "--", sys.executable, "-c", code, str(worktree)],
+            cwd=Path.cwd(), capture_output=True, text=True, timeout=20,
+        )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "open-file activity probe unavailable; foreign checkout preserved"
+    assert str(tmp_path) not in result.stdout
 
 
 def test_foreign_scratch_root_never_covers_the_repository_or_its_root(

@@ -48,8 +48,9 @@ Rank follows the catalog; entries at the same rank are peers.
 | medium | 5 | claude-opus-5-5-cursor-fallback | claude-opus-5-5 |
 | medium | 6 | claude-sonnet-5-5 | claude-sonnet-5-5 |
 | medium | 7 | composer-2.5 | composer-2.5 |
-| medium | 8 | pool | poolside/laguna-s-2.1 |
-| medium | 9 | pool-xs | poolside/laguna-xs-2.1 |
+| medium | 8 | gemini-3.8-flash-high | gemini-3.8-flash-high |
+| medium | 9 | pool | poolside/laguna-s-2.1 |
+| medium | 10 | pool-xs | poolside/laguna-xs-2.1 |
 | low | 1 | openai_frontier | gpt-6.1-sol |
 | low | 2 | claude-opus-5-5 | claude-opus-5-5 |
 | low | 3 | grok-4.7 | grok-4.7 |
@@ -57,5 +58,6 @@ Rank follows the catalog; entries at the same rank are peers.
 | low | 5 | claude-opus-5-5-cursor-fallback | claude-opus-5-5 |
 | low | 6 | claude-sonnet-5-5 | claude-sonnet-5-5 |
 | low | 7 | composer-2.5 | composer-2.5 |
-| low | 8 | pool | poolside/laguna-s-2.1 |
-| low | 9 | pool-xs | poolside/laguna-xs-2.1 |
+| low | 8 | gemini-3.8-flash-high | gemini-3.8-flash-high |
+| low | 9 | pool | poolside/laguna-s-2.1 |
+| low | 10 | pool-xs | poolside/laguna-xs-2.1 |

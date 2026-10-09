@@ -49,6 +49,7 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert json.loads(settings.read_text()) == {
         "permissions": {
             "allow": [
+                f"read_file({tmp_path.resolve()})",
                 *[f"mcp(sources/{name})" for name in sorted(tools)],
             ],
             "deny": [
@@ -66,11 +67,12 @@ def test_exact_review_grants(tmp_path, scoped, route):
     assert build(tmp_path, config).env_overrides == plan.env_overrides
 
 
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
 @pytest.mark.parametrize("route", ["full", "isolated", "permission-only"])
-def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route):
+def test_profile_does_not_deny_workspace_evidence(tmp_path, scoped, route, profile):
     evidence = tmp_path / "evidence.txt"
     evidence.write_text("workspace evidence")
-    config = {"agy_home_override": str(scoped), "review_profile": "ukrainian"}
+    config = {"agy_home_override": str(scoped), "review_profile": profile}
     if route != "permission-only":
         config["review_access"] = route
     plan = build(tmp_path, config)
@@ -88,7 +90,7 @@ def test_permission_only_provisioned_home_passes_adapter_for_review_tools(tmp_pa
     monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
-    home = prepare_agy_permission_home(tmp_path)
+    home = prepare_agy_permission_home(tmp_path, checkout_root=tmp_path)
     settings = home / ".gemini" / "antigravity-cli" / "settings.json"
     before = settings.read_bytes()
     plan = build(
@@ -213,6 +215,10 @@ def test_review_missing_scoped_home_refused_before_probe(tmp_path, monkeypatch, 
         {"permissions": {"allow": ["mcp(*)"]}},
         {"permissions": {"allow": [], "ask": ["mcp(*)"]}},
         {"toolPermission": "always-proceed"},
+        {"permissions": {"allow": ["read_file(*)"]}},
+        {"permissions": {"allow": ["read_file(/)"]}},
+        {"permissions": {"allow": ["command(cat)"]}},
+        {"permissions": {"allow": ["write_file(*)"]}},
     ],
 )
 def test_existing_config_is_not_silently_repaired(tmp_path, scoped, settings):
@@ -512,13 +518,31 @@ def test_model_response_cannot_supply_permission_denial(monkeypatch):
     assert parsed.ok
 
 
-def test_trusted_ukrainian_profile_requires_scoped_home_before_probe(tmp_path, monkeypatch):
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_review_profile_rejects_write_mode_before_probe(tmp_path, scoped, monkeypatch, profile, mode):
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
+    with pytest.raises(agy.AgyReviewPermissionError, match="agy_review_permissions_require_read_only"):
+        agy.AgyAdapter().build_invocation(
+            prompt="Review the supplied plan.",
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="permissions",
+            session_id=None,
+            tool_config={"review_profile": profile, "agy_home_override": str(scoped)},
+        )
+    assert not (scoped / ".gemini" / "antigravity-cli" / "settings.json").exists()
+
+
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
+def test_trusted_review_profile_requires_scoped_home_before_probe(tmp_path, monkeypatch, profile):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
     with pytest.raises(agy.AgyReviewPermissionError, match="require_scoped_home"):
-        build(tmp_path, {"review_profile": "ukrainian"})
+        build(tmp_path, {"review_profile": profile})
 
 
-@pytest.mark.parametrize("config", [None, {"review_profile": "code"}, {"task_family": "recon"}])
+@pytest.mark.parametrize("config", [None, {"task_family": "recon"}])
 def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatch, config):
     monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
     monkeypatch.setattr(agy, "_build_log_path", lambda *a: tmp_path / "agy.log")
@@ -527,12 +551,22 @@ def test_prompt_keywords_never_enable_the_profile_for_recon(tmp_path, monkeypatc
     assert plan.metadata["agy_permission_profile_id"] is None
 
 
-def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped):
-    plan = build(tmp_path, {"review_profile": "ukrainian", "agy_home_override": str(scoped)})
-    assert plan.metadata["agy_permission_profile_id"] == "ukrainian-review-command-denial-v3"
+@pytest.mark.parametrize(
+    ("profile", "profile_id"),
+    [
+        ("ukrainian", "ukrainian-review-command-denial-v3"),
+        ("code", "code-review-command-denial-v1"),
+    ],
+)
+def test_profile_denies_commands_and_preserves_sources(tmp_path, scoped, profile, profile_id):
+    plan = build(tmp_path, {"review_profile": profile, "agy_home_override": str(scoped)})
+    assert "--sandbox" in plan.cmd
+    assert "--dangerously-skip-permissions" not in plan.cmd
+    assert plan.metadata["agy_permission_profile_id"] == profile_id
     rules = json.loads((scoped / ".gemini" / "antigravity-cli" / "settings.json").read_text())["permissions"]
     assert "command(*)" in rules["deny"]
     assert "read_file(*)" not in rules["deny"]
+    assert rules == agy_review_settings(None, checkout_root=tmp_path)["permissions"]
     assert {rule for rule in rules["deny"] if rule.startswith("mcp(")} == {
         f"mcp(sources/{tool})" for tool in set().union(*sources_tool_sets()) - review_tools()
     }
@@ -569,3 +603,40 @@ def test_facet_authorities_granted_and_every_server_writer_denied(access):
     for writer in sources_tool_sets()[1]:
         assert f"mcp(sources/{writer})" in permissions["deny"]
         assert f"mcp(sources/{writer})" not in permissions["allow"]
+
+
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_checkout_read_grant_is_recursive_and_has_no_other_native_allow(tmp_path, access):
+    checkout = tmp_path / "checkout with spaces"
+    checkout.mkdir()
+    rules = agy_review_settings(access, checkout_root=checkout)["permissions"]
+    native = [rule for rule in rules["allow"] if not rule.startswith("mcp(sources/")]
+    assert native == [f"read_file({checkout.resolve()})"]
+    assert "command(*)" in rules["deny"]
+    assert "write_file(*)" in rules["deny"]
+    assert all("*" not in rule for rule in rules["allow"])
+
+
+@pytest.mark.parametrize("name", ["*", "bad)name", "bad(name", "bad\nname", "bad\u202ename"])
+def test_unsafe_checkout_names_never_become_permission_rules(tmp_path, name):
+    checkout = tmp_path / name
+    checkout.mkdir()
+    with pytest.raises(ValueError, match="agy_review_permissions_unsafe_checkout"):
+        agy_review_settings(checkout_root=checkout)
+
+
+def test_filesystem_root_and_root_alias_never_become_read_grants(tmp_path):
+    alias = tmp_path / "root-alias"
+    alias.symlink_to("/", target_is_directory=True)
+    for root in ("/", alias):
+        with pytest.raises(ValueError, match="agy_review_permissions_unsafe_checkout"):
+            agy_review_settings(checkout_root=root)
+
+
+def test_checkout_change_refuses_existing_grant_before_probe(tmp_path, scoped, monkeypatch):
+    build(tmp_path, {"review_access": "full", "agy_home_override": str(scoped)})
+    other = tmp_path / "other-checkout"
+    other.mkdir()
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: pytest.fail("CLI probe"))
+    with pytest.raises(agy.AgyReviewPermissionError, match="config_mismatch"):
+        build(other, {"review_access": "full", "agy_home_override": str(scoped)})

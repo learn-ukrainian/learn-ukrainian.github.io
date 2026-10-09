@@ -80,13 +80,15 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 def test_permission_only_review_uses_existing_home_provisioner(tmp_path, fake_agy_user_home):
     root = tmp_path / "lease"
     root.mkdir()
-    home = review_mcp_module.prepare_agy_permission_home(root)
+    home = review_mcp_module.prepare_agy_permission_home(root, checkout_root=tmp_path)
     config = json.loads((home / ".gemini" / "config" / "mcp_config.json").read_text())
     assert set(config["mcpServers"]) == {"sources"}
     assert "LU_REVIEW_LEDGER_PATH" not in config["mcpServers"]["sources"].get("env", {})
     settings = json.loads((home / ".gemini" / "antigravity-cli" / "settings.json").read_text())
     readers, writers = sources_tool_sets()
-    assert settings["permissions"]["allow"] == [f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    assert settings["permissions"]["allow"] == [
+        f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(REVIEW_TOOLS)]
+    ]
     assert settings["permissions"]["deny"] == [
         "command(*)",
         "write_file(*)",
@@ -111,6 +113,7 @@ def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(mani
         "agy",
         receipts_root=tmp_path / "receipts",
         review_access=access,
+        checkout_root=tmp_path,
     )
     # Explicit approved #9949 contract; do not derive this expectation from review_tools.
     names = [
@@ -141,7 +144,7 @@ def test_receipt_attempt_allow_contract_includes_approved_facet_authorities(mani
         names.append("search_resources")
     expected = {
         "permissions": {
-            "allow": [f"mcp(sources/{name})" for name in sorted(names)],
+            "allow": [f"read_file({tmp_path.resolve()})", *[f"mcp(sources/{name})" for name in sorted(names)]],
             "deny": [
                 "command(*)",
                 "write_file(*)",
@@ -1320,13 +1323,14 @@ def test_codex_ordinary_dispatch_has_no_scoped_home_or_url_override(tmp_path: Pa
 # --- AGY scoped-home receipts seat (#8617) --------------------------------------------
 
 
-def _prepare_agy(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-agy-001"):
+def _prepare_agy(manifest_file: Path, tmp_path: Path, attempt_id: str = "att-agy-001", *, checkout_root=None):
     return prepare_review_attempt(
         review_id="rev-agy-001",
         attempt_id=attempt_id,
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout_root=checkout_root or tmp_path,
     )
 
 
@@ -1364,7 +1368,7 @@ def test_agy_home_layout_modes_and_single_source_config(
     from scripts.agent_runtime.review_mcp import agy_review_settings
 
     settings = app_data / "settings.json"
-    assert json.loads(settings.read_text()) == agy_review_settings("isolated")
+    assert json.loads(settings.read_text()) == agy_review_settings("isolated", checkout_root=tmp_path)
     assert stat.S_IMODE(settings.stat().st_mode) == 0o600
 
 
@@ -1577,10 +1581,10 @@ def _rewrite_agy_config(plan, mutate) -> None:
 def test_agy_gate_accepts_exactly_sources_with_padded_table(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     cwd = tmp_path / "wt"
     cwd.mkdir()
+    plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     agy_bin = _fake_agy_bin(tmp_path)
     verify_agy_review_effective_mcp(config_path=plan.config_path, cwd=cwd, env=_agy_env(plan), agy_bin=agy_bin)
     logged_cwd, logged_home, logged_app_data, logged_args = log.read_text(encoding="utf-8").strip().split("|")
@@ -1786,6 +1790,7 @@ def test_agy_gate_refusals_never_embed_home_or_app_data_values(
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=operator_home / "scoped-marker-8652" / "receipts",
+        checkout_root=tmp_path,
     )
     env = _agy_env(plan)
     app_data = Path(env["AGY_APP_DATA_DIR"])
@@ -1888,10 +1893,10 @@ def _agy_tool_config(plan, **extra) -> dict:
 def test_agy_launch_gate_runs_under_the_final_spawned_environment(
     manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    plan = _prepare_agy(manifest_file, tmp_path)
-    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     cwd = tmp_path / "wt"
     cwd.mkdir()
+    plan = _prepare_agy(manifest_file, tmp_path, checkout_root=cwd)
+    log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     verify_agy_review_launch(
         config_path=plan.config_path,
         cwd=cwd,
@@ -1918,6 +1923,7 @@ def test_agy_launch_gate_refuses_when_the_sanitizer_would_drop_the_scoped_home(
         manifest_path=manifest_file,
         harness="agy",
         receipts_root=tmp_path / "receipts",
+        checkout_root=tmp_path,
     )
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617"):

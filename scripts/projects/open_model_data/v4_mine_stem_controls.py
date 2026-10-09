@@ -33,6 +33,7 @@ import numpy as np
 
 from scripts.lib.readonly_sqlite import SQLiteConnection
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
+from scripts.opsec.needles import Needles, load_needles, run_user_alias_pattern
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
@@ -83,14 +84,22 @@ DIGIT_RUN_RE = re.compile(r"(?:\b\d+\b\s+){3,}\b\d+\b")
 REPEATED_WORD_RE = re.compile(r"\b([А-Яа-яІіЇїЄєҐґ]{2,})\s+\1\b", re.IGNORECASE)
 FIGURE_CAPTION_RE = re.compile(r"\b(?:Рис|Мал|Табл)\.\s*$")
 ISOLATED_MULT_RE = re.compile(r"\b[хx]\b")
-_HOME_ROOT = "/home/"
-_OPS_USER = "ops"
-SSH_OR_HOST_RE = re.compile(
-    rf"{re.escape(_HOME_ROOT + _OPS_USER)}|{re.escape(_HOME_ROOT)}[A-Za-z0-9_.-]+|"
-    r"/Users/[A-Za-z0-9_.-]+|"
-    r"\bHost\s+" + _OPS_USER + r"\b|" + _OPS_USER + r"@|[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
-    re.IGNORECASE,
-)
+
+
+def ssh_or_host_re(needles: Needles) -> re.Pattern[str]:
+    """Home paths, SSH ``<user>@<host>:`` remotes, and the deployment's run-user aliases."""
+    parts = [
+        r"(?:/home|/Users)/[A-Za-z0-9_.-]+",
+        *(re.escape(home) for home in needles.home_dirs),
+        r"[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
+    ]
+    alias = run_user_alias_pattern(needles)
+    if alias:
+        parts.append(alias)
+    return re.compile("|".join(parts), re.IGNORECASE)
+
+
+SSH_OR_HOST_RE = ssh_or_host_re(load_needles())
 
 FUNCTION_WORDS: frozenset[str] = frozenset(
     {
@@ -1057,17 +1066,18 @@ def strip_private_fields(record: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in record.items() if not key.startswith("_")}
 
 
-def assert_no_private_host_paths(data: Any, path_prefix: str = "root") -> None:
+def assert_no_private_host_paths(data: Any) -> None:
     if isinstance(data, dict):
         for key, value in data.items():
-            assert_no_private_host_paths(value, f"{path_prefix}.{key}")
+            assert_no_private_host_paths(key)
+            assert_no_private_host_paths(value)
         return
     if isinstance(data, list):
-        for idx, value in enumerate(data):
-            assert_no_private_host_paths(value, f"{path_prefix}[{idx}]")
+        for value in data:
+            assert_no_private_host_paths(value)
         return
     if isinstance(data, str) and SSH_OR_HOST_RE.search(data):
-        raise ValueError(f"private host path or SSH alias leaked at {path_prefix}")
+        raise ValueError("private host path or SSH alias leaked")
 
 
 def assert_no_corpus_text(record: dict[str, Any]) -> None:

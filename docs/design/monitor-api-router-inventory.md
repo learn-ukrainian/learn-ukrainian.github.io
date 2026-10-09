@@ -18,10 +18,10 @@ migration step grouping per §5.2 point 4 of the parent design.
 All counts below were derived from the checked-out worktree at inventory time.
 A reviewer can reproduce them with these exact commands.
 
-### Total router-module count — **46** distinct router objects
+### Total router-module count — **47** distinct router objects
 
-`main.py` makes **47** `include_router` calls registering **46 distinct router
-objects**: 45 imported router modules plus `core_router` (defined inside
+`main.py` makes **48** `include_router` calls registering **47 distinct router
+objects**: 46 imported router modules plus `core_router` (defined inside
 `main.py`). Only `docs_router` is registered twice (at `/artifacts` and
 `/files`). `reviewer_ghosts_router` uses a multiline `include_router` call.
 `telemetry_router`, `batch_router` and `core_router` are mounted without a
@@ -29,7 +29,7 @@ prefix.
 
 ```bash
 grep -c 'include_router' scripts/api/main.py
-# 47
+# 48
 
 .venv/bin/python -c "
 import ast
@@ -44,20 +44,20 @@ calls = Counter(
 )
 print(sum(calls.values()), len(calls), [n for n, c in calls.items() if c > 1])
 "
-# 47 46 ['docs_router']
+# 48 47 ['docs_router']
 ```
 
 The one-line `grep -oE` form of this count is not authoritative: it breaks on the
 multiline `reviewer_ghosts_router` call. The AST parse above is.
 
-### Total route-handler count — **271** decorator sum; **272** OpenAPI HTTP ops + **1** WebSocket
+### Total route-handler count — **273** decorator sum; **274** OpenAPI HTTP ops + **1** WebSocket
 
 Three separate denominators (do not conflate them):
 
 | Metric | Value | Source |
 | --- | ---: | --- |
-| Route-handler decorator sum | **271** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
-| OpenAPI HTTP operations | **272** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| Route-handler decorator sum | **273** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **274** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
 | WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `batch_router` — absent from `app.openapi()['paths']` |
 
 Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
@@ -96,6 +96,7 @@ ROUTER_MAP = {
     'discussions_router': 'scripts/api/discussions_router.py',
     'docs_router': 'scripts/api/docs_router.py',
     'epics_router': 'scripts/api/epics_router.py',
+    'fleet_board_router': 'scripts/api/fleet_board/router.py',
     'fleet_router': 'scripts/api/fleet_router.py',
     'fleet_workers_router': 'scripts/api/fleet_workers_router.py',
     'git_hygiene_router': 'scripts/api/git_hygiene_router.py',
@@ -139,7 +140,7 @@ for var, path in sorted(ROUTER_MAP.items()):
     total += n
 print(total)
 "
-# 271
+# 273
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
@@ -149,8 +150,8 @@ print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
 print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
-# 272
-# 272
+# 274
+# 274
 # 1
 ```
 
@@ -226,13 +227,13 @@ Counting rules:
 The four global backstops stay as defense-in-depth per §4.1 point 5 of the parent design
 until all routers read stores through `MonitorContext`.
 
-### Per-step module tally — sums to **46**
+### Per-step module tally — sums to **47**
 
 ```
 step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1)
 + step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1)
-+ step 12a (5) + step 12b (5) + step 12c (5) + step 12d (4) + step 12e (2)
-+ step 13 (2) = 46 router objects
++ step 12a (5) + step 12b (5) + step 12c (5) + step 12d (4) + step 12e (3)
++ step 13 (2) = 47 router objects
 ```
 
 ---
@@ -261,7 +262,7 @@ routers (§4.2 core-router-last ordering).
 | **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 1,844 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
 | **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router`, `cluster_router` | 1,107 | Governance/decisions-adjacent reads + issues/gh seam + cluster readiness probe over the control-plane stores |
 | **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,594 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
-| **12e** | `work_router`, `epics_router` | 1,948 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) |
+| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,069 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
 | **13** | `batch_router`, `core_router` (`main.py` inline) | 2,112 | **Last two mounts, in this order** — batch dispatcher/active/usage routes + `WS /ws/batch` (split out of `main.py`), then health/orient/config routes + catch-all static; read config through `Depends(get_ctx)`, no dedicated store of their own |
 
 ---
@@ -464,6 +465,7 @@ The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are d
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `work_router.py` | `/api/work` | 4 | 790 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
 | `epics_router.py` | `/api/epics` | 12 | 1,158 | — | — | 0 | 12e |
+| `fleet_board.router.py` | `/api/fleet/v1` | 2 | 121 | — | — | 0 | 12e |
 
 **12e migrated (#7334):** stores and live repo root now come from
 `Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`
@@ -509,11 +511,11 @@ beyond the config imports and module globals listed above.
 
 | Metric | Value |
 | --- | ---: |
-| Router registrations (`include_router` calls) | 47 |
-| Distinct router objects (45 imported modules + `core_router`) | 46 |
+| Router registrations (`include_router` calls) | 48 |
+| Distinct router objects (46 imported modules + `core_router`) | 47 |
 | Routers mounted twice | 1 (`docs_router`) |
-| Route handlers (decorator sum, nested included) | 271 |
-| OpenAPI HTTP operations (sweep denominator) | 272 |
+| Route handlers (decorator sum, nested included) | 273 |
+| OpenAPI HTTP operations (sweep denominator) | 274 |
 | WebSocket routes (separate denominator) | 1 |
 | OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 
@@ -522,8 +524,8 @@ beyond the config imports and module globals listed above.
 ```
 step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1)
 + step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1)
-+ step 12a (5) + step 12b (5) + step 12c (5) + step 12d (4) + step 12e (2)
-+ step 13 (2) = 46 router objects
++ step 12a (5) + step 12b (5) + step 12c (5) + step 12d (4) + step 12e (3)
++ step 13 (2) = 47 router objects
 ```
 
 ---

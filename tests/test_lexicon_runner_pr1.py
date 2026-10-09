@@ -1138,3 +1138,24 @@ def test_500_lemma_equivalence_cefr_and_relations(
             assert closed == baseline["relations"][kind], kind
     finally:
         conn.close()
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
+def test_unicode_structured_boundary_candidate_roundtrip(tmp_path: Path, separator: str) -> None:
+    entry = {"lemma": f"alpha{separator}beta", "url_slug": "example"}
+    out = tmp_path / "candidate.json"
+    with StreamingCandidateWriter(out) as writer:
+        writer.write_entry(entry)
+    assert json.loads(out.read_text(encoding="utf-8")) == {"entries": [entry]}
+
+
+def test_candidate_writer_empty_and_multiple_entries(tmp_path: Path) -> None:
+    out = tmp_path / "candidate.json"
+    with StreamingCandidateWriter(out, meta={"label": "synthetic"}):
+        pass
+    assert json.loads(out.read_text()) == {"label": "synthetic", "entries": []}
+    entries = [{"lemma": "first"}, {"lemma": "second", "note": "line\nend"}]
+    with StreamingCandidateWriter(out) as writer:
+        for entry in entries:
+            writer.write_entry(entry)
+    assert json.loads(out.read_text()) == {"entries": entries}

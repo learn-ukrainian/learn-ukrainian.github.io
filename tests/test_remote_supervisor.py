@@ -369,8 +369,23 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     lease = _open_supervisory_driver(supervisor)
     before = supervisor.remote.stream(lease.stream_id)
     thread = "019e6063-c3da-78d1-acaa-4cd684a08786"
-    monkeypatch.setattr(_ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}))
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    rollout = tmp_path / f"rollout-fixture-{thread}.jsonl"
+    records = [
+        {"type": "session_meta", "payload": {"id": thread, "cwd": str(tmp_path)}},
+        {"type": "event_msg", "payload": {"type": "task_started", "turn_id": "fixture-turn"}},
+        {"type": "event_msg", "payload": {"type": "task_complete", "turn_id": "fixture-turn"}},
+    ]
+    rollout.write_text("".join(json.dumps(record) + "\n" for record in records), encoding="utf-8")
+    monkeypatch.setattr(
+        _ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}, rollout=rollout),
+    )
+    def resume(**kwargs):
+        kwargs["before_resume"]()
+        with rollout.open("a") as stream:
+            for kind in ("task_started", "task_complete"):
+                stream.write(json.dumps({"type": "event_msg", "payload": {"type": kind, "turn_id": "resume"}}) + "\n")
+        return {"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]}
+    send = Mock(side_effect=resume)
     monkeypatch.setattr(_ui_codex, "send", send)
     start = Mock(side_effect=AssertionError("live lease forbids launcher"))
     assert wake_driver_once(
@@ -382,6 +397,36 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     assert "pending work" in send.call_args.kwargs["message"]
     start.assert_not_called()
     assert supervisor.remote.stream(lease.stream_id) == before
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+
+
+@pytest.mark.parametrize("already_prepared", [False, True])
+def test_unavailable_restart_cli_does_not_claim_or_replay_delivery(supervisory_cycle, already_prepared):
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    now = datetime.now(UTC)
+    if already_prepared:
+        consume_supervisory_event(service, supervisor, lease, now=now.isoformat())
+    original = service.get_delivery(did)
+    capsule = supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    for tick in range(1, 5):
+        assert consume_supervisory_event(
+            service, supervisor, lease, now=(now + timedelta(seconds=61 * tick)).isoformat(),
+            restart_preflight=lambda: False,
+        ) is None
+        assert service.get_delivery(did) == original
+        assert supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease).digest == capsule.digest
+    request = consume_supervisory_event(
+        service, supervisor, lease, now=(now + timedelta(seconds=305)).isoformat(), restart_preflight=lambda: True,
+    )
+    assert request.delivery_id == did
+    assert service.get_delivery(did).attempt_count == (2 if already_prepared else 1)
+    assert service.supervisory_delivery_status(did) == "live_driver_consumed"
     assert supervisor.close_driver(role="driver", lease=lease) == "closed"
 
 

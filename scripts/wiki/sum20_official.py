@@ -41,7 +41,7 @@ SUM20_OFFICIAL_BASE_URL = "https://sum20ua.com"
 SUM20_ATTRIBUTION_LABEL = (
     "Словник української мови у 20 томах (УМІФ НАН України; Інститут мовознавства ім. О. О. Потебні НАН України)"
 )
-PARSER_VERSION = "sum20_official_v2"
+PARSER_VERSION = "sum20_official_v4"
 QUARANTINE_COLUMN = "quarantine_reason"
 DEFAULT_USER_AGENT = "learn-ukrainian-sum20-ingest/1.0 (noncommercial educational corpus; issue 5228)"
 
@@ -181,6 +181,72 @@ def _has_reference_target(entry: _Node, root: _Node) -> bool:
     return False
 
 
+def _has_phrase_reference(entry: _Node, root: _Node) -> bool:
+    """Recognize owned source-only phrase references observed at 172 and 461."""
+    # Counts apply to direct owners, not flattened article-wide fields. A group
+    # may contain further groups, each with its own marker and phrases. BUX is
+    # optional reference formatting, never a group or phrase marker.
+    child_limits: dict[str, dict[str, tuple[int, int | None]]] = {
+        "ENTRY": {"WORD": (1, 1), "LPART": (1, 1), "PHRF": (1, None)},
+        "PHRF": {"PHRSYM": (1, 1), "PHRASE": (1, None), "PHRF": (0, None)},
+        "PHRASE": {"PHRTXT": (1, 1), "LINK": (1, 1)},
+        "LINK": {"LINKTXT": (1, 1)},
+        "LINKTXT": {"BUX": (0, 1)},
+        "WORD": {},
+        "LPART": {},
+        "PHRSYM": {},
+        "PHRTXT": {},
+        "BUX": {},
+    }
+    owned: set[int] = set()
+    phrase_references: set[tuple[str, str]] = set()
+
+    def validate(field: _Node, class_name: str) -> bool:
+        if _classes(field) != {class_name} or not _node_text(field):
+            return False
+        if class_name == "LINKTXT" and not any(
+            _clean_text(child) if isinstance(child, str) else not _classes(child) and _node_text(child)
+            for child in field.children
+        ):
+            # A formatting index alone is not a reference target.
+            return False
+        owned.add(id(field))
+        limits = child_limits[class_name]
+        children: dict[str, list[_Node]] = {name: [] for name in limits}
+        for child in field.children:
+            if not isinstance(child, _Node) or not _classes(child):
+                continue
+            classes = _classes(child)
+            if len(classes) != 1 or not classes <= limits.keys():
+                return False
+            children[next(iter(classes))].append(child)
+        for name, (minimum, maximum) in limits.items():
+            matches = children[name]
+            if len(matches) < minimum or (maximum is not None and len(matches) > maximum):
+                return False
+            if not all(validate(child, name) for child in matches):
+                return False
+        if class_name == "PHRASE":
+            reference = (
+                _node_text(children["PHRTXT"][0]),
+                _node_text(_all_with_class(children["LINK"][0], "LINKTXT")[0]),
+            )
+            # Reject repeated complete units, including duplicated whole groups.
+            # Distinct phrases may reference the same target; no lexical
+            # normalization or target-text-only uniqueness is appropriate here.
+            if reference in phrase_references:
+                return False
+            phrase_references.add(reference)
+        return True
+
+    if not validate(entry, "ENTRY"):
+        return False
+    # Inspect the whole article, including classed descendants inside unclassed
+    # formatting: orphan fields, foreign/linked entries and definition markers
+    # cannot supply or hide evidence outside the validated ownership tree.
+    return all(not _classes(node) or id(node) in owned for node in _walk(root, stop_classes=frozenset()))
+
+
 def normalize_sum20_lookup(value: str) -> str:
     """Normalize a headword/query for exact offline СУМ-20 lookup."""
     normalized = _ACUTE_RE.sub("", str(value or "").strip().lower())
@@ -304,8 +370,16 @@ def parse_sum20_article(document_html: str, wordid: int) -> Sum20Article:
                     parsed_bib_fields=_parsed_bib_fields(source),
                 )
             )
-    if not senses and not _has_reference_target(entry, parser.root):
-        raise Sum20ParseError("official article contains no definition senses")
+    if not senses:
+        # Phrase references are source-only units; a matching embedded target
+        # must not let them enter through the ordinary word-reference path.
+        has_reference = (
+            _has_phrase_reference(entry, parser.root)
+            if _all_with_class(entry, "PHRF")
+            else _has_reference_target(entry, parser.root)
+        )
+        if not has_reference:
+            raise Sum20ParseError("official article contains no definition senses")
 
     return Sum20Article(
         wordid=int(wordid),

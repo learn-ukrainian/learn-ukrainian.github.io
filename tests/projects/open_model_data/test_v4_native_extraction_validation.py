@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_native_extraction_validation as extraction
 from scripts.projects.open_model_data.paths import resolve_open_model_path
+from tests._host_path_guard import FIXTURE_HOME
 
 
 def _committed(name: str) -> Path:
@@ -287,7 +288,7 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
     quarantine_data = json.loads(
         _committed("v4_native_extraction_quarantine_report_v1.json").read_text(encoding="utf-8")
     )
-    quarantine_data["quarantined_spans"][0]["reason"] = "failed at /home/ops/secret/corpus"
+    quarantine_data["quarantined_spans"][0]["reason"] = f"failed at {FIXTURE_HOME}/secret/corpus"
     quarantine_path = _place(tampered_out, "v4_native_extraction_quarantine_report_v1.json")
     quarantine_path.write_text(json.dumps(quarantine_data), encoding="utf-8")
 

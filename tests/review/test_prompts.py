@@ -2359,7 +2359,9 @@ def test_plan_template_canary_records_before_validation(tmp_path, monkeypatch, c
     original_attested_return = record.attested_return
     original_validate = review_validator.validate_review
 
-    def prepare(review_id, attempt_id, manifest_path, harness, *, receipts_root, review_access):
+    def prepare(
+        review_id, attempt_id, manifest_path, harness, *, receipts_root, review_access, checkout_root=None, **_extra_kwargs
+    ):
         ledger = receipts_root / "synthetic.jsonl"
         create_empty_ledger(ledger)
         _record(ledger, manifest=digest, result="synthetic evidence", review_id=review_id, attempt_id=attempt_id)

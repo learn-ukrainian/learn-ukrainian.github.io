@@ -25,6 +25,7 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     resolve_record_text,
     verify_dataset,
 )
+from tests._host_path_guard import FIXTURE_HOME
 
 CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 MANIFEST_PATH = resolve_open_model_path(
@@ -178,7 +179,7 @@ def test_privacy_host_paths_clean() -> None:
     assert_no_private_host_paths(receipt_data)
 
     with pytest.raises(ValueError, match="Prohibited host path detected"):
-        assert_no_private_host_paths({"bad": "/home/ops/secret"})
+        assert_no_private_host_paths({"bad": f"{FIXTURE_HOME}/secret"})
 
 
 @pytest.mark.needs_artifact(

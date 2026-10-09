@@ -30,6 +30,7 @@ from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import render_prompt
 from scripts.review.receipts import ledger
+from scripts.review.receipts.outcomes import classify_outcome
 from scripts.review.validate.validate import _MISSING, _leaf_texts, _plan_unit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -722,6 +723,9 @@ def validate_reply(reply_bytes: bytes, manifest_bytes: bytes, ledger_path: Path)
             "antonenko-davydovych-yak-my-hovorymo"
         ):
             raise SettleError("style prose search must name the contract's source_file")
+        facts = classify_outcome(record["tool"], record["status"], record["result"])
+        if facts["status"] not in {"no_hits", "hits_found"}:
+            raise SettleError(f"broadened_search_call_unsuccessful: {category}: {facts['status']}")
         searches[category] = receipt
     outcome = reply["outcome"]
     if outcome in {"supported_defect", "refuted"} and not any(

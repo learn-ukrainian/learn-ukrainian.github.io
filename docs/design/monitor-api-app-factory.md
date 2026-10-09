@@ -166,14 +166,14 @@ against the actual router set — codex's review caught that this is not filing-
 undercounted the router set itself (said 33) and silently dropped `build_events_router` from the
 step table. Later revisions still miscounted (43, then a table that omitted `batch_router` and
 `cluster_router`). The numbers below come from an AST walk of `scripts/api/main.py`, not from
-`grep` and not by hand, and `tests/test_monitor_api_app_factory_doc.py` recomputes them on every
-run and compares them with this document, so they cannot drift again. `main.py` makes 47
-`include_router` calls registering **46 distinct router objects**: 45 imported router modules
+`grep` and not by hand, and `tests/api/test_app_factory_doc_router_count.py` recomputes them on every
+run and compares them with this document, so they cannot drift again. `main.py` makes 48
+`include_router` calls registering **47 distinct router objects**: 46 imported router modules
 plus `core_router`, which is defined in `main.py` itself. Only `docs_router` is registered twice
-(at `/artifacts` and `/files`); every other router is registered once. Six of the 45 imported
+(at `/artifacts` and `/files`); every other router is registered once. Six of the 46 imported
 modules are the largest and mix several concerns internally (`fleet_router.py` 2,677 lines,
 `state_router.py` 3,096, `comms_router.py` 2,119, `runtime_router.py` 1,776, `route_contracts.py`
-1,400, `dashboard_router.py` 1,061 — together roughly 46% of the 26,547 lines in the 45 router
+1,400, `dashboard_router.py` 1,061 — together roughly 46% of the lines in the 46 router
 modules). Naming one of these a "family" by itself is not precise enough to file a bounded
 sub-issue from, and lumping several together is worse. Guessing a finer split without reading
 what's actually inside those six files would just move the same ambiguity to a smaller-looking
@@ -376,10 +376,10 @@ the source of truth that confirms or corrects this, not this doc**):
 | 9 | `dashboard_router.py` (own step; inventory decides if it splits) | large, own step |
 | 10 | `sources_router.py` (mounted once, as `/api/sources`) | small — folds the #7284 connect-deny guard into the context per §4.1 |
 | 11 | `route_contracts.py` (own step; inventory decides if it splits) | large, own step |
-| 12 | Everything else the inventory had not yet placed: `atlas_jobs_router.py`, `batch_router.py`, `blue_router.py`, `build_events_router.py`, `cluster_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (22 modules; the Hermes cron router has since been removed) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
+| 12 | Everything else the inventory had not yet placed: `atlas_jobs_router.py`, `batch_router.py`, `blue_router.py`, `build_events_router.py`, `cluster_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `fleet_board.router.py`, `gold_router.py`, `governance_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (23 modules; the Hermes cron router has since been removed) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
 
 Full accounting: step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1) +
-step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (22) = **45 modules**,
+step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (23) = **46 modules**,
 matching the live count above with none dropped (`core_router` lives in `main.py`, is mounted last,
 and is not a module of its own).
 

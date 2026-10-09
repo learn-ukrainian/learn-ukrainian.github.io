@@ -37,6 +37,7 @@ from content.video_discovery_helpers import (
 from content.video_discovery_helpers import (
     search_rag as _search_rag_impl,
 )
+from scripts.common.jsonl import jsonl_lines
 
 logger = logging.getLogger(__name__)
 
@@ -433,8 +434,8 @@ def _yt_dlp_search(
                                       flat_playlist=flat_playlist, _retry=_retry + 1)
             return []
         videos = []
-        for line in result.stdout.strip().splitlines():
-            parts = line.strip().split("\t")
+        for line in jsonl_lines(result.stdout):
+            parts = line.strip(" \t\r").split("\t")
             if len(parts) < 3:
                 continue
             title, vid_id, lang = parts[0], parts[1], parts[2]

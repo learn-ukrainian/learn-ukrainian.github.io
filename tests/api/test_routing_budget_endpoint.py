@@ -218,6 +218,87 @@ def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     )
 
 
+# Frozen key sets for the dispatch payload the routing page renders.
+# A new or removed key is a shape change and must fail here.
+_ROUTING_BUDGET_TOP_LEVEL_KEYS = frozenset(
+    {
+        "generated_at",
+        "agents",
+        "reset_reserve",
+        "api_accounts",
+        "in_flight",
+        "recommendation",
+        "diagnostics",
+        "ranked_by_headroom",
+        "transport",
+    }
+)
+_ROUTING_BUDGET_RECOMMENDATION_KEYS = frozenset(
+    {
+        "primary_agent_for_code",
+        "rationale",
+        "warnings",
+    }
+)
+_ROUTING_BUDGET_DIAGNOSTIC_KEYS = frozenset(
+    {
+        "records_loaded",
+        "missing_cost_records",
+        "window_start",
+        "stale",
+        "data_age_s",
+        "stale_threshold_s",
+        "reset_imminent_hours",
+        "codexbar_data_available",
+        "codexbar_freshness",
+        "codexbar_max_age_s",
+        "fresh_codexbar_requested",
+        "fresh_codexbar_blocking",
+        "runtime_data_available",
+        "runtime_usage_records_7d",
+        "budget_ledger_empty",
+        "usage_sources",
+        "fleet_burn_available",
+        "notebook_report_available",
+        "notebook_report_max_age_s",
+    }
+)
+_ROUTING_BUDGET_USAGE_SOURCE_KEYS = frozenset(
+    {
+        "allotment",
+        "burn_rate_limit",
+        "fleet_burn",
+    }
+)
+
+
+def test_routing_budget_shape_lock(monkeypatch, tmp_path):
+    """The routing page depends on this key set. Do not add or drop keys."""
+    _configure(monkeypatch, tmp_path, [])
+    ctx = fixture_context(tmp_path)
+    # An observable tasks directory publishes measured counts. A missing
+    # directory stays null (unknown load), which the page treats as empty.
+    (ctx.roots.batch_state_dir / "tasks").mkdir(parents=True, exist_ok=True)
+    app = FastAPI()
+    app.state.ctx = ctx
+    app.include_router(state_router.router, prefix="/api/state")
+
+    response = TestClient(app).get("/api/state/routing-budget")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data) == _ROUTING_BUDGET_TOP_LEVEL_KEYS
+    assert set(data["recommendation"]) == _ROUTING_BUDGET_RECOMMENDATION_KEYS
+    assert set(data["diagnostics"]) == _ROUTING_BUDGET_DIAGNOSTIC_KEYS
+    assert set(data["diagnostics"]["usage_sources"]) == _ROUTING_BUDGET_USAGE_SOURCE_KEYS
+    assert data["transport"] == "dispatch"
+    assert isinstance(data["agents"], dict)
+    assert isinstance(data["api_accounts"], dict)
+    assert isinstance(data["ranked_by_headroom"], list)
+    assert isinstance(data["in_flight"], dict)
+    assert all(isinstance(count, int) for count in data["in_flight"].values())
+
+
 def test_endpoint_returns_documented_shape(monkeypatch, tmp_path):
     _configure(monkeypatch, tmp_path, [])
     app = FastAPI()

@@ -9,6 +9,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+from scripts.common.jsonl import jsonl_lines
 from scripts.lib.readonly_sqlite import open_readonly as _shared_open_readonly
 
 
@@ -170,7 +171,7 @@ class StreamingCandidateWriter:
             self._handle.write(",\n")
         self._first = False
         payload = json.dumps(entry, ensure_ascii=False, indent=2)
-        indented = "\n".join("    " + line if line else line for line in payload.splitlines())
+        indented = "\n".join("    " + line if line else line for line in jsonl_lines(payload))
         self._handle.write(indented)
         self._count += 1
 
