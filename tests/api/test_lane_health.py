@@ -567,8 +567,9 @@ def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
         records_loaded=len(records),
         authoritative_data_available=False,
     )
-    # Absent health is unknown (#9740 F4): the budget pick stands, but it is not reported as health-verified.
-    assert rec["primary_agent_for_code"] == "claude"
+    # Absent health and headroom are unknown: the shared lane tie-break chooses
+    # Codex, without presenting its health as verified (#9740 F4, #10279).
+    assert rec["primary_agent_for_code"] == "codex"
     assert not any("skipped" in w for w in rec["warnings"])
     assert not any("unhealthy" in w for w in rec["warnings"])
     assert any("recommendation is not health-verified" in w for w in rec["warnings"])

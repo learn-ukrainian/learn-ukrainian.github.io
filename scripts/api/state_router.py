@@ -63,7 +63,7 @@ except ImportError:
 
 from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.common.repo_root import main_checkout_root
-from scripts.fleet import credit_lane
+from scripts.fleet import capacity_pick, credit_lane
 from scripts.fleet.reset_reserve import (
     codex_is_threatened,
     codex_reset_reserve_eligible,
@@ -152,15 +152,6 @@ from .state_issues import (
     compute_issues,
 )
 from .telemetry.response import add_json_telemetry, session_id_from_request
-
-CODE_IMPLEMENT_LANE_PRIORITY: dict[str, int] = {
-    "cursor": 0,
-    "codex": 1,
-    "claude": 2,
-    "grok": 3,
-    "kimi": 4,
-    "gemini": 5,
-}
 
 
 def _probe_freshness_label(cb_data: Mapping[str, Any]) -> str:
@@ -752,6 +743,7 @@ def _recommend_agent(
     records_loaded: int = 0,
     authoritative_data_available: bool = False,
     usage_dir: Path | None = None,
+    in_flight: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Generalized recommendation over subscription lanes + reset-aware + empty/stale guards.
 
@@ -771,6 +763,10 @@ def _recommend_agent(
     with a warning, and is never reported as healthy. ``is_stale`` None is a
     snapshot whose staleness is missing: the owner reads it as unknown, never
     fresh.
+
+    Resource ordering is owned by ``capacity_pick.build_pick_order``. Use
+    tightest plan headroom and the producer's observed load, preserving None
+    when load is unknown; separate pools and raw burn do not override it.
     """
     # Hard admission failures cannot use the soft all-unhealthy budget fallback.
     agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}
@@ -790,15 +786,19 @@ def _recommend_agent(
     def is_healthy(lane_name: str) -> bool:
         return health_of(lane_name) == credit_lane.HEALTHY
 
+    facts_by_lane: dict[str, credit_lane.RoutingFacts] = {}
+
     def owner_facts(lane_name: str) -> credit_lane.RoutingFacts:
-        return credit_lane.routing_facts(
-            lane_name,
-            agents.get(lane_name),
-            model=None,
-            snapshot_metadata={"stale": is_stale},
-            now=current_time,
-            usage_dir=usage_dir,
-        )
+        if lane_name not in facts_by_lane:
+            facts_by_lane[lane_name] = credit_lane.routing_facts(
+                lane_name,
+                agents.get(lane_name),
+                model=None,
+                snapshot_metadata={"stale": is_stale},
+                now=current_time,
+                usage_dir=usage_dir,
+            )
+        return facts_by_lane[lane_name]
 
     # Build status/burn for core code lanes (claude special interactive, others flat); include grok/cursor if present
     core = ["claude", "codex", "gemini"]
@@ -879,129 +879,52 @@ def _recommend_agent(
             f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible"
         )
 
-    def select_agent(agents_dict, status_map, burn_map, resets_map):
-        def _sort_burn(agent: str) -> tuple[float, int]:
-            val = burn_map.get(agent)
-            burn_key = float(val) if isinstance(val, (int, float)) else 999.0
-            # Burn first (lowest 7d spend), lane rank only as a tie-break.
-            # Cursor-first for cool Ultra is the explicit branch above, not this sort.
-            return (burn_key, CODE_IMPLEMENT_LANE_PRIORITY.get(agent, 50))
-
-        credit_candidates = [agent for agent in status_map if agent in credit_lanes]
-
-        def credit_pick() -> dict[str, Any]:
-            pool = [c for c in credit_candidates if c not in imminent] or credit_candidates
-            recommended = min(pool, key=_sort_burn)
+    def select_agent(status_map, burn_map):
+        # Share the picker's ordering; neither provider burn percentages nor a
+        # separate Claude pool establish comparable code-worker headroom.
+        rows = []
+        for lane, status in status_map.items():
+            facts = owner_facts(lane)
+            rows.append({
+                "lane": lane,
+                "status": credit_lane.CREDIT_BALANCE_PRESENT if lane in credit_lanes else status,
+                "remaining_pct": facts.plan_remaining_pct,
+                "in_flight": in_flight.get(lane, 0) if in_flight is not None else None,
+                "capacity": {"state": facts.capacity},
+                "avoid": facts.capacity == credit_lane.CAPACITY_AVOID,
+            })
+        # Preserve the credit-relief fallback: unknown telemetry does not
+        # establish a plan-backed alternative to a verified credit lane.
+        plan_rows = [row for row in rows if row["status"] in {"cool", "warm"} and not row["avoid"]]
+        credit_rows = [row for row in rows if row["lane"] in credit_lanes]
+        ordered = capacity_pick.build_pick_order(plan_rows or credit_rows or rows)
+        if not ordered:
+            return {
+                "primary_agent_for_code": None,
+                "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
+            }
+        chosen = ordered[0]
+        recommended = chosen["lane"]
+        if recommended in credit_lanes:
             models = ", ".join(credit_models[recommended])
-            return {
-                "primary_agent_for_code": recommended,
-                "rationale": (
-                    f"No cool or warm plan-backed lane; {recommended} is past its plan cap with a "
-                    f"{credit_lane.DRAW_NOT_VERIFIED}; dispatch only {models} (credit-period allowlist)."
-                ),
-            }
-
-        if "near_cap" in status_map.values():
-            candidates = [agent for agent, st in status_map.items() if st == "cool"]
-            if not candidates:
-                candidates = [agent for agent, st in status_map.items() if st == "warm"]
-            if candidates:
-                # prefer non-imminent if possible
-                non_imm = [c for c in candidates if c not in imminent] or candidates
-                recommended = min(non_imm, key=_sort_burn)
-                return {
-                    "primary_agent_for_code": recommended,
-                    "rationale": (
-                        f"At least one agent is near cap; {recommended} has the lowest "
-                        f"available 7d burn ({_format_pct(burn_map.get(recommended))}%)."
-                    ),
-                }
-            if credit_candidates:
-                return credit_pick()
-
-        # Operator 2026-08-26: authenticated Cursor Ultra must lead cool code-implement seats.
-        cursor_st = status_map.get("cursor")
-        cursor_info = agents_dict.get("cursor") if isinstance(agents_dict.get("cursor"), dict) else {}
-        if (
-            cursor_st == "cool"
-            and cursor_info.get("login_state") != "NEED_LOGIN"
-            and cursor_info.get("probe_state") != "NEED_LOGIN"
-        ):
-            return {
-                "primary_agent_for_code": "cursor",
-                "rationale": (
-                    "Cursor Ultra is authenticated and cool; prefer Auto-pool utilization "
-                    f"({_format_pct(burn_map.get('cursor'))}% Auto monthly burn)."
-                ),
-            }
-
-        # claude pool still special
-        if "claude" in agents_dict:
-            agentic_pool = agents_dict["claude"].get("agentic_pool", {})
-            if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
-                return {
-                    "primary_agent_for_code": "claude",
-                    "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
-                }
-
-        cool_lanes = [a for a, s in status_map.items() if s == "cool"]
-        if cool_lanes:
-            pool = [c for c in cool_lanes if c not in imminent] or cool_lanes
-            recommended = min(pool, key=_sort_burn)
             rationale = (
-                "All agents cool or warm; default split applies. "
-                f"{recommended} 7d burn is {_format_pct(burn_map.get(recommended))}%. "
+                f"No cool or warm plan-backed lane; {recommended} is past its plan cap with a "
+                f"{credit_lane.DRAW_NOT_VERIFIED}; dispatch only {models} (credit-period allowlist)."
             )
-            return {
-                "primary_agent_for_code": recommended,
-                "rationale": rationale,
-            }
-
-        warm_lanes = [a for a, s in status_map.items() if s == "warm"]
-        if warm_lanes:
-            pool = [c for c in warm_lanes if c not in imminent] or warm_lanes
-            recommended = min(pool, key=_sort_burn)
-            rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_map.get(recommended))}%)."
-            return {
-                "primary_agent_for_code": recommended,
-                "rationale": rationale,
-            }
-
-        if credit_candidates:
-            return credit_pick()
-
-        # fallback to lowest burn among known
-        known = [a for a, s in status_map.items() if s not in ("unknown", "unavailable")]
-        if known:
-            recommended = min(known, key=_sort_burn)
-            return {
-                "primary_agent_for_code": recommended,
-                "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_map.get(recommended))}%).",
-            }
-
-        # Doctrine #5816: lanes without pace data are partly blind, not unusable.
-        # Fall back to in-flight count + lane health, picking the first eligible candidate.
-        unknown_candidates = [a for a in ("claude", "codex", "gemini") if a in status_map]
-        if not unknown_candidates:
-            unknown_candidates = [a for a in status_map if a in SUBSCRIPTION_LANES]
-        if unknown_candidates:
-
-            def _sort_in_flight(lane_name: str) -> int:
-                return int(agents_dict.get(lane_name, {}).get("in_flight", 0))
-
-            recommended = min(unknown_candidates, key=_sort_in_flight)
-            return {
-                "primary_agent_for_code": recommended,
-                "rationale": f"Capacity data unavailable for subscription lanes (partly blind); fallback recommendation {recommended} based on lane health and in-flight signals.",
-            }
-
-        return {
-            "primary_agent_for_code": None,
-            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
-        }
+        elif chosen["status"] in {"unknown", "unavailable"}:
+            rationale = (
+                f"Capacity data unavailable for subscription lanes (partly blind); fallback recommendation "
+                f"{recommended} based on lane health and in-flight signals."
+            )
+        else:
+            rationale = (
+                f"{recommended} leads the capacity picker order: heat, plan headroom, "
+                f"in-flight load, then lane priority (7d burn {_format_pct(burn_map.get(recommended))}%)."
+            )
+        return {"primary_agent_for_code": recommended, "rationale": rationale}
 
     # 1. Determine baseline budget-only recommendation (ignore health)
-    budget_only_res = select_agent(agents, status_by_agent, burn_by_agent, resets_by)
+    budget_only_res = select_agent(status_by_agent, burn_by_agent)
 
     # 2. Check health of candidate lanes: established healthy, then unknown, never unhealthy
     candidate_lanes = list(status_by_agent.keys())
@@ -1010,10 +933,8 @@ def _recommend_agent(
 
     def select_among(predicate) -> dict[str, Any]:
         return select_agent(
-            {k: v for k, v in agents.items() if predicate(k)},
             {k: v for k, v in status_by_agent.items() if predicate(k)},
             {k: v for k, v in burn_by_agent.items() if predicate(k)},
-            {k: v for k, v in resets_by.items() if predicate(k)},
         )
 
     if not unhealthy_candidates and not unknown_candidates:
@@ -1441,6 +1362,7 @@ def _compute_dispatch_routing_budget(
                 is_stale=False,
                 records_loaded=0,
                 authoritative_data_available=True,
+                in_flight=in_flight_by_agent,
             )
 
         return {
@@ -2015,6 +1937,7 @@ def _compute_dispatch_routing_budget(
         is_stale=is_stale,
         records_loaded=len(records),
         authoritative_data_available=cb_sourced_any or fleet_burn_any,
+        in_flight=in_flight_by_agent,
         usage_dir=usage_dir,
     )
     if reserve_relaxes_codex:
@@ -2208,6 +2131,7 @@ def compute_routing_budget(
             or diagnostics.get("fleet_burn_available")
         ),
         reset_imminent_hours=diagnostics.get("reset_imminent_hours", 6),
+        in_flight=budget.get("in_flight"),
         is_stale=diagnostics.get("stale", False),
     )
     if reserve_relaxes_codex and budget["agents"].get("codex", {}).get("eligible") is True:
