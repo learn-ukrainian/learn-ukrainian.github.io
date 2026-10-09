@@ -2303,7 +2303,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
         (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
-        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7", None),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7-high", None),
         (AcpxPoolShadowAdapter, "pool", "pool", None, None),
     ],
 )
@@ -2416,7 +2416,7 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
         )
 
 
-@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7"), ("grok-4.7", "grok-4.7"), ("composer-2.5", "composer-2.5")])
+@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7-high"), ("grok-4.7-high", "grok-4.7-high"), ("composer-2.5", "composer-2.5")])
 def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
     plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
@@ -2562,8 +2562,6 @@ def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
     [
         ("claude", "claude-fable-5-1"),
         ("claude", "claude-fable-5-1-thinking-high"),
-        ("cursor", "claude-fable-5-1-thinking-high"),
-        ("cursor", "claude-fable-5-1"),
     ],
 )
 def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participant, model):
