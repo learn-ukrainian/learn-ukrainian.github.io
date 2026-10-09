@@ -646,14 +646,19 @@ def _tokenize(command: str) -> list[str]:
     ``_expand_word`` turns tokens into the text the guard classifies.
     """
     try:
+        protected = _mask_quoted_literals(
+            _normalize_quoted_command_substitutions(
+                _normalize_backtick_substitutions(_decode_ansi_c_quotes(preprocess_shell_command(command)))
+            )
+        )
+        # Quoted/escaped redirect characters are masked above. Only a raw
+        # descriptor glued to a real redirect is syntax rather than argv;
+        # a process substitution's <( or >( is still a word.
+        protected = re.sub(
+            r"(?<![^ \t\n;|&()])(?:[0-9]+|\{[A-Za-z_][A-Za-z0-9_]*\})(?=[<>](?!\())", "", protected
+        )
         lexer = shlex.shlex(
-            _mask_quoted_literals(
-                _normalize_quoted_command_substitutions(
-                    _normalize_backtick_substitutions(
-                        _decode_ansi_c_quotes(preprocess_shell_command(command))
-                    )
-                )
-            ),
+            protected,
             posix=True,
             punctuation_chars="();<>|&\n",
         )
@@ -1040,6 +1045,9 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
     i = 0
     while i < len(segment):
         tok = segment[i]
+        if isinstance(tok, ShellWord) and tok.shell_redirect and tok in _REDIRECT_OPS:
+            i += 2
+            continue
         if _ASSIGN_RE.match(tok):
             i += 1  # leading environment assignment
             continue
@@ -1600,19 +1608,8 @@ def _find_targets(args: list[str], *, cwd: str | None, main_root: Path | None, d
     return targets
 
 
-def _writer_targets(
-    segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
-) -> list[str]:
-    """Targets of the writer in one expanded segment, including exec wrappers."""
-    targets = _redirect_targets(segment)
-    for target in targets:
-        if isinstance(target, ShellWord):
-            target.base = redirect_cwd
-            if redirect_cwd is None and not Path(target).is_absolute():
-                target.decision_reason = "undecidable_write_target_after_cd"
-    # A shell redirect is not an argv operand of tee/cp/etc. The redirected
-    # file was already classified above; leaving `>` in argv makes a harmless
-    # `tee /tmp/file >/dev/null` look like a write to a file named `>`.
+def _without_redirects(segment: list[str]) -> list[str]:
+    """Program argv excludes redirects and their operands, wherever placed."""
     without_redirects: list[str] = []
     index = 0
     while index < len(segment):
@@ -1626,7 +1623,20 @@ def _writer_targets(
         else:
             without_redirects.append(segment[index])
             index += 1
-    segment = without_redirects
+    return without_redirects
+
+
+def _writer_targets(
+    segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
+) -> list[str]:
+    """Targets of the writer in one expanded segment, including exec wrappers."""
+    targets = _redirect_targets(segment)
+    for target in targets:
+        if isinstance(target, ShellWord):
+            target.base = redirect_cwd
+            if redirect_cwd is None and not Path(target).is_absolute():
+                target.decision_reason = "undecidable_write_target_after_cd"
+    segment = _without_redirects(segment)
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))

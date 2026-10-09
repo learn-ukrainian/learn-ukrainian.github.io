@@ -67,6 +67,33 @@ def _load_hook():
 hook = _load_hook()
 
 
+@pytest.mark.parametrize(
+    "prefix", [">sink", "2>sink", "2>&1", "<f", "<f 2>&1 >sink", "&>sink", ">sink X=1 <f", "X=1 >sink"]
+)
+def test_issue_9490_program_after_redirect(prefix):
+    segment = next(iter(hook._expanded_segments(f"{prefix} git add f")))
+    command, index = hook._command_word(segment)
+    assert command == "git"
+    assert segment[index + 1 :] == ["add", "f"]
+    intents = hook.bash_git_write_intents(f"{prefix} git add f")
+    assert len(intents) == 1
+    assert intents[0]["kind"] == "add"
+
+
+def test_issue_9490_input_redirect_does_not_hide_primary_git_write(repo: Path):
+    payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": "<f git add f"}}
+    result = _run(repo, payload)
+    assert result.returncode == 2
+    assert "git" in result.stderr.lower()
+
+
+@pytest.mark.parametrize("command", ["2 >sink git add f", "'>' sink git add f"])
+def test_issue_9490_literal_words_remain_programs(command):
+    segment = next(iter(hook._expanded_segments(command)))
+    assert hook._command_word(segment)[0] == ("2" if command.startswith("2 ") else ">")
+    assert hook.bash_git_write_intents(command) == []
+
+
 @pytest.mark.parametrize("command", BENIGN_COMMANDS)
 def test_issue_9102_benign_corpus_allowed_in_dispatch(repo: Path, command: str):
     dispatch = repo / ".worktrees/dispatch/claude/task-1"

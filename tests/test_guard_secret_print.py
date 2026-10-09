@@ -42,6 +42,26 @@ def _load_hook():
 guard = _load_hook()
 
 
+@pytest.mark.parametrize(
+    "prefix", [">sink", "2>sink", "2>&1", "<f", "<f 2>&1 >sink", "&>sink", ">sink X=1 <f", "X=1 >sink"]
+)
+@pytest.mark.parametrize("command", ["cat .env", "command -p cat .env", "env -i cat .env"])
+def test_issue_9490_secret_reader_after_redirect_blocked(monkeypatch, prefix, command):
+    assert _run(monkeypatch, f"{prefix} {command}") == 2
+
+
+@pytest.mark.parametrize("command", ["2>&1 cat f", "<f cat f", ">sink printf '%s' 'cat .env'"])
+def test_issue_9490_benign_redirects_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize("command", ["cat .env", "2 >sink cat .env", "'>' sink cat .env"])
+def test_issue_9490_descriptor_and_literal_command_positions(command):
+    segment = guard._pipelines(command)[0][0]
+    expected = "cat" if command == "cat .env" else "2" if command.startswith("2 ") else ">"
+    assert guard._command_at(segment)[0] == expected
+
+
 @pytest.mark.parametrize("command", BENIGN_COMMANDS)
 def test_issue_9102_benign_corpus_allowed(monkeypatch, command):
     assert _run(monkeypatch, command) == 0

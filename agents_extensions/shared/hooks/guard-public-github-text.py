@@ -10,18 +10,31 @@ import shlex
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.dont_write_bytecode = True
+try:
+    from shell_redirects import scope_events
+except ImportError as exc:
+    print("OPSEC: Bash publishing parser unavailable.", file=sys.stderr)
+    raise SystemExit(2) from exc
+
 
 def invokes_gh(command: str) -> bool:
     """Recognize command positions, common wrappers and nested shell -c forms."""
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
-        lexer.whitespace = " \t\r"
-        lexer.whitespace_split = True
+        events = scope_events(
+            command,
+            mark_redirect_unreadable=False,
+            unreadable_marker="",
+            unparsed=[],
+            may_match=lambda line: False,
+        )
+        words = [word for kind, argv in events for word in ([*argv, ";"] if kind == "segment" else [";"])]
         expecting_command = True
         shell = False
         shell_script = False
         wrapper = False
-        for word in lexer:
+        for word in words:
             if shell_script:
                 if invokes_gh(word):
                     return True

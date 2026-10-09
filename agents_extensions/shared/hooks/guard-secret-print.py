@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
+    from shell_redirects import _split_scopes
     from shell_shlex import (
         ShellPreprocessLimit,
         preprocess_shell_command,
@@ -171,6 +172,8 @@ def _collapse_shell_line_continuations(command: str) -> str:
 def _tokenize(command: str) -> list[str]:
     try:
         executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
+        # Drop glued descriptor words while raw quote/spacing context remains.
+        executable = "".join(raw for _, raw in _split_scopes(executable))
         protected, parameters = _protect_parameters(executable)
         tokens = split_quote_preserving(protected, punctuation_chars="();&|<>\n", whitespace=" \t")
         restored = [_restore_parameters(token, parameters) for token in tokens]
@@ -399,10 +402,13 @@ def _command_at(seg: list[str]) -> tuple[str, list[str], int] | None:
     while i < len(seg) and _strip_quotes(seg[i]) in reserved:
         i += 1
     while i < len(seg):
-        while i < len(seg) and _is_assignment(seg[i]):
+        redirection_skip = _redirection_skip_count(seg[i])
+        if redirection_skip:
+            i += redirection_skip
+            continue
+        if _is_assignment(seg[i]):
             i += 1
-        if i >= len(seg):
-            return None
+            continue
         wrapper = _strip_quotes(seg[i])
         if wrapper in {"sudo", "time", "nohup", "exec", "builtin", "command"}:
             i += 1
@@ -705,7 +711,7 @@ def _file_args(cmd: str, args: list[str]) -> list[str]:
 
 
 def _redirection_skip_count(token: str) -> int:
-    if token in {"<<", "<<-", "<", ">", ">>", "<>", ">|", "&>", "&>>", "<<<"}:
+    if token in {"<<", "<<-", "<", ">", ">>", "<>", ">|", "&>", "&>>", "<<<", "<&", ">&"}:
         return 2
     if token.startswith("<<"):
         return 1

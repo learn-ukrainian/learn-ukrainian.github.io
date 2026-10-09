@@ -63,6 +63,7 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
         return "nested shell command exceeds reviewer inspection depth"
     parser = parser or _shell_parser()
     for segment in parser._expanded_segments(command):
+        segment = parser._without_redirects(segment)
         binary, index = parser._command_word(segment)
         args = [str(word) for word in segment[index + 1 :]]
         if binary == "git":
