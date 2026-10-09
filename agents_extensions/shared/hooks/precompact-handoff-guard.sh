@@ -1,23 +1,6 @@
 #!/bin/bash
-# PreCompact(manual|auto): interactive Claude drivers never compact (#10265).
-# Workers and isolated reviews retain native compaction. Evidence only selects
-# the instruction; it cannot turn a refusal into permission to compact.
-# Managed KimiCC/GLMCC sessions use other models in the Claude Code client.
-if [ "${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-}" = 1 ] \
-  || [ "${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-}" = 1 ]; then
-  exit 0
-fi
-case "${SESSION_HANDOFF_AGENT:-claude}" in
-  claude|claude-*) ;;
-  *) exit 0 ;;
-esac
-if [[ "${0:-}" == *"/.codex/"* ]] \
-  || [ -n "${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}${CODEX_SESSION:-}" ] \
-  || [ -n "${CLAUDE_NON_INTERACTIVE:-}${LEARN_UK_PIPELINE:-}${LEARN_UKRAINIAN_PIPELINE:-}" ] \
-  || [ -n "${GEMINI_SESSION:-}${GROK_AGENT:-}${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
-  exit 0
-fi
-
+# Installed only by the interactive Claude launcher (#10265).
+# Refuse unconditionally; prepared evidence selects only the handoff message.
 # Independent of Python, evidence, parsing, and the evidence helper's status.
 # Unexpected shell/helper exits also refuse; no raw diagnostic is published.
 trap 'printf "%s\n" "Claude driver compaction refused: use thread-rollover (scripts/orchestration/thread_handoff.py prepare); if already prepared, print HANDOFF-DONE <path> and exit for a fresh launcher restart." >&2; exit 2' EXIT

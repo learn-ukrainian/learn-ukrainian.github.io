@@ -54,111 +54,131 @@ codes, appended to the failure message as `close_failure_reason=<code>`:
 
 ## Claude drivers: refuse compaction and hand off (#10265)
 
-Interactive Claude drivers never compact. At the rollover limit, follow
+Interactive Claude sessions started through `scripts/launchers/claude.sh`
+receive `--settings agents_extensions/shared/settings/driver-compaction-guard.json`
+with a repository-resolved absolute filename. The launcher refuses to start if
+that fragment is missing or unreadable. The fragment installs one unconditional
+`PreCompact` command with matcher `manual|auto`. The shared deployed
+`settings.json` has no PreCompact registration: workers, isolated reviews,
+headless bridges, Codex on Claude Code, KimiCC, GLMCC and nested raw `claude`
+retain their existing compaction behavior. Raw `claude` outside the launcher is
+outside this enforcement boundary.
+
+The CLI flag is specific to this invocation, so inherited environment markers
+cannot exempt a real driver or install the guard in a child. The launcher omits
+the fragment and policy prompt for forwarded `-p` / `--print` invocations.
+Resume, tmux and supervisor restarts that re-enter the interactive launcher
+receive the flag again. Neither the hook nor its policy prompt mutates a lease.
+
+At the rollover limit, follow
 `agents_extensions/shared/skills/thread-rollover/SKILL.md`, run
 `scripts/orchestration/thread_handoff.py prepare` with the exact active identity,
 write the reserved handoff, then print `HANDOFF-DONE <path>` with that exact path
-and exit for a fresh launcher session. The launcher appends this rule to the
-system prompt independently of the rules-core text (the full launcher still
-requires its rules-core loader). Workers
-and isolated reviews keep native compaction.
+and exit for a fresh launcher session. The launcher appends this instruction
+independently of the rules-core text.
 
-### Supported client capability and local probe
+### Installed-client evidence and limits
 
-Verified on 2026-10-09 with installed Claude Code **2.1.295** (`claude --version`)
-and its own `claude --help`. The [official hook reference](https://code.claude.com/docs/en/hooks#precompact)
-specifies `PreCompact` and `PostCompact`, both with `manual` and `auto` matchers.
-`manual` means `/compact`; `auto` means native automatic compaction.
-`PreCompact` supports refusal by **exit 2 with stderr**, or exit 0 with JSON
-`{"decision":"block","reason":"..."}`. `PostCompact` has no decision control.
-`continue` and `systemMessage` are discarded by PreCompact; they cannot enforce
-this policy. Proactive automatic refusal leaves the conversation uncompacted;
-refusing automatic recovery after an API context-limit error surfaces that
-error and fails the current request.
+Verified on 2026-10-09 with installed Claude Code **2.1.295** (`claude --version`).
+`claude --help` describes `--settings <file-or-json>` as loading additional
+settings. A scratch project used only a synthetic two-message transcript,
+isolated user configuration, disabled tools/MCP and harmless marker-writing
+hooks. No private conversation was resumed.
 
-A harmless local probe used a synthetic two-message transcript in managed
-scratch, no repository or private conversation content, disabled MCP/tools,
-and an isolated `manual|auto` PreCompact registration. Its command printed
-`LOCAL-PRECOMPACT-REFUSAL` to stderr and exited 2. Invoking the installed client
-with `-p /compact --resume <fixture.jsonl> --setting-sources '' --settings
-<probe-settings.json> --strict-mcp-config --mcp-config '{"mcpServers":{}}'
---tools '' --no-session-persistence` returned:
+User and project settings each registered SessionStart and manual PreCompact
+markers. A CLI settings overlay registered a third SessionStart marker plus
+separate `manual` and `auto` PreCompact hooks, each exiting 2 after writing a
+marker and a refusal. The manual command was:
+
+```sh
+claude -p /compact --resume <synthetic-fixture.jsonl> \
+  --setting-sources user,project --settings <overlay.json> \
+  --strict-mcp-config --mcp-config '{"mcpServers":{}}' \
+  --tools '' --no-session-persistence
+```
+
+Raw results:
 
 ```text
 exit=0
-Compaction blocked by PreCompact hook: [printf 'LOCAL-PRECOMPACT-REFUSAL\n' >&2; exit 2]: LOCAL-PRECOMPACT-REFUSAL
+stdout=Compaction blocked by PreCompact hook: [printf '%s\\n' overlay-manual >> markers; printf '%s\\n' LOCAL-SETTINGS-REFUSAL >&2; exit 2]: LOCAL-SETTINGS-REFUSAL
+stderr=
+markers=user
+project
+overlay
+user-manual
+project-manual
+overlay-manual
 ```
 
-The CLI's outer exit status is **not** the compaction verdict. This probe
-confirmed manual client refusal before any summarization request; automatic
-blocking is documented by the client vendor and covered by trigger-specific
-hook tests, not a live context-exhaustion run. Both triggers are interceptable,
-so the issue's manual-only prompt fallback is unnecessary.
+All three settings sources' hooks executed, including all three hooks for the
+same PreCompact event. Thus the CLI overlay merges hooks with user and project
+settings rather than replacing them. Exit 2 blocked manual compaction before
+summarization; the outer CLI exit status 0 is not the compaction verdict.
 
-### Denominator and failure posture
+An oversized synthetic fixture (reported input usage of 1,000,000 tokens and
+15,000 repeated synthetic phrases) tested automatic matching without provider
+credentials in the isolated configuration:
 
-| Trigger | Interactive driver | Headless worker or bridge | Isolated review (no project hooks) |
-| --- | --- | --- | --- |
-| Automatic | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
-| Manual | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
+```sh
+CLAUDE_CODE_AUTO_COMPACT_WINDOW=100 CLAUDE_CODE_MAX_CONTEXT_TOKENS=2000 \
+  claude -p 'Reply OK' --resume <oversized-synthetic-fixture.jsonl> \
+  --setting-sources user,project --settings <overlay.json> \
+  --strict-mcp-config --mcp-config '{"mcpServers":{}}' \
+  --tools '' --no-session-persistence
+```
 
-The guard preserves the tracked hooks' environment exemptions:
-`CLAUDE_NON_INTERACTIVE`, the pipeline flags, and
-`LEARN_UKRAINIAN_DISPATCH_TASK_ID` identify exempt work; other harnesses also
-remain exempt. Every headless `-p` invocation in the Claude adapter sets
-`CLAUDE_NON_INTERACTIVE=1`, including bridge sessions with no dispatch id; the
-Claude environment sanitizer preserves it. The native Claude launcher scrubs an
-inherited marker before starting the session. KimiCC and GLMCC launchers explicitly
-set their existing `LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH=1` and
-`LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH=1` markers when creating Claude Code
-sessions. The guard allows compaction for these other-model routes; the native
-Claude launcher scrubs both markers so they cannot exempt a Claude driver.
-A linked checkout alone is not an
-exemption: interactive drivers can run from linked checkouts too. Isolated
-reviews are unaffected because their `--safe-mode --setting-sources ''`
-invocation never loads project hooks (`scripts/review/isolation.py`), regardless
-of any environment marker.
+```text
+exit=1
+stdout=Prompt is too long
+stderr=
+markers=user
+project
+overlay
+overlay-auto
+```
 
-Refusal is independent of evidence. Missing Python, missing runner, unreadable
-or unsafe evidence, malformed input, helper exceptions, unexpected or partial
-output, and deadlines all refuse for a driver. The hook requires `jq` for the
-read-only trigger normalization and GNU `timeout` for deadlines; missing `jq`
-refuses with the generic handoff message. A shell EXIT trap supplies the refusal
-even on unexpected exits. The evidence subprocess has a three-second deadline
-with a one-second kill grace; the existing checker also has its two-second
-deadline. The settings command wraps the entire hook in `timeout -k 1 4`,
-bounding a runner child that escapes its process group and holds the evidence
-pipe open, below the five-second client deadline. Partial `prepared` output
-from a failed or timed-out process is never proof. The settings command converts
-hook startup errors or abnormal exits to refusal for drivers, retaining the
-same environment exemptions on that fallback path. Exempt sessions return before
-any evidence dependency is inspected.
+This proves that the installed client honors the overlay's automatic matcher.
+It does not prove continued conversation after proactive refusal or recovery
+from a real provider context-limit error. The
+[official hook reference](https://code.claude.com/docs/en/hooks#precompact)
+documents exit 2 refusal for both triggers: proactive automatic refusal skips
+compaction, while refusal during API context-limit recovery surfaces the error.
+The tracked combined `manual|auto` registration and shell failure behavior are
+covered locally; a live interactive driver exhaustion run remains unverified.
 
-Prepared evidence changes only the instruction: print `HANDOFF-DONE <path>` and
-exit; compaction is still refused. Manual input is normalized to `auto` solely
-for the existing read-only checker, which previously accepted only that trigger.
-Neither the guard nor the launcher model prompt opens, renews, or releases a
-supervisor lease.
+### Failure posture
+
+The hook refuses regardless of evidence, trigger input or inherited markers.
+Prepared evidence changes only its instruction to print `HANDOFF-DONE <path>`;
+it cannot allow compaction. Missing Python, runner, `jq` or GNU `timeout`, unsafe
+or unreadable evidence, malformed or huge input, exceptions, partial/unexpected
+output and deadlines select the generic refusal. An EXIT trap handles internal
+shell failures. Manual input is normalized to `auto` only for the existing
+read-only evidence checker.
+
+The evidence path has a three-second deadline with one-second kill grace and
+the checker a two-second deadline. The fragment wraps the whole hook in
+`timeout -k 1 4` and converts every result, including unexpected success and
+startup errors, to exit 2. This bounds an escaped runner child holding the
+output pipe below the five-second client hook deadline. The command addresses
+the canonical tracked hook relative to `CLAUDE_PROJECT_DIR`; the existing
+`npm run agents:deploy` path also mirrors the sources and fragment.
+
+Claude Code treats an unavailable hook shell or harness cancellation as
+non-blocking. These subprocess deadlines do not prove enforcement when the
+client never executes the registration or kills its outer shell. Deployment and
+exact-client driver integration remain accountable-driver gates.
 
 ### Restart evidence and remaining boundary
 
-The common launcher's existing exit path closes its exact lease; its next fresh
-launch runs the supervisor bootstrap and existing rollover detection/import.
-This change introduces no restart mechanism. The tracked common supervisor and
-launcher currently have **no `HANDOFF-DONE` marker consumer**. Restart is not
-automatic. AC-03 remains a residual owned by `claude-monitor`; marker printing
-alone is not verified automatic restart. The accountable driver must
-supply an external supervisor restart receipt or resolve that integration before
-claiming AC-03 or closing #10265. Owner: `claude-monitor`; condition: demonstrate
-marker, predecessor exit, fresh replacement bootstrap and handoff consumption.
-
-Claude Code itself treats an unavailable hook shell or a harness-level hook
-cancellation as non-blocking; no shell script can change that client behavior.
-The inner deadline and settings fallback handle ordinary evidence/runtime
-failures, but do not prove enforcement if the client never runs the registration
-or kills its outer shell. Keep deployment and the exact-client integration
-check as driver gates. Owner: `claude-monitor`; condition: deploy canonical
-sources after merge and verify both registrations on the running driver.
+The common launcher retains its existing lease and bootstrap lifecycle. This
+change introduces no restart mechanism. `HANDOFF-DONE` still has no consumer in
+the common supervisor or launcher; restart is not automatic. **AC-03 remains
+open**, owned by `claude-monitor`, until a receipt demonstrates the marker,
+predecessor exit, fresh replacement bootstrap and handoff consumption.
+Printing a marker alone cannot close #10265. The same owner must deploy after
+merge and verify the registration on the running interactive driver.
 
 ## Environment envelope
 

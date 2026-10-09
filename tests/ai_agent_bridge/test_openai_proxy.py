@@ -354,9 +354,7 @@ def test_claude_backend_runs_without_background_work(monkeypatch):
     ((argv, kwargs),) = seen
     assert argv[argv.index("--disallowedTools") + 1].split(",") == list(HEADLESS_BACKGROUND_TOOL_DENIES)
     defaults = {"TERM": "xterm-256color", "COLORTERM": "truecolor"}
-    assert kwargs["env"] == {
-        **defaults, **proxy._PARENT_ENV, **HEADLESS_BACKGROUND_ENV, "CLAUDE_NON_INTERACTIVE": "1",
-    }
+    assert kwargs["env"] == {**defaults, **proxy._PARENT_ENV, **HEADLESS_BACKGROUND_ENV}
 
 
 def test_codex_backend_rejects_override_before_preparation(monkeypatch):

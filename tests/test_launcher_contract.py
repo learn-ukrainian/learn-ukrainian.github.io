@@ -120,6 +120,12 @@ def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) 
     for relative in expected:
         assert (deployed / relative).read_bytes() == (sources / relative).read_bytes()
     assert not (checkout / ".codex/skills").exists()
+    shared_settings = json.loads((checkout / ".claude/settings.json").read_text())
+    assert not shared_settings["hooks"].get("PreCompact")
+    fragment = Path("settings/driver-compaction-guard.json")
+    assert (checkout / ".claude" / fragment).read_bytes() == (
+        checkout / "agents_extensions/shared" / fragment
+    ).read_bytes()
 
 
 def test_root_launcher_allowlist_is_exact() -> None:
@@ -1254,7 +1260,7 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
-    assert re.search(r"--effort high --append-system-prompt .* --agent curriculum-orchestrator ", explicit.stdout)
+    assert re.search(r"--effort high --settings .* --append-system-prompt .* --agent curriculum-orchestrator ", explicit.stdout)
 
     # A registry stream key with no roster slot would mint an unregistered handoff
     # identity, so the launcher refuses it instead of starting the session (#8303).

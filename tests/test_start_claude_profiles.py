@@ -23,7 +23,6 @@ def _stub_claude(tmp_path: Path) -> Path:
         "printf 'max=%s\\n' \"${CLAUDE_CODE_MAX_CONTEXT_TOKENS:-unset}\"\n"
         "printf 'compact=%s\\n' \"${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-unset}\"\n"
         "printf 'profile=%s\\n' \"${LEARN_UKRAINIAN_PROFILE_ID:-unset}\"\n"
-        "printf 'noninteractive=%s\\n' \"${CLAUDE_NON_INTERACTIVE:-unset}\"\n"
         "printf 'args=%s\\n' \"$*\"\n",
         encoding="utf-8",
     )
@@ -54,7 +53,6 @@ def test_claude_interactive_injects_effort_when_explicit() -> None:
     assert both.returncode == 0, both.stderr
     assert "would exec claude --model claude-fable-5-1 --effort xhigh" in both.stdout
 
-
 @pytest.mark.parametrize("model", ("not-certified", "gpt-6.1-sol"))
 def test_claude_rejects_models_outside_native_profile(model: str) -> None:
     result = run_launcher("start-claude.sh", "--model", model)
@@ -76,7 +74,6 @@ def test_explicit_retired_sonnet_driver_pin_is_refused() -> None:
     assert result.returncode == 2
     assert "would exec claude" not in result.stdout
 
-
 @pytest.mark.parametrize("alias", ["fable-5", "opus-5"])
 @pytest.mark.parametrize("script", ["start-claude.sh", "start-claude-driver.sh"])
 def test_versioned_retired_claude_alias_is_refused(alias, script) -> None:
@@ -93,7 +90,6 @@ def test_full_retired_fable_id_is_refused() -> None:
     assert retired.returncode != 0
     assert "would claim lease" not in retired.stdout
     assert "would exec claude" not in retired.stdout
-
 
 @pytest.mark.parametrize(
     "model", [model_id for model_id, entry in load_model_catalog()["models"].items() if entry["lifecycle"] == "retired"]
@@ -145,7 +141,6 @@ def test_claude_interactive_does_not_inherit_driver_default() -> None:
     assert result.returncode == 0, result.stderr
     assert "would exec claude --model" not in result.stdout
     assert "--effort" not in result.stdout
-
 
 @pytest.mark.parametrize(
     "argv",
@@ -202,85 +197,71 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
     assert "foreign-secret" not in result.stdout + result.stderr
 
 
-def test_interactive_launcher_scrubs_inherited_headless_marker(tmp_path):
-    bin_dir = _stub_claude(tmp_path)
-    result = run_launcher(
-        "start-claude.sh",
-        env={"PATH": f"{bin_dir}:{os.environ['PATH']}", "CLAUDE_NON_INTERACTIVE": "1"},
-        dry_run=False,
-    )
-    assert result.returncode == 0, result.stderr
-    assert "noninteractive=unset" in result.stdout
-    assert "Never compact a Claude driver" in result.stdout
-
-
 @pytest.mark.parametrize(
     "launcher,args",
-    [
-        ("start-claude.sh", ()),
-        ("start-claude-driver.sh", ("--epic", "devops")),
-    ],
+    [("start-claude.sh", ()), ("start-claude-driver.sh", ("--epic", "devops"))],
 )
-def test_claude_launchers_always_carry_no_compaction_rule(launcher, args):
-    result = run_launcher(launcher, *args)
+@pytest.mark.parametrize("inherited", [False, True])
+def test_interactive_launcher_installs_guard_despite_inherited_markers(launcher, args, inherited):
+    env = {
+        "CODEX_SESSION": "1", "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "parent-worker",
+        "CLAUDE_NON_INTERACTIVE": "1", "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH": "1",
+        "LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH": "1",
+    } if inherited else {}
+    result = run_launcher(launcher, *args, env=env)
     assert result.returncode == 0, result.stderr
-    # Bash uses ANSI-C quoting for multiline core text and backslash quoting
-    # for single-line prompts; either must retain the complete policy sentence.
+    assert "--settings" in result.stdout
+    assert "agents_extensions/shared/settings/driver-compaction-guard.json" in result.stdout
     assert "Never compact a Claude driver" in result.stdout.replace("\\ ", " ")
-    assert "thread-rollover" in result.stdout
     assert "HANDOFF-DONE" in result.stdout
 
-
-@pytest.mark.parametrize(
-    "extra_env,expected_rule",
-    [
-        ({"CLAUDE_NON_INTERACTIVE": "1"}, True),
-        ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
-    ],
-)
-def test_claude_launcher_rule_follows_fresh_session_class(extra_env, expected_rule):
-    result = run_launcher("start-claude.sh", env=extra_env)
+@pytest.mark.parametrize("flag", ["-p", "--print", "--print=true"])
+def test_print_mode_launcher_omits_driver_guard(flag):
+    result = run_launcher("start-claude.sh", "--", flag, "inspect")
     assert result.returncode == 0, result.stderr
-    assert ("HANDOFF-DONE" in result.stdout) is expected_rule
-
+    assert "--settings" not in result.stdout
+    assert "driver-compaction-guard" not in result.stdout
+    assert "HANDOFF-DONE" not in result.stdout
 
 @pytest.mark.parametrize(
-    "session_env,expected_rule",
+    "launcher,args,credentials",
     [
-        ({}, True),
-        ({"LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH": "1"}, True),
-        ({"LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH": "1"}, True),
-        ({"CLAUDE_NON_INTERACTIVE": "1"}, True),
-        ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
+        ("start-codex.sh", ("--harness", "claude-code"), {}),
+        ("start-kimi.sh", ("--harness", "claude-code"), {"KIMICC_AUTH_TOKEN": "test-key"}),
+        ("start-glmcc.sh", (), {"GLMCC_AUTH_TOKEN": "test-key"}),
     ],
 )
-def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_rule):
+def test_other_model_launchers_omit_claude_driver_guard(tmp_path, launcher, args, credentials):
+    result = run_launcher(launcher, *args, env={"HOME": os.fspath(tmp_path / "home"), **credentials})
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude" in result.stdout
+    assert "--settings" not in result.stdout
+    assert "driver-compaction-guard" not in result.stdout
+
+@pytest.mark.parametrize("failure", ["missing", "directory", "unreadable"])
+def test_interactive_adapter_refuses_unavailable_fragment(tmp_path, failure):
     import subprocess
 
+    fragment = tmp_path / "agents_extensions/shared/settings/driver-compaction-guard.json"
+    fragment.parent.mkdir(parents=True)
+    if failure == "directory":
+        fragment.mkdir()
+    elif failure == "unreadable":
+        fragment.write_text("{}")
+        fragment.chmod(0)
     adapter = Path(__file__).resolve().parents[1] / "scripts/launchers/claude.sh"
     result = subprocess.run(
-        [
-            "bash",
-            "-c",
-            "\n".join(
-                [
-                    'source "$1"',
-                    'LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_FORWARD_ARGS=(); LC_DRY_RUN=0',
-                    'launcher_exec_command() { printf "kimi_marker=%s glm_marker=%s\\n" "${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-unset}" "${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-unset}"; printf "noninteractive=%s\\n" "${CLAUDE_NON_INTERACTIVE:-unset}"; printf "%s\\n" "$@"; }',
-                    "launcher_adapter_exec",
-                ]
-            ),
-            "--",
-            os.fspath(adapter),
-        ],
-        env={**os.environ, "CLAUDE_NON_INTERACTIVE": "", "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "", **session_env},
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=10,
+        ["bash", "-c", '\n'.join([
+            'source "$1"',
+            'LC_ROOT="$2"; LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_FORWARD_ARGS=(); LC_DRY_RUN=0',
+            # The launcher uses [, so intercept only its readability check.
+            '[() { if builtin [ "$1" = "-r" ]; then return 1; fi; builtin [ "$@"; }' if failure == "unreadable" else ':',
+            'launcher_error() { printf "%s\\n" "$*" >&2; }',
+            'launcher_exec_command() { echo UNEXPECTED_LAUNCH; }',
+            'launcher_adapter_exec',
+        ]), "--", os.fspath(adapter), os.fspath(tmp_path)],
+        capture_output=True, text=True, check=False, timeout=10,
     )
-    assert result.returncode == 0, result.stderr
-    assert "noninteractive=unset" in result.stdout
-    assert "kimi_marker=unset glm_marker=unset" in result.stdout
-    assert ("--append-system-prompt" in result.stdout) is expected_rule
-    assert ("Never compact a Claude driver" in result.stdout) is expected_rule
+    assert result.returncode == 2, result.stderr
+    assert "missing or unreadable" in result.stderr
+    assert "UNEXPECTED_LAUNCH" not in result.stdout

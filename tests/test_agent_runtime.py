@@ -3518,9 +3518,7 @@ def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_m
     assert "--tools" in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
     # Every headless Claude run also disables background tasks (#9690).
-    assert plan.env_overrides == {
-        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1", "CLAUDE_NON_INTERACTIVE": "1", "AB_DISCUSS_READONLY": "1",
-    }
+    assert plan.env_overrides == {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1", "AB_DISCUSS_READONLY": "1"}
 
 
 def test_claude_adapter_resume_existing_session(tmp_path):

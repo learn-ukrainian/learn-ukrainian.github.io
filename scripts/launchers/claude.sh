@@ -30,10 +30,6 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
-  # A headless parent cannot exempt a fresh interactive Claude session.
-  unset CLAUDE_NON_INTERACTIVE
-  # An alternate-model parent cannot exempt a fresh native Claude session.
-  unset LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
   # high (launcher_defaults); interactive keeps the last TUI / user selection.
@@ -43,9 +39,20 @@ launcher_adapter_exec() {
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--effort "$LC_EFFORT")
   fi
-  # Carry the rule even when the optional core loader supplies no prompt.
+  # CLI settings are scoped to this launch and cannot be inherited by children.
+  # Print-mode invocations retain native compaction and the ordinary core prompt.
+  local interactive=1 arg
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    case "$arg" in -p|--print|--print=*) interactive=0 ;; esac
+  done
   local system_prompt="${LC_RULES_CORE:-}"
-  if [ -z "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
+  if [ "$interactive" = 1 ]; then
+    local guard_settings="$LC_ROOT/agents_extensions/shared/settings/driver-compaction-guard.json"
+    if [ ! -f "$guard_settings" ] || [ ! -r "$guard_settings" ]; then
+      launcher_error "interactive Claude compaction guard settings are missing or unreadable."
+      exit 2
+    fi
+    cmd+=(--settings "$guard_settings")
     system_prompt="${system_prompt:+$system_prompt$'\n'}Never compact a Claude driver; use thread-rollover to prepare the handoff, print HANDOFF-DONE <path>, and exit for a fresh launcher restart."
   fi
   if [ -n "$system_prompt" ]; then

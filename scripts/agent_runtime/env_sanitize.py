@@ -174,9 +174,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     # feature switch, never a credential.
     "claude": {
         "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS",
-        # Headless adapter invocations, including bridge calls without a
-        # dispatch id, must remain exempt from interactive-driver hooks.
-        "CLAUDE_NON_INTERACTIVE",
     },
     # CODEX_HOME must reach the codex subprocess so the V7 writer's
     # scoped config (materialized by

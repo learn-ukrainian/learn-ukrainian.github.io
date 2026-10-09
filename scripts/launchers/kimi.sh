@@ -109,8 +109,6 @@ launcher_adapter_exec() {
       fi
     fi
   else
-    # Other-model Claude Code sessions retain their native compaction policy.
-    export LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH=1
     cmd=(claude --model "$LEAD_MODEL")
     if [ -n "${LC_RULES_CORE:-}" ]; then
       cmd+=(--append-system-prompt "$LC_RULES_CORE")

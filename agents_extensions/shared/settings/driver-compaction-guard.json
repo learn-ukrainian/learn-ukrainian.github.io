@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c '\n  timeout -k 1 4 \"$CLAUDE_PROJECT_DIR/agents_extensions/shared/hooks/precompact-handoff-guard.sh\"\n  status=$?\n  [ \"$status\" -eq 2 ] && exit 2\n  printf \"%s\\n\" \"Claude driver compaction refused: use thread-rollover (scripts/orchestration/thread_handoff.py prepare), print HANDOFF-DONE <path>, and exit.\" >&2\n  exit 2\n'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
