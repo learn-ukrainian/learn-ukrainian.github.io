@@ -96,6 +96,71 @@ def test_cache_get_or_compute_force_bypasses_warm_and_coalesces():
     assert all(r == {"v": "fresh", "n": 1} for r in results)
 
 
+def test_cancelled_waiter_does_not_cancel_the_shared_flight():
+    started = threading.Event()
+    release = threading.Event()
+    calls = {"n": 0}
+
+    def compute():
+        calls["n"] += 1
+        started.set()
+        assert release.wait(timeout=2)
+        return {"ok": True}
+
+    async def scenario():
+        first = asyncio.create_task(state_helpers.cache_get_or_compute_async("cancel-key", 30.0, compute))
+        assert await asyncio.to_thread(started.wait, 2)
+        second = asyncio.create_task(state_helpers.cache_get_or_compute_async("cancel-key", 30.0, compute))
+        await asyncio.sleep(0.05)
+        first.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await first
+        release.set()
+        assert await asyncio.wait_for(second, 2) == {"ok": True}
+        again = await state_helpers.cache_get_or_compute_async("cancel-key", 30.0, compute)
+        assert again == {"ok": True}
+        assert calls["n"] == 1
+
+    try:
+        asyncio.run(scenario())
+    finally:
+        release.set()
+
+
+def test_sync_and_async_callers_share_one_flight():
+    """A warmup thread and a request must not publish two results for one key."""
+    started = threading.Event()
+    release = threading.Event()
+    calls = {"n": 0}
+
+    def compute():
+        calls["n"] += 1
+        started.set()
+        assert release.wait(timeout=2)
+        return {"gen": calls["n"]}
+
+    async def scenario():
+        sync_task = asyncio.create_task(
+            asyncio.to_thread(state_helpers.cache_get_or_compute, "shared-key", 30.0, compute, force=True)
+        )
+        assert await asyncio.to_thread(started.wait, 2)
+        async_task = asyncio.create_task(
+            state_helpers.cache_get_or_compute_async("shared-key", 30.0, lambda: {"gen": 99}, force=True)
+        )
+        await asyncio.sleep(0.05)
+        release.set()
+        sync_result = await sync_task
+        async_result = await async_task
+        assert sync_result == async_result == {"gen": 1}
+        assert calls["n"] == 1
+        assert state_helpers.cache_get("shared-key", 30.0) == {"gen": 1}
+
+    try:
+        asyncio.run(scenario())
+    finally:
+        release.set()
+
+
 def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
     from scripts.api import state_router
     from scripts.api.monitor_context import fixture_context

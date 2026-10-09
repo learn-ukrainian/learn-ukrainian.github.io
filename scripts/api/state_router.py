@@ -131,9 +131,9 @@ from .state_helpers import (
     cache_get,
     cache_get_or_compute,
     cache_get_or_compute_async,
+    cache_get_stored,
     cache_get_with_age,
     cache_invalidate,
-    cache_peek,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -215,6 +215,9 @@ STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
 STATE_WEAK_POINTS_TTL_S = 60.0
 ROUTING_BUDGET_TTL_S = 15.0
+# Past this age a stored snapshot must not authorize a lane. Same bound the
+# payload already publishes as diagnostics.stale_threshold_s.
+ROUTING_BUDGET_MAX_AGE_S = 900.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 _state_scan_warm_lock = threading.Lock()
 _state_scan_warm_thread: threading.Thread | None = None
@@ -2229,6 +2232,68 @@ def compute_routing_budget(
     return budget
 
 
+def _aged_routing_budget(payload: object, age_s: float) -> object:
+    """Publish the real age of a stored routing snapshot without adding keys.
+
+    Within the stale threshold the recommendation stays, marked stale. Past
+    that threshold the snapshot must not authorize a lane.
+    """
+    if not isinstance(payload, dict):
+        return payload
+    served = dict(payload)
+    diagnostics = payload.get("diagnostics")
+    threshold = ROUTING_BUDGET_MAX_AGE_S
+    if isinstance(diagnostics, dict):
+        diagnostics = dict(diagnostics)
+        if isinstance(diagnostics.get("stale_threshold_s"), (int, float)):
+            threshold = float(diagnostics["stale_threshold_s"])
+        prior = diagnostics.get("data_age_s")
+        extra = float(prior) if isinstance(prior, (int, float)) else 0.0
+        diagnostics["data_age_s"] = round(extra + age_s, 1)
+        diagnostics["stale"] = True
+        served["diagnostics"] = diagnostics
+    if age_s <= threshold:
+        return served
+    return _withdraw_routing_authorization(served)
+
+
+def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
+    """Clear a lane choice on a snapshot that is too old to act on."""
+    recommendation = payload.get("recommendation")
+    if isinstance(recommendation, dict):
+        recommendation = dict(recommendation)
+        recommendation["primary_agent_for_code"] = None
+        warnings = list(recommendation.get("warnings") or [])
+        note = "snapshot older than the stale threshold; recommendation withdrawn"
+        if note not in warnings:
+            warnings.append(note)
+        recommendation["warnings"] = warnings
+        recommendation["rationale"] = "Snapshot is past the stale threshold and cannot authorize a lane."
+        payload["recommendation"] = recommendation
+    agents = payload.get("agents")
+    if isinstance(agents, dict):
+        rewritten: dict[str, Any] = {}
+        for lane, info in agents.items():
+            if not isinstance(info, dict):
+                rewritten[str(lane)] = info
+                continue
+            info = dict(info)
+            if "eligible" in info:
+                info["eligible"] = False
+            if "status" in info:
+                info["status"] = "unknown"
+            health = info.get("health")
+            if isinstance(health, dict) and "eligible" in health:
+                health = dict(health)
+                health["eligible"] = False
+                info["health"] = health
+            rewritten[str(lane)] = info
+        payload["agents"] = rewritten
+    if isinstance(payload.get("ranked_by_headroom"), list):
+        payload["ranked_by_headroom"] = []
+    return payload
+
+
 # ==================== ENDPOINTS ====================
 
 
@@ -2261,16 +2326,16 @@ async def routing_budget(
             batch_state_dir=ctx.roots.batch_state_dir,
         )
 
-    # A warm or last-good snapshot returns on the event loop. Recompute runs
-    # beside the request so a slow ledger/task scan cannot blow the page's
-    # fetch budget or occupy the shared thread pool.
-    cached = cache_get(cache_key, ROUTING_BUDGET_TTL_S)
-    if cached is not None:
-        return cached
-    stale = cache_peek(cache_key)
-    if stale is not None:
+    # A warm snapshot returns on the event loop. After the TTL, the last
+    # snapshot is served with its real age and refreshed beside the request.
+    # Past the stale threshold it no longer authorizes a lane.
+    stored = cache_get_stored(cache_key)
+    if stored is not None:
+        value, age_s = stored
+        if age_s < ROUTING_BUDGET_TTL_S:
+            return value
         schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
-        return stale
+        return _aged_routing_budget(value, age_s)
     return await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
 
 

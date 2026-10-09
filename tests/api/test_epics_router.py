@@ -601,3 +601,54 @@ def test_epic_list_keeps_latest_typed_entries(tmp_path: Path, monkeypatch) -> No
     assert row["last_state"]["body"] == "newer state"
     assert row["last_decision"]["body"] == "ship it"
     assert row["last_next_action"] is None
+
+
+def test_epic_listing_ignores_history_on_other_streams(tmp_path: Path) -> None:
+    """Latest typed entries are an index lookup per epic, not a rank of every row."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+    store = SessionStreamStore(
+        SessionStreamDatabase(tmp_path / "streams.sqlite3"),
+        _process_probe=lambda _process_id: True,
+    )
+    holder = LeaseHolder(
+        agent="codex",
+        harness="codex",
+        instance_id="runtime-1",
+        process_id=41001,
+        task_id="task-runtime-1",
+    )
+    epic = store.open_session(
+        stream_id="epic:4707",  # allow-hardcoded-epic: listing fixture, not a live epic
+        holder=holder,
+        lineage_id="lineage-epic",
+        ttl_seconds=60,
+        session_id="session-epic",
+        lease_id="lease-epic",
+    )
+    other = store.open_session(
+        stream_id="shared:notes",
+        holder=holder,
+        lineage_id="lineage-other",
+        ttl_seconds=60,
+        session_id="session-other",
+        lease_id="lease-other",
+    )
+    for index in range(30):
+        store.append_entry(
+            other,
+            entry_type=EntryType.STATE,
+            body=f"other history {index}",
+            idempotency_key=f"other-{index}",
+        )
+    store.append_entry(epic, entry_type=EntryType.STATE, body="older state", idempotency_key="epic-state-1")
+    store.append_entry(epic, entry_type=EntryType.STATE, body="newer state", idempotency_key="epic-state-2")
+
+    bundle = store.load_remote_epic_listing(snapshot_sha256=None)
+    stream_ids = {str(row["stream_id"]) for row in bundle["projections"]}
+    assert stream_ids == {"epic:4707"}  # allow-hardcoded-epic: listing fixture, not a live epic
+    latest = bundle["latest_entries"]["epic:4707"][EntryType.STATE.value]  # allow-hardcoded-epic: listing fixture
+    assert latest.body == "newer state"
+    assert "shared:notes" not in bundle["latest_entries"]

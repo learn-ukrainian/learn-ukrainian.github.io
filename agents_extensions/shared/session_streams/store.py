@@ -2272,21 +2272,26 @@ class SessionStreamStore:
         connection: sqlite3.Connection,
         types: tuple[str, ...],
     ) -> dict[str, dict[str, Entry]]:
-        """Newest entry of each requested type, via the stream/type index."""
+        """Newest entry of each requested type for epic streams only.
+
+        Each epic stream does one index lookup per type (``stream_id, type,
+        entry_id DESC``). History on other streams is not ranked.
+        """
         if not types:
             return {}
-        placeholders = ", ".join("?" for _ in types)
-        rows = connection.execute(
-            f"WITH ranked AS ("
-            f" SELECT entry_id, stream_id, session_id, agent, harness, ts, type, body,"
-            f" body_sha256, idempotency_key,"
-            f" ROW_NUMBER() OVER (PARTITION BY stream_id, type ORDER BY entry_id DESC) AS rn"
-            f" FROM entries WHERE type IN ({placeholders})"
-            f") "
-            f"SELECT entry_id, stream_id, session_id, agent, harness, ts, type, body,"
-            f" body_sha256, idempotency_key FROM ranked WHERE rn = 1",
-            types,
-        ).fetchall()
+        selected = (
+            "e.entry_id, e.stream_id, e.session_id, e.agent, e.harness, e.ts, e.type, "
+            "e.body, e.body_sha256, e.idempotency_key"
+        )
+        parts = [
+            f"SELECT {selected} FROM streams AS stream "
+            "JOIN entries AS e ON e.entry_id = ("
+            "SELECT entry_id FROM entries WHERE stream_id = stream.stream_id AND type = ? "
+            "ORDER BY entry_id DESC LIMIT 1) "
+            "WHERE stream.kind = 'epic'"
+            for _ in types
+        ]
+        rows = connection.execute(" UNION ALL ".join(parts), types).fetchall()
         if not rows:
             return {}
         entry_ids = [int(row["entry_id"]) for row in rows]

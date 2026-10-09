@@ -29,7 +29,7 @@ from scripts.work.sources_public import public_repository_id
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
-from .state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from .state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 
 router = APIRouter(tags=["delegate"])
 
@@ -722,15 +722,12 @@ def _delegate_list_cache_key(
 ) -> str:
     resolved = resolve_context(ctx)
     tasks_dir = _tasks_dir(resolved)
-    return ctx_scoped_ttl_key(
-        resolved,
-        "delegate",
-        kind,
-        status,
-        limit,
-        _dir_token(tasks_dir),
-        _dir_token(tasks_dir / TASK_ARCHIVE_DIR_NAME),
-    )
+    prefix = ctx_scoped_ttl_key(resolved, "delegate", kind, status, limit)
+    # A new directory generation replaces the previous snapshot. Keeping every
+    # generation would retain obsolete task lists for the life of the process.
+    key = f"{prefix}:{_dir_token(tasks_dir)}:{_dir_token(tasks_dir / TASK_ARCHIVE_DIR_NAME)}"
+    cache_retain(f"{prefix}:", key)
+    return key
 
 
 @router.get("/tasks")

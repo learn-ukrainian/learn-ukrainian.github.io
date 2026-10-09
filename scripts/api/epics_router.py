@@ -6,6 +6,7 @@ import asyncio
 import base64
 import binascii
 import logging
+import os
 import re
 import sqlite3
 from datetime import datetime
@@ -44,7 +45,7 @@ from agents_extensions.shared.session_streams.store import (
 from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
-from scripts.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
+from scripts.api.state_helpers import cache_get_or_compute_async, cache_retain, ctx_scoped_ttl_key
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
 
@@ -53,6 +54,19 @@ logger = logging.getLogger(__name__)
 
 SCHEMA = "remote-epic-lifecycle.v1"
 _EPIC_LIST_TTL_S = 5.0
+
+
+def _sqlite_generation(path: Path) -> str:
+    """Change when the database or its WAL is rewritten, without reading rows."""
+    parts: list[str] = []
+    for candidate in (path, Path(str(path) + "-wal")):
+        try:
+            st = os.stat(candidate)
+        except OSError:
+            parts.append("0")
+        else:
+            parts.append(f"{st.st_mtime_ns}:{st.st_size}")
+    return ":".join(parts)
 GRAPH_SCHEMA = "epics-graph.v1"
 DEFAULT_TTL_SECONDS = 15 * 60
 MAX_DIGEST_LIMIT = 100
@@ -593,7 +607,9 @@ def _safe_latest_entry(entry: Any) -> dict[str, Any] | None:
 async def remote_epic_list(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
     try:
         store = _store(ctx)
-        cache_key = ctx_scoped_ttl_key(ctx, "epics-v1", str(store.database.path))
+        prefix = ctx_scoped_ttl_key(ctx, "epics-v1", str(store.database.path))
+        cache_key = f"{prefix}:{_sqlite_generation(store.database.path)}"
+        cache_retain(f"{prefix}:", cache_key)
         payload = await cache_get_or_compute_async(
             cache_key,
             _EPIC_LIST_TTL_S,

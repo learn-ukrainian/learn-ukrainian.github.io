@@ -238,25 +238,81 @@ def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-pa
         if cached is not None:
             return cached  # type: ignore[return-value]
 
-    leader = False
+    fut, leader, cached = _claim_flight(key, ttl, force=force)
+    if cached is not None:
+        return cached  # type: ignore[return-value]
+    assert fut is not None
+    if not leader:
+        return fut.result(timeout=180)
+    return _finish_flight(key, fut, compute)
+
+
+def cache_peek(key: str) -> object | None:
+    """Return a stored value even after its TTL has elapsed.
+
+    Callers use this for stale-while-revalidate: serve the last payload and
+    refresh off the request path instead of making the caller wait.
+    """
+    stored = cache_get_stored(key)
+    if stored is None:
+        return None
+    return stored[0]
+
+
+def cache_get_stored(key: str) -> tuple[object, float] | None:
+    """Return a stored value and how long it has been stored, ignoring TTL."""
+    entry = _ttl_cache.get(key)
+    if entry is None:
+        return None
+    return entry[1], _ttl_clock() - entry[0]
+
+
+def cache_retain(prefix: str, key: str) -> int:
+    """Drop every other entry under ``prefix`` so a new generation replaces the old one."""
+    if not prefix:
+        return 0
+    stale = [item for item in _ttl_cache if item.startswith(prefix) and item != key]
+    for item in stale:
+        _ttl_cache.pop(item, None)
+    return len(stale)
+
+
+_lead_tasks: set[asyncio.Task] = set()
+_refresh_keys: set[str] = set()
+_refresh_keys_lock = threading.Lock()
+_cache_log = logging.getLogger("state_helpers")
+
+
+def _claim_flight(key: str, ttl: float, *, force: bool) -> tuple[concurrent.futures.Future | None, bool, object | None]:
+    """Claim the single in-flight compute shared by sync and async callers.
+
+    Returns ``(future, is_leader, cached)``. A cached hit has no future.
+    A finished flight is not reused, so a later caller can start the next one.
+    """
     with _inflight_lock:
         if not force:
             cached = cache_get(key, ttl)
             if cached is not None:
-                return cached  # type: ignore[return-value]
+                return None, False, cached
         fut = _inflight_futures.get(key)
-        if fut is None:
+        if fut is None or fut.done():
             fut = concurrent.futures.Future()
             _inflight_futures[key] = fut
-            leader = True
+            return fut, True, None
+        return fut, False, None
 
-    if not leader:
-        return fut.result(timeout=180)
 
+def _finish_flight(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
+    key: str,
+    fut: concurrent.futures.Future,
+    compute: Callable[[], T],
+) -> T:
+    """Run compute on the caller's thread and publish one result for every waiter."""
     try:
         value = compute()
         cache_set(key, value)
-        fut.set_result(value)
+        if not fut.done():
+            fut.set_result(value)
         return value
     except BaseException as exc:
         if not fut.done():
@@ -268,25 +324,6 @@ def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-pa
                 _inflight_futures.pop(key, None)
 
 
-def cache_peek(key: str) -> object | None:
-    """Return a stored value even after its TTL has elapsed.
-
-    Callers use this for stale-while-revalidate: serve the last payload and
-    refresh off the request path instead of making the caller wait.
-    """
-    entry = _ttl_cache.get(key)
-    if entry is None:
-        return None
-    return entry[1]
-
-
-_async_inflight: dict[str, asyncio.Future] = {}
-_lead_tasks: set[asyncio.Task] = set()
-_refresh_keys: set[str] = set()
-_refresh_keys_lock = threading.Lock()
-_cache_log = logging.getLogger("state_helpers")
-
-
 async def cache_get_or_compute_async(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
     key: str,
     ttl: float,
@@ -296,27 +333,19 @@ async def cache_get_or_compute_async(  # noqa: UP047 — ruff pyflakes lacks PEP
 ) -> T:
     """TTL read that stays on the event loop when the value is already warm.
 
-    A miss starts one worker thread. Other callers for the same key await that
-    result without taking more thread-pool slots, so a stampede cannot fill the
-    pool and trip the request timeout.
+    A miss starts one worker thread. Sync warmup and other requests for the
+    same key wait on that same flight, so an older compute cannot overwrite a
+    newer one. Cancelling one waiter does not cancel the shared result.
     """
     if not force:
         cached = cache_get(key, ttl)
         if cached is not None:
             return cached  # type: ignore[return-value]
 
-    loop = asyncio.get_running_loop()
-    leader = False
-    with _inflight_lock:
-        if not force:
-            cached = cache_get(key, ttl)
-            if cached is not None:
-                return cached  # type: ignore[return-value]
-        fut = _async_inflight.get(key)
-        if fut is None or fut.done():
-            fut = loop.create_future()
-            _async_inflight[key] = fut
-            leader = True
+    fut, leader, cached = _claim_flight(key, ttl, force=force)
+    if cached is not None:
+        return cached  # type: ignore[return-value]
+    assert fut is not None
 
     if leader:
 
@@ -331,14 +360,15 @@ async def cache_get_or_compute_async(  # noqa: UP047 — ruff pyflakes lacks PEP
                     fut.set_exception(exc)
             finally:
                 with _inflight_lock:
-                    if _async_inflight.get(key) is fut:
-                        _async_inflight.pop(key, None)
+                    if _inflight_futures.get(key) is fut:
+                        _inflight_futures.pop(key, None)
 
         task = asyncio.create_task(_lead())
         _lead_tasks.add(task)
         task.add_done_callback(_lead_tasks.discard)
 
-    return await fut
+    # shield: cancelling this waiter must not cancel the shared future.
+    return await asyncio.shield(asyncio.wrap_future(fut))
 
 
 def schedule_cache_refresh(key: str, ttl: float, compute: Callable[[], object]) -> None:

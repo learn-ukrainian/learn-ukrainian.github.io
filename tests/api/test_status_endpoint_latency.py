@@ -258,3 +258,85 @@ def test_stale_routing_budget_returns_while_refresh_runs(
         assert asyncio.run(scenario()) < 0.5
     finally:
         hold.set()
+
+
+def test_expired_routing_budget_reports_age_and_withdraws_authorization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = {"t": 1_000.0}
+    calls = {"n": 0}
+    monkeypatch.setattr(state_helpers, "_ttl_clock", lambda: clock["t"])
+
+    def compute(**_kwargs):
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise RuntimeError("refresh failed")
+        return {
+            "generated_at": "2026-01-01T00:00:00Z",
+            "agents": {"codex": {"eligible": True, "status": "cool"}},
+            "recommendation": {
+                "primary_agent_for_code": "codex",
+                "rationale": "fresh",
+                "warnings": [],
+            },
+            "diagnostics": {"stale": False, "data_age_s": 0, "stale_threshold_s": 900},
+            "ranked_by_headroom": [{"lane": "codex"}],
+        }
+
+    monkeypatch.setattr(state_router, "compute_routing_budget", compute)
+    app = _mount(tmp_path, state_router.router, "/api/state")
+
+    async def scenario() -> tuple[dict, dict]:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/state/routing-budget")
+            assert first.status_code == 200
+            assert first.json()["diagnostics"]["stale"] is False
+            clock["t"] += state_router.ROUTING_BUDGET_TTL_S + 5
+            aged = await client.get("/api/state/routing-budget")
+            for _ in range(50):
+                if calls["n"] >= 2 and not state_helpers._refresh_keys:
+                    break
+                await asyncio.sleep(0.02)
+            clock["t"] = 1_000.0 + state_router.ROUTING_BUDGET_MAX_AGE_S + 1
+            withdrawn = await client.get("/api/state/routing-budget")
+        return aged.json(), withdrawn.json()
+
+    aged, withdrawn = asyncio.run(scenario())
+    assert calls["n"] >= 2
+    assert aged["diagnostics"]["stale"] is True
+    assert aged["diagnostics"]["data_age_s"] == state_router.ROUTING_BUDGET_TTL_S + 5
+    assert set(aged["diagnostics"]) == {"stale", "data_age_s", "stale_threshold_s"}
+    assert aged["recommendation"]["primary_agent_for_code"] == "codex"
+    assert withdrawn["diagnostics"]["stale"] is True
+    assert withdrawn["diagnostics"]["data_age_s"] == state_router.ROUTING_BUDGET_MAX_AGE_S + 1
+    assert withdrawn["recommendation"]["primary_agent_for_code"] is None
+    assert withdrawn["agents"]["codex"]["eligible"] is False
+    assert withdrawn["agents"]["codex"]["status"] == "unknown"
+    assert withdrawn["ranked_by_headroom"] == []
+
+
+def test_delegate_list_replaces_the_previous_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = {"n": 0}
+
+    def scan(**_kwargs):
+        calls["n"] += 1
+        return {"total": calls["n"], "tasks": []}
+
+    monkeypatch.setattr(delegate_router, "active_delegate_tasks", scan)
+    app = _mount(tmp_path, delegate_router.router, "/api/delegate")
+    tasks_dir = tmp_path / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+
+    async def scenario() -> None:
+        transport = ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            first = await client.get("/api/delegate/active")
+            assert first.json()["total"] == 1
+            (tasks_dir / "one.json").write_text("{}", encoding="utf-8")
+            second = await client.get("/api/delegate/active")
+            assert second.json()["total"] == 2
+
+    asyncio.run(scenario())
+    keys = [key for key in state_helpers._ttl_cache if ":delegate:" in key]
+    assert len(keys) == 1
