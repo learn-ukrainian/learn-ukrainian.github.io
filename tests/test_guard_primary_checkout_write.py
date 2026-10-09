@@ -449,6 +449,35 @@ def test_dispatch_worktree_write_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "printf changed > {primary}/curriculum/tracked.md",
+        "git -C {primary} add curriculum/tracked.md",
+        "git -C {primary} restore --source=HEAD curriculum/tracked.md",
+        "touch {primary}/curriculum/new.md",
+        "touch $UNKNOWN_TARGET",
+    ],
+)
+def test_issue_10337_cursor_shell_blocks_primary_and_allows_dispatch(repo: Path, command: str):
+    """Cursor's preToolUse Shell input follows the same containment path as Bash."""
+    dispatch = repo / ".worktrees/dispatch/claude/task-1"
+
+    def run(command: str):
+        return _run(dispatch, {
+            "tool_name": "Shell",
+            "cwd": str(dispatch),
+            "tool_input": {"command": command, "cwd": str(dispatch)},
+        })
+
+    result = run(command.format(primary=repo))
+    assert result.returncode == 2, result.stderr
+    assert "BLOCKED" in result.stderr
+    for allowed in ("git status", "printf changed > curriculum/tracked.md", "git add curriculum/tracked.md"):
+        result = run(allowed)
+        assert result.returncode == 0, result.stderr
+
+
 def test_dispatch_worktree_control_hook_write_allowed(repo: Path):
     payload = _write_payload(
         repo,

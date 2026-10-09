@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Block ordinary Git and GitHub publish commands from a read-only Claude Bash tool.
+"""Block ordinary Git and GitHub publish commands from a read-only Bash and Cursor Shell tool.
 
 The adapter registers this hook only for read-only runs. The deny list, this
 hook, and the push rewrite stop ordinary command forms only. Code the reviewer
@@ -13,6 +13,9 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
 def _shell_parser():
@@ -108,11 +111,13 @@ def blocked(command: str, parser=None, depth: int = 0) -> str | None:
 def main() -> int:
     try:
         payload = json.loads(sys.stdin.read() or "{}")
-        if payload.get("tool_name") != "Bash":
+        from tool_names import is_shell_tool
+
+        if not is_shell_tool(payload.get("tool_name")):
             return 0
         command = payload.get("tool_input", {}).get("command", "")
         reason = blocked(command)
-    except (OSError, ValueError, TypeError, RuntimeError) as exc:
+    except (ImportError, OSError, ValueError, TypeError, RuntimeError) as exc:
         print(f"BLOCKED by guard-reviewer-publish: cannot inspect command ({type(exc).__name__}).", file=sys.stderr)
         return 2
     if reason:
