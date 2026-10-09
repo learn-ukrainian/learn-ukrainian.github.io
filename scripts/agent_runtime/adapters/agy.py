@@ -787,6 +787,13 @@ def unknown_model_suggestion(model: str) -> str:
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
+_WRITE_MODE_PROMPT_CONTRACT = (
+    "\n\n[WRITE MODE CONTRACT: Do not start timers or waits. "
+    "If a command becomes a background task, track it to confirmed completion (poll its status) before replying. "
+    "Never end the turn while a task is running. Reply ONLY after push and verification are confirmed.]"
+)
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
@@ -920,9 +927,12 @@ class AgyAdapter:
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
+
+        final_prompt = prompt
+
         stdin_payload = (
             json.dumps(
-                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
+                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": final_prompt}]}},
             )
             + "\n"
         )

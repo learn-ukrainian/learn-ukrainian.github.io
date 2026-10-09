@@ -9432,6 +9432,8 @@ def _compose_dispatch_prompt(
     advisory_block_kind: str | None,
     rules_seat: str | None,
     blocks: list[str] | None = None,
+    agent: str | None = None,
+    review_route: bool = False,
 ) -> str:
     """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
 
@@ -9462,6 +9464,11 @@ def _compose_dispatch_prompt(
         if blocks is not None:
             blocks.insert(0, "rules_core")
         prompt = cored_prompt
+    if agent == "agy" and mode in ("workspace-write", "danger") and not review_route:
+        from scripts.agent_runtime.adapters.agy import _WRITE_MODE_PROMPT_CONTRACT
+        prompt += _WRITE_MODE_PROMPT_CONTRACT
+        if blocks is not None:
+            blocks.append("agy_write_contract")
     return prompt
 
 
@@ -13377,6 +13384,8 @@ def _dispatch(
             advisory_block_kind=advisory_block_kind,
             rules_seat=getattr(args, "rules_seat", None),
             blocks=prompt_blocks,
+            agent=dispatch_agent,
+            review_route=(review_attempt is not None),
         )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
@@ -14271,6 +14280,8 @@ def _bounded_prompt_composer(
             advisory_block=bounded_advisory.worker_prompt_block(validated),
             advisory_block_kind="advisory_envelope",
             rules_seat=args.get("rules_seat"),
+            agent=agent,
+            review_route=(record.get("review_attempt") is not None),
         )
 
     return compose
