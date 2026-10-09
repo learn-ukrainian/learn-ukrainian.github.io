@@ -166,7 +166,52 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_TRANSCRIPT_UNREADABLE,
     AGY_HEADLESS_PERMISSION_DENIED,
 )
+# Transient provider faults the pre-model eligibility retry does not own (#10206).
+# Quoted from failed task records:
+#   agy_stream_result_error: API error (attempt 1): UNAVAILABLE (code 503): The service is currently unavailable.
+#   agy_stream_result_error: Eligibility check failed: failed to get load code assist response: UNAVAILABLE (code 503): ...
+#   agy_stream_result_error: The stream was interrupted. Please continue the task you were working on.
+#   agy_stream_output_invalid: missing terminal result
+# The exact line ``Eligibility check failed: UNAVAILABLE (code 503)`` stays on the
+# pre-model gate in the runner. A different eligibility failure blocks this
+# class, so a nearby 503 is not treated as the cause.
+TRANSIENT_PROVIDER_FAULT = "transient_provider_fault"
+_EXACT_PRE_MODEL_ELIGIBILITY_503 = re.compile(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)")
+_ELIGIBILITY_UNAVAILABLE_503 = re.compile(r"Eligibility check failed:.*UNAVAILABLE \(code 503\)")
+_OTHER_ELIGIBILITY_FAILURE = re.compile(r"Eligibility check failed:")
+_API_UNAVAILABLE_503 = re.compile(r"API error \(attempt \d+\): UNAVAILABLE \(code 503\)")
+_STREAM_INTERRUPTED = re.compile(r"The stream was interrupted\.")
+_MISSING_TERMINAL_RESULT = re.compile(r"agy_stream_output_invalid: missing terminal result")
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+
+
+def classify_agy_transient_provider_fault(*texts: str | None) -> str | None:
+    """Return ``transient_provider_fault`` for a recorded provider fault safe to classify.
+
+    Incomplete-run tokens, including cancellation, stay on their own path.
+    The exact pre-model eligibility line is not classified here.
+    """
+    lines = [line for text in texts if text for line in text.splitlines()]
+    blob = "\n".join(lines)
+    if any(reason in blob for reason in AGY_INCOMPLETE_RUN_REASONS):
+        return None
+    if any(
+        _OTHER_ELIGIBILITY_FAILURE.search(line) and not _ELIGIBILITY_UNAVAILABLE_503.search(line) for line in lines
+    ):
+        return None
+    for line in lines:
+        if _EXACT_PRE_MODEL_ELIGIBILITY_503.search(line):
+            continue
+        if (
+            _ELIGIBILITY_UNAVAILABLE_503.search(line)
+            or _API_UNAVAILABLE_503.search(line)
+            or _STREAM_INTERRUPTED.search(line)
+            or _MISSING_TERMINAL_RESULT.search(line)
+        ):
+            return TRANSIENT_PROVIDER_FAULT
+    return None
+
+
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
 _AGY_VERSION_PROBE_TIMEOUT_S = 15
