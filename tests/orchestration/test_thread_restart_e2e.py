@@ -197,6 +197,7 @@ def init_repo(
                 # driver dies at `source` before any behavior under test runs.
                 "scripts/launchers/codex.sh",
                 "scripts/launchers/claude.sh",
+                "agents_extensions/shared/settings/driver-compaction-guard.json",
                 "scripts/launchers/gemini.sh",
                 "scripts/launchers/grok.sh",
                 "scripts/orchestration/codex_transport_health.py",

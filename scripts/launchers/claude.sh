@@ -2,6 +2,9 @@
 
 launcher_adapter_validate() {
   [ "$LC_HARNESS" = claude-code ] || { launcher_error "Claude supports only --harness claude-code."; exit 2; }
+  # Pure argument validation precedes provider preflight, lease acquisition,
+  # and canary execution. Keep the exec-boundary check for direct adapter use.
+  launcher_claude_forward_preflight "${LC_FORWARD_ARGS[@]}"
 }
 launcher_adapter_preflight() {
   # shellcheck source=scripts/lib/profile_resolver.sh
@@ -32,16 +35,28 @@ launcher_adapter_canary() {
 
 launcher_claude_forward_preflight() {
   # Audit: installed client 2.1.295 help and embedded option definitions.
-  # Parse values before detecting print mode: --append-system-prompt --print
-  # is an interactive invocation, not a headless exemption. Unknown syntax
+  # Validate values before detecting print mode: --append-system-prompt --print
+  # must be refused, rather than granting a headless exemption. Unknown syntax
   # fails closed; no user-supplied value is included in the error.
-  local arg flag arity allowed refused='' unknown=0 positional=0
+  local arg flag arity allowed value refused='' unknown=0 positional=0
+  # The client scans the raw prefix for these switches, even when its option
+  # parser would consume them as values. Inspect every element independently
+  # of arity and print mode. Only the client's literal -- ends this scan;
+  # everything following it remains unchanged prompt text.
+  for arg in "$@"; do
+    case "$arg" in
+      --) break ;;
+      --bare|--bare=*|--safe-mode|--safe-mode=*|--bg|--bg=*|--background|--background=*)
+        launcher_error "forwarded ${arg%%=*} is refused in interactive Claude: hook-disabling switches are forbidden before the client --, to preserve launcher settings and compaction hooks."
+        exit 2 ;;
+    esac
+  done
   LC_CLAUDE_INTERACTIVE=1
   while [ "$#" -gt 0 ]; do
+    [ "$1" != -- ] || break # Only the literal client delimiter ends validation.
     arg="$1"; flag="${arg%%=*}"; arity=0; allowed=0
     shift
     case "$flag" in
-      --) break ;; # Everything after the client's delimiter is prompt text.
       -p|--print) [ "$unknown" = 1 ] || LC_CLAUDE_INTERACTIVE=0; continue ;;
       --model|--effort|--append-system-prompt|--append-system-prompt-file|--agent|--session-id|--name|-n|--permission-mode)
         allowed=1; arity=1 ;;
@@ -81,6 +96,22 @@ launcher_claude_forward_preflight() {
       # Only a syntactically safe option name can be quoted. In particular,
       # malformed flags containing whitespace/control characters stay private.
       if [[ "$flag" =~ ^--?[a-zA-Z][a-zA-Z0-9-]*$ ]]; then refused="$flag"; else refused='unrecognized option'; fi
+    fi
+    # An explicit option value must never look like another option. Optional
+    # and variadic arguments without = consume only non-option tokens below;
+    # bare --resume / -r therefore remain valid.
+    value=''
+    case "$arg" in
+      *=*) [ "$arity" = 0 ] || value="${arg#*=}" ;;
+      *) [ "$arity" != 1 ] || value="${1:-}" ;;
+    esac
+    if [[ "$value" == -* ]]; then
+      launcher_error "forwarded $flag is refused in interactive Claude: option values must not start with '-', to preserve launcher settings and compaction hooks."
+      exit 2
+    fi
+    if [ "$arity" = 1 ] && [ "$#" -eq 0 ] && [[ "$arg" != *=* ]]; then
+      launcher_error "forwarded $flag is refused in interactive Claude: a value is required, to preserve launcher settings and compaction hooks."
+      exit 2
     fi
     case "$arg" in *=*) continue ;; esac
     case "$arity" in

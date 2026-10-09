@@ -292,6 +292,8 @@ launcher_clear_foreign_route_state() {
   unset ANTHROPIC_DEFAULT_HAIKU_MODEL ANTHROPIC_DEFAULT_FABLE_MODEL
   unset CLAUDE_CODE_SUBAGENT_MODEL CLAUDE_CODE_EFFORT_LEVEL
   unset CLAUDE_CODE_MAX_CONTEXT_TOKENS CLAUDE_CODE_AUTO_COMPACT_WINDOW
+  # These ambient client switches bypass hooks regardless of CLI settings.
+  unset CLAUDE_CODE_SAFE_MODE CLAUDE_CODE_SIMPLE
   unset CLAUDE_CODE_API_KEY_HELPER_TTL_MS API_TIMEOUT_MS
   # Provider-selector switches (Bedrock/Vertex/Foundry/Mantle/AWS) must not
   # survive into an alternate Claude-Code route — settings env can also pin

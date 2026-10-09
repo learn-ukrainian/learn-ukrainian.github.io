@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,8 @@ def _stub_claude(tmp_path: Path) -> Path:
         "printf 'base=%s\\n' \"${ANTHROPIC_BASE_URL:-unset}\"\n"
         "printf 'max=%s\\n' \"${CLAUDE_CODE_MAX_CONTEXT_TOKENS:-unset}\"\n"
         "printf 'compact=%s\\n' \"${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-unset}\"\n"
+        "printf 'safe=%s\\n' \"${CLAUDE_CODE_SAFE_MODE:-unset}\"\n"
+        "printf 'simple=%s\\n' \"${CLAUDE_CODE_SIMPLE:-unset}\"\n"
         "printf 'profile=%s\\n' \"${LEARN_UKRAINIAN_PROFILE_ID:-unset}\"\n"
         "printf 'args=%s\\n' \"$*\"\n",
         encoding="utf-8",
@@ -186,6 +189,8 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
             "ANTHROPIC_AUTH_TOKEN": "foreign-secret",
             "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "123",
             "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "122",
+            "CLAUDE_CODE_SAFE_MODE": "1",
+            "CLAUDE_CODE_SIMPLE": "1",
         },
         dry_run=False,
     )
@@ -193,6 +198,8 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
     assert "base=unset" in result.stdout
     assert "max=unset" in result.stdout
     assert "compact=unset" in result.stdout
+    assert "safe=unset" in result.stdout
+    assert "simple=unset" in result.stdout
     assert "profile=native_claude" in result.stdout
     assert "foreign-secret" not in result.stdout + result.stderr
 
@@ -237,6 +244,7 @@ REFUSED_FORWARD_ARGS = [
     ("--disable-hooks",), ("--no-hooks",), ("--future-option", "private-value"),
     ("--set", "private-value"), ("--sett=private-value",), ("--bar",), ("--safe",),
     ("-b",), ("-bc",), ("--settings\nprivate-value",),
+    ("--=private-value", "--settings", "private-value"),
     ("attach", "private-value"), ("agents",), ("remote-control",),
 ]
 
@@ -255,6 +263,8 @@ def test_interactive_forwarding_refuses_unaudited_arguments(launcher, args, forw
     assert "private-value" not in result.stdout + result.stderr
     assert "disableAllHooks" not in result.stdout + result.stderr
     assert "would exec claude" not in result.stdout
+    assert "would claim lease" not in result.stdout
+    assert "would run provider canary" not in result.stdout
 
 
 @pytest.mark.parametrize("forwarded", [
@@ -273,9 +283,9 @@ def test_interactive_forwarding_refuses_unaudited_arguments(launcher, args, forw
     ("--allow-dangerously-skip-permissions",), ("--help",), ("-h",),
     ("--version",), ("-v",), ("fixture prompt",),
     ("--", "--settings", "fixture"), ("--", "--print"), ("--", "attach"),
-    # Required option values and embedded prose must not grant print exemption.
-    ("--append-system-prompt", "--print"), ("--append-system-prompt", "-p"),
-    ("--append-system-prompt=--print",), ("fixture --print prose",),
+    ("fixture --print prose",),
+    ("--resume", "abc"), ("--append-system-prompt", "extra"),
+    ("-r", "abc", "--fork-session"),
 ])
 @pytest.mark.parametrize("launcher,args", [
     ("start-claude.sh", ()), ("start-claude-driver.sh", ("--epic", "devops")),
@@ -292,7 +302,6 @@ def test_audited_interactive_forwarding_preserves_guard(launcher, args, forwarde
     ("--settings=fixture", "--print", "inspect"),
     ("--setting-sources", "", "-p", "inspect"),
     ("--managed-settings", "{}", "--print", "inspect"),
-    ("--safe-mode", "-p", "inspect"), ("--bare", "--print", "inspect"),
     ("-p", "--future-headless-option", "inspect"),
     ("--mcp-config", "{}", "{}", "-p", "inspect"),
     ("--resume", "session", "--print", "inspect"),
@@ -316,6 +325,114 @@ def test_option_values_cannot_hide_interactive_settings_bypass(forwarded):
     assert result.returncode == 2, result.stderr
     assert "would exec claude" not in result.stdout
     assert "private-value" not in result.stdout + result.stderr
+
+
+CLAUDE_LAUNCH_FORMS = [
+    ("start-claude.sh", ("--",)),
+    ("start-claude-driver.sh", ("--epic", "devops")),
+    ("start-claude-driver.sh", ("--epic", "devops", "--")),
+]
+HOOK_DISABLING_FLAGS = ["--bare", "--safe-mode", "--bg", "--background"]
+AUDITED_REQUIRED_VALUE_FLAGS = [
+    "--model", "--effort", "--append-system-prompt", "--append-system-prompt-file",
+    "--agent", "--session-id", "--name", "-n", "--permission-mode",
+]
+
+
+@pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
+@pytest.mark.parametrize("flag", ["--name", "-n", "--append-system-prompt", "--agent", "--session-id"])
+@pytest.mark.parametrize("value", [value + suffix for value in HOOK_DISABLING_FLAGS for suffix in ("", "=true")])
+@pytest.mark.parametrize("equals", [False, True])
+def test_hook_disabling_option_values_refused_before_side_effects(launcher, args, flag, value, equals):
+    forwarded = (f"{flag}={value}",) if equals else (flag, value)
+    result = run_launcher(launcher, *args, *forwarded)
+    assert result.returncode == 2, result.stderr
+    assert "preserve launcher settings and compaction hooks" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would run provider canary" not in result.stdout
+    assert "would exec claude" not in result.stdout
+
+
+@pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
+@pytest.mark.parametrize("flag", HOOK_DISABLING_FLAGS)
+@pytest.mark.parametrize("suffix", ["", "=true", "=false"])
+@pytest.mark.parametrize("headless", [False, True])
+def test_raw_hook_disabling_flags_refused_before_client_delimiter(launcher, args, flag, suffix, headless):
+    # Inspect the entire raw prefix, including tokens hidden in option values
+    # or following a positional prompt, independently of print-mode parsing.
+    result = run_launcher(launcher, *args, "prompt", flag + suffix, *(("-p", "hi") if headless else ()))
+    assert result.returncode == 2, result.stderr
+    assert flag in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would run provider canary" not in result.stdout
+    assert "would exec claude" not in result.stdout
+
+
+@pytest.mark.parametrize("flag", AUDITED_REQUIRED_VALUE_FLAGS)
+@pytest.mark.parametrize("equals", [False, True])
+@pytest.mark.parametrize("value", ["--print", "-p", "-private-value"])
+def test_required_option_values_cannot_start_with_dash(flag, equals, value):
+    forwarded = (f"{flag}={value}",) if equals else (flag, value)
+    result = run_launcher("start-claude.sh", "--", *forwarded)
+    assert result.returncode == 2, result.stderr
+    assert "would exec claude" not in result.stdout
+    assert "private-value" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("flag", ["--resume", "-r", "--debug", "-d", "--mcp-config", "--settings"])
+def test_explicit_values_for_optional_and_variadic_flags_cannot_start_with_dash(flag):
+    result = run_launcher("start-claude.sh", "--", f"{flag}=-private-value", "-p", "hi")
+    assert result.returncode == 2, result.stderr
+    assert "would exec claude" not in result.stdout
+    assert "private-value" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("flag", AUDITED_REQUIRED_VALUE_FLAGS)
+def test_required_option_value_cannot_be_missing_or_client_delimiter(flag):
+    for trailing in [(), ("--", "--safe-mode")]:
+        result = run_launcher("start-claude.sh", "--", flag, *trailing)
+        assert result.returncode == 2, result.stderr
+        assert "would exec claude" not in result.stdout
+
+
+@pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
+@pytest.mark.parametrize("flag", HOOK_DISABLING_FLAGS)
+@pytest.mark.parametrize("suffix", ["", "=true"])
+def test_client_delimiter_preserves_hook_disabling_prompt_text(launcher, args, flag, suffix):
+    # A direct driver form still needs the launcher delimiter before it can
+    # pass a literal client delimiter. They are distinct argument boundaries.
+    if args[-1] != "--":
+        args = (*args, "--")
+    result = run_launcher(launcher, *args, "--", flag + suffix)
+    assert result.returncode == 0, result.stderr
+    assert "driver-compaction-guard.json" in result.stdout
+    assert f" -- {flag + suffix}" in result.stdout
+
+
+@pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
+def test_legitimate_print_mode_still_launches(launcher, args):
+    result = run_launcher(launcher, *args, "-p", "hi")
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude" in result.stdout
+    assert "driver-compaction-guard" not in result.stdout
+
+
+@pytest.mark.parametrize("mode,args", [("interactive", ()), ("driver", ("--epic", "devops"))])
+@pytest.mark.parametrize("variable", ["CLAUDE_CODE_SAFE_MODE", "CLAUDE_CODE_SIMPLE"])
+def test_claude_dry_run_clears_inherited_hook_disabling_environment(mode, args, variable):
+    repo = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["bash", "-c", '\n'.join([
+            'source scripts/lib/launcher_core.sh',
+            # Observe the environment at the dry-run client boundary.
+            'launcher_print_argv() { printf "safe=%s simple=%s\\n" "${CLAUDE_CODE_SAFE_MODE-unset}" "${CLAUDE_CODE_SIMPLE-unset}"; }',
+            'launcher_main claude "$@"',
+        ]), "--", mode, *args],
+        cwd=repo, env={**os.environ, variable: "1", "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would exec safe=unset simple=unset" in result.stdout
 
 
 AUDITED_REFUSED_SCALAR_FLAGS = [

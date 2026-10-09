@@ -366,6 +366,31 @@ def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -
     assert "PROVIDER_EXEC" not in result.stdout
 
 
+@pytest.mark.parametrize("forwarded", [
+    ("--name", "--safe-mode"), ("--append-system-prompt=--bare",),
+    ("--session-id", "-private-value"), ("--settings", "private-value"),
+])
+def test_claude_argument_refusal_precedes_lease_and_provider_side_effects(tmp_path: Path, forwarded) -> None:
+    launcher, claim_marker, close_marker = _core_canary_failure_fixture(tmp_path)
+    adapter = launcher.parent / "scripts/launchers/claude.sh"
+    adapter.write_text(
+        (REPO / "scripts/launchers/claude.sh").read_text(encoding="utf-8")
+        + '\nlauncher_adapter_preflight() { echo UNEXPECTED_PROVIDER_PREFLIGHT; }\n'
+        + 'launcher_adapter_canary() { echo UNEXPECTED_PROVIDER_CANARY; }\n',
+        encoding="utf-8",
+    )
+    result = run_launcher(
+        "start-claude-driver.sh", "--epic", "devops", *forwarded,
+        dry_run=False, root=launcher.parent,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "refused in interactive Claude" in result.stderr
+    assert "UNEXPECTED_PROVIDER" not in result.stdout
+    assert not claim_marker.exists()
+    assert not close_marker.exists()
+    assert "private-value" not in result.stdout + result.stderr
+
+
 # Bound for the child-and-parent readiness handshake. Startup under a loaded
 # runner can take much longer than the old 2s provider lifetime; the wait is
 # still finite so a hung launcher fails the test.
