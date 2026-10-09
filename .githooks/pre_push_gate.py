@@ -686,30 +686,32 @@ def validate(
         event["outcome"] = "green"
         event["detail"] = "valid receipt"
         return
-    with Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)) as admitted:
-        event["admission_wait_s"] = round(admitted.waited, 2)
-        deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).deadline
-        shadow = Shadow(plan, root, launcher)
-        settled = False
-        try:
-            run_pre_commit_stage(plan, root, launcher, config, deadline)
-            event["pytest"] = run_pytest_stage(plan, root, launcher, deadline)
+    try:
+        with Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)) as admitted:
+            event["admission_wait_s"] = round(admitted.waited, 2)
+            deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).deadline
+            shadow: Shadow | None = None
+            settled = False
             try:
-                write_receipt(state, plan, time.time())
-            except OSError as error:
-                raise GateOutcome(
-                    "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
-                ) from error
-            event["shadow"] = shadow.finish()
-            settled = True
-            event["outcome"] = "green"
-        except GateOutcome:
-            raise
-        except OSError as error:  # e.g. the output file of a stage could not be created
-            raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
-        finally:
-            if not settled:  # whatever escapes, the shadow must not outlive the hook
-                shadow.abandon()
+                shadow = Shadow(plan, root, launcher)
+                run_pre_commit_stage(plan, root, launcher, config, deadline)
+                event["pytest"] = run_pytest_stage(plan, root, launcher, deadline)
+                try:
+                    write_receipt(state, plan, time.time())
+                except OSError as error:
+                    raise GateOutcome(
+                        "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
+                    ) from error
+                event["shadow"] = shadow.finish()
+                settled = True
+                event["outcome"] = "green"
+            finally:
+                if not settled and shadow is not None:  # whatever escapes, the shadow must not outlive the hook
+                    shadow.abandon()
+    except GateOutcome:
+        raise
+    except OSError as error:  # e.g. the admission lock or a stage's output file could not be created
+        raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
 
 
 def refuse(error: GateOutcome) -> int:

@@ -1047,3 +1047,54 @@ def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
     (shadow,) = shadows
     assert shadow.process is not None and shadow.process.poll() is not None
     assert shadow.output.closed
+
+
+# ---- review round 6: startup I/O errors are typed, not unhandled -----------------------------------------
+
+
+@pytest.mark.parametrize("failing_step", ["admission_lock", "shadow_tempfile"])
+def test_a_startup_io_error_is_a_typed_incomplete_outcome_and_leaks_nothing(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, failing_step: str
+) -> None:
+    monkeypatch.chdir(repo)
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+    state = gate.state_dir(repo)
+    started: list[str] = []
+    real_open = os.open
+
+    def open_without_lock(path: object, *args: object, **kwargs: object) -> int:
+        if str(path).endswith("admission.lock"):
+            raise OSError("cannot open admission lock")
+        return real_open(path, *args, **kwargs)  # type: ignore[arg-type]
+
+    def no_tempfile(*_args: object, **_kwargs: object) -> None:
+        raise OSError("no space for shadow output")
+
+    def no_stage(*_args: object, **_kwargs: object) -> None:
+        started.append("stage")
+
+    if failing_step == "admission_lock":
+        monkeypatch.setattr(gate.os, "open", open_without_lock)
+    else:
+        monkeypatch.setattr(gate.tempfile, "TemporaryFile", no_tempfile)
+    monkeypatch.setattr(gate, "run_pre_commit_stage", no_stage)
+    monkeypatch.setattr(gate, "run_pytest_stage", no_stage)
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(
+            update,
+            repo,
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            str(repo / ".pre-commit-config.yaml"),
+            {},
+        )
+
+    assert raised.value.reason == "validation_error" and raised.value.incomplete
+    assert "validation I/O failed" in raised.value.detail
+    assert started == []  # no stage ran on an unadmitted or shadow-less gate
+    monkeypatch.undo()
+    with gate.Admission(state, 0.0):  # the admission lock was released, not leaked
+        pass
