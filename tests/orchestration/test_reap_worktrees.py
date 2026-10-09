@@ -9,6 +9,7 @@ import shutil
 import signal
 import sqlite3
 import subprocess
+import sys
 import threading
 import time
 from datetime import UTC, datetime
@@ -25,6 +26,7 @@ from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
+_REAL_OPEN_FILE_ACTIVITY_REASON = rw._open_file_activity_reason
 _REPO_TEMPLATE: Path | None = None
 
 
@@ -6505,6 +6507,9 @@ _OLD_PR = 9237
 def _no_default_foreign_scratch_roots(monkeypatch: pytest.MonkeyPatch) -> None:
     """pytest's own tmp_path lives under /tmp; only the #9129 tests opt in to scratch roots."""
     monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: ())
+    # Safety-class tests use a known empty process snapshot. Probe tests below
+    # restore the real implementation rather than depending on host activity.
+    monkeypatch.setattr(rw, "_open_file_activity_reason", lambda _path, *, timeout=None: None)
 
 
 def _reap_review(
@@ -6823,7 +6828,7 @@ def test_foreign_registered_checkout_outside_scratch_roots_is_only_reported(
     assert worktree.exists()
 
 
-@pytest.mark.parametrize("problem", ["dirty", "cwd", "unpushed"])
+@pytest.mark.parametrize("problem", ["dirty", "cwd", "unpushed", "locked"])
 def test_foreign_registered_checkout_keeps_every_safety_check(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -6837,6 +6842,8 @@ def test_foreign_registered_checkout_keeps_every_safety_check(
         (worktree / "notes.txt").write_text("unsaved\n", encoding="utf-8")
     elif problem == "cwd":
         live_cwds = {worktree.resolve() / "sub"}
+    elif problem == "locked":
+        git(repo, "worktree", "lock", "--reason", "long reader", str(worktree))
     else:
         git(worktree, "commit", "--allow-empty", "-m", "local-only work")
 
@@ -6845,6 +6852,193 @@ def test_foreign_registered_checkout_keeps_every_safety_check(
     assert result.action == "skipped"
     assert result.reason != "foreign registered checkout"
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("phase", ["plan", "recheck"])
+@pytest.mark.parametrize("reader_kind", ["fd", "mapped"])
+@pytest.mark.skipif(
+    shutil.which("lsof") is None or not Path("/proc/self/fd").is_dir(),
+    reason="real reader proof needs lsof and procfs",
+)
+def test_foreign_checkout_with_reader_cwd_elsewhere_is_preserved(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, reader_kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: {tmp_path.resolve()})
+    reader_code = """
+import ctypes, os, sys
+file = open(sys.argv[1], 'rb')
+if sys.argv[2] == 'mapped':
+    libc = ctypes.CDLL(None, use_errno=True)
+    libc.mmap.restype = ctypes.c_void_p
+    libc.mmap.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int,
+                         ctypes.c_int, ctypes.c_int, ctypes.c_long]
+    address = libc.mmap(None, os.fstat(file.fileno()).st_size, 1, 2, file.fileno(), 0)
+    assert address != ctypes.c_void_p(-1).value
+    file.close()
+print('ready', flush=True)
+sys.stdin.read()
+"""
+    reader = subprocess.Popen(
+        [sys.executable, "-c", reader_code, str(worktree / "README.md"), reader_kind],
+        cwd=tmp_path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True,
+    )
+    try:
+        assert reader.stdout is not None
+        assert reader.stdout.readline().strip() == "ready"
+        assert Path(os.readlink(f"/proc/{reader.pid}/cwd")) == tmp_path
+        if reader_kind == "mapped":
+            assert all(
+                os.readlink(fd) != str(worktree / "README.md")
+                for fd in Path(f"/proc/{reader.pid}/fd").iterdir()
+            )
+        if phase == "plan":
+            monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+        else:
+            original = rw._review_checkout_recheck
+
+            def recheck(*args: Any, **kwargs: Any) -> str | None:
+                monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+                return original(*args, **kwargs)
+
+            monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+        result = result_for(_reap_review(repo, monkeypatch, apply=phase == "recheck"), worktree)
+        assert result.action == "skipped"
+        expected = "live process has open or mapped files inside foreign checkout"
+        if phase == "recheck":
+            expected += "; originally qualified because foreign registered checkout"
+        assert result.reason == expected
+        assert str(tmp_path) not in result.reason
+        assert result.error is None
+        assert worktree.exists()
+    finally:
+        reader.communicate(timeout=10)
+        assert reader.returncode == 0
+
+
+@pytest.mark.parametrize("phase", ["plan", "recheck"])
+@pytest.mark.parametrize("failure", ["missing", "permission", "timeout", "warning", "error", "malformed", "partial"])
+def test_foreign_checkout_open_file_probe_failure_preserves_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, failure: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    original_run = rw._run
+
+    def run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[0] != "lsof":
+            return original_run(args, **kwargs)
+        if failure == "missing":
+            raise FileNotFoundError(str(worktree))
+        if failure == "permission":
+            raise PermissionError(str(worktree))
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(args, kwargs["timeout"])
+        return subprocess.CompletedProcess(
+            args, 2 if failure == "error" else 1,
+            stdout="unexpected" if failure == "malformed" else "",
+            stderr=f"cannot stat {worktree}" if failure == "warning" else "",
+        )
+
+    monkeypatch.setattr(rw, "_run", run)
+    if failure == "partial":
+        monkeypatch.setattr(
+            rw, "_open_file_probe_visibility_reason",
+            lambda _deadline: "open-file activity probe unavailable; foreign checkout preserved",
+        )
+    if phase == "plan":
+        monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+    else:
+        original = rw._review_checkout_recheck
+
+        def recheck(*args: Any, **kwargs: Any) -> str | None:
+            monkeypatch.setattr(rw, "_open_file_activity_reason", _REAL_OPEN_FILE_ACTIVITY_REASON)
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+    result = result_for(_reap_review(repo, monkeypatch, apply=phase == "recheck"), worktree)
+    assert result.action == "skipped"
+    assert "open-file activity probe" in result.reason
+    assert ("timed out" if failure == "timeout" else "unavailable") in result.reason
+    assert str(tmp_path) not in result.reason
+    assert result.error is None
+    assert worktree.exists()
+
+
+def test_open_file_probe_empty_selection_and_locked_timeout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[tuple[list[str], float | None]] = []
+
+    def run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        calls.append((args, rw._effective_timeout(kwargs["timeout"])))
+        return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+
+    monkeypatch.setattr(rw, "_run", run)
+    monkeypatch.setattr(rw, "_open_file_probe_visibility_reason", lambda _deadline: None)
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 1)
+    with rw._bounded_locked_git():
+        assert _REAL_OPEN_FILE_ACTIVITY_REASON(tmp_path, timeout=15) is None
+    args, timeout = calls[0]
+    assert args == ["lsof", "+w", "-n", "-P", "-F", "p", "+D", str(tmp_path), "-x", "f"]
+    assert timeout is not None and 0 < timeout <= 1
+
+
+@pytest.mark.parametrize("state", [
+    "idle", "missing_root", "empty", "fd_denied", "maps_denied",
+    "closed_fd", "exited", "live_missing_maps", "timeout",
+])
+def test_open_file_probe_visibility_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str,
+) -> None:
+    proc_root = tmp_path / "proc"
+    process = proc_root / "123"
+    if state != "missing_root":
+        proc_root.mkdir()
+    if state not in {"missing_root", "empty"}:
+        (process / "fd").mkdir(parents=True)
+        (process / "fd" / "3").symlink_to(tmp_path / "outside.txt")
+        if state != "live_missing_maps":
+            (process / "maps").write_bytes(b"")
+    original_readlink = Path.readlink
+    original_read_bytes = Path.read_bytes
+    original_iterdir = Path.iterdir
+    original_exists = Path.exists
+
+    def readlink(path: Path) -> Path:
+        if path == process / "fd" / "3":
+            if state == "fd_denied":
+                raise PermissionError(str(path))
+            if state == "closed_fd":
+                raise FileNotFoundError(str(path))
+        return original_readlink(path)
+
+    def read_bytes(path: Path) -> bytes:
+        if state == "maps_denied" and path == process / "maps":
+            raise PermissionError(str(path))
+        return original_read_bytes(path)
+
+    def iterdir(path: Path):
+        if state == "exited" and path == process / "fd":
+            raise FileNotFoundError(str(path))
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "readlink", readlink)
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    monkeypatch.setattr(Path, "iterdir", iterdir)
+    monkeypatch.setattr(Path, "exists", lambda p: False if state == "exited" and p == process else original_exists(p))
+    deadline = time.monotonic() + (-1 if state == "timeout" else 10)
+    reason = rw._open_file_probe_visibility_reason(deadline, proc_root)
+    if state in {"idle", "closed_fd", "exited"}:
+        assert reason is None
+    else:
+        assert reason is not None
+        assert ("timed out" if state == "timeout" else "unavailable") in reason
+        assert str(tmp_path) not in reason
 
 
 def test_foreign_scratch_root_never_covers_the_repository_or_its_root(

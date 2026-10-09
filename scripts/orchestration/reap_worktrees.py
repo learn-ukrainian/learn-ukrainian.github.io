@@ -1175,6 +1175,68 @@ def _path_contains(parent: Path, child: Path) -> bool:
     return True
 
 
+def _open_file_probe_visibility_reason(deadline: float, proc_root: Path = Path("/proc")) -> str | None:
+    """An empty lsof selection is proof only with a complete process view.
+
+    Inaccessible process FDs/maps can be silently omitted by lsof. Require
+    readable procfs entries; platforms without this visibility proof retain
+    foreign checkouts. Process exits and closed FDs during the scan are safe.
+    """
+    unavailable = "open-file activity probe unavailable; foreign checkout preserved"
+    try:
+        processes = [entry for entry in proc_root.iterdir() if entry.name.isdigit()]
+        if not processes:
+            return unavailable
+        for process in processes:
+            if time.monotonic() >= deadline:
+                return "open-file activity probe timed out; foreign checkout preserved"
+            try:
+                for fd in (process / "fd").iterdir():
+                    if time.monotonic() >= deadline:
+                        return "open-file activity probe timed out; foreign checkout preserved"
+                    try:
+                        fd.readlink()
+                    except FileNotFoundError:
+                        continue
+                (process / "maps").read_bytes()
+            except FileNotFoundError:
+                if process.exists():
+                    return unavailable
+    except OSError:
+        return unavailable
+    if time.monotonic() >= deadline:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    return None
+
+
+def _open_file_activity_reason(worktree: Path, *, timeout: float | None = None) -> str | None:
+    """Prove no open or mapped files in a foreign checkout; never expose paths.
+
+    No FD filter: lsof includes memory mappings as well as ordinary FDs.
+    Cross nested mount points, but do not follow symlinks outside the tree.
+    lsof exits 1 for an empty selection; diagnostics invalidate that proof.
+    The shared runner also clips this probe to the locked-region deadline.
+    """
+    budget = _effective_timeout(15 if timeout is None else timeout)
+    assert budget is not None
+    deadline = time.monotonic() + budget
+    try:
+        proc = _run(
+            ["lsof", "+w", "-n", "-P", "-F", "p", "+D", str(worktree), "-x", "f"],
+            cwd=worktree.parent,
+            timeout=budget,
+        )
+    except subprocess.TimeoutExpired:
+        return "open-file activity probe timed out; foreign checkout preserved"
+    except (OSError, subprocess.SubprocessError):
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    if any(re.fullmatch(r"p[0-9]+", line) for line in (proc.stdout or "").splitlines()):
+        return "live process has open or mapped files inside foreign checkout"
+    if proc.returncode != 1 or (proc.stdout or "").strip() or (proc.stderr or "").strip():
+        return "open-file activity probe unavailable; foreign checkout preserved"
+    return _open_file_probe_visibility_reason(deadline)
+
+
 def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
     return _dispatch_task_id_for_path(repo_root, info.path)
 
@@ -2624,6 +2686,11 @@ def _foreign_checkout_reason(
         timeout=timeout,
     ):
         return None
+    activity = _open_file_activity_reason(info.path, timeout=timeout)
+    if activity is not None:
+        if attention is not None:
+            attention.append(activity)
+        return None
     return _FOREIGN_CHECKOUT_REASON
 
 
@@ -2680,12 +2747,16 @@ def _review_checkout_recheck(
     if errors:
         return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
     if klass == "foreign":
+        attention: list[str] = []
         fresh_reason = _foreign_checkout_reason(
             repo_root=repo_root,
             info=fresh,
             active_ids=current_active_ids,
+            attention=attention,
             timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
         )
+        if attention:
+            return attention[0]
     else:
         fresh_reason = _review_checkout_reason(
             repo_root=repo_root,
