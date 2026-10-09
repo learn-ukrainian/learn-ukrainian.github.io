@@ -55,11 +55,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "d415891a4b3ba96f81f5beecb5647595a9ed895a909431274fab123231470c33:1",
     ),
     (
-        "scripts/audit/generate_source_inventory_review_candidates.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "119cb542d8ff39c42a45e6454247b93a81470ac2320465e4fe37c2faa89fdf2d:1 56273c6b69c9e2700e5602ebe426dc2034e6fd04d0f13402b8bbc11f0e8c816c:1",
-    ),
-    (
         "scripts/audit/llm_qg_canaries.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "a939a6675fa5496c893bda2351817d67ad44c4c5e604bd17a54819691882de17:1",
@@ -68,11 +63,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "scripts/audit/measure_russicism_recall.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "547197605237a25fb85383eade35b889f7201271e397345306bf205f832f083f:1 61684fe365d1dc2985819bb098dce28fc2a4f354be970581ae1ed86ae51b615d:1",
-    ),
-    (
-        "scripts/audit/plan_source_inventory_promotion.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "617d3a036e07eadeb84980092b677ac198b0c802285c30fe1020ce2b27080cee:1 be728736e627a1fe9034557e5f4b839e232aefbe6de70cacf37b9a46353377a2:1 d9f92ff18db2ae9f804524579c4f24bbc70505b90eaa79f40549db82445e41d0:1",
     ),
     (
         "scripts/audit/sum11_sovietization_scan.py",

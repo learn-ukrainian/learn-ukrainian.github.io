@@ -22,9 +22,9 @@ from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 WORKFLOW_ID = "source_inventory_approved_promotion_plan.v1"
-DEFAULT_CANDIDATES = Path("/tmp/atlas-source-inventory-review-candidates.json")
-DEFAULT_OUT = Path("/tmp/atlas-source-inventory-approved-promotion-plan.json")
-DEFAULT_REPORT_OUT = Path("/tmp/atlas-source-inventory-approved-promotion-plan.md")
+DEFAULT_CANDIDATES = review.DEFAULT_OUT
+DEFAULT_OUT = review.default_review_output_path("atlas-source-inventory-approved-promotion-plan.json")
+DEFAULT_REPORT_OUT = review.default_review_output_path("atlas-source-inventory-approved-promotion-plan.md")
 
 
 @dataclass(frozen=True)
@@ -55,11 +55,13 @@ class CandidateMatch:
 
 def build_promotion_plan(
     *,
-    candidates_path: Path = DEFAULT_CANDIDATES,
+    candidates_path: Path | None = None,
     decision_files: Sequence[Path] | None = None,
     manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     """Return approved source-inventory rows as proposed manifest additions."""
+    if candidates_path is None:
+        candidates_path = review.default_review_output_path(DEFAULT_CANDIDATES.name)
     decision_paths = _decision_paths(decision_files)
     decision_summary = decisions.validate_committed_decision_files(decision_paths)
     approved = _approved_decisions(decision_paths)
@@ -117,9 +119,11 @@ def build_promotion_plan(
     }
 
 
-def write_plan(plan: Mapping[str, Any], out: Path = DEFAULT_OUT) -> Path:
+def write_plan(plan: Mapping[str, Any], out: Path | None = None) -> Path:
     """Write promotion plan outside the repository."""
-    output_path = resolve_ephemeral_plan_output_path(out)
+    output_path = resolve_ephemeral_plan_output_path(
+        out if out is not None else review.default_review_output_path(DEFAULT_OUT.name)
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(plan, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
@@ -128,9 +132,11 @@ def write_plan(plan: Mapping[str, Any], out: Path = DEFAULT_OUT) -> Path:
     return output_path
 
 
-def write_report(plan: Mapping[str, Any], out: Path = DEFAULT_REPORT_OUT) -> Path:
+def write_report(plan: Mapping[str, Any], out: Path | None = None) -> Path:
     """Write a human Markdown summary outside the repository."""
-    output_path = resolve_ephemeral_plan_output_path(out)
+    output_path = resolve_ephemeral_plan_output_path(
+        out if out is not None else review.default_review_output_path(DEFAULT_REPORT_OUT.name)
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(format_report(plan) + "\n", encoding="utf-8")
     return output_path
@@ -384,12 +390,40 @@ def _markdown_cell(value: object) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
-    parser.add_argument("--decision-file", type=Path, action="append", dest="decision_files")
-    parser.add_argument("--manifest", type=Path, help="Optional existing manifest for duplicate checks")
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build a review-only publish plan from approved source-inventory decisions. "
+            "Use to inspect proposed additions before the separate promotion workflow."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.audit.plan_source_inventory_promotion --report\n"
+            "  .venv/bin/python -m scripts.audit.plan_source_inventory_promotion --generate-candidates --limit 5\n"
+            "Outputs: plan JSON and Markdown report. No production outputs updated.\n"
+            "Defaults share caller-owned TMPDIR (system temp if unset); lifecycle cleanup belongs to the caller.\n"
+            "Exit codes: 0 success; 2 invalid input or refused output.\n"
+            "Related: scripts.audit.generate_source_inventory_review_candidates; #9702."
+        ),
+    )
+    parser.add_argument(
+        "--candidates", type=Path,
+        default=None,
+        help="Candidate JSON input (default: caller temp/atlas-source-inventory-review-candidates.json)",
+    )
+    parser.add_argument(
+        "--decision-file", type=Path, action="append", dest="decision_files",
+        help="Approved decision YAML, repeatable (default: committed decision ledgers)",
+    )
+    parser.add_argument("--manifest", type=Path, help="Existing manifest JSON for duplicate checks (default: omitted)")
+    parser.add_argument(
+        "--out", type=Path, default=None,
+        help="Plan JSON output (default: caller temp/atlas-source-inventory-approved-promotion-plan.json)",
+    )
+    parser.add_argument(
+        "--report-out", type=Path, default=None,
+        help="Markdown output (default: caller temp/atlas-source-inventory-approved-promotion-plan.md)",
+    )
     parser.add_argument(
         "--generate-candidates",
         action="store_true",

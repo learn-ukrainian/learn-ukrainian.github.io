@@ -44,7 +44,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from secret_redactor import redact_text, redact_value
+try:
+    from secret_redactor import redact_text, redact_value
+except ModuleNotFoundError as exc:
+    if exc.name != "secret_redactor":
+        raise
+    from scripts.secret_redactor import redact_text, redact_value
 
 try:
     from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES

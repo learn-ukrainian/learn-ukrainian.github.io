@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import re
+import sys
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
@@ -16,7 +18,13 @@ from typing import Any
 
 import yaml
 
+# Keep the standalone script entrypoint able to import the shared runtime reader.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.agent_runtime.usage import _iter_usage_records
+
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 API_USAGE_DIR = PROJECT_ROOT / "batch_state" / "api_usage"
 COST_RATES_PATH = PROJECT_ROOT / "scripts" / "analytics" / "cost_rates.yaml"
@@ -269,6 +277,7 @@ def count_runtime_calls(
     days: int | None,
     now: datetime | None = None,
     usage_dir: Path | None = None,
+    unreadable: dict[str, int] | None = None,
 ) -> int:
     """Count runtime usage rows (batch_state/api_usage/usage_*.jsonl) for a window.
 
@@ -277,6 +286,7 @@ def count_runtime_calls(
     Day granularity: a N-day window covers the last N calendar days, which is a
     slight superset of the cost window's exact N*24h mtime cutoff.
     """
+    counts = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
     directory = usage_dir or API_USAGE_DIR
     if not directory.exists():
         return 0
@@ -288,20 +298,9 @@ def count_runtime_calls(
             day = _usage_day_from_name(path)
             if day is None or day < earliest or day > today:
                 continue
-        try:
-            with open(path, encoding="utf-8") as handle:
-                for raw in handle:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        data = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue
-                    if isinstance(data, dict):
-                        total += 1
-        except OSError:
-            continue
+        total += sum(1 for _ in _iter_usage_records(path, counts))
+    if any(counts.values()):
+        logging.getLogger(__name__).warning("Runtime call count: unreadable usage records %s", counts)
     return total
 
 
@@ -518,8 +517,12 @@ def build_cost_windows(
             phase=phase,
             since=since,
         )
-        runtime_calls = count_runtime_calls(days=days, now=current_time, usage_dir=usage_dir)
+        unreadable = {"files": 0, "lines": 0, "records": 0}
+        runtime_calls = count_runtime_calls(days=days, now=current_time, usage_dir=usage_dir, unreadable=unreadable)
         window["runtime_calls_total"] = runtime_calls
+        window["unreadable"] = unreadable
+        if any(unreadable.values()):
+            window["warnings"].append(f"Runtime usage data is incomplete: unreadable usage records {unreadable}.")
         ledger_empty = window["records_total"] == 0 and runtime_calls > 0
         window["ledger_empty"] = ledger_empty
         if ledger_empty:
