@@ -50,7 +50,6 @@ def first_attempt(path: Path, repo: str, number: int, head: str) -> dict | None:
         return _legacy_attempt(path, number, head)
     except (OSError, ValueError, AttributeError, sqlite3.Error):
         raise PublishBlocked("RECOVERY_RECORD_UNAVAILABLE: allowance unreadable") from None
-    return None
 
 
 def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
