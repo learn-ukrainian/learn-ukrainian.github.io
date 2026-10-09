@@ -13,9 +13,18 @@ ROOT = Path(__file__).resolve().parents[1]
 ENTRYPOINTS = (
     "scripts/ingest/grac_frequency_ingest.py",
     "scripts/ingest/slovnyk_me_ingest.py",
+    "scripts/ingest/dictionary_acquisition.py",
     "scripts/curriculum/evidence/sources.py",
     "scripts/lexicon/enrich_manifest.py",
+    "scripts/lexicon/reenrich_thin_manifest_entries.py",
+    "scripts/wiki/ingest_ukrainian_wiki.py",
+    "scripts/wiki/ukrainian_wiki_corpus.py",
+    "scripts/wiki/slovnyk_me.py",
 )
+LIBRARY_ENTRYPOINTS = {
+    "scripts/curriculum/evidence/sources.py",
+    "scripts/wiki/slovnyk_me.py",
+}
 
 
 @pytest.fixture
@@ -43,8 +52,8 @@ def test_source_cli_help(path: str, style: str, clean_env: dict[str, str]) -> No
     output = result.stdout + result.stderr
     assert result.returncode == 0, f"{command!r}: exit {result.returncode}\n{output}"
     assert "Traceback" not in output, output
-    # sources.py exposes library primitives, so its startup probe has no parser.
-    if path != "scripts/curriculum/evidence/sources.py":
+    # Library helpers expose primitives, so their startup probes have no parser.
+    if path not in LIBRARY_ENTRYPOINTS:
         assert "usage:" in result.stdout.lower(), output
         assert "--help" in result.stdout, output
 
