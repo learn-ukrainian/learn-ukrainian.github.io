@@ -51,6 +51,7 @@ from __future__ import annotations
 
 import argparse
 import codecs
+import hashlib
 import json
 import os
 import re
@@ -78,6 +79,7 @@ DEFAULT_TIMEOUT_S = 1800  # 30 min — covers most multi-turn dispatches
 _TURN_START = frozenset({"task_started", "turn_started"})
 _TURN_END = frozenset({"task_complete", "turn_complete", "turn_aborted"})
 _READ_CHUNK = 64 * 1024
+_CACHE_GUARD_BYTES = 4096
 _STABLE_READ_ATTEMPTS = 3
 
 
@@ -201,7 +203,16 @@ class _RolloutRecord:
                 self.escape = True
             elif byte == 34:
                 self.in_string = False
-                output.extend(b'""' if self.long_string else self.string)
+                if self.long_string:
+                    output.extend(b'""')
+                elif b"\\u" in self.string:
+                    # The streaming backend may reject lone surrogate escapes.
+                    # Decode bounded strings using JSON's escape grammar, then
+                    # replace unpaired code units before passing them on. They
+                    # cannot match the ASCII lifecycle keys or event names.
+                    output.extend(json.dumps(json.loads(self.string), ensure_ascii=False).encode("utf-8", errors="replace"))
+                else:
+                    output.extend(self.string)
                 self.string.clear()
             elif byte < 32:
                 raise ValueError("unescaped control byte in JSON string")
@@ -229,7 +240,9 @@ class RolloutReader:
 
     Keep this instance across watcher polls. Partial records remain in the
     streaming parser; a decoder failure remains BUSY until file replacement or
-    truncation. Inode change, truncation and same-size rewrites reset the cache.
+    truncation. Inode change, truncation, same-size rewrites and changes to the
+    cached prefix fingerprint reset the cache. The fingerprint samples the head
+    and bytes immediately before the cached offset, keeping append polls bounded.
     ``after_read`` is a deterministic race-test hook, never a sleep or a clock.
     """
 
@@ -241,6 +254,8 @@ class RolloutReader:
         self.state = (True, "no_lifecycle_event")
         self.record = None
         self.error = None
+        self.guard_offset = 0
+        self.guard_digest = None
 
     def _reset(self, path, signature):
         if self.record is not None:
@@ -251,6 +266,17 @@ class RolloutReader:
         self.state = (True, "no_lifecycle_event")
         self.record = None
         self.error = None
+        self.guard_offset = 0
+        self.guard_digest = None
+
+    @staticmethod
+    def _prefix_fingerprint(stream, offset):
+        """Hash two bounded cached-history spans without reparsing old records."""
+        stream.seek(0)
+        head = stream.read(min(offset, _CACHE_GUARD_BYTES))
+        stream.seek(max(0, offset - _CACHE_GUARD_BYTES))
+        boundary = stream.read(min(offset, _CACHE_GUARD_BYTES))
+        return hashlib.sha256(head + boundary).digest()
 
     def ready(self, path: Path) -> tuple[bool, str]:
         if self.error and self.error.startswith("read_error:"):
@@ -263,6 +289,7 @@ class RolloutReader:
                     if self.path != path or self.signature is None or (
                         signature[:2] != self.signature[:2] or before.st_size < self.signature[2]
                         or (signature[2] == self.signature[2] and signature[3] != self.signature[3])
+                        or (self.guard_digest is not None and self._prefix_fingerprint(stream, self.guard_offset) != self.guard_digest)
                     ):
                         self._reset(path, signature)
                     stream.seek(self.offset)
@@ -284,6 +311,8 @@ class RolloutReader:
                                 elif kind in _TURN_END:
                                     self.state = (True, f"end_event:{kind}")
                                 self.record = None
+                    self.guard_digest = self._prefix_fingerprint(stream, self.offset)
+                    self.guard_offset = self.offset
                     if self.after_read:
                         self.after_read()
                     after = path.stat()
