@@ -1399,7 +1399,11 @@ launcher_main() {
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
-  launcher_adapter_preflight
+  # Native Grok drivers inspect deployed project hooks. Deploy first so a
+  # first launch or changed profile is checked against its fresh deployment.
+  if [ "$LC_PROVIDER:$LC_MODE:$LC_HARNESS" != grok:driver:grok ]; then
+    launcher_adapter_preflight
+  fi
 
   if [ "$LC_DRY_RUN" != "1" ]; then
     if declare -F fleet_comms_warn_if_plane_unreachable >/dev/null 2>&1; then
@@ -1420,6 +1424,10 @@ launcher_main() {
       launcher_error "refusing to launch ${LC_PROVIDER}: the agent-extensions deploy failed."
       exit 1
     fi
+  fi
+
+  if [ "$LC_PROVIDER:$LC_MODE:$LC_HARNESS" = grok:driver:grok ]; then
+    launcher_adapter_preflight || exit $?
   fi
 
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then

@@ -176,16 +176,38 @@ guards with `tool_name` and `tool_input`, rejects malformed event envelopes and
 truncated inputs, rejects missing shell commands and non-object inputs,
 and retains the publishing guard's input rewrite.
 
-`start-grok-driver.sh` binds a fresh native session UUID with `--session-id`.
+`start-grok-driver.sh` binds a fresh native session UUID with `--session-id`
+and forces `--no-leader`, keeping hook binding in the launcher process tree.
 The binding activates guards for every conversation and native subagent in
 that launcher process tree, including `/new`, `/resume` and `/fork`; the event
 session ID does not select enforcement. The launcher identity must still be
-`grok` / `grok-tui`. Interactive launches clear the binding, and fleet-dispatched
-workers and reviewers scrub all `LU_GROK_*` variables. Commands resolve the
+`grok` / `grok-tui`. Interactive launches clear the three driver binding
+variables. Native Grok fleet workers/reviewers and acpx Grok discussions/sealed
+reviews scrub all inherited `LU_GROK_*` variables through their invocation
+plans. Commands resolve the
 shared project interpreter and this launcher's tracked guard sources. Native
 aliases are anchored so `todo_write` does not trigger file-write guards.
 
-Before launching a native driver, the launcher requires `projectTrusted: true`
+Native driver forwarded arguments (after `--`) are denied by default. The
+allowlist, checked against the installed `grok --help`, contains only these
+exact, valueless flags:
+
+| Flags | Rationale |
+| --- | --- |
+| `--debug` | Enables diagnostic logging without selecting a project or session. |
+| `--fullscreen`, `--minimal`, `--no-alt-screen` | Changes terminal presentation only. |
+| `--disable-web-search`, `--no-subagents` | Removes tool capabilities without changing their execution site. |
+
+Value spellings, positional prompts, subcommands, unknown flags and every
+other option are refused with the option name and reason, without echoing values
+or positional text into diagnostics. In particular,
+`--cwd`, `-w`/`--worktree`, `--worktree-ref`/`--ref`, session/replay options,
+agent definitions and leader options cannot redirect a session after its
+project passed preflight. Model and effort remain launcher options before the
+separator. Interactive forwarding is unchanged.
+
+Before launching a native driver, the launcher deploys agent extensions,
+refuses a failed deployment, then requires `projectTrusted: true`
 from `grok inspect --json`, both discovered `pre_tool_use` matchers from the
 project profile, and byte equality between the deployed profile and its source.
 It refuses launch with the missing condition and remedy; it never grants
@@ -203,6 +225,8 @@ checkout. Residual: live firing in a real launcher-bound driver session has
 not yet been observed. The accountable driver owns that observation before
 claiming runtime certification; stop if the installed client cannot execute
 project hooks, and do not patch the client.
+Residual: native `apply_patch` and `features.write_file` are not covered by
+the current matcher groups; the accountable driver owns that coverage gap.
 
 ## Related
 

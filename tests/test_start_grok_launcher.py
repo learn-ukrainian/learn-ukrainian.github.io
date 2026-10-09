@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
 
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
@@ -82,6 +87,116 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     result = run_launcher("start-grok.sh", "--", "--reasoning", "high")
     assert result.returncode == 0, result.stderr
     assert "--reasoning high" in result.stdout
+
+
+def _run_grok_driver_adapter(flag: str) -> subprocess.CompletedProcess[str]:
+    script = """
+set -euo pipefail
+source scripts/launchers/grok.sh
+LC_HARNESS=grok LC_MODE=driver LC_ROOT="$PWD"
+LC_DURABLE_HELPER_ROOT="$FIXTURE_HELPER_ROOT"
+LC_MODEL='' LC_EFFORT='' LC_RULES_CORE='' LC_DRY_RUN=0
+LC_FORWARD_ARGS=("$1")
+launcher_error() { echo "$*" >&2; }
+launcher_exec_command() { printf 'would exec '; printf '%s ' "$@"; }
+launcher_adapter_validate
+launcher_adapter_exec
+"""
+    return subprocess.run(
+        ["bash", "-c", script, "fixture", flag], cwd=Path(__file__).resolve().parents[1],
+        env={**os.environ, "FIXTURE_HELPER_ROOT": str(Path(sys.executable).parents[2])},
+        capture_output=True, text=True, timeout=15,
+    )
+
+
+@pytest.mark.parametrize(
+    "flag",
+    (
+        "--cwd", "-w", "--worktree", "--worktree-ref", "--ref", "--leader",
+        "--leader-socket", "--session-id", "--unknown-driver-option",
+        "--cwd=nested", "-w=nested", "-wnested", "--worktree=nested",
+        "--worktree-ref=main", "--ref=main", "--leader=true",
+        "--leader-socket=socket", "--session-id=other", "--unknown-driver-option=value",
+        "--agent=custom", "--agents={}", "--fullscreen=true", "--", "leader",
+    ),
+)
+def test_grok_driver_forwarded_arguments_fail_closed(flag: str) -> None:
+    result = _run_grok_driver_adapter(flag)
+    assert result.returncode == 2, result.stdout + result.stderr
+    name = flag.split("=", 1)[0] if flag.startswith("--") else flag[:2] if flag.startswith("-") else "subcommand"
+    assert name in result.stderr
+    assert "not allowlisted" in result.stderr
+    assert "launcher-bound" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
+
+
+@pytest.mark.parametrize("flag", ["--unknown-driver-option=private-fixture-value", "-sprivate-fixture-value", "private-fixture-value"])
+def test_grok_driver_refusal_does_not_echo_values(flag: str) -> None:
+    result = _run_grok_driver_adapter(flag)
+    assert result.returncode == 2
+    assert "not allowlisted" in result.stderr
+    assert "private-fixture-value" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "flag",
+    ("--debug", "--fullscreen", "--minimal", "--no-alt-screen", "--disable-web-search", "--no-subagents"),
+)
+def test_grok_driver_allowlisted_arguments_launch(flag: str) -> None:
+    result = _run_grok_driver_adapter(flag)
+    assert result.returncode == 0, result.stdout + result.stderr
+    command = result.stdout.split("would exec grok", 1)[1]
+    assert flag in command
+    assert "--no-leader" in command
+
+
+@pytest.mark.parametrize("deploy_failed", [False, True])
+def test_grok_driver_deploy_precedes_preflight(tmp_path, deploy_failed: bool) -> None:
+    """Run the startup sequence, stopping before any lease or provider session."""
+    root = Path(__file__).resolve().parents[1]
+    checkout = tmp_path / "checkout"
+    for relative in ("scripts/lib/launcher_core.sh", "scripts/lib/handoff_identity.sh", "scripts/launchers/grok.sh"):
+        target = checkout / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((root / relative).read_bytes())
+    (checkout / "scripts/lib/driver_scope.sh").write_text("launcher_enter_driver_scope() { return 0; }\n")
+    (checkout / "scripts/lib/deploy_extensions.sh").write_text(
+        'deploy_agent_extensions() { echo DEPLOY; return "$FIXTURE_DEPLOY_RC"; }\n'
+    )
+    script = """
+set -euo pipefail
+source "$1/scripts/lib/launcher_core.sh"
+launcher_defaults() {
+  LC_DRY_RUN=0 LC_HARNESS=grok LC_ENDPOINT='' LC_ISOLATE_CONFIG=0
+  LC_DURABLE_HELPER_ROOT="$FIXTURE_HELPER_ROOT"
+  LC_FORWARD_ARGS=()
+}
+for function in launcher_clear_foreign_route_state launcher_parse \
+  launcher_refuse_uncertified_gemini_driver launcher_drop_force_from_successor_args \
+  launcher_normalize_effort launcher_resolve_roots launcher_publication_path \
+  launcher_normalize_model launcher_validate_mode launcher_validate_driver_certification \
+  launcher_load_rules_core launcher_export_git_identity; do
+  eval "$function() { return 0; }"
+done
+launcher_require_binary() { return 0; }
+grok() { echo INSPECT >&2; return 1; }
+launcher_main grok driver
+"""
+    result = subprocess.run(
+        ["bash", "-c", script, "fixture", str(checkout)], cwd=checkout,
+        env={**os.environ, "FIXTURE_DEPLOY_RC": "1" if deploy_failed else "0", "FIXTURE_HELPER_ROOT": str(root)},
+        capture_output=True, text=True, timeout=15,
+    )
+    assert "DEPLOY" in result.stdout, result.stdout + result.stderr
+    if deploy_failed:
+        assert result.returncode == 1
+        assert "deploy failed" in result.stderr
+        assert "INSPECT" not in result.stderr
+    else:
+        assert result.returncode == 2
+        assert "INSPECT" in result.stderr
+        assert "grok inspect --json failed" in result.stderr
 
 
 @pytest.mark.rules_core_absent

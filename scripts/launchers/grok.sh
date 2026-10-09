@@ -3,11 +3,23 @@
 launcher_adapter_validate() {
   # shellcheck disable=SC2153 # LC_MODE is supplied by launcher_core.sh.
   if [ "$LC_MODE" = driver ] && [ "$LC_HARNESS" = grok ]; then
-    local forwarded
+    local forwarded forwarded_name
     for forwarded in "${LC_FORWARD_ARGS[@]}"; do
       case "$forwarded" in
-        --session-id|--session-id=*|-s|-s?*|--resume|--resume=*|-r|-r?*|--continue|-c|--fork-session)
-          launcher_error 'Grok driver session identity is launcher-bound; session overrides and replay are unavailable.'
+        # No value-taking flags, positional prompts, subcommands or aliases:
+        # only presentation changes and tool removal preserve the inspected
+        # project and the launcher-bound process tree. See the canary runbook.
+        --debug|--fullscreen|--minimal|--no-alt-screen|--disable-web-search|--no-subagents)
+          ;;
+        *)
+          # Name the option without reflecting values or positional prompt
+          # text into diagnostics.
+          case "$forwarded" in
+            --*) forwarded_name="${forwarded%%=*}" ;;
+            -?*) forwarded_name="${forwarded:0:2}" ;;
+            *) forwarded_name='positional argument or subcommand' ;;
+          esac
+          launcher_error "Grok driver forwarded option '$forwarded_name' is not allowlisted: project root, tool execution site, session identity and leader mode are launcher-bound. Allowed flags: --debug, --fullscreen, --minimal, --no-alt-screen, --disable-web-search, --no-subagents."
           exit 2
           ;;
       esac
@@ -63,7 +75,7 @@ launcher_adapter_exec() {
     export LU_GROK_PROJECT_PYTHON="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
     LU_GROK_DRIVER_SESSION_ID="$("$LU_GROK_PROJECT_PYTHON" -c 'import uuid; print(uuid.uuid4())')" || return 2
     export LU_GROK_DRIVER_SESSION_ID
-    cmd+=(--session-id "$LU_GROK_DRIVER_SESSION_ID")
+    cmd+=(--session-id "$LU_GROK_DRIVER_SESSION_ID" --no-leader)
   fi
   # Only pin --model / --reasoning-effort when the caller asked for them;
   # otherwise the Grok TUI keeps whatever was selected last in the session.

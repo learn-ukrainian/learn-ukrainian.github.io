@@ -311,7 +311,7 @@ launcher_adapter_exec
         data = json.loads(output.read_text())
         if mode == "driver":
             UUID(data["binding"])
-            assert data["argv"] == ["grok", "--session-id", data["binding"]]
+            assert data["argv"] == ["grok", "--session-id", data["binding"], "--no-leader"]
             assert data["root"] == str(ROOT)
             assert data["python"] == str(project_interpreter(ROOT))
         else:
