@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import UTC, datetime
+from random import Random
 
 import pytest
 
 from scripts.api import state_router
-from scripts.fleet import capacity_pick
+from scripts.fleet import capacity_pick, credit_lane
 
 NOW = datetime(2026, 10, 9, 12, tzinfo=UTC)
 
@@ -52,18 +53,23 @@ def test_cool_plan_lane_with_headroom_outranks_low_headroom_cursor(preferred):
         ({"codex": _lane(85, codexbar={"primary_remaining_pct": 45}), "cursor": _lane(65)}, {}, "cursor"),
         ({"codex": _lane(85), "claude": _lane(65, agentic_pool={"active": True, "status": "cool"})}, {}, "codex"),
         ({"codex": _lane(85, resets_at="2026-10-09T13:00:00Z"), "cursor": _lane(35)}, {}, "codex"),
+        ({"gemini": _lane(87.6), "codex": _lane(72)}, {}, "agy"),
+        ({"glm": _lane(100), "codex": _lane(72)}, {}, "codex"),
+        ({"deepseek": _lane(100), "codex": _lane(72)}, {}, "codex"),
     ],
     ids=[
         "codex-headroom", "claude-headroom", "cursor-stronger-headroom", "tie",
         "claude-cursor-tie", "missing-headroom", "codex-claude-same-band", "same-band", "cursor-lower-load",
         "codex-lower-load", "unknown-load", "missing-load", "known-headroom",
         "heat-first", "burn-is-not-headroom", "tightest-window", "separate-pool", "imminent-reset",
+        "retired-gemini", "retired-glm", "excluded-deepseek",
     ],
 )
 def test_monitor_and_capacity_picker_agree(agents, in_flight, expected):
     original = deepcopy(agents)
     budget = {"agents": agents, "in_flight": in_flight, "diagnostics": {"stale": False}}
-    rows = capacity_pick.build_lane_rows(budget, lanes=tuple(agents), reset_reserve={}, now=NOW)
+    lanes = tuple(dict.fromkeys((*agents, "agy"))) if "gemini" in agents else tuple(agents)
+    rows = capacity_pick.build_lane_rows(budget, lanes=lanes, reset_reserve={}, now=NOW)
     picker = next(row["lane"] for row in capacity_pick.build_pick_order(rows) if row["pick"] != "AVOID")
     result = state_router._recommend_agent(
         agents, [], records_loaded=1, current_time=NOW,
@@ -72,6 +78,64 @@ def test_monitor_and_capacity_picker_agree(agents, in_flight, expected):
     assert picker == expected
     assert result["primary_agent_for_code"] == picker
     assert agents == original
+
+
+@pytest.mark.parametrize("lane", ["glm", "deepseek", "codex"])
+def test_monitor_suppresses_avoid_only_fallback(lane):
+    agents = {lane: _lane(80, health={"healthy": lane != "codex"})}
+    rows = capacity_pick.build_lane_rows({"agents": agents}, lanes=(lane,), reset_reserve={}, now=NOW)
+    assert all(row["pick"] == "AVOID" for row in capacity_pick.build_pick_order(rows))
+    assert state_router._recommend_agent(agents, [], records_loaded=1, current_time=NOW)["primary_agent_for_code"] is None
+
+
+def test_monitor_picker_seeded_fuzz(monkeypatch):
+    """Vary heat, headroom, load and health with retired/excluded lanes present."""
+    # Parse the real, unchanged policy once; keep every routing calculation real.
+    policy = credit_lane.load_policy()
+    monkeypatch.setattr(credit_lane, "load_policy", lambda: policy)
+    rng = Random(10279)
+    counts = {"cases": 3000, "disagreements": 0, "inline_orchestrator": 0, "established_health": 0}
+    disagreements = []
+    for case in range(counts["cases"]):
+        agents = {
+            lane: _lane(
+                rng.choice([None, 10, 35, 65, 72, 85, 87.6, 100]),
+                status=rng.choice(["cool", "warm", "hot", "near_cap"]),
+            )
+            for lane in capacity_pick.CODE_LANES
+        }
+        if case % 10 == 0:
+            for info in agents.values():
+                info["status"] = rng.choice(["hot", "near_cap"])
+        # Every third scenario exercises the intentional health preference.
+        if case % 3 == 0:
+            for info in agents.values():
+                info["health"] = rng.choice([{"healthy": True}, {}])
+        loads = {lane: rng.choice([None, 0, 1, 2]) for lane in agents}
+        budget = {"agents": agents, "in_flight": loads, "diagnostics": {"stale": False}}
+        rows = capacity_pick.build_lane_rows(budget, reset_reserve={}, now=NOW)
+
+        def pick(candidates):
+            return next((row["lane"] for row in capacity_pick.build_pick_order(candidates) if row["pick"] != "AVOID"), None)
+
+        picker = pick(rows)
+        monitor = state_router._recommend_agent(
+            agents, [], records_loaded=1, current_time=NOW, in_flight=loads,
+        )["primary_agent_for_code"]
+        if monitor == picker:
+            continue
+        if monitor == "inline_orchestrator":
+            assert all(info["status"] in {"hot", "near_cap"} for info in agents.values())
+            counts["inline_orchestrator"] += 1
+        elif monitor == pick([row for row in rows if row["health"] == "healthy"]) and any(
+            row["health"] == "healthy" for row in rows
+        ) and any(row["health"] == "unknown" for row in rows):
+            counts["established_health"] += 1
+        else:
+            counts["disagreements"] += 1
+            disagreements.append((case, picker, monitor))
+    print(f"seed=10279 {counts}")
+    assert counts["disagreements"] == 0, disagreements[:10]
 
 
 @pytest.mark.parametrize("loads, expected", [({"codex": 2, "claude": 1, "cursor": 0}, "cursor"), ({"codex": 0, "claude": 1, "cursor": 2}, "codex")])

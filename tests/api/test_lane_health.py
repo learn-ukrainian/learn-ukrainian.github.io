@@ -528,9 +528,9 @@ def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
     )
     rec = budget["recommendation"]
 
-    # Since all candidate lanes are unhealthy, should fallback to budget-only pick (claude)
-    assert rec["primary_agent_for_code"] == "claude"
-    assert any("all lanes unhealthy — recommendation is budget-only" in w for w in rec["warnings"])
+    # The picker marks every unhealthy candidate AVOID; none may be recommended.
+    assert rec["primary_agent_for_code"] is None
+    assert any("all lanes unhealthy — no usable recommendation" in w for w in rec["warnings"])
 
 
 def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):

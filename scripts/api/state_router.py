@@ -745,12 +745,14 @@ def _recommend_agent(
     usage_dir: Path | None = None,
     in_flight: dict[str, int] | None = None,
 ) -> dict[str, Any]:
-    """Generalized recommendation over subscription lanes + reset-aware + empty/stale guards.
+    """Recommend a code worker using picker order, health and empty/stale guards.
 
     When both the ledger and CodexBar are empty, suppress the primary rec. A
     fresh CodexBar overlay is authoritative even when the local USD ledger is
     empty.
-    Reset-aware: if top pick resets within N hours, note deferral warning (N configurable).
+    Imminent resets produce advisory warnings only (N hours configurable).
+    Reset-imminent ranking and the #9172 agentic-pool preference were removed
+    in favor of the shared capacity-picker order.
     A lane past its plan cap whose published credit state is
     ``credit_balance_present`` is a candidate after every cool and warm
     plan-backed lane (#9517); its raw status is not rewritten.
@@ -768,8 +770,14 @@ def _recommend_agent(
     tightest plan headroom and the producer's observed load, preserving None
     when load is unknown; separate pools and raw burn do not override it.
     """
-    # Hard admission failures cannot use the soft all-unhealthy budget fallback.
-    agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}
+    # Use the picker's live inventory and shared-subscription mirror: Gemini
+    # telemetry belongs to AGY, while GLM must never supply Cursor quota.
+    lane_inventory = {}
+    for lane in capacity_pick.CODE_LANES:
+        info, quota_source = capacity_pick._mirror_retired_quota(agents, lane, agents.get(lane, {}))
+        if (lane in agents or quota_source) and info.get("eligible", True):
+            lane_inventory[lane] = info
+    agents = lane_inventory
     if is_stale:
         warnings.append("snapshot stale (>15min old data) — advisory only, verify manually before trusting numbers")
 
@@ -819,7 +827,7 @@ def _recommend_agent(
         resets_by[a] = agents[a].get("resets_at")
 
     # include extra subs if they have data (stale-advisory relabelling below covers both)
-    for a in SUBSCRIPTION_LANES:
+    for a in capacity_pick.CODE_LANES:
         if a in core or a not in agents:
             continue
         st = agents[a].get("status", "unknown")
@@ -891,13 +899,16 @@ def _recommend_agent(
                 "remaining_pct": facts.plan_remaining_pct,
                 "in_flight": in_flight.get(lane, 0) if in_flight is not None else None,
                 "capacity": {"state": facts.capacity},
-                "avoid": facts.capacity == credit_lane.CAPACITY_AVOID,
+                "avoid": lane in capacity_pick._EXCLUDED_DISPATCH_LANES
+                or capacity_pick.is_avoid_lane(agents.get(lane), lane=lane, facts=facts),
             })
         # Preserve the credit-relief fallback: unknown telemetry does not
         # establish a plan-backed alternative to a verified credit lane.
         plan_rows = [row for row in rows if row["status"] in {"cool", "warm"} and not row["avoid"]]
-        credit_rows = [row for row in rows if row["lane"] in credit_lanes]
-        ordered = capacity_pick.build_pick_order(plan_rows or credit_rows or rows)
+        credit_rows = [row for row in rows if row["lane"] in credit_lanes and not row["avoid"]]
+        # AVOID rows remain visible in the picker but never receive a pick rank.
+        usable_rows = [row for row in rows if not row["avoid"]]
+        ordered = capacity_pick.build_pick_order(plan_rows or credit_rows or usable_rows)
         if not ordered:
             return {
                 "primary_agent_for_code": None,
@@ -940,9 +951,9 @@ def _recommend_agent(
     if not unhealthy_candidates and not unknown_candidates:
         res = budget_only_res
     elif len(unhealthy_candidates) == len(candidate_lanes):
-        # Fall back to budget-only pick + warning
+        # All unhealthy rows are AVOID; shared ordering suppresses the pick.
         res = budget_only_res
-        warnings.append("all lanes unhealthy — recommendation is budget-only")
+        warnings.append("all lanes unhealthy — no usable recommendation")
     else:
         if any(is_healthy(lane) for lane in candidate_lanes):
             res = select_among(is_healthy)
