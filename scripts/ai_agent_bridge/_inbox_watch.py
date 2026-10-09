@@ -273,7 +273,7 @@ def wake_driver_once(
 
         for event in inbox_events:
             if event.wake_event and event.wake_event.get("status") != "CLEAN":
-                raise CodexWakeError(event.wake_event, retained=True)
+                raise CodexWakeError({**event.wake_event, "message_ids": event.wake_event.get("message_ids", [event.message_id])}, retained=True)
         readiness_reader = readiness_reader or _ui_codex.RolloutReader()
         current = remote.stream(stream_id).get("lease")
         if (
@@ -473,12 +473,12 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
             remote = RemoteEpicClient()
             require_supervisory_api(service)
             while True:
-                events = poll_once(conn, agent, last_seen) if conn is not None else []
                 try:
+                    events = poll_once(conn, agent, last_seen) if conn is not None else []
                     if events and wake_driver_once(
                         service, remote, stream_id=stream_id, launcher=launcher, epic=epic,
                         inbox_events=events, readiness_reader=readiness_reader,
-                        record_wake=record_codex_wake,
+                        record_wake=lambda events, report: record_codex_wake(events, report, agent=agent),
                     ):
                         last_seen = max(event.message_id for event in events)
                     else:
@@ -516,6 +516,8 @@ class InboxEvent:
 
     def notification_line(self) -> str:
         """Return a one-line, bounded notification safe for Monitor stdout."""
+        if self.wake_event:
+            return f"INBOX-WATCH id={self.message_id} codex_wake={self.wake_event['status']} reason={self.wake_event['reason']}"
         return (
             "INBOX-WATCH "
             f"id={self.message_id} "
@@ -552,13 +554,13 @@ def canonical_slot(agent: str) -> str:
     return recipients_for_agent(agent)[0]
 
 
-def build_poll_query(recipients: tuple[str, ...], *, has_data: bool = False) -> str:
+def build_poll_query(recipients: tuple[str, ...]) -> str:
     """Build the parameterized, read-only query for newly visible messages."""
     if not recipients:
         raise ValueError("at least one recipient is required")
     placeholders = ", ".join("?" for _ in recipients)
     return f"""
-        SELECT id, from_llm, task_id, content{", data" if has_data else ""}
+        SELECT id, from_llm, task_id, content
         FROM messages
         WHERE to_llm IN ({placeholders})
           AND consumed_by_live_driver = 0
@@ -571,6 +573,8 @@ def poll_once(
     conn: SQLiteConnection,
     agent: str,
     last_seen: int = 0,
+    *,
+    lock_dir: Path | None = None,
 ) -> list[InboxEvent]:
     """Return currently unconsumed messages after the in-memory cursor.
 
@@ -578,17 +582,20 @@ def poll_once(
     current unconsumed row, including rows that predate the watcher process.
     """
     recipients = recipients_for_agent(agent)
-    has_data = any(row["name"] == "data" for row in conn.execute("PRAGMA table_info(messages)"))
-    rows = conn.execute(build_poll_query(recipients, has_data=has_data), (*recipients, last_seen)).fetchall()
+    # Reconcile all unread IDs, including those before the in-memory cursor.
+    # Attachment data is deliberately never selected or interpreted here.
+    rows = conn.execute(build_poll_query(recipients), (*recipients, 0)).fetchall()
+    retained = read_codex_wakes(agent, {int(row["id"]) for row in rows}, lock_dir=lock_dir)
     return [
         InboxEvent(
             message_id=int(row["id"]),
             sender=str(row["from_llm"]),
             request_id=str(row["task_id"] or "-"),
             content=str(row["content"]),
-            wake_event=_wake_event(row["data"]) if has_data else None,
+            wake_event=retained.get(int(row["id"])),
         )
         for row in rows
+        if int(row["id"]) > last_seen
     ]
 
 
@@ -602,22 +609,11 @@ class CodexWakeError(RuntimeError):
 
 
 class CodexWakePersistenceError(CodexWakeError):
-    """Cannot attach evidence: stop rather than silently repeat the attempt."""
+    """Cannot save watcher evidence: stop rather than repeat the attempt."""
 
 
-def _wake_event(data: str | None) -> dict | None:
-    """Non-object attachments carry no receipt; invalid explicit claims refuse."""
-    if not data:
-        return None
-    try:
-        metadata = json.loads(data)
-    except (ValueError, TypeError):
-        return None
-    if not isinstance(metadata, dict):
-        return None
-    if "codex_wake" not in metadata:
-        return None
-    event = metadata["codex_wake"]
+def _wake_event(event: object) -> dict:
+    """Validate only watcher-owned evidence; never interpret sender data."""
     invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "retained_receipt_invalid"}
     if not isinstance(event, dict) or event.get("schema") != "codex-wake.v1" or event.get("status") not in ("OVERLAP", "UNKNOWN"):
         return invalid
@@ -656,31 +652,95 @@ def _wake_event(data: str | None) -> dict | None:
     return safe
 
 
-def record_codex_wake(events: list[InboxEvent], report: dict) -> None:
-    """Attach one retained receipt to each existing inbox row, atomically.
+def codex_wake_state_path(agent: str, lock_dir: Path | None = None) -> Path:
+    """Use the watcher's existing per-seat state directory and slot naming."""
+    return watcher_lock_path(agent, DEFAULT_LOCK_DIR if lock_dir is None else lock_dir).with_suffix(".wake.json")
 
-    No schema migration, second store or acknowledgment. Preserve unrelated
-    object fields; wrap non-object attachments in the existing ``raw`` field
-    consumed by ``ask_attachment``. The original serialized text stays intact.
-    """
+
+def _rollout_key(report: dict) -> str:
+    """Bind an attempt to its native thread and rollout, excluding the cursor."""
+    rollout = report.get("rollout", {})
+    identity = {key: rollout.get(key) for key in ("path_sha256", "device", "inode")}
+    identity["thread_id"] = report.get("thread_id")
+    return hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+
+
+def _read_wake_state(path: Path) -> dict:
+    """Missing state is empty; unreadable or malformed state is not clean."""
     try:
-        with sqlite3.connect(f"{_config.DB_PATH.resolve().as_uri()}?mode=rw", uri=True) as conn:
-            conn.execute("PRAGMA busy_timeout = 5000")
-            conn.execute("BEGIN IMMEDIATE")
-            for event in events:
-                row = conn.execute("SELECT data FROM messages WHERE id = ?", (event.message_id,)).fetchone()
-                if row is None:
-                    raise RuntimeError("codex_wake:UNKNOWN:inbox_record_missing; cannot attach retained event")
-                try:
-                    data = json.loads(row[0]) if row[0] is not None else {}
-                except (ValueError, TypeError):
-                    data = {"raw": row[0]}
-                if not isinstance(data, dict):
-                    data = {"raw": row[0]}
-                data["codex_wake"] = report
-                conn.execute("UPDATE messages SET data = ? WHERE id = ?", (json.dumps(data, sort_keys=True), event.message_id))
-    except (OSError, sqlite3.Error, RuntimeError) as exc:
-        raise CodexWakePersistenceError({**report, "status": "UNKNOWN", "reason": "receipt_write_failed"}) from exc
+        state = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    if (not isinstance(state, dict) or state.get("schema") != "inbox-wake-state.v1"
+            or not isinstance(state.get("receipts"), dict)):
+        raise ValueError("invalid watcher wake state")
+    return state["receipts"]
+
+
+def _write_wake_state(path: Path, receipts: dict) -> None:
+    """Replace all receipts atomically under the existing exclusive watcher lock."""
+    from ._monitor_cache import _atomic_write
+
+    try:
+        _atomic_write(path, json.dumps({"schema": "inbox-wake-state.v1", "receipts": receipts}, sort_keys=True) + "\n")
+        directory_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except OSError as exc:
+        raise CodexWakePersistenceError({"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "receipt_write_failed"}) from exc
+
+
+def read_codex_wakes(agent: str, unread_ids: set[int], *, lock_dir: Path | None = None) -> dict[int, dict]:
+    """Read retained attempts and collect entries for consumed/deleted messages.
+
+    Callers hold the existing watcher lock. Corruption refuses automatic wake;
+    acknowledgment of all unread rows permits discarding unparseable state.
+    """
+    path = codex_wake_state_path(agent, lock_dir)
+    invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "retained_receipt_invalid"}
+    try:
+        receipts = _read_wake_state(path)
+        if any(not re.fullmatch(r"[1-9][0-9]{0,18}", key) for key in receipts):
+            raise ValueError("invalid message key")
+    except (OSError, ValueError, TypeError, RecursionError):
+        if not unread_ids:
+            _write_wake_state(path, {})
+        return {message_id: {**invalid, "message_ids": [message_id]} for message_id in unread_ids}
+    active = {key: value for key, value in receipts.items() if int(key) in unread_ids}
+    if active != receipts:
+        _write_wake_state(path, active)
+    retained = {}
+    for key, attempts in active.items():
+        message_id = int(key)
+        if not isinstance(attempts, dict) or not attempts:
+            retained[message_id] = {**invalid, "message_ids": [message_id]}
+            continue
+        for identity, report in attempts.items():
+            safe = _wake_event(report)
+            if (safe["reason"] == "retained_receipt_invalid" or identity != _rollout_key(safe)
+                    or ("message_ids" in safe and message_id not in safe["message_ids"])):
+                safe = {**invalid, "message_ids": [message_id]}
+            retained[message_id] = safe
+            if safe["reason"] == "retained_receipt_invalid":
+                break
+    return retained
+
+
+def record_codex_wake(
+    events: list[InboxEvent], report: dict, *, agent: str = "codex", lock_dir: Path | None = None,
+) -> None:
+    """Retain attempts beside the watcher lock without writing any inbox row."""
+    path = codex_wake_state_path(agent, lock_dir)
+    safe = _wake_event(report)
+    try:
+        receipts = _read_wake_state(path)
+        for event in events:
+            receipts.setdefault(str(event.message_id), {})[_rollout_key(safe)] = safe
+        _write_wake_state(path, receipts)
+    except (OSError, ValueError, TypeError, CodexWakePersistenceError) as exc:
+        raise CodexWakePersistenceError({**safe, "status": "UNKNOWN", "reason": "receipt_write_failed"}) from exc
 
 
 def emit_notifications(events: list[InboxEvent], last_seen: int, output: TextIO) -> int:
@@ -797,7 +857,7 @@ def run_watcher(
                         file=sys.stderr,
                     )
                     watchdog_warned = True
-            events = poll_once(conn, agent, last_seen)
+            events = poll_once(conn, agent, last_seen, lock_dir=lock_dir)
             last_seen = emit_notifications(events, last_seen, output)
             if once:
                 return last_seen

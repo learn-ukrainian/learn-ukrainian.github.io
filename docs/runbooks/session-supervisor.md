@@ -370,41 +370,47 @@ flag the new wake. The detector emits a `codex-wake.v1` JSON event:
   unsuccessful resume evidence. Missing evidence is never CLEAN. At most 1,024
   simultaneous IDs are retained; exceeding this safety bound is UNKNOWN.
 
-For OVERLAP and UNKNOWN, the watcher attaches the event to each affected existing
-inbox row's JSON `data.codex_wake`, preserving other object fields and the unread
-flag. There is no new store or schema. Evidence contains the native thread ID,
-message IDs, start/end and open counts, overlap turn IDs, and rollout identity
-(device, inode, byte offset and hashed path); no transcript or local path is
-logged. A later poll, including a fresh watcher process, sees this receipt and
-refuses to resume those messages again, even if the rollout now looks READY.
-The live driver must read the message and reconcile the attempt, then consume
-the row with the existing command:
+For OVERLAP and UNKNOWN, the watcher saves the event in its ignored per-seat
+`inbox-watch-<slot>.wake.json` file beside its existing pid/lock file, under the
+same exclusive watcher lock. An atomic, mode-0600 write replaces the file and
+fsyncs the file and directory. Receipts are keyed by message ID and a hash of
+the native thread and rollout identity (hashed path, device and inode); the
+receipt also records byte offset, turn IDs and start/end and open counts.
+The cursor remains in memory. No inbox row, attachment or database schema is
+changed, and no new message bus is introduced. Sender attachment data is never
+selected or interpreted by the watcher: a sender-supplied `codex_wake` key of
+any type, including a forged OVERLAP or CLEAN receipt, cannot retain a wake.
+This also holds for rows inserted outside `send_message`.
+
+A later poll, including a fresh watcher process or a changed rollout, refuses
+to resume a message with retained evidence even if readiness now looks READY.
+A retained row holds back the entire unread batch, including later plain-text
+attachments. The existing watcher notify/log path names the message ID and
+status: notification-only mode emits `INBOX-WATCH id=<id> codex_wake=<status>`
+with its reason, and wake mode logs the body-free JSON event with `message_ids`
+and status plus `wake_error:codex_wake:<status>:retained_event`. No message body
+or absolute host path is printed in these retained-event notices. The driver
+reads its unchanged inbox attachment, reconciles the logged attempt, and then
+consumes the row with the existing command:
 
 ```bash
 .venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <id>
 ```
 
-The receipt stays on the row; consumption removes it from subsequent unread
-polls and lets later rows proceed. A retained row holds back the entire unread
-batch, including later plain-text attachments.
+The next poll ignores and garbage-collects watcher receipts for acked or deleted
+messages, permitting later rows to proceed. Corrupted watcher-owned receipts
+refuse safely with `retained_receipt_invalid`; that reason never comes from a
+sender attachment. If the entire state file is unreadable or unparseable, every
+unread row is held until reconciliation; after all unread rows are acked or
+deleted, the next poll replaces the corrupt state with an empty receipt map.
+Unrecognized receipt fields are omitted from diagnostics. Inbox reading keeps
+its existing attachment presentation; no receipt wrapper or receipt hash enters
+`read_message` or its redaction path.
 
-Plain text, empty data, malformed JSON and JSON arrays/scalars carry no receipt
-and wake normally. A JSON object without a `codex_wake` key also wakes normally.
-Only an object with a valid `codex-wake.v1` OVERLAP or UNKNOWN receipt counts as
-retained. An explicit `codex_wake` key with a malformed receipt, unknown status
-or invalid allowed field refuses with `retained_receipt_invalid`, without
-resuming or consuming the row. Unrecognized receipt fields are omitted from
-diagnostics. When adding a receipt, existing object fields remain intact;
-non-object attachments are wrapped as `{"raw": <original text>, "codex_wake":
-<receipt>}` using the bridge's existing attachment convention. The original text,
-including JSON serialization and empty strings, is readable through
-`ask_attachment()` and the inbox message reader. No schema change is needed.
-
-Database write failure reports UNKNOWN and stops the watcher with status 2
+Watcher-state write failure reports UNKNOWN and stops the watcher with status 2
 because retaining a receipt is impossible; it never retries that resume in the
-same process. A restart after that failure can re-run the resume because no
-receipt was persisted. Ordinary OVERLAP and UNKNOWN receipts keep daemon mode
-running.
+same process. A restart after that failure can re-run the resume if no receipt
+was persisted. Ordinary OVERLAP and UNKNOWN receipts keep daemon mode running.
 
 Detection covers the observed rollout only. It cannot detect a start appended
 after the post-resume scan, an unrecorded turn, or an arbitrary historical rewrite

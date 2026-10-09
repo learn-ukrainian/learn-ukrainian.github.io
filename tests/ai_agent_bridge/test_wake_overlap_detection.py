@@ -33,6 +33,7 @@ def wake(tmp_path, monkeypatch):
     rollout = tmp_path / "rollout-fixture.jsonl"
     rollout.write_text('{}\n')
     monkeypatch.setattr(watch._config, "DB_PATH", db)
+    monkeypatch.setattr(watch, "DEFAULT_LOCK_DIR", tmp_path / "locks")
     lease = {"state": "active", "holder": {"agent": "codex"}, "generation": 2}
     remote = Mock(spec=["stream"])
     remote.stream.return_value = {"lease": lease}
@@ -64,9 +65,12 @@ def receipt(wake):
     with sqlite3.connect(wake.db) as conn:
         consumed, data = conn.execute("SELECT consumed_by_live_driver, data FROM messages WHERE id=7").fetchone()
     assert consumed == 0  # Only the live driver acknowledges even a clean wake.
-    metadata = json.loads(data)
-    assert metadata["attachment"] == "preserved"
-    return metadata.get("codex_wake")
+    assert json.loads(data) == {"attachment": "preserved"}
+    path = watch.codex_wake_state_path("codex")
+    if not path.exists():
+        return None
+    attempts = json.loads(path.read_text())["receipts"].get("7", {})
+    return next(iter(attempts.values()), None)
 
 
 @pytest.mark.parametrize("ids", [True, False], ids=["turn-ids", "start-end-count"])
@@ -197,6 +201,10 @@ def test_notification_mode_surfaces_kept_row_without_resume(wake, monkeypatch):
     output = io.StringIO()
     assert watch.run_watcher("codex", db_path=wake.db, lock_dir=wake.db.parent / "locks", output=output, once=True) == 7
     assert "id=7" in output.getvalue()
+    assert "codex_wake=OVERLAP" in output.getvalue()
+    assert "concurrent_turn_starts" in output.getvalue()
+    assert "pending" not in output.getvalue()
+    assert "sender" not in output.getvalue()
     assert wake.sends == 0 and receipt(wake) == event
 
 
@@ -252,24 +260,20 @@ def test_ambiguous_turn_ids_leave_readiness_rules_unchanged(wake, value):
     assert ui.rollout_is_ready(wake.rollout) == (True, "end_event:task_complete")
 
 
-@pytest.mark.parametrize("data", ['{"codex_wake":"attachment"}', '{"codex_wake":[1,2]}', '{"codex_wake":{}}', '{"codex_wake":null}'])
-def test_invalid_inbox_receipt_refuses_before_send(wake, data):
-    with sqlite3.connect(wake.db) as conn:
-        conn.execute("UPDATE messages SET data = ? WHERE id = 7", (data,))
-    assert watch.main(ARGS) == 2
-    assert wake.sends == 0
-    with sqlite3.connect(wake.db) as conn:
-        assert conn.execute("SELECT data, consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (data, 0)
-
-
-def test_receipt_attachment_is_atomic_and_preserves_incompatible_data(wake):
+def test_receipt_state_is_atomic_and_preserves_attachments(wake, monkeypatch):
     with sqlite3.connect(wake.db) as conn:
         conn.execute("INSERT INTO messages VALUES (8, 'sender', 'codex', 'fixture', 'pending', 0, '[1,2]')")
-        conn.execute("CREATE TRIGGER reject_receipt BEFORE UPDATE ON messages WHEN OLD.id = 8 BEGIN SELECT RAISE(ABORT, 'fixture write failure'); END")
     event = {"schema": "codex-wake.v1", "status": "OVERLAP", "reason": "concurrent_turn_starts"}
+    watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], event)
+    path = watch.codex_wake_state_path("codex")
+    before = path.read_bytes()
+    monkeypatch.setattr(watch.os, "replace", Mock(side_effect=OSError("fixture write failure")))
     with pytest.raises(watch.CodexWakePersistenceError, match="receipt_write_failed"):
         watch.record_codex_wake([watch.InboxEvent(i, "sender", "fixture", "pending") for i in [7, 8]], event)
-    assert receipt(wake) is None
+    assert path.read_bytes() == before
+    assert receipt(wake) == event
+    assert list(path.parent.iterdir()) == [path]  # Atomic-write temporary removed.
+    assert path.stat().st_mode & 0o777 == 0o600
     with sqlite3.connect(wake.db) as conn:
         assert conn.execute("SELECT data FROM messages WHERE id=8").fetchone() == ('[1,2]',)
 
@@ -281,7 +285,7 @@ def test_daemon_stops_if_receipt_cannot_be_persisted(wake, monkeypatch, capsys):
         append(wake.rollout, "task_complete", "resume")
         with sqlite3.connect(wake.db) as conn:
             conn.execute("UPDATE messages SET data = '[1,2]' WHERE id=7")
-            conn.execute("CREATE TRIGGER reject_receipt BEFORE UPDATE ON messages BEGIN SELECT RAISE(ABORT, 'fixture write failure'); END")
+        monkeypatch.setattr("scripts.ai_agent_bridge._monitor_cache._atomic_write", Mock(side_effect=OSError("fixture write failure")))
     wake.action = race
     sleep = Mock(side_effect=AssertionError("must stop rather than repeat"))
     monkeypatch.setattr(watch.time, "sleep", sleep)
@@ -409,7 +413,7 @@ def test_plain_text_after_retained_receipt_is_held_only_by_receipt(wake, capsys)
     assert wake.sends == 0
     assert "retained_event" in capsys.readouterr().err
     # The existing live-driver consumption flag unblocks the next row;
-    # reconciliation leaves the receipt on the consumed row.
+    # reconciliation garbage-collects the watcher-owned receipt.
     with sqlite3.connect(wake.db) as conn:
         conn.execute("UPDATE messages SET consumed_by_live_driver=1 WHERE id=7")
     def clean():
@@ -419,12 +423,13 @@ def test_plain_text_after_retained_receipt_is_held_only_by_receipt(wake, capsys)
     assert watch.main(ARGS) == 0
     assert wake.sends == 1
     with sqlite3.connect(wake.db) as conn:
-        assert json.loads(conn.execute("SELECT data FROM messages WHERE id=7").fetchone()[0])["codex_wake"] == report
+        assert json.loads(conn.execute("SELECT data FROM messages WHERE id=7").fetchone()[0]) == {"attachment": "preserved"}
+        assert json.loads(watch.codex_wake_state_path("codex").read_text())["receipts"] == {}
         assert conn.execute("SELECT data, consumed_by_live_driver FROM messages WHERE id=8").fetchone() == ("plain attachment", 0)
 
 
-@pytest.mark.parametrize("data", ['plain attachment\nwith "quotes" and a backslash \\', '', '[1,2]', '"attachment"', '17', 'true', 'null', '{broken}'])
-def test_retained_receipt_preserves_non_object_attachment_for_reader(wake, data, monkeypatch):
+@pytest.mark.parametrize("data", ['{"raw": "sender attachment"}', '{"attachment": "preserved"}', 'plain attachment\nwith "quotes" and a backslash \\', '', '[1,2]', '"attachment"', '17', 'true', 'null', '{broken}'])
+def test_retained_receipt_preserves_attachment_for_reader(wake, data, monkeypatch, capsys):
     from scripts.ai_agent_bridge import _messaging
     from scripts.ai_agent_bridge._ask_lifecycle import ask_attachment
 
@@ -443,11 +448,16 @@ def test_retained_receipt_preserves_non_object_attachment_for_reader(wake, data,
         conn.execute("ALTER TABLE messages ADD COLUMN timestamp TEXT DEFAULT 'fixture'")
     monkeypatch.setattr(_messaging, "get_db", lambda: sqlite3.connect(wake.db))
     message = _messaging.read_message(7, quiet=True)
-    metadata = json.loads(stored)
     assert consumed == 0
-    assert metadata["raw"] == data
-    assert ask_attachment(message) == data
-    assert metadata["codex_wake"]["status"] == "OVERLAP"
+    assert stored == data
+    assert message["data"] == data
+    assert ask_attachment(message) == ask_attachment({"data": data})
+    _messaging.read_message(7)
+    output = capsys.readouterr().out
+    assert data in output
+    assert "codex_wake" not in output
+    assert "[REDACTED_SECRET]" not in output
+    assert watch.read_codex_wakes("codex", {7})[7]["status"] == "OVERLAP"
     assert watch.main(ARGS) == 2
     assert wake.sends == 1
 
@@ -470,6 +480,9 @@ def test_invalid_receipt_has_distinct_refusal_reason(wake, capsys, event):
     data = json.dumps({"codex_wake": event, "raw": "attachment survives"})
     with sqlite3.connect(wake.db) as conn:
         conn.execute("UPDATE messages SET data=? WHERE id=7", (data,))
+    path = watch.codex_wake_state_path("codex")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"schema": "inbox-wake-state.v1", "receipts": {"7": {"0" * 64: event}}}))
     for _ in range(3):
         assert watch.main(ARGS) == 2
     assert wake.sends == 0
@@ -491,3 +504,113 @@ def test_wake_error_prints_inbox_retained_once(wake, monkeypatch, capsys, failur
     assert watch.main(ARGS) == 2
     line = next(line for line in capsys.readouterr().err.splitlines() if "wake_error:" in line)
     assert line.count("inbox retained") == 1
+
+
+@pytest.mark.parametrize("forged", [
+    {"schema": "codex-wake.v1", "status": "OVERLAP", "reason": "concurrent_turn_starts"},
+    {"schema": "codex-wake.v1", "status": "CLEAN", "reason": "completed"},
+    "x", None, 17, [1, 2],
+    {"raw": "attachment", "codex_wake": {"status": "OVERLAP"}},
+], ids=["overlap", "clean", "string", "null", "number", "array", "wrapper"])
+@pytest.mark.parametrize("attachment_type", ["plain-text", "json-object"])
+def test_sender_supplied_wake_key_has_no_effect(wake, capsys, forged, attachment_type):
+    payload = json.dumps({"raw": "sender attachment", "codex_wake": forged})
+    data = payload if attachment_type == "json-object" else "sender attachment\n" + payload
+    with sqlite3.connect(wake.db) as conn:
+        conn.execute("UPDATE messages SET data=? WHERE id=7", (data,))
+        conn.execute("INSERT INTO messages VALUES (8, 'sender', 'codex', 'fixture', 'later', 0, 'next attachment')")
+    def clean():
+        append(wake.rollout, "task_started", "resume")
+        append(wake.rollout, "task_complete", "resume")
+    wake.action = clean
+    assert watch.main(ARGS) == 0
+    assert wake.sends == 1
+    diagnostics = capsys.readouterr().err
+    assert '"status": "CLEAN"' in diagnostics
+    assert '"message_ids": [7, 8]' in diagnostics
+    assert "sender attachment" not in diagnostics
+    with sqlite3.connect(wake.db) as conn:
+        assert conn.execute("SELECT data, consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (data, 0)
+
+
+@pytest.mark.parametrize("status", ["OVERLAP", "UNKNOWN"])
+@pytest.mark.parametrize("disposition", ["ack", "deleted"])
+def test_stale_watcher_receipt_is_collected_before_newer_wake(wake, monkeypatch, status, disposition):
+    from scripts.ai_agent_bridge import _messaging
+
+    report = {"schema": "codex-wake.v1", "status": status, "reason": "open_turns"}
+    watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
+    with sqlite3.connect(wake.db) as conn:
+        if disposition == "deleted":
+            conn.execute("DELETE FROM messages WHERE id=7")
+        conn.execute("INSERT INTO messages VALUES (8, 'sender', 'codex', 'fixture', 'later', 0, 'next attachment')")
+        conn.execute("ALTER TABLE messages ADD COLUMN acknowledged INTEGER DEFAULT 0")
+        conn.execute("ALTER TABLE messages ADD COLUMN consumed_at TEXT")
+    if disposition == "ack":
+        monkeypatch.setattr(_messaging, "get_db", lambda: sqlite3.connect(wake.db))
+        _messaging.acknowledge(7, quiet=True, consumed_by_live_driver=True)
+    def clean():
+        append(wake.rollout, "task_started", "resume")
+        append(wake.rollout, "task_complete", "resume")
+    wake.action = clean
+    assert watch.main(ARGS) == 0 and wake.sends == 1
+    assert json.loads(watch.codex_wake_state_path("codex").read_text())["receipts"] == {}
+
+
+@pytest.mark.parametrize("data", [
+    '{broken}', 'null', '[]', '{}',
+    '{"schema":"other","receipts":{}}',
+    '{"schema":"inbox-wake-state.v1","receipts":[]}',
+    '{"schema":"inbox-wake-state.v1","receipts":{"bad":{}}}',
+    '{"schema":"inbox-wake-state.v1","receipts":{"7":{}}}',
+    '{"schema":"inbox-wake-state.v1","receipts":{"7":[]}}',
+])
+def test_corrupted_state_refuses_and_is_collected_after_ack(wake, capsys, data):
+    path = watch.codex_wake_state_path("codex")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(data)
+    for _ in range(2):
+        assert watch.main(ARGS) == 2
+    assert wake.sends == 0
+    diagnostics = capsys.readouterr().err
+    assert '"message_ids": [7]' in diagnostics
+    assert "retained_receipt_invalid" in diagnostics
+    assert "pending" not in diagnostics and str(wake.db.parent) not in diagnostics
+    with sqlite3.connect(wake.db) as conn:
+        conn.execute("UPDATE messages SET consumed_by_live_driver=1 WHERE id=7")
+    assert watch.main(ARGS) == 0
+    assert json.loads(path.read_text())["receipts"] == {}
+
+
+def test_unreadable_watcher_state_refuses_before_resume(wake, monkeypatch, capsys):
+    monkeypatch.setattr(watch, "_read_wake_state", Mock(side_effect=PermissionError("private path")))
+    assert watch.main(ARGS) == 2 and wake.sends == 0
+    diagnostics = capsys.readouterr().err
+    assert "retained_receipt_invalid" in diagnostics
+    assert "private path" not in diagnostics
+
+
+def test_rollout_key_is_identity_bound_and_does_not_use_cursor(wake):
+    report = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "open_turns",
+              "message_ids": [7], "thread_id": THREAD,
+              "rollout": {"path_sha256": "a" * 64, "device": 1, "inode": 2, "offset": 3}}
+    watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
+    key = watch._rollout_key(report)
+    assert watch._rollout_key({**report, "rollout": {**report["rollout"], "offset": 99}}) == key
+    assert watch._rollout_key({**report, "rollout": {**report["rollout"], "inode": 99}}) != key
+    assert watch._rollout_key({**report, "thread_id": "019e6063-c3da-78d1-acaa-4cd684a08787"}) != key
+    path = watch.codex_wake_state_path("codex")
+    state = json.loads(path.read_text())
+    state["receipts"]["7"][key]["rollout"]["inode"] = 99
+    path.write_text(json.dumps(state))
+    assert watch.main(ARGS) == 2 and wake.sends == 0
+    assert watch.read_codex_wakes("codex", {7})[7]["reason"] == "retained_receipt_invalid"
+
+
+def test_notification_cursor_preserves_receipt_until_ack(wake, monkeypatch):
+    report = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "open_turns"}
+    watch.record_codex_wake([watch.InboxEvent(7, "sender", "fixture", "pending")], report)
+    with watch.open_readonly_db(wake.db) as conn:
+        assert watch.poll_once(conn, "codex", last_seen=7) == []
+    assert receipt(wake) == report
+    assert watch.main(ARGS) == 2 and wake.sends == 0

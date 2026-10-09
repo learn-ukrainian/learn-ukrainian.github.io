@@ -20,6 +20,11 @@ from scripts.ai_agent_bridge import _ui_codex as ui
 THREAD = "019e6063-c3da-78d1-acaa-4cd684a08786"
 
 
+@pytest.fixture(autouse=True)
+def isolate_watcher_state(tmp_path, monkeypatch):
+    monkeypatch.setattr(watch, "DEFAULT_LOCK_DIR", tmp_path / "locks")
+
+
 @pytest.fixture
 def live_driver(tmp_path, monkeypatch):
     lease = {
