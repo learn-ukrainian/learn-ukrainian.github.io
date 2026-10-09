@@ -18,6 +18,7 @@ from urllib.parse import quote
 from scripts.common import github_client
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import repository
+from scripts.publish import recovery
 
 # Each field has one type and one meaning; strings never select gh flags.
 COMMON = {"repo": "repo"}
@@ -42,7 +43,15 @@ SCHEMAS = {
     ),
     "pr-merge": (
         {"number"},
-        {**COMMON, "number": "number", "subject": "text", "body": "text", "body_file": "file", "match_head": "sha"},
+        {
+            **COMMON,
+            "number": "number",
+            "subject": "text",
+            "body": "text",
+            "body_file": "file",
+            "match_head": "sha",
+            "recovery": "bool",
+        },
     ),
     "pr-update-branch": ({"number"}, {**COMMON, "number": "number"}),
     "pr-ready": ({"number"}, {**COMMON, "number": "number"}),
@@ -261,6 +270,110 @@ def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
     return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
 
 
+def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=False):
+    """Resolve live PR/run identities and posted evidence before any recovery write."""
+    from scripts.gh_merge_queue_status import extract_pr_number
+    from scripts.orchestration.integration_sweep import lookup_verdict
+
+    def fetch(name, **selectors):
+        try:
+            result = read(
+                name,
+                repo=dest,
+                cwd=cwd,
+                env=environment,
+                runner=runner,
+                capture_output=True,
+                text=True,
+                check=True,
+                paginate=name in {"comments", "timeline", "jobs"},
+                slurp=name in {"comments", "timeline", "jobs"},
+                **selectors,
+            )
+            value = json.loads(result.stdout)
+            if name in {"comments", "timeline"}:
+                return [item for page in value for item in page]
+            if name == "jobs":
+                return [job for page in value for job in page["jobs"]]
+            return value
+        except github_client.GitHubRateLimited:
+            raise
+        except Exception:
+            raise gate.PublishBlocked("RECOVERY_LOOKUP_UNKNOWN: live evidence unavailable") from None
+
+    if verb == "run-rerun":
+        run = fetch("run", number=fields["number"])
+        if (
+            not isinstance(run, dict)
+            or run.get("id") != fields["number"]
+            or run.get("status") != "completed"
+            or run.get("conclusion") not in {"failure", "cancelled", "timed_out", "action_required"}
+        ):
+            raise gate.PublishBlocked("RECOVERY_RUN_INVALID: completed failed run required")
+        associations = run.get("pull_requests", [])
+        if isinstance(associations, list) and len(associations) == 1:
+            number = associations[0].get("number")
+        elif run.get("event") == "merge_group":
+            number = extract_pr_number(run.get("head_branch", ""))
+        else:
+            number = None
+        if type(number) is not int or number <= 0:
+            raise gate.PublishBlocked("RECOVERY_PR_UNKNOWN: run must identify one PR")
+        pull = fetch("pull", number=number)
+        head = pull.get("head", {}).get("sha")
+        if pull.get("state") != "open" or not isinstance(head, str) or not recovery.SHA.fullmatch(head):
+            raise gate.PublishBlocked("RECOVERY_HEAD_UNKNOWN: open PR head required")
+        if run.get("event") != "merge_group" and associations[0].get("head", {}).get("sha") != head:
+            raise gate.PublishBlocked("RECOVERY_HEAD_MOVED: run belongs to another PR head")
+        action = "run-rerun"
+    elif queue or fields.get("recovery"):
+        number, head = fields["number"], fields["match_head"]
+        timeline = fetch("timeline", number=number)
+        removals = [event for event in timeline if event.get("event") == "removed_from_merge_queue"]
+        if not fields.get("recovery") and not removals:
+            return None
+        run = None
+        action = "re-enqueue"
+    else:
+        return None
+    path = recovery.ledger_path(cwd)
+    prior = recovery.first_attempt(path, dest, number, head)
+    if prior:
+        raise gate.PublishBlocked(recovery.spent_reason(prior))
+    comments = fetch("comments", number=number)
+    login = fetch("identity").get("login")
+    if not isinstance(login, str) or lookup_verdict(comments, head, login).state != "APPROVED":
+        raise gate.PublishBlocked("RECOVERY_APPROVAL_MISSING: exact-head recorded approval required")
+    evidence = recovery.evidence_from_comments(
+        comments, number, head, run_id=fields["number"] if run is not None else None
+    )
+    failed_run = run if run is not None else fetch("run", number=evidence["run_id"])
+    if (type(failed_run.get("run_attempt")) is not int or failed_run["run_attempt"] < 1
+            or failed_run.get("status") != "completed"
+            or failed_run.get("conclusion") not in {"failure", "cancelled", "timed_out", "action_required"}):
+        raise gate.PublishBlocked("RECOVERY_RUN_INVALID: completed failed run and attempt metadata required")
+    if failed_run["run_attempt"] > 1:
+        raise gate.PublishBlocked("RECOVERY_ALLOWANCE_SPENT: first=prior workflow run attempt")
+    if failed_run.get("head_sha") != evidence["tested_sha"]:
+        raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: tested SHA does not match run")
+    if run is None and (
+        failed_run.get("event") != "merge_group" or extract_pr_number(failed_run.get("head_branch", "")) != number
+    ):
+        raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: ejected merge-group run required")
+    jobs = fetch("jobs", number=evidence["run_id"])
+    failed_ids = {
+        job.get("id")
+        for job in jobs
+        if job.get("conclusion") in {"failure", "cancelled", "timed_out", "action_required"}
+    }
+    if not failed_ids or failed_ids != set(evidence["job_ids"]):
+        raise gate.PublishBlocked("RECOVERY_EVIDENCE_MISMATCH: every failing job must be diagnosed")
+    current = fetch("pull", number=number)
+    if current.get("state") != "open" or current.get("head", {}).get("sha") != head:
+        raise gate.PublishBlocked("RECOVERY_HEAD_MOVED: PR changed during preflight")
+    return path, number, head, action, evidence
+
+
 @github_client.rate_limited_command
 def publish(
     verb: str,
@@ -312,17 +425,19 @@ def publish(
                     fields[field] = raw.decode("utf-8")
                 except UnicodeError:
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
+
+        def readiness_runner(args, **kwargs):
+            if runner is None:
+                kwargs["fresh"] = True
+            result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+            observation = getattr(result, "github_result", None)
+            if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
+                raise github_client.GitHubRateLimited(observation.reset_at)
+            return result
+
+        recovery_queue = False
         if verb == "pr-merge":
             from scripts.publish.merge_guard import ensure_merge_ready
-
-            def readiness_runner(args, **kwargs):
-                if runner is None:
-                    kwargs["fresh"] = True
-                result = _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
-                observation = getattr(result, "github_result", None)
-                if observation is not None and (observation.stale or observation.error == "github_rate_limited"):
-                    raise github_client.GitHubRateLimited(observation.reset_at)
-                return result
 
             fields["match_head"] = ensure_merge_ready(
                 gh_repo,
@@ -336,6 +451,7 @@ def publish(
             # Omitted fields are sent explicitly so the scanned text is the sent text;
             # a merge queue ignores explicit text, so its defaults are scanned too.
             default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
+            recovery_queue = default["queue"]
             for key in ("subject", "body"):
                 if key not in fields:
                     fields[key] = default[key]
@@ -493,6 +609,13 @@ def publish(
             argv = ["gh", "api", "--method", method, endpoint, "--input", str(frozen)]
             if endpoint == "graphql":
                 argv += _hostname_flag(dest)
+        if verb in {"run-rerun", "pr-merge"}:
+            reservation = _prepare_recovery(
+                verb, fields, dest, cwd, environment, readiness_runner, queue=recovery_queue
+            )
+            if reservation:
+                path, number, head, action, evidence = reservation
+                recovery.consume(path, dest, number, head, action, evidence)
         return _send(
             argv,
             environment=environment,
@@ -644,6 +767,7 @@ REST_READS = {
     "code-scanning-alerts": ("repos/{repo}/code-scanning/alerts?state=open&ref={ref}", {"ref": "ref"}),
     "check-annotations": ("repos/{repo}/check-runs/{number}/annotations", {"number": "number"}),
     "jobs": ("repos/{repo}/actions/runs/{number}/jobs", {"number": "number"}),
+    "run": ("repos/{repo}/actions/runs/{number}", {"number": "number"}),
     "issues": ("repos/{repo}/issues?state=open&labels=infra", {}),
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "date", "end": "date"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),

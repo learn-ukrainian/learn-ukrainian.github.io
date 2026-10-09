@@ -12,6 +12,7 @@ import pytest
 from scripts.opsec import prepublish as gate
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import Verdict
+from scripts.publish import recovery
 from scripts.review.record_cf_verdict import build_comment
 from tests.opsec_fixtures import CATALOG, TOKEN
 
@@ -49,7 +50,30 @@ def checks(head: str = HEAD_A, conclusion: str = "success", status: str = "compl
     ]
 
 
+@pytest.fixture(autouse=True)
+def recovery_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    common = tmp_path / ".git"
+    common.mkdir()
+    monkeypatch.setattr(recovery, "ledger_path", lambda cwd: common / "ci-recovery.sqlite3")
+
+
+def recovery_comment(head: str = HEAD_A) -> dict[str, Any]:
+    data = {
+        "pr": 42,
+        "head": head,
+        "run_id": 123,
+        "job_ids": [456],
+        "tested_sha": "c" * 40,
+        "failure_evidence": "Runner outage in linked job log",
+        "unrelated_to_diff": "Runner failed before checkout",
+    }
+    return {"id": 789, "body": "<!-- ci-recovery-evidence " + json.dumps(data) + " -->"}
+
+
 class FakeGitHub:
+    root = Path.cwd()
+    repository = "github.com/unit/public"
+
     def __init__(self, row: dict[str, Any] | None = None) -> None:
         self.row = row or pr()
         self.fresh = dict(self.row)
@@ -59,7 +83,7 @@ class FakeGitHub:
         self.queue_enabled = True
         self.remaining = 3000
         self.membership_result = True
-        self.comments_rows: list[dict[str, Any]] = []
+        self.comments_rows: list[dict[str, Any]] = [recovery_comment(self.row["headRefOid"])]
         self.actions: list[tuple[str, Any]] = []
         self.fail_removal = False
         self.events: list[dict[str, Any]] = []
@@ -101,7 +125,13 @@ class FakeGitHub:
         self.lookups.append("files")
         return self.file_rows
 
-    def enqueue(self, number: int, head: str) -> None:
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
+        if recovery_attempt:
+            try:
+                evidence = recovery.evidence_from_comments(self.comments_rows, number, head)
+                recovery.consume(recovery.ledger_path(self.root), self.repository, number, head, "re-enqueue", evidence)
+            except gate.PublishBlocked as exc:
+                raise keeper.KeeperError(str(exc)) from exc
         self.actions.append(("enqueue", (number, head)))
 
     def membership(self, number: int) -> bool:
@@ -1122,7 +1152,7 @@ def test_gate_requeues_a_granted_head_once(tmp_path: Path, monkeypatch: pytest.M
     again = FakeGitHub()
     lines, _ = gated(again, path, monkeypatch, gate)
     assert "enqueue" not in mutations(again)
-    assert "reason=requeue-spent" in lines[0]
+    assert "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
 
 
 @pytest.mark.parametrize("drops", [0, 1, 2])
@@ -1137,7 +1167,7 @@ def test_used_grant_holds_even_without_another_recorded_drop(
         lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
     else:
         lines, failed = run(fake, path, monkeypatch)
-    assert not failed and "reason=requeue-spent" in lines[0]
+    assert not failed and "reason=RECOVERY_ALLOWANCE_SPENT" in lines[0]
     assert "enqueue" not in mutations(fake)
 
 
@@ -1404,3 +1434,28 @@ def test_per_head_state_cleanup_preserves_only_open_prs(tmp_path: Path, name: st
 
     assert not failed
     assert json.loads(path.read_text())[name] == {open_key: value}
+
+
+def test_shared_rerun_record_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub()
+    evidence = recovery.evidence_from_comments(fake.comments_rows, 42, HEAD_A)
+    recovery.consume(recovery.ledger_path(fake.root), fake.repository, 42, HEAD_A, "run-rerun", evidence)
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    assert not failed
+    assert "RECOVERY_ALLOWANCE_SPENT: first=run-rerun" in lines[0]
+    assert "enqueue" not in mutations(fake)
+
+
+def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def unavailable(*args: Any) -> None:
+        raise gate.PublishBlocked("RECOVERY_RECORD_UNAVAILABLE")
+    monkeypatch.setattr(recovery, "first_attempt", unavailable)
+    path = tmp_path / "state.json"
+    _dropped_state(path)
+    fake = FakeGitHub()
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {f"42:{HEAD_A}": {"decision": "grant"}}))
+    assert failed and "reason=requeue-unknown" in lines[0]
+    assert any("FAILED: RECOVERY_RECORD_UNAVAILABLE" in line for line in lines)
+    assert "enqueue" not in mutations(fake)

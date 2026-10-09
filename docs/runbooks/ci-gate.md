@@ -426,3 +426,5 @@ saving. The shadow job is explicitly reuse-neutral in `REUSE_NEUTRAL_JOBS`;
 `projected_cost_after_lost_reuse` receipt key is retained for reader compatibility.
 The driver must measure combined PR/queue cost before decision A; all other
 reuse eligibility checks remain unchanged.
+
+CI recovery uses one durable Git-common-directory `ci-recovery.sqlite3` record per repository/PR/head for both failed-job reruns and keeper/direct re-enqueue; before recovery post `<!-- ci-recovery-evidence {"pr":42,"head":"<PR SHA>","run_id":123,"job_ids":[456],"tested_sha":"<tested SHA>","failure_evidence":"<failure evidence>","unrelated_to_diff":"<diff diagnosis>"} -->` on the PR (all failing job IDs are required), retain any keeper requeue grant, and record an operator-authorized exception as a separate attributed PR comment naming the exact head, first attempt and authorization; exceptions never erase or reset the shared record and grant no automatic bypass.

@@ -28,6 +28,7 @@ from scripts.opsec.prepublish import (
     publication_cli,
 )
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
 FLOOR = 500
@@ -250,8 +251,8 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str) -> None:
-        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
+        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt))
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -436,7 +437,7 @@ def _requeue_hold(
     if drop_key in previous.get("shared_pass", {}):
         return None
     if drop_key in previous.get("requeued", {}):
-        return "requeue-spent"
+        return recovery.spent_reason({"action": "re-enqueue (legacy)", "at": previous["requeued"][drop_key]})
     if drop_key in previous.get("undiagnosed", {}):
         return "requeue-unknown"
     if drops < 1:
@@ -459,6 +460,15 @@ def _gate_hold(
 ) -> str | None:
     """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
     drop_key = f"{number}:{head}"
+    if drops >= 1:
+        try:
+            prior = recovery.first_attempt(
+                recovery.ledger_path(gh.root), normalize_repository(gh.repository), number, head
+            )
+        except PublishBlocked as exc:
+            raise KeeperError(str(exc)) from exc
+        if prior:
+            return recovery.spent_reason(prior)
     if (
         grants is not None
         and drop_key in previous.get("squash_revoked", {})
@@ -872,7 +882,10 @@ def run(
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
             elif reason == "ready":
-                gh.enqueue(number, head)
+                if drops >= 1:
+                    gh.enqueue(number, head, recovery_attempt=True)
+                else:
+                    gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):

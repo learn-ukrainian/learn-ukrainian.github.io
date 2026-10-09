@@ -126,15 +126,21 @@ def test_worker_merge_guard_and_changed_head_refuse_before_write():
     ("pr-ready", {"number": 1}, ["pr", "ready", "1"]),
     ("pr-close", {"number": 1}, ["pr", "close", "1"]),
     ("issue-reopen", {"number": 1}, ["issue", "reopen", "1"]),
-    ("run-rerun", {"number": 1}, ["run", "rerun", "1"]),
+    ("run-rerun", {"number": 123}, ["run", "rerun", "123"]),
     ("workflow-run", {"workflow": "ci.yml", "ref": "unit", "inputs": {}}, ["workflow", "run", "ci.yml"]),
 ])
-def test_no_text_driver_operations(verb, fields, expected):
+def test_no_text_driver_operations(verb, fields, expected, monkeypatch, tmp_path, synthetic_opsec):
     calls = []
     def spy(args, **kwargs):
         calls.append(args)
         return subprocess.CompletedProcess(args, 0, "", "")
-    pub.publish(verb, repo="unit/public", runner=spy, env={}, **fields)
+    sender = spy
+    if verb == "run-rerun":
+        from tests.test_ci_recovery import Transport
+        sender = Transport()
+        calls = sender.writes
+        monkeypatch.setattr(pub.recovery, "ledger_path", lambda cwd: tmp_path / "ci-recovery.sqlite3")
+    pub.publish(verb, repo="unit/public", cwd=tmp_path, runner=sender, env={}, **fields)
     assert calls[0][1:4] == expected
     assert calls[0][calls[0].index("--repo") + 1] == "unit/public"
     if verb == "run-rerun":
