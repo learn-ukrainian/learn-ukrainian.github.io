@@ -42,7 +42,7 @@ def test_agy_recorded_file_denial_is_refused_before_probe_without_widening(tmp_p
         "relative-parent": "../evidence.txt",
         "normalized-parent": "docs/../../evidence.txt",
         "home": "~/evidence.txt",
-        "symlink": "outside.txt",
+        "symlink": "./outside.txt",
         "markdown-link": f"[evidence]({tmp_path / 'evidence.txt'})",
         "line-number": f"{tmp_path / 'evidence.txt'}:12:3",
         "quoted-space": str(outside),

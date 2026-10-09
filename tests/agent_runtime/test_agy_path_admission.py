@@ -1,5 +1,6 @@
 """Read requirements, rather than incidental path mentions, drive AGY admission."""
 
+import json
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -30,7 +31,11 @@ def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_co
             rules_seat="core", agent="agy", review_route=True,
         )
 
-    prompt = compose("Review `scripts/agent_runtime/adapters/agy.py` and report findings.")
+    prompt = compose(
+        "# Review of record (code, medium): PR #10255 / issue #8506\n"
+        "Exact head: `9dc756cb` · Author: gpt-6.1-sol (OpenAI / Codex)\n"
+        "Review `scripts/agent_runtime/adapters/agy.py` and report an exact-head verdict."
+    )
     agy.validate_agy_read_only_paths(prompt, mode="read-only", cwd=Path.cwd(), tool_config=config)
     plan = agy.AgyAdapter().build_invocation(
         prompt=prompt, mode="read-only", cwd=Path.cwd(), model=None,
@@ -44,6 +49,26 @@ def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_co
             agy.validate_agy_read_only_paths(
                 compose(base), mode="read-only", cwd=Path.cwd(), tool_config=config,
             )
+
+
+_CORPUS_FIXTURE = json.loads(
+    (Path(__file__).parents[1] / "fixtures" / "agy_read_only_admission.json").read_text()
+)
+
+
+def test_sanitized_historical_review_fragments_admitted(tmp_path):
+    """Stable corpus count; fixtures contain no private prompt bodies or targets."""
+    assert sum(map(len, _CORPUS_FIXTURE.values())) == 36
+    refused = []
+    for category, prompts in _CORPUS_FIXTURE.items():
+        for index, prompt in enumerate(prompts):
+            try:
+                agy.validate_agy_read_only_paths(
+                    prompt, mode="read-only", cwd=tmp_path, tool_config={"review_profile": "code"},
+                )
+            except agy.AgyReviewPermissionError as exc:
+                refused.append((category, index, exc.reason))
+    assert refused == []
 
 
 @pytest.mark.parametrize(
@@ -71,7 +96,11 @@ def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_co
         ("Review the API endpoint /health.", False),
         ("Read /api/rules?scope=core.", False),
         ("Do not read `../evidence.txt`.", False),
-        ("Read the file `../sibling/file`.", True),
+        ("Review the snippet: `cat /workspace/evidence.txt`.", False),
+        ("Review the snippet:\n```sh\nhead /workspace/evidence.txt\n```", False),
+        ("Do not read `cat /workspace/evidence.txt`.", False),
+        ("Read the directory reference `../sibling/no-extension`.", False),
+        ("Read the file `../sibling/file.txt`.", True),
         ("Read `~/evidence.txt`.", True),
         ("Open the file `/etc/evidence.conf`.", True),
         ("Inspect the files under /tmp.", True),
@@ -81,6 +110,19 @@ def test_real_composed_agy_review_prompt_admitted(tmp_path, monkeypatch, with_co
         ("Read these files:\n```text\n../evidence.txt\n```", True),
         ("Read:\n- `../evidence.txt`", True),
         ("Read the command output:\n```sh\ncat ../evidence.txt\n```", True),
+        ("Read FULL /workspace/evidence.txt.", True),
+        ("Read /evidence:12.", True),
+        ("Read COMPLETE audit at /workspace/evidence.txt.", True),
+        ("Read global semantic contract v2 in /workspace/evidence.txt.", True),
+        ("Inspect exact prospective packet /workspace/evidence.txt.", True),
+        ("Inspect exact head commit `9dc756cb` inside /workspace/review.", True),
+        ("Read `docs/a.md` and the diagnosis /workspace/evidence.txt.", True),
+        ("Read the driver's private evidence at /workspace/evidence.txt.", True),
+        ("Read `scripts/a.py`, and `/workspace/evidence.txt`.", True),
+        ("Read `head /workspace/evidence.txt`.", True),
+        ("Read `tail /workspace/evidence.txt`.", True),
+        ("Read `less /workspace/evidence.txt`.", True),
+        ("Read the command output:\n```sh\nhead /workspace/evidence.txt\n```", True),
         ("The interpreter is /home/example/bin/python. Read `../evidence.txt`.", True),
     ],
 )

@@ -1529,12 +1529,36 @@ _PROMPT_PATH_TOKEN_RE = re.compile(
     r"|`(?P<code>[^`\n]+)`|\"(?P<double>[^\"\n]+)\"|'(?P<single>[^'\n]+)'"
     r"|(?P<bare>[^\s`\"'<>]+)"
 )
-_LITERAL_FILE_PATH_RE = re.compile(r"(?:/|~/|\.\.?/|[\w.-]+/|[\w.-]+\.[\w-]+$)")
+_LITERAL_FILE_PATH_RE = re.compile(
+    r"(?:~?/[^/\s][^\n]*|(?:[\w.-]+/)+[^/\n]+\.[\w-]+)(?::\d+(?::\d+)?)?"
+)
 _READ_REQUEST_RE = re.compile(
-    r"\b(?:read|open|inspect|review|examine|load|cat|head|tail|less|"
-    r"view_file|view_file_outline|view_code_item|list_dir|grep_search|find_by_name)\b(?![-])",
+    r"(?:^|(?<=[\n;!?])|(?<= and ))[ \t]*(?:[-*#]+[ \t]+)?"
+    r"(?:(?:please|first|then|now|only)\s+|(?:can|could)\s+you\s+(?:toolfully\s+)?|"
+    r"you\s+(?:must|may|should|need to)\s+)?"
+    r"(?P<verb>read|open|inspect|review(?![ \t]*:)|examine|load|"
+    r"view_file|view_file_outline|view_code_item|list_dir|grep_search|find_by_name)\b(?![-.])",
+    re.IGNORECASE | re.MULTILINE,
+)
+# Only an object/list directly governed by the read counts. A verb somewhere
+# earlier in the paragraph is insufficient (review metadata, code descriptions,
+# launcher invocations, etc.). Unrecognized prose is left to native permissions.
+_READ_OPERAND_PREFIX_RE = re.compile(
+    r"\s*(?:[\w#'-]+\s+)*(?:files?|paths?|directories|directory|folders?|"
+    r"evidence|briefs?|prompts?|reports?|results?|artifacts?|patch|contracts?|"
+    r"proposals?|handoff|reconciliation|implementation|rules|sources?|notes|"
+    r"output|input|record|evaluation|reviews?|findings|audit|state|scope|critique|"
+    r"packet|supplement|design|diagnosis|corrections|diff|changes|commit)\s*(?:of\s+record\s*)?"
+    r"(?:in\s+full\s*|first\s*)?(?:(?:at|in|from|under|inside)\s*)?"
+    r"|\s*(?!.*\b(?:how|that|which)\b)(?:[\w#'-]+\s+)+(?:at|in|from|under|inside)\s*"
+    r"|\s*(?:(?:the|these|this|following|only|directly|complete|full|frozen|"
+    r"authoritative|exact|primary|absolute|revised|approved|original|current|prior)\b\s*)*"
+    r"(?:(?:at|in|from|under|inside)\s*)?",
     re.IGNORECASE,
 )
+_READ_LIST_PREFIX_RE = re.compile(r"[\s,*:-]*(?:(?:and|or)\s+)?(?:```\w*\s*)?[\s*-]*", re.IGNORECASE)
+_READ_COMMAND_RE = re.compile(r"^(?:cat|head|tail|less)\s+(?:-[\w-]+\s+)*(.+)$")
+_READ_COMMAND_LINE_RE = re.compile(r"(?m)^[ \t]*((?:cat|head|tail|less)\s+[^\n]+)$")
 _FILESYSTEM_REQUEST_RE = re.compile(r"\b(?:files?|paths?|directories|directory|folders?|disk)\b", re.IGNORECASE)
 _API_REFERENCE_RE = re.compile(
     r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$"
@@ -1550,33 +1574,75 @@ _NEGATED_READ_RE = re.compile(r"\b(?:do not|don't|never|not to|no need to)\s+$",
 def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
     """Yield literal read operands, never every slash-bearing prompt token.
 
-    A read verb must precede the operand in its sentence/paragraph (including
-    lists and command spans). API operands are recognized by HTTP/route wording
-    or /api/ syntax; explicit filesystem wording takes precedence. Interpreter
-    instructions, shebangs and incidental mentions are not read requirements.
+    Recognize direct read objects, lists and command spans, rather than guessing
+    what every free-form clause means. Separators, routes, slash commands and
+    incidental process/interpreter descriptions are not file operands.
     No dispatcher-looking marker exempts text: a task cannot hide its read by
     copying a preamble heading. This also avoids trusting prompt block provenance.
     """
     # Interpreter invocations and shebangs in fenced samples describe code;
     # they do not request opening the executable. Preserve other operands,
     # including cat commands and bare paths in an explicit read list.
-    prompt = _FENCED_CODE_RE.sub(lambda block: _INTERPRETER_LINE_RE.sub("", block.group()), prompt)
+    prompt = _FENCED_CODE_RE.sub(
+        lambda block: _READ_COMMAND_LINE_RE.sub(
+            lambda line: f"`{line[1]}`", _INTERPRETER_LINE_RE.sub("", block.group()),
+        ), prompt,
+    )
     for span in re.split(r"\n\s*\n|(?<=[.;!?])\s+", prompt):
+        operand_end = None
+        request_end = None
+        requests = iter(_READ_REQUEST_RE.finditer(span))
+        upcoming = next(requests, None)
+        request = None
         for token in _PROMPT_PATH_TOKEN_RE.finditer(span):
-            request = list(_READ_REQUEST_RE.finditer(span[:token.start()]))
-            if not request:
-                continue
-            if _NEGATED_READ_RE.search(span[:request[-1].start()]):
-                continue
-            context = span[request[-1].start():token.start()]
+            while upcoming is not None and upcoming.start() < token.start():
+                request = upcoming
+                upcoming = next(requests, None)
             raw = next((part for part in token.groups() if part is not None), token.group())
             if link := re.fullmatch(r"\[[^\]\n]*\]\(([^)\n]+)\)", raw):
                 raw = link[1]
-            # A quoted/code span can contain a command rather than just a path.
-            parts = [raw] if _LITERAL_FILE_PATH_RE.match(raw) else raw.split()
+            command = _READ_COMMAND_RE.fullmatch(raw) if token.group("code") else None
+            # A quoted non-file object can precede another read operand;
+            # ordinary prose words cannot turn the remainder into a list.
+            if (
+                not command
+                and not _LITERAL_FILE_PATH_RE.fullmatch(raw.rstrip(".,;)]}"))
+                and not any(token.group(kind) for kind in ("code", "double", "single", "link"))
+            ):
+                continue
+            if _INTERPRETER_LINE_RE.fullmatch(raw):
+                continue
+            if request is None or _NEGATED_READ_RE.search(span[:request.start()]):
+                continue
+            # Reviewing a command example is not an instruction to read its
+            # operands. Explicit Read + command spans/lists are unambiguous.
+            if command and request.group("verb").lower() != "read":
+                continue
+            context = span[request.start():token.start()]
+            prefix = span[request.end():token.start()]
+            if request_end == request.end() and operand_end is not None:
+                continuation = span[operand_end:token.start()]
+                governed = _READ_LIST_PREFIX_RE.fullmatch(continuation) or _READ_OPERAND_PREFIX_RE.fullmatch(
+                    re.sub(r"^\s*,?\s*(?:and|or)\s+", "", continuation, flags=re.IGNORECASE),
+                )
+            else:
+                # A trailing colon/fence/bullet introduces an operand list.
+                prefix = re.sub(r"[\s:*\-]*(?:```\w*\s*)?[\s*\-]*$", "", prefix)
+                if re.match(r"\s+of\s+record\b", prefix, re.IGNORECASE):
+                    continue
+                governed = _READ_OPERAND_PREFIX_RE.fullmatch(prefix)
+            if not governed:
+                continue
+            request_end = request.end()
+            operand_end = token.end()
+            # Command spans are reads only when the command itself reads files.
+            parts = command[1].split() if command else [raw]
             for part in parts:
-                part = part.strip("([]{},;")
-                if not _LITERAL_FILE_PATH_RE.match(part) or "://" in part:
+                part = part.strip("([]{},;").rstrip(".,;)]}")
+                if not _LITERAL_FILE_PATH_RE.fullmatch(part) or "://" in part:
+                    continue
+                # A slash command's namespace colon is not a line suffix.
+                if re.fullmatch(r"/[\w-]+:[a-zA-Z_][\w-]*", part):
                     continue
                 if (
                     part.startswith("/")
@@ -1591,7 +1657,7 @@ def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
                     )
                 ):
                     continue
-                yield re.sub(r":\d+(?::\d+)?$", "", part.rstrip(".,;)]}"))
+                yield re.sub(r":\d+(?::\d+)?$", "", part)
 
 
 def validate_agy_read_only_paths(
