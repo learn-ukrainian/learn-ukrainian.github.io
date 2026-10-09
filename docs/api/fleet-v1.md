@@ -172,21 +172,26 @@ Sources on this route are `github` and `mq_state`.
 
 `FLEET_BACKUP_STATE_DIR`, reading `last-success.json`, `freshness.json`,
 and `receipt.json`. `data` is the age in hours, whether that age is over
-36 hours, the last result, and the restore-test result. A missing file is
-`unavailable` and still HTTP 200. Fields that were not read are null.
+36 hours, the last result, and the restore-test result. A cached age
+keeps moving while a later read fails, so that flag can change without a
+new file. A missing file is `unavailable` and still HTTP 200. Fields that
+were not read are null.
 
 ### `GET /api/fleet/v1/downloads`
 
 `FLEET_DOWNLOAD_STATUS`. One row per source: state, done, total, percent,
 last progress time, and `stalled`. `stalled` is true when there has been
 no progress for more than `FLEET_DOWNLOAD_STALL_MIN` minutes (15 when
-unset). A missing progress time leaves `stalled` null. An unreadable file
+unset), evaluated when the response is built. A missing progress time
+leaves `stalled` null. A source name is kept only when it is a plain
+identifier. An unreadable file
 sets `data.state` to `unknown` and the source to `unavailable`.
 
 ### `GET /api/fleet/v1/harness`
 
 `FLEET_HARNESS_SNAPSHOT`. One row per driver: context percent, compactions,
 stop count, ask count, idle minutes, and `measured_at`. A missing
-measurement is null. `GET /api/fleet/v1/harness/{agent_id}` returns that
-driver, or null when the id is absent. The id is not copied into the body
-when it is absent.
+measurement is null. A driver id is kept only when it is a plain
+identifier. `GET /api/fleet/v1/harness/{agent_id}` returns that driver, or
+null when the id is absent. The id is not copied into the body when it is
+absent.

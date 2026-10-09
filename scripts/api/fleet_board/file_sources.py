@@ -74,12 +74,13 @@ def _load_backup_raw(directory: Path) -> dict[str, Any]:
     return {"last": last, "fresh": fresh, "receipt": receipt, "complete": last_ok and fresh_ok and receipt_ok}
 
 
-def _age_hours(fresh: object, last: object, now: datetime) -> float | None:
+def _age_hours(fresh: object, last: object, now: datetime, elapsed_s: float = 0.0) -> float | None:
     if isinstance(fresh, dict) and "age_h" in fresh:
         number = _number(fresh.get("age_h"))
         if number is None or number < 0:
             return None
-        return number
+        extra = elapsed_s / 3600 if elapsed_s > 0 else 0.0
+        return round(number + extra, 3)
     if isinstance(last, dict):
         stamp = _timestamp(last.get("at"))
         if stamp is None:
@@ -94,11 +95,13 @@ def _empty_backups() -> dict[str, Any]:
     return {"age_h": None, "stale": None, "last_result": None, "restore_test": None}
 
 
-def _backup_view(raw: Mapping[str, Any], now: datetime) -> tuple[dict[str, Any], str, float | None]:
+def _backup_view(
+    raw: Mapping[str, Any], now: datetime, elapsed_s: float = 0.0
+) -> tuple[dict[str, Any], str, float | None]:
     last = raw.get("last")
     fresh = raw.get("fresh")
     receipt = raw.get("receipt")
-    age_h = _age_hours(fresh, last, now)
+    age_h = _age_hours(fresh, last, now, elapsed_s)
     stale = None if age_h is None else age_h > BACKUP_STALE_AFTER_H
     data = {
         "age_h": None if age_h is None else _json_number(age_h),
@@ -134,7 +137,7 @@ def load_backups(environ: Mapping[str, str] | None = None) -> Outcome:
         )
     except Exception:
         return _done("backups", _empty_backups(), "unavailable")
-    data, status, data_age = _backup_view(raw, _now())
+    data, status, data_age = _backup_view(raw, _now(), cache_age)
     if freshness == "stale":
         status = "stale"
         if data_age is None:
@@ -204,6 +207,16 @@ def _download_items(payload: object, now: datetime, limit: float) -> list[dict[s
     return items
 
 
+def _current_stall(items: list[dict[str, Any]], now: datetime, limit: float) -> list[dict[str, Any]]:
+    """Evaluate stall flags at serve time, including a cached payload."""
+    current: list[dict[str, Any]] = []
+    for item in items:
+        row = dict(item)
+        row["stalled"] = _stalled(row.get("last_progress_at"), now, limit)
+        current.append(row)
+    return current
+
+
 def load_downloads(environ: Mapping[str, str] | None = None) -> Outcome:
     """Per-source download state, progress, and a stall flag."""
     env = _env(environ)
@@ -219,6 +232,7 @@ def load_downloads(environ: Mapping[str, str] | None = None) -> Outcome:
         items, freshness, age = _cached_call("downloads", location, load, cacheable=lambda _value: True)
     except Exception:
         return _done("downloads", {"state": "unknown", "items": []}, "unavailable")
+    items = _current_stall(items, _now(), limit)
     status = "stale" if freshness == "stale" else "ok"
     return _done("downloads", {"state": "ok", "items": items}, status, age_s=age)
 

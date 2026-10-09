@@ -13,7 +13,7 @@ from typing import Any
 from .cache import CACHE, CACHE_TTL_S
 from .sources import SourceReport, report
 
-_NAME = re.compile(r"[A-Za-z0-9_.:-]{1,64}\Z")
+_NAME = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,63}\Z")
 _TOKEN = re.compile(r"[a-z0-9_-]{1,32}\Z")
 
 Outcome = tuple[dict[str, Any], tuple[SourceReport, ...]]
