@@ -979,7 +979,7 @@ def test_agy_impl_8771_timer_kill_not_excused_fails_incomplete(tmp_path):
         [
             _prompt(),
             _start(_TASK_2, description="Timer: 20s, Prompt: Wait for tests"),
-            _kill(),
+            _kill(_TASK_2),
             _canceled(_TASK_2),
             _reply("I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."),
         ],
@@ -996,7 +996,7 @@ def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
         [
             _prompt(),
             _start(_TASK_2, description="git push"),
-            _kill(),
+            _kill(_TASK_2),
             _canceled(_TASK_2),
             _reply("git push killed"),
         ],
