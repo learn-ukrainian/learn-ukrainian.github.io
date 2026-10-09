@@ -779,6 +779,16 @@ LC_CURSOR_SEAT_PIN=grok-4.7-high
 # model and a provider --model forwarded after `--` would let cursor-agent pick
 # Auto or override the certified pin.
 launcher_validate_cursor_pin() {
+  if [ "$LC_MODEL" = "grok-4.7" ]; then
+    LC_MODEL="grok-4.7-high"
+  fi
+  if [[ "${LC_MODEL}" == claude-* ]] || [[ "${LC_MODEL}" == *fable* ]]; then
+    if "${LC_DURABLE_HELPER_ROOT}/.venv/bin/python" -c "import sys; sys.path.insert(0, '${LC_ROOT}/scripts'); from agent_runtime.adapters.claude import _default_claude_bin; sys.exit(0 if _default_claude_bin() else 1)" 2>/dev/null; then
+      launcher_error "CURSOR_CLAUDE_REFUSED: Claude models (${LC_MODEL}) must use the native Claude CLI while it is available. (operator decision #10205)"
+      exit 4
+    fi
+  fi
+
   local arg seat="cursor driver"
   [ "$LC_MODE" = driver ] || seat="cursor interactive session"
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
@@ -806,7 +816,7 @@ launcher_validate_cursor_pin() {
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    grok-4.7|composer-2.5) return 0 ;;
+    composer-2.5) return 0 ;;
     grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
   esac
   [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1

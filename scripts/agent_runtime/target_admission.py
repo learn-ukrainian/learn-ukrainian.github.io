@@ -34,6 +34,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from scripts.review.model_catalog import apply_cursor_model_pins
+
 from .kimi_admission import (
     BRIDGE_MODE,
     REVIEW_MODE,
@@ -282,6 +284,8 @@ def resolve_and_admit(
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
+    if "cursor" in raw and explicit_model:
+        explicit_model = apply_cursor_model_pins(explicit_model)
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
     requested = _gate_names(seats, models)

@@ -38,6 +38,7 @@ from typing import Any
 
 from scripts.review.model_catalog import (
     CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+    apply_cursor_model_pins,
     cursor_pinned_models,
     is_cursor_auto_selector,
     retired_model_refusal,
@@ -144,7 +145,7 @@ class CursorAdapter:
     """Adapter for the Cursor agent CLI (``cursor-agent``)."""
 
     name: str = "cursor"
-    default_model: str = "grok-4.7"
+    default_model: str = "grok-4.7-high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -182,6 +183,10 @@ class CursorAdapter:
         """
         if effort:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
+        try:
+            model = apply_cursor_model_pins(model) or self.default_model
+        except Exception as exc:
+            raise ValueError(f"Cursor adapter: {exc}") from exc
         refusal = retired_model_refusal(model)
         if refusal:
             raise ValueError(f"Cursor adapter: {refusal}")

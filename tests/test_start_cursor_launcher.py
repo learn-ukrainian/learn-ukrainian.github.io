@@ -350,3 +350,27 @@ def test_cursor_interactive_executes_an_explicit_approved_pin(tmp_path: Path, mo
     result, argv = _run_interactive(tmp_path, "--model", model)
     assert result.returncode == 0, result.stdout + result.stderr
     assert argv is not None and argv[:2] == ["--model", model]
+
+def test_cursor_rewrites_bare_grok_4_7_to_high() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "grok-4.7")
+    assert result.returncode == 0, result.stderr
+    assert "--model grok-4.7-high" in result.stdout
+
+def test_cursor_refuses_claude_model(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Ensure native claude CLI is "found" by creating a dummy in tmp_path and putting it in PATH
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(exist_ok=True)
+    claude_bin = bin_dir / "claude"
+    claude_bin.write_text("#!/bin/sh\nexit 0", encoding="utf-8")
+    claude_bin.chmod(0o755)
+    env = os.environ.copy()
+    env["PATH"] = f"{bin_dir}{os.pathsep}{env['PATH']}"
+
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "claude-opus-5-5", env=env)
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
+
+def test_cursor_claude_refusal_does_not_trip_for_non_claude() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", "composer-2.5")
+    assert result.returncode == 0, result.stderr
+    assert "--model composer-2.5" in result.stdout
