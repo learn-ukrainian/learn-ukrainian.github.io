@@ -367,6 +367,9 @@ session_supervisor_start_inbox_watch() {
   trap 'LC_SUPERVISORY_EVENT=1' USR1
   (
     trap - EXIT INT TERM HUP USR1
+    # The watcher checks the same harness CLI before claiming a restart. These
+    # values come from the initial provider argv, never from the wake body.
+    export LC_DRIVER_PROVIDER_COMMAND LC_DRIVER_PROVIDER_EXECUTABLE
     exec 216<&-
     exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
   ) >&217 217>&- &

@@ -31,7 +31,9 @@ from tests.helpers.restore_import_state import restore_import_state
 
 
 @pytest.mark.parametrize("resolution", ["recorded", "local-bin", "path", "missing", "non-executable", "directory"])
-def test_successor_preflight_resolves_executable_with_stripped_pane_path(tmp_path: Path, resolution: str) -> None:
+def test_successor_preflight_resolves_executable_with_stripped_pane_path(
+    tmp_path: Path, resolution: str, monkeypatch: pytest.MonkeyPatch,
+) -> None:
     helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
     home = tmp_path / "home"
     cli = (home / ".local/bin" if resolution == "local-bin" else tmp_path / "cli with spaces") / "fixture-cli"
@@ -62,6 +64,26 @@ fixture-cli
     else:
         assert result.returncode == 0, result.stderr
         assert result.stdout == "provider-found\n"
+
+    from scripts.ai_agent_bridge._inbox_watch import preflight_supervisory_successor
+
+    for key in ("HOME", "PATH"):
+        monkeypatch.setenv(key, env[key])
+    monkeypatch.setenv("LC_DRIVER_PROVIDER_COMMAND", "fixture-cli")
+    monkeypatch.setenv("LC_DRIVER_PROVIDER_EXECUTABLE", str(cli) if resolution != "local-bin" else "")
+    assert preflight_supervisory_successor() is (result.returncode == 0)
+
+
+@pytest.mark.parametrize("failure", [OSError("unavailable"), subprocess.TimeoutExpired("bash", 30)])
+def test_watcher_preflight_probe_failure_retains_restart(monkeypatch, capsys, failure) -> None:
+    from scripts.ai_agent_bridge import _inbox_watch
+
+    def fail(*args, **kwargs):
+        raise failure
+
+    monkeypatch.setattr(_inbox_watch.subprocess, "run", fail)
+    assert not _inbox_watch.preflight_supervisory_successor()
+    assert "restart retained for retry" in capsys.readouterr().err
 
 
 def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path: Path) -> None:

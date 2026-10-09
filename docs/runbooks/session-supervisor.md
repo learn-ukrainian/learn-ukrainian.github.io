@@ -221,6 +221,15 @@ transient watcher exit (76) restarts the watcher under the same lease; USR1 alon
 never authorizes a wake. Permanent watcher failures still stop the provider
 without authorizing a successor.
 
+Before claiming or preparing a current-generation restart, the live watcher
+checks the successor CLI using the launcher's recorded harness executable,
+current PATH, and `~/.local/bin` fallback. If unavailable, it leaves the delivery
+unchanged and retries at the watcher poll interval. The launcher repeats this
+check before stopping the predecessor. If the CLI disappears after preparation,
+the restarted watcher checks it before replaying or reclaiming the delivery;
+the predecessor and lease remain live, and failed CLI checks spend no delivery
+attempts. Restoring the executable lets the same wake proceed.
+
 Exact lease close retries Monitor failures with exponential backoff from 1 second
 up to 30 seconds for ten minutes (override: `LC_DRIVER_CLOSE_RETRY_SECONDS`). It
 logs `waiting for Monitor API to recover (close attempt N)` without remote stderr.
