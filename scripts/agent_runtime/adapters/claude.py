@@ -853,6 +853,7 @@ class ClaudeAdapter:
             output_file=None,
             env_overrides={
                 **HEADLESS_BACKGROUND_ENV,
+                "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
                 **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
                 **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
             },

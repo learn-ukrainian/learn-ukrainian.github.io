@@ -38,6 +38,7 @@ from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 SWITCH = "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"
+ADVISOR_SWITCH = "CLAUDE_CODE_DISABLE_ADVISOR_TOOL"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 _FAKE_CLAUDE = textwrap.dedent(
@@ -113,16 +114,20 @@ def _invoke(binary: Path, cwd: Path, mode: str) -> runner.Result:
 
 
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_runner_launch_carries_switch_and_worker_reports_in_full(fake_claude, tmp_path: Path, mode: str) -> None:
+def test_runner_launch_carries_switch_and_worker_reports_in_full(
+    fake_claude, tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """AC-01: through the real runner and sanitizer, background work is refused."""
     binary, dump = fake_claude
     workdir = tmp_path / "work"
     workdir.mkdir()
+    monkeypatch.setenv(ADVISOR_SWITCH, "0")
 
     result = _invoke(binary, workdir, mode)
 
     seen = json.loads(dump.read_text(encoding="utf-8"))
     assert seen["env"][SWITCH] == "1"
+    assert seen["env"][ADVISOR_SWITCH] == "1"
     argv = seen["argv"]
     assert argv[0] == "-p"
     deny = json.loads(argv[argv.index("--settings") + 1])["permissions"]["deny"]
@@ -130,6 +135,7 @@ def test_runner_launch_carries_switch_and_worker_reports_in_full(fake_claude, tm
     assert result.ok is True
     assert result.response == "FINAL REPORT: every command ran in the foreground. VERDICT: APPROVE"
     assert SWITCH not in os.environ
+    assert os.environ[ADVISOR_SWITCH] == "0"
 
 
 def test_fake_cli_reproduces_the_lost_report_without_the_switch(
@@ -260,7 +266,7 @@ def test_every_headless_plan_disables_background(tmp_path: Path, mode: str, tool
     assert plan.cmd.count("--settings") == 1
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
     assert "advisorModel" not in settings
-    assert "CLAUDE_CODE_DISABLE_ADVISOR_TOOL" not in plan.env_overrides
+    assert plan.env_overrides[ADVISOR_SWITCH] == "1"
     assert settings["permissions"]["deny"] == ["Monitor", "ScheduleWakeup", "CronCreate", "Workflow"]
     # The guard hooks are unchanged by the added deny.
     publish_guard = mode == "read-only" and tool_config == {"reviewer_tools": True}
