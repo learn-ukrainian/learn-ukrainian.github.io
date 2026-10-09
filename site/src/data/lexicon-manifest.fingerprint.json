@@ -175,7 +175,7 @@
       },
       {
         "path": "scripts/lexicon/dispose_published_records.py",
-        "sha256": "f8c2269afc9ad6508fc33924b303cdeb65bd0b2eed27e2c2aa9a9e3607b1366f"
+        "sha256": "319899b6307a3975ac43b84b59ab4002cbb12227b988883aced77be04ecf5213"
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",

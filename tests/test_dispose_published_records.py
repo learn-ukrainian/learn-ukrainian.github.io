@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import stat
 from pathlib import Path
 
 import pytest
@@ -11,7 +13,7 @@ import pytest
 from scripts.lexicon import dispose_published_records as command
 from scripts.lexicon import manifest_io
 from scripts.lexicon import published_record_dispositions as dispositions
-from tests.test_published_record_dispositions import add_release, make_authority
+from tests.test_published_record_dispositions import add_release, make_authority, write_preservation, write_yaml
 
 
 def prepare(tmp_path, monkeypatch):
@@ -93,6 +95,7 @@ def test_interrupted_replace_preserves_before_and_exact_retry(tmp_path, monkeypa
         patch.setattr(os, "replace", fail_replace)
         assert command.main(["--manifest", str(path), "--action", "withdraw", "--write"]) == 2
     assert path.read_bytes() == raw
+    assert not list(tmp_path.glob(".prospective.json.*.tmp"))
     assert command.dispose(path, "withdraw", write=True)["written"]
     assert command.dispose(path, "withdraw", write=True)["state"] == "already_applied"
 
@@ -211,3 +214,125 @@ def test_present_metadata_aliases_only_and_cli_contract(tmp_path, monkeypatch, c
     manifest = {"entries": []}
     command._refresh_present_counts(manifest)
     assert manifest == {"entries": []}
+
+
+@pytest.mark.parametrize(
+    "manifest",
+    [
+        {},
+        {"entries": [], "unknown": {"z": None, "a": [True, False, 0, -7, 1.25]}},
+        {"unknown": {"unicode": "їé😀e\u0301", "escapes": '\"\\\n\t\x00'}, "entries": [{"b": {}, "a": []}]},
+        {"unknown": {"nested": [{"large": "é" * 4096}], "float": -0.0}, "entries": []},
+    ],
+)
+def test_incremental_canonical_bytes_match_shared_serializer(manifest):
+    expected = manifest_io.serialize_manifest(manifest)
+    chunks = list(command._canonical_chunks(manifest))
+    assert b"".join(chunks) == expected
+    assert chunks[-1] == b"\n"
+    assert command._manifest_sha256(manifest) == hashlib.sha256(expected).hexdigest()
+
+
+@pytest.mark.parametrize("raw", [b"", b"small\n", b"x" * (2 * 1024 * 1024 + 17)])
+def test_file_digest_covers_empty_and_multiple_read_blocks(tmp_path, raw):
+    path = tmp_path / "input.json"
+    path.write_bytes(raw)
+    assert command._file_sha256(path) == hashlib.sha256(raw).hexdigest()
+
+
+@pytest.mark.parametrize("fault", ["open", "encoding", "digest", "write"])
+def test_failed_staging_keeps_original_and_cleans_only_owned_file(tmp_path, monkeypatch, fault):
+    path = tmp_path / "input.json"
+    original = b"unchanged original\n"
+    path.write_bytes(original)
+    unrelated = tmp_path / ".input.json.unrelated.tmp"
+    unrelated.write_bytes(b"other writer")
+    manifest = {"first": [1, 2], "unknown": {"later": "valid"}}
+    expected = command._manifest_sha256(manifest)
+    if fault == "open":
+        def refused_open(*args, **kwargs):
+            raise OSError("staging creation refused")
+
+        monkeypatch.setattr(command.tempfile, "NamedTemporaryFile", refused_open)
+    elif fault == "encoding":
+        manifest["unknown"]["later"] = object()
+    elif fault == "digest":
+        expected = "0" * 64
+    else:
+        real_temporary = command.tempfile.NamedTemporaryFile
+
+        def interrupted_output(*args, **kwargs):
+            output = real_temporary(*args, **kwargs)
+
+            def interrupted_write(chunks):
+                output.write(next(chunks))
+                output.flush()
+                raise OSError("interrupted staging write")
+
+            output.writelines = interrupted_write
+            return output
+
+        monkeypatch.setattr(command.tempfile, "NamedTemporaryFile", interrupted_output)
+    with pytest.raises((TypeError, dispositions.DispositionError, OSError)):
+        with command._staged_manifest(path, manifest, expected):
+            pytest.fail("failed staging must never reach replacement")
+    assert path.read_bytes() == original
+    assert unrelated.read_bytes() == b"other writer"
+    assert set(tmp_path.iterdir()) == {path, unrelated}
+
+
+def test_staged_canonical_bytes_are_closed_verified_and_removed(tmp_path):
+    path = tmp_path / "input.json"
+    path.write_bytes(b"original")
+    path.chmod(0o640)
+    manifest = {"unknown": {"unicode": "é😀", "ordered": [None, True]}, "entries": []}
+    expected = manifest_io.serialize_manifest(manifest)
+    with command._staged_manifest(path, manifest, hashlib.sha256(expected).hexdigest()) as staged:
+        assert staged.parent == path.parent and staged != path
+        assert staged.read_bytes() == expected
+        assert stat.S_IMODE(staged.stat().st_mode) == 0o640
+        assert path.read_bytes() == b"original"
+    assert set(tmp_path.iterdir()) == {path}
+
+
+@pytest.mark.parametrize("fault", ["input", "ledger", "preservation"])
+def test_changes_during_staging_refuse_atomic_replace(tmp_path, monkeypatch, fault):
+    ledger, preserved, _, path = prepare(tmp_path, monkeypatch)
+    original = path.read_bytes()
+    real_chunks = command._canonical_chunks
+    calls = 0
+
+    def concurrent_change(manifest):
+        nonlocal calls
+        calls += 1
+        yield from real_chunks(manifest)
+        if calls == 2:  # Actual staging, after prospective hashing has completed.
+            if fault == "input":
+                path.write_bytes(original + b"\n")
+            elif fault == "ledger":
+                ledger["unknown"] = "concurrent authority metadata"
+                write_yaml(tmp_path / dispositions.LEDGER_PATH, ledger)
+            else:
+                preserved["unknown"] = "concurrent recovery metadata"
+                write_preservation(tmp_path, ledger, preserved)
+
+    monkeypatch.setattr(command, "_canonical_chunks", concurrent_change)
+    with pytest.raises(dispositions.DispositionError, match="changed during transaction"):
+        command.dispose(path, "withdraw", write=True)
+    assert calls == 2
+    assert path.read_bytes() == original + (b"\n" if fault == "input" else b"")
+    assert not list(tmp_path.glob(".prospective.json.*.tmp"))
+
+
+def test_atomic_withdraw_does_not_mutate_hardlinked_original(tmp_path, monkeypatch):
+    _, preserved, _, path = prepare(tmp_path, monkeypatch)
+    original = path.read_bytes()
+    linked = tmp_path / "original-link.json"
+    os.link(path, linked)
+    path.chmod(0o444)
+    assert command.dispose(path, "withdraw", write=True)["written"]
+    assert linked.read_bytes() == original
+    assert command._file_sha256(path) == preserved["transaction"]["after_sha256"]
+    assert stat.S_IMODE(path.stat().st_mode) == 0o444
+    assert path.stat().st_ino != linked.stat().st_ino
+    assert not list(tmp_path.glob(".prospective.json.*.tmp"))
