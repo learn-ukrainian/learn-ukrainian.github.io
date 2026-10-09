@@ -1587,7 +1587,7 @@ def _execute_invocation_plan(
     agy_budget: _AgyLaunchBudget | None = None,
     cli_version: str = "unknown",
 ) -> _ExecutionOutcome:
-    """Two launches maximum; cancellation and pre-model 503 share the retry."""
+    """Two launches maximum; cancellation, pre-model 503, and transient faults share the retry."""
     kwargs = dict(
         agent_name=agent_name,
         adapter=adapter,
@@ -1647,9 +1647,10 @@ def _execute_invocation_plan(
         tc.get(key)
         for key in ("review_id", "attempt_id", "review_attempt_boundary", "review_ledger_path", "mcp_config_path")
     )
-    # Receipt attempts cannot replay cancellation, so they need no Git snapshot.
+    # Receipt attempts cannot replay, so they need no Git snapshot.
     # In particular, do not spawn a Git probe before the boundary can refuse.
-    before = _agy_git_state(cwd) if mode == "read-only" and not receipt else None
+    # Write modes snapshot so a transient fault can prove the workspace is unchanged.
+    before = _agy_git_state(cwd) if not receipt else None
     elapsed = 0.0
     execution: _ExecutionOutcome | None = None
     while True:
@@ -1687,7 +1688,11 @@ def _execute_invocation_plan(
         execution = replace(execution, duration_s=elapsed)
         if parse.ok or execution.kill_reason or parse.rate_limited:
             return finish(execution)
-        from .adapters.agy import AGY_BACKGROUND_TASK_CANCELED, AGY_INCOMPLETE_RUN_REASONS
+        from .adapters.agy import (
+            AGY_BACKGROUND_TASK_CANCELED,
+            AGY_INCOMPLETE_RUN_REASONS,
+            classify_agy_transient_provider_fault,
+        )
 
         cancellation = (
             evidence.completion_reason == AGY_BACKGROUND_TASK_CANCELED
@@ -1705,13 +1710,27 @@ def _execute_invocation_plan(
             and not parse.agy_killed_commands
             and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS
         )
-        if not cancellation and not eligibility:
+        provider_fault = None
+        if not cancellation and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS:
+            provider_fault = classify_agy_transient_provider_fault(
+                execution.stderr_text,
+                parse.provider_error_text,
+                parse.stderr_excerpt,
+            )
+        if not cancellation and not eligibility and not provider_fault:
             return finish(execution)
         if len(budget.attempts) >= 2:
             budget.retry_disposition = "exhausted"
             budget.reroute_reason = "agy_retry_exhausted"
             return finish(execution)
-        if mode != "read-only":
+        # Cancellation and pre-model eligibility never replay a write.
+        # A transient provider fault replays a write only when Git is unchanged.
+        if provider_fault and not cancellation and not eligibility:
+            if mode != "read-only" and (before is None or _agy_git_state(cwd) != before):
+                budget.retry_disposition = "unsafe_replay"
+                budget.reroute_reason = "unsafe_replay"
+                return finish(execution)
+        elif mode != "read-only":
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
@@ -1752,14 +1771,27 @@ def _execute_invocation_plan(
             budget.retry_disposition = "deadline_exhausted"
             budget.reroute_reason = "deadline_exhausted"
             return finish(execution)
-        if (cancellation and _agy_git_state(cwd) != before) or not _agy_receipt_ledger_empty(tool_config):
+        write_changed = (
+            bool(provider_fault)
+            and not cancellation
+            and not eligibility
+            and mode != "read-only"
+            and (before is None or _agy_git_state(cwd) != before)
+        )
+        replay_blocked = (cancellation and _agy_git_state(cwd) != before) or write_changed
+        if replay_blocked or not _agy_receipt_ledger_empty(tool_config):
             cleanup = getattr(adapter, "cleanup_invocation", None)
             if cleanup is not None:
                 cleanup(retry_plan)
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
-        budget.retry_reason = "incomplete_cancellation" if cancellation else "pre_model_eligibility_503"
+        if cancellation:
+            budget.retry_reason = "incomplete_cancellation"
+        elif eligibility:
+            budget.retry_reason = "pre_model_eligibility_503"
+        else:
+            budget.retry_reason = provider_fault
         budget.retry_disposition = "retried"
         kwargs.update(plan=retry_plan, session_id=None)
 
