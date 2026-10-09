@@ -38,7 +38,6 @@ from typing import Any
 from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
 
 DEFAULT_POLICY = Path("~/.config/learn-ukrainian/model-pause.json")
-_MONITOR_DEFAULT = "http://127.0.0.1:8765"
 
 
 class ModelPausedRefused(MechanicalAdmissionRefused):
@@ -110,7 +109,12 @@ def active_pause(model: str | None, policy: Mapping[str, Any], now: datetime) ->
 
 def routing_budget_used_pct(lane: str) -> float | None:
     """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None."""
-    base = os.environ.get("DELEGATE_MONITOR_API", _MONITOR_DEFAULT).rstrip("/")
+    try:
+        from scripts.delegate import _monitor_api_base_url  # the one Monitor endpoint setting
+
+        base = _monitor_api_base_url()
+    except Exception:
+        return None
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
             data = json.load(resp)

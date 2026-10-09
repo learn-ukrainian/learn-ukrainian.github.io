@@ -152,3 +152,21 @@ def test_dispatch_admission_refuses_a_paused_model(tmp_path, monkeypatch) -> Non
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
     with pytest.raises(mp.ModelPausedRefused):
         ta._refuse_paused(["claude-opus-5-5"])
+
+
+def test_selected_reviewer_not_the_paused_pin_is_admitted(monkeypatch) -> None:
+    from scripts.agent_runtime import target_admission as ta
+
+    seen: list = []
+    monkeypatch.setattr(ta, "_refuse_paused", lambda models: seen.append(list(models)))
+    import inspect
+
+    src = inspect.getsource(ta.resolve_and_admit)
+    assert "[*models," not in src.split("_refuse_paused(")[1].split(")")[0]
+
+
+def test_public_source_has_no_endpoint_literal() -> None:
+    from pathlib import Path
+
+    text = Path("scripts/agent_runtime/model_pause.py").read_text(encoding="utf-8")
+    assert "127.0.0.1" not in text and ":8765" not in text

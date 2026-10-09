@@ -422,8 +422,10 @@ def resolve_and_admit(
     if new_dispatch or review_dispatch:
         # Operator pauses apply to new work only, never to messaging or to
         # lifecycle operations on existing work.
+        # Checked against the identities actually selected, so an automatic
+        # fallback away from a paused pin (e.g. reviewer selection) proceeds.
         _refuse_paused(
-            [*models, *(target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved)]
+            [target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved]
         )
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
