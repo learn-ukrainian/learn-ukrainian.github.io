@@ -830,6 +830,12 @@ launcher_prepare_driver_identity() {
   LC_DRIVER_HARNESS="$harness"
   export SESSION_EPIC="$LC_EPIC"
   export SESSION_HANDOFF_AGENT="$LC_DRIVER_HANDOFF"
+  # Pinned per-epic driver state (scripts/driver_state.py). Harness hooks
+  # re-inject it every model call so compaction cannot drop the epic binding.
+  export LU_DRIVER_STATE_FILE="$LC_ROOT/.claude/${LC_EPIC}-epic/DRIVER-STATE.md"
+  if [ -n "${LC_DURABLE_HELPER_ROOT:-}" ] && [ -x "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" ]; then
+    export LU_DRIVER_STATE_PYTHON="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
+  fi
 }
 
 launcher_import_rollover_bundle() {
@@ -1295,7 +1301,7 @@ launcher_bind_drive_epic() {
   else
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
   fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands."
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then

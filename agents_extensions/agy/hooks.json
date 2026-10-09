@@ -1,0 +1,11 @@
+{
+  "driver-state-pin": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "sh ../scripts/agy_hooks/driver_state_inject.sh",
+        "timeout": 10
+      }
+    ]
+  }
+}
