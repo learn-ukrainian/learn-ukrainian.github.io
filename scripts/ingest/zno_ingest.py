@@ -3,6 +3,7 @@ Ingest ZNO booklet metadata and online tasks from zno.osvita.ua into sources.db.
 """
 
 import argparse
+import http.client
 import json
 import math
 import re
@@ -1086,7 +1087,7 @@ def _fetch(url: str, rate_limit: float, *, robots: bool = True) -> str | bytes:
                 state = _robots_parse(_fetch(f"{origin}/robots.txt", rate_limit, robots=False), USER_AGENT)
                 _robots_states[origin] = state
                 _robots_delays[origin] = state["delay"]
-            except (urllib.error.URLError, OSError) as exc:
+            except (urllib.error.URLError, OSError, http.client.HTTPException) as exc:
                 _robots_stop(f"robots_unreachable: {type(exc).__name__}")
         if robots:
             _robots_check_target(url)
@@ -1115,6 +1116,8 @@ def _fetch(url: str, rate_limit: float, *, robots: bool = True) -> str | bytes:
                 if 400 <= status < 500:
                     return b""
                 _robots_stop("robots_unreachable")
+            if not 200 <= status < 300:
+                raise urllib.error.HTTPError(url, status, "Source HTTP error", headers, None)
             return body.decode("utf-8", errors="strict")
     if not robots:
         _robots_stop("robots_unreachable: redirect limit")
