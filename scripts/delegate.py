@@ -10071,12 +10071,16 @@ def _run_worker(
                 tool_config["mechanical_task"] = state["mechanical_task"]
             if (
                 agent in {"agy", "gemini"}
-                and mode == "read-only"
-                and (state.get("review") or require_review_verdict or review_id is not None)
+                and (
+                    _dispatch_is_review_typed(argparse.Namespace(**state))
+                    or require_review_verdict
+                    or review_id is not None
+                )
             ):
-                tool_config["review_profile"] = state.get("review_profile")
+                tool_config["review_profile"] = state.get("review_profile") or "code"
                 if (
-                    state.get("review_profile") == "ukrainian"
+                    mode == "read-only"
+                    and tool_config["review_profile"] in {"ukrainian", "code"}
                     and mcp_config_path is None
                     and review_id is None
                     and attempt_id is None
@@ -11695,6 +11699,14 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
+
     if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
@@ -11955,6 +11967,15 @@ def _dispatch(
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    # Reviewer resolution and budget substitution can change the seat after
+    # the original-request guard. Enforce the same boundary on the final route.
+    if (
+        dispatch_agent in {"agy", "gemini"}
+        and (_dispatch_is_review_typed(args) or getattr(args, "pr", None) is not None)
+        and args.mode != "read-only"
+    ):
+        print("❌ agy_review_permissions_require_read_only: use --mode read-only", file=sys.stderr)
+        return 2
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
@@ -17626,8 +17647,9 @@ def build_parser() -> argparse.ArgumentParser:
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected. "
-            "On agy/gemini this also requires --review-profile ukrainian, and "
-            "a --branch target must be a Ukrainian-content diff."
+            "On agy/gemini this also requires --review-profile code or ukrainian. "
+            "Native AGY code review requires low or medium risk and resolver admission; "
+            "Ukrainian review targets must be Ukrainian-content diffs."
         ),
     )
     d.add_argument(
@@ -17636,8 +17658,9 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("code", "infra", "ukrainian"),
         help=(
             "Required with --require-review-verdict when --agent is agy or gemini. "
-            "code and infra are refused (Gemini reviews Ukrainian only, never code — "
-            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
+            "Native AGY admits code at low or medium risk through the reviewer resolver, "
+            "excluding security-sensitive paths; infra is refused. "
+            "Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(

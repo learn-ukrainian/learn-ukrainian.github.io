@@ -6876,7 +6876,7 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert rc == 0
     tool_config = mock_invoke.call_args.kwargs["tool_config"]
     assert tool_config == {
-        "review_profile": None,
+        "review_profile": "code",
         "review_ledger_path": str(plan.ledger_path),
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
@@ -6911,7 +6911,60 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
 
 
-def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir, tmp_path, monkeypatch):
+@pytest.mark.parametrize("agent", ["agy", "gemini"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize("review_flags", [{"review": True}, {"review_profile": "ukrainian"}, {"review_risk": "low"}])
+def test_run_worker_agy_review_write_mode_reaches_adapter_refusal(
+    tmp_tasks_dir, tmp_path, monkeypatch, agent, mode, review_flags
+):
+    from scripts.agent_runtime.adapters import agy
+
+    task_id = "worker-agy-review-write"
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, "cli_version": "fixture", **review_flags}
+    )
+    monkeypatch.setattr(delegate, "_verify_bounded_worker", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *_args: pytest.fail("CLI probe"))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.review_mcp.prepare_agy_permission_home",
+        lambda *_args, **_kwargs: pytest.fail("write review must not provision a home"),
+    )
+    refusals = []
+
+    def invoke(*_args, **kwargs):
+        assert kwargs["tool_config"]["review_profile"] == review_flags.get("review_profile", "code")
+        try:
+            agy.AgyAdapter().build_invocation(
+                prompt="Review the tracked diff.",
+                mode=mode,
+                cwd=tmp_path,
+                model=None,
+                task_id=task_id,
+                session_id=None,
+                tool_config=kwargs["tool_config"],
+            )
+        except agy.AgyReviewPermissionError as exc:
+            refusals.append(exc.reason)
+            raise
+        pytest.fail("write review passed the adapter")
+
+    with patch("agent_runtime.runner.invoke", side_effect=invoke) as runtime:
+        assert delegate._run_worker(
+            task_id=task_id,
+            agent=agent,
+            prompt="Review the tracked diff.",
+            mode=mode,
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        ) == 1
+    runtime.assert_called_once()
+    assert refusals == ["agy_review_permissions_require_read_only"]
+    assert delegate._read_state(delegate._state_path(task_id))["status"] == "failed"
+
+
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
+def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir, tmp_path, monkeypatch, profile):
     token = tmp_path / "fixture-token"
     token.write_text("fixture")
     monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
@@ -6920,18 +6973,38 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     task_id = "worker-agy-permission-home"
-    record = {"task_id": task_id, "review": True, "review_profile": "ukrainian", **_agy_ukrainian_exemption("read-only")}
+    record = {"task_id": task_id, "review": True, "review_profile": profile, **_agy_ukrainian_exemption("read-only")}
     record["advisory_exemption"]["review_profile"] = "ukrainian"
+    if profile == "code":
+        record.pop("advisory_exemption")
+        # This test isolates home provisioning and adapter permissions. The
+        # separate bounded-advisory suite proves admission before this seam.
+        monkeypatch.setattr(delegate, "_verify_bounded_worker", lambda *_args, **_kwargs: None)
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     monkeypatch.setattr(
         delegate, "_reap_runtime_tmp_lease", lambda *_args: {"tmp_bytes_freed": 0, "tmp_reap_error": None}
     )
 
     def invoke(*_args, **kwargs):
+        from scripts.agent_runtime.adapters import agy
+
         home = Path(kwargs["tool_config"]["agy_home_override"])
         settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())["permissions"]
         assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({checkout})"]
         assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
+        monkeypatch.setattr(agy, "_require_background_wait_support", lambda *_args: None)
+        plan = agy.AgyAdapter().build_invocation(
+            prompt="Review the tracked diff.",
+            mode="read-only",
+            cwd=checkout,
+            model=None,
+            task_id=task_id,
+            session_id=None,
+            tool_config=kwargs["tool_config"],
+        )
+        assert "--sandbox" in plan.cmd
+        assert "--dangerously-skip-permissions" not in plan.cmd
+        assert "command(*)" in settings["deny"]
         return _codex_worker_result()
 
     with patch("agent_runtime.runner.invoke", side_effect=invoke):
@@ -10638,6 +10711,53 @@ def _write_args(**overrides):
 
 
 # --- _resolve_write_cwd_error unit tests (deterministic policy) -------------
+
+
+@pytest.mark.parametrize("agent", ["agy", "gemini"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize(
+    "review_flags",
+    [
+        {"review": True},
+        {"type": "review"},
+        {"require_review_verdict": True},
+        {"review_profile": "code"},
+        {"review_profile": "ukrainian"},
+        {"review_attempt": "attempt"},
+        {"review_author_model": "gpt-6.1-sol"},
+        {"review_risk": "low"},
+        {"pr": 10243},
+    ],
+)
+def test_agy_review_dispatch_rejects_write_mode_before_admission(monkeypatch, capsys, agent, mode, review_flags):
+    monkeypatch.setattr(delegate, "dispatch_args_sha256", lambda *a: pytest.fail("dispatch admission"))
+    assert delegate.cmd_dispatch(_write_args(agent=agent, mode=mode, **review_flags)) == 2
+    assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("agent", ["agy", "gemini"])
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+@pytest.mark.parametrize("review_flags", [{"review": True}, {"review_profile": "code"}, {"review_risk": "low"}])
+def test_agy_review_substitution_rejects_write_mode_before_side_effects(
+    tmp_tasks_dir, monkeypatch, capsys, agent, mode, review_flags
+):
+    # Isolate the consumer boundary: the original seat passes the early guard,
+    # then reviewer/budget routing returns a different admitted seat.
+    target = argparse.Namespace(recipient=agent, model="gemini-3.1-pro-high")
+    with (
+        patch.object(delegate, "_kimi_dispatch_gate", return_value=(None, None, target)) as route,
+        patch.object(delegate, "_credit_period_refusal", side_effect=AssertionError("post-route admission")),
+        patch.object(delegate, "_ensure_worktree") as ensure,
+        patch.object(delegate, "_write_state_atomic") as write_state,
+        patch.object(delegate.subprocess, "Popen") as spawn,
+    ):
+        assert delegate.cmd_dispatch(_write_args(agent="claude", mode=mode, **review_flags)) == 2
+    route.assert_called_once()
+    assert route.call_args.kwargs["agent"] == "claude"
+    assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
+    ensure.assert_not_called()
+    write_state.assert_not_called()
+    spawn.assert_not_called()
 
 
 def test_write_guard_allows_read_only_repo_root():

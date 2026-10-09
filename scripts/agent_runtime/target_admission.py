@@ -491,8 +491,6 @@ def _resolve_review_target(
     # Composer/Kimi never review. Native and Cursor Grok require runtime
     # attestation and cross-family eligibility at every risk (#9769).
     forbidden = {"moonshot"}
-    if profile != "ukrainian":
-        forbidden.add("google")
     if profile == "ukrainian":
         facts = None
     trusted = bool((author_model or facts is not None) and risk)

@@ -626,13 +626,26 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
             return "sealed endpoint identity is missing or does not match the candidate route"
         if not candidate.participant or not candidate.sealed_executable:
             return "sealed ACP participant or review executable identity is missing"
-        if candidate.adapter_transport != "acp":
+        native_agy = candidate.route == "agy" and candidate.adapter_transport == "native_agy"
+        if candidate.route == "agy" and not native_agy:
+            return "native AGY review endpoint identity is required; ACP wrapper is not a formal review route"
+        if native_agy:
+            # #10073: AGY reviews in the dispatch worktree, without the
+            # source-blind parent ACP wrapper. Other endpoints stay sealed.
+            if (
+                candidate.participant != "agy"
+                or candidate.catalog_transport != "agy"
+                or candidate.transport != "agy"
+                or candidate.sealed_executable != "scripts/delegate.py"
+            ):
+                return "native AGY review endpoint identity is invalid"
+        elif candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
-        if candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
+        if not native_agy and candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
             return "candidate is not bound to the sealed ACP executable"
-        if candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
+        if not native_agy and candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
-        if ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
+        if not native_agy and ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:
             return "candidate catalog transport does not match its runner-owned ACP participant"
         if candidate.transport != candidate.catalog_transport:
             return "candidate transport does not match its ACPX catalog transport"
@@ -859,9 +872,13 @@ def evaluate_candidate(
                 capacity=capacity,
             )
 
-    # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
-    # hard gate even for injected ladders and explicitly pinned candidates.
-    if candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy":
+    # #10073: low/medium code review only through AGY. Pins, custom ladders,
+    # advisory evaluation and forged roles cannot bypass the risk boundary.
+    if (candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy") and (
+        candidate.route != "agy"
+        or inputs.risk.strip().casefold() not in {"low", "medium"}
+        or is_security_sensitive_change(inputs.changed_paths, inputs.owned_paths)
+    ):
         return CandidateResult(
             name=candidate.name,
             concrete_model=candidate.concrete_model,
@@ -872,7 +889,7 @@ def evaluate_candidate(
             quality_tier=candidate.quality_tier,
             requires_silence_timeout=candidate.requires_silence_timeout,
             status="excluded",
-            reason="operator 2026-09-25: Gemini reviews Ukrainian only, never code — model-assignment.md",
+            reason="Gemini code review requires AGY at low/medium risk and excludes security-sensitive paths (#10073)",
             health=health,
             capacity=capacity,
         )

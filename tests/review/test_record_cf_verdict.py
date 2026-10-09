@@ -15,6 +15,54 @@ from scripts.review.language_lane import is_ukrainian_review
 from tests.test_record_cf_verdict import SHA, setup_record, write_task
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("profile", ["code", "ukrainian"])
+def test_gemini_verdict_records_and_gate_accepts_exact_head(monkeypatch, tmp_path, risk, profile):
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path, families={"openai"})
+    write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_profile=profile,
+               review_risk=risk, sources_mcp_call_count=3 if profile == "ukrainian" else None)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["verdict"] == "APPROVED"
+    marker = recorder.parse_marker(comments[0]["body"])
+    assert marker["family"] == "google"
+    assert marker["sha"] == SHA
+    assert sweep.lookup_verdict(comments, SHA, "fleet").state == "APPROVED"
+    assert keeper._recorded_approval_for_head(comments, SHA, "fleet")
+    assert not keeper._recorded_approval_for_head(comments, "b" * 40, "fleet")
+    assert calls == {"posts": 1, "statuses": 1}
+
+
+@pytest.mark.parametrize("risk,path", [("high", "ordinary.py"), ("critical", "ordinary.py"),
+                                      ("low", "scripts/review/reviewer_resolver.py"),
+                                      ("medium", ".github/workflows/ci.yml")])
+def test_gemini_code_verdict_refused_before_publication(monkeypatch, tmp_path, risk, path):
+    from tests.test_record_cf_verdict import facts_for
+
+    tasks, comments, calls = setup_record(monkeypatch, tmp_path)
+    monkeypatch.setattr(recorder, "pr_review_facts", lambda *_args, **_kwargs: facts_for({"anthropic"}, changed_paths=(path,)))
+    write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_profile="code", review_risk=risk)
+    with pytest.raises(recorder.RecordError, match="Gemini code review requires AGY at low/medium risk"):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert not comments
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("head", ["a" * 7, "b" * 40])
+def test_gemini_stale_or_short_head_refused(monkeypatch, tmp_path, head):
+    tasks, _, calls = setup_record(monkeypatch, tmp_path, head=head)
+    write_task(tasks, agent="agy", model="gemini-3.8-flash-high", review_risk="low")
+    with pytest.raises(recorder.RecordError):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert calls == {"posts": 0, "statuses": 0}
+
+
+@pytest.mark.parametrize("sha", ["a" * 7, "a" * 39, "z" * 40])
+def test_gemini_marker_requires_full_commit_sha(sha):
+    with pytest.raises(recorder.RecordError, match="full 40-hex"):
+        recorder.build_comment(sha=sha, task_id="gemini-review", started="2026-10-09T00:00:00Z",
+                               verdict="APPROVED", model="gemini-3.8-flash-high", family="google", reply="VERDICT: APPROVE")
+
+
 @pytest.fixture(autouse=True)
 def recorder_matcher(synthetic_opsec):
     from tests.opsec_fixtures import synthetic_rules

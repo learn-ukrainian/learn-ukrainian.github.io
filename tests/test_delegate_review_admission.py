@@ -20,6 +20,26 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_native_gemini_low_medium_review_retains_requested_seat(risk):
+    result = target_admission._resolve_review_target(
+        "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+        profile="code", attempt=False, snapshot=None, budget_seat="agy",
+    )
+    assert result == ("agy", "gemini-3.8-flash-high")
+
+
+@pytest.mark.parametrize("risk,path", [("high", "ordinary.py"), ("critical", "ordinary.py"),
+                                      ("low", ".github/workflows/ci.yml"),
+                                      ("medium", "scripts/review/reviewer_resolver.py")])
+def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
+    with pytest.raises(ReviewAdmissionRefused):
+        target_admission._resolve_review_target(
+            "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+            profile="code", attempt=True, snapshot=None, budget_seat="agy", changed_paths=(path,),
+        )
+
+
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
     from tests.test_ask_review_admission_floor import _git
@@ -44,6 +64,67 @@ def ordinary_review_repo(tmp_path_factory):
 def resolved_route_test_target(ordinary_review_repo, monkeypatch):
     monkeypatch.setattr(delegate, "_local_repo_root", ordinary_review_repo)
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {"agents": {}, "diagnostics": {"stale": False}})
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_cmd_dispatch_native_agy_code_pr_review(ordinary_review_repo, tmp_path, monkeypatch, risk):
+    """PR verdict reviews pass both profile checks and real resolver admission."""
+    from scripts.review import target_resolution
+    from tests.ai_agent_bridge import test_agy_review_profile
+    from tests.test_delegate import _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", ordinary_review_repo)
+    monkeypatch.chdir(ordinary_review_repo)
+    monkeypatch.setattr(test_agy_review_profile, "_OWNED_PATH", "ordinary.py")
+    head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ordinary_review_repo, text=True, timeout=30,
+    ).strip()
+    payload = json.dumps({
+        "number": 42, "baseRefName": "main", "baseRefOid": head,
+        "headRefName": "ordinary-review", "headRefOid": head, "isCrossRepository": False,
+    })
+    monkeypatch.setattr(
+        target_resolution, "_run_gh",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    monkeypatch.setattr(
+        "scripts.common.github_client.run",
+        lambda *_args, **_kwargs: subprocess.CompletedProcess([], 0, payload, ""),
+    )
+    argv = [
+        "dispatch", "--agent", "agy", "--model", "gemini-3.8-flash-high",
+        "--mode", "read-only", "--task-id", "native-agy-review", "--pr", "42",
+        "--require-review-verdict", "--review-profile", "code",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk,
+        "--owned-path", "ordinary.py",
+        "--prompt", "Review the PR.",
+    ]
+    args = delegate.build_parser().parse_args(
+        test_agy_review_profile._with_sol_envelope(monkeypatch, tmp_path, argv)
+    )
+    validate_effort = delegate._validate_dispatch_effort
+    checks = []
+
+    class PassedReviewAdmission(Exception):
+        pass
+
+    def stop_after_profile_checks(agent, effort):
+        validate_effort(agent, effort)
+        checks.append(agent)
+        # The second check follows both profile gates and resolver admission,
+        # including final-model resolution. Stop before launch side effects.
+        if len(checks) == 2:
+            raise PassedReviewAdmission
+
+    monkeypatch.setattr(delegate, "_validate_dispatch_effort", stop_after_profile_checks)
+    with pytest.raises(PassedReviewAdmission):
+        delegate.cmd_dispatch(args)
+    assert checks == ["agy", "agy"]
+    assert args.model == "gemini-3.8-flash-high"
+    assert args.pinned_head == head
+    assert args._review_admission_head == head
+    assert not delegate._state_path(args.task_id).exists()
 
 
 @pytest.mark.parametrize("outcome", ["published", "refused", "crashed", "spawn-failed"])
@@ -1157,7 +1238,8 @@ def test_review_budget_without_both_trusted_inputs_keeps_requested_reviewer(monk
 
 
 @pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
-def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatch, risk):
+@pytest.mark.parametrize("agy_available", [False, True])
+def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatch, risk, agy_available):
     calls = []
     real = reviewer_resolver.resolve_reviewer
 
@@ -1168,13 +1250,21 @@ def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatc
 
     monkeypatch.setattr(reviewer_resolver, "resolve_reviewer", capture)
     args = _args("--check-budget", "--review-author-model", "claude-opus-5-5", "--review-risk", risk)
-    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
+    budget = _budget(claude="near_cap")
+    if agy_available:
+        budget["agents"]["agy"] = {"status": "cool", "remaining_pct": 80}
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
     assert calls and all(inputs.author_model == "claude-opus-5-5" and inputs.risk == risk for inputs, _ in calls)
-    # #9769: the resolver may select either admitted Grok transport at every risk.
+    # #10073 adds Gemini below high risk; Grok retains high/critical review.
     assert refusal is None
-    assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
+    if risk in {"low", "medium"} and agy_available:
+        assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    else:
+        assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
     assert routing.substitution["source"] == "reviewer-resolver"
-    assert calls[-1][1].selected.concrete_model == "grok-4.7"
+    assert calls[-1][1].selected.concrete_model == (
+        "gemini-3.8-flash-high" if risk in {"low", "medium"} and agy_available else "grok-4.7"
+    )
 
 
 def _admit_cursor_review(model, author, risk):
@@ -1732,7 +1822,8 @@ def test_ineligible_review_refuses_before_budget_probe(monkeypatch, seat, model)
         pytest.fail("ineligible review must not probe budget")
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
-    args = _args("--agent", seat, "--model", model, "--check-budget")
+    risk_flags = ("--review-risk", "high") if seat == "agy" else ()
+    args = _args("--agent", seat, "--model", model, "--check-budget", *risk_flags)
     routing = delegate._DispatchRouting()
     refusal, target = delegate._admit_dispatch_target(
         args,
@@ -2016,7 +2107,7 @@ def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):
     assert delegate._dispatch_is_review_typed(_args(*extra, verdict=False))
 
 
-@pytest.mark.parametrize("seat,model", [("kimi", None), ("agy", "gemini-3.8-flash-high")])
+@pytest.mark.parametrize("seat,model", [("kimi", None)])
 def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_code(monkeypatch, seat, model):
     """#9538: a code-review dispatch without trusted inputs still passes reviewer admission."""
     pin = ("--model", model) if model else ()
@@ -2024,6 +2115,15 @@ def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_
     (refusal, target), _ = _admit(args, monkeypatch)
     assert target is None
     assert refusal
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_gemini_code_review_without_verdict_flag_is_admitted(monkeypatch, risk):
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "code",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, "--force-agent", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
 
 
 def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_seat(monkeypatch):

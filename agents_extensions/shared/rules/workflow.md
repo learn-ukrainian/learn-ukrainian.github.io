@@ -499,7 +499,7 @@ Strong success criteria enable independent looping. Weak criteria ("make it work
 
 **Adversarial code review command** (steps 2 & 6). Use a current cross-family
 review lane per `model-assignment.md` Code review row and document findings on the GH issue.
-Gemini-family seats stay off that row. Two residuals are accepted there:
+Gemini/AGY joins at low/medium risk; security paths remain excluded (#10073). Two residuals are accepted there:
 `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion
 with no path check, and `delegate --agent agy` with no review-typing flag
 is not gated.

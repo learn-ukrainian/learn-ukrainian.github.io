@@ -952,6 +952,8 @@ def build_comment(
     review_mode: str = "cross_family",
     review_profile: str = "code", sources_mcp_call_count: int | None = None,
 ) -> str:
+    if not SHA.fullmatch(sha):
+        raise RecordError("reviewed SHA must be a full 40-hex commit SHA")
     if review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
     if MARKER_PREFIX in reply:
