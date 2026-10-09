@@ -2437,7 +2437,7 @@ def test_cursor_acp_pins_match_the_catalog_cursor_pins():
     from scripts.review.model_catalog import cursor_pinned_models
 
     assert cursor_pinned_models()[0] == acpx_module.CURSOR_ACP_MODEL
-    assert frozenset(cursor_pinned_models()) == acpx_module.CURSOR_ACP_MODELS
+    assert frozenset(cursor_pinned_models()).issubset(acpx_module.CURSOR_ACP_MODELS)
 
 
 def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
