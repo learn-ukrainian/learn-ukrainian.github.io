@@ -267,17 +267,17 @@ def test_stacked_base_is_the_open_pr_on_the_base_branch() -> None:
 
 def test_epic_and_state_filters() -> None:
     rows = _rows(
-        _pull(number=1, sha="d" * 40, body="Closes #12", epics=("12",)),
+        _pull(number=1, sha="d" * 40, body="Closes #123", epics=("123",)),
         _pull(number=2, sha="e" * 40, labels=({"name": "hold"},), epics=("99",)),
         comments={1: (_comment("d" * 40),), 2: (_comment("e" * 40),)},
         checks={"d" * 40: _green("d" * 40), "e" * 40: (_check("CI Gate", "e" * 40, conclusion="failure"),)},
     )
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="epic:12")] == [1]
+    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="epic:123")] == [1]
     assert [row["number"] for row in prs_mod.filter_prs(rows, epic="99")] == [2]
     assert [row["number"] for row in prs_mod.filter_prs(rows, state="held")] == [2]
     assert [row["number"] for row in prs_mod.filter_prs(rows, state="red")] == [2]
     assert prs_mod.filter_prs(rows, state="nope") == []
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="12", state="open")] == [1]
+    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="123", state="open")] == [1]
 
 
 def _rest_pull(number: int, sha: str, head: str, base: str) -> dict:
