@@ -78,6 +78,55 @@ def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     )
 
 
+def _render_driver_prompt(root: Path) -> str:
+    """Render the binding without running a provider or mutating its lease."""
+    proc = subprocess.run(
+        [
+            "bash", "-c",
+            'set -euo pipefail; source "$1"; LC_ROOT="$2"; LC_EPIC=infra; '
+            'LC_PROVIDER=codex; LC_DRY_RUN=0; LC_FORWARD_ARGS=(); '
+            'export FLEET_COMMS_PLANE_MODE=authority; '
+            'launcher_bind_drive_epic; printf "%s\\n" "${LC_FORWARD_ARGS[0]}"',
+            "bash", str(REPO / "scripts/lib/launcher_core.sh"), str(root),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    return proc.stdout
+
+
+def test_fallback_driver_prompt_pins_landing_sequence(tmp_path: Path) -> None:
+    # With no helper under LC_ROOT, fleet_comms_cold_clause is unavailable.
+    prompt = _render_driver_prompt(tmp_path)
+    landing = (
+        "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; "
+        "require CI Gate green on that same head, then the accountable driver enqueues "
+        "through the merge queue. "
+    )
+    closeout = (
+        "After landing: confirm MERGED and the actual merge SHA, then run "
+        "`.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` for closeout."
+    )
+    assert landing in prompt
+    assert closeout in prompt
+    assert prompt.index(landing) < prompt.index(closeout)
+    assert "merge when CI green" not in prompt
+    assert "Sealed formal CF is retired" in prompt
+    assert "do not claim, renew, or reopen the lease" in prompt
+
+
+def test_fallback_and_shared_driver_prompt_landing_clauses_match(tmp_path: Path) -> None:
+    fallback = _render_driver_prompt(tmp_path)
+    shared = _render_driver_prompt(REPO)
+    for prefix, suffix in (("Landing: ", "merge queue."), ("After landing: ", "for closeout.")):
+        fallback_clause = prefix + fallback.split(prefix, 1)[1].split(suffix, 1)[0] + suffix
+        assert fallback_clause in shared
+
+
 def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
     helper = HELPER.read_text(encoding="utf-8")
     for required in (
