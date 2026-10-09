@@ -82,8 +82,8 @@ def test_oracle_rejects_a_judged_directory_mismatch():
             from dataclasses import replace
 
             original_read = module.read_commands
-            module.read_commands = lambda command, cwd=None: [
-                replace(inv, cwd=cwd) for inv in original_read(command, cwd=cwd)
+            module.read_commands = lambda command, cwd=None, **kwargs: [
+                replace(inv, cwd=cwd) for inv in original_read(command, cwd=cwd, **kwargs)
             ]
         return module
 
@@ -293,8 +293,8 @@ def test_oracle_rejects_wrong_pr_target_even_when_blocking():
         module = original_load(name)
         if name == "guard-pr-merge":
             original_read = module.read_commands
-            module.read_commands = lambda command, cwd=None: [
-                replace(inv, argv=["gh", "pr", "merge", "6"]) for inv in original_read(command, cwd=cwd)
+            module.read_commands = lambda command, cwd=None, **kwargs: [
+                replace(inv, argv=["gh", "pr", "merge", "6"]) for inv in original_read(command, cwd=cwd, **kwargs)
             ]
         return module
 
@@ -374,8 +374,9 @@ def test_oracle_admin_judgments_must_match_gold_target_and_actual_directory(faul
                 module._pr_number = lambda args: "6"
             else:
                 original_read = module.read_commands
-                module.read_commands = lambda command, cwd=None: [
-                    replace(inv, cwd=str(Path(cwd) / ".worktrees/wt")) for inv in original_read(command, cwd=cwd)
+                module.read_commands = lambda command, cwd=None, **kwargs: [
+                    replace(inv, cwd=str(Path(cwd) / ".worktrees/wt"))
+                    for inv in original_read(command, cwd=cwd, **kwargs)
                 ]
         return module
 
@@ -390,3 +391,162 @@ def test_oracle_admin_judgments_must_match_gold_target_and_actual_directory(faul
     with patch.object(oracle, "load_hook", mutant):
         report = oracle.run_oracle(rows=[row], traffic=[])
     assert report["totals"]["misses"] == 1
+
+
+@pytest.mark.parametrize(
+    "command, argv",
+    [
+        ("g\\\nit checkout -b fixture", ["git", "checkout", "-b", "fixture"]),
+        ("git check\\\nout -b fixture", ["git", "checkout", "-b", "fixture"]),
+        ("gh pr mer\\\nge 5", ["gh", "pr", "merge", "5"]),
+        ("gh pr merge 5 --ad\\\nmin", ["gh", "pr", "merge", "5", "--admin"]),
+        ("printf '%s' 'g\\\nit'", ["printf", "%s", "g\\\nit"]),
+    ],
+)
+def test_line_continuations_join_executed_words_and_preserve_quoted_data(command, argv):
+    assert read_commands(command)[-1].argv == argv
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "strace gh pr merge 5",
+        "script -qc 'gh pr merge 5' fixture",
+        "numactl --localalloc git checkout -b fixture",
+        "systemd-run --scope gh pr merge 5",
+        "uv run --no-project gh pr merge 5",
+        "git bisect run gh pr merge 5",
+        'f(){ git "$@"; }; f checkout -b fixture',
+        'f(){ gh "$1" merge 5; }; f pr',
+        'command -p "$candidate" pr merge 5',
+        "command -p gh pr merge 5",
+    ],
+)
+def test_review_executor_and_forwarding_forms_fail_closed(command):
+    with pytest.raises(ShellParseError):
+        read_commands(command)
+
+
+@pytest.mark.parametrize("hook", ["guard-pr-merge", "guard-admin-merge"])
+@pytest.mark.parametrize(
+    "command, selector, repository",
+    [
+        ("gh pr merge --subject 7 5 --admin", "5", None),
+        ("gh pr merge -t 7 5 --admin", "5", None),
+        ("gh pr merge 5 --repo=fixture/other --admin", "5", "fixture/other"),
+        ("GH_REPO=fixture/other gh pr merge 5 --admin", "5", "fixture/other"),
+        ("GH_REPO=fixture/other gh pr merge 5 -R fixture/explicit --admin", "5", "fixture/explicit"),
+    ],
+)
+def test_merge_target_options_and_environment_reach_the_judged_identity(hook, command, selector, repository, tmp_path):
+    import io
+
+    module = _oracle_module().load_hook(hook)
+    seen = []
+    if hook == "guard-pr-merge":
+
+        def judge(args, cwd=None, repo=None):
+            seen.append((module._pr_selector(args), module._repo_option(args) or repo, cwd))
+            return "fixture red check"
+
+        patches = patch.object(module, "_judge", judge)
+    else:
+
+        def checks(pr, cwd=None, repo=None):
+            seen.append((pr, repo, cwd))
+            return ["fixture red check"]
+
+        patches = patch.object(module, "_failing_blocking_checks", checks)
+    payload = {"cwd": str(tmp_path), "tool_input": {"command": command}}
+    with patches, patch.object(sys, "stdin", io.StringIO(json.dumps(payload))):
+        assert module.main() == 2
+    assert seen == [(selector, repository, str(tmp_path))]
+
+
+@pytest.mark.parametrize("hook", ["guard-pr-merge", "guard-admin-merge"])
+def test_url_selector_and_repository_conflict_never_lookup_another_target(hook):
+    rows = json.loads((ROOT / "tests/fixtures/guard_bash_oracle.json").read_text())["rows"]
+    oracle = _oracle_module()
+    selected = [
+        row
+        for row in rows
+        if row["family"] in {"target-identity", "target-conflict"}
+        and row["hook"] == ("merge" if hook == "guard-pr-merge" else "admin")
+    ]
+    report = oracle.run_oracle(rows=selected, traffic=[])
+    assert report["totals"]["wrong_target_judgments"] == 0
+    assert report["totals"]["missing_target_judgments"] == 0
+    assert report["totals"]["expected_mismatches"] == 0
+
+
+def test_stopped_paths_and_false_loops_do_not_emit_guarded_invocations(tmp_path):
+    assert not any(
+        row.argv[:2] == ["git", "checkout"]
+        for row in read_commands("cd missing || exit; git checkout -b fixture", cwd=str(tmp_path))
+    )
+    assert read_commands("while false; do gh pr merge 5; done", cwd=str(tmp_path)) == []
+    assert any(
+        row.argv[:3] == ["gh", "pr", "merge"]
+        for row in read_commands("until false; do gh pr merge 5; break; done", cwd=str(tmp_path))
+    )
+
+
+def test_directory_only_function_tracking_is_explicit_and_literal(tmp_path):
+    (tmp_path / "other").mkdir()
+    command = "f(){ cd other; }; f; git checkout -b fixture"
+    with pytest.raises(ShellParseError, match="called function"):
+        read_commands(command, cwd=str(tmp_path))
+    rows = read_commands(command, cwd=str(tmp_path), follow_directory_functions=True)
+    assert rows[-1].cwd == str(tmp_path / "other")
+    with pytest.raises(ShellParseError, match="called function"):
+        read_commands(
+            'f(){ cd "$target"; }; f; git checkout -b fixture', cwd=str(tmp_path), follow_directory_functions=True
+        )
+
+
+def test_home_override_uses_only_an_unmodified_inherited_parameter(tmp_path, monkeypatch):
+    monkeypatch.setenv("FIXTURE_ROOT", str(tmp_path))
+    (tmp_path / "other").mkdir()
+    rows = read_commands('HOME="$FIXTURE_ROOT/other" cd && git checkout -b fixture', cwd=str(tmp_path))
+    assert rows[-1].cwd == str(tmp_path / "other")
+    rows = read_commands(
+        'FIXTURE_ROOT=unknown; HOME="$FIXTURE_ROOT/other" cd && git checkout -b fixture', cwd=str(tmp_path)
+    )
+    assert rows[-1].cwd_unreadable
+
+
+@pytest.mark.parametrize("hook", ["guard-pr-merge", "guard-admin-merge", "guard-branch-switch-in-main"])
+def test_read_only_pipeline_with_temporary_redirect_remains_data(hook, tmp_path):
+    import io
+
+    module = _oracle_module().load_hook(hook)
+    payload = {"cwd": str(tmp_path), "tool_input": {"command": "gh pr view 5 --json mergeable > $(mktemp) | cat"}}
+    with patch.object(sys, "stdin", io.StringIO(json.dumps(payload))):
+        assert module.main() == 0
+
+
+def test_dynamic_cd_redirect_tracks_success_without_changing_repository(tmp_path):
+    (tmp_path / "other").mkdir()
+    consumer = _oracle_module().load_hook("guard-branch-switch-in-main")._check_consumer
+    rows = read_commands(
+        'cd other 2>"$(mktemp)" && git checkout -b fixture', cwd=str(tmp_path), consumer_check=consumer
+    )
+    assert rows[-1].cwd == str(tmp_path / "other")
+    assert not rows[-1].repository_unknown
+
+
+@pytest.mark.parametrize("binding", ["unset -f f", "enable -n cd"])
+def test_directory_function_binding_mutation_cannot_license_an_operation(tmp_path, binding):
+    (tmp_path / "other").mkdir()
+    with pytest.raises(ShellParseError, match="binding"):
+        read_commands(
+            f"f(){{ cd other; }}; {binding}; f; git checkout -b fixture",
+            cwd=str(tmp_path),
+            follow_directory_functions=True,
+        )
+
+
+@pytest.mark.parametrize("shell", ["sh", "bash"])
+def test_command_local_repository_cannot_be_lost_in_a_nested_shell(shell):
+    with pytest.raises(ShellParseError, match="repository environment"):
+        read_commands(f"GH_REPO=fixture/other {shell} -c 'gh pr merge 5'")

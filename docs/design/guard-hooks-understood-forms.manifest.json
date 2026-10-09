@@ -10,8 +10,8 @@
     "tests/fixtures/guard_bash_understood_traffic.json": "98caa660a1f163d7bdb38a7dcad929823bdffb6ce651a91289f766d4002c2d0b",
     "tests/fixtures/guard_bash_recording_setup.json": "e1b6c88530361a0b5655e37348ed9c1c666a810d129ba708f03b8b45db06900e",
     "tests/fixtures/guard_9115_baseline.json": "c9b89f375f9826ed216f482ced728974386f6aff9404618678b842d9a8616c7b",
-    "scripts/hooks/bash_oracle.py": "c5614b97001310f02a3c0ead39a5b1b991d966737475051eef25a54828c68501",
-    "tests/test_guard_understood_freeze.py": "ba63203257caaf0b123db91ee5a8f4000f7e88ec09f3ce7f64626ccf5fc29281"
+    "scripts/hooks/bash_oracle.py": "702fd90e22fcd4ef60c42e510df39ba00aede18c8f3a1a141e51568303da177e",
+    "tests/test_guard_understood_freeze.py": "b7ee75ddcfac6ba8aa4a7e3325fce62c0ad51f7b765fbebe36688307596810d6"
   },
   "decision_sha256": {
     "sol": "541a4ed9d82ccc786c41d89943864b2e990cab5a896954fb7072f9f05383c19a",

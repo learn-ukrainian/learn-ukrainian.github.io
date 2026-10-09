@@ -224,11 +224,28 @@ def test_oracle_target_cwd_follows_execution_and_rejects_stale_initial_cwd() -> 
             from dataclasses import replace
 
             original_read = module.read_commands
-            module.read_commands = lambda command, cwd=None: [
-                replace(inv, cwd=cwd) for inv in original_read(command, cwd=cwd)
+            module.read_commands = lambda command, cwd=None, **kwargs: [
+                replace(inv, cwd=cwd) for inv in original_read(command, cwd=cwd, **kwargs)
             ]
         return module
 
     with patch.object(oracle, "load_hook", mutant):
         report = oracle.run_oracle(rows=[row], traffic=[])
     assert report["totals"]["wrong_target_judgments"] == 1
+
+
+def test_oracle_allowed_branches_and_intentional_refusals_use_frozen_dispositions():
+    oracle = _oracle_module()
+    rows = json.loads((FIXTURES / "guard_bash_oracle.json").read_text())["rows"]
+    selected = [
+        row
+        for row in rows
+        if row["id"]
+        in {
+            "freeze-branch-policy-correction-000",
+            "freeze-intentional-refusal-000",
+        }
+    ]
+    report = oracle.run_oracle(rows=selected, traffic=[])
+    assert report["totals"]["expected_matches"] == len(selected) == 2
+    assert report["totals"]["misses"] == report["totals"]["overblocks"] == 0

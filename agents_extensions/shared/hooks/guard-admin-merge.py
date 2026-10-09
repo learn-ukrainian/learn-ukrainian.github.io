@@ -23,6 +23,7 @@ substring (case-insensitive); erring toward "treat as blocking" is the safe dire
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import re
@@ -42,8 +43,13 @@ def _may_guard(command: str) -> bool:
         )
     except ValueError:
         return True  # unreadable escape: let the full parser refuse it
-    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
-    return "gh" in probe and "--admin" in probe
+    probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    return bool(
+        ("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
+        or ("--admin" in probe)
+        or re.search(r"(?:^|[\s;{])gh\s+[^;\n]*\$", probe)
+        or re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$|\bgh\s+alias\s)", probe)
+    )
 
 
 if __name__ == "__main__":
@@ -71,6 +77,9 @@ except Exception as exc:
         file=sys.stderr,
     )
     raise SystemExit(2) from None
+
+
+_merge_guard = importlib.import_module("guard-pr-merge")
 
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
@@ -172,28 +181,20 @@ def _segments(command: str) -> list[list[str]]:
 
 def _admin_merge_args(seg: list[str]) -> list[str] | None:
     """Return the args of a `gh pr merge ... --admin` segment, else None."""
-    i = _skip_command_prefix(seg, 0)
-    if seg[i : i + 3] != ["gh", "pr", "merge"]:
-        return None
-    args = seg[i + 3 :]
-    return args if _flag_enabled(args, "admin") else None
+    args = _merge_guard._merge_args(seg)
+    return args if args is not None and _merge_guard._flag_enabled(_merge_guard._classify(args)[0], "admin") else None
 
 
 def _pr_number(args: list[str]) -> str | None:
-    """First numeric positional after `merge`; implicit discovery is refused."""
-    if _UNREADABLE_MARKER in args:
-        return None
-    for a in args:
-        if not a.startswith("-") and a.isdigit():
-            return a
-    return None
+    """Explicit selector after removing value-taking options."""
+    return None if UNREADABLE in args else _merge_guard._pr_selector(args)
 
 
-def _failing_blocking_checks(pr: str, cwd: str | None = None) -> list[str] | None:
+def _failing_blocking_checks(pr: str, cwd: str | None = None, repo: str | None = None) -> list[str] | None:
     """Failing non-advisory check names for the PR, or None if undeterminable (→ fail-closed)."""
     try:
         out = subprocess.run(
-            ["gh", "pr", "checks", pr, "--json", "name,bucket,state"],
+            ["gh", "pr", "checks", pr, *_merge_guard._repo_args(repo), "--json", "name,bucket,state"],
             capture_output=True,
             cwd=cwd,
             env=_gh_env(),
@@ -244,7 +245,9 @@ def main() -> int:
     if not command or not _may_guard(command):
         return 0
     try:
-        rows = read_commands(command, cwd=payload.get("cwd") or os.getcwd())
+        rows = read_commands(
+            command, cwd=payload.get("cwd") or os.getcwd(), consumer_check=_merge_guard._check_consumer
+        )
         segments = [row.argv for row in rows]
     except Exception as exc:
         sys.stderr.write(
@@ -260,6 +263,11 @@ def main() -> int:
         args = _admin_merge_args(row.argv)
         if args is None:
             continue
+        if row.environment_repo is not None and not _merge_guard._repo_option(args):
+            args = [*args, "--repo", row.environment_repo]
+        if _merge_guard._target_conflict(args):
+            sys.stderr.write(_block_msg("conflicting merge repositories"))
+            return 2
         if row.cwd_unreadable:
             sys.stderr.write(
                 _block_msg(f"merge working directory cannot be read; use a literal directory; repair: {REPAIR}")
@@ -269,7 +277,8 @@ def main() -> int:
         if not pr:
             sys.stderr.write(_block_msg("could not determine the target PR number"))
             return 2
-        failing = _failing_blocking_checks(pr, cwd=row.cwd)
+        repo = _merge_guard._repo_option(args)
+        failing = _failing_blocking_checks(pr, cwd=row.cwd, **({"repo": repo} if repo else {}))
         if failing is None:
             sys.stderr.write(_block_msg(f"could not verify PR #{pr} check states (gh error/timeout)"))
             return 2

@@ -14,6 +14,7 @@ import shlex
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from importlib.metadata import version
+from itertools import pairwise
 from pathlib import Path
 
 import tree_sitter_bash
@@ -102,6 +103,13 @@ _RESERVED_WORDS = frozenset(
 )
 _SHELLS = {"bash", "sh", "dash", "zsh", "ksh", "fish"}
 _INDIRECT_EXECUTORS = {
+    "strace",
+    "script",
+    "numactl",
+    "systemd-run",
+    "uv",
+    "nsenter",
+    "unshare",
     "find",
     "setsid",
     "flock",
@@ -139,6 +147,7 @@ class Invocation:
     repository_unknown: bool = False
     redirect_unknown: bool = False
     branch_scope_refusal: bool = False
+    environment_repo: str | None = None
 
     @property
     def cwd_unreadable(self) -> bool:
@@ -178,7 +187,7 @@ def literal(node) -> str | None:
     if node.named_children or re.search(r"(?<!\\)[$`*?\[]", raw):
         return None
     try:
-        return shlex.split(raw, comments=False)[0] if raw else ""
+        return shlex.split(raw.replace("\\\n", ""), comments=False)[0] if raw else ""
     except (ValueError, IndexError):
         return None
 
@@ -225,9 +234,38 @@ def operation_candidate(text: str) -> bool:
     except ValueError:
         return True
     text = text.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
-    return any(name in text for name in ("git", "gh", "scripts.publish")) and any(
-        word in text for word in ("checkout", "switch", "branch", "merge")
+    return any(name in text for name in ("git", "gh", "scripts.publish")) and bool(
+        re.search(r"\b(?:checkout|switch|branch|merge)\b", text)
     )
+
+
+def utility_executor_options(argv: list[str]) -> bool:
+    if not argv:
+        return False
+    utility = Path(argv[0]).name
+    if utility == "rg":
+        return any(arg.partition("=")[0] in {"--pre", "--pre-glob"} for arg in argv[1:])
+    if utility == "git":
+        return any(
+            arg == "mergetool"
+            or arg.startswith(
+                (
+                    "--config-env",
+                    "--env-filter",
+                    "--tree-filter",
+                    "--index-filter",
+                    "--parent-filter",
+                    "--msg-filter",
+                    "--commit-filter",
+                    "--to-cmd",
+                    "--cc-cmd",
+                    "--bcc-cmd",
+                    "--header-cmd",
+                )
+            )
+            for arg in argv[1:]
+        )
+    return False
 
 
 def cd_target(argv: list[str], cwd: str | None) -> str | None:
@@ -261,6 +299,8 @@ def read_commands(
     depth: int = 0,
     include_payloads: bool = True,
     consumer_check: Callable[[list[str], str, bool], None] | None = None,
+    follow_directory_functions: bool = False,
+    allow_dynamic_git_arguments: bool = False,
 ) -> list[Invocation]:
     """Walk simple commands with conservative sets of Bash working directories."""
     out: list[Invocation] = []
@@ -327,6 +367,8 @@ def read_commands(
                         *_INDIRECT_EXECUTORS,
                         *_WRAPPERS,
                         *_STATE_MUTATORS,
+                        "git",
+                        "gh",
                     }:
                         return True
                     if called in functions and function_sensitive(called, seen):
@@ -335,11 +377,27 @@ def read_commands(
         return False
 
     def parse(source: str, states: set[str | None], level: int) -> set[str | None]:
-        nonlocal branch_scope_refusal, inherited_repo_override, cdpath_unknown
+        nonlocal branch_scope_refusal, inherited_repo_override, cdpath_unknown, directory_options_unknown
         if level > MAX_DEPTH:
             raise ShellParseError("nested shell depth limit")
         encoded = source.encode()
         tree = Parser(_LANGUAGE).parse(encoded)
+        # Grammar 0.25 splits words around line continuations. Repair only
+        # gaps between AST words in commands; quoted data and heredocs stay intact.
+        pending = [tree.root_node]
+        joins = []
+        while pending:
+            node = pending.pop()
+            if node.type == "command":
+                children = node.named_children
+                for left, right in pairwise(children):
+                    if encoded[left.end_byte : right.start_byte] == b"\\\n":
+                        joins.append((left.end_byte, right.start_byte))
+            pending.extend(node.named_children)
+        for begin, end in sorted(joins, reverse=True):
+            encoded = encoded[:begin] + encoded[end:]
+        if joins:
+            tree = Parser(_LANGUAGE).parse(encoded)
         # Grammar 0.25 cannot queue multiple heredocs: its second opener is
         # an ERROR '<' plus a file_redirect. Reparse it as a separate inert
         # reader, preserving each body's expansion and quoting semantics.
@@ -460,6 +518,8 @@ def read_commands(
                 candidate.type == "expansion" and (b"(" in candidate.text or b")" in candidate.text)
             ):
                 branch_scope_refusal = True
+            if guarded_source and candidate.type == "declaration_command" and re.search(rb"-[^ ]*n", candidate.text):
+                raise ShellParseError("indirect variable declaration cannot establish execution")
             if candidate.type == "variable_assignment":
                 if guarded_source and candidate.text.startswith((b"BASH_CMDS[", b"BASH_ALIASES[")):
                     raise ShellParseError("shell executable binding cannot establish command identity")
@@ -472,14 +532,26 @@ def read_commands(
                         in {
                             b"BASH_ENV",
                             b"ENV",
-                            b"GH_REPO",
-                            b"HOME",
                             b"PATH",
                         }
                     ):
                         raise ShellParseError(
                             "command-local executor or repository environment cannot establish context"
                         )
+                    if guarded_source and name.text in {
+                        b"GIT_SSH_COMMAND",
+                        b"GIT_PAGER",
+                        b"GIT_EDITOR",
+                        b"PAGER",
+                        b"EDITOR",
+                        b"GH_PAGER",
+                        b"BROWSER",
+                    }:
+                        raise ShellParseError("executor environment cannot establish execution")
+                    if guarded_source and name.text == b"GH_REPO" and candidate.parent.type != "command":
+                        raise ShellParseError("repository environment mutation cannot establish context")
+                    if guarded_source and name.text == b"HOME" and candidate.parent.type != "command":
+                        directory_options_unknown = True
                     inherited_repo_override |= name.text.decode() in repo_names
                     cdpath_unknown |= name.text == b"CDPATH"
             if (
@@ -576,6 +648,8 @@ def read_commands(
 
     def simple(node, redirects, states, level):
         nonlocal directory_options_unknown, inherited_repo_override
+        if not states:
+            return states
         substitutions(node, states, level)
         words = [
             c
@@ -620,6 +694,12 @@ def read_commands(
                 if descriptor and descriptor.text.isdigit() and int(descriptor.text) > 2147483647:
                     raise ShellParseError("redirect descriptor exceeds Bash integer range")
                 destinations = [c for c in redirect.named_children if c.type != "file_descriptor"]
+                if guarded_source and consumer_check is not None and destinations:
+                    destination = literal(destinations[0])
+                    if destination in {".bashrc", ".git/config", ".config/gh/config.yml"} or (
+                        destination is not None and ".git/hooks/" in destination
+                    ):
+                        raise ShellParseError("redirect cannot establish data-only destination")
                 if destinations:
                     dynamic_redirect |= literal(destinations[0]) is None
                     # The grammar puts ordinary trailing arguments in redirects.
@@ -660,8 +740,15 @@ def read_commands(
             and guarded_source
         ):
             raise ShellParseError("env split-string execution payload cannot establish argv")
+        if guarded_source and any(
+            name == "command" and any(re.fullmatch(r"-[pVv]+", option) and "p" in option for option in options)
+            for name, options in scopes
+        ):
+            raise ShellParseError("command default-path resolution cannot establish executable identity")
         if not selected:
             return states
+        if guarded_source and utility_executor_options(selected):
+            raise ShellParseError("executor option cannot establish execution")
         if selected[0] == UNREADABLE:
             raise ShellParseError("dynamic command name")
         utility = Path(selected[0]).name
@@ -671,15 +758,53 @@ def read_commands(
             source = node.text.decode() + "\n" + "\n".join(r.text.decode() for r in all_redirects)
             source += "\n" + "\n".join(pipeline_sources)
             consumer_check(selected, source, guarded_source)
+        if (
+            dynamic_redirect
+            and consumer_check is not None
+            and operation_candidate(node.text.decode())
+            and utility not in {"git", "gh"}
+        ):
+            raise ShellParseError("redirect cannot establish data-only destination")
         typed_publisher = re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and selected[1:4] == [
             "-m",
             "scripts.publish",
             "pr-merge",
         ]
         if guarded_source:
+            if utility in {"source", "."}:
+                raise ShellParseError("visible sourced payload cannot establish execution")
+            if utility == "git" and any(
+                arg in {"run", "foreach", "--exec", "-x", "--extcmd", "--upload-pack", "--receive-pack"}
+                or arg.startswith(("--exec=", "--extcmd=", "--upload-pack=", "--receive-pack=", "--config-env"))
+                for arg in selected[1:]
+            ):
+                raise ShellParseError("Git executor cannot establish execution")
+            if (
+                utility in {"git", "gh"}
+                and UNREADABLE in selected
+                and not (utility == "git" and allow_dynamic_git_arguments)
+            ):
+                operation = selected[1:3]
+                if (
+                    operation[0:1] == [UNREADABLE]
+                    or (utility == "git" and operation[0:1] in [["checkout"], ["switch"], ["branch"], ["worktree"]])
+                    or (
+                        utility == "gh"
+                        and operation[0:1] == ["pr"]
+                        and operation[1:2] in [["merge"], ["checkout"], [UNREADABLE]]
+                    )
+                ):
+                    raise ShellParseError("dynamic operation arguments")
+            if follow_directory_functions and selected[0] in functions and len(functions[selected[0]]) == 1:
+                body = functions[selected[0]][0]
+                commands = body.named_children
+                if len(commands) == 1 and commands[0].type == "command":
+                    args = [literal(c) for c in commands[0].named_children]
+                    if len(args) == 2 and args[0] == "cd" and args[1] is not None:
+                        return walk(body, states, level + 1)
             if selected[0] in functions and function_sensitive(selected[0]):
                 raise ShellParseError("called function has guarded operation or directory effects")
-            if utility in {"alias", "hash"}:
+            if utility in {"alias", "hash", "declare", "typeset", "unset", "enable"}:
                 raise ShellParseError("shell executable binding cannot establish command identity")
             if utility == "trap" and any(
                 arg == UNREADABLE
@@ -726,7 +851,13 @@ def read_commands(
                 # shell option mutations are not transparent.
                 directory_options_unknown = True
                 return {None}
-            if utility in {"mkdir", "rmdir", "mv", "rm", "ln", "chmod", "install"}:
+            if utility in {"mkdir", "rmdir", "mv", "rm", "ln", "chmod", "install"} or (
+                utility == "mktemp"
+                and any(
+                    arg == UNREADABLE or arg.startswith("--directory") or re.fullmatch(r"-[^-]*d[^-]*", arg)
+                    for arg in selected[1:]
+                )
+            ):
                 # Filesystem changes invalidate earlier existence/access probes,
                 # including explicit absolute Git/env directories.
                 inherited_repo_override = True
@@ -776,6 +907,19 @@ def read_commands(
                 if target is not None:
                     execution_states = {cd_target(["cd", "-P", target], state) for state in execution_states}
                 i += 2 if arg in _VALUE_OPTIONS["env"] else 1
+        environment_repo = None
+        for assignment in [*assignments, *argv[:start]]:
+            if assignment.startswith("GH_REPO="):
+                value = assignment.partition("=")[2]
+                try:
+                    values = shlex.split(value)
+                except ValueError:
+                    values = []
+                if len(values) != 1 or re.search(r"[$`*?]", value):
+                    raise ShellParseError("dynamic repository environment")
+                environment_repo = values[0]
+        if environment_repo is not None and utility in _SHELLS:
+            raise ShellParseError("nested shell repository environment cannot establish context")
         unknown_repo = any(
             re.match(r"(?:GIT_DIR|GIT_WORK_TREE|GIT_COMMON_DIR)=", arg) for arg in [*assignments, *argv[:start]]
         )
@@ -790,6 +934,7 @@ def read_commands(
                     xargs,
                     unknown_repo,
                     dynamic_redirect,
+                    environment_repo=environment_repo,
                 )
             )
         if include_payloads and (utility in _SHELLS or utility == "eval"):
@@ -852,7 +997,25 @@ def read_commands(
             # Non-existent literal targets leave PWD untouched. Unknown can succeed anywhere.
             targets = set()
             for state in states:
-                target = cd_target(["cd", *selected[1:]], state)
+                cd_args = ["cd", *selected[1:]]
+                home = next(
+                    (a for a in node.named_children if a.type == "variable_assignment" and a.text.startswith(b"HOME=")),
+                    None,
+                )
+                if home is not None and len(cd_args) == 1:
+                    value = home.child_by_field_name("value")
+                    target_home = literal(value) if value is not None else None
+                    if target_home is None and value is not None:
+                        raw = value.text.decode().strip('"')
+                        match = re.fullmatch(r"\$([A-Za-z_][A-Za-z_0-9]*)(/[^$`\s\"']*)?", raw)
+                        # Read only a simple inherited parameter whose binding
+                        # the submitted shell program does not replace.
+                        if match and not re.search(r"\b" + re.escape(match[1]) + r"=", command):
+                            inherited = os.environ.get(match[1])
+                            if inherited is not None:
+                                target_home = inherited + (match[2] or "")
+                    cd_args = ["cd", target_home or UNREADABLE]
+                target = cd_target(cd_args, state)
                 targets.add(target if target is None or Path(target).is_dir() else state)
             # Redirection can fail before cd runs. Keep its failure state for
             # sequential execution; && also remains conservative.
@@ -872,6 +1035,8 @@ def read_commands(
         kind = node.type
         if level > MAX_DEPTH:
             raise ShellParseError("nested shell depth limit")
+        if kind == "unset_command" and guarded_source and states:
+            raise ShellParseError("shell executable binding cannot establish command identity")
         if kind == "command":
             return simple(node, list(attached), states, level)
         if kind == "redirected_statement":
@@ -924,6 +1089,10 @@ def read_commands(
             for index, child in enumerate(node.named_children):
                 current = walk(child, current, level + 1, attached if index == len(node.named_children) - 1 else ())
             return current if kind == "negated_command" else states
+        if kind == "while_statement" and node.text.lstrip().startswith(b"while "):
+            condition = node.child_by_field_name("condition")
+            if condition is not None and condition.text.strip(b" ;\n") == b"false":
+                return states
         if kind in {"if_statement", "case_statement", "while_statement", "for_statement", "c_style_for_statement"}:
             possible = set(states)
             if kind in {"while_statement", "for_statement", "c_style_for_statement"}:
@@ -950,6 +1119,11 @@ def read_commands(
             left, right = children[0], children[-1]
             after = walk(left, states, level)
             operator = next((c.type for c in node.children if c.type in {"&&", "||"}), None)
+            if operator == "||" and right.text.strip() == b"exit" and left.type == "command":
+                args = [literal(c) for c in left.named_children]
+                if args and args[0] == "cd" and None not in args:
+                    targets = {cd_target(args, state) for state in states}
+                    return {target for target in targets if target is None or Path(target).is_dir()}
             return walk(right, after if operator == "&&" else after | states, level, attached)
         if kind in {"variable_assignment", "string", "heredoc_body", "word", "concatenation"}:
             substitutions(node, states, level)

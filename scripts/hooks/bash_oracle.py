@@ -84,6 +84,7 @@ def run_oracle(rows=None, traffic=None):
     rows = (
         rows if rows is not None else json.loads((ROOT / "tests/fixtures/guard_bash_oracle.json").read_text())["rows"]
     )
+    rows = resolve_active_rows(rows)
     traffic = (
         traffic if traffic is not None else json.loads((ROOT / "tests/fixtures/guard_bash_traffic.json").read_text())
     )
@@ -215,7 +216,7 @@ def run_oracle(rows=None, traffic=None):
             with (
                 patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
                 redirect_stderr(io.StringIO()),
-                patch.dict(os.environ, {"CDPATH": "", "GH_REPO": "fixture/default"}),
+                patch.dict(os.environ, {**env, "CDPATH": ""}),
             ):
                 for name in ("SHELLOPTS", "BASHOPTS", "BASH_ENV"):
                     os.environ.pop(name, None)
@@ -230,7 +231,7 @@ def run_oracle(rows=None, traffic=None):
                         with patch.object(
                             merge,
                             "_judge",
-                            lambda args, cwd=None, seen=judged: seen.append((args, cwd)) or "oracle red PR",
+                            lambda args, cwd=None, seen=judged, **kwargs: seen.append((args, cwd)) or "oracle red PR",
                         ):
                             blocked = merge.main() == 2
                 elif kind == "admin":
@@ -239,7 +240,7 @@ def run_oracle(rows=None, traffic=None):
                         "_failing_blocking_checks",
                         admin_checks
                         if expected_target
-                        else lambda pr, cwd=None, seen=judged: seen.append(([str(pr)], cwd)) or ["CI Gate"],
+                        else lambda pr, cwd=None, repo=None, seen=judged: seen.append(([str(pr)], cwd)) or ["CI Gate"],
                     ):
                         blocked = admin.main() == 2
                 elif kind == "branch":
@@ -298,8 +299,18 @@ def run_oracle(rows=None, traffic=None):
                 for target in targets
             )
             missing_target = bool(expected_target) and row["expected"]["disposition"] == "block" and not targets
-            miss = (executed and not blocked) or mismatch or oracle_missing or wrong_target or missing_target
-            over = blocked and not executed and kind != "argv"
+            expected_disposition = row.get("expected", {}).get("disposition")
+            # A safe branch invocation is still recorded by Bash. Conversely,
+            # an intentional refusal can be correct without executing anything.
+            unsafe_allow = (executed or expected_disposition in {"block", "refuse"}) and not blocked
+            if expected_disposition == "allow":
+                unsafe_allow = False
+            miss = unsafe_allow or mismatch or oracle_missing or wrong_target or missing_target
+            over = (
+                blocked
+                and kind != "argv"
+                and (expected_disposition == "allow" if expected_disposition else not executed)
+            )
 
             def relative(value):
                 return str(value).replace(str(base), "<oracle>")
@@ -503,9 +514,7 @@ def resolve_active_rows(rows):
     for prior, follower_ids in successors.items():
         follower = by_id[follower_ids[0]]
         if _is_typed(by_id[prior]) and not _is_typed(follower):
-            raise TypedSupersededByUntyped(
-                f"typed row superseded by untyped row: {prior} -> {follower['id']}"
-            )
+            raise TypedSupersededByUntyped(f"typed row superseded by untyped row: {prior} -> {follower['id']}")
     superseded = set(successors)
     return [row for row in rows if row["id"] not in superseded]
 
@@ -764,9 +773,7 @@ def classify_judgment(expected, judgment, invocation_cwd, observed, lookup_happe
             return "unsafe_allow"
         return None
 
-    if judgment.reported_targets is not None and not _lists_match(
-        judgment.reported_targets, observed, invocation_cwd
-    ):
+    if judgment.reported_targets is not None and not _lists_match(judgment.reported_targets, observed, invocation_cwd):
         return dangerous() or "fail"
     if judgment.source == "exit" and (expected_disposition == "refuse" or expected.get("reason_class") is not None):
         return dangerous() or "fail"
@@ -940,7 +947,9 @@ def _score_typed_rows(typed, *, hooks, primary, worktree, own_probe, counts):
                 active_hooks = {name: load_hook(module_name) for name, module_name in _TYPED_HOOKS.items()}
             branch_module = active_hooks.get("branch") if own_probe else None
             branch_patch = (
-                patch.object(branch_module, "PROTECTED_ROOTS", [primary]) if branch_module is not None else nullcontext()
+                patch.object(branch_module, "PROTECTED_ROOTS", [primary])
+                if branch_module is not None
+                else nullcontext()
             )
             with branch_patch:
                 for row in typed:

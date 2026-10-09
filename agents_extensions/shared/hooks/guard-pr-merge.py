@@ -45,6 +45,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 
 def _read_payload() -> dict | None:
@@ -72,11 +73,14 @@ def _may_merge(command: str) -> bool:
         )
     except ValueError:
         return True  # unreadable escape: let the full parser refuse it
-    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
+    probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
     # A dynamic program can run the literal operation without spelling `gh`.
     # Likewise, dynamic GH operation words may expand to `pr merge`.
-    return (("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe) or bool(
-        re.search(r"\bpr\s+merge\b", probe) or re.search(r"(?:^|[\s;|&(])(?:gh|/[^\s]+/gh)\s+[^\n;]*\$", probe)
+    return (
+        bool("git" in re.sub(r"\$git\b", "", probe) and re.search(r"\b(?:checkout|switch|branch)\b", probe))
+        or bool(re.search(r"(?:--pre(?:=|\s)|--config-env|\bmergetool\b|\bgit\s+worktree[^;\n]*\$)", probe))
+        or (("gh" in probe or "scripts.publish" in probe) and "pr" in probe and re.search(r"\bmerge\b", probe))
+        or bool(re.search(r"\bpr\s+merge\b", probe) or re.search(r"(?:^|[\s;|&(])(?:gh|/[^\s]+/gh)\s+[^\n;]*\$", probe))
     )
 
 
@@ -197,14 +201,14 @@ _UNPARSED = ["gh", "pr", "merge", UNREADABLE]
 _invoked_start = invoked_start
 
 
-def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
+def _check_consumer(argv: list[str], source: str, guarded_source: bool, *, candidate=_may_merge) -> None:
     """Account for visible code by its reader, never by quotation alone."""
     utility = Path(argv[0]).name
     if utility == "eval" and guarded_source:
         raise ShellParseError("eval cannot establish merge argv or directory")
     if utility in {"source", "."} and guarded_source:
         raise ShellParseError("visible sourced payload cannot establish execution")
-    if not _may_merge(source):
+    if not candidate(source):
         return
     if "/" in argv[0]:
         installed = shutil.which(utility)
@@ -213,7 +217,7 @@ def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
             utility.startswith("python") and Path(argv[0]).resolve() == Path(sys.executable).resolve()
         ):
             raise ShellParseError("executable path is not the verified candidate reader")
-    if utility in {"echo", "printf", "cat", "grep", "rg", "jq", "sed", "head", "tail"}:
+    if utility in {"echo", "printf", "cat", "grep", "rg", "jq", "sed", "head", "tail", "mktemp"}:
         if utility == "printf":
             operands = argv[2:] if argv[1:2] == ["--"] else argv[1:]
             if "-v" in argv[1:] or (operands and (operands[0] == UNREADABLE or "%n" in operands[0])):
@@ -265,7 +269,7 @@ def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
         return  # The AST reader checks shell payloads, expansions and context.
     if utility == "xargs":
         return  # The reader admits only fixed echo/printf logging executables.
-    if utility == "let" and not _may_merge(" ".join(argv[1:])):
+    if utility == "let" and not candidate(" ".join(argv[1:])):
         return  # let ignores a heredoc on stdin; arithmetic operands are code.
     if re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and argv[1:4] == ["-m", "scripts.publish", "pr-merge"]:
         return
@@ -285,7 +289,19 @@ def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
             for arg in argv[1:]
         ):
             raise ShellParseError("Git executor consumer cannot establish execution")
-        if argv[1:2] in [["commit"], ["log"], ["show"], ["diff"], ["status"], ["grep"]]:
+        if argv[1:2] in [
+            ["commit"],
+            ["log"],
+            ["show"],
+            ["diff"],
+            ["status"],
+            ["grep"],
+            ["checkout"],
+            ["switch"],
+            ["branch"],
+            ["worktree"],
+            ["sparse-checkout"],
+        ]:
             return
         raise ShellParseError("unclassified Git candidate consumer")
     raise ShellParseError("unknown consumer of visible merge text")
@@ -502,6 +518,22 @@ def _pr_selector(args: list[str]) -> str | None:
     return positionals[0] if positionals else None
 
 
+def _target_conflict(args: list[str]) -> bool:
+    """Refuse an explicit repository that disagrees with a URL selector."""
+    selector = _pr_selector(args) or ""
+    repo = _repo_option(args)
+    if not repo or not selector.startswith(("http://", "https://")):
+        return False
+    url = urlparse(selector)
+    parts = url.path.strip("/").split("/")
+    if len(parts) != 4 or parts[2] != "pull" or not parts[3].isdigit():
+        return True
+    repo_parts = repo.strip("/").split("/")
+    if len(repo_parts) == 2:
+        return repo_parts != parts[:2]
+    return repo_parts != [url.netloc, *parts[:2]]
+
+
 def _pr_ref(args: list[str], repo: str | None = None, cwd: str | None = None) -> str | None:
     """The explicit PR selector; implicit current-branch discovery is refused."""
     del repo, cwd
@@ -692,7 +724,7 @@ def _block_msg(reason: str, guidance: str) -> str:
     return f"BLOCKED by guard-pr-merge: {reason}.\n\n{guidance}\n\n{_FOOTER}"
 
 
-def _judge(args: list[str], cwd: str | None = None) -> str | None:
+def _judge(args: list[str], cwd: str | None = None, repo: str | None = None) -> str | None:
     """Block message for this `gh pr merge`, or None to allow."""
     if _UNREADABLE_MARKER in args:
         return _block_msg(
@@ -702,7 +734,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
             "instead would verify one PR while gh merges another. Run the merge with the PR\n"
             "named explicitly (`gh pr merge <number> ...`).",
         )
-    repo = _repo_option(args)
+    repo = _repo_option(args) or repo
     pr = _pr_ref(args, repo, cwd=cwd)
     if not pr:
         return _block_msg(
@@ -820,6 +852,9 @@ def main() -> int:
             args = [*args, UNREADABLE]
         if args is None:
             continue
+        if _target_conflict(args):
+            sys.stderr.write(_block_msg("conflicting merge repositories", "Use one explicit target."))
+            return 2
         if UNREADABLE in args:
             sys.stderr.write(
                 _block_msg("merge arguments cannot be read", f"Use literal arguments; repair parser: {REPAIR}")
@@ -832,7 +867,7 @@ def main() -> int:
         # `gh pr view 9 --repo cli/cli --json number` -> rc=0 `{"number":9}`. Without a
         # selector gh refuses (`argument required when using the --repo flag` -> rc=1), so
         # `-R` alone cannot wave a merge through: _pr_ref reads that rc and fails closed.
-        if seg.cwd_unreadable and not _repo_option(args):
+        if seg.cwd_unreadable and not (_repo_option(args) or seg.environment_repo):
             sys.stderr.write(
                 _block_msg(
                     "this merge's working directory cannot be read (a `cd` to a variable, "
@@ -845,7 +880,11 @@ def main() -> int:
             return 2
         # An unreadable cwd is a guess, not a location — `-R` got us here, so let gh resolve
         # from the repo name in this hook's own cwd rather than hand it a stale directory.
-        blocked = _judge(args, cwd=None if seg.cwd_unreadable else seg.cwd)
+        blocked = _judge(
+            args,
+            cwd=None if seg.cwd_unreadable else seg.cwd,
+            **({"repo": seg.environment_repo} if seg.environment_repo else {}),
+        )
         if blocked:
             sys.stderr.write(blocked)
             return 2

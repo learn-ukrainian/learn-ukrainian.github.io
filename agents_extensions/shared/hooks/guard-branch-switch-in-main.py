@@ -37,6 +37,7 @@ Allowed in the MAIN worktree:
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import re
@@ -57,8 +58,14 @@ def _may_guard(command: str) -> bool:
         )
     except ValueError:
         return True  # unreadable escape: let the full parser refuse it
-    probe = probe.replace("\\", "").replace("'", "").replace('"', "")
-    return ("git" in probe or "gh" in probe) and any(word in probe for word in ("checkout", "switch", "branch"))
+    probe = probe.replace("\\\n", "").replace("\\", "").replace("'", "").replace('"', "")
+    return bool(
+        ("gh" in re.sub(r"\$gh\b", "", probe) and re.search(r"\bpr\s+merge\b", probe))
+        or re.search(
+            r"\b(?:checkout|switch|branch)\b|\bworktree\s+add\b|--pre(?:=|\s)|--config-env|\bmergetool\b", probe
+        )
+        or re.search(r"(?:^|[\s;{])gh\s+[^;\n]*\$", probe)
+    )
 
 
 if __name__ == "__main__":
@@ -469,14 +476,51 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path | None) -> str | 
     return None
 
 
+def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
+    """Use the same data-reader boundary for visible branch operations."""
+    merge_guard = importlib.import_module("guard-pr-merge")
+    # The consumer policy is operation-neutral except its candidate prefilter
+    # and the Git/GH command allowlists.
+    utility = Path(argv[0]).name
+    if utility == "git":
+        invocation = _git_invocation(argv, Path.cwd())
+        if UNREADABLE in argv or (invocation is not None and invocation[0] in {"checkout", "switch", "branch"}):
+            return
+    if utility == "gh" and argv[1:3] == ["pr", "checkout"]:
+        return
+    merge_guard._check_consumer(argv, source, guarded_source, candidate=_may_guard)
+
+
 def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str | None:
     """Return a block reason only for a command targeting a protected root."""
     if not _may_guard(command):
         return None
     protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
     try:
-        rows = read_commands(command, cwd=str(session_cwd or Path.cwd()))
+        initial_root = (
+            _git_repo_root(session_cwd or Path.cwd())
+            if re.search(r"\b[A-Za-z_][A-Za-z_0-9]*\s*\(\)\s*\{", command)
+            else None
+        )
+        rows = read_commands(
+            command,
+            cwd=str(session_cwd or Path.cwd()),
+            consumer_check=_check_consumer,
+            allow_dynamic_git_arguments=True,
+            follow_directory_functions=initial_root is not None and initial_root.resolve() not in protected_roots,
+        )
     except Exception as exc:
+        if isinstance(exc, ShellParseError) and str(exc) == "dynamic command name" and session_cwd is not None:
+            root = _git_repo_root(session_cwd)
+            if (
+                root is not None
+                and root.resolve() not in protected_roots
+                and re.fullmatch(
+                    r"(?:[A-Za-z_][A-Za-z_0-9]*=[A-Za-z_0-9]+;\s*)?(?:\$[A-Za-z_][A-Za-z_0-9]*|\$\{[A-Za-z_][A-Za-z_0-9]*\}[A-Za-z]*)\s+(?:checkout|switch|branch)\s+[-A-Za-z_0-9 ]+",
+                    command,
+                )
+            ):
+                return None
         return f"shell command cannot be read: {str(exc) if isinstance(exc, ShellParseError) else type(exc).__name__}; repair: {REPAIR}"
     for row in rows:
         segment = row.argv
@@ -490,9 +534,18 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
             return "repository environment cannot be read; use default Git repository discovery"
         invocation = _git_invocation(segment, effective_cwd)
         if invocation is None:
+            selected = segment[invoked_start(segment)[0] :]
+            if selected[:1] == ["git"] and UNREADABLE in selected:
+                return "branch operation arguments cannot be read"
             continue
         _, _, git_cwd = invocation
+        selected = segment[invoked_start(segment)[0] :]
+        dynamic_args = UNREADABLE in segment and (
+            invocation[0] in SWITCH_VERBS | {"branch", "worktree"} or selected[1:2] == [UNREADABLE]
+        )
         reason = _segment_is_dangerous(segment, None if git_cwd is None else "main")
+        if dynamic_args:
+            reason = "branch operation arguments cannot be read"
         if git_cwd is None:
             if reason:
                 return "branch-switch target cannot be read; use a literal directory and repository"
@@ -507,7 +560,11 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
         current_branch = _checked_out_branch(repo_root)
         if current_branch is None and invocation[0] == "branch":
             return "checked-out branch unknown; repair Git discovery before branch operations"
-        reason = _segment_is_dangerous(segment, current_branch)
+        reason = (
+            "branch operation arguments cannot be read"
+            if dynamic_args
+            else _segment_is_dangerous(segment, current_branch)
+        )
         if reason:
             return reason
     return None

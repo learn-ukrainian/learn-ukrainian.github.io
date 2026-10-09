@@ -2121,7 +2121,12 @@ def test_issue_9484_empty_value_does_not_consume_selector():
     ],
 )
 def test_issue_9484_unresolved_context_and_executor_options_refuse(monkeypatch, command):
-    assert _run(monkeypatch, command) == 2
+    if command == "GH_REPO=fixture/other gh pr merge 5":
+        # A literal command-local repository is now an understood target.
+        assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+        assert _run(monkeypatch, command, checks=([], [])) == 0
+    else:
+        assert _run(monkeypatch, command) == 2
 
 
 @pytest.mark.parametrize("script", ["p", "1p", "1,5p", "/literal/p"])
