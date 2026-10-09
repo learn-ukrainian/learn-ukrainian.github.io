@@ -19,6 +19,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -174,6 +175,7 @@ MONITOR_NOT_CONTACTED = MonitorNotContacted()
 
 def consume_supervisory_event(
     service: AuthorityService, supervisor: SessionSupervisor, lease: Lease, *, now: str | None = None,
+    restart_preflight: Callable[[], bool] | None = None,
 ) -> SupervisoryRequest | MonitorNotContacted | None:
     """Consume under the live envelope; prepare restart or reconcile its successor.
 
@@ -191,6 +193,22 @@ def consume_supervisory_event(
         return MONITOR_NOT_CONTACTED
     # Fence the live lease before claiming. Idle polls never reach this call.
     supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    if restart_preflight is not None:
+        try:
+            pending_request = read_supervisory_request(service, delivery.delivery_id, lease.stream_id)
+        except (ValueError, TypeError):
+            # Invalid events still follow the fenced refusal path below.
+            pending_request = None
+        if (
+            pending_request is not None
+            and pending_request.action == "restart"
+            and pending_request.generation == lease.generation
+            and not restart_preflight()
+        ):
+            # Do not claim/reclaim, consume, or prepare while the successor is
+            # unavailable. This also protects a replay after launcher preflight
+            # loses a race with the CLI disappearing after preparation.
+            return None
     now_value = now or datetime.now(UTC).isoformat()
     if delivery.state == "running":
         expires = datetime.fromisoformat(delivery.lease_expires_at.replace("Z", "+00:00"))
@@ -339,6 +357,26 @@ def wake_driver_once(
     return True
 
 
+def preflight_supervisory_successor() -> bool:
+    """Reuse the launcher's CLI resolution before spending a delivery attempt."""
+    helper = Path(__file__).resolve().parents[1] / "lib/session_supervisor.sh"
+    try:
+        result = subprocess.run(
+            ["bash", "-c", 'source "$1"; session_supervisor_preflight_successor',
+             "supervisory-preflight", str(helper)],
+            check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30,
+        )
+        available = result.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        available = False
+    if not available:
+        print(
+            "inbox watcher: provider-cli-unavailable; restart retained for retry",
+            file=sys.stderr, flush=True,
+        )
+    return available
+
+
 def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS) -> int:
     """Watch in the launcher-owned generation; return 75 only after preparation."""
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
@@ -354,7 +392,9 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
         outage = False
         while True:
             try:
-                request = consume_supervisory_event(service, supervisor, lease)
+                request = consume_supervisory_event(
+                    service, supervisor, lease, restart_preflight=preflight_supervisory_successor,
+                )
             except RemoteUnavailableError:
                 # One line per outage. Diagnostics stay off this stream.
                 if not outage:

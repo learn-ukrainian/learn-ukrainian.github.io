@@ -120,6 +120,14 @@ Both clear the delivery, stop the provider, close the predecessor's existing
 lease, then attempt one status publication before returning the original
 non-zero status. Neither executes a successor.
 
+Before stopping the provider or releasing its lease for a wake, the launcher
+preflights the successor CLI. It checks the executable recorded at provider
+startup, then the current PATH, then `~/.local/bin`, using the actual harness
+command rather than the provider label. It carries the resolved directory in
+PATH through successor exec. If no executable is available, preflight returns
+3 with `provider-cli-unavailable` and a repair hint; the launcher retains the
+predecessor and its lease and resumes inbox supervision.
+
 Before clearing `SESSION_STREAM_*` for a supervisory successor, the launcher
 captures the predecessor generation in
 `LC_SUPERVISORY_PREDECESSOR_GENERATION`. If the successor fails to start its
@@ -212,6 +220,15 @@ launcher only after writing a successfully prepared delivery (exit 75). A
 transient watcher exit (76) restarts the watcher under the same lease; USR1 alone
 never authorizes a wake. Permanent watcher failures still stop the provider
 without authorizing a successor.
+
+Before claiming or preparing a current-generation restart, the live watcher
+checks the successor CLI using the launcher's recorded harness executable,
+current PATH, and `~/.local/bin` fallback. If unavailable, it leaves the delivery
+unchanged and retries at the watcher poll interval. The launcher repeats this
+check before stopping the predecessor. If the CLI disappears after preparation,
+the restarted watcher checks it before replaying or reclaiming the delivery;
+the predecessor and lease remain live, and failed CLI checks spend no delivery
+attempts. Restoring the executable lets the same wake proceed.
 
 Exact lease close retries Monitor failures with exponential backoff from 1 second
 up to 30 seconds for ten minutes (override: `LC_DRIVER_CLOSE_RETRY_SECONDS`). It
