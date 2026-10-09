@@ -164,9 +164,13 @@ role and are not a last resort for any of them.
   orchestrator here would override the routine Sonnet default. Choose a named
   agent explicitly for its reserved seat; stream launchers select their driver agent.
 - **Reserved repository agents**: `curriculum-orchestrator`,
-  `curriculum-track-orchestrator`, `curriculum-writer` and `infra-orchestrator`
-  pin `model: claude-opus-5-5`, so Ukrainian writing/judgment, stream driving
-  and code-writing seats never inherit the routine interactive model.
+  `curriculum-track-orchestrator` and `curriculum-writer` pin
+  `model: claude-opus-5-5`, so Ukrainian writing/judgment seats never inherit
+  the routine interactive model. `infra-orchestrator` pins
+  `model: claude-sonnet-5-5`, matching its frontmatter. The advisor is strictly
+  for interactive Claude sessions; headless runs omit `advisorModel`, and
+  subagents do not inherit the advisor. Route reserved subagent work to an
+  explicitly pinned qualified seat.
 - **Subagent default stays unset**: do not set `CLAUDE_CODE_SUBAGENT_MODEL` or
   `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`. Built-in general-purpose and Plan agents
   are not limited to read-only search; a global Haiku override would admit

@@ -442,7 +442,7 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build hook and advisor settings from tracked sources in this checkout."""
+    """Build worker hook settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
@@ -464,8 +464,6 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
     settings: dict[str, Any] = {"hooks": {"PreToolUse": groups}}
-    if "advisorModel" in source:
-        settings["advisorModel"] = source["advisorModel"]
     return json.dumps(settings, separators=(",", ":"))
 
 
