@@ -781,9 +781,15 @@ LC_CURSOR_SEAT_PIN=grok-4.7-high
 launcher_validate_cursor_pin() {
   if [ "$LC_MODEL" = "grok-4.7" ]; then
     LC_MODEL="grok-4.7-high"
+  elif [[ "${LC_MODEL}" == grok-4.7* && "${LC_MODEL}" != "grok-4.7-high" ]]; then
+    launcher_error "CURSOR_UNATTESTED_GROK_VARIANT: model '${LC_MODEL}' is an unattested variant. Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
+    exit 4
   fi
   if [[ "${LC_MODEL}" == claude-* ]] || [[ "${LC_MODEL}" == *fable* ]]; then
-    if "${LC_DURABLE_HELPER_ROOT}/.venv/bin/python" -c "import sys; sys.path.insert(0, '${LC_ROOT}/scripts'); from agent_runtime.adapters.claude import _default_claude_bin; sys.exit(0 if _default_claude_bin() else 1)" 2>/dev/null; then
+    # Pass LC_ROOT securely through sys.argv to avoid command injection.
+    # We treat an execution error as "native CLI unavailable" (failing open for the model fallback)
+    # because if the CLI cannot be probed, the Cursor route should still function as a fallback (#10205).
+    if "${LC_DURABLE_HELPER_ROOT}/.venv/bin/python" -c "import sys; sys.path.insert(0, sys.argv[1] + '/scripts'); from agent_runtime.adapters.claude import _default_claude_bin; sys.exit(0 if _default_claude_bin() else 1)" "$LC_ROOT" 2>/dev/null; then
       launcher_error "CURSOR_CLAUDE_REFUSED: Claude models (${LC_MODEL}) must use the native Claude CLI while it is available. (operator decision #10205)"
       exit 4
     fi
@@ -809,17 +815,14 @@ launcher_validate_cursor_pin() {
   fi
 }
 
-# Cursor CLI model ids: bare certified pins, effort variants such as
-# grok-4.7-high, and bracket overrides such as
-# grok-4.7[context=500k,reasoning_effort=high,fast=false]. Auto, Fast variants
-# and previous generations are not certified.
+# Cursor CLI model ids: bare certified pins and bracket overrides such as
+# composer-2.5[fast=false]. Auto, Fast variants and previous generations are not certified.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    composer-2.5) return 0 ;;
-    grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
+    composer-2.5|grok-4.7-high) return 0 ;;
   esac
-  [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
+  [[ "$model" =~ ^composer-2\.5\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
   # A bracket override may only switch Fast off.
   local rest="${model//fast=false,/}"
   rest="${rest//fast=false]/]}"

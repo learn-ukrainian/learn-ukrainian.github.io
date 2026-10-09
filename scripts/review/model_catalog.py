@@ -992,26 +992,16 @@ def apply_cursor_model_pins(model: str | None) -> str | None:
     text_lower = text.casefold()
 
     if "grok-4.7" in text_lower:
-        if text_lower == "grok-4.7":
+        if text_lower == "grok-4.7" or text_lower == "grok-4.7-high":
             return "grok-4.7-high"
-
-        import re
-        allowed_efforts = {"grok-4.7-low", "grok-4.7-medium", "grok-4.7-high", "grok-4.7-xhigh"}
-        if text_lower in allowed_efforts:
-            return text
-
-        if re.match(r"^grok-4\.7\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$", text_lower):
-            # A bracket override may only switch Fast off.
-            rest = text_lower.replace("fast=false,", "").replace("fast=false]", "]")
-            if "fast=" not in rest:
-                return text
 
         raise ModelCatalogError(
             f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
             "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
         )
 
-    if "claude-" in text_lower or "fable" in text_lower:
+    from learn_ukrainian_v4_runtime.identity import resolve_family
+    if resolve_family(text_lower) == "anthropic":
         from scripts.agent_runtime.adapters.claude import _default_claude_bin
         if _default_claude_bin():
             raise ModelCatalogError(
@@ -1085,13 +1075,12 @@ def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ..
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     source = catalog or load_model_catalog()
     seat = source["orchestrator_seats"]["cursor"]
-    pin = apply_cursor_model_pins(seat["model_id"])  # apply Cursor rules
+    pin = seat["model_id"]
 
     def _gen():
         for model in seat["auto_allowlist"]:
-            m = apply_cursor_model_pins(model)
-            if m and m != pin:
-                yield m
+            if model and model != pin:
+                yield model
 
     return (pin, *_gen()) if pin else tuple(_gen())
 
