@@ -4039,16 +4039,17 @@ def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
     """True only when HEAD equals the live, exact origin branch tip."""
     head = _resolve_sha(path, "HEAD")
     try:
-        proc = subprocess.run(
-            ["git", "ls-remote", "--exit-code", "--refs", "origin", f"refs/heads/{branch}"],
-            cwd=path, capture_output=True, text=True, check=False,
-            env=_sanitized_git_env(), timeout=DEFAULT_GIT_TIMEOUT_S,
+        result = _run_git_stdout(
+            path, "ls-remote", "--exit-code", "--refs", "origin", f"refs/heads/{branch}",
         )
     except (OSError, subprocess.SubprocessError):
         return False
-    lines = (proc.stdout or "").splitlines()
+    if result is None:
+        return False
+    returncode, stdout = result
+    lines = stdout.splitlines()
     return bool(
-        head and proc.returncode == 0 and len(lines) == 1
+        head and returncode == 0 and len(lines) == 1
         and lines[0].split("\t") == [head, f"refs/heads/{branch}"]
     )
 

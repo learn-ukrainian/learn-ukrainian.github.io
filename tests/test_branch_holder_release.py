@@ -66,6 +66,28 @@ def snapshot(path):
     return sorted(entries)
 
 
+@pytest.mark.parametrize("result,expected", [
+    ((0, "a" * 40 + "\trefs/heads/feature\n"), True),
+    ((0, "b" * 40 + "\trefs/heads/feature\n"), False),
+    ((0, "a" * 40 + "\trefs/heads/other\n"), False),
+    ((0, ("a" * 40 + "\trefs/heads/feature\n") * 2), False),
+    ((2, ""), False),
+    (None, False),
+])
+def test_live_remote_tip_uses_existing_git_runner(tmp_path, monkeypatch, result, expected):
+    """Keep exact-ref and fail-closed proofs through the sanctioned Git helper."""
+    monkeypatch.setattr(delegate, "_resolve_sha", lambda path, ref: "a" * 40)
+    calls = []
+
+    def git_stdout(path, *args):
+        calls.append((path, args))
+        return result
+
+    monkeypatch.setattr(delegate, "_run_git_stdout", git_stdout)
+    assert delegate._worktree_matches_origin_branch(tmp_path, "feature") is expected
+    assert calls == [(tmp_path, ("ls-remote", "--exit-code", "--refs", "origin", "refs/heads/feature"))]
+
+
 @pytest.mark.parametrize("names", [
     ["source.txt.orig", "fix.patch"], ["pytest_out.txt"],
     ["source.txt.orig", "ignored/log.txt"], ["dir/a\nwith space.patch"],
