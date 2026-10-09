@@ -172,6 +172,7 @@ import re
 import resource
 import shutil
 import signal
+import sqlite3
 import stat
 import subprocess
 import sys
@@ -5280,6 +5281,63 @@ def _is_read_only_snapshot_excluded_path(path: str) -> bool:
     return top_level in _READ_ONLY_SNAPSHOT_EXCLUDED_TOP_LEVEL_DIRS
 
 
+@contextlib.contextmanager
+def _isolated_read_only_database_links(cwd: Path, *, restore_links: Callable[[], bool] | None = None):
+    """Keep linked DB writes off the primary until the checkout guard has run.
+
+    SQLite's backup API includes committed WAL pages and reads its source with
+    mode=ro. Retarget only existing database links, so detached sparse checkouts
+    still have no DBs and write-capable dispatches retain their shared links.
+    Restore untouched links on exit; never overwrite a worker's replacement.
+    """
+    try:
+        with os.scandir(cwd / "data") as entries:
+            links = sorted(Path(entry.path) for entry in entries if entry.name.endswith(".db") and entry.is_symlink())
+    except FileNotFoundError:
+        links = []
+    if not links:
+        yield
+        return
+    if cwd.resolve() == _main_checkout_root(cwd).resolve():
+        raise OSError("refusing database link isolation in the primary checkout")
+
+    # Own the copies in a temporary directory, outside the checkout and its
+    # mutation denominator. Its lifetime extends through the post snapshot.
+    restored: list[tuple[Path, str, Path]] = []
+    with tempfile.TemporaryDirectory(prefix="lu-read-only-databases-") as temp_root:
+        try:
+            for link in links:
+                original = os.readlink(link)
+                source = link.resolve(strict=True)
+                copy = Path(temp_root) / link.name
+                deadline = time.monotonic() + DEFAULT_GIT_TIMEOUT_S
+
+                def progress(_status, _remaining, _total, *, deadline=deadline):
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError("read-only database backup timed out")
+
+                with (
+                    contextlib.closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True)) as reader,
+                    contextlib.closing(sqlite3.connect(copy)) as writer,
+                ):
+                    reader.backup(writer, pages=256, progress=progress)
+                restored.append((link, original, copy))
+                link.unlink()
+                link.symlink_to(copy)
+            yield
+        finally:
+            for link, original, copy in reversed(restored):
+                if restore_links is not None and not restore_links():
+                    # A leaked child must never regain a conduit to the primary.
+                    # The broken isolated link stays for the failed task's reaper.
+                    continue
+                if not link.exists() and not link.is_symlink():
+                    link.symlink_to(original)
+                elif link.is_symlink() and os.readlink(link) == str(copy):
+                    link.unlink()
+                    link.symlink_to(original)
+
+
 def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str | None]:
     """Capture Git state and linked database contents for a read-only worker.
 
@@ -5290,10 +5348,10 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
 
     Paths under ``.worktrees/`` are excluded entirely (#7124): they belong to
     concurrent dispatch lanes, not to the task being guarded.
-    Provisioned DB links retain their Git status when the primary target is
-    written (#9421). Fingerprint their link text, resolved path, and contents,
-    including SQLite's persistent journal/WAL at the resolved target, so a
-    write followed by retargeting to an older copy cannot settle ``done``.
+    Provisioned DB links retain their Git status when their target is written
+    (#9421). Read-only workers receive isolated targets; fingerprint their
+    link text, resolved path, and contents, including SQLite's persistent
+    journal/WAL, so a write followed by retargeting cannot settle ``done``.
     """
     commands = (
         (
@@ -9972,15 +10030,7 @@ def _run_worker(
     # Set only after digest.json is on disk. Phase files stay until the
     # terminal record that names retention=digest has been written.
     clean_snapshots_to_discard: Path | None = None
-    if mode == "read-only":
-        read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
-        task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
-        task_records_snapshot_error = task_records_error
-        if read_only_snapshot_error is None:
-            read_only_snapshot_error = task_records_error
-        _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
-        state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
-        _write_state_atomic(state_path, state)
+    database_links = contextlib.ExitStack()
     start = time.monotonic()
     ok_outcome = False
     stderr_excerpt = None
@@ -10064,6 +10114,25 @@ def _run_worker(
 
     try:
         try:
+            if mode == "read-only":
+                try:
+                    database_links.enter_context(
+                        _isolated_read_only_database_links(cwd, restore_links=lambda: not leftovers_unconfirmed)
+                    )
+                except (OSError, RuntimeError, sqlite3.Error) as exc:
+                    read_only_snapshot_error = f"linked database snapshot failed: isolation: {type(exc).__name__}"
+                if read_only_snapshot_error is None:
+                    read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
+                task_records_pre, task_records_error = _read_only_task_record_snapshot(task_id)
+                task_records_snapshot_error = task_records_error
+                if read_only_snapshot_error is None:
+                    read_only_snapshot_error = task_records_error
+                _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
+                state["read_only_checkout_snapshot_error"] = read_only_snapshot_error
+                _write_state_atomic(state_path, state)
+                if (read_only_snapshot_error or "").startswith("linked database snapshot failed: isolation:"):
+                    pre_spawn_failure = True
+                    raise RuntimeError(read_only_snapshot_error)
             stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
             initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
             tool_config: dict[str, Any] = {}
@@ -10306,9 +10375,16 @@ def _run_worker(
             # Last-ditch: don't crash the worker on an unexpected bug — we
             # need to update the state file or the parent will see us as
             # "crashed" forever.
-            worker_exception = _exception_cause("worker_unexpected_error", exc)
-            stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
-            returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
+            if pre_spawn_failure and (read_only_snapshot_error or "").startswith(
+                "linked database snapshot failed: isolation:"
+            ):
+                # This is the database preflight's refusal, already recorded
+                # by the snapshot gate, rather than an unexpected runtime bug.
+                returncode_reason = "database isolation refused before a worker process was spawned"
+            else:
+                worker_exception = _exception_cause("worker_unexpected_error", exc)
+                stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
+                returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
             if cursor_mcp_path is not None:
                 try:
@@ -10318,7 +10394,7 @@ def _run_worker(
                         cursor_mcp_path.unlink()
                 except OSError as exc:
                     print(f"⚠️  failed to restore {cursor_mcp_path}: {exc}", file=sys.stderr)
-            if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
+            if mode != "read-only" and (runtime_tmp_root is not None or runtime_tmp_namespace_root is not None):
                 # This cleanup runs AFTER the worker has finished but BEFORE the
                 # guarded span below, and it catches Exception rather than the
                 # KeyboardInterrupt a SIGTERM raises — so a cancel landing here used
@@ -10412,6 +10488,14 @@ def _run_worker(
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
+            # The worker has exited and both fingerprints are captured. Restore
+            # shared links before finalization/reaping, including failed runs.
+            database_links.close()
+            # Copies live in the worker's managed TMPDIR. Reap its lease only
+            # after the guard reads them and shared links have been restored.
+            if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
+                with _sigterm_deferred():
+                    runtime_tmp_reap = _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
             task_records_post, task_records_error = _read_only_task_record_snapshot(task_id, task_records_pre)
             if task_records_snapshot_error is None:
                 task_records_snapshot_error = task_records_error
@@ -10927,6 +11011,17 @@ def _run_worker(
                 discard_read_only_snapshot_phases(clean_snapshots_to_discard)
                 clean_snapshots_to_discard = None
         raise
+    finally:
+        with _sigterm_deferred():
+            try:
+                database_links.close()
+            finally:
+                if (
+                    mode == "read-only"
+                    and runtime_tmp_reap is None
+                    and (runtime_tmp_root is not None or runtime_tmp_namespace_root is not None)
+                ):
+                    runtime_tmp_reap = _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
 
     last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
     if no_deliverable_reason is not None:

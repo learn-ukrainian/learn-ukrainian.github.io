@@ -123,7 +123,15 @@ def _sparse_dispatch_worktree(primary: Path, task_id: str) -> Path:
     return worktree
 
 
-def _run_read_only_worker(worktree: Path, task_id: str, worker_script: str, *args: str) -> tuple[int, dict, str]:
+def _run_read_only_worker(
+    worktree: Path,
+    task_id: str,
+    worker_script: str,
+    *args: str,
+    expected_invocations: int = 1,
+    runtime_tmp_root: Path | None = None,
+    runtime_tmp_namespace_root: Path | None = None,
+) -> tuple[int, dict, str]:
     """Run ``worker_script`` as the agy worker of a read-only dispatch, with the worktree as cwd."""
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree), **_AGY_UKRAINIAN_REVIEW})
@@ -163,11 +171,13 @@ def _run_read_only_worker(worktree: Path, task_id: str, worker_script: str, *arg
             cwd_str=str(worktree),
             model=None,
             hard_timeout=60,
+            runtime_tmp_root=str(runtime_tmp_root) if runtime_tmp_root is not None else None,
+            runtime_tmp_namespace_root=str(runtime_tmp_namespace_root) if runtime_tmp_namespace_root is not None else None,
         )
     state = delegate._read_state(state_path)
     assert state is not None
-    assert len(outputs) == 1
-    return rc, state, outputs[0]
+    assert len(outputs) == expected_invocations
+    return rc, state, outputs[0] if outputs else ""
 
 
 # The commands the AGY reviewers ran in review-8843-sent-1 and -5: ad-hoc
@@ -216,8 +226,9 @@ def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
 
     assert output == "opened"
     assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
+    assert _digest(primary / "data" / name) == before
+    assert link.resolve() == (primary / "data" / name).resolve()
     if action == "write":
-        assert _digest(primary / "data" / name) != before
         assert rc == 1
         assert state["status"] == "failed"
         assert state["read_only_mutation_paths"] == [f"data/{name}"]
@@ -233,7 +244,7 @@ def test_read_only_dispatch_detects_writes_through_provisioned_database_links(
 def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
     primary: Path, tmp_tasks_dir, name: str
 ) -> None:
-    """#9421: retargeting a link cannot hide an earlier write to the primary DB."""
+    """#9421: retargeting cannot hide a write to the isolated copy or reach the primary."""
     task_id = f"review-9421-retarget-{name.removesuffix('.db')}"
     worktree, _, _ = delegate._ensure_worktree(
         agent="agy",
@@ -247,17 +258,20 @@ def test_read_only_dispatch_detects_write_then_retarget_to_pre_write_copy(
     copy = tmp_tasks_dir / f"pre-write-{name}"
     copy.write_bytes(database.read_bytes())
     git_before = _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all")
-    worker_script = _RELATIVE_OPEN + """
+    worker_script = (
+        _RELATIVE_OPEN
+        + """
 import os
 link = "data/" + sys.argv[1]
 os.unlink(link)
 os.symlink(sys.argv[3], link)
 """
+    )
 
     rc, state, output = _run_read_only_worker(worktree, task_id, worker_script, name, "write", str(copy))
 
     assert output == "opened"
-    assert _digest(database) != before
+    assert _digest(database) == before
     assert (worktree / "data" / name).resolve() == copy
     assert _digest(worktree / "data" / name) == before
     assert _git(worktree, "status", "--porcelain", "--ignored", "--untracked-files=all") == git_before
@@ -265,6 +279,145 @@ os.symlink(sys.argv[3], link)
     assert state["status"] == "failed"
     assert state["read_only_mutation_paths"] == [f"data/{name}"]
     assert state["last_error"] == "read_only_checkout_mutation, count 1"
+
+
+@pytest.mark.parametrize("name", _DATABASES)
+def test_read_only_database_isolation_includes_committed_wal_and_restores_links(primary, name):
+    """The isolated reader sees committed WAL data; its writes never reach the source."""
+    worktree = _sparse_dispatch_worktree(primary, f"review-9421-wal-{name}")
+    database = primary / "data" / name
+    with sqlite3.connect(database) as connection:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("CREATE TABLE wal_fixture (value TEXT)")
+        connection.execute("INSERT INTO wal_fixture VALUES ('committed in WAL')")
+        connection.commit()
+        delegate._provision_data_symlinks(worktree, primary)
+        before = {suffix: _digest(Path(f"{database}{suffix}")) for suffix in ("", "-wal")}
+        link = worktree / "data" / name
+        original = os.readlink(link)
+
+        with delegate._isolated_read_only_database_links(worktree):
+            copy = link.resolve()
+            assert copy != database.resolve()
+            with sqlite3.connect(link) as isolated:
+                assert isolated.execute("SELECT value FROM wal_fixture").fetchall() == [("committed in WAL",)]
+                isolated.execute("UPDATE wal_fixture SET value = 'worker write'")
+            isolated.close()
+            assert connection.execute("SELECT value FROM wal_fixture").fetchall() == [("committed in WAL",)]
+
+        assert os.readlink(link) == original
+        assert not copy.exists()
+        assert {suffix: _digest(Path(f"{database}{suffix}")) for suffix in ("", "-wal")} == before
+    connection.close()
+
+
+@pytest.mark.parametrize("failure", ["missing", "invalid", "timeout"])
+def test_read_only_database_isolation_failure_refuses_worker_and_restores_links(
+    primary, tmp_tasks_dir, monkeypatch, failure
+):
+    """Partial backup setup must not expose the shared links to a worker."""
+    task_id = f"review-9421-isolation-{failure}"
+    worktree = _sparse_dispatch_worktree(primary, task_id)
+    delegate._provision_data_symlinks(worktree, primary)
+    originals = {name: os.readlink(worktree / "data" / name) for name in _DATABASES}
+    # sources.db sorts first; failing vesum exercises rollback of an already
+    # isolated sources link as well as refusal before provider invocation.
+    broken = worktree / "data" / "vesum.db"
+    if failure == "missing":
+        broken.unlink()
+        broken.symlink_to(primary / "missing.db")
+        originals["vesum.db"] = os.readlink(broken)
+    elif failure == "invalid":
+        (primary / "data" / "vesum.db").write_bytes(b"not a SQLite database")
+    else:
+        original_clock = delegate.time.monotonic
+        values = iter([0, delegate.DEFAULT_GIT_TIMEOUT_S + 1])
+
+        def clock():
+            return next(values, original_clock())
+
+        # Isolate the bounded backup probe without changing the worker's clocks.
+        original_isolation = delegate._isolated_read_only_database_links
+
+        @delegate.contextlib.contextmanager
+        def timed_isolation(cwd, **kwargs):
+            with monkeypatch.context() as context:
+                context.setattr(delegate.time, "monotonic", clock)
+                with original_isolation(cwd, **kwargs):
+                    yield
+
+        monkeypatch.setattr(delegate, "_isolated_read_only_database_links", timed_isolation)
+
+    rc, state, _ = _run_read_only_worker(
+        worktree, task_id, _RELATIVE_OPEN, "sources.db", "write", expected_invocations=0
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["last_error"] == "read_only_checkout_snapshot_failed"
+    assert state["read_only_checkout_snapshot_error"].startswith("linked database snapshot failed: isolation:")
+    assert {name: os.readlink(worktree / "data" / name) for name in _DATABASES} == originals
+
+
+@pytest.mark.parametrize("action", ["write", "read"])
+def test_read_only_database_copies_outlive_managed_tmp_reap(primary, tmp_tasks_dir, monkeypatch, action):
+    task_id = f"review-9421-managed-tmp-{action}"
+    worktree = _sparse_dispatch_worktree(primary, task_id)
+    delegate._provision_data_symlinks(worktree, primary)
+    original = os.readlink(worktree / "data" / "sources.db")
+    before = _digest(primary / "data" / "sources.db")
+    scratch = tmp_tasks_dir.parent / "scratch"
+    scratch.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch))
+    lease, namespace = delegate._create_runtime_tmp_lease(task_id)
+    monkeypatch.setenv("TMPDIR", str(lease))
+    monkeypatch.setenv("LU_RUNTIME_TMP_ROOT", str(lease))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(namespace.parent))
+    monkeypatch.setattr(delegate.tempfile, "tempdir", None)
+
+    rc, state, output = _run_read_only_worker(
+        worktree,
+        task_id,
+        _RELATIVE_OPEN + "\nfrom pathlib import Path\nassert Path('data/sources.db').resolve().is_relative_to(Path(sys.argv[3]))\n",
+        "sources.db",
+        action,
+        str(lease),
+        runtime_tmp_root=lease,
+        runtime_tmp_namespace_root=namespace,
+    )
+
+    assert output == "opened"
+    assert rc == (1 if action == "write" else 0)
+    assert state["status"] == ("failed" if action == "write" else "done")
+    assert state["read_only_mutation_paths"] == (["data/sources.db"] if action == "write" else [])
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert _digest(primary / "data" / "sources.db") == before
+    assert os.readlink(worktree / "data" / "sources.db") == original
+    assert not lease.exists()
+    assert state["tmp_reap_error"] is None
+
+
+def test_read_only_database_isolation_restores_links_after_interruption(primary):
+    worktree = _sparse_dispatch_worktree(primary, "review-9421-interrupted")
+    delegate._provision_data_symlinks(worktree, primary)
+    originals = {name: os.readlink(worktree / "data" / name) for name in _DATABASES}
+    with pytest.raises(KeyboardInterrupt), delegate._isolated_read_only_database_links(worktree):
+        copies = [(worktree / "data" / name).resolve() for name in _DATABASES]
+        raise KeyboardInterrupt
+    assert {name: os.readlink(worktree / "data" / name) for name in _DATABASES} == originals
+    assert all(not copy.exists() for copy in copies)
+
+
+def test_read_only_database_isolation_never_restores_shared_links_for_live_children(primary):
+    worktree = _sparse_dispatch_worktree(primary, "review-9421-live-child")
+    delegate._provision_data_symlinks(worktree, primary)
+    with delegate._isolated_read_only_database_links(worktree, restore_links=lambda: False):
+        copies = {name: (worktree / "data" / name).resolve() for name in _DATABASES}
+    for name, copy in copies.items():
+        link = worktree / "data" / name
+        assert link.is_symlink() and not link.exists()
+        assert link.readlink() == copy
+        assert link.readlink() != (primary / "data" / name).resolve()
 
 
 @pytest.mark.parametrize("action", ["write", "read"])
@@ -313,7 +466,7 @@ def test_read_only_linked_database_snapshot_failure_cannot_settle_done(
     original_open = Path.open
 
     def unreadable(path, *args, **kwargs):
-        if path == target:
+        if path.name == name and path != target:
             raise PermissionError("fixture target unreadable")
         return original_open(path, *args, **kwargs)
 
