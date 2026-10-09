@@ -226,3 +226,27 @@ def test_endpoint_resolves_under_plain_package_import() -> None:
     )
     assert out.returncode == 0, out.stderr[-400:]
     assert out.stdout.strip().startswith("http")
+
+
+def test_kimi_worker_pause_settles_the_existing_task(tmp_path, monkeypatch) -> None:
+    import importlib
+
+    from scripts import delegate
+
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    task_id = "kimi-pause-race"
+    state = delegate._state_path_no_create(task_id)
+    state.parent.mkdir(parents=True, exist_ok=True)
+    state.write_text(json.dumps({"task_id": task_id, "status": "spawning"}))
+
+    def paused(*_a, **_k):
+        raise mp.ModelPausedRefused("MODEL_PAUSED: kimi-x is paused by operator policy")
+
+    for name in ("scripts.agent_runtime.target_admission", "agent_runtime.target_admission"):
+        with contextlib.suppress(ImportError):
+            monkeypatch.setattr(importlib.import_module(name), "resolve_and_admit", paused)
+    refusal, target = delegate._kimi_worker_refusal(
+        task_id, agent="kimi", model=None, mode="read-only", cwd=tmp_path, review=False
+    )
+    assert refusal and target is None
+    assert json.loads(state.read_text())["status"] == "failed"

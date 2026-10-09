@@ -6577,11 +6577,22 @@ def _kimi_worker_refusal(
             trees=lambda: _kimi_worktree_trees(cwd),
         )
     except MechanicalAdmissionRefused as exc:
-        # e.g. an operator model pause that began after dispatch: a typed
-        # refusal, and a refused Kimi worker writes nothing.
-        return _publish_cause(
+        # e.g. an operator model pause that began after dispatch. The task record
+        # already exists (it was dispatched), so settle it as failed rather than
+        # leaving it "spawning"; nothing new is created when there is no record.
+        cause = _publish_cause(
             task_id, _TypedCause("mechanical_admission_refused", diagnostic=str(exc)), source="worker"
-        ), None
+        )
+        record = _read_state_json(_state_path_no_create(task_id)) or {}
+        if record:
+            record.update({
+                "status": "failed", "finished_at": datetime.now(UTC).isoformat(),
+                "failure_reason": cause, "last_error": cause,
+                "returncode_reason": cause, "returncode": None, "exit_code": 1,
+                "stderr_excerpt": str(exc),
+            })
+            _write_state_atomic(_state_path_no_create(task_id), record)
+        return cause, None
     except KimiAdmissionRefused as exc:
         if not exc.read_errors:
             # A policy refusal: its text is fixed policy that the dispatch-time gate prints in full,
