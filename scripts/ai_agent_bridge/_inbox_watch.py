@@ -270,6 +270,11 @@ def wake_driver_once(
             latest.get(key) != current.get(key) for key in identity
         ):
             return False
+        # Re-read the rollout after the lease check. An open task_started means
+        # the pane is mid-turn; leave the rows unread and retry on a later poll.
+        if live.rollout is not None and not _ui_codex.rollout_is_ready(live.rollout):
+            return False
+        # One Ready pane gets one turn. This poll's rows are included in id order.
         message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
             f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
             for event in inbox_events

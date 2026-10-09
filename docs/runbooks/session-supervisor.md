@@ -239,7 +239,35 @@ The intended host-resident invocation uses the existing watcher process:
 ```bash
 scripts/ai_agent_bridge/inbox_watch.sh grok-infra --wake-driver grok --epic infra
 scripts/ai_agent_bridge/inbox_watch.sh grok-atlas --wake-driver grok --epic atlas
+scripts/ai_agent_bridge/inbox_watch.sh <codex-slot> --wake-driver codex --epic <epic>
 ```
+
+Codex wake mode resumes an unread bridge message into the live thread when
+that seat's lease is active and the rollout has no open turn. A busy pane
+waits for the next poll. Without `--wake-driver`, the watcher only prints
+notifications. One poll becomes one `codex exec resume` turn, with the unread
+rows in id order inside that turn. The watcher does not mark the rows
+consumed; the live driver records consumption after it reads the turn.
+
+The process keeps the code it imported at start. Nothing compares that copy
+to the file on disk. Restart by stopping the lock holder, then starting the
+same command once that process has exited. `--stop` sends SIGTERM to the pid
+in the slot lock, and the lock refuses a second watcher:
+
+```bash
+scripts/ai_agent_bridge/inbox_watch.sh --stop <codex-slot>
+scripts/ai_agent_bridge/inbox_watch.sh <codex-slot> --wake-driver codex --epic <epic>
+```
+
+A throwaway idle thread can record the resume receipt. Do not point `--thread`
+at a live fleet driver:
+
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge send-codex-ui --thread <THROWAWAY_THREAD_UUID> --json "Reply with exactly: wake-receipt"
+```
+
+The JSON includes `thread_id`, `exit_code`, `event_types`, and `turn_ids`
+taken from `turn.started` when the CLI emits them.
 
 Run it in an existing persistent host terminal or service allocation. The
 watcher does not install another service or make an offline host available.

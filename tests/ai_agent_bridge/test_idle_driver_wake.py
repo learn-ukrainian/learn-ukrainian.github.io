@@ -200,3 +200,153 @@ def test_explicit_wake_watcher_delivers_once_without_ack(inbox_db, live_driver, 
     lock.release.assert_called_once()
     with sqlite3.connect(inbox_db) as conn:
         assert conn.execute("SELECT consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (0,)
+
+
+def _rollout_text(cwd: Path, *event_payloads: dict) -> str:
+    lines = [json.dumps({"type": "session_meta", "payload": {"id": THREAD, "cwd": str(cwd)}})]
+    lines.extend(json.dumps({"type": "event_msg", "payload": payload}) for payload in event_payloads)
+    return "\n".join(lines) + "\n"
+
+
+def test_busy_pane_does_not_resume_until_the_open_turn_closes(live_driver, monkeypatch, tmp_path):
+    """A rollout with an unmatched task_started is mid-turn. Resume waits."""
+    _, _, rollout, _, _, _, remote = live_driver
+    rollout.write_text(
+        _rollout_text(tmp_path, {"type": "task_started", "turn_id": "turn-open"}),
+        encoding="utf-8",
+    )
+    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    monkeypatch.setattr(ui, "send", send)
+    launch = Mock(side_effect=AssertionError("busy pane must not start a launcher"))
+    event = watch.InboxEvent(7, "fixture-sender", "request-fixture", "pending")
+    assert not _wake(Mock(), remote, [event], launch)
+    send.assert_not_called()
+    launch.assert_not_called()
+
+    rollout.write_text(
+        _rollout_text(
+            tmp_path,
+            {"type": "task_started", "turn_id": "turn-open"},
+            {"type": "task_complete", "turn_id": "turn-open"},
+        ),
+        encoding="utf-8",
+    )
+    assert _wake(Mock(), remote, [event], launch)
+    send.assert_called_once()
+
+
+def test_missing_resume_binary_is_a_retained_inbox_failure(live_driver, monkeypatch):
+    *_, remote = live_driver
+
+    def missing(*_args, **_kwargs):
+        raise FileNotFoundError("codex")
+
+    monkeypatch.setattr(ui.subprocess, "run", missing)
+    monkeypatch.setattr(ui, "find_session_file", lambda _: None)
+    launch = Mock(side_effect=AssertionError("missing resume must not start a launcher"))
+    with pytest.raises(RuntimeError, match="inbox retained"):
+        _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], launch)
+    launch.assert_not_called()
+
+
+def test_two_unread_messages_coalesce_into_one_turn_in_id_order(live_driver, monkeypatch):
+    """One Ready pane, one poll: both rows ride a single resume, older id first."""
+    *_, remote = live_driver
+    first = watch.InboxEvent(7, "sender-a", "req-a", "first payload")
+    second = watch.InboxEvent(8, "sender-b", "req-b", "second payload")
+    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    monkeypatch.setattr(ui, "send", send)
+    launch = Mock(side_effect=AssertionError("coalesced wake must not start a launcher"))
+    assert _wake(Mock(), remote, [first, second], launch)
+    send.assert_called_once()
+    launch.assert_not_called()
+    message = send.call_args.kwargs["message"]
+    assert message.index("Message #7") < message.index("Message #8")
+    assert message.index("first payload") < message.index("second payload")
+    assert send.call_args.kwargs["bridge_id"] == "inbox-7-8"
+
+
+def test_rollout_ready_tracks_turn_boundaries(tmp_path):
+    path = tmp_path / "rollout-fixture.jsonl"
+    path.write_text(_rollout_text(tmp_path), encoding="utf-8")
+    assert ui.rollout_is_ready(path)
+    path.write_text(
+        _rollout_text(tmp_path, {"type": "task_started", "turn_id": "turn-a"}) + "{not-json",
+        encoding="utf-8",
+    )
+    assert not ui.rollout_is_ready(path)
+    closed = _rollout_text(
+        tmp_path,
+        {"type": "task_started", "turn_id": "turn-a"},
+        {"type": "turn_aborted", "turn_id": "turn-a"},
+        {"type": "turn_started", "turn_id": "turn-b"},
+        {"type": "turn_complete", "turn_id": "turn-b"},
+    )
+    path.write_text(closed + "{partial", encoding="utf-8")
+    assert ui.rollout_is_ready(path)
+    path.write_text(
+        closed + json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "turn-c"}}) + "\n",
+        encoding="utf-8",
+    )
+    assert not ui.rollout_is_ready(path)
+    path.write_text("{\"type\":\n" + closed, encoding="utf-8")
+    assert not ui.rollout_is_ready(path)
+
+
+def test_resume_receipt_names_thread_exit_and_turn(tmp_path):
+    receipt = ui.resume_receipt({
+        "thread_id": THREAD,
+        "exit_code": 0,
+        "events": [{"type": "turn.started", "turn_id": "turn-landed"}, {"type": "turn.completed"}],
+        "stderr": "",
+    })
+    assert receipt["thread_id"] == THREAD
+    assert receipt["exit_code"] == 0
+    assert receipt["turn_ids"] == ["turn-landed"]
+    assert receipt["event_types"] == ["turn.started", "turn.completed"]
+    assert "events" not in receipt
+
+
+def test_wake_watcher_retries_a_busy_pane_without_a_launcher(inbox_db, live_driver, monkeypatch, tmp_path):
+    _, _, rollout, _, _, _, remote = live_driver
+    rollout.write_text(_rollout_text(tmp_path, {"type": "task_started", "turn_id": "turn-open"}), encoding="utf-8")
+    monkeypatch.setattr(watch._config, "DB_PATH", inbox_db)
+    service = Mock()
+    service.store.connection.execute.return_value.fetchall.return_value = []
+    service.__enter__ = Mock(return_value=service)
+    service.__exit__ = Mock(return_value=False)
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
+    monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: Mock())
+
+    def send(**_kwargs):
+        assert "task_complete" in rollout.read_text(encoding="utf-8")
+        return {"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]}
+
+    send = Mock(side_effect=send)
+    monkeypatch.setattr(ui, "send", send)
+
+    def selector(argv, **kwargs):
+        assert argv[0] == "bash"
+        return SimpleNamespace(stdout="epic:123\n")
+
+    monkeypatch.setattr(watch.subprocess, "run", selector)
+
+    def sleep(_seconds):
+        if "task_complete" not in rollout.read_text(encoding="utf-8"):
+            rollout.write_text(
+                _rollout_text(
+                    tmp_path,
+                    {"type": "task_started", "turn_id": "turn-open"},
+                    {"type": "task_complete", "turn_id": "turn-open"},
+                ),
+                encoding="utf-8",
+            )
+            return None
+        raise OSError("stop fixture loop")
+
+    monkeypatch.setattr(watch.time, "sleep", sleep)
+    with pytest.raises(OSError, match="stop fixture loop"):
+        watch.run_supervisory_wake_watcher("codex", "codex", "fixture", interval_seconds=1, once=False)
+    send.assert_called_once()
+    assert "unread payload" in send.call_args.kwargs["message"]

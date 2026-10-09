@@ -67,6 +67,11 @@ CODEX_SESSIONS_ROOT = Path.home() / ".codex" / "sessions"
 DEFAULT_TIMEOUT_S = 1800  # 30 min — covers most multi-turn dispatches
 
 
+# Rollout `event_msg` names from codex-rs protocol::EventMsg (v1 wire, plus aliases).
+_TURN_START = frozenset({"task_started", "turn_started"})
+_TURN_END = frozenset({"task_complete", "turn_complete", "turn_aborted"})
+
+
 @dataclass(frozen=True)
 class LiveSession:
     """An exact thread and execution context from the lease owner's child."""
@@ -74,6 +79,7 @@ class LiveSession:
     thread_id: str
     cwd: Path
     environment: dict[str, str] = field(repr=False)
+    rollout: Path | None = None
 
 
 def find_live_session(lease: dict) -> LiveSession | None:
@@ -117,12 +123,84 @@ def find_live_session(lease: dict) -> LiveSession | None:
                     cwd = Path(payload["cwd"])
                     if not cwd.is_absolute():
                         continue
-                    matches[thread_id] = LiveSession(thread_id, cwd, environment)
+                    matches[thread_id] = LiveSession(thread_id, cwd, environment, rollout=path)
             except (psutil.Error, OSError, ValueError, KeyError, TypeError):
                 continue
     except psutil.Error:
         return None
     return next(iter(matches.values())) if len(matches) == 1 else None
+
+
+def rollout_is_ready(path: Path) -> bool:
+    """Return whether this rollout has no open turn.
+
+    A file that only has ``session_meta`` is idle at the prompt. ``task_started``
+    (and the ``turn_started`` alias) opens a turn; ``task_complete``,
+    ``turn_complete``, or ``turn_aborted`` closes the matching ``turn_id``.
+    A truncated last line is an in-flight append and is ignored. Any earlier
+    unreadable line, or a file that cannot be opened, is not Ready.
+    """
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return False
+    open_ids: set[str] = set()
+    anonymous = 0
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        try:
+            record = json.loads(stripped)
+        except json.JSONDecodeError:
+            if index == len(lines) - 1:
+                continue
+            return False
+        if not isinstance(record, dict):
+            return False
+        kind, turn_id = _rollout_turn_marker(record)
+        if kind in _TURN_START:
+            if turn_id:
+                open_ids.add(turn_id)
+            else:
+                anonymous += 1
+        elif kind in _TURN_END:
+            if turn_id:
+                open_ids.discard(turn_id)
+            else:
+                anonymous = max(0, anonymous - 1)
+    return not open_ids and anonymous == 0
+
+
+def _rollout_turn_marker(record: dict) -> tuple[str | None, str | None]:
+    """Return the turn boundary name and turn id from one rollout record."""
+    payload = record.get("payload") if record.get("type") == "event_msg" else record
+    if not isinstance(payload, dict):
+        return None, None
+    kind = payload.get("type")
+    turn_id = payload.get("turn_id")
+    if not isinstance(kind, str) or kind not in _TURN_START | _TURN_END:
+        return None, None
+    return kind, turn_id if isinstance(turn_id, str) and turn_id else None
+
+
+def resume_receipt(result: dict) -> dict:
+    """Compact proof that a resume landed: thread, exit, and turn ids."""
+    events = result.get("events") or []
+    compact = {key: value for key, value in result.items() if key != "events"}
+    compact["event_count"] = len(events)
+    compact["event_types"] = [
+        event.get("type") for event in events if isinstance(event, dict) and isinstance(event.get("type"), str)
+    ]
+    turn_ids: list[str] = []
+    for event in events:
+        if not isinstance(event, dict) or event.get("type") != "turn.started":
+            continue
+        turn_id = event.get("turn_id") or event.get("id")
+        if isinstance(turn_id, str) and turn_id:
+            turn_ids.append(turn_id)
+    compact["turn_ids"] = turn_ids
+    return compact
 
 
 def find_session_file(thread_id: str) -> Path | None:
@@ -215,6 +293,10 @@ def send(
         stdout = proc.stdout
         stderr = proc.stderr
         exit_code = proc.returncode
+    except FileNotFoundError as exc:
+        stdout = ""
+        stderr = f"codex exec resume unavailable: {exc}"
+        exit_code = 127
     except subprocess.TimeoutExpired as e:
         stdout = e.stdout.decode("utf-8", errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
         stderr = e.stderr.decode("utf-8", errors="replace") if isinstance(e.stderr, bytes) else (e.stderr or "")
@@ -323,9 +405,7 @@ def cli_main(argv: list[str] | None = None) -> int:
     )
 
     if args.json:
-        compact = {k: v for k, v in result.items() if k != "events"}
-        compact["event_count"] = len(result["events"])
-        print(json.dumps(compact, indent=2, default=str))
+        print(json.dumps(resume_receipt(result), indent=2, default=str))
     else:
         print(f"thread:       {result['thread_id']}")
         print(f"bridge_id:    {result['bridge_id']}")
