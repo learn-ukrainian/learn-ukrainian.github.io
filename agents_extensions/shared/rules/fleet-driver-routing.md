@@ -56,7 +56,7 @@ Do **not** use an advisory seat on lockfiles, pointer publishes, rsync gates, or
 `--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
 `--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
 card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
-unclear work pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer
+unclear work pin `grok-4.7-high` or `composer-2.5`; a review runs the approved concrete model the reviewer
 resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models

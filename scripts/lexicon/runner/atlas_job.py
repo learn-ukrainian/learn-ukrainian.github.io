@@ -7,7 +7,7 @@ submit refuses a second active unit on the SAME host; distinct hosts may run
 concurrently). Registry lives under batch_state/atlas-jobs/ (restic-covered).
 Close writes a fail-closed result receipt; large artifacts go through
 durable_mirror + backup-data.sh. Publish/pointer flip is never this module.
-Submit enforces a host free-disk floor (default 5 GiB,
+Submit enforces a host free-disk floor (a generic default; deployments set
 ATLAS_MIN_FREE_DISK_BYTES / ATLAS_MIN_FREE_DISK_GIB).
 """
 
@@ -79,7 +79,8 @@ _HOSTNAME_HINT = re.compile(
     r"(?i)\b(?:[a-z0-9-]+\.)+(?:internal|local|lan|corp|example)\b|\b\d{1,3}(?:\.\d{1,3}){3}\b"
 )
 DEFAULT_TIMEOUT_SECONDS = 86400
-DEFAULT_MIN_FREE_DISK_BYTES = 5 * 1024 * 1024 * 1024  # 5 GiB host floor
+# Generic default; deployments set their own floor through the env below.
+DEFAULT_MIN_FREE_DISK_BYTES = 14 * 1024 * 1024 * 1024
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 DEFAULT_SSH_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_SYSTEMCTL_TIMEOUT_SECONDS: float = 30.0
@@ -96,7 +97,7 @@ _HOST = None  # set via set_host_adapter(); typed as HostAdapter | None
 
 
 def min_free_disk_bytes() -> int:
-    """Return the configured host free disk floor in bytes (default 5 GiB).
+    """Return the configured host free disk floor in bytes.
 
     Overridable via ATLAS_MIN_FREE_DISK_BYTES (raw integer bytes) or
     ATLAS_MIN_FREE_DISK_GIB / ATLAS_MIN_FREE_DISK_GB (in GiB / GB).

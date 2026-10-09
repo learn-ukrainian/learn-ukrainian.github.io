@@ -15599,8 +15599,13 @@ def _worker_route_argv(target: AdmittedTarget) -> list[str]:
 
     target = require_admitted(target)
     argv = ["--agent", target.recipient]
-    if target.model:
-        argv.extend(["--model", target.model])
+    model = target.model
+    if target.recipient == "cursor":
+        from scripts.review.model_catalog import apply_cursor_model_pins
+
+        model = apply_cursor_model_pins(model)
+    if model:
+        argv.extend(["--model", model])
     return argv
 
 
@@ -15914,6 +15919,7 @@ def _admit_dispatch_target(
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.mechanical_admission import MechanicalAdmissionRefused
     from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+    from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
     from scripts.review.target_resolution import TargetResolutionError
 
     def flag_paths(attr: str) -> list[str]:
@@ -15996,7 +16002,9 @@ def _admit_dispatch_target(
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
         args._mechanical_admitted_scope = mechanical_task
-    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+        if target.recipient == "cursor":
+            apply_cursor_model_pins(target.model)
+    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError, ModelCatalogError) as exc:
         return str(exc), None
     return None, target
 
