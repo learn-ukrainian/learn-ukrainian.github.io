@@ -1135,3 +1135,103 @@ def test_keeper_timer_runs_every_minute() -> None:
     text = timer.read_text()
     assert "OnCalendar=*:*:00" in text
     assert "AccuracySec=5s" in text
+
+
+def _ejected(fake: FakeGitHub, path: Path, jobs: list[str], **state: Any) -> None:
+    since = "2026-09-23T00:00:00Z"
+    fake.events = [{"event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}]
+    fake.run_rows = [
+        {
+            "id": 321,
+            "event": "merge_group",
+            "conclusion": "failure",
+            "created_at": "2026-09-23T00:00:02Z",
+            "head_branch": "gh-readonly-queue/main/pr-42-deadbeef",
+            "html_url": "https://github.com/example/runs/321",
+        }
+    ]
+    fake.job_rows = [{"name": job, "conclusion": "failure"} for job in jobs]
+    path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": since, **state}))
+
+
+def _recent(job: str, pr_number: int) -> dict[str, Any]:
+    return {"job": job, "pr": pr_number, "at": "2999-01-01T00:00:00+00:00"}
+
+
+@pytest.mark.parametrize("spent", [False, True])
+def test_queue_wide_failure_requeues_a_clean_head_without_spending(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, spent: bool
+) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    extra: dict[str, Any] = {"failures": [_recent("pytest (9)", 7)]}
+    if spent:
+        extra["requeued"] = {f"42:{HEAD_A}": "earlier"}
+        extra["drops"] = {f"42:{HEAD_A}": 1}
+    _ejected(fake, path, ["pytest (9)", "CI Gate"], **extra)
+    if spent:
+        state = json.loads(path.read_text())
+        state["drops"] = {f"42:{HEAD_A}": 1}
+        path.write_text(json.dumps(state))
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert not failed
+    assert ("enqueue", (42, HEAD_A)) in fake.actions
+    assert any("requeued after a queue-wide failure" in line for line in lines)
+    state = json.loads(path.read_text())
+    assert state["drops"].get(f"42:{HEAD_A}", 0) == (1 if spent else 0)
+    assert state["shared_requeues"][f"42:{HEAD_A}"] == 1
+    assert f"42:{HEAD_A}" not in state.get("shared_pass", {})
+    assert (f"42:{HEAD_A}" in state.get("requeued", {})) is spent
+
+
+def test_failure_new_to_the_window_still_counts_against_the_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (3)", 7), _recent("pytest (9)", 42)])
+    lines, failed = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert not failed and "enqueue" not in mutations(fake)
+    assert "reason=requeue-pending" in lines[0]
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+
+def test_aggregate_job_alone_never_attributes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["CI Gate"], failures=[_recent("CI Gate", 7)])
+    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+
+
+def test_every_failing_job_must_be_shared(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    _ejected(fake, path, ["pytest (9)", "pytest (2)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
+    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+
+
+def test_shared_failure_requeues_are_capped_per_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    cap = keeper.SHARED_FAILURE_REQUEUE_LIMIT
+    _ejected(
+        fake,
+        path,
+        ["pytest (9)", "CI Gate"],
+        failures=[_recent("pytest (9)", 7)],
+        shared_requeues={f"42:{HEAD_A}": cap},
+    )
+    lines, _ = gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert "enqueue" not in mutations(fake) and "reason=requeue-pending" in lines[0]
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+
+def test_shared_failure_still_requires_green_head_checks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "state.json"
+    fake = FakeGitHub()
+    fake.check_rows = checks(HEAD_A, conclusion="failure")
+    _ejected(fake, path, ["pytest (9)", "CI Gate"], failures=[_recent("pytest (9)", 7)])
+    gated(fake, path, monkeypatch, _gate(tmp_path, {}))
+    assert "enqueue" not in mutations(fake)
