@@ -13,6 +13,7 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
+from types import ModuleType
 
 import jsonschema
 import pytest
@@ -22,6 +23,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.lib.readonly_sqlite import open_readonly
+from scripts.projects.open_model_data import v4_mine_corpus_calques as corpus_miner
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_textbook_heldout,
@@ -62,6 +64,218 @@ def _artifact_path(name: str) -> Path:
     return artifact_path(
         "open_model_other_indexes", f"projects/open_model_data/decolonization/mined/{name}", repo=REPO_ROOT
     )
+
+
+@pytest.fixture
+def zno_cache_consumer(monkeypatch: pytest.MonkeyPatch) -> dict:
+    """Replace the externally owned fetch consumer with synthetic cold/warm IO."""
+    payload = b'<div class="task-card" id="task7"><div class="question">Synthetic official stem.</div></div>\r\n'
+    state = {"payload": payload, "paths": [], "cold_writes": 0, "warm_only": False}
+    consumer = ModuleType("scripts.ingest.zno_ingest")
+    consumer.ONLINE_TEST_MAPPING = {(2020, "main", "synthetic"): ("fixture", 123)}
+
+    def fetch_page_with_rate_limit(url: str, cache_path: Path) -> str:
+        assert url == "https://zno.osvita.ua/fixture/123/"
+        state["paths"].append(cache_path)
+        if not cache_path.exists():
+            assert not state["warm_only"], "Warm cache must not acquire a page"
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            cache_path.write_bytes(state["payload"])
+            state["cold_writes"] += 1
+        return cache_path.read_bytes().decode("utf-8")
+
+    consumer.fetch_page_with_rate_limit = fetch_page_with_rate_limit
+    monkeypatch.setitem(sys.modules, "scripts.ingest.zno_ingest", consumer)
+    return state
+
+
+def _restore_synthetic_zno(
+    mode: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    cache_dir: Path | None = None,
+) -> dict:
+    records = [
+        {
+            "task_id": "zno.42",
+            "year": 2020,
+            "session": "main",
+            "task_no": 7,
+            "stem": "Old.",
+            "source": "synthetic-fixture",
+            "privacy": "fixture-only",
+        }
+    ]
+    if mode == "direct":
+        before = dict(records[0])
+        stats = corpus_miner.restore_zno_stems_from_official_exam_text(records, cache_dir=cache_dir)
+        assert stats == {"restored": 1, "longer": 1, "missing": 0}
+        assert records == [{**before, "stem": "Synthetic official stem."}]
+        return records[0]
+
+    output = tmp_path / "mined"
+    output.mkdir(exist_ok=True)
+    artifact = output / "zno_distractor_tasks.jsonl"
+    artifact.write_text(json.dumps(records[0]) + "\n", encoding="utf-8")
+    manifest_path = output / "decolonization_mined_manifest.json"
+    manifest = {
+        "issue": 8006,
+        "privacy": "fixture-only",
+        "files": {
+            "zno_distractor_tasks": {"sha256": "old", "record_count": 0, "filename": artifact.name},
+            "other": {"sha256": "preserved", "record_count": 2},
+        },
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    argv = ["miner", "--restore-zno-stems", "--sources-db", str(tmp_path / "absent.db"), "--output-dir", str(output)]
+    if cache_dir is not None:
+        argv.extend(["--zno-html-cache", str(cache_dir)])
+    monkeypatch.setattr(sys, "argv", argv)
+    with pytest.raises(SystemExit) as exc:
+        corpus_miner.main()
+    assert exc.value.code == 0
+    restored = json.loads(artifact.read_text(encoding="utf-8"))
+    assert restored == {**records[0], "stem": "Synthetic official stem."}
+    expected = json.loads(json.dumps(manifest))
+    expected["files"]["zno_distractor_tasks"].update(
+        sha256=hashlib.sha256(artifact.read_bytes()).hexdigest(),
+        record_count=1,
+    )
+    assert json.loads(manifest_path.read_text(encoding="utf-8")) == expected
+    assert all(str(tmp_path) not in json.dumps(value) for value in (restored, expected))
+    return restored
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
+@pytest.mark.parametrize("root_env", ["TMPDIR", "LU_TASK_SCRATCH_DIR"])
+def test_zno_cache_defaults_cold_write_warm_read(
+    mode: str,
+    root_env: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    root = tmp_path / "task-root"
+    root.mkdir()
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv(root_env, str(root))
+    if root_env == "TMPDIR":
+        monkeypatch.setenv("LU_TASK_SCRATCH_DIR", str(tmp_path / "unused-root"))
+    cache = root / "zno_cache" / "fixture_123.html"
+    assert corpus_miner.default_zno_html_cache() == cache.parent
+    assert not cache.parent.exists(), "Resolving a default must not allocate scratch"
+    cold = _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert cache.read_bytes() == zno_cache_consumer["payload"]
+    zno_cache_consumer["warm_only"] = True
+    warm = _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert warm == cold
+    assert zno_cache_consumer["paths"] == [cache, cache]
+    assert zno_cache_consumer["cold_writes"] == 1
+    assert cache.read_bytes() == zno_cache_consumer["payload"]
+    assert sorted(path.relative_to(root).as_posix() for path in root.rglob("*")) == [
+        "zno_cache",
+        "zno_cache/fixture_123.html",
+    ]
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
+def test_zno_cache_explicit_override_without_scratch(
+    mode: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    cache_dir = tmp_path / "explicit-cache"
+    _restore_synthetic_zno(mode, tmp_path, monkeypatch, cache_dir)
+    assert zno_cache_consumer["paths"] == [cache_dir / "fixture_123.html"]
+    assert (cache_dir / "fixture_123.html").read_bytes() == zno_cache_consumer["payload"]
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
+def test_zno_cache_preseeded_warm_cache_never_acquires_page(
+    mode: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    """Held-out warm proof starts from bytes independent of the cold-write fixture."""
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    cache = tmp_path / "zno_cache" / "fixture_123.html"
+    cache.parent.mkdir()
+    payload = b'<!-- held-out -->\n<div id="task7" class="task-card">\n<div class="question">Synthetic official stem.</div></div>\n'
+    cache.write_bytes(payload)
+    zno_cache_consumer["warm_only"] = True
+    _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert zno_cache_consumer["cold_writes"] == 0
+    assert zno_cache_consumer["paths"] == [cache]
+    assert cache.read_bytes() == payload
+
+
+@pytest.mark.parametrize("mode", ["direct", "cli"])
+@pytest.mark.parametrize("root", [None, "", " ", "relative", "missing", "file"])
+def test_zno_cache_invalid_root_fails_before_consumer(
+    mode: str,
+    root: str | None,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    zno_cache_consumer: dict,
+) -> None:
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    if root is not None:
+        value = str(tmp_path / root) if root in ("missing", "file") else root
+        if root == "file":
+            Path(value).write_bytes(b"sentinel")
+        monkeypatch.setenv("TMPDIR", value)
+        monkeypatch.setenv("LU_TASK_SCRATCH_DIR", str(tmp_path))
+    artifact = tmp_path / "mined/zno_distractor_tasks.jsonl"
+    manifest = tmp_path / "mined/decolonization_mined_manifest.json"
+    with pytest.raises(ValueError, match="ZNO HTML cache") as exc:
+        _restore_synthetic_zno(mode, tmp_path, monkeypatch)
+    assert str(tmp_path) not in str(exc.value)
+    assert zno_cache_consumer["paths"] == []
+    assert not (tmp_path / "missing").exists()
+    assert not (tmp_path / "zno_cache").exists()
+    if mode == "cli":
+        assert json.loads(artifact.read_text(encoding="utf-8"))["stem"] == "Old."
+        assert json.loads(manifest.read_text(encoding="utf-8"))["files"]["zno_distractor_tasks"]["sha256"] == "old"
+
+
+def test_zno_cache_database_restore_does_not_need_scratch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    source = tmp_path / "source-fixture.db"
+    source.write_bytes(b"synthetic store sentinel")
+    monkeypatch.setattr(corpus_miner, "load_official_zno_stems_from_sources", lambda path: {42: "Store stem."})
+    records = [{"task_id": "zno.42", "stem": "Old."}]
+    assert corpus_miner.restore_zno_stems_from_official_exam_text(records, sources_db=source) == {
+        "restored": 1,
+        "longer": 1,
+        "missing": 0,
+    }
+    assert records[0]["stem"] == "Store stem."
+    assert source.read_bytes() == b"synthetic store sentinel"
+
+
+def test_zno_cache_cli_help_without_scratch(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+    for name in ("TMPDIR", "LU_TASK_SCRATCH_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(sys, "argv", ["miner", "--help"])
+    with pytest.raises(SystemExit) as exc:
+        corpus_miner.main()
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    for expected in (
+        "$TMPDIR/zno_cache",
+        "$LU_TASK_SCRATCH_DIR/zno_cache",
+        "root must exist",
+        "Outputs:",
+        "Exit codes:",
+    ):
+        assert expected in help_text
 
 
 @pytest.fixture(scope="module")

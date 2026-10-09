@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -100,6 +101,17 @@ def load_official_zno_stems_from_html(cache_dir: Path) -> dict[tuple[int, str, i
     return stems
 
 
+def default_zno_html_cache() -> Path:
+    """Reuse caller-owned scratch without allocating another task lifecycle."""
+    root = os.environ.get("TMPDIR", os.environ.get("LU_TASK_SCRATCH_DIR"))
+    if not root or not root.strip():
+        raise ValueError("ZNO HTML cache requires TMPDIR or LU_TASK_SCRATCH_DIR, or an explicit --zno-html-cache.")
+    path = Path(root)
+    if not path.is_absolute() or not path.is_dir():
+        raise ValueError("ZNO HTML cache scratch root must be an existing absolute directory.")
+    return path / "zno_cache"
+
+
 def restore_zno_stems_from_official_exam_text(
     records: list[dict[str, Any]],
     sources_db: Path | None = None,
@@ -115,7 +127,7 @@ def restore_zno_stems_from_official_exam_text(
     if db_path is not None:
         by_id = load_official_zno_stems_from_sources(db_path)
     else:
-        cache = cache_dir if cache_dir is not None else Path("/tmp/zno_cache")
+        cache = cache_dir if cache_dir is not None else default_zno_html_cache()
         by_key = load_official_zno_stems_from_html(cache)
 
     for rec in records:
@@ -692,21 +704,49 @@ def mine_corpus_calques(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Mine textbook contrast tables and ZNO tasks.")
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--verify-only", action="store_true", help="Verify existing output files.")
+    parser = argparse.ArgumentParser(
+        description="Mine textbook contrast tables and ZNO tasks.\n"
+        "Use with local source stores; verification reads existing artifacts without mining or fetching.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+        "  .venv/bin/python scripts/projects/open_model_data/v4_mine_corpus_calques.py --verify-only\n"
+        "  .venv/bin/python scripts/projects/open_model_data/v4_mine_corpus_calques.py "
+        '--restore-zno-stems --output-dir "$TMPDIR/mined"\n'
+        "Outputs: mined JSONL and manifest; restoration rewrites ZNO JSONL and its manifest hash/count.\n"
+        "Source stores are read-only; HTML fallback may fetch and cache official exam pages.\n"
+        "Exit codes: 0 success; 1 verification/restoration failure; 2 invalid arguments.\n"
+        "Related: #8006, #9702; v4_mine_uagec_calques.py; v1_decolonization_mined_candidates.schema.json.",
+    )
+    parser.add_argument(
+        "--sources-db",
+        type=Path,
+        default=DEFAULT_SOURCES_DB,
+        help="Read-only sources store (default: resolved data/sources.db; example: data/sources.db).",
+    )
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=DEFAULT_VESUM_DB,
+        help="Read-only morphology store (default: resolved data/vesum.db; example: data/vesum.db).",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Mined artifact directory (default: data/projects/open_model_data/decolonization/mined; example: $TMPDIR/mined).",
+    )
+    parser.add_argument("--verify-only", action="store_true", help="Verify existing output files (default: off).")
     parser.add_argument(
         "--restore-zno-stems",
         action="store_true",
-        help="Rewrite committed ZNO stems from official zno_tasks.stem or published exam HTML.",
+        help="Rewrite existing ZNO stems from official zno_tasks.stem or published exam HTML (default: off).",
     )
     parser.add_argument(
         "--zno-html-cache",
         type=Path,
-        default=Path("/tmp/zno_cache"),
-        help="Cache directory for official zno.osvita.ua booklet HTML.",
+        default=None,
+        help="Official booklet HTML cache (default: $TMPDIR/zno_cache, or $LU_TASK_SCRATCH_DIR/zno_cache "
+        "if TMPDIR is unset; root must exist). Explicit example: $TMPDIR/official-pages.",
     )
     args = parser.parse_args()
 
