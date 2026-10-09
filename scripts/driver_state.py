@@ -57,6 +57,9 @@ from pathlib import Path
 
 from markdown_it import MarkdownIt
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 
