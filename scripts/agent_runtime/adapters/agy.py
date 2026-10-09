@@ -787,6 +787,13 @@ def unknown_model_suggestion(model: str) -> str:
     return f"Accepted AGY model ids: {accepted_ids}."
 
 
+_WRITE_MODE_PROMPT_CONTRACT = (
+    "\n\n[WRITE MODE CONTRACT: Tests, pushes, and other long commands MUST run in the foreground to completion. "
+    "Do not start any timer, wait, or background task. "
+    "Send your final reply ONLY after everything is pushed and verified.]"
+)
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
@@ -920,9 +927,14 @@ class AgyAdapter:
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
+
+        final_prompt = prompt
+        if mode in ("workspace-write", "danger") and not review_route:
+            final_prompt += _WRITE_MODE_PROMPT_CONTRACT
+
         stdin_payload = (
             json.dumps(
-                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
+                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": final_prompt}]}},
             )
             + "\n"
         )

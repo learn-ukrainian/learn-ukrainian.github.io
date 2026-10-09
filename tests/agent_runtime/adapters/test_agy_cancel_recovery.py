@@ -969,3 +969,189 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
     command = " ".join(key)
     assert agy._read_only_killed_command(f"{command} {group} {operands}")
     assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
+
+
+
+def test_agy_impl_8771_timer_kill_not_excused_fails_incomplete(tmp_path):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    log = tmp_path / "attempt.log"
+    log.write_text("Print mode: conversation=00000000-0000-0000-0000-000000000000\n")
+    events = [
+        {"type": "USER_INPUT", "content": "Wait for tests"},
+        {
+            "type": "GENERIC",
+            "status": "RUNNING",
+            "content": "Created At: 2026-10-09T08:18:14Z\nTool is running as a background task with task id: task-1\nTask Description: Timer: 20s, Prompt: Wait for tests\nTask logs are available at: ...",
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "RUNNING",
+            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "DONE",
+            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
+        },
+        {
+            "type": "SYSTEM_MESSAGE",
+            "source": "SYSTEM",
+            "status": "DONE",
+            "content": "\n\n<SYSTEM_MESSAGE>\n[Message] timestamp=X sender=task-1 priority=X content=Task id \"task-1\" was canceled with result: Tool execution was canceled"
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "DONE",
+            "content": "I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes.",
+        },
+    ]
+    brain_dir = tmp_path / "brain" / "00000000-0000-0000-0000-000000000000" / ".system_generated" / "logs"
+    brain_dir.mkdir(parents=True)
+    with open(brain_dir / "transcript.jsonl", "w") as f:
+        for event in events:
+            f.write(json.dumps(event) + "\n")
+
+    plan = InvocationPlan(
+        cmd=["agy"],
+        cwd=tmp_path,
+        env_overrides={agy._AGY_LOG_ENV: str(log)},
+        metadata={
+            agy._TRANSCRIPT_BASELINE_KEY: {"conversation_id": "00000000-0000-0000-0000-000000000000", "offset": 0},
+            "parent_read_root": str(tmp_path),
+            "agy_app_data_root": str(tmp_path),
+            "agy_app_data_path": str(tmp_path),
+        }
+    )
+
+    stdout = json.dumps({"event": "result", "result": {"status": "DONE", "response": "I am currently waiting for the test suite to finish running in the background. The system will notify me as soon as it completes."}}) + "\n"
+
+    result = agy.AgyAdapter().parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+
+
+def test_agy_impl_8771_git_push_kill_not_excused_fails_incomplete(tmp_path):
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    log = tmp_path / "attempt.log"
+    log.write_text("Print mode: conversation=00000000-0000-0000-0000-000000000000\n")
+    events = [
+        {"type": "USER_INPUT", "content": "Run git push"},
+        {
+            "type": "GENERIC",
+            "status": "RUNNING",
+            "content": "Created At: 2026-10-09T08:18:14Z\nTool is running as a background task with task id: task-1\nTask Description: git push\nTask logs are available at: ...",
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "RUNNING",
+            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "DONE",
+            "tool_calls": [{"name": "manage_task", "args": '{"Action": "kill", "TaskId": "task-1"}'}],
+        },
+        {
+            "type": "SYSTEM_MESSAGE",
+            "source": "SYSTEM",
+            "status": "DONE",
+            "content": "\n\n<SYSTEM_MESSAGE>\n[Message] timestamp=X sender=task-1 priority=X content=Task id \"task-1\" was canceled with result: Tool execution was canceled"
+        },
+        {
+            "type": "PLANNER_RESPONSE",
+            "source": "MODEL",
+            "status": "DONE",
+            "content": "git push killed",
+        },
+    ]
+    brain_dir = tmp_path / "brain" / "00000000-0000-0000-0000-000000000000" / ".system_generated" / "logs"
+    brain_dir.mkdir(parents=True)
+    with open(brain_dir / "transcript.jsonl", "w") as f:
+        for event in events:
+            f.write(json.dumps(event) + "\n")
+
+    plan = InvocationPlan(
+        cmd=["agy"],
+        cwd=tmp_path,
+        env_overrides={agy._AGY_LOG_ENV: str(log)},
+        metadata={
+            agy._TRANSCRIPT_BASELINE_KEY: {"conversation_id": "00000000-0000-0000-0000-000000000000", "offset": 0},
+            "parent_read_root": str(tmp_path),
+            "agy_app_data_root": str(tmp_path),
+            "agy_app_data_path": str(tmp_path),
+        }
+    )
+
+    stdout = json.dumps({"event": "result", "result": {"status": "DONE", "response": "git push killed"}}) + "\n"
+
+    result = agy.AgyAdapter().parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+
+
+def test_agy_impl_8771_prompt_contract_in_built_invocation(tmp_path):
+    adapter = agy.AgyAdapter()
+    base_prompt = "Do some work."
+
+    for mode in ["workspace-write", "danger"]:
+        plan = adapter.build_invocation(
+            prompt=base_prompt,
+            mode=mode,
+            cwd=tmp_path,
+            model=None,
+            task_id="test",
+            session_id=None,
+            tool_config={},
+        )
+        payload = json.loads(plan.stdin_payload)
+        sent_prompt = payload["message"]["content"][0]["text"]
+        assert "WRITE MODE CONTRACT" in sent_prompt
+        assert sent_prompt.startswith(base_prompt)
+
+    plan_read = adapter.build_invocation(
+        prompt=base_prompt,
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id=None,
+        tool_config={},
+    )
+    payload_read = json.loads(plan_read.stdin_payload)
+    sent_prompt_read = payload_read["message"]["content"][0]["text"]
+    assert "WRITE MODE CONTRACT" not in sent_prompt_read
+    assert sent_prompt_read == base_prompt
+
+    agy_home = tmp_path / "agy_home"
+    (agy_home / ".gemini" / "antigravity-cli").mkdir(parents=True, exist_ok=True)
+    plan_review = adapter.build_invocation(
+        prompt=base_prompt,
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test",
+        session_id=None,
+        tool_config={"review_isolation": True, "review_access": "isolated", "review_attempt_boundary": True, "review_write_root": str(tmp_path), "agy_home_override": str(agy_home), "mcp_server_names": ["sources"]},
+    )
+    payload_review = json.loads(plan_review.stdin_payload)
+    sent_prompt_review = payload_review["message"]["content"][0]["text"]
+    assert "WRITE MODE CONTRACT" not in sent_prompt_review
