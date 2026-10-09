@@ -40,6 +40,7 @@ import concurrent.futures
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -71,7 +72,11 @@ def _may_merge(command: str) -> bool:
     except ValueError:
         return True  # unreadable escape: let the full parser refuse it
     probe = probe.replace("\\", "").replace("'", "").replace('"', "")
-    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+    # A dynamic program can run the literal operation without spelling `gh`.
+    # Likewise, dynamic GH operation words may expand to `pr merge`.
+    return (("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe) or bool(
+        re.search(r"\bpr\s+merge\b", probe) or re.search(r"(?:^|[\s;|&(])(?:gh|/[^\s]+/gh)\s+[^\n;]*\$", probe)
+    )
 
 
 # Ordinary Bash commands must remain usable even if guard dependencies are absent.
@@ -199,6 +204,98 @@ _UNPARSED = ["gh", "pr", "merge", UNREADABLE]
 _invoked_start = invoked_start
 
 
+def _check_consumer(argv: list[str], source: str, guarded_source: bool) -> None:
+    """Account for visible code by its reader, never by quotation alone."""
+    utility = Path(argv[0]).name
+    if utility in {"source", "."} and guarded_source:
+        raise ShellParseError("visible sourced payload cannot establish execution")
+    if not _may_merge(source):
+        return
+    if "/" in argv[0]:
+        installed = shutil.which(utility)
+        # The typed publisher must use this hook's prescribed interpreter.
+        if (not installed or Path(argv[0]).resolve() != Path(installed).resolve()) and not (
+            utility.startswith("python") and Path(argv[0]).resolve() == Path(sys.executable).resolve()
+        ):
+            raise ShellParseError("executable path is not the verified candidate reader")
+    if utility in {"echo", "printf", "cat", "grep", "rg", "jq", "sed", "head", "tail"}:
+        if utility == "printf":
+            operands = argv[2:] if argv[1:2] == ["--"] else argv[1:]
+            if "-v" in argv[1:] or (operands and (operands[0] == UNREADABLE or "%n" in operands[0])):
+                raise ShellParseError("printf assignment consumer cannot establish execution")
+        if utility == "rg" and any(arg.split("=", 1)[0] in {"--pre", "--pre-glob"} for arg in argv[1:]):
+            raise ShellParseError("search executor option cannot establish execution")
+        if utility == "jq" and any(
+            arg.startswith("-L") or re.search(r"\b(?:import|include)\b", arg) for arg in argv[1:]
+        ):
+            raise ShellParseError("jq loading consumer cannot establish execution")
+        if utility == "sed":
+            # Only literal print-only scripts are admitted candidate readers.
+            # Script files and other sed programs can execute or emit code.
+            args = argv[1:]
+            scripts = []
+            positional = False
+            while args:
+                arg, *args = args
+                if positional:
+                    if arg.startswith("-"):
+                        raise ShellParseError("sed option after file cannot establish data-only input")
+                    continue
+                if arg in {"-n", "--quiet", "--silent"}:
+                    continue
+                if arg in {"-e", "--expression"} and args:
+                    script, *args = args
+                    scripts.append(script)
+                    continue
+                if arg.startswith("--expression="):
+                    scripts.append(arg.partition("=")[2])
+                    continue
+                if arg == "--":
+                    if not scripts and args:
+                        script, *args = args
+                        scripts.append(script)
+                    break
+                if arg.startswith("-"):
+                    raise ShellParseError("sed option cannot establish data-only input")
+                if not scripts:
+                    scripts.append(arg)
+                positional = True
+            if not scripts or any(
+                not re.fullmatch(r"\s*(?:(?:\d+|\$|/[^/\\]*/)(?:,(?:\d+|\$|/[^/\\]*/))?)?p\s*", script)
+                for script in scripts
+            ):
+                raise ShellParseError("sed script cannot establish data-only input")
+        return
+    if utility in {"bash", "sh", "dash", "eval", "cd", "pushd", "popd", "true", "false", ":"}:
+        return  # The AST reader checks shell payloads, expansions and context.
+    if utility == "xargs":
+        return  # The reader admits only fixed echo/printf logging executables.
+    if utility == "let" and not _may_merge(" ".join(argv[1:])):
+        return  # let ignores a heredoc on stdin; arithmetic operands are code.
+    if re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and argv[1:4] == ["-m", "scripts.publish", "pr-merge"]:
+        return
+    if utility == "gh":
+        if _merge_args(argv) is not None:
+            return
+        # Built-in GH read/message operands are data; aliases are executors.
+        if argv[1:2] in [["pr"], ["issue"], ["run"], ["repo"], ["api"], ["search"]] and not any(
+            arg in {"--editor", "--web"} for arg in argv[1:]
+        ):
+            return
+        raise ShellParseError("unclassified GH candidate consumer")
+    if utility == "git":
+        if any(
+            arg in {"--exec", "-x", "--extcmd", "--upload-pack", "--receive-pack", "foreach", "run"}
+            or arg.startswith(("--exec=", "--extcmd=", "--upload-pack=", "--receive-pack=", "--config-env"))
+            for arg in argv[1:]
+        ):
+            raise ShellParseError("Git executor consumer cannot establish execution")
+        if argv[1:2] in [["commit"], ["log"], ["show"], ["diff"], ["status"], ["grep"]]:
+            return
+        raise ShellParseError("unclassified Git candidate consumer")
+    raise ShellParseError("unknown consumer of visible merge text")
+
+
 def _segments(command: str) -> list[list[str]]:
     try:
         rows = [segment.argv for segment in read_commands(command, include_payloads=False)]
@@ -243,8 +340,28 @@ def _merge_args(seg: list[str]) -> list[str] | None:
             else:
                 args.append(("--match-head-commit" if key == "--match-head" else key) + "=" + value)
             j += 1
-    elif seg[i : i + 3] == ["gh", "pr", "merge"]:
-        args = seg[i + 3 :]
+    elif seg[i : i + 1] == ["gh"]:
+        # Cobra accepts inherited repository flags before/between subcommands.
+        # Keep their values in argv order for last-value repository semantics.
+        cursor = i + 1
+        inherited = []
+        for operation in ("pr", "merge"):
+            while cursor < len(seg) and seg[cursor].startswith(("-R", "--repo")):
+                option = seg[cursor]
+                if option in {"-R", "--repo"}:
+                    if cursor + 1 >= len(seg):
+                        return [_UNREADABLE_MARKER]
+                    inherited.extend(seg[cursor : cursor + 2])
+                    cursor += 2
+                elif option.startswith(("-R", "--repo=")):
+                    inherited.append(option)
+                    cursor += 1
+                else:
+                    return [_UNREADABLE_MARKER]
+            if cursor >= len(seg) or seg[cursor] != operation:
+                return [_UNREADABLE_MARKER] if cursor < len(seg) and UNREADABLE in seg[cursor] else None
+            cursor += 1
+        args = [*inherited, *seg[cursor:]]
     else:
         return None
     if via_xargs and _pr_selector(args) is None:
@@ -328,10 +445,13 @@ def _parse_args(args: list[str]) -> tuple[list[str], list[str], dict[str, str]]:
     i = 0
     while i < len(args):
         a = args[i]
+        if a == "--":
+            positionals.extend(args[i + 1 :])
+            break
         if a.startswith("--"):
             flags.append(a)
-            name, _, value = a.partition("=")
-            if value:
+            name, separator, value = a.partition("=")
+            if separator:
                 if name in _LONG_VALUE_FLAGS:
                     values[name] = value
                 i += 1
@@ -683,7 +803,7 @@ def main() -> int:
     # The AST reader carries each invocation's shell-scoped cwd, including
     # subshells and literal shell payloads, so PR selectors use that repository.
     try:
-        segments = read_commands(command, cwd=payload.get("cwd") or os.getcwd())
+        segments = read_commands(command, cwd=payload.get("cwd") or os.getcwd(), consumer_check=_check_consumer)
     except Exception as exc:
         sys.stderr.write(
             _block_msg(

@@ -1882,3 +1882,220 @@ def test_bare_unmatched_paren_still_fails_closed(monkeypatch):
 def test_issue_9479_r2_redirect_merge_decision(monkeypatch, command, checks, expected):
     assert _run(monkeypatch, command, checks=checks) == expected
     assert ["gh", "pr", "merge", "5", "--admin"] in guard._segments(command)
+
+
+# #9484: execution evidence comes from Bash and recording executables, rather
+# than a second call to the AST reader under test. No real GitHub CLI is run.
+_MERGE_SHELL_FORMS = [
+    "if {merge}; then :; fi",
+    "if true; then {merge}; fi",
+    "if false; then :; else {merge}; fi",
+    "if false; then :; elif {merge}; then :; fi",
+    "while {merge}; do break; done",
+    "until {merge}; do break; done",
+    "while true; do {merge}; break; done",
+    "for item in one; do {merge}; done",
+    "{{ {merge}; }}",
+    "({merge})",
+    "f(){{ {merge}; }}; f",
+    "time {merge}",
+    "coproc {{ {merge}; }}",
+    "coproc name if true; then {merge}; fi",
+    "! {merge}",
+    "printf x | {merge}",
+    "true && {merge}",
+    "false || {merge}",
+    "true; {merge}",
+    "{merge} &",
+    "bash <<'EOF'\n{merge}\nEOF",
+    "sh <<EOF\n{merge}\nEOF",
+    "eval '{merge}'",
+    "bash -c '{merge}'",
+    "sh -c '{merge}'",
+    "echo $({merge})",
+    'echo "$({merge})"',
+    'value="$({merge})"',
+    'case x in x) echo "$({merge})";; esac',
+    "echo `{merge}`",
+    'echo "`{merge}`"',
+    "cat <({merge})",
+    "printf x > >({merge})",
+]
+
+
+@pytest.fixture
+def recording_bash(tmp_path):
+    binaries = tmp_path / "bin"
+    binaries.mkdir()
+    records = tmp_path / "operations"
+    recorder = binaries / "gh"
+    recorder.write_text('#!/bin/sh\nprintf "%s\\0" "$@" >> "$MERGE_RECORDS"\nprintf "\\n" >> "$MERGE_RECORDS"\n')
+    recorder.chmod(0o755)
+    publisher = binaries / "python"
+    publisher.write_text(recorder.read_text())
+    publisher.chmod(0o755)
+    # A real, unsupported executor with explicitly visible shell input.
+    runner = binaries / "runner"
+    runner.write_text('#!/bin/bash\nif (($#)); then eval "$1"; else source /dev/stdin; fi\n')
+    runner.chmod(0o755)
+    env = {
+        "PATH": f"{binaries}:/usr/bin:/bin",
+        "HOME": str(tmp_path),
+        "MERGE_RECORDS": str(records),
+        "MERGE_OP": "pr merge",
+    }
+
+    def run(command):
+        result = subprocess.run(
+            ["bash", "--noprofile", "--norc", "-c", command + "\nwait"],
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert records.exists(), (command, result.stderr)
+        return records.read_bytes()
+
+    return run
+
+
+@pytest.mark.parametrize("shape", _MERGE_SHELL_FORMS)
+@pytest.mark.parametrize("suffix", ["", " 2>/dev/null", " --admin"])
+def test_issue_9484_shell_denominator_executes_and_is_never_unjudged(monkeypatch, recording_bash, shape, suffix):
+    command = shape.format(merge="gh pr merge 5" + suffix)
+    assert b"pr\0merge\0" in recording_bash(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize("shape", _MERGE_SHELL_FORMS)
+@pytest.mark.parametrize("suffix", ["", " 2>/dev/null"])
+def test_issue_9484_typed_publisher_shell_denominator(monkeypatch, recording_bash, shape, suffix):
+    command = shape.format(merge="python -m scripts.publish pr-merge --number 5" + suffix)
+    assert b"scripts.publish\0pr-merge\0--number\0" in recording_bash(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'op=merge; gh pr "$op" 5',
+        'op="pr merge"; gh $op 5',
+        "G=g; ${G}h pr merge 5",
+        "runner 'gh pr merge 5'",
+        "runner <<'EOF'\ngh pr merge 5\nEOF",
+        "sed -n '1e gh pr merge 5' <<<'input'",
+        "printf '%s' 'gh pr merge 5' | runner",
+        "printf '%s' 'gh pr merge 5' | runner > output",
+        "printf '%s' 'gh pr merge 5' | (runner)",
+        "printf '%s' 'gh pr merge 5' | bash -c 'runner'",
+        "gh --repo fixture/other pr merge 5",
+        "gh pr --repo fixture/other merge 5",
+        "gh -Rfixture/other pr merge 5",
+        "gh pr merge -- --disable-auto",
+        "echo 'gh pr merge 5' > startup; BASH_ENV=./startup bash -c ':'",
+        "printf '%s' 'gh pr merge 5' > script; source ./script",
+        "value='array[$(gh pr merge 5)]'; echo $((value))",
+        "echo(){ runner \"$@\"; }; echo 'gh pr merge 5'",
+        "value='$(gh pr merge 5)'; echo \"${value@P}\"",
+        "$(printf g)h pr merge 5",
+        "`printf g`h pr merge 5",
+        "f(){ G=g; ${G}h pr merge 5; }; f",
+        "value='array[$(gh pr merge 5)]'; [[ -v $value ]]",
+        "value='array[$(gh pr merge 5)]'; [[ \"$value\" -eq 0 ]]",
+        "cat <<'EOF' | bash -c 'runner'\ngh pr merge 5\nEOF",
+        "g'h' $MERGE_OP 5",
+        "sed -n -e p /dev/stdin -e '1e gh pr merge 5' <<<'input'",
+    ],
+)
+def test_issue_9484_visible_execution_cannot_bypass_accounting(monkeypatch, recording_bash, command):
+    assert b"merge\0" in recording_bash(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize(
+    "command", ["echo 'gh pr merge 5'", "printf '%s' 'gh pr merge 5'", "sed -n '1p' <<<'gh pr merge 5'"]
+)
+def test_issue_9484_known_data_readers_remain_usable(monkeypatch, command):
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
+
+
+def test_issue_9484_repo_prefix_is_bound_to_the_lookup(monkeypatch):
+    seen = []
+    monkeypatch.setattr(guard, "_judge", lambda args, cwd=None: seen.append(args) or None)
+    monkeypatch.setattr(
+        sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "gh -Rfixture/other pr merge 5"}}))
+    )
+    assert guard.main() == 0
+    assert len(seen) == 1
+    assert guard._pr_selector(seen[0]) == "5"
+    assert guard._repo_option(seen[0]) == "fixture/other"
+
+
+def test_issue_9484_empty_value_does_not_consume_selector():
+    assert guard._parse_args(["--subject=", "5"]) == (["--subject="], ["5"], {"--subject": ""})
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "GH_REPO=fixture/other gh pr merge 5",
+        "export GH_REPO=fixture/other; gh pr merge 5",
+        "HOME=elsewhere; cd; gh pr merge 5",
+        "PATH=elsewhere gh pr merge 5",
+        "printf -v 'slot[$(gh pr merge 5)]' '%s' value",
+        "printf -- '%n' 'slot[$(gh pr merge 5)]'",
+        "printf -- \"$format\" 'slot[$(gh pr merge 5)]'",
+        "rg --pre 'gh pr merge 5' pattern file",
+        "jq -Lmodules 'include \"gh pr merge 5\"' file",
+        "git rebase -x 'gh pr merge 5'",
+        "git alias-unknown 'gh pr merge 5'",
+    ],
+)
+def test_issue_9484_unresolved_context_and_executor_options_refuse(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("script", ["p", "1p", "1,5p", "/literal/p"])
+@pytest.mark.parametrize("option", ["-e", "--expression", "--expression="])
+def test_issue_9484_print_only_sed_is_data(monkeypatch, script, option):
+    arg = option + script if option.endswith("=") else f"{option} '{script}'"
+    assert _run(monkeypatch, f"sed -n {arg} <<<'gh pr merge 5'") == 0
+
+
+def test_issue_9484_consumer_boundary_failure_is_closed(monkeypatch):
+    def broken_consumer(*args):
+        raise RuntimeError("consumer boundary unavailable")
+
+    monkeypatch.setattr(guard, "_check_consumer", broken_consumer)
+    assert _run(monkeypatch, "echo 'gh pr merge 5'") == 2
+
+
+def test_issue_9484_consumer_callback_is_opt_in():
+    command = "runner 'gh pr merge 5'"
+    assert guard.read_commands(command)[0].argv == ["runner", "gh pr merge 5"]
+    with pytest.raises(guard.ShellParseError, match="unknown consumer"):
+        guard.read_commands(command, consumer_check=guard._check_consumer)
+
+
+def test_issue_9484_bash_proof_detects_an_omitted_invocation(monkeypatch, recording_bash):
+    command = 'echo "$(gh pr merge 5)"'
+    assert b"pr\0merge\0" in recording_bash(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+    monkeypatch.setattr(guard, "read_commands", lambda *args, **kwargs: [])
+    # The same Bash observation exposes the mutant's unsafe allow. The proof
+    # must not infer execution from the parser that the mutant has disabled.
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
+
+
+def test_issue_9484_arbitrary_basename_is_not_a_data_reader(monkeypatch, tmp_path):
+    program = tmp_path / "printf"
+    program.write_text("#!/bin/sh\nexit 0\n")
+    program.chmod(0o755)
+    assert _run(monkeypatch, f"{program} '%s' 'gh pr merge 5'") == 2
+
+
+def test_issue_9484_verified_absolute_data_reader_allows(monkeypatch):
+    program = shutil.which("printf")
+    assert program
+    assert _run(monkeypatch, f"{program} '%s' 'gh pr merge 5'") == 0

@@ -45,6 +45,20 @@ because their execution time and directory are not established by registration.
 Shell stdin from pipelines or process substitution is refused; literal
 here-strings, here-documents and `-c` payloads remain recursively parsed.
 
+The merge guard also supplies an opt-in candidate-consumer check to the AST
+reader. It classifies visible merge text at each command, including redirected
+stdin and pipeline input. Known data readers remain usable; unknown consumers,
+executor options, sourced input, arithmetic references and command-local shell
+startup/repository environment changes refuse instead of losing visible code.
+This check applies recursively to literal shell/eval payloads. The sibling
+guards retain their existing reader behavior.
+
+Dynamic command names with literal `pr merge` arguments and dynamic GH
+operation words engage the merge guard even without a literal `gh pr merge`.
+Inherited `-R`/`--repo` options before or between GH subcommands are retained
+when selecting the merge target. The merge option parser honors `--` and empty
+`--option=` values, so data cannot accidentally suppress the merge judgment.
+
 `xargs` never acts as a removable prefix. Guarded candidates involving its input
 or executable arguments are refused; fixed `echo`/`printf` logging commands remain
 inert. Dynamic traps and traps calling guarded functions also refuse. `find`

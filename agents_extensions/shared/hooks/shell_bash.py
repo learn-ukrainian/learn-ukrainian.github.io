@@ -11,6 +11,7 @@ import codecs
 import os
 import re
 import shlex
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from importlib.metadata import version
 from pathlib import Path
@@ -254,7 +255,12 @@ def cd_target(argv: list[str], cwd: str | None) -> str | None:
 
 
 def read_commands(
-    command: str, cwd: str | None = None, *, depth: int = 0, include_payloads: bool = True
+    command: str,
+    cwd: str | None = None,
+    *,
+    depth: int = 0,
+    include_payloads: bool = True,
+    consumer_check: Callable[[list[str], str, bool], None] | None = None,
 ) -> list[Invocation]:
     """Walk simple commands with conservative sets of Bash working directories."""
     out: list[Invocation] = []
@@ -269,8 +275,11 @@ def read_commands(
     )
     if directory_options_unknown:
         initial = {None}
-    guarded_source = operation_candidate(command)
+    # A hook-supplied consumer boundary has already engaged on a candidate,
+    # including dynamic operation shapes with no literal git/gh spelling.
+    guarded_source = operation_candidate(command) or consumer_check is not None
     functions = {}
+    pipeline_sources: list[str] = []
     work = 0
 
     def charge():
@@ -294,6 +303,15 @@ def read_commands(
                 node = pending.pop()
                 if node.type == "command_name":
                     called = literal(node)
+                    if consumer_check is not None and called not in {
+                        "echo",
+                        "printf",
+                        "true",
+                        "false",
+                        ":",
+                        *functions,
+                    }:
+                        return True
                     if called is None or called in {
                         "cd",
                         "pushd",
@@ -430,8 +448,60 @@ def read_commands(
                     raise ShellParseError("shell executable binding cannot establish command identity")
                 name = candidate.child_by_field_name("name")
                 if name is not None:
+                    if (
+                        consumer_check is not None
+                        and guarded_source
+                        and name.text
+                        in {
+                            b"BASH_ENV",
+                            b"ENV",
+                            b"GH_REPO",
+                            b"HOME",
+                            b"PATH",
+                        }
+                    ):
+                        raise ShellParseError(
+                            "command-local executor or repository environment cannot establish context"
+                        )
                     inherited_repo_override |= name.text.decode() in repo_names
                     cdpath_unknown |= name.text == b"CDPATH"
+            if (
+                consumer_check is not None
+                and guarded_source
+                and candidate.type
+                in {
+                    "arithmetic_expansion",
+                    "arithmetic_expression",
+                    "c_style_for_statement",
+                }
+                and re.search(rb"[A-Za-z_$`]", candidate.text)
+            ):
+                raise ShellParseError("arithmetic references cannot establish data-only execution")
+            if (
+                consumer_check is not None
+                and guarded_source
+                and candidate.type == "expansion"
+                and (candidate.text.startswith(b"${!") or b"@P" in candidate.text)
+            ):
+                raise ShellParseError("indirect or prompt expansion cannot establish data-only execution")
+            if consumer_check is not None and candidate.type == "test_operator":
+                if candidate.text in {b"-v", b"-R"}:
+                    raise ShellParseError("variable test cannot establish data-only execution")
+                if candidate.text in {b"-eq", b"-ne", b"-lt", b"-le", b"-gt", b"-ge"}:
+                    operands = [candidate.parent.child_by_field_name(field) for field in ("left", "right")]
+                    if any(
+                        operand is None or not re.fullmatch(r"[+-]?\d+", literal(operand) or "") for operand in operands
+                    ):
+                        raise ShellParseError("arithmetic test cannot establish data-only execution")
+            if (
+                consumer_check is not None
+                and candidate.type == "heredoc_redirect"
+                and any(
+                    child.type not in {"heredoc_start", "heredoc_body", "heredoc_end", "file_descriptor"}
+                    for child in candidate.named_children
+                )
+            ):
+                raise ShellParseError("executable node misparsed inside heredoc redirect")
             start = candidate.start_byte
             if (
                 candidate.type == "concatenation"
@@ -578,6 +648,12 @@ def read_commands(
         if selected[0] == UNREADABLE:
             raise ShellParseError("dynamic command name")
         utility = Path(selected[0]).name
+        if consumer_check is not None:
+            # Keep source attached to its consumer, including redirected stdin
+            # and pipeline input. A heredoc is data only if its reader is known.
+            source = node.text.decode() + "\n" + "\n".join(r.text.decode() for r in all_redirects)
+            source += "\n" + "\n".join(pipeline_sources)
+            consumer_check(selected, source, guarded_source)
         typed_publisher = re.fullmatch(r"python(?:3(?:\.\d+)?)?", utility) and selected[1:4] == [
             "-m",
             "scripts.publish",
@@ -809,8 +885,12 @@ def read_commands(
                             ):
                                 raise ShellParseError("piped shell input cannot establish execution payload")
                     pending.extend(child.named_children)
-            for index, child in enumerate(node.named_children):
-                walk(child, set(states), level + 1, attached if index == len(node.named_children) - 1 else ())
+            pipeline_sources.append(node.text.decode())
+            try:
+                for index, child in enumerate(node.named_children):
+                    walk(child, set(states), level + 1, attached if index == len(node.named_children) - 1 else ())
+            finally:
+                pipeline_sources.pop()
             return states
         if kind in {"subshell", "command_substitution", "process_substitution", "negated_command"}:
             current = set(states)
