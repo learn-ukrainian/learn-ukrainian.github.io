@@ -587,11 +587,27 @@ def test_m16_gemini_flash_code_review_with_ukrainian_family_is_refused(ordinary_
             "ukrainian-authoring",
             "--review-profile",
             "code",
+            "--review-risk",
+            "low",
             agent="agy",
             model=None,
         )
     )
     _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
+
+
+def test_m16_gemini_flash_code_review_without_review_risk_is_refused(ordinary_review_scope, env, capsys):
+    rc = _dispatch(
+        _argv(
+            "--branch",
+            "review-target",
+            "--review-profile",
+            "code",
+            agent="agy",
+            model=None,
+        )
+    )
+    _assert_refused(env, capsys, rc, "AGY code review requires an explicit --review-risk")
 
 
 def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
@@ -1085,7 +1101,9 @@ def test_m12_exceeding_either_ceiling_alone_is_a_typed_failure(tmp_path, monkeyp
 
 
 def test_m12_unmeasurable_ceilings_fail_closed(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
+    monkeypatch.setattr(
+        delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+    )
     state = _run_bounded_worker(tmp_path, monkeypatch, {"src/a.py": "x = 1\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.CEILING_UNMEASURED
@@ -2137,7 +2155,9 @@ def test_b3_code_by_attributes_symlink_or_location_fails_the_exempt_completion_g
 
 
 def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
+    monkeypatch.setattr(
+        delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+    )
     state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
     assert state["status"] == "failed"
     assert state["failure_reason"] == bounded_advisory.EXEMPT_CHANGES_UNMEASURED
@@ -2227,7 +2247,9 @@ _STALE_PASS = {
 def _gate_run(gate: str, verdict: str, env, tmp_path, monkeypatch, capsys, *, seed: dict | None = _STALE_PASS) -> dict:
     files, _code = _GATE_INPUTS[gate][verdict]
     if verdict == "unmeasurable":
-        monkeypatch.setattr(delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed")))
+        monkeypatch.setattr(
+            delegate, "_worktree_diff_read", lambda *_a, **_k: (None, delegate._TypedCause("diff_command_failed"))
+        )
     if gate == "ceiling":
         return _run_bounded_worker(tmp_path, monkeypatch, files, seed=seed)
     return _exempt_writer_run(env, tmp_path, monkeypatch, capsys, files, seed=seed)

@@ -42,6 +42,8 @@ def test_index_lists_every_registered_v1_route() -> None:
         ("GET", "/api/fleet/v1"),
         ("GET", "/api/fleet/v1/alerts"),
         ("GET", "/api/fleet/v1/links"),
+        ("GET", "/api/fleet/v1/prs"),
+        ("GET", "/api/fleet/v1/prs/{number}"),
         ("GET", "/api/fleet/v1/schema"),
         ("GET", "/api/fleet/v1/stats"),
     }

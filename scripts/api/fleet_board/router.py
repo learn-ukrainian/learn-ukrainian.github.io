@@ -1,13 +1,14 @@
-"""Fleet board v1 routes: index, schema, and read-only operations sources."""
+"""Fleet board v1 routes: index, schema, operations sources, and the PR pipeline."""
 
 from __future__ import annotations
 
 import re
 from collections.abc import Callable
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Path, Query, Request
 
+from . import prs as prs_api
 from .envelope import endpoint_schema, envelope, utc_timestamp
 from .http_sources import empty_stats, load_alerts, load_links, load_stats
 from .sources import SourceReport, collect_source_reports, report
@@ -150,3 +151,16 @@ def read_stats() -> dict[str, Any]:
 @router.get("/links", name="links")
 def read_links() -> dict[str, Any]:
     return _publish("links", "links", lambda: {"links": []}, load_links)
+
+
+@router.get("/prs", name="prs")
+def read_prs(
+    epic: Annotated[str | None, Query(max_length=80)] = None,
+    state: Annotated[str | None, Query(max_length=40)] = None,
+) -> dict[str, Any]:
+    return prs_api.read_prs(epic=epic, state=state)
+
+
+@router.get("/prs/{number}", name="pr")
+def read_pr(number: Annotated[int, Path(ge=1)]) -> dict[str, Any]:
+    return prs_api.read_pr(number)
