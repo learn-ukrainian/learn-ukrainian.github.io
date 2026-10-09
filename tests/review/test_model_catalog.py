@@ -1,4 +1,4 @@
-"""Frozen routing evidence with the approved #10016 review-capacity revision."""
+"""Frozen routing evidence with scoped, hash-pinned approved overlays."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import yaml
 
 from scripts.review.model_catalog import load_model_catalog
 from scripts.review.role_resolution import expanded_legacy_view
@@ -88,8 +89,10 @@ GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
 GROK_OVERLAY_PATH = FIXTURE / "routing-10267.json.gz"
 GROK_OVERLAY = json.loads(gzip.decompress(GROK_OVERLAY_PATH.read_bytes()))
+RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
+RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
 APPROVED_BASELINE = {
-    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"],
+    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
     **GROK_OVERLAY["configurations"]["host-cli"],
 }
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
@@ -134,6 +137,35 @@ def test_grok_fixture_changes_only_driver_binding_and_documented_help(configurat
         1,
     ).replace("Hermes (opt-in only):\n", block + "Hermes (opt-in only):\n", 1)
     assert overlay == expected
+
+
+def test_resource_policy_fixture_changes_only_approved_fallback_rows():
+    assert set(RESOURCE_OVERLAY) == {"surfaces"}
+    assert set(RESOURCE_OVERLAY["surfaces"]) == {"fallbacks"}
+    after = RESOURCE_OVERLAY["surfaces"]["fallbacks"]
+    for path in (FIXTURE / "baseline.json.gz", FIXTURE / "no-cli/baseline.json.gz"):
+        before = json.loads(gzip.decompress(path.read_bytes()))["fallbacks"]
+        expected = deepcopy(before)
+        expected.pop("post_2026_06_15_hard_rule")
+        removed = [row for row in expected["substitutions"]
+                   if row["currently_uses"] == "linear_pipeline.invoke_writer(writer='claude-tools')"]
+        assert len(removed) == 1
+        expected["substitutions"].remove(removed[0])
+        expected["worker_resource_policy"] = (
+            "Sol is the default eligible code worker. Use native Claude CLI workers as\n"
+            "heavily as their subscription allows, respecting task fit and hard gates.\n"
+            "Cursor Grok or Gemini routes are language-free overflow only; resolve admitted\n"
+            "models and transports from the live catalog, never infer route availability.\n"
+            "Writer selection follows core rules and the canonical writer policy, with no\n"
+            "excluded-writer recommendation in this substitution table.\n"
+        )
+        assert after == expected
+
+
+def test_resource_policy_fallbacks_equal_approved_overlay():
+    source = Path(__file__).resolve().parents[2]
+    actual = yaml.safe_load((source / "scripts/config/agent_fallback_substitutions.yaml").read_text())
+    assert actual == RESOURCE_OVERLAY["surfaces"]["fallbacks"]
 
 
 def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
@@ -212,8 +244,9 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # configurations; see SPEC.md.
 PINNED_DIGESTS = {
     "routing-10267.json.gz": "da57576235271cfe20fbd8934e27a42a0288d9cfe4c7349d3b9b4e4e4e9be5bf",
+    "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "0f5ef5bb626891fba94f1b86c086236e13c4d63772b10c86465bfcb2b3283c0f",
+    "SPEC.md": "8b1434492f5856d05ac261d3a5b79e956c452709cb843b7968b40ad4ce8427cd",
     "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -527,7 +560,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
     assert actual == {
-        **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"],
+        **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
         **GROK_OVERLAY["configurations"]["no-cli"],
     }
     assert len(actual["launchers"]) == 70

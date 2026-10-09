@@ -1,5 +1,24 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Worker resource-policy overlay (#10263)
+
+The 2026-10-09 resource-policy order is represented by the hash-pinned
+`routing-10263.json.gz` overlay, applied after the review-capacity and Gemini
+overlays for both CLI configurations. It replaces only the `fallbacks`
+surface. The decompressed comparison removes `post_2026_06_15_hard_rule`,
+adds `worker_resource_policy`, and removes the substitution whose
+`currently_uses` is `linear_pipeline.invoke_writer(writer='claude-tools')`.
+All remaining fields and substitution rows are identical. The replacement
+states the Sol default, native Claude eligibility and language-free overflow
+policy; it introduces no writer recommendation.
+
+The historical compressed baselines, input matrices, occurrence census,
+capture driver and checksum manifests remain byte-identical. Independent
+literal digests in `tests/review/test_model_catalog.py` pin this overlay and
+the updated specification; its scope test checks the exact decompressed
+difference against both historical fallback surfaces. Fresh full captures
+must still reproduce every other approved surface unchanged.
+
 The pinned source-contract/occurrence census is
 `dae3d752426d6c11c5dc82260ec07ae8164e7730`. The host-independent executable
 capture was reproduced from `019dcde544fe93f5aecf6d0deb6b2fd7352f339b`, the
