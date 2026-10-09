@@ -111,6 +111,70 @@ def test_provision_data_symlinks_read_only_withdraws_only_primary_database_links
     assert (worktree / "data" / "vesum.db").resolve() == (main_repo / "data" / "vesum.db").resolve()
 
 
+def test_read_only_stray_database_file_is_displaced_before_write_capable_relink(tmp_path, capsys):
+    """A read-only run leaves a regular file at a database path; a write-capable reuse must still link the primary.
+
+    The stray file is renamed aside with its bytes intact, never deleted.
+    """
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "vesum.db").write_bytes(b"primary vesum")
+    (main_repo / "data" / "sources.db").write_bytes(b"primary sources")
+    delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+    # The read-only worker opens the path, which has no link, and creates a regular file.
+    (worktree / "data").mkdir(parents=True, exist_ok=True)
+    (worktree / "data" / "vesum.db").write_bytes(b"stray worker bytes")
+
+    delegate._provision_data_symlinks(worktree, main_repo)
+
+    vesum_link = worktree / "data" / "vesum.db"
+    assert vesum_link.is_symlink()
+    assert vesum_link.resolve() == (main_repo / "data" / "vesum.db").resolve()
+    assert (main_repo / "data" / "vesum.db").read_bytes() == b"primary vesum"
+    displaced = [p for p in (worktree / "data").iterdir() if p.name.startswith("vesum.db.displaced-")]
+    assert len(displaced) == 1
+    assert not displaced[0].is_symlink()
+    assert displaced[0].read_bytes() == b"stray worker bytes"
+    assert "moved stray" in capsys.readouterr().err
+
+
+def test_write_capable_provisioning_displaces_wrong_database_symlink(tmp_path):
+    """A wrong symlink at a database path is moved aside, not kept and not followed into the wrong file."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "sources.db").write_bytes(b"primary sources")
+    wrong = tmp_path / "wrong.db"
+    wrong.write_bytes(b"wrong target")
+    (worktree / "data").mkdir(parents=True)
+    (worktree / "data" / "sources.db").symlink_to(wrong)
+
+    delegate._provision_data_symlinks(worktree, main_repo)
+
+    assert (worktree / "data" / "sources.db").resolve() == (main_repo / "data" / "sources.db").resolve()
+    assert wrong.read_bytes() == b"wrong target"
+    displaced = list((worktree / "data").glob("sources.db.displaced-*"))
+    assert len(displaced) == 1
+    assert displaced[0].is_symlink()
+    assert displaced[0].resolve() == wrong.resolve()
+
+
+def test_write_capable_provisioning_keeps_correct_database_link(tmp_path, capsys):
+    """An already-correct link is left as is: nothing is displaced on repeat provisioning."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "vesum.db").touch()
+    delegate._provision_data_symlinks(worktree, main_repo)
+
+    delegate._provision_data_symlinks(worktree, main_repo)
+
+    assert (worktree / "data" / "vesum.db").resolve() == (main_repo / "data" / "vesum.db").resolve()
+    assert not list((worktree / "data").glob("*.displaced-*"))
+    assert "moved stray" not in capsys.readouterr().err
+
+
 def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):
     """Guard against the node_modules ELOOP footgun: provisioning the main
     checkout into itself would create `node_modules -> node_modules` self-loops

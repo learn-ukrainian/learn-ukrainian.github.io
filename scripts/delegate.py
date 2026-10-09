@@ -8245,6 +8245,28 @@ def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path, 
             print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
 
 
+def _displace_stray_database_path(target: Path, source: Path) -> Path | None:
+    """Move a database path that is not the primary link aside; never delete it.
+
+    A read-only worker can leave a regular file (or a wrong symlink) at a
+    database path. The git-ignored file slips past the clean check, and a
+    write-capable reuse would keep it instead of the primary link. Renaming it
+    to a unique sibling preserves its bytes for inspection. Returns the new
+    path, or ``None`` when ``target`` is absent or already links to ``source``.
+    A failed rename raises, so the dispatch refuses instead of linking over it.
+    """
+    if not os.path.lexists(target):
+        return None
+    if target.is_symlink() and target.resolve() == source.resolve():
+        return None
+    while True:
+        displaced = target.with_name(f"{target.name}.displaced-{uuid.uuid4().hex[:8]}")
+        if not os.path.lexists(displaced):
+            break
+    target.rename(displaced)
+    return displaced
+
+
 def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_only: bool = False) -> None:
     """Symlink heavy local-only files into a delegated worktree.
 
@@ -8254,6 +8276,11 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
     directories. The primary Python environment is deliberately excluded:
     workers invoke its absolute interpreter and must not receive a local
     ``.venv`` symlink.
+
+    A write-capable dispatch makes each database path the primary link. A
+    regular file or a wrong symlink there (for example one a read-only worker
+    created) is renamed aside first, never deleted (see
+    ``_displace_stray_database_path``).
 
     A read-only dispatch gets no database link (#9421). A symlink cannot be
     made read-only, so a write through it lands in the primary database.
@@ -8297,6 +8324,14 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
                 file=sys.stderr,
             )
             continue
+
+        if relative_path in database_links:
+            displaced = _displace_stray_database_path(target, source)
+            if displaced is not None:
+                print(
+                    f"⚠️  moved stray {target} aside to {displaced} before linking the primary database",
+                    file=sys.stderr,
+                )
 
         if target.exists() or target.is_symlink():
             continue
