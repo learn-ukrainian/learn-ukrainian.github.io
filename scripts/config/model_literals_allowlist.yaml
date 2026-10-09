@@ -1,0 +1,1897 @@
+# Exact AST-scope inventory for #9302. No file, scope or model wildcards.
+# Counts include embedded model tokens, not comments or generic lane aliases.
+# migration_debt is an explicit residual, not approval of a permanent routing pin.
+# Remove debt rows when consumer migration resolves them; preserve frozen protocol identities.
+---
+schema_version: model-literals-allowlist.v1
+entries:
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: composer-2.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: google-ais/gemma-4-31b-it
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: grok-4.7
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: grok-4.7-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: <module>
+  id: zai-coding-plan/glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxAdapter
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in AcpxAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxAdapter.build_invocation
+  id: gpt-6-luna
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in AcpxAdapter.build_invocation; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxAdapter.build_invocation
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in AcpxAdapter.build_invocation; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxGrokShadowAdapter
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in AcpxGrokShadowAdapter; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxGrokShadowAdapter.build_invocation
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in AcpxGrokShadowAdapter.build_invocation; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: AcpxKimiCcShadowAdapter
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in AcpxKimiCcShadowAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/acpx.py
+  scope: _build_grok_agent_command
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in _build_grok_agent_command; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.6-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.7-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.8-flash-low
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: <module>
+  id: gemini-3.8-flash-medium
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: AgyAdapter
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in AgyAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: AgyAdapter.build_invocation
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: documentation
+  reason: Documented identity in AgyAdapter.build_invocation; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: claude-opus-4-6-thinking
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: claude-sonnet-4-6
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.6-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.6-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.7-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.7-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gemini-3.8-flash-high
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _build_agy_model_map
+  id: gpt-oss-120b-medium
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_agy_model_map; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: _normalize_model
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: documentation
+  reason: Documented identity in _normalize_model; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/agy.py
+  scope: unknown_model_suggestion
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in unknown_model_suggestion; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/claude.py
+  scope: ClaudeAdapter
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in ClaudeAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/codex.py
+  scope: <module>
+  id: gpt-6-luna
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/codex.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/codex.py
+  scope: CodexAdapter
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in CodexAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/cursor.py
+  scope: CursorAdapter
+  id: grok-4.7-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in CursorAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/cursor.py
+  scope: CursorAdapter.build_invocation
+  id: composer-2.5
+  count: 1
+  kind: documentation
+  reason: Documented identity in CursorAdapter.build_invocation; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/deepseek.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/deepseek.py
+  scope: DeepSeekAdapter
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in DeepSeekAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/gemini.py
+  scope: GeminiAdapter
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in GeminiAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/glm.py
+  scope: <module>
+  id: glm-5.3
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/glm.py
+  scope: <module>
+  id: glm-5.3-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/glm.py
+  scope: <module>
+  id: zai-coding-plan/glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/glm.py
+  scope: GlmAdapter
+  id: glm-5.3-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in GlmAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/grok_build.py
+  scope: <module>
+  id: grok-4.7
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/hermes_deepseek.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/hermes_deepseek.py
+  scope: HermesDeepSeekAdapter
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in HermesDeepSeekAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/hermes_grok.py
+  scope: <module>
+  id: grok-4.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/hermes_grok.py
+  scope: HermesGrokAdapter
+  id: grok-4.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in HermesGrokAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/hermes_qwen.py
+  scope: <module>
+  id: qwen/qwen3.6-plus
+  count: 4
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/hermes_qwen.py
+  scope: HermesQwenAdapter
+  id: qwen/qwen3.6-plus
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in HermesQwenAdapter; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimi.py
+  scope: <module>
+  id: k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimi.py
+  scope: <module>
+  id: k3-256k
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimi.py
+  scope: <module>
+  id: kimi-code/k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/kimi.py
+  scope: KimiAdapter.build_invocation
+  id: k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in KimiAdapter.build_invocation; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: KimiccHarness.build_invocation
+  id: k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in KimiccHarness.build_invocation; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: KimiccHarness.build_invocation
+  id: k3-256k
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in KimiccHarness.build_invocation; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: kimicc_default_model
+  id: kimi-code/k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in kimicc_default_model; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: resolve_kimicc_dispatch_model
+  id: k3-256k
+  count: 1
+  kind: documentation
+  reason: Documented identity in resolve_kimicc_dispatch_model; does not select a runtime model.
+- path: scripts/agent_runtime/codex_hook_probe.py
+  scope: _run_case
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in _run_case; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/codex_hook_probe.py
+  scope: parse_args
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in parse_args; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/kimi_admission.py
+  scope: is_kimi_model
+  id: k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in is_kimi_model; does not select a runtime model.
+- path: scripts/agent_runtime/kimi_admission.py
+  scope: is_kimi_model
+  id: kimi-k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in is_kimi_model; does not select a runtime model.
+- path: scripts/agent_runtime/probe_fallback.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/probe_fallback.py
+  scope: <module>
+  id: grok-4.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/probe_fallback.py
+  scope: <module>
+  id: grok-4.7
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/probe_fallback.py
+  scope: <module>
+  id: qwen/qwen3.6-plus
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 4
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: glm-5.3-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: google-ais/gemma-4-31b-it
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: grok-4.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: grok-4.7
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: k3-256k
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/registry.py
+  scope: <module>
+  id: qwen/qwen3.6-plus
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/telemetry.py
+  scope: _kimicc_alias
+  id: k3-256k
+  count: 1
+  kind: documentation
+  reason: Documented identity in _kimicc_alias; does not select a runtime model.
+- path: scripts/agent_runtime/telemetry.py
+  scope: _kimicc_alias
+  id: kimi-code/k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in _kimicc_alias; does not select a runtime model.
+- path: scripts/agent_runtime/telemetry.py
+  scope: _resolve_effort_from_defaults
+  id: k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _resolve_effort_from_defaults; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/telemetry.py
+  scope: _resolve_effort_from_plan
+  id: k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _resolve_effort_from_plan; #9302 consumer migration owned by infra.'
+- path: scripts/agent_runtime/telemetry.py
+  scope: _resolve_effort_from_plan
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _resolve_effort_from_plan; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_agy.py
+  scope: _extract_target_model
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: documentation
+  reason: Documented identity in _extract_target_model; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_agy.py
+  scope: gemini_model_leaf
+  id: gemini-3.1-pro
+  count: 1
+  kind: documentation
+  reason: Documented identity in gemini_model_leaf; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_claude.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_claude.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_claude.py
+  scope: _run_claude_sync_via_runtime
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _run_claude_sync_via_runtime; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_codex_usage_report
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _build_codex_usage_report; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: laguna-s-2.1
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: zai-coding-plan/glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_codex.py
+  scope: ask_codex
+  id: gpt-6-luna
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in ask_codex; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_codex.py
+  scope: ask_codex
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in ask_codex; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_codex.py
+  scope: has_codex_headroom
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in has_codex_headroom; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_codex.py
+  scope: process_for_codex
+  id: gpt-6-luna
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in process_for_codex; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_codex.py
+  scope: process_for_codex
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in process_for_codex; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cursor.py
+  scope: <module>
+  id: composer-2.5
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_db.py
+  scope: <module>
+  id: deepseek-v4-pro
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_dispatch_wrappers.py
+  scope: build_review_deep_command
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_review_deep_command; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_hermes.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_model.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: google-ais/gemma-4-31b-it
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: laguna-m.1
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: laguna-xs-2.1
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: poolside/poolside/laguna-s-2.1
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: poolside/poolside/laguna-xs-2.1
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  id: zai-coding-plan/glm-5.3
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: ask_gemma
+  id: google-ais/gemma-4-31b-it
+  count: 2
+  kind: documentation
+  reason: Documented identity in ask_gemma; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: ask_glm
+  id: glm-5.3
+  count: 1
+  kind: documentation
+  reason: Documented identity in ask_glm; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: ask_pool
+  id: laguna-s-2.1
+  count: 1
+  kind: documentation
+  reason: Documented identity in ask_pool; does not select a runtime model.
+- path: scripts/ai_agent_bridge/openai_proxy.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/openai_proxy.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/openai_proxy.py
+  scope: _codex_backend
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in _codex_backend; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/openai_proxy.py
+  scope: chat_completions
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in chat_completions; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
+  id: 0x-alpha
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
+  id: qwen/qwen3.6-plus
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/ai_llm/claude_call.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/claude_call.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/codex_call.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/codex_call.py
+  scope: call_codex_with_fallback
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in call_codex_with_fallback; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/fallback.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/fallback.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_llm/fallback.py
+  scope: <module>
+  id: gemini-3.8-flash-low
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/api/hramatka_generator.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/api/hramatka_generator.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/api/main.py
+  scope: _primary_integrity_canary
+  id: gpt-5.6-sol
+  count: 1
+  kind: documentation
+  reason: Documented identity in _primary_integrity_canary; does not select a runtime model.
+- path: scripts/audit/_judge_eval_lib.py
+  scope: render_grok_report
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in render_grok_report; #9302 consumer migration owned by infra.'
+- path: scripts/audit/check_primary_integrity.py
+  scope: <module>
+  id: gpt-5.6-sol
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/code_review_benchmark.py
+  scope: <module>
+  id: claude-sonnet-4-6
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/code_review_benchmark.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/code_review_benchmark.py
+  scope: <module>
+  id: grok-4.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/code_review_benchmark.py
+  scope: build_native_command
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in build_native_command; #9302 consumer migration owned by infra.'
+- path: scripts/audit/cursor_judge_calibration.py
+  scope: <module>
+  id: composer-2.5
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/cursor_judge_calibration.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/cursor_judge_calibration.py
+  scope: main
+  id: composer-2.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/grok_judge_calibration.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/grok_judge_calibration.py
+  scope: <module>
+  id: grok-4.5
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/grok_judge_calibration.py
+  scope: main
+  id: grok-4.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/grok_stage_runner.py
+  scope: <module>
+  id: grok-4.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/ingest_ua_gec_gold.py
+  scope: build_fixture
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_fixture; #9302 consumer migration owned by infra.'
+- path: scripts/audit/judge_calibration_matrix.py
+  scope: <module>
+  id: claude-sonnet-4-6
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/judge_calibration_matrix.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/judge_calibration_matrix.py
+  scope: <module>
+  id: grok-4.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/judge_calibration_matrix.py
+  scope: build_native_command
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in build_native_command; #9302 consumer migration owned by infra.'
+- path: scripts/audit/layerb_judge_bridge.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/layerb_judge_bridge.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/layerb_judge_bridge.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/layerb_judge_bridge.py
+  scope: BridgeConfig.__post_init__
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in BridgeConfig.__post_init__; #9302 consumer migration owned by infra.'
+- path: scripts/audit/layerb_judge_bridge.py
+  scope: _config_from_args
+  id: grok-4.7
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in _config_from_args; #9302 consumer migration owned by infra.'
+- path: scripts/audit/lint_agent_trailer.py
+  scope: <module>
+  id: deepseek-v4-pro
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/lint_agent_trailer.py
+  scope: _agents_match
+  id: deepseek-v4-pro
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _agents_match; #9302 consumer migration owned by infra.'
+- path: scripts/audit/lint_agent_trailer.py
+  scope: locate_record_for_trailer
+  id: deepseek-v4-pro
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in locate_record_for_trailer; #9302 consumer migration owned by infra.'
+- path: scripts/audit/llm_reviewer_dispatch.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/llm_reviewer_dispatch.py
+  scope: <module>
+  id: deepseek-v4-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/llm_reviewer_dispatch.py
+  scope: <module>
+  id: deepseek-v4-pro
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/llm_reviewer_dispatch.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/llm_reviewer_dispatch.py
+  scope: <module>
+  id: gemma-4-31b-it
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/naturalness_check.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: _lenient_first_json_object
+  id: deepseek-v4-flash
+  count: 1
+  kind: documentation
+  reason: Documented identity in _lenient_first_json_object; does not select a runtime model.
+- path: scripts/audit/qg_bakeoff.py
+  scope: _runtime_bridge_command
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _runtime_bridge_command; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: _subscription_identity
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _subscription_identity; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: main
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: main
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: main
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qwen_judge_calibration.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/qwen_judge_calibration.py
+  scope: main
+  id: qwen/qwen3.6-plus
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/review_plan.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/run_gemini_1x17_sweep.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/run_subscription_1x17_sweep.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/run_subscription_1x17_sweep.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: gpt-6-luna
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_eval.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/russianism_judge.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 2
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/audit/russianism_judge.py
+  scope: main
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_fix_review.py
+  scope: main
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_gemini_config.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_gemini_config.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_gemini_config.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_gemini_config.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_otaman.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_otaman.py
+  scope: BatchOtaman
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in BatchOtaman; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_otaman.py
+  scope: cmd_dispatch_one
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in cmd_dispatch_one; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_otaman.py
+  scope: cmd_run
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in cmd_run; #9302 consumer migration owned by infra.'
+- path: scripts/batch/batch_otaman.py
+  scope: main
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/build/build_module_direct.py
+  scope: phase_review
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in phase_review; #9302 consumer migration owned by infra.'
+- path: scripts/build/dispatch.py
+  scope: dispatch_agent
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in dispatch_agent; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: composer-2.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: <module>
+  id: qwen/qwen3.6-plus
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/build/linear_pipeline.py
+  scope: parse_writer_correction_module_only
+  id: deepseek-v4-pro
+  count: 1
+  kind: documentation
+  reason: Documented identity in parse_writer_correction_module_only; does not select a runtime model.
+- path: scripts/build/phases/plan_patch.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ci/component_shadow.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/context_canary.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/curriculum/evidence/sense_cli.py
+  scope: parser
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in parser; #9302 consumer migration owned by infra.'
+- path: scripts/dataset/export_ukrainian_pedagogy_dataset.py
+  scope: export_pedagogy_dataset
+  id: gemini-3.6-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in export_pedagogy_dataset; #9302 consumer migration owned by infra.'
+- path: scripts/dataset/export_ukrainian_pedagogy_dataset.py
+  scope: export_pedagogy_dataset
+  id: google-ais/gemma-4-31b-it
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in export_pedagogy_dataset; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/delegate.py
+  scope: _deepseek_model_state
+  id: deepseek-v4-pro
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _deepseek_model_state; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: _deepseek_model_state
+  id: deepseek-v4.1-flash
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _deepseek_model_state; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: build_parser
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: build_parser
+  id: gpt-6-luna
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/delegate.py
+  scope: build_parser
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/deploy_codex_home.py
+  scope: <module>
+  id: gpt-6-luna
+  count: 4
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/deploy_codex_home.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 5
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/docs/find.py
+  scope: compounds
+  id: gpt-6-astra
+  count: 1
+  kind: documentation
+  reason: Documented identity in compounds; does not select a runtime model.
+- path: scripts/docs/find.py
+  scope: main
+  id: gpt-6-astra
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/eval/uk_preamble/common.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/eval/uk_preamble/common.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/eval/uk_preamble/common.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 3
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/fleet/credit_lane.py
+  scope: <module>
+  id: gpt-6-luna
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/fleet/credit_lane.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/lexicon/teacher_deck.py
+  scope: _parser
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _parser; #9302 consumer migration owned by infra.'
+- path: scripts/orchestration/codex_transport_health.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: _agy_model
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _agy_model; #9302 consumer migration owned by infra.'
+- path: scripts/pipeline/dispatch.py
+  scope: dispatch_gemini
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in dispatch_gemini; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/phase3_functional_roles.py
+  scope: <module>
+  id: composer-2.5
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_functional_roles.py
+  scope: <module>
+  id: gemini-3.6-flash-high
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_functional_roles.py
+  scope: <module>
+  id: gpt-5.6-sol
+  count: 3
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_functional_roles.py
+  scope: <module>
+  id: grok-4.5
+  count: 3
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_heldout_label_transport.py
+  scope: <module>
+  id: gpt-5.6-sol
+  count: 4
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_heldout_label_transport.py
+  scope: _actor
+  id: gpt-5.6-sol
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_heldout_label_transport.py
+  scope: run_cycle002
+  id: gpt-5.6-sol
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_rule_author_runner.py
+  scope: <module>
+  id: gemini-3.6-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/phase3_source_production_transport.py
+  scope: <module>
+  id: gemini-3.6-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/phase3_source_production_transport.py
+  scope: <module>
+  id: grok-4.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
+  scope: _verify_roles_and_visibility
+  id: claude-fable-5
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
+  scope: _verify_roles_and_visibility
+  id: gemini-3.7-flash-high
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
+  scope: _verify_roles_and_visibility
+  id: gpt-5.6-sol
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
+  scope: _verify_roles_and_visibility
+  id: grok-4.6
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3b_cooperative_control_plane.py
+  scope: <module>
+  id: claude-fable-5
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3b_cooperative_control_plane.py
+  scope: <module>
+  id: gemini-3.7-flash-high
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3b_cooperative_control_plane.py
+  scope: <module>
+  id: gpt-5.6-sol
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_v3b_cooperative_control_plane.py
+  scope: <module>
+  id: grok-4.6
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/review_build/components/antonenko.py
+  scope: <module>
+  id: claude-opus-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/review_build/components/antonenko.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/run_codex_baseline.py
+  scope: _run_batch
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _run_batch; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/run_codex_baseline.py
+  scope: main
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/run_codex_baseline.py
+  scope: run
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in run; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/smoke_public_v0.py
+  scope: <module>
+  id: gpt-5.6-terra
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/smoke_public_v011.py
+  scope: <module>
+  id: gemma-4-31b-it
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/smoke_public_v011.py
+  scope: <module>
+  id: gpt-5.6-terra
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_eval_harness/verify_release_freeze_v011.py
+  scope: <module>
+  id: gemma-4-31b-it
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/closeout_cli.py
+  scope: _build_parser
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/review/integration_check.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/integration_check.py
+  scope: ModuleWorld.promote_crafted
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in ModuleWorld.promote_crafted; #9302 consumer migration owned by infra.'
+- path: scripts/review/integration_check.py
+  scope: engine_lesson
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in engine_lesson; #9302 consumer migration owned by infra.'
+- path: scripts/review/isolation.py
+  scope: prepare_isolated_review_launch
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in prepare_isolated_review_launch; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: <module>
+  id: composer-2.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: _main
+  id: claude-fable-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in _main; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: _main
+  id: k3
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _main; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: _model_id_candidates
+  id: gpt-6-sol
+  count: 1
+  kind: documentation
+  reason: Documented identity in _model_id_candidates; does not select a runtime model.
+- path: scripts/review/model_catalog.py
+  scope: _model_id_candidates
+  id: kimi-code/k3
+  count: 1
+  kind: documentation
+  reason: Documented identity in _model_id_candidates; does not select a runtime model.
+- path: scripts/review/model_catalog.py
+  scope: apply_cursor_model_pins
+  id: composer-2.5
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in apply_cursor_model_pins; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: apply_cursor_model_pins
+  id: grok-4.7
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in apply_cursor_model_pins; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: apply_cursor_model_pins
+  id: grok-4.7-high
+  count: 5
+  kind: migration_debt
+  reason: 'Existing identity in apply_cursor_model_pins; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: canonical_model_id
+  id: claude-opus-5-5
+  count: 1
+  kind: documentation
+  reason: Documented identity in canonical_model_id; does not select a runtime model.
+- path: scripts/review/record_cf_verdict.py
+  scope: _require_formal_reviewer
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in _require_formal_reviewer; does not select a runtime model.
+- path: scripts/review/reviewer_resolver.py
+  scope: <module>
+  id: claude-sonnet-5-5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/reviewer_resolver.py
+  scope: <module>
+  id: glm-5.3
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/reviewer_resolver.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/reviewer_resolver.py
+  scope: candidate_dispatch_model
+  id: grok-4.7-high
+  count: 1
+  kind: documentation
+  reason: Documented identity in candidate_dispatch_model; does not select a runtime model.
+- path: scripts/review/seeds/adjudicate.py
+  scope: build_parser
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: <module>
+  id: grok-4.5
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: <module>
+  id: grok-4.6
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: <module>
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: <module>
+  id: kimi-k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/subject_seat.py
+  scope: normalize_subject_seat
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in normalize_subject_seat; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/codex_lane.py
+  scope: build_parser
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/gemini_lane.py
+  scope: build_parser
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/glm_lane.py
+  scope: <module>
+  id: glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/glm_lane.py
+  scope: build_parser
+  id: glm-5.3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/grok_lane.py
+  scope: <module>
+  id: grok-4.7
+  count: 1
+  kind: documentation
+  reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/session_canary/grok_lane.py
+  scope: build_parser
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/grok_lane.py
+  scope: cmd_protocol
+  id: grok-4.7
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in cmd_protocol; #9302 consumer migration owned by infra.'
+- path: scripts/session_canary/kimi_lane.py
+  scope: build_parser
+  id: kimi-code/k3
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/tools/upgrade_activity_hints.py
+  scope: <module>
+  id: gemini-3.8-flash-high
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/tools/upgrade_activity_hints.py
+  scope: main
+  id: gemini-3.8-flash-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/compile.py
+  scope: main
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/compiler.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/compiler.py
+  scope: _call_writer
+  id: gpt-6.1-sol
+  count: 2
+  kind: migration_debt
+  reason: 'Existing identity in _call_writer; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/compiler.py
+  scope: compile_article
+  id: gpt-6.1-sol
+  count: 1
+  kind: documentation
+  reason: Documented identity in compile_article; does not select a runtime model.
+- path: scripts/wiki/config.py
+  scope: <module>
+  id: gemini-3.1-pro-preview
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/diagnostics/corpus_gaps/audit.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/diagnostics/corpus_gaps/audit.py
+  scope: run_codex_concept_extraction
+  id: gpt-6.1-sol
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in run_codex_concept_extraction; #9302 consumer migration owned by infra.'
