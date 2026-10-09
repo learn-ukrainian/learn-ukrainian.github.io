@@ -13,6 +13,8 @@ import yaml
 from scripts.lexicon import manifest_io
 from scripts.lexicon import published_record_dispositions as dispositions
 from scripts.review.record_cf_verdict import build_comment
+from scripts.review.review_contract import AgentIdentity, FindingValidation, VerifyContext, build_receipt
+from scripts.review.target_resolution import ReviewTarget
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -100,7 +102,37 @@ def make_authority(root: Path) -> tuple[dict, dict, dict]:
     return ledger, preserved, before
 
 
-def add_release(root: Path, ledger: dict, hold: dict, *, suffix: str = "release") -> dict:
+def native_receipt(*, nonblocking: bool = False) -> dict:
+    """Native factory interop fixture; never independent review evidence."""
+    ctx = VerifyContext(
+        issue_ref="#10181",
+        scope={"paths": [dispositions.LEDGER_PATH.as_posix()]},
+        author=AgentIdentity("gpt-6.1-sol", "openai", "codex", "fixture author"),
+        reviewer=AgentIdentity("claude-opus-5-5", "anthropic", "claude-code", "fixture reviewer"),
+        target=ReviewTarget("branch", "d" * 40, "a" * 40, (dispositions.LEDGER_PATH.as_posix(),), 1, True, "fixture"),
+        repo_root=ROOT,
+        input_sha256="b" * 64,
+        reviewer_output_sha256="c" * 64,
+    )
+    findings = (
+        [FindingValidation("F1", "verified", disposition="follow_up", disposition_rationale="No behavior impact.")]
+        if nonblocking
+        else []
+    )
+    return build_receipt(
+        ctx,
+        payload={
+            "schema_version": "code-review-findings.v1",
+            "overall": {"correctness": "correct"},
+            "findings": [{"id": finding.id} for finding in findings],
+        },
+        validations=findings,
+        exit_code=1 if nonblocking else 0,
+        final_disposition="actionable" if nonblocking else "clean",
+    )
+
+
+def add_release(root: Path, ledger: dict, hold: dict, *, suffix: str = "release", receipt: dict | None = None) -> dict:
     release = copy.deepcopy(hold)
     release.update(
         row_id=hold["row_id"] + "-" + suffix,
@@ -118,16 +150,7 @@ def add_release(root: Path, ledger: dict, hold: dict, *, suffix: str = "release"
     )
     digest = dispositions.canonical_sha256(release)
     reviewer = {"model": "claude-opus-5-5", "family": "anthropic", "harness": "claude-code"}
-    receipt = {
-        "schema_version": "code-review-receipt.v1",
-        "exit_code": 0,
-        "final_disposition": "clean",
-        "error": None,
-        "author": {"model": "gpt-6.1-sol", "family": "openai", "harness": "codex"},
-        "reviewer": reviewer,
-        "target": {"mode": "branch", "head_sha": "a" * 40, "clean_tree": True, "input_sha256": "b" * 64},
-        "reviewer_output_sha256": "c" * 64,
-    }
+    receipt = native_receipt() if receipt is None else receipt
     body = build_comment(
         sha="a" * 40,
         task_id="fixture-review",
@@ -284,6 +307,91 @@ def test_reviewed_release_keeps_hold_and_exact_chain(tmp_path):
     authority = dispositions.load_dispositions(tmp_path)
     assert len(authority.active_holds) == 5
     assert authority.released_ids == {hold["row_id"]}
+
+
+@pytest.mark.parametrize("nonblocking", [False, True], ids=["native-clean", "native-nonblocking"])
+def test_native_factory_release_preserves_receipt_findings(tmp_path, nonblocking):
+    ledger, _, _ = make_authority(tmp_path)
+    receipt = native_receipt(nonblocking=nonblocking)
+    original = copy.deepcopy(receipt)
+    hold = ledger["decisions"][0]
+    add_release(tmp_path, ledger, hold, receipt=receipt)
+    authority = dispositions.load_dispositions(tmp_path)
+    assert authority.released_ids == {hold["row_id"]}
+    assert receipt == original
+    assert json.loads(authority.ledger["release_reviews"][0]["receipt_json"]) == original
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "incorrect",
+        "uncertain",
+        "payload_absent",
+        "overall_absent",
+        "findings_absent",
+        "empty_findings",
+        "nonmapping_finding",
+        "missing_id",
+        "wrong_ids",
+        "unverified",
+        "stop_and_escalate",
+        "invalid_disposition",
+        "nonstring_disposition",
+        "missing_rationale",
+        "blank_rationale",
+        "nonstring_rationale",
+        "error",
+        "missing_error",
+        "wrong_exit",
+        "wrong_status",
+        "clean_wrong_exit",
+        "invalid_schema",
+    ],
+)
+def test_native_actionable_release_requires_canonical_qualification(tmp_path, fault):
+    ledger, _, _ = make_authority(tmp_path)
+    receipt = native_receipt(nonblocking=True)
+    finding = receipt["findings"][0]
+    if fault in {"incorrect", "uncertain"}:
+        receipt["reviewer_payload"]["overall"]["correctness"] = fault
+    elif fault == "payload_absent":
+        receipt.pop("reviewer_payload")
+    elif fault == "overall_absent":
+        receipt["reviewer_payload"].pop("overall")
+    elif fault == "findings_absent":
+        receipt.pop("findings")
+    elif fault == "empty_findings":
+        receipt["findings"] = []
+    elif fault == "nonmapping_finding":
+        receipt["findings"] = ["F1"]
+    elif fault == "missing_id":
+        finding.pop("id")
+    elif fault == "wrong_ids":
+        receipt["reviewer_payload"]["finding_ids"] = ["F2"]
+    elif fault == "unverified":
+        finding["outcome"] = "quote_missing"
+    elif fault in {"stop_and_escalate", "invalid_disposition", "nonstring_disposition"}:
+        finding["disposition"] = 1 if fault == "nonstring_disposition" else fault
+    elif fault == "missing_rationale":
+        finding.pop("disposition_rationale")
+    elif fault in {"blank_rationale", "nonstring_rationale"}:
+        finding["disposition_rationale"] = " " if fault == "blank_rationale" else 1
+    elif fault == "error":
+        receipt["error"] = "incomplete review"
+    elif fault == "missing_error":
+        receipt.pop("error")
+    elif fault == "wrong_exit":
+        receipt["exit_code"] = 2
+    elif fault == "wrong_status":
+        receipt["final_disposition"] = "unverifiable"
+    elif fault == "clean_wrong_exit":
+        receipt["final_disposition"] = "clean"
+    elif fault == "invalid_schema":
+        receipt["schema_version"] = "invalid"
+    add_release(tmp_path, ledger, ledger["decisions"][0], receipt=receipt)
+    with pytest.raises(dispositions.DispositionError, match="canonical code-review receipt"):
+        dispositions.load_dispositions(tmp_path)
 
 
 @pytest.mark.parametrize(

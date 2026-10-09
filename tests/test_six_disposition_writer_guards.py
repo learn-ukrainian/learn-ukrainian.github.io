@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 
 import pytest
@@ -266,6 +267,129 @@ def test_all_four_producers_reach_the_guarded_central_boundaries():
     ):
         assert producer.planner is planner
         assert producer.apply is applier
+
+
+def producer_inputs(tmp_path, *, count=1):
+    """Use established public decisions and independent source contributions."""
+    from tests.test_source_inventory_promotion_plan import FIRST_BATCH, _candidate_payload_for
+
+    ledger = copy.deepcopy(dispositions._read_yaml(FIRST_BATCH))
+    ledger["decisions"] = ledger["decisions"][:count]
+    decisions = tmp_path / "decisions.yaml"
+    write_yaml(decisions, ledger)
+    candidates = tmp_path / "candidates.json"
+    entries = [_candidate_payload_for(row)["needs_review"][0]["entry"] for row in ledger["decisions"]]
+    candidates.write_text(json.dumps({"auto_merge": entries, "needs_review": []}, ensure_ascii=False))
+    manifest, fingerprint = tmp_path / "manifest.json", tmp_path / "fingerprint.json"
+    held = copy.deepcopy(dispositions.load_dispositions().preservation["records"][1]["entry"])
+    manifest.write_text(json.dumps({"entries": [held], "stats": {}}, ensure_ascii=False))
+    fingerprint.write_text("retained fingerprint")
+    return candidates, decisions, manifest, fingerprint
+
+
+@pytest.mark.parametrize("name", ["curated_ohoiko_ulp_repromote", "curated_textbook_jsonl_repromote"])
+def test_curated_producer_actual_apply_refuses_held_manifest(tmp_path, monkeypatch, name):
+    import importlib
+
+    producer = importlib.import_module("scripts.lexicon." + name)
+    candidates, decisions, manifest, fingerprint = producer_inputs(tmp_path)
+    original, old_fingerprint = manifest.read_bytes(), fingerprint.read_bytes()
+    kwargs = {}
+    if name == "curated_ohoiko_ulp_repromote":
+        kwargs["plan_out"] = tmp_path / "plan.json"
+    else:
+        monkeypatch.setattr(producer, "DEFAULT_PLAN", tmp_path / "plan.json")
+    with pytest.raises(dispositions.DispositionError, match="held inventory contribution"):
+        producer.apply_plan(
+            candidates=candidates, decisions=decisions, manifest=manifest, fingerprint=fingerprint, write=True, **kwargs
+        )
+    assert manifest.read_bytes() == original
+    assert fingerprint.read_bytes() == old_fingerprint
+    plan = json.loads((tmp_path / "plan.json").read_bytes())
+    assert plan["counts"]["proposed_additions"] == 1
+    assert not dispositions.load_dispositions().holds_source_key(
+        plan["proposed_manifest_additions"][0]["source_inventory_key"]
+    )
+
+
+def test_named_multiword_producer_actual_main_refuses_held_manifest(tmp_path, monkeypatch, capsys):
+    from scripts.lexicon import promote_atlas_6370_named_multiword_residual as producer
+
+    candidates, decisions, manifest, fingerprint = producer_inputs(tmp_path, count=len(producer.TARGET_ENTRY_TYPES) + 1)
+    original, old_fingerprint = manifest.read_bytes(), fingerprint.read_bytes()
+    # Isolate candidate acquisition, retaining the actual plan/apply/final writer.
+    monkeypatch.setattr(producer, "build_candidates_and_decisions", lambda _scratch: (candidates, [decisions]))
+    assert producer.main(["--manifest", str(manifest), "--fingerprint", str(fingerprint), "--write"]) == 2
+    assert "held inventory contribution" in capsys.readouterr().err
+    assert manifest.read_bytes() == original
+    assert fingerprint.read_bytes() == old_fingerprint
+
+
+@pytest.mark.parametrize("resume", [False, True], ids=["fresh-stage", "resume-staged"])
+def test_teacher_actual_promotion_verifier_refuses_held_stage(tmp_path, monkeypatch, capsys, resume):
+    from scripts.lexicon import promote_teacher_lesson_intake as producer
+    from tests.test_promote_teacher_lesson_intake import _fake_candidate_and_decision
+
+    intake = tmp_path / "intake"
+    intake.mkdir()
+    staged = tmp_path / "manifest.staged.json"
+    journal = intake / "journal.json"
+    for name, path in {
+        "DEFAULT_INTAKE_DIR": intake,
+        "DEFAULT_JOURNAL": journal,
+        "DEFAULT_LOCK": intake / "promotion.lock",
+        "STAGED_MANIFEST": staged,
+        "STAGED_FINGERPRINT": tmp_path / "staged.fingerprint.json",
+        "DEFAULT_PLAN": tmp_path / "plan.json",
+    }.items():
+        monkeypatch.setattr(producer, name, path)
+    # The independently originated candidate already exists, so no enrichment
+    # is needed; resume's saved held contribution is already enriched.
+    independent, decision = _fake_candidate_and_decision(
+        "fixture-independent", locator="private source unit 1 paragraph 1"
+    )
+    monkeypatch.setattr(
+        producer, "_build_rows", lambda *args: ([independent], [decision], {"held_without_english_anchor": 0})
+    )
+    manifest, fingerprint = tmp_path / "manifest.json", tmp_path / "fingerprint.json"
+    held = copy.deepcopy(dispositions.load_dispositions().preservation["records"][1]["entry"])
+    payload = {"entries": [independent, held], "stats": {}}
+    manifest.write_text(json.dumps({"entries": [independent], "stats": {}} if resume else payload, ensure_ascii=False))
+    fingerprint.write_text("retained fingerprint")
+    original, old_fingerprint = manifest.read_bytes(), fingerprint.read_bytes()
+    if resume:
+        staged.write_text(json.dumps(payload, ensure_ascii=False))
+        journal.write_text(
+            json.dumps(
+                {
+                    "schema_version": "promotion-journal.v1",
+                    "tx_id": "fixture-resume",
+                    "phase": "ENRICHED",
+                    "base_sha256": hashlib.sha256(original).hexdigest(),
+                    "promoted": 1,
+                }
+            )
+        )
+    with pytest.raises(RuntimeError, match="staged manifest failed verification with exit code 2"):
+        producer.promote(
+            full_decisions=tmp_path / "unused-full.yaml",
+            curated_inventory=tmp_path / "unused-curated.yaml",
+            manifest=manifest,
+            fingerprint=fingerprint,
+            vesum_db=tmp_path / "unused-vesum.db",
+            sources_db=None,
+            candidates_out=tmp_path / "candidates.json",
+            decisions_out=tmp_path / "decisions.yaml",
+            write=True,
+            resume_staged=resume,
+        )
+    assert "DISPOSITION GATE" in capsys.readouterr().out
+    assert manifest.read_bytes() == original
+    assert fingerprint.read_bytes() == old_fingerprint
+    assert json.loads(staged.read_bytes())["entries"] == [independent, held]
+    retained = json.loads(journal.read_bytes())
+    assert retained["phase"] == "ENRICHED"
+    assert retained["base_sha256"] == hashlib.sha256(original).hexdigest()
 
 
 def test_overlay_cli_checks_mandatory_authority_before_writing(tmp_path, monkeypatch, capsys):

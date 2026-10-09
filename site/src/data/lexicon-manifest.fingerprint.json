@@ -331,7 +331,7 @@
       },
       {
         "path": "scripts/lexicon/published_record_dispositions.py",
-        "sha256": "4f1872398d1762fe389dd53e62c6aa3f9cf7544469f4db4e89f43ea33f91d907"
+        "sha256": "d77b19ca09dbba34bb4d4974a59007a7c478fa1a901264013228674b5d1217b5"
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
