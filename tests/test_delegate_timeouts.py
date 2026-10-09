@@ -10,6 +10,7 @@ import pytest
 
 from scripts.common.git_context import sanitized_git_env
 from scripts.delegate import (
+    AUTO_FINALIZE_PUSH_TIMEOUT_S,
     DEFAULT_GH_CLI_TIMEOUT_S,
     DEFAULT_GIT_TIMEOUT_S,
     DEFAULT_NETWORK_GIT_TIMEOUT_S,
@@ -320,13 +321,13 @@ def test_push_auto_finalize_branch_timeouts(tmp_path: Path) -> None:
         _push_auto_finalize_branch(tmp_path, "feature")
 
     assert len(calls) == 1
-    assert calls[0]["timeout"] == DEFAULT_NETWORK_GIT_TIMEOUT_S
+    assert calls[0]["timeout"] == AUTO_FINALIZE_PUSH_TIMEOUT_S
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "push"], DEFAULT_NETWORK_GIT_TIMEOUT_S)):
+    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "push"], AUTO_FINALIZE_PUSH_TIMEOUT_S)):
         with pytest.raises(RuntimeError, match=r"^auto_finalize_push_failed, git push, TimeoutExpired$") as raised:
             _push_auto_finalize_branch(tmp_path, "feature")
     # #9878: the public form is typed; the timeout's own words stay for the local diagnostic.
-    assert raised.value.message == "git push timed out after 180.0s"
+    assert raised.value.message == f"git push timed out after {AUTO_FINALIZE_PUSH_TIMEOUT_S}s"
 
 
 def test_create_auto_finalize_pr_timeouts(tmp_path: Path) -> None:
