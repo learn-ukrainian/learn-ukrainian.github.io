@@ -1580,3 +1580,11 @@ fi
         with suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
         process.communicate(timeout=10)
+
+
+def test_driver_prompt_uses_private_worker_target_without_number() -> None:
+    source = (REPO / "scripts" / "lib" / "launcher_core.sh").read_text(encoding="utf-8")
+    prompt = next(line for line in source.splitlines() if line.startswith('  LC_DRIVER_PROMPT="'))
+    worker_clause = prompt.rsplit("and end each turn with ", 1)[1]
+    assert "privately configured worker target met" in worker_clause
+    assert not any(char.isdigit() for char in worker_clause)

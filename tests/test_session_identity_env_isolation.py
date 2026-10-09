@@ -56,6 +56,7 @@ _HOST_CONFIG_EXPORTS = frozenset(
         "CODEX_CC_AUTH_SOURCE",  # credential provenance label
         "LU_AGENT_GITHUB_IDENTITY_SOURCE",  # credential provenance label
         "LEARN_UKRAINIAN_LOCK_TIMEOUT_SECONDS",  # SessionStart-local subprocess bound
+        "LU_DRIVER_STATE_PYTHON",  # interpreter configuration, shared across sessions
         "LU_AGENT_COMM_TRANSPORT",  # fleet comms transport choice
         "LU_MONITOR_HOST_ID",  # this host, shared by every session on it
         "LU_RUNTIME_TMP_BASE_ROOT",  # storage root
@@ -308,3 +309,9 @@ def pytest_sessionfinish(session):
     result.assert_outcomes(passed=2)
     # The test's own write is undone; the launching session's value returns.
     result.stdout.fnmatch_lines(["*AFTER live-operator-session"])
+
+
+def test_driver_state_exports_have_distinct_classifications() -> None:
+    assert "LU_DRIVER_STATE_FILE" in SESSION_IDENTITY_ENV_VARS
+    assert "LU_DRIVER_STATE_PYTHON" in _HOST_CONFIG_EXPORTS
+    assert {"LU_DRIVER_STATE_FILE", "LU_DRIVER_STATE_PYTHON"} <= _shell_exports()

@@ -10,8 +10,10 @@ from pathlib import Path
 import pytest
 
 from scripts import driver_state
+from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
+SYNTHETIC_WORKER_TARGET = 7
 
 
 @pytest.fixture
@@ -132,6 +134,8 @@ def _workers(root, seat, n, status="running"):
 @pytest.fixture
 def driver(state, tmp_path, monkeypatch):
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "gemini-infra")
+    monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET))
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "batch_state" / "tasks"))
     monkeypatch.setattr(driver_state.tempfile, "gettempdir", lambda: str(tmp_path / "tmp"))
     return tmp_path
 
@@ -151,19 +155,19 @@ def _stop(tmp_path, transcript, fully_idle=False, conv="c1"):
 
 
 def test_stop_allows_clean_report_with_workers_and_wakeup(driver):
-    _workers(driver, "gemini-infra", 4)
-    assert _stop(driver, _transcript(driver, "Dispatched 4 workers; waiting on them.")) == {}
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    assert _stop(driver, _transcript(driver, "Workers dispatched; waiting on them.")) == {}
 
 
 def test_stop_continues_on_question(driver):
-    _workers(driver, "gemini-infra", 4)
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "Option A or option B for #10117. Which should I take?"))
     assert out["decision"] == "continue"
     assert "question" in out["reason"]
 
 
 def test_stop_continues_on_listed_plan(driver):
-    _workers(driver, "gemini-infra", 5)
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET + 1)
     out = _stop(driver, _transcript(driver, "Status done.\n\n## Next steps\n- rebase #10197"))
     assert out["decision"] == "continue"
     assert "actions you have not done" in out["reason"]
@@ -171,13 +175,14 @@ def test_stop_continues_on_listed_plan(driver):
 
 def test_stop_continues_below_min_workers_counting_only_own_seat(driver):
     _workers(driver, "gemini-infra", 2)
+    assert driver_state.running_workers("gemini-infra") == 2
     out = _stop(driver, _transcript(driver, "All good."))
     assert out["decision"] == "continue"
-    assert "only 2 of your workers" in out["reason"]
+    assert "below the privately configured target" in out["reason"]
 
 
 def test_stop_requires_wakeup_when_fully_idle(driver):
-    _workers(driver, "gemini-infra", 4)
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "All good."), fully_idle=True)
     assert out["decision"] == "continue"
     assert "schedule" in out["reason"]
@@ -235,3 +240,65 @@ def test_last_model_text_reads_final_response(tmp_path):
     path = _transcript(tmp_path, "final words")
     assert driver_state.last_model_text(str(path)) == "final words"
     assert driver_state.last_model_text(str(tmp_path / "missing.jsonl")) == ""
+
+
+@pytest.mark.parametrize("prefix", ["No ", "Report complete.\n", "Quoted: "])
+def test_stop_does_not_accept_embedded_escalation_marker(driver, prefix):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    text = prefix + "CTO-ESCALATION: is needed. I will run the remaining actions next."
+    out = _stop(driver, _transcript(driver, text))
+    assert out["decision"] == "continue"
+    assert "actions you have not done" in out["reason"]
+
+
+@pytest.mark.parametrize("raw", [None, "", "invalid", "0", "-1", "1.5", "７"])
+def test_stop_unknown_worker_target_does_not_force_continuation(driver, monkeypatch, raw):
+    if raw is None:
+        monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
+    else:
+        monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, raw)
+    _workers(driver, "gemini-infra", 0)
+    assert driver_state.minimum_workers() is None
+    assert _stop(driver, _transcript(driver, "Work verified.")) == {}
+    assert _stop(driver, _transcript(driver, "I will run the remaining actions next."))["decision"] == "continue"
+
+
+def test_worker_target_is_read_at_call_time(driver, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    transcript = _transcript(driver, "Work verified.")
+    assert _stop(driver, transcript) == {}
+    monkeypatch.setenv(driver_state.MIN_WORKERS_ENV, str(SYNTHETIC_WORKER_TARGET + 1))
+    assert _stop(driver, transcript)["decision"] == "continue"
+
+
+def test_running_workers_uses_shared_store_from_linked_worktree(tmp_path, monkeypatch):
+    primary = tmp_path / "primary"
+    linked = tmp_path / "linked"
+    metadata = primary / ".git" / "worktrees" / "linked"
+    metadata.mkdir(parents=True)
+    linked.mkdir()
+    (linked / ".git").write_text(f"gitdir: {metadata}\n", encoding="utf-8")
+    module = linked / "scripts" / "common" / "task_store_paths.py"
+    module.parent.mkdir(parents=True)
+    module.touch()
+    monkeypatch.setattr(task_store_paths, "__file__", str(module))
+    monkeypatch.delenv("LU_TASKS_DIR", raising=False)
+    monkeypatch.chdir(linked)
+    _workers(primary, "synthetic-seat", SYNTHETIC_WORKER_TARGET)
+    assert driver_state.running_workers("synthetic-seat") == SYNTHETIC_WORKER_TARGET
+    _workers(linked, "synthetic-seat", SYNTHETIC_WORKER_TARGET + 1)
+    assert driver_state.running_workers("synthetic-seat") == SYNTHETIC_WORKER_TARGET
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"])
+def test_last_model_text_preserves_unicode_inside_jsonl(tmp_path, separator):
+    content = f"Verified{separator}result"
+    path = tmp_path / "unicode.jsonl"
+    row = {"source": "MODEL", "type": "PLANNER_RESPONSE", "content": content}
+    path.write_text(json.dumps(row, ensure_ascii=False) + "\r\n", encoding="utf-8")
+    assert driver_state.last_model_text(str(path)) == content
+
+
+def test_public_worker_policy_uses_no_numeric_target():
+    assert "privately configured worker target" in driver_state.POLICY
+    assert not any(char.isdigit() for char in driver_state.POLICY)

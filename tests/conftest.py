@@ -70,6 +70,7 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    "LU_DRIVER_STATE_FILE",
     # Verified driver scope re-entry identity (scripts/lib/driver_scope.sh).
     "LU_DRIVER_SCOPE_UNIT",
     "LU_DRIVER_SCOPE_PID",

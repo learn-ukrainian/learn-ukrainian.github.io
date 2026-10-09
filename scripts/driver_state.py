@@ -26,10 +26,11 @@ it is re-injected before every model call and survives any compaction. The
 hook is fail-open: any problem prints ``{}`` and never blocks the agent.
 
 ``agy-stop-hook`` implements the AGY ``Stop`` contract. A driver must not end a
-turn on a question or a plan, with fewer than ``MIN_WORKERS`` of its own
-workers running, or with nothing armed to wake it. In those cases it returns
+turn on a question or a plan, with fewer of its own workers running than the
+private ``LU_DRIVER_MIN_WORKERS`` target, or with nothing armed to wake it.
+An absent or invalid target is unknown and cannot force a worker-count continuation. In those cases it returns
 ``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
-reason as a system message. A turn whose final text carries
+reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
 per-conversation counter caps consecutive continuations so the hook can never
 spin the agent forever. ``agy-pretool-hook`` denies the interactive
@@ -48,10 +49,13 @@ import sys
 import tempfile
 from pathlib import Path
 
+from scripts.common.jsonl import jsonl_lines
+from scripts.common.task_store_paths import tasks_dir
+
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
 MAX_INJECT_CHARS = 6000
-MIN_WORKERS = 4
+MIN_WORKERS_ENV = "LU_DRIVER_MIN_WORKERS"
 MAX_CONSECUTIVE_CONTINUES = 4
 ESCALATION_MARKER = "CTO-ESCALATION:"
 LIVE_WORKER_STATUSES = frozenset({"spawning", "running"})
@@ -64,7 +68,7 @@ POLICY = f"""## {POLICY_TITLE}
 - Never ask for an admission or gate override; the answer is always no. Use the clean path (fresh recorded branch, rebase, new commit).
 - When you list an action for yourself, do it in the same turn; never end a turn on a plan.
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
-- End every turn with at least {MIN_WORKERS} of your workers running and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
+- End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
 """
 
 TEMPLATE = """# Driver state: {epic}
@@ -231,7 +235,7 @@ def last_model_text(transcript_path: str | None) -> str:
         size = handle.tell()
         handle.seek(max(0, size - 512_000))
         chunk = handle.read().decode("utf-8", errors="replace")
-    for line in reversed(chunk.splitlines()):
+    for line in reversed(jsonl_lines(chunk)):
         try:
             row = json.loads(line)
         except json.JSONDecodeError:
@@ -245,9 +249,21 @@ def last_model_text(transcript_path: str | None) -> str:
     return ""
 
 
-def running_workers(root: Path, initiator: str) -> int | None:
+def minimum_workers() -> int | None:
+    """Read the private worker target; absent or invalid configuration is unknown."""
+    raw = os.environ.get(MIN_WORKERS_ENV, "").strip()
+    if not raw.isascii() or not raw.isdecimal():
+        return None
+    try:
+        value = int(raw)
+    except ValueError:
+        return None
+    return value if value > 0 else None
+
+
+def running_workers(initiator: str) -> int | None:
     """Count live delegate task records started by this driver seat."""
-    tasks = root / "batch_state" / "tasks"
+    tasks = tasks_dir()
     if not initiator or not tasks.is_dir():
         return None
     count = 0
@@ -291,14 +307,15 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     if reason in SKIP_TERMINATION_REASONS:
         return {}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
-    if ESCALATION_MARKER in text:
+    if text.lstrip().startswith(ESCALATION_MARKER):
         _reset_counter(conversation)
         return {}
     reasons = []
     seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
-    workers = running_workers(_state_root(path), seat)
-    if workers is not None and workers < MIN_WORKERS:
-        reasons.append(f"only {workers} of your workers are running (minimum {MIN_WORKERS}); dispatch ready work")
+    minimum = minimum_workers()
+    workers = running_workers(seat) if minimum is not None else None
+    if workers is not None and workers < minimum:
+        reasons.append("your running workers are below the privately configured target; dispatch ready work")
     why = ends_on_question_or_plan(text)
     if why:
         reasons.append(f"{why}; decide per the policy and execute it now")
