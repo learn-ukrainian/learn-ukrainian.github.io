@@ -259,6 +259,8 @@ def test_every_headless_plan_disables_background(tmp_path: Path, mode: str, tool
     assert plan.env_overrides[SWITCH] == "1"
     assert plan.cmd.count("--settings") == 1
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
+    assert settings["advisorModel"] == "claude-opus-5-5"
+    assert "CLAUDE_CODE_DISABLE_ADVISOR_TOOL" not in plan.env_overrides
     assert settings["permissions"]["deny"] == ["Monitor", "ScheduleWakeup", "CronCreate", "Workflow"]
     # The guard hooks are unchanged by the added deny.
     publish_guard = mode == "read-only" and tool_config == {"reviewer_tools": True}

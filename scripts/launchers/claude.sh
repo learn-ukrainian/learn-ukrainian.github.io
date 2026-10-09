@@ -38,7 +38,7 @@ launcher_adapter_exec() {
   fi
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
-  # high (launcher_defaults); interactive keeps the last TUI / user selection.
+  # high (launcher_defaults); interactive uses the project Sonnet 5.5 setting.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi

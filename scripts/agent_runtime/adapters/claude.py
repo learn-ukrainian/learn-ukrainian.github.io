@@ -442,7 +442,7 @@ def _worker_guard_invocation(command: str, source_root: Path) -> str | None:
 
 
 def _worker_guard_settings(*, publish_guard: bool = False) -> str:
-    """Build hook settings from tracked sources in this checkout."""
+    """Build hook and advisor settings from tracked sources in this checkout."""
     source_root = Path(__file__).resolve().parents[3]
     source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
     groups = []
@@ -463,7 +463,10 @@ def _worker_guard_settings(*, publish_guard: bool = False) -> str:
         )
     if not groups:
         raise RuntimeError("Claude worker PreToolUse guards unavailable")
-    return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
+    settings: dict[str, Any] = {"hooks": {"PreToolUse": groups}}
+    if "advisorModel" in source:
+        settings["advisorModel"] = source["advisorModel"]
+    return json.dumps(settings, separators=(",", ":"))
 
 
 def _headless_worker_settings(*, publish_guard: bool) -> str:
@@ -552,7 +555,7 @@ class ClaudeAdapter:
     name: str = "claude"
     default_model: str = "claude-sonnet-5-5"
     # Operator 2026-08-13: headless/print defaults to high when the caller
-    # omits effort; interactive start-claude.sh keeps empty (last session).
+    # omits effort; interactive start-claude.sh leaves effort to the session.
     default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 

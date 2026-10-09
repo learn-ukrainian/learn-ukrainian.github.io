@@ -132,6 +132,8 @@ def test_help_is_machine_usable(name: str) -> None:
     assert "Usage:" in result.stdout
     assert "EXIT CODES:" in result.stdout
     assert "LAUNCHER_DRY_RUN=1" in result.stdout
+    if name in {"start-claude.sh", "start-claude-driver.sh"}:
+        assert "project settings (Sonnet 5.5)" in result.stdout
 
 
 @pytest.mark.parametrize("name", PUBLIC)
