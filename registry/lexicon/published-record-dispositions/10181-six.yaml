@@ -1,0 +1,347 @@
+kind: atlas_published_record_dispositions
+version: 1
+batch_id: issue-10181-six
+preservation:
+  path: registry/lexicon/published-record-dispositions/10181-six.preserved.json
+  sha256: 8d62e3a45d87f7fb0e8bbb2ebe99fd598a0b2dc93e12218ca532c4309e13f5c3
+decisions:
+- row_id: 10181-01
+  lemma: достовірний
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: built_vocabulary
+    path: curriculum/l2-uk-en/b1/society-and-media/vocabulary.yaml
+    track: b1
+    module_slug: society-and-media
+    lemma: достовірний
+    index_zero_based: 18
+    row_one_based: 19
+    row_sha256: a6c631621252464a359915ed2a00a022b0a38f57a6df2030169bddbf7bd6656d
+    baseline_file_sha256: b141ab1dc9d947267e8192878c01f8efddf87030c9a86d9b1c8650ffedfe6fc2
+  projection:
+    url_slug: достовірний
+    index_zero_based: 6138
+    payload_sha256: 868f467b0037e3453042b7d92eb0456e3c0319681a5248da2c86fb566ec8986e
+  supersedes: []
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: conflict
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: 'KNOWN_INVALID: bad'
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+    entry_id: 103748
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 64763
+    retrieved_at: '2026-09-23T07:35:43.679129+00:00'
+    outer_status: attested
+    entry_status: ok
+    lookup_state: qualified cited record
+    content_sha256: 6d35e3f95463fd4177d94fb7b8d0a3c736784b4a61b92bc503021d0ec0a735cb
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed conflict: ULIF attests the head; VESUM marks it bad. No reason
+    for that marker or replacement is inferred.'
+- row_id: 10181-02
+  lemma: клієн
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: source_inventory
+    historical_path: data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    historical_key: c827f4cf98a6eab9
+    key: 479c3b18f3edd53f
+    lemma: клієн
+    source_locator: ohoiko-1000-words entry 352
+    structural_locator_one_based: sources[1].headwords[746]
+    source_id: ohoiko-ulp-curated-2026-07-19-bulk-ohoiko
+    source_family: ohoiko
+    extraction_mode: curated_bulk
+    source_title: ohoiko curated bulk 2026-07-19
+    row_sha256: c9c1950f408a7d5eb45aae2927e1e509fc666600f86c7d2b8493b403e6bb6702
+  projection:
+    url_slug: клієн
+    index_zero_based: 9729
+    payload_sha256: 237374d8861c6ae447e26fb997b6415fef9200ef09c3d412bc9028ca1d645a67
+  supersedes:
+  - ledger_path: registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+    batch_id: source-inventory-ohoiko-ulp-curated-bulk-2026-07-19
+    source_key: 479c3b18f3edd53f
+    decision: approve_for_publish
+    row_sha256: 42b87e6021a849b56b8f2237404df891715301f9d737b4eeb35f26c50af4dae1
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: unresolved
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: NOT_FOUND
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 269264
+    retrieved_at: '2026-10-09T01:42:02.408301+00:00'
+    outer_status: attested
+    entry_status: parse_error
+    lookup_state: 'UNKNOWN: parse_error / empty sections'
+    content_sha256: 3a89e35c745b060a9504d20f84c21ce4f7040ced76c79327144db0a4d5be78fd
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed unresolved lookup: VESUM not found; dated ULIF entry parse_error/empty
+    sections remains UNKNOWN despite outer attested status. No replacement or nonexistence
+    judgment.'
+- row_id: 10181-03
+  lemma: наверху
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: source_inventory
+    historical_path: data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    historical_key: faaf6300a48cbfe9
+    key: 8b13f9d92e8f8895
+    lemma: наверху
+    source_locator: ohoiko-1000-words entry 478
+    structural_locator_one_based: sources[1].headwords[929]
+    source_id: ohoiko-ulp-curated-2026-07-19-bulk-ohoiko
+    source_family: ohoiko
+    extraction_mode: curated_bulk
+    source_title: ohoiko curated bulk 2026-07-19
+    row_sha256: c7cb9a9a7caba75a7f3afc865975a063306bda483e96d473a34715c7e675dfea
+  projection:
+    url_slug: наверху
+    index_zero_based: 12788
+    payload_sha256: a95809b4309e9d895434d0f38209d7432e02ea0afb70a2a9a69b5e70b8de8e61
+  supersedes:
+  - ledger_path: registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+    batch_id: source-inventory-ohoiko-ulp-curated-bulk-2026-07-19
+    source_key: 8b13f9d92e8f8895
+    decision: approve_for_publish
+    row_sha256: 7685922830bc54e7edf46317775e534cc8a4fb7b74d982d6f5a7efadc4018cca
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: conflict
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: 'KNOWN_INVALID: bad'
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+    entry_id: 210791
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 123603
+    retrieved_at: '2026-09-24T07:32:03.015751+00:00'
+    outer_status: attested
+    entry_status: ok
+    lookup_state: qualified cited record
+    content_sha256: df6060d4ec3dfffdd5018dad3f542f5451c8f3208bea413661d8d1513690de16
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed conflict: ULIF attests the head; VESUM marks it bad. No reason
+    for that marker or replacement is inferred.'
+- row_id: 10181-04
+  lemma: об'єд
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: source_inventory
+    historical_path: data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    historical_key: d8b4f54e807fde0d
+    key: 6a07d0eb88273d99
+    lemma: об'єд
+    source_locator: ohoiko-500-verbs entry 277
+    structural_locator_one_based: sources[1].headwords[1015]
+    source_id: ohoiko-ulp-curated-2026-07-19-bulk-ohoiko
+    source_family: ohoiko
+    extraction_mode: curated_bulk
+    source_title: ohoiko curated bulk 2026-07-19
+    row_sha256: d165fc1345d7201e2a2980aae5f6d98168bd8e7854f68e8eec704ec2b1daf5d9
+  projection:
+    url_slug: об-єд
+    index_zero_based: 14461
+    payload_sha256: 02a12ad4c2b4895d95781771db59348f7844042e85caad8b51281e2ff2997600
+  supersedes:
+  - ledger_path: registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+    batch_id: source-inventory-ohoiko-ulp-curated-bulk-2026-07-19
+    source_key: 6a07d0eb88273d99
+    decision: approve_for_publish
+    row_sha256: 54f72232da7445f98fd4357af4314d9372a7df964a95111999fd8ad36a92fd25
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: unresolved
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: NOT_FOUND
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 269265
+    retrieved_at: '2026-10-09T01:42:10.656118+00:00'
+    outer_status: attested
+    entry_status: parse_error
+    lookup_state: 'UNKNOWN: parse_error / empty sections'
+    content_sha256: 4645de230895190b8709686fa65ea2f379b53c486095105299976a3b604d833f
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed unresolved lookup: VESUM not found; dated ULIF entry parse_error/empty
+    sections remains UNKNOWN despite outer attested status. No replacement or nonexistence
+    judgment.'
+- row_id: 10181-05
+  lemma: поєд
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: source_inventory
+    historical_path: data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    historical_key: ab140153cbc70b70
+    key: 6f8b38e7c848d89f
+    lemma: поєд
+    source_locator: ohoiko-500-verbs entry 341
+    structural_locator_one_based: sources[1].headwords[1379]
+    source_id: ohoiko-ulp-curated-2026-07-19-bulk-ohoiko
+    source_family: ohoiko
+    extraction_mode: curated_bulk
+    source_title: ohoiko curated bulk 2026-07-19
+    row_sha256: 6f1690f39483693e24a69ceaada6b3456f24d6f7017bbfcedab99758f28932d9
+  projection:
+    url_slug: поєд
+    index_zero_based: 18228
+    payload_sha256: 9f578829aa95ac790c519b8efba463a8f5de232a707560828cc6f9d68778a3b0
+  supersedes:
+  - ledger_path: registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+    batch_id: source-inventory-ohoiko-ulp-curated-bulk-2026-07-19
+    source_key: 6f8b38e7c848d89f
+    decision: approve_for_publish
+    row_sha256: 26381b7584dfeec4c837eafd085bfeb72220fa7600c09b8ef5856f21d819e2a9
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: unresolved
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: NOT_FOUND
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 269266
+    retrieved_at: '2026-10-09T01:42:13.538406+00:00'
+    outer_status: attested
+    entry_status: parse_error
+    lookup_state: 'UNKNOWN: parse_error / empty sections'
+    content_sha256: 6d65becf2bc63bd8e3bf90d05e313ef259ffbefe38ad15621143c19d3b021aa2
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed unresolved lookup: VESUM not found; dated ULIF entry parse_error/empty
+    sections remains UNKNOWN despite outer attested status. No replacement or nonexistence
+    judgment.'
+- row_id: 10181-06
+  lemma: приєд
+  decision: needs_more_evidence
+  effect: withhold_projection
+  origin:
+    kind: source_inventory
+    historical_path: data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    path: data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml
+    historical_key: 4e1b996de939e4f5
+    key: e0ccaf075a772b8d
+    lemma: приєд
+    source_locator: ohoiko-500-verbs entry 365
+    structural_locator_one_based: sources[1].headwords[1430]
+    source_id: ohoiko-ulp-curated-2026-07-19-bulk-ohoiko
+    source_family: ohoiko
+    extraction_mode: curated_bulk
+    source_title: ohoiko curated bulk 2026-07-19
+    row_sha256: d8b3050696699701435c23a3f1d0ba5dc642ca926f216488c4482c8447e013b2
+  projection:
+    url_slug: приєд
+    index_zero_based: 18881
+    payload_sha256: 8e4320e820462b005da1c4a751f44e28644e6b799759f36a60a86f3cbbb2157d
+  supersedes:
+  - ledger_path: registry/lexicon/source-inventory-review-decisions/2026-07-19-ohoiko-ulp-curated-bulk-approve.yaml
+    batch_id: source-inventory-ohoiko-ulp-curated-bulk-2026-07-19
+    source_key: e0ccaf075a772b8d
+    decision: approve_for_publish
+    row_sha256: 3ffa9d2535c0e010f9ddff07b784769d87dfdca980d002997016dd5d4f74ff47
+  evidence_refs:
+  - authority: independent Sources-backed Opus review
+    reviewed_on: '2026-10-09'
+    receipt_sha256: 6cb9aac842875de5ccd8c167b65be6a8986d28696c4c2627d925d0e8a0916be8
+    lookup_state: unresolved
+  - authority: VESUM
+    tool: inspect_words
+    reviewed_on: '2026-10-09'
+    lookup_state: NOT_FOUND
+    receipt_sha256: f0dfd84c5d1624cf427006637026de4cecac5153d198796962a194147a3cf217
+  - authority: official ULIF
+    tool: query_ulif
+    entry_id: 269267
+    retrieved_at: '2026-10-09T01:42:16.340931+00:00'
+    outer_status: attested
+    entry_status: parse_error
+    lookup_state: 'UNKNOWN: parse_error / empty sections'
+    content_sha256: c58a449a03d655bdb4591067090e5720c8b3dde8c802a5af6116a32fdd6075fa
+    receipt_sha256: 8328a68e29e2f8e519a3e37e8f495a77ec2ad9e52e9963da480683e6b54de937
+  - authority: heritage
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: a5ae368994f6bfedbf7a03708d1910e9681ce43f9de9e7f38dadd6a1ba4bdf60
+  - authority: source escalation
+    reviewed_on: '2026-10-09'
+    lookup_state: reviewed receipt retained; no new judgment
+    receipt_sha256: aa9b8dd4cbfed4629bedb4d5309dc283e921a61ba54a3506ba1ee2918dbba965
+  rationale: 'Reviewed unresolved lookup: VESUM not found; dated ULIF entry parse_error/empty
+    sections remains UNKNOWN despite outer attested status. No replacement or nonexistence
+    judgment.'
+release_reviews: []

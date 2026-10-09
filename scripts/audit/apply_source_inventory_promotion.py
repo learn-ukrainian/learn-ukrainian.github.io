@@ -20,6 +20,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon import promote_grow_candidates as promote
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
+from scripts.lexicon.published_record_dispositions import load_dispositions
 
 DEFAULT_PLAN = planner.DEFAULT_OUT
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
@@ -48,6 +49,8 @@ def apply_promotion_plan(
     expected_skipped_existing: int | None = None,
 ) -> dict[str, Any]:
     """Insert approved plan additions into ``manifest`` and return a summary."""
+    authority = load_dispositions()
+    authority.guard_plan_rows(_plan_rows(plan, "proposed_manifest_additions") + _plan_rows(plan, "skipped_existing"))
     _validate_plan(plan)
     additions = _filter_by_source_family(_plan_rows(plan, "proposed_manifest_additions"), source_family)
     skipped_existing = _filter_by_source_family(_plan_rows(plan, "skipped_existing"), source_family)
@@ -173,6 +176,7 @@ def write_manifest_if_changed(
     """Validate and write the mutated manifest when the result promoted rows."""
     if not _has_manifest_changes(result):
         return result
+    load_dispositions().validate_manifest(manifest)
     self_check = self_check or promote.verify_prospective_manifest
     fingerprint_writer = fingerprint_writer or _write_fingerprint_sidecar
     promote._validate_before_write(manifest, manifest_path, self_check)

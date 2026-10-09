@@ -145,3 +145,95 @@ rm -f data/sources.db
 ```
 
 Keep `data/sources.db` untracked.
+
+## Published-record holds and exact recovery (#10181)
+
+`registry/lexicon/published-record-dispositions/10181-six.yaml` is a separate,
+mandatory version-1 disposition ledger. The adjacent `10181-six.preserved.json`
+contains the six complete already-published payloads, their original positions,
+the original envelope and transaction digests. These claims are opaque recovery
+data; their preservation is not a linguistic endorsement. The holds record
+reviewed conflicts or unresolved evidence as `needs_more_evidence`; they make
+no replacement, nonexistence, Russianism, POS or CEFR judgment. In particular,
+ULIF outer attestation with an entry parse error remains UNKNOWN.
+
+The existing v1 inventory decision validator and admission gates are unchanged.
+Selected `--decision-file` subsets cannot omit this mandatory authority. The
+planner removes held approvals, while saved-plan application and provenance
+overlay reject held contributions before mutation. The shared applier validates
+again at the writer boundary, including when a producer supplies a custom
+self-check. All four curated/intake producers use these central boundaries.
+Built-vocabulary ingestion checks the exact raw row before normalization drops
+its identity. Internal row identity survives normalization until merge admission
+and never becomes a published payload field. The final build and
+`verify_manifest.run()` also enforce active holds; the latter does so even
+with conformance disabled. Missing or malformed authority refuses operation.
+
+Inventory predecessors bind complete canonical **rows**, not whole YAML files.
+An unrelated ledger rewrite or unrelated vocabulary-row edit does not release
+a hold. A changed or moved identified row fails identity verification. Explicit
+historical/current keys and paths remain distinct from the separately labelled
+one-based structural locators. Built indexes are zero-based with an explicit
+one-based row label. Canonical row/payload digests use UTF-8 JSON with
+`ensure_ascii=False`, `sort_keys=True`, comma/colon separators and no newline;
+ordered-survivor digests add one newline after each canonical payload.
+
+Same-head contributions with independent explicit provenance may survive.
+Held provenance remains disallowed under aliasing or slug collisions; a mixed
+or opaque contribution refuses operation rather than being guessed apart.
+Unresolved `form_of`, relation slugs, alias targets and link-catalog targets block
+withdrawal. Unlinked cited synonym text remains verbatim.
+
+Exercise recovery on a prospective copy with an explicit path:
+
+```bash
+.venv/bin/python -m scripts.lexicon.dispose_published_records \
+  --manifest "$TMPDIR/prospective-manifest.json" --action withdraw
+# Apply only after reviewing the dry-run result:
+.venv/bin/python -m scripts.lexicon.dispose_published_records \
+  --manifest "$TMPDIR/prospective-manifest.json" --action withdraw --write
+```
+
+The command defaults to dry-run. It accepts only the exact original or exact
+already-withdrawn state, verifies all six identities, re-reads authority before
+replacement and conserves every survivor and its order. It refreshes only
+present `stats.lemmas_total`, `stats.from_built`, `stats.form_of_count` and
+`entries_count` using the established writer predicates; all other envelope
+values are preserved. Divergence or missing authority exits 2 without replacing
+the manifest. Replacement uses the existing atomic `manifest_io` writer. The
+command never rewrites preservation data or derives runtime/publication output.
+
+No releases exist initially. Restoration requires explicit reviewed release
+rows (`approve_for_publish` / `restore_projection`) that supersede the retained
+holds with exact origin, projection and predecessor-row identities. Forks,
+cycles, orphan rows and competing tips fail closed. Root owns exact-head
+outside-family CF, same-head CI and merge-queue/merge authorization for that
+tracked change before accepting a release for application.
+
+The ledger's `release_reviews` field adapts the existing
+`code-review-receipt.v1` carrier and `record_cf_verdict` comment. Each binding
+names the canonical release-row digest and superseded hold-row digest, plus
+the exact retained receipt JSON (`receipt_json`), recorder verdict body
+(`verdict_body`) and their complete UTF-8 byte digests. This keeps the existing
+review carrier readable in CI without a dependency on local task files.
+Keeping the binding beside the rows avoids a circular digest inside the release
+row. The recorder verdict body must contain both literal labels:
+
+```text
+release-row-sha256: <canonical release-row digest>
+superseded-hold-row-sha256: <canonical hold-row digest>
+```
+
+The resolver requires a clean completed receipt, distinct author/reviewer
+families, native model/family/harness provenance and the recorder's exact-head
+APPROVED cross-family verdict. Arbitrary clearance JSON or a bare approval
+string is insufficient. This deterministic validation checks structure and
+bindings; it does not prove that a review occurred. Root verifies the genuine
+completed review and landing gates using the existing review process.
+
+After valid release authorization, `--action restore` (also dry-run by default)
+accepts the exact withdrawn state and restores the preserved bytes, complete
+payloads, original ordering and original envelope values, including historical
+stale counters. It does not reconstruct missing source-book bytes. Actual
+canonical application, independent held-out proof, merged-SHA verification and
+Atlas publication remain the accountable root's responsibility.

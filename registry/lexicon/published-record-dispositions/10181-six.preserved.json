@@ -1,0 +1,1884 @@
+{
+  "kind": "atlas_published_record_preservation",
+  "version": 1,
+  "batch_id": "issue-10181-six",
+  "records": [
+    {
+      "row_id": "10181-01",
+      "original_index_zero_based": 6138,
+      "entry": {
+        "lemma": "достовірний",
+        "url_slug": "достовірний",
+        "gloss": "reliable, trustworthy",
+        "pos": "adjective",
+        "ipa": null,
+        "primary_source": "built_vocabulary",
+        "course_usage": [
+          {
+            "track": "b1",
+            "module_num": 73,
+            "slug": "society-and-media",
+            "context": "built_vocabulary"
+          }
+        ],
+        "heritage_status": {
+          "classification": "calque",
+          "attestations": [
+            {
+              "source": "lt_replacements",
+              "ref": "docs/best-practices/heritage-attestation-engine.md",
+              "detail": "local correction evidence; no authentic dictionary attestation found"
+            },
+            {
+              "source": "slovnyk_me_correction",
+              "ref": "https://slovnyk.me/dict/foreign_shtepa/%D0%B4%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%96%D1%80%D0%BD%D0%B8%D0%B9",
+              "detail": "достовірний Вірогідний, певний Джерело: Словник чужомовних слів і термінів Павло Штепа на Slovnyk.me"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "певний",
+              "detail": "Ukrainian standard alternative for достовірний"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "правдивий",
+              "detail": "Ukrainian standard alternative for достовірний"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "вірогідний",
+              "detail": "Ukrainian standard alternative for достовірний"
+            }
+          ],
+          "is_russianism": false,
+          "russian_shadow": false,
+          "vesum_attested": false,
+          "calque_warning": {
+            "standard_alternatives": [
+              "певний",
+              "правдивий",
+              "вірогідний"
+            ]
+          },
+          "warning_severity": "calque_yellow"
+        },
+        "pronunciation": {
+          "ipa": "[dɔstɔˈʋʲirnei̯]",
+          "source": "kaikki/Wiktionary (CC BY-SA 3.0)"
+        },
+        "enrichment": {
+          "stress": {
+            "form": "достові́рний",
+            "source": "ukrainian-word-stress"
+          },
+          "cefr": {
+            "level": "B2",
+            "source": "estimated (GRAC frequency)",
+            "text": "B2 (орієнтовно / estimated; GRAC 0.26/million, rank 3233/4161)"
+          },
+          "meaning": {
+            "definitions": [
+              "reliable, trustworthy (information)",
+              "authentic (document)"
+            ],
+            "source": "kaikki/Wiktionary (CC BY-SA 3.0)",
+            "note": "English Wiktionary gloss fallback; direct per-lemma row."
+          },
+          "definition_cards": [
+            {
+              "id": "vts",
+              "source": "ВТС",
+              "source_pill": "ВТС",
+              "note": "Великий тлумачний словник сучасної української мови",
+              "definitions": [
+                "достові́рний -а, -е. Який не викликає сумніву, цілком вірний, точний."
+              ],
+              "source_url": "https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%96%D1%80%D0%BD%D0%B8%D0%B9"
+            }
+          ],
+          "etymology": {
+            "text": "Borrowed from Old Church Slavonic достоиновѣрьнъ (dostoinověrĭnŭ), a calque of Ancient Greek ἀξιόπιστος (axiópistos). By surface analysis, досто- (dosto-) + ві́рний (vírnyj). Compare вірогі́дний (virohídnyj).",
+            "source": "kaikki/Wiktionary (CC BY-SA 3.0)"
+          },
+          "literary_attestation": {
+            "text": "…ад. Рос. V ч. 23 як автентичний документ — безсумнївний фальсіфікат, хоч його ще Кубаля вважав певним в своїй основі (І. Ossolioski II c. 375-6). Томашівський противставив йому як достовірний „перший зазивний лист Хмельницького” переказаний в orаtiо оbliquа в записках Кушевича (Записки тов. ім. Шевченка т. XXIV). Але сей риторичний і бідний змістом текст без сумнїву яв…",
+            "source": "literary_fts",
+            "source_label": "Грушевський М. · Грушевський — Історія України-Руси, т.7-10 · 1898",
+            "chunk_id": "5794da94_c1714",
+            "source_url": ""
+          },
+          "translation": {
+            "en": [
+              "trustworthy (reliable)",
+              "reliable, trustworthy (information)",
+              "authentic (document)"
+            ],
+            "source": "dmklinger",
+            "pos": "adjective"
+          },
+          "sources": [
+            "dmklinger",
+            "estimated (GRAC frequency)",
+            "kaikki/Wiktionary (CC BY-SA 3.0)",
+            "literary_fts",
+            "ukrainian-word-stress",
+            "ВТС",
+            "Орфографічний словник української мови",
+            "Словник синонімів української мови"
+          ]
+        },
+        "sections": {
+          "synonyms": {
+            "items": [
+              "вірогідний",
+              "достотний",
+              "певний",
+              "правдивий",
+              "імовірний"
+            ],
+            "synsets": [
+              {
+                "id": 1,
+                "members": [
+                  {
+                    "lemma": "вірогідний",
+                    "stressed": "ВІРОГІ́ДНИЙ",
+                    "gloss": {
+                      "text": "який не викликає сумніву, найближчий до правди, справжнього стану речей"
+                    }
+                  },
+                  {
+                    "lemma": "імовірний",
+                    "stressed": "ІМОВІ́РНИЙ"
+                  },
+                  {
+                    "lemma": "правдивий",
+                    "stressed": "ПРАВДИ́ВИЙ"
+                  },
+                  {
+                    "lemma": "достотний",
+                    "stressed": "ДОСТО́ТНИЙ"
+                  }
+                ],
+                "gloss": {
+                  "text": "який не викликає сумніву, найближчий до правди, справжнього стану речей"
+                }
+              }
+            ],
+            "source": "curated standard alternatives",
+            "mirror_source_urls": [
+              "https://slovnyk.me/dict/synonyms/%D0%B4%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%96%D1%80%D0%BD%D0%B8%D0%B9"
+            ]
+          },
+          "form_notes": {
+            "items": [
+              {
+                "dictionary": "orthography",
+                "text": "достові́рний прикметник",
+                "source": "Орфографічний словник української мови",
+                "mirror_source_url": "https://slovnyk.me/dict/orthography/%D0%B4%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%96%D1%80%D0%BD%D0%B8%D0%B9"
+              }
+            ],
+            "source": "Орфографічний словник української мови",
+            "mirror_source_urls": [
+              "https://slovnyk.me/dict/orthography/%D0%B4%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%96%D1%80%D0%BD%D0%B8%D0%B9"
+            ]
+          }
+        },
+        "enrichment_version": 2,
+        "updated_at": "2026-09-12T20:03:22.258715+00:00",
+        "is_russianism": false,
+        "calque_warning": {
+          "is_calque": true,
+          "severity": "orange",
+          "standard_alternatives": [
+            "певний",
+            "правдивий",
+            "вірогідний"
+          ],
+          "warning_text": "Нерекомендоване або ненормативне слововживання. В українській літературній мові слід уживати: певний, правдивий, вірогідний."
+        }
+      },
+      "payload_sha256": "868f467b0037e3453042b7d92eb0456e3c0319681a5248da2c86fb566ec8986e"
+    },
+    {
+      "row_id": "10181-02",
+      "original_index_zero_based": 9729,
+      "entry": {
+        "lemma": "клієн",
+        "url_slug": "клієн",
+        "gloss": "ohoiko 1000-words entry",
+        "pos": "noun",
+        "ipa": null,
+        "primary_source": "source_inventory_grow",
+        "course_usage": [],
+        "heritage_status": {
+          "classification": "unknown",
+          "attestations": [],
+          "is_russianism": false,
+          "russian_shadow": true,
+          "vesum_attested": false,
+          "calque_warning": {
+            "type": "russian_shadow_only",
+            "russian_lemma": null,
+            "confidence": 1.0,
+            "note": "negative signal only; no Ukrainian standard alternative was found"
+          },
+          "warning_severity": "russianism_red"
+        },
+        "source_provenance": [
+          {
+            "source_family": "ohoiko",
+            "extraction_mode": "curated_bulk",
+            "inventory_path": "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+            "inventory_locator": "sources[1].headwords[746]",
+            "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+            "source_title": "ohoiko curated bulk 2026-07-19",
+            "source_locator": "ohoiko-1000-words entry 352",
+            "context": "Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.",
+            "notes": "Derived headword metadata only; raw private copyrighted material is local-only and not committed. Curated-source auto-approve; Daily Word / Practice / cloze remain frozen without surface_admission."
+          }
+        ],
+        "enrichment": {
+          "translation": {
+            "terms": [
+              "ohoiko 1000-words entry"
+            ],
+            "source": "learner_english_gloss",
+            "gloss": "ohoiko 1000-words entry",
+            "en": [
+              "ohoiko 1000-words entry"
+            ]
+          },
+          "sources": [
+            "learner_english_gloss"
+          ]
+        }
+      },
+      "payload_sha256": "237374d8861c6ae447e26fb997b6415fef9200ef09c3d412bc9028ca1d645a67"
+    },
+    {
+      "row_id": "10181-03",
+      "original_index_zero_based": 12788,
+      "entry": {
+        "lemma": "наверху",
+        "url_slug": "наверху",
+        "gloss": "above, upstairs (location)",
+        "pos": "noun",
+        "ipa": null,
+        "primary_source": "source_inventory_grow",
+        "course_usage": [],
+        "heritage_status": {
+          "classification": "calque",
+          "attestations": [
+            {
+              "source": "sum11",
+              "ref": "50700",
+              "word": "наверху",
+              "detail": "НАВЕРХУ́, присл. 1. У верхній частині чого-небудь. Сидить [син] аж наверху, біліє чубчиком і щось клепає (Гончар, Тронка, 1963, 90); // На поверхні чого-небудь. Він розуміє, без прози трудно прожити. Нехай буде наверху піна, але під нею мусить в келиху грати чисте вино (Коцюб., II, 1955, 304); // На верхньому поверсі будинку. Наверху в залі ще було видно, а чим нижче він спускався плутаними східцями, тим більше темніло (Гончар, III, 1959, 144); // перен., розм. В організації, що стоїть вище в а…"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "зверху",
+              "detail": "Ukrainian standard alternative for наверху"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "угорі",
+              "detail": "Ukrainian standard alternative for наверху"
+            },
+            {
+              "source": "standard_alternative",
+              "ref": "нагорі",
+              "detail": "Ukrainian standard alternative for наверху"
+            }
+          ],
+          "is_russianism": false,
+          "russian_shadow": true,
+          "vesum_attested": false,
+          "calque_warning": {
+            "standard_alternatives": [
+              "зверху",
+              "угорі",
+              "нагорі"
+            ]
+          },
+          "warning_severity": "calque_yellow"
+        },
+        "source_provenance": [
+          {
+            "source_family": "ohoiko",
+            "extraction_mode": "curated_bulk",
+            "inventory_path": "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+            "inventory_locator": "sources[1].headwords[929]",
+            "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+            "source_title": "ohoiko curated bulk 2026-07-19",
+            "source_locator": "ohoiko-1000-words entry 478",
+            "context": "Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.",
+            "notes": "Derived headword metadata only; raw private copyrighted material is local-only and not committed. Curated-source auto-approve; Daily Word / Practice / cloze remain frozen without surface_admission."
+          }
+        ],
+        "enrichment": {
+          "stress": {
+            "form": "наверху́",
+            "source": "ukrainian-word-stress"
+          },
+          "cefr": {
+            "level": "B2",
+            "source": "PULS CEFR",
+            "pos": "прислівник",
+            "text": "наверху (B2, прислівник)"
+          },
+          "literary_attestation": {
+            "text": "За той час оба приятелі від ринку зійшли вже долів, на місток, відки улиця почала знов підійматися догори, поміж двома рядами високих ясенів, поки не урвалася наверху, де блискучий позолочений хрест меркотів до сонця.",
+            "source": "literary_fts",
+            "source_label": "Франко І. · Іван Франко. Борислав сміється · 1856",
+            "chunk_id": "94839dbc_c0023",
+            "source_url": ""
+          },
+          "sources": [
+            "Anna Ohoiko",
+            "PULS CEFR",
+            "learner_english_gloss",
+            "literary_fts",
+            "ukrainian-word-stress"
+          ],
+          "translation": {
+            "en": [
+              "above, upstairs (location)"
+            ],
+            "source": "learner_english_gloss"
+          },
+          "examples": [
+            {
+              "uk": "Ми чека́ємо наверху́ (нагорі́).",
+              "en": "We are waiting upstairs.",
+              "source": "Anna Ohoiko",
+              "locator": "ohoiko-1000-words entry 478"
+            }
+          ]
+        },
+        "enrichment_version": 2,
+        "updated_at": "2026-09-12T20:03:23.093587+00:00",
+        "is_russianism": false,
+        "calque_warning": {
+          "is_calque": true,
+          "severity": "orange",
+          "standard_alternatives": [
+            "зверху",
+            "угорі",
+            "нагорі"
+          ],
+          "warning_text": "Нерекомендоване або ненормативне слововживання. В українській літературній мові слід уживати: зверху, угорі, нагорі."
+        },
+        "sections": {
+          "synonyms": {
+            "items": [
+              "зверху",
+              "нагорі",
+              "угорі"
+            ],
+            "source": "curated standard alternatives"
+          }
+        }
+      },
+      "payload_sha256": "a95809b4309e9d895434d0f38209d7432e02ea0afb70a2a9a69b5e70b8de8e61"
+    },
+    {
+      "row_id": "10181-04",
+      "original_index_zero_based": 14461,
+      "entry": {
+        "lemma": "об'єд",
+        "url_slug": "об-єд",
+        "gloss": "to unite sth/sb [to come together, to unite] Conjugation: 1st (-ють)",
+        "pos": "verb",
+        "ipa": null,
+        "primary_source": "source_inventory_grow",
+        "course_usage": [],
+        "heritage_status": {
+          "classification": "unknown",
+          "attestations": [],
+          "is_russianism": false,
+          "russian_shadow": false,
+          "vesum_attested": false,
+          "calque_warning": null,
+          "warning_severity": "none"
+        },
+        "source_provenance": [
+          {
+            "source_family": "ohoiko",
+            "extraction_mode": "curated_bulk",
+            "inventory_path": "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+            "inventory_locator": "sources[1].headwords[1015]",
+            "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+            "source_title": "ohoiko curated bulk 2026-07-19",
+            "source_locator": "ohoiko-500-verbs entry 277",
+            "context": "Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.",
+            "notes": "Derived headword metadata only; raw private copyrighted material is local-only and not committed. Curated-source auto-approve; Daily Word / Practice / cloze remain frozen without surface_admission."
+          }
+        ],
+        "enrichment": {
+          "literary_attestation": {
+            "text": "…нельзя не верить, чтобы такой язык не был дан великому народу\". Це ж та сама програма, що в шевченківському \"... наша пісня повік не загине: от де, діти, наша слава, слава Украї­ни\", хоч і соціяльні причини такої платформи були зовсім не однакові, ба навіть протилежні. Це той момент, що їх об'єд­нує. Це одночасно і той момент, що допускав існування нефабульної прози, \"стіхотворєній у прозі\" і такого іншого.",
+            "source": "literary_fts",
+            "source_label": "Йогансен М. · Майк Йогансен. Як будується оповідання · 1895",
+            "chunk_id": "172f2637_c0116",
+            "source_url": ""
+          }
+        }
+      },
+      "payload_sha256": "02a12ad4c2b4895d95781771db59348f7844042e85caad8b51281e2ff2997600"
+    },
+    {
+      "row_id": "10181-05",
+      "original_index_zero_based": 18228,
+      "entry": {
+        "lemma": "поєд",
+        "url_slug": "поєд",
+        "gloss": "to combine sth [to combine] Conjugation: 1st (-ють)",
+        "pos": "verb",
+        "ipa": null,
+        "primary_source": "source_inventory_grow",
+        "course_usage": [],
+        "heritage_status": {
+          "classification": "unknown",
+          "attestations": [],
+          "is_russianism": false,
+          "russian_shadow": false,
+          "vesum_attested": false,
+          "calque_warning": null,
+          "warning_severity": "none"
+        },
+        "source_provenance": [
+          {
+            "source_family": "ohoiko",
+            "extraction_mode": "curated_bulk",
+            "inventory_path": "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+            "inventory_locator": "sources[1].headwords[1379]",
+            "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+            "source_title": "ohoiko curated bulk 2026-07-19",
+            "source_locator": "ohoiko-500-verbs entry 341",
+            "context": "Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.",
+            "notes": "Derived headword metadata only; raw private copyrighted material is local-only and not committed. Curated-source auto-approve; Daily Word / Practice / cloze remain frozen without surface_admission."
+          }
+        ]
+      },
+      "payload_sha256": "9f578829aa95ac790c519b8efba463a8f5de232a707560828cc6f9d68778a3b0"
+    },
+    {
+      "row_id": "10181-06",
+      "original_index_zero_based": 18881,
+      "entry": {
+        "lemma": "приєд",
+        "url_slug": "приєд",
+        "gloss": "to add, to attach, to join sth [to join] Conjugation: 1st (-ють)",
+        "pos": "verb",
+        "ipa": null,
+        "primary_source": "source_inventory_grow",
+        "course_usage": [],
+        "heritage_status": {
+          "classification": "unknown",
+          "attestations": [],
+          "is_russianism": false,
+          "russian_shadow": false,
+          "vesum_attested": false,
+          "calque_warning": null,
+          "warning_severity": "none"
+        },
+        "source_provenance": [
+          {
+            "source_family": "ohoiko",
+            "extraction_mode": "curated_bulk",
+            "inventory_path": "data/lexicon/source-inventory/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+            "inventory_locator": "sources[1].headwords[1430]",
+            "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+            "source_title": "ohoiko curated bulk 2026-07-19",
+            "source_locator": "ohoiko-500-verbs entry 365",
+            "context": "Curated ohoiko inventory (book_candidate); auto-approve policy — no AI linguistic review.",
+            "notes": "Derived headword metadata only; raw private copyrighted material is local-only and not committed. Curated-source auto-approve; Daily Word / Practice / cloze remain frozen without surface_admission."
+          }
+        ]
+      },
+      "payload_sha256": "8e4320e820462b005da1c4a751f44e28644e6b799759f36a60a86f3cbbb2157d"
+    }
+  ],
+  "original_manifest_envelope": {
+    "version": "0.1",
+    "generated_at": "2026-09-11T10:12:36+00:00",
+    "stats": {
+      "lemmas_total": 27304,
+      "modules_covered": 262,
+      "from_built": 5169,
+      "from_surzhyk_to_avoid": 3,
+      "from_heritage_status_seed": 6,
+      "form_of_count": 336,
+      "entry_count": 20111,
+      "entries": 19203
+    },
+    "modules": [
+      {
+        "track": "a1",
+        "module_num": 55,
+        "slug": "a1-finale"
+      },
+      {
+        "track": "a1",
+        "module_num": 33,
+        "slug": "around-the-city"
+      },
+      {
+        "track": "a1",
+        "module_num": 38,
+        "slug": "at-the-cafe"
+      },
+      {
+        "track": "a1",
+        "module_num": 21,
+        "slug": "checkpoint-actions"
+      },
+      {
+        "track": "a1",
+        "module_num": 47,
+        "slug": "checkpoint-communication"
+      },
+      {
+        "track": "a1",
+        "module_num": 7,
+        "slug": "checkpoint-first-contact"
+      },
+      {
+        "track": "a1",
+        "module_num": 41,
+        "slug": "checkpoint-food-shopping"
+      },
+      {
+        "track": "a1",
+        "module_num": 14,
+        "slug": "checkpoint-my-world"
+      },
+      {
+        "track": "a1",
+        "module_num": 35,
+        "slug": "checkpoint-places"
+      },
+      {
+        "track": "a1",
+        "module_num": 27,
+        "slug": "checkpoint-time-nature"
+      },
+      {
+        "track": "a1",
+        "module_num": 10,
+        "slug": "colors"
+      },
+      {
+        "track": "a1",
+        "module_num": 23,
+        "slug": "days-and-months"
+      },
+      {
+        "track": "a1",
+        "module_num": 54,
+        "slug": "emergencies"
+      },
+      {
+        "track": "a1",
+        "module_num": 28,
+        "slug": "euphony"
+      },
+      {
+        "track": "a1",
+        "module_num": 36,
+        "slug": "food-and-drink"
+      },
+      {
+        "track": "a1",
+        "module_num": 26,
+        "slug": "free-time"
+      },
+      {
+        "track": "a1",
+        "module_num": 53,
+        "slug": "health"
+      },
+      {
+        "track": "a1",
+        "module_num": 42,
+        "slug": "hey-friend"
+      },
+      {
+        "track": "a1",
+        "module_num": 46,
+        "slug": "holidays"
+      },
+      {
+        "track": "a1",
+        "module_num": 11,
+        "slug": "how-many"
+      },
+      {
+        "track": "a1",
+        "module_num": 37,
+        "slug": "i-eat-i-drink"
+      },
+      {
+        "track": "a1",
+        "module_num": 18,
+        "slug": "i-want-i-can"
+      },
+      {
+        "track": "a1",
+        "module_num": 44,
+        "slug": "linking-ideas"
+      },
+      {
+        "track": "a1",
+        "module_num": 13,
+        "slug": "many-things"
+      },
+      {
+        "track": "a1",
+        "module_num": 30,
+        "slug": "my-city"
+      },
+      {
+        "track": "a1",
+        "module_num": 25,
+        "slug": "my-day"
+      },
+      {
+        "track": "a1",
+        "module_num": 6,
+        "slug": "my-family"
+      },
+      {
+        "track": "a1",
+        "module_num": 20,
+        "slug": "my-morning"
+      },
+      {
+        "track": "a1",
+        "module_num": 51,
+        "slug": "my-plans"
+      },
+      {
+        "track": "a1",
+        "module_num": 52,
+        "slug": "my-story"
+      },
+      {
+        "track": "a1",
+        "module_num": 40,
+        "slug": "people-around-me"
+      },
+      {
+        "track": "a1",
+        "module_num": 43,
+        "slug": "please-do-this"
+      },
+      {
+        "track": "a1",
+        "module_num": 19,
+        "slug": "questions"
+      },
+      {
+        "track": "a1",
+        "module_num": 2,
+        "slug": "reading-ukrainian"
+      },
+      {
+        "track": "a1",
+        "module_num": 39,
+        "slug": "shopping"
+      },
+      {
+        "track": "a1",
+        "module_num": 1,
+        "slug": "sounds-letters-and-hello"
+      },
+      {
+        "track": "a1",
+        "module_num": 3,
+        "slug": "special-signs"
+      },
+      {
+        "track": "a1",
+        "module_num": 4,
+        "slug": "stress-and-melody"
+      },
+      {
+        "track": "a1",
+        "module_num": 8,
+        "slug": "things-have-gender"
+      },
+      {
+        "track": "a1",
+        "module_num": 12,
+        "slug": "this-and-that"
+      },
+      {
+        "track": "a1",
+        "module_num": 32,
+        "slug": "transport"
+      },
+      {
+        "track": "a1",
+        "module_num": 16,
+        "slug": "verbs-group-one"
+      },
+      {
+        "track": "a1",
+        "module_num": 17,
+        "slug": "verbs-group-two"
+      },
+      {
+        "track": "a1",
+        "module_num": 24,
+        "slug": "weather"
+      },
+      {
+        "track": "a1",
+        "module_num": 48,
+        "slug": "what-happened"
+      },
+      {
+        "track": "a1",
+        "module_num": 15,
+        "slug": "what-i-like"
+      },
+      {
+        "track": "a1",
+        "module_num": 9,
+        "slug": "what-is-it-like"
+      },
+      {
+        "track": "a1",
+        "module_num": 22,
+        "slug": "what-time"
+      },
+      {
+        "track": "a1",
+        "module_num": 50,
+        "slug": "what-will-happen"
+      },
+      {
+        "track": "a1",
+        "module_num": 45,
+        "slug": "when-and-where"
+      },
+      {
+        "track": "a1",
+        "module_num": 34,
+        "slug": "where-from"
+      },
+      {
+        "track": "a1",
+        "module_num": 29,
+        "slug": "where-is-it"
+      },
+      {
+        "track": "a1",
+        "module_num": 31,
+        "slug": "where-to"
+      },
+      {
+        "track": "a1",
+        "module_num": 5,
+        "slug": "who-am-i"
+      },
+      {
+        "track": "a1",
+        "module_num": 49,
+        "slug": "yesterday"
+      },
+      {
+        "track": "a2",
+        "module_num": 1,
+        "slug": "a2-bridge"
+      },
+      {
+        "track": "a2",
+        "module_num": 67,
+        "slug": "a2-comprehensive-review"
+      },
+      {
+        "track": "a2",
+        "module_num": 69,
+        "slug": "a2-finale"
+      },
+      {
+        "track": "a2",
+        "module_num": 68,
+        "slug": "a2-practice-exam"
+      },
+      {
+        "track": "a2",
+        "module_num": 37,
+        "slug": "all-cases-practice"
+      },
+      {
+        "track": "a2",
+        "module_num": 2,
+        "slug": "aspect-concept"
+      },
+      {
+        "track": "a2",
+        "module_num": 40,
+        "slug": "aspect-in-past"
+      },
+      {
+        "track": "a2",
+        "module_num": 3,
+        "slug": "aspect-in-vocabulary"
+      },
+      {
+        "track": "a2",
+        "module_num": 42,
+        "slug": "aspect-mastery"
+      },
+      {
+        "track": "a2",
+        "module_num": 47,
+        "slug": "because-and-although"
+      },
+      {
+        "track": "a2",
+        "module_num": 39,
+        "slug": "checkpoint-cases"
+      },
+      {
+        "track": "a2",
+        "module_num": 23,
+        "slug": "checkpoint-dative"
+      },
+      {
+        "track": "a2",
+        "module_num": 8,
+        "slug": "checkpoint-foundations"
+      },
+      {
+        "track": "a2",
+        "module_num": 16,
+        "slug": "checkpoint-genitive"
+      },
+      {
+        "track": "a2",
+        "module_num": 31,
+        "slug": "checkpoint-instrumental"
+      },
+      {
+        "track": "a2",
+        "module_num": 53,
+        "slug": "checkpoint-syntax"
+      },
+      {
+        "track": "a2",
+        "module_num": 46,
+        "slug": "checkpoint-verbs"
+      },
+      {
+        "track": "a2",
+        "module_num": 54,
+        "slug": "comparison"
+      },
+      {
+        "track": "a2",
+        "module_num": 19,
+        "slug": "dative-adjectives-pronouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 18,
+        "slug": "dative-nouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 17,
+        "slug": "dative-pronouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 21,
+        "slug": "dative-verbs"
+      },
+      {
+        "track": "a2",
+        "module_num": 35,
+        "slug": "dozvillia-i-khobi"
+      },
+      {
+        "track": "a2",
+        "module_num": 52,
+        "slug": "education-and-work"
+      },
+      {
+        "track": "a2",
+        "module_num": 12,
+        "slug": "euphony-advanced"
+      },
+      {
+        "track": "a2",
+        "module_num": 7,
+        "slug": "foundations-practice"
+      },
+      {
+        "track": "a2",
+        "module_num": 13,
+        "slug": "genitive-adjectives-pronouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 6,
+        "slug": "genitive-dates-numbers"
+      },
+      {
+        "track": "a2",
+        "module_num": 5,
+        "slug": "genitive-intro"
+      },
+      {
+        "track": "a2",
+        "module_num": 14,
+        "slug": "genitive-plural"
+      },
+      {
+        "track": "a2",
+        "module_num": 11,
+        "slug": "genitive-prepositions-direction"
+      },
+      {
+        "track": "a2",
+        "module_num": 10,
+        "slug": "genitive-prepositions-purpose"
+      },
+      {
+        "track": "a2",
+        "module_num": 9,
+        "slug": "genitive-prepositions-source"
+      },
+      {
+        "track": "a2",
+        "module_num": 38,
+        "slug": "home-and-daily-life"
+      },
+      {
+        "track": "a2",
+        "module_num": 44,
+        "slug": "imperative-complete"
+      },
+      {
+        "track": "a2",
+        "module_num": 57,
+        "slug": "indefinite-negative-pronouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 24,
+        "slug": "instrumental-accompaniment"
+      },
+      {
+        "track": "a2",
+        "module_num": 29,
+        "slug": "instrumental-adjectives-pronouns"
+      },
+      {
+        "track": "a2",
+        "module_num": 25,
+        "slug": "instrumental-means"
+      },
+      {
+        "track": "a2",
+        "module_num": 28,
+        "slug": "instrumental-prepositions"
+      },
+      {
+        "track": "a2",
+        "module_num": 26,
+        "slug": "instrumental-profession"
+      },
+      {
+        "track": "a2",
+        "module_num": 4,
+        "slug": "liudyna-i-stosunky"
+      },
+      {
+        "track": "a2",
+        "module_num": 20,
+        "slug": "locative-expanded"
+      },
+      {
+        "track": "a2",
+        "module_num": 65,
+        "slug": "metalanguage-morphology"
+      },
+      {
+        "track": "a2",
+        "module_num": 64,
+        "slug": "metalanguage-phonetics"
+      },
+      {
+        "track": "a2",
+        "module_num": 63,
+        "slug": "metalanguage-sentences-and-classroom"
+      },
+      {
+        "track": "a2",
+        "module_num": 66,
+        "slug": "metalanguage-syntax-cases"
+      },
+      {
+        "track": "a2",
+        "module_num": 62,
+        "slug": "metalanguage-verbs-and-time"
+      },
+      {
+        "track": "a2",
+        "module_num": 61,
+        "slug": "metalanguage-words-and-cases"
+      },
+      {
+        "track": "a2",
+        "module_num": 43,
+        "slug": "motion-verbs"
+      },
+      {
+        "track": "a2",
+        "module_num": 60,
+        "slug": "nature-and-traditions"
+      },
+      {
+        "track": "a2",
+        "module_num": 55,
+        "slug": "numerals-and-cases"
+      },
+      {
+        "track": "a2",
+        "module_num": 33,
+        "slug": "plural-genitive"
+      },
+      {
+        "track": "a2",
+        "module_num": 32,
+        "slug": "plural-nominative-accusative"
+      },
+      {
+        "track": "a2",
+        "module_num": 34,
+        "slug": "plural-other-cases"
+      },
+      {
+        "track": "a2",
+        "module_num": 59,
+        "slug": "preferences-and-choices"
+      },
+      {
+        "track": "a2",
+        "module_num": 48,
+        "slug": "purpose-clauses"
+      },
+      {
+        "track": "a2",
+        "module_num": 51,
+        "slug": "real-conditionals"
+      },
+      {
+        "track": "a2",
+        "module_num": 49,
+        "slug": "relative-clauses"
+      },
+      {
+        "track": "a2",
+        "module_num": 22,
+        "slug": "services-and-communication"
+      },
+      {
+        "track": "a2",
+        "module_num": 15,
+        "slug": "shopping-and-health"
+      },
+      {
+        "track": "a2",
+        "module_num": 56,
+        "slug": "sviy-and-sebe"
+      },
+      {
+        "track": "a2",
+        "module_num": 58,
+        "slug": "synonyms-antonyms-style"
+      },
+      {
+        "track": "a2",
+        "module_num": 41,
+        "slug": "synthetic-future"
+      },
+      {
+        "track": "a2",
+        "module_num": 45,
+        "slug": "telling-stories-and-travel"
+      },
+      {
+        "track": "a2",
+        "module_num": 27,
+        "slug": "vocative-expanded"
+      },
+      {
+        "track": "a2",
+        "module_num": 36,
+        "slug": "which-case-when"
+      },
+      {
+        "track": "a2",
+        "module_num": 50,
+        "slug": "word-order-emphasis"
+      },
+      {
+        "track": "a2",
+        "module_num": 30,
+        "slug": "work-and-food"
+      },
+      {
+        "track": "b1",
+        "module_num": 44,
+        "slug": "adjectives-comparative"
+      },
+      {
+        "track": "b1",
+        "module_num": 45,
+        "slug": "adjectives-superlative"
+      },
+      {
+        "track": "b1",
+        "module_num": 63,
+        "slug": "advanced-pronouns"
+      },
+      {
+        "track": "b1",
+        "module_num": 46,
+        "slug": "adverbs-comparison-formation"
+      },
+      {
+        "track": "b1",
+        "module_num": 12,
+        "slug": "alternation-consonants-nouns"
+      },
+      {
+        "track": "b1",
+        "module_num": 13,
+        "slug": "alternation-consonants-verbs"
+      },
+      {
+        "track": "b1",
+        "module_num": 11,
+        "slug": "alternation-vowels"
+      },
+      {
+        "track": "b1",
+        "module_num": 5,
+        "slug": "aspect-future-tense"
+      },
+      {
+        "track": "b1",
+        "module_num": 24,
+        "slug": "aspect-in-conditionals"
+      },
+      {
+        "track": "b1",
+        "module_num": 27,
+        "slug": "aspect-in-imperatives"
+      },
+      {
+        "track": "b1",
+        "module_num": 6,
+        "slug": "aspect-in-narration"
+      },
+      {
+        "track": "b1",
+        "module_num": 8,
+        "slug": "aspect-in-negation"
+      },
+      {
+        "track": "b1",
+        "module_num": 4,
+        "slug": "aspect-past-tense"
+      },
+      {
+        "track": "b1",
+        "module_num": 2,
+        "slug": "b1-baseline-future-aspect"
+      },
+      {
+        "track": "b1",
+        "module_num": 1,
+        "slug": "b1-baseline-past-present"
+      },
+      {
+        "track": "b1",
+        "module_num": 61,
+        "slug": "cases-with-ordinal-numerals"
+      },
+      {
+        "track": "b1",
+        "module_num": 62,
+        "slug": "cases-with-quantity-expressions"
+      },
+      {
+        "track": "b1",
+        "module_num": 10,
+        "slug": "checkpoint-aspect"
+      },
+      {
+        "track": "b1",
+        "module_num": 64,
+        "slug": "checkpoint-cases"
+      },
+      {
+        "track": "b1",
+        "module_num": 51,
+        "slug": "checkpoint-comparison"
+      },
+      {
+        "track": "b1",
+        "module_num": 21,
+        "slug": "checkpoint-morphophonemics"
+      },
+      {
+        "track": "b1",
+        "module_num": 43,
+        "slug": "checkpoint-motion"
+      },
+      {
+        "track": "b1",
+        "module_num": 74,
+        "slug": "checkpoint-participles"
+      },
+      {
+        "track": "b1",
+        "module_num": 84,
+        "slug": "checkpoint-syntax"
+      },
+      {
+        "track": "b1",
+        "module_num": 90,
+        "slug": "checkpoint-text-register"
+      },
+      {
+        "track": "b1",
+        "module_num": 33,
+        "slug": "checkpoint-verbs"
+      },
+      {
+        "track": "b1",
+        "module_num": 75,
+        "slug": "complex-compound"
+      },
+      {
+        "track": "b1",
+        "module_num": 82,
+        "slug": "complex-subordinate-concess"
+      },
+      {
+        "track": "b1",
+        "module_num": 80,
+        "slug": "complex-subordinate-condition"
+      },
+      {
+        "track": "b1",
+        "module_num": 76,
+        "slug": "complex-subordinate-object"
+      },
+      {
+        "track": "b1",
+        "module_num": 81,
+        "slug": "complex-subordinate-purpose"
+      },
+      {
+        "track": "b1",
+        "module_num": 79,
+        "slug": "complex-subordinate-reason"
+      },
+      {
+        "track": "b1",
+        "module_num": 77,
+        "slug": "complex-subordinate-relative"
+      },
+      {
+        "track": "b1",
+        "module_num": 78,
+        "slug": "complex-subordinate-time"
+      },
+      {
+        "track": "b1",
+        "module_num": 93,
+        "slug": "comprehensive-b1-review"
+      },
+      {
+        "track": "b1",
+        "module_num": 22,
+        "slug": "conditionals-real"
+      },
+      {
+        "track": "b1",
+        "module_num": 23,
+        "slug": "conditionals-unreal"
+      },
+      {
+        "track": "b1",
+        "module_num": 7,
+        "slug": "daily-life-and-routines"
+      },
+      {
+        "track": "b1",
+        "module_num": 54,
+        "slug": "dative-nuances"
+      },
+      {
+        "track": "b1",
+        "module_num": 92,
+        "slug": "debate-and-opinion"
+      },
+      {
+        "track": "b1",
+        "module_num": 55,
+        "slug": "education-and-university"
+      },
+      {
+        "track": "b1",
+        "module_num": 42,
+        "slug": "figurative-motion"
+      },
+      {
+        "track": "b1",
+        "module_num": 53,
+        "slug": "genitive-nuances"
+      },
+      {
+        "track": "b1",
+        "module_num": 72,
+        "slug": "gerund-phrases"
+      },
+      {
+        "track": "b1",
+        "module_num": 70,
+        "slug": "gerunds-imperfective"
+      },
+      {
+        "track": "b1",
+        "module_num": 71,
+        "slug": "gerunds-perfective"
+      },
+      {
+        "track": "b1",
+        "module_num": 14,
+        "slug": "health-at-the-doctor"
+      },
+      {
+        "track": "b1",
+        "module_num": 52,
+        "slug": "homogeneous-members"
+      },
+      {
+        "track": "b1",
+        "module_num": 29,
+        "slug": "housing-and-renting"
+      },
+      {
+        "track": "b1",
+        "module_num": 26,
+        "slug": "imperative-nuances"
+      },
+      {
+        "track": "b1",
+        "module_num": 56,
+        "slug": "instrumental-nuances"
+      },
+      {
+        "track": "b1",
+        "module_num": 89,
+        "slug": "introductory-words"
+      },
+      {
+        "track": "b1",
+        "module_num": 68,
+        "slug": "leisure-culture-festivals"
+      },
+      {
+        "track": "b1",
+        "module_num": 35,
+        "slug": "motion-base-review"
+      },
+      {
+        "track": "b1",
+        "module_num": 41,
+        "slug": "motion-flight-swim"
+      },
+      {
+        "track": "b1",
+        "module_num": 36,
+        "slug": "motion-prefixes-arrival"
+      },
+      {
+        "track": "b1",
+        "module_num": 38,
+        "slug": "motion-prefixes-departure"
+      },
+      {
+        "track": "b1",
+        "module_num": 39,
+        "slug": "motion-prefixes-in-out"
+      },
+      {
+        "track": "b1",
+        "module_num": 40,
+        "slug": "motion-prefixes-transit"
+      },
+      {
+        "track": "b1",
+        "module_num": 91,
+        "slug": "narrative-mastery"
+      },
+      {
+        "track": "b1",
+        "module_num": 47,
+        "slug": "nature-and-environment"
+      },
+      {
+        "track": "b1",
+        "module_num": 19,
+        "slug": "noun-subclasses-feminine"
+      },
+      {
+        "track": "b1",
+        "module_num": 17,
+        "slug": "noun-subclasses-hissing"
+      },
+      {
+        "track": "b1",
+        "module_num": 16,
+        "slug": "noun-subclasses-masculine"
+      },
+      {
+        "track": "b1",
+        "module_num": 67,
+        "slug": "participle-phrases"
+      },
+      {
+        "track": "b1",
+        "module_num": 65,
+        "slug": "participles-active"
+      },
+      {
+        "track": "b1",
+        "module_num": 66,
+        "slug": "participles-passive"
+      },
+      {
+        "track": "b1",
+        "module_num": 30,
+        "slug": "passive-voice-intro"
+      },
+      {
+        "track": "b1",
+        "module_num": 3,
+        "slug": "people-and-relationships"
+      },
+      {
+        "track": "b1",
+        "module_num": 59,
+        "slug": "places-and-locations"
+      },
+      {
+        "track": "b1",
+        "module_num": 20,
+        "slug": "pluralia-tantum"
+      },
+      {
+        "track": "b1",
+        "module_num": 49,
+        "slug": "possessive-adjectives"
+      },
+      {
+        "track": "b1",
+        "module_num": 94,
+        "slug": "practice-exam"
+      },
+      {
+        "track": "b1",
+        "module_num": 60,
+        "slug": "prepositions-cause-purpose"
+      },
+      {
+        "track": "b1",
+        "module_num": 34,
+        "slug": "prepositions-spatial-review"
+      },
+      {
+        "track": "b1",
+        "module_num": 58,
+        "slug": "prepositions-temporal"
+      },
+      {
+        "track": "b1",
+        "module_num": 88,
+        "slug": "reading-literature"
+      },
+      {
+        "track": "b1",
+        "module_num": 28,
+        "slug": "reflexive-verbs-nuances"
+      },
+      {
+        "track": "b1",
+        "module_num": 83,
+        "slug": "reported-speech"
+      },
+      {
+        "track": "b1",
+        "module_num": 18,
+        "slug": "restaurant-and-food"
+      },
+      {
+        "track": "b1",
+        "module_num": 25,
+        "slug": "shopping-and-services"
+      },
+      {
+        "track": "b1",
+        "module_num": 69,
+        "slug": "short-form-adjectives"
+      },
+      {
+        "track": "b1",
+        "module_num": 15,
+        "slug": "simplification-consonants"
+      },
+      {
+        "track": "b1",
+        "module_num": 73,
+        "slug": "society-and-media"
+      },
+      {
+        "track": "b1",
+        "module_num": 87,
+        "slug": "text-compression"
+      },
+      {
+        "track": "b1",
+        "module_num": 85,
+        "slug": "text-register-formal"
+      },
+      {
+        "track": "b1",
+        "module_num": 86,
+        "slug": "text-register-informal"
+      },
+      {
+        "track": "b1",
+        "module_num": 37,
+        "slug": "traveling-ukraine"
+      },
+      {
+        "track": "b1",
+        "module_num": 32,
+        "slug": "verb-formation-suffixes"
+      },
+      {
+        "track": "b1",
+        "module_num": 31,
+        "slug": "verbal-nouns"
+      },
+      {
+        "track": "b1",
+        "module_num": 57,
+        "slug": "vocative-formal"
+      },
+      {
+        "track": "b1",
+        "module_num": 48,
+        "slug": "word-formation-adjectives"
+      },
+      {
+        "track": "b1",
+        "module_num": 50,
+        "slug": "word-formation-nouns"
+      },
+      {
+        "track": "b1",
+        "module_num": 9,
+        "slug": "work-and-career"
+      },
+      {
+        "track": "b2",
+        "module_num": 11,
+        "slug": "active-participles-past"
+      },
+      {
+        "track": "b2",
+        "module_num": 9,
+        "slug": "active-participles-present"
+      },
+      {
+        "track": "b2",
+        "module_num": 3,
+        "slug": "b2-impersonal-passive"
+      },
+      {
+        "track": "b2",
+        "module_num": 18,
+        "slug": "b2-one-member-sentences"
+      },
+      {
+        "track": "b2",
+        "module_num": 10,
+        "slug": "checkpoint-passive-voice"
+      },
+      {
+        "track": "b2",
+        "module_num": 42,
+        "slug": "checkpoint-register-domain"
+      },
+      {
+        "track": "b2",
+        "module_num": 21,
+        "slug": "checkpoint-syntax-i"
+      },
+      {
+        "track": "b2",
+        "module_num": 31,
+        "slug": "checkpoint-syntax-ii"
+      },
+      {
+        "track": "b2",
+        "module_num": 29,
+        "slug": "complex-syntax-ellipsis-parcelling"
+      },
+      {
+        "track": "b2",
+        "module_num": 25,
+        "slug": "correlative-constructions"
+      },
+      {
+        "track": "b2",
+        "module_num": 20,
+        "slug": "detached-members"
+      },
+      {
+        "track": "b2",
+        "module_num": 4,
+        "slug": "dim-zhytlo"
+      },
+      {
+        "track": "b2",
+        "module_num": 30,
+        "slug": "direct-indirect-speech"
+      },
+      {
+        "track": "b2",
+        "module_num": 26,
+        "slug": "emphasis-and-inversion"
+      },
+      {
+        "track": "b2",
+        "module_num": 19,
+        "slug": "homogeneous-members"
+      },
+      {
+        "track": "b2",
+        "module_num": 24,
+        "slug": "kharchuvannia-i-kukhnia"
+      },
+      {
+        "track": "b2",
+        "module_num": 28,
+        "slug": "kupivlia-i-servisy"
+      },
+      {
+        "track": "b2",
+        "module_num": 33,
+        "slug": "lexical-stylistic-devices"
+      },
+      {
+        "track": "b2",
+        "module_num": 35,
+        "slug": "mistsia-i-oriientyry"
+      },
+      {
+        "track": "b2",
+        "module_num": 23,
+        "slug": "multi-clause-sentences"
+      },
+      {
+        "track": "b2",
+        "module_num": 22,
+        "slug": "parenthetical-expressions"
+      },
+      {
+        "track": "b2",
+        "module_num": 12,
+        "slug": "participles-vs-relative-clauses"
+      },
+      {
+        "track": "b2",
+        "module_num": 7,
+        "slug": "passive-in-context"
+      },
+      {
+        "track": "b2",
+        "module_num": 1,
+        "slug": "passive-voice-system"
+      },
+      {
+        "track": "b2",
+        "module_num": 2,
+        "slug": "past-passive-participles"
+      },
+      {
+        "track": "b2",
+        "module_num": 32,
+        "slug": "phonetic-stylistic-devices"
+      },
+      {
+        "track": "b2",
+        "module_num": 14,
+        "slug": "phrases-word-combinations"
+      },
+      {
+        "track": "b2",
+        "module_num": 8,
+        "slug": "pobut-shchodenne"
+      },
+      {
+        "track": "b2",
+        "module_num": 15,
+        "slug": "predicate-types"
+      },
+      {
+        "track": "b2",
+        "module_num": 5,
+        "slug": "reflexive-passive"
+      },
+      {
+        "track": "b2",
+        "module_num": 37,
+        "slug": "register-business-ukrainian"
+      },
+      {
+        "track": "b2",
+        "module_num": 36,
+        "slug": "register-formal-informal"
+      },
+      {
+        "track": "b2",
+        "module_num": 38,
+        "slug": "register-formal-written"
+      },
+      {
+        "track": "b2",
+        "module_num": 40,
+        "slug": "register-literary-ukrainian"
+      },
+      {
+        "track": "b2",
+        "module_num": 41,
+        "slug": "register-public-discourse"
+      },
+      {
+        "track": "b2",
+        "module_num": 16,
+        "slug": "secondary-sentence-members"
+      },
+      {
+        "track": "b2",
+        "module_num": 17,
+        "slug": "sport-i-dozvillia"
+      },
+      {
+        "track": "b2",
+        "module_num": 27,
+        "slug": "stylistic-connectors"
+      },
+      {
+        "track": "b2",
+        "module_num": 34,
+        "slug": "syntactic-stylistic-devices"
+      },
+      {
+        "track": "b2",
+        "module_num": 6,
+        "slug": "third-person-plural-passive"
+      },
+      {
+        "track": "b2",
+        "module_num": 39,
+        "slug": "tradytsii-i-zvychai"
+      },
+      {
+        "track": "b2",
+        "module_num": 13,
+        "slug": "zdorovya-i-medytsyna"
+      },
+      {
+        "track": "folk",
+        "module_num": 14,
+        "slug": "istorychni-pisni"
+      },
+      {
+        "track": "folk",
+        "module_num": 15,
+        "slug": "striletski-povstanski-pisni"
+      }
+    ],
+    "seed_groups": [
+      {
+        "id": "surzhyk-to-avoid",
+        "source": "surzhyk_to_avoid",
+        "description": "Classifier-verified Russianism/surzhyk examples for visible Atlas warnings.",
+        "lemmas": [
+          "агенство",
+          "авось",
+          "автозагар",
+          "всьо",
+          "діюча",
+          "міроприємство",
+          "слідуючий"
+        ]
+      },
+      {
+        "id": "heritage-status-samples",
+        "source": "heritage_status_seed",
+        "description": "Source-backed heritage status sample pages for Atlas design conformance QA.",
+        "lemmas": [
+          "вельми",
+          "глагол",
+          "гетьман",
+          "опришок",
+          "десятина",
+          "кобіта"
+        ]
+      }
+    ],
+    "enrichment_generated": true,
+    "manifest_fingerprint": {
+      "schema_version": 1,
+      "fingerprint": "a7d9a4f4c020d482a5fdaabe8fca8d890cacf69d1f48563120ca635247c9a4af"
+    },
+    "entries_count": 27472
+  },
+  "original_top_level_order": [
+    "version",
+    "generated_at",
+    "stats",
+    "modules",
+    "seed_groups",
+    "entries",
+    "enrichment_generated",
+    "manifest_fingerprint",
+    "entries_count"
+  ],
+  "transaction": {
+    "before_sha256": "81c695cdd5a5fdbd09fe2062884f663f891368b52a8de9f18340c2100a998801",
+    "after_sha256": "d90df5a9fb1ce00ab19644d6a2c331a1277e4b03f17f6cbebd78610683fc7094",
+    "ordered_survivor_sha256": "8c4df87bb0c2abeff8b263dbac288746bfad7d8d1245102253cbb5846f06ef82",
+    "before_entries": 27472,
+    "after_entries": 27466
+  }
+}
