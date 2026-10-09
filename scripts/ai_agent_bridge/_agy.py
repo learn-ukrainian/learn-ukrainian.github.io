@@ -117,33 +117,36 @@ AGY_SEALED_REVIEW_UNSUPPORTED = (
     "AGY remains fine for advisory ask-agy *without* --review."
 )
 
-# Operator 2026-09-25: Gemini reviews Ukrainian only, never code.
+# Native AGY admits low/medium code review through the reviewer resolver.
+# ACP bridge reviews remain restricted to Ukrainian content.
 GEMINI_REVIEW_PROFILE_CHOICES = ("code", "ukrainian")
 GEMINI_REVIEW_AGENTS = frozenset({"agy", "gemini"})
 GEMINI_CODE_REVIEW_FORBIDDEN = (
-    "gemini_code_review_forbidden: operator 2026-09-25 — "
-    "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+    "gemini_code_review_forbidden: this route requires Ukrainian content. "
+    "Code review requires native AGY dispatch at low or medium risk "
+    "through the reviewer resolver (model-assignment.md)"
 )
 AGY_REVIEW_PROFILE_REQUIRED = (
     "agy_review_profile_required: a review request to agy/gemini requires "
     "--review-profile {code,ukrainian}. "
-    "code is refused (Gemini reviews Ukrainian only, never code — "
-    "operator 2026-09-25, model-assignment.md). "
+    "Native AGY code review requires low or medium risk and resolver admission; "
+    "the ACP bridge refuses code review. "
     "Ukrainian content review must pass --review-profile ukrainian."
 )
 
 
-def gemini_review_profile_error(profile: str | None) -> str | None:
-    """Refuse a Gemini review unless the profile is explicitly Ukrainian.
+def gemini_review_profile_error(profile: str | None, *, native_code_review: bool = False) -> str | None:
+    """Require Ukrainian content unless native code review is explicitly enabled.
 
     ``None`` means the review may proceed. A missing profile names the flag.
-    ``code`` cites the operator rule. Any other value is treated as missing.
+    Native dispatch still needs the resolver's risk and security-path gates.
+    ACP callers leave ``native_code_review`` false. Other profiles refuse.
     """
     normalized = (profile or "").strip().lower()
     if normalized == "ukrainian":
         return None
     if normalized == "code":
-        return GEMINI_CODE_REVIEW_FORBIDDEN
+        return None if native_code_review else GEMINI_CODE_REVIEW_FORBIDDEN
     return AGY_REVIEW_PROFILE_REQUIRED
 
 
@@ -474,9 +477,9 @@ def gemini_review_verdict_dispatch_error(
 
     Review-typed means ``--require-review-verdict``, ``--review`` / ``--type review``,
     or ``--pr``. The requested model and the model after fallback substitution
-    are both checked, on every agent. A matching dispatch needs
-    ``--review-profile ukrainian``. When it also names a PR or branch, every
-    changed path must be Ukrainian content. ``head_sha``, when set, is the
+    are both checked, on every agent. Native AGY code reviews proceed to the
+    resolver's risk and security-path gates. Ukrainian reviews require every
+    changed path to be Ukrainian content. ``head_sha``, when set, is the
     commit that diff covers; otherwise a PR number is resolved once.
     ``head_out`` receives that SHA. Implementation dispatches pass.
     """
@@ -485,9 +488,12 @@ def gemini_review_verdict_dispatch_error(
         return None
     if not gemini_review_targets_model(agent=agent, model=model, resolved_model=resolved_model):
         return None
-    profile_error = gemini_review_profile_error(profile)
+    native_code_review = (agent or "").strip().lower() in GEMINI_REVIEW_AGENTS
+    profile_error = gemini_review_profile_error(profile, native_code_review=native_code_review)
     if profile_error is not None:
         return profile_error
+    if (profile or "").strip().lower() == "code":
+        return None
     return gemini_pr_or_branch_content_error(
         pr_number=pr_number,
         branch=branch,

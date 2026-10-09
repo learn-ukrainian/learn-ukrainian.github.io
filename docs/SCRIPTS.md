@@ -2082,7 +2082,9 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
-# AGY — Ukrainian content review (Gemini reviews Ukrainian only, never code)
+# AGY bridge — Ukrainian content review; bridge code reviews are refused.
+# Native AGY admits low/medium risk code review through delegate.py;
+# high/critical, infra and security reviews exclude Gemini.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --review \

@@ -1587,7 +1587,7 @@ def _execute_invocation_plan(
     agy_budget: _AgyLaunchBudget | None = None,
     cli_version: str = "unknown",
 ) -> _ExecutionOutcome:
-    """Two launches maximum; cancellation and pre-model 503 share the retry."""
+    """Two launches maximum; cancellation, eligibility and provider faults share it."""
     kwargs = dict(
         agent_name=agent_name,
         adapter=adapter,
@@ -1693,11 +1693,20 @@ def _execute_invocation_plan(
             evidence.completion_reason == AGY_BACKGROUND_TASK_CANCELED
             and parse.failure_code == "provider_stream_incomplete"
         )
-        errors = (execution.stderr_text, parse.provider_error_text or "")
-        transient = any(
-            re.search(r"Eligibility check failed:\s*UNAVAILABLE \(code 503\)", line)
-            for text in errors
-            for line in text.splitlines()
+        fault = parse.agy_provider_fault
+        # Real parses carry typed headers. Keep the exact pre-model stderr
+        # path for callers without adapter diagnostic evidence (#8771).
+        transient = (
+            fault.kind == "eligibility" and fault.transient
+            if fault is not None
+            else any(
+                re.fullmatch(
+                    r"(?:agy_stream_result_error:\s*)?Eligibility check failed:\s*"
+                    r"UNAVAILABLE \(code 503\)(?::[^\n]*)?", line
+                )
+                for text in (execution.stderr_text, parse.provider_error_text or "")
+                for line in text.splitlines()
+            )
         )
         eligibility = (
             transient
@@ -1705,13 +1714,37 @@ def _execute_invocation_plan(
             and not parse.agy_killed_commands
             and evidence.completion_reason not in AGY_INCOMPLETE_RUN_REASONS
         )
-        if not cancellation and not eligibility:
+        provider_fault = fault is not None and fault.transient and not cancellation
+        if not cancellation and not eligibility and not provider_fault:
             return finish(execution)
         if len(budget.attempts) >= 2:
             budget.retry_disposition = "exhausted"
             budget.reroute_reason = "agy_retry_exhausted"
             return finish(execution)
-        if mode != "read-only":
+        if provider_fault and (
+            not execution.process_group_exited
+            or evidence.completion_reason in {
+                "agy_background_task_canceled", "agy_background_task_unconfirmed",
+                "agy_background_task_abandoned", "agy_print_timeout_partial",
+                "agy_headless_permission_denied",
+            }
+        ):
+            budget.retry_disposition = "unsafe_replay"
+            budget.reroute_reason = "unsafe_replay"
+            return finish(execution)
+        if provider_fault and not eligibility:
+            safe = mode == "read-only" or (
+                evidence.evidence_complete is True
+                and evidence.executed_command_count == 0
+                and evidence.side_effect_tool_count == 0
+                and evidence.unknown_command_count == 0
+                and evidence.kill_count == 0
+            )
+            if not safe:
+                budget.retry_disposition = "unsafe_replay"
+                budget.reroute_reason = "unsafe_replay"
+                return finish(execution)
+        elif mode != "read-only":
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
@@ -1759,7 +1792,10 @@ def _execute_invocation_plan(
             budget.retry_disposition = "unsafe_replay"
             budget.reroute_reason = "unsafe_replay"
             return finish(execution)
-        budget.retry_reason = "incomplete_cancellation" if cancellation else "pre_model_eligibility_503"
+        budget.retry_reason = (
+            "incomplete_cancellation" if cancellation else
+            "pre_model_eligibility_503" if eligibility else "transient_provider_fault"
+        )
         budget.retry_disposition = "retried"
         kwargs.update(plan=retry_plan, session_id=None)
 

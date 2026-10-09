@@ -24,7 +24,7 @@ from scripts.review.model_catalog import (
 )
 from scripts.review.reviewer_resolver import ResolverInputs, resolve_reviewer
 from scripts.review.role_resolution import expanded_legacy_view
-from tests.review.test_model_catalog import BASELINE, CAPTURE, FIXTURE, INPUTS, REVIEW_CAPACITY_BASELINE
+from tests.review.test_model_catalog import APPROVED_BASELINE, APPROVED_INPUTS, BASELINE, CAPTURE, FIXTURE, INPUTS
 
 
 @pytest.fixture
@@ -36,13 +36,13 @@ def test_v1_without_extension_and_v11_with_extension_are_accepted(catalog):
     assert validate_catalog(deepcopy(BASELINE["catalog"])) == BASELINE["catalog"]
     catalog["schema_version"] = "model-catalog.v1.1"
     assert validate_catalog(catalog)["schema_version"] == "model-catalog.v1.1"
-    assert expanded_legacy_view(catalog) == BASELINE["catalog"]
+    assert expanded_legacy_view(catalog) == APPROVED_BASELINE["catalog"]
 
 
 def test_expansion_is_independent_and_does_not_mutate_catalog(catalog):
     before = deepcopy(catalog)
     expanded = expanded_legacy_view(catalog)
-    assert expanded == BASELINE["catalog"]
+    assert expanded == APPROVED_BASELINE["catalog"]
     expanded["models"]["gpt-6.1-sol"]["roles"].clear()
     assert catalog == before
     assert expanded_legacy_view(BASELINE["catalog"]) == BASELINE["catalog"]
@@ -77,7 +77,7 @@ def test_wire_ids_belong_to_identity_and_transport_and_opus_is_primary(catalog):
     assert not cursor.exclusion_reasons
     assert cursor.argv[-1] == cursor.wire_id
     assert catalog["seats"]["anthropic_authority"]["routes"]["cursor_fallback"].get("last_resort", False) is False
-    assert expanded_legacy_view(catalog)["review_candidates"] == BASELINE["catalog"]["review_candidates"]
+    assert expanded_legacy_view(catalog)["review_candidates"] == APPROVED_BASELINE["catalog"]["review_candidates"]
 
 
 def test_launch_explicitly_pins_implicit_bridge_defaults():
@@ -371,9 +371,9 @@ def test_catalog_file_path_cli_in_clean_environment(tmp_path, args, expected_sta
         assert result.stderr == ""
 
 
-@pytest.mark.parametrize("index", range(len(INPUTS["reviewer"])))
+@pytest.mark.parametrize("index", range(len(APPROVED_INPUTS["reviewer"])))
 def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
-    case = deepcopy(INPUTS["reviewer"][index])
+    case = deepcopy(APPROVED_INPUTS["reviewer"][index])
     for key in ("required_capabilities", "subject_seats", "subject_families", "author_families"):
         if key in case:
             case[key] = frozenset(case[key])
@@ -384,7 +384,7 @@ def test_frozen_complete_reviewer_receipts(index, tmp_path, monkeypatch):
     monkeypatch.setattr(credit_lane, "published_credit_relief", partial(credit_lane.published_credit_relief,
                         now=CAPTURE["FIXED_NOW"]))
     actual = CAPTURE["observed"](lambda: resolve_reviewer(ResolverInputs(**case)))
-    assert json.loads(CAPTURE["encode"](actual)) == REVIEW_CAPACITY_BASELINE["reviewer"][index]
+    assert json.loads(CAPTURE["encode"](actual)) == APPROVED_BASELINE["reviewer"][index]
 
 
 def test_fixture_bytes_remain_frozen():

@@ -64,7 +64,8 @@ def test_denominator_admission_and_independence(profile, risk, author, health):
 @pytest.mark.parametrize("risk", RISKS)
 @pytest.mark.parametrize("native_dark", [False, True])
 def test_grok_transport_fallback_when_opus_unavailable(risk, native_dark):
-    snapshot = {"claude": "unhealthy"}
+    # Isolate the Grok fallback: AGY precedes it at low/medium risk (#10073).
+    snapshot = {"claude": "unhealthy", "agy": "unhealthy"}
     if native_dark:
         snapshot["grok"] = "unhealthy"
     result = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk, routing_snapshot=snapshot))

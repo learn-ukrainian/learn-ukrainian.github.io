@@ -31,6 +31,8 @@ from agent_runtime.usage import _reset_rate_limit_cache_for_tests
         "profiled",
         "profile-refused",
         "recon-profiled",
+        "code-profiled",
+        "code-profile-refused",
         "headless-denial",
         "headless-symlink",
         "headless-private-url",
@@ -51,7 +53,9 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
     profile = "ukrainian" if outcome in {"profiled", "profile-refused", "recon-profiled"} else None
-    successful = outcome in {"success", "profiled", "recon-profiled"}
+    if outcome in {"code-profiled", "code-profile-refused"}:
+        profile = "code"
+    successful = outcome in {"success", "profiled", "recon-profiled", "code-profiled"}
     headless = outcome.startswith("headless-")
     task_id = "agy-record"
     state_path = delegate._state_path(task_id)
@@ -72,6 +76,25 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
             },
         },
     )
+    prompt = "Review supplied items."
+    if profile == "code":
+        from tests import test_delegate_bounded_advisory as advisory
+
+        # Code review has no Ukrainian exemption. Bind a genuine sealed
+        # advisory envelope to this Flash launch before testing telemetry.
+        launch = advisory._launch
+        monkeypatch.setattr(advisory, "_worker_id", lambda: task_id)
+        monkeypatch.setattr(advisory, "_advisor_id", lambda: "sol-code-review")
+        monkeypatch.setattr(advisory, "_launch", lambda mode, cwd: {
+            **launch(mode, cwd), "agent": "agy", "model_id": "gemini-3.8-flash-high", "hard_timeout": 30,
+        })
+        admission, prompt = advisory._admitted_worker(
+            tasks, repo_root=repo, cwd=repo, owned=["tracked.txt"], brief=prompt,
+            task_contract="Review tracked.txt with read-only permissions.",
+        )
+        state = delegate._read_state(state_path)
+        state.pop("advisory_exemption")
+        delegate._write_state_atomic(state_path, {**state, **admission})
     telemetry = AgyTelemetry(
         attempts=(
             AgyAttempt(completion_reason="agy_background_task_canceled"),
@@ -99,7 +122,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         failure_code=None,
     )
     provision = MagicMock(return_value=repo / "lease-home")
-    if outcome == "profile-refused":
+    if outcome in {"profile-refused", "code-profile-refused"}:
         provision.side_effect = ValueError("agy_review_permissions_require_scoped_home")
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.prepare_agy_permission_home", provision)
     lease = tmp_path / "lease"
@@ -186,7 +209,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         delegate._run_worker(
             task_id=task_id,
             agent="agy",
-            prompt="Review supplied items.",
+            prompt=prompt,
             mode="read-only",
             cwd_str=str(repo),
             model="gemini-3.8-flash-high",
@@ -220,12 +243,13 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         assert "resolved-private-name" not in json.dumps(terminal)
         assert terminal["agy_retry_disposition"] == "no_retry"
         return
-    if outcome == "profile-refused":
+    if outcome in {"profile-refused", "code-profile-refused"}:
         assert terminal["agy_attempt_count"] == 0
         runtime.assert_not_called()
         provision.assert_called_once()
         return
-    expected_profile = profile if outcome != "recon-profiled" else None
+    # A review profile alone types the dispatch and requires isolation (#10073).
+    expected_profile = profile
     assert runtime.call_args.kwargs["tool_config"].get("review_profile") == expected_profile
     if expected_profile:
         assert runtime.call_args.kwargs["tool_config"]["agy_home_override"] == str(repo / "lease-home")

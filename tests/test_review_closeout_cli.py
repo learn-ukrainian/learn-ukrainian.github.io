@@ -818,7 +818,7 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
 
     # The latest author alone (GPT) would select Opus; the earlier Claude author excludes it.
     assert medium.returncode == 0, medium.stdout
-    assert payload["selected"]["name"] == "grok-4.7"
+    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
     assert payload["branch_facts"]["existing_families"] == ["anthropic", "openai"]
     trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
     assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
@@ -832,7 +832,7 @@ def test_resolve_reviewer_excludes_every_branch_author_and_agrees_with_the_recor
         task_root=tasks,
     )
     recorder._require_qualified_reviewer(
-        facts, task={"agent": "cursor", "review_risk": "medium"}, model="grok-4.7", family="xai"
+        facts, task={"agent": "agy", "review_risk": "medium"}, model="gemini-3.8-flash-high", family="google"
     )
     with pytest.raises(recorder.RecordError, match="not qualified"):
         recorder._require_qualified_reviewer(
@@ -954,7 +954,7 @@ def test_resolve_reviewer_attributes_only_the_branch_after_main_is_merged(tmp_pa
     payload = json.loads(result.stdout)
     assert payload["branch_facts"]["existing_families"] == ["anthropic"]
     assert payload["branch_facts"]["commits"] == 2
-    assert payload["selected"]["name"] == "grok-4.7"
+    assert payload["selected"]["name"] == "gemini-3.8-flash-high"
     trace = {entry["name"]: entry["reason"] for entry in payload["trace"]}
     assert "same family as author (anthropic)" in trace["claude-opus-5-5"]
     assert squash != head
@@ -1151,7 +1151,7 @@ def test_pr_mode_target_keeps_the_base_name_for_authorship_exclusion(tmp_path, m
     if excluded:
         assert result.returncode == 0, result.stdout + result.stderr
         assert body["branch_facts"]["existing_families"] == ["anthropic"]
-        assert body["selected"]["name"] == "grok-4.7"
+        assert body["selected"]["name"] == "gemini-3.8-flash-high"
     else:
         assert result.returncode == 1, result.stdout + result.stderr
         assert body["selected"] is None

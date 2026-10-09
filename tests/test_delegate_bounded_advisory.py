@@ -580,8 +580,8 @@ def test_m16_gemini_flash_with_conflicting_classification_is_refused(env, capsys
     assert env.spawned == [] and _worker_record(env.tasks) is None
 
 
-def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(ordinary_review_scope, env, capsys):
-    """#9538: --review-profile code types the dispatch as a code review, which Gemini never performs."""
+def test_m16_gemini_flash_code_review_with_ukrainian_family_is_refused(ordinary_review_scope, env, capsys):
+    """#10073 admits code review; a conflicting language classification still refuses."""
     rc = _dispatch(
         _argv(
             "--branch",
@@ -594,7 +594,7 @@ def test_m16_gemini_flash_code_review_profile_is_refused_at_reviewer_admission(o
             model=None,
         )
     )
-    _assert_refused(env, capsys, rc, "REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile code")
+    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
 
 
 def test_m16_ukrainian_family_with_code_review_profile_is_an_ambiguous_classification():
@@ -613,7 +613,7 @@ def test_m16_ukrainian_review_profile_in_write_mode_without_family_is_refused(en
     rc = _dispatch(
         _argv("--mode", "workspace-write", "--worktree", "--review-profile", "ukrainian", agent="agy", model=None)
     )
-    _assert_refused(env, capsys, rc, bounded_advisory.ENVELOPE_REQUIRED)
+    _assert_refused(env, capsys, rc, "agy_review_permissions_require_read_only")
 
 
 @pytest.mark.parametrize(
