@@ -1537,7 +1537,8 @@ _READ_REQUEST_RE = re.compile(
 )
 _FILESYSTEM_REQUEST_RE = re.compile(r"\b(?:files?|paths?|directories|directory|folders?|disk)\b", re.IGNORECASE)
 _API_REFERENCE_RE = re.compile(
-    r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$", re.IGNORECASE,
+    r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$"
+    r"|\breturns\s+[1-5]\d\d\s+(?:for|at)\s+$", re.IGNORECASE,
 )
 _FENCED_CODE_RE = re.compile(r"(?m)^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)^[ \t]*(?P=fence)[ \t]*$", re.DOTALL)
 _INTERPRETER_LINE_RE = re.compile(
@@ -1580,7 +1581,14 @@ def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
                 if (
                     part.startswith("/")
                     and not _FILESYSTEM_REQUEST_RE.search(context)
-                    and (part.startswith("/api/") or _API_REFERENCE_RE.search(context))
+                    and (
+                        part.startswith("/api/")
+                        or _API_REFERENCE_RE.search(context)
+                        or (
+                            re.fullmatch(r"/[\w-]+[.,;]?", part)
+                            and re.match(r"\s+(?:slash\s+)?command\b", span[token.end():], re.IGNORECASE)
+                        )
+                    )
                 ):
                     continue
                 yield re.sub(r":\d+(?::\d+)?$", "", part.rstrip(".,;)]}"))
