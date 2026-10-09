@@ -55,6 +55,21 @@ def test_canonical_source_matches_gpt6_role_matrix():
     }
 
 
+def test_home_instructions_agree_with_configured_worker_default():
+    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
+    assets = deployer.source_assets(root)
+    defaults = tomllib.loads(assets["config.toml"].decode())["agents"]
+    assert defaults["default_subagent_model"] == "gpt-6.1-sol"
+    assert defaults["default_subagent_reasoning_effort"] == "high"
+    instructions = " ".join(assets["AGENTS.md"].decode().split())
+    readme = " ".join((root / "README.md").read_text().split())
+    assert "The default subagent is Sol at high reasoning for eligible code work." in instructions
+    assert "The default spawned agent is Sol high for eligible code work." in readme
+    for document in (instructions, readme):
+        assert "Luna profiles remain available explicitly" in document
+    assert tomllib.loads(assets["agents/luna_coder_high.toml"].decode())["model"] == "gpt-6-luna"
+
+
 def test_astra_seat_is_retired_and_advisor_states_the_approval_rule():
     root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
     assert "astra_advisor_high" in deployer.SUPERSEDED_PROFILES

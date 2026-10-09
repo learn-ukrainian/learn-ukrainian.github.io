@@ -75,9 +75,9 @@ _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
 # is_avoid_lane() already force-excludes them from `pick`, this ordering only
 # affects stable table/tie-break display among AVOID rows.
 _CODE_LANE_PRIORITY = {
-    "cursor": 0,
-    "codex": 1,
-    "claude": 2,
+    "codex": 0,
+    "claude": 1,
+    "cursor": 2,
     "grok": 3,
     "kimi": 4,
     "gemini": 5,
@@ -878,8 +878,8 @@ def main(argv: list[str] | None = None) -> int:
             "(healthy | unhealthy | unknown). `remaining%` is the tightest plan window. A pace deficit read\n"
             "from a stale snapshot shows `unknown` with `UNKNOWN — stale/advisory`: ranked after every\n"
             "verified row, never a cooler seat, never --strict success. Unknown load prints `—` (JSON null).\n"
-            "Pick order: heat first; a cool Cursor leads; then plan headroom in 10-point bands, fewest in\n"
-            "flight, static lane rank. A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
+            "Pick order: heat first; then plan headroom in 10-point bands, fewest in flight, static lane\n"
+            "rank (Codex, Claude, Cursor first). A lane with >=3 write dispatches in 7 days and <60% done drops one band\n"
             "(JSON `write_success`). DeepSeek (prepaid API) is shown but never picked.\n"
             "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; scripts/orchestration/dispatch_admission.py;\n"
