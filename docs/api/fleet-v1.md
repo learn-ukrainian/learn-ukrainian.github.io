@@ -1,9 +1,8 @@
 # Fleet board API v1
 
-Read-only JSON API mounted at `/api/fleet/v1`. This slice publishes the
-contract only: an index of routes and a JSON Schema for each response.
-Later slices add the data routes. Existing unversioned fleet routes are
-unchanged.
+Read-only JSON API mounted at `/api/fleet/v1`. Responses share one envelope.
+Existing unversioned fleet routes, including `/api/state/routing-budget`,
+are unchanged.
 
 ## Envelope
 
@@ -20,9 +19,9 @@ Each source row is `{name, status, age_s, error}`.
 
 | Status | Meaning |
 | --- | --- |
-| `ok` | The location variable is set. This slice does not read it, so `age_s` is null. |
-| `stale` | Reserved for a later slice that has read a location older than its interval. |
-| `unavailable` | The status check failed. `error` is the token `unavailable`. |
+| `ok` | The source was read, or a route that does not read it found the variable set. `age_s` is null until a route has read the source. |
+| `stale` | A read source is older than twice its snapshot interval, or a budget refresh did not finish in time and an older result is being served. `age_s` is how old that result is. |
+| `unavailable` | The read or status check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
 The schema rejects a row whose status disagrees with `age_s` or `error`.
@@ -59,3 +58,57 @@ route as `{method, path, schema}`. `HEAD` and `OPTIONS` are omitted.
 `schema` is `fleet.v1.schema`. `data.endpoints` maps each schema id to a
 JSON Schema document. The `fleet.v1.index` document validates a response
 from the index route.
+
+### `GET /api/fleet/v1/roster`
+
+`schema` is `fleet.v1.roster`. The body is read from the JSON snapshot
+named by `FLEET_ROSTER_SNAPSHOT`. The location itself is not returned.
+Unset or blank is `not_configured`. An unreadable or non-object document
+is `unavailable`. Both still respond with HTTP 200 and the three layers,
+with no epics.
+
+`data.layers` is three groups, in order:
+
+| `layer` | `kind` | Who is listed |
+| --- | --- | --- |
+| `0` | `foundations` | Snapshot epics on layer 0, foundations first (`codebase`, then `data`), then any other layer-0 epic |
+| `1` | `consumers` | Snapshot epics on layer 1 |
+| `null` | `postponed` | Snapshot epics marked postponed |
+
+Each epic has `epic`, `depends_on`, `restart_condition`, `state`, and
+`flags`. A postponed epic is always `state: "off"`. A flag `value` is
+`true`, `false`, or `"unknown"`. Only a JSON boolean stays boolean; every
+other value, including a missing one, is `"unknown"`. Each flag also has
+`source` and `checked_at` (null when the snapshot did not give a usable
+token or timestamp).
+
+`data.foundation_status` is `{foundation, red, reasons}`. `red` is boolean
+or null. A missing or non-boolean `red` is null. `data.active_alerts` is
+`{name, summary}` from the snapshot's `alerts` list. Keys the snapshot
+adds beyond this contract are dropped.
+
+The snapshot may include `generated_at` and `interval_s`. When both are
+present and the document is older than twice `interval_s`, the
+`roster_snapshot` source is `stale` and `age_s` is set. The roster data
+is still returned.
+
+### `GET /api/fleet/v1/budget`
+
+`schema` is `fleet.v1.budget`. `data.subscriptions` has one row per
+subscription lane from the existing routing-budget compute:
+
+| Field | Meaning |
+| --- | --- |
+| `subscription` | Lane name |
+| `used_pct` | Weekly used percent. Null when the compute has no weekly figure. A measured zero stays zero. |
+| `elapsed_pct` | Percent of the weekly window that has elapsed. Null when it cannot be computed. |
+| `pace` | Pace stage from the existing weekly pace function, or null when used percent is unknown. |
+| `reset_at` | Weekly reset timestamp, or null |
+| `recommendation` | The lane status already computed for that subscription, or null |
+
+The route keeps a result for 15 seconds and waits at most 2 seconds for a
+refresh. When a refresh exceeds that wait and an older result exists, the
+response is that older result, the `routing_budget` source is `stale`, and
+`age_s` is the age of the cached result. A failure with nothing cached is
+`unavailable`, with null measurements, and HTTP 200. This route does not
+change the response of `/api/state/routing-budget`.
