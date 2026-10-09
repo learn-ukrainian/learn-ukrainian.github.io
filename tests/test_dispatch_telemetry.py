@@ -188,7 +188,7 @@ def test_agy_attempt_snapshot_is_in_first_terminal_checkpoint(tmp_path, monkeypa
         ordering.append("extracted")
         return result
 
-    def reap(*args):
+    def reap(*args, **kwargs):
         if headless:
             # Simulate the common reaper removing the invocation store. The
             # real adapter must have extracted evidence before this callback.

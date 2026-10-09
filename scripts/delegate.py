@@ -60,6 +60,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
+        "held_work": [str] | absent,  # explicit runtime-root relative files to preserve (#10000)
+        "preserved_held_work": object | absent,  # verified runtime-held-work.v1 retrieval manifest
         "stderr_excerpt": str | null,   # the worker's raw stderr: local; never quote it in a PR or issue
         "returncode": int | null,
         "returncode_reason": str | null,
@@ -1584,6 +1586,44 @@ def _scratch_scan_roots() -> list[Path]:
         raise ScratchScanRootError(exc.reason) from None
 
 
+def _preserve_runtime_tmp_held_work(
+    lease: Path,
+    record: dict[str, Any] | None,
+    response: str | None = None,
+) -> dict[str, Any]:
+    """Publish held-work retrieval metadata before any runtime lease deletion."""
+    from scripts.fleet import runtime_held_work
+
+    if record is None:
+        return {}
+    if response is None:
+        task_id = record.get("task_id")
+        response = saved_task_response(record, _state_path_no_create(task_id) if isinstance(task_id, str) else None)
+        if response is None and (record.get("result_file") or record.get("response_chars")):
+            raise runtime_held_work.HeldWorkPreservationError()
+    try:
+        bound_root = record.get("runtime_tmp_root")
+        if bound_root and Path(bound_root).absolute() != lease.absolute():
+            raise runtime_held_work.HeldWorkPreservationError()
+        receipt = runtime_held_work.preserve(
+            lease, primary=_main_checkout_root(_REPO_ROOT), record=record, response=response or ""
+        )
+        if receipt is None:
+            return {}
+        updates = {"preserved_held_work": receipt}
+        path = _state_path_no_create(record["task_id"])
+        with task_state_lock(path):
+            current = _read_state_json(path)
+            if current is None or any(current.get(key) != record.get(key) for key in ("task_id", "run_nonce")):
+                raise runtime_held_work.HeldWorkPreservationError()
+            current.update(updates)
+            _write_record_unlocked(path, current)
+        record.update(updates)
+        return updates
+    except (OSError, ValueError, TypeError):
+        raise runtime_held_work.HeldWorkPreservationError() from None
+
+
 def _sweep_runtime_tmp_orphans(
     *,
     now: float | None = None,
@@ -1672,12 +1712,19 @@ def _sweep_runtime_tmp_orphans(
                 continue
 
             try:
+                _preserve_runtime_tmp_held_work(lease, state)
                 bytes_freed = _runtime_tmp_lease_bytes(lease)
                 _remove_runtime_tmp_lease(lease, namespace)
-            except OSError as exc:
+            except (OSError, ValueError) as exc:
                 result["errors"] += 1
                 if len(error_details) < _RUNTIME_TMP_SWEEP_ERROR_DETAILS_LIMIT:
-                    error_details.append((lease.name, exc.errno, str(exc.filename or lease)))
+                    error_details.append(
+                        (
+                            lease.name,
+                            getattr(exc, "errno", None),
+                            getattr(exc, "code", None) or str(getattr(exc, "filename", None) or lease),
+                        )
+                    )
                 continue
             result["leases_reaped"] += 1
             result["bytes_freed"] += bytes_freed
@@ -1687,7 +1734,10 @@ def _sweep_runtime_tmp_orphans(
 def _reap_runtime_tmp_lease(
     lease_root: Path | str | None,
     namespace_root: Path | str | None,
-) -> dict[str, int | str | None]:
+    *,
+    task_record: dict[str, Any] | None = None,
+    response: str | None = None,
+) -> dict[str, Any]:
     """Best-effort, fd-relative deletion of one task-scoped runtime lease.
 
     This is intentionally stricter than a generic ``rm -rf``. It only removes
@@ -1695,10 +1745,12 @@ def _reap_runtime_tmp_lease(
     ``shutil.rmtree``'s fd-based implementation so a symlink swap cannot turn
     cleanup into a deletion outside the lease. A filesystem or validation
     failure is recorded on ``tmp_reap_error`` and does not fail the worker.
+    Cited held work is copied and its retrieval manifest published before
+    deletion; preservation failure refuses deletion with a typed reason.
     ``ScratchScanRootError`` propagates: a misconfigured scan root is not
     telemetry, and this function raises it before it deletes the lease.
     """
-    result: dict[str, int | str | None] = {
+    result: dict[str, Any] = {
         "tmp_bytes_freed": 0,
         "tmp_reap_error": None,
     }
@@ -1758,6 +1810,15 @@ def _reap_runtime_tmp_lease(
         if not getattr(shutil.rmtree, "avoids_symlink_attacks", False):
             raise RuntimeError("platform rmtree lacks symlink-attack protection")
 
+        if task_record is None:
+            task_record = _runtime_tmp_state_for_lease(
+                lease.name,
+                lease,
+                legacy_stem_index=_build_runtime_tmp_legacy_stem_index()
+                if _read_runtime_tmp_task_id_marker(lease) is None
+                else None,
+            )
+        result.update(_preserve_runtime_tmp_held_work(lease, task_record, response))
         bytes_freed = _runtime_tmp_lease_bytes(lease)
         _remove_runtime_tmp_lease(lease, namespace)
         if os.path.lexists(lease):
@@ -1766,7 +1827,7 @@ def _reap_runtime_tmp_lease(
     except ScratchScanRootError:
         raise
     except Exception as exc:
-        result["tmp_reap_error"] = (f"{type(exc).__name__}: {exc}")[:500]
+        result["tmp_reap_error"] = getattr(exc, "code", None) or (f"{type(exc).__name__}: {exc}")[:500]
     if worker_base_root is not None and resolved_lease is not None and not os.path.lexists(resolved_lease):
         _rebind_reaped_process_tmp(resolved_lease, worker_base_root)
     return result
@@ -9443,6 +9504,12 @@ def _augment_prompt_with_worktree(
         "`python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker "
         "cwd is a worktree.\n"
         f"{sparse_note}{test_scope}{delivery_note}{db_note}\n"
+        "[held work]\n"
+        "Keep patches, handoffs and diagnostics needed after exit in this worktree's "
+        "`batch_state/reports/`, and cite each file in your final response. "
+        "Runtime scratch is deleted at exit; if held work remains there, cite its absolute "
+        "file path or `$TMPDIR/<file>` in the final response so it is preserved. "
+        "Cite regular files, not directories or symlinks; automatic preservation has a 256 MiB cap.\n\n"
         f"{prompt}"
     )
 
@@ -10121,7 +10188,7 @@ def _run_worker(
     timed_out = False
     result = None
     substitution: dict[str, Any] | None = None
-    runtime_tmp_reap: dict[str, int | str | None] | None = None
+    runtime_tmp_reap: dict[str, Any] | None = None
 
     cancelled = False
     # ONE recovery region, spanning the runtime call itself through the moment
@@ -10457,7 +10524,10 @@ def _run_worker(
                     runtime_tmp_reap = _reap_runtime_tmp_lease(
                         runtime_tmp_root,
                         runtime_tmp_namespace_root,
+                        task_record=final_state,
+                        response=response,
                     )
+                    final_state.update(runtime_tmp_reap)
 
         duration_s = time.monotonic() - start
         final_status = _classify_final_status(
