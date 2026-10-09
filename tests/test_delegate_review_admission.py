@@ -20,6 +20,26 @@ from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resol
 from scripts.review import reviewer_resolver
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_native_gemini_low_medium_review_retains_requested_seat(risk):
+    result = target_admission._resolve_review_target(
+        "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+        profile="code", attempt=False, snapshot=None, budget_seat="agy",
+    )
+    assert result == ("agy", "gemini-3.8-flash-high")
+
+
+@pytest.mark.parametrize("risk,path", [("high", "ordinary.py"), ("critical", "ordinary.py"),
+                                      ("low", ".github/workflows/ci.yml"),
+                                      ("medium", "scripts/review/reviewer_resolver.py")])
+def test_gemini_review_attempt_refuses_high_risk_and_security(risk, path):
+    with pytest.raises(ReviewAdmissionRefused):
+        target_admission._resolve_review_target(
+            "agy", "gemini-3.8-flash-high", author_model="gpt-6.1-sol", risk=risk,
+            profile="code", attempt=True, snapshot=None, budget_seat="agy", changed_paths=(path,),
+        )
+
+
 @pytest.fixture(scope="module")
 def ordinary_review_repo(tmp_path_factory):
     from tests.test_ask_review_admission_floor import _git
@@ -1066,11 +1086,14 @@ def test_review_budget_uses_exact_resolver_choice_and_author_identity(monkeypatc
     args = _args("--check-budget", "--review-author-model", "claude-opus-5-5", "--review-risk", risk)
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
     assert calls and all(inputs.author_model == "claude-opus-5-5" and inputs.risk == risk for inputs, _ in calls)
-    # #9769: the resolver may select either admitted Grok transport at every risk.
+    # #10073 adds Gemini below high risk; Grok retains high/critical review.
     assert refusal is None
-    assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
+    if risk in {"low", "medium"}:
+        assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    else:
+        assert (target.recipient, target.model) in {("grok", "grok-4.7"), ("cursor", "grok-4.7-high")}
     assert routing.substitution["source"] == "reviewer-resolver"
-    assert calls[-1][1].selected.concrete_model == "grok-4.7"
+    assert calls[-1][1].selected.concrete_model == ("gemini-3.8-flash-high" if risk in {"low", "medium"} else "grok-4.7")
 
 
 def _admit_cursor_review(model, author, risk):
@@ -1627,7 +1650,8 @@ def test_ineligible_review_refuses_before_budget_probe(monkeypatch, seat, model)
         pytest.fail("ineligible review must not probe budget")
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
-    args = _args("--agent", seat, "--model", model, "--check-budget")
+    risk_flags = ("--review-risk", "high") if seat == "agy" else ()
+    args = _args("--agent", seat, "--model", model, "--check-budget", *risk_flags)
     routing = delegate._DispatchRouting()
     refusal, target = delegate._admit_dispatch_target(
         args,
@@ -1911,7 +1935,7 @@ def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):
     assert delegate._dispatch_is_review_typed(_args(*extra, verdict=False))
 
 
-@pytest.mark.parametrize("seat,model", [("kimi", None), ("agy", "gemini-3.8-flash-high")])
+@pytest.mark.parametrize("seat,model", [("kimi", None)])
 def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_code(monkeypatch, seat, model):
     """#9538: a code-review dispatch without trusted inputs still passes reviewer admission."""
     pin = ("--model", model) if model else ()
@@ -1919,6 +1943,15 @@ def test_code_review_without_the_verdict_flag_refuses_a_seat_that_never_reviews_
     (refusal, target), _ = _admit(args, monkeypatch)
     assert target is None
     assert refusal
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_gemini_code_review_without_verdict_flag_is_admitted(monkeypatch, risk):
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-profile", "code",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, "--force-agent", verdict=False)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
 
 
 def test_medium_risk_review_without_the_verdict_flag_keeps_the_requested_sonnet_seat(monkeypatch):

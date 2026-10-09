@@ -777,10 +777,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(
                     f"review_candidates.{name}.transport_fallback_for must reference a primary transport of the same model"
                 )
-        if model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy":
+        if (model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy") and (
+            candidate.get("route") != "agy"
+            or transport_raw != "agy"
+            or models[model_id]["family"] != "google"
+        ):
             raise ModelCatalogError(
-                f"review_candidates.{name} violates operator 2026-09-25: "
-                "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+                f"review_candidates.{name}: Gemini code review requires the native AGY route (#10073)"
             )
         if models[model_id]["lifecycle"] not in {"active", "fallback"}:
             raise ModelCatalogError(f"review candidate {name!r} must reference an active or fallback model")

@@ -192,13 +192,13 @@ review_scheduler:
       credential_limit: 1
       capacity_weight: 1.0
     agy:
-      formal_review_eligible: false
-      formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
+      # #10073: direct exact-head worktree review; no parent ACP MCP dependency.
+      formal_review_eligible: true
       models: [{role: bounded_fallback}]
       participant: agy
-      adapter_transport: acp
+      adapter_transport: native_agy
       catalog_transport: agy
-      sealed_executable: agent_runtime.runner:invoke_inter_agent
+      sealed_executable: scripts/delegate.py
       quota_bucket: agy
       credential_bucket: agy
       quota_limit: 2
@@ -632,8 +632,8 @@ models:
     lifecycle: active
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
     # The first-choice Ukrainian reviewer (core.md P2). The 2026-10-08 approval adds low-risk and
-    # medium-risk code review (not yet wired in the resolver); high and critical stay Opus 5.5 / Sol 6.1.
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review]
+    # medium-risk code review through native AGY; high/critical and security paths remain excluded.
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review, long_context_review]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
@@ -1099,10 +1099,11 @@ review_candidates:
   composer-2.5: {role: legacy_reviewers, seat: cursor_coder, route_name: native, field: candidate}
   pool: {role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: candidate}
   pool-xs: {role: legacy_reviewers, seat: light_reviewer, route_name: native, field: candidate}
+  gemini-3.8-flash-high: {role: legacy_reviewers, seat: google_bounded, route_name: native, field: candidate}
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
-# cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
-# AGY remains fail-closed because its text-only wrapper cannot consume the
+# cold-start loop (prioritize → delegate → CF → merge-in-lane).
+# Native AGY reviews low/medium code in an exact-head worktree; its ACP wrapper cannot consume the
 # parent-owned sealed MCP. Native and Cursor Grok review code/infra with runtime
 # attestation at every risk (#9769); Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
@@ -1167,8 +1168,8 @@ orchestrator_seats:
       gemini-3.8-flash-high, and refuses every other Gemini model id. The 2026-10-08 approval also
       admits Gemini as a formal reviewer of low-risk and medium-risk code, and of Ukrainian work with
       the Sources MCP; high-risk and critical review stay with Opus 5.5 or Sol 6.1 until Gemini 4
-      passes docs/runbooks/agy-authority-qualification.md. The resolver and reviewer admission still
-      refuse Gemini code review until that seat is wired. Design input and designated approval stay
+      passes docs/runbooks/agy-authority-qualification.md. Security-path code reviews remain excluded.
+      Native AGY review dispatches run directly in the exact-head worktree. Design input and designated approval stay
       with Opus 5.5 and Sol 6.1. Gemini 4 is re-evaluated at general availability.
   cursor:
     model_id: {role: legacy_reviewers, seat: xai_reviewer}
@@ -1250,13 +1251,10 @@ formal_cf_defaults:
     fallback_transport: cursor
     fallback_model_id: {role: legacy_reviewers, seat: xai_reviewer}
   agy:
-    # Orchestrator pin + ladder seat; not a reviewer transport until
-    # sealed isolation (#5555). Operator 2026-09-25 also excludes AGY from
-    # every code-review candidate and ladder; this is not a CF route.
+    # #10073: native low/medium code review; Ukrainian review needs Sources MCP.
     model_id: {role: bounded_fallback}
     effort: high
-    formal_review_eligible: false
-    isolation_issue: 5555
+    formal_review_eligible: true
 
 review_ladders:
   # Hard filters precede last-resort preference, then suitability and quality.
@@ -1289,6 +1287,7 @@ review_ladders:
     - [{role: anthropic_authority_reviewer, seat: anthropic_authority, route_name: cursor_fallback, field: legacy_label}]
     - [{role: legacy_reviewers, seat: anthropic_practical, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: cursor_coder, route_name: native, field: legacy_label}]
+    - [{role: legacy_reviewers, seat: google_bounded, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: volume_reviewer, route_name: native, field: legacy_label}]
     - [{role: legacy_reviewers, seat: light_reviewer, route_name: native, field: legacy_label}]
   low: *practical_first_code_review
@@ -1534,10 +1533,15 @@ seats:
     model_id: gemini-3.8-flash-high
     bindings:
     - bounded_fallback
+    - legacy_review_candidate
     priority: 100
     decision_reference: scripts/config/model_catalog.yaml#execution_routing
     routes:
       native:
+        legacy_name: gemini-3.8-flash-high
+        review_profiles: [code, infra]
+        capabilities: [code_review]
+        health_keys: [agy, gemini]
         route: agy
         transport: agy
         effort: high
@@ -1589,6 +1593,7 @@ roles:
     - anthropic_practical/native
     - volume_reviewer/native
     - light_reviewer/native
+    - google_bounded/native
     cardinality: many
     risk: low
   code_review_medium:
@@ -1601,6 +1606,7 @@ roles:
     - anthropic_practical/native
     - volume_reviewer/native
     - light_reviewer/native
+    - google_bounded/native
     cardinality: many
     risk: medium
   code_review_high:

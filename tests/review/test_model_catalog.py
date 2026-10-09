@@ -84,6 +84,42 @@ def approved_review_baseline(baseline):
 
 
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
+GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
+GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+APPROVED_BASELINE = {**REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"]}
+APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+def test_gemini_fixture_preserves_historical_cases_and_other_seat_eligibility():
+    assert hashlib.sha256(GEMINI_OVERLAY_PATH.read_bytes()).hexdigest() == (
+        "e397875d12488c783f2edac83ac76fdb52d05cbf965a5cf54e288901ebdaaa25"
+    )
+    assert set(GEMINI_OVERLAY["surfaces"]) == {"catalog", "roles", "routing_holders", "reviewer"}
+    assert set(GEMINI_OVERLAY["inputs"]) == {"roles", "reviewer"}
+    def key(value):
+        return json.dumps(value, sort_keys=True)
+    for surface in ("roles", "reviewer"):
+        new_inputs = {key(row) for row in APPROVED_INPUTS[surface]}
+        assert all(key(row) in new_inputs for row in INPUTS[surface])
+    receipts = dict(zip(map(key, APPROVED_INPUTS["reviewer"]), APPROVED_BASELINE["reviewer"], strict=True))
+    for inputs, before in zip(INPUTS["reviewer"], REVIEW_CAPACITY_BASELINE["reviewer"], strict=True):
+        after = receipts[key(inputs)]
+        if before == after:
+            continue
+        old, new = deepcopy(before), deepcopy(after)
+        assert isinstance(old["value"], dict) and isinstance(new["value"], dict)
+        chosen = new["value"]["selected"]
+        if chosen != old["value"]["selected"]:
+            assert inputs["risk"] in {"low", "medium"}
+            assert chosen["name"] == "gemini-3.8-flash-high"
+        new["value"]["trace"] = [row for row in new["value"]["trace"] if row["family"] != "google"]
+        for receipt in (old, new):
+            for row in receipt["value"]["trace"]:
+                if row["status"] == "selected":
+                    row["status"] = "eligible"
+            for field in ("selected", "fail_closed_reason", "substitution_note"):
+                receipt["value"].pop(field, None)
+        assert old == new, inputs
 
 
 def test_review_capacity_fixture_is_pinned_and_scope_bounded():
@@ -163,7 +199,7 @@ def test_frozen_hashes_and_matrix_denominator():
 
 
 def test_legacy_catalog_equals_approved_routing_baseline():
-    assert expanded_legacy_view() == BASELINE["catalog"]
+    assert expanded_legacy_view() == APPROVED_BASELINE["catalog"]
 
 
 @pytest.mark.parametrize("entrypoint,args", [
@@ -231,14 +267,14 @@ def test_fresh_capture_equals_every_frozen_surface(tmp_path, host_clis):
     assert result.returncode == 0, result.stderr
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     assert_frozen_surfaces(actual)
-    assert json.loads((output / "inputs.json").read_bytes()) == INPUTS
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
     assert (output / "occurrences.json.gz").read_bytes() == (FIXTURE / "occurrences.json.gz").read_bytes()
 
 
 def assert_frozen_surfaces(actual):
     assert actual.keys() == BASELINE.keys()
     for surface in BASELINE:
-        assert actual[surface] == REVIEW_CAPACITY_BASELINE[surface], f"approved surface differs: {surface}"
+        assert actual[surface] == APPROVED_BASELINE[surface], f"approved surface differs: {surface}"
     assert len(actual["launchers"]) == len(BASELINE["launchers"]) == 70
 
 
@@ -272,7 +308,7 @@ def main():
 
 @pytest.mark.parametrize("surface", BASELINE)
 def test_fresh_capture_comparison_rejects_each_mutated_surface(surface):
-    actual = dict(REVIEW_CAPACITY_BASELINE)
+    actual = dict(APPROVED_BASELINE)
     actual[surface] = {"mutated": True}
     with pytest.raises(AssertionError, match=f"approved surface differs: {surface}"):
         assert_frozen_surfaces(actual)
@@ -406,7 +442,7 @@ def test_capture_preserves_success_and_streams(capsys):
 
 
 def test_capture_matrix_is_frozen():
-    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == INPUTS["reviewer"]
+    assert CAPTURE["reviewer_inputs"](load_model_catalog()) == APPROVED_INPUTS["reviewer"]
 
 
 def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
@@ -435,14 +471,14 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     expected = FIXTURE / "no-cli"
-    for name in ("inputs.json", "occurrences.json.gz"):
-        assert (output / name).read_bytes() == (expected / name).read_bytes(), name
+    assert json.loads((output / "inputs.json").read_bytes()) == APPROVED_INPUTS
+    assert (output / "occurrences.json.gz").read_bytes() == (expected / "occurrences.json.gz").read_bytes()
     for row in (output / "SHA256SUMS").read_text().splitlines():
         digest, name = row.split()
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_review_baseline(original)
+    assert actual == {**approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"]}
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)
