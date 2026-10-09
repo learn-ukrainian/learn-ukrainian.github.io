@@ -20,6 +20,7 @@ import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
 import scripts.api.state_router as state_router
 from scripts.api.monitor_context import fixture_context
+from scripts.lib import rules_core
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -30,7 +31,7 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 
 
 def test_rule_sources_includes_all_unscoped_files():
-    """All always-load (API-served) rule files must be served by /api/rules."""
+    """The explicit full-reference archive retains all its original sources."""
     expected = {
         "agents_extensions/shared/rules/operator-expectations.md",
         "agents_extensions/shared/rules/critical-rules.md",
@@ -71,8 +72,8 @@ def test_rule_sources_includes_all_unscoped_files():
 
 
 def test_rules_live_assembly_includes_fleet_scorecard():
-    """Live PROJECT_ROOT must serve doctrine + scorecard so cold-starts see them."""
-    resp = client.get("/api/rules?format=json")
+    """Doctrine + scorecard remain available through the task-scoped driver path."""
+    resp = client.get("/api/rules?scope=task:driver&format=json")
     assert resp.status_code == 200
     body = resp.json()
     sources = body["sources"]
@@ -81,12 +82,12 @@ def test_rules_live_assembly_includes_fleet_scorecard():
     md = body["markdown"]
     assert "Fleet role scorecard" in md
     assert "Fleet topology" in md or "orchestrator" in md.lower()
-    assert body["hash"] == hashlib.sha256(md.encode("utf-8")).hexdigest()
+    assert body["hash"] == rules_router.scope_digest("task:driver", md)
 
 
 def test_rules_live_assembly_includes_fleet_comms_coordination():
-    """Standalone TUI/UI drivers receive the fleet-comms authority SSOT."""
-    resp = client.get("/api/rules?format=json")
+    """Drivers explicitly load the fleet-comms authority SSOT for their task."""
+    resp = client.get("/api/rules?scope=task:fleet-comms&format=json")
     assert resp.status_code == 200
     body = resp.json()
     assert "agents_extensions/shared/rules/fleet-comms-coordination.md" in body["sources"]
@@ -105,16 +106,17 @@ def test_rules_live_assembly_includes_fleet_comms_coordination():
 def test_rules_markdown_default(monkeypatch, tmp_path):
     """GET /api/rules returns text/markdown with an X-Rules-Hash header."""
     # Redirect the router at synthetic rule files so the test is hermetic.
-    rule_file = tmp_path / "rules.md"
+    rule_file = tmp_path / rules_core.CORE_REL
+    rule_file.parent.mkdir(parents=True)
     rule_file.write_text("# Rule A\n\nBe excellent.\n", encoding="utf-8")
-    monkeypatch.setattr(rules_router, "RULE_SOURCES", (str(rule_file.relative_to(tmp_path.parent)),))
-    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path.parent))
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
 
     resp = client.get("/api/rules")
     assert resp.status_code == 200
     assert resp.headers["content-type"].startswith("text/markdown")
     assert "Be excellent." in resp.text
     assert resp.headers.get("X-Rules-Hash"), "missing X-Rules-Hash"
+    assert resp.headers["X-Rules-Scope"] == "core"
 
 
 def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
@@ -129,7 +131,7 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
         ("a.md", "b.md", "does-not-exist.md"),
     )
 
-    resp = client.get("/api/rules?format=json")
+    resp = client.get("/api/rules?scope=full&format=json")
     assert resp.status_code == 200
     body = resp.json()
     assert body["sources"] == ["a.md", "b.md"]  # missing file omitted, order preserved
@@ -138,11 +140,44 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
 
 
-def test_rules_500_when_no_sources_readable(monkeypatch, tmp_path):
+def test_rules_missing_core_refuses_instead_of_serving_archive(monkeypatch, tmp_path):
+    """A readable archive never substitutes for a missing binding core."""
+    monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
+    (tmp_path / "archive.md").write_text("Full reference.\n", encoding="utf-8")
+    monkeypatch.setattr(rules_router, "RULE_SOURCES", ("archive.md",))
+    resp = client.get("/api/rules")
+    assert resp.status_code == 503
+    assert rules_core.CORE_REL in resp.json()["detail"]
+    assert rules_router.rules_hash(project_root=tmp_path) == ""
+    assert client.get("/api/rules?scope=full").status_code == 200
+
+
+def test_rules_archive_500_when_no_sources_readable(monkeypatch, tmp_path):
     monkeypatch.setattr(api_main.app.state, "ctx", fixture_context(tmp_path))
     monkeypatch.setattr(rules_router, "RULE_SOURCES", ("missing.md",))
-    resp = client.get("/api/rules")
+    resp = client.get("/api/rules?scope=full")
     assert resp.status_code == 500
+
+
+def test_binding_rules_are_core_with_task_scoped_references():
+    response = client.get("/api/rules?format=json")
+    assert response.status_code == 200
+    body = response.json()
+    assert body == client.get("/api/rules?scope=core&format=json").json()
+    assert body["sources"] == [rules_core.CORE_REL]
+    assert body["markdown"] == rules_core.core_text()
+    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_000
+    assert body["scope"] == "core"
+    assert "task-scoped-reading.md" in body["markdown"]
+    assert "<!-- p4-worktree: O04 -->" in body["markdown"]
+    assert "<!-- p1-review: O14 -->" in body["markdown"]
+    assert "<!-- r2-lease: F06 -->" in body["markdown"]
+    assert "<!-- p8-public: A23 -->" in body["markdown"]
+    assert "<!-- p8-secrets: Y04 -->" in body["markdown"]
+
+    manifest = client.get("/api/state/manifest").json()
+    assert manifest["rules"]["hash"] == manifest["rules_core"]["hash"] == body["hash"]
+    assert client.get(manifest["rules"]["url"]).content == body["markdown"].encode("utf-8")
 
 
 # ---------------------------------------------------------------------

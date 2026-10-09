@@ -2969,12 +2969,14 @@ hashes against its local cache and only refetches what changed.
 
 ### `GET /api/rules?format={markdown,json}`
 
-Condensed always-load rule text for agent cold-start. Source of truth is
-the checked-in paths in `scripts/api/rules_router.RULE_SOURCES` (not the
+Binding core for agent cold-start. By default, this endpoint serves
+`agents_extensions/shared/rules/core.md`, identically to `scope=core`.
+`scope=full` explicitly selects the complete reference archive from the
+checked-in paths in `scripts/api/rules_router.RULE_SOURCES` (not the
 deployed `.claude/rules/` copies), so a fresh clone or worktree that
 hasn't run `npm run agents:deploy` still gets correct content.
 
-Assembly order (stable; hash changes if this list or any file changes):
+Full-reference assembly order (stable; hash changes if this list or any file changes):
 
 1. Operator expectations + critical + non-negotiable + workflow
 2. Worktree / CLI hygiene rules
@@ -2983,8 +2985,8 @@ Assembly order (stable; hash changes if this list or any file changes):
 5. **`docs/best-practices/fleet-role-scorecard.md`** — living role scoreboard (#5474 / #5529)
 
 Machine routing (`model-assignment.md`) wins on conflict with the living
-scorecard. Agents that previously only saw topology via rules now also
-receive the scoreboard without a second file read.
+scorecard. Explicit full-reference readers receive the scoreboard without
+a second file read.
 
 - `format=markdown` (default) → `text/markdown; charset=utf-8` with
   an `X-Rules-Hash` header. Drop-in for a system prompt. With telemetry
@@ -2993,8 +2995,8 @@ receive the scoreboard without a second file read.
   an SDK needs to reconcile the hash against its on-disk cache. With
   telemetry enabled, the response also includes top-level `_telemetry`.
 
-**Scoped selections — `scope=core | content | task:<name>`.** Without
-`scope` the full bundle above is served unchanged. `scope=core` serves
+**Scoped selections — `scope=core | content | task:<name> | full`.** Without
+`scope` the binding core is served, capped at 40,000 UTF-8 bytes. `scope=core` serves
 `agents_extensions/shared/rules/core.md`, the rules core every seat
 starts with; `scope=content` adds `core-curriculum.md` for curriculum
 seats; `scope=task:<name>` serves one `task-scoped-reading.md` row
@@ -3002,9 +3004,10 @@ seats; `scope=task:<name>` serves one `task-scoped-reading.md` row
 `fleet-comms`, `intake`, `review`, `task-family`, `rollover`). Sources and
 assembly come from `scripts/lib/rules_core.py`, the loader launchers,
 `delegate.py` workers and ACP calls use offline, so online and offline
-bytes are identical. A scoped hash is sha256 over `scope=<scope>\n` plus
-the Markdown, so its `ETag` never matches another scope or the full
-bundle; responses carry `X-Rules-Scope` and JSON adds `scope`. The
+bytes are identical. `scope=full` retains the reference archive's source order,
+bytes and hash. A core, content or task hash is sha256 over
+`scope=<scope>\n` plus the Markdown, so its `ETag` never matches another
+scope or the full archive; responses carry `X-Rules-Scope` and JSON adds `scope`. The
 manifest advertises `rules_core` and `rules_content` hashes; the SDK
 caches `MonitorClient.rules(scope=...)` under `rules:<scope>`. An unknown
 scope is `400`; a scope whose file is missing, unreadable or empty in the checkout (the core, or the addendum for `content`) is `503` naming the repo-relative path; nothing is served in its place.

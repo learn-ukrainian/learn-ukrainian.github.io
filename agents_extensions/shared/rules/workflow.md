@@ -146,7 +146,7 @@ mission needs operator/advisor approval.
 
 Use canonical Git sources selected for the task. Do not load another harness's
 root instructions or unrelated session state during Codex startup. Monitor's
-complete `/api/rules?format=markdown` reference supports cached full-policy
+complete `/api/rules?scope=full&format=markdown` reference supports cached full-policy
 reads; when unavailable, the same task-scoped selector and ordered full fallback
 remain available in `agents_extensions/shared/rules/_load-via-api.md`.
 
@@ -199,12 +199,42 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
    review, reviewed head, and author qualification; require **CI Gate green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
-makes a prior APPROVE stale. Automated merge pipelines cannot replace review gates; enqueue
-with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
+voids both approval and CI; re-establish both on the new head. Automated merge pipelines cannot replace review gates; enqueue
+with the task-prescribed interpreter and `-m scripts.publish pr-merge --number <N>` after both gates (never `--auto` as a
 substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
 only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or apply merge-automation labels.
 `--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
+Only non-draft PRs with no unresolved BLOCKING finding may enqueue. Pending
+or cancelled required checks fail the gate; never use `--admin` to bypass CI.
+Queued is not MERGED: diagnose conflicts, changed bases, failed checks or queue
+ejection, and re-establish the gates before re-enqueueing. The rules core's
+unchanged-head CI recovery allowance and evidence requirements still bind.
+
+### Post-merge cleanup — the single landing and cleanup recipe
+
+After the queue lands the PR, confirm `MERGED` and the actual merge SHA. Wait
+for every worker/reviewer process using the target worktrees to exit, then run
+with the task-prescribed project interpreter:
+
+```bash
+.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
+```
+
+Require exit 0 and the receipt proving the PR's worktrees, temporary residue,
+and local and remote branches are gone before the next large dispatch. A
+non-zero exit or `SKIPPED` blocks closeout: record its evidence and owner and
+resolve safely, never retry with `--force`. Remote branches may be deleted only
+after `MERGED`; queued is not merged. The common reaper owns removal, never a
+second deletion path. If it cannot run, use only the rescue restore and narrowly
+allowlisted fallback in `docs/runbooks/worktree-cleanup.md`.
+
+For settled tasks use `scripts.fleet.post_task_reap --task-id <id>` (dry-run
+first, `--apply` through the common reaper); review trees are reaped as soon as
+the verdict is posted and the reviewer exits. Before a branch sweep, inspect
+`scripts.hygiene.branch_sweep --json` receipts; then apply only safe dispositions
+and prove no residue. Close linked issues only with all acceptance criteria
+verified on the delivered artifact; name any residual, owner and dependency.
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
@@ -392,7 +422,7 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 `docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
 
 - **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
-  issue list. Check `/api/issues/streams` (or the session-setup 11b warning) for drift.
+  issue list. Check `/api/issues/streams` (from `scripts.orchestration.issue_stream_audit`) for drift.
 - **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
   (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
   and gets flagged at every agent's cold start until adopted.

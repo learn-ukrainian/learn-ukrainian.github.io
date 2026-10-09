@@ -108,6 +108,7 @@ def _anchors(seat: str) -> tuple[str, ...]:
 
 def _assert_core(context: str, seat: str, row: str, *, context_bytes: int | None = None) -> None:
     block = rules_core.core_block(seat)
+    assert len(block.encode("utf-8")) <= 40_000, f"{row}: binding {seat} block exceeds 40 KB"
     assert block in context, f"{row}: the exact {seat} block is not in the assembled context"
     for anchor in _anchors(seat):
         assert anchor in context, f"{row}: anchor {anchor!r} missing"
@@ -954,16 +955,45 @@ def api_client():
     return TestClient(api_main.app, raise_server_exceptions=False)
 
 
-def test_legacy_bundle_is_unchanged(api_client) -> None:
+def test_default_binding_bundle_is_the_bounded_core(api_client) -> None:
+    body = api_client.get("/api/rules?format=json").json()
+    assert body == api_client.get("/api/rules?scope=core&format=json").json()
+    assert body["scope"] == "core"
+    assert body["sources"] == [rules_core.CORE_REL]
+    assert body["markdown"] == rules_core.core_text()
+    assert body["bytes"] == len(body["markdown"].encode("utf-8")) <= 40_000
+    plain = api_client.get("/api/rules")
+    assert plain.text == body["markdown"]
+    assert plain.headers["x-rules-scope"] == "core"
+    assert api_client.get("/api/rules", headers={"If-None-Match": plain.headers["etag"]}).status_code == 304
+
+
+def test_full_reference_is_preserved_only_by_explicit_scope(api_client) -> None:
     from scripts.api import rules_router
 
-    body = api_client.get("/api/rules?format=json").json()
+    body = api_client.get("/api/rules?scope=full&format=json").json()
     assert set(body) >= {"hash", "bytes", "sources", "markdown"}
-    assert "scope" not in body
+    assert body["scope"] == "full"
     assert body["sources"] == [rel for rel in rules_router.RULE_SOURCES if (REPO / rel).is_file()]
+    expected, sources, digest = rules_router._assemble_rules(REPO)
+    assert (body["markdown"], body["sources"], body["hash"]) == (expected, sources, digest)
     assert body["hash"] == hashlib.sha256(body["markdown"].encode("utf-8")).hexdigest()
-    plain = api_client.get("/api/rules")
-    assert "x-rules-scope" not in plain.headers
+    assert body["bytes"] == len(expected.encode("utf-8"))
+    plain = api_client.get("/api/rules?scope=full")
+    assert plain.headers["x-rules-scope"] == "full"
+    assert plain.text == expected
+    assert rules_router.rules_hash(project_root=REPO, scope="full") == digest
+    assert api_client.get("/api/rules?scope=full", headers={"If-None-Match": plain.headers["etag"]}).status_code == 304
+    assert api_client.get("/api/rules", headers={"If-None-Match": plain.headers["etag"]}).status_code == 200
+
+
+@pytest.mark.parametrize("scope", ("core", "content", "task:cli", "full"))
+def test_source_paths_match_the_requested_bundle(scope: str) -> None:
+    from scripts.api import rules_router
+
+    sources = rules_router.RULE_SOURCES if scope == "full" else rules_core.scope_sources(scope)
+    assert rules_router.rules_source_paths(project_root=REPO, scope=scope) == list(sources)
+    assert rules_router.rules_source_paths(project_root=REPO) == [rules_core.CORE_REL]
 
 
 @pytest.mark.parametrize("scope", ("core", "content"))
@@ -1001,7 +1031,8 @@ def test_missing_core_scope_is_unavailable_not_empty(api_client, monkeypatch, tm
         response = api_client.get(f"/api/rules?scope={scope}")
         assert response.status_code == 503
         assert "agents_extensions/shared/rules/core.md" in response.json()["detail"]
-    assert api_client.get("/api/rules").status_code == 200
+    assert api_client.get("/api/rules").status_code == 503
+    assert api_client.get("/api/rules?scope=full").status_code == 200
 
 
 def test_content_scope_without_the_addendum_is_unavailable(api_client, core_without_addendum: Path) -> None:

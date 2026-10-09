@@ -76,6 +76,7 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/delegate-must-use-worktree.md"
     "rules/cli-help-standard.md"
     "rules/model-assignment.md"
+    "rules/catalog-routing-tables.md"
     "rules/operator-expectations.md"
     "rules/fleet-driver-routing.md"
     # Draft rules core and its content-seat addendum: stay out of Claude autoload

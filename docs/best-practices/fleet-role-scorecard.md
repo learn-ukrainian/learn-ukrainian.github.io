@@ -170,11 +170,7 @@ Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Ge
 
 ## 9. Change log
 
-| Date | Change | Confidence note | By |
-|---|---|---|---|
-| 2026-07-19 | Initial scorecard from operator intent + web research + Sol #3588/#3593 | **drafted / provisional** — not full bakeoff-validated | grok/fleet-doctrine-scorecard |
-| 2026-07-19 | Add Claude Haiku to recon seat (with Luna / Gemini 3.5 Flash) | provisional | grok/fleet-scorecard-haiku-recon |
-| 2026-10-03 | Opus 5.5 and Sol 6.1 replace Fable / Astra as advisors and designated approvers (both approve, neither the author; operator decides on disagreement); Fable holds no advisory, approval or review role (#9583) | operator decision | claude/impl-9583 |
-| 2026-10-03 | Designated approval: Opus 5.5 and Sol 6.1 agreeing; when one of them authored the proposal, the other's approval completes it; any other author needs both; operator decides on disagreement (#9616) | operator decision | claude/impl-9616 |
+[Historical scorecard changes](../decisions/agent-rules-routing-history.md)
+are evidence only; they never establish the current roster.
 
 **Approval authority:** operator for ceiling-seat changes; orchestrator may update provisional notes and evidence ledger.

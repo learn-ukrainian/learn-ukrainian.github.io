@@ -80,6 +80,13 @@ and [pricing](https://platform.claude.com/docs/en/about-claude/pricing).
 
 ## Canonical model catalog and refresh contract
 
+[Generated seats and ordered review ladders](catalog-routing-tables.md) are the
+readable projection of `scripts/config/model_catalog.yaml`. Check drift with
+the task-prescribed interpreter and
+`-m agents_extensions.shared.skills.drive-epic.scripts.render_catalog_tables --check`;
+regenerate with `--write`. Resolver admission, author-family exclusions, risk
+floors and runtime health remain binding; these tables grant no permission.
+
 The machine-readable inventory and reviewer ladders live in
 `scripts/config/model_catalog.yaml`. It records current preferred models, model families,
 quality tiers, strengths, weaknesses, transports, official sources, and risk-specific review
@@ -125,25 +132,10 @@ A sole eligible cross-family reviewer in pace-only deficit is admitted with a
 `REVIEW_BUDGET_RETAINED` NOTE when no valid substitute remains; near-cap, hot,
 health, circuit, runtime headroom and subject gates still bind.
 
-### Historical Wave 1 CF SCORECARD fold (provisional, 2026-08-23)
+### Historical routing evidence
 
-Operator/CTO GO 2026-08-23. Letter grades are **advisory labels** on the existing
-`quality_tiers` — not a parallel ranking and not a `reviewed_on` refresh. **Hold
-merge / do not jump MQ ahead of Foundry #7102.**
-
-| Seat | Provisional lock | Catalog tier (unchanged) | Wave 1 CF evidence |
-| --- | --- | --- | --- |
-| Fable (`claude-fable-5`, historical scorecard) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
-| Historical `gpt-5.6-sol` / Codex (retired; not a route) | **A** / hard advisory in the 2026-08-23 scorecard | `frontier_authority` at the time | #7142 thorough/confirmational on docs; live hard advice now routes to the Sol advisor (`gpt-6.1-sol` @ high) |
-| Historical Grok (`grok-4.6`; retired, not a route) | **≥B, NOT C** — do not demote | `frontier_practical` | #7133 pass with nits; residual-positional finding |
-| Kimi (native `kimi` CLI) | historical evidence only; Kimi no longer reviews (coding only) | `frontier_practical` | #7143 pass with nits |
-| AGY (`gemini-3.7-flash-high`) | historical fast scoped CF; no current code-review route | `frontier_practical` | #7137 pass, wall ~47s, low noise, concrete finding |
-| GLM-5.3 | ships-heavier; **LOCAL-ONLY** (zai-coding-plan) | `frontier_practical` | #7144 pass with nits; solid root-cause; also #7121 fetch refspecs |
-
-OpenRouter remains **mainly Pool + Gemma**. Kimi / Gemini (AGY) / GLM subscribed seats
-**never** route through OpenRouter. Do not reopen Kimi-OpenRouter; keep the native
-`kimi` CLI. This fold does not change review ladders, formal-eligibility bits, or
-`reviewed_on` (2026-08-16) — notes and strengths only.
+The [Wave 1 scorecard](../../../docs/decisions/agent-rules-routing-history.md)
+is historical evidence only; live seats and ladders come from the catalog.
 
 **Unknown-Auto AUTHORS (Cursor Auto) — allowlist-union family (#6955):** when the author ran
 `cursor:auto` and reports `resolved_model=unknown`, the resolver attributes the author to the
@@ -610,8 +602,8 @@ Typical live driver count (names rotate; count is the constraint):
    and native usage so two Groks + four Codexes do not all stampede one near_cap lane.
 2. Claim **disjoint** work (stream epic / issue / owned paths); no duplicate branches.
 3. **Timed pause, not permanent neglect:** a lane at near_cap or operator-paused carries an
-   explicit **return-at** timestamp. Example (2026-08-08 survey): Codex weekly pause ends
-   **2026-08-10T19:47Z** → auto-return to rotation then, not “Codex is dead forever.”
+   explicit **return-at** timestamp from the current usage probe or operator pause.
+   Recheck live health and headroom at that time before returning it to rotation.
 4. Verify delivery against **git/PR state**, not only task `no_deliverable` flags (#6426 class
    false negatives poison utilization metrics).
 5. Cursor mechanical tier is **active** once the #6469 adapter fix is on main; substitute with NOTE only on live adapter regression.
@@ -920,7 +912,7 @@ branch. Delegate admission pins the remote-tracking target; fetch refuses
 movement. Compare task `pinned_head`/`worktree_base_sha` with the pushed tip,
 not ask reply stdout; require qualified APPROVE before PR, then bind with
 `record_cf_verdict.py`, require same-SHA CI, and reap the worktree
-(`reap_worktrees.py --apply` / `drive-epic` §7a). Ask waits synchronously without
+(the canonical `workflow.md` § Merge policy / landing and cleanup). Ask waits synchronously without
 nonce; continue expiry on the same task/nonce using §6, never repeat the launch.
 
 ```bash

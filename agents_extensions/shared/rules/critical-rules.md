@@ -145,33 +145,14 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - The tier is the **reviewer's** call, recorded explicitly in the verdict, not the author's. An author
   who disagrees escalates to a second reviewer rather than re-tiering their own finding.
 
-**8.5 — Merge queue protocol.**
-- **Workers never merge, enqueue, or arm auto-merge; orchestrators MUST.** Only the accountable owner (orchestrator) of that PR's lane enqueues/merges it once both gates pass. The orchestrator's job is to ensure approved work lands in `main`, not to abandon approved PRs unmerged.
-- **CF review-fix before CI (operator 2026-09-18):** complete exact-head CF
-  (APPROVE / fix / re-CF) on the branch **before opening any PR** (draft or
-  ready — drafts still start CI in this repo). Do not burn CI while CF
-  findings are still being fixed. See `workflow.md` § Merge policy.
-- Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
-  with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
-  that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
-- Use `.venv/bin/python -m scripts.publish pr-merge --number <N> --repo <owner/repo>` after both gates. Automated merge
-  configuration and `--auto` are not a substitute for either gate. See
-  [`workflow.md`](workflow.md) for the binding landing order.
-- Do **not** pass `--delete-branch` while the PR is queued. Delete the remote branch only after
-  `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
-- A moved head makes the prior APPROVE stale. Obtain exact-head CF approval and green CI again
-  before enqueue; never merge ahead of the verdict, even under pressure.
-- **Our review gate is agent-enforced.** Do not assume GitHub will prevent enqueue without
-  an independent exact-head verdict; the accountable owner must verify both gates.
-- **QUEUED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Observe exceptions:
-  failed checks, a changed base, conflicts, queue removal, or a queued-and-green PR that does
-  not land. Resolve the exception and re-establish the required gates before enqueueing again.
-- **Never `--admin`-bypass blocking CI** (pytest, ruff, frontend, schema-drift, gitleaks, radon,
-  prompt-lint).
-- A **`cancelled`** required check is a gate failure, not a pass — re-run it. But after fixing the
-  **base branch**, use `.venv/bin/python -m scripts.publish pr-update-branch --number <N>`, **not** `.venv/bin/python -m scripts.publish run-rerun --number <N>`: rerun re-tests the original
-  pinned merge SHA and reproduces the old result.
-- After any merge: delete the remote branch and remove the worktree (worktree first).
+**8.5 — Merge queue protocol.** The sole ordered landing and cleanup recipe is
+[`workflow.md`](workflow.md) § Merge policy. Workers never merge, enqueue or arm
+auto-merge; the accountable driver verifies independent exact-head CF and same-head
+CI, lands the non-draft PR, confirms MERGED and completes common-reaper cleanup.
+Missing evidence, stale heads, pending/cancelled checks and unresolved BLOCKING
+findings fail closed. Never bypass blocking CI with `--admin`, arm `--auto`, or
+delete a queued branch. The CI recovery allowance and diagnostics in the rules
+core remain binding; the forge does not enforce the independent review gate.
 
 **8.6 — Supply-chain controls and merge invariants.**
 Core technical requirements for protected branch workflows:

@@ -19,7 +19,10 @@ semantics, scope freezing, non-mutating checks, cross-family reviewer
 resolution, finding adjudication, and separate behavior proof. A clean
 working tree never substitutes for reviewing a requested commit or PR.
 
-For inline PR-comment posting, use `/code-review:code-review`.
+For the review of record, use `scripts/review/record_cf_verdict.py` after the
+toolful review settles. It posts a PR comment bound to the exact head, with
+model/family/harness provenance; the shared GitHub identity cannot approve its
+own PR through `gh pr review --approve`. See `workflow.md` § Merge policy.
 
 ## Execute
 

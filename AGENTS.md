@@ -6,13 +6,16 @@
 
 ## Read the current rule set
 
-Start with this binding digest, then read the canonical
+Load `agents_extensions/shared/rules/core.md` (`/api/rules?scope=core`) as the
+short binding set for every seat; curriculum seats add `core-curriculum.md`.
+Then read this digest and the canonical
 [`task-scoped-reading.md`](agents_extensions/shared/rules/task-scoped-reading.md)
 selector. Load the sources for the task and current phase before acting; load
 additional sources when scope changes. Git `agents_extensions/` remains
 canonical; deployed harness copies are consumers.
 
-The Monitor `GET /api/rules?format=markdown` endpoint remains the complete,
+The Monitor `GET /api/rules?format=markdown` endpoint serves the binding core.
+`GET /api/rules?scope=full&format=markdown` remains the complete,
 hash-cacheable rules reference. Use it when the full ruleset is needed, not as
 a requirement to inject unrelated rules on every task. If Monitor is unavailable,
 use the same selector via
@@ -23,7 +26,7 @@ Missing telemetry is unknown; applicable hard gates still bind.
 
 The binding wording is in
 `agents_extensions/shared/rules/operator-expectations.md` (served first by
-`/api/rules`). Its items decide conflicts. This inline digest is intentionally
+`/api/rules?scope=full`). Its items decide conflicts. This inline digest is intentionally
 non-skippable:
 
 1. Quality: no shortcuts, threshold-lowering, or “for now”.
@@ -85,13 +88,12 @@ non-skippable:
   operator tasking.
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
   a pushed branch; never push directly to `main`. Workers neither merge nor
-  arm auto-merge. **CF review-fix before CI** (operator 2026-09-18): exact-head
-  independent cross-family CF APPROVE/fix/re-CF on the branch **before opening
-  any PR** (draft or ready; drafts still start CI here); then CI green on that
-  same head; then the accountable orchestrator MUST merge (or enqueue via
-  `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged
-  waiting for operator action. Resolve material findings and re-review before
-  merge.
+  arm auto-merge. Follow the sole landing and cleanup recipe in
+  `agents_extensions/shared/rules/workflow.md` § Merge policy: exact-head
+  independent cross-family review-fix before opening any PR, same-head green CI before
+  the accountable driver enqueues, then confirm MERGED and common-reaper
+  cleanup. Never leave approved green PRs unmerged; moved heads void both
+  gates and unresolved material findings block landing.
 - Treat unavailable telemetry as unknown, not policy proof. Do not close
   partial work: state verified outcome, denominator, residual gap, and owner.
 

@@ -47,7 +47,7 @@ def test_curriculum_injection_routes_sizing_and_keeps_legacy_gates(api_client, s
     if surface == "offline":
         text = rules_core.assemble(rules_core.scope_sources("task:curriculum"), ROOT)
     else:
-        query = "&scope=task:curriculum" if surface == "api-curriculum" else ""
+        query = "&scope=task:curriculum" if surface == "api-curriculum" else "&scope=full"
         response = api_client.get(f"/api/rules?format=markdown{query}")
         assert response.status_code == 200
         text = response.text
