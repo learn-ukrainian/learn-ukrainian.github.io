@@ -462,14 +462,19 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
     failed = False
     user, user_age, user_stale = _optional_object(client, "user")
     age, stale = max(age, user_age), stale or user_stale
-    login = user.get("login").strip() if isinstance(user, dict) and isinstance(user.get("login"), str) else None
+    raw_login = user.get("login") if isinstance(user, dict) else None
+    login = raw_login.strip() if isinstance(raw_login, str) else ""
     if not login:
         login = None
+        failed = True
     repository, repo_age, repo_stale = _optional_object(client, f"repos/{repo}")
     age, stale = max(age, repo_age), stale or repo_stale
     default_branch = repository.get("default_branch") if isinstance(repository, dict) else None
+    if isinstance(default_branch, str):
+        default_branch = default_branch.strip()
     if not isinstance(default_branch, str) or not default_branch:
         default_branch = None
+        failed = True
 
     pulls: list[Pull] = []
     comments: dict[int, tuple[dict[str, Any], ...] | None] = {}
@@ -641,7 +646,9 @@ def read_mq_state(
         if not root.is_dir():
             return report(MQ_SOURCE, "unavailable"), empty
         keeper_path = next((root / name for name in KEEPER_FILES if (root / name).is_file()), None)
-        keeper = _load(keeper_path) if keeper_path is not None else {"queued": {}, "drops": {}}
+        if keeper_path is None:
+            return report(MQ_SOURCE, "unavailable"), empty
+        keeper = _load(keeper_path)
         gate = root / REQUEUE_FILE
         grants = _requeue_grants(gate if gate.is_file() else None)
         alert = root / ALERT_FILE
@@ -678,7 +685,7 @@ def _keeper_hold(
     if hold is None:
         return None, "hold-unknown"
     if not mq.usable:
-        return False, None
+        return None, None
     if drop_key in mq.keeper.get("squash_revoked", {}):
         return True, "squash-text-blocked"
     reason = _requeue_hold(drop_key, _drop_count(mq.keeper, drop_key), mq.grants, mq.keeper)

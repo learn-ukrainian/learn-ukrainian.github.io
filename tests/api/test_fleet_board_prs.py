@@ -394,6 +394,44 @@ def test_github_cache_reuses_a_short_lived_read(monkeypatch: pytest.MonkeyPatch)
     assert calls == [REPO, REPO]
 
 
+class _BlindIdentity(_Client):
+    def request(
+        self,
+        method: str,
+        endpoint: str,
+        payload: dict | None = None,
+        timeout: float = 20,
+        allow_stale: bool = False,
+        **kwargs: object,
+    ) -> _Result:
+        path = endpoint.split("?", 1)[0]
+        if path in {"user", f"repos/{REPO}"}:
+            return _Result(None, error="denied")
+        return super().request(method, endpoint, payload, timeout, allow_stale, **kwargs)
+
+
+def test_failed_identity_and_repository_reads_are_unavailable_and_not_cached(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[int] = []
+
+    def factory() -> _BlindIdentity:
+        calls.append(1)
+        return _BlindIdentity([[_rest_pull(7, SHA, "feature", "topic")]])
+
+    monkeypatch.setattr(prs_mod, "_client", factory)
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
+    first_rows, first_sources = prs_mod.collect_pipeline()
+    assert first_sources[0].status == "unavailable"
+    assert [row["number"] for row in first_rows] == [7]
+    assert first_rows[0]["ci"] == "green"
+    assert first_rows[0]["cf"] == {"verdict": "unknown", "at_head": False}
+    assert first_rows[0]["stacked_base"] is None
+    prs_mod.collect_pipeline()
+    assert calls == [1, 1]
+
+
 def test_a_failed_read_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[int] = []
     failed = _view(_pull(), queue_failed=True, failed=True)
@@ -467,6 +505,33 @@ def test_old_keeper_file_is_stale_and_a_missing_dir_is_unavailable(tmp_path) -> 
     assert empty.usable is False
     unset, _snapshot = prs_mod.read_mq_state({})
     assert unset.status == "not_configured"
+
+
+def test_missing_keeper_state_is_unavailable_and_hold_stays_unknown(tmp_path) -> None:
+    report, snapshot = prs_mod.read_mq_state({"FLEET_MQ_STATE_DIR": str(tmp_path)})
+    assert report.status == "unavailable"
+    assert snapshot.usable is False
+    ready = prs_mod.assemble_prs(
+        _view(_pull()),
+        snapshot,
+        now=NOW,
+    )
+    assert ready[0]["keeper"] == {"hold": None, "reason": None}
+    assert ready[0]["stale_green"] is False
+    assert ready[0]["minutes"] is None
+    held = prs_mod.assemble_prs(
+        _view(_pull(labels=({"name": "hold"},))),
+        snapshot,
+        now=NOW,
+    )
+    assert held[0]["keeper"] == {"hold": True, "reason": "hold"}
+
+    gate_only = tmp_path / "gate-only"
+    gate_only.mkdir()
+    (gate_only / "requeue.json").write_text(json.dumps({"version": 1, "requeue": {}}), encoding="utf-8")
+    again, empty = prs_mod.read_mq_state({"FLEET_MQ_STATE_DIR": str(gate_only)})
+    assert again.status == "unavailable"
+    assert empty.usable is False
 
 
 def test_github_errors_stay_http_200(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
