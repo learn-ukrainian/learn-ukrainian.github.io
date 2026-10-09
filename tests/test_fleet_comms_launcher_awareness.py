@@ -201,3 +201,17 @@ printf '%s\\n' "$clause"
     assert proc.returncode == 0, proc.stderr
     assert "mode=authority" in proc.stdout
     assert "current mode=off" not in proc.stdout
+    landing = (
+        "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; "
+        "require CI Gate green on that same head, then the accountable driver enqueues "
+        "through the merge queue. "
+    )
+    closeout = (
+        "After landing: confirm MERGED and the actual merge SHA, then run "
+        "`.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` for closeout. "
+    )
+    assert landing in proc.stdout
+    assert closeout in proc.stdout
+    assert proc.stdout.index(landing) < proc.stdout.index(closeout)
+    assert "merge when CI green" not in proc.stdout
+    assert "reap_worktrees.py --apply" not in proc.stdout

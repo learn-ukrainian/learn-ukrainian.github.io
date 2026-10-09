@@ -78,11 +78,11 @@ fleet_comms_cold_clause() {
     "Use fleet-comms as communication authority when current mode=${plane_mode}; " \
     "legacy bridge/channel stores are read-only migration projections in authority mode. " \
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
-    "Cross-family CF: direct ask-<lane> for verdict+findings, post on the PR, merge when CI green " \
+    "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; require CI Gate green on that same head, then the accountable driver enqueues through the merge queue. " \
     "(sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
     "All normal inter-agent asks and discussions of 2 to 4 enabled seats use ACP; other seat counts reject loudly. " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
-    "After merge: reap worktrees (\`reap_worktrees.py --apply\`). " \
+    "After landing: confirm MERGED and the actual merge SHA, then run \`.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply\` for closeout. " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
 }
 

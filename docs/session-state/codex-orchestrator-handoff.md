@@ -1,4 +1,13 @@
-# Current - Codex / Grok Orchestrator Handoff (2026-07-22)
+# Historical - Codex / Grok Orchestrator Handoff (2026-07-22)
+
+This file preserves a historical session snapshot. Its operational directions,
+task priorities, commands, model references and status claims are historical,
+not current instructions or authorization to resume work. For current tasking,
+read the assigned seat's live handoff and Fleet Comms state; current rules are
+in `agents_extensions/shared/rules/core.md` and `workflow.md` in that directory.
+The current landing sequence is independent exact-head cross-family APPROVE
+before opening the PR, CI Gate green on that same head, accountable driver
+enqueue through the merge queue, then confirmed MERGED and `merge_closeout`.
 
 Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
@@ -6,7 +15,7 @@ Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
 Orchestrator seat (Codex / Grok / Claude-infra as assigned): drive the product and
 infra queue, keep main clean, open PRs from worktrees only, require cross-family
-review (`ask-<lane> --type review`) before merge, arm auto-merge after the gate, clean worktrees after merge.
+review (`ask-<lane> --type review`) before merge, clean worktrees after merge.
 Do not babysit idle green PRs; do not leave draft limbo.
 
 Do not use `docs/session-state/current.md` as scratch space. Durable state lives in
@@ -15,9 +24,9 @@ the Latest-Brief above and this file. Thread rollover packets live under
 
 ---
 
-## NEXT SESSION — START HERE (binding)
+## Historical next-session directions
 
-**Do not ask the operator what to work on.** Read the Latest-Brief and **execute**.
+The recorded next-session directions referred to the Latest-Brief above.
 
 ### Primary — Fleet-comms #5512 operator cutovers (item 2)
 
@@ -37,7 +46,7 @@ Full commands and acceptance: **Latest-Brief** above.
 
 ---
 
-## Current State (session close 2026-07-22)
+## Recorded State (session close 2026-07-22)
 
 Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L).  
 **Operator cutovers and multi-family isolation enablement remain.**
