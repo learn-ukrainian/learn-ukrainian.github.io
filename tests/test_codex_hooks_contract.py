@@ -314,6 +314,18 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     assert "continue only from the capsule's next_drive_boundary" in context
 
 
+def test_lane_goal_file_outranks_capsule_boundary(tmp_path: Path) -> None:
+    epic_dir = tmp_path / ".claude" / "devops-epic"
+    epic_dir.mkdir(parents=True)
+    (epic_dir / "CODEX-DRIVER-HANDOFF.md").write_text("# durable driver state\n", encoding="utf-8")
+    (epic_dir / "DRIVER-STATE.md").write_text("# goal\n", encoding="utf-8")
+    context = _run_bound_codex_compact(tmp_path)
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert "Lane goal file: .claude/devops-epic/DRIVER-STATE.md." in context
+    assert "outranks the capsule's next_drive_boundary" in context
+    assert "continue only from the capsule's next_drive_boundary" not in context
+
+
 def test_first_codex_driver_uses_existing_shared_handoff(
     tmp_path: Path,
 ) -> None:
