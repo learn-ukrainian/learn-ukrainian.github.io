@@ -996,3 +996,54 @@ def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
 
     assert raised.value.reason == "receipt_unwritable" and raised.value.incomplete
     assert abandoned == [True]
+
+
+# ---- review round 5: lifecycle-wide shadow cleanup and unencodable selections ----------------------------
+
+
+def test_an_unencodable_selected_test_is_unavailable_not_a_crash(repo: Path) -> None:
+    _install_shadow(repo, 'print(\'{"selected_tests": ["tests/test_x\\\\ud800.py"], "components": []}\')\n')
+    plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
+    shadow = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh"))
+
+    result = shadow.finish()
+
+    assert result == {"status": "unavailable", "detail": "cannot encode selected_tests"}
+
+
+def test_an_io_error_during_a_stage_abandons_the_shadow_and_is_incomplete(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+    monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
+    monkeypatch.chdir(repo)
+    shadows: list[gate.Shadow] = []
+    real_init = gate.Shadow.__init__
+
+    def recording_init(self: gate.Shadow, *args: object) -> None:
+        real_init(self, *args)  # type: ignore[arg-type]
+        shadows.append(self)
+
+    def broken_stage(*_args: object, **_kwargs: object) -> None:
+        raise OSError("no space for the output file")
+
+    monkeypatch.setattr(gate.Shadow, "__init__", recording_init)
+    monkeypatch.setattr(gate, "run_pre_commit_stage", broken_stage)
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(
+            update,
+            repo,
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            str(repo / ".pre-commit-config.yaml"),
+            {},
+        )
+
+    assert raised.value.reason == "validation_error" and raised.value.incomplete
+    (shadow,) = shadows
+    assert shadow.process is not None and shadow.process.poll() is not None
+    assert shadow.output.closed

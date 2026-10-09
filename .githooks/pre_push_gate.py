@@ -615,12 +615,16 @@ class Shadow:
             if not isinstance(selected, list) or not all(isinstance(test, str) for test in selected):
                 return {"status": "unavailable", "detail": "unexpected selected_tests shape"}
             selected = sorted(selected)
+            try:
+                digest = hashlib.sha256("\n".join(selected).encode()).hexdigest()[:16]
+            except UnicodeEncodeError:  # e.g. a lone surrogate from a JSON "\ud800" escape
+                return {"status": "unavailable", "detail": "cannot encode selected_tests"}
             return {
                 "status": "recorded",
                 "selected_count": len(selected),
                 "components": selection.get("components", []),
                 "fallback_reasons": selection.get("fallback_reasons", []),
-                "selected_digest": hashlib.sha256("\n".join(selected).encode()).hexdigest()[:16],
+                "selected_digest": digest,
             }
         finally:
             self.output.close()
@@ -686,19 +690,26 @@ def validate(
         event["admission_wait_s"] = round(admitted.waited, 2)
         deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).deadline
         shadow = Shadow(plan, root, launcher)
+        settled = False
         try:
             run_pre_commit_stage(plan, root, launcher, config, deadline)
             event["pytest"] = run_pytest_stage(plan, root, launcher, deadline)
+            try:
+                write_receipt(state, plan, time.time())
+            except OSError as error:
+                raise GateOutcome(
+                    "receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True
+                ) from error
+            event["shadow"] = shadow.finish()
+            settled = True
+            event["outcome"] = "green"
         except GateOutcome:
-            shadow.abandon()
             raise
-        try:
-            write_receipt(state, plan, time.time())
-        except OSError as error:
-            shadow.abandon()  # no verdict can be recorded, so the shadow must not outlive the hook
-            raise GateOutcome("receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True) from error
-        event["outcome"] = "green"
-        event["shadow"] = shadow.finish()
+        except OSError as error:  # e.g. the output file of a stage could not be created
+            raise GateOutcome("validation_error", f"validation I/O failed: {error}", incomplete=True) from error
+        finally:
+            if not settled:  # whatever escapes, the shadow must not outlive the hook
+                shadow.abandon()
 
 
 def refuse(error: GateOutcome) -> int:
