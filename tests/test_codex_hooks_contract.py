@@ -124,7 +124,7 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
         groups = config["hooks"]["PreToolUse"]
         toggles = [arg for index, arg in enumerate(plan.cmd[:-1])
                    if arg in {"--enable", "--disable"} and plan.cmd[index + 1] == "hooks"]
-        assert toggles == ["--disable", "--enable"]
+        assert toggles == ["--enable"]
         assert "--dangerously-bypass-hook-trust" in plan.cmd
         runner = groups[0]["hooks"][0]
         assert shlex.split(runner["command"]) == ["bash", str(ENTRY), "pre-tool-use"]
@@ -159,6 +159,57 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
         assert (primary / "README.md").read_text() == "hook test\n"
     finally:
         plan.output_file.unlink()
+
+
+@pytest.mark.parametrize("session_id", [None, "worker-thread"])
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("disable_features", [["hooks"], ("hooks", "apps", "hooks", "shell_tool")])
+def test_worker_hooks_stay_enabled_in_cli_feature_state(tmp_path, session_id, mode, disable_features):
+    """Inspect the CLI's effective features without starting a provider turn."""
+    binary = shutil.which("codex")
+    if binary is None:
+        pytest.skip("Codex CLI unavailable for local feature-state inspection")
+    home = tmp_path / "private-home"
+    home.mkdir()
+    (home / "config.toml").write_text(
+        '[features]\nhooks = false\n[mcp_servers.sources]\ncommand = "true"\n', encoding="utf-8",
+    )
+    plan = CodexAdapter().build_invocation(
+        prompt="test", mode=mode, cwd=tmp_path, model=None, task_id=None,
+        session_id=session_id,
+        tool_config={
+            "codex_home_override": str(home),
+            "disable_features": disable_features,
+            # These generic caller keys are unsupported and must stay local.
+            "enable_features": ["hooks", "apps"],
+            "config_overrides": {"features.hooks": False},
+            "features": {"hooks": False},
+            "config": ["features.hooks=false"],
+        },
+    )
+    try:
+        # Preserve every feature toggle and config override in adapter order;
+        # the CLI, rather than an order assertion, decides the effective state.
+        flags = [
+            token
+            for index, arg in enumerate(plan.cmd[:-1])
+            if arg in {"-c", "--enable", "--disable"}
+            for token in (arg, plan.cmd[index + 1])
+        ]
+        result = subprocess.run(
+            [binary, "features", "list", *flags], cwd=plan.cwd,
+            env={**os.environ, **plan.env_overrides},
+            capture_output=True, text=True, check=False, timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        features = {fields[0]: fields[-1] for line in result.stdout.splitlines() if (fields := line.split())}
+        hooks_state = next((line for line in result.stdout.splitlines() if line.split()[0] == "hooks"), "hooks missing")
+        assert features.get("hooks") == "true", hooks_state
+        assert features.get("apps") == "false", result.stdout
+        if "shell_tool" in disable_features:
+            assert features.get("shell_tool") == "false", result.stdout
+    finally:
+        plan.output_file.unlink(missing_ok=True)
 
 
 def test_codex_config_encoder_round_trips_nested_hook_tables():

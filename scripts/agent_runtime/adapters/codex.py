@@ -511,11 +511,8 @@ class CodexAdapter:
         # modes (matches start-codex.sh). ``_tool_config_flags`` emits the
         # writer-isolation ``--disable shell_tool / goals / browser_use /
         # in_app_browser / image_generation / apps / plugins / multi_agent``
-        # list. ORDER MATTERS: Codex CLI processes ``--enable`` and
-        # ``--disable`` as ordered toggles, so the disable list MUST come
-        # after the enable to actually suppress ``multi_agent``. The 2026-05-22
-        # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
-        # this ordering as a secondary leak path (see PR #2230 follow-up).
+        # list. Codex applies disables after enables regardless of argv order;
+        # caller isolation disables therefore suppress ``multi_agent``.
         if has_session_to_resume and tc.get("review_isolation"):
             raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):
@@ -540,14 +537,15 @@ class CodexAdapter:
         cmd.extend(self._tool_config_flags(tool_config))
         if not tc.get("review_isolation"):
             # Sealed reviews run in an OS sandbox without tracked hook mounts.
-            # Ordinary workers, including scoped homes and resumes, bind last
-            # so caller feature toggles cannot disable this safety boundary.
+            # Ordinary workers, including scoped homes and resumes, enable
+            # tracked hooks. _tool_config_flags filters caller hooks disables:
+            # an explicit disable would defeat this enable in either order.
             cmd.extend(_worker_hook_flags())
         # Dispatched workers must have NO write-capable GitHub connector tools
         # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP
         # connectors (including `github.create_commit`, `github.update_ref`,
         # `github.create_pr`) across all runtime invocations (fresh & resume).
-        # ORDER MATTERS: must come after every feature enable, including hooks.
+        # Keep the unconditional apps disable after every feature enable.
         cmd.extend(["--disable", "apps"])
         mcp_servers = tc.get("mcp_servers")
         sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
@@ -615,7 +613,9 @@ class CodexAdapter:
           before invocation so the model can't reach for them and trip
           the ``writer_trace_isolation`` gate with ``wrong_tool_family``
           (``apps`` is filtered here because it is emitted unconditionally
-          in ``build_invocation``).
+          in ``build_invocation``; ``hooks`` is filtered for ordinary workers
+          because they bind tracked safety hooks. Sealed reviews do not bind
+          those hooks and retain caller disables).
           See ``codex_home_override`` for the companion MCP-scoping fix.
         - ``codex_home_override``: NOT translated to flags here — it's a
           companion ``env_overrides`` key handled in
@@ -648,8 +648,11 @@ class CodexAdapter:
 
         disable_features = tool_config.get("disable_features")
         if isinstance(disable_features, (list, tuple)):
+            bound_features = {"apps"}
+            if not tool_config.get("review_isolation"):
+                bound_features.add("hooks")
             for feature in disable_features:
-                if isinstance(feature, str) and feature and feature != "apps":
+                if isinstance(feature, str) and feature and feature not in bound_features:
                     flags.extend(["--disable", feature])
 
         output_schema_path = tool_config.get("output_schema_path")

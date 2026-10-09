@@ -797,7 +797,8 @@ def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, 
         assert apps_indices[0] > max(enable_indices)
 
 
-def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
+@pytest.mark.parametrize("disable_features", [None, ["hooks"]])
+def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path, disable_features):
     """Dispatched review isolation workers must also disable apps connector (#7181)."""
     from scripts.review.isolation import review_isolation_tool_config
     from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
@@ -823,6 +824,7 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
         session_id=None,
         tool_config={
             **config_without_disable_features,
+            "disable_features": disable_features,
             "review_engine_binary": str(fake.resolve()),
             "review_snapshot_root": str(snapshot),
             "review_reject_root": str(snapshot),
@@ -832,9 +834,29 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
         },
     )
     bypass_idx = plan.cmd.index("--dangerously-bypass-approvals-and-sandbox")
-    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "apps"]
+    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "hooks" if disable_features else "apps"]
     disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_flags == ["apps"]
+    assert disable_flags == [*(disable_features or []), "apps"]
+    assert not any(
+        token == "--enable" and plan.cmd[index + 1] == "hooks"
+        for index, token in enumerate(plan.cmd[:-1])
+    )
+    assert not any(token.startswith("hooks.PreToolUse=") for token in plan.cmd)
+
+
+@pytest.mark.parametrize("container", [list, tuple])
+@pytest.mark.parametrize("review_isolation", [False, True])
+def test_codex_adapter_filters_only_bound_feature_disables(container, review_isolation):
+    flags = CodexAdapter._tool_config_flags({
+        "review_isolation": review_isolation,
+        "disable_features": container(["hooks", "shell_tool", "apps", "hooks", None, ""]),
+        "enable_features": ["apps"],
+        "config_overrides": {"features.hooks": False},
+    })
+    expected = ["--disable", "shell_tool"]
+    if review_isolation:
+        expected = ["--disable", "hooks", *expected, "--disable", "hooks"]
+    assert flags == expected
 
 
 def test_codex_adapter_binds_valid_output_schema(tmp_path):
