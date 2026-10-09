@@ -107,8 +107,13 @@ The guard preserves the tracked hooks' environment exemptions:
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID` identify exempt work; other harnesses also
 remain exempt. Every headless `-p` invocation in the Claude adapter sets
 `CLAUDE_NON_INTERACTIVE=1`, including bridge sessions with no dispatch id; the
-Claude environment sanitizer preserves it. Interactive launchers scrub an
-inherited marker before starting the session. A linked checkout alone is not an
+Claude environment sanitizer preserves it. The native Claude launcher scrubs an
+inherited marker before starting the session. KimiCC and GLMCC launchers explicitly
+set their existing `LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH=1` and
+`LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH=1` markers when creating Claude Code
+sessions. The guard allows compaction for these other-model routes; the native
+Claude launcher scrubs both markers so they cannot exempt a Claude driver.
+A linked checkout alone is not an
 exemption: interactive drivers can run from linked checkouts too. Isolated
 reviews are unaffected because their `--safe-mode --setting-sources ''`
 invocation never loads project hooks (`scripts/review/isolation.py`), regardless

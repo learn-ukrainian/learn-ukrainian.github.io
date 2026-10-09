@@ -2,6 +2,11 @@
 # PreCompact(manual|auto): interactive Claude drivers never compact (#10265).
 # Workers and isolated reviews retain native compaction. Evidence only selects
 # the instruction; it cannot turn a refusal into permission to compact.
+# Managed KimiCC/GLMCC sessions use other models in the Claude Code client.
+if [ "${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-}" = 1 ] \
+  || [ "${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-}" = 1 ]; then
+  exit 0
+fi
 case "${SESSION_HANDOFF_AGENT:-claude}" in
   claude|claude-*) ;;
   *) exit 0 ;;

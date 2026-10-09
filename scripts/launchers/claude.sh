@@ -32,6 +32,8 @@ launcher_adapter_canary() {
 launcher_adapter_exec() {
   # A headless parent cannot exempt a fresh interactive Claude session.
   unset CLAUDE_NON_INTERACTIVE
+  # An alternate-model parent cannot exempt a fresh native Claude session.
+  unset LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
   # high (launcher_defaults); interactive keeps the last TUI / user selection.

@@ -56,6 +56,8 @@ launcher_adapter_exec() {
     fi
     exec "${cmd[@]}" < /dev/null
   fi
+  # Other-model Claude Code sessions retain their native compaction policy.
+  export LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH=1
   local cmd=(claude --model "$LEAD_MODEL")
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--effort "$LC_EFFORT")

@@ -69,6 +69,8 @@ def _run(prepared, *, payload=None, **extra_env):
         "CODEX_SESSION_ID",
         "CODEX_SESSION",
         "CLAUDE_NON_INTERACTIVE",
+        "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH",
+        "LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH",
         "LEARN_UK_PIPELINE",
         "LEARN_UKRAINIAN_PIPELINE",
         "GEMINI_SESSION",
@@ -162,9 +164,21 @@ def test_registration_deadline_refuses_even_if_runner_child_escapes_group(prepar
     # kills the runner's group. Test the real settings command's outer bound.
     runner = tmp_path / "escaped-runner.py"
     pid_file = tmp_path / "escaped.pid"
+    pipe_proof = tmp_path / "pipe-proof.txt"
     runner.write_text(
-        "import subprocess, sys, time\n"
-        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'], start_new_session=True)\n"
+        "import os, subprocess, sys, time\n"
+        "pipe_fd = os.dup(sys.stdout.fileno())\n"
+        # Hold an explicit non-standard descriptor despite close_fds=True,
+        # with ordinary stdout/stderr redirected away from RESULT's pipe.
+        "child_code = " + repr(
+            "import os, stat, sys, time\n"
+            "assert stat.S_ISFIFO(os.fstat(int(sys.argv[1])).st_mode)\n"
+            f"open({os.fspath(pipe_proof)!r}, 'w').write('holding-output-pipe')\n"
+            "time.sleep(30)\n"
+        ) + "\n"
+        "child = subprocess.Popen([sys.executable, '-c', child_code, str(pipe_fd)], "
+        "start_new_session=True, close_fds=True, pass_fds=(pipe_fd,), "
+        "stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
         f"open({os.fspath(pid_file)!r}, 'w').write(str(child.pid))\n"
         "print('prepared', flush=True)\ntime.sleep(30)\n"
     )
@@ -193,10 +207,66 @@ def test_registration_deadline_refuses_even_if_runner_child_escapes_group(prepar
         _refused(result)
         assert elapsed < settings["hooks"]["PreCompact"][0]["hooks"][0]["timeout"]
         assert pid_file.is_file(), "the escaping-child path must actually run"
+        assert pipe_proof.read_text() == "holding-output-pipe"
     finally:
         if pid_file.is_file():
             with suppress(ProcessLookupError):
                 os.kill(int(pid_file.read_text()), signal.SIGKILL)
+
+
+@pytest.mark.usefixtures("hermetic_monitor")
+@pytest.mark.parametrize("trigger", ["auto", "manual"])
+@pytest.mark.parametrize(
+    "provider,mode,args,parent_marker,expected_rc",
+    [
+        ("kimi", "interactive", ["--harness", "claude-code"], None, 0),
+        ("glm", "interactive", [], None, 0),
+        ("claude", "driver", ["--epic", "devops"], None, 2),
+        ("claude", "driver", ["--epic", "devops"], "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH", 2),
+        ("claude", "driver", ["--epic", "devops"], "LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH", 2),
+    ],
+)
+def test_dry_run_launcher_environment_drives_guard_policy(
+    tmp_path, provider, mode, args, parent_marker, expected_rc, trigger
+):
+    # Run the real common launcher in dry-run mode, then the hook in that same
+    # shell environment. No hand-set child exemption or provider invocation.
+    env = {
+        key: value for key, value in os.environ.items()
+        if key in {"PATH", "TMPDIR", "LU_MONITOR_LOOPBACK", "TOOL_TIMING_API_URL", "DELEGATE_MONITOR_API"}
+    }
+    env.update(
+        HOME=os.fspath(tmp_path / "home"), LAUNCHER_DRY_RUN="1",
+        KIMICC_AUTH_TOKEN="test-key", GLMCC_AUTH_TOKEN="test-key",
+        CLAUDE_PROJECT_DIR=os.fspath(REPO), THREAD_ROLLOVER_PYTHON=sys.executable,
+    )
+    if parent_marker:
+        env[parent_marker] = "1"
+    result = subprocess.run(
+        [
+            "bash", "-c",
+            'set -euo pipefail; source "$1/scripts/lib/launcher_core.sh"; '
+            'root="$1"; shift; launcher_main "$@"; set +e; '
+            'printf "kimi_marker=%s glm_marker=%s\\n" '
+            '"${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-unset}" '
+            '"${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-unset}"; '
+            '"$root/agents_extensions/shared/hooks/precompact-handoff-guard.sh"; '
+            'printf "HOOK_RC=%s\\n" "$?"',
+            "--", os.fspath(REPO), provider, mode, *args,
+        ],
+        env=env, cwd=REPO,
+        input=json.dumps({"hook_event_name": "PreCompact", "trigger": trigger, "session_id": SESSION}),
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "LAUNCHER_DRY_RUN=1" in result.stdout
+    assert f"HOOK_RC={expected_rc}\n" in result.stdout
+    if provider == "claude":
+        assert "kimi_marker=unset glm_marker=unset" in result.stdout
+        assert "compaction refused" in result.stderr
+    else:
+        assert f"{provider}_marker=1" in result.stdout
+        assert result.stderr == ""
 
 
 @pytest.mark.parametrize("trigger", ["auto", "manual"])
@@ -324,6 +394,8 @@ def test_missing_or_malformed_input_refuses_driver_allows_worker(prepared, paylo
         {"CODEX_SESSION_ID": "native-session"},
         {"CODEX_SESSION": "1"},
         {"CLAUDE_NON_INTERACTIVE": "1"},
+        {"LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH": "1"},
+        {"LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH": "1"},
         {"LEARN_UK_PIPELINE": "1"},
         {"LEARN_UKRAINIAN_PIPELINE": "1"},
         {"GEMINI_SESSION": "1"},

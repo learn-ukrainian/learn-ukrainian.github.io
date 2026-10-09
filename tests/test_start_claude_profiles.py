@@ -248,6 +248,8 @@ def test_claude_launcher_rule_follows_fresh_session_class(extra_env, expected_ru
     "session_env,expected_rule",
     [
         ({}, True),
+        ({"LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH": "1"}, True),
+        ({"LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH": "1"}, True),
         ({"CLAUDE_NON_INTERACTIVE": "1"}, True),
         ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
     ],
@@ -264,7 +266,7 @@ def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_r
                 [
                     'source "$1"',
                     'LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_FORWARD_ARGS=(); LC_DRY_RUN=0',
-                    'launcher_exec_command() { printf "noninteractive=%s\\n" "${CLAUDE_NON_INTERACTIVE:-unset}"; printf "%s\\n" "$@"; }',
+                    'launcher_exec_command() { printf "kimi_marker=%s glm_marker=%s\\n" "${LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH:-unset}" "${LEARN_UKRAINIAN_GLMCC_MANAGED_LAUNCH:-unset}"; printf "noninteractive=%s\\n" "${CLAUDE_NON_INTERACTIVE:-unset}"; printf "%s\\n" "$@"; }',
                     "launcher_adapter_exec",
                 ]
             ),
@@ -279,5 +281,6 @@ def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_r
     )
     assert result.returncode == 0, result.stderr
     assert "noninteractive=unset" in result.stdout
+    assert "kimi_marker=unset glm_marker=unset" in result.stdout
     assert ("--append-system-prompt" in result.stdout) is expected_rule
     assert ("Never compact a Claude driver" in result.stdout) is expected_rule

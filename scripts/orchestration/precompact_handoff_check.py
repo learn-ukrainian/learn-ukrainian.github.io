@@ -1,7 +1,8 @@
 """Read-only, anchored proof of this Claude session's prepared handoff (#9790).
 
 Only a successful check emits ``prepared``. Missing or unsafe evidence is silent;
-the hook must never block automatic compaction on an uncertain result.
+the shell hook refuses driver compaction regardless of this result. Evidence
+only selects the handoff instruction in that refusal.
 """
 
 from __future__ import annotations
@@ -68,7 +69,7 @@ def has_prepared_handoff(state_root: Path, *, agent: str, session_id: str) -> bo
                     return False
                 return bool(_read_text(tree, replacement["handoff_path"]).strip())
     except Exception:
-        # Evidence failures, including canonical validation failures, allow compaction.
+        # Evidence failures select the shell hook's generic refusal instruction.
         # The shell bounds this entire process, including stdin and filesystem reads.
         return False
     return False
