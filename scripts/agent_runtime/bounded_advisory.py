@@ -880,6 +880,7 @@ def _is_primary_read_only_worktree(
 ) -> bool:
     """#10025: a bound primary-root read runs in its exact automatic detached checkout."""
     root = admitted.get("repo_root")
+    cwd = args.get("cwd")
     task_id = record.get("task_id")
     agent = execution.get("agent")
     if (
@@ -888,11 +889,11 @@ def _is_primary_read_only_worktree(
         or args.get("pr")
         or record.get("worktree_branch") is not None
         or not (
-            _same_cwd(args.get("cwd"), root)
+            (isinstance(cwd, str) and Path(cwd).is_absolute() and _same_cwd(cwd, root))
             or (
                 record.get("read_only_primary_cwd") is True
-                and isinstance(args.get("cwd"), str)
-                and not Path(args["cwd"]).is_absolute()
+                and isinstance(cwd, str)
+                and Path(cwd) == Path(".")
             )
         )
         or not isinstance(root, str)
@@ -942,9 +943,10 @@ def _require_execution(
     if worktree is not None and not _same_cwd(str(worktree), execution["cwd"]):
         mismatches.append(f"cwd {execution['cwd']!r} is not the admitted worktree {worktree!r}")
     bound_cwd = args.get("cwd")
-    if not args.get("worktree") and bound_cwd:
+    if not args.get("worktree") and bound_cwd is not None:
         if execution.get("mode") == "read-only" and (
-            _same_cwd(str(bound_cwd), admitted.get("repo_root")) or record.get("read_only_primary_cwd") is True
+            (Path(str(bound_cwd)).is_absolute() and _same_cwd(str(bound_cwd), admitted.get("repo_root")))
+            or record.get("read_only_primary_cwd") is True
         ):
             if not _is_primary_read_only_worktree(admitted, args, record, execution):
                 mismatches.append("cwd is not the automatic worktree of the bound primary --cwd")

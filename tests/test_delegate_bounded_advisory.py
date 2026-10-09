@@ -1480,6 +1480,35 @@ def test_primary_read_only_binding_accepts_only_its_automatic_worktree(tmp_path,
             bounded_advisory._require_execution(admitted, args, record, execution=execution, envelope_paths=[])
 
 
+@pytest.mark.parametrize("bound_cwd,accepted,primary", [
+    (".", True, True), ("", True, True), ("./", True, True), ("./.", True, True),
+    ("subdir", False, True), ("./subdir", False, True), ("../x", False, True),
+    ("subdir/..", False, True), ("../../../..", False, True), ("../../../..", False, False),
+])
+@pytest.mark.parametrize("automatic", [True, False])
+def test_primary_read_only_relative_cwd_binding_is_root_only(
+    tmp_path, monkeypatch, bound_cwd, accepted, primary, automatic,
+):
+    expected = delegate._auto_worktree_path("codex", "review", repo_root=tmp_path)
+    actual = expected if automatic else expected.with_name("another-task")
+    actual.mkdir(parents=True)
+    monkeypatch.chdir(actual)
+    execution = dict.fromkeys(bounded_advisory.EXECUTION_FIELDS)
+    execution.update(agent="codex", mode="read-only", cwd=str(actual))
+    admitted = {"repo_root": str(tmp_path), "admitted_execution": dict(execution)}
+    args = {"cwd": bound_cwd, "mode": "read-only"}
+    record = {
+        "task_id": "review", "worktree_path": str(actual), "worktree_branch": None,
+        "read_only_primary_cwd": primary,
+    }
+    assert bounded_advisory._is_primary_read_only_worktree(admitted, args, record, execution) is (accepted and automatic)
+    if accepted and automatic:
+        bounded_advisory._require_execution(admitted, args, record, execution=execution, envelope_paths=[])
+    else:
+        with pytest.raises(bounded_advisory.AdvisoryRefused, match=bounded_advisory.EXECUTION_MISMATCH):
+            bounded_advisory._require_execution(admitted, args, record, execution=execution, envelope_paths=[])
+
+
 @pytest.mark.parametrize(
     ("field", "value", "launch"),
     [
