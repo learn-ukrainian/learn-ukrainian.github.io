@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -41,8 +42,8 @@ from scripts.lexicon.manifest_io import load_manifest
 from scripts.lib.readonly_sqlite import open_readonly as _open_readonly
 
 DEFAULT_CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-DEFAULT_INVENTORY_OUT = Path("/tmp/atlas-curriculum-full-text-inventory.json")
-DEFAULT_REPORT_OUT = Path("/tmp/atlas-curriculum-full-text-intake.json")
+INVENTORY_FILENAME = "atlas-curriculum-full-text-inventory.json"
+REPORT_FILENAME = "atlas-curriculum-full-text-intake.json"
 DEFAULT_INVENTORY_PATH = "data/lexicon/source-inventory/curriculum-full-text-intake.json"
 WORKFLOW_ID = "curriculum_full_text_atlas_intake.v1"
 LEDGER_KIND = "atlas_source_inventory_review_decisions"
@@ -1002,17 +1003,77 @@ def stable_lemma_sort_key(value: str) -> tuple[str, str]:
     return _lemma_key(value), value
 
 
+def resolve_output_paths(
+    *,
+    inventory_out: Path | None = None,
+    report_out: Path | None = None,
+) -> tuple[Path, Path]:
+    """Resolve defaults at call time; the caller owns artifact lifetime and cleanup."""
+    if inventory_out is not None and report_out is not None:
+        return inventory_out, report_out
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        raise ValueError("Set TMPDIR to caller-owned scratch or provide explicit temporary output paths")
+    root = Path(tmpdir)
+    if not root.is_absolute() or not root.is_dir():
+        raise ValueError("TMPDIR must be an existing absolute directory")
+    return (
+        inventory_out if inventory_out is not None else root / INVENTORY_FILENAME,
+        report_out if report_out is not None else root / REPORT_FILENAME,
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run fail-closed full-text curriculum Word Atlas intake.")
-    parser.add_argument("--curriculum-root", type=Path, default=DEFAULT_CURRICULUM_ROOT)
-    parser.add_argument("--manifest", type=Path, default=LEXICON_MANIFEST_PATH)
-    parser.add_argument("--inventory-path", default=DEFAULT_INVENTORY_PATH)
-    parser.add_argument("--inventory-out", type=Path, default=DEFAULT_INVENTORY_OUT)
-    parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
-    parser.add_argument("--ledger-out", type=Path)
-    parser.add_argument("--batch-id")
-    parser.add_argument("--batch-label")
-    parser.add_argument("--reviewed-at", help="Required when --ledger-out is supplied (YYYY-MM-DD).")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Run fail-closed full-text curriculum Word Atlas intake.\n"
+            "Use for read-only inventory and classification; Atlas publication is a separate phase."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "The caller retains outputs for readback and owns cleanup.\n"
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.lexicon.curriculum_atlas_intake\n"
+            "  .venv/bin/python -m scripts.lexicon.curriculum_atlas_intake --inventory-out inventory.json --report-out report.json\n"
+            "Outputs: JSON inventory and aggregate report; optional decision-ledger YAML. No Atlas or learner publication.\n"
+            "Exit codes: 0 success; 2 invalid arguments, destination or intake failure.\n"
+            "Related: #9702; scripts.tools.task_scratch; source_inventory_review_decisions."
+        ),
+    )
+    parser.add_argument(
+        "--curriculum-root",
+        type=Path,
+        default=DEFAULT_CURRICULUM_ROOT,
+        help="Module/activity/vocabulary root (default: curriculum/l2-uk-en; example: curriculum/l2-uk-en).",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=LEXICON_MANIFEST_PATH,
+        help="Atlas manifest for deduplication (default: site/src/data/lexicon-manifest.json; example: atlas.json).",
+    )
+    parser.add_argument(
+        "--inventory-path",
+        default=DEFAULT_INVENTORY_PATH,
+        help=f"Portable source-ledger inventory identity (default: {DEFAULT_INVENTORY_PATH}; independent of scratch).",
+    )
+    parser.add_argument(
+        "--inventory-out",
+        type=Path,
+        help=f"JSON inventory destination (default: $TMPDIR/{INVENTORY_FILENAME}; example: inventory.json).",
+    )
+    parser.add_argument(
+        "--report-out",
+        type=Path,
+        help=f"Aggregate JSON report destination (default: $TMPDIR/{REPORT_FILENAME}; example: report.json).",
+    )
+    parser.add_argument(
+        "--ledger-out", type=Path, help="Optional decision-ledger YAML (default: none; example: ledger.yaml)."
+    )
+    parser.add_argument("--batch-id", help="Required with --ledger-out (default: none; example: intake-batch-01).")
+    parser.add_argument("--batch-label", help="Required with --ledger-out (default: none; example: Curriculum intake).")
+    parser.add_argument("--reviewed-at", help="Required with --ledger-out (default: none; YYYY-MM-DD).")
     return parser
 
 
@@ -1022,6 +1083,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.ledger_out and not all((args.batch_id, args.batch_label, args.reviewed_at)):
         parser.error("--ledger-out requires --batch-id, --batch-label, and --reviewed-at")
     try:
+        args.inventory_out, args.report_out = resolve_output_paths(
+            inventory_out=args.inventory_out,
+            report_out=args.report_out,
+        )
         if args.ledger_out:
             assert_ledger_inventory_destination(args.inventory_out, args.inventory_path)
         result = build_curriculum_intake(

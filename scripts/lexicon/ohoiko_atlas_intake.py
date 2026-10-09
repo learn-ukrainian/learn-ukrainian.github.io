@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import sys
 from collections import Counter
@@ -35,8 +36,8 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 DEFAULT_PRIVATE_ROOT = PROJECT_ROOT / "docs" / "references" / "private"
 DEFAULT_JUNE_NOTES_ROOT = DEFAULT_PRIVATE_ROOT / "ohoiko-june-a1-book" / "notes"
-DEFAULT_INVENTORY_OUT = Path("/tmp/atlas-ohoiko-corpus-inventory.json")
-DEFAULT_REPORT_OUT = Path("/tmp/atlas-ohoiko-corpus-intake.json")
+INVENTORY_FILENAME = "atlas-ohoiko-corpus-inventory.json"
+REPORT_FILENAME = "atlas-ohoiko-corpus-intake.json"
 DEFAULT_INVENTORY_PATH = "data/lexicon/source-inventory/ohoiko-corpus-intake.json"
 WORKFLOW_ID = "ohoiko_corpus_atlas_intake.v1"
 SOURCE_FAMILY = "ohoiko"
@@ -496,17 +497,77 @@ def source_ref_for_path(path: Path, *, prefix: str = "ohoiko-source") -> str:
     return f"{prefix}-{digest}"
 
 
+def resolve_output_paths(
+    *,
+    inventory_out: Path | None = None,
+    report_out: Path | None = None,
+) -> tuple[Path, Path]:
+    """Resolve defaults at call time; the caller owns artifact lifetime and cleanup."""
+    if inventory_out is not None and report_out is not None:
+        return inventory_out, report_out
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        raise ValueError("Set TMPDIR to caller-owned scratch or provide explicit temporary output paths")
+    root = Path(tmpdir)
+    if not root.is_absolute() or not root.is_dir():
+        raise ValueError("TMPDIR must be an existing absolute directory")
+    return (
+        inventory_out if inventory_out is not None else root / INVENTORY_FILENAME,
+        report_out if report_out is not None else root / REPORT_FILENAME,
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run fail-closed Anna Ohoiko corpus Word Atlas intake.")
-    parser.add_argument("--private-root", type=Path, default=DEFAULT_PRIVATE_ROOT)
-    parser.add_argument("--june-notes-root", type=Path, default=DEFAULT_JUNE_NOTES_ROOT)
-    parser.add_argument("--inventory-path", default=DEFAULT_INVENTORY_PATH)
-    parser.add_argument("--inventory-out", type=Path, default=DEFAULT_INVENTORY_OUT)
-    parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
-    parser.add_argument("--ledger-out", type=Path)
-    parser.add_argument("--batch-id")
-    parser.add_argument("--batch-label")
-    parser.add_argument("--reviewed-at", help="Required when --ledger-out is supplied (YYYY-MM-DD).")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Run fail-closed Anna Ohoiko corpus Word Atlas intake.\n"
+            "Use for read-only inventory and classification; Atlas publication is a separate phase."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Temporary defaults require an existing caller-owned TMPDIR (dispatch or scripts.tools.task_scratch run).\n"
+            "The caller retains outputs for readback and owns cleanup.\n"
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake\n"
+            "  .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake --inventory-out inventory.json --report-out report.json\n"
+            "Outputs: JSON inventory and aggregate report; optional decision-ledger YAML. No Atlas or learner publication.\n"
+            "Exit codes: 0 success; 2 invalid arguments, destination or intake failure.\n"
+            "Related: #9702; scripts.tools.task_scratch; source_inventory_review_decisions."
+        ),
+    )
+    parser.add_argument(
+        "--private-root",
+        type=Path,
+        default=DEFAULT_PRIVATE_ROOT,
+        help="Private corpus root (default: docs/references/private; example: synthetic/private).",
+    )
+    parser.add_argument(
+        "--june-notes-root",
+        type=Path,
+        default=DEFAULT_JUNE_NOTES_ROOT,
+        help="June lesson notes root (default: private root/ohoiko-june-a1-book/notes; example: synthetic/notes).",
+    )
+    parser.add_argument(
+        "--inventory-path",
+        default=DEFAULT_INVENTORY_PATH,
+        help=f"Portable source-ledger inventory identity (default: {DEFAULT_INVENTORY_PATH}; independent of scratch).",
+    )
+    parser.add_argument(
+        "--inventory-out",
+        type=Path,
+        help=f"JSON inventory destination (default: $TMPDIR/{INVENTORY_FILENAME}; example: inventory.json).",
+    )
+    parser.add_argument(
+        "--report-out",
+        type=Path,
+        help=f"Aggregate JSON report destination (default: $TMPDIR/{REPORT_FILENAME}; example: report.json).",
+    )
+    parser.add_argument(
+        "--ledger-out", type=Path, help="Optional decision-ledger YAML (default: none; example: ledger.yaml)."
+    )
+    parser.add_argument("--batch-id", help="Required with --ledger-out (default: none; example: intake-batch-01).")
+    parser.add_argument("--batch-label", help="Required with --ledger-out (default: none; example: Curriculum intake).")
+    parser.add_argument("--reviewed-at", help="Required with --ledger-out (default: none; YYYY-MM-DD).")
     return parser
 
 
@@ -516,6 +577,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.ledger_out and not all((args.batch_id, args.batch_label, args.reviewed_at)):
         parser.error("--ledger-out requires --batch-id, --batch-label, and --reviewed-at")
     try:
+        args.inventory_out, args.report_out = resolve_output_paths(
+            inventory_out=args.inventory_out,
+            report_out=args.report_out,
+        )
         if args.ledger_out:
             core.assert_ledger_inventory_destination(args.inventory_out, args.inventory_path)
         result = build_ohoiko_intake(
