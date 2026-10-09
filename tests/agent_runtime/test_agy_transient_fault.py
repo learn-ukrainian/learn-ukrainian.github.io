@@ -36,19 +36,23 @@ RECORDED = (
 
 def _fault(excerpt: str, *, ok: bool = False):
     base = _outcome(pre_model=False, stderr="", ok=ok)
+    base = replace(base, process_group_exited=True)
     return replace(
         base,
         parse=replace(
             base.parse,
             ok=ok,
             response="Complete reply." if ok else "",
-            failure_code=None if ok else "provider_error",
+            failure_code=None if ok else excerpt,
             provider_error_text="",
             stderr_excerpt=None if ok else excerpt,
             agy_pre_model_failure=False,
             agy_attempt=AgyAttempt(
                 completion_reason="completed" if ok else "provider_error",
-                failure_code=None if ok else "provider_error",
+                failure_code=None if ok else excerpt,
+                executed_command_count=0,
+                unknown_command_count=0,
+                kill_count=0,
             ),
         ),
     )
@@ -111,18 +115,38 @@ def test_write_mode_transient_retries_when_workspace_is_unchanged(tmp_path, monk
 
 
 @pytest.mark.parametrize(
-    "states",
+    "executed,unknown",
     [
-        [(b"head", b""), (b"head", b" M tracked\n")],
-        [None],
+        (1, 0),
+        (0, 1),
     ],
-    ids=["workspace-changed", "git-unreadable"],
+    ids=["executed-commands", "unknown-commands"],
 )
-def test_write_mode_transient_is_unsafe_replay_without_a_clean_workspace(tmp_path, monkeypatch, states):
-    remaining = iter(states)
+def test_write_mode_transient_is_unsafe_replay_when_commands_executed(tmp_path, monkeypatch, executed, unknown):
+    fault = _fault(API_503)
+    fault = replace(
+        fault,
+        parse=replace(
+            fault.parse,
+            agy_attempt=replace(
+                fault.parse.agy_attempt,
+                executed_command_count=executed,
+                unknown_command_count=unknown,
+            )
+        )
+    )
+    result, once, adapter, *_ = _execute(tmp_path, monkeypatch, [fault], mode="workspace-write")
+    assert once.call_count == 1
+    adapter.build_invocation.assert_not_called()
+    assert result.parse.agy_telemetry.retry_disposition == "unsafe_replay"
+    assert result.parse.agy_telemetry.reroute_reason == "unsafe_replay"
+    assert result.parse.agy_telemetry.reroute_required
 
-    monkeypatch.setattr(runner, "_agy_git_state", lambda _cwd: next(remaining))
-    result, once, adapter, *_ = _execute(tmp_path, monkeypatch, [_fault(API_503)], mode="workspace-write")
+
+def test_transient_is_unsafe_replay_when_process_group_survives(tmp_path, monkeypatch):
+    fault = _fault(API_503)
+    fault = replace(fault, process_group_exited=False)
+    result, once, adapter, *_ = _execute(tmp_path, monkeypatch, [fault], mode="workspace-write")
     assert once.call_count == 1
     adapter.build_invocation.assert_not_called()
     assert result.parse.agy_telemetry.retry_disposition == "unsafe_replay"
