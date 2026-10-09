@@ -1234,6 +1234,9 @@ def dispatch_env(monkeypatch, tmp_path, snapshot):
     import subprocess
 
     import scripts.audit.check_primary_integrity as cpi
+    from tests.helpers.dispatch_checkout import isolate_dispatch_repo
+
+    isolate_dispatch_repo(monkeypatch, tmp_path, delegate)
 
     tasks = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
@@ -1271,10 +1274,6 @@ def dispatch_env(monkeypatch, tmp_path, snapshot):
             return _Health()
         raise AssertionError(f"unexpected urlopen {url}")
 
-    head_sha = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=delegate._REPO_ROOT, check=True, capture_output=True, text=True, timeout=30
-    ).stdout.strip()
-    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()

@@ -21,6 +21,6 @@ tool_namespace = "agents"
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-6-luna"
+default_subagent_model = "gpt-6.1-sol"
 default_subagent_reasoning_effort = "high"
 interrupt_message = true
