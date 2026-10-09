@@ -17,12 +17,19 @@ from scripts.curriculum.arc.loader import ArcPosition, ArcStaleError, load_arc
 from scripts.curriculum.learner_state.immersion import ImmersionError, compute_lesson_immersion_band
 from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.cross import LevelPlans
-from scripts.curriculum.validate.pack import Pack, WordRecord, WordStore
+from scripts.curriculum.validate.pack import Pack, WordRecord, WordStore, load_pack
 from scripts.curriculum.validate.report import Report
 from scripts.curriculum.validate.review_gates import ReviewGates
 from scripts.curriculum.validate.validate import _check_cyrillic
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def registered_quote(quote="model"):
+    """Existing publication fixture identity; synthetic print, no language assertion."""
+    from tests.curriculum.evidence.test_publication import record
+
+    return record(quote=quote)
 
 
 def task(task_id: str = "practical-closure") -> dict:
@@ -258,13 +265,116 @@ def test_assembler_prints_plan_without_draft_echo():
 def test_assembler_permitted_source_print():
     draft, plan, pack, words = assembly_world()
     plan["lessons"][0]["steps"][0]["task"]["learner_reads"] = [{"ref": "T-001", "words": ["model"]}]
-    pack["texts"] = [{"id": "T-001", "quote": "model"}]
+    pack["texts"] = [registered_quote()]
     expanded, _ = assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
     rendered, _ = _render_urok_markdown(draft, expanded, pack, words)
     assert "model" in rendered
+    assert "> — *Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 39*" in rendered
     pack["texts"] = []
     with pytest.raises(AssemblerError, match="recap_task_print"):
         assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
+
+
+@pytest.mark.parametrize("section,record,selection,code", [
+    ("texts", {**registered_quote("x" * 860), "source": {"kind": "textbook", "file": "unregistered", "page": 39}},
+     "T-001", "publication_right"),
+    ("texts", registered_quote("x" * 801), {"ref": "T-001", "words": ["x"]}, "publication_limit"),
+    ("texts", {**registered_quote(), "source": {**registered_quote()["source"], "page": None}},
+     "T-001", "publication_attribution"),
+    ("texts", {"id": "T-001", "text": "model"}, "T-001", "learner_text_not_allowed"),
+    ("texts", {**registered_quote(), "text": "sibling"}, "T-001", "learner_text_not_allowed"),
+    ("examples", {"id": "EX-001", "text": "model", "items_sample": ["sibling"]},
+     "EX-001", "learner_text_not_allowed"),
+    ("exercises", {"id": "X-001", "items_sample": ["model"]}, "X-001", "learner_text_not_allowed"),
+    ("examples", {"id": "T-001", "text": "model"}, "T-001", "learner_text_not_allowed"),
+    ("texts", registered_quote(), {"ref": "T-001", "words": ["models"]}, "recap_task_print"),
+    ("texts", registered_quote(), {"ref": "T-001", "words": ["Model"]}, "recap_task_print"),
+    ("texts", registered_quote(), {"ref": "T-001", "words": []}, "recap_task_print"),
+    ("examples", {"id": "EX-001", "text": ""}, "EX-001", "recap_task_print"),
+    ("examples", {"id": "EX-001"}, "EX-001", "recap_task_print"),
+    ("examples", {"id": "EX-001", "text": None}, "EX-001", "recap_task_print"),
+    ("texts", registered_quote(), "T-999", "recap_task_print"),
+])
+def test_recap_source_refusals_agree_in_assembly_and_validation(tmp_path, section, record, selection, code):
+    import yaml
+
+    draft, plan, _pack, words = assembly_world()
+    step = plan["lessons"][0]["steps"][0]
+    ref = selection if isinstance(selection, str) else selection["ref"]
+    step["evidence"] = [ref]
+    step["task"]["learner_reads"] = [selection]
+    pack = {section: [record]}
+    with pytest.raises(AssemblerError) as exc:
+        assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
+    assert exc.value.code == code
+    path = tmp_path / "pack.yaml"
+    path.write_text(yaml.safe_dump(pack))
+    gates, closure = gate_world()
+    gates.pack = load_pack(path)
+    # Aggregate print is deliberately present even for absent refs: it cannot grant permission.
+    gates.pack.record_texts[ref] = "model"
+    closure["evidence"] = [ref]
+    closure["task"]["learner_reads"] = [selection]
+    gates.check_practical_recaps()
+    assert codes.RECAP_TASK_PRINT in gates.report.codes()
+
+
+@pytest.mark.parametrize("section,record,selection", [
+    ("texts", registered_quote("model"), "T-001"),
+    ("texts", registered_quote("model"), {"ref": "T-001", "words": ["model"]}),
+    ("texts", registered_quote("x" * 800), "T-001"),
+    ("examples", {"id": "EX-001", "text": "model"}, "EX-001"),
+    ("examples", {"id": "EX-001", "text": "model"}, {"ref": "EX-001", "words": ["model"]}),
+])
+def test_permitted_recap_print_uses_raw_metadata_and_mapped_page(tmp_path, section, record, selection):
+    import yaml
+
+    draft, plan, _pack, words = assembly_world()
+    step = plan["lessons"][0]["steps"][0]
+    step["evidence"] = [record["id"]]
+    step["task"]["learner_reads"] = [selection]
+    pack = {section: [record]}
+    expanded, provenance = assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
+    rendered, mapping = _render_urok_markdown(draft, expanded, pack, words)
+    assert record.get("quote", record.get("text")) in rendered
+    assert ("> — *Захарійчук" in rendered) == (section == "texts")
+    assert mapping.verify(rendered) == {i: u["text"] for i, u in enumerate(expanded["units"]) if u["tab"] == "urok"}
+    span = next(s for s in provenance["spans"] if s["block"] == "recap_print_0")
+    assert span["source"] == "record" and span["ref"] == record["id"]
+    if section == "texts":
+        attribution = next(s for s in provenance["spans"] if s["block"] == "recap_attribution_0")
+        assert attribution["source"] == "record" and attribution["ref"] == record["id"]
+        assert attribution["role"] == "vesum_exempt" and attribution["record_kind"] == "quote"
+        assert attribution["text"] in rendered
+    path = tmp_path / "pack.yaml"
+    path.write_text(yaml.safe_dump(pack))
+    gates, closure = gate_world()
+    gates.pack = load_pack(path)
+    assert gates.pack.recap_records[record["id"]] == (section, record)
+    gates.pack.record_texts.clear()  # Recaps use admitted raw fields, never this aggregate.
+    closure["evidence"] = [record["id"]]
+    closure["task"]["learner_reads"] = [selection]
+    gates.check_practical_recaps()
+    assert gates.report.failures == []
+
+
+@pytest.mark.parametrize("uncited", [False, True])
+def test_recap_missing_record_or_citation_refuses(uncited):
+    draft, plan, pack, words = assembly_world()
+    step = plan["lessons"][0]["steps"][0]
+    step["task"]["learner_reads"] = ["T-001"]
+    pack["texts"] = [registered_quote()] if uncited else []
+    if uncited:
+        step["evidence"] = []
+    with pytest.raises(AssemblerError, match="recap_task_print"):
+        assemble_expanded_document(draft, plan, pack, words, "a1", "unit", 1)
+    gates, closure = gate_world()
+    if uncited:
+        gates.pack.recap_records["T-001"] = ("texts", registered_quote())
+        closure["evidence"] = []
+    closure["task"]["learner_reads"] = ["T-001"]
+    gates.check_practical_recaps()
+    assert codes.RECAP_TASK_PRINT in gates.report.codes()
 
 
 def produced_recap_codes() -> set[str]:
@@ -307,6 +417,7 @@ def test_recap_print_decodability_and_before_step_inventory():
     # Synthetic glyph fixture, no claim about Ukrainian words.
     glyph = chr(0x0430)
     g.pack.record_texts["T-001"] = glyph
+    g.pack.recap_records["T-001"] = ("texts", registered_quote(glyph))
     s["task"]["learner_reads"] = [{"ref": "T-001", "words": [glyph]}]
     g.__dict__["taught_before"] = {1: set()}
     g.check_practical_recaps()
@@ -540,7 +651,7 @@ def test_quoted_tasks_real_resolution_stress_and_check9(tmp_path, monkeypatch, q
     assert assembled.passed, assembled.to_dict()
     expanded = assembled.artifacts["expanded_doc"]
     instructions = [u for u in expanded["units"] if str(u["block"]).startswith("recap_")
-                    and not str(u["block"]).startswith("recap_print")]
+                    and not str(u["block"]).startswith(("recap_print", "recap_attribution"))]
     assert len([u for u in instructions if quote in u["text"]]) == 3
     assert all(u["role"] == "instruction" for u in instructions)
     printed = [u for u in expanded["units"] if str(u["block"]).startswith("recap_print")]

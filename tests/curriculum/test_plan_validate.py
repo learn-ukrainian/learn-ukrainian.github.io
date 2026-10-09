@@ -1332,3 +1332,35 @@ def test_cli_subprocess_clean_environment(tmp_path: Path) -> None:
     failing = run(bad.plan_path)
     assert failing.returncode == 1
     assert codes.REMOVED_V1_FIELD in failing.stdout
+
+
+@pytest.mark.parametrize("case", ["permitted", "unregistered", "oversize", "text_field", "exercise", "missing", "selector"])
+def test_plan_validator_recap_source_admission(tmp_path, case):
+    from tests.curriculum.evidence.test_publication import record
+
+    plan, pack, words = build_cyrillic_lemma()
+    closure = plan["lessons"][-1]["steps"][-1]
+    printed = record(quote=LETTER_A)
+    pack["texts"][0] = printed
+    closure["task"]["learner_reads"] = [{"ref": "T-001", "words": [LETTER_A]}]
+    if case == "unregistered":
+        printed["source"]["file"] = "unregistered"
+        printed["quote"] = "x" * 860
+    elif case == "oversize":
+        printed["quote"] = "x" * 801
+    elif case == "text_field":
+        printed["text"] = LETTER_A
+    elif case == "exercise":
+        pack["exercises"] = [{"id": "X-001", "items_sample": [LETTER_A]}]
+        closure["evidence"] = ["X-001"]
+        closure["task"]["learner_reads"] = ["X-001"]
+    elif case == "missing":
+        closure["task"]["learner_reads"] = ["T-999"]
+    elif case == "selector":
+        closure["task"]["learner_reads"][0]["words"] = ["synthetic-absent-selection"]
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    if case == "permitted":
+        assert report.ok, report.render_text()
+    else:
+        assert codes.RECAP_TASK_PRINT in report.codes(), report.render_text()

@@ -896,6 +896,24 @@ class ReviewGates(Gates):
     def _comprehension(self, lesson: dict) -> list[dict]:
         return [a for a in lesson.get("activities") or [] if _COMPREHENSION_KIND.search(a["focus"])]
 
+    def _recap_print_text(self, ref: str) -> str:
+        """Admit only the existing example/text print fields, never aggregate metadata."""
+        from scripts.curriculum.evidence import publication
+
+        section, record = self.pack.recap_records.get(ref, ("", {}))
+        field = {"texts": "quote", "examples": "text"}.get(section)
+        prefix = {"texts": "T-", "examples": "EX-"}.get(section)
+        if field is None or not ref.startswith(prefix):
+            raise ValueError("unclassified recap record kind")
+        if any(key != field and key in record for key in ("quote", "text", "items_sample")):
+            raise ValueError("unclassified recap source field")
+        text = record.get(field)
+        if not isinstance(text, str) or not text:
+            raise ValueError("recap source has no printable text")
+        if section == "texts":
+            publication.quote_attribution(record)
+        return text
+
     def check_practical_recaps(self) -> None:
         """A1 plan tasks: structural contract only; usefulness is independently reviewed.
 
@@ -968,12 +986,17 @@ class ReviewGates(Gates):
                         self.fail(codes.RECAP_TASK_INVALID, "early A1 closes with a practical task, not comprehension questions", lesson["n"], step_id)
                     for selection in task["learner_reads"]:
                         ref = selection if isinstance(selection, str) else selection["ref"]
-                        text = self.pack.record_texts.get(ref)
-                        if not text or ref not in step.get("evidence", []):
-                            self.fail(codes.RECAP_TASK_PRINT, "recap print must be printable cited evidence", lesson["n"], step_id)
+                        try:
+                            text = self._recap_print_text(ref)
+                            if ref not in step.get("evidence", []):
+                                raise ValueError("recap print must be cited evidence")
+                        except ValueError as exc:
+                            self.fail(codes.RECAP_TASK_PRINT, str(exc), lesson["n"], step_id)
                             continue
                         text = _STRESS_MARKS.sub("", _nfc(text))
                         words = _ROW_TOKEN.findall(text) if isinstance(selection, str) else selection["words"]
+                        if isinstance(selection, dict) and not words:
+                            self.fail(codes.RECAP_TASK_PRINT, "recap word selection must be nonempty", lesson["n"], step_id)
                         for word in words:
                             if not _print_holds(text, word, exact=True) or (self.taught_before is not None and not self._readable(word, taught)):
                                 self.fail(codes.RECAP_TASK_PRINT, "recap print must be source-attested and decodable before its step", lesson["n"], step_id)

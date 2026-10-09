@@ -374,6 +374,9 @@ LEARNER_TEXT_ALLOWLIST = {
 # Writer-controlled bilingual prose is separate from assembler additions;
 # classification records that boundary and grants no new publication rights.
 ENGLISH_CHANNELS = {
+    "plan.lessons.*.steps.*.task.context_en": "plan_task_scaffolding",
+    "plan.lessons.*.steps.*.task.instruction_en": "plan_task_scaffolding",
+    "plan.lessons.*.steps.*.task.success_criteria_en.*": "plan_task_scaffolding",
     "pack.examples.*.translation_en": "body_support",
     "draft.dialogue.translation_en.*": "body_support",
     "draft.steps.*.blocks.*.en.*": "writer_bilingual",
@@ -425,6 +428,37 @@ def learner_text_allowed(path: str, record: dict[str, Any] | None = None) -> boo
         url = record.get(path.rsplit(".", 1)[-1])
         return bool(isinstance(permission, dict) and url and permission.get("description") == f"<{url}>")
     return True
+
+
+def recap_learner_print(selection: str | dict, evidence: list[str], pack: dict) -> tuple[str, str | None]:
+    """Check every source field before selecting recap print; retain quote attribution."""
+    from scripts.curriculum.validate.review_gates import _print_holds
+
+    ref = selection if isinstance(selection, str) else selection["ref"]
+    found = [(section, record) for section in ("texts", "examples", "exercises")
+             for record in pack.get(section, []) if record.get("id") == ref]
+    if len(found) != 1 or ref not in evidence:
+        raise AssemblerError("recap_task_print", "recap print must be cited printable evidence")
+    section, record = found[0]
+    field = {"texts": "quote", "examples": "text"}.get(section)
+    prefix = {"texts": "T-", "examples": "EX-"}.get(section)
+    if field is None or not ref.startswith(prefix):
+        raise AssemblerError("learner_text_not_allowed", "unclassified recap record kind")
+    attribution = None
+    for key in ("quote", "text", "items_sample"):
+        if key in record:
+            permission = learner_text_permission(f"pack.{section}.*.{key}", record)
+            if key == field:
+                attribution = permission
+    text = record.get(field)
+    if not isinstance(text, str) or not text:
+        raise AssemblerError("recap_task_print", "recap source has no printable text")
+    if isinstance(selection, dict):
+        if not selection["words"] or any(not _print_holds(strip_accents(text), word, exact=True)
+                                         for word in selection["words"]):
+            raise AssemblerError("recap_task_print", "recap words must occur in the exact source print")
+        text = " / ".join(selection["words"])
+    return text, attribution
 
 
 def body_english_support_allowed(level: str, module_num: int = 1) -> bool:
@@ -1252,15 +1286,12 @@ def assemble_expanded_document(
                 add_unit("urok", step_id, None, None, f"recap_{key}", "instruction", page_text(text), source="writer_prose")
             for i, selection in enumerate(task["learner_reads"]):
                 ref = selection if isinstance(selection, str) else selection["ref"]
-                records = {r["id"]: r for section in ("texts", "examples", "exercises") for r in pack.get(section, [])}
-                rec = records.get(ref, {})
-                printable = [rec.get(key) for key in ("quote", "text")]
-                printable += rec.get("items_sample") if isinstance(rec.get("items_sample"), list) else []
-                text = "\n".join(value for value in printable if isinstance(value, str))
-                if not text or ref not in next(st for st in lesson_entry["steps"] if st["id"] == step_id).get("evidence", []):
-                    raise AssemblerError("recap_task_print", "recap print must be cited printable evidence")
-                selected = text if isinstance(selection, str) else " / ".join(selection["words"])
+                evidence = next(st for st in lesson_entry["steps"] if st["id"] == step_id).get("evidence", [])
+                selected, attribution = recap_learner_print(selection, evidence, pack)
                 add_unit("urok", step_id, None, None, f"recap_print_{i}", "record_print", page_text(selected), source="record", ref=ref)
+                if attribution:
+                    add_unit("urok", step_id, None, None, f"recap_attribution_{i}", "vesum_exempt",
+                             attribution, source="record", ref=ref)
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
@@ -2500,7 +2531,10 @@ def _render_urok_markdown(
 
         for key, indices in unit_indices_by_block.items():
             if key[0] == "urok" and key[1] == step_id and isinstance(key[2], str) and key[2].startswith("recap_"):
-                w.line(*unit_fragments(indices))
+                if key[2].startswith("recap_attribution_"):
+                    w.line("> — *", *unit_fragments(indices), "*")
+                else:
+                    w.line(*unit_fragments(indices))
                 w.blank()
 
     consol_lead = draft.get("consolidation", {}).get("lead_in")
