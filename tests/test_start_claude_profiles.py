@@ -94,16 +94,16 @@ def test_full_retired_fable_id_is_refused() -> None:
     assert "would exec claude" not in retired.stdout
 
 
-@pytest.mark.parametrize("model", [
-    model_id for model_id, entry in load_model_catalog()["models"].items()
-    if entry["lifecycle"] == "retired"
-])
+@pytest.mark.parametrize(
+    "model", [model_id for model_id, entry in load_model_catalog()["models"].items() if entry["lifecycle"] == "retired"]
+)
 @pytest.mark.parametrize("suffix", ["", "[1m]"])
 @pytest.mark.parametrize("via_env", [False, True])
 def test_interactive_launcher_refuses_every_retired_catalog_id(model, suffix, via_env) -> None:
     pin = model + suffix
     result = run_launcher(
-        "start-claude.sh", *(() if via_env else ("--model", pin)),
+        "start-claude.sh",
+        *(() if via_env else ("--model", pin)),
         env={"LAUNCHER_MODEL": pin} if via_env else {},
     )
     assert result.returncode == 2
@@ -199,3 +199,71 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
     assert "compact=unset" in result.stdout
     assert "profile=native_claude" in result.stdout
     assert "foreign-secret" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "launcher,args",
+    [
+        ("start-claude.sh", ()),
+        ("start-claude-driver.sh", ("--epic", "devops")),
+    ],
+)
+def test_claude_launchers_always_carry_no_compaction_rule(launcher, args):
+    result = run_launcher(launcher, *args)
+    assert result.returncode == 0, result.stderr
+    # Bash uses ANSI-C quoting for multiline core text and backslash quoting
+    # for single-line prompts; either must retain the complete policy sentence.
+    assert "Never compact a Claude driver" in result.stdout.replace("\\ ", " ")
+    assert "thread-rollover" in result.stdout
+    assert "HANDOFF-DONE" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "extra_env",
+    [
+        {"CLAUDE_NON_INTERACTIVE": "1"},
+        {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"},
+    ],
+)
+def test_claude_worker_and_review_launches_do_not_receive_driver_rule(extra_env):
+    result = run_launcher("start-claude.sh", env=extra_env)
+    assert result.returncode == 0, result.stderr
+    assert "HANDOFF-DONE" not in result.stdout
+
+
+@pytest.mark.parametrize(
+    "session_env,expected_rule",
+    [
+        ({}, True),
+        ({"CLAUDE_NON_INTERACTIVE": "1"}, False),
+        ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
+    ],
+)
+def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_rule):
+    import subprocess
+
+    adapter = Path(__file__).resolve().parents[1] / "scripts/launchers/claude.sh"
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            "\n".join(
+                [
+                    'source "$1"',
+                    'LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_FORWARD_ARGS=(); LC_DRY_RUN=0',
+                    'launcher_exec_command() { printf "%s\\n" "$@"; }',
+                    "launcher_adapter_exec",
+                ]
+            ),
+            "--",
+            os.fspath(adapter),
+        ],
+        env={**os.environ, "CLAUDE_NON_INTERACTIVE": "", "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "", **session_env},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert ("--append-system-prompt" in result.stdout) is expected_rule
+    assert ("Never compact a Claude driver" in result.stdout) is expected_rule

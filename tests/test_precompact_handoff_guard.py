@@ -1,4 +1,4 @@
-"""Own-handoff proof and no-follow redirects for PreCompact(auto) (#9790)."""
+"""Fail-closed interactive PreCompact policy and own-handoff proof (#10265)."""
 
 from __future__ import annotations
 
@@ -21,7 +21,8 @@ HOOK = REPO / "agents_extensions/shared/hooks/precompact-handoff-guard.sh"
 SESSION = "precompact-session"
 AGENT = "claude-infra"
 BLOCK_MESSAGE = (
-    "Automatic compaction paused: this session has prepared its rollover handoff. Restart the session to continue.\n"
+    "Claude driver compaction refused: thread-rollover handoff is prepared; print HANDOFF-DONE <path> "
+    "using its exact handoff path and exit for a fresh launcher restart.\n"
 )
 
 
@@ -99,16 +100,25 @@ def _allowed(result):
     assert (result.returncode, result.stdout, result.stderr) == (0, "", "")
 
 
-def test_valid_own_handoff_blocks_and_is_read_only(prepared):
+def _refused(result):
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert "compaction refused" in result.stderr
+    assert "thread-rollover" in result.stderr
+    assert "HANDOFF-DONE <path>" in result.stderr
+
+
+@pytest.mark.parametrize("trigger", ["auto", "manual"])
+def test_valid_own_handoff_blocks_and_is_read_only(prepared, trigger):
     root, _, _, _, _ = prepared
     before = {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()}
-    result = _run(prepared)
+    result = _run(prepared, payload={"hook_event_name": "PreCompact", "trigger": trigger, "session_id": SESSION})
     assert (result.returncode, result.stdout, result.stderr) == (2, "", BLOCK_MESSAGE)
     assert {path.relative_to(root): path.read_bytes() for path in root.rglob("*") if path.is_file()} == before
 
 
 @pytest.mark.parametrize("component", [".agent", "thread-rollovers", "agent", "lineage", "generation", "packet"])
-def test_each_symlinked_ancestor_allows_even_with_valid_outside_packet(prepared, tmp_path, component):
+def test_each_symlinked_ancestor_refuses_driver_allows_worker(prepared, tmp_path, component):
     root, _, lease, handoff, _ = prepared
     paths = {
         ".agent": root / ".agent",
@@ -123,13 +133,14 @@ def test_each_symlinked_ancestor_allows_even_with_valid_outside_packet(prepared,
     path.rename(outside)
     path.symlink_to(outside, target_is_directory=True)
     before = {p.relative_to(outside): p.read_bytes() for p in outside.rglob("*") if p.is_file()}
-    _allowed(_run(prepared))
+    _refused(_run(prepared))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
     assert {p.relative_to(outside): p.read_bytes() for p in outside.rglob("*") if p.is_file()} == before
 
 
 @pytest.mark.parametrize("member", ["lease", "handoff", "record"])
 @pytest.mark.parametrize("failure", ["missing", "symlink", "fifo", "directory", "unreadable"])
-def test_unavailable_or_unsafe_file_allows(prepared, tmp_path, member, failure):
+def test_unavailable_or_unsafe_file_refuses_driver_allows_worker(prepared, tmp_path, member, failure):
     _, _, lease, handoff, record = prepared
     path = {"lease": lease, "handoff": handoff, "record": record}[member]
     contents = path.read_bytes()
@@ -145,11 +156,12 @@ def test_unavailable_or_unsafe_file_allows(prepared, tmp_path, member, failure):
     elif failure == "unreadable":
         # Invalid UTF-8 is unreadable even under a privileged test process.
         path.write_bytes(b"\xff")
-    _allowed(_run(prepared))
+    _refused(_run(prepared))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize("mutation", ["foreign", "schema", "identity", "outside", "started", "malformed", "nonobject"])
-def test_invalid_or_foreign_lease_allows(prepared, mutation):
+def test_invalid_or_foreign_lease_refuses_driver_allows_worker(prepared, mutation):
     _, state, lease, handoff, _ = prepared
     if mutation == "foreign":
         state["active"]["thread_id"] = "other-session"
@@ -165,11 +177,12 @@ def test_invalid_or_foreign_lease_allows(prepared, mutation):
         "{bad json" if mutation == "malformed" else json.dumps([] if mutation == "nonobject" else state),
         encoding="utf-8",
     )
-    _allowed(_run(prepared))
+    _refused(_run(prepared))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize("mutation", ["foreign", "schema", "malformed", "nonobject", "continuation", "missing-mode"])
-def test_invalid_or_other_profile_record_allows(prepared, mutation):
+def test_invalid_or_other_profile_record_refuses_driver_allows_worker(prepared, mutation):
     record = prepared[4]
     data = json.loads(record.read_text())
     if mutation == "foreign":
@@ -181,19 +194,20 @@ def test_invalid_or_other_profile_record_allows(prepared, mutation):
     elif mutation == "missing-mode":
         del data["rollover_mode"]
     record.write_text("{bad json" if mutation == "malformed" else json.dumps([] if mutation == "nonobject" else data))
-    _allowed(_run(prepared, LEARN_UKRAINIAN_ROLLOVER_MODE="operator_restart"))
+    _refused(_run(prepared, LEARN_UKRAINIAN_ROLLOVER_MODE="operator_restart"))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize("content", ["", " \n\t"])
-def test_empty_handoff_allows(prepared, content):
+def test_empty_handoff_refuses_driver_allows_worker(prepared, content):
     prepared[3].write_text(content)
-    _allowed(_run(prepared))
+    _refused(_run(prepared))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize(
     "payload",
     [
-        {"hook_event_name": "PreCompact", "trigger": "manual", "session_id": SESSION},
         {"hook_event_name": "PreCompact", "session_id": SESSION},
         {"hook_event_name": "PostCompact", "trigger": "auto", "session_id": SESSION},
         {"hook_event_name": "PreCompact", "trigger": "auto", "session_id": "../foreign"},
@@ -203,8 +217,9 @@ def test_empty_handoff_allows(prepared, content):
         "[]",
     ],
 )
-def test_manual_missing_or_malformed_input_allows(prepared, payload):
-    _allowed(_run(prepared, payload=payload))
+def test_missing_or_malformed_input_refuses_driver_allows_worker(prepared, payload):
+    _refused(_run(prepared, payload=payload))
+    _allowed(_run(prepared, payload=payload, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize(
@@ -223,15 +238,13 @@ def test_manual_missing_or_malformed_input_allows(prepared, payload):
         {"GEMINI_SESSION": "1"},
         {"GROK_AGENT": "1"},
         {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"},
-        {"THREAD_ROLLOVER_PYTHON": "/nonexistent/interpreter"},
-        {"SESSION_BOUNDED_RUNNER": "/nonexistent/runner"},
     ],
 )
-def test_other_harness_workers_or_missing_runtime_allow(prepared, extra_env):
+def test_other_harness_and_workers_allow(prepared, extra_env):
     _allowed(_run(prepared, **extra_env))
 
 
-def test_timeout_allows_and_does_not_trust_partial_prepared_output(prepared, tmp_path):
+def test_timeout_refuses_driver_allows_worker_and_discards_partial_output(prepared, tmp_path):
     runner = tmp_path / "slow-runner.py"
     runner.write_text("import time\nprint('prepared', flush=True)\ntime.sleep(30)\n")
     # Keep the real deadline runner; delay the checker by importing a shadow
@@ -241,7 +254,8 @@ def test_timeout_allows_and_does_not_trust_partial_prepared_output(prepared, tmp
     module.parent.mkdir(parents=True)
     module.write_bytes(runner.read_bytes())
     started = time.monotonic()
-    _allowed(_run(prepared, CLAUDE_PROJECT_DIR=os.fspath(project)))
+    _refused(_run(prepared, CLAUDE_PROJECT_DIR=os.fspath(project)))
+    _allowed(_run(prepared, CLAUDE_PROJECT_DIR=os.fspath(project), CLAUDE_NON_INTERACTIVE="1"))
     assert 2 <= time.monotonic() - started < 8
 
 
@@ -323,13 +337,14 @@ def test_lineage_retained_from_predecessor_still_matches_current_session(prepare
 
 
 @pytest.mark.parametrize("component", ["root", "sessions"])
-def test_symlinked_root_or_session_directory_allows(prepared, tmp_path, component):
+def test_symlinked_root_or_session_directory_refuses_driver_allows_worker(prepared, tmp_path, component):
     root = prepared[0]
     path = root if component == "root" else root / ".agent/sessions"
     outside = tmp_path / "outside"
     path.rename(outside)
     path.symlink_to(outside, target_is_directory=True)
-    _allowed(_run(prepared))
+    _refused(_run(prepared))
+    _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
 
 
 @pytest.mark.parametrize(
@@ -374,7 +389,7 @@ def test_checker_main_reads_official_payload_only(prepared, monkeypatch, capsys,
     assert (result.out, result.err) == (expected, "")
 
 
-def test_settings_registers_only_auto_guard_and_shell_parses():
+def test_settings_registers_both_triggers_and_shell_parses():
     settings = json.loads((REPO / "agents_extensions/shared/settings.json").read_text())
     registrations = [
         (entry.get("matcher"), hook)
@@ -382,15 +397,126 @@ def test_settings_registers_only_auto_guard_and_shell_parses():
         for hook in entry["hooks"]
         if "precompact-handoff-guard.sh" in hook.get("command", "")
     ]
-    assert registrations == [
-        (
-            "auto",
-            {
-                "type": "command",
-                "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh",
-                "timeout": 5,
-            },
-        )
-    ]
+    assert len(registrations) == 1
+    matcher, registration = registrations[0]
+    assert matcher == "manual|auto"
+    assert registration["type"] == "command"
+    assert "precompact-handoff-guard.sh" in registration["command"]
+    assert "exit 2" in registration["command"]
+    assert registration["timeout"] == 5
     result = subprocess.run(["bash", "-n", os.fspath(HOOK)], capture_output=True, text=True, check=False, timeout=30)
     assert (result.returncode, result.stdout, result.stderr) == (0, "", "")
+
+
+@pytest.mark.parametrize("trigger", ["auto", "manual"])
+@pytest.mark.parametrize("session_class", ["interactive_driver", "headless_worker", "isolated_review"])
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "no_handoff",
+        "missing_runtime",
+        "missing_runner",
+        "exception",
+        "partial_output",
+        "unexpected_output",
+        "unsafe_file",
+        "timeout",
+    ],
+)
+def test_compaction_denominator_and_failure_modes(prepared, tmp_path, trigger, session_class, failure):
+    payload = {"hook_event_name": "PreCompact", "trigger": trigger, "session_id": SESSION}
+    extra = {}
+    if session_class == "headless_worker":
+        extra["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = "worker"
+    elif session_class == "isolated_review":
+        extra["CLAUDE_NON_INTERACTIVE"] = "1"
+    if failure == "no_handoff":
+        prepared[3].unlink()
+    elif failure == "unsafe_file":
+        outside = tmp_path / "outside-handoff.md"
+        outside.write_bytes(prepared[3].read_bytes())
+        prepared[3].unlink()
+        prepared[3].symlink_to(outside)
+    elif failure == "missing_runtime":
+        extra["THREAD_ROLLOVER_PYTHON"] = os.fspath(tmp_path / "missing-python")
+    elif failure == "missing_runner":
+        extra["SESSION_BOUNDED_RUNNER"] = os.fspath(tmp_path / "missing-runner")
+    else:
+        runner = tmp_path / "broken-runner.py"
+        runner.write_text(
+            {
+                "exception": "raise RuntimeError('private diagnostic must not escape')\n",
+                "partial_output": "print('prepared', flush=True)\nraise RuntimeError('private diagnostic must not escape')\n",
+                "unexpected_output": "print('prepared\\nextra')\n",
+                "timeout": "import time\nprint('prepared', flush=True)\ntime.sleep(30)\n",
+            }[failure]
+        )
+        extra["SESSION_BOUNDED_RUNNER"] = os.fspath(runner)
+    result = _run(prepared, payload=payload, **extra)
+    if session_class == "interactive_driver":
+        _refused(result)
+        assert result.stderr != BLOCK_MESSAGE
+        assert "private diagnostic" not in result.stderr
+    else:
+        _allowed(result)
+
+
+def test_shell_exception_refuses_without_runtime_or_evidence(prepared, tmp_path):
+    hook = tmp_path / HOOK.name
+    hook.write_bytes(HOOK.read_bytes())
+    hook.chmod(0o755)
+    (tmp_path / "context-rollover-lib.sh").write_text("exit 7\n")
+    # _run's interpreter/evidence environment stays identical to a healthy driver.
+    import unittest.mock
+
+    with unittest.mock.patch(__name__ + ".HOOK", hook):
+        _refused(_run(prepared))
+        _allowed(_run(prepared, CLAUDE_NON_INTERACTIVE="1"))
+
+
+@pytest.mark.parametrize(
+    "session_env",
+    [
+        {},
+        {"CLAUDE_NON_INTERACTIVE": "1"},
+        {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"},
+    ],
+)
+@pytest.mark.parametrize("exit_code", [None, 1, 7, 143])
+def test_registration_refuses_driver_allows_exempt_sessions_if_hook_errors(
+    tmp_path, monkeypatch, session_env, exit_code
+):
+    settings = json.loads((REPO / "agents_extensions/shared/settings.json").read_text())
+    command = settings["hooks"]["PreCompact"][0]["hooks"][0]["command"]
+    if exit_code is not None:
+        hook = tmp_path / ".claude/hooks/precompact-handoff-guard.sh"
+        hook.parent.mkdir(parents=True)
+        hook.write_text(f"#!/bin/sh\nexit {exit_code}\n")
+        hook.chmod(0o755)
+    # Mirror the guard's clean driver fixture so the dispatch running pytest
+    # cannot classify the isolated settings probe as an exempt worker.
+    for key in (
+        "CODEX_THREAD_ID",
+        "CODEX_SESSION_ID",
+        "CODEX_SESSION",
+        "CLAUDE_NON_INTERACTIVE",
+        "LEARN_UK_PIPELINE",
+        "LEARN_UKRAINIAN_PIPELINE",
+        "GEMINI_SESSION",
+        "GROK_AGENT",
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+        "SESSION_HANDOFF_AGENT",
+    ):
+        monkeypatch.delenv(key, raising=False)
+    result = subprocess.run(
+        ["sh", "-c", command],
+        env={**os.environ, "CLAUDE_PROJECT_DIR": os.fspath(tmp_path), **session_env},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    if not session_env:
+        _refused(result)
+    else:
+        assert result.returncode == 0

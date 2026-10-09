@@ -52,6 +52,99 @@ codes, appended to the failure message as `close_failure_reason=<code>`:
 | `store-error` | A local session-stream store error not covered above. |
 | `unknown` | No known-safe marker matched; check the host's own logs, not this classification. |
 
+## Claude drivers: refuse compaction and hand off (#10265)
+
+Interactive Claude drivers never compact. At the rollover limit, follow
+`agents_extensions/shared/skills/thread-rollover/SKILL.md`, run
+`scripts/orchestration/thread_handoff.py prepare` with the exact active identity,
+write the reserved handoff, then print `HANDOFF-DONE <path>` with that exact path
+and exit for a fresh launcher session. The launcher appends this rule to the
+system prompt independently of the rules-core text (the full launcher still
+requires its rules-core loader). Workers
+and isolated reviews keep native compaction.
+
+### Supported client capability and local probe
+
+Verified on 2026-10-09 with installed Claude Code **2.1.295** (`claude --version`)
+and its own `claude --help`. The [official hook reference](https://code.claude.com/docs/en/hooks#precompact)
+specifies `PreCompact` and `PostCompact`, both with `manual` and `auto` matchers.
+`manual` means `/compact`; `auto` means native automatic compaction.
+`PreCompact` supports refusal by **exit 2 with stderr**, or exit 0 with JSON
+`{"decision":"block","reason":"..."}`. `PostCompact` has no decision control.
+`continue` and `systemMessage` are discarded by PreCompact; they cannot enforce
+this policy. Proactive automatic refusal leaves the conversation uncompacted;
+refusing automatic recovery after an API context-limit error surfaces that
+error and fails the current request.
+
+A harmless local probe used a synthetic two-message transcript in managed
+scratch, no repository or private conversation content, disabled MCP/tools,
+and an isolated `manual|auto` PreCompact registration. Its command printed
+`LOCAL-PRECOMPACT-REFUSAL` to stderr and exited 2. Invoking the installed client
+with `-p /compact --resume <fixture.jsonl> --setting-sources '' --settings
+<probe-settings.json> --strict-mcp-config --mcp-config '{"mcpServers":{}}'
+--tools '' --no-session-persistence` returned:
+
+```text
+exit=0
+Compaction blocked by PreCompact hook: [printf 'LOCAL-PRECOMPACT-REFUSAL\n' >&2; exit 2]: LOCAL-PRECOMPACT-REFUSAL
+```
+
+The CLI's outer exit status is **not** the compaction verdict. This probe
+confirmed manual client refusal before any summarization request; automatic
+blocking is documented by the client vendor and covered by trigger-specific
+hook tests, not a live context-exhaustion run. Both triggers are interceptable,
+so the issue's manual-only prompt fallback is unnecessary.
+
+### Denominator and failure posture
+
+| Trigger | Interactive driver | Headless dispatch worker | Isolated review |
+| --- | --- | --- | --- |
+| Automatic | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
+| Manual | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
+
+The guard preserves the tracked hooks' environment exemptions:
+`CLAUDE_NON_INTERACTIVE`, the pipeline flags, and
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID` identify exempt work; other harnesses also
+remain exempt. A linked checkout alone is not an exemption: interactive drivers
+can run from linked checkouts too. Isolated review invocations must retain their
+existing noninteractive or dispatch flag.
+
+Refusal is independent of evidence. Missing Python, missing runner, unreadable
+or unsafe evidence, malformed input, helper exceptions, unexpected or partial
+output, and deadlines all refuse for a driver. A shell EXIT trap supplies the
+refusal even on unexpected exits. The full evidence subprocess has a three-second
+deadline with a one-second kill grace, below the five-second hook registration;
+the existing checker also has its two-second deadline. Partial `prepared` output
+from a failed or timed-out process is never proof. The settings command converts
+hook startup errors or abnormal exits to refusal for drivers, retaining the
+same environment exemptions on that fallback path. Exempt sessions return before
+any evidence dependency is inspected.
+
+Prepared evidence changes only the instruction: print `HANDOFF-DONE <path>` and
+exit; compaction is still refused. Manual input is normalized to `auto` solely
+for the existing read-only checker, which previously accepted only that trigger.
+Neither the guard nor the launcher model prompt opens, renews, or releases a
+supervisor lease.
+
+### Restart evidence and remaining boundary
+
+The common launcher's existing exit path closes its exact lease; its next fresh
+launch runs the supervisor bootstrap and existing rollover detection/import.
+This change introduces no restart mechanism. The tracked common supervisor and
+launcher currently have **no `HANDOFF-DONE` marker consumer**. Therefore marker
+printing alone is not verified automatic restart; the accountable driver must
+supply an external supervisor restart receipt or resolve that integration before
+claiming AC-03 or closing #10265. Owner: `claude-monitor`; condition: demonstrate
+marker, predecessor exit, fresh replacement bootstrap and handoff consumption.
+
+Claude Code itself treats an unavailable hook shell or a harness-level hook
+cancellation as non-blocking; no shell script can change that client behavior.
+The inner deadline and settings fallback handle ordinary evidence/runtime
+failures, but do not prove enforcement if the client never runs the registration
+or kills its outer shell. Keep deployment and the exact-client integration
+check as driver gates. Owner: `claude-monitor`; condition: deploy canonical
+sources after merge and verify both registrations on the running driver.
+
 ## Environment envelope
 
 A launcher that claims a lease must export every `SESSION_STREAM_*` variable the

@@ -1246,15 +1246,16 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    # The driver pins --model/--effort first (Opus 5.5 default), then --agent.
-    assert (
-        "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
-    )
+    # Pinning precedes the mandatory policy prompt and the selected agent.
+    assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high " in result.stdout
+    assert "--append-system-prompt" in result.stdout
+    assert "--agent infra-orchestrator " in result.stdout
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
-    assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
+    assert "--effort high " in explicit.stdout
+    assert "--agent curriculum-orchestrator " in explicit.stdout
 
     # A registry stream key with no roster slot would mint an unregistered handoff
     # identity, so the launcher refuses it instead of starting the session (#8303).

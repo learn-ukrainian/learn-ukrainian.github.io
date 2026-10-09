@@ -39,9 +39,13 @@ launcher_adapter_exec() {
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--effort "$LC_EFFORT")
   fi
-  # CLAUDE.md autoload does not carry the rules core; append it to the system prompt.
-  if [ -n "${LC_RULES_CORE:-}" ]; then
-    cmd+=(--append-system-prompt "$LC_RULES_CORE")
+  # Carry the rule even when the optional core loader supplies no prompt.
+  local system_prompt="${LC_RULES_CORE:-}"
+  if [ -z "${CLAUDE_NON_INTERACTIVE:-}${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
+    system_prompt="${system_prompt:+$system_prompt$'\n'}Never compact a Claude driver; use thread-rollover to prepare the handoff, print HANDOFF-DONE <path>, and exit for a fresh launcher restart."
+  fi
+  if [ -n "$system_prompt" ]; then
+    cmd+=(--append-system-prompt "$system_prompt")
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
   if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
