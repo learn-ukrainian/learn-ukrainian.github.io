@@ -283,7 +283,20 @@ to disable only this optional scheduled class during an incident; merged-clean
 reaping remains enabled. Before removal the reaper writes an
 append-only local journal, reserves the path as reap-pending, and creates a
 `refs/reaper-rescue/...` ref. Set `LU_REAPER_DISABLED=1` to stop automatic
-reaps immediately. The first seven days are capped by
+reaps immediately. Apply mode also recovers interrupted reap reservations:
+new reservations record the holding PID, and recovery requires that PID to be
+absent plus acquisition of the worktree attachment lock. Live or unverifiable
+PIDs are retained regardless of age. Legacy reservations without a PID require
+a timestamp at least one hour old, the exclusive sweep lock, and the attachment
+lock. Malformed or future legacy timestamps remain reserved. A stable sidecar lock
+serializes pending-state replacements so concurrent writers cannot lose entries.
+Recovery journals `reservation-recovery` before releasing a reservation, then
+reruns the normal safety proofs; dirty, active, or unmerged trees remain refused.
+Dry runs and disabled reapers never release reservations. To recover one target,
+use the existing `reap_worktrees --apply --merged --worktree <path>` command;
+never edit `reap-pending.json` manually. Reservations for already removed trees
+can also be released; no second deletion path is used.
+The first seven days are capped by
 `LU_REAPER_MAX_REAPS_PER_DAY` (default 25); when the eligible backlog of
 fully safety-qualified worktrees exceeds the remaining daily budget, the cap
 may expand up to a hard ceiling of 2x the configured base (journaled as

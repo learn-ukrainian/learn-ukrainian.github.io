@@ -12,15 +12,19 @@ import json
 import os
 import re
 import subprocess
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration import worktree_claims
 from scripts.orchestration.execution_safe_git import primary_repository
 from scripts.orchestration.execution_safe_git import run_git as safe_git
 
 _STATE_RELATIVE = Path("batch_state") / "worktree-reaper"
 _PENDING_NAME = "reap-pending.json"
+_LEGACY_PENDING_STALE_SECONDS = 3600
 _CAP_NAME = "first-class-cap.json"
 _JOURNAL_NAME = "journal.jsonl"
 _FIRST_CLASS_DAYS = 7
@@ -89,6 +93,25 @@ def append_journal(repo_root: Path, event: str, **evidence: Any) -> None:
         fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
+@contextmanager
+def _pending_entries(repo_root: Path) -> Iterator[dict[str, Any]]:
+    """Serialize read/replace transactions on an inode that is never replaced."""
+    path = pending_path(repo_root)
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    with path.with_suffix(".lock").open("a+", encoding="utf-8") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            try:
+                current = json.loads(path.read_text(encoding="utf-8"))
+            except FileNotFoundError:
+                current = {"paths": {}}
+            if not isinstance(current, dict) or not isinstance(current.get("paths"), dict):
+                raise ValueError("invalid reap-pending state; refusing reservation mutation")
+            yield current["paths"]
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 def mark_reap_pending(
     repo_root: Path,
     *,
@@ -96,53 +119,102 @@ def mark_reap_pending(
     branch: str | None,
     head: str | None,
     task_id: str | None,
-) -> None:
+) -> bool:
     """Atomically reserve a path before its final deletion checks.
 
     Consumers that bind dispatch paths can call :func:`is_reap_pending` and
     refuse reuse while this reservation exists.  The reaper clears it after a
     terminal remove or any abort path.
     """
-    path = pending_path(repo_root)
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    with path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-        handle.seek(0)
-        try:
-            current = json.load(handle)
-        except json.JSONDecodeError:
-            current = {}
-        if not isinstance(current, dict):
-            current = {}
-        entries = current.get("paths")
-        if not isinstance(entries, dict):
-            entries = {}
-        entries[str(worktree_path.resolve())] = {
+    with _pending_entries(repo_root) as entries:
+        key = str(worktree_path.resolve())
+        if key in entries:
+            return False
+        entries[key] = {
             "branch": branch,
             "head": head,
             "task_id": task_id,
             "marked_at": utc_now().replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+            "pid": os.getpid(),
         }
-        _atomic_write(path, {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
-        fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        _atomic_write(pending_path(repo_root), {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
+        return True
 
 
 def clear_reap_pending(repo_root: Path, worktree_path: Path) -> None:
     path = pending_path(repo_root)
     if not path.exists():
         return
-    with path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-        handle.seek(0)
-        try:
-            current = json.load(handle)
-        except json.JSONDecodeError:
-            current = {}
-        entries = current.get("paths") if isinstance(current, dict) else None
-        if isinstance(entries, dict):
-            entries.pop(str(worktree_path.resolve()), None)
+    with _pending_entries(repo_root) as entries:
+        key = str(worktree_path.resolve())
+        entry = entries.get(key)
+        if isinstance(entry, dict) and entry.get("pid") == os.getpid():
+            entries.pop(key)
             _atomic_write(path, {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
-        fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def _orphan_reason(entry: Any, now: datetime) -> str | None:
+    """Require absent PID; legacy entries also require a stale UTC timestamp."""
+    if not isinstance(entry, dict):
+        return None
+    if "pid" in entry:
+        pid = entry["pid"]
+        if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+            return None
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return "holding PID absent"
+        except (OSError, OverflowError):
+            return None
+        return None
+    try:
+        marked = datetime.fromisoformat(str(entry.get("marked_at")).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if marked.tzinfo is None or (now - marked).total_seconds() < _LEGACY_PENDING_STALE_SECONDS:
+        return None
+    return "legacy reservation stale with no active reaper/worktree lock"
+
+
+def recover_orphaned_reap_pending(
+    repo_root: Path,
+    worktree_path: Path,
+    *,
+    lock_dir: Path,
+) -> bool:
+    """Release an orphan, never delete a tree; caller holds the sweep's reaper lock.
+
+    Recheck the entry under both the stable state lock and the attachment lock.
+    Journal before mutation: an unavailable journal leaves the reservation intact.
+    Live or unverifiable PIDs remain protected regardless of age (including PID
+    reuse). Legacy PID-less entries require age plus the caller's reaper lock.
+    """
+    if not is_reap_pending(repo_root, worktree_path):
+        return False
+    try:
+        with (
+            worktree_claims.worktree_lock(worktree_path, lock_dir=lock_dir, timeout_s=0),
+            _pending_entries(repo_root) as entries,
+        ):
+            key = str(worktree_path.resolve())
+            entry = entries.get(key)
+            reason = _orphan_reason(entry, utc_now())
+            if reason is None:
+                return False
+            append_journal(
+                repo_root,
+                "reservation-recovery",
+                path=key,
+                decision="release for normal safety evaluation",
+                reason=reason,
+                reservation=entry,
+            )
+            entries.pop(key)
+            _atomic_write(pending_path(repo_root), {"schema_version": "worktree-reaper-pending.v1", "paths": entries})
+            return True
+    except worktree_claims.WorktreeLockError:
+        return False
 
 
 def is_reap_pending(repo_root: Path, worktree_path: Path) -> bool:
@@ -197,9 +269,7 @@ def cap_allows_reap(
         return False, f"first-class daily reap cap ceiling reached ({ceiling})"
     remaining = max(base - count, 0)
     backlog_known = (
-        isinstance(eligible_backlog, int)
-        and not isinstance(eligible_backlog, bool)
-        and eligible_backlog >= 0
+        isinstance(eligible_backlog, int) and not isinstance(eligible_backlog, bool) and eligible_backlog >= 0
     )
     if backlog_known and eligible_backlog > remaining:
         append_journal(
@@ -227,8 +297,7 @@ def record_reap_for_cap(repo_root: Path, *, now: datetime | None = None) -> None
     counts[day] = previous + 1 if isinstance(previous, int) else 1
     state = {
         "schema_version": "worktree-reaper-first-class-cap.v1",
-        "enabled_at": state.get("enabled_at")
-        or current.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "enabled_at": state.get("enabled_at") or current.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "counts": counts,
     }
     _atomic_write(path, state)
