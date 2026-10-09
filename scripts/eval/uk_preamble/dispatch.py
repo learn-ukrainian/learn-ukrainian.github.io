@@ -207,7 +207,7 @@ class DelegateComposer:
     """Delegate's composition of a read-only ``--cwd`` dispatch, computed in-process without spawning anything.
 
     Mirrors ``cmd_dispatch`` for this harness's flags: the cwd is validated and
-    resolved as delegate does; a cwd inside a registered worktree gets the
+    resolved as delegate does; it must be inside a registered worktree and gets the
     worktree block, with the sparse-checkout exclusions delegate would apply
     there (computed from ``git ls-tree`` without changing the checkout); then
     ``_compose_dispatch_prompt`` builds the final prompt. A record that departs
@@ -226,7 +226,12 @@ class DelegateComposer:
         self.delegate = delegate
         self.rules_seat = rules_seat
         self.worktree: Path | None = delegate._resolve_verified_worktree_path(validated)
-        self.cwd = str(self.worktree or validated)
+        if self.worktree is None:
+            raise DispatchError(
+                "--worker-cwd must resolve inside a registered added Git worktree; "
+                "pass an existing isolated Git worktree with --worker-cwd"
+            )
+        self.cwd = str(self.worktree)
 
     def _sparse(self, prompt: str) -> dict[str, Any]:
         """The sparse-checkout telemetry delegate's worktree block reads (exclusions only; nothing applied)."""

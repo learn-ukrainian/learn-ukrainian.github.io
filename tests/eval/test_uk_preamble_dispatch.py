@@ -313,15 +313,16 @@ def test_primary_readonly_cwd_is_refused_before_dispatch(tmp_path: Path, monkeyp
         dispatcher.compose(PROMPT)
 
 
-def test_real_composition_outside_a_worktree_adds_no_block(tmp_path: Path):
+@pytest.mark.parametrize("git_checkout", [False, True])
+def test_real_composition_outside_a_worktree_is_refused(tmp_path: Path, monkeypatch, git_checkout: bool):
     plain = tmp_path / "plain"
     plain.mkdir()
-    expected = DelegateComposer(delegate, plain).compose(PROMPT)
-    assert expected["prompt_blocks"] == [] and expected["worktree_path"] is None
-    assert expected["effective_prompt_sha256"] == sha256_text(PROMPT)  # the rendered core is not repeated
-    assert condition_problems(_delegate_record(plain, PROMPT, "a"), expected=expected, args_sha256="a") == []
-    bare = DelegateComposer(delegate, plain).compose("Завдання без ядра.\n")
-    assert bare["prompt_blocks"] == ["rules_core"]
+    if git_checkout:
+        _git(plain, "init", "-q")
+    dispatcher = DelegateDispatcher(python=sys.executable, delegate=Path(delegate.__file__), cwd=plain)
+    monkeypatch.setattr(dispatcher, "_run", lambda *_a, **_k: pytest.fail("must refuse before a worker call"))
+    with pytest.raises(DispatchError, match="must resolve inside a registered added Git worktree"):
+        dispatcher.compose(PROMPT)
 
 
 class SimulatedDelegate(DelegateDispatcher):

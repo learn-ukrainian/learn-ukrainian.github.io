@@ -226,8 +226,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="Working directory (delegate --cwd) of every task, frozen in the manifest; its commit and "
-        "instruction files are fingerprinted per task. Default: this checkout; when running from the primary "
-        "checkout, pass an existing isolated Git worktree (primary cwd is refused before dispatch).",
+        "instruction files are fingerprinted per task. Must resolve inside an existing registered isolated Git "
+        "worktree. Default: this checkout; primary and unregistered checkouts are refused before dispatch.",
     )
     run.add_argument(
         "--seat",
