@@ -202,6 +202,47 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
 - it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
 - it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
 
+### Finished branch-holder scratch hand-off (#10227, first slice)
+
+Dispatch/review branch attachment may release a terminal, unambiguously bound
+holder with only untracked `*.orig`, `*.patch`, or `pytest_out.txt` scratch.
+The closed classifier lives in `scripts/fleet/regenerable_output.py`;
+these patterns do not become auto-finalize exclusions. Each eligible file is
+regular, has one hard link, and is at most 256 MiB. An `.orig` stem must be a
+tracked path. A filesystem scan also rejects special files that Git omits.
+Tracked changes (including concealed index-flag edits), submodules, nested
+repositories, arbitrary links and any other untracked output refuse the entire
+release. Ignored output is inventoried separately and archived, with existing
+cache and verified provisioned-link exemptions unchanged. The shared 256 MiB
+aggregate archive cap also applies.
+
+Under the existing attachment/removal lock, the active-task API must return a
+valid `tasks` list with no matching active task; missing or malformed `tasks`
+is unknown. Process-CWD and open-file/mapping probes must prove absence, including
+the open-file probe's visibility check. These gates bind clean legacy holders
+too, regardless of whether an owner record exists. HEAD must equal the exact
+live remote branch tip from `git ls-remote`; cached tracking refs cannot prove
+that equality.
+
+Before unlinking scratch, the shared preservation boundary copies and retrieves
+every selected file, verifies names/sizes/SHA-256, publishes a manifest, and
+records `branch_holder_archive` on the canonical task. Hand-off output includes
+the repository-relative `manifest_path`, `content_sha256` and
+`retrieval_proof_sha256`. Archive or receipt failure deletes nothing. Claims,
+liveness, task/run identity, HEAD and the complete inventory are rechecked;
+every scratch source's identity and bytes are revalidated before the first
+descriptor-relative, no-follow unlink. Non-force worktree removal then uses
+the existing common boundary. Dry-run neither archives nor unlinks.
+
+This lock coordinates cooperating attachment/removal callers; it cannot freeze
+an unrelated filesystem writer or a new process after the final absence probe.
+Git still refuses new ordinary untracked/modified files at non-force removal;
+already archived scratch remains retrievable if removal fails. Unknown state
+always refuses release. This slice adds no probe retry, identity bypass,
+retention release or automatic archive deletion. The reaper's dirty-tree and
+activity refusals and `delegate.py rescue` identity/activity refusals remain
+residuals owned by the accountable driver (`claude-monitor`).
+
 The scheduled job reports terminal non-success dispatches older than six hours
 as rescue candidates in its result and status; it does not commit or push them.
 A clean tree with unpushed commits is flagged at task exit as

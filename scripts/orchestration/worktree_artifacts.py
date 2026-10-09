@@ -11,7 +11,7 @@ import shlex
 import stat
 import subprocess
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -343,6 +343,47 @@ def _fingerprint(path: Path, *, root: Path) -> tuple[int, str]:
     """
     walked = _read_preserved_bytes(path, root=root)
     return len(walked.payload), hashlib.sha256(walked.payload).hexdigest()
+
+
+def unlink_archived_regular_files(root: Path, entries: list[Mapping[str, Any]], *, recheck: Callable[[], None]) -> None:
+    """Recheck the whole holder, preflight every source, then fd-relative unlink.
+
+    Called only under the attachment/removal lock after verified retrieval.
+    No link traversal, path normalization or recursive directory deletion.
+    """
+    # Probe before opening our own source descriptors: those would otherwise
+    # correctly show up as open-file activity in the independent lsof probe.
+    recheck()
+    with contextlib.ExitStack() as held:
+        root_fd = _open_trusted_root(root)
+        held.callback(os.close, root_fd)
+        leaves = []
+        for entry in entries:
+            parts = _relative_parts(root / entry["path"], root)
+            parent_fd, owned = _open_parent(root_fd, parts[:-1])
+            if owned:
+                held.callback(os.close, parent_fd)
+            fd = os.open(parts[-1], _LEAF_FLAGS, dir_fd=parent_fd)
+            held.callback(os.close, fd)
+            info = os.fstat(fd)
+            if (
+                not stat.S_ISREG(info.st_mode) or info.st_nlink != 1
+                or [info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns] != entry["identity"]
+                or _fingerprint(root / entry["path"], root=root) != (entry["size"], entry["sha256"])
+            ):
+                raise ValueError("source_changed")
+            leaves.append((parent_fd, parts[-1], info))
+        # Validate the entire set once more before the first deletion.
+        for parent_fd, name, info in leaves:
+            current = os.stat(name, dir_fd=parent_fd, follow_symlinks=False)
+            if (
+                current.st_mode != info.st_mode or current.st_nlink != 1 or current.st_size != info.st_size
+                or (current.st_dev, current.st_ino, current.st_mtime_ns, current.st_ctime_ns)
+                != (info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns)
+            ):
+                raise ValueError("source_changed")
+        for parent_fd, name, _info in leaves:
+            os.unlink(name, dir_fd=parent_fd)
 
 
 def _write_verified_bytes(payload: bytes, destination: Path) -> None:

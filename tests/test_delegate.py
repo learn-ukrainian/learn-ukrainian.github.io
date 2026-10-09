@@ -7615,6 +7615,8 @@ def _make_run_stub(
             return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(cmd, 0, f"{rev_parse_head_sha}\t{cmd[-1]}\n", "")
         if cmd[:2] == ["git", "rev-parse"]:
             if "--verify" in cmd:
                 rc = 0 if rev_parse_verify_ok else 1
@@ -7624,6 +7626,8 @@ def _make_run_stub(
                 return subprocess.CompletedProcess(cmd, 0, abbrev_ref, "")
             return subprocess.CompletedProcess(cmd, 0, rev_parse_head_sha, "")
         if cmd[:2] == ["git", "status"]:
+            if "-z" in cmd:
+                return subprocess.CompletedProcess(cmd, 0, status_porcelain.encode().replace(b"\n", b"\0"), b"")
             return subprocess.CompletedProcess(cmd, 0, status_porcelain, "")
         if cmd[:2] == ["git", "ls-files"]:
             # The removal guard inventories bytes with NUL delimiters.
@@ -9589,7 +9593,8 @@ def test_branch_reuse_releases_clean_holder_with_absent_task_record(tmp_path, mo
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     from scripts.orchestration import reap_worktrees
 
-    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(delegate, "_branch_holder_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_open_file_activity_reason", lambda _path: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     # No batch_state entry at all; a known-empty activity probe permits release.
 
@@ -14937,13 +14942,14 @@ def test_review_attempt_stale_branch_holder_survives_before_admission(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.setattr(delegate, "_local_repo_root", holder)
     branch = "codex/task-1"
-    subprocess.run(
-        ["git", "update-ref", f"refs/remotes/origin/{branch}", "HEAD"],
-        cwd=holder,
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    # #10227: a cached tracking ref cannot stand in for the live remote.
+    remote = tmp_path / "origin.git"
+    for argv in (
+        ["init", "--bare", str(remote)],
+        ["remote", "add", "origin", str(remote)],
+        ["push", "origin", f"HEAD:refs/heads/{branch}"],
+    ):
+        subprocess.run(["git", *argv], cwd=holder, check=True, capture_output=True, timeout=30)
     state = holder / "local_state"
     state.mkdir()
     manifest = (state if dependency == "manifest" else tmp_path) / "manifest.yaml"
@@ -15023,13 +15029,14 @@ def test_stale_branch_holder_ordinary_dispatch_still_releases_real_clean_holder(
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
     branch = "codex/task-1"
-    subprocess.run(
-        ["git", "update-ref", f"refs/remotes/origin/{branch}", "HEAD"],
-        cwd=holder,
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    # #10227: a cached tracking ref cannot stand in for the live remote.
+    remote = tmp_path / "origin.git"
+    for argv in (
+        ["init", "--bare", str(remote)],
+        ["remote", "add", "origin", str(remote)],
+        ["push", "origin", f"HEAD:refs/heads/{branch}"],
+    ):
+        subprocess.run(["git", *argv], cwd=holder, check=True, capture_output=True, timeout=30)
 
     assert delegate._release_stale_branch_holders(branch=branch, holders=[holder], dry_run=False) == [holder]
     assert not holder.exists()
@@ -17917,7 +17924,7 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, tmp_path, monke
 
 
 def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monkeypatch, tmp_tasks_dir):
-    """#7236: terminal+clean branch holder auto-releases even when active-task API is unreachable."""
+    """#10227: terminal+clean holder releases only after known-empty complete probes."""
     from scripts.orchestration import reap_worktrees
 
     target = tmp_path / "target"
@@ -17952,8 +17959,9 @@ def test_branch_reuse_releases_terminal_clean_holder_and_attaches(tmp_path, monk
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
-    # Active-task probe is unreachable (returns None), live process cwd probe is empty.
-    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: None)
+    # Both independent liveness probes are known-empty.
+    monkeypatch.setattr(delegate, "_branch_holder_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_open_file_activity_reason", lambda _path: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
 
     # Bound prior task is terminal (done) with dead PID.
@@ -18228,13 +18236,16 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
 
 def test_branch_holder_refuses_unparseable_bound_task_state(tmp_path, monkeypatch, tmp_tasks_dir):
     """#7242: exists-but-unparseable bound state must refuse release (P0-reaper posture)."""
+    from scripts.fleet import regenerable_output
     from scripts.orchestration import reap_worktrees
 
+    monkeypatch.setattr(regenerable_output, "branch_holder_scratch_inventory", lambda *_a, **_k: {"paths": []})
     occupied = Path(delegate._REPO_ROOT) / ".worktrees" / "dispatch" / "codex" / "corrupt-7242"
     branch = "codex/corrupt-7242"
     _, base_stub = _make_run_stub(status_porcelain="", rev_parse_head_sha="same-sha")
     monkeypatch.setattr(delegate.subprocess, "run", base_stub)
-    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(delegate, "_branch_holder_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_open_file_activity_reason", lambda _path: None)
     monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _repo: set())
 
     corrupt_path = delegate._state_path("codex-corrupt-7242")
