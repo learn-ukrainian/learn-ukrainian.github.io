@@ -200,7 +200,10 @@ replacement and conserves every survivor and its order. It refreshes only
 present `stats.lemmas_total`, `stats.from_built`, `stats.form_of_count` and
 `entries_count` using the established writer predicates; all other envelope
 values are preserved. Divergence or missing authority exits 2 without replacing
-the manifest. Replacement uses the existing atomic `manifest_io` writer. The
+the manifest. Replacement streams exact canonical bytes to a same-directory
+stage, preserves manifest permissions and verifies the staged digest. After final
+authority and input rechecks, `os.replace` atomically replaces the manifest; the
+stage is cleaned on every exit. The shared `manifest_io` writer is unchanged. The
 command never rewrites preservation data or derives runtime/publication output.
 
 No releases exist initially. Restoration requires explicit reviewed release
