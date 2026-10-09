@@ -345,7 +345,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "min_pct": 85,
             "max_pct": 100,
             "rule": (
-                "TARGET: 85-100% Ukrainian. Uncalibrated editorial advisory.\n"
+                "TARGET: 85-100% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY: easy Ukrainian explanations with concrete examples. Do not add English support paragraphs.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
@@ -368,7 +368,7 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
             "min_pct": 85,
             "max_pct": 100,
             "rule": (
-                "TARGET: 85-100% Ukrainian. Uncalibrated editorial advisory.\n"
+                "TARGET: 85-100% Ukrainian. HARD GATE — the audit rejects modules outside this range.\n"
                 "LANGUAGE ROLES:\n"
                 "- THEORY: easy Ukrainian explanations with brief repeated frames. English is not the default body voice.\n"
                 "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
