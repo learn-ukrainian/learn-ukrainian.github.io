@@ -756,6 +756,27 @@ entries:
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
 - path: scripts/agent_runtime/adapters/hermes_qwen.py
+  scope: <module>
+  context: docstring
+  id: qwen3.6-35b-a3b
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/hermes_qwen.py
+  scope: <module>
+  context: docstring
+  id: qwen3.6-flash
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/hermes_qwen.py
+  scope: <module>
+  context: docstring
+  id: qwen3.6-max-preview
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/adapters/hermes_qwen.py
   scope: HermesQwenAdapter
   context: expression
   id: qwen/qwen3.6-plus
@@ -835,6 +856,13 @@ entries:
 - path: scripts/agent_runtime/adapters/kimicc.py
   scope: KimiccHarness.build_invocation
   context: expression
+  id: claude-code
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'claude-code'; not a model ID.
+- path: scripts/agent_runtime/adapters/kimicc.py
+  scope: KimiccHarness.build_invocation
+  context: expression
   id: k3
   count: 1
   kind: migration_debt
@@ -888,6 +916,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
+- path: scripts/agent_runtime/env_sanitize.py
+  scope: build_agent_env
+  context: expression
+  id: claude-read-only
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'claude-read-only'; not a model ID.
 - path: scripts/agent_runtime/grok_hook_bridge.py
   scope: <module>
   context: docstring
@@ -895,6 +930,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'Claude-shaped'; not a model ID.
+- path: scripts/agent_runtime/kimi_admission.py
+  scope: <module>
+  context: docstring
+  id: kimi-code
+  count: 1
+  kind: non_model_label
+  reason: Provider namespace prefix in kimi-code/*; not a complete model ID.
 - path: scripts/agent_runtime/kimi_admission.py
   scope: <module>
   context: docstring
@@ -912,10 +954,24 @@ entries:
 - path: scripts/agent_runtime/kimi_admission.py
   scope: is_kimi_model
   context: docstring
+  id: kimi-code
+  count: 1
+  kind: non_model_label
+  reason: Provider namespace prefix in kimi-code/*; not a complete model ID.
+- path: scripts/agent_runtime/kimi_admission.py
+  scope: is_kimi_model
+  context: docstring
   id: kimi-k3
   count: 1
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/agent_runtime/kimi_boundary.py
+  scope: <module>
+  context: expression
+  id: kimi-push-disabled
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-push-disabled'; not a model ID.
 - path: scripts/agent_runtime/lane_probe.py
   scope: build_parser
   context: expression
@@ -1256,7 +1312,7 @@ entries:
   scope: _profile_for_agent
   context: expression
   id: grok-hermes
-  count: 1
+  count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-hermes'; not a model ID.
 - path: scripts/ai_agent_bridge/_agy.py
@@ -1759,6 +1815,13 @@ entries:
 - path: scripts/ai_agent_bridge/_opencode.py
   scope: <module>
   context: docstring
+  id: qwen3.7-max
+  count: 2
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
+  context: docstring
   id: zai-coding-plan/glm-5.3
   count: 1
   kind: documentation
@@ -1942,6 +2005,13 @@ entries:
   scope: <module>
   context: docstring
   id: qwen/qwen3.6-plus
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
+  context: docstring
+  id: qwen3.7-max
   count: 1
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
@@ -2166,7 +2236,7 @@ entries:
   scope: <module>
   context: expression
   id: grok-bot
-  count: 2
+  count: 3
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-bot'; not a model ID.
 - path: scripts/api/runtime_router.py
@@ -2232,6 +2302,27 @@ entries:
   count: 1
   kind: uncatalogued_identity
   reason: 'Existing model or provider alias outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/audit/bakeoff_aggregate.py
+  scope: build_parser
+  context: expression
+  id: gpt55
+  count: 2
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/audit/bakeoff_aggregate.py
+  scope: normalize_agent
+  context: expression
+  id: gpt55
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/audit/bakeoff_aggregate.py
+  scope: parse_args
+  context: expression
+  id: gpt55
+  count: 3
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
 - path: scripts/audit/bakeoff_run.py
   scope: <module>
   context: expression
@@ -2253,6 +2344,13 @@ entries:
   count: 1
   kind: uncatalogued_identity
   reason: 'Existing model or provider alias outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/audit/bakeoff_run.py
+  scope: <module>
+  context: expression
+  id: gpt55
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
 - path: scripts/audit/bakeoff_run.py
   scope: build_parser
   context: expression
@@ -2740,7 +2838,7 @@ entries:
   scope: <module>
   context: docstring
   id: claude-inline
-  count: 1
+  count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'claude-inline'; not a model ID.
 - path: scripts/audit/lint_agent_trailer.py
@@ -2807,6 +2905,13 @@ entries:
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
 - path: scripts/audit/lint_agent_trailer.py
+  scope: _is_exempt_trailer
+  context: docstring
+  id: claude-inline
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'claude-inline'; not a model ID.
+- path: scripts/audit/lint_agent_trailer.py
   scope: locate_record_for_trailer
   context: expression
   id: deepseek-v4-pro
@@ -2820,6 +2925,13 @@ entries:
   count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-build'; not a model ID.
+- path: scripts/audit/lint_agent_trailer.py
+  scope: main
+  context: expression
+  id: claude-inline
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'claude-inline'; not a model ID.
 - path: scripts/audit/llm_reviewer_dispatch.py
   scope: <module>
   context: expression
@@ -2876,6 +2988,27 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'gemini-auto'; not a model ID.
+- path: scripts/audit/opencode_judge_calibration.py
+  scope: <module>
+  context: docstring
+  id: qwen3.7-max
+  count: 6
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/audit/opencode_judge_calibration.py
+  scope: call_opencode
+  context: docstring
+  id: qwen3.7-max
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/audit/opencode_judge_calibration.py
+  scope: main
+  context: expression
+  id: qwen3.7-max
+  count: 2
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/audit/qg_bakeoff.py
   scope: <module>
   context: expression
@@ -3038,12 +3171,40 @@ entries:
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
 - path: scripts/audit/qwen_judge_calibration.py
+  scope: <module>
+  context: docstring
+  id: qwen3.6-flash
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/audit/qwen_judge_calibration.py
+  scope: <module>
+  context: docstring
+  id: qwen3.6-max-preview
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/audit/qwen_judge_calibration.py
   scope: main
   context: expression
   id: qwen/qwen3.6-plus
   count: 2
   kind: migration_debt
   reason: 'Existing identity in main; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qwen_judge_calibration.py
+  scope: main
+  context: expression
+  id: qwen3.6-flash
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qwen_judge_calibration.py
+  scope: main
+  context: expression
+  id: qwen3.6-max-preview
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/audit/review_plan.py
   scope: <module>
   context: expression
@@ -3717,6 +3878,13 @@ entries:
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'gemini-tools'; not a model ID.
 - path: scripts/build/v7_build.py
+  scope: build_parser
+  context: expression
+  id: gpt55.write.jsonl
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gpt55.write.jsonl'; not a model ID.
+- path: scripts/build/v7_build.py
   scope: parse_args
   context: expression
   id: claude-tools
@@ -3759,6 +3927,20 @@ entries:
   kind: uncatalogued_identity
   reason: 'Existing model or provider alias outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/build/v7_review.py
+  scope: <module>
+  context: expression
+  id: gpt55
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/build/v7_review.py
+  scope: _writer_from_content_path
+  context: expression
+  id: gpt55
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/build/v7_review.py
   scope: build_parser
   context: expression
   id: claude-tools
@@ -3772,6 +3954,20 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'gemini-tools'; not a model ID.
+- path: scripts/build/v7_review.py
+  scope: build_parser
+  context: expression
+  id: gpt55-gemini.review.jsonl
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gpt55-gemini.review.jsonl'; not a model ID.
+- path: scripts/build/v7_review.py
+  scope: build_parser
+  context: expression
+  id: gpt55.md
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gpt55.md'; not a model ID.
 - path: scripts/build/v7_review.py
   scope: parse_args
   context: expression
@@ -3796,10 +3992,24 @@ entries:
 - path: scripts/canary/kimi_oauth_canary.py
   scope: post_failure_alert
   context: expression
+  id: kimi-oauth-canary
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-oauth-canary'; not a model ID.
+- path: scripts/canary/kimi_oauth_canary.py
+  scope: post_failure_alert
+  context: expression
   id: kimi-oauth-refresh
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'kimi-oauth-refresh'; not a model ID.
+- path: scripts/canary/kimi_oauth_canary.py
+  scope: run_canary
+  context: expression
+  id: kimi-oauth-canary
+  count: 2
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-oauth-canary'; not a model ID.
 - path: scripts/ci/component_shadow.py
   scope: <module>
   context: expression
@@ -4192,6 +4402,13 @@ entries:
   count: 2
   kind: migration_debt
   reason: 'Existing identity in _parser; #9302 consumer migration owned by infra.'
+- path: scripts/lexicon/ulp_taught_pair_extractor.py
+  scope: format_markdown_tables
+  context: expression
+  id: grok-atlas
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'grok-atlas'; not a model ID.
 - path: scripts/lib/kimi_coding_oauth.py
   scope: <module>
   context: docstring
@@ -4220,6 +4437,27 @@ entries:
   count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'kimi-code.json'; not a model ID.
+- path: scripts/lib/kimi_coding_oauth.py
+  scope: _emit_token
+  context: expression
+  id: kimi-coding-oauth
+  count: 3
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-coding-oauth'; not a model ID.
+- path: scripts/lib/kimi_coding_oauth.py
+  scope: cmd_refresh
+  context: expression
+  id: kimi-coding-oauth
+  count: 3
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-coding-oauth'; not a model ID.
+- path: scripts/lib/kimi_coding_oauth.py
+  scope: cmd_token
+  context: expression
+  id: kimi-coding-oauth
+  count: 2
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'kimi-coding-oauth'; not a model ID.
 - path: scripts/lib/rules_core.py
   scope: <module>
   context: docstring
@@ -4238,7 +4476,7 @@ entries:
   scope: main
   context: expression
   id: kimi-agent-file
-  count: 1
+  count: 2
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'kimi-agent-file'; not a model ID.
 - path: scripts/lint/lint_prompts.py
@@ -4472,6 +4710,21 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing case or suffix variant of google-ais/gemma-4-31b-it; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/gemma_hardware_probe.py
+  scope: <module>
+  context: expression
+  id: gemma4-it-l40s-hf-jobs-hardware-probe-v1
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gemma4-it-l40s-hf-jobs-hardware-probe-v1'; not
+    a model ID.
+- path: scripts/projects/open_model_data/gemma_hardware_probe.py
+  scope: build_hf_job_command
+  context: expression
+  id: gemma4-it-l40s-probe-6170
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gemma4-it-l40s-probe-6170'; not a model ID.
 - path: scripts/projects/open_model_data/phase3_cycle007_labeling_guardian.py
   scope: _fresh_provider_free_status
   context: expression
@@ -4675,6 +4928,14 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing case or suffix variant of google-ais/gemma-4-31b-it; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/prepare_treatment.py
+  scope: <module>
+  context: expression
+  id: gemma4-it-wikipedia-mask-ablation-v1
+  count: 1
+  kind: non_model_label
+  reason: Existing harness, task, artifact or descriptive label 'gemma4-it-wikipedia-mask-ablation-v1'; not a model
+    ID.
 - path: scripts/projects/open_model_data/reference_build.py
   scope: reproduce_baseline
   context: expression
@@ -4703,6 +4964,20 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/projects/open_model_data/train_and_eval_real_model.py
+  scope: <module>
+  context: docstring
+  id: Qwen2.5-0.5B-Instruct
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/projects/open_model_data/train_and_eval_real_model.py
+  scope: main
+  context: expression
+  id: Qwen2.5-0.5B-Instruct
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/projects/open_model_data/v4_open_weight_learning_study.py
   scope: <module>
   context: expression
@@ -4724,6 +4999,13 @@ entries:
   count: 1
   kind: documentation
   reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/projects/open_model_data/v4_pilot_canary_evaluation.py
+  scope: evaluate_canary_run
+  context: expression
+  id: Gemma3ForCausalLM
+  count: 1
+  kind: non_model_label
+  reason: Runtime architecture class or model_type label; not a routable model ID.
 - path: scripts/projects/open_model_data/v4_pilot_canary_evaluation.py
   scope: evaluate_canary_run
   context: expression
@@ -4976,6 +5258,111 @@ entries:
   count: 1
   kind: uncatalogued_identity
   reason: 'Existing model or provider alias outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/projects/ua_open_weight_eval/hf_jobs_worker.py
+  scope: enable_gemma4_text_gguf_alias
+  context: expression
+  id: gemma4
+  count: 1
+  kind: non_model_label
+  reason: Runtime architecture class or model_type label; not a routable model ID.
+- path: scripts/projects/ua_open_weight_eval/hf_jobs_worker.py
+  scope: prepare_text_runtime_tokenizer
+  context: expression
+  id: Gemma4ForCausalLM
+  count: 1
+  kind: non_model_label
+  reason: Runtime architecture class or model_type label; not a routable model ID.
+- path: scripts/projects/ua_open_weight_eval/hf_jobs_worker.py
+  scope: prepare_text_runtime_tokenizer
+  context: expression
+  id: Gemma4ForConditionalGeneration
+  count: 1
+  kind: non_model_label
+  reason: Runtime architecture class or model_type label; not a routable model ID.
+- path: scripts/projects/ua_open_weight_eval/hf_jobs_worker.py
+  scope: prepare_text_runtime_tokenizer
+  context: expression
+  id: gemma4
+  count: 1
+  kind: non_model_label
+  reason: Runtime architecture class or model_type label; not a routable model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: <module>
+  context: docstring
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: <module>
+  context: docstring
+  id: qwen3
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: <module>
+  context: expression
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/rag/benchmark_embeddings.py
+  scope: Qwen3Encoder
+  context: docstring
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: Qwen3Encoder.encode
+  context: docstring
+  id: Qwen3
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: Qwen3Encoder.encode
+  context: docstring
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: documentation
+  reason: Explanatory model identity in an AST docstring; does not select a runtime model.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: Qwen3Encoder.load
+  context: expression
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/rag/benchmark_embeddings.py
+  scope: Qwen3Encoder.unload
+  context: expression
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/rag/benchmark_embeddings.py
+  scope: build_parser
+  context: expression
+  id: qwen3
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: print_dry_run_plan
+  context: expression
+  id: qwen3
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: run_benchmark
+  context: expression
+  id: Qwen3-Embedding-0.6B
+  count: 2
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/rag/benchmark_embeddings.py
   scope: run_benchmark
   context: expression
@@ -4983,6 +5370,20 @@ entries:
   count: 1
   kind: uncatalogued_identity
   reason: 'Existing model or provider alias outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/rag/benchmark_embeddings.py
+  scope: run_benchmark
+  context: expression
+  id: qwen3
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
+- path: scripts/rag/benchmark_embeddings.py
+  scope: run_benchmark
+  context: expression
+  id: qwen3-0.6b
+  count: 1
+  kind: non_model_label
+  reason: Historical writer alias or benchmark selector/result label; not a concrete model ID.
 - path: scripts/review/closeout_cli.py
   scope: <module>
   context: expression
@@ -5256,6 +5657,13 @@ entries:
   count: 1
   kind: non_model_label
   reason: Existing harness, task, artifact or descriptive label 'grok-4.7-cursor-fallback'; not a model ID.
+- path: scripts/review/reviewer_resolver.py
+  scope: <module>
+  context: expression
+  id: qwen3-max
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/review/reviewer_resolver.py
   scope: candidate_dispatch_model
   context: docstring
@@ -5872,6 +6280,20 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing identity in run_codex_concept_extraction; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/diagnostics/retrieval_bakeoff_9233.py
+  scope: <module>
+  context: expression
+  id: Qwen3-Embedding-0.6B
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
+- path: scripts/wiki/diagnostics/retrieval_bakeoff_9233.py
+  scope: <module>
+  context: expression
+  id: Qwen3-Reranker-0.6B
+  count: 1
+  kind: uncatalogued_identity
+  reason: 'Existing model identity outside the current catalog; #9302 consumer migration owned by infra.'
 - path: scripts/wiki/review.py
   scope: _run_round
   context: docstring

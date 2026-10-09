@@ -36,7 +36,10 @@ KINDS = frozenset(
 )
 CONTEXTS = frozenset({"docstring", "expression"})
 # Broad shapes catch future/retired IDs independently of the current catalog.
-MODEL_SHAPE = r"(?:gpt|claude|gemini|grok|glm|gemma|laguna|kimi|composer|deepseek|qwen|llama|mistral)-[a-z0-9](?:[a-z0-9.\-]*[a-z0-9])?"
+MODEL_SHAPE = (
+    r"(?:gpt|claude|gemini|grok|glm|gemma|laguna|kimi|composer|deepseek|qwen|llama|mistral)"
+    r"(?:-[a-z0-9]|[0-9])(?:[a-z0-9.\-]*[a-z0-9])?"
+)
 SCOPE = re.compile(r"(?:<module>|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)\Z")
 GENERIC_LANE_ALIASES = frozenset({"pool", "glm", "gemma"})
 
@@ -70,8 +73,9 @@ def _identities(catalog: dict[str, Any]) -> set[str]:
 def _pattern(identities: set[str]) -> re.Pattern[str]:
     assert identities, "catalog has no model identities"
     choices = "|".join(re.escape(identity) for identity in sorted(identities, key=lambda x: (-len(x), x)))
+    # Preserve complete catalog wire IDs before scanning slash-delimited shapes.
     return re.compile(
-        rf"(?<![\w.-])(?:{MODEL_SHAPE}|{choices})(?![\w/:-]|\.[\w])",
+        rf"(?<![\w.-])(?:{choices}|{MODEL_SHAPE})(?![\w-]|\.[\w])",
         re.IGNORECASE,
     )
 
@@ -368,8 +372,9 @@ def test_model_boundaries_distinguish_versions_from_sentence_punctuation() -> No
     [
         ("codex:gpt-6.1-sol", "gpt-6.1-sol"),
         ("xai/grok-4.7", "grok-4.7"),
-        ("kimi-code/kimi-for-coding", "kimi-for-coding"),
         ("opencode:provider/coding", "provider/coding"),
+        ("kimi-code/k3", "kimi-code/k3"),
+        ("zai-coding-plan/glm-5.3", "zai-coding-plan/glm-5.3"),
     ],
 )
 def test_prefixed_model_ids_are_inventoried(tmp_path: Path, literal: str, identity: str) -> None:
@@ -380,6 +385,46 @@ def test_prefixed_model_ids_are_inventoried(tmp_path: Path, literal: str, identi
     assert actual == Counter({("scripts/router.py", "<module>", "expression", identity): 1})
     with pytest.raises(AssertionError, match="unexempted model literals"):
         _assert_inventory(actual, Counter())
+
+
+@pytest.mark.parametrize("literal", ["qwen3-max", "gpt5-codex", "gemma4", "glm54", "llama3.1", "gpt55"])
+@pytest.mark.parametrize("suffix", ["", ":", "/", ":route", "/route"])
+def test_digit_family_model_ids_fail_closed(tmp_path: Path, literal: str, suffix: str) -> None:
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/router.py").write_text(f"MODEL = {literal + suffix!r}\n")
+    actual = _scan(tmp_path, {"gpt-99-test"})
+    assert actual == Counter({("scripts/router.py", "<module>", "expression", literal): 1})
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(actual, Counter())
+
+
+@pytest.mark.parametrize("suffix", [":", "/", ":route", "/route"])
+def test_model_ids_before_colon_or_slash_fail_closed(tmp_path: Path, suffix: str) -> None:
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/router.py").write_text(f"MODEL = {'gpt-99-test' + suffix!r}\n")
+    actual = _scan(tmp_path, {"gpt-99-test"})
+    assert actual == Counter({("scripts/router.py", "<module>", "expression", "gpt-99-test"): 1})
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(actual, Counter())
+
+
+def test_provider_prefix_label_cannot_hide_model_identity(tmp_path: Path) -> None:
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts/router.py").write_text('MODEL = "kimi-code/kimi-for-coding"\n')
+    identities = {"kimi-for-coding"}
+    actual = _scan(tmp_path, identities)
+    allowed = _allowlist(
+        _document(_entry(scope="<module>", id="kimi-code", kind="non_model_label", reason="Provider prefix.")),
+        identities,
+    )
+    assert actual == Counter(
+        {
+            ("scripts/router.py", "<module>", "expression", "kimi-code"): 1,
+            ("scripts/router.py", "<module>", "expression", "kimi-for-coding"): 1,
+        }
+    )
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(actual, allowed)
 
 
 @pytest.mark.parametrize(
