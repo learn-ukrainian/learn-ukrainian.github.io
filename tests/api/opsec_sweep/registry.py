@@ -33,9 +33,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 276
+FROZEN_HTTP_OPERATION_COUNT = 278
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "cb5614dcfa7df858ab31ff118cf78e3a3a4d97012ff41dc964bff6198c61e6f3"
+FROZEN_DENOMINATOR_SHA256 = "750688b047ac829f17261b7a65c51907b5e775337260cc2527fd40c7725dd00c"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied

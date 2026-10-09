@@ -11711,6 +11711,18 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
+    # Diagnose the required profile before route admission defaults to code
+    # review and checks its explicit risk.
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and getattr(args, "require_review_verdict", False)
+        and not getattr(args, "review_profile", None)
+    ):
+        from scripts.ai_agent_bridge._agy import gemini_review_profile_error
+
+        print(f"❌ {gemini_review_profile_error(None)}", file=sys.stderr)
+        return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -14437,13 +14449,14 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review.
+    """True when a PR target or any review flag types this dispatch as a review.
 
     ``--review-author-model`` and ``--review-risk`` exist only for reviewer
     resolution, so either one types the dispatch as a (code-profile) review.
     """
     return (
         bool(getattr(args, "review", False))
+        or getattr(args, "pr", None) is not None
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
@@ -17689,6 +17702,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
+            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )

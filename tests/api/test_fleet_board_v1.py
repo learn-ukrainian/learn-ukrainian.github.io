@@ -41,6 +41,8 @@ def test_index_lists_every_registered_v1_route() -> None:
     assert listed == {
         ("GET", "/api/fleet/v1"),
         ("GET", "/api/fleet/v1/budget"),
+        ("GET", "/api/fleet/v1/prs"),
+        ("GET", "/api/fleet/v1/prs/{number}"),
         ("GET", "/api/fleet/v1/roster"),
         ("GET", "/api/fleet/v1/schema"),
     }

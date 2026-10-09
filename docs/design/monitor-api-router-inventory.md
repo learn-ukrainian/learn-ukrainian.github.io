@@ -50,14 +50,14 @@ print(sum(calls.values()), len(calls), [n for n, c in calls.items() if c > 1])
 The one-line `grep -oE` form of this count is not authoritative: it breaks on the
 multiline `reviewer_ghosts_router` call. The AST parse above is.
 
-### Total route-handler count — **275** decorator sum; **276** OpenAPI HTTP ops + **1** WebSocket
+### Total route-handler count — **277** decorator sum; **278** OpenAPI HTTP ops + **1** WebSocket
 
 Three separate denominators (do not conflate them):
 
 | Metric | Value | Source |
 | --- | ---: | --- |
-| Route-handler decorator sum | **275** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
-| OpenAPI HTTP operations | **276** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
+| Route-handler decorator sum | **277** | `@router.*` (and `@core_router.*` in `main.py`) in each mounted module **once**, plus nested `router.include_router` children (currently only `entire_context_router` inside `ops_router`) |
+| OpenAPI HTTP operations | **278** | `FROZEN_HTTP_OPERATION_COUNT` in `tests/api/opsec_sweep/registry.py`; duplicate prefix mounts count twice; **excludes** WebSocket routes |
 | WebSocket routes | **1** | `FROZEN_WEBSOCKET_ROUTE_COUNT`; `WS /ws/batch` on `batch_router` — absent from `app.openapi()['paths']` |
 
 Nested mounts (grep `\.include_router(` in `scripts/api/*.py`, excluding
@@ -140,7 +140,7 @@ for var, path in sorted(ROUTER_MAP.items()):
     total += n
 print(total)
 "
-# 275
+# 277
 
 .venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
@@ -150,8 +150,8 @@ print(sum(len(v) for v in app.openapi()['paths'].values()))
 print(FROZEN_HTTP_OPERATION_COUNT)
 print(FROZEN_WEBSOCKET_ROUTE_COUNT)
 "
-# 276
-# 276
+# 278
+# 278
 # 1
 ```
 
@@ -262,7 +262,7 @@ routers (§4.2 core-router-last ordering).
 | **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 1,844 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
 | **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router`, `cluster_router` | 1,107 | Governance/decisions-adjacent reads + issues/gh seam + cluster readiness probe over the control-plane stores |
 | **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,594 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
-| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,100 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
+| **12e** | `work_router`, `epics_router`, `fleet_board_router` | 2,114 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) + fleet board v1 |
 | **13** | `batch_router`, `core_router` (`main.py` inline) | 2,112 | **Last two mounts, in this order** — batch dispatcher/active/usage routes + `WS /ws/batch` (split out of `main.py`), then health/orient/config routes + catch-all static; read config through `Depends(get_ctx)`, no dedicated store of their own |
 
 ---
@@ -465,7 +465,7 @@ The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are d
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `work_router.py` | `/api/work` | 4 | 790 | — | `_IN_FLIGHT_BUILDS` | 0 | 12e |
 | `epics_router.py` | `/api/epics` | 12 | 1,158 | — | — | 0 | 12e |
-| `fleet_board.router.py` | `/api/fleet/v1` | 4 | 152 | — | — | 0 | 12e |
+| `fleet_board.router.py` | `/api/fleet/v1` | 6 | 166 | — | — | 0 | 12e |
 
 **12e migrated (#7334):** stores and live repo root now come from
 `Depends(get_ctx)`. The 3 seams this row listed (`work_router._IN_FLIGHT_BUILDS`
@@ -514,8 +514,8 @@ beyond the config imports and module globals listed above.
 | Router registrations (`include_router` calls) | 48 |
 | Distinct router objects (46 imported modules + `core_router`) | 47 |
 | Routers mounted twice | 1 (`docs_router`) |
-| Route handlers (decorator sum, nested included) | 275 |
-| OpenAPI HTTP operations (sweep denominator) | 276 |
+| Route handlers (decorator sum, nested included) | 277 |
+| OpenAPI HTTP operations (sweep denominator) | 278 |
 | WebSocket routes (separate denominator) | 1 |
 | OPSEC fixture `setattr` targets (unique; see *OPSEC fixture seams*) | 22 |
 

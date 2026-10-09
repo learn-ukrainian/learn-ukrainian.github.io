@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import re
 from collections.abc import Sequence
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Path, Query, Request
 
 from ..monitor_context import MonitorContext, get_ctx
+from . import prs as prs_api
 from .budget import load_budget, unknown_budget
 from .envelope import endpoint_schema, envelope, utc_timestamp
 from .roster import empty_roster, load_roster
@@ -150,3 +151,16 @@ def read_budget(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         data = unknown_budget()
         source = report("routing_budget", "unavailable")
     return respond("budget", data, overlay_source(source))
+
+
+@router.get("/prs", name="prs")
+def read_prs(
+    epic: Annotated[str | None, Query(max_length=80)] = None,
+    state: Annotated[str | None, Query(max_length=40)] = None,
+) -> dict[str, Any]:
+    return prs_api.read_prs(epic=epic, state=state)
+
+
+@router.get("/prs/{number}", name="pr")
+def read_pr(number: Annotated[int, Path(ge=1)]) -> dict[str, Any]:
+    return prs_api.read_pr(number)
