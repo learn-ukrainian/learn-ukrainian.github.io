@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
@@ -109,6 +111,62 @@ def test_provision_data_symlinks_read_only_withdraws_only_primary_database_links
     (worktree / "data" / "vesum.db").unlink()
     delegate._provision_data_symlinks(worktree, main_repo)
     assert (worktree / "data" / "vesum.db").resolve() == (main_repo / "data" / "vesum.db").resolve()
+
+
+def test_withdraw_refuses_aliased_data_parent_and_primary_link_survives(tmp_path):
+    """Regression: a worktree ``data`` directory aliased into the primary must not unlink the primary's DB link."""
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "store").mkdir(parents=True)
+    (main_repo / "data").mkdir()
+    real_sources = main_repo / "store" / "sources-real.db"
+    real_sources.touch()
+    primary_link = main_repo / "data" / "sources.db"
+    primary_link.symlink_to(real_sources)
+    worktree.mkdir(parents=True)
+    # The worktree's data directory aliases the primary's data directory, so
+    # worktree/data/sources.db is the primary's own link.
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._withdraw_primary_database_links(worktree, main_repo, ("data/sources.db",))
+
+    assert primary_link.is_symlink()
+    assert primary_link.resolve() == real_sources.resolve()
+
+
+def test_withdraw_refuses_aliased_data_parent_outside_worktree(tmp_path):
+    """Regression: the same alias is refused when the worktree itself sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    real_vesum = main_repo / "data" / "vesum-real.db"
+    real_vesum.touch()
+    primary_link = main_repo / "data" / "vesum.db"
+    primary_link.symlink_to(real_vesum)
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._withdraw_primary_database_links(worktree, main_repo, ("data/vesum.db",))
+
+    assert primary_link.is_symlink()
+    assert real_vesum.exists()
+
+
+def test_withdraw_unlinks_primary_link_through_worktree_owned_parent(tmp_path):
+    """The containment check still lets a normal worktree shed its primary database link."""
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "sources.db").touch()
+    (worktree / "data").mkdir(parents=True)
+    (worktree / "data" / "sources.db").symlink_to(main_repo / "data" / "sources.db")
+
+    delegate._withdraw_primary_database_links(worktree, main_repo, ("data/sources.db",))
+
+    assert not (worktree / "data" / "sources.db").is_symlink()
+    assert (main_repo / "data" / "sources.db").exists()
 
 
 def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):

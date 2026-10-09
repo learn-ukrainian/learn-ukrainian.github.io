@@ -16655,9 +16655,9 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
     withdrawals: list[bool] = []
     real_withdraw = delegate._withdraw_primary_database_links
 
-    def withdraw(worktree, main_repo_root):
+    def withdraw(worktree, main_repo_root, relative_paths):
         withdrawals.append(_worktree_lock_is_free(worktree))
-        real_withdraw(worktree, main_repo_root)
+        real_withdraw(worktree, main_repo_root, relative_paths)
 
     monkeypatch.setattr(delegate, "_withdraw_primary_database_links", withdraw)
     real_popen = delegate.subprocess.Popen

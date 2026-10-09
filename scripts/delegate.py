@@ -8224,24 +8224,35 @@ def _validate_existing_worktree(
     return True
 
 
-_PROVISIONED_DATABASE_LINKS = ("data/vesum.db", "data/sources.db")
-
-
-def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path) -> None:
+def _withdraw_primary_database_links(
+    worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]
+) -> None:
     """Remove a reused worktree's database links that resolve to the primary databases (#9421).
 
     A read-only dispatch must carry no such link: a symlink cannot be made
     read-only, so a write through it lands in the primary database. Links to
     anything else stay. Never touches the main checkout itself, whose own
     database entries are the primary.
+
+    The link is unlinked only through a parent directory that resolves inside
+    this worktree. An aliased parent (for example a worktree ``data`` directory
+    that points into the primary checkout) would otherwise delete the primary's
+    own entry, so such a dispatch fails closed instead.
     """
     if worktree_path.resolve() == main_repo_root.resolve():
         return
-    for relative_path in _PROVISIONED_DATABASE_LINKS:
+    worktree = worktree_path.resolve()
+    for relative_path in relative_paths:
         target = worktree_path / relative_path
         # Non-strict resolution also matches a dangling link, whose write
         # would create the primary database.
         if target.is_symlink() and target.resolve() == (main_repo_root / relative_path).resolve():
+            # The primary checkout contains worktrees, so containment in this
+            # worktree (not absence from the primary) is the boundary.
+            if not target.parent.resolve().is_relative_to(worktree):
+                raise RuntimeError(
+                    f"refusing to withdraw database link {target}: its parent resolves outside the worktree"
+                )
             target.unlink()
             print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
 
@@ -8279,10 +8290,11 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
         )
         return
 
+    database_links = ("data/vesum.db", "data/sources.db")
     if read_only:
-        _withdraw_primary_database_links(worktree_path, main_repo_root)
+        _withdraw_primary_database_links(worktree_path, main_repo_root, database_links)
     for relative_path in (
-        *(() if read_only else _PROVISIONED_DATABASE_LINKS),
+        *(() if read_only else database_links),
         "node_modules",
         "site/node_modules",
     ):
@@ -13361,7 +13373,12 @@ def _dispatch(
             if args.mode == "read-only":
                 # Still under the worktree lock: a link an earlier write-capable
                 # dispatch provisioned must not reach the worker (#9421).
-                _withdraw_primary_database_links(resolved_wt, _REPO_ROOT)
+                try:
+                    _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=True)
+                except RuntimeError as exc:
+                    discard_logs()
+                    print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
+                    return 1
 
     # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
     # gate and the check above already hold this; this re-check under the worktree lock
