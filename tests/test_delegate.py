@@ -10791,6 +10791,7 @@ def test_read_only_dispatch_auto_pins_detached_worktree(tmp_tasks_dir, monkeypat
         assert delegate.cmd_dispatch(args) == 1
         assert ensure_calls[-1]["agent"] == agent
         assert ensure_calls[-1]["detached"] is True
+        assert ensure_calls[-1]["read_only"] is True
         assert "sentinel: worktree creation reached" in capsys.readouterr().err
 
 

@@ -84,6 +84,33 @@ def test_provision_data_symlinks_skips_missing_main_files(tmp_path, capsys):
     assert not (worktree / "site" / "node_modules").exists()
 
 
+def test_provision_data_symlinks_read_only_withdraws_only_primary_database_links(tmp_path):
+    """#9421: read-only provisioning drops primary DB links, keeps other links, and a later write restores them."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    (main_repo / "data" / "vesum.db").touch()
+    (main_repo / "node_modules").mkdir()
+    other = tmp_path / "elsewhere.db"
+    other.touch()
+    delegate._provision_data_symlinks(worktree, main_repo)
+    # A dangling link to the primary's absent sources.db would create it on write.
+    (worktree / "data" / "sources.db").symlink_to(main_repo / "data" / "sources.db")
+
+    delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert not (worktree / "data" / "vesum.db").is_symlink()
+    assert not (worktree / "data" / "sources.db").is_symlink()
+    assert (worktree / "node_modules").resolve() == (main_repo / "node_modules").resolve()
+    (worktree / "data" / "vesum.db").symlink_to(other)
+    delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+    assert (worktree / "data" / "vesum.db").resolve() == other.resolve()
+
+    (worktree / "data" / "vesum.db").unlink()
+    delegate._provision_data_symlinks(worktree, main_repo)
+    assert (worktree / "data" / "vesum.db").resolve() == (main_repo / "data" / "vesum.db").resolve()
+
+
 def test_provision_data_symlinks_refuses_when_worktree_is_main(tmp_path, capsys):
     """Guard against the node_modules ELOOP footgun: provisioning the main
     checkout into itself would create `node_modules -> node_modules` self-loops
