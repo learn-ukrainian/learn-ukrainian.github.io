@@ -8234,25 +8234,26 @@ def _withdraw_primary_database_links(
     anything else stay. Never touches the main checkout itself, whose own
     database entries are the primary.
 
-    The link is unlinked only through a parent directory that resolves inside
-    this worktree. An aliased parent (for example a worktree ``data`` directory
-    that points into the primary checkout) would otherwise delete the primary's
-    own entry, so such a dispatch fails closed instead.
+    The parent containment is checked for every database path, whatever the
+    entry type. An aliased parent (for example a worktree ``data`` directory
+    that points into the primary checkout) makes a relative write reach the
+    primary database even when the entry is an ordinary file or absent, so
+    such a dispatch fails closed instead of only when the entry is a link.
     """
     if worktree_path.resolve() == main_repo_root.resolve():
         return
     worktree = worktree_path.resolve()
     for relative_path in relative_paths:
         target = worktree_path / relative_path
+        if not target.parent.resolve().is_relative_to(worktree):
+            raise RuntimeError(
+                f"refusing read-only dispatch: database path {target} has a parent that resolves outside the worktree"
+            )
         # Non-strict resolution also matches a dangling link, whose write
         # would create the primary database.
         if target.is_symlink() and target.resolve() == (main_repo_root / relative_path).resolve():
             # The primary checkout contains worktrees, so containment in this
             # worktree (not absence from the primary) is the boundary.
-            if not target.parent.resolve().is_relative_to(worktree):
-                raise RuntimeError(
-                    f"refusing to withdraw database link {target}: its parent resolves outside the worktree"
-                )
             target.unlink()
             print(f"ℹ️  withdrew database link {target} for a read-only dispatch", file=sys.stderr)
 

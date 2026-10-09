@@ -154,6 +154,45 @@ def test_withdraw_refuses_aliased_data_parent_outside_worktree(tmp_path):
     assert real_vesum.exists()
 
 
+def test_read_only_refuses_aliased_data_parent_over_ordinary_primary_files(tmp_path):
+    """Regression: an aliased worktree data dir must be refused even when the primary DBs are ordinary files.
+
+    The leaf entry is not a symlink here, so a check gated on the leaf type
+    would let withdrawal succeed while relative writes reach the primary.
+    """
+    main_repo = tmp_path / "main"
+    worktree = main_repo / ".worktrees" / "reused"
+    (main_repo / "data").mkdir(parents=True)
+    primary_vesum = main_repo / "data" / "vesum.db"
+    primary_sources = main_repo / "data" / "sources.db"
+    primary_vesum.touch()
+    primary_sources.touch()
+    worktree.mkdir(parents=True)
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert primary_vesum.is_file() and not primary_vesum.is_symlink()
+    assert primary_sources.is_file() and not primary_sources.is_symlink()
+
+
+def test_read_only_refuses_aliased_data_parent_outside_worktree_over_ordinary_files(tmp_path):
+    """Regression: the same refusal holds when the worktree sits outside the primary checkout."""
+    main_repo = tmp_path / "main"
+    worktree = tmp_path / "worktree"
+    (main_repo / "data").mkdir(parents=True)
+    primary_sources = main_repo / "data" / "sources.db"
+    primary_sources.touch()
+    worktree.mkdir()
+    (worktree / "data").symlink_to(main_repo / "data", target_is_directory=True)
+
+    with pytest.raises(RuntimeError, match="resolves outside the worktree"):
+        delegate._provision_data_symlinks(worktree, main_repo, read_only=True)
+
+    assert primary_sources.is_file() and not primary_sources.is_symlink()
+
+
 def test_withdraw_unlinks_primary_link_through_worktree_owned_parent(tmp_path):
     """The containment check still lets a normal worktree shed its primary database link."""
     main_repo = tmp_path / "main"
