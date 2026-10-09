@@ -96,6 +96,92 @@ def test_hook_cli_prints_json_end_to_end(state, tmp_path):
     assert json.loads(proc.stdout)["injectSteps"]
 
 
+@pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
+@pytest.mark.parametrize(
+    ("failure", "output", "exit_code"),
+    [
+        ("missing", "", 0),
+        ("not-executable", "", 0),
+        ("interpreter-error", "", 0),
+        ("nonzero", "", 1),
+        ("nonzero-object", '{"unexpected": true}', 1),
+        ("non-json", "not json", 0),
+        ("nul-byte", '{"value":\x00 1}', 0),
+        ("empty", "", 0),
+        ("array", "[]", 0),
+        ("scalar", '"text"', 0),
+        ("multiple-objects", "{}\n{}", 0),
+        ("nonstandard-constant", '{"value": NaN}', 0),
+        ("validator-error", '{"unexpected": true}', 0),
+    ],
+)
+def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mode, failure, output, exit_code):
+    interpreter = tmp_path / "synthetic-interpreter"
+    if failure != "missing":
+        interpreter.write_text(
+            f"#!{sys.executable}\n"
+            "import os\nimport sys\n"
+            "if sys.argv[1] == '-m':\n"
+            f"    print({output!r})\n"
+            f"    sys.exit({exit_code})\n"
+            + (
+                "sys.exit(1)\n" if failure == "validator-error"
+                else "os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n"
+            ),
+            encoding="utf-8",
+        )
+        if failure == "interpreter-error":
+            interpreter.write_text("#!missing-synthetic-interpreter\n", encoding="utf-8")
+        interpreter.chmod(0o600 if failure == "not-executable" else 0o700)
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", str(interpreter))
+    # Exceed a pipe buffer; the child deliberately never reads its input.
+    payload = " " * (256 * 1024) + "{}\n\n"
+    input_path = tmp_path / "hook-input.json"
+    input_path.write_text(payload, encoding="utf-8")
+    with input_path.open(encoding="utf-8") as hook_input:
+        proc = subprocess.run(
+            ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
+            stdin=hook_input,
+            capture_output=True,
+            text=True,
+            cwd=tmp_path,
+            timeout=60,
+            check=False,
+        )
+        assert hook_input.tell() == len(payload)
+    assert proc.returncode == 0
+    assert json.loads(proc.stdout) == ({"decision": "ask"} if mode == "agy-pretool-hook" else {})
+    assert proc.stderr == ""
+
+
+@pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
+def test_hook_shell_normal_path(state, tmp_path, monkeypatch, mode):
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    payload = {
+        "workspacePaths": [str(tmp_path)],
+        "terminationReason": "ERROR",
+        "toolCall": {"name": "ask_question"},
+    }
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts" / "agy_hooks" / "driver_state_inject.sh"), mode],
+        input=json.dumps(payload) + "\n\n",
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        timeout=60,
+        check=False,
+    )
+    assert proc.returncode == 0
+    result = json.loads(proc.stdout)
+    if mode == "agy-hook":
+        assert "fix X" in result["injectSteps"][0]["ephemeralMessage"]
+    elif mode == "agy-stop-hook":
+        assert result == {}
+    else:
+        assert result["decision"] == "deny"
+    assert proc.stderr == ""
+
+
 def test_agy_hooks_json_wires_all_driver_hooks():
     config = json.loads((REPO / "agents_extensions" / "agy" / "hooks.json").read_text(encoding="utf-8"))
     commands = {
