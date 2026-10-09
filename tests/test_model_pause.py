@@ -190,9 +190,39 @@ def test_only_fresh_probe_readings_count(monkeypatch) -> None:
     ok = {"diagnostics": {"stale": False}, "agents": {"claude": {"status": "hot", "codexbar": fresh}}}
     assert _budget(monkeypatch, ok) == 91.0
     for bad in (
-        {**ok, "diagnostics": {"stale": True}},
         {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "stale": True}}}},
         {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "freshness": "stale_last_good"}}}},
         {**ok, "agents": {"claude": {"status": "unknown", "codexbar": fresh}}},
     ):
         assert _budget(monkeypatch, bad) is None
+
+
+def test_aggregate_snapshot_staleness_does_not_hide_a_fresh_lane(monkeypatch) -> None:
+    fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 91}
+    payload = {"diagnostics": {"stale": True}, "agents": {"claude": {"status": "hot", "codexbar": fresh}}}
+    assert _budget(monkeypatch, payload) == 91.0
+
+
+def test_truncated_response_is_unavailable(monkeypatch) -> None:
+    import http.client
+
+    def boom(*_a, **_k):
+        raise http.client.IncompleteRead(b"{")
+
+    monkeypatch.setattr(mp.urllib.request, "urlopen", boom)
+    assert mp.routing_budget_used_pct("claude") is None
+
+
+def test_endpoint_resolves_under_plain_package_import() -> None:
+    import subprocess
+    import sys
+
+    out = subprocess.run(
+        [sys.executable, "-c", "import scripts.agent_runtime.model_pause as m; print(m._monitor_base())"],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        env={k: v for k, v in __import__("os").environ.items() if k != "DELEGATE_MONITOR_API"},
+    )
+    assert out.returncode == 0, out.stderr[-400:]
+    assert out.stdout.strip().startswith("http")

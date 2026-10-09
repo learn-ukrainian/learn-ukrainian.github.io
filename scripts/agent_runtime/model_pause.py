@@ -27,6 +27,7 @@ policy file means no pauses.
 from __future__ import annotations
 
 import fnmatch
+import http.client
 import json
 import os
 import urllib.request
@@ -107,24 +108,23 @@ def active_pause(model: str | None, policy: Mapping[str, Any], now: datetime) ->
     return None
 
 
+def _monitor_base() -> str:
+    """The Monitor base URL: DELEGATE_MONITOR_API, else the bridge client's default."""
+    from scripts.ai_agent_bridge.monitor_client import DEFAULT_BASE_URL
+
+    return (os.environ.get("DELEGATE_MONITOR_API") or DEFAULT_BASE_URL).rstrip("/")
+
+
 def routing_budget_used_pct(lane: str) -> float | None:
     """Weekly plan usage for ``lane`` from the Monitor routing-budget, or None."""
-    try:
-        from scripts.delegate import _monitor_api_base_url  # the one Monitor endpoint setting
-
-        base = _monitor_api_base_url()
-    except Exception:
-        return None
+    base = _monitor_base()
     try:
         with urllib.request.urlopen(f"{base}/api/state/routing-budget", timeout=3) as resp:
             data = json.load(resp)
-    except (OSError, ValueError):
-        return None
+    except (OSError, ValueError, http.client.HTTPException):
+        return None  # unreachable, unreadable or truncated: no usable reading
     if not isinstance(data, dict):
         return None
-    diagnostics = data.get("diagnostics")
-    if isinstance(diagnostics, dict) and diagnostics.get("stale") is not False:
-        return None  # the snapshot itself is stale or unrated
     agents = data.get("agents")
     info = agents.get(lane) if isinstance(agents, dict) else None
     if not isinstance(info, dict) or info.get("status") == "unknown":
