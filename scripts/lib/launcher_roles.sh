@@ -9,7 +9,7 @@ launcher_role_model() {
         return 2
     fi
     local root="$1" role="$2" transport="${3:-}" py
-    source "${BASH_SOURCE[0]%/*}/project_interpreter.sh" || return 2
+    source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh" || return 2
     py="$(project_interpreter_resolve "$root")" || return 2
     (
         cd "$root" || exit 2

@@ -296,7 +296,7 @@ entries:
 - path: scripts/agent_runtime/adapters/glm.py
   scope: <module>
   id: glm-5.3-flash
-  count: 1
+  count: 3
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/agent_runtime/adapters/glm.py
@@ -566,9 +566,27 @@ entries:
 - path: scripts/ai_agent_bridge/_agy.py
   scope: gemini_model_leaf
   id: gemini-3.1-pro
-  count: 1
+  count: 3
   kind: documentation
   reason: Documented identity in gemini_model_leaf; does not select a runtime model.
+- path: scripts/ai_agent_bridge/_channels_cli.py
+  scope: <module>
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
+- path: scripts/ai_agent_bridge/_channels_cli.py
+  scope: _parse_agent_models
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
+- path: scripts/ai_agent_bridge/_channels_cli.py
+  scope: register_channel_commands
+  id: gemini-3.1-pro-high
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/ai_agent_bridge/_claude.py
   scope: <module>
   id: claude-opus-5-5
@@ -607,10 +625,22 @@ entries:
   reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
 - path: scripts/ai_agent_bridge/_cli.py
   scope: _build_parser
+  id: gemma-4-31b-it
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
   id: glm-5.3
   count: 1
   kind: migration_debt
   reason: 'Existing identity in _build_parser; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_cli.py
+  scope: _build_parser
+  id: glm-5.3-flash
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/ai_agent_bridge/_cli.py
   scope: _build_parser
   id: laguna-s-2.1
@@ -703,6 +733,12 @@ entries:
   reason: Documented identity in <module>; does not select a runtime model.
 - path: scripts/ai_agent_bridge/_opencode.py
   scope: <module>
+  id: poolside/laguna-m.1
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: <module>
   id: poolside/poolside/laguna-s-2.1
   count: 2
   kind: migration_debt
@@ -719,6 +755,12 @@ entries:
   count: 2
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/ai_agent_bridge/_opencode.py
+  scope: ask_gemma
+  id: gemma-4-31b-it
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/ai_agent_bridge/_opencode.py
   scope: ask_gemma
   id: google-ais/gemma-4-31b-it
@@ -769,10 +811,34 @@ entries:
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/ai_agent_bridge/routing_guard.py
   scope: <module>
+  id: openrouter/stealth/ox-alpha
+  count: 1
+  kind: adapter_identity
+  reason: 'Retired provider identity in the routing denylist and refusal message.'
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
+  id: ox-alpha
+  count: 1
+  kind: adapter_identity
+  reason: 'Retired provider identity in the routing denylist and refusal message.'
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
   id: qwen/qwen3.6-plus
   count: 1
   kind: documentation
   reason: Documented identity in <module>; does not select a runtime model.
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: <module>
+  id: stealth/ox-alpha
+  count: 1
+  kind: adapter_identity
+  reason: 'Retired provider identity in the routing denylist and refusal message.'
+- path: scripts/ai_agent_bridge/routing_guard.py
+  scope: assert_model_routing_allowed
+  id: ox-alpha
+  count: 1
+  kind: adapter_identity
+  reason: 'Retired provider identity in the routing denylist and refusal message.'
 - path: scripts/ai_llm/claude_call.py
   scope: <module>
   id: claude-opus-5-5
@@ -998,13 +1064,13 @@ entries:
 - path: scripts/audit/llm_reviewer_dispatch.py
   scope: <module>
   id: deepseek-v4-flash
-  count: 2
+  count: 3
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/audit/llm_reviewer_dispatch.py
   scope: <module>
   id: deepseek-v4-pro
-  count: 2
+  count: 3
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/audit/llm_reviewer_dispatch.py
@@ -1016,7 +1082,7 @@ entries:
 - path: scripts/audit/llm_reviewer_dispatch.py
   scope: <module>
   id: gemma-4-31b-it
-  count: 2
+  count: 5
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/audit/naturalness_check.py
@@ -1033,6 +1099,18 @@ entries:
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/audit/qg_bakeoff.py
   scope: <module>
+  id: deepseek-v4-flash
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: deepseek-v4-pro
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
   id: deepseek-v4.1-flash
   count: 1
   kind: migration_debt
@@ -1040,6 +1118,12 @@ entries:
 - path: scripts/audit/qg_bakeoff.py
   scope: <module>
   id: gemini-3.1-pro-high
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/audit/qg_bakeoff.py
+  scope: <module>
+  id: gemma-4-31b-it
   count: 1
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
@@ -1241,6 +1325,12 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing identity in dispatch_agent; #9302 consumer migration owned by infra.'
+- path: scripts/build/fresh/cli.py
+  scope: _build_parser
+  id: gpt-6.1-sol
+  count: 2
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/build/linear_pipeline.py
   scope: <module>
   id: claude-opus-5-5
@@ -1331,6 +1421,12 @@ entries:
   count: 2
   kind: migration_debt
   reason: 'Existing identity in export_pedagogy_dataset; #9302 consumer migration owned by infra.'
+- path: scripts/dataset/train_gemma_huggingface.py
+  scope: parse_args
+  id: gemma-4-31b-it
+  count: 1
+  kind: migration_debt
+  reason: 'Existing identity in parse_args; #9302 consumer migration owned by infra.'
 - path: scripts/delegate.py
   scope: <module>
   id: gpt-6.1-sol
@@ -1511,6 +1607,12 @@ entries:
   count: 1
   kind: frozen_identity
   reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_minchak_phonetics_intake.py
+  scope: validate_review
+  id: claude-fable-5
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
 - path: scripts/projects/open_model_data/phase3_rule_author_runner.py
   scope: <module>
   id: gemini-3.6-flash-high
@@ -1526,7 +1628,7 @@ entries:
 - path: scripts/projects/open_model_data/phase3_source_production_transport.py
   scope: <module>
   id: grok-4.5
-  count: 1
+  count: 2
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
 - path: scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py
@@ -1574,6 +1676,12 @@ entries:
 - path: scripts/projects/open_model_data/phase3_v3b_cooperative_control_plane.py
   scope: <module>
   id: grok-4.6
+  count: 1
+  kind: frozen_identity
+  reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
+- path: scripts/projects/open_model_data/phase3_wave_l_modern_phonetics_reviewed_intake.py
+  scope: <module>
+  id: claude-fable-5
   count: 1
   kind: frozen_identity
   reason: Pinned Phase 3 protocol identity; preserved for experiment, contract and receipt verification.
@@ -1628,9 +1736,27 @@ entries:
 - path: scripts/projects/ua_eval_harness/verify_release_freeze_v011.py
   scope: <module>
   id: gemma-4-31b-it
-  count: 1
+  count: 2
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/closeout_cli.py
+  scope: <module>
+  id: gpt-6.1-sol
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
+- path: scripts/review/closeout_cli.py
+  scope: _build_parser
+  id: claude-opus-5-5
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
+- path: scripts/review/closeout_cli.py
+  scope: _build_parser
+  id: gpt-6.1-sol
+  count: 2
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/review/closeout_cli.py
   scope: _build_parser
   id: grok-4.7
@@ -1688,7 +1814,7 @@ entries:
 - path: scripts/review/model_catalog.py
   scope: _model_id_candidates
   id: gpt-6-sol
-  count: 1
+  count: 3
   kind: documentation
   reason: Documented identity in _model_id_candidates; does not select a runtime model.
 - path: scripts/review/model_catalog.py
@@ -1721,6 +1847,12 @@ entries:
   count: 1
   kind: documentation
   reason: Documented identity in canonical_model_id; does not select a runtime model.
+- path: scripts/review/model_catalog.py
+  scope: canonical_model_id
+  id: gpt-6-luna
+  count: 2
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/review/record_cf_verdict.py
   scope: _require_formal_reviewer
   id: grok-4.7
@@ -1751,6 +1883,12 @@ entries:
   count: 1
   kind: documentation
   reason: Documented identity in candidate_dispatch_model; does not select a runtime model.
+- path: scripts/review/reviewer_resolver.py
+  scope: resolve_reviewer
+  id: claude-opus-5-5
+  count: 1
+  kind: documentation
+  reason: 'Example or explanatory identity; not a routing default.'
 - path: scripts/review/seeds/adjudicate.py
   scope: build_parser
   id: gpt-6.1-sol

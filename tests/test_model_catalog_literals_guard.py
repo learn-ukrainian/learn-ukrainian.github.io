@@ -24,6 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 FIELDS = frozenset({"path", "scope", "id", "count", "kind", "reason"})
 KINDS = frozenset({"adapter_identity", "frozen_identity", "documentation", "migration_debt"})
 SCOPE = re.compile(r"(?:<module>|[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)\Z")
+GENERIC_LANE_ALIASES = frozenset({"pool", "glm", "gemma"})
 
 
 class _UniqueLoader(yaml.SafeLoader):
@@ -49,14 +50,13 @@ def _identities(catalog: dict[str, Any]) -> set[str]:
         identities.update(model.get("aliases", []))
         identities.update(model.get("runtime_model_ids", []))
         identities.update(model.get("routing_wire_ids", {}).values())
-    # Generic lane aliases (e.g. pool/glm) are not model-version identities.
-    return {identity for identity in identities if re.search(r"\d", identity)}
+    return identities - GENERIC_LANE_ALIASES
 
 
 def _pattern(identities: set[str]) -> re.Pattern[str]:
     assert identities, "catalog has no model identities"
     choices = "|".join(re.escape(identity) for identity in sorted(identities, key=lambda x: (-len(x), x)))
-    return re.compile(rf"(?<![\w./:-])(?:{choices})(?![\w/:-]|\.[\w])")
+    return re.compile(rf"(?<![\w.-])(?:{choices})(?![\w/:-]|\.[\w])")
 
 
 def _scan(root: Path, identities: set[str]) -> Counter[tuple[str, str, str]]:
@@ -172,13 +172,23 @@ def test_identity_inventory_includes_retired_and_wire_ids_but_not_lane_aliases()
             "models": {
                 "gpt-99-test": {
                     "lifecycle": "retired",
-                    "aliases": ["test", "gpt-99-alias"],
-                    "runtime_model_ids": ["gpt-99-runtime"],
-                    "routing_wire_ids": {"cursor": "gpt-99-test-high"},
-                }
+                    "aliases": ["test", "gpt-99-alias", "pool", "glm", "gemma"],
+                    "runtime_model_ids": ["gpt-99-runtime", "kimi-for-coding"],
+                    "routing_wire_ids": {"cursor": "gpt-99-test-high", "opencode": "provider/coding"},
+                },
+                "model-without-digits": {},
             }
         }
-    ) == {"gpt-99-test", "gpt-99-alias", "gpt-99-runtime", "gpt-99-test-high"}
+    ) == {
+        "gpt-99-test",
+        "test",
+        "gpt-99-alias",
+        "gpt-99-runtime",
+        "gpt-99-test-high",
+        "kimi-for-coding",
+        "provider/coding",
+        "model-without-digits",
+    }
 
 
 def test_ast_inventory_covers_embedded_ids_fstrings_nested_scopes_and_defaults(tmp_path: Path) -> None:
@@ -301,22 +311,46 @@ def test_model_boundaries_distinguish_versions_from_sentence_punctuation() -> No
         "gpt-99-test-high",
         "gpt-99-test",
     ]
-    assert not pattern.findall("gpt-99-testing gpt-99-test-extra prefix/gpt-99-test gpt-99-test.json")
+    assert not pattern.findall("gpt-99-testing gpt-99-test-extra prefix-gpt-99-test gpt-99-test.json")
 
 
 @pytest.mark.parametrize(
-    "role,transport",
+    "literal,identity",
     [
-        ("launcher_codex_default", "native_codex"),
-        ("launcher_claude_default", "native_claude"),
-        ("launcher_claude_driver_default", "native_claude"),
-        ("launcher_grok_default", "native_grok"),
-        ("launcher_cursor_default", "cursor"),
-        ("launcher_gemini_default", "agy"),
+        ("codex:gpt-6.1-sol", "gpt-6.1-sol"),
+        ("xai/grok-4.7", "grok-4.7"),
+        ("kimi-code/kimi-for-coding", "kimi-for-coding"),
+        ("opencode:provider/coding", "provider/coding"),
     ],
 )
-def test_shell_launcher_defaults_resolve_active_catalog_holders(role: str, transport: str) -> None:
-    from scripts.review.model_catalog import load_model_catalog, resolve_role
+def test_prefixed_model_ids_are_inventoried(tmp_path: Path, literal: str, identity: str) -> None:
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    (scripts / "router.py").write_text(f"MODEL = {literal!r}\n")
+    actual = _scan(tmp_path, {identity, identity.split("/")[-1]})
+    assert actual == Counter({("scripts/router.py", "<module>", identity): 1})
+    with pytest.raises(AssertionError, match="unexempted model literals"):
+        _assert_inventory(actual, Counter())
+
+
+@pytest.mark.parametrize(
+    "role,transport,provider,mode",
+    [
+        ("launcher_codex_default", "native_codex", "codex", "interactive"),
+        ("launcher_codex_default", "native_codex", "codex", "driver"),
+        ("launcher_claude_driver_default", "native_claude", "claude", "driver"),
+        ("launcher_cursor_default", "cursor", "cursor", "interactive"),
+        ("launcher_cursor_default", "cursor", "cursor", "driver"),
+        ("launcher_gemini_default", "agy", "gemini", "interactive"),
+    ],
+)
+def test_shell_launcher_defaults_resolve_active_catalog_holders(
+    role: str,
+    transport: str,
+    provider: str,
+    mode: str,
+) -> None:
+    from scripts.review.model_catalog import canonical_model_id, load_model_catalog, resolve_role
 
     catalog = load_model_catalog()
     rows = [
@@ -342,6 +376,65 @@ def test_shell_launcher_defaults_resolve_active_catalog_holders(role: str, trans
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.strip() == rows[0].wire_id
+    default = subprocess.run(
+        [
+            "bash",
+            "-c",
+            "source scripts/lib/launcher_core.sh; unset LAUNCHER_MODEL; "
+            'LC_PROVIDER="$1"; LC_MODE="$2"; launcher_defaults; printf "%s" "$LC_MODEL"',
+            "launcher-test",
+            provider,
+            mode,
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+    assert default.returncode == 0, default.stderr
+    assert canonical_model_id(default.stdout, catalog) == rows[0].model_id
+
+
+@pytest.mark.parametrize("provider,mode", [("claude", "interactive"), ("grok", "interactive"), ("grok", "driver")])
+def test_session_selected_launchers_have_no_fixed_catalog_default(provider: str, mode: str) -> None:
+    from scripts.review.model_catalog import load_model_catalog
+
+    assert f"launcher_{provider}_default" not in load_model_catalog()["roles"]
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            "source scripts/lib/launcher_core.sh; unset LAUNCHER_MODEL; "
+            'LC_PROVIDER="$1"; LC_MODE="$2"; launcher_defaults; printf "%s" "$LC_MODEL"',
+            "launcher-test",
+            provider,
+            mode,
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert not result.stdout
+
+
+def test_launcher_role_helper_can_be_sourced_by_bare_filename() -> None:
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'source launcher_roles.sh; launcher_role_model "$1" launcher_codex_default native_codex',
+            "launcher-test",
+            str(REPO_ROOT),
+        ],
+        cwd=REPO_ROOT / "scripts/lib",
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip()
 
 
 @pytest.mark.parametrize(
