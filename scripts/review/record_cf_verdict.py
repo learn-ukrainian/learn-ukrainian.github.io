@@ -40,6 +40,7 @@ from scripts.orchestration.integration_sweep import (
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.publish.github import Request, request_run
+from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.model_catalog import (
     REVIEW_ACTIVITY,
     activity_role_refusal,
@@ -95,6 +96,17 @@ def normalize_verdict(reply: str) -> str:
     if len(tokens) != 1:
         raise RecordError("review reply has missing or ambiguous VERDICT token")
     return tokens.pop()
+
+
+def _require_sources_mcp_calls(task: dict[str, Any]) -> None:
+    """Refuse Ukrainian verdicts without positive runtime Sources evidence (#10074)."""
+    if not is_ukrainian_review(task):
+        return
+    count = task.get("sources_mcp_call_count")
+    if type(count) is not int or count < 0:
+        raise RecordError("Ukrainian review Sources MCP call count unknown; runtime evidence required")
+    if count == 0:
+        raise RecordError("Ukrainian review has zero Sources MCP calls")
 
 
 @publication_boundary(RecordError)
@@ -938,19 +950,26 @@ def sha_lock(repository: str, sha: str, lock_root: Path):
 def build_comment(
     *, sha: str, task_id: str, started: str, verdict: str, model: str, family: str, reply: str,
     review_mode: str = "cross_family",
+    review_profile: str = "code", sources_mcp_call_count: int | None = None,
 ) -> str:
     if review_mode not in {"cross_family", "red_team"}:
         raise RecordError("unsupported review mode")
     if MARKER_PREFIX in reply:
         raise RecordError("review reply contains reserved verdict marker")
     mode_field = " review_mode=red_team" if review_mode == "red_team" else ""
+    ukrainian = is_ukrainian_review({"review_profile": review_profile})
+    _require_sources_mcp_calls({"review_profile": review_profile, "sources_mcp_call_count": sources_mcp_call_count})
+    profile_field = " review_profile=ukrainian" if ukrainian else ""
+    sources_field = f" sources_calls={sources_mcp_call_count}" if sources_mcp_call_count is not None else ""
     marker = (
         f"<!-- cf-verdict v1 sha={sha} task={task_id} started={started} verdict={verdict} "
-        f"model={model} family={family}{mode_field} -->"
+        f"model={model} family={family}{mode_field}{profile_field}{sources_field} -->"
     )
     prefix = (
         ("### Adversarial red-team review\n" if review_mode == "red_team" else "### Cross-family review\n")
         + ("Review mode: red_team\n" if review_mode == "red_team" else "")
+        + ("Review profile: ukrainian\n" if ukrainian else "")
+        + (f"Sources MCP calls: {sources_mcp_call_count}\n" if sources_mcp_call_count is not None else "")
         + f"head: {sha}\n"
         f"Reviewer family: {family}\n"
         f"VERDICT: {verdict}\n"
@@ -1172,6 +1191,11 @@ def record(
         raise RecordError("reviewer family unknown")
     _require_formal_reviewer(cursor=cursor, reported=reported, model=model, family=family, native_grok=native_grok)
     verdict = normalize_verdict(reply)
+    _require_sources_mcp_calls(task)
+    ukrainian = is_ukrainian_review(task)
+    sources_count = task.get("sources_mcp_call_count")
+    if type(sources_count) is not int or sources_count < 0:
+        sources_count = None
     started_dt = datetime.fromisoformat(str(task.get("started_at") or "").replace("Z", "+00:00"))
     if started_dt.tzinfo is None:
         raise RecordError("review start timestamp missing timezone")
@@ -1204,6 +1228,8 @@ def record(
     comment = build_comment(
         sha=sha, task_id=task_id, started=started, verdict=verdict, model=model, family=family, reply=reply,
         review_mode=review_mode,
+        review_profile="ukrainian" if ukrainian else "code",
+        sources_mcp_call_count=sources_count,
     )
     posted = False
     with sha_lock(repository, sha, lock_root):
@@ -1237,6 +1263,8 @@ def record(
                         or marker["model"] != model
                         or marker["family"] != family
                         or marker.get("review_mode", "cross_family") != review_mode
+                        or marker.get("review_profile", "code") != ("ukrainian" if ukrainian else "code")
+                        or marker.get("sources_calls") != sources_count
                         or item.get("created_at") != item.get("updated_at")
                     ):
                         raise RecordError("existing verdict marker was edited or conflicts with task")
@@ -1259,7 +1287,10 @@ def record(
             ):
                 raise RecordError("comment readback mismatch; publication state unknown")
             posted = True
-        description = f"VERDICT: {verdict} {family} {task_id}"[:140]
+        description = (
+            f"VERDICT: {verdict} ({family}, sources={sources_count}) {task_id}"
+            if ukrainian else f"VERDICT: {verdict} {family} {task_id}"
+        )[:140]
         try:
             post_commit_status(
                 repository=repository,

@@ -711,6 +711,11 @@
       "failure_class": "import_error"
     },
     {
+      "path": "scripts/fleet/agy_failure_tally.py",
+      "form": "file",
+      "failure_class": "module_not_found"
+    },
+    {
       "path": "scripts/fleet/capacity_pick.py",
       "form": "file",
       "failure_class": "module_not_found"

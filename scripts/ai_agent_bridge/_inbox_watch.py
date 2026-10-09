@@ -19,6 +19,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -174,6 +175,7 @@ MONITOR_NOT_CONTACTED = MonitorNotContacted()
 
 def consume_supervisory_event(
     service: AuthorityService, supervisor: SessionSupervisor, lease: Lease, *, now: str | None = None,
+    restart_preflight: Callable[[], bool] | None = None,
 ) -> SupervisoryRequest | MonitorNotContacted | None:
     """Consume under the live envelope; prepare restart or reconcile its successor.
 
@@ -191,6 +193,22 @@ def consume_supervisory_event(
         return MONITOR_NOT_CONTACTED
     # Fence the live lease before claiming. Idle polls never reach this call.
     supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    if restart_preflight is not None:
+        try:
+            pending_request = read_supervisory_request(service, delivery.delivery_id, lease.stream_id)
+        except (ValueError, TypeError):
+            # Invalid events still follow the fenced refusal path below.
+            pending_request = None
+        if (
+            pending_request is not None
+            and pending_request.action == "restart"
+            and pending_request.generation == lease.generation
+            and not restart_preflight()
+        ):
+            # Do not claim/reclaim, consume, or prepare while the successor is
+            # unavailable. This also protects a replay after launcher preflight
+            # loses a race with the CLI disappearing after preparation.
+            return None
     now_value = now or datetime.now(UTC).isoformat()
     if delivery.state == "running":
         expires = datetime.fromisoformat(delivery.lease_expires_at.replace("Z", "+00:00"))
@@ -245,13 +263,14 @@ def consume_supervisory_event(
 
 def wake_driver_once(
     service: AuthorityService, remote: RemoteEpicClient, *, stream_id: str, launcher: Path, epic: str, run=None,
-    inbox_events: list[InboxEvent] | None = None,
+    inbox_events: list[InboxEvent] | None = None, readiness_reader=None,
 ) -> bool:
     """Resume a live Codex inbox turn, or launch a fenced offline supervisor event."""
     require_supervisory_api(service)
     if inbox_events:
         from . import _ui_codex
 
+        readiness_reader = readiness_reader or _ui_codex.RolloutReader()
         current = remote.stream(stream_id).get("lease")
         if (
             launcher.name != "start-codex-driver.sh"
@@ -262,6 +281,11 @@ def wake_driver_once(
         live = _ui_codex.find_live_session(current)
         if live is None:
             raise RuntimeError("live Codex thread unavailable for codex exec resume; wake refused")
+        if live.rollout is None:
+            raise RuntimeError("codex_wake_busy:rollout_unavailable")
+        ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+        if not ready:
+            raise RuntimeError(f"codex_wake_busy:{reason}")
         # Thread discovery may race a rollover. Reconcile remote authority before
         # sending; neither discovery nor resume may claim or modify this lease.
         latest = remote.stream(stream_id).get("lease")
@@ -270,20 +294,39 @@ def wake_driver_once(
             latest.get(key) != current.get(key) for key in identity
         ):
             return False
+        inbox_events = sorted(inbox_events, key=lambda event: event.message_id)
         message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
             f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
             for event in inbox_events
         )
-        result = _ui_codex.send(
-            thread_id=live.thread_id, message=message, cwd=live.cwd,
-            environment=live.environment,
-            bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
-        )
-        event_types = {event.get("type") for event in result["events"]}
-        if result["exit_code"] != 0 or not {"turn.started", "turn.completed"} <= event_types or (
-            event_types & {"turn.failed", "error"}
+        # Final readiness check after lease reconciliation and message framing.
+        # The attach window after this check remains the #10217 residual.
+        def check_ready():
+            ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+            if not ready:
+                raise RuntimeError(f"codex_wake_busy:{reason}")
+        check_ready()
+        try:
+            result = _ui_codex.send(
+                thread_id=live.thread_id, message=message, cwd=live.cwd,
+                environment=live.environment,
+                bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
+                before_resume=check_ready,
+            )
+        except RuntimeError as exc:
+            if str(exc).startswith("codex_wake_busy:"):
+                raise
+            raise RuntimeError(f"codex_resume_error:{type(exc).__name__}; inbox retained") from exc
+        except Exception as exc:
+            raise RuntimeError(f"codex_resume_error:{type(exc).__name__}; inbox retained") from exc
+        event_types = [event.get("type") for event in result["events"]]
+        if (
+            result["exit_code"] != 0
+            or event_types.count("turn.started") != 1
+            or event_types.count("turn.completed") != 1
+            or {"turn.failed", "error"}.intersection(event_types)
         ):
-            raise RuntimeError("live Codex resume failed; inbox retained for reconciliation")
+            raise RuntimeError("codex_resume_error:failed; live Codex resume failed; inbox retained for reconciliation")
         return True
     # Old-generation events remain unacknowledged until a live driver reconciles
     # them. They must not hide a newer actionable wake while the driver is offline.
@@ -314,6 +357,26 @@ def wake_driver_once(
     return True
 
 
+def preflight_supervisory_successor() -> bool:
+    """Reuse the launcher's CLI resolution before spending a delivery attempt."""
+    helper = Path(__file__).resolve().parents[1] / "lib/session_supervisor.sh"
+    try:
+        result = subprocess.run(
+            ["bash", "-c", 'source "$1"; session_supervisor_preflight_successor',
+             "supervisory-preflight", str(helper)],
+            check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30,
+        )
+        available = result.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        available = False
+    if not available:
+        print(
+            "inbox watcher: provider-cli-unavailable; restart retained for retry",
+            file=sys.stderr, flush=True,
+        )
+    return available
+
+
 def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS) -> int:
     """Watch in the launcher-owned generation; return 75 only after preparation."""
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
@@ -329,7 +392,9 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
         outage = False
         while True:
             try:
-                request = consume_supervisory_event(service, supervisor, lease)
+                request = consume_supervisory_event(
+                    service, supervisor, lease, restart_preflight=preflight_supervisory_successor,
+                )
             except RemoteUnavailableError:
                 # One line per outage. Diagnostics stay off this stream.
                 if not outage:
@@ -356,7 +421,7 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
             time.sleep(interval_seconds)
 
 
-def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> None:
+def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> int:
     """Resume unread Codex inbox turns and bridge offline supervisory events."""
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor.remote import RemoteEpicClient
@@ -373,6 +438,8 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
     lock = acquire_watcher_lock(agent)
     conn: SQLiteConnection | None = None
     last_seen = 0
+    from ._ui_codex import RolloutReader
+    readiness_reader = RolloutReader()
     try:
         if provider == "codex":
             conn = open_readonly_db(_config.DB_PATH)
@@ -381,14 +448,21 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
             require_supervisory_api(service)
             while True:
                 events = poll_once(conn, agent, last_seen) if conn is not None else []
-                if events and wake_driver_once(
-                    service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
-                ):
-                    last_seen = events[-1].message_id
-                else:
-                    wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                try:
+                    if events and wake_driver_once(
+                        service, remote, stream_id=stream_id, launcher=launcher, epic=epic,
+                        inbox_events=events, readiness_reader=readiness_reader,
+                    ):
+                        last_seen = max(event.message_id for event in events)
+                    else:
+                        wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                except Exception as exc:
+                    reason = str(exc) if str(exc).startswith(("codex_wake_busy:", "codex_resume_error:")) else type(exc).__name__
+                    print(f"inbox watcher: wake_error:{reason}; inbox retained", file=sys.stderr, flush=True)
+                    if once:
+                        return 2
                 if once:
-                    return
+                    return 0
                 time.sleep(interval_seconds)
     finally:
         if conn is not None:
@@ -716,9 +790,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.wake_driver:
             if not args.epic:
                 raise ValueError("--wake-driver requires --epic")
-            run_supervisory_wake_watcher(args.agent, args.wake_driver, args.epic,
-                                         interval_seconds=args.interval, once=args.once)
-            return 0
+            return run_supervisory_wake_watcher(
+                args.agent, args.wake_driver, args.epic, interval_seconds=args.interval, once=args.once,
+            )
         if args.stop:
             print(stop_watcher(args.agent), file=sys.stderr)
             return 0

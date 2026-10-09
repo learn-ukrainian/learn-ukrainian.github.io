@@ -175,6 +175,12 @@ Without both inputs, no budget substitution occurs. Ukrainian reviews use
 `--review-profile ukrainian` without these code resolver flags. Existing
 `--review-attempt` identities never change. `--pinned-head` requires `--branch`
 or `--pr` and is checked against the fetched and reused heads before launch.
+`--subject-seat` and `--subject-family` are validated for every dispatch;
+reviewer admission applies them to code and Ukrainian profiles alike. Write
+dispatches use them for authoring review admission without becoming review-typed.
+Other non-review read-only calls refuse these flags instead of ignoring them.
+Review substitutes require their own budget snapshot; direct and substituted
+reviewers share the allowance rule (#10016), with pace advisory for both.
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 

@@ -40,6 +40,8 @@ from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
+    cache_get_or_compute_async,
+    ctx_scoped_ttl_key,
     find_content_file,
     get_audit_status,
     get_final_review_info,
@@ -48,6 +50,10 @@ from .state_helpers import (
 )
 
 router = APIRouter(tags=["artifacts"])
+
+# Dashboard polls share one tree walk. Direct collector calls stay uncached so
+# a caller that just wrote a file still sees it.
+_ARTIFACT_LIST_TTL_S = 15.0
 
 
 
@@ -142,14 +148,27 @@ async def html_artifacts(
     else:
         types = ("html", "md")
 
-    return await asyncio.to_thread(
-        collect_html_artifacts,
-        class_filter=class_,
-        date_from=date_from,
-        status=status,
-        author=author,
-        types=types,
-        ctx=resolve_context(ctx),
+    resolved = resolve_context(ctx)
+    # One JSON part, so a colon inside a filter cannot collide with another filter.
+    cache_key = ctx_scoped_ttl_key(
+        resolved,
+        "artifacts-html",
+        json.dumps(
+            [class_ or "", date_from or "", status or "", author or "", list(types)],
+            separators=(",", ":"),
+        ),
+    )
+    return await cache_get_or_compute_async(
+        cache_key,
+        _ARTIFACT_LIST_TTL_S,
+        lambda: collect_html_artifacts(
+            class_filter=class_,
+            date_from=date_from,
+            status=status,
+            author=author,
+            types=types,
+            ctx=resolved,
+        ),
     )
 
 
