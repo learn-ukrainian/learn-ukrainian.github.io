@@ -38,6 +38,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -48,6 +49,8 @@ MAX_TEST_PROCESSES = 2  # xdist workers, the approved ceiling
 ADMISSION_WAIT_S = 300.0
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
+CLEANUP_BUDGET_S = 10.0  # after a kill: reaping and the sweep for leftover descendants
+RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
 # A registered module whose recorded CI cost exceeds this cannot fit the run budget (the eight
 # test_docs_find_lookups parts and test_docs_catalogue_coverage alone cost ~2900 s). It is deferred to
@@ -76,6 +79,16 @@ FAILURE_RE = re.compile(r"^(?:FAILED|ERROR) (\S+?)(?: - .*)?$", re.MULTILINE)
 SUMMARY_RE = re.compile(r"^=+ .*\bin \d+(?:\.\d+)?s.*=+$|^\d+ \w+.* in \d+(?:\.\d+)?s", re.MULTILINE)
 PRE_COMMIT_FAILED_RE = re.compile(r"^(.+?)\.{3,}.*Failed$", re.MULTILINE)
 TEST_FILE_RE = re.compile(r"^tests/(?:.+/)?test_[^/]+\.py$")
+# Files outside the commit that can change what pytest imports or how it is configured.  The receipt
+# binds only committed inputs, so any such file, untracked or ignored, makes the run unrepeatable.
+OVERLAY_PATHSPECS = (
+    "*.py",
+    "*.pth",
+    ":(glob)**/pytest.ini",
+    ":(glob)**/tox.ini",
+    ":(glob)**/setup.cfg",
+    ":(glob)**/pyproject.toml",
+)
 
 
 class GateOutcome(Exception):
@@ -240,6 +253,21 @@ def outgoing_base(update: Update, root: Path) -> str:
     return base
 
 
+def reject_untracked_inputs(root: Path) -> None:
+    """Refuse when untracked or ignored Python/config files could change the run but not the receipt."""
+    listing = git_ok("ls-files", "-z", "--others", "--", *OVERLAY_PATHSPECS, cwd=root)
+    if listing is None:
+        raise GateOutcome("state_unavailable", "cannot list untracked validation inputs", incomplete=True)
+    overlays = sorted(path for path in listing.split("\0") if path)
+    if overlays:
+        shown = ", ".join(overlays[:10]) + (f" (+{len(overlays) - 10} more)" if len(overlays) > 10 else "")
+        raise GateOutcome(
+            "untracked_inputs",
+            f"untracked or ignored files outside the outgoing commit could change the test run: {shown}; "
+            "commit them or remove them first",
+        )
+
+
 def build_plan(update: Update, root: Path) -> Plan | None:
     head = (git_ok("rev-parse", "HEAD", cwd=root) or "").strip()
     if head != update.local_sha:
@@ -251,6 +279,7 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     dirty = git_ok("status", "--porcelain", "--untracked-files=no", cwd=root)
     if dirty is None or dirty.strip():
         raise GateOutcome("dirty_tree", "tracked files differ from the outgoing commit; commit or restore them first")
+    reject_untracked_inputs(root)
     base = outgoing_base(update, root)
     if base == head:
         return None
@@ -258,7 +287,15 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     if names is None:
         raise GateOutcome("range_unresolved", f"cannot list changed paths for {base[:12]}..{head[:12]}")
     changed = tuple(sorted(path for path in names.splitlines() if path))
-    changed_tests = tuple(path for path in changed if TEST_FILE_RE.match(path) and (root / path).is_file())
+    changed_tests = tuple(path for path in changed if TEST_FILE_RE.match(path))
+    unmaterialized = tuple(path for path in changed_tests if not (root / path).is_file())
+    if unmaterialized:
+        raise GateOutcome(
+            "changed_tests_unmaterialized",
+            "the outgoing range changes test files this worktree has not materialized (sparse-checkout): "
+            f"{', '.join(unmaterialized)}; run `git sparse-checkout add tests` and push again",
+            incomplete=True,
+        )
     registry, version = load_registry(root)
     present = tuple(node for node in registry if (root / node.split("::", 1)[0]).is_file())
     missing = tuple(node for node in registry if node not in present)
@@ -291,7 +328,7 @@ def receipt_key(plan: Plan) -> dict[str, object]:
 
 
 def receipt_path(state: Path, plan: Plan) -> Path:
-    return state / "receipts" / f"{plan.head}.json"
+    return state / "receipts" / f"{plan.head}-{plan.base}.json"
 
 
 def receipt_is_fresh(state: Path, plan: Plan, now: float) -> bool:
@@ -366,35 +403,79 @@ class Admission:
             self._fd = None
 
 
+def sweep_descendants(token: str, deadline: float) -> None:
+    """SIGKILL every process that inherited ``token``, wherever it moved (setsid, double fork).
+
+    Linux ``/proc`` only; elsewhere the process-group kill is the whole containment.  Repeats until
+    a pass finds nothing, so a descendant that forks during the sweep is caught too.
+    """
+    needle = f"{RUN_TOKEN_ENV}={token}".encode()
+    proc = Path("/proc")
+    if not proc.is_dir():
+        return
+    while time.monotonic() < deadline:
+        found = False
+        for entry in proc.iterdir():
+            if not entry.name.isdigit() or int(entry.name) == os.getpid():
+                continue
+            try:
+                environment = (entry / "environ").read_bytes()
+            except OSError:
+                continue
+            if needle in environment.split(b"\0"):
+                found = True
+                with contextlib.suppress(ProcessLookupError, PermissionError):
+                    os.kill(int(entry.name), signal.SIGKILL)
+        if not found:
+            return
+        time.sleep(0.05)
+
+
 def run_bounded(command: list[str], *, cwd: Path, deadline: float, label: str) -> tuple[int, str]:
-    """Run in its own process group; on budget exhaustion kill the group and report incomplete."""
+    """Run in its own process group; on budget exhaustion kill the group and report incomplete.
+
+    Output goes to a file, never a pipe, so a descendant that outlives the command cannot block the
+    gate on a pipe it still holds.  Every exit path then kills the run's leftover descendants.
+    """
     remaining = deadline - time.monotonic()
     if remaining <= 0:
         raise GateOutcome(
             "validation_incomplete", f"{label}: time budget exhausted before start (timeout)", incomplete=True
         )
-    try:
-        process = subprocess.Popen(
-            command,
-            cwd=cwd,
-            env=clean_environment(),
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-    except OSError as exc:
-        raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
-    try:
-        output, _ = process.communicate(timeout=remaining)
-    except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGKILL)
-        process.communicate()
-        raise GateOutcome(
-            "validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True
-        ) from None
-    return process.returncode, output or ""
+    token = uuid.uuid4().hex
+    environment = {**clean_environment(), RUN_TOKEN_ENV: token}
+    with tempfile.TemporaryFile() as sink:
+        try:
+            process = subprocess.Popen(
+                command,
+                cwd=cwd,
+                env=environment,
+                stdin=subprocess.DEVNULL,
+                stdout=sink,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+            )
+        except OSError as exc:
+            raise GateOutcome("validation_incomplete", f"{label}: cannot start ({exc})", incomplete=True) from exc
+        timed_out = False
+        try:
+            process.wait(timeout=remaining)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(process.pid, signal.SIGKILL)
+        finally:
+            sweep_descendants(token, time.monotonic() + CLEANUP_BUDGET_S)
+        if timed_out:
+            try:
+                process.wait(timeout=CLEANUP_BUDGET_S)
+            except subprocess.TimeoutExpired:
+                raise GateOutcome(
+                    "validation_incomplete", f"{label}: could not reap the timed-out process", incomplete=True
+                ) from None
+            raise GateOutcome("validation_incomplete", f"{label}: exceeded the time budget (timeout)", incomplete=True)
+        sink.seek(0)
+        return process.returncode, sink.read().decode("utf-8", errors="replace")
 
 
 def failing_node_ids(output: str) -> tuple[str, ...]:
@@ -538,10 +619,26 @@ def tail(output: str, lines: int = 40) -> str:
 # ---- entry point ----------------------------------------------------------
 
 
-def validate(update: Update, root: Path, launcher: str, config: str, event: dict[str, object]) -> None:
+class Budget:
+    """One run deadline shared by every ref update of a push; it starts at the first admitted run."""
+
+    def __init__(self, seconds: float):
+        self.seconds = seconds
+        self._deadline: float | None = None
+
+    @property
+    def deadline(self) -> float:
+        if self._deadline is None:
+            self._deadline = time.monotonic() + self.seconds
+        return self._deadline
+
+
+def validate(
+    update: Update, root: Path, launcher: str, config: str, event: dict[str, object], budget: Budget | None = None
+) -> None:
     now = time.time()
-    plan = build_plan(update, root)
     event["local_ref"] = update.local_ref
+    plan = build_plan(update, root)
     if plan is None:
         event["outcome"] = "green"
         event["detail"] = "no outgoing commits"
@@ -561,7 +658,7 @@ def validate(update: Update, root: Path, launcher: str, config: str, event: dict
         return
     with Admission(state, bounded("LU_PRE_PUSH_GATE_ADMISSION_WAIT_S", ADMISSION_WAIT_S)) as admitted:
         event["admission_wait_s"] = round(admitted.waited, 2)
-        deadline = time.monotonic() + bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S)
+        deadline = (budget or Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))).deadline
         shadow = Shadow(plan, root, launcher)
         try:
             run_pre_commit_stage(plan, root, launcher, config, deadline)
@@ -609,8 +706,21 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
     if root_text is None:
         return refuse(GateOutcome("tree_mismatch", "cannot resolve the worktree root", incomplete=True))
     root = Path(root_text.strip())
-    event: dict[str, object] = {"gate_version": GATE_VERSION, "at": time.time()}
+    events: list[dict[str, object]] = []
     status = 0
+
+    def new_event() -> dict[str, object]:
+        event: dict[str, object] = {"gate_version": GATE_VERSION, "at": time.time()}
+        events.append(event)
+        return event
+
+    def mark(event: dict[str, object], error: GateOutcome) -> None:
+        event.update(
+            outcome="validation_incomplete" if error.incomplete else "refused",
+            reason=error.reason,
+            failing=list(error.failing),
+        )
+
     try:
         updates = [
             u
@@ -619,20 +729,25 @@ def main(argv: list[str] | None = None, stdin: str | None = None) -> int:
         ]
         if len({u.local_sha for u in updates}) > 1:
             raise GateOutcome("tree_mismatch", "one push carries several different commits; push them one at a time")
-        for update in updates[:1]:
-            validate(update, root, arguments.launcher, arguments.config, event)
+        budget = Budget(bounded("LU_PRE_PUSH_GATE_RUN_BUDGET_S", RUN_BUDGET_S))
+        for update in updates:  # equal commits can still have different outgoing ranges: validate each
+            event = new_event()
+            try:
+                validate(update, root, arguments.launcher, arguments.config, event, budget)
+            except GateOutcome as error:
+                mark(event, error)
+                raise
     except GateOutcome as error:
-        event.update(
-            outcome="validation_incomplete" if error.incomplete else "refused",
-            reason=error.reason,
-            failing=list(error.failing),
-        )
+        if not events:
+            mark(new_event(), error)
         status = refuse(error)
     finally:
-        event["duration_s"] = round(time.monotonic() - started, 2)
-        if "outcome" in event:
-            with contextlib.suppress(GateOutcome):
-                record(state_dir(root), event)
+        with contextlib.suppress(GateOutcome):
+            state = state_dir(root)
+            for event in events:
+                if "outcome" in event:
+                    event["duration_s"] = round(time.monotonic() - started, 2)
+                    record(state, event)
     return status
 
 

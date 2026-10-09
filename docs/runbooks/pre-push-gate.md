@@ -26,19 +26,22 @@ Stages 2 and 3 run as one pytest process. Importer-closure selection
 | green | 0 | Push proceeds; a receipt is written. |
 | `pre_commit_failed`, `tests_failed` | 1 | Push refused; failing hook names or pytest node ids are listed. |
 | `tree_mismatch`, `dirty_tree`, `range_unresolved`, `invalid_ref_updates` | 1 | The exact commit cannot be validated as pushed. |
-| `validation_incomplete` | 75 | Not validated and not green: `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict). The branch is preserved; return to the driver. Never retry blindly. |
+| `untracked_inputs` | 1 | Untracked or ignored `*.py`, `*.pth` or pytest/tox/setup/pyproject config files exist; they could change the run but not the receipt. Commit or remove them. |
+| `validation_incomplete` | 75 | Not validated and not green: `admission_timeout`, `timeout`, `registry_unavailable`, `pytest_error` (pytest exited without a verdict), `changed_tests_unmaterialized` (a test file the range changes is absent from a sparse worktree; `git sparse-checkout add tests`). The branch is preserved; return to the driver. Never retry blindly. |
 
 The last stderr line before the bypass hint is machine-readable: `{"pre_push_gate": {...}}`.
 
 ## Bounds
 
-One admitted gate per repository at a time (lock under the Git common dir), admission wait 300 s, run
-budget 600 s, one test process (ceiling 2). `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and
+One admitted gate per repository at a time (lock under the Git common dir), admission wait 300 s, one run
+budget of 600 s shared by every ref update of the push, two test workers (ceiling). Each update is validated
+with its own base. Command output goes to a file, and after every command the gate kills any descendant
+that inherited its run token (10 s cleanup bound), so a detached child cannot stall or outlive the gate. `LU_PRE_PUSH_GATE_ADMISSION_WAIT_S` and
 `LU_PRE_PUSH_GATE_RUN_BUDGET_S` can only shorten these.
 
 ## Receipts
 
-`<git-common-dir>/lu-pre-push-gate/receipts/<head>.json` lets a retry of the same commit skip the run. It is
+`<git-common-dir>/lu-pre-push-gate/receipts/<head>-<base>.json` lets a retry of the same commit skip the run. It is
 bound to the commit, tree, base, registry version, selected ids and gate version, expires after one hour, and
 is ignored when any of them differ or the tree is dirty.
 

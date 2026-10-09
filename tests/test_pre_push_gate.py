@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import textwrap
+import time
 from pathlib import Path
 
 import pytest
@@ -702,3 +703,164 @@ def test_measured_cost_rows_name_registered_heavy_modules() -> None:
     for module, cost in gate.MEASURED_COST_S.items():
         assert module in registry and cost > gate.HEAVY_MODULE_S
         assert module not in durations, "the durations table now has a row; drop the local measurement"
+
+
+# ---- review round 1: every ref update, sparse tests, untracked inputs, bounded cleanup -----------------------
+
+
+def _run_gate_with(repo: Path, updates: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [
+            str(PYTHON),
+            str(repo / ".githooks/pre_push_gate.py"),
+            "--launcher",
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            "--config",
+            str(repo / ".pre-commit-config.yaml"),
+        ],
+        capture_output=True,
+        check=False,
+        cwd=repo,
+        input=updates,
+        text=True,
+        timeout=120,
+        env=_env({"PRE_COMMIT_HOME": str(repo.parent / "pre-commit-cache")}),
+    )
+
+
+def test_every_ref_update_is_validated_with_its_own_base(repo: Path) -> None:
+    _write(repo, "tests/test_a_red.py", RED_TEST)
+    first = _commit(repo, "red test", "tests/test_a_red.py")
+    _write(repo, "tests/test_b.py", GREEN_TEST)
+    head = _commit(repo, "green test", "tests/test_b.py")
+    # The first update's range holds only the green test; the second's also holds the red one.
+    updates = (
+        f"refs/heads/feature {head} refs/heads/narrow {first}\n"
+        f"refs/heads/feature {head} refs/heads/wide {ZERO_SHA}\n"
+    )
+
+    result = _run_gate_with(repo, updates)
+
+    assert result.returncode == gate.EXIT_REFUSED, result.stderr
+    assert "tests/test_a_red.py::test_broken" in _verdict(result)["failing"]
+    rows = _measurements(repo)
+    assert [row["outcome"] for row in rows] == ["green", "refused"]
+    assert rows[0]["base"] != rows[1]["base"]
+    assert len(_receipts(repo)) == 1  # only the green range left a receipt, keyed by its own base
+
+
+def test_receipts_of_two_ranges_with_one_head_do_not_overwrite_each_other(tmp_path: Path) -> None:
+    narrow, wide = _plan(base="a" * 40), _plan(base="b" * 40)
+
+    assert gate.receipt_path(tmp_path, narrow) != gate.receipt_path(tmp_path, wide)
+
+
+def test_one_run_budget_covers_the_whole_push_attempt() -> None:
+    budget = gate.Budget(600.0)
+    first = budget.deadline
+    time.sleep(0.05)
+
+    assert budget.deadline == first  # later ref updates inherit the deadline, they do not restart it
+
+
+def test_a_changed_test_the_sparse_worktree_lacks_is_validation_incomplete(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", RED_TEST)
+    _commit(repo, "red test", "tests/test_new.py")
+    _git(repo, "sparse-checkout", "set", "--no-cone", "/*", "!/tests/test_new.py")
+    assert not (repo / "tests/test_new.py").exists()
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_INCOMPLETE
+    verdict = _verdict(result)
+    assert verdict["outcome"] == "validation_incomplete"
+    assert verdict["reason"] == "changed_tests_unmaterialized"
+    assert "tests/test_new.py" in result.stderr
+    assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("ignored", [False, True], ids=["untracked", "ignored"])
+def test_an_untracked_python_overlay_is_refused_before_execution(repo: Path, ignored: bool) -> None:
+    if ignored:
+        _write(repo, ".gitignore", "conftest.py\n")
+        _commit(repo, "ignore overlays", ".gitignore")
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green test", "tests/test_new.py")
+    _write(repo, "tests/conftest.py", "def pytest_collection_modifyitems(items):\n    items.clear()\n")
+
+    result = _run_gate(repo)
+
+    assert result.returncode == gate.EXIT_REFUSED
+    assert _verdict(result)["reason"] == "untracked_inputs"
+    assert "tests/conftest.py" in result.stderr
+    assert _receipts(repo) == []
+
+
+def test_untracked_overlay_blocks_receipt_reuse_and_unrelated_scratch_does_not(repo: Path) -> None:
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green test", "tests/test_new.py")
+    _write(repo, "notes.txt", "scratch\n")
+    assert _run_gate(repo).returncode == 0
+    assert len(_receipts(repo)) == 1
+
+    _write(repo, "conftest.py", "")
+
+    assert _verdict(_run_gate(repo))["reason"] == "untracked_inputs"
+
+
+def _gone(pid: int) -> bool:
+    for _ in range(100):
+        try:
+            state = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").rsplit(")", 1)[1].split()[0]
+        except OSError:
+            return True
+        if state == "Z":
+            return True
+        time.sleep(0.05)
+    return False
+
+
+_DETACHED_CHILD = (
+    "import os, subprocess, sys, time\n"
+    "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(300)'], start_new_session=True)\n"
+    "open(sys.argv[1], 'w').write(str(child.pid))\n"
+)
+
+
+@pytest.mark.parametrize("hang", [False, True], ids=["command-exits", "command-times-out"])
+def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(
+    tmp_path: Path, hang: bool
+) -> None:
+    pid_file = tmp_path / "child.pid"
+    script = _DETACHED_CHILD + ("time.sleep(300)\n" if hang else "")
+    started = time.monotonic()
+
+    if hang:
+        with pytest.raises(gate.GateOutcome) as raised:
+            gate.run_bounded(
+                [sys.executable, "-c", script, str(pid_file)],
+                cwd=tmp_path,
+                deadline=time.monotonic() + 2.0,
+                label="probe",
+            )
+        assert raised.value.incomplete
+    else:
+        code, _ = gate.run_bounded(
+            [sys.executable, "-c", script, str(pid_file)], cwd=tmp_path, deadline=time.monotonic() + 30.0, label="probe"
+        )
+        assert code == 0
+
+    assert time.monotonic() - started < 25.0  # the 300 s sleeper held the pipe in the old design
+    assert _gone(int(pid_file.read_text(encoding="utf-8")))
+
+
+def test_command_output_and_exit_code_are_returned(tmp_path: Path) -> None:
+    code, output = gate.run_bounded(
+        [sys.executable, "-c", "print('out'); import sys; print('err', file=sys.stderr); sys.exit(3)"],
+        cwd=tmp_path,
+        deadline=time.monotonic() + 30.0,
+        label="probe",
+    )
+
+    assert code == 3
+    assert "out" in output and "err" in output
