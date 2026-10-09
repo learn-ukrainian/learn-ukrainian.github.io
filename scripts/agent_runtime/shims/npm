@@ -117,4 +117,22 @@ real_tool="$(_real_binary "$tool" "$pinned")" || {
   exit 127
 }
 
+if [[ "$tool" == "npm" ]]; then
+  if "$guard_python" -I -c '
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]).resolve().parent))
+import npm_guard
+args = sys.argv[2:]
+kinds = npm_guard._kinds(args)
+indices = [i for i, k in enumerate(kinds) if k in ("positional", "maybe-value")]
+candidates = [args[i] for i in indices[: next((n + 1 for n, idx in enumerate(indices) if kinds[idx] == "positional"), None)]]
+if any(c in {"ci", "install", "i", "add", "update", "up"} for c in candidates):
+    sys.exit(0)
+sys.exit(1)
+' "$shim_dir" "$@" < /dev/null; then
+    umask 022
+  fi
+fi
+
 exec "$real_tool" "$@"
