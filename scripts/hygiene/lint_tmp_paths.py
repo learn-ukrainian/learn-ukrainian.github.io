@@ -744,11 +744,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "Existing test literal; migration outside this bounded packet (#8755).",
         "fb04258d59aaa3da8b6cc76a5706d17904554d861e90e8560483361ced618fe8:1",
     ),
-    (
-        "tests/test_wiki_cache.py",
-        "Existing test literal; migration outside this bounded packet (#8755).",
-        "da1144b3844b687e4d3ca149522094a78c1bec371dd0d2cea89f1d3b3038f082:1",
-    ),
 )
 
 
