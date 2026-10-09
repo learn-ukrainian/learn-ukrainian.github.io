@@ -7,6 +7,8 @@ import json
 import re
 import subprocess
 import sys
+import textwrap
+from dataclasses import asdict
 from pathlib import Path
 
 import pytest
@@ -724,3 +726,99 @@ def test_import_keeps_minimal_ci_dependencies():
         timeout=30,
     )
     assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("mode", ["--help", "--check", "--write"])
+def test_cli_keeps_minimal_dependencies(root, mode):
+    """Exercise actual CLI startup in a fresh process with heavy imports refused."""
+    arc = _arc("synthetic")
+    _plan(root, "synthetic", 1)
+    _review(root, "synthetic", "plan-review.yaml")
+    _lesson_built(root, "synthetic", 1)
+    _review(root, "synthetic", "module-verdict.yaml")
+    files = gen.generated_files(root, arc)
+    assert json.loads(files[root.data_json])["positions"][0]["state"] == "reviewed"
+    if mode == "--check":
+        gen.write_files(files)
+    script = textwrap.dedent("""\
+        import importlib.abc
+        import json
+        import sys
+        from pathlib import Path
+
+        blocked = (
+            'requests',
+            'scripts.curriculum.evidence.sense_cli',
+            'scripts.curriculum.evidence.sources',
+            'scripts.review.fixloop',
+        )
+        class MinimalDependencies(importlib.abc.MetaPathFinder):
+            def find_spec(self, fullname, path=None, target=None):
+                if any(fullname == name or fullname.startswith(name + '.') for name in blocked):
+                    raise ModuleNotFoundError('Heavy dependency unavailable: ' + fullname)
+
+        sys.meta_path.insert(0, MinimalDependencies())
+        from scripts.build import build_arc_landing as gen
+        mode, repo, positions = sys.argv[1:]
+        gen.REPO_ROOT = Path(repo)
+        gen.load_arc = lambda level: [gen.ArcPosition(**p) for p in json.loads(positions)]
+        try:
+            result = gen.main(['--help'] if mode == '--help' else ['a1', mode])
+        except SystemExit as error:
+            assert mode == '--help' and error.code == 0
+            result = error.code
+        assert result == 0
+        assert not any(name in sys.modules for name in blocked)
+        if mode != '--help':
+            assert gen.main(['a1', '--check']) == 0
+        """)
+    result = subprocess.run(
+        [sys.executable, "-c", script, mode, str(root.repo), json.dumps([asdict(p) for p in arc])],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    if mode == "--help":
+        assert "--private-input" in result.stdout and "Outputs:" in result.stdout
+        assert not root.data_json.exists()
+    else:
+        assert not gen.stale_files(files)
+
+
+@pytest.mark.parametrize(
+    "flags",
+    [
+        [],
+        ["--private-input", "synthetic-input"],
+        ["--key-file", "synthetic-key"],
+        ["--key-id", "synthetic-id"],
+        ["--receipt", "synthetic-receipt"],
+        ["--receipt-base", "explicit-base"],
+        ["--receipt-base", "origin/main"],
+        ["--key-id", ""],
+        [
+            "--private-input", "synthetic-input", "--key-file", "synthetic-key",
+            "--key-id", "synthetic-id", "--receipt", "synthetic-receipt", "--receipt-base", "explicit-base",
+        ],
+    ],
+)
+def test_cli_receipt_parsing_matches_existing_contract(root, monkeypatch, flags):
+    import argparse
+
+    from scripts.curriculum.evidence import sense_cli
+
+    parser = argparse.ArgumentParser()
+    sense_cli.add_receipt_arguments(parser)
+    expected = sense_cli.receipt_inputs(parser.parse_args(flags))
+    original = gen.generated_files
+    seen = []
+
+    def capture(*args, **kwargs):
+        seen.append(kwargs["receipt_inputs"])
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(gen, "generated_files", capture)
+    assert _run_main(monkeypatch, root, "--check", *flags) == 1
+    assert seen == [expected]

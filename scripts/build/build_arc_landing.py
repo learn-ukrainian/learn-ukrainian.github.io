@@ -197,9 +197,9 @@ def _module_verdict_reviewed(
     that database — ``batch_state/`` is gitignored — so there the committed file is generated
     locally, where this same check already ran, and CI trusts it as-is. The import of
     ``scripts.review.fixloop`` is deferred to this branch so this module's own top-level imports
-    stay light enough for CI's minimal install (PyYAML + jsonschema; see the ``Plan Validate``
-    step of ``.github/workflows/ci.yml``) even though, as of #8774 r6, ``fixloop``'s own import
-    chain also only needs those two packages.
+    preserve the lightweight PyYAML + jsonschema import contract. Current CI installs
+    ``requirements-lock.txt`` through ``.github/actions/python-ci-env/action.yml``;
+    the lightweight contract also supports ordinary no-receipt, no-database CLI runs.
     """
     doc = _read_mapping(roots.state / slug / "module-verdict.yaml")
     if doc is None or doc.get("verdict") != "APPROVE":
@@ -380,8 +380,6 @@ def orphan_pages(roots: Roots, arc: list[ArcPosition]) -> list[Path]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    from scripts.curriculum.evidence import sense_cli
-
     parser = argparse.ArgumentParser(
         description=(
             "Generate fresh-arc landing data and pages from current module state.\n"
@@ -403,12 +401,28 @@ Related: scripts.review.fixloop; docs/runbooks/reference-sense-bindings.md; #101
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true", help="write the generated files")
     mode.add_argument("--check", action="store_true", help="fail when a generated file is stale")
-    sense_cli.add_receipt_arguments(parser)
+    # Keep parsing/help independent of the source clients. These flags mirror
+    # sense_cli.add_receipt_arguments; only explicit inputs need that module.
+    parser.add_argument("--private-input", type=Path, help="Private JSONL outside Git (default: no local proof)")
+    parser.add_argument(
+        "--key-file", type=Path, help="Existing host-local key outside Git, at least 32 bytes (default: none)"
+    )
+    parser.add_argument("--key-id", help="Existing public receipt key identifier, e.g. build1 (default: none)")
+    parser.add_argument("--receipt", type=Path, help="Existing HMAC receipt outside Git; verify only (default: none)")
+    parser.add_argument(
+        "--receipt-base", default="origin/main", help="Receipt leak-scan merge-base ref (default: origin/main)"
+    )
     args = parser.parse_args(argv)
+
+    receipt_inputs = None
+    if any((args.private_input, args.key_file, args.key_id, args.receipt)) or args.receipt_base != "origin/main":
+        from scripts.curriculum.evidence import sense_cli
+
+        receipt_inputs = sense_cli.receipt_inputs(args)
 
     roots = Roots(REPO_ROOT, args.level)
     arc = load_arc(args.level)
-    files = generated_files(roots, arc, receipt_inputs=sense_cli.receipt_inputs(args))
+    files = generated_files(roots, arc, receipt_inputs=receipt_inputs)
     if args.write:
         write_files(files)
         print(f"wrote {len(files)} files for {args.level}")
