@@ -640,7 +640,7 @@ ADMISSION_CONTROLS = [
     ("malformed-allow-slash", group(b"Disallow: /", b"Allow: public"), "/public", DENY),
     ("malformed-allow-percent", group(b"Disallow: /", b"Allow: /public%"), "/public%25", DENY),
     ("malformed-allow-dollar", group(b"Disallow: /", b"Allow: /public$x"), "/public$x", DENY),
-    ("malformed-allow-colon", b"User-agent: *\nDisallow: /\nAllow /public\n", "/public", DENY),
+    ("malformed-allow-colon", b"User-agent: *\nDisallow: /\nAllow /public\n", "/public", UNRESOLVED),
     ("malformed-allow-ctl", group(b"Disallow: /", b"Allow: /public\x7f"), "/public%7F", DENY),
     ("misspelled-record", b"Usr-agent: *\nDisalow: /\n", "/public", ALLOW),
     ("all-equivalent-ties", group(b"Disallow: /p", b"Disallow: /%70", b"Allow: /p"), "/p", ALLOW),
@@ -676,6 +676,120 @@ def test_disclosed_control_denominators():
     assert len(DISCLOSED_SEVEN) == 7
     assert len([row for row in DECISION_CONTROLS if row[0].startswith("P")]) == 14
     assert len([row for row in DECISION_CONTROLS if not row[0].startswith("P")]) == 24
+
+
+# Handwritten disclosed controls for the adopted structural rule, not held-outs.
+N1_CONTROLS = [
+    ("V1a", group(b"Disallow: /private"), "/public", ALLOW),
+    ("V1b", group(b"Disallow: /private"), "/private", DENY),
+    ("V2", group(b"  Disallow  :  /private"), "/private", DENY),
+    ("V3", group(b"\tDISALLOW\t:/private"), "/private", DENY),
+    ("V4a", group(b"Disallow: /private?x=a:b"), "/private?x=a:b", DENY),
+    ("V4b", group(b"Disallow: /private?x=a:b"), "/public", ALLOW),
+    ("V5", b"User-agent :  *\nAllow : /\nDisallow: /private\n", "/public", ALLOW),
+    ("V6", group(b"Disallow:"), "/x", ALLOW),
+    ("N1a", group(b"Disallow /private?x=a:b"), "/private?x=a:b", UNRESOLVED),
+    ("N1b", group(b"Disallow /private?x=a:b"), "/public", UNRESOLVED),
+    ("N1c", group(b"Disallow /private"), "/public", UNRESOLVED),
+    ("N1d", group(b"  disallow\t/a:b"), "/public", UNRESOLVED),
+    ("N1e", group(b"Disallow /p # note: x"), "/public", UNRESOLVED),
+    ("N1f", group(b"Allow: /", b"User-agent learnukrainianbot (+https://example.org/bot)", b"Disallow: /"), "/x", UNRESOLVED),
+    ("N1g", group(b"Disallow /private?x=a:b", b"User-agent: Googlebot", b"Allow: /"), "/x", UNRESOLVED),
+    ("N1h", b"User-agent: Googlebot\nDisallow /x:y\nUser-agent: *\nAllow: /\n", "/x", UNRESOLVED),
+    ("N1i", group(b"Allow /public?a:b", b"User-agent: Googlebot", b"Disallow: /"), "/x", UNRESOLVED),
+    ("N1i0", group(b"Allow /public", b"User-agent: Googlebot", b"Disallow: /"), "/x", UNRESOLVED),
+    ("N1j", group(b"Crawl-delay 5 x:y", b"User-agent: Googlebot", b"Disallow: /"), "/x", UNRESOLVED),
+    ("N1j0", group(b"Crawl-delay 5", b"User-agent: Googlebot", b"Disallow: /"), "/x", UNRESOLVED),
+    ("N1k", group(b"Disallow: /", b"Allow /pub:lic"), "/pub:lic", UNRESOLVED),
+    ("N1l", group(b"User-agent *:", b"Disallow: /p"), "/x", UNRESOLVED),
+    ("L1", group(b"Disallowance: /x"), "/x", ALLOW),
+    ("L2", group(b"X-Disallow: /x"), "/x", ALLOW),
+    ("L3", group(b"Disallow-Extra: /x"), "/x", ALLOW),
+    ("L4", group(b"Disallow_v2: /x"), "/x", ALLOW),
+    ("L5", group(b"Sitemap: https://example.org/s.xml", b"Host: example.org", b"Clean-param: ref /a"), "/x", ALLOW),
+    ("L6", b"User-agent: Googlebot\nDisallow: /\nUseragent: *\nDisallow: /private\n", "/private", ALLOW),
+    ("L7", b"User-agent: Googlebot\nDisallow: /\nUser agent: *\nDisallow: /private\n", "/private", ALLOW),
+    ("G1", group(b"Disallow/private"), "/private", UNRESOLVED),
+    ("G2", group(b"Disallow/private:x"), "/private", UNRESOLVED),
+    ("G3", group(b"Disallow;/private"), "/private", UNRESOLVED),
+    ("G4", group(b"Disallow=/private"), "/private", UNRESOLVED),
+    ("G5", group(b"Disallow\x0b/private"), "/private", UNRESOLVED),
+    ("G6", group(b"Disallow\x0b: /private"), "/private", UNRESOLVED),
+    ("G7", group(b"\x0bDisallow: /private"), "/private", UNRESOLVED),
+    ("G8", group(b"Disallow\xc2\xa0/private"), "/private", UNRESOLVED),
+    ("G9", group(b"Disallow2: /x"), "/public", UNRESOLVED),
+    ("G10", group(b"\xe2\x80\x8bDisallow: /private"), "/private", ALLOW),
+    ("G11", group(b"Disallow: /", b"Allow/"), "/x", UNRESOLVED),
+    ("C1", group(b"dIsAlLoW /p:x"), "/public", UNRESOLVED),
+    ("C2a", group(b"DISALLOW: /P"), "/P", DENY),
+    ("C2b", group(b"DISALLOW: /P"), "/p", ALLOW),
+    ("C3", group(b"Disallow /p\x01:x"), "/public", UNRESOLVED),
+    ("C4", group(b"Disallow: /p\x01"), "/public", UNRESOLVED),
+    ("C5", group(b"# Disallow /p:x"), "/p:x", ALLOW),
+    ("C6", group(b"Disallow /\xd0\xba:x"), "/public", UNRESOLVED),
+    ("C7", group(b"Crawl-delay 5 x:y"), "/x", UNRESOLVED),
+    ("C8", b"Disallow /private?x=a:b\nUser-agent: *\nAllow: /\n", "/public", UNRESOLVED),
+    ("C9", b"Allow /x:y\nUser-agent: *\nDisallow: /y\n", "/x", UNRESOLVED),
+    ("C10", group(b"Disallow :/p"), "/p", DENY),
+    ("C11", group(b"Disallow : x:/p"), "/public", UNRESOLVED),
+    ("C12", group(b"Disallow x:"), "/public", UNRESOLVED),
+    ("D1", group(b"Crawl-delay: 5"), "/x", ALLOW),
+    ("D2", group(b"Allow"), "/x", UNRESOLVED),
+    ("C13", b"User-agent: learnukrainianbot\nDisallow /x:y\nUser-agent: *\nAllow: /\n", "/public", UNRESOLVED),
+]
+N1_BOUNDARY_CONTROLS = [
+    ("ff-leading", group(b"\x0cAllow: /x"), "/x", UNRESOLVED),
+    ("ff-delimiter", group(b"Disallow\x0c: /x"), "/public", UNRESOLVED),
+    ("mixed-leading", group(b" \t\x0b\x0cCrawl-delay: 5"), "/x", UNRESOLVED),
+    ("orphan-agent", b"User-agent/Googlebot\nUser-agent: *\nAllow: /\n", "/x", UNRESOLVED),
+    ("orphan-delay", b"Crawl-delay=5\nUser-agent: *\nAllow: /\n", "/x", UNRESOLVED),
+    ("unknown-group-run", group(b"Disallow-Extra /x", b"User-agent: Googlebot", b"Disallow: /x"), "/x", DENY),
+    ("empty-identifier", group(b" : /x", b"123: /x"), "/x", ALLOW),
+    ("bom-cr-lf", b"\xef\xbb\xbfUser-agent:\t*\rAllow :\t/\r\nDisallow:\t/private\n", "/public", ALLOW),
+    ("middle-bom", group(b"\xef\xbb\xbfDisallow: /x"), "/x", ALLOW),
+    ("nbsp-leading", group(b"\xc2\xa0Disallow: /x"), "/x", ALLOW),
+    ("value-ff-allow", group(b"Disallow: /", b"Allow: /\x0c"), "/x", DENY),
+    ("ignored-unknown-ff", group(b"\x0cUnknown: /x"), "/x", ALLOW),
+]
+
+
+def test_n1_disclosed_denominator():
+    assert len(N1_CONTROLS) == 56
+    assert len({row[0] for row in N1_CONTROLS}) == 56
+
+
+@pytest.mark.parametrize("case", N1_CONTROLS + N1_BOUNDARY_CONTROLS, ids=lambda row: row[0])
+def test_n1_structural_recognition_and_global_transport_stop(server, case):
+    import os
+    case_id, body, target, expected = case
+    module = server.module
+    server.robots = body
+    parsed = module._robots_parse(body, module.USER_AGENT)
+    assert parsed["unresolved"] is (expected == UNRESOLVED)
+    if case_id == "D1":
+        assert parsed["delay"] == 5
+    url = "https://source.test" + target
+    if expected == ALLOW:
+        assert server.fetch(url) == NORMAL.decode()
+        assert not module._access_stopped
+        assert [call[1] for call in server.source_calls()] == [url]
+    else:
+        with pytest.raises(module.AccessStopped, match=expected):
+            server.fetch(url)
+        assert module._access_stopped
+        assert server.source_calls() == []
+        before = list(server.calls)
+        for followup in (url, "https://other.test/robots.txt", "https://other.test/public"):
+            with pytest.raises(module.AccessStopped):
+                server.fetch(followup)
+        assert server.calls == before
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"n1-{module.__name__}-{case_id}.json").write_text(json.dumps({
+            "id": case_id, "body_hex": body.hex(), "target": target,
+            "expected": expected, "unresolved": parsed["unresolved"],
+            "latched": module._access_stopped, "requests": server.calls,
+            "not_held_out": True,
+        }, indent=2))
 
 
 @pytest.mark.parametrize("module", MODULES)
@@ -1132,7 +1246,12 @@ def test_three_retained_synthetic_inputs_fresh_conservation(monkeypatch, tmp_pat
     jsonl.write_text(json.dumps(row) + "\n")
     paths = [cache, pdf, jsonl]
     def snapshot():
-        return [{"path": str(p), "size": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
+        rows = []
+        for p in paths:
+            stat = p.stat()
+            rows.append({"path": str(p), "size": stat.st_size, "device": stat.st_dev,
+                         "inode": stat.st_ino, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()})
+        return rows
     before = snapshot()
     srv = Server(monkeypatch, ukrlib, tmp_path, isolate_policy)
     assert zno.fetch_page_with_rate_limit("https://source.test/cache", cache) == NORMAL.decode()
@@ -1154,7 +1273,13 @@ def test_three_retained_synthetic_inputs_fresh_conservation(monkeypatch, tmp_pat
 @pytest.mark.parametrize("module", MODULES)
 def test_target_path_without_authority_and_orphan_delay(module):
     assert module._robots_target("/a;p?x=%2F#fragment") == b"/a;p?x=%2F"
-    assert module._robots_parse(b"Crawl-delay: 99\nUser-agent: *\nCrawl-delay 90\n", module.USER_AGENT)["delay"] == 0
+    state = module._robots_parse(b"Crawl-delay: 99\nUser-agent: *\nCrawl-delay 90\n", module.USER_AGENT)
+    assert state["delay"] == 0
+    assert state["unresolved"] is True
+    module._robots_states["https://source.test"] = state
+    with pytest.raises(module.AccessStopped, match=UNRESOLVED):
+        module._robots_check_target("https://source.test/public")
+    assert module._access_stopped is True
 
 
 @pytest.mark.parametrize("status", [301, 302, 303, 307, 308])

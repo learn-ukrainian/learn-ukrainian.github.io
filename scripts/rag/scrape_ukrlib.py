@@ -889,15 +889,26 @@ def _robots_parse(body: bytes, header: str) -> dict:
     # Only CR/LF delimit records: bytes.splitlines would also split CTLs.
     for line in body.replace(b"\r\n", b"\n").replace(b"\r", b"\n").split(b"\n"):
         line = line.split(b"#", 1)[0]
-        key, colon, value = line.partition(b":")
-        key, value = key.strip(b" \t").lower(), value.strip(b" \t")
-        if not colon:
-            words = key.split()
-            key = words[0] if words else b""
+        start = 0
+        while start < len(line) and line[start] in b" \t\v\f":
+            start += 1
+        end = start
+        while end < len(line) and (
+            65 <= line[end] <= 90 or 97 <= line[end] <= 122 or line[end] in b"_-"
+        ):
+            end += 1
+        key = line[start:end].lower()
+        if key not in (b"user-agent", b"allow", b"disallow", b"crawl-delay"):
+            continue  # Other records never end a group.
+        colon = end
+        while colon < len(line) and line[colon] in b" \t":
+            colon += 1
+        if any(o not in b" \t" for o in line[:start]) or line[colon:colon + 1] != b":":
+            unresolved = True  # Structural failure applies to the whole file.
+            continue
+        value = line[colon + 1:].strip(b" \t")
         if key == b"user-agent":
             seen_agent = True
-            if not colon:
-                unresolved = True
             if directives:
                 groups.append((agents, rules, delays))
                 agents, rules, delays, directives = [], [], [], False
@@ -915,7 +926,7 @@ def _robots_parse(body: bytes, header: str) -> dict:
         elif key in (b"allow", b"disallow", b"crawl-delay"):
             directives = bool(agents)
             if key == b"crawl-delay":
-                if colon and agents:
+                if agents:
                     try:
                         delay = float(value)
                     except ValueError:
@@ -923,7 +934,7 @@ def _robots_parse(body: bytes, header: str) -> dict:
                     if math.isfinite(delay) and delay >= 0:
                         delays.append(delay)
                 continue
-            malformed = not colon
+            malformed = False
             if value:
                 try:
                     value.decode("utf-8", errors="strict")
