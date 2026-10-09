@@ -30,13 +30,32 @@ def test_cursor_adapter_rejects_catalog_retired_model_before_invocation(adapter,
     monkeypatch.setattr(
         adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("retired model reached workspace setup")
     )
-    with pytest.raises(ValueError, match=r"^Cursor adapter: CURSOR_MODEL_NOT_APPROVED: model .* is not an approved Cursor pin"):
+    with pytest.raises(
+        ValueError, match=r"^Cursor adapter: CURSOR_MODEL_NOT_APPROVED: model .* is not an approved Cursor pin"
+    ):
         adapter.build_invocation(
             prompt="review",
             mode="read-only",
             cwd=tmp_path,
             model=model,
             task_id="retired-model",
+            session_id=None,
+            tool_config=None,
+        )
+
+
+def test_cursor_adapter_does_not_disguise_unexpected_pin_errors(adapter, tmp_path, monkeypatch):
+    def fail_pin(_model):
+        raise RuntimeError("unexpected catalog failure")
+
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor.apply_cursor_model_pins", fail_pin)
+    with pytest.raises(RuntimeError, match="unexpected catalog failure"):
+        adapter.build_invocation(
+            prompt="review",
+            mode="read-only",
+            cwd=tmp_path,
+            model="composer-2.5",
+            task_id="pin-error",
             session_id=None,
             tool_config=None,
         )

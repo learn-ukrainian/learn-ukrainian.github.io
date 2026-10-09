@@ -38,10 +38,10 @@ from typing import Any
 
 from scripts.review.model_catalog import (
     CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+    ModelCatalogError,
     apply_cursor_model_pins,
     cursor_pinned_models,
     is_cursor_auto_selector,
-    retired_model_refusal,
 )
 
 from ..binary_resolve import resolve_agent_binary
@@ -185,11 +185,8 @@ class CursorAdapter:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
         try:
             model = apply_cursor_model_pins(model) or self.default_model
-        except Exception as exc:
+        except ModelCatalogError as exc:
             raise ValueError(f"Cursor adapter: {exc}") from exc
-        refusal = retired_model_refusal(model)
-        if refusal:
-            raise ValueError(f"Cursor adapter: {refusal}")
         config = tool_config or {}
         cursor_mode = _effective_cursor_mode(mode, config)
         # Auto needs delegate's admission and agent execution: plan and ask

@@ -174,9 +174,9 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
         "grok-4.7-xhigh",
         "grok-4.7[context=500k]",
         "grok-4.7[fast=false]",
-
         "grok-4.7-high-fast",
         "composer-2.5-fast",
+        "composer-2.5[fast=true]",
         "grok-4.7[context=500k,fast=true]",
         "grok-4.7[fast=true,reasoning_effort=high]",
         "grok-4.7[fast=1]",
@@ -197,10 +197,12 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
             assert model in result.stderr
         else:
             assert result.returncode == 4, result.stdout + result.stderr
+            assert "not certified for the cursor driver" in result.stderr
             if model.startswith("grok-4.7"):
                 assert "is an unattested variant" in result.stderr
+                assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
             else:
-                assert "composer-2.5" in result.stderr
+                assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -338,13 +340,14 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
         assert selection[1] in result.stderr
     else:
         assert result.returncode == 4, result.stdout + result.stderr
+        assert "cursor interactive session" in result.stderr
+        assert "grok-4.7-high or composer-2.5" in result.stderr
         model = selection[-1] if selection else ""
         if model.startswith("grok-4.7"):
             assert "is an unattested variant" in result.stderr
-        else:
-            assert "cursor interactive session" in result.stderr
-        if model and not model.startswith("grok-4.7"):
-            assert "composer-2.5" in result.stderr
+            assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
+        elif selection[0] != "--" and model in {"auto", "--model=Auto", "cursor:auto", "composer-2.5[fast=true]"}:
+            assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 
@@ -353,10 +356,13 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
 def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path: Path, model: str) -> None:
     result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": model})
     assert result.returncode == 4, result.stdout + result.stderr
+    assert "not certified for the cursor interactive session" in result.stderr
+    assert "grok-4.7-high or composer-2.5" in result.stderr
     if model.startswith("grok-4.7"):
         assert "is an unattested variant" in result.stderr
+        assert "CURSOR_UNATTESTED_GROK_VARIANT" in result.stderr
     else:
-        assert "not certified for the cursor interactive session" in result.stderr
+        assert "CURSOR_MODEL_NOT_APPROVED" in result.stderr
     assert argv is None
 
 

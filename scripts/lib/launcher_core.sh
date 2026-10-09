@@ -804,7 +804,7 @@ except ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
 ' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat."
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
     exit 4
   fi
   LC_MODEL="$normalized"

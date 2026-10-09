@@ -802,7 +802,30 @@ def test_advisor_role_refuses_a_fable_pin(env, capsys, agent, model, monkeypatch
             task_id=_advisor_id(),
         )
     )
-    _assert_refused(env, capsys, rc, ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED), task_id=_advisor_id())
+    _assert_refused(
+        env,
+        capsys,
+        rc,
+        ("CURSOR_CLAUDE_REFUSED" if agent == "cursor" else bounded_advisory.ADVISOR_ROUTE_REFUSED),
+        task_id=_advisor_id(),
+    )
+
+
+@pytest.mark.parametrize("model", ["grok-4.7-high", "composer-2.5"])
+def test_advisor_role_refuses_non_advisor_cursor_pins(env, capsys, model):
+    """Approved Cursor pins reach the advisory gate without a Claude-route refusal."""
+    rc = _dispatch(
+        _argv(
+            "--advisory-role",
+            "bounded_advisory_envelope",
+            "--advisory-binding",
+            "a" * 64,
+            agent="cursor",
+            model=model,
+            task_id=_advisor_id(),
+        )
+    )
+    _assert_refused(env, capsys, rc, bounded_advisory.ADVISOR_ROUTE_REFUSED, task_id=_advisor_id())
 
 
 def test_advisor_must_run_read_only(env, capsys):

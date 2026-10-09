@@ -9,12 +9,22 @@ import pytest
 from scripts.audit import cursor_judge_calibration as calibration
 
 
-@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "composer-2.5-fast", ""])
-def test_call_cursor_refuses_before_spawn(monkeypatch, model):
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("Auto", "cursor_auto_outside_coding_task"),
+        ("cursor:auto", "cursor_auto_outside_coding_task"),
+        ("composer-2.5-fast", "CURSOR_MODEL_NOT_APPROVED"),
+        ("", "cursor_model_unpinned"),
+    ],
+)
+def test_call_cursor_refuses_before_spawn(monkeypatch, model, code):
     monkeypatch.setattr(
         calibration.subprocess, "run", lambda *_a, **_k: pytest.fail("spawned the provider before refusing")
     )
-    with pytest.raises(SystemExit, match=r"cursor_judge_calibration: refused: .*(CURSOR_|cursor_)"):
+    code_pattern = rf"\({code}\)" if code.startswith("cursor_") else rf"{code}: model"
+    with pytest.raises(SystemExit, match=rf"^cursor_judge_calibration: refused: .*{code_pattern}"):
         calibration.call_cursor("judge this", model)
 
 

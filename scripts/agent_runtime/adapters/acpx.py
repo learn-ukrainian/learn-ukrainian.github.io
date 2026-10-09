@@ -2601,19 +2601,17 @@ class _AcpxDiscussionAdapter:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: model={model!r} rejected; caller may only pass None or {self.fixed_model!r}"
             )
-        if self.allowed_models and model is not None:
-            check_model = model
-            if self.name == "acpx-cursor-shadow":
-                from scripts.review.model_catalog import apply_cursor_model_pins
-                # This raises ModelCatalogError for unattested variants
-                _ = apply_cursor_model_pins(model)
-                if check_model == "grok-4.7-high":
-                    check_model = "grok-4.7"
+        if self.name == "acpx-cursor-shadow":
+            from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
 
-            if check_model not in self.allowed_models:
-                raise AcpxShadowRefusalError(
-                    f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
-                )
+            try:
+                model = apply_cursor_model_pins(model or self.default_model)
+            except ModelCatalogError as exc:
+                raise AcpxShadowRefusalError(f"{type(self).__name__}: {exc}") from exc
+        if self.allowed_models and model is not None and model not in self.allowed_models:
+            raise AcpxShadowRefusalError(
+                f"{type(self).__name__}: model={model!r} rejected; allowed pins are {sorted(self.allowed_models)!r}"
+            )
         if self.fixed_effort is not None and effort not in {None, self.fixed_effort}:
             raise AcpxShadowRefusalError(
                 f"{type(self).__name__}: effort={effort!r} rejected; caller may only pass None or {self.fixed_effort!r}"
@@ -2653,9 +2651,6 @@ class _AcpxDiscussionAdapter:
             cmd.extend(["--model", self.acpx_model or self.fixed_model])
         elif self.allowed_models:
             cmd_model = model or self.default_model
-            if self.name == "acpx-cursor-shadow":
-                from scripts.review.model_catalog import apply_cursor_model_pins
-                cmd_model = apply_cursor_model_pins(cmd_model)
             cmd.extend(["--model", cmd_model])
         if custom_agent is None:
             cmd.extend([self.target_agent, "exec", "-f", "-"])
