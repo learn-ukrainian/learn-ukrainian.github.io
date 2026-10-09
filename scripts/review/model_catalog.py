@@ -982,6 +982,46 @@ def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str
     return model_id
 
 
+
+def apply_cursor_model_pins(model: str | None) -> str | None:
+    """Apply Cursor harness model rules: Grok pinning and Claude refusal."""
+    if not model:
+        return None
+
+    text = str(model).strip()
+    text_lower = text.casefold()
+
+    if "grok-4.7" in text_lower:
+        if text_lower == "grok-4.7":
+            return "grok-4.7-high"
+
+        import re
+        allowed_efforts = {"grok-4.7-low", "grok-4.7-medium", "grok-4.7-high", "grok-4.7-xhigh"}
+        if text_lower in allowed_efforts:
+            return text
+
+        if re.match(r"^grok-4\.7\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$", text_lower):
+            # A bracket override may only switch Fast off.
+            rest = text_lower.replace("fast=false,", "").replace("fast=false]", "]")
+            if "fast=" not in rest:
+                return text
+
+        raise ModelCatalogError(
+            f"CURSOR_UNATTESTED_GROK_VARIANT: model {text!r} is an unattested variant. "
+            "Use grok-4.7-high or the native Grok CLI. (operator decision #10205)"
+        )
+
+    if "claude-" in text_lower or "fable" in text_lower:
+        from scripts.agent_runtime.adapters.claude import _default_claude_bin
+        if _default_claude_bin():
+            raise ModelCatalogError(
+                f"CURSOR_CLAUDE_REFUSED: Claude models ({text}) must use the native Claude CLI "
+                "while it is available. (operator decision #10205)"
+            )
+        return text
+
+    return text
+
 def _cursor_role_pins(catalog: dict[str, Any]) -> tuple[str, ...]:
     """The same approved logical seats after a holder rotation; v1 is PR 4 compatibility."""
     if "roles" not in catalog:
@@ -1045,8 +1085,15 @@ def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ..
     """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
     source = catalog or load_model_catalog()
     seat = source["orchestrator_seats"]["cursor"]
-    pin = seat["model_id"]  # load_model_catalog resolves the authored role reference; explicit snapshots stay explicit.
-    return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
+    pin = apply_cursor_model_pins(seat["model_id"])  # apply Cursor rules
+
+    def _gen():
+        for model in seat["auto_allowlist"]:
+            m = apply_cursor_model_pins(model)
+            if m and m != pin:
+                yield m
+
+    return (pin, *_gen()) if pin else tuple(_gen())
 
 
 def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
