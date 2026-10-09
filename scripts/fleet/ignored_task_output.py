@@ -271,12 +271,23 @@ def _matching_worktree_records_once(
 def reused_worktree_creator(
     matches: list[tuple[Path, dict[str, Any]]], worktree: Path, *, repo_root: Path, tasks_dir: Path
 ) -> tuple[Path, dict[str, Any]]:
-    """Accept only one creator and settled successors of the same checkout/branch."""
+    """Accept one creator and settled successors with a common checkout/branch binding."""
     from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, checked_out_branch, resolve_claim_path
 
+    retained = any(record.get("keep_worktree") for _, record in matches)
     matches = _current_reuse_records(matches, tasks_dir)
     creators = [match for match in matches if match[1].get("worktree_reused") is False]
     branch = checked_out_branch(worktree)
+    if branch is None and not retained and len(creators) == 1:
+        # None also means a failed probe. Only a positive detached HEAD result
+        # permits using the records' common branch instead of a checked-out one.
+        from scripts.orchestration.worktree_claims import _git_probe
+
+        probe = _git_probe(["rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree)
+        if probe is not None and probe.returncode == 0 and probe.stdout.strip() == "HEAD":
+            recorded = creators[0][1].get("worktree_branch")
+            if isinstance(recorded, str) and recorded.strip():
+                branch = recorded
     if len(creators) != 1 or not branch:
         raise ValueError("ambiguous worktree task attribution with retention intent")
     target = worktree.resolve(strict=True)

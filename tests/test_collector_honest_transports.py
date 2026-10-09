@@ -153,6 +153,86 @@ def server(request, monkeypatch, tmp_path, isolate_policy):
     return Server(monkeypatch, request.param, tmp_path, isolate_policy)
 
 
+@pytest.fixture
+def curl_capture(monkeypatch):
+    """Write frozen wire bytes at the subprocess boundary, using the real reader."""
+    def capture(raw_headers, *, stdout=b"200", returncode=0):
+        body = bytes(range(256))
+        calls = []
+
+        def run(args, **kwargs):
+            calls.append(args)
+            assert kwargs == {"capture_output": True, "timeout": 60}
+            assert args[0] == "curl" and args[-1] == "https://source.test/page"
+            assert "-L" not in args and "--retry" not in args
+            Path(args[args.index("--dump-header") + 1]).write_bytes(raw_headers)
+            Path(args[args.index("--output") + 1]).write_bytes(body)
+            return SimpleNamespace(stdout=stdout, returncode=returncode, stderr=b"")
+
+        monkeypatch.setattr(ukrlib.subprocess, "run", run)
+        result = ukrlib._curl_response("https://source.test/page")
+        assert len(calls) == 1
+        assert result[2] == body
+        assert result[3] == returncode
+        return result
+
+    return capture
+
+
+@pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
+@pytest.mark.parametrize("stdout,returncode,status", [
+    (b"200", 0, 200), (b"503\n", 22, 503), (b"", 7, 0),
+])
+def test_curl_response_physical_headers_and_capture_metadata(curl_capture, eol, stdout, returncode, status):
+    raw = eol.join([b"HTTP/1.1 200 OK", b"Content-Type: text/html", b"X-Value \t: \t a:b \t", b"X-Empty:\t ", b"", b""])
+    actual_status, headers, _body, _rc = curl_capture(raw, stdout=stdout, returncode=returncode)
+    assert actual_status == status
+    assert headers == {"content-type": "text/html", "x-value": "a:b", "x-empty": ""}
+
+
+@pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
+@pytest.mark.parametrize("value,expected", [
+    (b"safe\x85Cf-Mitigated: challenge", "safe\x85Cf-Mitigated: challenge"),
+    (b"safe\x85Location: /private", "safe\x85Location: /private"),
+    (b"safe\x85Retry-After: 999", "safe\x85Retry-After: 999"),
+    (b"safe\x85HTTP/1.1 200 OK", "safe\x85HTTP/1.1 200 OK"),
+], ids=["challenge-field", "redirect-field", "retry-field", "status-reset"])
+def test_curl_response_nel_cannot_invent_fields_or_reset_block(curl_capture, eol, value, expected):
+    # Literal controls and expectations are independent of the parser's framing.
+    raw = eol.join([b"HTTP/1.1 200 OK", b"Cf-Mitigated: challenge", b"X-Opaque: " + value, b"X-After: retained", b"", b""])
+    status, headers, _body, _rc = curl_capture(raw)
+    assert status == 200
+    assert headers == {"cf-mitigated": "challenge", "x-opaque": expected, "x-after": "retained"}
+
+
+@pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
+@pytest.mark.parametrize("octet", range(0x80, 0x100), ids=lambda octet: f"{octet:02x}")
+def test_curl_response_preserves_every_opaque_octet(curl_capture, eol, octet):
+    opaque = bytes([octet])
+    value = opaque + b":field HTTP/1.1 200 OK" + opaque
+    raw = eol.join([
+        b"HTTP/1.1 200 OK", b"X-Before: retained", b"X-Opaque: \t" + value + b" \t",
+        b"X-Single: " + opaque, b"X-After: retained", b"", b"",
+    ])
+    _status, headers, _body, _rc = curl_capture(raw)
+    assert headers == {
+        "x-before": "retained", "x-opaque": value.decode("iso-8859-1"),
+        "x-single": chr(octet), "x-after": "retained",
+    }
+
+
+@pytest.mark.parametrize("eol", [b"\r\n", b"\n"], ids=["crlf", "lf"])
+def test_curl_response_genuine_status_blocks_reset_headers(curl_capture, eol):
+    raw = eol.join([
+        b"HTTP/1.1 200 Connection established", b"X-Proxy: obsolete", b"",
+        b"HTTP/1.1 100 Continue", b"X-Interim: obsolete", b"",
+        b"HTTP/2 200", b"X-Final: retained", b"X-Opaque: \x85\xa0", b"", b"",
+    ])
+    status, headers, _body, _rc = curl_capture(raw)
+    assert status == 200
+    assert headers == {"x-final": "retained", "x-opaque": "\x85\xa0"}
+
+
 @pytest.mark.parametrize("status,body,headers", [
     (403, b"Forbidden", {}), (429, b"Too many requests", {"Retry-After": "120"}),
     (200, b"arbitrary", {"Cf-Mitigated": "challenge"}), (200, CHALLENGE, {}),

@@ -36,11 +36,12 @@ from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.occupancy_sanitize import safe_field as _safe_field
 from scripts.api.occupancy_sanitize import safe_summary as _safe_summary
 from scripts.lexicon.runner import atlas_job
+from tests import _host_path_guard as guard
 
 client = TestClient(app, raise_server_exceptions=False)
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
-_ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
+_ALIAS_LEAKS = guard.HOST_ALIASES
 # Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
 _PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 
@@ -967,7 +968,7 @@ def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, m
         assert host["burn_sources"]["foundry"]["state"] == "unknown"
         assert host["idle_or_empty"] is False
         text = json.dumps(host).lower()
-        for forbidden in ("/users/", "192.0.2.1", "atlas-runner", "tunnel", "ssh", "not-json"):
+        for forbidden in ("/users/", "192.0.2.1", *_ALIAS_LEAKS, "tunnel", "ssh", "not-json"):
             assert forbidden not in text
     finally:
         atlas_job.set_host_adapter(None)

@@ -11,6 +11,7 @@ import pytest
 
 import scripts.projects.open_model_data.v4_language_usage_separation as lang_sep
 from scripts.projects.open_model_data.paths import resolve_open_model_path
+from tests._host_path_guard import FIXTURE_HOME
 
 CONFIG_PATH = resolve_open_model_path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
 _INDEX = "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
@@ -180,7 +181,7 @@ def test_verify_detects_prohibited_private_host_paths(tmp_path: Path, repo_root:
 
     receipt_data = json.loads(resolve_open_model_path(_RECEIPT).read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
-    receipt_tampered["notes"] = "failed at /home/ops/secret/corpus"
+    receipt_tampered["notes"] = f"failed at {FIXTURE_HOME}/secret/corpus"
     receipt_tampered["index_sha256"] = lang_sep.sha256_file(idx_path)
     receipt_tampered["receipt_id"] = lang_sep._make_receipt_id(
         receipt_tampered["config_sha256"],

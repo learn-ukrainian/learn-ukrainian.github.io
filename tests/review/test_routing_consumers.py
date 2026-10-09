@@ -164,9 +164,9 @@ def test_catalog_file_path_role_validation_is_clean_exit_two(tmp_path, bad, entr
 
 
 def test_legacy_allowlist_cannot_expand_from_injected_cursor_candidates():
-    from tests.review.test_model_catalog import BASELINE
+    from tests.review.test_model_catalog import APPROVED_BASELINE
 
-    catalog = deepcopy(BASELINE["catalog"])
+    catalog = deepcopy(APPROVED_BASELINE["catalog"])
     new_id = "grok-99"
     catalog["models"][new_id] = deepcopy(catalog["models"]["grok-4.7"])
     catalog["models"][new_id]["aliases"] = []
@@ -288,6 +288,6 @@ def test_routing_model_uses_resolved_snapshot_and_rejects_unresolved_values(monk
 
 def test_legacy_adapter_expands_raw_authored_references():
     from scripts.review.role_resolution import expanded_legacy_view
-    from tests.review.test_model_catalog import BASELINE
+    from tests.review.test_model_catalog import APPROVED_BASELINE
 
-    assert expanded_legacy_view(raw_catalog()) == BASELINE["catalog"]
+    assert expanded_legacy_view(raw_catalog()) == APPROVED_BASELINE["catalog"]

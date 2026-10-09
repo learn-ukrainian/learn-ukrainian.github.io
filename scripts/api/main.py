@@ -78,6 +78,7 @@ from .discussions_router import router as discussions_router
 from .docs_router import router as docs_router
 from .epics_router import router as epics_router
 from .epics_router import seed_manifest_inventory
+from .fleet_board.router import router as fleet_board_router
 from .fleet_router import router as fleet_router
 from .fleet_workers_router import router as fleet_workers_router
 from .git_hygiene_router import router as git_hygiene_router
@@ -1890,6 +1891,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(fleet_router, prefix="/api/fleet", tags=["fleet"])
     factory_app.include_router(project_state_router, prefix="/api/fleet", tags=["fleet"])
     factory_app.include_router(fleet_workers_router, prefix="/api/fleet", tags=["fleet"])
+    factory_app.include_router(fleet_board_router, prefix="/api/fleet/v1", tags=["fleet-v1"])
     factory_app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
     factory_app.include_router(coordination_router, prefix="/api/coordination")
     factory_app.include_router(consultation_router, prefix="/api/consultation")

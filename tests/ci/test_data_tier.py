@@ -174,17 +174,17 @@ CURRENT_G177 = HISTORICAL_H126 | frozenset([
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_index_header_tampering_and_corpus_leakage",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_mismatched_custody_status_or_host_reachable",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_provenance_index",
-    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path0-/home/ops/secret_archive]",
+    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path0-fixture-home-archive]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path1-alice at /home/alice]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path2-processing C:\\\\Users\\\\alice\\\\data]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path3-Proceed using \\\\\\\\server\\\\share\\\\data.pdf]",
-    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path4-unmounted at /home/ops/gdrive]",
+    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path4-fixture-home-mount]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path5-blocked by C:\\\\private\\\\job]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path6-/root/admin]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path7-location=/opt/private-corpus]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_missing_report_freeform_private_host_paths[field_path8-prefix:/opt/private-corpus]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_provenance_projection_mismatch",
-    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_recomputed_safety_assertion_violations[/home/ops/private/book.pdf]",
+    "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_recomputed_safety_assertion_violations[fixture-home-book]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_recomputed_safety_assertion_violations[C:\\\\Users\\\\alice\\\\private\\\\book.pdf]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_recomputed_safety_assertion_violations[\\\\\\\\server\\\\share\\\\private\\\\book.pdf]",
     "tests/projects/open_model_data/test_v4_source_custody_access.py::test_verify_detects_recomputed_safety_assertion_violations[relative/path/appdata/secrets.txt]",
@@ -232,7 +232,7 @@ NEW_STORE_SELECTIONS = frozenset([
     r"tests/test_check_text.py::test_mcp_round2_no_firm_book_false_positives[\u042f\u043a \u043d\u0435 \u0434\u0438\u0432\u043d\u043e, \u0432\u0456\u043d \u043f\u0440\u0438\u0439\u0448\u043e\u0432]",
     r"tests/test_check_text.py::test_mcp_round2_no_firm_book_false_positives[\u041f\u043e \u043c\u043e\u0457\u0439 \u0434\u0443\u043c\u0446\u0456 \u0442\u0430\u043a \u043d\u0435 \u043c\u043e\u0436\u043d\u0430 \u0440\u043e\u0431\u0438\u0442\u0438]"
 ])
-PREVIOUS_SELECTION_SHA256 = "14a3a406cc396b57728cc06c9c8ad05bfdfdda6a8b2efd31f50a8c7322f9acae"
+PREVIOUS_SELECTION_SHA256 = "9f33687f8c73317ecd9263d819700b024f55ab327eddf990926c04e5f019349d"
 PREVIOUS_SELECTION_FILES_SHA256 = "e9370daea41d82bc7278d31fc137f9461c0e0e720ecde9b219aa362d86c7034c"
 
 
