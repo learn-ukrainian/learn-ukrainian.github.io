@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -375,7 +379,9 @@ def test_explicit_manifest_uses_the_canonical_atlas_key_normalizer(tmp_path: Pat
 def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     result = intake.main(
         [
             "--ledger-out",
@@ -388,6 +394,8 @@ def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
             "2026-07-14",
             "--inventory-out",
             str(intake.PROJECT_ROOT / "batch_state" / "cli-fixture-inventory.json"),
+            "--report-out",
+            str(tmp_path / "report.json"),
             "--inventory-path",
             "batch_state/cli-fixture-inventory.json",
         ]
@@ -395,6 +403,8 @@ def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
 
     assert result == 2
     assert "data/lexicon/source-inventory" in capsys.readouterr().err
+    assert not (tmp_path / "report.json").exists()
+    assert not (tmp_path / "ledger.yaml").exists()
 
 
 def test_existing_ledger_keys_ignores_unreviewed_inventory(tmp_path: Path) -> None:
@@ -743,3 +753,234 @@ def test_unresolved_hyphenated_form_checks_capitalized_heritage_lookup(tmp_path:
     assert by_lemma["дівка-бранка"].heritage_status is not None
     assert by_lemma["дівка-бранка"].heritage_status["classification"] == "authentic-archaism"
     assert by_lemma["дівка-бранка"].gloss == "captive maiden"
+
+
+def empty_intake_cli_args(tmp_path: Path) -> list[str]:
+    """Use synthetic empty inputs; never inspect a corpus or a live database."""
+    source = tmp_path / "empty-curriculum"
+    source.mkdir()
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"entries": []}\n', encoding="utf-8")
+    return ["--curriculum-root", str(source), "--manifest", str(manifest)]
+
+
+@pytest.mark.parametrize(
+    "inventory_override,report_override", [(False, False), (True, False), (False, True), (True, True)]
+)
+def test_caller_scratch_defaults_and_override_readback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+    inventory_override: bool,
+    report_override: bool,
+) -> None:
+    monkeypatch.setattr(intake, "load_existing_ledger_keys", lambda **kwargs: set())
+    argv = empty_intake_cli_args(tmp_path)
+    baseline_inventory, baseline_report = tmp_path / "baseline.json", tmp_path / "baseline-report.json"
+    monkeypatch.delenv("TMPDIR", raising=False)
+    assert intake.main([*argv, "--inventory-out", str(baseline_inventory), "--report-out", str(baseline_report)]) == 0
+    expected_inventory, expected_report = baseline_inventory.read_bytes(), baseline_report.read_bytes()
+    capsys.readouterr()
+    # Reuse the imported API after the caller changes roots; prior outputs survive.
+    for root_name in ("producer-consumer", "distinct-held-out-root"):
+        root = tmp_path / root_name
+        root.mkdir()
+        monkeypatch.setenv("TMPDIR", str(root))
+        inventory = tmp_path / f"{root_name}-inventory.json" if inventory_override else root / intake.INVENTORY_FILENAME
+        report = tmp_path / f"{root_name}-report.json" if report_override else root / intake.REPORT_FILENAME
+        overrides = ({"inventory_out": inventory} if inventory_override else {}) | (
+            {"report_out": report} if report_override else {}
+        )
+        assert intake.resolve_output_paths(**overrides) == (inventory, report)
+        call_args = argv.copy()
+        for key, path in overrides.items():
+            call_args.extend(["--" + key.replace("_", "-"), str(path)])
+        assert intake.main(call_args) == 0
+        output = capsys.readouterr().out
+        assert f"inventory_out: {inventory}" in output and f"report_out: {report}" in output
+        assert inventory.read_bytes() == expected_inventory == b"[\n\n]\n"
+        assert report.read_bytes() == expected_report
+        assert read_source_inventory(inventory) == []
+        payload = json.loads(report.read_bytes())
+        assert payload["production_outputs_updated"] == []
+        assert set(payload["surface_admission"].values()) == {"unchanged"}
+        assert payload["counts"]["deduped_candidates"] == 0
+        assert str(tmp_path) not in report.read_text()
+        assert intake.build_parser().parse_args(call_args).inventory_path == intake.DEFAULT_INVENTORY_PATH
+        assert set(root.iterdir()) == ({inventory} if not inventory_override else set()) | (
+            {report} if not report_override else set()
+        )
+    if not inventory_override:
+        assert (tmp_path / "producer-consumer" / intake.INVENTORY_FILENAME).read_bytes() == expected_inventory
+    if not report_override:
+        assert (tmp_path / "producer-consumer" / intake.REPORT_FILENAME).read_bytes() == expected_report
+
+
+@pytest.mark.parametrize("root_kind", ["unset", "empty", "relative", "missing", "file"])
+@pytest.mark.parametrize("inventory_override,report_override", [(False, False), (True, False), (False, True)])
+def test_invalid_caller_root_refuses_before_intake(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys,
+    root_kind: str,
+    inventory_override: bool,
+    report_override: bool,
+) -> None:
+    if root_kind == "unset":
+        monkeypatch.delenv("TMPDIR", raising=False)
+    else:
+        file = tmp_path / "file"
+        file.write_text("sentinel", encoding="utf-8")
+        value = {"empty": "", "relative": "relative", "missing": str(tmp_path / "missing"), "file": str(file)}[
+            root_kind
+        ]
+        monkeypatch.setenv("TMPDIR", value)
+    monkeypatch.setattr(intake, "build_curriculum_intake", lambda **kwargs: pytest.fail("must refuse before intake"))
+    overrides = ({"inventory_out": tmp_path / "override-inventory.json"} if inventory_override else {}) | (
+        {"report_out": tmp_path / "override-report.json"} if report_override else {}
+    )
+    with pytest.raises(ValueError, match="TMPDIR"):
+        intake.resolve_output_paths(**overrides)
+    argv = []
+    for key, path in overrides.items():
+        argv.extend(["--" + key.replace("_", "-"), str(path)])
+    assert intake.main(argv) == 2
+    assert "TMPDIR" in capsys.readouterr().err
+    assert not (tmp_path / "missing").exists()
+    assert not any(path.exists() for path in overrides.values())
+
+
+def test_help_and_argument_errors_need_no_caller_root(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
+    args = intake.build_parser().parse_args([])
+    assert args.inventory_out is None and args.report_out is None
+    assert args.inventory_path == intake.DEFAULT_INVENTORY_PATH
+    with pytest.raises(SystemExit) as exc:
+        intake.main(["--help"])
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    for required in ("$TMPDIR", "caller", "Outputs:", "Exit codes:", "Related:"):
+        assert required in help_text
+    with pytest.raises(SystemExit) as exc:
+        intake.main(["--ledger-out", "ledger.yaml"])
+    assert exc.value.code == 2
+    assert "--batch-id" in capsys.readouterr().err
+
+
+def test_real_no_source_cli_retains_artifacts_for_consumer(tmp_path: Path) -> None:
+    argv = empty_intake_cli_args(tmp_path)
+    root = tmp_path / "subprocess-caller"
+    root.mkdir()
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "from scripts.lexicon import curriculum_atlas_intake as intake; "
+            "intake.load_existing_ledger_keys = lambda **kwargs: set(); "
+            "raise SystemExit(intake.main())",
+            *argv,
+        ],
+        cwd=Path(__file__).resolve().parents[1],
+        env={**os.environ, "TMPDIR": str(root)},
+        text=True,
+        capture_output=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    inventory, report = root / intake.INVENTORY_FILENAME, root / intake.REPORT_FILENAME
+    assert f"inventory_out: {inventory}" in result.stdout
+    assert f"report_out: {report}" in result.stdout
+    assert inventory.read_bytes() == b"[\n\n]\n"
+    assert read_source_inventory(inventory) == []
+    assert json.loads(report.read_bytes())["counts"]["deduped_candidates"] == 0
+    assert set(root.iterdir()) == {inventory, report}
+
+
+def synthetic_intake_result(tmp_path: Path):
+    curriculum = write_fixture_curriculum(tmp_path)
+    return intake.build_curriculum_intake(
+        curriculum_root=curriculum,
+        project_root=tmp_path,
+        manifest_lemma_keys=set(),
+        existing_ledger_keys=set(),
+        vesum_lookup=fake_vesum,
+        heritage_lookup=clear_heritage,
+        english_lookup=lambda lemma: None,
+    )
+
+
+def test_direct_api_defaults_keep_bytes_and_portable_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    result = synthetic_intake_result(tmp_path)
+    assert result.records
+    before = [(record.inventory_path, record.inventory_locator) for record in result.records]
+    expected = None
+    for root_name in ("api-producer", "api-distinct-consumer"):
+        root = tmp_path / root_name
+        root.mkdir()
+        monkeypatch.setenv("TMPDIR", str(root))
+        inventory, report = intake.resolve_output_paths()
+        intake.write_flat_source_inventory(result, inventory)
+        intake.write_json_payload(result.report_payload(), report)
+        actual = (inventory.read_bytes(), report.read_bytes())
+        if expected is None:
+            expected = actual
+        assert actual == expected
+        consumed = read_source_inventory(inventory)
+        assert {record.lemma for record in consumed} == {record.lemma for record in result.records}
+        assert json.loads(report.read_bytes())["production_outputs_updated"] == []
+    assert [(record.inventory_path, record.inventory_locator) for record in result.records] == before
+    assert {path for path, locator in before} == {intake.DEFAULT_INVENTORY_PATH}
+    assert (tmp_path / "api-producer" / intake.INVENTORY_FILENAME).read_bytes() == expected[0]
+
+
+def test_synthetic_cli_ledger_preserves_committed_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    import yaml
+
+    result = synthetic_intake_result(tmp_path)
+    inventory = tmp_path / intake.DEFAULT_INVENTORY_PATH
+    ledger = tmp_path / "ledger.yaml"
+    root = tmp_path / "caller"
+    root.mkdir()
+    monkeypatch.setenv("TMPDIR", str(root))
+    builder = intake.build_curriculum_intake
+
+    def synthetic_builder(**kwargs):
+        assert kwargs["inventory_path"] == intake.DEFAULT_INVENTORY_PATH
+        return result
+
+    monkeypatch.setattr(intake, builder.__name__, synthetic_builder)
+    if hasattr(intake, "load_atlas_lemma_keys"):
+        monkeypatch.setattr(intake, "load_atlas_lemma_keys", lambda path: set())
+    assert_destination = intake.assert_ledger_inventory_destination
+    monkeypatch.setattr(
+        intake,
+        "assert_ledger_inventory_destination",
+        lambda out, identity: assert_destination(out, identity, project_root=tmp_path),
+    )
+    assert (
+        intake.main(
+            [
+                "--inventory-out",
+                str(inventory),
+                "--ledger-out",
+                str(ledger),
+                "--batch-id",
+                "synthetic",
+                "--batch-label",
+                "Synthetic intake",
+                "--reviewed-at",
+                "2026-10-09",
+            ]
+        )
+        == 0
+    )
+    payload = yaml.safe_load(ledger.read_text())
+    assert payload["decisions"]
+    assert all(row["source_inventory"]["path"] == intake.DEFAULT_INVENTORY_PATH for row in payload["decisions"])
+    assert payload["production_outputs_updated"] == []
+    assert {record.lemma for record in read_source_inventory(inventory)} == {record.lemma for record in result.records}
+    assert f"ledger_out: {ledger}" in capsys.readouterr().out
+    assert json.loads((root / intake.REPORT_FILENAME).read_bytes())["production_outputs_updated"] == []
