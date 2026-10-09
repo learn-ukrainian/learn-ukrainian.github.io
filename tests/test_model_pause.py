@@ -265,3 +265,37 @@ def test_kimicc_default_is_the_harness_default(monkeypatch) -> None:
 
     monkeypatch.setattr(kimicc, "kimicc_default_model", lambda *a, **k: "kimi-code/k3")
     assert ta._seat_default_model("kimi", "kimicc") == "kimi-code/k3"
+
+
+def test_native_alias_matches_a_concrete_pause(monkeypatch) -> None:
+    from scripts.review import model_catalog
+
+    catalog = {
+        "models": {
+            "claude-opus-5-4": {"family": "anthropic"},
+            "claude-opus-5-5": {"family": "anthropic"},
+            "claude-sonnet-5-5": {"family": "anthropic"},
+        }
+    }
+    monkeypatch.setattr(model_catalog, "load_model_catalog", lambda *a, **k: catalog)
+    policy = {"pauses": [{"pattern": "claude-opus-5-5", "until": "2999-01-01T00:00:00Z"}]}
+    for alias in ("opus", "opus[1m]"):
+        assert mp.refusal_reason(alias, policy=policy, now=NOW, used_pct=lambda _l: None)
+    old = {"pauses": [{"pattern": "claude-opus-5-4", "until": "2999-01-01T00:00:00Z"}]}
+    assert mp.refusal_reason("opus", policy=old, now=NOW, used_pct=lambda _l: None) is None
+
+
+def test_admission_refuses_native_alias_under_concrete_pause(tmp_path, monkeypatch) -> None:
+    from scripts.agent_runtime import target_admission as ta
+    from scripts.review import model_catalog
+
+    monkeypatch.setattr(
+        model_catalog,
+        "load_model_catalog",
+        lambda *a, **k: {"models": {"claude-opus-5-5": {"family": "anthropic"}}},
+    )
+    policy = tmp_path / "p.json"
+    policy.write_text(json.dumps({"pauses": [{"pattern": "claude-opus-5-5", "until": "2999-01-01T00:00:00Z"}]}))
+    monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(policy))
+    with pytest.raises(mp.ModelPausedRefused):
+        ta._refuse_paused(["opus"])

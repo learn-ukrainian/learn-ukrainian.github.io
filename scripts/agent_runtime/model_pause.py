@@ -72,6 +72,30 @@ def _utc(value: Any) -> datetime | None:
 _NATIVE_CLAUDE_ALIASES = ("opus", "sonnet", "haiku", "fable")
 
 
+def _newest_claude(family: str) -> str | None:
+    """The concrete model a native Claude alias runs: the newest catalog id of that family."""
+    try:
+        from scripts.review.model_catalog import load_model_catalog
+
+        models = load_model_catalog().get("models") or {}
+    except Exception:  # no catalog: the alias is matched by family name only
+        return None
+    prefix = f"claude-{family}-"
+
+    def version(model_id: str) -> tuple[int, ...]:
+        return tuple(int(part) for part in model_id[len(prefix) :].split("-") if part.isdigit())
+
+    ids = [
+        mid
+        for mid, info in models.items()
+        if isinstance(mid, str)
+        and mid.startswith(prefix)
+        and isinstance(info, dict)
+        and info.get("family") == "anthropic"
+    ]
+    return max(ids, key=version) if ids else None
+
+
 def _names(model: str) -> set[str]:
     names = {model}
     # Native Claude aliases ("opus", "sonnet[1m]") run that family's current
@@ -79,6 +103,9 @@ def _names(model: str) -> set[str]:
     family = model.strip().lower().split("[", 1)[0]
     if family in _NATIVE_CLAUDE_ALIASES:
         names.add(f"claude-{family}-latest")
+        concrete = _newest_claude(family)
+        if concrete:
+            names.add(concrete)
     try:
         from scripts.review.model_catalog import canonical_model_id
 
