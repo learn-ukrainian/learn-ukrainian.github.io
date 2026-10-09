@@ -183,7 +183,7 @@ CLAUDE_ACP_MODEL = "claude-sonnet-5-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-opus-5-5"})
 # Cursor ACP asks never run Auto (operator decision 2026-09-30, #9274): the
 # participant sends the catalog's Cursor seat pin, or the other allowlisted pin.
-CURSOR_ACP_MODEL = "grok-4.7"
+CURSOR_ACP_MODEL = "grok-4.7-high"
 CURSOR_ACP_MODELS = frozenset({CURSOR_ACP_MODEL, "composer-2.5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
