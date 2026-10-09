@@ -233,7 +233,7 @@ _META_WRITE_GUARD_AGENT_FILE = "write_guard_agent_file"
 # ids that expansion does not cover, so a write session's guards still see
 # the shell and file tools the model actually calls.
 _WRITE_MATCHER_ALIASES: dict[str, tuple[str, ...]] = {
-    "Bash": ("run_terminal_command", "run_terminal_cmd"),
+    "Bash": ("run_terminal_command", "run_terminal_cmd", "monitor"),
     "Write|Edit|MultiEdit": ("write", "search_replace", "hashline_edit"),
 }
 

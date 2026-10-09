@@ -13,6 +13,7 @@ from pathlib import Path
 from uuid import UUID
 
 import pytest
+import yaml
 
 from scripts.agent_runtime import grok_hook_bridge as bridge
 from scripts.agent_runtime.adapters import grok_build
@@ -344,6 +345,99 @@ def test_todo_write_bypasses_native_profile_but_primary_write_denies(scratch_rep
     matched = [i for i, group in enumerate(groups) if re.search(group["matcher"], "write")]
     assert matched == [1]
     assert profile_run(payload, matched[0]).returncode == 2
+
+
+@pytest.mark.parametrize("lane", ["driver", "worker"])
+def test_monitor_runs_shell_guards_and_unknown_tool_denies(scratch_repo, lane):
+    repo, worktree = scratch_repo
+    if lane == "driver":
+        groups = json.loads(PROFILE.read_text())["hooks"]["PreToolUse"]
+    else:
+        definition = grok_build._guard_agent_definition(
+            name="fixture", description="fixture", body="fixture", publish_guard=False, native_aliases=True
+        )
+        groups = yaml.safe_load(definition.split("---")[1])["hooks"]["PreToolUse"]
+    matched = [group for group in groups if re.search(group["matcher"], "monitor")]
+    assert len(matched) == 1
+    env = driver_env()
+    if lane == "worker":
+        env = {key: value for key, value in env.items() if not key.startswith("LU_GROK_")}
+    for tool, cwd, command, expected in (
+        ("monitor", repo, "echo overwrite > tracked.txt", 2),
+        ("monitor", worktree, "echo overwrite > tracked.txt", 0),
+        ("monitor", repo, "git status --porcelain", 0),
+        ("unknown_shell_tool", repo, "git status --porcelain", 2),
+    ):
+        payload = event(tool, {"command": command, "description": "fixture", "timeout_ms": 1000}, cwd=cwd)
+        for hook in matched[0]["hooks"]:
+            result = subprocess.run(
+                ["bash", "-c", hook["command"]], cwd=ROOT, env=env,
+                input=json.dumps(payload), capture_output=True, text=True, timeout=150,
+            )
+            if result.returncode:
+                break
+        assert result.returncode == expected, result.stdout + result.stderr
+    assert (repo / "tracked.txt").read_text() == "keep\n"
+
+
+@pytest.mark.parametrize("lane", ["driver", "worker"])
+def test_gh_rewrite_preserves_exact_original_keys(lane):
+    for extra in ({}, {"description": "fixture", "timeout_ms": 1000}, {"cwd": str(ROOT), "workdir": str(ROOT)}):
+        original = {"command": "gh --version", **extra}
+        payload = event(tool_input=original)
+        if lane == "driver":
+            result = profile_run(payload)
+        else:
+            result = subprocess.run(
+                [sys.executable, str(bridge.__file__), str(ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py")],
+                cwd=ROOT, input=json.dumps(payload), capture_output=True, text=True, timeout=15,
+            )
+        assert result.returncode == 0, result.stdout + result.stderr
+        rewritten = json.loads(result.stdout)["hookSpecificOutput"]["updatedInput"]
+        assert set(rewritten) == set(original)
+        assert {key: value for key, value in rewritten.items() if key != "command"} == extra
+        assert "scripts/agent_runtime/shims" in rewritten["command"]
+        assert rewritten["command"].endswith("gh --version")
+
+
+@pytest.mark.parametrize("lane", ["driver", "worker"])
+@pytest.mark.parametrize("raw", ["not-json", "[]", "null", '{"hookSpecificOutput":[]}', '{"hookSpecificOutput":{"updatedInput":[]}}'])
+def test_invalid_guard_rewrite_denies(monkeypatch, lane, raw):
+    for key, value in driver_env().items():
+        monkeypatch.setenv(key, value)
+    if lane == "driver":
+        args = ["--driver", _fleet_guard_groups(publish_guard=False, native_aliases=True)[0]["matcher"]]
+    else:
+        args = [str(ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py")]
+    monkeypatch.setattr(sys, "argv", [str(bridge.__file__), *args])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event())))
+    monkeypatch.setattr(
+        bridge.subprocess, "run", lambda argv, **kwargs: subprocess.CompletedProcess(argv, 0, stdout=raw, stderr="")
+    )
+    assert bridge.main() == 2
+
+
+@pytest.mark.parametrize("group", [0, 1])
+@pytest.mark.parametrize("failure", ["syntax_error", "nonzero_exit", "sigterm", "sigkill"])
+def test_hook_wrapper_denies_interpreter_failure(tmp_path, group, failure):
+    source = tmp_path / "source with spaces"
+    broken = source / "scripts/agent_runtime/grok_hook_bridge.py"
+    broken.parent.mkdir(parents=True)
+    broken.write_text(f"#!{sys.executable}\n" + {
+        "syntax_error": "def invalid(:\n",
+        "nonzero_exit": "raise SystemExit(7)\n",
+        "sigterm": "import os, signal; os.kill(os.getpid(), signal.SIGTERM)\n",
+        "sigkill": "import os, signal; os.kill(os.getpid(), signal.SIGKILL)\n",
+    }[failure])
+    broken.chmod(0o755)
+    env = driver_env()
+    command = json.loads(PROFILE.read_text())["hooks"]["PreToolUse"][group]["hooks"][0]["command"]
+    env["LU_GROK_SOURCE_ROOT"] = str(source)
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=ROOT, env=env, input=json.dumps(event()),
+        capture_output=True, text=True, timeout=15,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
 
 
 def test_shell_workdir_is_not_shadowed_by_session_cwd(scratch_repo):

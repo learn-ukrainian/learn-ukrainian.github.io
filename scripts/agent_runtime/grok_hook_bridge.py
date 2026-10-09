@@ -32,6 +32,7 @@ from pathlib import Path
 _TOOL_NAMES = {
     "run_terminal_command": "Bash",
     "run_terminal_cmd": "Bash",
+    "monitor": "Bash",
     "Bash": "Bash",
     "search_replace": "Edit",
     "hashline_edit": "Edit",
@@ -112,6 +113,22 @@ def _translate(payload: dict, *, driver: bool = False) -> dict:
     return translated
 
 
+def _guard_output(raw: str, payload: dict) -> str:
+    """Keep guard-only cwd context out of a native tool-input rewrite."""
+    output = json.loads(raw)
+    if not isinstance(output, dict):
+        raise ValueError("guard output must be an object")
+    specific = output.get("hookSpecificOutput", {})
+    if not isinstance(specific, dict):
+        raise ValueError("guard hook output must be an object")
+    if "updatedInput" in specific:
+        updated = specific["updatedInput"]
+        if not isinstance(updated, dict):
+            raise ValueError("guard rewrite must be an object")
+        specific["updatedInput"] = {key: updated[key] for key in payload["toolInput"] if key in updated}
+    return json.dumps(output)
+
+
 def _driver_main(matcher: str) -> int:
     """Enforce shared guards for every session in a bound driver process tree.
 
@@ -155,7 +172,7 @@ def _driver_main(matcher: str) -> int:
             return 2
         # In particular, retain the publishing guard's updatedInput decision.
         if result.stdout.strip():
-            outputs.append(result.stdout.strip())
+            outputs.append(_guard_output(result.stdout, payload))
     for output in outputs:
         print(output)
     return 0
@@ -224,7 +241,7 @@ def main() -> int:
             "Outputs: guard stdout/stderr; preflight only validates, writes no files.\n"
             "Exit codes: 0 allowed; 2 denied or invalid input.\n"
             "Related: docs/runbooks/grok-session-canary.md\n"
-            "Example: grok_hook_bridge.py --driver 'Bash|run_terminal_command|run_terminal_cmd'"
+            "Example: grok_hook_bridge.py --driver 'Bash|run_terminal_command|run_terminal_cmd|monitor'"
         )
         return 0
     try:
@@ -244,8 +261,13 @@ def main() -> int:
         if not isinstance(payload, dict):
             raise ValueError("invalid PreToolUse event")
         translated = _translate(payload)
-        result = subprocess.run(argv, input=json.dumps(translated), text=True, check=False, timeout=10)
-        return 0 if result.returncode == 0 else 2
+        result = subprocess.run(argv, input=json.dumps(translated), text=True, check=False, timeout=10, capture_output=True)
+        sys.stderr.write(result.stderr or "")
+        if result.returncode != 0:
+            return 2
+        if result.stdout and result.stdout.strip():
+            print(_guard_output(result.stdout, payload))
+        return 0
     except (
         OSError,
         ValueError,
