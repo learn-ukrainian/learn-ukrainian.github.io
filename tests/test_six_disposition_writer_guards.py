@@ -340,7 +340,6 @@ def test_teacher_actual_promotion_verifier_refuses_held_stage(tmp_path, monkeypa
         "DEFAULT_LOCK": intake / "promotion.lock",
         "STAGED_MANIFEST": staged,
         "STAGED_FINGERPRINT": tmp_path / "staged.fingerprint.json",
-        "DEFAULT_PLAN": tmp_path / "plan.json",
     }.items():
         monkeypatch.setattr(producer, name, path)
     # The independently originated candidate already exists, so no enrichment
@@ -380,6 +379,7 @@ def test_teacher_actual_promotion_verifier_refuses_held_stage(tmp_path, monkeypa
             sources_db=None,
             candidates_out=tmp_path / "candidates.json",
             decisions_out=tmp_path / "decisions.yaml",
+            plan_out=tmp_path / "plan.json",
             write=True,
             resume_staged=resume,
         )
