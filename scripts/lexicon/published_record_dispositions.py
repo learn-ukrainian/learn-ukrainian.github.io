@@ -21,6 +21,7 @@ import yaml
 from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.orchestration.integration_sweep import parse_marker
+from scripts.review.review_contract import ALLOWED_DISPOSITIONS
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LEDGER_PATH = Path("registry/lexicon/published-record-dispositions/10181-six.yaml")
@@ -139,12 +140,36 @@ def _validate_release_review(
     _require(hashlib.sha256(receipt_bytes).hexdigest() == binding["receipt_sha256"], "release receipt digest mismatch")
     _require(hashlib.sha256(body_bytes).hexdigest() == binding["verdict_sha256"], "release verdict digest mismatch")
     receipt = json.loads(receipt_bytes)
+    # Match task_lifecycle's canonical nonblocking acceptance predicate without
+    # reclassifying or discarding the native findings and their dispositions.
+    clean = receipt.get("final_disposition") == "clean" and receipt.get("exit_code") == 0
+    approved_nonblocking = False
+    if receipt.get("final_disposition") == "actionable" and receipt.get("exit_code") == 1:
+        payload = receipt.get("reviewer_payload")
+        findings = receipt.get("findings")
+        approved_nonblocking = (
+            isinstance(payload, dict)
+            and isinstance(payload.get("overall"), dict)
+            and payload["overall"].get("correctness") == "correct"
+            and isinstance(findings, list)
+            and bool(findings)
+            and all(isinstance(finding, dict) and "id" in finding for finding in findings)
+            and [finding["id"] for finding in findings] == payload.get("finding_ids")
+            and all(
+                finding.get("outcome") == "verified"
+                and isinstance(finding.get("disposition"), str)
+                and finding.get("disposition") in (ALLOWED_DISPOSITIONS - {"stop_and_escalate"})
+                and isinstance(finding.get("disposition_rationale"), str)
+                and bool(finding["disposition_rationale"].strip())
+                for finding in findings
+            )
+        )
     _require(
         receipt.get("schema_version") == "code-review-receipt.v1"
-        and receipt.get("exit_code") == 0
-        and receipt.get("final_disposition") == "clean"
-        and not receipt.get("error"),
-        "release requires completed clean code-review receipt",
+        and "error" in receipt
+        and receipt["error"] is None
+        and (clean or approved_nonblocking),
+        "release requires clean or approved non-blocking canonical code-review receipt",
     )
     author, reviewer, target = receipt["author"], receipt["reviewer"], receipt["target"]
     for identity in (author, reviewer):
