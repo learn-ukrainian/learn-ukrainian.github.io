@@ -163,7 +163,7 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 <tr>
 <td><strong>Fleet-comms + file handoffs</strong></td>
 <td>Durable coordination</td>
-<td>Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane</td>
+<td>Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>.venv/bin/python -m scripts.fleet_comms plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane</td>
 </tr>
 <tr>
 <td><strong>ACPX</strong></td>

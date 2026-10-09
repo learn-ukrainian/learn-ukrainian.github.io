@@ -305,10 +305,10 @@ or merge-base…HEAD) — never two-dot <code>base-tip..HEAD</code> against a mo
 <h3>Worktree cleanup (post-merge painpoint)</h3>
 <p>After a PR merges, do <strong>not</strong> leave dispatch worktrees forever:</p>
 <pre><code class="language-bash"># Safe default (dry-run):
-.venv/bin/python scripts/orchestration/reap_worktrees.py
+.venv/bin/python -m scripts.orchestration.reap_worktrees
 
 # Recommended post-merge cleanup (dirty worktrees are preserved):
-.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged
+.venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged
 </code></pre>
 <p><code>--merged</code> restricts cleanup to exact merged-PR heads and enables branch
 pruning. Dirty trees remain untouched unless a human explicitly adds
