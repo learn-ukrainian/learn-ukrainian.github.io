@@ -1622,9 +1622,9 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
         # session binding, then refuses; the launcher must propagate the refusal.
         provider.write_text(
             inspect_stub
-            + '[ "$#" = 6 ] && [ "$1" = --session-id ] && [ "$2" = "$LU_GROK_DRIVER_SESSION_ID" ] '
-            '&& [ "$3" = --no-leader ] && [ "$4" = --rules ] && [ "$6" = --no-subagents ] || exit 99\n'
-            '[ -n "$5" ] || exit 99\n'
+            + '[ "$#" = 5 ] && [ "$1" = --session-id ] && [ "$2" = "$LU_GROK_DRIVER_SESSION_ID" ] '
+            '&& [ "$3" = --no-leader ] && [ "$4" = --no-subagents ] || exit 99\n'
+            'case "$5" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
             "echo approval-required >&2\nexit 23\n",
             encoding="utf-8",
         )
