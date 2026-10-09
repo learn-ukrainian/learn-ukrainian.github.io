@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 import yaml
 
+from scripts.audit import generate_source_inventory_review_candidates as review
 from scripts.audit import plan_source_inventory_promotion as planner
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import SourceInventoryError
@@ -215,3 +220,135 @@ def test_plan_drops_candidate_surface_admission_without_decision_opt_in(tmp_path
 
     assert addition["surface_admission"] == {}
     assert "surface_admission" not in addition["manifest_entry"]
+
+
+@pytest.fixture
+def synthetic_flow(tmp_path: Path) -> tuple[Path, Path]:
+    """Synthetic candidate and approval, independent of corpus and databases."""
+    inventory = {
+        "path": "data/lexicon/source-inventory/synthetic.yaml",
+        "locator": "items[0]", "source_id": "synthetic", "source_family": "fixture",
+    }
+    inventory["key"] = decisions.source_inventory_key(
+        lemma="synthetic-item", inventory_path=inventory["path"], locator=inventory["locator"],
+    )
+    row = {
+        "lemma": "synthetic-item", "decision": "approve_for_publish",
+        "approved_pos": "noun", "approved_gloss": "synthetic gloss",
+        "sense_note": "fixture only", "source_inventory": inventory,
+        "evidence_refs": ["synthetic evidence"],
+    }
+    candidate = tmp_path / "synthetic-input.json"
+    _write_json(candidate, _candidate_payload_for(row))
+    ledger = tmp_path / "synthetic-decisions.yaml"
+    ledger.write_text(yaml.safe_dump({"batch_id": "synthetic", "batch_label": "fixture", "decisions": [row]}))
+    return candidate, ledger
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_api_defaults_and_overrides_preserve_all_artifact_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_flow: tuple[Path, Path], explicit: bool,
+) -> None:
+    source, ledger = synthetic_flow
+    caller = tmp_path / "caller"
+    caller.mkdir()
+    monkeypatch.setenv("TMPDIR", str(caller))
+    monkeypatch.setattr(review.tempfile, "gettempdir", lambda: str(tmp_path / "stale"))
+    monkeypatch.setattr(review, "COMMITTED_SOURCE_INVENTORIES", ())
+    monkeypatch.setattr(review, "screen_auto_merge_lemma_validity", lambda payload: [])
+    monkeypatch.setattr(review.grow, "generate_candidates", lambda **kwargs: json.loads(source.read_bytes()))
+    # Isolate corpus validation; real decision parsing and source-key matching still run.
+    monkeypatch.setattr(decisions, "validate_committed_decision_files", lambda paths: {"files": len(paths)})
+    candidate_path = tmp_path / "override-candidates.json" if explicit else caller / review.DEFAULT_OUT.name
+    result = review.generate_review_candidates(**({"out": candidate_path} if explicit else {}))
+    candidate_bytes = candidate_path.read_bytes()
+    plan = planner.build_promotion_plan(
+        decision_files=[ledger], **({"candidates_path": candidate_path} if explicit else {}),
+    )
+    plan_path = planner.write_plan(plan, **({"out": tmp_path / "override-plan.json"} if explicit else {}))
+    report_path = planner.write_report(plan, **({"out": tmp_path / "override-report.md"} if explicit else {}))
+    assert plan_path == (tmp_path / "override-plan.json" if explicit else caller / planner.DEFAULT_OUT.name)
+    assert report_path == (tmp_path / "override-report.md" if explicit else caller / planner.DEFAULT_REPORT_OUT.name)
+    assert plan["counts"]["proposed_additions"] == 1
+    assert plan["proposed_manifest_additions"][0]["manifest_entry"]["gloss"] == "synthetic gloss"
+    assert plan["production_outputs_updated"] == []
+    assert candidate_path.read_bytes() == candidate_bytes
+    assert json.loads(candidate_bytes) == result
+    assert plan_path.read_bytes() == (json.dumps(plan, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+    assert report_path.read_bytes() == (planner.format_report(plan) + "\n").encode()
+
+
+@pytest.mark.parametrize("combined", [False, True])
+@pytest.mark.parametrize("explicit", [False, True])
+def test_synthetic_cli_candidate_to_plan_readback_across_processes(
+    tmp_path: Path, synthetic_flow: tuple[Path, Path], combined: bool, explicit: bool,
+) -> None:
+    source, ledger = synthetic_flow
+    caller = tmp_path / "caller"
+    caller.mkdir()
+    environment = {**os.environ, "TMPDIR": str(caller)}
+    setup = """
+import json
+import sys
+from pathlib import Path
+from scripts.audit import generate_source_inventory_review_candidates as review
+from scripts.audit import plan_source_inventory_promotion as planner
+review.COMMITTED_SOURCE_INVENTORIES = ()
+review.screen_auto_merge_lemma_validity = lambda payload: []
+source = Path(sys.argv[1])
+review.grow.generate_candidates = lambda **kwargs: json.loads(source.read_bytes())
+planner.decisions.validate_committed_decision_files = lambda paths: {"files": len(paths)}
+"""
+    candidates = tmp_path / "override-candidates.json" if explicit else caller / review.DEFAULT_OUT.name
+    plan_path = tmp_path / "override-plan.json" if explicit else caller / planner.DEFAULT_OUT.name
+    report_path = tmp_path / "override-report.md" if explicit else caller / planner.DEFAULT_REPORT_OUT.name
+    if not combined:
+        writer = subprocess.run(
+            [sys.executable, "-c", setup + "raise SystemExit(review.main(sys.argv[2:]))", str(source),
+             *(["--out", str(candidates)] if explicit else [])],
+            env=environment, capture_output=True, text=True, timeout=30, check=False,
+        )
+        assert writer.returncode == 0, writer.stderr
+        assert candidates.exists()  # The writer has exited; the consumer has not run.
+        before = candidates.read_bytes()
+    planner_code = "raise SystemExit(planner.main(['--decision-file', sys.argv[2]] + sys.argv[3:]))"
+    reader = subprocess.run(
+        [sys.executable, "-c", setup + planner_code, str(source), str(ledger),
+         *(["--generate-candidates"] if combined else []),
+         *(["--candidates", str(candidates), "--out", str(plan_path), "--report-out", str(report_path)]
+           if explicit else [])],
+        env=environment, capture_output=True, text=True, timeout=30, check=False,
+    )
+    assert reader.returncode == 0, reader.stderr
+    plan = json.loads(plan_path.read_bytes())
+    assert plan["counts"]["proposed_additions"] == 1
+    assert plan["production_outputs_updated"] == []
+    assert plan["proposed_manifest_additions"][0]["lemma"] == "synthetic-item"
+    assert report_path.read_bytes() == (planner.format_report(plan) + "\n").encode()
+    assert plan_path.read_bytes() == (json.dumps(plan, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+    if not combined:
+        assert candidates.read_bytes() == before
+    expected = set() if explicit else {review.DEFAULT_OUT.name, planner.DEFAULT_OUT.name, planner.DEFAULT_REPORT_OUT.name}
+    assert {path.name for path in caller.iterdir()} == expected
+
+
+@pytest.mark.parametrize("writer", [planner.write_plan, planner.write_report])
+def test_plan_api_default_refuses_repository_tmpdir(
+    monkeypatch: pytest.MonkeyPatch, writer: Callable[..., Path],
+) -> None:
+    monkeypatch.setenv("TMPDIR", str(PROJECT_ROOT / "site/src/data"))
+    with pytest.raises(SourceInventoryError, match="must not write under"):
+        writer({})
+
+
+@pytest.mark.parametrize("output_flag", ["--out", "--report-out"])
+def test_planner_cli_refuses_repository_outputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, synthetic_flow: tuple[Path, Path], output_flag: str,
+) -> None:
+    source, ledger = synthetic_flow
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    monkeypatch.setattr(decisions, "validate_committed_decision_files", lambda paths: {"files": len(paths)})
+    assert planner.main([
+        "--candidates", str(source), "--decision-file", str(ledger),
+        output_flag, str(PROJECT_ROOT / "site/src/data/forbidden.json"),
+    ]) == 2

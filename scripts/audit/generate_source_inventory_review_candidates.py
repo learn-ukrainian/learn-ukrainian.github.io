@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+import tempfile
 import uuid
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -43,8 +45,13 @@ COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
     REGISTRY_ROOT / "lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
 )
 
-DEFAULT_OUT = Path("/tmp/atlas-source-inventory-review-candidates.json")
-DEFAULT_QUEUE_REPORT_OUT = Path("/tmp/atlas-source-inventory-publish-review-queue.md")
+def default_review_output_path(filename: str) -> Path:
+    """Use caller-owned temp storage without allocating or ending its lifecycle."""
+    return Path(os.environ.get("TMPDIR") or tempfile.gettempdir()) / filename
+
+
+DEFAULT_OUT = default_review_output_path("atlas-source-inventory-review-candidates.json")
+DEFAULT_QUEUE_REPORT_OUT = default_review_output_path("atlas-source-inventory-publish-review-queue.md")
 WORKFLOW_ID = "source_inventory_review_candidates.v1"
 TRIAGE_WORKFLOW_ID = "source_inventory_review_triage.v1"
 PUBLISH_REVIEW_QUEUE_WORKFLOW_ID = "source_inventory_publish_review_queue.v1"
@@ -67,9 +74,13 @@ LIVE_REVIEW_FORBIDDEN_OUTPUT_DIRS: tuple[Path, ...] = (
 )
 
 
-def generate_review_candidates(*, limit: int | None = None, out: Path = DEFAULT_OUT) -> dict[str, Any]:
+def generate_review_candidates(*, limit: int | None = None, out: Path | None = None) -> dict[str, Any]:
     """Generate candidates without live Atlas/static-practice outputs."""
-    output_path = resolve_review_output_path(out)
+    output_path = (
+        resolve_ephemeral_review_output_path(default_review_output_path(DEFAULT_OUT.name))
+        if out is None
+        else resolve_review_output_path(out)
+    )
     temp_out = output_path.with_name(f".{output_path.name}.{uuid.uuid4().hex}.tmp")
     try:
         payload = grow.generate_candidates(
@@ -547,15 +558,30 @@ def resolve_review_output_path(out: Path) -> Path:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    default_out = default_review_output_path(DEFAULT_OUT.name)
+    queue_example = default_review_output_path(DEFAULT_QUEUE_REPORT_OUT.name)
     parser = argparse.ArgumentParser(
-        description=("Generate review-only Atlas candidates from committed source inventories.")
+        description=(
+            "Generate review-only Atlas candidates from committed source inventories. "
+            "Use for source review and promotion planning; publishing is a separate workflow."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.audit.generate_source_inventory_review_candidates --report\n"
+            "  .venv/bin/python -m scripts.audit.generate_source_inventory_review_candidates --limit 5 --queue-report\n"
+            "Outputs: candidate JSON; optional Markdown queue. No production outputs updated.\n"
+            "Defaults use caller-owned TMPDIR (system temp if unset), retained for downstream readers.\n"
+            "Exit codes: 0 success; 2 invalid input or refused output.\n"
+            "Related: scripts.audit.plan_source_inventory_promotion; #9702."
+        ),
     )
     parser.add_argument("--limit", type=int, help="Limit processed source headwords")
     parser.add_argument(
         "--out",
         type=Path,
-        default=DEFAULT_OUT,
-        help=f"Review-only JSON output path (default: {DEFAULT_OUT})",
+        default=None,
+        help=f"Review-only JSON output path (default: {default_out}; example: candidates.json)",
     )
     parser.add_argument(
         "--queue-report",
@@ -565,7 +591,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--queue-report-out",
         type=Path,
-        help=(f"Optional review-only Markdown queue path outside the repository (example: {DEFAULT_QUEUE_REPORT_OUT})"),
+        help=(f"Optional Markdown queue outside the repository (default: omitted; example: {queue_example})"),
     )
     parser.add_argument("--report", action="store_true", help="Print candidate bucket counts")
     return parser
