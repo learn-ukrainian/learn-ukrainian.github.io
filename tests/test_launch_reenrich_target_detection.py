@@ -18,6 +18,8 @@ from pathlib import Path
 
 import pytest
 
+from tests._host_path_guard import assert_no_checkout_paths, assert_no_host_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_class_b.sh"
 REMOTE_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_class_b_remote.sh"
@@ -185,7 +187,7 @@ def test_remote_wrapper_resolves_primary_root_portably() -> None:
     source = REMOTE_LAUNCHER.read_text(encoding="utf-8")
 
     # Ban the hardcoded absolute path in live source.
-    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in source
+    assert_no_checkout_paths(source)
     assert "ATLAS_PRIMARY_ROOT" in source
     assert 'git -C "$WORKTREE" rev-parse --git-common-dir' in source
 
@@ -274,12 +276,12 @@ def test_remote_wrapper_mkdirs_run_root_before_first_transfer() -> None:
     assert mkdir_idx > source.index('ssh_q "true"')
 
 
-def test_launchers_never_reference_teacher_product_or_ops_home_trees() -> None:
-    """Launchers must not bake teacher-product or ops-home filesystem layout."""
+def test_launchers_never_reference_teacher_product_or_home_trees() -> None:
+    """Launchers must not bake teacher-product or home-directory filesystem layout."""
     for launcher in (REMOTE_LAUNCHER, LOCAL_LAUNCHER):
         text = launcher.read_text(encoding="utf-8")
         assert "/opt/hramatka" not in text
-        assert "/home/ops" not in text
+        assert_no_host_paths(text)
 
 
 def _local_run_root_block(source: str) -> str:

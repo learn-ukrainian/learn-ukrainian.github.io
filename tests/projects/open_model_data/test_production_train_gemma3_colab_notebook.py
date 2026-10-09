@@ -6,6 +6,8 @@ import ast
 import json
 from pathlib import Path
 
+from tests._host_path_guard import assert_no_host_paths
+
 NOTEBOOK_PATH = (
     Path(__file__).resolve().parents[3]
     / "scripts"
@@ -65,4 +67,4 @@ def test_production_colab_notebook_contract_invariants() -> None:
 
     # No hardcoded secrets or raw keys
     assert "hf_" not in content or "hf_token" in content or "hf_hub" in content, "Must not contain hardcoded HF tokens"
-    assert "/home/ops" not in content, "Notebook must not reference local host paths (/home/ops)"
+    assert_no_host_paths(content, "notebook")

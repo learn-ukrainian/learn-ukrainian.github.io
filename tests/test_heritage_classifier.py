@@ -22,6 +22,7 @@ from scripts.lexicon.heritage_classifier import (
     source_text_digest,
     usage_source_records,
 )
+from tests._host_path_guard import assert_no_checkout_paths
 
 DB = Path(__file__).resolve().parent / "fixtures" / "heritage_sample.db"
 VESUM_DB = Path(__file__).resolve().parent / "fixtures" / "vesum_sample.db"
@@ -506,7 +507,7 @@ def test_source_db_path_has_no_hardcoded_absolute_path() -> None:
     from scripts.lexicon import heritage_classifier as hc
 
     src = Path(hc.__file__).read_text(encoding="utf-8")
-    assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
+    assert_no_checkout_paths(src)
 
 
 def test_convergence_calques_receive_yellow_severity_and_alternatives() -> None:
