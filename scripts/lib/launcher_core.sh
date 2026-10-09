@@ -793,27 +793,35 @@ launcher_validate_cursor_pin() {
     launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN or composer-2.5)."
     exit 4
   fi
+  local normalized
+  if ! normalized="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+from scripts.review.model_catalog import ModelCatalogError, apply_cursor_model_pins
+try:
+    print(apply_cursor_model_pins(sys.argv[2]) or "")
+except ModelCatalogError as exc:
+    print(str(exc), file=sys.stderr)
+    sys.exit(4)
+' "$LC_ROOT" "$LC_MODEL")"; then
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    exit 4
+  fi
+  LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation)."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
     exit 4
   fi
 }
 
-# Cursor CLI model ids: bare certified pins, effort variants such as
-# grok-4.7-high, and bracket overrides such as
-# grok-4.7[context=500k,reasoning_effort=high,fast=false]. Auto, Fast variants
-# and previous generations are not certified.
+# Cursor CLI model ids: bare certified pins and bracket overrides such as
+# composer-2.5[fast=false]. Auto, Fast variants and previous generations are not certified.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    grok-4.7|composer-2.5) return 0 ;;
-    grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
+    composer-2.5|composer-2.5\[fast=false\]|grok-4.7-high) return 0 ;;
   esac
-  [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
-  # A bracket override may only switch Fast off.
-  local rest="${model//fast=false,/}"
-  rest="${rest//fast=false]/]}"
-  [[ "$rest" != *fast=* ]]
+  return 1
 }
 
 launcher_prepare_driver_identity() {
