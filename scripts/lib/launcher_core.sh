@@ -1254,9 +1254,8 @@ launcher_forward_args_have_agent() {
 }
 
 launcher_inject_driver_agent() {
-  # Claude Code selects its system prompt from --agent. The project default
-  # (.claude/settings.json "agent") is the main orchestrator, which is the wrong
-  # prompt for every non-curriculum driver lane, so resolve the lane's
+  # Claude Code selects its system prompt and model from --agent. Routine
+  # interactive settings have no default agent, so resolve the lane's
   # driver_agent_type from scripts/config/area_assignments.yaml and inject it
   # unless the caller chose an agent explicitly.
   [ "$LC_PROVIDER" = "claude" ] || return 0
