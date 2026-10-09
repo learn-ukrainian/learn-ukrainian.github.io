@@ -13961,6 +13961,10 @@
       "sha256": "209b59eb9e6718b521c0859656b6d2194465725321e8012dbf3fb6d3462dab0b"
     },
     {
+      "path": "site/src/content/docs/a1/first-conversations/index.mdx",
+      "sha256": "f6f11c635c0264b525383870e3f70bf96ce49c5ef8b56154edc8878d85d7b006"
+    },
+    {
       "path": "site/src/content/docs/a1/food-and-drink/index.mdx",
       "sha256": "f4095e77a5571df32a50bdae195afe1e167aa4b5e9468344fe9c3e1c7c68adfc"
     },
@@ -13995,6 +13999,10 @@
     {
       "path": "site/src/content/docs/a1/index.mdx",
       "sha256": "298c7703e8a3c3f5b9d823ba7e2dde7aaf98a00f6c14cf1a15967f8f066eb7ca"
+    },
+    {
+      "path": "site/src/content/docs/a1/introduction-to-ukrainian/index.mdx",
+      "sha256": "4c45c96ff6ba8fe9c7b2b1677065a8a0c157bae0c1e85b13c76c8ff229b690e7"
     },
     {
       "path": "site/src/content/docs/a1/linking-ideas/index.mdx",
