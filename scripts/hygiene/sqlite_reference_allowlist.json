@@ -859,13 +859,11 @@
   },
   {
     "path": "scripts/projects/open_model_data/phase3_vspu_db_cutover.py",
-    "reference_count": 6,
+    "reference_count": 4,
     "kind": "writer",
     "target_db": "sources.db",
     "reason": "restores source DB from approved snapshot",
     "calls": [
-      "sqlite3.connect(uri, uri=True, timeout=30.0)",
-      "sqlite3.connect(source_uri, uri=True)",
       "sqlite3.connect(target)"
     ]
   },
