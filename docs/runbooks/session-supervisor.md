@@ -243,9 +243,11 @@ scripts/ai_agent_bridge/inbox_watch.sh grok-atlas --wake-driver grok --epic atla
 
 Run it in an existing persistent host terminal or service allocation. The
 watcher does not install another service or make an offline host available.
-It checks at most 64 pending events per tick and invokes only the selected
-existing launcher. The launcher remains the sole process/lease supervisor.
-An active remote lease prevents startup; unknown authority fails closed.
+It checks at most 64 pending supervisory events per tick. Offline events invoke
+only the selected existing launcher; ordinary unread Codex inbox rows can resume
+an idle live thread as described below. The launcher remains the sole
+process/lease supervisor. An active remote lease prevents launcher startup;
+unknown authority fails closed.
 
 For a clean restart, launcher-owned consumption records the exact generation
 before preparing a durable stream handoff. The process loop must stop and reap
@@ -264,6 +266,123 @@ second start. A later generation requires a new explicitly targeted event.
 
 All certified provider driver entrypoints, including Claude, use the common
 launcher lease boundary before starting their provider adapters.
+
+### Live Codex inbox readiness (#10133)
+
+With `--wake-driver codex`, unread ordinary bridge rows for an occupied Codex
+lease are coalesced into one `codex exec resume` turn, oldest message first.
+The watcher discovers the exact lease owner's Codex process and open rollout,
+checks the inherited lease envelope, and reconciles remote authority again.
+It never launches a second driver, types into tmux, signals the live process,
+or claims, renews or releases its lease. Wake mode off only notifies.
+
+Readiness comes from a forward streaming scan of complete rollout JSONL
+records, with a cached byte offset and last lifecycle state across polls.
+Cold start scans the file once; inode replacement, observed truncation or a
+same-size rewrite resets the cache. No record or file size cap limits the scan.
+Long message strings are validated and skipped with bounded memory; JSON grammar,
+escapes, UTF-8 and nesting are validated before a record can decide readiness.
+Only the top-level `type="event_msg"` and its direct `payload.type` count.
+`payload.id`, nested envelopes and type-like text inside strings do not count.
+
+The last lifecycle event decides: `task_started` / `turn_started` is BUSY;
+`task_complete` / `turn_complete` / `turn_aborted` is READY. An abort closes the
+turn even without a turn ID; a later start supersedes that abort. A complete
+valid rollout with no lifecycle event has no recorded open turn. The installed
+CLI's rollout vocabulary was verified against its own events and the
+[upstream EventMsg protocol](https://github.com/openai/codex/blob/2351d9e1b608e6f9d9a3699b71d7eb39ee41cfa4/codex-rs/protocol/src/protocol.rs#L1511-L1522):
+`task_*` are the v1 wire names; `turn_started` and `turn_complete` are aliases,
+and `turn_aborted` follows the enum's snake-case encoding.
+
+Fail-closed reasons include:
+
+- `start_event:<type>`: an unmatched start, regardless of its age. There is **no
+  time-based staleness escape**. A crashed driver ends through lease/session
+  expiry and the normal launcher recovery path.
+- `partial_final_line`: any record without its terminating newline, even if
+  its current bytes happen to form valid JSON. An append can complete it.
+- `decode_error:<exception>`: malformed JSON anywhere in the scanned history,
+  duplicate lifecycle fields, invalid UTF-8, invalid string escapes, decoder
+  failures, nesting beyond 256 containers, or numeric tokens longer than 4,300
+  bytes. These last two are decoder safety limits, not record size limits.
+  Decoder faults remain BUSY until the rollout is replaced or truncated.
+- `read_error:<exception>`: missing or unreadable rollout; retried next poll.
+- `rollout_changing`: after each scan, device/inode, size and modification time
+  are checked again. Appends are rescanned, up to three passes. A file still
+  changing remains BUSY and is retried next poll.
+- `rollout_unavailable`: discovery did not provide an exact rollout path.
+
+BUSY reports `codex_wake_busy:<reason>`. A missing binary or resume exception
+reports `codex_resume_error:<exception>`; a nonzero exit, missing turn evidence,
+or failed/error event reports `codex_resume_error:failed`. The supervisory loop
+catches all ordinary wake exceptions, emits a typed `wake_error`, leaves the
+rows unread, and polls again. Only a successful resume advances the watcher's
+in-memory cursor; the live driver still records durable inbox consumption.
+
+Readiness is checked after lease reconciliation and message framing and again
+immediately before the resume subprocess is spawned. **A residual window still
+exists between that last check and the subprocess attaching**: another turn
+can start during that interval. File observation cannot provide atomic turn
+admission. [#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217),
+owned by the harness stream's accountable driver, tracks that admission work.
+This gate does not claim to close the race.
+
+#### Manual throwaway-session receipt
+
+The following creates a fresh, isolated Codex session and resumes only the UUID
+returned by that creation. Run it from a dispatch checkout using the configured
+project interpreter (replace `.venv/bin/python` with that interpreter when
+shared). It uses the existing managed `$TMPDIR`, and asserts the rollout's
+recorded working directory is the throwaway directory before resuming. It never
+accepts a production thread ID. This receipt proves resume/readiness behavior;
+it does not certify a production lease or atomic admission. Do not run a receipt
+against a live production driver.
+
+```bash
+.venv/bin/python - <<'PY'
+import json
+import os
+import subprocess
+import tempfile
+from pathlib import Path
+from scripts.ai_agent_bridge import _ui_codex as ui
+
+with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"], prefix="wake-receipt-") as scratch:
+    first = subprocess.run(
+        ["codex", "exec", "--json", "--disable", "apps", "--skip-git-repo-check", "-"],
+        input="Reply exactly RECEIPT-START. Do not run tools.", cwd=scratch,
+        capture_output=True, text=True, timeout=180, check=True,
+    )
+    events = [json.loads(line) for line in first.stdout.splitlines() if line.strip()]
+    thread = next(event["thread_id"] for event in events if event["type"] == "thread.started")
+    assert any(event["type"] == "turn.completed" for event in events)
+    rollout = ui.find_session_file(thread)
+    assert rollout is not None
+    with rollout.open("rb") as stream:
+        metadata = json.loads(stream.readline())
+    assert metadata["payload"]["id"] == thread
+    assert Path(metadata["payload"]["cwd"]).resolve() == Path(scratch).resolve()
+    reader = ui.RolloutReader()
+    def check_ready():
+        ready, reason = ui.rollout_is_ready(rollout, reader=reader)
+        assert ready, reason
+    check_ready()
+    before = rollout.stat().st_size
+    result = ui.send(
+        thread, "Reply exactly RECEIPT-RESUMED. Do not run tools.",
+        cwd=Path(scratch), timeout_s=180, before_resume=check_ready,
+    )
+    types = [event["type"] for event in result["events"]]
+    assert result["exit_code"] == 0
+    assert types.count("turn.started") == types.count("turn.completed") == 1
+    assert not {"turn.failed", "error"}.intersection(types)
+    assert result["final_message"] == "RECEIPT-RESUMED"
+    assert rollout.stat().st_size > before
+    check_ready()
+    print(json.dumps({"schema": "codex-wake-receipt.v1", "same_thread": True,
+                      "new_turns": 1, "ready_after_resume": True}))
+PY
+```
 
 ## Related
 
