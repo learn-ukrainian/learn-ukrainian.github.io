@@ -55,6 +55,10 @@ RECEIPT_TTL_S = 3600.0
 # Measured 2026-10-09 on a loaded host: the registry still took 17.5 min on one process at a 120 s cap.
 HEAVY_MODULE_S = 60.0
 DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
+# Modules the tracked durations table lacks.  Measured with --durations=0 on 2026-10-09 (load average
+# 16): test_source_ingest_entrypoints alone was 359 of 893 CPU-seconds and, being one file, the
+# critical path of the two-worker run.
+MEASURED_COST_S = {"tests/test_source_ingest_entrypoints.py": 359.0}
 # Registry entries that read a tree a sparse dispatch worktree omits.  They fail there for want of the
 # tree, not for a defect (measured: tests/conftest.py's sparse skip covers only data/projects and
 # data/lexicon).  Deferred to CI only while the worktree is sparse and the tree is absent.
@@ -189,26 +193,27 @@ def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
     return nodes, f"v{GATE_VERSION}-{digest}"
 
 
+def tree_is_partial(root: Path, tree: str) -> bool:
+    """True when sparse-checkout left some tracked file under ``tree`` unmaterialized (skip-worktree)."""
+    listing = git_ok("ls-files", "-v", "--", tree, cwd=root)
+    return listing is not None and any(line.startswith("S ") for line in listing.splitlines())
+
+
 def defer_to_ci(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """Split ``nodes`` into ``(run_here, deferred_to_ci)``; every deferral is recorded by the caller.
 
     Two reasons defer an entry.  A whole module whose tracked CI duration exceeds ``HEAVY_MODULE_S``
     cannot fit the budget (function entries and unknown durations run).  An entry that reads a tree
-    a sparse worktree omits cannot pass here; it defers only while sparse-checkout is on and the
-    tree is absent, so a full checkout runs it.
+    a sparse worktree omits cannot pass here; it defers only while sparse-checkout has left part of
+    the tree unmaterialized, so a full checkout runs it.
     """
     try:
         durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         durations = {}
-    if not isinstance(durations, dict):
-        durations = {}
-    sparse = (git_ok("config", "--get", "core.sparseCheckout", cwd=root) or "").strip() == "true"
+    durations = {**MEASURED_COST_S, **durations} if isinstance(durations, dict) else dict(MEASURED_COST_S)
     absent = {
-        node
-        for tree, tree_nodes in SPARSE_TREE_NODES.items()
-        if sparse and not (root / tree).is_dir()
-        for node in tree_nodes
+        node for tree, tree_nodes in SPARSE_TREE_NODES.items() if tree_is_partial(root, tree) for node in tree_nodes
     }
 
     def deferred(node: str) -> bool:

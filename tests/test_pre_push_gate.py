@@ -646,6 +646,8 @@ def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(tmp
     assert gate.defer_to_ci(nodes, tmp_path / "nowhere") == (nodes, ())
     _write(tmp_path, gate.DURATIONS_FILE, "[1, 2]")
     assert gate.defer_to_ci(nodes, tmp_path) == (nodes, ())
+    measured = next(iter(gate.MEASURED_COST_S))  # measured locally where the durations table has no row
+    assert gate.defer_to_ci((measured,), tmp_path) == ((), (measured,))
 
 
 def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
@@ -667,12 +669,16 @@ def test_the_real_registry_fits_the_run_budget_once_heavy_modules_are_deferred()
 def test_entries_that_read_a_tree_the_sparse_worktree_omits_are_deferred_only_there(repo: Path) -> None:
     node = gate.SPARSE_TREE_NODES["curriculum"][0]
     nodes = (node, "tests/other.py")
+    _write(repo, "curriculum/plans/a.yaml", "a: 1\n")
+    _write(repo, "curriculum/kept.yaml", "k: 1\n")
+    _commit(repo, "curriculum", "curriculum")
 
-    assert gate.defer_to_ci(nodes, repo) == (nodes, ())  # not sparse: CI-equivalent full checkout runs it
-    _git(repo, "config", "core.sparseCheckout", "true")
-    assert gate.defer_to_ci(nodes, repo) == (("tests/other.py",), (node,))  # sparse and tree absent
-    (repo / "curriculum").mkdir()
-    assert gate.defer_to_ci(nodes, repo) == (nodes, ())  # sparse but the tree is present
+    assert gate.defer_to_ci(nodes, repo) == (nodes, ())  # full checkout: the entry runs
+    _git(repo, "sparse-checkout", "set", "--no-cone", "/*", "!/curriculum/plans/")
+    assert not (repo / "curriculum/plans/a.yaml").exists() and (repo / "curriculum/kept.yaml").exists()
+    assert gate.defer_to_ci(nodes, repo) == (("tests/other.py",), (node,))  # part of the tree is unmaterialized
+    _git(repo, "sparse-checkout", "disable")
+    assert gate.defer_to_ci(nodes, repo) == (nodes, ())
 
 
 def test_sparse_deferrals_name_real_registry_entries() -> None:
@@ -687,3 +693,12 @@ def test_pytest_runs_on_at_most_two_xdist_workers_kept_by_file() -> None:
 
     assert options == ["-n", "2", "--dist", "loadfile"]  # xdist is a project dependency
     assert int(options[1]) <= gate.MAX_TEST_PROCESSES
+
+
+def test_measured_cost_rows_name_registered_heavy_modules() -> None:
+    registry, _ = gate.load_registry(REPO_ROOT)
+    durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
+
+    for module, cost in gate.MEASURED_COST_S.items():
+        assert module in registry and cost > gate.HEAVY_MODULE_S
+        assert module not in durations, "the durations table now has a row; drop the local measurement"
