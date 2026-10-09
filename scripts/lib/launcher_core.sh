@@ -838,6 +838,20 @@ launcher_prepare_driver_identity() {
   fi
 }
 
+# Seed a missing per-epic state file from the template (goals placeholder plus
+# the standing decision policy). Never overwrites; fail-open.
+launcher_seed_driver_state() {
+  [ "$LC_MODE" = driver ] || return 0
+  [ -n "${LU_DRIVER_STATE_FILE:-}" ] && [ ! -e "$LU_DRIVER_STATE_FILE" ] || return 0
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    printf 'launcher: would seed driver state %s\n' ".claude/${LC_EPIC}-epic/DRIVER-STATE.md"
+    return 0
+  fi
+  local py="${LU_DRIVER_STATE_PYTHON:-$LC_ROOT/.venv/bin/python}"
+  [ -x "$py" ] || return 0
+  (cd "$LC_ROOT" && "$py" -m scripts.driver_state init --epic "$LC_EPIC" >/dev/null 2>&1) || true
+}
+
 launcher_import_rollover_bundle() {
   local stream helper_root py script output rc
   stream="$(launcher_selector_stream "$LC_EPIC" 2>/dev/null || true)"
@@ -1301,7 +1315,7 @@ launcher_bind_drive_epic() {
   else
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
   fi
-  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands."
+  LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review. Your pinned epic, goals and next step live in .claude/${LC_EPIC}-epic/DRIVER-STATE.md; after any compaction or doubt run .venv/bin/python -m scripts.driver_state whoami, and update that file when a goal lands. Follow its standing decision policy: decide and execute reversible rule-following choices yourself, never ask for overrides, do listed actions in the same turn, escalate only deletes, money, security or rule changes (final message starts CTO-ESCALATION:), and end each turn with at least 4 workers running and a wake-up armed."
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
@@ -1429,6 +1443,7 @@ launcher_main() {
       launcher_close_failed_driver_lease
       exit "$canary_rc"
     fi
+    launcher_seed_driver_state
     launcher_bind_drive_epic
   fi
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "1" ] && [ "$LC_DRY_RUN" = "1" ]; then

@@ -15,13 +15,25 @@ Commands::
     .venv/bin/python -m scripts.driver_state goals      # full pinned state
     .venv/bin/python -m scripts.driver_state path [--epic E]
     .venv/bin/python -m scripts.driver_state init --epic E [--force]
-    .venv/bin/python -m scripts.driver_state agy-hook   # AGY PreInvocation hook (stdin JSON)
+    .venv/bin/python -m scripts.driver_state agy-hook          # AGY PreInvocation hook
+    .venv/bin/python -m scripts.driver_state agy-stop-hook     # AGY Stop hook
+    .venv/bin/python -m scripts.driver_state agy-pretool-hook  # AGY PreToolUse(ask_question)
 
 The ``agy-hook`` command implements the AGY ``PreInvocation`` contract: it
 reads the hook payload on stdin and prints ``{"injectSteps": [{"ephemeralMessage":
 ...}]}``. An ephemeral message is transient (not stored in the transcript), so
 it is re-injected before every model call and survives any compaction. The
 hook is fail-open: any problem prints ``{}`` and never blocks the agent.
+
+``agy-stop-hook`` implements the AGY ``Stop`` contract. A driver must not end a
+turn on a question or a plan, with fewer than ``MIN_WORKERS`` of its own
+workers running, or with nothing armed to wake it. In those cases it returns
+``{"decision": "continue", "reason": ...}`` and AGY re-enters the loop with the
+reason as a system message. A turn whose final text carries
+``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
+per-conversation counter caps consecutive continuations so the hook can never
+spin the agent forever. ``agy-pretool-hook`` denies the interactive
+``ask_question`` tool for driver sessions: nobody answers it in a driver pane.
 Standard library only, so it runs from a linked worktree without a venv.
 """
 
@@ -30,13 +42,30 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
 MAX_INJECT_CHARS = 6000
+MIN_WORKERS = 4
+MAX_CONSECUTIVE_CONTINUES = 4
+ESCALATION_MARKER = "CTO-ESCALATION:"
+LIVE_WORKER_STATUSES = frozenset({"spawning", "running"})
+# AGY reports a normal end of turn as NO_TOOL_CALL (docs also show model_stop).
+SKIP_TERMINATION_REASONS = frozenset({"ERROR", "MAX_INVOCATIONS", "MAX_STEPS_EXCEEDED", "USER_CANCELED", "HALTED_STEP"})
+
+POLICY_TITLE = "Standing decision policy"
+POLICY = f"""## {POLICY_TITLE}
+- Decide reversible, rule-following choices yourself and execute them now. Pick the option that obeys the rules (cross-family review, then CI Gate, then merge queue) and do it.
+- Never ask for an admission or gate override; the answer is always no. Use the clean path (fresh recorded branch, rebase, new commit).
+- When you list an action for yourself, do it in the same turn; never end a turn on a plan.
+- Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
+- End every turn with at least {MIN_WORKERS} of your workers running and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
+"""
 
 TEMPLATE = """# Driver state: {epic}
 
@@ -55,6 +84,7 @@ TEMPLATE = """# Driver state: {epic}
 - Never self-merge; landing order is cross-family review at the exact head, then CI Gate, then the merge queue.
 - No secrets or deployment details in the public repo.
 
+{policy}
 ## Next step
 - <single next action>
 """
@@ -115,6 +145,8 @@ def _section(text: str, title: str) -> list[str]:
 
 
 def render_injection(text: str, path: Path) -> str:
+    if POLICY_TITLE.lower() not in text.lower():
+        text = text.rstrip() + "\n\n" + POLICY
     return (
         "PINNED DRIVER STATE (re-injected every model call; authoritative over any "
         "compacted summary). You are the driver for the epic below. Re-orient from it "
@@ -123,14 +155,19 @@ def render_injection(text: str, path: Path) -> str:
     )
 
 
-def cmd_agy_hook(stdin_text: str) -> dict:
-    path = state_path() if os.environ.get(STATE_ENV, "").strip() else None
-    if path is None or not path.is_file():
-        return {}
+def _payload(stdin_text: str) -> dict:
     try:
         payload = json.loads(stdin_text) if stdin_text.strip() else {}
     except json.JSONDecodeError:
-        payload = {}
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _driver_session(payload: dict) -> Path | None:
+    """State path when this hook runs inside the launcher's driver session."""
+    path = state_path() if os.environ.get(STATE_ENV, "").strip() else None
+    if path is None or not path.is_file():
+        return None
     workspaces = payload.get("workspacePaths") or []
     if workspaces:
         root = _state_root(path)
@@ -142,8 +179,163 @@ def cmd_agy_hook(stdin_text: str) -> dict:
                 continue
         # A worker in another checkout inherits env but must not get driver goals.
         if root not in resolved:
-            return {}
+            return None
+    return path
+
+
+def cmd_agy_hook(stdin_text: str) -> dict:
+    path = _driver_session(_payload(stdin_text))
+    if path is None:
+        return {}
     return {"injectSteps": [{"ephemeralMessage": render_injection(_read_state(path), path)}]}
+
+
+_QUESTION_RE = re.compile(
+    r"\b(should i|shall i|do you want|would you like|which (option|path) (do|would|should)|"
+    r"please (confirm|choose|decide|advise)|awaiting (your|cto|operator)|let me know|"
+    r"need(s)? (your|cto|operator) (decision|approval|input)|option [ab12]\b.*\bor\b)",
+    re.IGNORECASE,
+)
+_PLAN_RE = re.compile(
+    r"(^#+\s*(next (steps?|actions?)|plan|pending actions?)\b|^\s*(next|then)[,:]?\s+i('ll| will)\b|"
+    r"\bi will (now|next|then)\b|\bi('ll| will) (dispatch|rebase|start|run|open|fix)\b)",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def ends_on_question_or_plan(text: str) -> str | None:
+    """Name why a final message must not end the turn, or None."""
+    body = text.strip()
+    if not body:
+        return None
+    tail = body[-1500:]
+    last_line = body.splitlines()[-1].strip().rstrip("*_` ")
+    if last_line.endswith("?"):
+        return "your final message ends on a question"
+    if _QUESTION_RE.search(tail):
+        return "your final message asks for a decision"
+    if _PLAN_RE.search(tail):
+        return "your final message lists actions you have not done"
+    return None
+
+
+def last_model_text(transcript_path: str | None) -> str:
+    """Final text of the latest model response in an AGY transcript.jsonl."""
+    if not transcript_path:
+        return ""
+    path = Path(os.path.expanduser(transcript_path))
+    if not path.is_file():
+        return ""
+    with path.open("rb") as handle:
+        handle.seek(0, os.SEEK_END)
+        size = handle.tell()
+        handle.seek(max(0, size - 512_000))
+        chunk = handle.read().decode("utf-8", errors="replace")
+    for line in reversed(chunk.splitlines()):
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if row.get("source") == "MODEL" and row.get("type") == "PLANNER_RESPONSE":
+            content = row.get("content")
+            if isinstance(content, str) and content.strip():
+                return content
+            if not row.get("tool_calls"):
+                return ""
+    return ""
+
+
+def running_workers(root: Path, initiator: str) -> int | None:
+    """Count live delegate task records started by this driver seat."""
+    tasks = root / "batch_state" / "tasks"
+    if not initiator or not tasks.is_dir():
+        return None
+    count = 0
+    for record in tasks.glob("*.json"):
+        try:
+            data = json.loads(record.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if isinstance(data, dict) and data.get("initiator") == initiator and data.get("status") in LIVE_WORKER_STATUSES:
+            count += 1
+    return count
+
+
+def _counter_path(conversation_id: str) -> Path:
+    safe = re.sub(r"[^A-Za-z0-9_-]", "_", conversation_id or "unknown")[:80]
+    return Path(tempfile.gettempdir()) / "lu-driver-state" / f"stop-{safe}.count"
+
+
+def _bump_counter(conversation_id: str) -> int:
+    path = _counter_path(conversation_id)
+    try:
+        value = int(path.read_text(encoding="utf-8").strip() or "0") + 1
+    except (OSError, ValueError):
+        value = 1
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(str(value), encoding="utf-8")
+    return value
+
+
+def _reset_counter(conversation_id: str) -> None:
+    _counter_path(conversation_id).unlink(missing_ok=True)
+
+
+def cmd_agy_stop_hook(stdin_text: str) -> dict:
+    payload = _payload(stdin_text)
+    path = _driver_session(payload)
+    if path is None:
+        return {}
+    conversation = str(payload.get("conversationId") or "")
+    reason = str(payload.get("terminationReason") or "").upper().removeprefix("EXECUTOR_TERMINATION_REASON_")
+    if reason in SKIP_TERMINATION_REASONS:
+        return {}  # errors, limits and user cancels are not policy decisions
+    text = last_model_text(payload.get("transcriptPath"))
+    if ESCALATION_MARKER in text:
+        _reset_counter(conversation)
+        return {}
+    reasons = []
+    seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
+    workers = running_workers(_state_root(path), seat)
+    if workers is not None and workers < MIN_WORKERS:
+        reasons.append(f"only {workers} of your workers are running (minimum {MIN_WORKERS}); dispatch ready work")
+    why = ends_on_question_or_plan(text)
+    if why:
+        reasons.append(f"{why}; decide per the policy and execute it now")
+    if not reasons and payload.get("fullyIdle") is True:
+        reasons.append(
+            "nothing is armed to wake you; start a background `delegate.py wait` or set a `schedule` timer, then end the turn"
+        )
+    if not reasons:
+        _reset_counter(conversation)
+        return {}
+    if _bump_counter(conversation) > MAX_CONSECUTIVE_CONTINUES:
+        _reset_counter(conversation)
+        return {}
+    return {
+        "decision": "continue",
+        "reason": (
+            "DRIVER-STATE standing decision policy: "
+            + "; ".join(reasons)
+            + f". Ask the CTO only about deletes, money, security or rule changes, via Fleet Comms, "
+            f"with a final message starting `{ESCALATION_MARKER}`."
+        ),
+    }
+
+
+def cmd_agy_pretool_hook(stdin_text: str) -> dict:
+    payload = _payload(stdin_text)
+    tool = (payload.get("toolCall") or {}).get("name")
+    if tool != "ask_question" or _driver_session(payload) is None:
+        return {"decision": "ask"}
+    return {
+        "decision": "deny",
+        "reason": (
+            "Driver sessions have no one at the prompt. Decide reversible, rule-following choices "
+            "yourself and execute them. For deletes, money, security or rule changes, post to the CTO "
+            f"via Fleet Comms and start your final message with `{ESCALATION_MARKER}`."
+        ),
+    }
 
 
 def cmd_whoami(path: Path | None) -> int:
@@ -185,13 +377,16 @@ def main(argv: list[str] | None = None) -> int:
     p_init.add_argument("--epic", required=True)
     p_init.add_argument("--force", action="store_true", help="Overwrite an existing file.")
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
+    sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
+    sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
     args = parser.parse_args(argv)
 
-    if args.cmd == "agy-hook":
+    hooks = {"agy-hook": cmd_agy_hook, "agy-stop-hook": cmd_agy_stop_hook, "agy-pretool-hook": cmd_agy_pretool_hook}
+    if args.cmd in hooks:
         try:
-            result = cmd_agy_hook(sys.stdin.read())
+            result = hooks[args.cmd](sys.stdin.read())
         except Exception:  # hook must never block the agent loop
-            result = {}
+            result = {"decision": "ask"} if args.cmd == "agy-pretool-hook" else {}
         sys.stdout.write(json.dumps(result))
         return 0
     if args.cmd == "whoami":
@@ -217,7 +412,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"exists: {path} (use --force to overwrite)", file=sys.stderr)
             return 1
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(TEMPLATE.format(epic=args.epic), encoding="utf-8")
+        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY), encoding="utf-8")
         print(path)
         return 0
     return 2
