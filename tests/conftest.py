@@ -3079,3 +3079,12 @@ def github_transport(monkeypatch):
         return calls
 
     return install
+
+
+@pytest.fixture(autouse=True)
+def _no_operator_model_pause(monkeypatch, tmp_path_factory):
+    """Tests never read the operator's live model-pause policy."""
+    if "LU_MODEL_PAUSE_FILE" not in os.environ:
+        monkeypatch.setenv(
+            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
+        )

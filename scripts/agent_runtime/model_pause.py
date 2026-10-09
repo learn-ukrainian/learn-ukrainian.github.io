@@ -86,11 +86,19 @@ def _matches(pattern: str, model: str) -> bool:
     return any(fnmatch.fnmatchcase(name, pattern) for name in _names(model))
 
 
+def _entries(policy: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
+    """The mapping entries of ``policy[key]``; any other shape is inert."""
+    value = policy.get(key) if isinstance(policy, Mapping) else None
+    if not isinstance(value, list):
+        return []
+    return [entry for entry in value if isinstance(entry, Mapping)]
+
+
 def active_pause(model: str | None, policy: Mapping[str, Any], now: datetime) -> dict[str, Any] | None:
     if not model:
         return None
-    for entry in policy.get("pauses") or ():
-        if not isinstance(entry, Mapping) or not isinstance(entry.get("pattern"), str):
+    for entry in _entries(policy, "pauses"):
+        if not isinstance(entry.get("pattern"), str):
             continue
         until = _utc(entry.get("until"))
         if until is None or now >= until:
@@ -108,10 +116,14 @@ def routing_budget_used_pct(lane: str) -> float | None:
             data = json.load(resp)
     except (OSError, ValueError):
         return None
-    info = ((data or {}).get("agents") or {}).get(lane) or {}
-    for source in (info.get("codexbar") or {}, info):
+    agents = data.get("agents") if isinstance(data, dict) else None
+    info = agents.get(lane) if isinstance(agents, dict) else None
+    if not isinstance(info, dict):
+        return None
+    codexbar = info.get("codexbar")
+    for source in (codexbar if isinstance(codexbar, dict) else {}, info):
         value = source.get("weekly_used_pct")
-        if isinstance(value, int | float):
+        if isinstance(value, int | float) and not isinstance(value, bool):
             return float(value)
     return None
 
@@ -123,9 +135,7 @@ def headroom_stop(
 ) -> dict[str, Any] | None:
     if not model:
         return None
-    for entry in policy.get("headroom") or ():
-        if not isinstance(entry, Mapping):
-            continue
+    for entry in _entries(policy, "headroom"):
         lane, pattern, cap = entry.get("lane"), entry.get("pattern"), entry.get("max_weekly_used_pct")
         if not (isinstance(lane, str) and isinstance(pattern, str) and isinstance(cap, int | float)):
             continue
@@ -148,18 +158,11 @@ def refusal_reason(
     if not policy or not model:
         return None
     now = now or datetime.now(UTC)
-    pause = active_pause(model, policy, now)
-    if pause:
-        return (
-            f"MODEL_PAUSED: {model} matches paused pattern {pause['pattern']!r} until "
-            f"{pause.get('until')}: {pause.get('reason') or 'operator pause'}"
-        )
-    stop = headroom_stop(model, policy, used_pct)
-    if stop:
-        return (
-            f"MODEL_HEADROOM: {model}: {stop['lane']} weekly plan at {stop['used_pct']:.0f}% "
-            f"(stop at {stop['max_weekly_used_pct']}%)"
-        )
+    # Public-safe codes only: reasons, times and usage stay in the private policy.
+    if active_pause(model, policy, now):
+        return f"MODEL_PAUSED: {model} is paused by operator policy"
+    if headroom_stop(model, policy, used_pct):
+        return f"MODEL_HEADROOM: {model} is held for plan headroom"
     return None
 
 

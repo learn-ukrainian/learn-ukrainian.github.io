@@ -229,6 +229,7 @@ def resolve_and_admit(
     task_family: str | None = None,
     task_role: str | None = None,
     task_prompt: str | None = None,
+    new_dispatch: bool = False,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -418,7 +419,12 @@ def resolve_and_admit(
                                task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
-    _refuse_paused([*models, *(target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved)])
+    if new_dispatch or review_dispatch:
+        # Operator pauses apply to new work only, never to messaging or to
+        # lifecycle operations on existing work.
+        _refuse_paused(
+            [*models, *(target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved)]
+        )
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 

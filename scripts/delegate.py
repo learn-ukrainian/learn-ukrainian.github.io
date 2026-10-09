@@ -6540,7 +6540,7 @@ def _kimi_worker_refusal(
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
             (target,) = resolve_and_admit(
                 (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
-                trees=lambda: _kimi_worktree_trees(cwd), **scope,
+                trees=lambda: _kimi_worktree_trees(cwd), new_dispatch=True, **scope,
             )
         except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
             code = (

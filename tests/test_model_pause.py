@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 from datetime import UTC, datetime, timedelta
 
@@ -85,3 +86,42 @@ def test_reviewer_resolver_excludes_a_paused_candidate(tmp_path, monkeypatch) ->
     monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(path))
     reason = rr._hard_exclusion_reason(candidate, None)  # type: ignore[arg-type]
     assert reason and "MODEL_PAUSED" in reason
+
+
+def test_invalid_policy_shapes_are_inert() -> None:
+    for policy in ({"pauses": 1}, {"headroom": 1}, {"pauses": [1, "x"]}, {"headroom": [None]}):
+        mp.refuse_paused_models(["claude-opus-5-5"], policy=policy, now=NOW, used_pct=lambda _l: 99.0)
+
+
+def test_malformed_usage_is_unreadable(monkeypatch) -> None:
+    import io
+
+    for payload in ("[1, 2]", '{"agents": {"claude": {"codexbar": [1]}}}', '{"agents": 3}'):
+        monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, _p=payload, **k: io.StringIO(_p))
+        assert mp.routing_budget_used_pct("claude") is None
+
+
+def test_refusals_are_public_safe() -> None:
+    policy = {
+        "pauses": [{"pattern": "claude-opus-*", "until": "2026-10-12T07:00:00Z", "reason": "private note"}],
+        "headroom": [{"lane": "claude", "pattern": "claude-*", "max_weekly_used_pct": 87}],
+    }
+    paused = mp.refusal_reason("claude-opus-5-5", policy=policy, now=NOW, used_pct=lambda _l: 10.0)
+    held = mp.refusal_reason("claude-sonnet-5-5", policy=policy, now=NOW, used_pct=lambda _l: 91.0)
+    for text in (paused, held):
+        assert (
+            text
+            and "private" not in text
+            and "2026" not in text
+            and "9" not in text.split(":", 1)[1].replace("claude-sonnet-5-5", "").replace("claude-opus-5-5", "")
+        )
+
+
+def test_messaging_admission_ignores_pauses(tmp_path, monkeypatch) -> None:
+    from scripts.agent_runtime import target_admission as ta
+
+    called: list = []
+    monkeypatch.setattr(ta, "_refuse_paused", lambda models: called.append(list(models)))
+    with contextlib.suppress(Exception):  # other gates may refuse; the pause gate must not
+        ta.resolve_and_admit(["claude"], mode="bridge")
+    assert called == []
