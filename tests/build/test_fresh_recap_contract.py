@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -63,8 +64,10 @@ def task(task_id: str = "practical-closure") -> dict:
     ],
 )
 def test_boundaries_renumber_and_split_invariance(count, key, share):
+    original = load_arc("a1")[0]
+    positions = [replace(original, position=n, band_key=None) for n in (1, 40, 2)]
     for position, lesson in [(1, 1), (40, 1), (2, 8)]:
-        payload = compute_immersion_payload("a1", position, lesson, count, arc_loader=lambda _: [])
+        payload = compute_immersion_payload("a1", position, lesson, count, arc_loader=lambda _: positions)
         assert payload.band_key == key and payload.advisory_uk_share == share
         assert payload.structural_targets == {}
         assert payload.not_checked == ["lesson_structural_minimums_not_calibrated"]
@@ -80,7 +83,6 @@ def test_invalid_counts_fail_closed(count):
 def test_explicit_orientation_vs_normal_zero():
     positions = load_arc("a1")
     original = positions[0]
-    from dataclasses import replace
 
     declared = replace(original, position=17, band_key="a1-orientation")
     payload = compute_immersion_payload("a1", 17, 1, 0, arc_loader=lambda _: [declared])
@@ -89,19 +91,31 @@ def test_explicit_orientation_vs_normal_zero():
     assert payload.structural_targets == {}
     band = compute_lesson_immersion_band("a1", 17, 1, 0, arc_loader=lambda _: [declared])
     assert band.to_dict()["advisory_uk_share"] is None and "No advisory share" in band.render_text()
-    assert compute_immersion_payload("a1", 1, 1, 0, arc_loader=lambda _: [declared]).band_key == "a1-m01-03"
+    ordinary = replace(original, position=1, band_key=None)
+    assert compute_immersion_payload("a1", 1, 1, 0, arc_loader=lambda _: [declared, ordinary]).band_key == "a1-m01-03"
     # Cumulative prior vocabulary is not a declaration of new words; the plan gate checks additions.
     assert compute_immersion_payload("a1", 17, 1, 1, arc_loader=lambda _: [declared]).advisory_uk_share is None
     for pos in [-5, 0, 1, 17, 10001]:
         assert config.compute_immersion_band("a1", pos)["key"] != "a1-orientation"
 
 
+@pytest.mark.parametrize("declared_positions", [(), (1,)])
+def test_missing_position_refused_before_vocabulary_selection(declared_positions):
+    original = load_arc("a1")[0]
+    positions = [replace(original, position=n, band_key=None) for n in declared_positions]
+    with pytest.raises(ImmersionError) as exc:
+        compute_immersion_payload("a1", 999, 1, 600, arc_loader=lambda _: positions)
+    assert exc.value.code == "position_not_found"
+
+
 def test_stale_arc_is_rejected(tmp_path):
     doc = ROOT / "docs/epics/fresh-build-a1-arc.md"
     changed = tmp_path / "changed.md"
     changed.write_bytes(doc.read_bytes() + b"\nChanged source.\n")
-    with pytest.raises(ArcStaleError):
+    with pytest.raises(ImmersionError) as exc:
         compute_lesson_immersion_band("a1", 1, 1, 0, doc_path=changed)
+    assert exc.value.code == "arc_band_table_missing"
+    assert isinstance(exc.value.__cause__, ArcStaleError)
 
 
 def gate_world(*, embedded=False, early_count=0, orientation=False):
@@ -700,6 +714,7 @@ def test_quoted_tasks_real_resolution_stress_and_check9(tmp_path, monkeypatch, q
         return
     assert full["ok"], full
     assert full["check_5"]["passed"] and full["check_9"]["passed"] and full["check_11"]["passed"], full
+    print("production_check11_artifact:", json.dumps(full["check_11"], ensure_ascii=False, default=str))
     full_mdx = (tmp_path / "full-site/1.mdx").read_text()
     assert full_mdx.count(captured["pedagogical_stressed_form"]) >= 4
     assert "recap_print" in (tmp_path / "full-state/lesson-1.expanded.yaml").read_text()
