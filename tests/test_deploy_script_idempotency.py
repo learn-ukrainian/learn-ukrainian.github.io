@@ -1831,3 +1831,32 @@ def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tm
         assert note.read_bytes() == b"Declared runtime content\n"
     checked = _run(repo, CHECK_SCRIPT)
     assert checked.returncode == 0, checked.stdout + checked.stderr
+
+
+@pytest.mark.parametrize("target", [".grok", ".grok/hooks"])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_grok_deploy_refuses_symlink_without_touching_outside(tmp_path: Path, target: str, dry_run: bool) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    for relative in _SYNTHETIC_SOURCE_DIRS:
+        (repo / relative).mkdir(parents=True, exist_ok=True)
+    _copy_deploy_harness(repo)
+    source = repo / "agents_extensions/grok/hooks/driver.json"
+    source.parent.mkdir(parents=True)
+    source.write_bytes((REPO_ROOT / "agents_extensions/grok/hooks/driver.json").read_bytes())
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    sentinel = outside / "keep.txt"
+    sentinel.write_bytes(b"untouched\n")
+    link = repo / target
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(outside, target_is_directory=True)
+    before = {path.relative_to(outside): path.read_bytes() for path in outside.rglob("*") if path.is_file()}
+    command = ["bash", str(DEPLOY_SCRIPT), *(["--dry-run"] if dry_run else [])]
+    result = _run_command(repo, command)
+    assert result.returncode != 0, result.stdout + result.stderr
+    assert "Grok deploy refused" in result.stdout + result.stderr
+    assert target in result.stdout + result.stderr
+    after = {path.relative_to(outside): path.read_bytes() for path in outside.rglob("*") if path.is_file()}
+    assert after == before
+    assert link.is_symlink()

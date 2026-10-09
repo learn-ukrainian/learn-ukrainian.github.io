@@ -2,21 +2,21 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash|run_terminal_command|run_terminal_cmd",
+        "matcher": "^(Bash|run_terminal_command|run_terminal_cmd)$",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -z \"${LU_GROK_DRIVER_SESSION_ID:-}\" ]; then exit 0; fi; exec \"$LU_GROK_PROJECT_PYTHON\" \"$LU_GROK_SOURCE_ROOT/scripts/agent_runtime/grok_hook_bridge.py\" --driver \"Bash|run_terminal_command|run_terminal_cmd\"'",
+            "command": "bash -c 'if [ -z \"${LU_GROK_DRIVER_SESSION_ID:-}\" ]; then exit 0; fi; [ -x \"$LU_GROK_PROJECT_PYTHON\" ] || exit 2; exec \"$LU_GROK_PROJECT_PYTHON\" \"$LU_GROK_SOURCE_ROOT/scripts/agent_runtime/grok_hook_bridge.py\" --driver \"Bash|run_terminal_command|run_terminal_cmd\"'",
             "timeout": 180
           }
         ]
       },
       {
-        "matcher": "Write|Edit|MultiEdit|write|search_replace|hashline_edit",
+        "matcher": "^(Write|Edit|MultiEdit|write|search_replace|hashline_edit)$",
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'if [ -z \"${LU_GROK_DRIVER_SESSION_ID:-}\" ]; then exit 0; fi; exec \"$LU_GROK_PROJECT_PYTHON\" \"$LU_GROK_SOURCE_ROOT/scripts/agent_runtime/grok_hook_bridge.py\" --driver \"Write|Edit|MultiEdit|write|search_replace|hashline_edit\"'",
+            "command": "bash -c 'if [ -z \"${LU_GROK_DRIVER_SESSION_ID:-}\" ]; then exit 0; fi; [ -x \"$LU_GROK_PROJECT_PYTHON\" ] || exit 2; exec \"$LU_GROK_PROJECT_PYTHON\" \"$LU_GROK_SOURCE_ROOT/scripts/agent_runtime/grok_hook_bridge.py\" --driver \"Write|Edit|MultiEdit|write|search_replace|hashline_edit\"'",
             "timeout": 30
           }
         ]

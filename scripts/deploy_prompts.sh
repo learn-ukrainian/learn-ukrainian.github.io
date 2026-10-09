@@ -43,6 +43,11 @@ AGENT_EXTENSIONS_ROOT="agents_extensions"
 SHARED_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/shared"
 CODEX_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/codex"
 GROK_EXTENSIONS="$AGENT_EXTENSIONS_ROOT/grok"
+# Refuse Grok overlays before diffing or syncing through an unsafe target.
+if [[ -L .grok || -L .grok/hooks ]]; then
+    echo "❌ Grok deploy refused: .grok and .grok/hooks must not be symlinks; reconcile the symlink target before rerunning npm run agents:deploy." >&2
+    exit 1
+fi
 DEPLOY_STATE_DIR="${DEPLOY_STATE_DIR:-$PROJECT_ROOT/.deploy-state}"
 AGENT_SHARED_MANIFEST="$DEPLOY_STATE_DIR/shared-to-agent.manifest"
 
@@ -483,6 +488,10 @@ if [[ -d "$CODEX_EXTENSIONS" ]]; then
 fi
 # Grok is a narrow overlay: unrelated configuration and runtime files survive.
 if [[ -d "$GROK_EXTENSIONS" ]]; then
+    if [[ -L .grok || -L .grok/hooks ]]; then
+        echo "❌ Grok deploy refused: .grok and .grok/hooks must not be symlinks; reconcile the symlink target before rerunning npm run agents:deploy." >&2
+        exit 1
+    fi
     rsync -av "$GROK_EXTENSIONS/" .grok/
 fi
 # shellcheck disable=SC2046

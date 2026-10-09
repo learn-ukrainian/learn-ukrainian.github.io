@@ -13,7 +13,7 @@ interpreter, guard or extra argument denies.
 
 The driver profile supplies ``--driver MATCHER`` instead. That entrypoint
 uses the same guard groups as write workers and requires the launcher's native
-session UUID. Its guards retain their own structured-input contracts; unknown
+process binding. All native conversations and subagents inherit it; unknown
 events and truncated inputs deny before any guard is run.
 """
 
@@ -93,7 +93,7 @@ def guard_argv(command: str) -> list[str]:
     return argv
 
 
-def _translate(payload: dict, *, strict: bool = True) -> dict:
+def _translate(payload: dict, *, driver: bool = False) -> dict:
     """Translate native fields, retaining each driver's guard input contract."""
     if payload.get("hookEventName", payload.get("hook_event_name")) not in {"PreToolUse", "pre_tool_use"}:
         raise ValueError("invalid PreToolUse event")
@@ -101,36 +101,28 @@ def _translate(payload: dict, *, strict: bool = True) -> dict:
     tool_input = payload.get("toolInput")
     if payload.get("toolInputTruncated") or tool_name is None:
         raise ValueError("unknown or truncated tool payload")
-    if strict and not isinstance(tool_input, dict):
+    if not isinstance(tool_input, dict):
         raise ValueError("unknown tool payload")
-    if strict and tool_name == "Bash" and not isinstance(tool_input.get("command"), str):
+    if tool_name == "Bash" and not isinstance(tool_input.get("command"), str):
         raise ValueError("shell command unavailable")
     translated = dict(payload)
     translated["tool_name"] = tool_name
-    translated["tool_input"] = dict(tool_input) if isinstance(tool_input, dict) else tool_input
-    if isinstance(translated["tool_input"], dict):
-        translated["tool_input"].setdefault("cwd", payload.get("cwd"))
+    translated["tool_input"] = dict(tool_input)
+    translated["tool_input"].setdefault("cwd", (tool_input.get("workdir") if driver else None) or payload.get("cwd"))
     return translated
 
 
 def _driver_main(matcher: str) -> int:
-    """Run one shared guard group only for the launcher's native session UUID.
+    """Enforce shared guards for every session in a bound driver process tree.
 
-    Workers, reviews and native child sessions may inherit driver environment
-    variables, but their native session id cannot match this launch binding.
+    Dispatched workers and reviewers scrub the binding through env_unsets.
     No lease is acquired, inspected or changed here.
     """
-    session_id = os.environ.get("LU_GROK_DRIVER_SESSION_ID")
-    if not session_id:
+    if not os.environ.get("LU_GROK_DRIVER_SESSION_ID"):
         return 0
-    raw = sys.stdin.read()
-    payload = json.loads(raw)
+    payload = json.load(sys.stdin)
     if not isinstance(payload, dict):
         raise ValueError("invalid PreToolUse event")
-    if payload.get("sessionId") != session_id:
-        if not payload.get("sessionId"):
-            raise ValueError("driver event session unavailable")
-        return 0
     if os.environ.get("SESSION_STREAM_AGENT") != "grok" or os.environ.get("SESSION_STREAM_HARNESS") != "grok-tui":
         raise ValueError("driver launcher identity unavailable")
     source_root = Path(__file__).resolve().parents[2]
@@ -142,7 +134,7 @@ def _driver_main(matcher: str) -> int:
     group = next((group for group in groups if group["matcher"] == matcher), None)
     if group is None:
         raise ValueError("unknown driver guard group")
-    translated = _translate(payload, strict=False)
+    translated = _translate(payload, driver=True)
     outputs = []
     for hook in group["hooks"]:
         argv = guard_argv(hook["command"])
@@ -169,10 +161,59 @@ def _driver_main(matcher: str) -> int:
     return 0
 
 
+def _driver_preflight(source_root: Path) -> int:
+    """Require native trust and discovery of the byte-exact deployed profile."""
+    remedy = "Run npm run agents:deploy in this checkout, then retry."
+    try:
+        inspection = json.load(sys.stdin)
+        if not isinstance(inspection, dict):
+            raise ValueError("inspection is not an object")
+    except (ValueError, TypeError) as exc:
+        raise ValueError(
+            "Grok driver preflight: grok inspect --json returned invalid output; rerun grok inspect --json."
+        ) from exc
+    if inspection.get("projectTrusted") is not True:
+        raise ValueError(
+            "Grok driver preflight: folder is not trusted. Run grok in this checkout and accept the folder-trust prompt, then retry."
+        )
+    source = source_root / "agents_extensions/grok/hooks/driver.json"
+    deployed = source_root / ".grok/hooks/driver.json"
+    if not source.is_file() or not deployed.is_file():
+        raise ValueError(f"Grok driver preflight: driver profile is missing. {remedy}")
+    if source.read_bytes() != deployed.read_bytes():
+        raise ValueError(f"Grok driver preflight: deployed driver profile differs from its source. {remedy}")
+    expected = json.loads(source.read_bytes())["hooks"]["PreToolUse"]
+    discovered = inspection.get("hooks")
+    if not isinstance(discovered, list):
+        raise ValueError(f"Grok driver preflight: pre_tool_use hooks are missing. {remedy}")
+    for group in expected:
+        if not any(
+            isinstance(hook, dict)
+            and hook.get("event") == "pre_tool_use"
+            and hook.get("hookType") == "command"
+            and hook.get("matcher") == group["matcher"]
+            and hook.get("target") == group["hooks"][0]["command"]
+            and hook.get("source") == {"type": "project", "path": str(deployed.parent)}
+            and hook.get("compatibilityStatus", "enabled") == "enabled"
+            for hook in discovered
+        ):
+            raise ValueError(
+                f"Grok driver preflight: pre_tool_use matcher {group['matcher']} is missing or disabled. {remedy}"
+            )
+    return 0
+
+
 def main() -> int:
     try:
-        if len(sys.argv) == 3 and sys.argv[1] == "--driver":
-            return _driver_main(sys.argv[2])
+        if len(sys.argv) == 3 and sys.argv[1] in {"--driver", "--driver-preflight"}:
+            try:
+                if sys.argv[1] == "--driver-preflight":
+                    return _driver_preflight(Path(sys.argv[2]))
+                return _driver_main(sys.argv[2])
+            except Exception as exc:
+                detail = f": {exc}" if sys.argv[1] == "--driver-preflight" else ""
+                print(f"BLOCKED by grok hook bridge: {type(exc).__name__}{detail}.", file=sys.stderr)
+                return 2
         if len(sys.argv) != 2:
             raise ValueError("one fleet guard path required")
         argv = guard_argv(sys.argv[1])

@@ -32,6 +32,22 @@ launcher_adapter_preflight() {
   if [ "$LC_HARNESS" = hermes ]; then launcher_hermes_preflight; return; fi
   LC_AUTH_SOURCE='grok-cli-oauth'
   launcher_require_binary grok 'Grok executable is unavailable.' 3 || exit $?
+  if [ "$LC_MODE" = driver ]; then
+    if [ "${LC_DRY_RUN:-0}" = 1 ]; then
+      echo 'LAUNCHER_DRY_RUN=1: would require a trusted folder, a matching deployed Grok driver profile and both discovered pre_tool_use matchers'
+      return 0
+    fi
+    local inspection project_python="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
+    if ! inspection="$(cd "$LC_ROOT" && grok inspect --json)"; then
+      launcher_error 'Grok driver preflight: grok inspect --json failed. Run grok inspect --json in this checkout and resolve its error, then retry.'
+      return 2
+    fi
+    if [ ! -x "$project_python" ]; then
+      launcher_error 'Grok driver preflight: project interpreter unavailable. Restore the shared project interpreter, then retry.'
+      return 2
+    fi
+    "$project_python" "$LC_ROOT/scripts/agent_runtime/grok_hook_bridge.py" --driver-preflight "$LC_ROOT" <<< "$inspection" || return 2
+  fi
 }
 launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'grok adapter: would run provider canary'; fi

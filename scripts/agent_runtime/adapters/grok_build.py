@@ -720,6 +720,18 @@ class GrokBuildAdapter:
             stdin_payload="",
             output_file=None,
             env_overrides={"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_tools else {},
+            # Native subagents inherit the driver's binding; fleet dispatches
+            # are separate workers/reviewers and must never inherit it.
+            env_unsets=tuple(
+                sorted(
+                    {
+                        "LU_GROK_DRIVER_SESSION_ID",
+                        "LU_GROK_SOURCE_ROOT",
+                        "LU_GROK_PROJECT_PYTHON",
+                        *(key for key in os.environ if key.startswith("LU_GROK_")),
+                    }
+                )
+            ),
             liveness_paths=liveness_paths,
             metadata=metadata,
             host_harness="grok",

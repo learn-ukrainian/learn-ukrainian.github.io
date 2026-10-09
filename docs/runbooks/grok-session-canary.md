@@ -173,16 +173,30 @@ and preserves unrelated `.grok` configuration. The two native `PreToolUse`
 matcher groups reuse the write-worker guard selection and native tool aliases,
 without reviewer restrictions or a Stop hook. The bridge supplies the shared
 guards with `tool_name` and `tool_input`, rejects malformed event envelopes and
-truncated inputs, preserves each guard's structured-input failure contract,
+truncated inputs, rejects missing shell commands and non-object inputs,
 and retains the publishing guard's input rewrite.
 
 `start-grok-driver.sh` binds a fresh native session UUID with `--session-id`.
-The profile runs only when that UUID matches the event's `sessionId` and the
-launcher identity is `grok` / `grok-tui`. Interactive launches clear the binding;
-workers, isolated reviews and native children have different session IDs.
-Commands resolve the shared project interpreter and this launcher's tracked
-guard sources. Project hooks require the existing native folder-trust grant;
-the launcher does not grant trust or disable that gate.
+The binding activates guards for every conversation and native subagent in
+that launcher process tree, including `/new`, `/resume` and `/fork`; the event
+session ID does not select enforcement. The launcher identity must still be
+`grok` / `grok-tui`. Interactive launches clear the binding, and fleet-dispatched
+workers and reviewers scrub all `LU_GROK_*` variables. Commands resolve the
+shared project interpreter and this launcher's tracked guard sources. Native
+aliases are anchored so `todo_write` does not trigger file-write guards.
+
+Before launching a native driver, the launcher requires `projectTrusted: true`
+from `grok inspect --json`, both discovered `pre_tool_use` matchers from the
+project profile, and byte equality between the deployed profile and its source.
+It refuses launch with the missing condition and remedy; it never grants
+folder trust. Deployment refuses symlinked `.grok` or `.grok/hooks` targets.
+A missing executable project interpreter or any driver bridge exception denies
+with exit 2. Shell inputs require a command and all guarded inputs require an
+object; tool `workdir` takes precedence over the session `cwd`.
+
+Worker and reviewer profiles retain their existing behavior except for two
+explicit bridge changes: truncated inputs now deny, and native envelopes with
+only `hookEventName` are accepted alongside the legacy event-name field.
 
 Discovery can be verified with `grok inspect --json` in an isolated deployed
 checkout. Residual: live firing in a real launcher-bound driver session has
