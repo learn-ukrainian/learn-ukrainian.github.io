@@ -39,9 +39,11 @@ def test_index_lists_every_registered_v1_route() -> None:
     assert listed == _openapi_v1()
     assert listed == {
         ("GET", "/api/fleet/v1"),
+        ("GET", "/api/fleet/v1/now"),
         ("GET", "/api/fleet/v1/prs"),
         ("GET", "/api/fleet/v1/prs/{number}"),
         ("GET", "/api/fleet/v1/schema"),
+        ("GET", "/api/fleet/v1/stats"),
     }
     assert body["schema"] == "fleet.v1.index"
 
@@ -174,6 +176,7 @@ def test_location_variables_match_the_optional_catalog() -> None:
         ("stats", "FLEET_PROMETHEUS_URL", "url"),
         ("alerts", "FLEET_ALERTMANAGER_URL", "url"),
         ("links", "FLEET_GRAFANA_URL", "url"),
+        ("stale_prs", "FLEET_STALE_PR_STATE", "json_file"),
     ]
 
 

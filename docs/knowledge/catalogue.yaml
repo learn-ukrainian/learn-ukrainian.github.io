@@ -154,17 +154,18 @@ entries:
 
   - id: monitor-api-docs
     kind: doc_family
-    paths: [docs/MONITOR-API.md, docs/monitor-api/**]
-    purpose: Monitor (Ops) API reference, the read-only work-projection API spec and the agent cold-start measurement log.
-    keywords: [Monitor API, Ops API, endpoints, work projection, cold start, routes]
+    paths: [docs/MONITOR-API.md, docs/monitor-api/**, docs/api/fleet-v1.md]
+    purpose: Monitor (Ops) API reference, the versioned fleet board API, the read-only work-projection API spec and the agent cold-start measurement log.
+    keywords: [Monitor API, Ops API, endpoints, fleet board, work projection, cold start, routes]
     lifecycle: active
     owner: monitor
     entrypoints:
       - {topic: Monitor API endpoints, path: docs/MONITOR-API.md}
+      - {topic: fleet board API, path: docs/api/fleet-v1.md}
       - {topic: work projection API, path: docs/monitor-api/work.md}
     query:
       - {surface: api, how: "GET /openapi.json (route list of the running Monitor API)"}
-      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MONITOR-API.md docs/monitor-api"}
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/MONITOR-API.md docs/monitor-api docs/api/fleet-v1.md"}
     content_searchable: true
 
   - id: core-lesson-contracts

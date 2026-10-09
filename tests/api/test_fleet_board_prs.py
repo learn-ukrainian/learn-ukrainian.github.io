@@ -12,6 +12,7 @@ from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
 from scripts.api import main as api_main
+from scripts.api.fleet_board import activity as activity_mod
 from scripts.api.fleet_board import prs as prs_mod
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import lookup_verdict
@@ -31,6 +32,7 @@ def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
         raise AssertionError("network")
 
     monkeypatch.setattr(prs_mod, "_client", boom)
+    monkeypatch.delenv("FLEET_STALE_PR_STATE", raising=False)
     prs_mod.clear_github_cache()
 
 
@@ -88,6 +90,7 @@ def _pull(
     body: str = "",
     merge_state: str | None = "CLEAN",
     epics: tuple[str, ...] = (),
+    commit_at: str | None = None,
 ) -> prs_mod.Pull:
     return prs_mod.Pull(
         number=number,
@@ -100,6 +103,7 @@ def _pull(
         body=body,
         merge_state=merge_state,
         epics=epics,
+        commit_at=commit_at,
     )
 
 
@@ -134,12 +138,18 @@ def _mq(**kwargs: object) -> prs_mod.MqSnapshot:
 
 
 def _rows(*pulls: prs_mod.Pull, **kwargs: object) -> list[dict]:
+    activity = kwargs.pop("activity", None)
     view_kwargs = {
         key: kwargs.pop(key)
         for key in ("queued", "login", "comments", "checks", "files", "queue_failed", "default_branch")
         if key in kwargs
     }
-    return prs_mod.assemble_prs(_view(*pulls, **view_kwargs), _mq(**kwargs), now=NOW)
+    return prs_mod.assemble_prs(
+        _view(*pulls, **view_kwargs),
+        _mq(**kwargs),
+        now=NOW,
+        activity=activity,  # type: ignore[arg-type]
+    )
 
 
 def test_current_head_approval_counts_and_an_older_head_does_not() -> None:
@@ -354,6 +364,8 @@ class _Client:
             sha = path.split("/commits/", 1)[1].split("/", 1)[0]
             runs = list(_green(sha))
             return _Result({"total_count": len(runs), "check_runs": runs})
+        if "/commits/" in path:
+            return _Result({"commit": {"committer": {"date": "2026-10-09T07:30:00Z"}}})
         raise AssertionError(path)
 
 
@@ -372,6 +384,7 @@ def test_loader_uses_rest_for_pulls_and_graphql_only_for_the_queue() -> None:
     assert view.queued == {7: False, 8: True}
     assert view.failed is False
     assert view.default_branch == "main"
+    assert {pull.commit_at for pull in view.pulls} == {"2026-10-09T07:30:00Z"}
     rows = prs_mod.assemble_prs(view, _mq(since={}), now=NOW)
     assert {row["number"] for row in rows} == {7, 8}
     assert all(row["ci"] == "green" for row in rows)
@@ -442,7 +455,7 @@ def test_state_dir_supplies_the_gate_and_the_ready_time(tmp_path, monkeypatch: p
     monkeypatch.setenv("FLEET_MQ_STATE_DIR", str(tmp_path))
     monkeypatch.setattr(prs_mod, "load_github_view", lambda repo, **_kwargs: _view(_pull()))
 
-    rows, sources = prs_mod.collect_pipeline()
+    rows, sources, _events = prs_mod.collect_pipeline()
     assert rows[0]["keeper"]["reason"] == "requeue-denied"
     assert rows[0]["flake_grant"]["decision"] == "deny"
     assert rows[0]["stale_green"] is False
@@ -551,4 +564,232 @@ def test_unset_repository_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> 
     by_name = {item["name"]: item for item in response.json()["sources"]}
     assert by_name["github"]["status"] == "not_configured"
     assert by_name["mq_state"]["status"] == "not_configured"
+    assert by_name["stale_prs"]["status"] == "not_configured"
     assert response.json()["data"]["prs"] == []
+
+
+def _note(**kwargs: object) -> activity_mod.PrActivity:
+    return activity_mod.PrActivity(**kwargs)  # type: ignore[arg-type]
+
+
+def test_hours_idle_uses_the_latest_commit_verdict_or_merge_event() -> None:
+    quiet = _rows(_pull(), comments={42: ()})
+    assert quiet[0]["hours_idle"] is None
+    assert quiet[0]["idle_24h"] is False
+    assert quiet[0]["idle_48h"] is False
+
+    from_verdict = _rows(_pull(commit_at="2026-10-08T10:00:00Z"))
+    assert from_verdict[0]["hours_idle"] == 2.0
+    assert from_verdict[0]["idle_24h"] is False
+
+    day = _rows(_pull(commit_at="2026-10-08T10:00:00Z"), comments={42: ()})
+    assert day[0]["hours_idle"] == 24.0
+    assert day[0]["idle_24h"] is True
+    assert day[0]["idle_48h"] is False
+
+    two_days = _rows(_pull(commit_at="2026-10-07T10:00:00Z"), comments={42: ()})
+    assert two_days[0]["hours_idle"] == 48.0
+    assert two_days[0]["idle_48h"] is True
+
+    merged = _rows(
+        _pull(commit_at="2026-10-07T10:00:00Z"),
+        activity={42: _note(merge_event_at=datetime(2026, 10, 9, 9, 0, tzinfo=UTC))},
+    )
+    assert merged[0]["hours_idle"] == 1.0
+    assert merged[0]["idle_24h"] is False
+
+
+def test_blocker_precedence_and_a_stacked_pr_is_never_ready() -> None:
+    red = (
+        _check("CI Gate", conclusion="failure"),
+        _check("Analyze (python)", conclusion="failure"),
+    )
+    stacked = _rows(
+        _pull(base_ref="feature-a", merge_state="DIRTY", head_ref="cursor/child"),
+        checks={SHA: red},
+        comments={42: (_comment(SHA, verdict="CHANGES_REQUESTED"),)},
+        since={f"42:{SHA}": "2026-10-09T08:00:00Z"},
+    )
+    assert stacked[0]["blocker"] == {"kind": "stacked_base", "number": None, "state": "unmerged"}
+    assert stacked[0]["stale_green"] is False
+    assert stacked[0]["minutes"] is None
+    assert stacked[0]["ready_since"] is None
+    assert stacked[0]["owner_lane"] == "cursor"
+
+    conflict = _rows(_pull(merge_state="DIRTY"), checks={SHA: red})
+    assert conflict[0]["blocker"] == {"kind": "conflict"}
+
+    failing = _rows(_pull(), checks={SHA: red})
+    assert failing[0]["blocker"] == {"kind": "failing_check", "checks": ["Analyze (python)", "CI Gate"]}
+
+    changes = _rows(_pull(), comments={42: (_comment(SHA, verdict="CHANGES_REQUESTED"),)})
+    assert changes[0]["blocker"] == {"kind": "cf_changes"}
+    assert _rows(_pull())[0]["blocker"] == {"kind": "none"}
+
+    closed = _rows(
+        _pull(base_ref="feature-a", head_ref="cursor/child"),
+        activity={42: _note(base_number=6, base_state="closed")},
+        since={f"42:{SHA}": "2026-10-09T08:00:00Z"},
+    )
+    assert closed[0]["blocker"] == {"kind": "stacked_base", "number": 6, "state": "closed"}
+    assert closed[0]["stale_green"] is False
+
+    ready = _rows(_pull(head_ref="cursor/feature"), since={f"42:{SHA}": "2026-10-09T08:00:00Z"})
+    assert ready[0]["blocker"] == {"kind": "none"}
+    assert ready[0]["stale_green"] is True
+    assert ready[0]["owner_lane"] == "cursor"
+
+
+def test_owner_lane_prefers_the_recorded_lane() -> None:
+    rows = _rows(
+        _pull(head_ref="cursor/feature"),
+        activity={42: _note(owner_lane="codex")},
+    )
+    assert rows[0]["owner_lane"] == "codex"
+    plain = _rows(_pull(head_ref="feature"))
+    assert plain[0]["owner_lane"] is None
+
+
+def test_open_base_pr_is_the_stacked_blocker() -> None:
+    rows = _rows(
+        _pull(number=6, sha=OTHER, head_ref="feature-a", base_ref="main"),
+        _pull(number=7, head_ref="cursor/feature-b", base_ref="feature-a"),
+        comments={6: (_comment(OTHER),), 7: (_comment(SHA),)},
+        checks={OTHER: _green(OTHER), SHA: _green(SHA)},
+        since={f"7:{SHA}": "2026-10-09T08:00:00Z"},
+    )
+    child = next(row for row in rows if row["number"] == 7)
+    assert child["blocker"] == {"kind": "stacked_base", "number": 6, "state": "open"}
+    assert child["stacked_base"]["number"] == 6
+    assert child["stale_green"] is False
+    assert child["owner_lane"] == "cursor"
+    parent = next(row for row in rows if row["number"] == 6)
+    assert parent["blocker"] == {"kind": "none"}
+
+
+def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fresh = _pull(number=1, sha="d" * 40, head_ref="cursor/fresh", commit_at="2026-10-09T09:00:00Z")
+    day = _pull(number=2, sha="e" * 40, head_ref="codex/day", commit_at="2026-10-08T10:00:00Z")
+    older = _pull(number=3, sha="f" * 40, head_ref="codex/older", commit_at="2026-10-07T09:00:00Z")
+    record = {
+        "version": 1,
+        "activity": {"3": {"merge_event_at": "2026-10-07T10:00:00Z", "owner_lane": "agy"}},
+        "throughput": [
+            {"date": "2026-10-09", "repo": REPO, "owner_lane": "cursor", "opened": 2, "merged": 1},
+            {"date": "2026-10-08", "repo": REPO, "owner_lane": "codex", "opened": 1, "merged": 0},
+            {"date": "2026-09-01", "repo": REPO, "owner_lane": "cursor", "opened": 9, "merged": 9},
+            {"date": "2026-10-09", "repo": "example/other", "owner_lane": None, "opened": 1, "merged": 1},
+        ],
+    }
+    path = tmp_path / "record.json"
+    path.write_text(json.dumps(record), encoding="utf-8")
+    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(path))
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
+    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
+    monkeypatch.setattr(
+        prs_mod,
+        "load_github_view",
+        lambda repo, **_kwargs: _view(
+            fresh,
+            day,
+            older,
+            comments={1: (), 2: (), 3: ()},
+            checks={"d" * 40: _green("d" * 40), "e" * 40: _green("e" * 40), "f" * 40: _green("f" * 40)},
+            queued={1: False, 2: False, 3: False},
+        ),
+    )
+
+    now = client.get("/api/fleet/v1/now")
+    assert now.status_code == 200
+    attention = now.json()["data"]["attention"]
+    assert [row["number"] for row in attention] == [3, 2]
+    assert attention[0]["idle_48h"] is True
+    assert attention[0]["owner_lane"] == "agy"
+    assert attention[1]["idle_48h"] is False
+    assert attention[1]["hours_idle"] == 24.0
+    assert path.name not in now.text
+
+    stats = client.get("/api/fleet/v1/stats")
+    assert stats.status_code == 200
+    body = stats.json()
+    assert body["schema"] == "fleet.v1.stats"
+    assert body["data"]["window_days"] == 14
+    by_repo = {row["repo"]: row for row in body["data"]["by_repo"]}
+    assert set(by_repo) == {REPO, "example/other"}
+    assert by_repo[REPO]["backlog"] == 3
+    assert len(by_repo[REPO]["days"]) == 14
+    assert by_repo[REPO]["days"][-1] == {"date": "2026-10-09", "opened": 2, "merged": 1}
+    assert by_repo[REPO]["days"][-2] == {"date": "2026-10-08", "opened": 1, "merged": 0}
+    assert by_repo[REPO]["days"][0]["date"] == "2026-09-26"
+    assert sum(day["opened"] for day in by_repo[REPO]["days"]) == 3
+    by_lane = {row["owner_lane"]: row for row in body["data"]["by_lane"]}
+    assert by_lane["cursor"]["backlog"] == 1
+    assert by_lane["codex"]["backlog"] == 1
+    assert by_lane["agy"]["backlog"] == 1
+    assert by_lane[None]["backlog"] == 0
+    assert by_lane[None]["days"][-1] == {"date": "2026-10-09", "opened": 1, "merged": 1}
+    assert "2026-09-01" not in stats.text
+
+    schema = client.get("/api/fleet/v1/schema")
+    documents = schema.json()["data"]["endpoints"]
+    Draft202012Validator(documents["fleet.v1.now"]).validate(now.json())
+    Draft202012Validator(documents["fleet.v1.stats"]).validate(body)
+    listed = client.get("/api/fleet/v1/prs")
+    Draft202012Validator(documents["fleet.v1.prs"]).validate(listed.json())
+
+
+def test_missing_or_malformed_state_record_degrades(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
+    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
+    monkeypatch.setattr(
+        prs_mod,
+        "load_github_view",
+        lambda repo, **_kwargs: _view(
+            _pull(head_ref="cursor/feature", commit_at="2026-10-08T10:00:00Z"),
+            comments={42: ()},
+        ),
+    )
+
+    missing = client.get("/api/fleet/v1/stats")
+    assert missing.status_code == 200
+    stale = next(item for item in missing.json()["sources"] if item["name"] == "stale_prs")
+    assert stale["status"] == "not_configured"
+    assert missing.json()["data"]["by_repo"][0]["backlog"] == 1
+    assert missing.json()["data"]["by_repo"][0]["days"][-1]["opened"] == 0
+
+    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(tmp_path / "absent.json"))
+    absent = client.get("/api/fleet/v1/stats")
+    assert absent.status_code == 200
+    absent_source = next(item for item in absent.json()["sources"] if item["name"] == "stale_prs")
+    assert absent_source["status"] == "unavailable"
+    assert absent.json()["data"]["by_repo"][0]["backlog"] == 1
+    assert tmp_path.name not in absent.text
+
+    bad = tmp_path / "record.json"
+    bad.write_text('{"version": 1, "activity": {"nope": {}}}', encoding="utf-8")
+    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(bad))
+    broken = client.get("/api/fleet/v1/prs")
+    assert broken.status_code == 200
+    source = next(item for item in broken.json()["sources"] if item["name"] == "stale_prs")
+    assert source == {"name": "stale_prs", "status": "unavailable", "age_s": None, "error": "unavailable"}
+    assert broken.json()["data"]["prs"][0]["hours_idle"] == 24.0
+    assert broken.json()["data"]["prs"][0]["owner_lane"] == "cursor"
+    assert bad.name not in broken.text
+
+    old = NOW.timestamp() - 1000
+    good = {
+        "version": 1,
+        "throughput": [
+            {"date": "2026-10-09", "repo": REPO, "owner_lane": "cursor", "opened": 4, "merged": 2}
+        ],
+    }
+    bad.write_text(json.dumps(good), encoding="utf-8")
+    os.utime(bad, (old, old))
+    aged = client.get("/api/fleet/v1/stats")
+    aged_source = next(item for item in aged.json()["sources"] if item["name"] == "stale_prs")
+    assert aged_source["status"] == "stale"
+    assert aged_source["age_s"] > activity_mod.STALE_PR_FRESH_S
+    assert aged.json()["data"]["by_lane"][0]["days"][-1]["merged"] == 2
+    assert bad.name not in aged.text

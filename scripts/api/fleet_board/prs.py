@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.github_client import GitHubClient
-from scripts.orchestration.integration_sweep import lookup_verdict
+from scripts.orchestration.integration_sweep import TRUSTED_ASSOCIATIONS, lookup_verdict, parse_marker
 from scripts.orchestration.merge_queue_keeper import (
     KeeperError,
     _check_state,
@@ -33,6 +33,15 @@ from scripts.orchestration.merge_queue_keeper import (
     _requeue_hold,
 )
 
+from .activity import (
+    PrActivity,
+    ThroughputEvent,
+    attention_rows,
+    build_stats,
+    hours_idle,
+    lane_from_ref,
+    read_stale_state,
+)
 from .envelope import envelope
 from .sources import SourceReport, read_location, report
 
@@ -97,6 +106,7 @@ class Pull:
     body: str
     merge_state: str | None
     epics: tuple[str, ...]
+    commit_at: str | None = None
 
 
 @dataclass(frozen=True)
@@ -438,6 +448,77 @@ def _ci_label(state: str) -> str | None:
     return None
 
 
+def _commit_stamp(client: Any, repo: str, sha: str) -> tuple[str | None, float, bool]:
+    payload, age, stale = _optional_object(client, f"repos/{repo}/commits/{sha}")
+    if not isinstance(payload, dict):
+        return None, age, stale
+    commit = payload.get("commit")
+    if not isinstance(commit, dict):
+        return None, age, stale
+    for key in ("committer", "author"):
+        person = commit.get(key)
+        if isinstance(person, dict) and isinstance(person.get("date"), str):
+            stamp = _stamp(person["date"])
+            if stamp is not None:
+                return stamp, age, stale
+    return None, age, stale
+
+
+def _failing_check_names(
+    number: int,
+    head: str,
+    checks: tuple[dict[str, Any], ...] | None,
+    files: tuple[dict[str, Any], ...] | None,
+) -> list[str]:
+    """Names of required checks at ``head`` that finished without succeeding."""
+    if checks is None:
+        return []
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in checks:
+        if not isinstance(row, dict) or row.get("head_sha") != head or not isinstance(row.get("name"), str):
+            return []
+        grouped.setdefault(row["name"], []).append(row)
+    required = ["CI Gate", *[name for name in grouped if name.startswith("Analyze (")]]
+    failed: list[str] = []
+    for name in required:
+        group = grouped.get(name, [])
+        if not group:
+            continue
+        latest = _latest(group)
+        if latest.get("status") == "completed" and latest.get("conclusion") != "success":
+            failed.append(name)
+    state = _ci_state(number, head, checks, files)
+    if state.startswith("CI-red-"):
+        name = state.removeprefix("CI-red-")
+        if name not in failed:
+            failed.append(name)
+    return sorted(set(failed))
+
+
+def _verdict_at(comments: tuple[dict[str, Any], ...] | None, login: str | None) -> datetime | None:
+    """When the latest trusted cross-family verdict comment was recorded."""
+    if comments is None or not login:
+        return None
+    latest: datetime | None = None
+    for comment in comments:
+        if not isinstance(comment, dict):
+            continue
+        body = comment.get("body")
+        if not isinstance(body, str) or parse_marker(body) is None:
+            continue
+        author = comment.get("user")
+        author_login = author.get("login") if isinstance(author, dict) else None
+        if author_login != login or comment.get("author_association") not in TRUSTED_ASSOCIATIONS:
+            continue
+        created = _parse_time(comment["created_at"]) if isinstance(comment.get("created_at"), str) else None
+        updated = _parse_time(comment["updated_at"]) if isinstance(comment.get("updated_at"), str) else None
+        if created is None or updated is None or created != updated:
+            continue
+        if latest is None or created > latest:
+            latest = created
+    return latest
+
+
 def _gate_label(checks: tuple[dict[str, Any], ...] | None, head: str) -> str | None:
     if checks is None:
         return None
@@ -475,6 +556,7 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
     comments: dict[int, tuple[dict[str, Any], ...] | None] = {}
     checks: dict[str, tuple[dict[str, Any], ...] | None] = {}
     files: dict[int, tuple[dict[str, Any], ...]] = {}
+    commit_at: dict[str, str | None] = {}
     for raw in pulls_raw:
         if raw.get("mergeable_state") is None and type(raw.get("number")) is int:
             detail, detail_age, detail_stale = _optional_object(client, f"repos/{repo}/pulls/{raw['number']}")
@@ -485,6 +567,11 @@ def _fetch_github(repo: str, client: Any) -> GithubView:
         if pull is None:
             failed = True
             continue
+        if pull.head_sha not in commit_at:
+            stamp, commit_age, commit_stale = _commit_stamp(client, repo, pull.head_sha)
+            age, stale = max(age, commit_age), stale or commit_stale
+            commit_at[pull.head_sha] = stamp
+        pull = replace(pull, commit_at=commit_at[pull.head_sha])
         pulls.append(pull)
         try:
             comment_rows, comment_age, comment_stale = _pages(
@@ -779,16 +866,44 @@ def _stacked(pull: Pull, by_head: Mapping[str, dict[str, Any]], default_branch: 
     return {"number": base["number"], "ref": pull.base_ref, "state": "open", "mq": base["mq"]}
 
 
+def _plain_blocker(pull: Pull, cf: Mapping[str, Any], failed: list[str]) -> dict[str, Any]:
+    if pull.merge_state == "DIRTY":
+        return {"kind": "conflict"}
+    if failed:
+        return {"kind": "failing_check", "checks": failed}
+    if cf.get("verdict") == "CHANGES_REQUESTED" and cf.get("at_head") is True:
+        return {"kind": "cf_changes"}
+    return {"kind": "none"}
+
+
+def _stacked_blocker(
+    pull: Pull,
+    by_head: Mapping[str, dict[str, Any]],
+    recorded: PrActivity | None,
+) -> dict[str, Any]:
+    base = by_head.get(pull.base_ref)
+    if base is not None and base["number"] != pull.number:
+        return {"kind": "stacked_base", "number": base["number"], "state": "open"}
+    if recorded is not None and recorded.base_state is not None:
+        return {"kind": "stacked_base", "number": recorded.base_number, "state": recorded.base_state}
+    return {"kind": "stacked_base", "number": None, "state": "unmerged"}
+
+
 def assemble_prs(
     view: GithubView,
     mq: MqSnapshot,
     *,
     now: datetime | None = None,
     stale_min: int | None = None,
+    activity: Mapping[int, PrActivity] | None = None,
 ) -> list[dict[str, Any]]:
-    """One row per open pull request. An older-head approval does not count."""
+    """One row per open pull request. An older-head approval does not count.
+
+    A pull request whose base is not ``main`` is stacked and is never ready.
+    """
     moment = now or utc_now()
     threshold = DEFAULT_STALE_MIN if stale_min is None else stale_min
+    recorded = activity or {}
     rows: list[tuple[Pull, dict[str, Any]]] = []
     for pull in sorted(view.pulls, key=lambda item: item.number):
         drop_key = f"{pull.number}:{pull.head_sha}"
@@ -809,6 +924,17 @@ def assemble_prs(
             now=moment,
             threshold=threshold,
         )
+        note = recorded.get(pull.number)
+        failed = _failing_check_names(pull.number, pull.head_sha, checks, files)
+        idle, idle_24h, idle_48h = hours_idle(
+            moment,
+            _parse_time(pull.commit_at) if isinstance(pull.commit_at, str) else None,
+            _verdict_at(view.comments.get(pull.number), view.login),
+            note.commit_at if note is not None else None,
+            note.cf_at if note is not None else None,
+            note.merge_event_at if note is not None else None,
+        )
+        owner = note.owner_lane if note is not None and note.owner_lane else lane_from_ref(pull.head_ref)
         rows.append(
             (
                 pull,
@@ -829,6 +955,11 @@ def assemble_prs(
                     "stale_green": stale_green,
                     "minutes": minutes,
                     "stacked_base": None,
+                    "hours_idle": idle,
+                    "blocker": _plain_blocker(pull, cf, failed),
+                    "owner_lane": owner,
+                    "idle_24h": idle_24h,
+                    "idle_48h": idle_48h,
                 },
             )
         )
@@ -837,6 +968,11 @@ def assemble_prs(
         by_head.setdefault(pull.head_ref, item)
     for pull, item in rows:
         item["stacked_base"] = _stacked(pull, by_head, view.default_branch)
+        if pull.base_ref != "main":
+            item["blocker"] = _stacked_blocker(pull, by_head, recorded.get(pull.number))
+            item["ready_since"] = None
+            item["stale_green"] = False
+            item["minutes"] = None
     return [item for _pull, item in rows]
 
 
@@ -852,18 +988,21 @@ def collect_pipeline(
     *,
     environ: Mapping[str, str] | None = None,
     now: datetime | None = None,
-) -> tuple[list[dict[str, Any]], tuple[SourceReport, SourceReport]]:
+) -> tuple[list[dict[str, Any]], tuple[SourceReport, ...], tuple[ThroughputEvent, ...]]:
     moment = now or utc_now()
     mq_report, mq = read_mq_state(environ, now=moment)
+    stale_report, stale = read_stale_state(environ, now=moment)
+    activity = stale.activity if stale.usable else {}
+    events = stale.events if stale.usable else ()
     repo = resolve_repo(environ)
     if repo is None:
-        return [], (report(GITHUB_SOURCE, "not_configured"), mq_report)
+        return [], (report(GITHUB_SOURCE, "not_configured"), mq_report, stale_report), events
     try:
         view = load_github_view(repo, environ=environ)
     except GithubReadError:
-        return [], (report(GITHUB_SOURCE, "unavailable"), mq_report)
-    rows = assemble_prs(view, mq, now=moment, stale_min=stale_after_min(environ))
-    return rows, (_github_report(view), mq_report)
+        return [], (report(GITHUB_SOURCE, "unavailable"), mq_report, stale_report), events
+    rows = assemble_prs(view, mq, now=moment, stale_min=stale_after_min(environ), activity=activity)
+    return rows, (_github_report(view), mq_report, stale_report), events
 
 
 def _epic_key(value: str) -> str:
@@ -912,48 +1051,55 @@ def filter_prs(
     return selected
 
 
-def _safe_prs(data: dict[str, Any]) -> dict[str, Any]:
+def _pipeline_sources() -> tuple[SourceReport, SourceReport, SourceReport]:
+    return (
+        report(GITHUB_SOURCE, "unavailable"),
+        report(MQ_SOURCE, "unavailable"),
+        report("stale_prs", "unavailable"),
+    )
+
+
+def _safe_body(name: str, data: dict[str, Any]) -> dict[str, Any]:
     try:
-        return envelope("prs", data, (report(GITHUB_SOURCE, "unavailable"), report(MQ_SOURCE, "unavailable")))
+        return envelope(name, data, _pipeline_sources())
     except Exception:
         return {
-            "schema": "fleet.v1.prs",
+            "schema": f"fleet.v1.{name}",
             "generated_at": "1970-01-01T00:00:00Z",
-            "sources": [
-                report(GITHUB_SOURCE, "unavailable").as_dict(),
-                report(MQ_SOURCE, "unavailable").as_dict(),
-            ],
-            "data": {"prs": []},
+            "sources": [item.as_dict() for item in _pipeline_sources()],
+            "data": data,
         }
 
 
 def read_prs(*, epic: str | None = None, state: str | None = None) -> dict[str, Any]:
     try:
-        rows, sources = collect_pipeline()
+        rows, sources, _events = collect_pipeline()
         return envelope("prs", {"prs": filter_prs(rows, epic=epic, state=state)}, sources)
     except Exception:
-        return _safe_prs({"prs": []})
+        return _safe_body("prs", {"prs": []})
 
 
 def read_pr(number: int) -> dict[str, Any]:
     try:
-        rows, sources = collect_pipeline()
+        rows, sources, _events = collect_pipeline()
         found = next((row for row in rows if row["number"] == number), None)
         return envelope("pr", {"pr": found}, sources)
     except Exception:
-        try:
-            return envelope(
-                "pr",
-                {"pr": None},
-                (report(GITHUB_SOURCE, "unavailable"), report(MQ_SOURCE, "unavailable")),
-            )
-        except Exception:
-            return {
-                "schema": "fleet.v1.pr",
-                "generated_at": "1970-01-01T00:00:00Z",
-                "sources": [
-                    report(GITHUB_SOURCE, "unavailable").as_dict(),
-                    report(MQ_SOURCE, "unavailable").as_dict(),
-                ],
-                "data": {"pr": None},
-            }
+        return _safe_body("pr", {"pr": None})
+
+
+def read_now() -> dict[str, Any]:
+    try:
+        rows, sources, _events = collect_pipeline()
+        return envelope("now", {"attention": attention_rows(rows)}, sources)
+    except Exception:
+        return _safe_body("now", {"attention": []})
+
+
+def read_stats() -> dict[str, Any]:
+    try:
+        moment = utc_now()
+        rows, sources, events = collect_pipeline(now=moment)
+        return envelope("stats", build_stats(rows, events, now=moment), sources)
+    except Exception:
+        return _safe_body("stats", {"window_days": 14, "by_repo": [], "by_lane": []})

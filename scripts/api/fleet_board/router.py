@@ -133,3 +133,13 @@ def read_prs(
 @router.get("/prs/{number}", name="pr")
 def read_pr(number: Annotated[int, Path(ge=1)]) -> dict[str, Any]:
     return prs_api.read_pr(number)
+
+
+@router.get("/now", name="now")
+def read_now() -> dict[str, Any]:
+    return prs_api.read_now()
+
+
+@router.get("/stats", name="stats")
+def read_stats() -> dict[str, Any]:
+    return prs_api.read_stats()
