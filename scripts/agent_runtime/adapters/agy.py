@@ -185,30 +185,46 @@ _MISSING_TERMINAL_RESULT = re.compile(r"^agy_stream_output_invalid: missing term
 AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
 
 
-def classify_agy_transient_provider_fault(*texts: str | None) -> str | None:
+_AGY_ERROR_LINE_RE = re.compile(
+    r"^(?P<kind>agy_stream_result_error|agy_stream_output_invalid):\s*"
+    r"(?:API error \(attempt \d+\):\s*|Eligibility check failed:[^:]*:\s*)?"
+    r"(?:(?P<status>[A-Z_]+) \(code (?P<code>\d+)\)|(?P<msg>.*))"
+)
+
+def classify_agy_transient_provider_fault(*texts: str | None, completion_reason: str | None = None) -> str | None:
     """Return ``transient_provider_fault`` for a recorded provider fault safe to classify.
 
-    Incomplete-run tokens, including cancellation, stay on their own path.
     The exact pre-model eligibility line is not classified here.
     """
+    if completion_reason in AGY_INCOMPLETE_RUN_REASONS:
+        return None
+
     lines = [line for text in texts if text for line in text.splitlines()]
-    blob = "\n".join(lines)
-    if any(reason in blob for reason in AGY_INCOMPLETE_RUN_REASONS):
-        return None
-    if any(
-        _OTHER_ELIGIBILITY_FAILURE.search(line) and not _ELIGIBILITY_UNAVAILABLE_503.search(line) for line in lines
-    ):
-        return None
+
+    for line in lines:
+        if _OTHER_ELIGIBILITY_FAILURE.search(line) and not _ELIGIBILITY_UNAVAILABLE_503.search(line):
+            return None
+
     for line in lines:
         if _EXACT_PRE_MODEL_ELIGIBILITY_503.search(line):
             continue
-        if (
-            _ELIGIBILITY_UNAVAILABLE_503.search(line)
-            or _API_UNAVAILABLE_503.search(line)
-            or _STREAM_INTERRUPTED.search(line)
-            or _MISSING_TERMINAL_RESULT.search(line)
-        ):
-            return TRANSIENT_PROVIDER_FAULT
+
+        match = _AGY_ERROR_LINE_RE.search(line)
+        if match:
+            kind = match.group("kind")
+            status = match.group("status")
+            code = match.group("code")
+            msg = (match.group("msg") or "").strip()
+
+            if status == "UNAVAILABLE" and code == "503":
+                return TRANSIENT_PROVIDER_FAULT
+
+            if kind == "agy_stream_result_error" and msg.startswith("The stream was interrupted."):
+                return TRANSIENT_PROVIDER_FAULT
+
+            if kind == "agy_stream_output_invalid" and msg.startswith("missing terminal result"):
+                return TRANSIENT_PROVIDER_FAULT
+
     return None
 
 
@@ -1167,6 +1183,7 @@ class AgyAdapter:
 
         stream_mode = plan is not None and "stream-json" in plan.cmd
         stream_result, stream_problem = _stream_result(stdout) if stream_mode else (None, None)
+        is_protocol_failure = stream_problem is not None and stream_problem.startswith("agy_stream_output_invalid")
         stdout_response = (
             str(stream_result.get("response") or "").strip()
             if stream_result is not None
@@ -1225,6 +1242,7 @@ class AgyAdapter:
                 rate_limited=provider_failure_code(provider_error) == "rate_limited",
                 failure_code=provider_failure_code(provider_error) if provider_error else "provider_stream_incomplete",
                 provider_error_text=provider_error,
+                protocol_failure=is_protocol_failure,
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
                 agy_attempt=AgyAttempt(completion_reason=incomplete_reason),
@@ -1257,6 +1275,7 @@ class AgyAdapter:
                     failure_code=failure_code,
                     rate_limited=failure_code == "rate_limited",
                     provider_error_text=provider_error,
+                    protocol_failure=is_protocol_failure,
                 )
             else:
                 structured = dataclasses.replace(
@@ -1300,6 +1319,7 @@ class AgyAdapter:
             rate_limited=rate_limited,
             failure_code=failure_code,
             provider_error_text=provider_error,
+            protocol_failure=is_protocol_failure,
             session_id=stream_result.get("conversation_id") if stream_result else None,
             tokens=_stream_total_tokens(stream_result),
             tool_calls=tool_calls,
@@ -1367,8 +1387,28 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
     executed_steps: set[int] = set()
     background_steps: set[int] = set()
     background_tasks: set[str] = set()
+    side_effecting_steps: set[int] = set()
     sources: set[str] = set()
     unknown_execution = False
+
+    explicit_read_only_tools = {
+        "view_file",
+        "grep_search",
+        "search_code",
+        "search_web",
+        "read_url_content",
+        "call_mcp_tool",
+        "list_resources",
+        "read_resource",
+        "ask_question",
+        "send_message",
+    }
+
+    def _is_read_only(name: str | None) -> bool:
+        if not name:
+            return False
+        return name in explicit_read_only_tools or name.startswith("mcp_sources_")
+
     for position, event in enumerate(events):
         if event.get("type") == "PLANNER_RESPONSE" and event.get("source") == "MODEL":
             sources.update(
@@ -1418,6 +1458,14 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
                 executed_steps.add(slot)
             else:
                 unknown_execution = True
+
+        if not _is_read_only(tool):
+            side_effecting_steps.add(slot)
+
+    for _, name in pending:
+        if not _is_read_only(name):
+            side_effecting_steps.add(position + 1)
+
     unknown_execution |= any(name == "run_command" for _, name in pending)
     return dataclasses.replace(
         base,
@@ -1426,6 +1474,7 @@ def _attempt_evidence(bound: _TranscriptSlice | None, result: ParseResult, plan:
         excused_kill_count=len(excused),
         unexcused_kill_count=max(0, len(killed) - len(excused)),
         unknown_command_count=sum(command == "<unknown command>" for command in killed),
+        side_effect_tool_count=len(side_effecting_steps),
         denied_command_count=len(denied_steps),
         denied_file_read_count=len(denied_file_reads),
         denied_mcp_count=len(denied_mcp),

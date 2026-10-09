@@ -1716,6 +1716,7 @@ def _execute_invocation_plan(
             provider_fault = classify_agy_transient_provider_fault(
                 parse.provider_error_text,
                 parse.failure_code,
+                parse.stderr_excerpt if parse.protocol_failure else None,
             )
         if not cancellation and not eligibility and not provider_fault:
             return finish(execution)
@@ -1734,7 +1735,14 @@ def _execute_invocation_plan(
                 return finish(execution)
             if mode != "read-only":
                 attempt = parse.agy_attempt
-                safe = attempt is not None and attempt.executed_command_count == 0 and attempt.unknown_command_count == 0 and attempt.kill_count == 0
+                safe = (
+                    attempt is not None
+                    and attempt.evidence_complete
+                    and attempt.executed_command_count == 0
+                    and attempt.unknown_command_count == 0
+                    and attempt.kill_count == 0
+                    and attempt.side_effect_tool_count == 0
+                )
                 if not safe:
                     budget.retry_disposition = "unsafe_replay"
                     budget.reroute_reason = "unsafe_replay"
