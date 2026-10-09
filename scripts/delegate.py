@@ -8226,10 +8226,7 @@ def _validate_existing_worktree(
     return True
 
 
-_PROVISIONED_DATABASE_LINKS = ("data/vesum.db", "data/sources.db")
-
-
-def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path) -> None:
+def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]) -> None:
     """Remove a reused worktree's database links that resolve to the primary databases (#9421).
 
     A read-only dispatch must carry no such link: a symlink cannot be made
@@ -8239,7 +8236,7 @@ def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path) 
     """
     if worktree_path.resolve() == main_repo_root.resolve():
         return
-    for relative_path in _PROVISIONED_DATABASE_LINKS:
+    for relative_path in relative_paths:
         target = worktree_path / relative_path
         # Non-strict resolution also matches a dangling link, whose write
         # would create the primary database.
@@ -8281,10 +8278,11 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path, *, read_
         )
         return
 
+    database_links = ("data/vesum.db", "data/sources.db")
     if read_only:
-        _withdraw_primary_database_links(worktree_path, main_repo_root)
+        _withdraw_primary_database_links(worktree_path, main_repo_root, database_links)
     for relative_path in (
-        *(() if read_only else _PROVISIONED_DATABASE_LINKS),
+        *(() if read_only else database_links),
         "node_modules",
         "site/node_modules",
     ):
@@ -13320,10 +13318,10 @@ def _dispatch(
                 sparse_include=sparse_include,
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
-            if args.mode == "read-only":
-                # Still under the worktree lock: a link an earlier write-capable
-                # dispatch provisioned must not reach the worker (#9421).
-                _withdraw_primary_database_links(resolved_wt, _REPO_ROOT)
+            # Still under the worktree lock. A read-only dispatch withdraws the database
+            # links an earlier write-capable dispatch provisioned; a write-capable one
+            # restores the links an earlier read-only dispatch withdrew (#9421).
+            _provision_data_symlinks(resolved_wt, _REPO_ROOT, read_only=args.mode == "read-only")
 
     # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
     # gate and the check above already hold this; this re-check under the worktree lock

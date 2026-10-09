@@ -16529,9 +16529,9 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
     withdrawals: list[bool] = []
     real_withdraw = delegate._withdraw_primary_database_links
 
-    def withdraw(worktree, main_repo_root):
+    def withdraw(worktree, main_repo_root, relative_paths):
         withdrawals.append(_worktree_lock_is_free(worktree))
-        real_withdraw(worktree, main_repo_root)
+        real_withdraw(worktree, main_repo_root, relative_paths)
 
     monkeypatch.setattr(delegate, "_withdraw_primary_database_links", withdraw)
     real_popen = delegate.subprocess.Popen
@@ -16566,6 +16566,43 @@ def test_cwd_reuse_read_only_dispatch_withdraws_primary_database_links_before_sp
         assert withdrawals == []
         assert at_spawn == [["other.db", "sources.db", "vesum.db"]]
     assert (dispatch_wt / "data" / "other.db").resolve() == other.resolve()
+
+
+def test_cwd_reuse_round_trip_read_only_then_workspace_write_restores_database_links(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    """#9421: a write-capable --cwd reuse restores the links a read-only reuse withdrew, before spawn."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    (main / ".git" / "info" / "exclude").write_text("*.db\n", encoding="utf-8")
+    (main / "data").mkdir()
+    for name in ("vesum.db", "sources.db"):
+        with contextlib.closing(sqlite3.connect(main / "data" / name)) as conn, conn:
+            conn.execute("CREATE TABLE primary_rows (value TEXT)")
+    delegate._provision_data_symlinks(dispatch_wt, main)
+    real_popen = delegate.subprocess.Popen
+    links_at_spawn: list[list[str]] = []
+
+    def fake_popen(cmd, *a, **k):
+        if cmd and Path(str(cmd[0])).name == "git":
+            return real_popen(cmd, *a, **k)
+        links_at_spawn.append(sorted(p.name for p in (dispatch_wt / "data").iterdir() if p.is_symlink()))
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
+        return _GuardFakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    assert delegate.cmd_dispatch(_write_args(task_id="cwd-trip-ro", mode="read-only", cwd=str(dispatch_wt))) == 0
+    assert not (dispatch_wt / "data" / "vesum.db").exists()
+    assert not (dispatch_wt / "data" / "sources.db").exists()
+
+    assert delegate.cmd_dispatch(_write_args(task_id="cwd-trip-ww", mode="workspace-write", cwd=str(dispatch_wt))) == 0
+
+    assert links_at_spawn == [[], ["sources.db", "vesum.db"]]
+    for name in ("vesum.db", "sources.db"):
+        assert (dispatch_wt / "data" / name).resolve() == (main / "data" / name).resolve()
 
 
 #: A --review-attempt prompt must print the ids its seat echoes (#8996); these match rev-test / att-test.
