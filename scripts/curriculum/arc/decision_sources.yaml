@@ -1,5 +1,5 @@
 # Source map for the accepted-decisions record (#8397, #8430).
-# Read by scripts/curriculum/arc/generate_decisions.py. Each entry names one operator-accepted
+# Read by scripts/curriculum/arc/generate_decisions.py. Each entry names one accepted (operator or designated approval; the evidence line says which)
 # section by doc + exact heading line; `accepted_evidence.line` is the exact line (verbatim, in
 # `accepted_evidence.doc`) that states the acceptance. Dates are never inferred.
 # Record order per level: the level's entries, then the `shared` entries.
@@ -18,6 +18,18 @@ levels:
       accepted_evidence:
         doc: docs/epics/fresh-build-a1-arc.md
         line: "## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)"
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 8. Revision r4 (#10108)"
+      accepted: "2026-10-08"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a1-arc.md
+        line: "Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10108)"
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 9. Revision r3.1: A1 practical recap (#10105)"
+      accepted: "2026-10-08"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a1-arc.md
+        line: "Accepted: 2026-10-08 (designated approval: Sol 6.1 and Opus 5.5; #10105)"
   a2:
     - doc: docs/epics/fresh-build-a2-arc.md
       heading: "## 2. Decisions"

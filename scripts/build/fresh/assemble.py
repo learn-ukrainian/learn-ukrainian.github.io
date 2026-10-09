@@ -189,6 +189,7 @@ from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import load_allowlist, resolve
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.validate.loader import load_plan, retirement_record
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -3170,10 +3171,13 @@ def assemble_lesson(
     root = repo_root or REPO_ROOT
 
     paths = lesson_lock.resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=root)
+    if plan_dict is not None and not paths["plan"].is_file():
+        retirement_record(paths["plan"].parent)
+    loaded_plan = load_plan(paths["plan"]) if plan_dict is None or paths["plan"].is_file() else plan_dict
     state_dir = output_dir or (paths["state_dir"] / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
-    plan = plan_dict if plan_dict is not None else yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    plan = plan_dict if plan_dict is not None else loaded_plan
     pack = pack_dict if pack_dict is not None else yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
     words_store = words_dict if words_dict is not None else yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
 

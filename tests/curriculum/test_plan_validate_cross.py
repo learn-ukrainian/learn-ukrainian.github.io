@@ -386,13 +386,13 @@ class CrossCase:
 
 
 def _letters(start: int, stop: int) -> list[str]:
-    return real_position_letters(1)[start:stop]
+    return real_position_letters(2)[start:stop]
 
 
 def _letters_union() -> list[str]:
     """The 33 letters of real arc positions 1–3, through load_arc, never typed."""
     union: list[str] = []
-    for position in (1, 2, 3):
+    for position in (2, 3, 4, 5):
         for letter in real_position_letters(position):
             if letter not in union:
                 union.append(letter)
@@ -686,7 +686,7 @@ def title_cases() -> list[CrossCase]:
                     SLUG,
                     1,
                     [
-                        teach_lesson(1, "lesson-one", letters=_letters(0, 13)),
+                        teach_lesson(1, "lesson-one", letters=_letters_union()[:13]),
                         teach_lesson(2, "lesson-two", letters=_letters_union()[13:25]),
                         teach_lesson(3, "lesson-three", letters=_letters_union()[25:]),
                         recap_lesson(4),
@@ -852,18 +852,18 @@ def test_title_quantities_quotes_digits(tmp_path: Path) -> None:
     assert report.ok
 
 
-def test_real_position1_letters_through_load_arc(tmp_path: Path) -> None:
-    """A plan matching the real position-1 arc (letters via load_arc) passes, and a
+def test_real_position2_letters_through_load_arc(tmp_path: Path) -> None:
+    """A plan matching the real position-2 arc (letters via load_arc) passes, and a
     title enumerating exactly the scope letter list passes the title check."""
     _skip_if_arc_absent()
-    letters = real_position_letters(1)
+    letters = real_position_letters(2)
     slug = "sounds-letters-and-hello"
     paths = write_level(
         tmp_path,
         plans=[
             make_plan(
                 slug,
-                1,
+                2,
                 [
                     teach_lesson(1, "lesson-one", letters=letters[:7]),
                     teach_lesson(2, "lesson-two", letters=letters[7:]),
@@ -882,7 +882,7 @@ def test_real_position1_letters_through_load_arc(tmp_path: Path) -> None:
     doc_path = tmp_path / ARC_DOC_REL
     doc_path.parent.mkdir(parents=True, exist_ok=True)
     doc_path.write_bytes(real_doc.read_bytes())
-    report = validate_plan(LEVEL, slug, plan_path=paths[slug])
+    report = validate_plan(LEVEL, slug, plan_path=paths[slug], allow_missing_prior=True)
     assert report.ok, report.render_text()
     assert not any(o.code == codes.TITLE_LETTER_ENUMERATION_MISMATCH for o in report.failures)
     assert any(o.code == codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY for o in report.not_checked)
@@ -900,7 +900,7 @@ def test_title_seven_over_33_message(tmp_path: Path) -> None:
 def test_letter_runs_boundaries() -> None:
     """The definition of 'a run of enumerated single letters' at its edges."""
     _skip_if_arc_absent()
-    letters = real_position_letters(1)
+    letters = real_position_letters(2)
     a, o, u = letters[0], letters[1], letters[2]
     assert letter_runs(f"{a}") == []  # one letter alone is not a run
     assert letter_runs(f"{a} {o}") == [[a, o]]

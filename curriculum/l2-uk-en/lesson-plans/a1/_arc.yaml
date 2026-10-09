@@ -2,155 +2,171 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: c26caccabe04f0ae9493e8b787cffe10f6c0a8bb1dee207001b539e7f67021f6
+  sha256: 960f07c3bc0d8c46d48a29636871ed09a1ba3eeaa6db3dcbf87036b4322870be
 est_lessons_total: 162
 positions:
 - position: 1
+  slug: introduction-to-ukrainian
+  est_lessons: 2
+  job: 'Orient yourself in English: language identity, brief history, where spoken, alphabet overview, study method and outcomes'
+  inventory_text: Overview only; no acquired letters
+  phase: A1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  letters: []
+  band_key: a1-orientation
+- position: 2
   slug: sounds-letters-and-hello
   est_lessons: 5
-  job: Hear and say your first greetings; learn the difference between a sound and a letter, and between vowels and consonants; read and write the first letter group in syllables and short words
-  inventory_text: '**13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р'
+  job: Greet and take a first spoken turn; connect useful words with letters and supported writing
+  inventory_text: '**12 letters**: А Е И І О М Н В П Р Т Я; stress and intonation from first speech'
   phase: A1.1
-  skills_text: Li, W (copying, own name)
+  skills_text: Li, S, W (supported copying)
   skills:
   - Li
+  - S
   - W
   standard_line_refs: []
   letters:
   - А
-  - О
-  - У
+  - Е
   - И
-  - М
   - І
+  - О
+  - М
   - Н
   - В
-  - Л
-  - С
-  - К
   - П
   - Р
-- position: 2
-  slug: reading-ukrainian
-  est_lessons: 5
-  job: Read words, then short sentences aloud, with most of the alphabet
-  inventory_text: '**12 letters**: Т Е Д З Б (end of primer part 1; ь, which the primer places before Б, is held for position 3), then Г Ґ Ч Й Х Ж Ш'
+  - Т
+  - Я
+- position: 3
+  slug: who-am-i
+  est_lessons: 4
+  job: Introduce yourself and ask identity; common professions and origin phrases
+  inventory_text: '**9 letters**: Д З К Л С У Х ь Г; hard/soft contrast; recycle stress and intonation'
   phase: A1.1
-  skills_text: Li, W (copying, own name)
+  skills_text: Li, S, W (`:485`)
   skills:
   - Li
+  - S
+  - W
+  standard_line_refs:
+  - - 485
+    - 485
+  letters:
+  - Д
+  - З
+  - К
+  - Л
+  - С
+  - У
+  - Х
+  - ь
+  - Г
+- position: 4
+  slug: my-family
+  est_lessons: 4
+  job: Introduce people in a chosen family photo or equivalent using supported possessive phrases
+  inventory_text: '**5 letters**: Б Й Ї Ю Є; apostrophe; recycle stress and intonation'
+  phase: A1.1
+  skills_text: Li, S, W (captions)
+  skills:
+  - Li
+  - S
   - W
   standard_line_refs: []
   letters:
-  - Т
-  - Е
-  - Д
-  - З
   - Б
-  - Г
-  - Ґ
-  - Ч
   - Й
-  - Х
-  - Ж
-  - Ш
-- position: 3
-  slug: special-signs
-  est_lessons: 4
-  job: Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft
-  inventory_text: '**8 letters**: Ї Я Ю Є Ц Щ Ф and ь; апостроф, дж, дз; hard / soft contrast. The alphabet in its dictionary order with the letter names; capital and small letters (`:571-572`)'
+  - Ї
+  - Ю
+  - Є
+- position: 5
+  slug: reading-ukrainian
+  est_lessons: 5
+  job: Complete the alphabet through useful labels and short exchanges; decode unfamiliar combinations of taught letters
+  inventory_text: '**7 letters**: Ґ Ж Ч Ш Щ Ц Ф; дж and дз; alphabet order and letter names; capital/small letters and recognising handwritten letters (`:571-572`)'
   phase: A1.1
-  skills_text: Li, W (copying, own name)
+  skills_text: Li, S, R, W
   skills:
   - Li
+  - S
+  - R
   - W
   standard_line_refs:
   - - 571
     - 572
   letters:
-  - Ї
-  - Я
-  - Ю
-  - Є
-  - Ц
+  - Ґ
+  - Ж
+  - Ч
+  - Ш
   - Щ
+  - Ц
   - Ф
-  - ь
-- position: 4
-  slug: stress-and-melody
-  est_lessons: 3
-  job: Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks
-  inventory_text: наголос, інтонація, склад і перенос (`:588`), писані літери (`:571`); no new letters
-  phase: A1.1
-  skills_text: Li, W (copying, own name)
-  skills:
-  - Li
-  - W
-  standard_line_refs:
-  - - 588
-    - 588
-  - - 571
-    - 571
-  letters: []
-- position: 5
-  slug: who-am-i
-  est_lessons: 3
-  job: Introduce yourself and ask who someone is; common professions
-  inventory_text: null
-  phase: A1.1
-  skills_text: Li (`:485`)
-  skills:
-  - Li
-  standard_line_refs:
-  - - 485
-    - 485
 - position: 6
-  slug: my-family
+  slug: first-conversations
   est_lessons: 3
-  job: Show a family photo and say who is who
+  job: Sustain a scaffolded conversation using greetings, identity, family and familiar belongings
   inventory_text: null
   phase: A1.1
-  skills_text: W (captions)
+  skills_text: Li, S, R, W
   skills:
+  - Li
+  - S
+  - R
   - W
   standard_line_refs: []
 - position: 7
   slug: checkpoint-first-contact
   est_lessons: 2
-  job: 'Self-check: read aloud, greet, introduce yourself and family'
+  job: Complete an integrated first-contact task with previously introduced language
   inventory_text: null
   phase: A1.1
-  skills_text: R, W
+  skills_text: Li, S, R, W
   skills:
+  - Li
+  - S
   - R
   - W
   standard_line_refs: []
 - position: 8
   slug: things-have-gender
   est_lessons: 3
-  job: Tell the gender of a noun and pick він / вона / воно, мій / моя / моє
+  job: Identify familiar belongings using noun gender and matching pronoun and possessive forms
   inventory_text: null
   phase: A1.2
-  skills_text: —
-  skills: []
+  skills_text: Li, S, R
+  skills:
+  - Li
+  - S
+  - R
   standard_line_refs: []
 - position: 9
   slug: what-is-it-like
   est_lessons: 3
-  job: Describe a thing with an agreeing adjective
+  job: Describe and identify familiar objects using nominative adjective agreement
   inventory_text: null
   phase: A1.2
-  skills_text: —
-  skills: []
+  skills_text: Li, S, R
+  skills:
+  - Li
+  - S
+  - R
   standard_line_refs: []
 - position: 10
   slug: colors
   est_lessons: 2
-  job: Name colours; soft-group adjectives
+  job: Use colours and agreeing descriptions to distinguish objects; soft-group adjectives
   inventory_text: null
   phase: A1.2
-  skills_text: —
-  skills: []
+  skills_text: Li, S, R
+  skills:
+  - Li
+  - S
+  - R
   standard_line_refs: []
 - position: 11
   slug: how-many
@@ -606,4 +622,5 @@ positions:
   - W
   - Li
   - R
+  - S
   standard_line_refs: []

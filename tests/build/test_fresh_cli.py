@@ -690,6 +690,7 @@ result_path.write_text('''```yaml
 
 @pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
 def test_cli_build_writer_effort(tmp_path, effort):
+    _admission_plan(tmp_path)
     from scripts.build.fresh import cli
 
     def build(level, slug, **kwargs):
@@ -863,6 +864,7 @@ def _fake_complete_module_report(level, slug, *, repo_root, lesson_n, writer_sea
 
 
 def test_build_module_completion_refuses_a_stale_module_verdict(tmp_path, capsys):
+    _admission_plan(tmp_path)
     from scripts.build.fresh import cli
 
     with (
@@ -876,6 +878,7 @@ def test_build_module_completion_refuses_a_stale_module_verdict(tmp_path, capsys
 
 
 def test_build_module_completion_passes_when_the_verdict_check_finds_nothing(tmp_path, capsys):
+    _admission_plan(tmp_path)
     from scripts.build.fresh import cli
 
     with (
@@ -999,3 +1002,7 @@ def test_assemble_cli_prints_real_check11_toolchain_failure(tmp_path, monkeypatc
     assert "Cannot find module" in render_failure["detail"] and "astro.config.mjs" in render_failure["detail"]
     assert f"Check 11: {check['reason']}" in out.err
     assert "Assembly succeeded" not in out.out
+def _admission_plan(root):
+    path = root / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("plan_schema: 2\nslug: fixture-module\nlessons: []\n")

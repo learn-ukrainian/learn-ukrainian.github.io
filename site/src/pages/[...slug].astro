@@ -460,6 +460,14 @@ const arcLevelData = arcFrontmatter ? arcDataForLevel(String(arcFrontmatter.arc_
 const arcPosition = arcFrontmatter?.arc_kind === 'module'
   ? arcLevelData?.positions.find((position) => position.slug === arcFrontmatter.arc_slug)
   : undefined;
+const arcRetired = arcFrontmatter?.arc_kind === 'retired'
+  ? (arcLevelData as ArcData & { retired?: { slug: string; old_position: number }[] })?.retired?.find(
+      (entry) => entry.slug === arcFrontmatter.arc_slug,
+    )
+  : undefined;
+if (arcFrontmatter?.arc_kind === 'retired' && !arcRetired) {
+  throw new Error(`retired arc page names unrecorded arc_slug "${arcFrontmatter.arc_slug}"`);
+}
 if (arcFrontmatter?.arc_kind === 'module' && !arcPosition) {
   throw new Error(`arc module page names unknown arc_slug "${arcFrontmatter.arc_slug}"`);
 }
@@ -655,7 +663,13 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
   showHero={props.kind !== 'landingDoc' && props.kind !== 'track' && !arcFrontmatter}
 >
   {arcFrontmatter && arcLevelData ? (
-    arcPosition
+    arcRetired
+      ? <section class="route-state-card" data-arc-state="retired">
+          <h1>Retired</h1>
+          <p>This module has been retired from the current course sequence.</p>
+          <a href={`/${arcFrontmatter.arc_level}/`}>View the current course</a>
+        </section>
+      : arcPosition
       ? <ArcModule level={String(arcFrontmatter.arc_level)} position={arcPosition} />
       : <ArcLanding level={String(arcFrontmatter.arc_level)} positions={arcLevelData.positions} previousEditionHref={arcPreviousEditionHref} />
   ) : props.kind === 'landingDoc' && Content ? (

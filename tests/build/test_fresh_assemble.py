@@ -1902,7 +1902,7 @@ def test_frontmatter_job_quotes_and_colons_roundtrip():
     assert "&quot;" not in fm_raw
 
 
-def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
+def test_cli_blocked_report_prints_tokens_and_failures(tmp_path, capsys, monkeypatch):
     """Minor 2: CLI prints blocking tokens and failures, not 'Check None: None'."""
     from scripts.build.fresh import cli
 
@@ -1914,7 +1914,10 @@ def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
     }
     monkeypatch.setattr("scripts.build.fresh.assemble.assemble_lesson", lambda *args, **kwargs: blocked_rep)
 
-    rc = cli.main(["assemble", "a1", "sample-slug", "--lesson", "1"])
+    path = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/sample-slug.yaml"
+    path.parent.mkdir(parents=True)
+    path.write_text("plan_schema: 2\nslug: sample-slug\nlessons: []\n")
+    rc = cli.main(["assemble", "a1", "sample-slug", "--lesson", "1", "--repo-root", str(tmp_path)])
     assert rc == 1
 
     captured = capsys.readouterr()

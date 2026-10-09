@@ -42,7 +42,7 @@ from scripts.build.fresh.writer import ALLOWED_WRITERS, WRITER_EFFORTS, dispatch
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.learner_state.planned import PlannedState, planned_state
-from scripts.curriculum.validate.loader import load_plan
+from scripts.curriculum.validate.loader import PlanError, load_plan
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -515,6 +515,8 @@ def _load_lesson_data(
         evidence_dir=evidence_dir,
         repo_root=root,
     )
+    paths["plan"] = checked_existing_path(root, paths["plan"], "curriculum/l2-uk-en/lesson-plans")
+    plan_dict = load_plan(paths["plan"])
     plan_root = Path("curriculum/l2-uk-en/lesson-plans")
     evidence_root = Path("curriculum/l2-uk-en/evidence")
     for name in ("plan", "pack", "words", "registry", "lock", "state_dir"):
@@ -524,10 +526,7 @@ def _load_lesson_data(
         checked_existing_path(root, Path(f"{paths[name]}.lock"), evidence_root)
     checked_existing_path(root, Path(f"{paths['lock']}.lock"), evidence_root)
 
-    # 1. Load plan via scripts.curriculum.validate.loader (Finding 1)
-    if not paths["plan"].is_file():
-        raise FileNotFoundError(f"Plan file not found: {paths['plan']}")
-    plan_dict = load_plan(paths["plan"])
+    # Plan was loaded before checking any evidence input.
 
     lesson_entry = next((l for l in plan_dict.get("lessons", []) if l.get("n") == lesson_n), None)
     if lesson_entry is None:
@@ -770,7 +769,11 @@ def main(argv: list[str] | None = None) -> int:
                     option,
                     checked_existing_path(repo_root, value if value.is_absolute() else repo_root / value, "."),
                 )
-    except ValueError as err:
+        if args.command == "assemble":
+            checked_path(repo_root, state / f"lesson-{args.lesson}.draft.yaml", evidence_root)
+        if args.command in {"render-prompt", "preflight", "write", "assemble", "build", "plan-manifest", "plan-promote"}:
+            load_plan(checked_existing_path(repo_root, repo_root / plan, plan_root))
+    except (ValueError, PlanError) as err:
         print(f"{err}", file=sys.stderr)
         return 1
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None

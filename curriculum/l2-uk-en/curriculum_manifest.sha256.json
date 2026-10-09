@@ -5702,15 +5702,19 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml",
-      "sha256": "762d1959e2d3ed8bbcd9bcf9ee1ead88b5c9c238db795dece1e6948f5e85298c"
+      "sha256": "30b9170298029a15142c77e4dc4c04a914741cb87e10d7c7cfd774510b965bae"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_decisions.yaml",
-      "sha256": "2212e94d984c2028823217140effc035d1fee5e31bb884b6eed64b4e936ee39c"
+      "sha256": "97bac3da910aa52b5ad331307a06098481d763f073684c26a6932ffd981f5d2c"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml",
       "sha256": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f"
+    },
+    {
+      "path": "curriculum/l2-uk-en/lesson-plans/a1/_retired.yaml",
+      "sha256": "6227308121fdb1fdaf33bc47bf16dca296f335cf0616a47587367ab28f4d6dca"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml",
@@ -5742,7 +5746,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/a2/_decisions.yaml",
-      "sha256": "61eed764505a407a858ce34b9eb559db7d73d99492a4b5d2d98ee9840f0c6640"
+      "sha256": "6da168980db5c9afe21e3dce8cbe8df9b9ee9d0d5e951be75c3c828806783a97"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b1/_arc.yaml",
@@ -5750,7 +5754,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b1/_decisions.yaml",
-      "sha256": "f545d7cccb88495153052f719543f1530e11321a1e27d1e80e78c29a7251ad31"
+      "sha256": "8370dba60f9dc337ab1bc9689cb49ab2f578a766d9325c5ef54ac70c2e328d8d"
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b2/_arc.yaml",
@@ -5758,7 +5762,7 @@
     },
     {
       "path": "curriculum/l2-uk-en/lesson-plans/b2/_decisions.yaml",
-      "sha256": "f645cfcfdd714efb6e2262504186931b7197ee68e7433fa5975c223be01204d6"
+      "sha256": "34a9c98020c27325d0aa4781f0e50172f73383cb5219bf525c8c713487cb0765"
     },
     {
       "path": "curriculum/l2-uk-en/module-mapping.json",
@@ -13922,7 +13926,7 @@
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-first-contact/index.mdx",
-      "sha256": "21d87d8aae15c501f248bb65679c44c447ab86666c456bc039b5bc4aec3ef0a7"
+      "sha256": "fd119e52e9e2a10ca13e23620e2146869e774957b76812017dae680990b143ee"
     },
     {
       "path": "site/src/content/docs/a1/checkpoint-food-shopping/index.mdx",
@@ -13942,7 +13946,7 @@
     },
     {
       "path": "site/src/content/docs/a1/colors/index.mdx",
-      "sha256": "c289c8ed895bf2738457d6e9a3f0b7845381fe2b3585c66c661c3e653b45eaeb"
+      "sha256": "3503a2d461e7bdfde7e7e744147cb5b72d89dacc24471eff392cae186fc80c5e"
     },
     {
       "path": "site/src/content/docs/a1/days-and-months/index.mdx",
@@ -14010,7 +14014,7 @@
     },
     {
       "path": "site/src/content/docs/a1/my-family/index.mdx",
-      "sha256": "cfccb6e48a9ba45a7b07687208829d32d0d8165a1e078381e83ea9d304542841"
+      "sha256": "46cdb2d7f1818daf68f3d9f00e950d11b3b85181ba888904d30d8b11f334dca3"
     },
     {
       "path": "site/src/content/docs/a1/my-morning/index.mdx",
@@ -14038,7 +14042,7 @@
     },
     {
       "path": "site/src/content/docs/a1/reading-ukrainian/index.mdx",
-      "sha256": "2b0a8c1b55a54e1ce9e4835af800fab5d49bfb2c775ab8b087a63e17eb407782"
+      "sha256": "0e94b6c55fa44ab4648527e1c69526938df07c80542f72dedb54e2ff358fd4c1"
     },
     {
       "path": "site/src/content/docs/a1/shopping/index.mdx",
@@ -14046,19 +14050,19 @@
     },
     {
       "path": "site/src/content/docs/a1/sounds-letters-and-hello/index.mdx",
-      "sha256": "c4cdd8b9652a7ae6345b3049351fca146bd68e9dc2c32988c1a4d673acf3bb3e"
+      "sha256": "56a2692f6b8c428b4660e87116b4c3144a3afbd09313d8c4a2b832ca71b44e9d"
     },
     {
       "path": "site/src/content/docs/a1/special-signs/index.mdx",
-      "sha256": "a69b156f3107107089b86712ba61c56b394f8b8d910e7d3aed389d75f1b576f0"
+      "sha256": "a8df69fb2d3c1126a64afca09044c9cc27de5bd1c68e51de09c7435a2b4c99f8"
     },
     {
       "path": "site/src/content/docs/a1/stress-and-melody/index.mdx",
-      "sha256": "0b509975cf2f7debe9f817a5ec39844fd26d76c026fd1df7d801e320d291eb21"
+      "sha256": "7d79c6e00fba852de5221d402e202a717c59ab02bcb45e7bce3edcff7084bd4f"
     },
     {
       "path": "site/src/content/docs/a1/things-have-gender/index.mdx",
-      "sha256": "3f515fc08b4e49c59717d49c2da7a15e9a2052a6fcca431106c0b899c28ff450"
+      "sha256": "75470c8e731420e1aabf7ff983a5f6778e3228d28610e7b253c33c5843887b9e"
     },
     {
       "path": "site/src/content/docs/a1/this-and-that/index.mdx",
@@ -14090,7 +14094,7 @@
     },
     {
       "path": "site/src/content/docs/a1/what-is-it-like/index.mdx",
-      "sha256": "76e1bc1a7756117c33eb0a35bc4e269f0cdef8a2b2df1674b1d98f81032d393a"
+      "sha256": "1dda31690cd393648ae1420ddbbdf04d64ecaf007208879f102f71e4b30adf70"
     },
     {
       "path": "site/src/content/docs/a1/what-time/index.mdx",
@@ -14118,7 +14122,7 @@
     },
     {
       "path": "site/src/content/docs/a1/who-am-i/index.mdx",
-      "sha256": "6de26ed5d67a56521f569134fec8d7d56e3b77de41e6b510568531bfe4d004c1"
+      "sha256": "9fa7a51f5bf7692d70a76b15b9125b335dda36b5bd4d119bc98442101af9c82d"
     },
     {
       "path": "site/src/content/docs/a1/yesterday/index.mdx",
