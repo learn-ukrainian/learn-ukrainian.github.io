@@ -282,7 +282,10 @@ def test_record_durations_validates_before_emitting_json(tmp_path, capsys, case)
 def test_workflow_uses_committed_weights_for_missing_or_invalid_snapshot(tmp_path, snapshot_data) -> None:
     workflow = Path(__file__).resolve().parents[2] / ".github/workflows/ci.yml"
     steps = yaml.safe_load(workflow.read_text())["jobs"]["pytest"]["steps"]
-    script = next(step["run"] for step in steps if step.get("name") == "Run pytest")
+    step_match = next((step["run"] for step in steps if step.get("name") == "Partition pytest files"), None)
+    if step_match is None:
+        step_match = next(step["run"] for step in steps if step.get("name") == "Run pytest")
+    script = step_match
     selection = script[script.index("durations=scripts/") : script.index("git ls-files")]
     snapshot = tmp_path / "snapshot.json"
     if snapshot_data is not None:
@@ -342,6 +345,7 @@ def test_archive_client_bound_maps_to_existing_size_failure(monkeypatch):
         failure = subprocess.CalledProcessError(1, args[0])
         failure.github_result = Result(status=413, error="github_http_error")
         raise failure
+
     monkeypatch.setattr(split.github_client, "run", oversized)
     with pytest.raises(ValueError, match="size limit"):
         split.github_api("repos/owner/repo/actions/artifacts/2/zip")
