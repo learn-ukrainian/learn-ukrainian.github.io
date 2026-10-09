@@ -224,12 +224,18 @@ release-row-sha256: <canonical release-row digest>
 superseded-hold-row-sha256: <canonical hold-row digest>
 ```
 
-The resolver requires a clean completed receipt, distinct author/reviewer
-families, native model/family/harness provenance and the recorder's exact-head
-APPROVED cross-family verdict. Arbitrary clearance JSON or a bare approval
-string is insufficient. This deterministic validation checks structure and
-bindings; it does not prove that a review occurred. Root verifies the genuine
-completed review and landing gates using the existing review process.
+The resolver requires a completed clean successful native receipt (`clean`,
+exit 0), or a completed correct actionable native receipt (`actionable`, exit 1)
+whose finding IDs match the reviewer payload and whose findings are all verified
+and explicitly qualified with allowed nonblocking dispositions and nonempty
+rationales. An actionable exit 1 alone is insufficient. Both cases require an
+explicit null error, distinct author/reviewer families, native model/family/harness
+provenance, the existing release-row and superseded hold-row digest bindings, and
+the recorder's exact-head APPROVED cross-family verdict. Arbitrary clearance JSON
+or a bare approval string is insufficient. This deterministic validation checks
+structure and bindings; it does not prove genuine review or landing. Root verifies
+the genuine completed review, same-head CI and merge-queue/merge gates using the
+existing review process.
 
 After valid release authorization, `--action restore` (also dry-run by default)
 accepts the exact withdrawn state and restores the preserved bytes, complete
