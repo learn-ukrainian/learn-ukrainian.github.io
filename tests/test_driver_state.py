@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts import driver_state
+from scripts import delegate, driver_state
 from scripts.common import task_store_paths
 
 REPO = Path(__file__).resolve().parents[1]
@@ -29,6 +29,8 @@ def state(tmp_path, monkeypatch):
     )
     monkeypatch.setenv(driver_state.STATE_ENV, str(path))
     monkeypatch.setenv("SESSION_EPIC", "infra")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "gemini-infra")
+    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV, raising=False)
     return path
 
 
@@ -57,14 +59,17 @@ def test_hook_is_noop_when_state_missing(state):
 
 
 def test_hook_tolerates_bad_payload(state):
-    assert "injectSteps" in driver_state.cmd_agy_hook("not json")
+    assert driver_state.cmd_agy_hook("not json") == {}
 
 
-def test_injection_is_capped(state):
-    state.write_text("x\n" * (driver_state.MAX_INJECT_CHARS), encoding="utf-8")
-    message = driver_state.cmd_agy_hook("{}")["injectSteps"][0]["ephemeralMessage"]
-    assert len(message) < driver_state.MAX_INJECT_CHARS + len(driver_state.POLICY) + 600
-    assert "truncated" in message
+def test_injection_is_rejected_when_envelope_is_oversized(state, tmp_path):
+    text = "x\n" * driver_state.MAX_ENVELOPE_CHARS + "\nNewest goal: preserve me"
+    state.write_text(text, encoding="utf-8")
+    out = driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(tmp_path)]}))
+    assert out["continue"] is False
+    assert "envelope exceeds" in out["stopReason"]
+    assert "injectSteps" not in out
+    assert driver_state._read_state(state) == text
 
 
 def test_whoami_prints_goals_and_next(state, capsys):
@@ -125,7 +130,8 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
             f"    print({output!r})\n"
             f"    sys.exit({exit_code})\n"
             + (
-                "sys.exit(1)\n" if failure == "validator-error"
+                "sys.exit(1)\n"
+                if failure == "validator-error"
                 else "os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n"
             ),
             encoding="utf-8",
@@ -150,7 +156,7 @@ def test_hook_shell_falls_back_and_drains_stdin(state, tmp_path, monkeypatch, mo
         )
         assert hook_input.tell() == len(payload)
     assert proc.returncode == 0
-    assert json.loads(proc.stdout) == ({"decision": "ask"} if mode == "agy-pretool-hook" else {})
+    assert json.loads(proc.stdout) == ({"decision": "allow"} if mode == "agy-pretool-hook" else {})
     assert proc.stderr == ""
 
 
@@ -215,8 +221,25 @@ def _workers(root, seat, n, status="running"):
     tasks = root / "batch_state" / "tasks"
     tasks.mkdir(parents=True, exist_ok=True)
     for i in range(n):
-        (tasks / f"t{i}.json").write_text(json.dumps({"initiator": seat, "status": status}), encoding="utf-8")
+        (tasks / f"t{i}.json").write_text(
+            json.dumps({"task_id": f"t{i}", "run_nonce": f"nonce-{i}", "initiator": seat, "status": status}),
+            encoding="utf-8",
+        )
     (tasks / "other.json").write_text(json.dumps({"initiator": "codex-devops", "status": "running"}), encoding="utf-8")
+
+
+@pytest.fixture(autouse=True)
+def live_monitor(monkeypatch):
+    """Replace only the live Monitor transport; never contact another lane."""
+
+    def fetch(task_id, *, run_nonce=None):
+        record = driver_state.tasks_dir() / f"{task_id}.json"
+        if not record.is_file():
+            return None
+        task = json.loads(record.read_text(encoding="utf-8"))
+        return {"task": task, "alive": True}
+
+    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
 
 
 @pytest.fixture
@@ -287,7 +310,12 @@ def test_stop_caps_consecutive_continues(driver):
     for _ in range(2):
         results = [_stop(driver, transcript) for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES + 1)]
         assert all(r.get("decision") == "continue" for r in results[:-1])
-        assert results[-1] == {}
+        assert results[-1] == {
+            "continue": False,
+            "stopReason": "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
+        }
+        failure = driver_state._counter_path(driver_state.state_path(), "c1").with_suffix(".failure.json")
+        assert json.loads(failure.read_text())["code"] == "corrective_retry_budget_exhausted"
 
 
 def test_counter_private_round_trip_and_epic_isolation(state, tmp_path):
@@ -325,13 +353,16 @@ def test_stop_refuses_unsafe_counter_directory(driver, state, monkeypatch, unsaf
     assert list(directory.iterdir()) == []
 
 
-@pytest.mark.parametrize("operation,ending", [
-    (operation, ending)
-    for operation in ("mkdir", "lstat", "read_text", "write_text", "unlink")
-    for ending in ("question", "clean", "escalation", "cap")
-    if not (operation == "read_text" and ending in ("clean", "escalation"))
-    and not (operation == "unlink" and ending == "question")
-])
+@pytest.mark.parametrize(
+    "operation,ending",
+    [
+        (operation, ending)
+        for operation in ("mkdir", "lstat", "read_text", "write_text", "unlink")
+        for ending in ("question", "clean", "escalation", "cap")
+        if not (operation == "read_text" and ending in ("clean", "escalation"))
+        and not (operation == "unlink" and ending == "question")
+    ],
+)
 def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, capsys, operation, ending):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     content = {
@@ -351,16 +382,27 @@ def test_stop_cli_counter_io_errors_fail_closed(driver, state, monkeypatch, caps
         return original(path, *args, **kwargs)
 
     monkeypatch.setattr(Path, operation, denied)
-    monkeypatch.setattr(driver_state.sys, "stdin", io.StringIO(json.dumps({
-        "conversationId": "synthetic-conversation",
-        "workspacePaths": [str(driver)],
-        "transcriptPath": str(transcript),
-        "terminationReason": "NO_TOOL_CALL",
-    })))
+    monkeypatch.setattr(
+        driver_state.sys,
+        "stdin",
+        io.StringIO(
+            json.dumps(
+                {
+                    "conversationId": "synthetic-conversation",
+                    "workspacePaths": [str(driver)],
+                    "transcriptPath": str(transcript),
+                    "terminationReason": "NO_TOOL_CALL",
+                }
+            )
+        ),
+    )
     assert driver_state.main(["agy-stop-hook"]) == 0
     out = json.loads(capsys.readouterr().out)
-    if ending in ("clean", "escalation") or operation == "unlink":
+    if ending in ("clean", "escalation"):
         assert out == {}
+        return
+    if ending == "cap" and operation in ("write_text", "unlink"):
+        assert out["continue"] is False
         if operation == "unlink":
             assert counter.read_text(encoding="utf-8") == "0"
         return
@@ -382,13 +424,13 @@ def test_stop_cap_resets_without_unlink(driver, state, monkeypatch):
 
     monkeypatch.setattr(Path, "unlink", denied)
     transcript = _transcript(driver, "Which should I take?")
-    assert _stop(driver, transcript) == {}
+    assert _stop(driver, transcript)["continue"] is False
     assert counter.read_text(encoding="utf-8") == "0"
     assert _stop(driver, transcript)["decision"] == "continue"
     assert counter.read_text(encoding="utf-8") == "1"
 
 
-def test_stop_cap_reset_write_failure_continues_until_reset_succeeds(driver, state, monkeypatch):
+def test_stop_cap_reset_write_failure_remains_visible_until_reset_succeeds(driver, state, monkeypatch):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     counter = driver_state._counter_path(state, "c1")
     counter.write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES), encoding="utf-8")
@@ -403,11 +445,10 @@ def test_stop_cap_reset_write_failure_continues_until_reset_succeeds(driver, sta
     transcript = _transcript(driver, "Which should I take?")
     for _ in range(2):
         out = _stop(driver, transcript)
-        assert out["decision"] == "continue"
-        assert "question" in out["reason"]
-        assert "counter unavailable" in out["reason"]
+        assert out["continue"] is False
+        assert "retry budget exhausted" in out["stopReason"]
     monkeypatch.setattr(Path, "write_text", original)
-    assert _stop(driver, transcript) == {}
+    assert _stop(driver, transcript)["continue"] is False
     assert counter.read_text(encoding="utf-8") == "0"
     assert _stop(driver, transcript)["decision"] == "continue"
 
@@ -460,11 +501,13 @@ def test_pretool_denies_ask_question_only_for_drivers(driver, monkeypatch):
     other = {"toolCall": {"name": "run_command"}, "workspacePaths": [str(driver)]}
     assert driver_state.cmd_agy_pretool_hook(json.dumps(other)) == {"decision": "ask"}
     monkeypatch.delenv(driver_state.STATE_ENV)
-    assert driver_state.cmd_agy_pretool_hook(json.dumps(call)) == {"decision": "ask"}
+    assert driver_state.cmd_agy_pretool_hook(json.dumps(call)) == {"decision": "allow"}
 
 
-def test_injection_appends_policy_when_state_lacks_it(state):
-    message = driver_state.cmd_agy_hook("{}")["injectSteps"][0]["ephemeralMessage"]
+def test_injection_appends_policy_when_state_lacks_it(state, tmp_path):
+    message = driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(tmp_path)]}))["injectSteps"][0][
+        "ephemeralMessage"
+    ]
     assert driver_state.POLICY_TITLE in message
     assert "CTO-ESCALATION:" in message
 
@@ -543,3 +586,296 @@ def test_last_model_text_preserves_unicode_inside_jsonl(tmp_path, separator):
 def test_public_worker_policy_uses_no_numeric_target():
     assert "privately configured worker target" in driver_state.POLICY
     assert not any(char.isdigit() for char in driver_state.POLICY)
+
+
+@pytest.mark.parametrize("length", [5999, 6000, 6001, 6100])
+def test_whole_state_keeps_appended_goals(state, tmp_path, length):
+    text = "x" * length + "\nNewest goal: preserve me"
+    state.write_text(text, encoding="utf-8")
+    out = driver_state.cmd_agy_hook(json.dumps({"workspacePaths": [str(tmp_path)]}))
+    message = out["injectSteps"][0]["ephemeralMessage"]
+    assert text in message
+    assert "truncated" not in message
+
+
+def test_rendered_envelope_exact_boundary(state):
+    wrapper_size = len(driver_state.render_injection(driver_state.POLICY, state))
+    text = driver_state.POLICY.rstrip() + "x" * (driver_state.MAX_ENVELOPE_CHARS - wrapper_size)
+    assert len(driver_state.render_injection(text, state)) == driver_state.MAX_ENVELOPE_CHARS
+    with pytest.raises(ValueError, match="envelope exceeds"):
+        driver_state.render_injection(text + "x", state)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "armed a background delegate.py wait. I will now wait for the reviewer verdict.",
+        "Work verified.\n\n> Should I dispatch?",
+        "Work verified.\n\n> quoted review:\nShould I dispatch?",  # CommonMark lazy quote continuation
+        "Work verified.\n\n```text\nShould I dispatch?\n## Next steps\n- fix it\n```",
+        "Work verified.\n\n~~~~\nI will now run tests.\n~~~\n~~~~",  # short fence cannot close
+        "Work verified.\n\n    Should I dispatch?",  # indented code
+        'Reviewer asked "Should I dispatch?" and the report is complete.',
+        "Reviewer asked ‘Should I dispatch?’ and the report is complete.",
+        "Logged question: `Should I dispatch?`",
+        "Option A was rejected, or deferred. Option B was implemented and verified.",
+        "## Next steps: none",
+        "## Next steps\nNone.",
+        "Next steps: none",
+        "## Pending actions\nDone.",
+    ],
+)
+def test_question_plan_detector_allows_reports_quotes_and_armed_waits(driver, text):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    assert driver_state.ends_on_question_or_plan(text) is None
+    assert _stop(driver, _transcript(driver, text)) == {}
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Work verified.\n\n> Should I dispatch?\n\nI will now run tests.",
+        "Work verified.\n\n```\nShould I dispatch?\n```\n\nShould I open the PR?",
+        "## Next steps\n- Run remaining checks.",
+        "Next steps: run remaining checks",
+        "I will now dispatch a worker.",
+        "I will fix the remaining defect.",
+        "Please choose a path.",
+    ],
+)
+def test_question_plan_detector_preserves_authored_actions(driver, text):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    assert driver_state.ends_on_question_or_plan(text) is not None
+    assert _stop(driver, _transcript(driver, text))["decision"] == "continue"
+
+
+@pytest.mark.parametrize(
+    "prefix,suffix",
+    [
+        ("> ", ""),
+        ("```\n", "\n```"),
+        ("~~~\n", "\n~~~"),
+        ('"', '"'),
+        ("`", "`"),
+        ("Report: ", ""),
+        ("    ", ""),
+    ],
+)
+def test_quoted_or_embedded_escalation_never_exempts_worker_gate(driver, prefix, suffix):
+    _workers(driver, "gemini-infra", 0)
+    text = prefix + "CTO-ESCALATION: approval required" + suffix
+    out = _stop(driver, _transcript(driver, text))
+    assert out["decision"] == "continue"
+    assert "below the privately configured target" in out["reason"]
+
+
+def test_trimmed_leading_escalation_resets_counter(driver, state):
+    driver_state._bump_counter(state, "c1")
+    assert _stop(driver, _transcript(driver, " \nCTO-ESCALATION: approval required?")) == {}
+    assert driver_state._counter_path(state, "c1").read_text() == "0"
+
+
+@pytest.mark.parametrize("workspaces", [None, [], "root", [None], [1], [""], ["\x00"]])
+def test_non_driver_workspace_payloads_are_allowed(state, workspaces):
+    payload = {"toolCall": {"name": "ask_question"}}
+    if workspaces is not None:
+        payload["workspacePaths"] = workspaces
+    raw = json.dumps(payload)
+    assert driver_state.cmd_agy_hook(raw) == {}
+    assert driver_state.cmd_agy_stop_hook(raw) == {}
+    assert driver_state.cmd_agy_pretool_hook(raw) == {"decision": "allow"}
+
+
+@pytest.mark.parametrize("secondary", [False, True])
+def test_consult_workspace_is_not_driver_even_with_inherited_env(state, tmp_path, secondary):
+    workspaces = [str(tmp_path / "consult")]
+    if secondary:
+        workspaces.insert(0, str(tmp_path))
+    raw = json.dumps({"workspacePaths": workspaces, "toolCall": {"name": "ask_question"}})
+    assert driver_state.cmd_agy_hook(raw) == {}
+    assert driver_state.cmd_agy_stop_hook(raw) == {}
+    assert driver_state.cmd_agy_pretool_hook(raw) == {"decision": "allow"}
+
+
+def test_handoff_identity_required_for_all_hooks(state, tmp_path, monkeypatch):
+    monkeypatch.delenv("SESSION_HANDOFF_AGENT")
+    raw = json.dumps({"workspacePaths": [str(tmp_path)], "toolCall": {"name": "ask_question"}})
+    assert driver_state.cmd_agy_hook(raw) == {}
+    assert driver_state.cmd_agy_stop_hook(raw) == {}
+    assert driver_state.cmd_agy_pretool_hook(raw) == {"decision": "allow"}
+
+
+@pytest.mark.parametrize("reason", sorted(driver_state.SKIP_TERMINATION_REASONS))
+def test_error_exit_resets_counter(driver, state, reason):
+    driver_state._bump_counter(state, "exit")
+    raw = json.dumps({"workspacePaths": [str(driver)], "conversationId": "exit", "terminationReason": reason})
+    assert driver_state.cmd_agy_stop_hook(raw) == {}
+    assert driver_state._counter_path(state, "exit").read_text() == "0"
+
+
+def test_clean_stop_resets_counter(driver, state):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    driver_state._bump_counter(state, "c1")
+    assert _stop(driver, _transcript(driver, "Work verified.")) == {}
+    assert driver_state._counter_path(state, "c1").read_text() == "0"
+
+
+@pytest.mark.parametrize(
+    "fault",
+    ["missing", "dead", "stale", "wrong-seat", "wrong-task", "unknown-status", "unavailable", "bad-json", "no-nonce"],
+)
+def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    original = delegate._fetch_monitor_task
+
+    def fetch(task_id, *, run_nonce=None):
+        if fault == "unavailable":
+            raise delegate.MonitorApiUnavailable("synthetic outage")
+        if fault == "missing":
+            return None
+        out = original(task_id, run_nonce=run_nonce)
+        if fault == "dead":
+            out["alive"] = False
+        elif fault == "stale":
+            out["task"]["run_nonce"] = "old-nonce"
+        elif fault == "wrong-seat":
+            out["task"]["initiator"] = "other-seat"
+        elif fault == "wrong-task":
+            out["task"]["task_id"] = "other-task"
+        elif fault == "unknown-status":
+            out["task"].pop("status")
+        return out
+
+    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    record = driver_state.tasks_dir() / "t0.json"
+    if fault == "bad-json":
+        record.write_text("invalid")
+    elif fault == "no-nonce":
+        data = json.loads(record.read_text())
+        data.pop("run_nonce")
+        record.write_text(json.dumps(data))
+    assert driver_state.running_workers("gemini-infra") is None
+    out = _stop(driver, _transcript(driver, "Work verified."))
+    assert out["decision"] == "continue"
+    assert "live worker count is unknown" in out["reason"]
+
+
+def test_live_terminal_workers_do_not_count(driver, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    original = delegate._fetch_monitor_task
+
+    def fetch(task_id, *, run_nonce=None):
+        out = original(task_id, run_nonce=run_nonce)
+        out["task"]["status"] = "done"
+        out["alive"] = False
+        return out
+
+    monkeypatch.setattr(delegate, "_fetch_monitor_task", fetch)
+    assert driver_state.running_workers("gemini-infra") == 0
+
+
+def test_worker_probe_budget_is_bounded(driver, monkeypatch):
+    _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
+    ticks = iter([0, 7])
+    monkeypatch.setattr(driver_state.time, "monotonic", lambda: next(ticks))
+    assert driver_state.running_workers("gemini-infra") is None
+
+
+@pytest.mark.parametrize("mode", ["agy-hook", "agy-stop-hook", "agy-pretool-hook"])
+def test_shell_consult_with_inherited_driver_environment(state, tmp_path, monkeypatch, mode):
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    raw = json.dumps({"workspacePaths": [str(tmp_path / "consult")], "toolCall": {"name": "ask_question"}})
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), mode],
+        input=raw,
+        capture_output=True,
+        text=True,
+        cwd=REPO,
+        timeout=60,
+        check=True,
+    )
+    assert json.loads(proc.stdout) == ({"decision": "allow"} if mode == "agy-pretool-hook" else {})
+
+
+def test_shell_exhaustion_is_visible_and_records_failure(driver, state, monkeypatch):
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
+    driver_state._counter_path(state, "shell").write_text(str(driver_state.MAX_CONSECUTIVE_CONTINUES))
+    transcript = _transcript(driver, "Which should I take?")
+    raw = json.dumps({"workspacePaths": [str(driver)], "conversationId": "shell", "transcriptPath": str(transcript)})
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), "agy-stop-hook"],
+        input=raw,
+        capture_output=True,
+        text=True,
+        cwd=REPO,
+        timeout=60,
+        check=True,
+    )
+    assert json.loads(proc.stdout) == {
+        "continue": False,
+        "stopReason": "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
+    }
+    receipt = driver_state._counter_path(state, "shell").with_suffix(".failure.json")
+    assert json.loads(receipt.read_text())["status"] == "failed"
+
+
+def test_cli_hook_error_resets_counter_and_fails_visibly(driver, state, monkeypatch, capsys):
+    driver_state._bump_counter(state, "error")
+    monkeypatch.setattr(driver_state, "last_model_text", lambda path: (_ for _ in ()).throw(OSError("synthetic fault")))
+    raw = json.dumps({"workspacePaths": [str(driver)], "conversationId": "error"})
+    monkeypatch.setattr(driver_state.sys, "stdin", io.StringIO(raw))
+    assert driver_state.main(["agy-stop-hook"]) == 0
+    assert json.loads(capsys.readouterr().out)["continue"] is False
+    assert driver_state._counter_path(state, "error").read_text() == "0"
+
+
+def test_gate_failure_storage_fault_preserves_typed_error(driver, state, monkeypatch, capsys):
+    original = Path.write_text
+
+    def denied(path, *args, **kwargs):
+        if path.name.endswith(".failure.json"):
+            raise PermissionError("synthetic failure storage fault")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", denied)
+    out = driver_state._gate_failure(state, "c1", "test_failure", "DRIVER-GATE-FAILED: synthetic failure.")
+    assert out["continue"] is False
+    assert json.loads(capsys.readouterr().err)["code"] == "test_failure"
+
+
+def test_shell_oversized_envelope_fails_visibly(state, tmp_path, monkeypatch):
+    monkeypatch.setenv("LU_DRIVER_STATE_PYTHON", sys.executable)
+    state.write_text("x" * driver_state.MAX_ENVELOPE_CHARS + "\nNewest goal: retain me")
+    raw = json.dumps({"workspacePaths": [str(tmp_path)], "conversationId": "oversized"})
+    proc = subprocess.run(
+        ["sh", str(REPO / "scripts/agy_hooks/driver_state_inject.sh"), "agy-hook"],
+        input=raw,
+        capture_output=True,
+        text=True,
+        cwd=REPO,
+        timeout=60,
+        check=True,
+    )
+    out = json.loads(proc.stdout)
+    assert out["continue"] is False
+    assert "envelope exceeds" in out["stopReason"]
+    failure = driver_state._counter_path(state, "oversized").with_suffix(".failure.json")
+    assert json.loads(failure.read_text())["code"] == "state_envelope_oversized"
+
+
+def test_negative_counter_is_not_a_new_retry_budget(state):
+    driver_state._counter_path(state, "c1").write_text("-3")
+    with pytest.raises(ValueError, match="invalid continuation counter"):
+        driver_state._bump_counter(state, "c1")
+
+
+def test_cli_help_documents_usage_and_outputs(capsys):
+    with pytest.raises(SystemExit) as exc:
+        driver_state.main(["--help"])
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "Examples:" in help_text
+    assert "Outputs:" in help_text
+    assert "Exit codes:" in help_text
+    assert "Related:" in help_text

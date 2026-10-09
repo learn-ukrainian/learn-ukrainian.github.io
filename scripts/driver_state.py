@@ -23,7 +23,7 @@ The ``agy-hook`` command implements the AGY ``PreInvocation`` contract: it
 reads the hook payload on stdin and prints ``{"injectSteps": [{"ephemeralMessage":
 ...}]}``. An ephemeral message is transient (not stored in the transcript), so
 it is re-injected before every model call and survives any compaction. The
-hook is fail-open: any problem prints ``{}`` and never blocks the agent.
+hook rejects an oversized rendered envelope visibly, without clipping goals.
 
 ``agy-stop-hook`` implements the AGY ``Stop`` contract. A driver must not end a
 turn on a question or a plan, with fewer of its own workers running than the
@@ -33,11 +33,12 @@ An absent or invalid target is unknown and cannot force a worker-count continuat
 reason as a system message. A turn whose final text starts with
 ``CTO-ESCALATION:`` (deletes, money, security, rule changes) may stop. A
 per-conversation counter caps consecutive continuations when its private storage
-is available; counter errors preserve required continuation while allowing
-clean reports and escalations to stop.
+is available. Exhaustion returns a visible ``continue: false`` gate failure and
+records its typed cause. Counter errors preserve required continuation while
+allowing clean reports and escalations to stop.
 ``agy-pretool-hook`` denies the interactive
 ``ask_question`` tool for driver sessions: nobody answers it in a driver pane.
-Standard library only, so it runs from a linked worktree without a venv.
+Uses the shared project interpreter and its installed CommonMark parser.
 """
 
 from __future__ import annotations
@@ -50,7 +51,11 @@ import re
 import stat
 import subprocess
 import sys
+import time
+from datetime import UTC, datetime
 from pathlib import Path
+
+from markdown_it import MarkdownIt
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
@@ -73,6 +78,9 @@ POLICY = f"""## {POLICY_TITLE}
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
 - End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
 """
+# Preserve the former total envelope budget (state, policy and wrapper), but
+# apply it to the complete rendered message rather than truncating the state.
+MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + 600
 
 TEMPLATE = """# Driver state: {epic}
 
@@ -134,10 +142,7 @@ def _state_root(path: Path) -> Path:
 
 
 def _read_state(path: Path) -> str:
-    text = path.read_text(encoding="utf-8")
-    if len(text) > MAX_INJECT_CHARS:
-        text = text[:MAX_INJECT_CHARS].rsplit("\n", 1)[0] + "\n[... state truncated; run `goals` for the full file]\n"
-    return text
+    return path.read_text(encoding="utf-8")
 
 
 def _section(text: str, title: str) -> list[str]:
@@ -154,12 +159,17 @@ def _section(text: str, title: str) -> list[str]:
 def render_injection(text: str, path: Path) -> str:
     if POLICY_TITLE.lower() not in text.lower():
         text = text.rstrip() + "\n\n" + POLICY
-    return (
+    message = (
         "PINNED DRIVER STATE (re-injected every model call; authoritative over any "
         "compacted summary). You are the driver for the epic below. Re-orient from it "
         "before acting; update the file when a goal lands. Full file: "
         f"{path.name} under .claude/; CLI: `.venv/bin/python -m scripts.driver_state whoami|goals`.\n\n" + text.strip()
     )
+    if len(message) > MAX_ENVELOPE_CHARS:
+        raise ValueError(
+            "DRIVER-GATE-FAILED: complete driver-state envelope exceeds the allowed size; no goals injected."
+        )
+    return message
 
 
 def _payload(stdin_text: str) -> dict:
@@ -173,46 +183,75 @@ def _payload(stdin_text: str) -> dict:
 def _driver_session(payload: dict) -> Path | None:
     """State path when this hook runs inside the launcher's driver session."""
     path = state_path() if os.environ.get(STATE_ENV, "").strip() else None
-    if path is None or not path.is_file():
+    if path is None or not path.is_file() or not os.environ.get("SESSION_HANDOFF_AGENT", "").strip():
         return None
-    workspaces = payload.get("workspacePaths") or []
-    if workspaces:
-        root = _state_root(path)
-        resolved = set()
-        for item in workspaces:
-            try:
-                resolved.add(Path(item).resolve())
-            except (OSError, RuntimeError):
-                continue
-        # A worker in another checkout inherits env but must not get driver goals.
-        if root not in resolved:
+    workspaces = payload.get("workspacePaths")
+    if not isinstance(workspaces, list) or len(workspaces) != 1 or not isinstance(workspaces[0], str):
+        return None
+    try:
+        if not workspaces[0].strip() or Path(workspaces[0]).resolve() != _state_root(path):
             return None
+    except (OSError, RuntimeError, ValueError):
+        return None
     return path
 
 
 def cmd_agy_hook(stdin_text: str) -> dict:
-    path = _driver_session(_payload(stdin_text))
+    payload = _payload(stdin_text)
+    path = _driver_session(payload)
     if path is None:
         return {}
-    return {"injectSteps": [{"ephemeralMessage": render_injection(_read_state(path), path)}]}
+    text = _read_state(path)
+    try:
+        message = render_injection(text, path)
+    except ValueError as exc:
+        return _gate_failure(path, str(payload.get("conversationId") or ""), "state_envelope_oversized", str(exc))
+    return {"injectSteps": [{"ephemeralMessage": message}]}
 
 
 _QUESTION_RE = re.compile(
     r"\b(should i|shall i|do you want|would you like|which (option|path) (do|would|should)|"
     r"please (confirm|choose|decide|advise)|awaiting (your|cto|operator)|let me know|"
-    r"need(s)? (your|cto|operator) (decision|approval|input)|option [ab12]\b.*\bor\b)",
+    r"need(s)? (your|cto|operator) (decision|approval|input))",
     re.IGNORECASE,
 )
 _PLAN_RE = re.compile(
-    r"(^#+\s*(next (steps?|actions?)|plan|pending actions?)\b|^\s*(next|then)[,:]?\s+i('ll| will)\b|"
-    r"\bi will (now|next|then)\b|\bi('ll| will) (dispatch|rebase|start|run|open|fix)\b)",
+    r"\bi('ll| will)\s+(?:(?:now|next|then)\s+)?"
+    r"(dispatch|rebase|start|run|open|fix|merge|enqueue|commit|push|implement|update|check|verify)\b",
     re.IGNORECASE | re.MULTILINE,
 )
+_PLAN_HEADING_RE = re.compile(r"^(?:#+\s*)?(next (steps?|actions?)|plan|pending actions?)\b\s*:?(.*)$", re.I)
+
+
+def _message_prose(text: str) -> str:
+    """Extract authored prose using CommonMark block and inline structure."""
+    lines = []
+    quote_depth = 0
+    heading = False
+    for token in MarkdownIt("commonmark").parse(text):
+        if token.type == "blockquote_open":
+            quote_depth += 1
+        elif token.type == "blockquote_close":
+            quote_depth -= 1
+        elif token.type == "heading_open":
+            heading = True
+        elif token.type == "heading_close":
+            heading = False
+        elif token.type == "inline" and not quote_depth:
+            prose = "".join(
+                child.content if child.type == "text" else "\n" if child.type in {"softbreak", "hardbreak"} else " "
+                for child in token.children or []
+            )
+            # Literal quoted questions in review prose are reported speech too.
+            prose = re.sub(r'"[^"\n]*"|“[^”\n]*”|(?<!\w)\x27[^\x27\n]*\x27|‘[^’\n]*’', " ", prose)
+            if prose.strip():
+                lines.append(("# " if heading else "") + prose.strip())
+    return "\n".join(lines)
 
 
 def ends_on_question_or_plan(text: str) -> str | None:
     """Name why a final message must not end the turn, or None."""
-    body = text.strip()
+    body = _message_prose(text).strip()
     if not body:
         return None
     tail = body[-1500:]
@@ -223,6 +262,14 @@ def ends_on_question_or_plan(text: str) -> str | None:
         return "your final message asks for a decision"
     if _PLAN_RE.search(tail):
         return "your final message lists actions you have not done"
+    lines = tail.splitlines()
+    for i, line in enumerate(lines):
+        match = _PLAN_HEADING_RE.match(line.strip())
+        if match:
+            actions = [match[3].strip(), *lines[i + 1 :]]
+            actions = [action.strip() for action in actions if action.strip()]
+            if actions and not re.fullmatch(r"(?:none|nothing|complete|completed|done)[.!]?", actions[0], re.I):
+                return "your final message lists actions you have not done"
     return None
 
 
@@ -265,18 +312,45 @@ def minimum_workers() -> int | None:
 
 
 def running_workers(initiator: str) -> int | None:
-    """Count live delegate task records started by this driver seat."""
+    """Count own workers only after a nonce-bound live Monitor status probe."""
+    from scripts.delegate import _TERMINAL_STATUSES, MonitorApiUnavailable, _fetch_monitor_task
+
     tasks = tasks_dir()
     if not initiator or not tasks.is_dir():
         return None
     count = 0
+    deadline = time.monotonic() + 6
     for record in tasks.glob("*.json"):
         try:
             data = json.loads(record.read_text(encoding="utf-8"))
         except (OSError, ValueError):
-            continue
-        if isinstance(data, dict) and data.get("initiator") == initiator and data.get("status") in LIVE_WORKER_STATUSES:
-            count += 1
+            return None
+        if not isinstance(data, dict):
+            return None
+        if data.get("initiator") == initiator and data.get("status") in LIVE_WORKER_STATUSES:
+            task_id, nonce = data.get("task_id"), data.get("run_nonce")
+            if not isinstance(task_id, str) or not task_id or not isinstance(nonce, str) or not nonce:
+                return None
+            if time.monotonic() >= deadline:
+                return None
+            try:
+                live = _fetch_monitor_task(task_id, run_nonce=nonce)
+            except MonitorApiUnavailable:
+                return None
+            task = live.get("task") if isinstance(live, dict) else None
+            if (
+                not isinstance(task, dict)
+                or task.get("task_id") != task_id
+                or task.get("run_nonce") != nonce
+                or task.get("initiator") != initiator
+            ):
+                return None
+            if task.get("status") not in LIVE_WORKER_STATUSES | _TERMINAL_STATUSES:
+                return None
+            if task.get("status") in LIVE_WORKER_STATUSES:
+                if live.get("alive") is not True:
+                    return None
+                count += 1
     return count
 
 
@@ -296,12 +370,37 @@ def _bump_counter(state: Path, conversation_id: str) -> int:
         value = int(path.read_text(encoding="utf-8").strip() or "0") + 1
     except FileNotFoundError:
         value = 1
-    path.write_text(str(value), encoding="utf-8")
+    if value <= 0:
+        raise ValueError("invalid continuation counter")
+    # Once exhausted, report the failure even if counter writes are broken.
+    if value <= MAX_CONSECUTIVE_CONTINUES:
+        path.write_text(str(value), encoding="utf-8")
     return value
 
 
 def _reset_counter(state: Path, conversation_id: str) -> None:
     _counter_path(state, conversation_id).write_text("0", encoding="utf-8")
+
+
+def _gate_failure(state: Path, conversation: str, code: str, reason: str) -> dict:
+    """Persist a private typed failure; always return the visible stop result."""
+    failure = {
+        "schema": "driver-gate-failure.v1",
+        "status": "failed",
+        "code": code,
+        "recorded_at": datetime.now(UTC).isoformat(),
+        "stopReason": reason,
+    }
+    try:
+        _counter_path(state, conversation).with_suffix(".failure.json").write_text(
+            json.dumps(failure), encoding="utf-8"
+        )
+    except OSError:
+        # A storage fault must never turn a policy failure into a silent allow.
+        print(json.dumps(failure), file=sys.stderr)
+    with contextlib.suppress(OSError):
+        _reset_counter(state, conversation)
+    return {"continue": False, "stopReason": reason}
 
 
 def cmd_agy_stop_hook(stdin_text: str) -> dict:
@@ -312,9 +411,11 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     conversation = str(payload.get("conversationId") or "")
     reason = str(payload.get("terminationReason") or "").upper().removeprefix("EXECUTOR_TERMINATION_REASON_")
     if reason in SKIP_TERMINATION_REASONS:
+        with contextlib.suppress(OSError):
+            _reset_counter(path, conversation)
         return {}  # errors, limits and user cancels are not policy decisions
     text = last_model_text(payload.get("transcriptPath"))
-    if text.lstrip().startswith(ESCALATION_MARKER):
+    if text.strip().startswith(ESCALATION_MARKER) and _message_prose(text).startswith(ESCALATION_MARKER):
         with contextlib.suppress(OSError):
             _reset_counter(path, conversation)
         return {}
@@ -322,7 +423,9 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
     seat = os.environ.get("SESSION_HANDOFF_AGENT", "").strip()
     minimum = minimum_workers()
     workers = running_workers(seat) if minimum is not None else None
-    if workers is not None and workers < minimum:
+    if minimum is not None and workers is None:
+        reasons.append("live worker count is unknown; restore worker telemetry before stopping")
+    elif workers is not None and workers < minimum:
         reasons.append("your running workers are below the privately configured target; dispatch ready work")
     why = ends_on_question_or_plan(text)
     if why:
@@ -337,8 +440,12 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
         return {}
     try:
         if _bump_counter(path, conversation) > MAX_CONSECUTIVE_CONTINUES:
-            _reset_counter(path, conversation)
-            return {}
+            return _gate_failure(
+                path,
+                conversation,
+                "corrective_retry_budget_exhausted",
+                "DRIVER-GATE-FAILED: corrective retry budget exhausted.",
+            )
     except (OSError, ValueError):
         reasons.append("continuation counter unavailable")
     return {
@@ -355,8 +462,10 @@ def cmd_agy_stop_hook(stdin_text: str) -> dict:
 def cmd_agy_pretool_hook(stdin_text: str) -> dict:
     payload = _payload(stdin_text)
     tool = (payload.get("toolCall") or {}).get("name")
-    if tool != "ask_question" or _driver_session(payload) is None:
+    if tool != "ask_question":
         return {"decision": "ask"}
+    if _driver_session(payload) is None:
+        return {"decision": "allow"}
     return {
         "decision": "deny",
         "reason": (
@@ -395,15 +504,24 @@ def cmd_whoami(path: Path | None) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="driver_state",
-        description="Pinned per-epic driver state (survives context compaction).",
+        description="Pinned per-epic driver state survives context compaction.\nUse in launcher-owned drivers; ordinary sessions receive no driver policy.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.driver_state whoami
+  .venv/bin/python -m scripts.driver_state init --epic infra
+  .venv/bin/python -m scripts.driver_state agy-stop-hook < hook-payload.json
+Outputs: init writes private driver state; hooks emit JSON and private failure/counter records.
+Exit codes: 0 success (hooks report failures in JSON); 1 missing state or refused overwrite.
+Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
+""",
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("whoami", help="Print epic, seat, goals and next step.")
     sub.add_parser("goals", help="Print the full pinned state file.")
     p_path = sub.add_parser("path", help="Print the state file path.")
-    p_path.add_argument("--epic")
+    p_path.add_argument("--epic", help="Epic selector, for example infra (default: launcher environment).")
     p_init = sub.add_parser("init", help="Write a template state file for an epic.")
-    p_init.add_argument("--epic", required=True)
+    p_init.add_argument("--epic", required=True, help="Epic selector to initialize, for example infra.")
     p_init.add_argument("--force", action="store_true", help="Overwrite an existing file.")
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
@@ -412,10 +530,21 @@ def main(argv: list[str] | None = None) -> int:
 
     hooks = {"agy-hook": cmd_agy_hook, "agy-stop-hook": cmd_agy_stop_hook, "agy-pretool-hook": cmd_agy_pretool_hook}
     if args.cmd in hooks:
+        stdin_text = sys.stdin.read()
         try:
-            result = hooks[args.cmd](sys.stdin.read())
-        except Exception:  # hook must never block the agent loop
-            result = {"decision": "ask"} if args.cmd == "agy-pretool-hook" else {}
+            result = hooks[args.cmd](stdin_text)
+        except Exception:  # keep the hook protocol valid and expose driver errors
+            payload = _payload(stdin_text)
+            path = _driver_session(payload)
+            if path is not None:
+                result = _gate_failure(
+                    path,
+                    str(payload.get("conversationId") or ""),
+                    "hook_error",
+                    "DRIVER-GATE-FAILED: driver-state hook error.",
+                )
+            else:
+                result = {"decision": "allow"} if args.cmd == "agy-pretool-hook" else {}
         sys.stdout.write(json.dumps(result))
         return 0
     if args.cmd == "whoami":

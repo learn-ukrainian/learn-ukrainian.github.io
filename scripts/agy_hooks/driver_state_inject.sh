@@ -10,13 +10,13 @@ case "$mode" in
   *) mode=agy-hook ;;
 esac
 fallback='{}'
-[ "$mode" = agy-pretool-hook ] && fallback='{"decision": "ask"}'
+[ "$mode" = agy-pretool-hook ] && fallback='{"decision": "allow"}'
 # Drain the hook input before any child can fail without reading it. Preserve
 # trailing newlines with a sentinel removed after command substitution.
 payload=$(cat; printf '.')
 payload=${payload%.}
 root=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || { echo "$fallback"; exit 0; }
-if [ -z "${LU_DRIVER_STATE_FILE:-}" ]; then
+if [ -z "${LU_DRIVER_STATE_FILE:-}" ] || [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
   echo "$fallback"
   exit 0
 fi
