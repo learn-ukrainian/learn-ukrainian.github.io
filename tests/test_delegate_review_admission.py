@@ -884,7 +884,10 @@ def test_explicit_review_risk_omission_dispatch_returns_nonzero(tmp_path, monkey
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
-    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-author-model", "gpt-6.1-sol")
+    args = _args(
+        "--agent", "agy", "--model", "gemini-3.8-flash-high",
+        "--review-profile", "code", "--review-author-model", "gpt-6.1-sol",
+    )
     assert delegate.cmd_dispatch(args) == 2
     assert "AGY code review requires an explicit --review-risk" in capsys.readouterr().err
     assert not (tmp_path / "tasks").exists()

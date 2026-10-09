@@ -11711,6 +11711,18 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
+    # Diagnose the required profile before route admission defaults to code
+    # review and checks its explicit risk.
+    if (
+        str(getattr(args, "agent", "") or "").strip().casefold() in {"agy", "gemini"}
+        and getattr(args, "require_review_verdict", False)
+        and not getattr(args, "review_profile", None)
+    ):
+        from scripts.ai_agent_bridge._agy import gemini_review_profile_error
+
+        print(f"❌ {gemini_review_profile_error(None)}", file=sys.stderr)
+        return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
