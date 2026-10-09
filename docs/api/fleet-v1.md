@@ -194,6 +194,9 @@ harness object carries `agents` keyed by agent id, with optional
 `pid_alive`, `idle_min`, and `activity`. Unknown numbers in those
 records stay null and are never reported as zero.
 
+Each epic also includes `health` from its fresh driver harness row:
+`context_pct`, `compactions`, `stop_to_ask_count`, and `idle_min`.
+
 The now, epic, and agent routes retain stale roster payloads with a `stale`
 source status. Unknown snapshot freshness is `unavailable` with no usable
 payload. A fresh harness can override roster seat fields.

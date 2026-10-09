@@ -598,6 +598,78 @@
     return agoLabel(age);
   }
 
+  function routeKey(route) {
+    const view = route && route.view ? route.view : "home";
+    if (view === "epic") return "epic:" + (route.epicId || "");
+    return view;
+  }
+
+  function responseCurrent(ticket, generation, route) {
+    return !!ticket && ticket.generation === generation && ticket.key === routeKey(route);
+  }
+
+  function rosterUnavailable(body) {
+    return sourcesOf(body).some((row) => row && row.name === "roster_snapshot" && row.status === "unavailable");
+  }
+
+  function payloadUsable(slot, body) {
+    const data = body && body.data;
+    if (!data || typeof data !== "object") return false;
+    if (slot === "now") {
+      const attention = Array.isArray(data.attention) ? data.attention.length : 0;
+      const epics = Array.isArray(data.epics) ? data.epics.length : 0;
+      return attention + epics > 0;
+    }
+    if (slot === "epics") return Array.isArray(data.epics) && data.epics.length > 0;
+    if (slot === "epic") return typeof data.epic === "string" && data.epic.length > 0;
+    if (slot === "agents") return Array.isArray(data.agents) && data.agents.length > 0;
+    return false;
+  }
+
+  function adoptPayload(slot, previous, incoming) {
+    if (!incoming) return { body: previous || null, fresh: false };
+    if (rosterUnavailable(incoming) && !payloadUsable(slot, incoming) && payloadUsable(slot, previous)) {
+      const sources = sourcesOf(incoming);
+      return {
+        body: {
+          schema: previous.schema,
+          generated_at: previous.generated_at,
+          sources: sources.length ? sources : sourcesOf(previous),
+          data: previous.data,
+        },
+        fresh: false,
+      };
+    }
+    return { body: incoming, fresh: true };
+  }
+
+  function displayedAge(stamps, route, now) {
+    const keys = route && route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+    let oldest = null;
+    keys.forEach((key) => {
+      const at = stamps && stamps[key];
+      if (typeof at !== "number" || at <= 0) return;
+      const age = now - at;
+      if (oldest == null || age > oldest) oldest = age;
+    });
+    return oldest;
+  }
+
+  function commitBoard(state, ticket, incoming, now) {
+    if (!responseCurrent(ticket, state.generation, state.route)) return state;
+    const nextSnapshot = Object.assign({}, state.snapshot);
+    const freshAt = Object.assign({}, state.freshAt);
+    const slots = state.route && state.route.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+    slots.forEach((slot) => {
+      const prior = slot === "epic" && nextSnapshot.epicId !== state.route.epicId ? null : nextSnapshot[slot];
+      const adopted = adoptPayload(slot, prior, incoming ? incoming[slot] : null);
+      nextSnapshot[slot] = adopted.body;
+      if (adopted.fresh) freshAt[slot] = now;
+    });
+    if (state.route && state.route.view === "epic") nextSnapshot.epicId = state.route.epicId;
+    return { generation: state.generation, route: state.route, snapshot: nextSnapshot, freshAt };
+  }
+
   const api = {
     REFRESH_MS,
     STALE_MS,
@@ -615,6 +687,11 @@
     staleState,
     staleMessage,
     homeModel,
+    routeKey,
+    responseCurrent,
+    adoptPayload,
+    displayedAge,
+    commitBoard,
     renderHome,
     renderEpic,
     renderPrs,
@@ -626,16 +703,16 @@
   if (typeof document === "undefined" || !document.getElementById) return;
 
   const snapshot = { now: null, epics: null, epic: null, epicId: "", agents: null };
-  let lastOkAt = 0;
+  const freshAt = { now: 0, epics: 0, epic: 0, agents: 0 };
+  let refreshGen = 0;
+  let appliedKey = "";
   let openAgentId = null;
-  let refreshing = false;
   let searchTimer = 0;
   let failed = false;
   let chord = false;
 
   function ageMs() {
-    if (!lastOkAt) return null;
-    return Date.now() - lastOkAt;
+    return displayedAge(freshAt, parseRoute(location.hash || "#/home"), Date.now());
   }
 
   function viewSources(route) {
@@ -743,8 +820,12 @@
     const options = { ageMs: ageMs() };
     let html;
     if (route.view === "epic") {
-      if (snapshot.epic || snapshot.agents) html = renderEpic(snapshot.epic, snapshot.agents, options);
-      else html = failed ? `<p class="fb-empty">The board could not be read.</p>` : `<p class="fb-empty">Loading the board…</p>`;
+      const data = snapshot.epic && snapshot.epic.data;
+      const id = data && data.epic;
+      const matches = snapshot.epicId === route.epicId && snapshot.epic && (id === route.epicId || data === null);
+      if (matches) html = renderEpic(snapshot.epic, snapshot.agents, options);
+      else if (failed && snapshot.epicId === route.epicId) html = `<p class="fb-empty">The board could not be read.</p>`;
+      else html = `<p class="fb-empty">Loading the board…</p>`;
     } else if (route.view === "prs") {
       html = renderPrs(route.params, sources, options);
     } else if (!snapshot.now && !snapshot.epics) {
@@ -794,10 +875,10 @@
   }
 
   async function refresh() {
-    if (refreshing) return;
-    refreshing = true;
+    const generation = ++refreshGen;
     const route = parseRoute(location.hash || "#/home");
-    let ok = false;
+    const ticket = { generation, key: routeKey(route) };
+    const incoming = {};
     try {
       if (route.view === "epic" && route.epicId) {
         const epicPath = "/api/fleet/v1/epics/" + encodeURIComponent(route.epicId);
@@ -805,41 +886,38 @@
           fetchJson(epicPath),
           fetchJson("/api/fleet/v1/agents"),
         ]);
-        if (epicBody) {
-          snapshot.epic = epicBody;
-          snapshot.epicId = route.epicId;
-          ok = true;
-        } else if (snapshot.epicId !== route.epicId) {
-          snapshot.epic = null;
-          snapshot.epicId = route.epicId;
-        }
-        if (agentsBody) {
-          snapshot.agents = agentsBody;
-          ok = true;
-        }
+        incoming.epic = epicBody;
+        incoming.agents = agentsBody;
       } else {
         const [nowBody, epicsBody] = await Promise.all([
           fetchJson("/api/fleet/v1/now"),
           fetchJson("/api/fleet/v1/epics"),
         ]);
-        if (nowBody) {
-          snapshot.now = nowBody;
-          ok = true;
-        }
-        if (epicsBody) {
-          snapshot.epics = epicsBody;
-          ok = true;
-        }
+        incoming.now = nowBody;
+        incoming.epics = epicsBody;
       }
     } finally {
-      if (ok) {
-        lastOkAt = Date.now();
-        failed = false;
-      } else {
-        failed = true;
+      const current = parseRoute(location.hash || "#/home");
+      if (responseCurrent(ticket, refreshGen, current)) {
+        const committed = commitBoard(
+          { generation: refreshGen, route: current, snapshot, freshAt },
+          ticket,
+          incoming,
+          Date.now(),
+        );
+        Object.keys(snapshot).forEach((key) => {
+          snapshot[key] = committed.snapshot[key];
+        });
+        Object.keys(freshAt).forEach((key) => {
+          freshAt[key] = committed.freshAt[key] || 0;
+        });
+        const slots = current.view === "epic" ? ["epic", "agents"] : ["now", "epics"];
+        const anyBody = slots.some((slot) => incoming[slot]);
+        const anyShown = slots.some((slot) => snapshot[slot]);
+        failed = !anyBody && !anyShown;
+        appliedKey = ticket.key;
+        paint();
       }
-      refreshing = false;
-      paint();
     }
   }
 
@@ -979,8 +1057,7 @@
     window.addEventListener("hashchange", () => {
       const route = parseRoute(location.hash || "#/home");
       paint();
-      if (route.view === "epic" && route.epicId !== snapshot.epicId) refresh();
-      else if (route.view !== "epic" && !snapshot.now && !snapshot.epics) refresh();
+      if (routeKey(route) !== appliedKey) refresh();
     });
 
     paint();

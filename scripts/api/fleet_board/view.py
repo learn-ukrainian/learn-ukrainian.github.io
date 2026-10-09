@@ -62,6 +62,31 @@ def _layer(value: object) -> int | None:
     return value
 
 
+def _count_metric(value: object) -> int | None:
+    number = finite_number(value)
+    if number is None or not number.is_integer():
+        return None
+    return int(number)
+
+
+def _health(harness: Mapping[str, Any]) -> dict[str, Any]:
+    """Harness metrics for the epic card. Missing numbers stay null."""
+
+    def metric(key: str, counter: bool) -> float | int | None:
+        if key not in harness:
+            return None
+        if counter:
+            return _count_metric(harness.get(key))
+        return finite_number(harness.get(key))
+
+    return {
+        "context_pct": metric("context_pct", False),
+        "compactions": metric("compactions", True),
+        "stop_to_ask_count": metric("stop_to_ask_count", True),
+        "idle_min": metric("idle_min", False),
+    }
+
+
 def _task(value: object) -> dict[str, Any]:
     row = mapping(value)
     kind = row.get("kind")
@@ -202,6 +227,7 @@ def _epic(
         parent_text = str(parent)
     else:
         parent_text = text(parent)
+    driver_harness = harness_row(harness_doc, driver["agent_id"]) if driver is not None else {}
     return {
         "epic": epic_id,
         "title": text(roster.get("title")),
@@ -215,6 +241,7 @@ def _epic(
         "driver": driver,
         "task": _task(roster.get("task")),
         "workers": _workers(roster.get("workers"), harness_doc, occupancy, intended=intended),
+        "health": _health(driver_harness),
     }
 
 

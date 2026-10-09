@@ -571,6 +571,71 @@ def test_schema_validates_now_epic_and_agent(monkeypatch: pytest.MonkeyPatch, tm
     Draft202012Validator(schema["fleet.v1.agents"]).validate(client.get("/api/fleet/v1/agents").json())
 
 
+def test_harness_health_projects_known_metrics_and_keeps_missing_null(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "alpha",
+                "title": "Alpha",
+                "intended": "running",
+                "driver": {
+                    "agent_id": "driver-alpha",
+                    "cli": "codex",
+                    "model": "model-a",
+                    "harness": "codex",
+                    "pid_alive": True,
+                    "activity": "working",
+                },
+                "workers": [],
+            },
+            {
+                "epic": "beta",
+                "title": "Beta",
+                "intended": "running",
+                "driver": {
+                    "agent_id": "driver-beta",
+                    "cli": "codex",
+                    "model": "model-a",
+                    "harness": "codex",
+                    "pid_alive": True,
+                },
+                "workers": [],
+            },
+        ],
+    }
+    harness = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "agents": {
+            "driver-alpha": {
+                "pid_alive": True,
+                "activity": "working",
+                "context_pct": 0,
+                "compactions": 0,
+                "stop_to_ask_count": 0,
+                "idle_min": 0,
+            }
+        },
+    }
+    _install(monkeypatch, tmp_path, roster, harness)
+
+    response = client.get("/api/fleet/v1/epics/alpha")
+
+    assert response.status_code == 200
+    assert response.json()["data"]["health"] == {
+        "context_pct": 0,
+        "compactions": 0,
+        "stop_to_ask_count": 0,
+        "idle_min": 0,
+    }
+    beta = client.get("/api/fleet/v1/epics/beta").json()["data"]["health"]
+    assert beta == {"context_pct": None, "compactions": None, "stop_to_ask_count": None, "idle_min": None}
+
+
 def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest.MonkeyPatch) -> None:
     def delegate_loader():
         return {

@@ -1383,8 +1383,9 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         "Read-only fleet board home and epic detail.",
         "GET /api/fleet/v1/now, /epics, /epics/{epic}, and /agents.",
         (
-            "Client refreshes every 30s. A stale source or a refresh older "
-            "than 2 minutes warns without clearing the last values."
+            "Client refreshes every 30s. Each shown payload keeps its own age. "
+            "A stale source, an unavailable roster, or a refresh older than "
+            "2 minutes warns without clearing the last values."
         ),
         ("humans", "operators"),
         "Roster, pull requests, budget, and ops stay placeholders for later slices.",

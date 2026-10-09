@@ -104,6 +104,18 @@ _WORKER: dict[str, Any] = {
     },
 }
 
+_HEALTH: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["context_pct", "compactions", "stop_to_ask_count", "idle_min"],
+    "properties": {
+        "context_pct": {"type": ["number", "null"], "minimum": 0},
+        "compactions": {"type": ["integer", "null"], "minimum": 0},
+        "stop_to_ask_count": {"type": ["integer", "null"], "minimum": 0},
+        "idle_min": {"type": ["number", "null"], "minimum": 0},
+    },
+}
+
 _NOW_EPIC: dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -120,6 +132,7 @@ _NOW_EPIC: dict[str, Any] = {
         "driver",
         "task",
         "workers",
+        "health",
     ],
     "properties": {
         "epic": {"type": "string", "minLength": 1},
@@ -134,6 +147,7 @@ _NOW_EPIC: dict[str, Any] = {
         "driver": _DRIVER,
         "task": _TASK,
         "workers": {"type": "array", "items": _WORKER},
+        "health": _HEALTH,
     },
 }
 

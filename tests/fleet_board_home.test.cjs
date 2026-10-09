@@ -467,6 +467,78 @@ test("untrusted text is escaped and fetches stay on the fleet v1 paths", () => {
   assert.equal(FB.sourceLabel("not_configured"), "not installed");
 });
 
+test("a superseded epic response is discarded and each payload keeps its own age", () => {
+  const birch = FB.parseRoute("#/epic/birch");
+  const cedar = FB.parseRoute("#/epic/cedar");
+  const birchBody = { schema: "fleet.v1.epic", data: { epic: "birch", title: "Birch" }, sources: [] };
+  const started = {
+    generation: 2,
+    route: cedar,
+    snapshot: { now: null, epics: null, epic: null, epicId: "", agents: null },
+    freshAt: { now: 0, epics: 0, epic: 0, agents: 0 },
+  };
+  const discarded = FB.commitBoard(
+    started,
+    { generation: 1, key: FB.routeKey(birch) },
+    { epic: birchBody },
+    5000,
+  );
+  assert.equal(discarded, started);
+  assert.equal(discarded.snapshot.epic, null);
+  assert.equal(FB.responseCurrent({ generation: 2, key: FB.routeKey(cedar) }, 2, cedar), true);
+
+  const nowBody = {
+    schema: "fleet.v1.now",
+    generated_at: "2026-10-09T12:00:00Z",
+    data: {
+      attention: [{ title: "Cedar", kind: "alert", severity: "warn", summary: "check", target: { type: "alert", id: "x" } }],
+      epics: [{ epic: "cedar", title: "Cedar" }],
+    },
+    sources: [{ name: "roster_snapshot", status: "ok", age_s: 1, error: null }],
+  };
+  const home = FB.parseRoute("#/home");
+  let state = {
+    generation: 1,
+    route: home,
+    snapshot: { now: null, epics: null, epic: null, epicId: "", agents: null },
+    freshAt: { now: 0, epics: 0, epic: 0, agents: 0 },
+  };
+  state = FB.commitBoard(state, { generation: 1, key: FB.routeKey(home) }, { now: nowBody, epics: null }, 1000);
+  assert.equal(state.freshAt.now, 1000);
+  assert.equal(state.freshAt.epics, 0);
+  const epicsBody = {
+    schema: "fleet.v1.epics",
+    data: { epics: [{ epic: "cedar", title: "Cedar" }] },
+    sources: [{ name: "roster_snapshot", status: "ok", age_s: 1, error: null }],
+  };
+  state = FB.commitBoard(state, { generation: 1, key: FB.routeKey(home) }, { now: null, epics: epicsBody }, 181000);
+  assert.equal(state.freshAt.now, 1000);
+  assert.equal(state.freshAt.epics, 181000);
+  assert.equal(state.snapshot.now.data.attention[0].title, "Cedar");
+  const age = FB.displayedAge(state.freshAt, home, 181000);
+  assert.equal(age, 180000);
+  assert.equal(FB.staleState([], age).ageStale, true);
+
+  const failedNow = {
+    schema: "fleet.v1.now",
+    generated_at: "2026-10-09T12:03:00Z",
+    data: { attention: [], epics: [] },
+    sources: [{ name: "roster_snapshot", status: "unavailable", age_s: null, error: "unavailable" }],
+  };
+  state = FB.commitBoard(state, { generation: 1, key: FB.routeKey(home) }, { now: failedNow }, 200000);
+  assert.equal(state.snapshot.now.data.attention[0].title, "Cedar");
+  assert.equal(state.snapshot.now.sources[0].status, "unavailable");
+  assert.equal(state.freshAt.now, 1000);
+  const rendered = FB.renderHome(
+    FB.homeModel(state.snapshot.now, state.snapshot.epics),
+    new URLSearchParams(),
+    { ageMs: FB.displayedAge(state.freshAt, home, 200000) },
+  );
+  assert.match(rendered, /Cedar/);
+  assert.match(rendered, /unavailable/);
+  assert.match(rendered, /over 2 minutes/);
+});
+
 test("the PR view stays a placeholder", () => {
   const rendered = FB.renderPrs(new URLSearchParams("pr=17"), sources, { ageMs: 1000 });
   const doc = parseHtml(rendered);
