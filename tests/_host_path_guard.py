@@ -1,10 +1,10 @@
-"""Host-path guard for anti-leak tests.
+"""Host-path and host-fact guards for anti-leak tests.
 
 Tests check for generic home-directory patterns plus the deployment's own
 needles (``scripts/opsec/needles.py``), so no test has to name a real
 account or home directory. Reject samples use the fictional values below.
 
-Results and failures carry line numbers only, never the matched text: with
+Results and failures carry kinds and line numbers only, never matched text: with
 a deployment needles file the match is a private value. Use the
 ``assert_no_*`` helpers instead of ``assert not ...`` so pytest's assertion
 rewriting cannot print the scanned text either.
@@ -14,12 +14,20 @@ from __future__ import annotations
 
 import re
 from functools import lru_cache
+from ipaddress import AddressValueError, IPv4Address
 
+from scripts.api.occupancy_sanitize import _CANONICAL_ALIASES
 from scripts.opsec.needles import Needles, home_dir_pattern, load_needles
 
 # Fictional values for reject samples; only their shape matters.
 FIXTURE_USER = "fixture-user"
 FIXTURE_HOME = "/".join(("", "home", FIXTURE_USER))
+HOST_ALIASES = _CANONICAL_ALIASES
+_ALIASES = "|".join(re.escape(alias) for alias in sorted(HOST_ALIASES))
+_HOST_ALIAS = re.compile(rf"(?:{_ALIASES})")
+_IPV4 = re.compile(r"(?<![\w.])\d{1,3}(?:\.\d{1,3}){3}(?!\w|\.\d)")
+_SSH_HOSTNAME = re.compile(r"^[ \t]*HostName(?:[ \t]+|=)", re.MULTILINE | re.IGNORECASE)
+_ADDON_TREE = re.compile(rf"/opt/(?:{_ALIASES})(?=$|[^\w.-])")
 
 
 @lru_cache(maxsize=1)
@@ -88,3 +96,36 @@ def host_template_lines(text: str, *, needles: Needles | None = None) -> list[in
 
 def assert_no_host_templates(text: str, where: str = "text", *, needles: Needles | None = None) -> None:
     _fail(where, "home-directory path template", host_template_lines(text, needles=needles))
+
+
+def host_fact_lines(text: str) -> dict[str, list[int]]:
+    """Host facts by kind and 1-based line number, without matched values.
+
+    Aliases come from the occupancy sanitizer. IPv4 literals are validated
+    before rejecting addresses outside the loopback range. Add-on trees are
+    known aliases installed under ``/opt``; SSH directives are line-anchored.
+    Empty kinds are omitted and multiple matches on one line are deduplicated.
+    """
+    ipv4_lines = set()
+    for match in _IPV4.finditer(text):
+        try:
+            address = IPv4Address(match.group(0))
+        except AddressValueError:
+            continue
+        if not address.is_loopback:
+            ipv4_lines.add(text.count("\n", 0, match.start()) + 1)
+    findings = {
+        "host alias": _lines(_HOST_ALIAS, text),
+        "non-loopback IPv4": sorted(ipv4_lines),
+        "SSH HostName": _lines(_SSH_HOSTNAME, text),
+        "add-on install tree": _lines(_ADDON_TREE, text),
+    }
+    return {kind: lines for kind, lines in findings.items() if lines}
+
+
+def assert_no_host_facts(text: str, where: str = "text") -> None:
+    """Reject host facts with diagnostics containing only kinds and line numbers."""
+    findings = host_fact_lines(text)
+    if findings:
+        details = "; ".join(f"{kind} at line(s) {', '.join(map(str, lines))}" for kind, lines in findings.items())
+        raise AssertionError(f"{where}: {details}")
