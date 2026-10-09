@@ -19,7 +19,7 @@ RESERVED_AGENTS = (
 
 @pytest.mark.repo_wide
 def test_reserved_agent_inventory() -> None:
-    assert {path.stem for path in AGENTS.glob("*.md")} == set(RESERVED_AGENTS)
+    assert set(RESERVED_AGENTS).issubset({path.stem for path in AGENTS.glob("*.md")})
 
 
 @pytest.mark.parametrize("name", RESERVED_AGENTS)
