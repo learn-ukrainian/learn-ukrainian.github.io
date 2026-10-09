@@ -1551,14 +1551,12 @@ def test_active_probe_failure_never_reaps_live_task(tmp_path, monkeypatch, failu
 
 @pytest.mark.parametrize(
     "unsafe",
-    ["missing", "malformed", "identity", "binding", "no_binding", "pid", "nonterminal", "permission", "pid_error"],
+    ["malformed", "identity", "binding", "no_binding", "pid", "nonterminal", "permission", "pid_error"],
 )
 def test_active_probe_fallback_retains_uncertain_record(tmp_path, monkeypatch, unsafe):
     repo = init_repo(tmp_path)
     worktree, task_file, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
-    if unsafe == "missing":
-        task_file.unlink()
-    elif unsafe == "malformed":
+    if unsafe == "malformed":
         task_file.write_text("{broken")
     else:
         if unsafe == "identity":
@@ -1610,14 +1608,45 @@ def test_active_probe_reads_working_monitor(monkeypatch):
     assert _REAL_ACTIVE_TASK_IDS() == {"live"}
 
 
-def test_active_probe_failure_is_safe_for_delegation_caller(tmp_path, monkeypatch):
+def test_active_probe_failure_releases_settled_delegation_holder(tmp_path, monkeypatch):
     from scripts import delegate
 
     repo = init_repo(tmp_path)
     worktree, _, record = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
     monkeypatch.setattr(delegate, "_bound_task_state_unparseable_reason", lambda _path: None)
+    diagnostics = []
+    monkeypatch.setattr(delegate, "_record_diagnostic", lambda *args, **kwargs: diagnostics.append(args))
     reason = delegate._branch_holder_activity_reason(worktree, task_id=record["task_id"], task_state=record)
-    assert reason == "activity probes unavailable (_ActiveTaskProbeFailure)"
+    assert reason is None
+    assert "active_task_probe_timeout" in diagnostics[0][1].diagnostic
+
+
+@pytest.mark.parametrize("layout", ["dispatch", "legacy"])
+def test_active_probe_missing_record_leaves_activity_unknown(tmp_path, monkeypatch, layout):
+    repo = init_repo(tmp_path)
+    worktree, task_file, _ = _probe_fixture(repo, monkeypatch, TimeoutError("deadline"))
+    task_file.unlink()
+    if layout == "legacy":
+        worktree = add_worktree(repo, "codex/legacy", path=repo / ".worktrees" / "legacy")
+    info = next(info for info in rw.list_git_worktrees(repo) if info.path == worktree)
+
+    active_ids, error = rw._resolve_activity_probe(repo, info, rw._read_active_task_probe())
+
+    assert active_ids is None
+    assert error is None
+    rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    assert rows[-1]["event"] == "activity-probe-unattributed"
+    assert rows[-1]["source"] == "no_local_task_record"
+    assert "active_task_probe_timeout" in rows[-1]["reason"]
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo, apply=True, live_cwds=set(), include_terminal_dispatches=True, target_paths=[worktree],
+        ),
+        worktree,
+    )
+    assert result.action == "skipped"
+    assert "local_task_probe_error" not in result.reason
+    assert worktree.exists()
 
 
 @pytest.mark.parametrize("change", ["live_pid", "binding", "lease"])
@@ -4565,6 +4594,41 @@ def test_acp_runtime_dead_owner_reported_under_dry_run(
     assert result.action == "would_remove"
     assert result.reason.startswith("acp runtime ")
     assert worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+@pytest.mark.parametrize("failure", [TimeoutError("deadline"), URLError("offline")])
+@pytest.mark.parametrize("apply", [False, True])
+@pytest.mark.parametrize("guard", ["dead", "live", "unexpected_files"])
+def test_acp_runtime_monitor_outage_uses_owner_and_file_guards(tmp_path, monkeypatch, failure, apply, guard):
+    import urllib.request
+
+    repo = init_repo(tmp_path)
+    pid = os.getpid() if guard == "live" else _dead_pid()
+    start = process_start_time(pid) if guard == "live" else 1
+    worktree = add_acp_runtime(repo, "runtime-outage", build_lock_reason("ask-outage", pid=pid, start_time=start))
+    if guard == "unexpected_files":
+        (worktree / "preserve.txt").write_text("must remain\n")
+
+    def fail(*_args, **_kwargs):
+        raise failure
+
+    monkeypatch.setattr(urllib.request, "urlopen", fail)
+    monkeypatch.setattr(rw, "_active_task_ids", _REAL_ACTIVE_TASK_IDS)
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=apply, live_cwds=set(), safe_only=True), worktree)
+
+    expected = ("removed" if apply else "would_remove") if guard == "dead" else "skipped"
+    assert result.action == expected, result.reason
+    assert worktree.exists() is (not apply or guard != "dead")
+    if guard == "dead":
+        assert "provably dead" in result.reason
+    rows = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    assert any(
+        row["event"] == "activity-probe-unattributed" and type(failure).__name__ in row["reason"]
+        for row in rows
+    )
     assert_main_checkout_unchanged(repo)
 
 

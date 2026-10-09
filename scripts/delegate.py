@@ -4099,7 +4099,13 @@ def _branch_holder_activity_reason(
     try:
         from scripts.orchestration import reap_worktrees
 
-        active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+        try:
+            active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
+        except reap_worktrees._ActiveTaskProbeFailure as exc:
+            _record_diagnostic(
+                candidate_task_ids[0], _exception_cause("activity probe unavailable", exc), source="branch_hand_off",
+            )
+            active_ids = None
         live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
     except Exception as exc:
         return f"activity probes unavailable ({type(exc).__name__})"
@@ -7801,7 +7807,15 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if reap_worktrees._task_pid_alive(state):
                 row["reason"] = "task process alive"
                 return row
-            active_ids = reap_worktrees._active_task_ids()
+            try:
+                active_ids = reap_worktrees._active_task_ids()
+            except reap_worktrees._ActiveTaskProbeFailure as exc:
+                diagnostic = _record_diagnostic(
+                    task_id, _exception_cause("activity probe unavailable", exc), source="rescue", field="reason",
+                )
+                if diagnostic:
+                    row["diagnostic"] = diagnostic
+                active_ids = None
             live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
             if active_ids is None or live_cwds is None:
                 row["reason"] = "activity probe unavailable"

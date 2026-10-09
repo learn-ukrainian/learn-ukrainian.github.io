@@ -2297,7 +2297,7 @@ def _active_task_ids() -> set[str] | None:
 
 
 def _read_active_task_probe() -> set[str] | _ActiveTaskProbeFailure | None:
-    """Keep typed failures for the reaper; legacy callers catch RuntimeError."""
+    """Keep typed failures for the reaper; delegate callers handle them as unknown."""
     try:
         return _active_task_ids()
     except _ActiveTaskProbeFailure as exc:
@@ -2312,19 +2312,34 @@ def _resolve_activity_probe(
     """Resolve a transport outage for this attributed checkout only.
 
     Local terminal status never stands in for global Monitor availability.
-    Unknown ownership, state or PID retains the tree; every other deletion
-    guard and the locked recheck still apply.
+    Missing task records leave Monitor activity unknown for class-specific
+    guards. Invalid records, state or PID retain the tree; every other
+    deletion guard and the locked recheck still apply.
     """
     if not isinstance(probe, _ActiveTaskProbeFailure):
         return probe, None
     if not probe.fallback_allowed:
         return None, probe.reason
     task_id = _dispatch_task_id(repo_root, info)
-    if not task_id or Path(task_id).name != task_id or task_id in {".", ".."}:
+    if task_id and (Path(task_id).name != task_id or task_id in {".", ".."}):
         return None, f"{probe.reason}; local_task_unattributed"
-    task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
+    task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json" if task_id else None
     try:
-        payload = json.loads(task_file.read_text(encoding="utf-8"))
+        try:
+            raw_payload = task_file.read_text(encoding="utf-8") if task_file else None
+        except FileNotFoundError:
+            raw_payload = None
+        if raw_payload is None:
+            reaper_lifecycle.append_journal(
+                repo_root,
+                "activity-probe-unattributed",
+                path=str(info.path),
+                task_id=task_id,
+                reason=probe.reason,
+                source="no_local_task_record",
+            )
+            return None, None
+        payload = json.loads(raw_payload)
         if not isinstance(payload, dict) or payload.get("task_id") != task_id:
             return None, f"{probe.reason}; local_task_identity_mismatch"
         recorded_path = payload.get("worktree_path") or payload.get("cwd")
