@@ -1,12 +1,21 @@
 # Current - Codex / Grok Orchestrator Handoff (2026-07-22)
 
+> Historical handoff: the operational directions below describe the 2026-07-22
+> session and are not current tasking. Current landing authority is
+> [rules core, P4](../../agents_extensions/shared/rules/core.md) and
+> [workflow, Merge policy](../../agents_extensions/shared/rules/workflow.md#merge-policy--ready-prs-must-not-sit-4703-landing-order-7450):
+> independent exact-head cross-family APPROVE before PR creation, CI Gate green
+> on that same head, driver enqueue through the merge queue (never `--auto`,
+> never ask the operator to merge), confirm MERGED and complete common-reaper closeout.
+
 Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
 ## Role
 
 Orchestrator seat (Codex / Grok / Claude-infra as assigned): drive the product and
 infra queue, keep main clean, open PRs from worktrees only, require cross-family
-review (`ask-<lane> --type review`) before merge, arm auto-merge after the gate, clean worktrees after merge.
+review before PR creation, require CI Gate green on the reviewed head, enqueue
+through the merge queue, confirm MERGED and complete common-reaper closeout.
 Do not babysit idle green PRs; do not leave draft limbo.
 
 Do not use `docs/session-state/current.md` as scratch space. Durable state lives in

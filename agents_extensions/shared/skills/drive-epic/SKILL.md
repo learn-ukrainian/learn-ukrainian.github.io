@@ -89,7 +89,7 @@ Never use a plain `ack` for these: it also records one-shot or headless processi
 not delivery proof for the live driver.
 
 1. **§0 Orient.** Run the cold-start board, lean orient, the Work API projection and your
-   stream's `next` list, and `plane-status`. The launcher already holds your lease; never
+   stream's `next` list, and `.venv/bin/python -m scripts.fleet_comms plane-status`. The launcher already holds your lease; never
    claim it. Detail and the optional §0b inbox watcher: [orient](references/orient.md).
 2. **§0a Inbox drain — cycle start.**
 3. **§0c / §0d Epic-specific rules.** Hramatka (#4542) and the core fresh build (#7994)

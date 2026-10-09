@@ -262,6 +262,25 @@ def test_kimi_binary_override_reaches_the_native_kimi_process():
     assert env["KIMI_CODE_BIN"] == "/opt/kimi"
 
 
+@pytest.mark.parametrize("provider", ["kimi", "claude"])
+def test_headless_claude_switches_survive_overrides_without_native_kimi_inheritance(provider):
+    switches = {
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+        "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+    }
+    with patch.dict("os.environ", {"PATH": "/usr/bin", **switches}, clear=True):
+        inherited = build_agent_env(provider=provider)
+        overridden = build_agent_env(provider=provider, overrides=switches)
+        unrelated = build_agent_env(provider="codex", overrides=switches)
+    for name, value in switches.items():
+        if provider == "kimi":
+            assert name not in inherited
+        else:
+            assert inherited[name] == value
+        assert overridden[name] == value
+        assert name not in unrelated
+
+
 def test_kimicc_route_inputs_reach_the_kimi_wrapper_only():
     parent_env = {
         "PATH": "/usr/bin",

@@ -485,6 +485,27 @@ def _settings_from(root: Path, monkeypatch) -> list[dict]:
     return [hook for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
 
 
+@pytest.mark.parametrize("advisor", [None, "claude-opus-5-5", "claude-sonnet-5-5"])
+def test_worker_settings_omit_the_interactive_advisor(tmp_path: Path, monkeypatch, advisor: str | None) -> None:
+    from scripts.agent_runtime.adapters import claude
+
+    _guard_source_tree(tmp_path, ["$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-venv.sh"])
+    source_path = tmp_path / "agents_extensions/shared/settings.json"
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    source["model"] = "claude-sonnet-5-5"
+    if advisor is not None:
+        source["advisorModel"] = advisor
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    monkeypatch.setattr(claude, "__file__", str(tmp_path / "scripts/agent_runtime/adapters/claude.py"))
+
+    settings = json.loads(claude._headless_worker_settings(publish_guard=False))
+    assert "advisorModel" not in json.loads(claude._worker_guard_settings())
+    assert "advisorModel" not in settings
+    assert "model" not in settings
+    assert settings["hooks"]["PreToolUse"]
+    assert settings["permissions"]["deny"] == list(claude.HEADLESS_BACKGROUND_TOOL_DENIES)
+
+
 def test_worker_guards_run_parser_guards_under_the_project_interpreter(tmp_path: Path, monkeypatch) -> None:
     from scripts.agent_runtime.adapters.claude import PROJECT_PYTHON_GUARDS
 

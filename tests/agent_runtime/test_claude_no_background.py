@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import textwrap
 from pathlib import Path
@@ -38,6 +39,7 @@ from scripts.agent_runtime.env_sanitize import build_agent_env
 from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 SWITCH = "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS"
+ADVISOR_SWITCH = "CLAUDE_CODE_DISABLE_ADVISOR_TOOL"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 _FAKE_CLAUDE = textwrap.dedent(
@@ -112,17 +114,48 @@ def _invoke(binary: Path, cwd: Path, mode: str) -> runner.Result:
         )
 
 
+@pytest.mark.parametrize("wrapper", [claude.run_headless_claude, claude.popen_headless_claude])
+@pytest.mark.parametrize("explicit_base_env", [False, True])
+def test_headless_spawn_disables_advisor_in_child(
+    fake_claude, monkeypatch: pytest.MonkeyPatch, wrapper, explicit_base_env: bool
+) -> None:
+    """Both spawn paths force the advisor off without changing the parent's environment."""
+    binary, dump = fake_claude
+    monkeypatch.setenv(ADVISOR_SWITCH, "0")
+    base_env = dict(os.environ) if explicit_base_env else None
+    kwargs = {"base_env": base_env, "stdout": subprocess.PIPE, "stderr": subprocess.PIPE}
+    if wrapper is claude.run_headless_claude:
+        process = wrapper([str(binary), "-p", "inspect"], timeout=10, **kwargs)
+    else:
+        with wrapper([str(binary), "-p", "inspect"], **kwargs) as process:
+            process.communicate(timeout=10)
+
+    assert process.returncode == 0
+    seen = json.loads(dump.read_text(encoding="utf-8"))
+    assert seen["env"][ADVISOR_SWITCH] == "1"
+    assert seen["env"][SWITCH] == "1"
+    assert os.environ[ADVISOR_SWITCH] == "0"
+    assert SWITCH not in os.environ
+    if base_env is not None:
+        assert base_env[ADVISOR_SWITCH] == "0"
+        assert SWITCH not in base_env
+
+
 @pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
-def test_runner_launch_carries_switch_and_worker_reports_in_full(fake_claude, tmp_path: Path, mode: str) -> None:
+def test_runner_launch_carries_switch_and_worker_reports_in_full(
+    fake_claude, tmp_path: Path, mode: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """AC-01: through the real runner and sanitizer, background work is refused."""
     binary, dump = fake_claude
     workdir = tmp_path / "work"
     workdir.mkdir()
+    monkeypatch.setenv(ADVISOR_SWITCH, "0")
 
     result = _invoke(binary, workdir, mode)
 
     seen = json.loads(dump.read_text(encoding="utf-8"))
     assert seen["env"][SWITCH] == "1"
+    assert seen["env"][ADVISOR_SWITCH] == "1"
     argv = seen["argv"]
     assert argv[0] == "-p"
     deny = json.loads(argv[argv.index("--settings") + 1])["permissions"]["deny"]
@@ -130,6 +163,7 @@ def test_runner_launch_carries_switch_and_worker_reports_in_full(fake_claude, tm
     assert result.ok is True
     assert result.response == "FINAL REPORT: every command ran in the foreground. VERDICT: APPROVE"
     assert SWITCH not in os.environ
+    assert os.environ[ADVISOR_SWITCH] == "0"
 
 
 def test_fake_cli_reproduces_the_lost_report_without_the_switch(
@@ -259,6 +293,8 @@ def test_every_headless_plan_disables_background(tmp_path: Path, mode: str, tool
     assert plan.env_overrides[SWITCH] == "1"
     assert plan.cmd.count("--settings") == 1
     settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
+    assert "advisorModel" not in settings
+    assert plan.env_overrides[ADVISOR_SWITCH] == "1"
     assert settings["permissions"]["deny"] == ["Monitor", "ScheduleWakeup", "CronCreate", "Workflow"]
     # The guard hooks are unchanged by the added deny.
     publish_guard = mode == "read-only" and tool_config == {"reviewer_tools": True}

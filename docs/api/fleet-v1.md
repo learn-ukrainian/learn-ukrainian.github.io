@@ -1,8 +1,9 @@
 # Fleet board API v1
 
-Read-only JSON API mounted at `/api/fleet/v1`. The index and schema
-describe every registered route. The pull-request pipeline is the first
-data route. Existing unversioned fleet routes are unchanged.
+Read-only JSON API mounted at `/api/fleet/v1`. The index and schema routes
+publish the contract. Operations routes and the pull-request pipeline read
+optional locations and degrade inside the envelope. Existing unversioned
+fleet routes are unchanged.
 
 ## Envelope
 
@@ -19,16 +20,19 @@ Each source row is `{name, status, age_s, error}`.
 
 | Status | Meaning |
 | --- | --- |
-| `ok` | The read succeeded, or the index confirmed the location variable is set. `age_s` is the age of a completed read, and null when that route did not read the location. |
-| `stale` | A completed read is older than that source's freshness interval. |
-| `unavailable` | The read failed, or the location check failed. `error` is the token `unavailable`. |
+| `ok` | The index saw a set variable, or a data route completed a read. `age_s` is the age of a completed read, and null when that route did not read the location. |
+| `stale` | A completed read is older than its freshness window, or a refresh failed and a cached payload is being served. |
+| `unavailable` | The read failed and there is nothing cached, or the location check failed. `error` is the token `unavailable`. |
 | `not_configured` | The variable is unset or blank. `age_s` and `error` are null. |
 
 The schema rejects a row whose status disagrees with `age_s` or `error`.
 `not_configured` requires both to be null. `unavailable` requires a null age
 and the error token `unavailable`. `ok` and `stale` require a null error.
 A failed source changes that row's status. The HTTP status stays 200.
-Exception text is not copied into the response.
+Exception text is not copied into the response. Each external read stops at
+an overall deadline of two seconds and uses a short cache. The index reports
+whether each variable is set; it does not read the location, so its `age_s`
+stays null. Data routes report the source they actually read.
 
 ## Configuration
 
@@ -58,6 +62,29 @@ route as `{method, path, schema}`. `HEAD` and `OPTIONS` are omitted.
 `schema` is `fleet.v1.schema`. `data.endpoints` maps each schema id to a
 JSON Schema document. The `fleet.v1.index` document validates a response
 from the index route.
+
+### `GET /api/fleet/v1/alerts`
+
+`FLEET_ALERTMANAGER_URL`. Server-side read of Alertmanager v2 alerts.
+Each item publishes `name`, `severity`, `summary`, `starts_at`, and `state`.
+A name is kept only when it is a plain identifier, and a summary is kept as
+plain text. Other fields are dropped. Unset or blank is `not_configured`.
+
+### `GET /api/fleet/v1/stats`
+
+`FLEET_PROMETHEUS_URL`. Four fixed instant queries: disk percent, memory
+percent, live drivers, and API probe status. Names are `disk_pct`,
+`memory_pct`, `drivers_live`, and `probe_status`. A query parameter on
+this route is ignored. One failed query marks that stat `unavailable` and
+leaves the others in place. When every query fails, a cached payload is
+served as `stale`; with nothing cached the source is `unavailable`. Series
+labels are not returned.
+
+### `GET /api/fleet/v1/links`
+
+`FLEET_GRAFANA_URL`. Fixed dashboard links for `overview` and `fleet`,
+built from that base. Userinfo and query strings on the base are not
+copied into the link.
 
 ### `GET /api/fleet/v1/prs`
 

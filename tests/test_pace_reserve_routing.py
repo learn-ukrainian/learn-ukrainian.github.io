@@ -119,7 +119,7 @@ def test_claude_headroom_reaches_routing_consumers(visible, monkeypatch, tmp_pat
     recommendation = state_router._recommend_agent(
         {
             "claude": data["agents"]["claude"],
-            "codex": {"status": "warm", "burn_pct_7d": 10.0, "health": {"healthy": True}},
+            "codex": {"status": "warm", "remaining_pct": 32.0, "burn_pct_7d": 10.0, "health": {"healthy": True}},
         },
         [],
         current_time=now,

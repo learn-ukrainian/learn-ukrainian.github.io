@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
 import gzip
 import hashlib
 import importlib
 import json
+import socket
 import sqlite3
 import sys
 from pathlib import Path
@@ -122,6 +124,480 @@ def test_phraseology_and_antonym_groups_remain_structured():
     assert any(row["kind"] == "relation_note" for row in antonyms[0]["rows"])
 
 
+def _first_relation_term(groups, kind):
+    if kind != "antonyms":
+        return groups[0]["terms"][0]
+    for row in groups[0]["rows"]:
+        if row["kind"] == "paired_sense":
+            return row["left"]["terms"][0]
+        if row["kind"] == "relation_note" and row["terms"]:
+            return row["terms"][0]
+    raise AssertionError("fixture has no relation term")
+
+
+@pytest.mark.parametrize(
+    ("fixture", "kind", "expected"),
+    [
+        ("privit-synonyms.html", "synonyms", "ВІТА́ННЯ"),
+        ("dobryi-antonyms.html", "antonyms", "ДОБРИЙ"),
+        ("privit-phraseology.html", "phraseology", "ні одві́ту, ні приві́ту,"),
+    ],
+)
+def test_live_and_offline_relation_parsers_match_retained_source_literal(fixture, kind, expected):
+    html = _fixture(fixture)
+    live = source_query._parse_ulif_relation_groups(html, kind)
+    offline = ulif_parse.parse_ulif_relation_groups(html, kind)
+    assert _first_relation_term(live, kind)["text"] == expected
+    assert _first_relation_term(offline, kind)["text"] == expected
+    expected_counts = {"synonyms": 43, "antonyms": 38, "phraseology": 3}
+    assert sum(_relation_term_count(group, kind) for group in live) == expected_counts[kind]
+    assert sum(_relation_term_count(group, kind) for group in offline) == expected_counts[kind]
+    assert [term["raw_html"] for term in _relation_terms(live, kind)] == [
+        term["raw_html"] for term in _relation_terms(offline, kind)
+    ]
+    if fixture == "privit-phraseology.html":
+        assert hashlib.sha256((FIXTURES / fixture).read_bytes()).hexdigest() == (
+            "45b081264c4a8c2dc4843620048a9c09aca6571f28c7ae41992303c64b73340d"
+        )
+
+
+def _relation_term_count(group, kind):
+    if kind != "antonyms":
+        return len(group.get("terms", []))
+    count = 0
+    for row in group.get("rows", []):
+        count += len(row.get("terms", [])) if row.get("kind") == "relation_note" else 0
+        for side in ("left", "right"):
+            part = row.get(side)
+            if isinstance(part, dict):
+                count += len(part.get("terms", []))
+    return count
+
+
+def _relation_terms(groups, kind):
+    terms = []
+    for group in groups:
+        if kind != "antonyms":
+            terms.extend(group.get("terms", []))
+            continue
+        for row in group.get("rows", []):
+            if row.get("kind") == "relation_note":
+                terms.extend(row.get("terms", []))
+            for side in ("left", "right"):
+                part = row.get(side)
+                if isinstance(part, dict):
+                    terms.extend(part.get("terms", []))
+    return terms
+
+
+@pytest.mark.parametrize(
+    ("raw_html", "expected"),
+    [
+        ('<b>ні <i>одві́ту</i>, ні <i>приві́ту</i></b>', "ні одві́ту, ні приві́ту"),
+        ('<b>“ні <i>одві́ту</i>, ні <i>приві́ту</i>”</b>', "“ні одві́ту, ні приві́ту”"),
+        ('<b>(є, <i>так</i>)</b>', "(є, так)"),
+        ('<b>а <i>б</i></b>', "а б"),
+        ('<b>аб<i>в</i></b>', "абв"),
+        ('<b>е́ &amp; є̀</b>', "е́ & є̀"),
+    ],
+)
+def test_term_spacing_retains_whitespace_punctuation_and_entities(raw_html, expected):
+    html = f'<div class="p_cl"><p>{raw_html}</p></div>'
+    for parser in (source_query._parse_ulif_relation_groups, ulif_parse.parse_ulif_relation_groups):
+        assert parser(html, "phraseology")[0]["terms"][0]["text"] == expected
+
+
+def test_relation_term_explicit_br_is_a_boundary_but_inline_tags_are_not():
+    scripts_source_query = importlib.import_module("scripts.rag.source_query")
+    cases = [
+        ("synonyms", '<div class="p_cl"><p><b><a>ні</a><br/><a>так</a></b></p></div>',
+         ["ні так"], ["<b><a>ні</a><br/><a>так</a></b>"]),
+        ("phraseology", '<div class="p_cl"><p><b><a>ні</a><a>так</a></b></p></div>',
+         ["нітак"], ["<b><a>ні</a><a>так</a></b>"]),
+        ("phraseology", '<div class="p_cl"><p><b><a>ні</a> <a>так</a></b></p></div>',
+         ["ні так"], ["<b><a>ні</a> <a>так</a></b>"]),
+        ("phraseology", '<div class="p_cl"><p><b><i>ні</i><br/> <span><a>та́к</a></span></b></p></div>',
+         ["ні та́к"], ["<b><i>ні</i><br/> <span><a>та́к</a></span></b>"]),
+        ("phraseology", '<div class="p_cl"><p><b>“ні<br/><a>так</a>,”</b></p></div>',
+         ["“ні так,”"], ["<b>“ні<br/><a>так</a>,”</b>"]),
+        ("phraseology", '<div class="p_cl"><p><b>е́ &amp; є̀</b></p></div>',
+         ["е́ & є̀"], ["<b>е́ &amp; є̀</b>"]),
+        (
+            "antonyms",
+            '<div class="p_cl"><table class="tab_ant">'
+            '<tr><td><b><a>ні</a><br/><a>так</a></b></td><td><b><a>верх</a><br/><a>низ</a></b></td></tr>'
+            '<tr><td><b><a>но́та</a><br/><a>пояс</a></b></td></tr>'
+            '</table></div>',
+            ["ні так", "верх низ", "но́та пояс"],
+            [
+                "<b><a>ні</a><br/><a>так</a></b>",
+                "<b><a>верх</a><br/><a>низ</a></b>",
+                "<b><a>но́та</a><br/><a>пояс</a></b>",
+            ],
+        ),
+    ]
+    for kind, html, expected, expected_raw in cases:
+        for parser in (
+            source_query._parse_ulif_relation_groups,
+            scripts_source_query._parse_ulif_relation_groups,
+            ulif_parse.parse_ulif_relation_groups,
+        ):
+            groups = parser(html, kind)
+            if kind != "antonyms":
+                terms = [term for group in groups for term in group["terms"]]
+            else:
+                rows = groups[0]["rows"]
+                terms = [rows[0]["left"]["terms"][0], rows[0]["right"]["terms"][0], rows[1]["terms"][0]]
+            assert [term["text"] for term in terms] == expected
+            assert [term["raw_html"] for term in terms] == expected_raw
+
+
+def test_explicit_br_stale_cache_and_actual_mcp_views_are_corrected_without_io(
+    tmp_path, monkeypatch
+):
+    scripts_source_query = importlib.import_module("scripts.rag.source_query")
+    scripts_sources_db = importlib.import_module("scripts.wiki.sources_db")
+    sources = {
+        "synonyms": '<div class="p_cl"><p><b><a>ні</a><br/><a>так</a></b></p></div>',
+        "phraseology": '<div class="p_cl"><p><b><a>і́мла</a><br/><a>мря́ка</a></b></p></div>',
+        "antonyms": (
+            '<div class="p_cl"><table class="tab_ant">'
+            '<tr><td><b><a>верх</a><br/><a>низ</a></b></td>'
+            '<td><b><a>сві́тло</a><br/><a>тьма́</a></b></td></tr>'
+            '<tr><td><b><a>но́та</a><br/><a>пояс</a></b></td></tr>'
+            '</table></div>'
+        ),
+    }
+    expected = {
+        "synonyms": ["ні так"],
+        "phraseology": ["і́мла мря́ка"],
+        "antonyms": ["верх низ", "сві́тло тьма́", "но́та пояс"],
+    }
+    expected_raw = {
+        "synonyms": ["<b><a>ні</a><br/><a>так</a></b>"],
+        "phraseology": ["<b><a>і́мла</a><br/><a>мря́ка</a></b>"],
+        "antonyms": [
+            "<b><a>верх</a><br/><a>низ</a></b>",
+            "<b><a>сві́тло</a><br/><a>тьма́</a></b>",
+            "<b><a>но́та</a><br/><a>пояс</a></b>",
+        ],
+    }
+    sections = {
+        kind: ulif_parse.parse_ulif_relation_groups(html, kind)
+        for kind, html in sources.items()
+    }
+    def terms_in(section, kind):
+        return _relation_terms(section, kind)
+
+    for kind, section in sections.items():
+        assert [term["text"] for term in terms_in(section, kind)] == expected[kind]
+        for term in terms_in(section, kind):
+            term["text"] = "".join(term["text"].split())
+    db_path = tmp_path / "sources.db"
+    sources_db.store_ulif_dictua_entry(
+        word="boundary", canonical_headword="boundary", sections=sections,
+        raw_responses=sources, retrieved_at="2026-10-09T00:00:00Z",
+        parser_version="stored-parser-version", status="ok", homonym_index=1,
+        homonym_checked=1, db_path=db_path,
+    )
+    db_before = db_path.read_bytes()
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+    raw_cache_before = raw_cache_path.read_bytes()
+    stored_before = sqlite3.connect(db_path).execute(
+        "SELECT payload_json FROM ulif_dictua_sections WHERE kind='phraseology'"
+    ).fetchone()[0]
+    assert '"text": "і́мламря́ка"' in stored_before
+    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
+    monkeypatch.setitem(sys.modules, "wiki.sources_db", sources_db)
+    monkeypatch.setitem(sys.modules, "scripts.wiki.sources_db", scripts_sources_db)
+
+    network_attempts = []
+    def deny_network(*args, **kwargs):
+        network_attempts.append((args, kwargs))
+        pytest.fail("network access forbidden for cached BR correction")
+
+    for query_module in (source_query, scripts_source_query):
+        monkeypatch.setattr(query_module, "_get", deny_network)
+        monkeypatch.setattr(query_module._SESSION, "post", deny_network)
+    monkeypatch.setattr(socket.socket, "connect", deny_network)
+    monkeypatch.setattr(socket, "create_connection", deny_network)
+    monkeypatch.setattr(socket, "getaddrinfo", deny_network)
+
+    writes = []
+    real_connect = sqlite3.connect
+    write_actions = {
+        sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE,
+        sqlite3.SQLITE_CREATE_INDEX, sqlite3.SQLITE_CREATE_TABLE,
+        sqlite3.SQLITE_CREATE_TEMP_INDEX, sqlite3.SQLITE_CREATE_TEMP_TABLE,
+        sqlite3.SQLITE_CREATE_TRIGGER, sqlite3.SQLITE_CREATE_VIEW,
+        sqlite3.SQLITE_DROP_INDEX, sqlite3.SQLITE_DROP_TABLE,
+        sqlite3.SQLITE_DROP_TEMP_INDEX, sqlite3.SQLITE_DROP_TEMP_TABLE,
+        sqlite3.SQLITE_DROP_TRIGGER, sqlite3.SQLITE_DROP_VIEW,
+        sqlite3.SQLITE_ALTER_TABLE, sqlite3.SQLITE_REINDEX, sqlite3.SQLITE_ANALYZE,
+        sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH,
+    }
+    def read_only_connect(*args, **kwargs):
+        conn = real_connect(*args, **kwargs)
+        def deny_write(action, arg1, arg2, database, trigger):
+            if action in write_actions:
+                writes.append((action, arg1, arg2, database, trigger))
+                return sqlite3.SQLITE_DENY
+            return sqlite3.SQLITE_OK
+        conn.set_authorizer(deny_write)
+        return conn
+
+    monkeypatch.setattr(sqlite3, "connect", read_only_connect)
+    for reader in (sources_db, scripts_sources_db):
+        cached = reader.get_ulif_dictua_entry("boundary", db_path=db_path)
+        record = reader.get_ulif_word_records("boundary", db_path=db_path)[0]
+        for kind in sources:
+            cached_terms = terms_in(cached["sections"][kind], kind)
+            record_terms = terms_in(record["entries"][0]["sections"][kind], kind)
+            assert [term["text"] for term in cached_terms] == expected[kind]
+            assert [term["text"] for term in record_terms] == expected[kind]
+            assert [term["raw_html"] for term in cached_terms] == expected_raw[kind]
+
+    for query_module in (source_query, scripts_source_query):
+        for kind in sources:
+            result = query_module.query_ulif("boundary", [kind])
+            assert [term["text"] for term in terms_in(result["sections"][kind], kind)] == expected[kind]
+
+    server_spec = importlib.util.spec_from_file_location(
+        "sources_server_br_boundary_test", ROOT / ".mcp/servers/sources/server.py"
+    )
+    assert server_spec and server_spec.loader
+    server = importlib.util.module_from_spec(server_spec)
+    sys.modules[server_spec.name] = server
+    server_spec.loader.exec_module(server)
+    query = json.loads(asyncio.run(server.handle_query_ulif(
+        {"word": "boundary", "cache_only": True}
+    ))[0].text)
+    for kind in sources:
+        query_terms = terms_in(query["entry"]["sections"][kind], kind)
+        assert [term["text"] for term in query_terms] == expected[kind]
+        assert [term["raw_html"] for term in query_terms] == expected_raw[kind]
+        relation = json.loads(asyncio.run(getattr(server, f"handle_query_ulif_{kind}")(
+            {"word": "boundary"}
+        ))[0].text)
+        assert [term["text"] for term in terms_in(relation["sections"][kind], kind)] == expected[kind]
+    full = json.loads(asyncio.run(server.handle_query_ulif_records(
+        {"words": ["boundary"], "detail": "full"}
+    ))[0].text)
+    compact = json.loads(asyncio.run(server.handle_query_ulif_records(
+        {"words": ["boundary"], "detail": "compact"}
+    ))[0].text)
+    for kind in sources:
+        full_terms = terms_in(full["records"][0]["entries"][0]["sections"][kind], kind)
+        compact_terms = terms_in(compact["records"][0]["entries"][0]["sections"][kind], kind)
+        assert [term["text"] for term in full_terms] == expected[kind]
+        assert [term["text"] for term in compact_terms] == expected[kind]
+        assert [term["raw_html"] for term in full_terms] == expected_raw[kind]
+        assert all("raw_html" not in term for term in compact_terms)
+    assert not writes
+    assert not network_attempts
+    assert db_path.read_bytes() == db_before
+    assert raw_cache_path.read_bytes() == raw_cache_before
+    assert real_connect(db_path).execute(
+        "SELECT payload_json FROM ulif_dictua_sections WHERE kind='phraseology'"
+    ).fetchone()[0] == stored_before
+
+
+@pytest.mark.parametrize(
+    ("kind", "fixture", "expected"),
+    [
+        ("synonyms", "privit-synonyms.html", "ВІТА́ННЯ"),
+        ("antonyms", "dobryi-antonyms.html", "ДОБРИЙ"),
+        ("phraseology", "privit-phraseology.html", "ні одві́ту, ні приві́ту,"),
+    ],
+)
+def test_cached_term_correction_is_return_only_and_uses_own_html(
+    tmp_path, kind, fixture, expected
+):
+    html = _fixture(fixture)
+    groups = ulif_parse.parse_ulif_relation_groups(html, kind)
+    term = _first_relation_term(groups, kind)
+    term["text"] = "stale , " + term["text"]
+    groups[0]["unrelated_group_text"] = "preserve group , text"
+    groups[0]["unknown_field"] = {"keep": True}
+    db_path = tmp_path / "sources.db"
+    sources_db.store_ulif_dictua_entry(
+        word="spacing", canonical_headword="spacing", sections={kind: groups},
+        raw_responses={kind: html}, retrieved_at="2026-10-09T00:00:00Z",
+        parser_version="stored-parser-version", status="ok", homonym_index=1,
+        homonym_checked=1, db_path=db_path,
+    )
+    before = db_path.read_bytes()
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+    before_raw_cache = raw_cache_path.read_bytes()
+    cached = sources_db.get_ulif_dictua_entry("spacing", db_path=db_path)
+    records = sources_db.get_ulif_word_records("spacing", db_path=db_path)
+    cached_groups = cached["sections"][kind]
+    record_groups = records[0]["entries"][0]["sections"][kind]
+    assert _first_relation_term(cached_groups, kind)["text"] == expected
+    assert _first_relation_term(record_groups, kind)["text"] == expected
+    expected_count = {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
+    source_terms = _relation_terms(groups, kind)
+    for materialized in (cached_groups, record_groups):
+        observed = _relation_terms(materialized, kind)
+        assert len(observed) == expected_count == len(source_terms)
+        assert [term.get("raw_html") for term in observed] == [
+            term.get("raw_html") for term in source_terms
+        ]
+    assert cached_groups[0]["unrelated_group_text"] == "preserve group , text"
+    assert cached_groups[0]["unknown_field"] == {"keep": True}
+    assert records[0]["entries"][0]["parser_version"] == "stored-parser-version"
+    assert db_path.read_bytes() == before
+    assert raw_cache_path.read_bytes() == before_raw_cache
+
+
+def test_cache_term_without_own_valid_html_is_unchanged():
+    for raw_html in (None, "<b>unterminated"):
+        term = {"text": "stored , text"}
+        if raw_html is not None:
+            term["raw_html"] = raw_html
+        payload = {"terms": [term], "text": "group , text", "unknown": [1, 2]}
+        before = json.loads(json.dumps(payload))
+        ulif_parse.correct_cached_ulif_relation_terms(payload, "phraseology")
+        assert payload == before
+
+
+def test_cached_entry_reader_keeps_empty_single_homonym_and_ambiguous_states(tmp_path):
+    missing_db = tmp_path / "missing.db"
+    assert sources_db.get_ulif_dictua_entry("", db_path=missing_db) is None
+    assert sources_db.get_ulif_dictua_entry("term", db_path=missing_db) is None
+    assert sources_db.get_ulif_dictua_entries("", db_path=missing_db) == []
+    assert sources_db.get_ulif_dictua_entries("term", db_path=missing_db) == []
+
+    db_path = tmp_path / "homonyms.db"
+    for index in (1, 2):
+        sources_db.store_ulif_dictua_entry(
+            word="term", canonical_headword=f"term-{index}", sections={}, raw_responses={},
+            retrieved_at="2026-10-09T00:00:00Z", parser_version="stored", status="ok",
+            homonym_index=index, homonym_checked=1, db_path=db_path,
+        )
+    assert sources_db.get_ulif_dictua_entry("term", homonym_index=1, db_path=db_path)["word"] == "term-1"
+    assert sources_db.get_ulif_dictua_entry("term", homonym_index=3, db_path=db_path) is None
+    assert sources_db.get_ulif_dictua_entry("term", db_path=db_path)["status"] == "ambiguous"
+    assert [entry["homonym_index"] for entry in sources_db.get_ulif_dictua_entries(
+        "term", db_path=db_path
+    )] == [1, 2]
+
+
+def test_cached_materializer_preserves_non_dict_payload_view(tmp_path):
+    db_path = tmp_path / "payload.db"
+    sources_db.store_ulif_dictua_entry(
+        word="term", canonical_headword="term", sections={"synonyms": [{}]},
+        raw_responses={}, retrieved_at="2026-10-09T00:00:00Z", parser_version="stored",
+        status="ok", homonym_index=1, homonym_checked=1, db_path=db_path,
+    )
+    conn = sqlite3.connect(db_path)
+    conn.execute("UPDATE ulif_dictua_sections SET payload_json = '[]' WHERE kind='synonyms'")
+    conn.row_factory = sqlite3.Row
+    entry = conn.execute("SELECT * FROM ulif_dictua_entries").fetchone()
+    result = sources_db._materialize_ulif_dictua_entry(conn, entry)
+    assert result["sections"]["synonyms"] == [
+        {"value": [], "source_order": 0, "sense_or_group_id": "synonyms:1"}
+    ]
+    conn.commit()
+    conn.close()
+
+
+def test_cached_materializer_handles_missing_sections_table_without_migration(tmp_path):
+    db_path = tmp_path / "entry-without-sections.db"
+    sources_db.store_ulif_dictua_entry(
+        word="term", canonical_headword="term", sections={}, raw_responses={},
+        retrieved_at="2026-10-09T00:00:00Z", parser_version="stored", status="ok",
+        homonym_index=1, homonym_checked=1, db_path=db_path,
+    )
+    conn = sqlite3.connect(db_path)
+    conn.execute("DROP TABLE ulif_dictua_sections")
+    conn.commit()
+    conn.close()
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    entry = conn.execute("SELECT * FROM ulif_dictua_entries").fetchone()
+    result = sources_db._materialize_ulif_dictua_entry(conn, entry)
+
+    assert result["sections"] == {}
+    assert "ulif_dictua_sections" not in {
+        row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    conn.close()
+
+
+def test_actual_query_and_record_mcp_adapters_return_corrected_cached_terms(
+    tmp_path, monkeypatch
+):
+    cases = {
+        "synonyms": ("privit-synonyms.html", "ВІТА́ННЯ"),
+        "antonyms": ("dobryi-antonyms.html", "ДОБРИЙ"),
+        "phraseology": ("privit-phraseology.html", "ні одві́ту, ні приві́ту,"),
+    }
+    sections = {}
+    raw_responses = {}
+    for kind, (fixture, _expected) in cases.items():
+        html = _fixture(fixture)
+        groups = ulif_parse.parse_ulif_relation_groups(html, kind)
+        _first_relation_term(groups, kind)["text"] = "stale , source term"
+        sections[kind] = groups
+        raw_responses[kind] = html
+    db_path = tmp_path / "sources.db"
+    sources_db.store_ulif_dictua_entry(
+        word="привіт", canonical_headword="приві́т", sections=sections,
+        raw_responses=raw_responses, retrieved_at="2026-10-09T00:00:00Z",
+        parser_version="stored-parser-version", status="ok", homonym_index=1,
+        homonym_checked=1, db_path=db_path,
+    )
+    before_db = db_path.read_bytes()
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+    before_raw_cache = raw_cache_path.read_bytes()
+    monkeypatch.setenv("LU_SOURCES_DB", str(db_path))
+    monkeypatch.setitem(sys.modules, "scripts.wiki.sources_db", sources_db)
+    monkeypatch.setitem(sys.modules, "wiki.sources_db", sources_db)
+    monkeypatch.setattr(source_query, "_get", lambda *_a, **_kw: pytest.fail("HTTP forbidden"))
+    monkeypatch.setattr(
+        source_query._SESSION, "post", lambda *_a, **_kw: pytest.fail("HTTP forbidden")
+    )
+    server_spec = importlib.util.spec_from_file_location(
+        "sources_server_spacing_test", ROOT / ".mcp/servers/sources/server.py"
+    )
+    assert server_spec and server_spec.loader
+    server = importlib.util.module_from_spec(server_spec)
+    sys.modules[server_spec.name] = server
+    server_spec.loader.exec_module(server)
+
+    query = asyncio.run(server.handle_query_ulif({"word": "привіт", "cache_only": True}))
+    query_entry = json.loads(query[0].text)["entry"]
+    for kind, (_fixture_name, expected) in cases.items():
+        assert _first_relation_term(query_entry["sections"][kind], kind)["text"] == expected
+        actual = _relation_terms(query_entry["sections"][kind], kind)
+        assert len(actual) == {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
+        adapter = getattr(server, f"handle_query_ulif_{kind}")
+        relation = asyncio.run(adapter({"word": "привіт"}))
+        assert expected in relation[0].text
+    full = json.loads(asyncio.run(server.handle_query_ulif_records(
+        {"words": ["привіт"], "detail": "full"}
+    ))[0].text)
+    compact = json.loads(asyncio.run(server.handle_query_ulif_records(
+        {"words": ["привіт"], "detail": "compact"}
+    ))[0].text)
+    for result in (full, compact):
+        record_sections = result["records"][0]["entries"][0]["sections"]
+        for kind, (_fixture_name, expected) in cases.items():
+            assert _first_relation_term(record_sections[kind], kind)["text"] == expected
+            assert len(_relation_terms(record_sections[kind], kind)) == (
+                {"synonyms": 43, "antonyms": 38, "phraseology": 3}[kind]
+            )
+    for kind in cases:
+        full_term = _first_relation_term(full["records"][0]["entries"][0]["sections"][kind], kind)
+        compact_term = _first_relation_term(compact["records"][0]["entries"][0]["sections"][kind], kind)
+        assert "raw_html" in full_term
+        assert "raw_html" not in compact_term
+    assert db_path.read_bytes() == before_db
+    assert raw_cache_path.read_bytes() == before_raw_cache
+
+
 def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
     """A first wrapper fetches all available tabs; later ones issue no POST."""
     db_path = tmp_path / "sources.db"
@@ -147,8 +623,11 @@ def test_wrappers_share_one_complete_cached_lookup(tmp_path, monkeypatch):
 
     monkeypatch.setattr(source_query._SESSION, "post", post)
 
-    record = source_query.query_ulif("говорити")
+    record = source_query.query_ulif("говорити", source_query.ULIF_SECTIONS)
     assert record["status"] == "ok"
+    assert record["sections"]["phraseology"][0]["terms"][0]["text"] == (
+        "ні одві́ту, ні приві́ту,"
+    )
     assert {
         "source_id", "official_url", "attribution_label", "retrieved_at",
         "content_sha256", "parser_version", "status",
