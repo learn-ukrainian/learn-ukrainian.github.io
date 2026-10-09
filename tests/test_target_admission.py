@@ -274,14 +274,24 @@ def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, mo
         repo = mini_repo(tmp_path, monkeypatch)
         repo.commit(SOL, message="review author")
         facts = collect_branch_review_facts(
-            repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"),
-            head_sha=repo.sha("feature"), task_root=tmp_path / "tasks",
+            repository=REPOSITORY,
+            repo_root=repo.root,
+            base_tip_sha=repo.sha("origin/main"),
+            head_sha=repo.sha("feature"),
+            task_root=tmp_path / "tasks",
         )
         assert facts.author_families == frozenset({"openai"})
     with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk") as refused:
         target_admission._resolve_review_target(
-            "agy", model, author_model=None, risk=risk, profile="code", attempt=False,
-            snapshot=None, budget_seat="agy", facts=facts,
+            "agy",
+            model,
+            author_model=None,
+            risk=risk,
+            profile="code",
+            attempt=False,
+            snapshot=None,
+            budget_seat="agy",
+            facts=facts,
         )
     assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
 
@@ -292,6 +302,7 @@ def test_explicit_review_risk_selected_agy_cannot_bypass_declaration(monkeypatch
     selected = ("agy", "gemini-3.8-flash-high")
     calls = []
     if stage in {"selection", "budget"}:
+
         def select(seat, model, **kwargs):
             calls.append(kwargs["snapshot"])
             # Exercise review_select's safety boundary for both initial and
@@ -307,7 +318,10 @@ def test_explicit_review_risk_selected_agy_cannot_bypass_declaration(monkeypatch
 
     with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk"):
         resolve_and_admit(
-            ("codex",), model="gpt-6.1-sol", mode="read-only", review_dispatch=True,
+            ("codex",),
+            model="gpt-6.1-sol",
+            mode="read-only",
+            review_dispatch=True,
             route=None if stage == "registry" else route,
             resolver=(lambda _seat: "agy") if stage == "registry" else None,
         )
@@ -322,8 +336,14 @@ def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
     paths = {f"review_{path_kind}_paths": ("scripts/delegate.py",)}
     with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
         resolve_and_admit(
-            ("agy",), model="gemini-3.8-flash-high", mode="read-only", review_dispatch=True,
-            review_author_model="gpt-6.1-sol", review_risk=risk, review_attempt=True, **paths,
+            ("agy",),
+            model="gemini-3.8-flash-high",
+            mode="read-only",
+            review_dispatch=True,
+            review_author_model="gpt-6.1-sol",
+            review_risk=risk,
+            review_attempt=True,
+            **paths,
         )
 
 
@@ -339,7 +359,11 @@ def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
 def test_explicit_review_risk_other_work_remains_unaffected(seat, model, review, profile):
     """D7: omission stays valid for Ukrainian, non-AGY and ordinary work."""
     (target,) = resolve_and_admit(
-        (seat,), model=model, mode="read-only", review_dispatch=review, review_profile=profile,
+        (seat,),
+        model=model,
+        mode="read-only",
+        review_dispatch=review,
+        review_profile=profile,
     )
     assert (target.recipient, target.model) == (seat, model)
 
