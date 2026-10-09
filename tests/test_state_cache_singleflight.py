@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -51,6 +52,27 @@ def test_cache_get_or_compute_hit_skips_compute():
 
     assert state_helpers.cache_get_or_compute("warm-key", 60.0, compute) == {"v": 1}
     assert calls["n"] == 0
+
+
+def test_cache_get_or_compute_async_coalesces_and_skips_a_warm_hit():
+    calls = {"n": 0}
+
+    def compute():
+        calls["n"] += 1
+        time.sleep(0.15)
+        return {"n": calls["n"]}
+
+    async def scenario():
+        results = await asyncio.gather(
+            *[state_helpers.cache_get_or_compute_async("async-sf", 60.0, compute) for _ in range(8)]
+        )
+        warm = await state_helpers.cache_get_or_compute_async("async-sf", 60.0, compute)
+        return results, warm
+
+    results, warm = asyncio.run(scenario())
+    assert calls["n"] == 1
+    assert all(item == {"n": 1} for item in results)
+    assert warm == {"n": 1}
 
 
 def test_cache_get_or_compute_force_bypasses_warm_and_coalesces():

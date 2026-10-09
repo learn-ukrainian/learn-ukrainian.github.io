@@ -152,7 +152,9 @@ V6_PHASE_ORDER = _V6_PHASES
 # explicitly and wait on completion signals instead of asserting
 # wall-clock staleness budgets on loaded CI runners (#8583).
 
+import asyncio
 import concurrent.futures
+import logging
 import threading
 import time
 from collections.abc import Callable
@@ -264,6 +266,98 @@ def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-pa
         with _inflight_lock:
             if _inflight_futures.get(key) is fut:
                 _inflight_futures.pop(key, None)
+
+
+def cache_peek(key: str) -> object | None:
+    """Return a stored value even after its TTL has elapsed.
+
+    Callers use this for stale-while-revalidate: serve the last payload and
+    refresh off the request path instead of making the caller wait.
+    """
+    entry = _ttl_cache.get(key)
+    if entry is None:
+        return None
+    return entry[1]
+
+
+_async_inflight: dict[str, asyncio.Future] = {}
+_lead_tasks: set[asyncio.Task] = set()
+_refresh_keys: set[str] = set()
+_refresh_keys_lock = threading.Lock()
+_cache_log = logging.getLogger("state_helpers")
+
+
+async def cache_get_or_compute_async(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
+    key: str,
+    ttl: float,
+    compute: Callable[[], T],
+    *,
+    force: bool = False,
+) -> T:
+    """TTL read that stays on the event loop when the value is already warm.
+
+    A miss starts one worker thread. Other callers for the same key await that
+    result without taking more thread-pool slots, so a stampede cannot fill the
+    pool and trip the request timeout.
+    """
+    if not force:
+        cached = cache_get(key, ttl)
+        if cached is not None:
+            return cached  # type: ignore[return-value]
+
+    loop = asyncio.get_running_loop()
+    leader = False
+    with _inflight_lock:
+        if not force:
+            cached = cache_get(key, ttl)
+            if cached is not None:
+                return cached  # type: ignore[return-value]
+        fut = _async_inflight.get(key)
+        if fut is None or fut.done():
+            fut = loop.create_future()
+            _async_inflight[key] = fut
+            leader = True
+
+    if leader:
+
+        async def _lead() -> None:
+            try:
+                value = await asyncio.to_thread(compute)
+                cache_set(key, value)
+                if not fut.done():
+                    fut.set_result(value)
+            except Exception as exc:
+                if not fut.done():
+                    fut.set_exception(exc)
+            finally:
+                with _inflight_lock:
+                    if _async_inflight.get(key) is fut:
+                        _async_inflight.pop(key, None)
+
+        task = asyncio.create_task(_lead())
+        _lead_tasks.add(task)
+        task.add_done_callback(_lead_tasks.discard)
+
+    return await fut
+
+
+def schedule_cache_refresh(key: str, ttl: float, compute: Callable[[], object]) -> None:
+    """Recompute one key on a daemon thread. Overlapping kicks share one flight."""
+
+    def _run() -> None:
+        try:
+            cache_get_or_compute(key, ttl, compute, force=True)
+        except Exception:
+            _cache_log.debug("background cache refresh failed", exc_info=True)
+        finally:
+            with _refresh_keys_lock:
+                _refresh_keys.discard(key)
+
+    with _refresh_keys_lock:
+        if key in _refresh_keys:
+            return
+        _refresh_keys.add(key)
+    threading.Thread(target=_run, name="status-cache-refresh", daemon=True).start()
 
 
 def cache_invalidate(prefix: str = "") -> int:

@@ -2201,14 +2201,128 @@ class SessionStreamStore:
     def list_remote_projections(self) -> list[dict[str, Any]]:
         """Return all epic lease projections from the API-host store."""
         with self._read_snapshot() as connection:
-            rows = connection.execute(
-                "SELECT stream.stream_id, stream.epic_number, lease.*, session.state AS session_state, "
-                "session.expired_at AS session_expired_at "
-                "FROM streams AS stream LEFT JOIN stream_leases AS lease ON lease.stream_id = stream.stream_id "
-                "LEFT JOIN sessions AS session ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
-                "WHERE stream.kind = 'epic' ORDER BY stream.epic_number"
-            ).fetchall()
-            return [self._row_as_dict(row) or {} for row in rows]
+            return self._projection_rows(connection)
+
+    def load_remote_epic_listing(self, *, snapshot_sha256: str | None) -> dict[str, Any]:
+        """One read snapshot for the epic list: projections, registry, latest entries.
+
+        The list used to open a fresh snapshot per stream (registry row plus
+        digest). Under concurrent polls those snapshots queued on the database
+        lock until the request timed out. The response fields are unchanged.
+        """
+        listing_types = (
+            EntryType.STATE.value,
+            EntryType.DECISION.value,
+            EntryType.NEXT_ACTION.value,
+        )
+        with self._read_snapshot() as connection:
+            return {
+                "projections": self._projection_rows(connection),
+                "registry": self._registry_choices(connection, snapshot_sha256),
+                "latest_entries": self._latest_typed_entries(connection, listing_types),
+            }
+
+    @staticmethod
+    def _projection_rows(connection: sqlite3.Connection) -> list[dict[str, Any]]:
+        rows = connection.execute(
+            "SELECT stream.stream_id, stream.epic_number, lease.*, session.state AS session_state, "
+            "session.expired_at AS session_expired_at "
+            "FROM streams AS stream LEFT JOIN stream_leases AS lease ON lease.stream_id = stream.stream_id "
+            "LEFT JOIN sessions AS session ON session.stream_id = lease.stream_id AND session.session_id = lease.session_id "
+            "WHERE stream.kind = 'epic' ORDER BY stream.epic_number"
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    @staticmethod
+    def _registry_choices(
+        connection: sqlite3.Connection,
+        snapshot_sha256: str | None,
+    ) -> dict[str, dict[str, Any]]:
+        """Latest receipt per stream, matching ``remote_registry_projection``."""
+        rows = connection.execute(
+            "SELECT stream_id, stream_name, title, source_sha256, receipt_id, recorded_at "
+            "FROM stream_inventory_receipts "
+            "ORDER BY stream_id, recorded_at DESC, receipt_id DESC"
+        ).fetchall()
+        latest: dict[str, sqlite3.Row] = {}
+        matched: dict[str, sqlite3.Row] = {}
+        for row in rows:
+            stream_id = str(row["stream_id"])
+            if stream_id not in latest:
+                latest[stream_id] = row
+            if (
+                snapshot_sha256
+                and str(row["source_sha256"]) == snapshot_sha256
+                and stream_id not in matched
+            ):
+                matched[stream_id] = row
+        choices: dict[str, dict[str, Any]] = {}
+        for stream_id, row in latest.items():
+            current = matched.get(stream_id)
+            chosen = current if current is not None else row
+            choices[stream_id] = {
+                "registered": current is not None,
+                "stream_name": None if chosen is None else str(chosen["stream_name"]),
+                "title": None if chosen is None else str(chosen["title"]),
+            }
+        return choices
+
+    def _latest_typed_entries(
+        self,
+        connection: sqlite3.Connection,
+        types: tuple[str, ...],
+    ) -> dict[str, dict[str, Entry]]:
+        """Newest entry of each requested type, via the stream/type index."""
+        if not types:
+            return {}
+        placeholders = ", ".join("?" for _ in types)
+        rows = connection.execute(
+            f"WITH ranked AS ("
+            f" SELECT entry_id, stream_id, session_id, agent, harness, ts, type, body,"
+            f" body_sha256, idempotency_key,"
+            f" ROW_NUMBER() OVER (PARTITION BY stream_id, type ORDER BY entry_id DESC) AS rn"
+            f" FROM entries WHERE type IN ({placeholders})"
+            f") "
+            f"SELECT entry_id, stream_id, session_id, agent, harness, ts, type, body,"
+            f" body_sha256, idempotency_key FROM ranked WHERE rn = 1",
+            types,
+        ).fetchall()
+        if not rows:
+            return {}
+        entry_ids = [int(row["entry_id"]) for row in rows]
+        ref_placeholders = ", ".join("?" for _ in entry_ids)
+        ref_rows = connection.execute(
+            f"SELECT entry_id, kind, target_entry_id, uri FROM entry_refs "
+            f"WHERE entry_id IN ({ref_placeholders}) ORDER BY entry_id, ordinal",
+            entry_ids,
+        ).fetchall()
+        refs_by_entry: dict[int, list[EntryRef]] = {}
+        for ref in ref_rows:
+            refs_by_entry.setdefault(int(ref["entry_id"]), []).append(
+                EntryRef(
+                    kind=str(ref["kind"]),
+                    target_entry_id=int(ref["target_entry_id"]) if ref["target_entry_id"] is not None else None,
+                    uri=str(ref["uri"]) if ref["uri"] is not None else None,
+                )
+            )
+        grouped: dict[str, dict[str, Entry]] = {}
+        for row in rows:
+            entry_id = int(row["entry_id"])
+            entry = Entry(
+                entry_id=entry_id,
+                stream_id=str(row["stream_id"]),
+                session_id=str(row["session_id"]),
+                agent=str(row["agent"]),
+                harness=str(row["harness"]),
+                ts=str(row["ts"]),
+                type=EntryType(str(row["type"])),
+                body=str(row["body"]),
+                body_sha256=str(row["body_sha256"]),
+                idempotency_key=str(row["idempotency_key"]),
+                refs=tuple(refs_by_entry.get(entry_id, ())),
+            )
+            grouped.setdefault(entry.stream_id, {})[entry.type.value] = entry
+        return grouped
 
     def latest_inventory_source_sha(self) -> str | None:
         """Return the source hash from the newest append-only inventory receipt."""

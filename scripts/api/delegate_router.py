@@ -7,6 +7,7 @@ import contextlib
 import json
 import os
 import sqlite3
+import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -28,6 +29,7 @@ from scripts.work.sources_public import public_repository_id
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
+from .state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 
 router = APIRouter(tags=["delegate"])
 
@@ -35,6 +37,10 @@ RESULT_BYTES_LIMIT = 64 * 1024
 TASK_READ_RETRIES = 2
 TASK_READ_RETRY_SECONDS = 0.01
 ACTIVE_TASK_STATUSES = {"running", "spawning"}
+# Short enough that a dead pid drops off the active list quickly, long enough
+# that a burst of dashboard polls shares one directory scan.
+DELEGATE_LIST_TTL_S = 2.0
+_TASK_SCAN_LOCK = threading.Lock()
 # Authoritative repository-attribution fields on task state. Paths, branch names,
 # cwd, worktree, and task_id are never used for repository matching.
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
@@ -441,6 +447,19 @@ def _delegate_task_rows(
     history. Active queries (running, spawning, ``needs_finalize``) read the
     hot directory only: nothing in the archive can match them.
     """
+    # One scan mutates the process-wide task cache and the sidecar index.
+    # Concurrent scans used to interleave those updates and pile SQLite writes
+    # on the same file until the request timeout fired.
+    with _TASK_SCAN_LOCK:
+        return _delegate_task_rows_locked(statuses, repository=repository, ctx=ctx)
+
+
+def _delegate_task_rows_locked(
+    statuses: set[str] | None = None,
+    *,
+    repository: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> list[dict[str, Any]]:
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
     resolved = resolve_context(ctx)
@@ -685,6 +704,35 @@ def active_delegate_tasks(
     return {"total": len(active), "tasks": active}
 
 
+def _dir_token(path: Path) -> str:
+    """Cheap generation for a directory: changes when entries are added or removed."""
+    try:
+        st = os.stat(path)
+    except OSError:
+        return "missing"
+    return f"{st.st_mtime_ns}:{getattr(st, 'st_nlink', 0)}"
+
+
+def _delegate_list_cache_key(
+    ctx: MonitorContext,
+    kind: str,
+    *,
+    status: str,
+    limit: int,
+) -> str:
+    resolved = resolve_context(ctx)
+    tasks_dir = _tasks_dir(resolved)
+    return ctx_scoped_ttl_key(
+        resolved,
+        "delegate",
+        kind,
+        status,
+        limit,
+        _dir_token(tasks_dir),
+        _dir_token(tasks_dir / TASK_ARCHIVE_DIR_NAME),
+    )
+
+
 @router.get("/tasks")
 async def delegate_tasks(
     status: Literal[
@@ -694,12 +742,22 @@ async def delegate_tasks(
     limit: int = Query(50, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
 ):
-    return await asyncio.to_thread(list_delegate_tasks, status=status, limit=limit, ctx=ctx)
+    cache_key = _delegate_list_cache_key(ctx, "tasks", status=status, limit=limit)
+    return await cache_get_or_compute_async(
+        cache_key,
+        DELEGATE_LIST_TTL_S,
+        lambda: list_delegate_tasks(status=status, limit=limit, ctx=ctx),
+    )
 
 
 @router.get("/active")
 async def delegate_active(ctx: MonitorContext = Depends(get_ctx)):
-    return await asyncio.to_thread(active_delegate_tasks, ctx=ctx)
+    cache_key = _delegate_list_cache_key(ctx, "active", status="active", limit=0)
+    return await cache_get_or_compute_async(
+        cache_key,
+        DELEGATE_LIST_TTL_S,
+        lambda: active_delegate_tasks(ctx=ctx),
+    )
 
 
 @router.get("/tasks/{task_id}")

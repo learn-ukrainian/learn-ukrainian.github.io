@@ -576,3 +576,28 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     assert epic_7919["lease"] is not None
     assert epic_7919["last_state"]["body"] == "working on graph"
     assert epic_7919["last_decision"]["body"] == "design approved"
+
+
+def test_epic_list_keeps_latest_typed_entries(tmp_path: Path, monkeypatch) -> None:
+    """The one-snapshot list still returns the newest state and decision."""
+    client = _client(tmp_path, monkeypatch)
+    claimed = _claim(client, "epic:7178")
+    lease = claimed["lease"]
+    for body, key in (("older state", "list-state-1"), ("newer state", "list-state-2")):
+        posted = client.post(
+            "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+            json={**lease, "type": "state", "body": body, "idempotency_key": key},
+        )
+        assert posted.status_code == 200, posted.text
+    decision = client.post(
+        "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+        json={**lease, "type": "decision", "body": "ship it", "idempotency_key": "list-dec-1"},
+    )
+    assert decision.status_code == 200, decision.text
+
+    listing = client.get("/api/epics/v1")
+    assert listing.status_code == 200
+    row = next(item for item in listing.json()["streams"] if item["stream_id"] == "epic:7178")
+    assert row["last_state"]["body"] == "newer state"
+    assert row["last_decision"]["body"] == "ship it"
+    assert row["last_next_action"] is None

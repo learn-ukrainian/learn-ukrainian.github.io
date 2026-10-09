@@ -130,8 +130,10 @@ from .state_coverage import (
 from .state_helpers import (
     cache_get,
     cache_get_or_compute,
+    cache_get_or_compute_async,
     cache_get_with_age,
     cache_invalidate,
+    cache_peek,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -141,6 +143,7 @@ from .state_helpers import (
     get_word_target_from_plan,
     read_v2_state,
     read_v3_state,
+    schedule_cache_refresh,
 )
 from .state_issues import (
     compute_final_reviews,
@@ -211,6 +214,7 @@ STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
 STATE_WEAK_POINTS_TTL_S = 60.0
+ROUTING_BUDGET_TTL_S = 15.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 _state_scan_warm_lock = threading.Lock()
 _state_scan_warm_thread: threading.Thread | None = None
@@ -352,6 +356,23 @@ def _run_state_scan_warmup(ctx: MonitorContext) -> None:
             _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
             STATE_WEAK_POINTS_TTL_S,
             lambda: _compute_weak_points_payload(ctx, None, 7, 20),
+        )
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "summary"),
+            STATE_SUMMARY_TTL_S,
+            lambda: compute_summary(
+                curriculum_root=ctx.roots.curriculum_root,
+                project_root=ctx.roots.project_root,
+                plans_root=ctx.roots.plans_root,
+            ),
+        )
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "research_coverage"),
+            STATE_RESEARCH_COVERAGE_TTL_S,
+            lambda: compute_research_coverage(
+                curriculum_root=ctx.roots.curriculum_root,
+                plans_root=ctx.roots.plans_root,
+            ),
         )
     except Exception as exc:
         logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
@@ -2226,19 +2247,31 @@ async def routing_budget(
     """
     if fresh_codexbar:
         trigger_background_refresh()
-    budget_config_path = ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml"
-    tasks_dir = ctx.roots.batch_state_dir / "tasks"
-    return await asyncio.to_thread(
-        compute_routing_budget,
-        transport=transport,
-        fresh_codexbar=False,
-        refresh_requested=fresh_codexbar,
-        budget_config_path=budget_config_path,
-        tasks_dir=tasks_dir,
-        project_root=ctx.roots.project_root,
-        curriculum_root=ctx.roots.curriculum_root,
-        batch_state_dir=ctx.roots.batch_state_dir,
-    )
+    cache_key = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+
+    def _compute() -> dict[str, Any]:
+        return compute_routing_budget(
+            transport=transport,
+            fresh_codexbar=False,
+            refresh_requested=fresh_codexbar,
+            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+            tasks_dir=ctx.roots.batch_state_dir / "tasks",
+            project_root=ctx.roots.project_root,
+            curriculum_root=ctx.roots.curriculum_root,
+            batch_state_dir=ctx.roots.batch_state_dir,
+        )
+
+    # A warm or last-good snapshot returns on the event loop. Recompute runs
+    # beside the request so a slow ledger/task scan cannot blow the page's
+    # fetch budget or occupy the shared thread pool.
+    cached = cache_get(cache_key, ROUTING_BUDGET_TTL_S)
+    if cached is not None:
+        return cached
+    stale = cache_peek(cache_key)
+    if stale is not None:
+        schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+        return stale
+    return await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
 
 
 @router.get("/github-budget")
@@ -2258,29 +2291,24 @@ async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depend
     cache_key = _ctx_cache_key(ctx, "summary")
     if fresh:
         cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_SUMMARY_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:plans+orchestration+artifacts+research",
-            stale_after_s=STATE_SUMMARY_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_summary,
-        curriculum_root=ctx.roots.curriculum_root,
-        project_root=ctx.roots.project_root,
-        plans_root=ctx.roots.plans_root,
+    was_warm = (not fresh) and cache_get(cache_key, STATE_SUMMARY_TTL_S) is not None
+    result = await cache_get_or_compute_async(
+        cache_key,
+        STATE_SUMMARY_TTL_S,
+        lambda: compute_summary(
+            curriculum_root=ctx.roots.curriculum_root,
+            project_root=ctx.roots.project_root,
+            plans_root=ctx.roots.plans_root,
+        ),
+        force=fresh,
     )
-    cache_set(cache_key, result)
+    aged = cache_get_with_age(cache_key, STATE_SUMMARY_TTL_S)
     return _with_state_meta(
         result,
         source="fs:plans+orchestration+artifacts+research",
         stale_after_s=STATE_SUMMARY_TTL_S,
-        cache="miss",
-        age_s=0.0,
+        cache="hit" if was_warm else "miss",
+        age_s=0.0 if aged is None else aged[1],
     )
 
 
@@ -2329,8 +2357,7 @@ async def pipeline_versions(
     """All modules grouped by pipeline version."""
     cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
     was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
-    result = await asyncio.to_thread(
-        cache_get_or_compute,
+    result = await cache_get_or_compute_async(
         cache_key,
         STATE_PIPELINE_VERSIONS_TTL_S,
         lambda: _compute_pipeline_versions_payload(ctx, track),
@@ -2449,8 +2476,7 @@ async def weak_points(
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
     cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    return await asyncio.to_thread(
-        cache_get_or_compute,
+    return await cache_get_or_compute_async(
         cache_key,
         STATE_WEAK_POINTS_TTL_S,
         lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
@@ -2630,28 +2656,23 @@ async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = De
     cache_key = _ctx_cache_key(ctx, "research_coverage")
     if fresh:
         cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_COVERAGE_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:research+dossiers",
-            stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_research_coverage,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
+    was_warm = (not fresh) and cache_get(cache_key, STATE_RESEARCH_COVERAGE_TTL_S) is not None
+    result = await cache_get_or_compute_async(
+        cache_key,
+        STATE_RESEARCH_COVERAGE_TTL_S,
+        lambda: compute_research_coverage(
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        ),
+        force=fresh,
     )
-    cache_set(cache_key, result)
+    aged = cache_get_with_age(cache_key, STATE_RESEARCH_COVERAGE_TTL_S)
     return _with_state_meta(
         result,
         source="fs:research+dossiers",
         stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-        cache="miss",
-        age_s=0.0,
+        cache="hit" if was_warm else "miss",
+        age_s=0.0 if aged is None else aged[1],
     )
 
 

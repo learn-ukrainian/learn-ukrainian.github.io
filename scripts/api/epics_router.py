@@ -44,6 +44,7 @@ from agents_extensions.shared.session_streams.store import (
 from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
+from scripts.api.state_helpers import cache_get_or_compute_async, ctx_scoped_ttl_key
 from scripts.orchestration import issue_stream_audit as audit
 from scripts.orchestration.thread_handoff import _bundle_extract, _bundle_secret_hits
 
@@ -51,6 +52,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 SCHEMA = "remote-epic-lifecycle.v1"
+_EPIC_LIST_TTL_S = 5.0
 GRAPH_SCHEMA = "epics-graph.v1"
 DEFAULT_TTL_SECONDS = 15 * 60
 MAX_DIGEST_LIMIT = 100
@@ -536,45 +538,71 @@ def remote_health(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
     )
 
 
+def _build_remote_epic_list(ctx: MonitorContext) -> dict[str, Any]:
+    """Assemble the list payload from one database snapshot."""
+    store = _store(ctx)
+    registry_status = registry_health_snapshot()["status"]
+    bundle = store.load_remote_epic_listing(snapshot_sha256=_registry_snapshot_for_response(store))
+    now = utc_now()
+    rows = []
+    for row in bundle["projections"]:
+        stream_id = str(row["stream_id"])
+        lease_payload = None
+        session_state = None
+        if row.get("lease_id") is not None:
+            lease = store._lease_from_row(row)
+            session_state = (
+                SessionState.EXPIRED.value if row.get("session_expired_at") else str(row["session_state"])
+            )
+            lease_payload = _lease_payload(
+                lease,
+                projection_state=str(row["state"]),
+                session_state=session_state,
+                now=now,
+            )
+        by_type = bundle["latest_entries"].get(stream_id, {})
+        meta = bundle["registry"].get(stream_id) or {
+            "registered": False,
+            "stream_name": None,
+            "title": None,
+        }
+        rows.append(
+            {
+                "stream_id": stream_id,
+                "registered": bool(meta["registered"]),
+                "stream_name": _response_registry_text(meta["stream_name"]),
+                "title": _response_registry_text(meta["title"]),
+                "registry_status": registry_status,
+                "lease": lease_payload,
+                "session_state": session_state,
+                "last_state": _safe_latest_entry(by_type.get(EntryType.STATE.value)),
+                "last_decision": _safe_latest_entry(by_type.get(EntryType.DECISION.value)),
+                "last_next_action": _safe_latest_entry(by_type.get(EntryType.NEXT_ACTION.value)),
+            }
+        )
+    return {"schema": SCHEMA, "registry_status": registry_status, "streams": rows}
+
+
+def _safe_latest_entry(entry: Any) -> dict[str, Any] | None:
+    if entry is None:
+        return None
+    return _safe_entry(entry_as_dict(entry))
+
+
 @router.get("/v1")
-def remote_epic_list(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
+async def remote_epic_list(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
     try:
         store = _store(ctx)
-        registry_status = registry_health_snapshot()["status"]
-        rows = []
-        for row in store.list_remote_projections():
-            stream_id = str(row["stream_id"])
-            lease_payload = None
-            session_state = None
-            if row.get("lease_id") is not None:
-                lease = store._lease_from_row(row)
-                session_state = (
-                    SessionState.EXPIRED.value if row.get("session_expired_at") else str(row["session_state"])
-                )
-                lease_payload = _lease_payload(
-                    lease,
-                    projection_state=str(row["state"]),
-                    session_state=session_state,
-                    now=utc_now(),
-                )
-            digest = _digest_payload(store, stream_id, 3)
-            latest = {entry["type"]: entry for entry in (*digest["pinned"], *digest["recent"])}
-            rows.append(
-                {
-                    "stream_id": stream_id,
-                    **_registry_fields(store, stream_id),
-                    "registry_status": registry_status,
-                    "lease": lease_payload,
-                    "session_state": session_state,
-                    "last_state": latest.get(EntryType.STATE.value),
-                    "last_decision": latest.get(EntryType.DECISION.value),
-                    "last_next_action": latest.get(EntryType.NEXT_ACTION.value),
-                }
-            )
+        cache_key = ctx_scoped_ttl_key(ctx, "epics-v1", str(store.database.path))
+        payload = await cache_get_or_compute_async(
+            cache_key,
+            _EPIC_LIST_TTL_S,
+            lambda: _build_remote_epic_list(ctx),
+        )
     except Exception:
         return _server_error()
     return JSONResponse(
-        content={"schema": SCHEMA, "registry_status": registry_status, "streams": rows},
+        content=payload,
         headers={"Cache-Control": "no-store"},
     )
 
