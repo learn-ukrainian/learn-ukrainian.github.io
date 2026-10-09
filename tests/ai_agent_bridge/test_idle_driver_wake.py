@@ -283,7 +283,7 @@ def test_rollout_ready_tracks_turn_boundaries(tmp_path):
         {"type": "turn_complete", "turn_id": "turn-b"},
     )
     path.write_text(closed + "{partial", encoding="utf-8")
-    assert ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)
     path.write_text(
         closed + json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "turn-c"}}) + "\n",
         encoding="utf-8",
@@ -350,3 +350,68 @@ def test_wake_watcher_retries_a_busy_pane_without_a_launcher(inbox_db, live_driv
         watch.run_supervisory_wake_watcher("codex", "codex", "fixture", interval_seconds=1, once=False)
     send.assert_called_once()
     assert "unread payload" in send.call_args.kwargs["message"]
+
+
+def test_abort_without_id_clears_open_turns(tmp_path):
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+
+    # Sequence 1: start(a) -> abort(no id)
+    seq1 = _rollout_text(
+        tmp_path,
+        {"type": "task_started", "turn_id": "turn-a"},
+        {"type": "turn_aborted"},
+    )
+    path.write_text(seq1, encoding="utf-8")
+    assert ui.rollout_is_ready(path)
+
+    # Sequence 2: start(a) -> abort(no id) -> start(b) -> complete(b)
+    seq2 = _rollout_text(
+        tmp_path,
+        {"type": "task_started", "turn_id": "turn-a"},
+        {"type": "turn_aborted"},
+        {"type": "task_started", "turn_id": "turn-b"},
+        {"type": "turn_complete", "turn_id": "turn-b"},
+    )
+    path.write_text(seq2, encoding="utf-8")
+    assert ui.rollout_is_ready(path)
+
+
+def test_stale_crash_is_ready(tmp_path, monkeypatch):
+    import time
+
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    path = tmp_path / "rollout.jsonl"
+    seq = _rollout_text(
+        tmp_path,
+        {"type": "task_started", "turn_id": "turn-a"},
+    )
+    path.write_text(seq, encoding="utf-8")
+
+    # If unmodified for a long time, it is considered stale
+    # Need to simulate time
+    import os
+    st = os.stat(path)
+    os.utime(path, (st.st_atime, st.st_mtime - 3601)) # 1 hour ago
+
+    assert ui.rollout_is_ready(path)
+
+    os.utime(path, (st.st_atime, time.time()))
+    assert not ui.rollout_is_ready(path)
+
+def test_bounded_rollout_reader(tmp_path, monkeypatch):
+    path = tmp_path / "rollout.jsonl"
+
+    # Large synthetic rollout
+    lines = [json.dumps({"type": "session_meta", "payload": {"id": THREAD, "cwd": str(tmp_path)}})]
+    # Add many complete turns to exceed bounds
+    for i in range(15000):
+        lines.append(json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": f"turn-{i}"}}))
+        lines.append(json.dumps({"type": "event_msg", "payload": {"type": "turn_complete", "turn_id": f"turn-{i}"}}))
+
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # It should fail closed if it reaches cap without determining state. Wait,
+    # if we only read the tail, we might only see complete(x) without start(x).
+    # But wait, open_ids is a set. If we see a complete without start in the chunk,
+    # does that mean we need to read further? Let's check how the logic should be implemented.

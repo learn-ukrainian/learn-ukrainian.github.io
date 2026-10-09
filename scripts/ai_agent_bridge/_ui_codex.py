@@ -131,45 +131,118 @@ def find_live_session(lease: dict) -> LiveSession | None:
     return next(iter(matches.values())) if len(matches) == 1 else None
 
 
+STALE_TURN_SECONDS = 600  # 10 minutes without a write means a mid-turn crash
+
+
 def rollout_is_ready(path: Path) -> bool:
     """Return whether this rollout has no open turn.
 
     A file that only has ``session_meta`` is idle at the prompt. ``task_started``
     (and the ``turn_started`` alias) opens a turn; ``task_complete``,
     ``turn_complete``, or ``turn_aborted`` closes the matching ``turn_id``.
-    A truncated last line is an in-flight append and is ignored. Any earlier
-    unreadable line, or a file that cannot be opened, is not Ready.
+    A truncated last line is an in-flight append and fails closed.
+
+    Reads backwards in chunks to bound work. Fails closed if the turn state
+    cannot be determined within the cap.
+
+    An unmatched historical start left by a crash is considered stale
+    (and the pane ready) if the rollout has no writes for STALE_TURN_SECONDS.
     """
+    import time
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        stat = path.stat()
+        size = stat.st_size
+        mtime = stat.st_mtime
     except OSError:
         return False
+
+    if size == 0:
+        return False
+
     open_ids: set[str] = set()
     anonymous = 0
-    for index, line in enumerate(lines):
-        stripped = line.strip()
-        if not stripped:
-            continue
-        try:
-            record = json.loads(stripped)
-        except json.JSONDecodeError:
-            if index == len(lines) - 1:
-                continue
-            return False
-        if not isinstance(record, dict):
-            return False
-        kind, turn_id = _rollout_turn_marker(record)
-        if kind in _TURN_START:
-            if turn_id:
-                open_ids.add(turn_id)
-            else:
-                anonymous += 1
-        elif kind in _TURN_END:
-            if turn_id:
-                open_ids.discard(turn_id)
-            else:
-                anonymous = max(0, anonymous - 1)
-    return not open_ids and anonymous == 0
+    cap_bytes = 1024 * 1024  # 1 MB cap
+    chunk_size = 64 * 1024   # 64 KB chunk
+
+    bytes_read = 0
+    remainder = b""
+    pos = size
+
+    def _check_stale(busy: bool) -> bool:
+        if busy:
+            return time.time() - mtime > STALE_TURN_SECONDS
+        return True
+
+    try:
+        with path.open("rb") as f:
+            while pos > 0 and bytes_read < cap_bytes:
+                read_size = min(chunk_size, pos)
+                pos -= read_size
+                f.seek(pos)
+                chunk = f.read(read_size)
+                bytes_read += read_size
+
+                lines = (chunk + remainder).split(b"\n")
+                if pos > 0:
+                    remainder = lines[0]
+                    lines = lines[1:]
+                else:
+                    remainder = b""
+
+                for line in reversed(lines):
+                    stripped = line.strip()
+                    if not stripped:
+                        continue
+                    try:
+                        record = json.loads(stripped)
+                    except json.JSONDecodeError:
+                        return False  # fail closed on incomplete json
+
+                    if not isinstance(record, dict):
+                        return False
+
+                    kind, turn_id = _rollout_turn_marker(record)
+                    if kind in _TURN_END:
+                        if turn_id:
+                            open_ids.add(turn_id)
+                        elif kind == "turn_aborted":
+                            return _check_stale(False)
+                        else:
+                            anonymous += 1
+                    elif kind in _TURN_START:
+                        if turn_id:
+                            if turn_id in open_ids:
+                                open_ids.discard(turn_id)
+                            else:
+                                return _check_stale(True)
+                        else:
+                            if anonymous > 0:
+                                anonymous -= 1
+                            else:
+                                return _check_stale(True)
+            if remainder:
+                stripped = remainder.strip()
+                if stripped:
+                    try:
+                        record = json.loads(stripped)
+                        if isinstance(record, dict):
+                            kind, turn_id = _rollout_turn_marker(record)
+                            if kind in _TURN_START:
+                                if turn_id:
+                                    if turn_id not in open_ids:
+                                        return _check_stale(True)
+                                else:
+                                    if anonymous == 0:
+                                        return _check_stale(True)
+                    except json.JSONDecodeError:
+                        return False
+    except OSError:
+        return False
+
+    if pos > 0:
+        return False
+
+    return _check_stale(bool(open_ids or anonymous > 0))
 
 
 def _rollout_turn_marker(record: dict) -> tuple[str | None, str | None]:
