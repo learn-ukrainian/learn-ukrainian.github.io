@@ -4,6 +4,7 @@ import sys
 import textwrap
 from pathlib import Path
 
+import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
@@ -11,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from pipeline.consultation import (
     ConsultationResult,
     TemplateChange,
+    _clean_yaml_text,
     apply_template_patch,
     parse_consultation,
     queue_for_approval,
@@ -544,3 +546,101 @@ class TestRecordConsultation:
         entry = state["consultations"][0]
         assert entry["outcome"] == "queued"
         assert entry["changes_count"] == 2
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
+def test_unicode_structured_boundary_consultation_yaml(separator):
+    from pipeline.consultation import _clean_yaml_text
+
+    body = (
+        f'root_cause: "alpha{separator}beta"\n'
+        "proposed_changes: []\nscope: this_module\naction: fix\nconfidence: high\n"
+    )
+    fenced = f"```yaml\n{body}```"
+    assert yaml.safe_load(_clean_yaml_text(fenced)) == yaml.safe_load(body)
+    assert parse_consultation(fenced).root_cause == yaml.safe_load(body)["root_cause"]
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("scalar", ['"alpha\\nbeta"', "|-\n  alpha\n  beta", "|\n  alpha\n  beta", "|+\n  alpha\n  beta\n"])
+def test_consultation_yaml_physical_framing_and_block_scalars(ending, scalar):
+    from pipeline.consultation import _clean_yaml_text
+
+    body = (f"value: {scalar}\n").replace("\n", ending)
+    for text in (body, f"```yaml{ending}{body}```", f"```{ending}{body}"):
+        assert yaml.safe_load(_clean_yaml_text(text)) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("text", ["", " \n\t", "value: [", "```yaml\nvalue: [\n```"])
+def test_consultation_yaml_empty_and_malformed(text):
+    from pipeline.consultation import _clean_yaml_text
+
+    cleaned = _clean_yaml_text(text)
+    if "[" in text:
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(cleaned)
+    else:
+        assert yaml.safe_load(cleaned) is None
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"], ids=["LF", "CRLF", "CR"])
+@pytest.mark.parametrize("exterior_blanks", [0, 1, 3])
+@pytest.mark.parametrize("payload_blanks", [0, 1, 3])
+@pytest.mark.parametrize("chomping", ["|", "|-", "|+"])
+@pytest.mark.parametrize("padding", ["", " \t"])
+def test_consultation_fence_exterior_lines_preserve_payload(ending, exterior_blanks, payload_blanks, chomping, padding):
+    body = f"value: {chomping}{ending}  x{ending}" + ending * payload_blanks
+    exterior = (padding + ending) * exterior_blanks
+    framed = f"{exterior}  ```yaml{ending}{body}```{exterior}"
+    cleaned = _clean_yaml_text(framed)
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029"], ids=["NEL", "LS", "PS"])
+@pytest.mark.parametrize("scalar", ['"alpha{separator}beta"', "|+\n  alpha{separator}  beta\n\n"])
+def test_consultation_unicode_scalar_bytes_preserved(separator, scalar):
+    body = "value: " + scalar.format(separator=separator) + "\n"
+    cleaned = _clean_yaml_text(f"```yaml\r\n{body}```\r\n \t\r\n\r\n")
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("fenced", [False, True])
+def test_consultation_uniform_indentation_and_literal_backticks_preserved(fenced):
+    body = "  first: one\n  value: |+\n    ```\n    tail\n\n"
+    text = f" \n```yaml\n{body}```\n\n" if fenced else body
+    cleaned = _clean_yaml_text(text)
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == {"first": "one", "value": "```\ntail\n\n"}
+
+
+def test_consultation_first_line_only_indentation_remains_malformed():
+    # Accepted low residual: do not repair malformed padding by corrupting valid indentation.
+    body = "  first: one\nsecond: two\n"
+    for text in (body, f"```yaml\n{body}```\n\n"):
+        assert _clean_yaml_text(text) == body
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(_clean_yaml_text(text))
+        assert parse_consultation(text) is None
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+def test_consultation_unterminated_fence_keeps_payload(ending):
+    body = f"value: |+{ending}  x{ending}{ending}{ending}"
+    cleaned = _clean_yaml_text(f" \t{ending}```yaml{ending}{body}")
+    assert cleaned == body
+    assert yaml.safe_load(cleaned) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("text", ["```yaml", "```yaml\n```\n\n"])
+def test_consultation_empty_fence(text):
+    assert _clean_yaml_text(text) == ""
+    assert parse_consultation(text) is None
+
+
+@pytest.mark.parametrize("text", ["```yaml\nvalue: [\n", "```yaml\nvalue: x\n```broken\n\n"])
+def test_consultation_malformed_fenced_yaml_still_fails(text):
+    with pytest.raises(yaml.YAMLError):
+        yaml.safe_load(_clean_yaml_text(text))
+    assert parse_consultation(text) is None
