@@ -37,7 +37,7 @@ Policy here; facts: `scripts/config/model_catalog.yaml`; changes need `model-ass
 | Advice, new design | `claude-opus-5-5` · `gpt-6.1-sol` | — |
 | Hard or accountable code | `gpt-6.1-sol` · `claude-opus-5-5` | Cursor `grok-4.7` · Kimi |
 | Bounded code, recon (Sol envelope first) | `gpt-6-luna` | `gemini-3.8-flash-high` |
-| Security code (hooks, launchers, credentials, admission, sandbox) | `claude-opus-5-5` · `gpt-6.1-sol`; review `--risk critical` | never Sonnet |
+| Security code (hooks, launchers, credentials, admission, sandbox) | `claude-opus-5-5` · `gpt-6.1-sol`; review `--risk critical` | never written or reviewed on Sonnet |
 | Mechanical lockfile/pointer/smoke | `claude-haiku-5-5` | `claude-sonnet-5-5` |
 | Classification/triage; read-only recon/search | `claude-haiku-5-5` (recon peer: Luna) | — |
 | Routine code, English prose | `claude-sonnet-5-5` | `gpt-6.1-sol` |
@@ -46,7 +46,7 @@ Policy here; facts: `scripts/config/model_catalog.yaml`; changes need `model-ass
 
 Claude Ukrainian: Opus 5.5. Fable/former Astra: no advice, approval or review. Sol 6.1 @ high: orchestration, advanced coding, Ukrainian authoring and red-team. Luna @ high: scouting and bounded repeatable work; max only for unusually hard scouting. No bounded dispatch is direct (operator decision 2026-09-30): every Luna dispatch, and
 every Flash one not classified Ukrainian authoring or review, first gets a complete `gpt-6.1-sol` advisory envelope
-bound to it (`--advisory-task`). `start-claude-driver.sh`: `claude-opus-5-5[1m]` @ high unless overridden by `--model`/`--effort` or `LAUNCHER_MODEL`/`LAUNCHER_EFFORT`. `start-claude.sh` retains its last TUI selection; designated advice is separate. <!-- p2-table: M04 -->
+bound to it (`--advisory-task`). `start-claude-driver.sh`: `claude-opus-5-5[1m]` @ high; `--model`/`--effort` or `LAUNCHER_MODEL`/`LAUNCHER_EFFORT` override. `start-claude.sh`: Sonnet 5.5 + Opus advisor default; designated advice is separate. <!-- p2-table: M04 -->
 
 - Resolve code/infra reviewers with `closeout_cli resolve-reviewer`: exclude affected seats, keep the receipt, pass exact `--author-model`, `--review-profile code`, `--risk`. For adapters/reviewer hooks, resolve ambiguity with `--owned-path` or `--subject-seat`/`--subject-family`. Apply hard filters before quality; execute the returned invocation; keep concrete model, family, route, transport, health trace and `requires_silence_timeout`. Rank primary before last resort, then profile/risk fit, quality tier and resources; never skip a higher eligible candidate. Native AGY admits low or medium risk code review. Ukrainian reviews need Sources MCP. Infra, high, critical and security reviews exclude Gemini. Grok 4.7 reviews code and infra at every risk, including critical, through native CLI and Cursor with runtime model attestation, never for xAI authors or its own subject seat (operator decision 2026-10-05, #9769); Grok, driving, delegates implementation. Grok reviews: no sandbox, shell, tests or scripts; tracked-file reads only (#9987). Execution-dependent reviews use Opus 5.5/Sol 6.1; Grok briefs: diff/CI evidence, no execution requests. <!-- p2-review: M30 -->
 - Ukrainian language, culture and heritage seats (authoring, review, judging, CEFR, Russianisms): Claude, GPT or Gemini only. Content review requiring VESUM verification uses Claude, GPT or Gemini with the `sources` MCP and runs `verify_words`, `query_cefr_level` and `check_russian_shadow`. <!-- p2-lang: M31 -->

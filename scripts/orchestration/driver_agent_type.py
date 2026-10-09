@@ -1,16 +1,14 @@
 """Resolve the driver agent type for a launcher lane from ``area_assignments.yaml``.
 
-Claude Code selects its system prompt from ``--agent``. The project default
-(``.claude/settings.json`` → ``"agent"``) is the main orchestrator, which is the
-wrong prompt for every non-curriculum driver lane. The driver launcher calls this
-module to inject ``--agent <driver_agent_type>`` for the epic's area.
+Claude Code selects its system prompt from ``--agent``. Project settings have no
+``"agent"`` default. The driver launcher calls this module to inject
+``--agent <driver_agent_type>`` for the epic's area.
 
 Lookup order: the lane is an area key → that area's ``driver_agent_type``; else the
 lane is a stream alias in ``fleet_taxonomy.yaml`` (``areas.<id>.aliases``, e.g.
 ``atlas-practice`` → ``atlas``) → the canonical area's ``driver_agent_type``; else the
 area whose ``slots`` list contains ``<provider>-<lane>`` (e.g. ``claude-folk`` lives
-under ``seminars``); else nothing (the caller keeps the settings default). Unknown
-lanes fail closed.
+under ``seminars``); else nothing. Unknown lanes fail closed.
 """
 
 from __future__ import annotations

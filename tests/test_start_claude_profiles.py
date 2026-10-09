@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 import pytest
 
 from scripts.review.model_catalog import load_model_catalog
-from tests.test_launcher_contract import run_launcher
+from tests.test_launcher_contract import REPO, _core_driver_exit_fixture, run_launcher
 
 pytestmark = pytest.mark.usefixtures("hermetic_monitor")
 
@@ -23,6 +24,7 @@ def _stub_claude(tmp_path: Path) -> Path:
         "printf 'max=%s\\n' \"${CLAUDE_CODE_MAX_CONTEXT_TOKENS:-unset}\"\n"
         "printf 'compact=%s\\n' \"${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-unset}\"\n"
         "printf 'profile=%s\\n' \"${LEARN_UKRAINIAN_PROFILE_ID:-unset}\"\n"
+        "printf 'advisor_disabled=%s\\n' \"${CLAUDE_CODE_DISABLE_ADVISOR_TOOL:-unset}\"\n"
         "printf 'args=%s\\n' \"$*\"\n",
         encoding="utf-8",
     )
@@ -119,6 +121,41 @@ def test_claude_driver_defaults_to_opus_5_5_at_high() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "devops")
     assert result.returncode == 0, result.stderr
     assert f"would exec claude --model {OPUS_5_5_1M} --effort high" in result.stdout
+
+
+@pytest.mark.parametrize("inherited", ["", "0", "1"])
+def test_claude_driver_disables_advisor_in_provider_environment(tmp_path: Path, inherited: str) -> None:
+    launcher, _, closed, _ = _core_driver_exit_fixture(tmp_path, provider_body="exit 0")
+    # Keep the real entrypoint, core and native adapter; only the fixture's
+    # scope, lease and continuity services are fake. No provider call is made.
+    shutil.copy2(REPO / "scripts/launchers/claude.sh", launcher.parent / "scripts/launchers/claude.sh")
+    shutil.copy2(REPO / "scripts/config/context_profiles.yaml", launcher.parent / "scripts/config/context_profiles.yaml")
+    bin_dir = _stub_claude(tmp_path)
+    env = {
+        "PATH": f"{bin_dir}:{os.environ['PATH']}",
+        "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": inherited,
+    }
+    result = run_launcher(
+        "start-claude-driver.sh", "--epic", "devops", env=env, dry_run=False, root=launcher.parent,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "advisor_disabled=1" in result.stdout
+    assert closed.is_file()
+
+
+@pytest.mark.parametrize("inherited", ["", "0", "1"])
+def test_claude_interactive_preserves_advisor_switch(tmp_path: Path, inherited: str) -> None:
+    bin_dir = _stub_claude(tmp_path)
+    result = run_launcher(
+        "start-claude.sh",
+        env={
+            "PATH": f"{bin_dir}:{os.environ['PATH']}",
+            "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": inherited,
+        },
+        dry_run=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f"advisor_disabled={inherited or 'unset'}\n" in result.stdout
 
 
 def test_claude_driver_default_yields_to_launcher_env() -> None:
