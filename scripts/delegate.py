@@ -68,6 +68,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "review_author_model": str | null,  # trusted author identity for code review resolution
         "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
         "review_profile": str | null,  # code (default) or ukrainian
+        "review_language_lane": bool,  # dispatch's Ukrainian content classification
+        "sources_mcp_call_count": int | null,  # runtime evidence; null means unknown
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -237,6 +239,7 @@ from scripts.orchestration.dead_worker_state import (
 )
 from scripts.orchestration.safe_git_context import CANONICAL_ORIGIN, SafeGitContext, SnapshotRefusal
 from scripts.publish.github import Request, request_run
+from scripts.review.language_lane import is_ukrainian_review
 from scripts.review.verdict_parser import recognized_verdicts
 from scripts.secret_redactor import redact_text
 
@@ -9721,6 +9724,23 @@ def _kimi_refusal_cause(refusal: str, unreadable: _TypedCause | None) -> tuple[s
     return public, dataclasses.replace(cause, diagnostic=detail)
 
 
+def _sources_mcp_call_count(result: Any) -> int | None:
+    """Count Sources invocations from runtime telemetry without retaining arguments."""
+    total = getattr(result, "tool_calls_total", None)
+    calls = getattr(result, "tool_calls", None)
+    if type(total) is not int or total < 0 or not isinstance(calls, list) or len(calls) != total:
+        return None
+    names = []
+    for call in calls:
+        if not isinstance(call, dict) or not isinstance(call.get("name"), str) or not call["name"].strip():
+            return None
+        names.append(call["name"])
+    return sum(
+        bool(re.fullmatch(r"(?:mcp__sources__|mcp_sources_)[A-Za-z][A-Za-z0-9_]*", name))
+        for name in names
+    )
+
+
 def _emit_terminal_dispatch_event(
     *,
     task_id: str,
@@ -10953,6 +10973,7 @@ def _run_worker(
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
             "no_deliverable_reason": no_deliverable_reason,
+            "sources_mcp_call_count": _sources_mcp_call_count(result),
             "delivery_declaration": delivery_declaration,
             "keep_worktree": keep_worktree,
             "worktree_reap": worktree_reap,
@@ -12926,6 +12947,8 @@ def _dispatch(
                 "review_author_model": getattr(args, "review_author_model", None),
                 "review_risk": getattr(args, "review_risk", None),
                 "review_profile": getattr(args, "review_profile", None),
+                "review_language_lane": _dispatch_is_language_lane(args)
+                or is_ukrainian_review(vars(args)),
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
@@ -13374,6 +13397,8 @@ def _dispatch(
             "review_author_model": getattr(args, "review_author_model", None),
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
+            "review_language_lane": _dispatch_is_language_lane(args)
+            or is_ukrainian_review(vars(args)),
             "task_id": task_id,
             "review": bool(getattr(args, "review", False))
             or str(getattr(args, "type", "") or "").strip().casefold() == "review",

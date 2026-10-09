@@ -2404,13 +2404,15 @@ def test_dispatch_uses_plain_popen_when_probe_reports_no_slice(tmp_tasks_dir, di
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
-def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
+@pytest.mark.parametrize("language_lane", [False, True])
+def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir, language_lane):
     """Dispatch should persist model/effort/cli_version immediately."""
     import argparse
 
     args = argparse.Namespace(
         agent="codex",
         task_id="telemetry-dispatch",
+        language_lane=language_lane,
         prompt="test",
         prompt_file=None,
         mode="read-only",
@@ -2455,6 +2457,7 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
     assert state["effort"] == "high"
     assert state["cli_version"] == "0.123.0"
     assert state["substitution"] is None
+    assert state["review_language_lane"] is language_lane
 
 
 def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeypatch):
@@ -3463,10 +3466,12 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     assert stderr_log.read_text(encoding="utf-8").splitlines()[0] == "error: Cannot combine --prompt with --yolo."
 
 
+@pytest.mark.parametrize("sources_count", [0, 1, None])
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
+    sources_count,
 ):
     from telemetry import emit as emit_mod
 
@@ -3524,6 +3529,8 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
                 "substituted": True,
             },
             "usage_record": {"tokens": 1_000},
+            "tool_calls_total": sources_count,
+            "tool_calls": [{"name": "mcp__sources__verify_words"}] if sources_count else [],
         },
     )()
 
@@ -3542,6 +3549,8 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         )
 
     assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state["sources_mcp_call_count"] == sources_count
     assert invoke.call_args.kwargs["tool_config"]["read_only_tmp_root"] == str(runtime_tmp_root)
     event_files = sorted(event_dir.glob("*.jsonl"))
     assert len(event_files) == 1

@@ -17,13 +17,15 @@ from scripts.ci.advisory_checks import is_advisory, load_advisory_checks
 from scripts.common.github_client import GitHubRateLimited, timer
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.publish.github import Request, request_run
+from scripts.review.language_lane import is_ukrainian_review
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 MARKER = re.compile(
     r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
     r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|APPROVE|CHANGES_REQUESTED|BLOCKED) "
-    r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))? -->\Z"
+    r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+)(?: review_mode=(?P<review_mode>red_team))?"
+    r"(?: review_profile=(?P<review_profile>ukrainian))?(?: sources_calls=(?P<sources_calls>[0-9]+))? -->\Z"
 )
 MARKER_PREFIX = "<!-- cf-verdict"
 TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
@@ -95,12 +97,28 @@ def _edited(comment: Mapping[str, Any]) -> bool:
     return created is None or updated is None or created != updated
 
 
-def parse_marker(body: str) -> dict[str, str] | None:
-    """Accept only an intact recorder comment with one terminal marker."""
+def parse_marker(body: str) -> dict[str, Any] | None:
+    """Accept an intact terminal marker; Ukrainian reviews need positive Sources calls."""
     match = _terminal_marker(body)
     if match is None:
         return None
-    item = match.groupdict()
+    item: dict[str, Any] = match.groupdict()
+    sources = item["sources_calls"]
+    try:
+        item["sources_calls"] = int(sources) if sources is not None else None
+    except ValueError:
+        return None
+    profile = item.pop("review_profile")
+    if profile is not None:
+        item["review_profile"] = profile
+    prefix = body.split("<details>", 1)[0]
+    ukrainian = is_ukrainian_review(item) or "Review profile: ukrainian\n" in prefix
+    if ukrainian and (item["sources_calls"] is None or item["sources_calls"] <= 0):
+        return None
+    if profile is not None and f"Review profile: {profile}\n" not in prefix:
+        return None
+    if sources is not None and f"Sources MCP calls: {item['sources_calls']}\n" not in prefix:
+        return None
     mode = item.pop("review_mode")
     if mode is not None:
         item["review_mode"] = mode
@@ -136,7 +154,7 @@ def lookup_verdict(
         return Verdict("unknown")
     if not SHA.fullmatch(sha) or not authenticated_login:
         return Verdict("unknown")
-    candidates: list[tuple[datetime, int, dict[str, str]]] = []
+    candidates: list[tuple[datetime, int, dict[str, Any]]] = []
     untrusted: list[str] = []
     legacy = False
     other_head = False
@@ -158,7 +176,11 @@ def lookup_verdict(
             continue
         if marker is None:
             trailer = _terminal_marker(body)
-            if trailer is None or trailer["verdict"] != "APPROVE":
+            if (
+                trailer is None or trailer["verdict"] != "APPROVE"
+                or is_ukrainian_review(trailer.groupdict())
+                or "Review profile: ukrainian\n" in body.split("<details>", 1)[0]
+            ):
                 return Verdict("unknown", untrusted_markers=tuple(untrusted))
             # An approval trailer outside the keeper format cannot hide a rejection, so it neither
             # poisons the head nor counts as approval; an edited one still poisons it (#10119).
