@@ -418,8 +418,26 @@ def resolve_and_admit(
                                task_role=task_role, task_prompt=task_prompt, review=review_activity, **mechanical_scope)
     if review_activity:
         _refuse_non_review_models(target_model for _, target_model, _ in resolved)
+    _refuse_paused([*models, *(target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved)])
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+
+
+def _seat_default_model(seat: str) -> str | None:
+    """The model a seat runs when the request pins none (its registry default)."""
+    try:
+        from .registry import AGENTS
+    except Exception:  # no registry: nothing to resolve
+        return None
+    raw = (AGENTS.get(seat) or {}).get("default_model")
+    return str(raw).strip() if isinstance(raw, str) and raw.strip() else None
+
+
+def _refuse_paused(models: Iterable[str | None]) -> None:
+    """Operator model pauses and plan-headroom stops (``model_pause``) for new dispatches."""
+    from .model_pause import refuse_paused_models
+
+    refuse_paused_models(models)
 
 
 def _refuse_non_review_models(models: Iterable[str | None]) -> None:
