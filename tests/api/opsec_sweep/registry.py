@@ -326,7 +326,7 @@ def assert_frozen_denominator(app: Any) -> None:
 def _path_value(name: str) -> str:
     if name in {"stream_id", "epic"}:
         return "epic:9999"
-    if name in {"page_num", "num", "message_id", "image_id", "start", "end", "upload_seq"}:
+    if name in {"page_num", "num", "number", "message_id", "image_id", "start", "end", "upload_seq"}:
         return "1"
     if name in {"filename"}:
         return "missing-opsec-fixture.json"
