@@ -295,10 +295,16 @@ or claims, renews or releases its lease. Wake mode off only notifies.
 
 Readiness comes from a forward streaming scan of complete rollout JSONL
 records, with a cached byte offset and last lifecycle state across polls.
-Cold start scans the file once; inode replacement, observed truncation or a
-same-size rewrite resets the cache. No record or file size cap limits the scan.
+Cold start scans the file once; inode replacement, observed truncation,
+same-size rewrites, or changes to the cached prefix fingerprint reset the cache.
+That fingerprint samples up to 4 KiB at the head and 4 KiB immediately before
+the cached offset, detecting in-place rewrites that grow while preserving
+bounded reads on normal append polls. It does not detect every possible edit
+between those samples. No record or file size cap limits the scan.
 Long message strings are validated and skipped with bounded memory; JSON grammar,
 escapes, UTF-8 and nesting are validated before a record can decide readiness.
+Lone surrogate escapes in strings are tolerated; they cannot supply ASCII
+lifecycle names. Raw invalid UTF-8 and malformed escapes still fail closed.
 Only the top-level `type="event_msg"` and its direct `payload.type` count.
 `payload.id`, nested envelopes and type-like text inside strings do not count.
 
@@ -333,7 +339,8 @@ BUSY reports `codex_wake_busy:<reason>`. A missing binary or resume exception
 reports `codex_resume_error:<exception>`; a nonzero exit, missing turn evidence,
 or failed/error event reports `codex_resume_error:failed`. The supervisory loop
 catches all ordinary wake exceptions, emits a typed `wake_error`, leaves the
-rows unread, and polls again. Only a successful resume advances the watcher's
+rows unread, and polls again. In `--once` mode a wake error exits with status 2;
+a successful one-shot poll exits 0. Only a successful resume advances the watcher's
 in-memory cursor; the live driver still records durable inbox consumption.
 
 Readiness is checked after lease reconciliation and message framing and again
@@ -342,7 +349,10 @@ exists between that last check and the subprocess attaching**: another turn
 can start during that interval. File observation cannot provide atomic turn
 admission. [#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217),
 owned by the harness stream's accountable driver, tracks that admission work.
-This gate does not claim to close the race.
+This gate guarantees only that the observed, stable rollout has no recorded
+open turn at each readiness check. It does not certify the driver's work or
+close the attach race. Cold scans retain full-history validation: a bounded
+tail alone could miss an earlier malformed record and incorrectly report READY.
 
 #### Manual throwaway-session receipt
 
@@ -365,6 +375,7 @@ from pathlib import Path
 from scripts.ai_agent_bridge import _ui_codex as ui
 
 with tempfile.TemporaryDirectory(dir=os.environ["TMPDIR"], prefix="wake-receipt-") as scratch:
+    subprocess.run(["git", "init", "-q", scratch], check=True)
     first = subprocess.run(
         ["codex", "exec", "--json", "--disable", "apps", "--skip-git-repo-check", "-"],
         input="Reply exactly RECEIPT-START. Do not run tools.", cwd=scratch,

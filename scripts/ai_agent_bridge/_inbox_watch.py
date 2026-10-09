@@ -421,7 +421,7 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
             time.sleep(interval_seconds)
 
 
-def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> None:
+def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> int:
     """Resume unread Codex inbox turns and bridge offline supervisory events."""
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor.remote import RemoteEpicClient
@@ -459,8 +459,10 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
                 except Exception as exc:
                     reason = str(exc) if str(exc).startswith(("codex_wake_busy:", "codex_resume_error:")) else type(exc).__name__
                     print(f"inbox watcher: wake_error:{reason}; inbox retained", file=sys.stderr, flush=True)
+                    if once:
+                        return 2
                 if once:
-                    return
+                    return 0
                 time.sleep(interval_seconds)
     finally:
         if conn is not None:
@@ -788,9 +790,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.wake_driver:
             if not args.epic:
                 raise ValueError("--wake-driver requires --epic")
-            run_supervisory_wake_watcher(args.agent, args.wake_driver, args.epic,
-                                         interval_seconds=args.interval, once=args.once)
-            return 0
+            return run_supervisory_wake_watcher(
+                args.agent, args.wake_driver, args.epic, interval_seconds=args.interval, once=args.once,
+            )
         if args.stop:
             print(stop_watcher(args.agent), file=sys.stderr)
             return 0

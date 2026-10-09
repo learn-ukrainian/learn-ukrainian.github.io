@@ -222,3 +222,41 @@ def test_unterminated_utf8_and_poisoned_history_remain_busy(tmp_path):
     assert ui.rollout_is_ready(path, reader=reader) == (False, "decode_error:UnicodeDecodeError")
     write(path, event("task_complete"))
     assert ui.rollout_is_ready(path, reader=reader) == (True, "end_event:task_complete")
+
+
+@pytest.mark.parametrize("initial_kind", ["task_complete", "task_started"])
+@pytest.mark.parametrize("padding", [0, 12 * 1024])
+def test_larger_same_inode_rewrite_rescans_cached_history(tmp_path, initial_kind, padding):
+    # Equal-length lifecycle rows keep the rewrite invisible at the old offset.
+    original = event(initial_kind)[:-1].ljust(80) + b"\n"
+    body = event("agent_message", text="x" * padding)
+    path = write(tmp_path / "rollout.jsonl", original, body)
+    reader = ui.RolloutReader()
+    assert ui.rollout_is_ready(path, reader=reader)[0] == (initial_kind == "task_complete")
+    before = path.stat()
+    replacement_kind = "task_started" if initial_kind == "task_complete" else "task_complete"
+    replacement = event(replacement_kind)[:-1].ljust(80) + b"\n"
+    write(path, replacement, body, event("agent_message", text="larger replacement"))
+    assert path.stat().st_ino == before.st_ino
+    assert path.stat().st_size > before.st_size
+    assert ui.rollout_is_ready(path, reader=reader) == (
+        replacement_kind == "task_complete",
+        f"{'end' if replacement_kind == 'task_complete' else 'start'}_event:{replacement_kind}",
+    )
+
+
+@pytest.mark.parametrize("chunk_size", [1, 7, 64 * 1024])
+def test_short_surrogate_escapes_do_not_poison_readiness(tmp_path, monkeypatch, chunk_size):
+    monkeypatch.setattr(ui, "_READ_CHUNK", chunk_size)
+    for escape in [b"\\ud800", b"\\udc00", b"\\uDFFF", b"\\ud800\\udc00"]:
+        path = write(tmp_path / "rollout.jsonl", event("task_started"),
+                     b'{"type":"event_msg","payload":{"type":"task_complete","text":"' + escape + b'"}}\n')
+        reader = ui.RolloutReader()
+        assert ui.rollout_is_ready(path, reader=reader) == (True, "end_event:task_complete")
+        with path.open("ab") as stream:
+            stream.write(event("task_started"))
+        assert ui.rollout_is_ready(path, reader=reader) == (False, "start_event:task_started")
+    # Normalization must not turn a non-lifecycle type into a completion.
+    write(path, event("task_started"),
+          b'{"type":"event_msg","payload":{"type":"task_complete\\udc00"}}\n')
+    assert ui.rollout_is_ready(path) == (False, "start_event:task_started")

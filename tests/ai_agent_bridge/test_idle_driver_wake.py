@@ -403,3 +403,40 @@ def test_missing_rollout_path_never_falls_back_to_launcher(live_driver, tmp_path
         _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], launch)
     send.assert_not_called()
     launch.assert_not_called()
+
+
+def test_once_cli_resume_spawn_failure_exits_nonzero_and_retains_inbox(
+    inbox_db, live_driver, monkeypatch, capsys,
+):
+    *_, remote = live_driver
+    monkeypatch.setattr(watch._config, "DB_PATH", inbox_db)
+    service = Mock()
+    service.__enter__ = Mock(return_value=service)
+    service.__exit__ = Mock(return_value=False)
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", lambda: service)
+    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
+    lock = Mock()
+    monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: lock)
+    monkeypatch.setattr(ui, "find_session_file", lambda _: None)
+    spawn = Mock(side_effect=FileNotFoundError("private spawn detail"))
+    def run(argv, **kwargs):
+        if argv[0] == "bash":
+            return SimpleNamespace(stdout="epic:123\n")
+        return spawn(argv, **kwargs)
+    monkeypatch.setattr(watch.subprocess, "run", run)
+    args = ["codex", "--wake-driver", "codex", "--epic", "fixture", "--once"]
+    assert watch.main(args) == 2
+    spawn.assert_called_once()
+    diagnostics = capsys.readouterr().err
+    assert "wake_error:codex_resume_error:FileNotFoundError" in diagnostics
+    assert "private spawn detail" not in diagnostics
+    lock.release.assert_called_once()
+    assert service.method_calls == []
+    with sqlite3.connect(inbox_db) as conn:
+        assert conn.execute("SELECT consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (0,)
+    spawn.side_effect = lambda argv, **kwargs: subprocess.CompletedProcess(
+        argv, 0, stdout='{"type":"turn.started"}\n{"type":"turn.completed"}\n', stderr="",
+    )
+    assert watch.main(args) == 0
+    assert spawn.call_count == 2
+    assert lock.release.call_count == 2
