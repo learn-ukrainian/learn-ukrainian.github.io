@@ -6683,6 +6683,7 @@ def _kimi_worker_refusal(
     cwd: Path,
     review: bool,
     prompt: str = "",
+    harness: str | None = None,
 ) -> tuple[str | None, Any]:
     """The worker-side gate: ``(refusal, admitted target)``; installs the Kimi worktree boundary when it admits.
 
@@ -6728,7 +6729,7 @@ def _kimi_worker_refusal(
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
             (target,) = resolve_and_admit(
                 (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
-                trees=lambda: _kimi_worktree_trees(cwd), new_dispatch=True, **scope,
+                trees=lambda: _kimi_worktree_trees(cwd), new_dispatch=True, harness=harness, **scope,
             )
         except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
             code = (
@@ -6750,7 +6751,7 @@ def _kimi_worker_refusal(
     try:
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
-            resolve_and_admit((agent,), model=model, mode=mode, review=review, new_dispatch=True)
+            resolve_and_admit((agent,), model=model, mode=mode, review=review, new_dispatch=True, harness=harness)
         # Read-only: a refused worker must leave no task directory or file behind.
         launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
@@ -6762,6 +6763,7 @@ def _kimi_worker_refusal(
             paths=owned,
             repo_root=_REPO_ROOT,
             new_dispatch=True,
+            harness=harness,
             trees=lambda: _kimi_worktree_trees(cwd),
         )
     except MechanicalAdmissionRefused as exc:
@@ -10086,6 +10088,7 @@ def _run_worker(
         cwd=Path(cwd_str),
         review=require_review_verdict or review_id is not None,
         prompt=prompt,
+        harness=harness,
     )
     if kimi_refusal:
         from scripts.agent_runtime import kimi_admission
@@ -16184,6 +16187,7 @@ def _admit_dispatch_target(
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
             new_dispatch=True,
+            harness=getattr(args, "harness", None),
             # Every review-typed dispatch passes reviewer admission, not only verdict-gated ones (#9538).
             review_dispatch=review_dispatch,
             review_author_model=getattr(args, "review_author_model", None),

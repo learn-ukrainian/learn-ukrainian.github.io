@@ -230,6 +230,7 @@ def resolve_and_admit(
     task_role: str | None = None,
     task_prompt: str | None = None,
     new_dispatch: bool = False,
+    harness: str | None = None,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -424,7 +425,9 @@ def resolve_and_admit(
         # lifecycle operations on existing work.
         # Checked against the identities actually selected, so an automatic
         # fallback away from a paused pin (e.g. reviewer selection) proceeds.
-        selected = [target_model or _seat_default_model(recipient) for recipient, target_model, _ in resolved]
+        selected = [
+            target_model or _seat_default_model(recipient, harness) for recipient, target_model, _ in resolved
+        ]
         # A new worker dispatch also answers for every model it asked for
         # (explicit, attached or also_models); reviewer selection only for what it picked.
         _refuse_paused(selected if review_dispatch else [*models, *selected])
@@ -432,8 +435,28 @@ def resolve_and_admit(
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
 
 
-def _seat_default_model(seat: str) -> str | None:
-    """The model a seat runs when the request pins none (its registry default)."""
+def _seat_default_model(seat: str, harness: str | None = None) -> str | None:
+    """The model a seat runs when the request pins none.
+
+    A harness picks its own default (kimicc runs the first routable kimicc model);
+    otherwise the registry default applies.
+    """
+    if harness == "kimicc":
+        try:
+            from .adapters.kimicc import kimicc_default_model
+
+            return kimicc_default_model()
+        except Exception:  # no catalog: fall back to the registry default
+            pass
+    elif harness:
+        try:
+            from .adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+            fixed = (ACPX_SUPPORTED_PARTICIPANTS.get(harness) or {}).get("model")
+            if fixed:
+                return str(fixed)
+        except Exception:  # unknown harness: registry default
+            pass
     try:
         from .registry import AGENTS
     except Exception:  # no registry: nothing to resolve

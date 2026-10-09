@@ -69,8 +69,16 @@ def _utc(value: Any) -> datetime | None:
     return parsed
 
 
+_NATIVE_CLAUDE_ALIASES = ("opus", "sonnet", "haiku", "fable")
+
+
 def _names(model: str) -> set[str]:
     names = {model}
+    # Native Claude aliases ("opus", "sonnet[1m]") run that family's current
+    # model: match them as such, so a family pause cannot be sidestepped.
+    family = model.strip().lower().split("[", 1)[0]
+    if family in _NATIVE_CLAUDE_ALIASES:
+        names.add(f"claude-{family}-latest")
     try:
         from scripts.review.model_catalog import canonical_model_id
 

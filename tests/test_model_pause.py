@@ -250,3 +250,18 @@ def test_kimi_worker_pause_settles_the_existing_task(tmp_path, monkeypatch) -> N
     )
     assert refusal and target is None
     assert json.loads(state.read_text())["status"] == "failed"
+
+
+def test_native_claude_alias_is_paused_with_its_family() -> None:
+    policy = {"pauses": [{"pattern": "claude-opus-*", "until": "2999-01-01T00:00:00Z"}]}
+    for alias in ("opus", "Opus", "opus[1m]"):
+        assert mp.refusal_reason(alias, policy=policy, now=NOW, used_pct=lambda _l: None)
+    assert mp.refusal_reason("sonnet", policy=policy, now=NOW, used_pct=lambda _l: None) is None
+
+
+def test_kimicc_default_is_the_harness_default(monkeypatch) -> None:
+    from scripts.agent_runtime import target_admission as ta
+    from scripts.agent_runtime.adapters import kimicc
+
+    monkeypatch.setattr(kimicc, "kimicc_default_model", lambda *a, **k: "kimi-code/k3")
+    assert ta._seat_default_model("kimi", "kimicc") == "kimi-code/k3"
