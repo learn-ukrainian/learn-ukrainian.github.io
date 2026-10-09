@@ -276,6 +276,24 @@ def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path
     assert f"reason={expected}" in lines[0]
 
 
+def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> None:
+    path = tmp_path / "state.json"
+    queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.check_rows = checks(conclusion="failure")
+    lines, failed = keeper.run(queued, path, apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in queued.actions
+    assert "#42 revoked: CI-red-CI Gate" in lines
+    assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
+
+    approved = FakeGitHub()
+    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(approved, path, apply=True)
+    assert not failed
+    assert "enqueue" not in mutations(approved)
+    assert "reason=requeue-pending" in lines[0]
+
+
 def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp_path: Path) -> None:
     path = tmp_path / "state.json"
     queued = FakeGitHub(pr(isInMergeQueue=True))

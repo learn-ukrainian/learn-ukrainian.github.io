@@ -826,10 +826,11 @@ def run(
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
                         previous.setdefault("squash_revoked", {})[drop_key] = observed
-                    if revoke == "needs-CF":
-                        # Count the removal so this head still faces the requeue rule.
+                    if queued is True and verdict_lookup_ok and current_verdict.state in MISSING_CF_STATES:
+                        # Count the removal even when another blocker is the stated reason.
                         previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
-                        previous.setdefault("pending_comments", {})[drop_key] = revoke
+                        if revoke == "needs-CF":
+                            previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
