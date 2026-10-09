@@ -911,7 +911,10 @@ def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_p
 
 
 @pytest.mark.parametrize("root_mode", ["argument", "environment"])
-@pytest.mark.parametrize("quote,taught", [("село", True), ("замок", False)])
+@pytest.mark.parametrize("quote,taught", [
+    pytest.param("село", True, marks=pytest.mark.site_toolchain),
+    ("замок", False),
+])
 def test_assemble_cli_uses_requested_root_without_folder_overrides(tmp_path, monkeypatch, capsys, root_mode, quote, taught):
     from scripts.curriculum.evidence.sources import Sources
     from tests.build.test_fresh_recap_contract import quoted_task_world
@@ -954,3 +957,45 @@ def test_assemble_cli_prints_structured_check9_setup_failure(tmp_path, monkeypat
     assert rc == 1
     assert f"Check 9: {code}: controlled failure" in out.err
     assert not (tmp_path / "site/src/content/docs/a1/controlled-root-only/1.mdx").exists()
+
+
+def test_assemble_cli_prints_real_check11_toolchain_failure(tmp_path, monkeypatch, capsys):
+    """A real Check 11 setup failure must reach stderr instead of a blank heading."""
+    from scripts.build import mdx_render_gate
+    from scripts.build.fresh import assemble
+    from scripts.curriculum.evidence.sources import Sources
+    from tests.build.test_fresh_recap_contract import quoted_task_world
+
+    slug = "controlled-root-only"
+    world = quoted_task_world(tmp_path, slug=slug)
+    monkeypatch.setattr(assemble, "Sources", lambda: Sources(
+        vesum_db=world["vesum_db"], sources_db=tmp_path / "unused-sources.db",
+    ))
+    # Run genuine Node compilation from an isolated site with no Astro config.
+    # This fails setup regardless of the developer's installed site dependencies.
+    (tmp_path / "site").mkdir(exist_ok=True)
+    monkeypatch.setattr(mdx_render_gate, "__file__", str(tmp_path / "scripts/build/mdx_render_gate.py"))
+    checks = []
+    real_check11 = assemble.check_11_render
+
+    def capture_check11(*args, **kwargs):
+        check = real_check11(*args, **kwargs)
+        checks.append(check)
+        return check
+
+    monkeypatch.setattr(assemble, "check_11_render", capture_check11)
+    rc = main(["assemble", "a1", slug, "--lesson", "1", "--repo-root", str(tmp_path)])
+    out = capsys.readouterr()
+    assert rc == 1
+    assert len(checks) == 1
+    check = checks[0].to_dict()
+    assert check["passed"] is False and check["layer"] == "harness", check
+    steps = checks[0].artifacts["verify_shippable"]["steps"]
+    compile_step = next(step for step in steps
+                        if step["step"] == "mdx_compile.1")
+    assert compile_step["passed"] is False and compile_step["layer"] == "harness", compile_step
+    render_failure = next(step for step in steps
+                          if step["step"] == "mdx_render.1")
+    assert "Cannot find module" in render_failure["detail"] and "astro.config.mjs" in render_failure["detail"]
+    assert f"Check 11: {check['reason']}" in out.err
+    assert "Assembly succeeded" not in out.out

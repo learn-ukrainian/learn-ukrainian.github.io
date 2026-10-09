@@ -1250,6 +1250,9 @@ def main(argv: list[str] | None = None) -> int:
             elif "failure" in res:
                 failure = res.get("failure") or {}
                 print(f"  Check {failure.get('check')}: {failure.get('reason')}", file=sys.stderr)
+            elif res.get("check_11", {}).get("passed") is False:
+                failure = res["check_11"]
+                print(f"  Check {failure['check']}: {failure['reason']}", file=sys.stderr)
             elif "message" in res:
                 print(f"  {res['message']}", file=sys.stderr)
             return 1

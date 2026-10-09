@@ -645,7 +645,10 @@ def quoted_task_world(tmp_path, quote="село", *, slug="sample-slug"):
     }
 
 
-@pytest.mark.parametrize("quote,taught", [("село", True), ("замок", False)])
+@pytest.mark.parametrize("quote,taught", [
+    pytest.param("село", True, marks=pytest.mark.site_toolchain),
+    ("замок", False),
+])
 def test_quoted_tasks_real_resolution_stress_and_check9(tmp_path, monkeypatch, quote, taught):
     """Real assembly, allowlist, resolver, locks, stress, render and check11 on both cases."""
     import yaml
