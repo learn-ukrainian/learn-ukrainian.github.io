@@ -592,9 +592,13 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert "test-task" in plan.output_file.name
     # Read-only keeps lane effort and grants only individually approved readers.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags
+    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags, _worker_hook_flags
 
-    assert config_values == ["model_reasoning_effort=high", *_sources_read_only_flags()[1::2]]
+    assert config_values == [
+        "model_reasoning_effort=high",
+        _worker_hook_flags()[4],
+        *_sources_read_only_flags()[1::2],
+    ]
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 
@@ -752,7 +756,7 @@ def test_codex_adapter_disable_features_multiple(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
+    assert disable_pairs == ["shell_tool", "browser_use", "apps"]
 
 
 @pytest.mark.parametrize(
@@ -930,7 +934,7 @@ def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
+    assert disable_pairs == ["shell_tool", "browser_use", "apps"]
 
 
 def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):

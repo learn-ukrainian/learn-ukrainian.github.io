@@ -537,19 +537,18 @@ class CodexAdapter:
             cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
-        # Dispatched workers must have NO write-capable GitHub connector tools
-        # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP
-        # connectors (including `github.create_commit`, `github.update_ref`,
-        # `github.create_pr`) across all runtime invocations (fresh & resume).
-        # ORDER MATTERS: must come after `_mode_flags` in case any mode
-        # enables toggles.
-        cmd.extend(["--disable", "apps"])
         cmd.extend(self._tool_config_flags(tool_config))
         if not tc.get("review_isolation"):
             # Sealed reviews run in an OS sandbox without tracked hook mounts.
             # Ordinary workers, including scoped homes and resumes, bind last
             # so caller feature toggles cannot disable this safety boundary.
             cmd.extend(_worker_hook_flags())
+        # Dispatched workers must have NO write-capable GitHub connector tools
+        # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP
+        # connectors (including `github.create_commit`, `github.update_ref`,
+        # `github.create_pr`) across all runtime invocations (fresh & resume).
+        # ORDER MATTERS: must come after every feature enable, including hooks.
+        cmd.extend(["--disable", "apps"])
         mcp_servers = tc.get("mcp_servers")
         sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
         sources_defined = isinstance(sources, dict) and bool(sources.get("command") or sources.get("url"))
