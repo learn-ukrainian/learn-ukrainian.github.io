@@ -110,9 +110,20 @@ def compute_lesson_immersion_band(
         if type(cumulative_core_count) is not int or cumulative_core_count < 0:
             raise ImmersionError(codes.CUMULATIVE_CORE_COUNT_INVALID, "A1 core count must be a nonnegative integer")
         # Only an explicit arc declaration selects orientation; never position or count.
-        positions = arc_loader(track) if arc_loader else load_arc(track, arc_path=arc_path, doc_path=doc_path)
+        try:
+            positions = arc_loader(track) if arc_loader else load_arc(track, arc_path=arc_path, doc_path=doc_path)
+        except Exception as err:
+            raise ImmersionError(
+                codes.ARC_BAND_TABLE_MISSING,
+                f"failed loading arc for track {track!r}: {err}",
+            ) from err
         declaration = next((p for p in positions if p.position == arc_position), None)
-        if declaration is not None and declaration.band_key == "a1-orientation":
+        if declaration is None:
+            raise ImmersionError(
+                codes.POSITION_NOT_FOUND,
+                f"position {arc_position} not found in arc for {track}",
+            )
+        if declaration.band_key == "a1-orientation":
             return LessonBand("a1-orientation", None, {}, "arc_table",
                               [codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED], waiver)
         band = config.compute_immersion_band(
