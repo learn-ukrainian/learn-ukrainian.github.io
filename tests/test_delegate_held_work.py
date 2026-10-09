@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -179,6 +180,79 @@ def test_quote_delimiters_must_match(lease, citation):
     assert held.cited_paths(root, {}, citation) == []
 
 
+@pytest.mark.parametrize("quote", ["'", '"', "`"])
+@pytest.mark.parametrize(
+    "passage",
+    [
+        "This long sentence describes the worker report and its remaining work. " * 6,
+        "У цьому звіті наведено довге цитоване речення. " * 8,
+    ],
+    ids=["english", "ukrainian"],
+)
+def test_long_quoted_prose_preserves_real_citation_and_allows_cleanup(lease, tmp_path, quote, passage):
+    root, namespace, record = lease
+    assert len(passage.encode("utf-8")) > 300
+    (root / "readers.patch").write_text("held patch")
+    response = f"Report: {quote}{passage}{quote}. Held `readers.patch`."
+    assert held.cited_paths(root, record, response) == ["readers.patch"]
+    result = delegate._reap_runtime_tmp_lease(root, namespace, task_record=record, response=response)
+    assert result["tmp_reap_error"] is None
+    assert not root.exists()
+    location, manifest = _retrieve(tmp_path, record)
+    assert manifest["count"] == 1
+    assert (location / "readers.patch").read_text() == "held patch"
+
+
+@pytest.mark.parametrize(
+    "segment",
+    ["a" * 255, "a" * 256, "я" * 127 + "a", "я" * 128],
+    ids=["ascii-255", "ascii-256", "utf8-255", "utf8-256"],
+)
+@pytest.mark.parametrize("parent", [False, True])
+def test_citation_component_limit_uses_utf8_bytes(lease, segment, parent):
+    root, _, record = lease
+    name = f"{segment}/patch" if parent else segment
+    expected = [] if len(segment.encode("utf-8")) > 255 else [name]
+    assert held.cited_paths(root, record, f"`{name}`") == expected
+
+
+@pytest.mark.parametrize("stage", ["parent", "leaf"])
+@pytest.mark.parametrize("error_number", [errno.ENAMETOOLONG, errno.EACCES])
+@pytest.mark.parametrize("declared", [False, True])
+def test_candidate_open_errors_only_skip_undeclared_long_names(
+    lease, tmp_path, monkeypatch, stage, error_number, declared
+):
+    root, namespace, record = lease
+    (root / "readers.patch").write_text("held patch")
+    candidate = "prose/patch" if stage == "parent" else "prose"
+    if declared:
+        record["held_work"] = [candidate]
+    original = held.artifacts._open_parent if stage == "parent" else held.open_leaf_descriptor
+
+    def fail_candidate(fd, name):
+        if name == (("prose",) if stage == "parent" else "prose"):
+            raise OSError(error_number, "fixture open error")
+        return original(fd, name)
+
+    if stage == "parent":
+        monkeypatch.setattr(held.artifacts, "_open_parent", fail_candidate)
+    else:
+        monkeypatch.setattr(held, "open_leaf_descriptor", fail_candidate)
+    result = delegate._reap_runtime_tmp_lease(
+        root, namespace, task_record=record, response=f"`{candidate}` `readers.patch`"
+    )
+    if declared or error_number != errno.ENAMETOOLONG:
+        assert result["tmp_reap_error"] == held.HeldWorkPreservationError.code
+        assert root.exists()
+        assert (root / "readers.patch").read_text() == "held patch"
+    else:
+        assert result["tmp_reap_error"] is None
+        assert not root.exists()
+        location, manifest = _retrieve(tmp_path, record)
+        assert manifest["count"] == 1
+        assert (location / "readers.patch").read_text() == "held patch"
+
+
 @pytest.mark.parametrize("with_patch", [False, True])
 @pytest.mark.parametrize("structured", [False, True])
 def test_harmless_report_paths_allow_cleanup(lease, tmp_path, with_patch, structured):
@@ -332,6 +406,9 @@ def test_structured_report_and_deliverable_citations(lease, tmp_path):
         ["$TMPDIR/"],
         ["${TMPDIR}/"],
         ["bad\x00name"],
+        ["a" * 256],
+        ["я" * 128],
+        ["a" * 256 + "/patch"],
     ],
 )
 def test_invalid_or_missing_declaration_refuses_cleanup(lease, declaration):

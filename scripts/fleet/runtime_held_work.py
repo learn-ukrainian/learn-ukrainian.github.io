@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
@@ -106,6 +107,9 @@ def cited_paths(root: Path, record: Mapping[str, Any], response: str) -> list[st
             if explicit:
                 raise HeldWorkPreservationError()
             continue
+        if not explicit and any(len(part.encode("utf-8")) > 255 for part in path.parts):
+            # Oversized prose cannot name a file; declarations still fail strictly.
+            continue
         names.add(path.as_posix())
     return sorted(names)
 
@@ -136,6 +140,10 @@ def preserve(root: Path, *, primary: Path, record: Mapping[str, Any], response: 
                         if name in declared_names:
                             raise HeldWorkPreservationError() from None
                         continue
+                    except OSError as exc:
+                        if name not in declared_names and exc.errno == errno.ENAMETOOLONG:
+                            continue
+                        raise
                     except ComponentOpenError as exc:
                         if name not in declared_names and exc.kind == "non-directory":
                             continue
