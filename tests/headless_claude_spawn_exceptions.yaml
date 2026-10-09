@@ -89,7 +89,7 @@ exceptions:
   # scripts/ai_agent_bridge/_gemini.py
   - {module: scripts/ai_agent_bridge/_gemini.py, function: "_launch_gemini_background", program: "bridge_cmd", category: non-claude, reason: "runs the bridge's Gemini `process` entry point under the project interpreter"}
   # scripts/ai_agent_bridge/_inbox_watch.py
-  - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "preflight_supervisory_successor", program: "bash", category: non-claude, reason: "runs the supervisory successor script with --preflight flag"}
+  - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "preflight_supervisory_successor", program: "bash", category: non-claude, reason: "sources session_supervisor.sh to check (with -f/-x, never running it) that the successor's provider CLI can be found before claiming a restart"}
   - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "run_supervisory_wake_watcher", program: "bash", category: non-claude, reason: "sources handoff_identity.sh to resolve a stream selector"}
   - {module: scripts/ai_agent_bridge/_inbox_watch.py, function: "wake_driver_once", program: "<reference>", category: non-claude, reason: "runs the configured supervisory launcher script (`<launcher> --epic`); shell launchers that run claude -p are checked by test_shell_launchers_are_proven_by_a_runner_test"}
   # scripts/ai_agent_bridge/_messaging.py
