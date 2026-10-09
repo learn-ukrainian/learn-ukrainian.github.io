@@ -379,7 +379,9 @@ def test_explicit_manifest_uses_the_canonical_atlas_key_normalizer(tmp_path: Pat
 def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.delenv("TMPDIR", raising=False)
     result = intake.main(
         [
             "--ledger-out",
@@ -392,6 +394,8 @@ def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
             "2026-07-14",
             "--inventory-out",
             str(intake.PROJECT_ROOT / "batch_state" / "cli-fixture-inventory.json"),
+            "--report-out",
+            str(tmp_path / "report.json"),
             "--inventory-path",
             "batch_state/cli-fixture-inventory.json",
         ]
@@ -399,6 +403,8 @@ def test_cli_rejects_ledger_output_outside_the_source_inventory_directory(
 
     assert result == 2
     assert "data/lexicon/source-inventory" in capsys.readouterr().err
+    assert not (tmp_path / "report.json").exists()
+    assert not (tmp_path / "ledger.yaml").exists()
 
 
 def test_existing_ledger_keys_ignores_unreviewed_inventory(tmp_path: Path) -> None:
