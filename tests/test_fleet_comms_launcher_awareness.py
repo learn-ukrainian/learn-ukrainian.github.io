@@ -93,6 +93,31 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
         assert required in helper
 
 
+def test_rendered_cold_clause_requires_ordered_landing_and_closeout() -> None:
+    env = os.environ.copy()
+    env["FLEET_COMMS_PLANE_MODE"] = "authority"
+    proc = subprocess.run(
+        ["bash", "-c", 'source "$1"; fleet_comms_cold_clause', "bash", str(HELPER)],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert (
+        "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; "
+        "then require CI Gate green on that same head. "
+        "Then the driver enqueues through the merge queue "
+        "(never --auto, never ask the operator to merge), confirms MERGED and runs closeout. "
+    ) in proc.stdout
+    assert "-m scripts.orchestration.merge_closeout <N> --apply" in proc.stdout
+    assert "require the common-reaper cleanup receipt" in proc.stdout
+    assert "merge when CI green" not in proc.stdout
+    assert "arm auto-merge" not in proc.stdout
+
+
 def test_cursor_cold_start_points_to_same_acp_contract() -> None:
     body = CURSOR_COLD_START.read_text(encoding="utf-8")
     assert "agent-seat-onboarding.md" in body
