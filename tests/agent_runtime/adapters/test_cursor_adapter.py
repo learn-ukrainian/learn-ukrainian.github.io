@@ -30,7 +30,9 @@ def test_cursor_adapter_rejects_catalog_retired_model_before_invocation(adapter,
     monkeypatch.setattr(
         adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("retired model reached workspace setup")
     )
-    with pytest.raises(ValueError, match=r"^Cursor adapter: model .* is retired in the model catalog"):
+    with pytest.raises(
+        ValueError, match=r"^Cursor adapter: CURSOR_MODEL_NOT_APPROVED: model .* is not an approved Cursor pin"
+    ):
         adapter.build_invocation(
             prompt="review",
             mode="read-only",
@@ -42,8 +44,25 @@ def test_cursor_adapter_rejects_catalog_retired_model_before_invocation(adapter,
         )
 
 
-@pytest.mark.parametrize("model", ["composer-2.5", "grok-4.7"])
-def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model):
+def test_cursor_adapter_does_not_disguise_unexpected_pin_errors(adapter, tmp_path, monkeypatch):
+    def fail_pin(_model):
+        raise RuntimeError("unexpected catalog failure")
+
+    monkeypatch.setattr("scripts.agent_runtime.adapters.cursor.apply_cursor_model_pins", fail_pin)
+    with pytest.raises(RuntimeError, match="unexpected catalog failure"):
+        adapter.build_invocation(
+            prompt="review",
+            mode="read-only",
+            cwd=tmp_path,
+            model="composer-2.5",
+            task_id="pin-error",
+            session_id=None,
+            tool_config=None,
+        )
+
+
+@pytest.mark.parametrize(("model", "wire"), [("composer-2.5", "composer-2.5"), ("grok-4.7", "grok-4.7-high")])
+def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model, wire):
     plan = adapter.build_invocation(
         prompt="review",
         mode="read-only",
@@ -53,7 +72,7 @@ def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model)
         session_id=None,
         tool_config=None,
     )
-    assert plan.cmd[plan.cmd.index("--model") + 1] == model
+    assert plan.cmd[plan.cmd.index("--model") + 1] == wire
 
 
 @pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default"])
@@ -109,7 +128,7 @@ def test_cursor_adapter_pins_default_model_when_none_is_given(adapter, tmp_path)
         session_id=None,
         tool_config=None,
     )
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7"
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
 
 
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path):
@@ -130,9 +149,9 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path):
     # the real prompt on stdin to be ignored. Prompt delivery is stdin-only.
     assert "-" not in plan.cmd
     assert "--model" in plan.cmd
-    # Default pin rotated to grok-4.7 (#8464). Pass an explicit model only when
+    # The catalog identity grok-4.7 uses its high Cursor wire pin (#10205).
     # Auto / composer-2.5 / another allowlisted id is required.
-    assert "grok-4.7" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7-high"
     assert "--mode" in plan.cmd
     assert "ask" in plan.cmd
     assert "--trust" in plan.cmd
@@ -188,7 +207,7 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
         prompt="Fix bug",
         mode="workspace-write",
         cwd=tmp_path,
-        model="composer-2.5-heavy",
+        model="composer-2.5[fast=false]",
         task_id="task-123",
         session_id=None,
         tool_config={
@@ -209,7 +228,7 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
     assert "--sandbox" in plan.cmd
     assert "enabled" in plan.cmd
     assert "--model" in plan.cmd
-    assert "composer-2.5-heavy" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "composer-2.5[fast=false]"
     assert "--yolo" not in plan.cmd
 
 
@@ -381,7 +400,7 @@ def test_cursor_adapter_attributes_concrete_model_from_stream_metadata(adapter):
 
     assert result.ok is True
     assert result.substitution is not None
-    assert result.substitution["requested_model"] == "grok-4.7"
+    assert result.substitution["requested_model"] == "grok-4.7-high"
     assert result.substitution["actual_model"] == "composer-2.5"
     assert result.substitution["actual_model_known"] is True
     assert result.substitution["source"] == "cursor-stream-json"
