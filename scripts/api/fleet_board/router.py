@@ -1,12 +1,13 @@
-"""Fleet board v1 routes: an endpoint index and a JSON Schema document."""
+"""Fleet board v1 routes: an endpoint index, a JSON Schema document, and the PR pipeline."""
 
 from __future__ import annotations
 
 import re
-from typing import Any
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Path, Query, Request
 
+from . import prs as prs_api
 from .envelope import endpoint_schema, envelope, utc_timestamp
 from .sources import SourceReport, collect_source_reports, report
 
@@ -119,3 +120,16 @@ def read_schema(request: Request) -> dict[str, Any]:
             }
         }
     return respond("schema", data)
+
+
+@router.get("/prs", name="prs")
+def read_prs(
+    epic: Annotated[str | None, Query(max_length=80)] = None,
+    state: Annotated[str | None, Query(max_length=40)] = None,
+) -> dict[str, Any]:
+    return prs_api.read_prs(epic=epic, state=state)
+
+
+@router.get("/prs/{number}", name="pr")
+def read_pr(number: Annotated[int, Path(ge=1)]) -> dict[str, Any]:
+    return prs_api.read_pr(number)
