@@ -616,3 +616,49 @@ def test_a_pytest_run_without_a_verdict_is_validation_incomplete(repo: Path) -> 
 
     assert result.returncode == gate.EXIT_INCOMPLETE
     assert _verdict(result)["reason"] == "pytest_error"
+
+
+def test_modules_over_the_cost_cap_are_deferred_to_ci_and_recorded(repo: Path) -> None:
+    # A conftest breaks the registered module without changing the module itself.
+    _write(
+        repo,
+        "tests/conftest.py",
+        "def pytest_runtest_setup(item):\n"
+        "    assert not item.nodeid.startswith('tests/test_invariant.py'), 'invariant broken'\n",
+    )
+    _commit(repo, "break the registered module from a conftest", "tests/conftest.py")
+    control = _run_gate(repo)
+    assert control.returncode == gate.EXIT_REFUSED  # without a cost record the module runs and fails
+
+    _write(repo, gate.DURATIONS_FILE, json.dumps({"tests/test_invariant.py": gate.HEAVY_MODULE_S + 1}))
+    _commit(repo, "record its CI cost", gate.DURATIONS_FILE)
+    result = _run_gate(repo)
+
+    assert result.returncode == 0, result.stderr
+    assert _measurements(repo)[-1]["deferred_to_ci"] == ["tests/test_invariant.py"]
+
+
+def test_cost_deferral_only_touches_whole_modules_and_tolerates_missing_data(tmp_path: Path) -> None:
+    nodes = ("tests/a.py", "tests/b.py::test_fast", "tests/c.py")
+    _write(tmp_path, gate.DURATIONS_FILE, json.dumps({"tests/a.py": 500, "tests/b.py": 900, "tests/c.py": 5}))
+
+    assert gate.defer_heavy_modules(nodes, tmp_path) == (("tests/b.py::test_fast", "tests/c.py"), ("tests/a.py",))
+    assert gate.defer_heavy_modules(nodes, tmp_path / "nowhere") == (nodes, ())
+    _write(tmp_path, gate.DURATIONS_FILE, "[1, 2]")
+    assert gate.defer_heavy_modules(nodes, tmp_path) == (nodes, ())
+
+
+def test_deferral_changes_the_receipt_key(tmp_path: Path) -> None:
+    plan = _plan()
+    gate.write_receipt(tmp_path, plan, 1000.0)
+
+    assert not gate.receipt_is_fresh(tmp_path, _plan(deferred_to_ci=("tests/x.py",)), 1001.0)
+
+
+def test_the_real_registry_fits_the_run_budget_once_heavy_modules_are_deferred() -> None:
+    nodes, _ = gate.load_registry(REPO_ROOT)
+    run, deferred = gate.defer_heavy_modules(nodes, REPO_ROOT)
+    durations = json.loads((REPO_ROOT / gate.DURATIONS_FILE).read_text(encoding="utf-8"))
+
+    assert deferred, "the docs lookup modules are expected to be deferred"
+    assert sum(durations.get(n, 0.0) for n in run if "::" not in n) <= gate.RUN_BUDGET_S

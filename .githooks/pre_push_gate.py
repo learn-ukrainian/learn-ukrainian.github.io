@@ -48,6 +48,11 @@ ADMISSION_WAIT_S = 300.0
 RUN_BUDGET_S = 600.0
 SHADOW_BUDGET_S = 120.0
 RECEIPT_TTL_S = 3600.0
+# A registered module whose recorded CI cost exceeds this cannot fit the run budget (the eight
+# test_docs_find_lookups parts and test_docs_catalogue_coverage alone cost ~2900 s). It is deferred to
+# CI explicitly and recorded on every run, never dropped silently. Function entries always run.
+HEAVY_MODULE_S = 120.0
+DURATIONS_FILE = "scripts/ci/pytest-file-durations.json"
 ZERO_SHA = "0" * 40
 EXIT_REFUSED = 1
 EXIT_INCOMPLETE = 75  # EX_TEMPFAIL: the push was not validated, not judged bad
@@ -86,6 +91,7 @@ class Plan:
     changed_tests: tuple[str, ...]
     changed_paths: tuple[str, ...]
     missing_registry_entries: tuple[str, ...] = ()
+    deferred_to_ci: tuple[str, ...] = ()
     node_ids: tuple[str, ...] = field(init=False)
 
     def __post_init__(self) -> None:
@@ -171,6 +177,26 @@ def load_registry(root: Path) -> tuple[tuple[str, ...], str]:
     return nodes, f"v{GATE_VERSION}-{digest}"
 
 
+def defer_heavy_modules(nodes: tuple[str, ...], root: Path) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Split ``nodes`` into ``(run_here, deferred_to_ci)`` by the tracked per-file CI durations.
+
+    Only whole-module entries are deferred; an unknown duration runs.  A missing or unreadable
+    durations file defers nothing, so the time budget stays the only bound.
+    """
+    try:
+        durations = json.loads((root / DURATIONS_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return nodes, ()
+    if not isinstance(durations, dict):
+        return nodes, ()
+
+    def heavy(node: str) -> bool:
+        cost = durations.get(node)
+        return "::" not in node and isinstance(cost, int | float) and cost > HEAVY_MODULE_S
+
+    return tuple(n for n in nodes if not heavy(n)), tuple(n for n in nodes if heavy(n))
+
+
 def outgoing_base(update: Update, root: Path) -> str:
     """The commit below the outgoing range; never inferred from HEAD or shell arguments."""
     if (
@@ -209,8 +235,9 @@ def build_plan(update: Update, root: Path) -> Plan | None:
     registry, version = load_registry(root)
     present = tuple(node for node in registry if (root / node.split("::", 1)[0]).is_file())
     missing = tuple(node for node in registry if node not in present)
+    present, deferred = defer_heavy_modules(present, root)
     tree = (git_ok("rev-parse", f"{head}^{{tree}}", cwd=root) or "").strip()
-    return Plan(head, tree, base, version, present, changed_tests, changed, missing)
+    return Plan(head, tree, base, version, present, changed_tests, changed, missing, deferred)
 
 
 # ---- receipts -------------------------------------------------------------
@@ -231,6 +258,7 @@ def receipt_key(plan: Plan) -> dict[str, object]:
         "tree": plan.tree,
         "base": plan.base,
         "registry_version": plan.registry_version,
+        "deferred_to_ci": list(plan.deferred_to_ci),
         "node_ids": list(plan.node_ids),
     }
 
@@ -478,6 +506,7 @@ def validate(update: Update, root: Path, launcher: str, config: str, event: dict
         nodes=len(plan.node_ids),
         registry_version=plan.registry_version,
         missing_registry_entries=list(plan.missing_registry_entries),
+        deferred_to_ci=list(plan.deferred_to_ci),
     )
     state = state_dir(root)
     if receipt_is_fresh(state, plan, now):
