@@ -269,12 +269,12 @@ def test_two_unread_messages_coalesce_into_one_turn_in_id_order(live_driver, mon
 def test_rollout_ready_tracks_turn_boundaries(tmp_path):
     path = tmp_path / "rollout-fixture.jsonl"
     path.write_text(_rollout_text(tmp_path), encoding="utf-8")
-    assert ui.rollout_is_ready(path)
+    assert ui.rollout_is_ready(path)[0]
     path.write_text(
         _rollout_text(tmp_path, {"type": "task_started", "turn_id": "turn-a"}) + "{not-json",
         encoding="utf-8",
     )
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
     closed = _rollout_text(
         tmp_path,
         {"type": "task_started", "turn_id": "turn-a"},
@@ -283,12 +283,12 @@ def test_rollout_ready_tracks_turn_boundaries(tmp_path):
         {"type": "turn_complete", "turn_id": "turn-b"},
     )
     path.write_text(closed + "{partial", encoding="utf-8")
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
     path.write_text(
         closed + json.dumps({"type": "event_msg", "payload": {"type": "task_started", "turn_id": "turn-c"}}) + "\n",
         encoding="utf-8",
     )
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
 
 
 def test_resume_receipt_names_thread_exit_and_turn(tmp_path):
@@ -360,7 +360,7 @@ def test_abort_without_id_clears_open_turns(tmp_path):
         {"type": "turn_aborted"},
     )
     path.write_text(seq1, encoding="utf-8")
-    assert ui.rollout_is_ready(path)
+    assert ui.rollout_is_ready(path)[0]
 
 
 def test_restart_after_abort(tmp_path):
@@ -373,14 +373,14 @@ def test_restart_after_abort(tmp_path):
         {"type": "task_started", "turn_id": "turn-b"},
     )
     path.write_text(seq, encoding="utf-8")
-    assert not ui.rollout_is_ready(path)  # The last event is task_started
+    assert not ui.rollout_is_ready(path)[0]  # The last event is task_started
 
 
 def test_empty_file(tmp_path):
     from scripts.ai_agent_bridge import _ui_codex as ui
     path = tmp_path / "rollout.jsonl"
     path.write_text("", encoding="utf-8")
-    assert ui.rollout_is_ready(path)  # Empty file means no lifecycle event found, returns True
+    assert ui.rollout_is_ready(path)[0]  # Empty file means no lifecycle event found, returns True
 
 
 def test_malformed_before_event(tmp_path):
@@ -391,12 +391,12 @@ def test_malformed_before_event(tmp_path):
         {"type": "turn_complete", "turn_id": "turn-a"}
     ), encoding="utf-8")
     # complete is found first going backwards, so it returns True before hitting the bad json
-    assert ui.rollout_is_ready(path)
+    assert ui.rollout_is_ready(path)[0]
 
     # But if bad json is AFTER the event in the file (BEFORE the event going backward):
     seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
     path.write_text(seq + '{"bad json\n', encoding="utf-8")
-    assert not ui.rollout_is_ready(path)  # Fails closed (BUSY)
+    assert not ui.rollout_is_ready(path)[0]  # Fails closed (BUSY)
 
 
 def test_invalid_utf8(tmp_path):
@@ -406,7 +406,7 @@ def test_invalid_utf8(tmp_path):
     seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
     with path.open("wb") as f:
         f.write(seq.encode("utf-8") + b'{"type": "bad"}\n\xff\xff\n')
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
 
 
 def test_oversized_record(tmp_path):
@@ -414,13 +414,13 @@ def test_oversized_record(tmp_path):
     path = tmp_path / "rollout.jsonl"
 
     # 1.5 MiB string (exceeds 1 MiB per-line cap)
-    large_line = json.dumps({"type": "event_msg", "payload": "a" * (1500 * 1024)}) + "\n"
+    large_line = '{"type": "event_msg", "payload": {"type": "item_completed", "text": "' + "a" * (1500 * 1024) + '"}}\n'
     seq = _rollout_text(tmp_path, {"type": "turn_complete", "turn_id": "turn-a"})
 
     # Large line is at the end. Since it exceeds cap, it should be skipped,
     # and the preceding turn_complete should make it READY.
     path.write_text(seq + large_line, encoding="utf-8")
-    assert ui.rollout_is_ready(path)
+    assert ui.rollout_is_ready(path)[0]
 
 
 def test_chunk_boundary(tmp_path):
@@ -434,7 +434,7 @@ def test_chunk_boundary(tmp_path):
 
     # The event_line will straddle the 64 KiB boundary when read backwards.
     path.write_text(pad_line + event_line + pad_line, encoding="utf-8")
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
 
 
 def test_cap_reached(tmp_path):
@@ -450,4 +450,153 @@ def test_cap_reached(tmp_path):
 
     path.write_text(seq + "".join(lines), encoding="utf-8")
     # Cap is reached without finding lifecycle event -> fails closed (BUSY)
-    assert not ui.rollout_is_ready(path)
+    assert not ui.rollout_is_ready(path)[0]
+
+def test_rollout_is_ready_race_condition(tmp_path, monkeypatch):
+    path = tmp_path / "race.jsonl"
+    path.write_text('{"type":"event_msg","payload":{"type":"task_complete","turn_id":"123"}}\n', encoding="utf-8")
+
+    # We want to append to the file *after* rollout_is_ready calls stat() for the FIRST time.
+    # We can mock Path.stat to do this once.
+    original_stat = Path.stat
+
+    call_count = 0
+    def mock_stat(self, *args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            # Append task_started, so it becomes BUSY
+            with self.open("a", encoding="utf-8") as f:
+                f.write('{"type":"event_msg","payload":{"type":"task_started","turn_id":"456"}}\n')
+        return original_stat(self, *args, **kwargs)
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._ui_codex.Path.stat", mock_stat)
+
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    # The file initially looks like it ends with task_complete.
+    # But during the read, we mutate it. The function should see the size changed,
+    # retry, and eventually read the task_started.
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert not is_ready
+    assert "start_event:task_started" in reason
+
+def test_rollout_is_ready_race_condition_to_ready(tmp_path, monkeypatch):
+    path = tmp_path / "race2.jsonl"
+    path.write_text('{"type":"event_msg","payload":{"type":"task_started","turn_id":"123"}}\n', encoding="utf-8")
+
+    original_stat = Path.stat
+
+    call_count = 0
+    def mock_stat(self, *args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            with self.open("a", encoding="utf-8") as f:
+                f.write('{"type":"event_msg","payload":{"type":"task_complete","turn_id":"123"}}\n')
+        return original_stat(self, *args, **kwargs)
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._ui_codex.Path.stat", mock_stat)
+
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert is_ready
+    assert "end_event:task_complete" in reason
+
+def test_rollout_is_ready_large_lifecycle(tmp_path):
+    path = tmp_path / "large_lifecycle.jsonl"
+    large_str = "x" * (1024 * 1024 + 10)
+    # start then a completion carrying a >1 MiB message gives READY
+    path.write_text(
+        '{"type":"event_msg","payload":{"type":"task_started","turn_id":"1"}}\n' +
+        '{"type":"event_msg","payload":{"type":"task_complete","turn_id":"1","message":"' + large_str + '"}}\n',
+        encoding="utf-8"
+    )
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert is_ready
+    assert "end_event_oversized:task_complete" in reason
+
+def test_rollout_is_ready_large_non_lifecycle(tmp_path):
+    path = tmp_path / "large_non_lifecycle.jsonl"
+    large_str = "x" * (1024 * 1024 + 10)
+    # start then an oversized non-lifecycle record gives BUSY (start still decides)
+    path.write_text(
+        '{"type":"event_msg","payload":{"type":"task_started","turn_id":"1"}}\n' +
+        '{"type":"event_msg","payload":{"type":"some_other_event","message":"' + large_str + '"}}\n',
+        encoding="utf-8"
+    )
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert not is_ready
+    assert "start_event:task_started" in reason
+
+def test_rollout_is_ready_large_undecidable(tmp_path):
+    path = tmp_path / "large_undecidable.jsonl"
+    large_str = "x" * (1024 * 1024 + 10)
+    # oversized record with undecidable prefix gives BUSY
+    # e.g., type is pushed very far away
+    path.write_text(
+        '{"type":"event_msg","payload":{"message":"' + large_str + '","type":"task_complete"}}\n',
+        encoding="utf-8"
+    )
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert not is_ready
+    assert "oversized_line_undecidable" in reason
+
+def test_rollout_is_ready_large_integer(tmp_path):
+    path = tmp_path / "large_int.jsonl"
+    large_int = "9" * 5000
+    path.write_text('{"type":"event_msg","payload":{"type":"task_started","turn_id":' + large_int + '}}\n', encoding="utf-8")
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert not is_ready
+    assert "decode_error:ValueError" in reason or "decode_error:JSONDecodeError" in reason or "decode_error:ValueError" in reason
+
+def test_rollout_is_ready_deep_json(tmp_path):
+    path = tmp_path / "deep.jsonl"
+    limit = 100000
+    deep_json = '{"a":' * (limit + 50) + '1' + '}' * (limit + 50)
+    path.write_text(deep_json + '\n', encoding="utf-8")
+    from scripts.ai_agent_bridge import _ui_codex as ui
+    is_ready, reason = ui.rollout_is_ready(path)
+    assert not is_ready
+    assert "decode_error:RecursionError" in reason or "decode_error:JSONDecodeError" in reason
+
+def test_wake_driver_once_exception(monkeypatch):
+    from scripts.ai_agent_bridge import _inbox_watch
+
+    def raise_exc(*args, **kwargs):
+        raise RuntimeError("injected exception")
+
+    monkeypatch.setattr(_inbox_watch, "wake_driver_once", raise_exc)
+    monkeypatch.setattr(_inbox_watch, "poll_once", lambda *args, **kwargs: [{"message_id": 1}])
+    monkeypatch.setattr("time.sleep", lambda *args: None)
+
+    # Run the watcher but with once=True so it exits
+    # We just want to ensure it handles the exception and doesn't crash.
+    # Note: the original run_supervisory_wake_watcher accesses authority and remote epic client
+    # so we might need to mock a few more things if we want to run the full loop.
+    # Let's mock AuthorityService and RemoteEpicClient to do nothing.
+    class MockService:
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+
+    class MockRemote:
+        pass
+
+    monkeypatch.setattr("scripts.fleet_comms.authority.AuthorityService", MockService)
+    monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", MockRemote)
+    monkeypatch.setattr("scripts.ai_agent_bridge._inbox_watch.require_supervisory_api", lambda *args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._inbox_watch.open_readonly_db", lambda *args: None)
+    monkeypatch.setattr("scripts.ai_agent_bridge._inbox_watch.supervisory_recipient", lambda *args: None)
+    class MockLock:
+        def release(self): pass
+    monkeypatch.setattr("scripts.ai_agent_bridge._inbox_watch.acquire_watcher_lock", lambda *args: MockLock())
+    import subprocess
+    class MockResult:
+        stdout = "test_stream_id"
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: MockResult())
+
+    # Should not raise exception
+    _inbox_watch.run_supervisory_wake_watcher("test", "codex", "epic1", interval_seconds=0, once=True)

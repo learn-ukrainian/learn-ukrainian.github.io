@@ -272,13 +272,15 @@ def wake_driver_once(
             return False
         # Re-read the rollout after the lease check. An open task_started means
         # the pane is mid-turn; leave the rows unread and retry on a later poll.
-        if live.rollout is not None and not _ui_codex.rollout_is_ready(live.rollout):
+        if live.rollout is not None and not _ui_codex.rollout_is_ready(live.rollout)[0]:
             return False
         # One Ready pane gets one turn. This poll's rows are included in id order.
         message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
             f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
             for event in inbox_events
         )
+        if live.rollout is not None and not _ui_codex.rollout_is_ready(live.rollout)[0]:
+            return False
         result = _ui_codex.send(
             thread_id=live.thread_id, message=message, cwd=live.cwd,
             environment=live.environment,
@@ -385,13 +387,17 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
             remote = RemoteEpicClient()
             require_supervisory_api(service)
             while True:
-                events = poll_once(conn, agent, last_seen) if conn is not None else []
-                if events and wake_driver_once(
-                    service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
-                ):
-                    last_seen = events[-1].message_id
-                else:
-                    wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                try:
+                    events = poll_once(conn, agent, last_seen) if conn is not None else []
+                    if events and wake_driver_once(
+                        service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
+                    ):
+                        last_seen = events[-1].message_id
+                    else:
+                        wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                except Exception as e:
+                    import sys
+                    print(f"inbox watcher: unexpected error during wake poll: {e}", file=sys.stderr, flush=True)
                 if once:
                     return
                 time.sleep(interval_seconds)

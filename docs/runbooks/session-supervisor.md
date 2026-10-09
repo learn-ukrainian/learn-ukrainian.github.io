@@ -248,12 +248,22 @@ when it has no open turn. To determine state, the watcher reads the tail of
 the rollout file backwards in chunks up to a 16 MiB cap. The FIRST lifecycle event
 found going backward decides the readiness: `task_started` or `turn_started` means BUSY;
 `task_complete`, `turn_complete`, or `turn_aborted` means READY (with or without a turn id).
-Non-lifecycle lines are skipped. A line longer than 1 MiB is treated as an opaque
-non-lifecycle record and skipped without parsing. The pane fails closed (unknown/busy)
-and waits for the next poll on: a malformed or truncated line BEFORE a lifecycle event,
-invalid UTF-8 anywhere in the scanned window, the total cap reached without finding
-a lifecycle event, or an unreadable file. A crashed unmatched start stays BUSY
-(the normal launcher path handles dead leases).
+Non-lifecycle lines are skipped. A line longer than 1 MiB is prefix-checked (up to 8 KiB)
+to determine if it is a lifecycle event. If it is a lifecycle event, it is treated as that event;
+if it is a non-lifecycle event, it is skipped without decoding; if the prefix is undecidable, it fails closed.
+
+The pane fails closed (returning BUSY with a typed reason) and waits for the next poll on:
+`oversized_line_undecidable` (a line > 1 MiB has an undecidable prefix),
+`invalid_utf8` (invalid UTF-8 on an examined line),
+`decode_error:<Exception>` (malformed JSON on an examined line),
+`not_dict` (JSON on an examined line is not an object),
+`cap_reached_no_lifecycle` (the 16 MiB cap was reached or file ended without finding a lifecycle event),
+`stat_failed:<Exception>`, `stat_after_failed:<Exception>`, `read_error:<Exception>` (unreadable file), or
+`file_changing_constantly` (the file size changes continuously across 3 stat checks).
+Note that earlier scanned lines are not examined for UTF-8 or malformed JSON after the deciding event is found.
+A crashed unmatched start stays BUSY (the normal launcher path handles dead leases).
+
+Race condition residual: A turn can still start between the final readiness check and the resume process attaching. This window is milliseconds and exists today without any gate. Eliminating it needs a turn-admission lock or acknowledgement protocol (follow-up, owned by the driver). Do not claim the race is closed.
 
 Without `--wake-driver`, the watcher only prints
 notifications. One poll becomes one `codex exec resume` turn, with the unread

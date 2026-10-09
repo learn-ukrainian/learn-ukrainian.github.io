@@ -131,7 +131,7 @@ def find_live_session(lease: dict) -> LiveSession | None:
     return next(iter(matches.values())) if len(matches) == 1 else None
 
 
-def rollout_is_ready(path: Path) -> bool:
+def rollout_is_ready(path: Path) -> tuple[bool, str]:
     """Return whether this rollout has no open turn.
 
     Reads backwards in chunks to bound work. The FIRST lifecycle event found
@@ -139,101 +139,119 @@ def rollout_is_ready(path: Path) -> bool:
     - task_started/turn_started means BUSY (False).
     - task_complete/turn_complete/turn_aborted means READY (True).
 
-    Fails closed (returns False) on:
+    Fails closed (returns False, reason) on:
     - A malformed or truncated line BEFORE a lifecycle event is found.
     - Invalid UTF-8 anywhere in the scanned window.
     - Total cap (16 MiB) reached without finding a lifecycle event.
     - Unreadable file.
     """
-    try:
-        stat = path.stat()
-        size = stat.st_size
-    except OSError:
-        return False
-
-    if size == 0:
-        return True
+    import re
+    # Match the Codex payload type (e.g. {"type":"event_msg","payload":{"type":"task_started",...})
+    _PAYLOAD_TYPE_RE = re.compile(
+        br'^\{.*?"type"\s*:\s*"([^"]+)"\s*,\s*"payload"\s*:\s*(?:\{\s*"(?:type|id)"\s*:\s*"([^"]+)")?'
+    )
 
     cap_bytes = 16 * 1024 * 1024  # 16 MiB cap
     chunk_size = 64 * 1024        # 64 KiB chunk
     max_line_bytes = 1024 * 1024  # 1 MiB cap per line
 
-    bytes_read = 0
-    remainder = b""
-    pos = size
-
-    try:
-        with path.open("rb") as f:
-            while pos > 0 and bytes_read < cap_bytes:
-                read_size = min(chunk_size, pos)
-                pos -= read_size
-                f.seek(pos)
-                chunk = f.read(read_size)
-                bytes_read += read_size
-
-                lines_b = (chunk + remainder).split(b"\n")
-                if pos > 0:
-                    remainder = lines_b[0]
-                    lines_b = lines_b[1:]
-                else:
-                    remainder = b""
-
-                for line_b in reversed(lines_b):
-                    stripped_b = line_b.strip()
-                    if not stripped_b:
-                        continue
-
-                    if len(stripped_b) > max_line_bytes:
-                        continue
-
-                    try:
-                        line_str = stripped_b.decode("utf-8")
-                    except UnicodeDecodeError:
-                        return False
-
-                    try:
-                        record = json.loads(line_str)
-                    except json.JSONDecodeError:
-                        return False
-
-                    if not isinstance(record, dict):
-                        return False
-
-                    kind, _ = _rollout_turn_marker(record)
-                    if kind in _TURN_END:
-                        return True
-                    elif kind in _TURN_START:
-                        return False
-
-            if remainder:
-                stripped_b = remainder.strip()
-                if stripped_b:
-                    if len(stripped_b) > max_line_bytes:
-                        pass
+    def _process_line(stripped_b: bytes) -> tuple[bool, str] | None:
+        if not stripped_b:
+            return None
+        if len(stripped_b) > max_line_bytes:
+            m = _PAYLOAD_TYPE_RE.match(stripped_b[:8192])
+            if m:
+                outer_type = m.group(1).decode("ascii", errors="replace")
+                inner_type_b = m.group(2)
+                if outer_type == "event_msg":
+                    if inner_type_b:
+                        kind = inner_type_b.decode("ascii", errors="replace")
+                        if kind in _TURN_END:
+                            return True, f"end_event_oversized:{kind}"
+                        elif kind in _TURN_START:
+                            return False, f"start_event_oversized:{kind}"
+                        return None
                     else:
-                        try:
-                            line_str = stripped_b.decode("utf-8")
-                        except UnicodeDecodeError:
-                            return False
+                        return False, "oversized_line_undecidable"
+                return None
+            return False, "oversized_line_undecidable"
+        try:
+            line_str = stripped_b.decode("utf-8")
+        except UnicodeDecodeError:
+            return False, "invalid_utf8"
+        try:
+            record = json.loads(line_str)
+        except Exception as e:
+            return False, f"decode_error:{type(e).__name__}"
+        if not isinstance(record, dict):
+            return False, "not_dict"
+        kind, _ = _rollout_turn_marker(record)
+        if kind in _TURN_END:
+            return True, f"end_event:{kind}"
+        elif kind in _TURN_START:
+            return False, f"start_event:{kind}"
+        return None
 
-                        try:
-                            record = json.loads(line_str)
-                            if isinstance(record, dict):
-                                kind, _ = _rollout_turn_marker(record)
-                                if kind in _TURN_END:
-                                    return True
-                                elif kind in _TURN_START:
-                                    return False
-                            else:
-                                return False
-                        except json.JSONDecodeError:
-                            return False
+    for _ in range(3):
+        try:
+            stat = path.stat()
+            size = stat.st_size
+        except OSError as e:
+            return False, f"stat_failed:{type(e).__name__}"
 
-    except OSError:
-        return False
+        if size == 0:
+            return True, "empty"
 
-    return pos <= 0
+        bytes_read = 0
+        remainder = b""
+        pos = size
+        found_decision = None
 
+        try:
+            with path.open("rb") as f:
+                while pos > 0 and bytes_read < cap_bytes:
+                    read_size = min(chunk_size, pos)
+                    pos -= read_size
+                    f.seek(pos)
+                    chunk = f.read(read_size)
+                    bytes_read += read_size
+
+                    lines_b = (chunk + remainder).split(b"\n")
+                    if pos > 0:
+                        remainder = lines_b[0]
+                        lines_b = lines_b[1:]
+                    else:
+                        remainder = b""
+
+                    for line_b in reversed(lines_b):
+                        found_decision = _process_line(line_b.strip())
+                        if found_decision is not None:
+                            break
+                    if found_decision is not None:
+                        break
+
+                if found_decision is None and remainder:
+                    found_decision = _process_line(remainder.strip())
+
+                if found_decision is None:
+                    if pos <= 0:
+                        found_decision = (True, "no_lifecycle_events_found")
+                    else:
+                        found_decision = (False, "cap_reached_no_lifecycle")
+
+        except OSError as e:
+            return False, f"read_error:{type(e).__name__}"
+
+        try:
+            stat_after = path.stat()
+            if stat_after.st_size != size:
+                continue
+        except OSError as e:
+            return False, f"stat_after_failed:{type(e).__name__}"
+
+        return found_decision
+
+    return False, "file_changing_constantly"
 
 def _rollout_turn_marker(record: dict) -> tuple[str | None, str | None]:
     """Return the turn boundary name and turn id from one rollout record."""
