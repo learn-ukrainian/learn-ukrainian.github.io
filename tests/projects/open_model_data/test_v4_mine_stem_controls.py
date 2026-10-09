@@ -15,6 +15,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+import scripts.projects.open_model_data.v4_mine_stem_controls as stem_controls
+from scripts.opsec.needles import Needles
 from scripts.projects.open_model_data.paths import resolve_open_model_path
 from scripts.projects.open_model_data.v4_mine_stem_controls import (
     DEFAULT_OUTPUT_DIR,
@@ -34,9 +36,14 @@ from scripts.projects.open_model_data.v4_mine_stem_controls import (
     mine_controls,
     ocr_sanity_check,
     public_relpath,
+    ssh_or_host_re,
     style_guide_collision_check,
     verify_artifacts,
 )
+
+# Fictional deployment values; only their shape matters.
+FIXTURE_USER = "fixture-runner"
+FIXTURE_HOME = "/".join(("", "home", FIXTURE_USER))
 
 CONTRACTS_DIR = resolve_open_model_path("data/projects/open_model_data/contracts")
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_stem_controls_receipt.schema.json"
@@ -287,15 +294,15 @@ def test_zero_false_preservation_of_abstract_calques() -> None:
 def test_public_relpath_never_returns_metal_root() -> None:
     rendered = public_relpath(DEFAULT_OUTPUT_DIR)
     assert not rendered.startswith("/")
-    assert "/home/ops" not in rendered
-    assert "ops@" not in rendered
+    assert not SSH_OR_HOST_RE.search(rendered)
 
 
-def test_receipt_safety_rejects_host_and_corpus_leaks() -> None:
+def test_receipt_safety_rejects_host_and_corpus_leaks(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(stem_controls, "SSH_OR_HOST_RE", ssh_or_host_re(Needles(run_users=(FIXTURE_USER,))))
     with pytest.raises(ValueError):
-        assert_no_private_host_paths({"notes": "ran on /home/ops/cluster"})
+        assert_no_private_host_paths({"notes": f"ran on {FIXTURE_HOME}/cluster"})
     with pytest.raises(ValueError):
-        assert_no_private_host_paths({"ssh": "Host ops"})
+        assert_no_private_host_paths({"ssh": f"Host {FIXTURE_USER}"})
     with pytest.raises(ValueError):
         assert_no_corpus_text({"text": "Об'єм піраміди"})
     clean = {"filename": "stem_controls_receipt.json", "note": "hash-only"}
@@ -363,7 +370,7 @@ def test_mine_exact_production_quotas(tmp_path: Path) -> None:
     assert all(row["metadata"]["vesum_verified"] for row in dpo)
     dumped = json.dumps(receipt, ensure_ascii=False)
     assert "Об'єм піраміди становить" not in dumped
-    assert "/home/ops" not in dumped
+    assert not SSH_OR_HOST_RE.search(dumped)
 
 
 def test_heldout_chunk_is_excluded(tmp_path: Path) -> None:
@@ -418,8 +425,7 @@ def test_verify_only_and_cli_help(tmp_path: Path) -> None:
     assert "python -m scripts.projects.open_model_data.v4_mine_stem_controls" in help_text
     assert "$SOURCES_DB" in help_text
     assert "$VESUM_DB" in help_text
-    assert "/home/ops" not in help_text
-    assert "Host ops" not in help_text
+    assert not SSH_OR_HOST_RE.search(help_text)
     assert "Exit codes" in help_text
     assert "Outputs" in help_text
 
@@ -430,12 +436,9 @@ def test_module_and_docs_have_no_private_host_paths() -> None:
         REPO_ROOT / "docs/projects/open-model-data/PHASE_3_3_STEM_NEGATIVE_CONTROLS.md",
         REPO_ROOT / "docs/SCRIPTS.md",
     ]
-    needle = "/home/" + "ops"
     for path in paths:
         text = path.read_text(encoding="utf-8")
-        assert needle not in text
-        assert "Host ops" not in text
-        assert "ops@" not in text
+        assert not SSH_OR_HOST_RE.search(text), path
 
 
 @pytest.mark.needs_artifact(
