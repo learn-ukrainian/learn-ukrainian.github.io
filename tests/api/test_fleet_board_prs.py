@@ -277,17 +277,17 @@ def test_stacked_base_is_the_open_pr_on_the_base_branch() -> None:
 
 def test_epic_and_state_filters() -> None:
     rows = _rows(
-        _pull(number=1, sha="d" * 40, body="Closes #12", epics=("12",)),
+        _pull(number=1, sha="d" * 40, body="Closes #123", epics=("123",)),
         _pull(number=2, sha="e" * 40, labels=({"name": "hold"},), epics=("99",)),
         comments={1: (_comment("d" * 40),), 2: (_comment("e" * 40),)},
         checks={"d" * 40: _green("d" * 40), "e" * 40: (_check("CI Gate", "e" * 40, conclusion="failure"),)},
     )
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="epic:12")] == [1]
+    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="epic:123")] == [1]
     assert [row["number"] for row in prs_mod.filter_prs(rows, epic="99")] == [2]
     assert [row["number"] for row in prs_mod.filter_prs(rows, state="held")] == [2]
     assert [row["number"] for row in prs_mod.filter_prs(rows, state="red")] == [2]
     assert prs_mod.filter_prs(rows, state="nope") == []
-    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="12", state="open")] == [1]
+    assert [row["number"] for row in prs_mod.filter_prs(rows, epic="123", state="open")] == [1]
 
 
 def _rest_pull(number: int, sha: str, head: str, base: str) -> dict:
@@ -407,6 +407,44 @@ def test_github_cache_reuses_a_short_lived_read(monkeypatch: pytest.MonkeyPatch)
     assert calls == [REPO, REPO]
 
 
+class _BlindIdentity(_Client):
+    def request(
+        self,
+        method: str,
+        endpoint: str,
+        payload: dict | None = None,
+        timeout: float = 20,
+        allow_stale: bool = False,
+        **kwargs: object,
+    ) -> _Result:
+        path = endpoint.split("?", 1)[0]
+        if path in {"user", f"repos/{REPO}"}:
+            return _Result(None, error="denied")
+        return super().request(method, endpoint, payload, timeout, allow_stale, **kwargs)
+
+
+def test_failed_identity_and_repository_reads_are_unavailable_and_not_cached(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[int] = []
+
+    def factory() -> _BlindIdentity:
+        calls.append(1)
+        return _BlindIdentity([[_rest_pull(7, SHA, "feature", "topic")]])
+
+    monkeypatch.setattr(prs_mod, "_client", factory)
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.delenv("FLEET_MQ_STATE_DIR", raising=False)
+    first_rows, first_sources, _events = prs_mod.collect_pipeline()
+    assert first_sources[0].status == "unavailable"
+    assert [row["number"] for row in first_rows] == [7]
+    assert first_rows[0]["ci"] == "green"
+    assert first_rows[0]["cf"] == {"verdict": "unknown", "at_head": False}
+    assert first_rows[0]["stacked_base"] is None
+    prs_mod.collect_pipeline()
+    assert calls == [1, 1]
+
+
 def test_a_failed_read_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[int] = []
     failed = _view(_pull(), queue_failed=True, failed=True)
@@ -480,6 +518,33 @@ def test_old_keeper_file_is_stale_and_a_missing_dir_is_unavailable(tmp_path) -> 
     assert empty.usable is False
     unset, _snapshot = prs_mod.read_mq_state({})
     assert unset.status == "not_configured"
+
+
+def test_missing_keeper_state_is_unavailable_and_hold_stays_unknown(tmp_path) -> None:
+    report, snapshot = prs_mod.read_mq_state({"FLEET_MQ_STATE_DIR": str(tmp_path)})
+    assert report.status == "unavailable"
+    assert snapshot.usable is False
+    ready = prs_mod.assemble_prs(
+        _view(_pull()),
+        snapshot,
+        now=NOW,
+    )
+    assert ready[0]["keeper"] == {"hold": None, "reason": None}
+    assert ready[0]["stale_green"] is False
+    assert ready[0]["minutes"] is None
+    held = prs_mod.assemble_prs(
+        _view(_pull(labels=({"name": "hold"},))),
+        snapshot,
+        now=NOW,
+    )
+    assert held[0]["keeper"] == {"hold": True, "reason": "hold"}
+
+    gate_only = tmp_path / "gate-only"
+    gate_only.mkdir()
+    (gate_only / "requeue.json").write_text(json.dumps({"version": 1, "requeue": {}}), encoding="utf-8")
+    again, empty = prs_mod.read_mq_state({"FLEET_MQ_STATE_DIR": str(gate_only)})
+    assert again.status == "unavailable"
+    assert empty.usable is False
 
 
 def test_github_errors_stay_http_200(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
@@ -793,3 +858,42 @@ def test_missing_or_malformed_state_record_degrades(tmp_path, monkeypatch: pytes
     assert aged_source["age_s"] > activity_mod.STALE_PR_FRESH_S
     assert aged.json()["data"]["by_lane"][0]["days"][-1]["merged"] == 2
     assert bad.name not in aged.text
+
+
+@pytest.mark.parametrize("keeper_available", [False, True])
+def test_idle_and_throughput_preserve_keeper_readiness(tmp_path, monkeypatch: pytest.MonkeyPatch, keeper_available: bool) -> None:
+    key = f"42:{SHA}"
+    state = tmp_path / "queue"
+    state.mkdir()
+    _write_state(state, keeper_body={"queued": {}, "drops": {}}, approved={key: {"since": "2026-10-09T08:00:00Z"}})
+    if not keeper_available:
+        # Keep the ready timestamp while omitting the keeper authority.
+        (state / "keeper.json").rename(state / "unused.json")
+    activity = tmp_path / "activity.json"
+    activity.write_text(json.dumps({
+        "version": 1,
+        "throughput": [{"date": "2026-10-09", "repo": REPO, "owner_lane": "codex", "opened": 2, "merged": 1}],
+    }), encoding="utf-8")
+    monkeypatch.setenv("FLEET_GITHUB_REPO", REPO)
+    monkeypatch.setenv("FLEET_MQ_STATE_DIR", str(state))
+    monkeypatch.setenv("FLEET_STALE_PR_STATE", str(activity))
+    monkeypatch.setattr(prs_mod, "utc_now", lambda: NOW)
+    monkeypatch.setattr(prs_mod, "load_github_view", lambda *_args, **_kwargs: _view(
+        _pull(head_ref="codex/topic", commit_at="2026-10-07T10:00:00Z"),
+        comments={42: ()},
+    ))
+    rows, sources, events = prs_mod.collect_pipeline(now=NOW)
+    row = rows[0]
+    assert row["hours_idle"] == 48.0
+    assert row["idle_48h"] is True
+    assert row["keeper"]["hold"] is (False if keeper_available else None)
+    assert row["stale_green"] is False
+    assert sources[1].status == ("ok" if keeper_available else "unavailable")
+    assert activity_mod.attention_rows(rows)[0]["number"] == 42
+    stats = activity_mod.build_stats(rows, events, now=NOW)
+    assert stats["by_repo"][0]["backlog"] == 1
+    assert stats["by_repo"][0]["days"][-1]["merged"] == 1
+
+    approved = prs_mod.assemble_prs(_view(_pull()), prs_mod.read_mq_state(now=NOW)[1], now=NOW)
+    assert approved[0]["stale_green"] is keeper_available
+    assert approved[0]["minutes"] == (120 if keeper_available else None)

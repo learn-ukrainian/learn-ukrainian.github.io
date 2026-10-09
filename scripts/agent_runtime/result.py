@@ -23,6 +23,22 @@ from scripts.fleet_comms.contracts import ResponseEnvelope
 
 
 @dataclass(frozen=True)
+class AgyProviderFault:
+    """Body-free provider diagnostic; explicit status outranks quoted messages."""
+
+    kind: str
+    status: str | None = None
+    code: int | None = None
+
+    @property
+    def transient(self) -> bool:
+        return (self.status == "UNAVAILABLE" and self.code == 503) or self.kind in {
+            "stream_interrupted",
+            "missing_terminal_result",
+        }
+
+
+@dataclass(frozen=True)
 class AgyAttempt:
     """Invocation-bound AGY evidence; denial targets are sanitized (#8771)."""
 
@@ -34,6 +50,7 @@ class AgyAttempt:
     excused_kill_count: int | None = None
     unexcused_kill_count: int | None = None
     unknown_command_count: int | None = None
+    side_effect_tool_count: int | None = None
     permission_profile_id: str | None = None
     denied_command_count: int | None = None
     denied_file_read_count: int | None = None
@@ -146,6 +163,8 @@ class ParseResult:
     response_envelope: ResponseEnvelope | None = None
     failure_code: str | None = None
     provider_error_text: str | None = None
+    # Adapter-owned anchored diagnostic, never inferred from model/tool prose.
+    agy_provider_fault: AgyProviderFault | None = None
     # Redacted, bounded command text for every model-owned AGY kill (#8771).
     agy_killed_commands: list[str] = field(default_factory=list)
     # Adapter-owned absence of prompt/model events; unknown is not retryable.

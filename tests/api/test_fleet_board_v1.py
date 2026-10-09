@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import ValidationError
 
 import scripts.api.fleet_board.router as board_routes
 from scripts.api import main as api_main
@@ -58,6 +59,39 @@ def test_schema_validates_the_index_response(monkeypatch: pytest.MonkeyPatch) ->
     document = schema.json()["data"]["endpoints"]["fleet.v1.index"]
     Draft202012Validator(document).validate(index.json())
     Draft202012Validator(schema.json()["data"]["endpoints"]["fleet.v1.schema"]).validate(schema.json())
+
+
+@pytest.mark.parametrize("schema_id", ["index", "prs", "pr", "now", "stats"])
+@pytest.mark.parametrize(
+    ("status", "age_s", "error"),
+    [
+        ("not_configured", 1, None),
+        ("not_configured", None, "detail"),
+        ("unavailable", 1, "unavailable"),
+        ("unavailable", None, None),
+        ("ok", 1, "detail"),
+        ("stale", 1, "detail"),
+    ],
+)
+def test_schema_rejects_a_source_row_that_disagrees_with_its_status(
+    monkeypatch: pytest.MonkeyPatch, schema_id: str, status: str, age_s: int | None, error: str | None
+) -> None:
+    _clear_locations(monkeypatch)
+    path = {"index": "", "pr": "/prs/42"}.get(schema_id, f"/{schema_id}")
+    document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"][f"fleet.v1.{schema_id}"]
+    payload = client.get(f"/api/fleet/v1{path}").json()
+    validator = Draft202012Validator(document)
+    validator.validate(payload)
+
+    contradictory = {
+        "name": payload["sources"][0]["name"],
+        "status": status,
+        "age_s": age_s,
+        "error": error,
+    }
+    payload["sources"][0] = contradictory
+    with pytest.raises(ValidationError):
+        validator.validate(payload)
 
 
 def test_missing_env_var_is_not_configured_and_http_200(monkeypatch: pytest.MonkeyPatch) -> None:

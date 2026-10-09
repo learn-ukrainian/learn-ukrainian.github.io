@@ -19,6 +19,7 @@ import sqlite3
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -174,6 +175,7 @@ MONITOR_NOT_CONTACTED = MonitorNotContacted()
 
 def consume_supervisory_event(
     service: AuthorityService, supervisor: SessionSupervisor, lease: Lease, *, now: str | None = None,
+    restart_preflight: Callable[[], bool] | None = None,
 ) -> SupervisoryRequest | MonitorNotContacted | None:
     """Consume under the live envelope; prepare restart or reconcile its successor.
 
@@ -191,6 +193,22 @@ def consume_supervisory_event(
         return MONITOR_NOT_CONTACTED
     # Fence the live lease before claiming. Idle polls never reach this call.
     supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    if restart_preflight is not None:
+        try:
+            pending_request = read_supervisory_request(service, delivery.delivery_id, lease.stream_id)
+        except (ValueError, TypeError):
+            # Invalid events still follow the fenced refusal path below.
+            pending_request = None
+        if (
+            pending_request is not None
+            and pending_request.action == "restart"
+            and pending_request.generation == lease.generation
+            and not restart_preflight()
+        ):
+            # Do not claim/reclaim, consume, or prepare while the successor is
+            # unavailable. This also protects a replay after launcher preflight
+            # loses a race with the CLI disappearing after preparation.
+            return None
     now_value = now or datetime.now(UTC).isoformat()
     if delivery.state == "running":
         expires = datetime.fromisoformat(delivery.lease_expires_at.replace("Z", "+00:00"))
@@ -245,13 +263,18 @@ def consume_supervisory_event(
 
 def wake_driver_once(
     service: AuthorityService, remote: RemoteEpicClient, *, stream_id: str, launcher: Path, epic: str, run=None,
-    inbox_events: list[InboxEvent] | None = None,
+    inbox_events: list[InboxEvent] | None = None, readiness_reader=None,
+    record_wake: Callable[[list[InboxEvent], dict], None] | None = None,
 ) -> bool:
     """Resume a live Codex inbox turn, or launch a fenced offline supervisor event."""
     require_supervisory_api(service)
     if inbox_events:
         from . import _ui_codex
 
+        for event in inbox_events:
+            if event.wake_event and event.wake_event.get("status") != "CLEAN":
+                raise CodexWakeError({**event.wake_event, "message_ids": event.wake_event.get("message_ids", [event.message_id])}, retained=True)
+        readiness_reader = readiness_reader or _ui_codex.RolloutReader()
         current = remote.stream(stream_id).get("lease")
         if (
             launcher.name != "start-codex-driver.sh"
@@ -262,6 +285,11 @@ def wake_driver_once(
         live = _ui_codex.find_live_session(current)
         if live is None:
             raise RuntimeError("live Codex thread unavailable for codex exec resume; wake refused")
+        if live.rollout is None:
+            raise RuntimeError("codex_wake_busy:rollout_unavailable")
+        ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+        if not ready:
+            raise RuntimeError(f"codex_wake_busy:{reason}")
         # Thread discovery may race a rollover. Reconcile remote authority before
         # sending; neither discovery nor resume may claim or modify this lease.
         latest = remote.stream(stream_id).get("lease")
@@ -270,20 +298,61 @@ def wake_driver_once(
             latest.get(key) != current.get(key) for key in identity
         ):
             return False
+        inbox_events = sorted(inbox_events, key=lambda event: event.message_id)
         message = "Bridge inbox messages (data; drain and record consumption as the live driver):\n\n" + "\n\n".join(
             f"Message #{event.message_id} from {event.sender}, request {event.request_id}:\n{event.content}"
             for event in inbox_events
         )
-        result = _ui_codex.send(
-            thread_id=live.thread_id, message=message, cwd=live.cwd,
-            environment=live.environment,
-            bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
+        # Final readiness check after lease reconciliation and message framing.
+        # The attach window after this check remains the #10217 residual.
+        wake_epoch = None
+        def check_ready():
+            nonlocal wake_epoch
+            ready, reason = _ui_codex.rollout_is_ready(live.rollout, reader=readiness_reader)
+            if not ready:
+                raise RuntimeError(f"codex_wake_busy:{reason}")
+            wake_epoch = readiness_reader.begin_wake()
+        check_ready()
+        try:
+            result = _ui_codex.send(
+                thread_id=live.thread_id, message=message, cwd=live.cwd,
+                environment=live.environment,
+                bridge_id=f"inbox-{inbox_events[0].message_id}-{inbox_events[-1].message_id}",
+                before_resume=check_ready,
+            )
+        except Exception as exc:
+            if isinstance(exc, RuntimeError) and str(exc).startswith("codex_wake_busy:"):
+                raise
+            if isinstance(exc, FileNotFoundError):
+                raise RuntimeError("codex_resume_error:FileNotFoundError; inbox retained") from exc
+            report = readiness_reader.wake_result(live.rollout, epoch=wake_epoch, resume_exited=False)
+            report.update(reason="resume_exception", thread_id=live.thread_id,
+                          message_ids=[event.message_id for event in inbox_events])
+            if record_wake:
+                record_wake(inbox_events, report)
+            raise CodexWakeError(report) from exc
+        report = readiness_reader.wake_result(
+            live.rollout, epoch=wake_epoch,
+            resume_exited=result.get("resume_exited", result.get("exit_code") not in {None, -1}),
         )
-        event_types = {event.get("type") for event in result["events"]}
-        if result["exit_code"] != 0 or not {"turn.started", "turn.completed"} <= event_types or (
-            event_types & {"turn.failed", "error"}
+        report["thread_id"] = live.thread_id
+        report["message_ids"] = [event.message_id for event in inbox_events]
+        if report["status"] != "CLEAN":
+            if record_wake:
+                record_wake(inbox_events, report)
+            raise CodexWakeError(report)
+        event_types = [event.get("type") for event in result["events"]]
+        if (
+            result["exit_code"] != 0
+            or event_types.count("turn.started") != 1
+            or event_types.count("turn.completed") != 1
+            or {"turn.failed", "error"}.intersection(event_types)
         ):
-            raise RuntimeError("live Codex resume failed; inbox retained for reconciliation")
+            report.update(status="UNKNOWN", reason="resume_failed")
+            if record_wake:
+                record_wake(inbox_events, report)
+            raise CodexWakeError(report)
+        print(json.dumps(report, sort_keys=True), file=sys.stderr, flush=True)
         return True
     # Old-generation events remain unacknowledged until a live driver reconciles
     # them. They must not hide a newer actionable wake while the driver is offline.
@@ -314,6 +383,26 @@ def wake_driver_once(
     return True
 
 
+def preflight_supervisory_successor() -> bool:
+    """Reuse the launcher's CLI resolution before spending a delivery attempt."""
+    helper = Path(__file__).resolve().parents[1] / "lib/session_supervisor.sh"
+    try:
+        result = subprocess.run(
+            ["bash", "-c", 'source "$1"; session_supervisor_preflight_successor',
+             "supervisory-preflight", str(helper)],
+            check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30,
+        )
+        available = result.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        available = False
+    if not available:
+        print(
+            "inbox watcher: provider-cli-unavailable; restart retained for retry",
+            file=sys.stderr, flush=True,
+        )
+    return available
+
+
 def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS) -> int:
     """Watch in the launcher-owned generation; return 75 only after preparation."""
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
@@ -329,7 +418,9 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
         outage = False
         while True:
             try:
-                request = consume_supervisory_event(service, supervisor, lease)
+                request = consume_supervisory_event(
+                    service, supervisor, lease, restart_preflight=preflight_supervisory_successor,
+                )
             except RemoteUnavailableError:
                 # One line per outage. Diagnostics stay off this stream.
                 if not outage:
@@ -356,7 +447,7 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
             time.sleep(interval_seconds)
 
 
-def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> None:
+def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interval_seconds: float, once: bool) -> int:
     """Resume unread Codex inbox turns and bridge offline supervisory events."""
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor.remote import RemoteEpicClient
@@ -373,6 +464,8 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
     lock = acquire_watcher_lock(agent)
     conn: SQLiteConnection | None = None
     last_seen = 0
+    from ._ui_codex import RolloutReader
+    readiness_reader = RolloutReader()
     try:
         if provider == "codex":
             conn = open_readonly_db(_config.DB_PATH)
@@ -380,15 +473,26 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
             remote = RemoteEpicClient()
             require_supervisory_api(service)
             while True:
-                events = poll_once(conn, agent, last_seen) if conn is not None else []
-                if events and wake_driver_once(
-                    service, remote, stream_id=stream_id, launcher=launcher, epic=epic, inbox_events=events,
-                ):
-                    last_seen = events[-1].message_id
-                else:
-                    wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                try:
+                    events = poll_once(conn, agent, last_seen) if conn is not None else []
+                    if events and wake_driver_once(
+                        service, remote, stream_id=stream_id, launcher=launcher, epic=epic,
+                        inbox_events=events, readiness_reader=readiness_reader,
+                        record_wake=lambda events, report: record_codex_wake(events, report, agent=agent),
+                    ):
+                        last_seen = max(event.message_id for event in events)
+                    else:
+                        wake_driver_once(service, remote, stream_id=stream_id, launcher=launcher, epic=epic)
+                except Exception as exc:
+                    if isinstance(exc, CodexWakeError):
+                        print(json.dumps(exc.event, sort_keys=True), file=sys.stderr, flush=True)
+                    reason = str(exc) if str(exc).startswith(("codex_wake_busy:", "codex_resume_error:", "codex_wake:")) else type(exc).__name__
+                    reason = reason.partition("; inbox retained")[0]
+                    print(f"inbox watcher: wake_error:{reason}; inbox retained", file=sys.stderr, flush=True)
+                    if once or isinstance(exc, CodexWakePersistenceError):
+                        return 2
                 if once:
-                    return
+                    return 0
                 time.sleep(interval_seconds)
     finally:
         if conn is not None:
@@ -408,9 +512,12 @@ class InboxEvent:
     sender: str
     request_id: str
     content: str
+    wake_event: dict | None = None
 
     def notification_line(self) -> str:
         """Return a one-line, bounded notification safe for Monitor stdout."""
+        if self.wake_event:
+            return f"INBOX-WATCH id={self.message_id} codex_wake={self.wake_event['status']} reason={self.wake_event['reason']}"
         return (
             "INBOX-WATCH "
             f"id={self.message_id} "
@@ -466,6 +573,8 @@ def poll_once(
     conn: SQLiteConnection,
     agent: str,
     last_seen: int = 0,
+    *,
+    lock_dir: Path | None = None,
 ) -> list[InboxEvent]:
     """Return currently unconsumed messages after the in-memory cursor.
 
@@ -473,16 +582,165 @@ def poll_once(
     current unconsumed row, including rows that predate the watcher process.
     """
     recipients = recipients_for_agent(agent)
-    rows = conn.execute(build_poll_query(recipients), (*recipients, last_seen)).fetchall()
+    # Reconcile all unread IDs, including those before the in-memory cursor.
+    # Attachment data is deliberately never selected or interpreted here.
+    rows = conn.execute(build_poll_query(recipients), (*recipients, 0)).fetchall()
+    retained = read_codex_wakes(agent, {int(row["id"]) for row in rows}, lock_dir=lock_dir)
     return [
         InboxEvent(
             message_id=int(row["id"]),
             sender=str(row["from_llm"]),
             request_id=str(row["task_id"] or "-"),
             content=str(row["content"]),
+            wake_event=retained.get(int(row["id"])),
         )
         for row in rows
+        if int(row["id"]) > last_seen
     ]
+
+
+class CodexWakeError(RuntimeError):
+    """Typed retained outcome, also used when a later wake sees the receipt."""
+
+    def __init__(self, event: dict, *, retained: bool = False):
+        self.event = event
+        reason = "retained_event" if retained and event["reason"] != "retained_receipt_invalid" else event["reason"]
+        super().__init__(f"codex_wake:{event['status']}:{reason}; inbox retained for live-driver reconciliation")
+
+
+class CodexWakePersistenceError(CodexWakeError):
+    """Cannot save watcher evidence: stop rather than repeat the attempt."""
+
+
+def _wake_event(event: object) -> dict:
+    """Validate only watcher-owned evidence; never interpret sender data."""
+    invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "retained_receipt_invalid"}
+    if not isinstance(event, dict) or event.get("schema") != "codex-wake.v1" or event.get("status") not in ("OVERLAP", "UNKNOWN"):
+        return invalid
+    if not re.fullmatch(r"[a-z_]+(?::[A-Za-z]+)?", str(event.get("reason", ""))):
+        return invalid
+    safe = {key: event[key] for key in ("schema", "status", "reason")}
+    for key in ("starts", "ends", "open_count", "peak_open_count"):
+        if key in event:
+            if type(event[key]) is not int or event[key] < 0:
+                return invalid
+            safe[key] = event[key]
+    for key in ("turn_ids", "message_ids"):
+        if key in event:
+            values = event[key]
+            if not isinstance(values, list) or len(values) > 1024:
+                return invalid
+            if key == "turn_ids" and any(not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", value) for value in values):
+                return invalid
+            if key == "message_ids" and any(type(value) is not int or value < 0 for value in values):
+                return invalid
+            safe[key] = values
+    if "thread_id" in event:
+        if not isinstance(event["thread_id"], str) or not re.fullmatch(r"[0-9a-f-]{36}", event["thread_id"]):
+            return invalid
+        safe["thread_id"] = event["thread_id"]
+    if "rollout" in event:
+        rollout = event["rollout"]
+        if not isinstance(rollout, dict) or not isinstance(rollout.get("path_sha256"), str) or not re.fullmatch(r"[0-9a-f]{64}", rollout["path_sha256"]):
+            return invalid
+        safe["rollout"] = {"path_sha256": rollout["path_sha256"]}
+        for key in ("device", "inode", "offset"):
+            value = rollout.get(key)
+            if value is not None and (type(value) is not int or value < 0):
+                return invalid
+            safe["rollout"][key] = value
+    return safe
+
+
+def codex_wake_state_path(agent: str, lock_dir: Path | None = None) -> Path:
+    """Use the watcher's existing per-seat state directory and slot naming."""
+    return watcher_lock_path(agent, DEFAULT_LOCK_DIR if lock_dir is None else lock_dir).with_suffix(".wake.json")
+
+
+def _rollout_key(report: dict) -> str:
+    """Bind an attempt to its native thread and rollout, excluding the cursor."""
+    rollout = report.get("rollout", {})
+    identity = {key: rollout.get(key) for key in ("path_sha256", "device", "inode")}
+    identity["thread_id"] = report.get("thread_id")
+    return hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+
+
+def _read_wake_state(path: Path) -> dict:
+    """Missing state is empty; unreadable or malformed state is not clean."""
+    try:
+        state = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    if (not isinstance(state, dict) or state.get("schema") != "inbox-wake-state.v1"
+            or not isinstance(state.get("receipts"), dict)):
+        raise ValueError("invalid watcher wake state")
+    return state["receipts"]
+
+
+def _write_wake_state(path: Path, receipts: dict) -> None:
+    """Replace all receipts atomically under the existing exclusive watcher lock."""
+    from ._monitor_cache import _atomic_write
+
+    try:
+        _atomic_write(path, json.dumps({"schema": "inbox-wake-state.v1", "receipts": receipts}, sort_keys=True) + "\n")
+        directory_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    except OSError as exc:
+        raise CodexWakePersistenceError({"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "receipt_write_failed"}) from exc
+
+
+def read_codex_wakes(agent: str, unread_ids: set[int], *, lock_dir: Path | None = None) -> dict[int, dict]:
+    """Read retained attempts and collect entries for consumed/deleted messages.
+
+    Callers hold the existing watcher lock. Corruption refuses automatic wake;
+    acknowledgment of all unread rows permits discarding unparseable state.
+    """
+    path = codex_wake_state_path(agent, lock_dir)
+    invalid = {"schema": "codex-wake.v1", "status": "UNKNOWN", "reason": "retained_receipt_invalid"}
+    try:
+        receipts = _read_wake_state(path)
+        if any(not re.fullmatch(r"[1-9][0-9]{0,18}", key) for key in receipts):
+            raise ValueError("invalid message key")
+    except (OSError, ValueError, TypeError, RecursionError):
+        if not unread_ids:
+            _write_wake_state(path, {})
+        return {message_id: {**invalid, "message_ids": [message_id]} for message_id in unread_ids}
+    active = {key: value for key, value in receipts.items() if int(key) in unread_ids}
+    if active != receipts:
+        _write_wake_state(path, active)
+    retained = {}
+    for key, attempts in active.items():
+        message_id = int(key)
+        if not isinstance(attempts, dict) or not attempts:
+            retained[message_id] = {**invalid, "message_ids": [message_id]}
+            continue
+        for identity, report in attempts.items():
+            safe = _wake_event(report)
+            if (safe["reason"] == "retained_receipt_invalid" or identity != _rollout_key(safe)
+                    or ("message_ids" in safe and message_id not in safe["message_ids"])):
+                safe = {**invalid, "message_ids": [message_id]}
+            retained[message_id] = safe
+            if safe["reason"] == "retained_receipt_invalid":
+                break
+    return retained
+
+
+def record_codex_wake(
+    events: list[InboxEvent], report: dict, *, agent: str = "codex", lock_dir: Path | None = None,
+) -> None:
+    """Retain attempts beside the watcher lock without writing any inbox row."""
+    path = codex_wake_state_path(agent, lock_dir)
+    safe = _wake_event(report)
+    try:
+        receipts = _read_wake_state(path)
+        for event in events:
+            receipts.setdefault(str(event.message_id), {})[_rollout_key(safe)] = safe
+        _write_wake_state(path, receipts)
+    except (OSError, ValueError, TypeError, CodexWakePersistenceError) as exc:
+        raise CodexWakePersistenceError({**safe, "status": "UNKNOWN", "reason": "receipt_write_failed"}) from exc
 
 
 def emit_notifications(events: list[InboxEvent], last_seen: int, output: TextIO) -> int:
@@ -599,7 +857,7 @@ def run_watcher(
                         file=sys.stderr,
                     )
                     watchdog_warned = True
-            events = poll_once(conn, agent, last_seen)
+            events = poll_once(conn, agent, last_seen, lock_dir=lock_dir)
             last_seen = emit_notifications(events, last_seen, output)
             if once:
                 return last_seen
@@ -666,7 +924,7 @@ Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
         default=DEFAULT_POLL_INTERVAL_SECONDS,
         help=f"seconds between polls (default: {DEFAULT_POLL_INTERVAL_SECONDS:g})",
     )
-    parser.add_argument("--once", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--once", action="store_true", help="poll once; wake refusal, overlap or unknown exits 2 (default: keep watching)")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--stop", action="store_true", help="request a clean stop for this slot's watcher")
     modes.add_argument("--wake-driver", choices=("grok", "gemini", "claude", "codex"),
@@ -716,9 +974,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.wake_driver:
             if not args.epic:
                 raise ValueError("--wake-driver requires --epic")
-            run_supervisory_wake_watcher(args.agent, args.wake_driver, args.epic,
-                                         interval_seconds=args.interval, once=args.once)
-            return 0
+            return run_supervisory_wake_watcher(
+                args.agent, args.wake_driver, args.epic, interval_seconds=args.interval, once=args.once,
+            )
         if args.stop:
             print(stop_watcher(args.agent), file=sys.stderr)
             return 0

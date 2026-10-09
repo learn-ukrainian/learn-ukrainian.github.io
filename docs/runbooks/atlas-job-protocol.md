@@ -25,10 +25,19 @@ Do not document them in this public repository. Operators set:
 `submit` and the launcher `mkdir -p` `$ATLAS_RUN_ROOT` on first use. Never
 point a job `workdir` at teacher product data trees.
 
-The class-B launcher (`launch_reenrich_class_b.sh`) pins
-`systemd-run --property=MemoryHigh=1536M --property=MemoryMax=2048M` on every
-host so a reenrich run cannot starve co-resident services. Do not raise those
-limits without checking headroom.
+The class-B launcher (`launch_reenrich_class_b.sh`) sets per-job
+`systemd-run` `MemoryHigh` / `MemoryMax` caps on every host so a reenrich run
+cannot starve co-resident services. The caps come from
+`LU_LEXICON_JOB_MEMORY_HIGH_MIB` / `LU_LEXICON_JOB_MEMORY_MAX_MIB`; the public
+defaults are generic and conservative, and each deployment sets its own
+privately. Do not raise them without checking headroom. The class-B, enrich
+and reduce launchers refuse a value that is not a positive whole number of MiB
+before touching anything, and hand the resolved caps to the job as unit
+environment (and, for enrich and reduce, as `--memory-*-mib` flags), so the
+Python runner and its worker scopes use the same values as the unit. An unset or
+blank value uses the default on both sides, and the enrich and reduce
+launchers refuse caller-supplied `--memory-*-mib` flags, so a caller cannot
+make the runner disagree with the unit.
 
 SSH aliases live in operator env / SSH config, not git. Occupancy/load on the
 Monitor host itself uses `ATLAS_JOB_SELF_HOST` (local collection, no
@@ -133,7 +142,7 @@ evidence is missing).
 
 ## Memory
 
-The class-B launcher pins `MemoryHigh=1.5G` / `MemoryMax=2G` on every host —
+The class-B launcher caps every job's memory (see above) on every host —
 one heavy job at a time per host. That cap is load-bearing wherever a runner
 shares a box with teacher or CI services. Two full-catalog runs on one host
 need a later host or a queue; two hosts running one campaign each is the

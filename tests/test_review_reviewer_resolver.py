@@ -159,7 +159,9 @@ def test_fleet_endpoint_eligibility_is_a_projection_of_model_catalog() -> None:
     for endpoint in fleet["endpoints"]:
         policy_name = aliases.get(endpoint["name"], endpoint["name"])
         if policy_name in policy:
-            assert endpoint["formal_review_eligible"] is policy[policy_name]["formal_review_eligible"]
+            # Native worktree review does not authorize the source-blind ACP endpoint.
+            expected = policy[policy_name]["formal_review_eligible"] and policy[policy_name]["adapter_transport"] == "acp"
+            assert endpoint["formal_review_eligible"] is expected
         else:
             assert endpoint["formal_review_eligible"] is False
 
@@ -498,10 +500,10 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5-5"
-    assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
+    assert all(entry.status == "excluded" for entry in resolution.trace if entry.concrete_model.startswith("gemini-"))
 
 
-def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
+def test_gemini_code_review_refuses_forged_endpoint_in_ladder_and_pin(monkeypatch):
     injected = replace(
         SONNET_5_5,
         name="injected-gemini",
@@ -513,11 +515,11 @@ def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch)
     inputs = ResolverInputs(author_model="codex", risk="medium")
     result = evaluate_candidate(injected, inputs)
     assert result.status == "excluded"
-    assert "operator 2026-09-25" in result.reason
+    assert "endpoint identity" in result.reason
     resolution = resolve_reviewer(inputs, ladder=((injected,),))
     assert resolution.selected is None
     assert resolution.trace[0].status == "excluded"
-    assert "Gemini reviews Ukrainian only, never code" in resolution.trace[0].reason
+    assert "endpoint identity" in resolution.trace[0].reason
     monkeypatch.setitem(REVIEW_CANDIDATES, injected.name, injected)
     pinned = resolve_reviewer(
         ResolverInputs(
@@ -1177,7 +1179,8 @@ def test_ladders_place_native_and_cursor_grok_directly_after_opus(risk):
         assert {c.concrete_model for rung in ladder for c in rung} == {"gpt-6.1-sol", "claude-opus-5-5", "grok-4.7"}
     else:
         assert ladder[5][0].name == "claude-sonnet-5-5"
-        assert ladder[7][0].name == "pool"
+        assert ladder[7][0].name == "gemini-3.8-flash-high"
+        assert ladder[8][0].name == "pool"
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
 
 
@@ -1269,7 +1272,8 @@ def test_sealed_executable_catalog_and_resolver_parity():
     assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
     for name, candidate in REVIEW_CANDIDATES.items():
         if candidate.formal_review_eligible:
-            assert candidate.sealed_executable == _SEALED_REVIEW_EXECUTABLE, (
+            executable = "scripts/delegate.py" if candidate.adapter_transport == "native_agy" else _SEALED_REVIEW_EXECUTABLE
+            assert candidate.sealed_executable == executable, (
                 f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
             )
             # Normal inputs pass sealed_executable hard exclusion
@@ -1284,7 +1288,8 @@ def test_sealed_executable_catalog_and_resolver_parity():
 
             # Tampered executable is rejected
             mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
-            assert _hard_exclusion_reason(mismatched, inputs) == "candidate is not bound to the sealed ACP executable"
+            expected = "native AGY review endpoint identity is invalid" if candidate.adapter_transport == "native_agy" else "candidate is not bound to the sealed ACP executable"
+            assert _hard_exclusion_reason(mismatched, inputs) == expected
 
 
 def _grok_trace(resolution):
@@ -1579,7 +1584,9 @@ def test_every_author_family_risk_profile_pick(family, author, risk, profile):
     assert resolution.selected.family != family
 
 
+# This matrix isolates the Grok fallback; Gemini fallback is covered separately.
 _AUTHORITY_DOWN = {
+    "agy": "unhealthy",
     "codex": "unhealthy",
     "claude": "unhealthy",
     "claude-opus-5-5-cursor-fallback": "unhealthy",
@@ -1644,7 +1651,7 @@ def test_native_grok_precedes_cursor_across_heads_pressure_and_subject_exclusion
     for head in range(200):
         inputs = ResolverInputs(
             author_model="claude-sonnet-5-5", risk=risk, review_profile=profile,
-            subject_families=frozenset({"openai", "anthropic"}),
+            subject_families=frozenset({"openai", "anthropic", "google"}),
             routing_snapshot=snapshot, exact_head=f"{head:040x}",
         )
         ladder = ((GROK_4_7_CURSOR_FALLBACK,), (GROK_4_7,))
@@ -2121,7 +2128,7 @@ def test_complete_author_set_excludes_every_member_not_only_the_latest():
     complete = _complete({"anthropic", "openai"}, author_model="gpt-6.1-sol")
 
     assert latest_only.selected.family == "anthropic"
-    assert complete.selected.name == "grok-4.7"
+    assert complete.selected.name == "gemini-3.8-flash-high"
     reasons = {entry.name: entry.reason for entry in complete.trace}
     assert "same family as author (anthropic)" in reasons["claude-opus-5-5"]
     # Grok reviews at every risk (#9769); an xAI member removes it too.

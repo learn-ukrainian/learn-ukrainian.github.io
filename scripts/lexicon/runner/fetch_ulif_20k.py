@@ -385,7 +385,10 @@ def _run(args: argparse.Namespace) -> int:
     work_dir = args.work_dir.resolve()
     work_dir.mkdir(parents=True, exist_ok=True)
     lemmas, cohort_digest = _cohort(args.cohort.resolve())
-    memory_policy = MemoryPolicy(high_bytes=1536 * 1024**2, max_bytes=2048 * 1024**2)
+    from scripts.lexicon.runner.contracts import job_memory_mib
+
+    job_high_mib, job_max_mib = job_memory_mib()
+    memory_policy = MemoryPolicy(high_bytes=job_high_mib * 1024**2, max_bytes=job_max_mib * 1024**2)
     # Proof runs in a disposable child (see memory.run_startup_self_test) — this
     # fetch loop runs single-process (no forked worker), so self-applying a hard
     # cap here would RLIMIT/cgroup-cap whatever process drives _run(), including

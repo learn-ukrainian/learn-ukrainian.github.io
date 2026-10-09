@@ -22,6 +22,20 @@ _SOURCE_SCHEMA: dict[str, Any] = {
         "age_s": {"type": ["number", "null"], "minimum": 0},
         "error": {"type": ["string", "null"]},
     },
+    "allOf": [
+        {
+            "if": {"properties": {"status": {"const": "not_configured"}}, "required": ["status"]},
+            "then": {"properties": {"age_s": {"type": "null"}, "error": {"type": "null"}}},
+        },
+        {
+            "if": {"properties": {"status": {"const": "unavailable"}}, "required": ["status"]},
+            "then": {"properties": {"age_s": {"type": "null"}, "error": {"const": "unavailable"}}},
+        },
+        {
+            "if": {"properties": {"status": {"enum": ["ok", "stale"]}}, "required": ["status"]},
+            "then": {"properties": {"error": {"type": "null"}}},
+        },
+    ],
 }
 
 _INDEX_DATA: dict[str, Any] = {

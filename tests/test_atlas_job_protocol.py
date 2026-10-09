@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lexicon.runner import atlas_job
+from tests._host_path_guard import assert_no_host_paths
 
 
 def _git_env() -> dict[str, str]:
@@ -55,9 +56,9 @@ def _non_operational_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ATLAS_RUN_ROOT", "/tmp/atlas-run-root")
 
 
-def test_source_has_no_baked_ops_home_defaults() -> None:
+def test_source_has_no_baked_home_defaults() -> None:
     text = Path(atlas_job.__file__).read_text(encoding="utf-8")
-    assert "/home/ops" not in text
+    assert_no_host_paths(text)
 
 
 def test_valid_plan_is_ok() -> None:
@@ -623,7 +624,7 @@ def test_min_free_disk_bytes_parsing(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GIB", raising=False)
     monkeypatch.delenv("ATLAS_MIN_FREE_DISK_GB", raising=False)
     assert atlas_job.min_free_disk_bytes() == atlas_job.DEFAULT_MIN_FREE_DISK_BYTES
-    assert atlas_job.min_free_disk_bytes() == 5 * 1024 * 1024 * 1024
+    assert atlas_job.min_free_disk_bytes() == 14 * 1024 * 1024 * 1024
 
     monkeypatch.setenv("ATLAS_MIN_FREE_DISK_BYTES", "10737418240")
     assert atlas_job.min_free_disk_bytes() == 10 * 1024 * 1024 * 1024
@@ -646,7 +647,9 @@ def test_submit_refuses_when_host_free_disk_below_floor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, _isolate_host: atlas_job.FakeHostAdapter
 ) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    # 1 GiB free disk is below the 5 GiB default floor.
+    for name in ("ATLAS_MIN_FREE_DISK_BYTES", "ATLAS_MIN_FREE_DISK_GIB", "ATLAS_MIN_FREE_DISK_GB"):
+        monkeypatch.delenv(name, raising=False)
+    # 1 GiB free disk is below the configured floor.
     _isolate_host.free_disk_bytes_value = 1 * 1024 * 1024 * 1024
 
     plan = _plan(id="low-disk-job")
