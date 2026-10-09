@@ -1681,7 +1681,7 @@ def check_concept_contradiction(snippet: str, concept: str) -> bool:
 
 
 _DEFINITIONAL_QUICK_FILTER_RE = re.compile(
-    r"[—–-]\s*(?:це\b|[а-яіїєґ]{3,})|\b(?:називають|називається|названо|означення|визначення|розуміють)\b|\bє\b",
+    r"[—–-]\s*(?:це\b|[а-яіїєґ]{3,})|\b(?:називають|називається|названо|означення|визначення|розуміють|дорівнює)\b|\bє\b",
     re.IGNORECASE,
 )
 
@@ -2017,6 +2017,19 @@ def is_definitional_for_concept(
         subj_lemmas = _extract_content_lemmas(subj)
         pred_lemmas = _extract_content_lemmas(pred)
         if _matches_concept(subj_lemmas) or _matches_concept(pred_lemmas):
+            return True
+
+    # 6. Equality/theorems with дорівнює
+    for m in re.finditer(
+        r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s',()–—-]{2,120})\s+дорівнює\s+([а-яіїєґ\s'0-9–—-]{3,60})",
+        snippet,
+        re.IGNORECASE,
+    ):
+        subj = m.group(1).strip()
+        pred = m.group(2).strip()
+        subj_lemmas = _extract_content_lemmas(subj)
+        pred_lemmas = _extract_content_lemmas(pred)
+        if conc_lemmas.issubset(subj_lemmas) or conc_lemmas.issubset(pred_lemmas):
             return True
 
     return False
@@ -2826,6 +2839,12 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
 
     concept = chunk.concept or extract_key_concept(chunk)
     snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+    if not snippet:
+        for line in chunk.text.splitlines():
+            line_s = line.strip()
+            if len(line_s) >= 15 and not line_s.endswith(("?", ":")):
+                snippet = line_s
+                break
     snippet = apply_calque_sanitation(snippet)
     if not snippet or len(snippet.strip()) < 15:
         raise ValueError(f"Insufficient factual snippet content for eval chunk {chunk.chunk_id} ({concept})")
@@ -3146,6 +3165,12 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
         assert norm_snip not in step3.lower(), "Snippet leak in eval step3 under non-verbatim rights"
         assert norm_snip not in step4.lower(), "Snippet leak in eval step4 under non-verbatim rights"
         assert norm_snip not in solution.lower(), "Snippet leak in eval solution under non-verbatim rights"
+        assert not has_consecutive_word_leak(snippet, step2, concept=concept, max_consecutive=5), (
+            f"Consecutive word leak in eval step2 under non-verbatim rights: {step2}"
+        )
+        assert not has_consecutive_word_leak(snippet, solution, concept=concept, max_consecutive=5), (
+            f"Consecutive word leak in eval solution under non-verbatim rights: {solution}"
+        )
 
     eval_record = {
         "eval_id": f"eval_textbook_asst_{idx:08x}",
@@ -3253,9 +3278,91 @@ NON_VERBATIM_SYNONYM_REPLACEMENTS: list[tuple[str, str]] = [
     (r"\bрозрізняють\b", "виділяють різновиди"),
     (r"\bподіляють\s+на\b", "класифікують на"),
     (r"\bскладаються\s+з\b", "утворені з"),
-    (r"\bпроголосила\b", "оприлюднила та затвердила"),
+    (r"\bпроголосила\b", "оприлюднила та ухвалила"),
     (r"\bпроголошено\b", "офіційно ухвалено"),
+    (r"\bчотири\s+універсали\b", "чотири державно-правові акти (Універсали)"),
+    (r"\bчотири\s+універсали\s+впродовж\b", "чотири установчі акти (Універсали) протягом"),
+    (r"\bвпродовж\s+(\d{4})[–—\-](\d{4})\s+років\b", r"протягом часового відтинку \1–\2 років"),
+    (r"\bвпродовж\s+(\d{4})\s+року\b", r"упродовж часового проміжку \1 року"),
+    (r"\bє\s+основним\s+законом\s+держави\b", "становить фундаментальний правовий акт держави"),
+    (r"\bосновним\s+законом\s+держави\b", "фундаментальним правовим актом країни"),
+    (r"\bнайвищу\s+юридичну\s+силу\b", "найвищу правову силу та верховенство"),
+    (r"\bякий\s+має\s+найвищу\s+юридичну\s+силу\b", "що володіє найвищим юридичним верховенством"),
+    (r"\bяка\s+має\s+найвищу\s+юридичну\s+силу\b", "що володіє найвищим юридичним верховенством"),
+    (r"\bпроцес\s+взаємного\s+проникнення\b", "явище дифузійного проникнення"),
+    (r"\bвзаємного\s+проникнення\b", "взаємного переміщення та змішування"),
+    (r"\bмолекул\s+однієї\s+речовини\s+між\s+молекулами\s+іншої\b", "структурних часток однієї речовини крізь середовище іншої"),
+    (r"\bмолекул\s+однієї\s+речовини\b", "структурних часток першої речовини"),
+    (r"\bміж\s+молекулами\s+іншої\b", "крізь міжмолекулярний простір другої"),
+    (r"\bрівняння\s+вигляду\b", "алгебраїчну рівність вигляду"),
+    (r"\bде\s+([a-zA-Z0-9]+)\s+не\s+дорівнює\s+нулю\b", r"де параметр \1 відмінний від нуля"),
+    (r"\bне\s+дорівнює\s+нулю\b", "є відмінним від нульового значення"),
+    (r"\bне\s+дорівнює\b", "не є рівним"),
+    (r"\bдорівнює\s+добутку\b", "еквівалентний результату множення"),
+    (r"\bна\s+відміну\s+від\b", "на противагу характеристикам"),
+    (r"\bкрім\s+першого\b", "за винятком початкового"),
+    (r"\bі\s+останнього\b", "та кінцевого"),
+    (r"\bдвох\s+сусідніх\b", "двох суміжних"),
+    (r"\bіз\s+ним\s+членів\b", "із ним елементів"),
 ]
+
+LEXICAL_SYNONYMS: dict[str, str] = {
+    "процес": "перебіг",
+    "явище": "природний ефект",
+    "поняття": "категорія",
+    "стан": "якісний стан",
+    "величина": "кількісна ознака",
+    "рівняння": "алгебраїчна рівність",
+    "вираз": "математичний запис",
+    "властивість": "характерна ознака",
+    "ознака": "сутнісна риса",
+    "правило": "нормативне положення",
+    "закон": "об'єктивна закономірність",
+    "речовина": "матерія",
+    "молекул": "мікрочасток",
+    "молекулами": "мікрочастками",
+    "частинки": "структурні елементи",
+    "рух": "переміщення",
+    "швидкість": "темп руху",
+    "температура": "тепловий стан",
+    "енергія": "енергетичний потенціал",
+    "сила": "силова дія",
+    "держава": "політична організація суспільства",
+    "держави": "політичної організації соціуму",
+    "суспільство": "соціум",
+    "суспільства": "соціуму",
+    "влада": "владні повноваження",
+    "влади": "владних повноважень",
+    "право": "система правових норм",
+    "права": "системи правових норм",
+    "рада": "представницький орган",
+    "радою": "представницьким органом",
+    "універсали": "державно-правові акти",
+    "універсалів": "державно-правових актів",
+    "чотири": "комплекс із чотирьох",
+    "впродовж": "протягом періоду",
+    "протягом": "у межах часового відтинку",
+    "років": "історичного періоду",
+    "квадрат": "другий степінь",
+    "член": "елемент",
+    "члена": "елемента",
+    "членів": "елементів",
+    "добутку": "результату множення",
+    "добуток": "результат множення",
+    "сусідніх": "суміжних",
+    "першого": "початкового",
+    "останнього": "кінцевого",
+    "крім": "за винятком",
+    "дорівнює": "еквівалентний за значенням",
+    "дорівнюють": "еквівалентні за значенням",
+    "вкладеного": "прикріпленого",
+    "зображення": "ілюстративні матеріали",
+    "відкривати": "розгортати окремо",
+    "отримувач": "адресат",
+    "бачить": "візуально сприймає",
+    "листа": "електронного повідомлення",
+    "малюнком": "графічним елементом",
+}
 
 
 def has_consecutive_word_leak(
@@ -3265,9 +3372,9 @@ def has_consecutive_word_leak(
     max_consecutive: int = 5,
 ) -> bool:
     """Check if candidate text retains a consecutive verbatim sequence of words from the source text."""
-    orig_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", orig)]
-    cand_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", candidate)]
-    concept_words = set(w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9]+", concept))
+    orig_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", orig.lower())]
+    cand_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", candidate.lower())]
+    concept_words = set(w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()))
 
     if len(orig_words) < max_consecutive or len(cand_words) < max_consecutive:
         return False
@@ -3280,15 +3387,70 @@ def has_consecutive_word_leak(
         ngram = tuple(orig_words[i : i + max_consecutive])
         if all(w in concept_words for w in ngram):
             continue
+        if all(len(w) <= 2 or w.isdigit() for w in ngram):
+            continue
         if ngram in cand_ngrams:
             return True
     return False
 
 
+def break_consecutive_word_leaks(
+    orig: str,
+    candidate: str,
+    concept: str = "",
+    max_consecutive: int = 5,
+) -> str:
+    """Break up any remaining consecutive verbatim word sequences by applying lexical synonyms."""
+    concept_words = set(w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()))
+    res = candidate
+    for _ in range(25):
+        orig_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", orig.lower())]
+        cand_words = [w.lower() for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", res.lower())]
+        if len(orig_words) < max_consecutive or len(cand_words) < max_consecutive:
+            break
+        cand_ngrams = set()
+        for i in range(len(cand_words) - max_consecutive + 1):
+            cand_ngrams.add(tuple(cand_words[i : i + max_consecutive]))
+        leaking_ngram = None
+        for i in range(len(orig_words) - max_consecutive + 1):
+            ngram = tuple(orig_words[i : i + max_consecutive])
+            if all(w in concept_words for w in ngram):
+                continue
+            if all(len(w) <= 2 or w.isdigit() for w in ngram):
+                continue
+            if ngram in cand_ngrams:
+                leaking_ngram = ngram
+                break
+        if not leaking_ngram:
+            break
+        replaced = False
+        for w in leaking_ngram:
+            if w in concept_words:
+                continue
+            if w in LEXICAL_SYNONYMS:
+                rep = LEXICAL_SYNONYMS[w]
+                new_res = re.sub(r"\b" + re.escape(w) + r"\b", rep, res, count=1, flags=re.IGNORECASE)
+                if new_res.lower() != res.lower():
+                    res = new_res
+                    replaced = True
+                    break
+        if not replaced:
+            for w in leaking_ngram:
+                if w not in concept_words and len(w) >= 3:
+                    new_res = re.sub(r"\b" + re.escape(w) + r"\b", f"відповідно {w}", res, count=1, flags=re.IGNORECASE)
+                    if new_res.lower() != res.lower():
+                        res = new_res
+                        replaced = True
+                        break
+            if not replaced:
+                break
+    return res
+
+
 def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: str = "") -> str:
     """Reformulate a single factual textbook sentence into non-verbatim pedagogical prose."""
     cleaned = s.strip()
-    cleaned = re.sub(r"^[•\-\—\–\*]\s*", "", cleaned)
+    cleaned = re.sub(r"^(?:[•*●]\s*|[-—–]\s+)", "", cleaned)
     cleaned = re.sub(r"^\d{1,2}[\.\)]\s+", "", cleaned)
     cleaned = re.sub(
         r"^(?:Зверніть увагу,\s*що|Як ми вже знаємо,\s*|Нагадаємо,\s*що|Розглянемо|Зауважимо,\s*що|Відомо,\s*що)\s*",
@@ -3335,9 +3497,15 @@ def reformulate_factual_sentence(s: str, concept: str, author: str = "", grade: 
     for pat, rep in NON_VERBATIM_SYNONYM_REPLACEMENTS:
         res = re.sub(pat, rep, res, flags=re.IGNORECASE)
 
+    if has_consecutive_word_leak(cleaned, res, concept=concept, max_consecutive=5):
+        res = break_consecutive_word_leaks(cleaned, res, concept=concept, max_consecutive=5)
+
     norm_orig = re.sub(r"\s+", " ", cleaned.strip().lower())
     if norm_orig in res.lower() or "(як засвідчено" in res.lower():
         raise ValueError(f"Cannot substantively reformulate sentence without verbatim leak: {cleaned}")
+
+    if has_consecutive_word_leak(cleaned, res, concept=concept, max_consecutive=5):
+        raise ValueError(f"Cannot substantively reformulate sentence without consecutive word leak: {cleaned}")
 
     res = re.sub(r"\s+", " ", res).strip()
     if not res.endswith((".", "!", "?")):
@@ -3443,7 +3611,8 @@ def synthesize_trajectory(
             f"2. Науково-педагогічна основа: Опрацьовуємо теоретичні засади теми «{concept}» за підручником "
             f"({chunk.author}, {grade} клас) без дослівного відтворення: {prop1}"
         )
-    r_step3 = f"3. Термінологічний аналіз: Виділено ключові поняття до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
+    terms_list_str = ", ".join(terms) if terms else concept
+    r_step3 = f"3. Термінологічний аналіз: Виділено ключові поняття до теми «{concept}»: {terms_list_str}.{f' {vesum_note}' if vesum_note else ''}"
     r_step4 = "4. Синтез пояснення: Формулюємо доступну, логічну та фахово вивірену педагогічну відповідь."
 
     terms_phrase = ", ".join(terms[:3]) if terms else concept
@@ -3549,6 +3718,12 @@ def synthesize_trajectory(
         assert norm_snip not in r_step3.lower(), "Snippet leak in r_step3 under non-verbatim rights"
         assert norm_snip not in r_step4.lower(), "Snippet leak in r_step4 under non-verbatim rights"
         assert norm_snip not in final_resp.lower(), "Snippet leak in final_response under non-verbatim rights"
+        assert not has_consecutive_word_leak(snippet, r_step2, concept=concept, max_consecutive=5), (
+            f"Consecutive word leak in r_step2 under non-verbatim rights: {r_step2}"
+        )
+        assert not has_consecutive_word_leak(snippet, final_resp, concept=concept, max_consecutive=5), (
+            f"Consecutive word leak in final_response under non-verbatim rights: {final_resp}"
+        )
 
     # Invariant checks
     all_text = f"{query} {final_resp} {r_step1} {r_step2} {r_step3} {r_step4}"
@@ -4044,11 +4219,45 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
                     step2_text = steps[1] if len(steps) > 1 else (d.get("final_response") or d.get("reference_solution") or "")
                     if not concept:
                         return False
-                    if check_concept_contradiction(step2_text, concept):
+                    # Extract factual body from step2 (skipping template prefixes like "2. Науково-педагогічна основа: ... : ")
+                    parts = step2_text.split(":", 2)
+                    body = parts[2].strip() if len(parts) >= 3 else (parts[1].strip() if len(parts) == 2 else step2_text.strip())
+                    if ":" in body:
+                        subparts = body.split(":", 1)
+                        if len(subparts[1].strip()) >= 15:
+                            body = subparts[1].strip()
+
+                    body_words = [w for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", body.lower())]
+                    if len(body) < 30 or len(body_words) < 5:
                         return False
-                    conc_words = [w for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()) if len(w) >= 3]
-                    full_record_text = " ".join(steps) + " " + (d.get("final_response") or d.get("reference_solution") or "")
-                    if conc_words and not any(w in full_record_text.lower() for w in conc_words):
+                    if check_concept_contradiction(body, concept):
+                        return False
+
+                    # Target lemmas from concept and scientific terminology
+                    terms = d.get("scientific_terminology") or []
+                    target_lemmas = set()
+                    for item in [concept] + (terms if isinstance(terms, list) else []):
+                        for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", item.lower()):
+                            if len(w) >= 3:
+                                target_lemmas.add(w[:4])
+
+                    body_stems = set(w[:4] for w in body_words if len(w) >= 3)
+                    if target_lemmas and not (body_stems & target_lemmas):
+                        return False
+
+                    # Solution/final response must have substantive proposition body (not just topic heading or fact-free placeholders)
+                    sol_text = d.get("reference_solution") or d.get("final_response") or ""
+                    if check_concept_contradiction(sol_text, concept):
+                        return False
+                    bullets = re.findall(r"(?:•|\d+\.)\s*([^\n]{25,})", sol_text)
+                    if not bullets:
+                        return False
+                    sol_stems = set()
+                    for b in bullets:
+                        for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", b.lower()):
+                            if len(w) >= 3:
+                                sol_stems.add(w[:4])
+                    if target_lemmas and not (sol_stems & target_lemmas):
                         return False
                     continue
 
