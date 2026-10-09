@@ -166,10 +166,115 @@ def test_recorded_faults_reach_retry_and_exhaustion(tmp_path, monkeypatch, error
 
 @pytest.mark.parametrize("returncode", [0, 1])
 def test_init_only_missing_terminal_result_retries_without_write_evidence(tmp_path, monkeypatch, returncode):
-    result, launches, parsed, _ = _run(tmp_path, monkeypatch, [_raw(None, returncode=returncode), _success()])
+    # Exit zero needs a completed transcript so no incomplete-run cause exists.
+    events = [_prompt(), _reply("Complete reply.")] if returncode == 0 else None
+    result, launches, parsed, _ = _run(tmp_path, monkeypatch, [_raw(None, returncode=returncode, events=events), _success()])
     assert launches == 2 and result.ok
     assert parsed[0].agy_provider_fault.kind == "missing_terminal_result"
     assert result.agy_telemetry.accepted_attempt == 2
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("stdout", [INIT, ""], ids=["init-only", "empty"])
+@pytest.mark.parametrize(
+    "diagnostic,failure_code,reason",
+    [
+        ("HTTP 401 Unauthorized", "provider_auth", "provider_auth"),
+        ("Error: authentication failed: invalid credentials", "provider_auth", "provider_auth"),
+        ("Error: unsupported model fixture-model", "provider_error", "provider_error"),
+        (
+            'jetski: no output produced — a tool required the "read_file" permission that headless mode cannot prompt for, so it was auto-denied.',
+            "provider_policy_refusal",
+            agy.AGY_HEADLESS_PERMISSION_DENIED,
+        ),
+        ("terminating 1 background task(s)", "provider_stream_incomplete", agy.AGY_BACKGROUND_TASK_ABANDONED),
+        ("print timeout after 30s with turn in progress", "provider_stream_incomplete", agy.AGY_PRINT_TIMEOUT_PARTIAL),
+    ],
+    ids=["http-auth", "auth-text", "unsupported-model", "permission-denial", "abandoned", "print-timeout"],
+)
+def test_missing_terminal_result_preserves_attributed_failure(
+    tmp_path, monkeypatch, mode, stdout, diagnostic, failure_code, reason
+):
+    # Complete invocation evidence with no tools permits write-mode replay;
+    # a permanent cause must still stop, rather than exhaust or reroute.
+    events = [_prompt(), _reply("Complete reply.")]
+    permanent_dir = tmp_path / "attributed"
+    permanent_dir.mkdir()
+    raw = (stdout, diagnostic, 1, events)
+    result, launches, parsed, build = _run(permanent_dir, monkeypatch, [raw, raw], mode=mode)
+    assert launches == 1
+    build.assert_not_called()
+    assert not result.ok
+    assert result.failure_code == failure_code
+    assert parsed[0].agy_attempt.completion_reason == reason
+    assert parsed[0].agy_provider_fault is None
+    fields = result.agy_telemetry.task_fields()
+    assert fields["agy_retry_disposition"] == "no_retry"
+    assert fields["agy_attempt_count"] == 1
+    assert fields["agy_retry_reason"] is None
+    assert fields["agy_reroute_required"] is False
+    assert fields["agy_reroute_reason"] is None
+
+    # Same stdout and evidence, empty stderr: still retry exactly once.
+    empty_dir = tmp_path / "unattributed"
+    empty_dir.mkdir()
+    raw = (stdout, "", 1, events)
+    result, launches, parsed, _ = _run(empty_dir, monkeypatch, [raw, raw], mode=mode)
+    assert launches == 2
+    assert all(p.agy_provider_fault.kind == "missing_terminal_result" for p in parsed)
+    assert all(p.agy_provider_fault.transient for p in parsed)
+    fields = result.agy_telemetry.task_fields()
+    assert fields["agy_retry_disposition"] == "exhausted"
+    assert fields["agy_attempt_count"] == 2
+    assert fields["agy_reroute_required"] is True
+    assert fields["agy_reroute_reason"] == "agy_retry_exhausted"
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("events,reason", [(None, agy.AGY_TRANSCRIPT_UNBOUND), (["unreadable"], agy.AGY_TRANSCRIPT_UNREADABLE)])
+def test_missing_terminal_result_cannot_override_incomplete_transcript(tmp_path, monkeypatch, mode, events, reason):
+    raw = _raw(None, returncode=0, events=events)
+    result, launches, parsed, build = _run(tmp_path, monkeypatch, [raw, raw], mode=mode)
+    assert launches == 1
+    build.assert_not_called()
+    assert result.failure_code == "provider_stream_incomplete"
+    assert parsed[0].agy_attempt.completion_reason == reason
+    assert parsed[0].agy_provider_fault is None
+    assert result.agy_telemetry.retry_disposition == "no_retry"
+    assert result.agy_telemetry.reroute_required is False
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize(
+    "tool,content,count_field",
+    [
+        ("run_command", "Matches user-configured deny rule.", "denied_command_count"),
+        (
+            "view_file",
+            "Encountered error in step execution: permission check failed for view_file. Permission denied for read_file(fixture). Matches user-configured deny rule.",
+            "denied_file_read_count",
+        ),
+        (
+            "call_mcp_tool",
+            "Encountered error in step execution: permission check failed for call_mcp_tool. Permission denied for mcp(fixture). Matches user-configured deny rule.",
+            "denied_mcp_count",
+        ),
+    ],
+)
+def test_missing_terminal_result_cannot_override_bound_tool_denial(tmp_path, monkeypatch, mode, tool, content, count_field):
+    events = [
+        _prompt(),
+        _event("PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": tool, "args": {}}]),
+        _event("GENERIC", content, status="ERROR"),
+    ]
+    raw = _raw(None, events=events)
+    result, launches, parsed, build = _run(tmp_path, monkeypatch, [raw, raw], mode=mode)
+    assert launches == 1
+    build.assert_not_called()
+    assert getattr(parsed[0].agy_attempt, count_field) == 1
+    assert parsed[0].agy_provider_fault is None
+    assert result.agy_telemetry.retry_disposition == "no_retry"
+    assert result.agy_telemetry.reroute_required is False
 
 
 @pytest.mark.parametrize("status,code", [("PERMISSION_DENIED", 403), ("INVALID_ARGUMENT", 400)])

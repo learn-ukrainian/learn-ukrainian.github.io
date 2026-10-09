@@ -50,7 +50,7 @@ CAUSE_PRECEDENCE: tuple[tuple[str, str | None], ...] = (
     ("transient provider fault", None),
     ("cancellation", r"^agy_background_task_canceled(?:$|[\s:])"),
     ("unconfirmed", r"^agy_background_task_unconfirmed(?:$|[\s:])"),
-    ("permission denied", r"^agy_headless_permission_denied(?:$|[\s:])|permission[_ ]denied"),
+    ("permission denied", r"^(?:agy_headless_permission_denied|permission[_ ]denied)(?:$|[\s:])"),
     ("read-only checkout mutation", r"read-only checkout mutation|read_only_checkout_mutation"),
     ("worktree preparation", r"worktree preparation|worktree_preparation"),
     ("output token cutoff", r"output token limit|cut off because it exceeded|output_token_limit"),

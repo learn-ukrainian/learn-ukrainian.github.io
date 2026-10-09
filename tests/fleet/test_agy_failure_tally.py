@@ -128,3 +128,25 @@ def test_tally_imports_the_adapter_parser():
     from scripts.agent_runtime.adapters.agy import parse_agy_provider_fault
 
     assert _module().parse_agy_provider_fault is parse_agy_provider_fault
+
+
+@pytest.mark.parametrize("field", ["last_error", "failure_code", "stderr_excerpt", "returncode_reason"])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "API error (attempt 1): INVALID_ARGUMENT (code 400): permission denied while validating input",
+        "Eligibility check failed: INVALID_ARGUMENT (code 400): quotes permission_denied",
+        "ordinary prose mentions permission denied",
+    ],
+)
+def test_permission_denied_message_text_is_not_a_permission_cause(field, text):
+    module = _module()
+    assert module.classify_failure({field: text}) == "other"
+    # Native reason fields and the parsed provider status still count.
+    for reason in (
+        "permission_denied",
+        "permission denied: refused",
+        "agy_headless_permission_denied",
+        "Eligibility check failed: PERMISSION_DENIED (code 403): access refused",
+    ):
+        assert module.classify_failure({field: reason}) == "permission denied"

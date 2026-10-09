@@ -1140,12 +1140,27 @@ class AgyAdapter:
         if fault and fault.status:
             code = provider_failure_code("", fault.status)
             result = dataclasses.replace(result, failure_code=code, rate_limited=code == "rate_limited")
+        attempt = _attempt_evidence(bound, result, plan)
+        # Missing output is transient only without another attributed cause.
+        # The adapter uses provider_error (or schema result_invalid) for an
+        # otherwise unexplained missing result; every more specific code,
+        # provider error text, denial or incomplete-run reason takes priority.
+        if (
+            fault and fault.kind == "missing_terminal_result"
+            and (
+                result.provider_error_text
+                or result.failure_code not in {None, "provider_error", "result_invalid"}
+                or attempt.completion_reason in AGY_INCOMPLETE_RUN_REASONS
+                or any((attempt.denied_command_count, attempt.denied_file_read_count, attempt.denied_mcp_count))
+            )
+        ):
+            fault = None
         return dataclasses.replace(
             result,
             agy_provider_fault=fault,
             agy_killed_commands=killed,
             agy_pre_model_failure=False if denial else _pre_model_failure(plan, stdout, bound),
-            agy_attempt=_attempt_evidence(bound, result, plan),
+            agy_attempt=attempt,
         )
 
     def _parse_response(
@@ -1200,6 +1215,14 @@ class AgyAdapter:
             and stream_problem is not None
             and stream_problem.startswith("agy_stream_result_error")
             else provider_stderr_error(stderr_text)
+            or "\n".join(
+                match.group(0)
+                for match in re.finditer(
+                    r"^(?:Error:|agy:)\s*(?:unsupported|unknown|invalid) model\b[^\r\n]*$",
+                    stderr_text,
+                    re.IGNORECASE | re.MULTILINE,
+                )
+            )
             if returncode != 0 or not stdout_response
             else ""
         )
