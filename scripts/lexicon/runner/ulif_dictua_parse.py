@@ -102,10 +102,57 @@ def _ulif_parentheticals(node: Tag) -> list[str]:
 def _ulif_terms(node: Tag) -> list[dict[str, str]]:
     terms: list[dict[str, str]] = []
     for bold in node.find_all("b"):
-        text = _ulif_text(bold)
+        # Preserve only source text-node whitespace; a synthetic separator
+        # here moves commas and quotation marks away from their source token.
+        text = re.sub(r"\s+", " ", bold.get_text("", strip=False)).strip()
         if text and any(char.isalpha() for char in text):
             terms.append({"text": text, "raw_html": str(bold)})
     return terms
+
+
+def correct_cached_ulif_relation_terms(payload: dict[str, Any], kind: str) -> None:
+    """Correct relation term text from each term's own retained HTML witness.
+
+    This mutates only the decoded, returned-view payload. Missing or malformed
+    witnesses leave stored text unchanged. Group text and other fields are
+    deliberately outside this narrow materialization rule.
+    """
+    if kind == "antonyms":
+        terms_by_row = []
+        rows = payload.get("rows")
+        if not isinstance(rows, list):
+            return
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            if row.get("kind") == "paired_sense":
+                for side in ("left", "right"):
+                    part = row.get(side)
+                    if isinstance(part, dict):
+                        terms_by_row.append(part.get("terms"))
+            elif row.get("kind") == "relation_note":
+                terms_by_row.append(row.get("terms"))
+    elif kind in {"synonyms", "phraseology"}:
+        terms_by_row = [payload.get("terms")]
+    else:
+        return
+
+    for terms in terms_by_row:
+        if not isinstance(terms, list):
+            continue
+        for term in terms:
+            if not isinstance(term, dict):
+                continue
+            raw_html = term.get("raw_html")
+            if not isinstance(raw_html, str) or not raw_html:
+                continue
+            soup = BeautifulSoup(raw_html, "html.parser")
+            bold_nodes = soup.find_all("b")
+            if len(bold_nodes) != 1 or str(bold_nodes[0]) != raw_html:
+                continue
+            text = re.sub(r"\s+", " ", bold_nodes[0].get_text("", strip=False)).strip()
+            if text and any(char.isalpha() for char in text):
+                term["text"] = text
 
 
 def parse_ulif_paradigm(html: str) -> dict[str, object] | None:

@@ -646,7 +646,10 @@ def _ulif_terms(node: Tag) -> list[dict[str, str]]:
     """Capture emphasized dictionary forms without collapsing their group."""
     terms: list[dict[str, str]] = []
     for bold in node.find_all("b"):
-        text = _ulif_text(bold)
+        # Relation tokens must retain the literal whitespace around inline
+        # markup.  A separator between every text node invents spaces before
+        # punctuation such as commas and quotation marks.
+        text = re.sub(r"\s+", " ", bold.get_text("", strip=False)).strip()
         if text and any(char.isalpha() for char in text):
             terms.append({"text": text, "raw_html": str(bold)})
     return terms
