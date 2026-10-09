@@ -366,6 +366,7 @@ def resolve_and_admit(
                 subject_families=review_subject_families,
                 facts=review_facts,
             )
+            _require_agy_code_review_risk(selected[0], review_risk, review_profile or "code")
             approved.add(selected)
             admitted_models[selected[0]] = selected[1]
             return selected
@@ -400,6 +401,8 @@ def resolve_and_admit(
             if holder != recipient:
                 recipient, reason = holder, f"slot:{recipient}"
         resolved.append((recipient, target_model, reason))
+        if review_dispatch:
+            _require_agy_code_review_risk(recipient, review_risk, review_profile or "code")
         if review_dispatch and (recipient, target_model) not in approved_review_targets:
             raise ReviewAdmissionRefused(
                 "REVIEW_ROUTE_REFUSED: resolved review identity was not admitted by the reviewer resolver"
@@ -426,6 +429,15 @@ def _refuse_non_review_models(models: Iterable[str | None]) -> None:
     for model in models:
         if refusal := activity_role_refusal(model, REVIEW_ACTIVITY):
             raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {refusal}")
+
+
+def _require_agy_code_review_risk(seat: str, risk: str | None, profile: str) -> None:
+    """Require the caller's risk declaration before admitting AGY code review."""
+    if seat == "agy" and profile == "code" and risk not in {"low", "medium", "high", "critical"}:
+        raise ReviewAdmissionRefused(
+            "REVIEW_ROUTE_REFUSED: AGY code review requires an explicit --review-risk; "
+            "supply --review-risk with one of: low, medium, high, critical"
+        )
 
 
 def _resolve_review_target(
@@ -474,6 +486,7 @@ def _resolve_review_target(
 
     from .telemetry import _default_model_for
 
+    _require_agy_code_review_risk(seat, risk, profile)
     requested_model = model or _default_model_for(seat) or ""
     concrete = requested_model.split("[", 1)[0]
     family = resolve_family(concrete or "")

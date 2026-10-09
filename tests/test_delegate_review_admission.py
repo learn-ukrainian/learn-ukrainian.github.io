@@ -847,6 +847,107 @@ def _admit(args, monkeypatch, budget=None):
     return result, routing
 
 
+@pytest.mark.parametrize("seat,model", [("agy", None), ("agy", "gemini-3.8-flash-high"), ("gemini", None)])
+@pytest.mark.parametrize("author", [None, "gpt-6.1-sol"])
+@pytest.mark.parametrize("typing", ["verdict", "profile", "pr"])
+@pytest.mark.parametrize("force", [False, True])
+def test_explicit_review_risk_omission_refuses_before_budget(monkeypatch, seat, model, author, typing, force):
+    """D1/D2: direct/default/alias requests refuse across dispatch entry points."""
+    flags = ["--agent", seat, "--check-budget"]
+    if author:
+        flags += ["--review-author-model", author]
+    if typing == "profile":
+        flags += ["--review-profile", "code"]
+    if typing == "pr":
+        flags += ["--pr", "42"]
+        # Isolate PR typing from GitHub transport; branch cases resolve a real local target.
+        monkeypatch.setattr(delegate, "_dispatch_review_changed_paths", lambda _args: ("ordinary.py",))
+        monkeypatch.setattr(delegate, "_dispatch_review_facts", lambda *_args: None)
+    if force:
+        flags += ["--force-agent"]
+    args = _args(*flags, verdict=typing == "verdict")
+    args.model = model
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None,
+        route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=False, review_attempt=None),
+    )
+    assert target is None
+    assert "AGY code review requires an explicit --review-risk" in refusal
+    assert all(value in refusal for value in ("low", "medium", "high", "critical"))
+
+
+def test_explicit_review_risk_omission_dispatch_returns_nonzero(tmp_path, monkeypatch, capsys):
+    """The real CLI path refuses before review preparation, worker or state creation."""
+    from tests.test_delegate import _sanitize_git_env_for_test
+
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: pytest.fail("omission reached budget probe"))
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--review-author-model", "gpt-6.1-sol")
+    assert delegate.cmd_dispatch(args) == 2
+    assert "AGY code review requires an explicit --review-risk" in capsys.readouterr().err
+    assert not (tmp_path / "tasks").exists()
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_explicit_review_risk_budget_omission_never_selects_agy(monkeypatch, risk):
+    """D2/D3: identical capacity substitutes AGY only with a declared risk."""
+    budget = _budget(claude="near_cap", codex="near_cap", cursor="near_cap")
+    budget["agents"]["agy"] = {"status": "cool", "remaining_pct": 80}
+    args = _args("--check-budget", "--review-author-model", "claude-opus-5-5")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert target is None
+    assert "--review-risk" in refusal
+    assert routing.substitution is None
+    args.review_risk = risk
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    assert routing.substitution["source"] == "reviewer-resolver"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium", "high", "critical"])
+def test_explicit_review_risk_direct_boundaries(monkeypatch, risk):
+    """D3/D4: low/medium retain AGY; high/critical select another family."""
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", risk)
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient == "agy") == (risk in {"low", "medium"})
+    assert reviewer_resolver.resolve_family(target.model) != "openai"
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("boundary", ["author", "seat", "family", "capacity"])
+def test_explicit_review_risk_other_agy_exclusions(monkeypatch, risk, boundary):
+    """D6: a risk declaration cannot override independence, subjects or capacity."""
+    flags = []
+    if boundary == "seat":
+        flags += ["--subject-seat", "agy"]
+    if boundary == "family":
+        flags += ["--subject-family", "google"]
+    author = "gemini-3.8-flash-high" if boundary == "author" else "gpt-6.1-sol"
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high",
+                 "--review-author-model", author, "--review-risk", risk, *flags)
+    budget = _budget(codex="cool")
+    budget["agents"]["agy"] = {
+        "status": "near_cap" if boundary == "capacity" else "cool",
+        "remaining_pct": 5 if boundary == "capacity" else 80,
+    }
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert target.recipient != "agy"
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_explicit_review_risk_write_review_still_refuses(capsys, mode):
+    args = _args("--agent", "agy", "--model", "gemini-3.8-flash-high", "--mode", mode,
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", "low")
+    assert delegate.cmd_dispatch(args) == 2
+    assert "agy_review_permissions_require_read_only" in capsys.readouterr().err
+
+
 def _9959_review_args(seat, model, author, *flags):
     return _args(
         "--agent", seat, "--model", model,
@@ -1714,6 +1815,7 @@ def test_review_resolver_help_and_budget_notice_state_code_profile_only(monkeypa
     assert exit_info.value.code == 0
     help_text = " ".join(capsys.readouterr().out.split())
     assert help_text.count("Code profile only") >= 2
+    assert "Mandatory for requested or substituted AGY code reviews" in help_text
     (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", "--check-budget"), monkeypatch, _budget(codex="hot"))
     assert refusal is None and target.recipient == "codex"
     assert "code profile only" in capsys.readouterr().err
@@ -2099,6 +2201,7 @@ def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch,
         pytest.param(("--review-profile", "code"), id="profile"),
         pytest.param(("--review-author-model", "gpt-6.1-sol"), id="author"),
         pytest.param(("--review-risk", "medium"), id="risk"),
+        pytest.param(("--pr", "42"), id="pr"),
     ],
 )
 def test_review_flags_type_a_dispatch_without_the_verdict_flag(extra):

@@ -20,6 +20,7 @@ from scripts.agent_runtime import kimi_admission, target_admission
 from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
+    ReviewAdmissionRefused,
     SubstituteUnavailable,
     require_admitted,
     resolve_and_admit,
@@ -258,6 +259,89 @@ def test_a_non_kimi_request_resolves_unchanged():
         ("codex", "m", "explicit"),
     ]
     assert resolve_and_admit((), mode=BRIDGE_MODE) == ()
+
+
+@pytest.mark.parametrize("model", [None, "gemini-3.8-flash-high"])
+@pytest.mark.parametrize("risk", [None, "", "invalid"])
+@pytest.mark.parametrize("branch_facts", [False, True])
+def test_explicit_review_risk_direct_agy_requires_valid_declaration(tmp_path, monkeypatch, model, risk, branch_facts):
+    """D1: neither legacy inputs nor complete facts may infer AGY's risk."""
+    from scripts.review.record_cf_verdict import collect_branch_review_facts
+    from tests.test_authoring_review_feasibility import REPOSITORY, SOL, mini_repo
+
+    facts = None
+    if branch_facts:
+        repo = mini_repo(tmp_path, monkeypatch)
+        repo.commit(SOL, message="review author")
+        facts = collect_branch_review_facts(
+            repository=REPOSITORY, repo_root=repo.root, base_tip_sha=repo.sha("origin/main"),
+            head_sha=repo.sha("feature"), task_root=tmp_path / "tasks",
+        )
+        assert facts.author_families == frozenset({"openai"})
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk") as refused:
+        target_admission._resolve_review_target(
+            "agy", model, author_model=None, risk=risk, profile="code", attempt=False,
+            snapshot=None, budget_seat="agy", facts=facts,
+        )
+    assert all(value in str(refused.value) for value in ("low", "medium", "high", "critical"))
+
+
+@pytest.mark.parametrize("stage", ["selection", "budget", "route", "registry"])
+def test_explicit_review_risk_selected_agy_cannot_bypass_declaration(monkeypatch, stage):
+    """D2: check risk even if an upstream selection unexpectedly returns AGY."""
+    selected = ("agy", "gemini-3.8-flash-high")
+    calls = []
+    if stage in {"selection", "budget"}:
+        def select(seat, model, **kwargs):
+            calls.append(kwargs["snapshot"])
+            # Exercise review_select's safety boundary for both initial and
+            # capacity/retained-candidate results, without depending on rankings.
+            return selected if stage == "selection" or kwargs["snapshot"] is not None else (seat, model)
+
+        monkeypatch.setattr(target_admission, "_resolve_review_target", select)
+
+    def route(request):
+        if stage == "budget":
+            return (*request.review_select({"agents": {}}, request.seat), "budget")
+        return (*selected, "route")
+
+    with pytest.raises(ReviewAdmissionRefused, match="explicit --review-risk"):
+        resolve_and_admit(
+            ("codex",), model="gpt-6.1-sol", mode="read-only", review_dispatch=True,
+            route=None if stage == "registry" else route,
+            resolver=(lambda _seat: "agy") if stage == "registry" else None,
+        )
+    if stage == "budget":
+        assert calls == [None, {"agents": {}}]
+
+
+@pytest.mark.parametrize("risk", ["low", "medium"])
+@pytest.mark.parametrize("path_kind", ["changed", "owned"])
+def test_explicit_review_risk_security_floor_excludes_agy(risk, path_kind):
+    """D5/D6: declared low risk never bypasses a security floor or attempt identity."""
+    paths = {f"review_{path_kind}_paths": ("scripts/delegate.py",)}
+    with pytest.raises(ReviewAdmissionRefused, match="REVIEW_ATTEMPT_IDENTITY_REFUSED"):
+        resolve_and_admit(
+            ("agy",), model="gemini-3.8-flash-high", mode="read-only", review_dispatch=True,
+            review_author_model="gpt-6.1-sol", review_risk=risk, review_attempt=True, **paths,
+        )
+
+
+@pytest.mark.parametrize(
+    "seat,model,review,profile",
+    [
+        ("agy", "gemini-3.8-flash-high", True, "ukrainian"),
+        ("codex", "gpt-6.1-sol", True, "code"),
+        ("claude", "claude-opus-5-5", True, "code"),
+        ("agy", "gemini-3.8-flash-high", False, "code"),
+    ],
+)
+def test_explicit_review_risk_other_work_remains_unaffected(seat, model, review, profile):
+    """D7: omission stays valid for Ukrainian, non-AGY and ordinary work."""
+    (target,) = resolve_and_admit(
+        (seat,), model=model, mode="read-only", review_dispatch=review, review_profile=profile,
+    )
+    assert (target.recipient, target.model) == (seat, model)
 
 
 # --- only resolve_and_admit produces a target ----------------------------------------

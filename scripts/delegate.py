@@ -14437,13 +14437,14 @@ CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
 def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
-    """True when any review flag types this dispatch as a review.
+    """True when a PR target or any review flag types this dispatch as a review.
 
     ``--review-author-model`` and ``--review-risk`` exist only for reviewer
     resolution, so either one types the dispatch as a (code-profile) review.
     """
     return (
         bool(getattr(args, "review", False))
+        or getattr(args, "pr", None) is not None
         or bool(getattr(args, "review_attempt", None))
         or bool(getattr(args, "require_review_verdict", False))
         or bool(getattr(args, "review_profile", None))
@@ -17681,6 +17682,7 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
+            "Mandatory for requested or substituted AGY code reviews; explicitly choose low, medium, high or critical. "
             "Example: critical for admission or launcher changes."
         ),
     )
