@@ -18,7 +18,9 @@ CALLERS = [
 
 MODELS_ALLOWED = [
     ("grok-4.7", "grok-4.7-high"),
-    ("grok-4.7-high", "grok-4.7-high")
+    ("grok-4.7-high", "grok-4.7-high"),
+    ("composer-2.5", "composer-2.5"),
+    ("composer-2.5[fast=false]", "composer-2.5[fast=false]"),
 ]
 
 MODELS_REFUSED = [
@@ -30,6 +32,13 @@ MODELS_REFUSED = [
     ("grok-4.7[fast=false]", "CURSOR_UNATTESTED_GROK_VARIANT"),
     ("opus", "CURSOR_CLAUDE_REFUSED"),
     ("sonnet", "CURSOR_CLAUDE_REFUSED"),
+    ("haiku", "CURSOR_CLAUDE_REFUSED"),
+    ("haiku-5-5", "CURSOR_CLAUDE_REFUSED"),
+    ("haiku-4.5", "CURSOR_CLAUDE_REFUSED"),
+    ("fable", "CURSOR_CLAUDE_REFUSED"),
+    ("random-unknown-model", "CURSOR_MODEL_NOT_APPROVED"),
+    ("composer-2.5[fast=true]", "CURSOR_MODEL_NOT_APPROVED"),
+    ("composer-2.5[arbitrary=value]", "CURSOR_MODEL_NOT_APPROVED"),
 ]
 
 def extract_argv(caller, model):

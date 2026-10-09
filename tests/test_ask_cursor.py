@@ -28,7 +28,7 @@ def test_cursor_default_model_is_the_concrete_seat_pin():
         ("AUTO", "cursor_auto_outside_coding_task"),
         ("cursor/auto", "cursor_auto_outside_coding_task"),
         ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
-        ("grok-4.6", "cursor_model_not_approved"),
+        ("grok-4.6", "CURSOR_MODEL_NOT_APPROVED"),
     ],
 )
 def test_invoke_cursor_refuses_non_pinned_models_before_spawn(model, code):

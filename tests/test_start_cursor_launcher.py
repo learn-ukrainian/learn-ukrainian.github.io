@@ -200,7 +200,7 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
             if model.startswith("grok-4.7"):
                 assert "is an unattested variant" in result.stderr
             else:
-                assert "not certified for the cursor driver" in result.stderr
+                assert "composer-2.5" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -344,7 +344,7 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
         else:
             assert "cursor interactive session" in result.stderr
         if model and not model.startswith("grok-4.7"):
-            assert "grok-4.7-high or composer-2.5" in result.stderr
+            assert "composer-2.5" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 
