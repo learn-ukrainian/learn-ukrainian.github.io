@@ -175,4 +175,24 @@ def test_public_source_has_no_endpoint_literal() -> None:
     from pathlib import Path
 
     text = Path("scripts/agent_runtime/model_pause.py").read_text(encoding="utf-8")
-    assert "127.0.0.1" not in text and ":8765" not in text
+    assert "http://" not in text and "https://" not in text
+
+
+def _budget(monkeypatch, payload: dict) -> float | None:
+    import io
+
+    monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, **k: io.StringIO(json.dumps(payload)))
+    return mp.routing_budget_used_pct("claude")
+
+
+def test_only_fresh_probe_readings_count(monkeypatch) -> None:
+    fresh = {"stale": False, "freshness": "fresh", "weekly_used_pct": 91}
+    ok = {"diagnostics": {"stale": False}, "agents": {"claude": {"status": "hot", "codexbar": fresh}}}
+    assert _budget(monkeypatch, ok) == 91.0
+    for bad in (
+        {**ok, "diagnostics": {"stale": True}},
+        {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "stale": True}}}},
+        {**ok, "agents": {"claude": {"status": "near_cap", "codexbar": {**fresh, "freshness": "stale_last_good"}}}},
+        {**ok, "agents": {"claude": {"status": "unknown", "codexbar": fresh}}},
+    ):
+        assert _budget(monkeypatch, bad) is None

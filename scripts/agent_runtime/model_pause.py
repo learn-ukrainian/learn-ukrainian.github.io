@@ -120,16 +120,23 @@ def routing_budget_used_pct(lane: str) -> float | None:
             data = json.load(resp)
     except (OSError, ValueError):
         return None
-    agents = data.get("agents") if isinstance(data, dict) else None
+    if not isinstance(data, dict):
+        return None
+    diagnostics = data.get("diagnostics")
+    if isinstance(diagnostics, dict) and diagnostics.get("stale") is not False:
+        return None  # the snapshot itself is stale or unrated
+    agents = data.get("agents")
     info = agents.get(lane) if isinstance(agents, dict) else None
     if not isinstance(info, dict) or info.get("status") == "unknown":
-        # Missing, or withdrawn as stale by Monitor: not a usable reading.
-        return None
+        return None  # missing, or withdrawn as stale by Monitor
     codexbar = info.get("codexbar")
-    for source in (codexbar if isinstance(codexbar, dict) else {}, info):
-        value = source.get("weekly_used_pct")
-        if isinstance(value, int | float) and not isinstance(value, bool):
-            return float(value)
+    if not isinstance(codexbar, dict):
+        return None
+    if codexbar.get("stale") is not False or codexbar.get("freshness") != "fresh":
+        return None  # only a fresh probe reading may block a dispatch
+    value = codexbar.get("weekly_used_pct")
+    if isinstance(value, int | float) and not isinstance(value, bool):
+        return float(value)
     return None
 
 
