@@ -544,8 +544,16 @@ def test_recommendation_agrees_with_owner_capacity(snapshot):
     case, budget = snapshot
     rec = budget["recommendation"]
     facts = owner(budget)
-    if recommend(budget)["primary_agent_for_code"] == "codex":
-        assert facts.capacity == credit_lane.CAPACITY_VERIFIED
+    recomputed = recommend(budget)
+    if recomputed["primary_agent_for_code"] == "codex":
+        if case.name == "unavailable_telemetry":
+            # Shared static order can choose Codex as an advisory fallback;
+            # it must still report missing capacity and health honestly.
+            assert facts.capacity == credit_lane.CAPACITY_UNKNOWN
+            assert "partly blind" in recomputed["rationale"]
+            assert any("not health-verified" in warning for warning in recomputed["warnings"])
+        else:
+            assert facts.capacity == credit_lane.CAPACITY_VERIFIED
     # The published recommendation predates a case's mutation; only the recomputed one reads it.
     if case.mutate is None and rec["primary_agent_for_code"] == "codex":
         assert facts.capacity == credit_lane.CAPACITY_VERIFIED
