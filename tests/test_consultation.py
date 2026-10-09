@@ -4,6 +4,7 @@ import sys
 import textwrap
 from pathlib import Path
 
+import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
@@ -544,3 +545,38 @@ class TestRecordConsultation:
         entry = state["consultations"][0]
         assert entry["outcome"] == "queued"
         assert entry["changes_count"] == 2
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
+def test_unicode_structured_boundary_consultation_yaml(separator):
+    from pipeline.consultation import _clean_yaml_text
+
+    body = (
+        f'root_cause: "alpha{separator}beta"\n'
+        "proposed_changes: []\nscope: this_module\naction: fix\nconfidence: high\n"
+    )
+    fenced = f"```yaml\n{body}```"
+    assert yaml.safe_load(_clean_yaml_text(fenced)) == yaml.safe_load(body)
+    assert parse_consultation(fenced).root_cause == yaml.safe_load(body)["root_cause"]
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("scalar", ['"alpha\\nbeta"', "|-\n  alpha\n  beta", "|\n  alpha\n  beta", "|+\n  alpha\n  beta\n"])
+def test_consultation_yaml_physical_framing_and_block_scalars(ending, scalar):
+    from pipeline.consultation import _clean_yaml_text
+
+    body = (f"value: {scalar}\n").replace("\n", ending)
+    for text in (body, f"```yaml{ending}{body}```", f"```{ending}{body}"):
+        assert yaml.safe_load(_clean_yaml_text(text)) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("text", ["", " \n\t", "value: [", "```yaml\nvalue: [\n```"])
+def test_consultation_yaml_empty_and_malformed(text):
+    from pipeline.consultation import _clean_yaml_text
+
+    cleaned = _clean_yaml_text(text)
+    if "[" in text:
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(cleaned)
+    else:
+        assert yaml.safe_load(cleaned) is None

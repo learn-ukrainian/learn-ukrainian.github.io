@@ -46,6 +46,7 @@ from scripts.build.fresh.regeneration import (
     record_harness_failure,
     writer_task_id,
 )
+from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.orchestration.task_record_store import locate_task_record
@@ -151,15 +152,22 @@ def _run_harness(cmd: list[str], *, timeout: int) -> subprocess.CompletedProcess
 
 def strip_markdown_fence(text: str) -> str:
     """Strip an enclosing Markdown code fence (e.g. ```yaml ... ``` or ``` ... ```)."""
-    s = text.strip()
+    s = text.lstrip(" \t\r\n")
+    if not s:
+        return ""
     if s.startswith("```"):
-        lines = s.splitlines()
-        if lines and lines[0].startswith("```"):
-            lines = lines[1:]
-        if lines and lines[-1].strip() == "```":
-            lines = lines[:-1]
-        return "\n".join(lines).strip()
-    return s
+        # YAML accepts CR and CRLF framing; Unicode separators belong to the
+        # scalar and must reach the YAML parser unchanged.
+        lines = jsonl_lines(s.replace("\r\n", "\n").replace("\r", "\n"))[1:]
+        end = len(lines)
+        while end and not lines[end - 1].strip(" \t"):
+            end -= 1
+        if end and lines[end - 1].strip(" \t") == "```":
+            # Keep the LF preceding the closing fence: block scalar chomping
+            # depends on it. Discard only the fence and exterior whitespace.
+            lines = [*lines[:end - 1], ""]
+        return "\n".join(lines)
+    return text
 
 
 def parse_and_validate_reply(

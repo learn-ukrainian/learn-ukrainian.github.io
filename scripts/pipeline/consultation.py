@@ -15,6 +15,7 @@ from pathlib import Path
 import yaml
 
 from pipeline.core import log
+from scripts.common.jsonl import jsonl_lines
 
 # ---------------------------------------------------------------------------
 # Data model
@@ -57,15 +58,19 @@ def _clean_yaml_text(text: str) -> str:
     Gemini often wraps YAML in markdown code fences or adds stray
     backticks. This pre-cleaning step handles those cases.
     """
-    lines = text.strip().splitlines()
+    if not text.strip(" \t\r\n"):
+        return ""
+    lines = jsonl_lines(text.replace("\r\n", "\n").replace("\r", "\n"))
     cleaned = []
-    for line in lines:
-        stripped = line.strip()
+    for index, line in enumerate(lines):
+        stripped = line.strip(" \t")
         # Skip markdown code fence markers
         if stripped.startswith("```"):
             continue
         cleaned.append(line)
-    return "\n".join(cleaned)
+        if index < len(lines) - 1:
+            cleaned.append("\n")
+    return "".join(cleaned)
 
 
 def parse_consultation(text: str) -> ConsultationResult | None:

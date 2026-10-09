@@ -207,25 +207,25 @@ def test_writer_subprocess_failures_are_harness_errors(tmp_path, monkeypatch, pa
         )
 
 
-def test_strip_markdown_fence(a1_valid_fixture):
+def test_strip_markdown_fence():
     """Strip surrounding markdown code fence if present (with or without 'yaml' tag)."""
-    draft, _ = a1_valid_fixture
+    draft = {"value": "synthetic", "items": [1, 2]}
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
 
     # 1. Without fence
-    assert strip_markdown_fence(raw_yaml) == raw_yaml.strip()
+    assert strip_markdown_fence(raw_yaml) == raw_yaml
 
     # 2. With ```yaml ... ``` fence
     fenced_yaml = f"```yaml\n{raw_yaml}\n```"
-    assert strip_markdown_fence(fenced_yaml) == raw_yaml.strip()
+    assert strip_markdown_fence(fenced_yaml) == raw_yaml + "\n"
 
     # 3. With plain ``` ... ``` fence
     fenced_plain = f"```\n{raw_yaml}\n```"
-    assert strip_markdown_fence(fenced_plain) == raw_yaml.strip()
+    assert strip_markdown_fence(fenced_plain) == raw_yaml + "\n"
 
     # 4. With surrounding whitespace
     fenced_ws = f"  \n```yaml\n{raw_yaml}\n```\n  "
-    assert strip_markdown_fence(fenced_ws) == raw_yaml.strip()
+    assert strip_markdown_fence(fenced_ws) == raw_yaml + "\n"
 
 
 def test_parse_and_validate_reply_success(a1_valid_fixture):
@@ -904,3 +904,27 @@ def test_nothing_typed_no_cyrillic_in_engine_code():
         assert len(cyrillic_matches) == 0, (
             f"{fpath.name} contains {len(cyrillic_matches)} Cyrillic characters: {cyrillic_matches[:5]}"
         )
+
+
+@pytest.mark.parametrize("separator", ["\u0085", "\u2028", "\u2029", ""], ids=["NEL", "LS", "PS", "ASCII"])
+def test_unicode_structured_boundary_writer_yaml(separator):
+    body = f'value: "alpha{separator}beta"\n'
+    assert yaml.safe_load(strip_markdown_fence(f"```yaml\n{body}```")) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("scalar", ['"alpha\\nbeta"', "|-\n  alpha\n  beta", "|\n  alpha\n  beta", "|+\n  alpha\n  beta\n"])
+def test_writer_yaml_physical_framing_and_block_scalars(ending, scalar):
+    body = (f"value: {scalar}\n").replace("\n", ending)
+    for text in (body, f"```yaml{ending}{body}```", f"```{ending}{body}"):
+        assert yaml.safe_load(strip_markdown_fence(text)) == yaml.safe_load(body)
+
+
+@pytest.mark.parametrize("text", ["", " \n\t", "value: [", "```yaml\nvalue: [\n```"])
+def test_writer_yaml_empty_and_malformed(text):
+    cleaned = strip_markdown_fence(text)
+    if "[" in text:
+        with pytest.raises(yaml.YAMLError):
+            yaml.safe_load(cleaned)
+    else:
+        assert yaml.safe_load(cleaned) is None
