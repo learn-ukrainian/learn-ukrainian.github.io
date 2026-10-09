@@ -20,6 +20,11 @@ from scripts.ai_agent_bridge import _ui_codex as ui
 THREAD = "019e6063-c3da-78d1-acaa-4cd684a08786"
 
 
+@pytest.fixture(autouse=True)
+def isolate_watcher_state(tmp_path, monkeypatch):
+    monkeypatch.setattr(watch, "DEFAULT_LOCK_DIR", tmp_path / "locks")
+
+
 @pytest.fixture
 def live_driver(tmp_path, monkeypatch):
     lease = {
@@ -58,7 +63,7 @@ def _wake(service, remote, events, run):
 
 
 def test_unread_message_resumes_exact_live_thread_without_launcher(live_driver, monkeypatch, tmp_path):
-    lease, environment, _, _, _, process, remote = live_driver
+    lease, environment, rollout, _, _, process, remote = live_driver
     before = deepcopy(lease)
     event = watch.InboxEvent(7, "fixture-sender", "request-fixture", "Please reconcile the pending work.")
     launcher = Mock(side_effect=AssertionError("second launcher forbidden"))
@@ -70,6 +75,8 @@ def test_unread_message_resumes_exact_live_thread_without_launcher(live_driver, 
         assert "Message #7 from fixture-sender, request request-fixture:" in kwargs["input"]
         assert event.content in kwargs["input"]
         assert kwargs["input"].startswith("Bridge-ID: inbox-7-7\n")
+        _append_event(rollout, "task_started", turn_id="resume")
+        _append_event(rollout, "task_complete", turn_id="resume")
         return subprocess.CompletedProcess(argv, 0, stdout='{"type":"turn.started"}\n{"type":"turn.completed"}\n', stderr="")
 
     monkeypatch.setattr(ui.subprocess, "run", resume)
@@ -174,7 +181,7 @@ def test_wake_mode_off_only_notifies(inbox_db, tmp_path, monkeypatch):
 
 
 def test_explicit_wake_watcher_delivers_once_without_ack(inbox_db, live_driver, monkeypatch):
-    *_, remote = live_driver
+    _, _, rollout, *_, remote = live_driver
     monkeypatch.setattr(watch._config, "DB_PATH", inbox_db)
     service = Mock()
     service.store.connection.execute.return_value.fetchall.return_value = []
@@ -184,7 +191,7 @@ def test_explicit_wake_watcher_delivers_once_without_ack(inbox_db, live_driver, 
     monkeypatch.setattr("scripts.session_supervisor.remote.RemoteEpicClient", lambda: remote)
     lock = Mock()
     monkeypatch.setattr(watch, "acquire_watcher_lock", lambda _: lock)
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     def selector(argv, **kwargs):
         assert argv[0] == "bash"  # Only the read-only stream selector may run.
@@ -208,8 +215,18 @@ def _append_event(rollout, kind, **fields):
         stream.write(json.dumps({"type": "event_msg", "payload": {"type": kind, **fields}}) + "\n")
 
 
+def _completed_resume(rollout):
+    def send(**kwargs):
+        if kwargs.get("before_resume"):
+            kwargs["before_resume"]()
+        _append_event(rollout, "task_started", turn_id="resume")
+        _append_event(rollout, "task_complete", turn_id="resume")
+        return {"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]}
+    return send
+
+
 def _assert_busy_then_resume(rollout, remote, monkeypatch, closing_kind="task_complete"):
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     launch = Mock(side_effect=AssertionError("second launcher forbidden"))
     service = Mock()
@@ -240,7 +257,7 @@ def test_regression_d1_oversized_impostor_never_wakes(live_driver, monkeypatch, 
 def test_regression_d2_busy_then_huge_completion_unblocks(live_driver, monkeypatch):
     _, _, rollout, *_, remote = live_driver
     _append_event(rollout, "task_started")
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     launch = Mock(side_effect=AssertionError("second launcher forbidden"))
     rows = [watch.InboxEvent(1, "sender", "request", "pending")]
@@ -269,7 +286,7 @@ def test_regression_d3_final_recheck_observes_new_start(live_driver, monkeypatch
             _append_event(rollout, "task_started")
         return {"lease": lease}
     remote.stream.side_effect = stream
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     launch = Mock()
     with pytest.raises(RuntimeError, match="codex_wake_busy:start_event"):
@@ -287,7 +304,7 @@ def test_regression_d4_decoder_fault_never_sends(live_driver, monkeypatch, recor
     _, _, rollout, *_, remote = live_driver
     with rollout.open("ab") as stream:
         stream.write(record)
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     with pytest.raises(RuntimeError, match=f"codex_wake_busy:decode_error:{reason}"):
         _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
@@ -298,7 +315,7 @@ def test_regression_d5_partial_start_never_wakes(live_driver, monkeypatch):
     _, _, rollout, *_, remote = live_driver
     with rollout.open("ab") as stream:
         stream.write(b'{"type":"event_msg","payload":{"type":"task_started"}}')
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     with pytest.raises(RuntimeError, match="codex_wake_busy:partial_final_line"):
         _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
@@ -310,7 +327,7 @@ def test_regression_d5_malformed_before_completion_never_wakes(live_driver, monk
     with rollout.open("ab") as stream:
         stream.write(b'{"broken":}\n')
     _append_event(rollout, "task_complete")
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     with pytest.raises(RuntimeError, match="codex_wake_busy:decode_error:"):
         _wake(Mock(), remote, [watch.InboxEvent(1, "sender", "request", "pending")], Mock())
@@ -355,8 +372,8 @@ def test_missing_codex_binary_is_typed_and_retains_inbox(live_driver, monkeypatc
 
 
 def test_multiple_unread_rows_coalesce_oldest_first(live_driver, monkeypatch):
-    *_, remote = live_driver
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    _, _, rollout, *_, remote = live_driver
+    send = Mock(side_effect=_completed_resume(rollout))
     monkeypatch.setattr(ui, "send", send)
     rows = [watch.InboxEvent(i, "sender", "request", "pending") for i in [3, 1, 2]]
     assert _wake(Mock(), remote, rows, Mock())
@@ -408,7 +425,7 @@ def test_missing_rollout_path_never_falls_back_to_launcher(live_driver, tmp_path
 def test_once_cli_resume_spawn_failure_exits_nonzero_and_retains_inbox(
     inbox_db, live_driver, monkeypatch, capsys,
 ):
-    *_, remote = live_driver
+    _, _, rollout, *_, remote = live_driver
     monkeypatch.setattr(watch._config, "DB_PATH", inbox_db)
     service = Mock()
     service.__enter__ = Mock(return_value=service)
@@ -434,9 +451,13 @@ def test_once_cli_resume_spawn_failure_exits_nonzero_and_retains_inbox(
     assert service.method_calls == []
     with sqlite3.connect(inbox_db) as conn:
         assert conn.execute("SELECT consumed_by_live_driver FROM messages WHERE id=7").fetchone() == (0,)
-    spawn.side_effect = lambda argv, **kwargs: subprocess.CompletedProcess(
-        argv, 0, stdout='{"type":"turn.started"}\n{"type":"turn.completed"}\n', stderr="",
-    )
+    def completed(argv, **kwargs):
+        _append_event(rollout, "task_started", turn_id="resume")
+        _append_event(rollout, "task_complete", turn_id="resume")
+        return subprocess.CompletedProcess(
+            argv, 0, stdout='{"type":"turn.started"}\n{"type":"turn.completed"}\n', stderr="",
+        )
+    spawn.side_effect = completed
     assert watch.main(args) == 0
     assert spawn.call_count == 2
     assert lock.release.call_count == 2

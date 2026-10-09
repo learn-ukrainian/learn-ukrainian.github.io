@@ -300,7 +300,8 @@ same-size rewrites, or changes to the cached prefix fingerprint reset the cache.
 That fingerprint samples up to 4 KiB at the head and 4 KiB immediately before
 the cached offset, detecting in-place rewrites that grow while preserving
 bounded reads on normal append polls. It does not detect every possible edit
-between those samples. No record or file size cap limits the scan.
+between those samples. Lifecycle records are append-only; the fingerprint detects deviations at its sampled spans.
+No record or file size cap limits the scan.
 Long message strings are validated and skipped with bounded memory; JSON grammar,
 escapes, UTF-8 and nesting are validated before a record can decide readiness.
 Lone surrogate escapes in strings are tolerated; they cannot supply ASCII
@@ -335,24 +336,103 @@ Fail-closed reasons include:
   changing remains BUSY and is retried next poll.
 - `rollout_unavailable`: discovery did not provide an exact rollout path.
 
-BUSY reports `codex_wake_busy:<reason>`. A missing binary or resume exception
-reports `codex_resume_error:<exception>`; a nonzero exit, missing turn evidence,
-or failed/error event reports `codex_resume_error:failed`. The supervisory loop
-catches all ordinary wake exceptions, emits a typed `wake_error`, leaves the
-rows unread, and polls again. In `--once` mode a wake error exits with status 2;
-a successful one-shot poll exits 0. Only a successful resume advances the watcher's
-in-memory cursor; the live driver still records durable inbox consumption.
+BUSY reports `codex_wake_busy:<reason>`. A missing binary
+reports `codex_resume_error:FileNotFoundError`. Other resume exceptions are UNKNOWN. The supervisory loop catches ordinary
+wake exceptions, emits `wake_error`, and leaves rows unread. In `--once` mode
+refusal, OVERLAP or UNKNOWN exits with status 2; a successful one-shot poll exits
+0. Daemon mode keeps running. Wake mode off still only notifies. Only a CLEAN,
+successful resume advances the in-memory cursor; the live driver still records
+durable inbox consumption.
 
 Readiness is checked after lease reconciliation and message framing and again
-immediately before the resume subprocess is spawned. **A residual window still
-exists between that last check and the subprocess attaching**: another turn
-can start during that interval. File observation cannot provide atomic turn
-admission. [#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217),
-owned by the harness stream's accountable driver, tracks that admission work.
-This gate guarantees only that the observed, stable rollout has no recorded
-open turn at each readiness check. It does not certify the driver's work or
-close the attach race. Cold scans retain full-history validation: a bounded
-tail alone could miss an earlier malformed record and incorrectly report READY.
+immediately before spawning the resume subprocess. The pre-send READY/BUSY
+rules above are unchanged. **The window between that last check and resume
+attaching remains open. Prevention is not provided.**
+
+### Post-resume overlap detection (#10217)
+
+After each returned resume, the watcher incrementally reads the exact discovered
+rollout again, including records appended after the process exited but before
+this read. Separate tracking preserves open turn IDs, or a starts-minus-ends
+count where IDs are absent. A repeated start for the same open ID does not
+create a second turn. A second distinct or idless start while a turn is open
+records an overlap even if a later completion makes the readiness reducer READY.
+Historical overlaps before the final pre-send observation do not by themselves
+flag the new wake. The detector emits a `codex-wake.v1` JSON event:
+
+- `CLEAN`: stable, valid lifecycle evidence of a completed wake, with no observed
+  overlap and no remaining open turn, plus successful resume stdout evidence.
+- `OVERLAP`: another turn starts while one is open. This is detected and reported;
+  the watcher does not interrupt, signal, cancel or undo either turn.
+- `UNKNOWN`: `decode_error`, `read_error`, `rollout_changing`,
+  `partial_final_line`, resume termination not evidenced, missing wake lifecycle,
+  remaining open turns, ambiguous lifecycle/IDs, replaced/reset rollout, or
+  unsuccessful resume evidence. Missing evidence is never CLEAN. At most 1,024
+  simultaneous IDs are retained; exceeding this safety bound is UNKNOWN.
+
+For OVERLAP and UNKNOWN, the watcher saves the event in its ignored per-seat
+`inbox-watch-<slot>.wake.json` file beside its existing pid/lock file, under the
+same exclusive watcher lock. An atomic, mode-0600 write replaces the file and
+fsyncs the file and directory. Receipts are keyed by message ID and a hash of
+the native thread and rollout identity (hashed path, device and inode); the
+receipt also records byte offset, turn IDs and start/end and open counts.
+The cursor remains in memory. No inbox row, attachment or database schema is
+changed, and no new message bus is introduced. Sender attachment data is never
+selected or interpreted by the watcher: a sender-supplied `codex_wake` key of
+any type, including a forged OVERLAP or CLEAN receipt, cannot retain a wake.
+This also holds for rows inserted outside `send_message`.
+
+A later poll, including a fresh watcher process or a changed rollout, refuses
+to resume a message with retained evidence even if readiness now looks READY.
+A retained row holds back the entire unread batch, including later plain-text
+attachments. The existing watcher notify/log path names the message ID and
+status: notification-only mode emits `INBOX-WATCH id=<id> codex_wake=<status>`
+with its reason, and wake mode logs the body-free JSON event with `message_ids`
+and status plus `wake_error:codex_wake:<status>:retained_event`. No message body
+or absolute host path is printed in these retained-event notices. The driver
+reads its unchanged inbox attachment, reconciles the logged attempt, and then
+consumes the row with the existing command:
+
+```bash
+.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <id>
+```
+
+The next poll ignores and garbage-collects watcher receipts for acked or deleted
+messages, permitting later rows to proceed. Corrupted watcher-owned receipts
+refuse safely with `retained_receipt_invalid`; that reason never comes from a
+sender attachment. If the entire state file is unreadable or unparseable, every
+unread row is held until reconciliation; after all unread rows are acked or
+deleted, the next poll replaces the corrupt state with an empty receipt map.
+Unrecognized receipt fields are omitted from diagnostics. Inbox reading keeps
+its existing attachment presentation; no receipt wrapper or receipt hash enters
+`read_message` or its redaction path.
+
+Watcher-state write failure reports UNKNOWN and stops the watcher with status 2
+because retaining a receipt is impossible; it never retries that resume in the
+same process. A restart after that failure can re-run the resume if no receipt
+was persisted. Ordinary OVERLAP and UNKNOWN receipts keep daemon mode running.
+
+Detection covers the observed rollout only. It cannot detect a start appended
+after the post-resume scan, an unrecorded turn, or an arbitrary historical rewrite
+outside the fingerprint samples. It does not certify work or prove delivery in
+the visible TUI. CLEAN cannot tie the one recorded turn to the wake turn. The
+existing pre-send READY gate still accepts `start A, start B, end A` with B open:
+it uses the last lifecycle event, unchanged by this fix. These are known limits,
+not additional readiness guarantees.
+[#10217](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/10217)
+tracks prevention, waiting on an upstream Codex turn start that refuses while a
+turn is open (compare-and-set/fail-if-active, externally reachable). Owner:
+`claude-monitor`. No bridge-only lock closes this attach window.
+
+Run the deterministic final-recheck refusal probe (no live resume):
+
+```bash
+.venv/bin/python -m pytest -q tests/ai_agent_bridge/test_wake_overlap_detection.py::test_once_final_recheck_refusal_exits_two_without_resume
+```
+
+It calls the watcher with `--once`, starts a fake turn during lease reconciliation,
+and asserts status 2, an unread row, `codex_wake_busy:start_event`, and no resume
+spawn. Post-resume race/unknown/replay probes are in the same test module.
 
 #### Manual throwaway-session receipt
 

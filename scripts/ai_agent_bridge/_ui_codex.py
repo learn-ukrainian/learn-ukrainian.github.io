@@ -98,6 +98,9 @@ class _RolloutRecord:
         self.key = None
         self.outer_type = None
         self.payload_type = None
+        self.turn_id = None
+        self.turn_id_valid = True
+        self.turn_id_seen = False
         self.seen = set()
         self.has_content = False
         self.in_string = False
@@ -115,6 +118,10 @@ class _RolloutRecord:
         while True:
             event, value = (yield)
             if event == "map_key":
+                if self.depth == self.payload_depth and value == "turn_id":
+                    if self.turn_id_seen:
+                        self.turn_id_valid = False
+                    self.turn_id_seen = True
                 self.key = value
                 if (self.depth == 1 and value in {"type", "payload"}) or (
                     self.depth == self.payload_depth and value == "type"
@@ -124,6 +131,8 @@ class _RolloutRecord:
                         raise ValueError("duplicate lifecycle field")
                     self.seen.add(identity)
                 continue
+            if self.depth == self.payload_depth and self.key == "turn_id" and event in {"start_map", "start_array"}:
+                self.turn_id_valid = False
             if event in {"start_map", "start_array"}:
                 if self.depth == 0 and event != "start_map":
                     raise ValueError("rollout record is not an object")
@@ -143,6 +152,11 @@ class _RolloutRecord:
                     self.outer_type = value
                 elif self.depth == self.payload_depth:
                     self.payload_type = value
+            if self.depth == self.payload_depth and self.key == "turn_id":
+                if event == "string" and re.fullmatch(r"[A-Za-z0-9_-]{1,128}", value):
+                    self.turn_id = value
+                else:
+                    self.turn_id_valid = False
             self.key = None
 
     def feed(self, data: bytes) -> None:
@@ -235,6 +249,67 @@ class _RolloutRecord:
 _STRING_SPECIAL = re.compile(br'["\\\x00-\x1f]')
 
 
+class _OpenTurns:
+    """Separate from readiness: count open turns and retain any overlap."""
+
+    def __init__(self):
+        self.ids = set()
+        self.anonymous = 0
+        self.begin()
+
+    @property
+    def count(self):
+        return len(self.ids) + self.anonymous
+
+    def begin(self):
+        self.starts = 0
+        self.ends = 0
+        self.peak = self.count
+        self.overlap_ids = []
+        self.overlap = False
+        self.ambiguous = False
+
+    def observe(self, kind, record):
+        if kind not in _TURN_START | _TURN_END:
+            return
+        if not record.turn_id_valid:
+            self.ambiguous = True
+            return
+        turn_id = record.turn_id
+        if kind in _TURN_START:
+            if turn_id and turn_id in self.ids:
+                return  # Repeated wire record for the same open turn.
+            if self.count >= 1024:
+                self.ambiguous = True  # Bound retained IDs, never guess CLEAN.
+                return
+            self.starts += 1
+            if turn_id:
+                self.ids.add(turn_id)
+            else:
+                self.anonymous += 1
+            self.peak = max(self.peak, self.count)
+            if self.count > 1:
+                if not self.overlap:
+                    self.overlap_ids = sorted(self.ids)
+                self.overlap = True
+        else:
+            if turn_id in self.ids:
+                self.ids.remove(turn_id)
+            elif self.anonymous:
+                self.anonymous -= 1
+            elif not turn_id and self.ids:
+                if len(self.ids) > 1:
+                    # An idless end decrements the count, but cannot identify
+                    # which named turn remains. Retain uncertainty this wake.
+                    self.anonymous = len(self.ids) - 1
+                    self.ambiguous = True
+                self.ids.clear()
+            else:
+                self.ambiguous = True
+                return
+            self.ends += 1
+
+
 class RolloutReader:
     """Forward incremental lifecycle reader for one live rollout, bounded memory.
 
@@ -256,6 +331,8 @@ class RolloutReader:
         self.error = None
         self.guard_offset = 0
         self.guard_digest = None
+        self.turns = _OpenTurns()
+        self.epoch = 0
 
     def _reset(self, path, signature):
         if self.record is not None:
@@ -268,6 +345,8 @@ class RolloutReader:
         self.error = None
         self.guard_offset = 0
         self.guard_digest = None
+        self.turns = _OpenTurns()
+        self.epoch += 1
 
     @staticmethod
     def _prefix_fingerprint(stream, offset):
@@ -306,6 +385,7 @@ class RolloutReader:
                                 self.record.feed(piece)
                             if index < len(pieces) - 1 and self.record is not None:
                                 kind = self.record.finish()
+                                self.turns.observe(kind, self.record)
                                 if kind in _TURN_START:
                                     self.state = (False, f"start_event:{kind}")
                                 elif kind in _TURN_END:
@@ -332,6 +412,45 @@ class RolloutReader:
             # No diagnostics contain transcript bodies, paths or decoder text.
             self.error = f"decode_error:{type(exc).__name__}" if not isinstance(exc, OSError) else f"read_error:{type(exc).__name__}"
             return False, self.error
+
+    def begin_wake(self):
+        """Freeze the final pre-send observation without changing readiness."""
+        self.turns.begin()
+        return self.epoch
+
+    def wake_result(self, path: Path, *, epoch: int, resume_exited: bool) -> dict:
+        """Read after resume, including starts appended after process exit."""
+        _, reason = self.ready(path)
+        turns = self.turns
+        status = "UNKNOWN"
+        if not resume_exited:
+            reason = "resume_not_exited"
+        elif reason.startswith(("decode_error:", "read_error:", "rollout_changing", "partial_final_line")):
+            pass
+        elif epoch != self.epoch:
+            reason = "rollout_replaced"
+        elif turns.ambiguous:
+            reason = "ambiguous_turn_lifecycle"
+        elif turns.overlap:
+            status, reason = "OVERLAP", "concurrent_turn_starts"
+        elif turns.count:
+            reason = "open_turns"
+        elif not turns.starts or not turns.ends:
+            reason = "missing_wake_lifecycle"
+        else:
+            status, reason = "CLEAN", "completed_turns_without_overlap"
+        return {
+            "schema": "codex-wake.v1", "status": status, "reason": reason,
+            "rollout": {
+                "path_sha256": hashlib.sha256(os.fsencode(path)).hexdigest(),
+                "device": self.signature[0] if self.signature else None,
+                "inode": self.signature[1] if self.signature else None,
+                "offset": self.offset,
+            },
+            "starts": turns.starts, "ends": turns.ends,
+            "open_count": turns.count, "peak_open_count": turns.peak,
+            "turn_ids": turns.overlap_ids or sorted(turns.ids),
+        }
 
 
 def rollout_is_ready(path: Path, *, reader: RolloutReader | None = None) -> tuple[bool, str]:
@@ -469,7 +588,8 @@ def send(
             events (list[dict] of parsed JSON event lines from stdout),
             final_message (str | None) — best-effort extraction,
             duration_s (float), session_file (str | None) — path to the
-            original UI session JSONL if locatable, stderr (str).
+            original UI session JSONL if locatable, stderr (str),
+            resume_exited (bool) — false when termination is not evidenced.
     """
     bridge_id = bridge_id or f"bridge-{uuid.uuid4().hex[:8]}"
     framed_message = f"Bridge-ID: {bridge_id}\n\n{message}"
@@ -492,11 +612,13 @@ def send(
         stdout = proc.stdout
         stderr = proc.stderr
         exit_code = proc.returncode
+        resume_exited = True
     except subprocess.TimeoutExpired as e:
         stdout = e.stdout.decode("utf-8", errors="replace") if isinstance(e.stdout, bytes) else (e.stdout or "")
         stderr = e.stderr.decode("utf-8", errors="replace") if isinstance(e.stderr, bytes) else (e.stderr or "")
         stderr = f"[timeout after {timeout_s}s]\n{stderr}"
         exit_code = -1
+        resume_exited = False
     duration_s = (datetime.now(UTC) - start).total_seconds()
 
     events: list[dict] = []
@@ -513,6 +635,7 @@ def send(
         "bridge_id": bridge_id,
         "thread_id": thread_id,
         "exit_code": exit_code,
+        "resume_exited": resume_exited,
         "events": events,
         "final_message": _extract_final_message(events),
         "duration_s": duration_s,
@@ -527,8 +650,18 @@ def cli_main(argv: list[str] | None = None) -> int:
         description=(
             "Send a prompt to a running Codex Desktop UI session via "
             "`codex exec resume`. Lane 1 from issue #2285. "
-            "Returns the codex subprocess exit code."
+            "Returns the codex subprocess exit code.\n"
+            "Use for explicit delivery to a known thread; use the inbox watcher for gated driver wakes."
         ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.ai_agent_bridge._ui_codex --thread <UUID> "ping"
+  .venv/bin/python -m scripts.ai_agent_bridge._ui_codex --thread <UUID> --from-file relay.md
+
+Outputs: a resume turn in the persisted thread; final response or JSON receipt on stdout.
+Exit codes: Codex subprocess status; timeout is -1 (shell 255); 2 invalid arguments.
+Related: scripts.ai_agent_bridge._inbox_watch; docs/runbooks/session-supervisor.md; #10217.
+""",
     )
     parser.add_argument(
         "--thread",
