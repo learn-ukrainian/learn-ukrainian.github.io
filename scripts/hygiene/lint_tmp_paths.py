@@ -145,11 +145,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "f74b23c4e494751935f713cdbc649a527ce14b2f041801aeececa75529ef2430:1",
     ),
     (
-        "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
-        "2c1bc6ffcd7e6962acfd9fa184a823656683a456026d41ea7619ce5309e69942:1 eaabb98be0ef9424c40a9700cc3945c40b51c807bf70a55a8b83c15781739499:1",
-    ),
-    (
         "scripts/lexicon/curriculum_atlas_intake.py",
         "Legacy literal/default/example; follow-up outside this bounded packet (#8755).",
         "9f8c849f6397c57001976e5f13b13a4a2b2fd84c86e94b9d7532d15692114bcf:1 e9c2b41d5f26e6d8bf4102ed118299a0e9d80b5f5ba5172b557dffa3ed66c7b1:1",

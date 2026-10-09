@@ -21,6 +21,7 @@ import argparse
 import json
 import os
 import sys
+import tempfile
 from collections import Counter
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
@@ -51,8 +52,8 @@ DEFAULT_DECISIONS = (
     PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-19-textbook-jsonl-curated-bulk-approve.yaml"
 )
-DEFAULT_CANDIDATES = Path("/tmp/atlas-textbook-jsonl-curated-candidates.json")
-DEFAULT_PLAN = Path("/tmp/atlas-textbook-jsonl-curated-plan.json")
+CANDIDATES_FILENAME = "atlas-textbook-jsonl-curated-candidates.json"
+PLAN_FILENAME = "atlas-textbook-jsonl-curated-plan.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 
@@ -82,6 +83,16 @@ _SKIP_SOURCE_PREFIXES = (
     "antonenko-",
     "pohribnyi-",
 )
+
+
+def _scratch_output(filename: str) -> Path:
+    """Resolve at call time; the caller's TMPDIR/task wrapper owns cleanup.
+
+    Keep artifacts available for downstream readers after this module returns.
+    Standalone callers can use ``scripts.tools.task_scratch run`` to supply
+    the same managed TMPDIR lifecycle used by dispatch.
+    """
+    return Path(os.environ.get("TMPDIR") or tempfile.gettempdir()) / filename
 
 
 def resolve_chunks_root() -> Path | None:
@@ -378,13 +389,14 @@ def apply_plan(
     manifest: Path,
     fingerprint: Path,
     write: bool,
+    plan_out: Path | None = None,
 ) -> dict[str, Any]:
     plan = planner.build_promotion_plan(
         candidates_path=candidates,
         decision_files=[decisions],
         manifest_path=manifest,
     )
-    planner.write_plan(plan, DEFAULT_PLAN)
+    planner.write_plan(plan, plan_out if plan_out is not None else _scratch_output(PLAN_FILENAME))
     print("plan", plan["counts"], flush=True)
     if not write:
         return {"plan": plan["counts"], "wrote": False}
@@ -438,22 +450,72 @@ def apply_plan(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--chunks-root", type=Path, default=None)
-    p.add_argument("--from-db", action="store_true", help="Mine sources.db textbooks instead of JSONL")
-    p.add_argument("--db", type=Path, default=PROJECT_ROOT / "data" / "sources.db")
-    p.add_argument("--min-freq", type=int, default=3)
-    p.add_argument("--max-lemmas", type=int, default=None)
-    p.add_argument("--inventory-out", type=Path, default=DEFAULT_INVENTORY)
-    p.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS)
-    p.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES)
-    p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    p.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
-    p.add_argument("--write-inventory", action="store_true")
-    p.add_argument("--write-decisions", action="store_true")
-    p.add_argument("--apply", action="store_true")
-    p.add_argument("--write", action="store_true")
-    p.add_argument("--report", action="store_true")
+    p = argparse.ArgumentParser(
+        description="Mine curated textbook headwords and prepare gated promotion artifacts.\n"
+        "Use for curated-source repromotion; manifest publication requires --apply --write.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.lexicon.curated_textbook_jsonl_repromote --min-freq 5\n"
+            "  .venv/bin/python -m scripts.lexicon.curated_textbook_jsonl_repromote --apply --report\n"
+            "Outputs: inventory/decision YAML when requested; --apply writes candidates and plan JSON.\n"
+            "Scratch defaults use caller TMPDIR (else the system temp directory); caller owns cleanup.\n"
+            "Standalone runs can use scripts.tools.task_scratch run for managed scratch.\n"
+            "Only --apply --write updates manifest/fingerprint; no surface-admission changes.\n"
+            "Exit codes: 0 success; nonzero on input, validation or write errors.\n"
+            "Related: #9702; scripts.audit.plan_source_inventory_promotion."
+        ),
+    )
+    p.add_argument("--chunks-root", type=Path, default=None, help="Grade JSONL root (default auto-discovery)")
+    p.add_argument("--from-db", action="store_true", help="Mine sources.db textbooks instead of JSONL (default off)")
+    # Keep the frozen store-path call AST; Action.help supplies CLI documentation.
+    db_argument = p.add_argument("--db", type=Path, default=PROJECT_ROOT / "data" / "sources.db")
+    db_argument.help = "Textbook database (default data/sources.db; example ./textbooks.db)"
+    p.add_argument("--min-freq", type=int, default=3, help="Minimum token frequency (default 3; example 5)")
+    p.add_argument("--max-lemmas", type=int, default=None, help="Maximum mined lemmas (default unlimited; example 100)")
+    p.add_argument(
+        "--inventory-out",
+        type=Path,
+        default=DEFAULT_INVENTORY,
+        help=f"Inventory YAML destination (default {DEFAULT_INVENTORY.relative_to(PROJECT_ROOT)})",
+    )
+    p.add_argument(
+        "--decisions-out",
+        type=Path,
+        default=DEFAULT_DECISIONS,
+        help=f"Decision YAML destination (default {DEFAULT_DECISIONS.relative_to(PROJECT_ROOT)})",
+    )
+    p.add_argument(
+        "--candidates-out",
+        type=Path,
+        default=None,
+        help=f"Candidate JSON destination (default caller temp root/{CANDIDATES_FILENAME})",
+    )
+    p.add_argument(
+        "--plan-out",
+        type=Path,
+        default=None,
+        help=f"Plan JSON outside the repository (default caller temp root/{PLAN_FILENAME})",
+    )
+    p.add_argument(
+        "--manifest",
+        type=Path,
+        default=DEFAULT_MANIFEST,
+        help="Manifest JSON (default site/src/data/lexicon-manifest.json)",
+    )
+    p.add_argument(
+        "--fingerprint",
+        type=Path,
+        default=DEFAULT_FINGERPRINT,
+        help="Fingerprint JSON (default site/src/data/lexicon-manifest.fingerprint.json)",
+    )
+    p.add_argument("--write-inventory", action="store_true", help="Write inventory YAML (default off)")
+    p.add_argument("--write-decisions", action="store_true", help="Write inventory and decision YAML (default off)")
+    p.add_argument(
+        "--apply", action="store_true", help="Write candidates and plan; publish only with --write (default off)"
+    )
+    p.add_argument("--write", action="store_true", help="Allow manifest/fingerprint writes with --apply (default off)")
+    p.add_argument("--report", action="store_true", help="Print JSON summary with --apply (default off)")
     args = p.parse_args(argv)
 
     if args.from_db:
@@ -485,14 +547,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_decisions(rows, args.decisions_out)
         print("wrote decisions", args.decisions_out, "n=", len(rows), flush=True)
     if args.apply:
-        build_candidates(args.inventory_out, args.candidates_out)
-        print("wrote candidates", args.candidates_out, flush=True)
+        candidates_out = (
+            args.candidates_out if args.candidates_out is not None else _scratch_output(CANDIDATES_FILENAME)
+        )
+        build_candidates(args.inventory_out, candidates_out)
+        print("wrote candidates", candidates_out, flush=True)
         summary = apply_plan(
-            candidates=args.candidates_out,
+            candidates=candidates_out,
             decisions=args.decisions_out,
             manifest=args.manifest,
             fingerprint=args.fingerprint,
             write=args.write,
+            plan_out=args.plan_out,
         )
         if args.report:
             print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
