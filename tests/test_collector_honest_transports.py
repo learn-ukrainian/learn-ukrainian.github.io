@@ -1335,6 +1335,288 @@ def test_urllib_real_loopback_redirect_handler_checks_before_followup(monkeypatc
             assert not worker.is_alive()
 
 
+@pytest.fixture
+def h_loopback(request):
+    """Real HTTP request targets, with no transport mocks or external sources."""
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    servers = []
+
+    def create(routes):
+        ledger = []
+
+        class Handler(BaseHTTPRequestHandler):
+            def log_message(self, *_args):
+                pass
+
+            def do_GET(self):
+                ledger.append((self.path, self.headers.get("User-Agent")))
+                status, headers, body = routes.get(self.path, (200, {}, NORMAL))
+                self.send_response(status)
+                for key, value in headers.items():
+                    self.send_header(key, value)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        httpd = HTTPServer(("localhost", 0), Handler)
+        worker = threading.Thread(target=httpd.serve_forever, kwargs={"poll_interval": .01})
+        worker.start()
+        servers.append((httpd, worker, ledger))
+        return f"http://localhost:{httpd.server_port}", ledger
+
+    try:
+        yield create
+    finally:
+        h_record("loopback-" + hashlib.sha256(request.node.nodeid.encode()).hexdigest()[:16],
+                 test=request.node.nodeid, ledgers=[ledger for _httpd, _worker, ledger in servers])
+        for httpd, worker, _ledger in servers:
+            httpd.shutdown()
+            worker.join(timeout=5)
+            httpd.server_close()
+            assert not worker.is_alive()
+
+
+def h_fetch(module, url, cache):
+    if module is textbook:
+        response = module._request(url, timeout=5)
+        try:
+            return response.content
+        finally:
+            response.close()
+    if module is zno:
+        return module.fetch_page_with_rate_limit(url, cache).encode()
+    status, body, rc = module._curl_request(url)
+    assert (status, rc) == (200, 0)
+    return body
+
+
+def h_record(name, **row):
+    import os
+    if root := os.environ.get("LU_PERMISSION_EVIDENCE_DIR"):
+        Path(root, f"h-{name}.json").write_text(json.dumps(row, indent=2))
+
+
+@pytest.mark.parametrize("target", [
+    "/{public,private}/x?q={a,b}", "/book[1-2];p?x=[3-4]",
+    "/public/../private/y;p?q=one", "/public/./x;p?q=two",
+])
+@pytest.mark.parametrize("entry", ["initial", "absolute", "relative", "robots"])
+@pytest.mark.parametrize("denied", [False, True])
+def test_h_curl_actual_target_equals_permission_target(
+    monkeypatch, tmp_path, isolate_policy, h_loopback, target, entry, denied,
+):
+    from urllib.parse import urljoin
+
+    routes = {}
+    base, ledger = h_loopback(routes)
+    # Relative redirects are resolved by the existing urljoin; the check must
+    # match the result that curl actually sends, including params and query.
+    location = base + target if entry == "absolute" else target
+    actual = ukrlib._robots_target(urljoin(base + "/start", location)).decode() if entry == "relative" else target
+    rule_target = actual.replace("{", "%7B").replace("}", "%7D")
+    allowed_rules = b"Disallow: /blocked" if entry == "relative" and actual.startswith("/private/") else b"Disallow: /private"
+    rules = group((b"Disallow: " + rule_target.encode()) if denied else allowed_rules)
+    routes["/robots.txt"] = (200, {}, rules)
+    if entry == "robots":
+        routes["/robots.txt"] = (302, {"Location": base + target}, b"")
+        routes[target] = (200, {}, group(b"Disallow: /private"))
+    else:
+        routes["/start"] = (302, {"Location": location}, b"")
+        routes[actual] = (200, {}, NORMAL)
+    checked, paced = [], []
+    check, wait = ukrlib._robots_check_target, ukrlib._wait_for_request
+
+    def observe_check(url):
+        checked.append(ukrlib._robots_target(url).decode())
+        check(url)
+
+    def observe_wait(url, floor):
+        wait(url, floor)
+        paced.append((ukrlib._robots_target(url).decode(), isolate_policy.now))
+
+    monkeypatch.setattr(ukrlib, "_robots_check_target", observe_check)
+    monkeypatch.setattr(ukrlib, "_wait_for_request", observe_wait)
+    cache = tmp_path / "body"
+    if entry == "robots":
+        result = h_fetch(ukrlib, base + "/public", cache)
+        assert result == NORMAL
+        expected, expected_checked = ["/robots.txt", target, "/public"], ["/public"]
+    elif denied:
+        with pytest.raises(ukrlib.AccessStopped, match=DENY):
+            h_fetch(ukrlib, base + (target if entry == "initial" else "/start"), cache)
+        expected = ["/robots.txt"] + ([] if entry == "initial" else ["/start"])
+        expected_checked = ([] if entry == "initial" else ["/start"]) + [actual]
+        other, other_ledger = h_loopback({})
+        with pytest.raises(ukrlib.AccessStopped):
+            h_fetch(ukrlib, other + "/later", cache)
+        assert other_ledger == [] and ukrlib._access_stopped
+        assert not cache.exists() and not list(tmp_path.iterdir())
+    else:
+        assert h_fetch(ukrlib, base + (target if entry == "initial" else "/start"), cache) == NORMAL
+        expected = ["/robots.txt"] + ([] if entry == "initial" else ["/start"]) + [actual]
+        expected_checked = ([] if entry == "initial" else ["/start"]) + [actual]
+    assert [path for path, _ua in ledger] == expected
+    assert all(ua == ukrlib.USER_AGENT for _path, ua in ledger)
+    assert checked == expected_checked
+    assert [path for path, _time in paced] == expected
+    assert all(b[1] - a[1] >= ukrlib.DELAY_BETWEEN_PAGES - 1e-8 for a, b in pairwise(paced))
+    assert all(path in checked for path in expected if path not in {"/robots.txt", target if entry == "robots" else ""})
+    h_record(f"target-{entry}-{denied}-{hashlib.sha256(target.encode()).hexdigest()[:8]}",
+             target=target, ledger=ledger, checked=checked, paced=paced, denied=denied, entry=entry)
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("scheme", ["dict", "ftp", "file", "data", "DiCt", "FtP", "FiLe", "DaTa", "schemeless", "relative"])
+@pytest.mark.parametrize("entry", ["initial", "content-redirect", "robots-redirect"])
+def test_h_http_only_before_any_destination_io(
+    monkeypatch, tmp_path, isolate_policy, h_loopback, module, scheme, entry,
+):
+    import socket
+
+    routes = {"/robots.txt": (200, {}, group(b"Disallow: /private"))}
+    base, ledger = h_loopback(routes)
+    other, other_ledger = h_loopback({})
+    cache = tmp_path / "page"
+    with socket.socket() as listener:
+        listener.bind(("localhost", 0))
+        listener.listen()
+        listener.setblocking(False)
+        address = f"localhost:{listener.getsockname()[1]}"
+        target = f"{scheme}://{address}/x"
+        if scheme == "data" or scheme == "DaTa":
+            target = scheme + ":text/plain,source"
+        elif scheme == "schemeless":
+            target = f"//{base.split('://', 1)[1]}/public;p?x=1"
+        elif scheme == "relative":
+            target = "/public;p?x=1"
+        supported = scheme in {"schemeless", "relative"} and entry != "initial"
+        checked, paced = [], []
+        check, wait = module._robots_check_target, module._wait_for_request
+
+        def observe_check(url):
+            checked.append(module._robots_target(url).decode())
+            check(url)
+
+        def observe_wait(url, floor):
+            wait(url, floor)
+            paced.append(module._robots_target(url).decode())
+
+        monkeypatch.setattr(module, "_robots_check_target", observe_check)
+        monkeypatch.setattr(module, "_wait_for_request", observe_wait)
+        if entry == "initial":
+            url, expected = target, []
+        elif entry == "content-redirect":
+            routes["/start"] = (302, {"Location": target}, b"")
+            url, expected = base + "/start", ["/robots.txt", "/start"]
+        else:
+            routes["/robots.txt"] = (302, {"Location": target}, b"")
+            routes["/public;p?x=1"] = (200, {}, group(b"Disallow: /private"))
+            url, expected = base + "/start", ["/robots.txt"]
+        if supported:
+            h_fetch(module, url, cache)
+            expected += ["/public;p?x=1"] + (["/start"] if entry == "robots-redirect" else [])
+            assert not module._access_stopped
+            assert checked == (["/start", "/public;p?x=1"] if entry == "content-redirect" else ["/start"])
+        else:
+            with pytest.raises(module.AccessStopped, match="robots_unreachable: unsupported scheme"):
+                h_fetch(module, url, cache)
+            assert module._access_stopped
+            with pytest.raises(module.AccessStopped):
+                h_fetch(module, other + "/later", cache)
+            assert other_ledger == [] and not cache.exists()
+            assert not list(tmp_path.iterdir())
+            assert checked == (["/start"] if entry == "content-redirect" else [])
+        assert [path for path, _ua in ledger] == expected
+        assert all(ua == module.USER_AGENT for _path, ua in ledger)
+        assert paced == expected
+        with pytest.raises(BlockingIOError):
+            listener.accept()
+        h_record(f"scheme-{module.__name__}-{scheme}-{entry}",
+                 ledger=ledger, checked=checked, paced=paced, unsupported=not supported,
+                 destination_connections=0, second_origin_ledger=other_ledger, cache=cache.exists())
+
+
+@pytest.mark.parametrize("module", MODULES)
+@pytest.mark.parametrize("entry", ["initial", "same-origin", "cross-origin"])
+@pytest.mark.parametrize("target", ["/ordinary;p?x=1", "/public/../private/y;p?x=1", "/public/./y;p?x=2"])
+def test_h_valid_http_hops_check_actual_raw_target(
+    monkeypatch, tmp_path, isolate_policy, h_loopback, module, entry, target,
+):
+    routes = {"/robots.txt": (200, {}, group(b"Disallow: /blocked"))}
+    other_routes = dict(routes)
+    base, ledger = h_loopback(routes)
+    other, other_ledger = h_loopback(other_routes)
+    checked, paced = [], []
+    check, wait = module._robots_check_target, module._wait_for_request
+
+    def observe_check(url):
+        checked.append((urlparse(url).netloc, module._robots_target(url).decode()))
+        check(url)
+
+    def observe_wait(url, floor):
+        wait(url, floor)
+        paced.append((urlparse(url).netloc, module._robots_target(url).decode(), isolate_policy.now))
+
+    monkeypatch.setattr(module, "_robots_check_target", observe_check)
+    monkeypatch.setattr(module, "_wait_for_request", observe_wait)
+    # Uppercase HTTP must stay usable. requests prepares dot paths; urllib
+    # and the explicitly literal curl transport preserve absolute dot paths.
+    destination = other if entry == "cross-origin" else base
+    absolute = destination.replace("http:", "HTTP:") + target
+    routes["/start"] = (302, {"Location": absolute}, b"")
+    actual = target
+    if module is textbook:
+        actual = target.replace("/public/../", "/").replace("/public/./", "/public/")
+    url = absolute if entry == "initial" else base + "/start"
+    assert h_fetch(module, url, tmp_path / "page") == NORMAL
+    expected = ["/robots.txt"] + ([] if entry == "initial" else ["/start"])
+    if entry == "cross-origin":
+        assert [path for path, _ua in ledger] == expected
+        assert [path for path, _ua in other_ledger] == ["/robots.txt", actual]
+    else:
+        expected += [actual]
+        assert [path for path, _ua in ledger] == expected and not other_ledger
+    assert checked == ([] if entry == "initial" else [(urlparse(base).netloc, "/start")]) + [(urlparse(destination).netloc, actual)]
+    assert all(ua == module.USER_AGENT for _path, ua in ledger + other_ledger)
+    # The requests transport prepares its URL before the check and the send;
+    # the existing pacer keys the original URL to the same origin.
+    assert len(paced) == len(ledger) + len(other_ledger)
+    for origin in {row[0] for row in paced}:
+        times = [row[2] for row in paced if row[0] == origin]
+        floor = .3 if module is ukrlib else 2
+        assert all(b - a >= floor - 1e-8 for a, b in pairwise(times))
+    assert not module._access_stopped
+    h_record(f"valid-{module.__name__}-{entry}-{hashlib.sha256(target.encode()).hexdigest()[:8]}",
+             ledger=ledger, other_ledger=other_ledger, checked=checked, paced=paced, target=actual)
+
+
+@pytest.mark.parametrize("scheme", ["dict", "ftp", "file", "data", "DiCt", "FtP", "FiLe", "DaTa"])
+def test_h_curl_protocol_restriction_blocks_low_level_io(tmp_path, scheme):
+    import socket
+
+    sentinel = tmp_path / "source"
+    sentinel.write_bytes(b"private synthetic content")
+    before = sentinel.stat(), sentinel.read_bytes()
+    with socket.socket() as listener:
+        listener.bind(("localhost", 0))
+        listener.listen()
+        listener.setblocking(False)
+        target = f"{scheme}://localhost:{listener.getsockname()[1]}/x"
+        if scheme.lower() == "file":
+            target = scheme + "://" + str(sentinel)
+        elif scheme.lower() == "data":
+            target = scheme + ":text/plain,private"
+        status, _headers, body, rc = ukrlib._curl_response(target)
+        assert status == 0 and rc != 0 and body == b""
+        with pytest.raises(BlockingIOError):
+            listener.accept()
+    assert (sentinel.stat(), sentinel.read_bytes()) == before
+    h_record(f"proto-{scheme}", status=status, rc=rc, body_hex=body.hex(), connections=0,
+             source_sha256=hashlib.sha256(before[1]).hexdigest())
+
+
 @pytest.mark.parametrize("links,expected", [
     (["/book-2020.pdf", "/book-2024.pdf", "book.pdf"], ["book-2024.pdf"]),
     (["book.pdf"], ["book.pdf"]),

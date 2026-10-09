@@ -1087,7 +1087,8 @@ def _curl_response(url: str) -> tuple[int, dict[str, str], bytes, int]:
         body_path = Path(scratch) / "body"
         try:
             result = subprocess.run(
-                ["curl", "-sS", "--max-time", "30", "--dump-header", str(headers_path),
+                ["curl", "-sS", "--globoff", "--path-as-is", "--proto", "=http,https",
+                 "--max-time", "30", "--dump-header", str(headers_path),
                  "--output", str(body_path), "--write-out", "%{http_code}",
                  "-H", "Accept-Charset: windows-1251,utf-8",
                  "-H", f"User-Agent: {USER_AGENT}", url],
@@ -1113,6 +1114,8 @@ def _curl_request(url: str, *, robots: bool = True) -> tuple[int, bytes, int]:
     _robots_token(USER_AGENT)
     for _hop in range(9 if robots else 11):
         parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            _robots_stop("robots_unreachable: unsupported scheme")
         origin = f"{parsed.scheme}://{parsed.netloc}"
         if robots and origin not in _robots_states:
             _robots_states[origin] = None

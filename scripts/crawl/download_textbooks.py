@@ -323,6 +323,8 @@ def _request(url: str, *, session=None, method: str = "get", robots: bool = True
     _robots_token(HEADERS["User-Agent"])
     for _hop in range(9 if robots else 11):
         parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            _robots_stop("robots_unreachable: unsupported scheme")
         origin = f"{parsed.scheme}://{parsed.netloc}"
         if robots and origin not in _robots_states:
             _robots_states[origin] = None
