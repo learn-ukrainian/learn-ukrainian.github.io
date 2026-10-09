@@ -297,6 +297,224 @@ def test_parse_entry_html_accepts_corrected_dictionary_article_id():
     assert "пиття" in row["text"]
 
 
+@pytest.mark.parametrize(
+    ("cell", "article", "expected"),
+    [
+        ("C1 span fragmentation", "<span>лі</span><span>с</span><span>т</span>", "слово ліст"),
+        ("C2 underline", "до<u>б</u>ре", "слово добре"),
+        ("C3 superscript and punctuation", "[кни<sup>га</sup>]—так!", "слово [книга]—так!"),
+        ("C4 combining acute across nodes", "а<span>\u0301</span>б", "слово а\u0301б"),
+        ("C5 supplied interword space fragment", "<span>білий</span> <span>кіт</span>", "слово білий кіт"),
+        ("C6 punctuation adjacency", "слово,<span>—</span>так.", "слово слово,—так."),
+        ("C7 paragraph separation", "<p>перший</p><p>другий</p>", "слово перший другий"),
+        ("C8 list item ordering and separation", "<ul><li>перший</li><li>другий</li></ul>", "слово перший другий"),
+        ("C9 br separation", "перше<br>друге", "слово перше друге"),
+    ],
+)
+def test_parse_entry_html_preserves_literal_inline_and_block_boundaries(cell, article, expected):
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        f'<section id="dictionary-acticle"><article><h1>слово</h1><p>{article}</p></article></section>',
+        query="слово",
+        word="слово",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/слово",
+    )
+
+    assert row is not None, cell
+    assert row["text"] == expected, cell
+    if cell == "C4 combining acute across nodes":
+        assert row["text"].count("\u0301") == 1
+
+
+def test_parse_entry_html_regression_inline_span_adjacency():
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        "<section id='dictionary-acticle'><article><h1>ліст</h1>"
+        "<p><span>лі</span><span>с</span><span>т</span></p></article></section>",
+        query="ліст",
+        word="ліст",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/ліст",
+    )
+
+    assert row is not None
+    assert row["text"] == "ліст ліст"
+
+
+def test_parse_entry_html_preserves_inline_headword_title_and_lookup_normalization():
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        "<html><head><title>книга — словник</title></head>"
+        "<section id='dictionary-acticle'><article><h1>кн<span>и</span>га\u0301</h1>"
+        "<p>текст</p></article></section></html>",
+        query="книга",
+        word="книга",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/книга",
+    )
+
+    assert row is not None
+    assert row["word"] == "книга\u0301"
+    assert row["title"] == "книга — словник"
+    assert row["normalized_word"] == "книга"
+
+
+@pytest.mark.parametrize("section_id", ["dictionary-acticle", "dictionary-article"])
+def test_parse_entry_html_keeps_article_alias_termination_and_excludes_outside_content(section_id):
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        f"<p>before</p><section id='{section_id}'><article><h1>слово</h1>"
+        "<p>всередині</p></article><p>поза article</p></section>"
+        "<section id='dictionary-more'><p>інше</p></section><p>after</p>",
+        query="слово",
+        word="слово",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/слово",
+    )
+
+    assert row is not None
+    assert row["text"] == "слово всередині"
+
+
+@pytest.mark.parametrize(
+    ("metadata", "expected_title", "expected_snippet", "expected_url"),
+    [
+        (
+            "<title>слово — заголовок</title><meta name='description' content='опис'>"
+            "<link rel='canonical' href='https://slovnyk.me/canonical'>",
+            "слово — заголовок",
+            "опис",
+            "https://slovnyk.me/canonical",
+        ),
+        ("", "слово", "слово те…", "https://fallback.example/entry"),
+    ],
+)
+def test_parse_entry_html_preserves_schema_metadata_fallbacks_and_truncation(
+    metadata, expected_title, expected_snippet, expected_url
+):
+    from wiki.slovnyk_me import parse_entry_html
+
+    row = parse_entry_html(
+        f"<html><head>{metadata}</head><section id='dictionary-acticle'><article>"
+        "<h1>слово</h1><p>текст</p></article></section></html>",
+        query="запит",
+        word="слово",
+        dict_slug="vts",
+        url="https://fallback.example/entry",
+        max_text_chars=9,
+    )
+
+    assert row is not None
+    assert set(row) == {
+        "query", "word", "normalized_word", "dictionary_slug", "dictionary_label", "source_type",
+        "source_url", "title", "snippet", "text", "is_modern", "is_dialect", "is_russianism",
+        "sovietization_risk", "sovietization_keywords", "fetched_at",
+    }
+    assert row["query"] == "запит"
+    assert row["word"] == "слово"
+    assert row["source_url"] == expected_url
+    assert row["title"] == expected_title
+    assert row["snippet"] == expected_snippet
+    assert row["text"] == "слово те…"
+    assert row["dictionary_slug"] == "vts"
+    assert row["dictionary_label"] == "Великий тлумачний словник сучасної української мови"
+    assert row["source_type"] == "modern_explanatory"
+    assert row["is_modern"] is True
+    assert row["is_dialect"] is False
+    assert row["is_russianism"] is False
+    assert {key: type(value) for key, value in row.items()} == {
+        "query": str,
+        "word": str,
+        "normalized_word": str,
+        "dictionary_slug": str,
+        "dictionary_label": str,
+        "source_type": str,
+        "source_url": str,
+        "title": str,
+        "snippet": str,
+        "text": str,
+        "is_modern": bool,
+        "is_dialect": bool,
+        "is_russianism": bool,
+        "sovietization_risk": int,
+        "sovietization_keywords": str,
+        "fetched_at": str,
+    }
+
+
+def test_parse_entry_html_empty_section_and_headword_fallbacks():
+    from wiki.slovnyk_me import parse_entry_html
+
+    empty = parse_entry_html(
+        "<section id='dictionary-acticle'><article></article></section>",
+        query="запит",
+        word="слово",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/слово",
+    )
+    row = parse_entry_html(
+        "<section id='dictionary-acticle'><article><p>текст</p></article></section>",
+        query="запит",
+        word="СЛОВО\u0301",
+        dict_slug="vts",
+        url="https://slovnyk.me/dict/vts/слово",
+    )
+
+    assert empty is None
+    assert row is not None
+    assert row["word"] == "слово"
+    assert row["title"] == "слово"
+    assert row["text"] == "текст"
+
+
+def test_search_slovnyk_me_returns_inline_text_through_real_fetch_chain(tmp_path, monkeypatch):
+    from wiki import slovnyk_me, sources_db
+
+    db_path = tmp_path / "sources.db"
+    with sqlite3.connect(db_path) as conn:
+        slovnyk_me.ensure_slovnyk_me_schema(conn)
+    response_html = (
+        "<title>книга — тест</title><section id='dictionary-acticle'><article><h1>кни<span>га</span></h1>"
+        "<p>взірець<span>,</span> пункт.</p></article></section>"
+    )
+    calls = []
+
+    class Response:
+        status_code = 200
+        text = response_html
+
+        def raise_for_status(self):
+            return None
+
+    def fake_get(url, **kwargs):
+        calls.append((url, kwargs))
+        return Response()
+
+    monkeypatch.setattr(slovnyk_me.requests, "get", fake_get)
+    rows, outages = sources_db.search_slovnyk_me_with_status(
+        "книга", limit=1, dictionaries=["vts"], live=True, db_path=db_path
+    )
+
+    assert calls == [
+        (
+            "https://slovnyk.me/dict/vts/%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0",
+            {"timeout": 20, "headers": {"User-Agent": slovnyk_me.DEFAULT_USER_AGENT}},
+        )
+    ]
+    assert len(rows) == 1
+    assert rows[0]["word"] == "книга"
+    assert rows[0]["text"] == "книга взірець, пункт."
+    assert rows[0]["source_url"] == "https://slovnyk.me/dict/vts/%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0"
+    assert rows[0]["dictionary_slug"] == "vts"
+    assert rows[0]["source"] == "slovnyk.me"
+    assert outages == []
+
+
 def test_primary_synonym_sense_text_cuts_later_groups():
     from wiki.slovnyk_me import primary_synonym_sense_text
 

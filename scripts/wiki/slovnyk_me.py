@@ -363,12 +363,12 @@ def parse_entry_html(
     parser = _SlovnykHTMLParser()
     parser.feed(page_html)
 
-    section_text = _clean_text(" ".join(parser.section_parts["dictionary-acticle"]))
+    section_text = _clean_text("".join(parser.section_parts["dictionary-acticle"]))
     if not section_text:
         return None
 
-    headword = _clean_text(" ".join(parser.h1_parts)) or normalize_word(word)
-    title = _clean_text(" ".join(parser.title_parts)) or headword
+    headword = _clean_text("".join(parser.h1_parts)) or normalize_word(word)
+    title = _clean_text("".join(parser.title_parts)) or headword
     canonical_url = parser.canonical_url or url
     text = _truncate(section_text, max_text_chars)
     snippet = _truncate(parser.meta_description or section_text, min(max_text_chars, 500))
