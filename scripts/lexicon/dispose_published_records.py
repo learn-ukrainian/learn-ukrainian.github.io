@@ -10,15 +10,18 @@ import argparse
 import copy
 import hashlib
 import json
+import os
+import stat
 import sys
-from collections.abc import Sequence
+import tempfile
+from collections.abc import Iterator, Sequence
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.lexicon import manifest_io
 from scripts.lexicon.published_record_dispositions import (
     DispositionError,
     Dispositions,
@@ -27,6 +30,59 @@ from scripts.lexicon.published_record_dispositions import (
     ordered_digest,
     validate_route_references,
 )
+
+
+def _canonical_chunks(manifest: dict[str, Any]) -> Iterator[bytes]:
+    """Yield the shared canonical serializer's bytes without joining output."""
+    for chunk in json.JSONEncoder(ensure_ascii=False, indent=2).iterencode(manifest):
+        yield chunk.encode("utf-8")
+    yield b"\n"
+
+
+def _manifest_sha256(manifest: dict[str, Any]) -> str:
+    digest = hashlib.sha256()
+    for chunk in _canonical_chunks(manifest):
+        digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        while chunk := source.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+@contextmanager
+def _staged_manifest(path: Path, manifest: dict[str, Any], expected_sha: str) -> Iterator[Path]:
+    """Close and verify an owned same-directory stage; clean it on every exit."""
+    staged = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb", prefix=f".{path.name}.", suffix=".tmp", dir=path.parent, delete=False
+        ) as output:
+            staged = Path(output.name)
+            output.writelines(_canonical_chunks(manifest))
+            os.fchmod(output.fileno(), stat.S_IMODE(path.stat().st_mode))
+        if _file_sha256(staged) != expected_sha:
+            raise DispositionError("staged transaction digest diverged")
+        yield staged
+    finally:
+        if staged is not None:
+            staged.unlink(missing_ok=True)
+
+
+def _check_unchanged(path: Path, authority: Dispositions, current_sha: str) -> None:
+    """Re-read both authorities and the exact input after any staging work."""
+    checked = load_dispositions()
+    if (
+        canonical_sha256(checked.ledger) != canonical_sha256(authority.ledger)
+        or checked.preservation != authority.preservation
+    ):
+        raise DispositionError("authority changed during transaction")
+    if _file_sha256(path) != current_sha:
+        raise DispositionError("manifest changed during transaction")
 
 
 def _refresh_present_counts(manifest: dict[str, Any]) -> None:
@@ -90,17 +146,18 @@ def prospective_manifest(manifest: dict[str, Any], authority: Dispositions, acti
     if ordered_digest(survivors) != tx["ordered_survivor_sha256"]:
         raise DispositionError("ordered survivors diverged")
     expected = tx["after_sha256" if action == "withdraw" else "before_sha256"]
-    if hashlib.sha256(manifest_io.serialize_manifest(result)).hexdigest() != expected:
+    if _manifest_sha256(result) != expected:
         raise DispositionError("prospective transaction digest diverged")
     return result
 
 
 def dispose(manifest_path: Path, action: str, *, write: bool = False) -> dict[str, Any]:
-    """Re-read authority and manifest before the existing atomic replacement."""
+    """Stage canonical bytes, then recheck authority/input before replacement."""
     authority = load_dispositions()
     raw = manifest_path.read_bytes()
     current_sha = hashlib.sha256(raw).hexdigest()
     manifest = json.loads(raw)
+    del raw
     tx = authority.preservation["transaction"]
     before, after = tx["before_sha256"], tx["after_sha256"]
     if action not in {"withdraw", "restore"}:
@@ -117,16 +174,12 @@ def dispose(manifest_path: Path, action: str, *, write: bool = False) -> dict[st
     if current_sha != expected_input:
         raise DispositionError("manifest diverged from exact before/after states")
     result = prospective_manifest(manifest, authority, action)
-    checked = load_dispositions()
-    if (
-        canonical_sha256(checked.ledger) != canonical_sha256(authority.ledger)
-        or checked.preservation != authority.preservation
-    ):
-        raise DispositionError("authority changed during transaction")
-    if hashlib.sha256(manifest_path.read_bytes()).hexdigest() != current_sha:
-        raise DispositionError("manifest changed during transaction")
     if write:
-        manifest_io.write_manifest(manifest_path, result)
+        with _staged_manifest(manifest_path, result, already) as staged:
+            _check_unchanged(manifest_path, authority, current_sha)
+            os.replace(staged, manifest_path)
+    else:
+        _check_unchanged(manifest_path, authority, current_sha)
     return {
         "action": action,
         "state": "applied" if write else "dry_run",
