@@ -297,6 +297,7 @@ jobs:
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        id: pytest-python
         with:
           python-version-file: '.python-version'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -315,7 +316,11 @@ jobs:
         with:
           name: pytest-duration-snapshot
           path: ci-artifacts
-      - name: Run pytest
+      # There is no live import-graph selector: CI still runs the full suite.
+      # Cache only the shard exercising test_impact's graph checks. Its duration-
+      # balanced assignment can move; do not hard-code a shard number.
+      - name: Partition pytest files
+        id: partition
         env:
           SHARD: ${{ matrix.shard }}
           SHARDS: ${{ strategy.job-total }}
@@ -338,12 +343,64 @@ jobs:
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" \
               --durations "$durations" > "$LU_PYTEST_SHARD_FILES"
+          if grep -Fxq 'tests/test_ci_test_impact.py' "$LU_PYTEST_SHARD_FILES"; then
+            echo 'test-impact=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Restore test-impact parse cache
+        id: test-impact-cache
+        if: steps.partition.outputs.test-impact == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        continue-on-error: true  # Cache availability must never affect the tests.
+        with:
+          path: ${{ runner.temp }}/test-impact-parse
+          # Entries are immutable. A new commit publishes updated content-hash
+          # records; the prefix restores the newest compatible snapshot.
+          key: test-impact-parse-${{ runner.os }}-${{ steps.pytest-python.outputs.python-version }}-${{ hashFiles('scripts/ci/test_impact.py') }}-${{ github.sha }}
+          restore-keys: |
+            test-impact-parse-${{ runner.os }}-${{ steps.pytest-python.outputs.python-version }}-${{ hashFiles('scripts/ci/test_impact.py') }}-
+      - name: Report test-impact parse cache
+        if: steps.partition.outputs.test-impact == 'true'
+        continue-on-error: true
+        env:
+          LU_TEST_IMPACT_CACHE_DIR: ${{ runner.temp }}/test-impact-parse
+        # Report the restored snapshot before pytest captures passing checks.
+        # This only builds derived records; it never selects or executes tests.
+        run: |
+          python3 - <<'PY'
+          from scripts.ci.test_impact import BUILD_BUDGET_SECONDS, build_graph
+          graph = build_graph()
+          print(f"graph_seconds={graph.build_seconds:.3f} budget_seconds={BUILD_BUDGET_SECONDS} reasons={graph.reasons}")
+          PY
+      - name: Run pytest
+        env:
+          SHARD: ${{ matrix.shard }}
+          SHARDS: ${{ strategy.job-total }}
+          LU_TEST_IMPACT_CACHE_DIR: ${{ steps.partition.outputs.test-impact == 'true' && format('{0}/test-impact-parse', runner.temp) || '' }}
+        run: |
+          set -euo pipefail
+          export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
+          export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}-needs-artifact.txt"
+          [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
             --timeout=120 --timeout-method=thread -m 'not atlas_release and not slow and not site_toolchain' --strict-markers \
             --override-ini addopts=-q --durations=25 --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
           # Postgres tests self-skip on an unusable DSN; a green run of skips fails here.
           .venv/bin/python -m scripts.ci.pg_skip_guard "ci-artifacts/pytest-shard-${SHARD}.xml" \
             --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
+      # PR caches are scoped to refs/pull/.../merge; merge-group refs are
+      # temporary. Only main schedule/dispatch runs publish a shared snapshot
+      # readable by later PRs and queue runs. No additional token permissions.
+      - name: Save test-impact parse cache
+        if: >-
+          steps.partition.outputs.test-impact == 'true' &&
+          steps.test-impact-cache.outputs.cache-hit != 'true' &&
+          github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+          (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        continue-on-error: true
+        with:
+          path: ${{ runner.temp }}/test-impact-parse
+          key: ${{ steps.test-impact-cache.outputs.cache-primary-key }}
       - name: List failing tests in job summary
         if: failure()
         env:

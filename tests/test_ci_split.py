@@ -812,7 +812,12 @@ def _run_pytest_script() -> str:
 
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
     script = _run_pytest_script()
-    assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in script
+    steps = _jobs_of_ci()["pytest"]["steps"]
+    partition = next(step for step in steps if step.get("id") == "partition")
+    assert steps.index(partition) < next(i for i, step in enumerate(steps) if step.get("name") == "Run pytest")
+    assert 'python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS"' in partition["run"]
+    assert '> "$LU_PYTEST_SHARD_FILES"' in partition["run"]
+    assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in partition["run"]
     assert 'export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"' in script
     assert "-m 'not atlas_release and not slow and not site_toolchain' --strict-markers" in script
     assert "not site_toolchain" in script
@@ -841,7 +846,9 @@ def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
     shards = pytest_job["strategy"]["matrix"]["shard"]
     assert shards == list(range(1, len(shards) + 1))
     env = next(step["env"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
-    assert env == {"SHARD": "${{ matrix.shard }}", "SHARDS": "${{ strategy.job-total }}"}
+    assert env["SHARD"] == "${{ matrix.shard }}"
+    assert env["SHARDS"] == "${{ strategy.job-total }}"
+    assert set(env) == {"SHARD", "SHARDS", "LU_TEST_IMPACT_CACHE_DIR"}
 
 
 def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
@@ -906,11 +913,14 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
         for step in job.get("steps", [])
         if "continue-on-error" in step
     ]
-    assert len(optional) == 1
-    job_id, telemetry = optional[0]
-    assert job_id == "pytest" and telemetry["continue-on-error"] is True
+    assert len(optional) == 4
+    assert all(job_id == "pytest" and step["continue-on-error"] is True for job_id, step in optional)
+    telemetry = next(step for _, step in optional if step.get("uses", "").startswith("actions/download-artifact@"))
     assert telemetry["uses"].startswith("actions/download-artifact@")
     assert telemetry["with"]["name"] == "pytest-duration-snapshot"
+    assert {step["name"] for _, step in optional if step is not telemetry} == {
+        "Restore test-impact parse cache", "Report test-impact parse cache", "Save test-impact parse cache",
+    }
     # Only the report-only component shadow may tolerate a whole-job failure.
     assert {
         job_id: job["continue-on-error"] for job_id, job in _jobs_of_ci().items() if "continue-on-error" in job

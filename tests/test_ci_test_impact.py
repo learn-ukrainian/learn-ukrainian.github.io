@@ -927,6 +927,22 @@ def test_parse_cache_unavailable_storage_is_optional(tmp_path):
     assert result.test_dependents(["scripts/target.py"]) == {"tests/test_use.py"}
 
 
+def test_persistent_parse_cache_logs_valid_hits_and_reparsed_misses(tmp_path, capsys):
+    sources = {"scripts/target.py": "", "tests/test_use.py": "import scripts.target"}
+    cold = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert capsys.readouterr().err == "test-impact parse cache: hits=0 misses=2\n"
+    warm = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert capsys.readouterr().err == "test-impact parse cache: hits=2 misses=0\n"
+    # Partial restoration or corruption costs parsing without losing edges.
+    next(tmp_path.glob("*.json")).write_text("{")
+    partial = impact.build_graph(sources=sources, cache=impact.ParseCache(tmp_path))
+    assert capsys.readouterr().err == "test-impact parse cache: hits=1 misses=1\n"
+    assert cold.dependents == warm.dependents == partial.dependents
+    assert cold.reasons == warm.reasons == partial.reasons == ()
+    impact.build_graph(sources=sources, cache=impact.ParseCache())
+    assert capsys.readouterr().err == ""
+
+
 def test_parse_cache_concurrent_process_writers(tmp_path):
     code = """
 import sys

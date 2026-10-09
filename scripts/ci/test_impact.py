@@ -762,6 +762,8 @@ def build_graph(
     contribute edges too. Parse and I/O failures are terminal FULL reasons.
     Extraction is cached by path/content; inventory, resolution, uncertainty and
     elapsed-time budget checks are recomputed on every build, including hits.
+    A cold/evicted CI cache still parses every source and can exceed the budget
+    under CPU contention. Persistence reduces parsing, never the FULL guard.
     """
     started = time.monotonic()
     reasons: set[str] = set()
@@ -837,6 +839,8 @@ def build_graph(
             missing.append((path, source))
         else:
             records.append(record)
+    if cache.directory is not None:
+        print(f"test-impact parse cache: hits={len(records)} misses={len(missing)}", file=sys.stderr)
     items = sorted(missing, key=lambda item: len(item[1]), reverse=True)
     workers = min(_MAX_PARSER_WORKERS, _available_cpu_count())
     # Bounded local CPU workers, no provider calls or source execution.

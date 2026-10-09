@@ -622,3 +622,75 @@ def test_ci_gate_guard_steps_lack_continue_on_error() -> None:
         assert "continue-on-error" not in step or not step["continue-on-error"], (
             f"Step {step.get('name')!r} must not have continue-on-error"
         )
+
+
+def test_parse_cache_is_optional_and_follows_the_graph_test_partition() -> None:
+    workflow = _load("ci.yml")
+    job = workflow["jobs"]["pytest"]
+    steps = job["steps"]
+    by_name = {step.get("name"): step for step in steps}
+    partition = by_name["Partition pytest files"]
+    restore = by_name["Restore test-impact parse cache"]
+    report = by_name["Report test-impact parse cache"]
+    run = by_name["Run pytest"]
+    save = by_name["Save test-impact parse cache"]
+    assert [steps.index(step) for step in (partition, restore, report, run, save)] == sorted(
+        steps.index(step) for step in (partition, restore, report, run, save)
+    )
+    assert "grep -Fxq 'tests/test_ci_test_impact.py'" in partition["run"]
+    assert "echo 'test-impact=true'" in partition["run"]
+    assert "matrix.shard" not in restore["if"]
+    assert workflow["permissions"] == {"contents": "read"}
+    assert "permissions" not in job
+    assert "cache-mode" not in workflow and "cache-mode" not in job
+    ui_steps = _load("ui-policy-gate.yml")["jobs"]["ui-policy"]["steps"]
+    for operation, step in (("restore", restore), ("save", save)):
+        pin = next(s["uses"] for s in ui_steps if s.get("uses", "").startswith(f"actions/cache/{operation}@"))
+        assert step["uses"] == pin
+        assert step["continue-on-error"] is True
+    assert report["continue-on-error"] is True
+    assert "build_graph()" in report["run"]
+    assert "graph_seconds=" in report["run"]
+    assert "pytest" not in report["run"]
+    assert "continue-on-error" not in run
+    assert restore["with"]["path"] == save["with"]["path"] == report["env"]["LU_TEST_IMPACT_CACHE_DIR"]
+    key = restore["with"]["key"]
+    prefix = restore["with"]["restore-keys"].strip()
+    assert key == prefix + "${{ github.sha }}"
+    assert "${{ steps.pytest-python.outputs.python-version }}" in prefix
+    assert "${{ hashFiles('scripts/ci/test_impact.py') }}" in prefix
+    assert next(s for s in steps if s.get("id") == "pytest-python")["with"]["python-version-file"] == ".python-version"
+    assert save["with"]["key"] == "${{ steps.test-impact-cache.outputs.cache-primary-key }}"
+    for owns_graph in ("true", "", "false"):
+        ctx = {"steps": {"partition": {"outputs": {"test-impact": owns_graph}}}, "runner": {"temp": "fixture-temp"}}
+        assert _condition(restore["if"], ctx) is (owns_graph == "true")
+        assert _condition(report["if"], ctx) is (owns_graph == "true")
+        cache_dir = _interpolate(run["env"]["LU_TEST_IMPACT_CACHE_DIR"], ctx)
+        assert cache_dir == ("fixture-temp/test-impact-parse" if owns_graph == "true" else "")
+
+
+@pytest.mark.parametrize("event,ref,expected", [
+    ("schedule", "refs/heads/trunk", True),
+    ("workflow_dispatch", "refs/heads/trunk", True),
+    ("workflow_dispatch", "refs/heads/topic", False),
+    ("pull_request", "refs/pull/1/merge", False),
+    ("merge_group", "refs/heads/gh-readonly-queue/trunk/pr-1", False),
+    ("pull_request_target", "refs/heads/trunk", False),
+])
+@pytest.mark.parametrize("cache_hit", ["true", "false", ""])
+@pytest.mark.parametrize("owns_graph", ["true", ""])
+@pytest.mark.parametrize("status", ["success", "failure", "cancelled"])
+def test_parse_cache_saves_only_successful_default_branch_misses(event, ref, expected, cache_hit, owns_graph, status) -> None:
+    save = next(s for s in _load("ci.yml")["jobs"]["pytest"]["steps"] if s.get("name") == "Save test-impact parse cache")
+    ctx = {
+        "github": {"event_name": event, "ref": ref, "event": {"repository": {"default_branch": "trunk"}}},
+        "steps": {
+            "partition": {"outputs": {"test-impact": owns_graph}},
+            "test-impact-cache": {"outputs": {"cache-hit": cache_hit}},
+        },
+        "job": {"status": status},
+    }
+    # GitHub implicitly requires success() when a condition has no status function.
+    assert not _STATUS_FUNCTIONS.search(save["if"])
+    eligible = _condition(f"success() && ({save['if']})", ctx)
+    assert eligible is (expected and cache_hit != "true" and owns_graph == "true" and status == "success")
