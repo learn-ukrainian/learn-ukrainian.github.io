@@ -147,3 +147,39 @@ def test_bootstrap_rejects_partial_rollover_environment(tmp_path: Path, monkeypa
 
     assert codex_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "infra"]) == 2
     assert not (tmp_path / ".claude" / "infra-epic" / "CODEX-COLD-START.md").exists()
+
+
+@pytest.mark.parametrize("lane_name", ["codex", "gemini", "glm"])
+def test_hydrate_reports_retry_count_without_changing_capsule(monkeypatch, capsys, lane_name) -> None:
+    import json
+
+    from scripts.session_canary import gemini_lane, glm_lane
+
+    lane = {"codex": codex_lane, "gemini": gemini_lane, "glm": glm_lane}[lane_name]
+    capsule = {"execution_allowed": True}
+    calls = []
+
+    def retry(stream, identity):
+        calls.append((stream, identity))
+        return capsule, 2
+
+    monkeypatch.setattr(lane.shared_hydration, "build_hydration_capsule_with_retry", retry)
+    assert lane.main(["hydrate", "--epic", "harness", "--stream", "epic:123"]) == 0
+    output = capsys.readouterr()
+    assert json.loads(output.out.splitlines()[0]) == capsule
+    assert output.err == "hydration_attempts: 2\n"
+    assert calls == [("epic:123", lane._HOLDER_AGENT)]
+
+
+@pytest.mark.parametrize("identity", ["codex", "codex-core", "codex-infra", "gemini"])
+def test_hydrate_preserves_launcher_codex_identity(monkeypatch, capsys, identity) -> None:
+    monkeypatch.setenv("SESSION_STREAM_AGENT", identity)
+    observed = []
+
+    def retry(stream, lane):
+        observed.append(lane)
+        return {"execution_allowed": lane == identity}
+
+    monkeypatch.setattr(codex_lane.shared_hydration, "build_hydration_capsule", retry)
+    assert codex_lane.main(["hydrate", "--epic", "core", "--stream", "epic:123"]) == (2 if identity == "gemini" else 0)
+    assert observed == ["codex" if identity == "gemini" else identity]
