@@ -13,7 +13,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from scripts.api.delegate_router import active_delegate_tasks
+from scripts.api.delegate_router import seat_delegate_tasks
+from scripts.api.epics_router import _response_registry_text
 from scripts.api.occupancy import occupancy_payload
 
 from .snapshot import finite_number, mapping
@@ -58,9 +59,12 @@ def _merge_delegate(current: DelegateFact | None, incoming: DelegateFact) -> Del
 
 
 def load_delegate_facts() -> tuple[SourceReport, dict[str, DelegateFact]]:
-    """Active delegate rows keyed by agent id. A failure is ``unavailable``."""
+    """Delegate rows keyed by agent id, including derived-dead seats.
+
+    The active listing drops those dead rows. A failure is ``unavailable``.
+    """
     try:
-        payload = active_delegate_tasks()
+        payload = seat_delegate_tasks()
     except Exception:
         return report("delegate", "unavailable"), {}
     if not isinstance(payload, dict):
@@ -83,8 +87,7 @@ def load_delegate_facts() -> tuple[SourceReport, dict[str, DelegateFact]]:
 
 
 def _occupant_activity(status: object) -> str | None:
-    if status is None:
-        return "working"
+    """Explicit activity only. Presence without a status is not working."""
     if not isinstance(status, str):
         return None
     token = status.strip().lower()
@@ -95,8 +98,26 @@ def _occupant_activity(status: object) -> str | None:
     return None
 
 
+def _observation_age(host: Mapping[str, Any]) -> float | None:
+    age = host.get("age_seconds")
+    if isinstance(age, bool) or not isinstance(age, (int, float)):
+        return None
+    try:
+        number = float(age)
+    except (OverflowError, ValueError):
+        return None
+    if not math.isfinite(number) or number < 0:
+        return None
+    return number
+
+
 def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
-    """Working or idle per agent id. Host identity is not copied out."""
+    """Working or idle per agent id. Host identity is not copied out.
+
+    A missing occupant status is presence, not activity. A stale host does
+    not contribute activity. When every observation is stale, the source is
+    ``stale`` and no activity is returned.
+    """
     try:
         payload = occupancy_payload()
     except Exception:
@@ -107,9 +128,22 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
     if not isinstance(hosts, dict):
         return report("occupancy", "ok"), {}
     activity: dict[str, str] = {}
+    saw_fresh = False
+    saw_stale = False
+    stale_age: float | None = None
     for host in hosts.values():
         if not isinstance(host, dict):
             continue
+        status = host.get("status")
+        if status == "stale":
+            saw_stale = True
+            age = _observation_age(host)
+            if age is not None and (stale_age is None or age > stale_age):
+                stale_age = age
+            continue
+        if status == "unavailable":
+            continue
+        saw_fresh = True
         occupants = host.get("occupants")
         if not isinstance(occupants, list):
             continue
@@ -126,6 +160,8 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
             if activity.get(agent_id) == "working":
                 continue
             activity[agent_id] = token
+    if saw_stale and not saw_fresh:
+        return report("occupancy", "stale", age_s=stale_age), {}
     return report("occupancy", "ok"), activity
 
 
@@ -139,10 +175,18 @@ def activity_token(value: object) -> str | None:
 
 
 def text(value: object) -> str | None:
+    """Project one emitted string through the epic-registry public-text bound."""
     if not isinstance(value, str):
         return None
-    stripped = value.strip()
-    return stripped or None
+    return _response_registry_text(value)
+
+
+def seat_id(value: object) -> str | None:
+    """An identity string. A redacted value is omitted rather than published."""
+    projected = text(value)
+    if not projected or projected == "[redacted]":
+        return None
+    return projected
 
 
 def derive_state(

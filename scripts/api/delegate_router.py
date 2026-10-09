@@ -704,6 +704,23 @@ def active_delegate_tasks(
     return {"total": len(active), "tasks": active}
 
 
+def seat_delegate_tasks(
+    *,
+    repository: str | None = None,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
+    """Return running, spawning, and derived-dead task summaries.
+
+    The active listing omits derived zombie rows. Seat liveness needs those
+    dead rows, so this asks the same collector to include them. Returned rows
+    keep the legacy summary shape and never include repository attribution.
+    """
+    statuses = set(ACTIVE_TASK_STATUSES)
+    statuses.add("zombie")
+    rows = _delegate_task_rows(statuses, repository=repository, ctx=ctx)
+    return {"total": len(rows), "tasks": rows}
+
+
 def _dir_token(path: Path) -> str:
     """Cheap generation for a directory: changes when entries are added or removed."""
     try:

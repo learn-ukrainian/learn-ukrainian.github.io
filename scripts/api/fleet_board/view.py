@@ -16,6 +16,7 @@ from .activity import (
     resolve_activity,
     resolve_idle_min,
     resolve_pid,
+    seat_id,
     text,
 )
 from .snapshot import as_timestamp, finite_number, load_snapshot, mapping, utc_now
@@ -74,7 +75,7 @@ def _layer(value: object) -> int | None:
 def _task(value: object) -> dict[str, Any]:
     row = mapping(value)
     kind = row.get("kind")
-    if kind not in {"issue", "pr"}:
+    if not isinstance(kind, str) or kind not in {"issue", "pr"}:
         return {"kind": "none", "number": None, "title": None}
     return {"kind": kind, "number": _whole_number(row.get("number")), "title": text(row.get("title"))}
 
@@ -119,7 +120,7 @@ def _driver(
     intended: str | None,
 ) -> tuple[dict[str, Any] | None, str, str]:
     roster = mapping(raw)
-    agent_id = text(roster.get("agent_id"))
+    agent_id = seat_id(roster.get("agent_id"))
     if agent_id is None:
         state, reason = derive_state(
             intended=intended,
@@ -164,31 +165,34 @@ def _workers(
         return []
     rows: list[dict[str, Any]] = []
     for item in raw:
-        roster = mapping(item)
-        agent_id = text(roster.get("agent_id"))
-        if agent_id is None:
+        try:
+            roster = mapping(item)
+            agent_id = seat_id(roster.get("agent_id"))
+            if agent_id is None:
+                continue
+            harness = harness_row(harness_doc, agent_id)
+            state, reason, _pid = _seat_signals(
+                roster,
+                harness,
+                delegates.get(agent_id),
+                occupancy.get(agent_id),
+                intended=intended,
+                seat_present=True,
+                require_liveness=False,
+            )
+            rows.append(
+                {
+                    "agent_id": agent_id,
+                    "cli": text(roster.get("cli")),
+                    "model": text(roster.get("model")),
+                    "task": _worker_task(roster.get("task")),
+                    "state": state,
+                    "state_reason": text(reason) or reason,
+                    "since": as_timestamp(roster.get("since")),
+                }
+            )
+        except (TypeError, ValueError, OverflowError, ArithmeticError):
             continue
-        harness = harness_row(harness_doc, agent_id)
-        state, reason, _pid = _seat_signals(
-            roster,
-            harness,
-            delegates.get(agent_id),
-            occupancy.get(agent_id),
-            intended=intended,
-            seat_present=True,
-            require_liveness=False,
-        )
-        rows.append(
-            {
-                "agent_id": agent_id,
-                "cli": text(roster.get("cli")),
-                "model": text(roster.get("model")),
-                "task": _worker_task(roster.get("task")),
-                "state": state,
-                "state_reason": reason,
-                "since": as_timestamp(roster.get("since")),
-            }
-        )
     return rows
 
 
@@ -199,7 +203,7 @@ def _epic(
     occupancy: Mapping[str, str],
 ) -> dict[str, Any] | None:
     roster = mapping(raw)
-    epic_id = text(roster.get("epic"))
+    epic_id = seat_id(roster.get("epic"))
     if epic_id is None:
         return None
     intended = text(roster.get("intended"))
@@ -225,7 +229,7 @@ def _epic(
         "layer": _layer(roster.get("layer")),
         "intended": intended,
         "state": state,
-        "state_reason": reason,
+        "state_reason": text(reason) or reason,
         "since": as_timestamp(roster.get("since")),
         "driver": driver,
         "task": _task(roster.get("task")),
@@ -307,7 +311,7 @@ def _bots(
     rows: list[dict[str, Any]] = []
     for item in raw:
         roster = mapping(item)
-        agent_id = text(roster.get("agent_id"))
+        agent_id = seat_id(roster.get("agent_id"))
         if agent_id is None:
             continue
         harness = harness_row(harness_doc, agent_id)
@@ -325,12 +329,12 @@ def _bots(
             _agent_from_seat(
                 agent_id=agent_id,
                 role="bot",
-                epic=text(roster.get("epic")),
+                epic=seat_id(roster.get("epic")),
                 cli=text(roster.get("cli")),
                 model=text(roster.get("model")),
                 task=_worker_task(roster.get("task")),
                 state=state,
-                reason=reason,
+                reason=text(reason) or reason,
                 last_seen=as_timestamp(roster.get("last_seen")) or as_timestamp(roster.get("since")),
             )
         )
@@ -349,9 +353,9 @@ def _attention_item(
     return {
         "severity": severity,
         "kind": kind,
-        "title": title,
-        "summary": summary,
-        "target": {"type": target_type, "id": target_id},
+        "title": text(title) or title,
+        "summary": text(summary) or summary,
+        "target": {"type": target_type, "id": text(target_id) or target_id},
     }
 
 
@@ -389,9 +393,11 @@ def _foundation_attention(raw: object) -> list[dict[str, Any]]:
         reasons = row.get("reasons")
         summary = "red"
         if isinstance(reasons, list):
-            parts = [part.strip() for part in reasons if isinstance(part, str) and part.strip()]
+            parts = [part for part in (text(reason) for reason in reasons) if part]
             if parts:
                 summary = "; ".join(parts)
+        elif isinstance(reasons, str):
+            summary = text(reasons) or "red"
         items.append(
             _attention_item(
                 severity="bad",
@@ -539,7 +545,10 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
     epics = []
     if isinstance(epic_rows, list):
         for item in epic_rows:
-            built = _epic(item, harness, delegates, occupancy)
+            try:
+                built = _epic(item, harness, delegates, occupancy)
+            except (TypeError, ValueError, OverflowError, ArithmeticError):
+                continue
             if built is not None:
                 epics.append(built)
 
@@ -557,13 +566,19 @@ def load_board(environ: Mapping[str, str] | None = None) -> Board:
         seen.add(agent["agent_id"])
         agents.append(agent)
 
-    attention = _sort_attention(
-        _driver_attention(epics)
-        + _foundation_attention(document.get("foundations"))
-        + _pr_attention(document.get("prs"), stale_after=pr_stale_minutes(environ))
-        + _alert_attention(document.get("alerts"))
-        + _usage_attention(document.get("usage"))
-    )
+    attention_parts: list[dict[str, Any]] = []
+    for builder in (
+        lambda: _driver_attention(epics),
+        lambda: _foundation_attention(document.get("foundations")),
+        lambda: _pr_attention(document.get("prs"), stale_after=pr_stale_minutes(environ)),
+        lambda: _alert_attention(document.get("alerts")),
+        lambda: _usage_attention(document.get("usage")),
+    ):
+        try:
+            attention_parts.extend(builder())
+        except (TypeError, ValueError, OverflowError, ArithmeticError):
+            continue
+    attention = _sort_attention(attention_parts)
     try:
         base = collect_source_reports(environ)
     except Exception:

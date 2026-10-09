@@ -521,7 +521,7 @@ def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest
     def occupancy_loader():
         return {"hosts": {"row-1": {"occupants": [{"agent": "driver-beta", "status": "idle"}]}}}
 
-    monkeypatch.setattr(activity_mod, "active_delegate_tasks", delegate_loader)
+    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", delegate_loader)
     monkeypatch.setattr(activity_mod, "occupancy_payload", occupancy_loader)
 
     delegate_report, facts = activity_mod.load_delegate_facts()
@@ -533,3 +533,253 @@ def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest
     assert occupancy_report.status == "ok"
     assert activity == {"driver-beta": "idle"}
     assert "row-1" not in repr(activity)
+
+
+def _markers() -> dict[str, str]:
+    return {
+        "title": "/" + "private" + "/marker",
+        "focus": ".".join(("10", "1", "2", "3")),
+        "task": "worker" + "." + "internal",
+        "reason": "~" + "/marker",
+        "summary": "ssh " + "ops-box",
+        "long": "x" * 161,
+    }
+
+
+def test_emitted_strings_follow_the_public_text_bound(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    marks = _markers()
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "kept",
+                "title": "Kept",
+                "focus": "plain focus",
+                "intended": "running",
+                "driver": {"agent_id": "driver-kept", "pid_alive": False},
+                "task": {"kind": "issue", "number": 21, "title": "kept task"},
+                "workers": [{"agent_id": "worker-kept", "task": "kept work"}],
+            },
+            {
+                "epic": "marked",
+                "title": marks["title"],
+                "focus": marks["focus"],
+                "intended": "running",
+                "driver": {"agent_id": "driver-marked", "pid_alive": True, "activity": "idle"},
+                "task": {"kind": "issue", "number": 22, "title": marks["task"]},
+                "workers": [{"agent_id": "worker-marked", "task": marks["long"]}],
+            },
+        ],
+        "foundations": [{"foundation": "queue", "red": True, "reasons": [marks["reason"]]}],
+        "alerts": [{"name": "ExampleWarning", "severity": "warning", "summary": marks["summary"]}],
+        "prs": [
+            {
+                "number": 31,
+                "title": marks["title"],
+                "ci": "green",
+                "cf_at_head": True,
+                "mq": "not_queued",
+                "unqueued_min": 74,
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/now")
+
+    assert response.status_code == 200
+    body = response.text
+    for mark in marks.values():
+        assert mark not in body
+    by_epic = {item["epic"]: item for item in response.json()["data"]["epics"]}
+    assert by_epic["kept"]["title"] == "Kept"
+    assert by_epic["kept"]["state"] == "dead"
+    assert by_epic["marked"]["title"] == "[redacted]"
+    assert by_epic["marked"]["focus"] == "[redacted]"
+    assert by_epic["marked"]["task"]["title"] == "[redacted]"
+    assert by_epic["marked"]["workers"][0]["task"] == "[redacted]"
+    agent = client.get("/api/fleet/v1/agents/worker-marked").json()["data"]
+    assert agent["task"] == "[redacted]"
+    attention = response.json()["data"]["attention"]
+    foundation = next(item for item in attention if item["kind"] == "red_foundation")
+    assert foundation["summary"] == "[redacted]"
+    alert = next(item for item in attention if item["kind"] == "alert")
+    assert alert["summary"] == "[redacted]"
+    pull = next(item for item in attention if item["kind"] == "unqueued_pr")
+    assert pull["title"] == "[redacted]"
+    assert "Kept" in body
+
+
+def test_malformed_epic_keeps_sibling_records(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "bad-kind",
+                "title": "Bad kind",
+                "intended": "running",
+                "driver": {"agent_id": "driver-kind", "pid_alive": True},
+                "task": {"kind": [], "title": "skip"},
+                "workers": [],
+            },
+            {
+                "epic": "bad-number",
+                "title": "Bad number",
+                "intended": "running",
+                "driver": {"agent_id": "driver-number", "pid_alive": True},
+                "task": {"kind": "issue", "number": 10**400, "title": "count"},
+                "workers": [],
+            },
+            {
+                "epic": "kept",
+                "title": "Kept",
+                "intended": "running",
+                "driver": {"agent_id": "driver-kept", "pid_alive": False},
+                "workers": [],
+            },
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/now")
+
+    assert response.status_code == 200
+    by_epic = {item["epic"]: item for item in response.json()["data"]["epics"]}
+    assert by_epic["kept"]["state"] == "dead"
+    assert by_epic["kept"]["title"] == "Kept"
+    assert by_epic["bad-kind"]["task"] == {"kind": "none", "number": None, "title": None}
+    assert by_epic["bad-number"]["task"] == {"kind": "issue", "number": None, "title": "count"}
+    kinds = [item["kind"] for item in response.json()["data"]["attention"]]
+    assert "dead_driver" in kinds
+
+
+def test_occupancy_presence_without_status_stays_idle(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    monkeypatch.setattr(
+        activity_mod,
+        "occupancy_payload",
+        lambda: {"hosts": {"row-1": {"status": "fresh", "occupants": [{"agent": "driver-beta"}]}}},
+    )
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "beta",
+                "title": "Beta",
+                "intended": "running",
+                "driver": {"agent_id": "driver-beta", "pid_alive": True, "activity": "idle", "idle_min": 6},
+                "workers": [],
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/epics/beta")
+
+    assert response.status_code == 200
+    assert response.json()["data"]["state"] == "idle"
+    assert "row-1" not in response.text
+
+
+def test_stale_occupancy_does_not_override_idle(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    monkeypatch.setattr(
+        activity_mod,
+        "occupancy_payload",
+        lambda: {
+            "hosts": {
+                "row-1": {
+                    "status": "stale",
+                    "age_seconds": 90,
+                    "occupants": [{"agent": "driver-beta", "status": "working"}],
+                }
+            }
+        },
+    )
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "beta",
+                "title": "Beta",
+                "intended": "running",
+                "driver": {"agent_id": "driver-beta", "pid_alive": True, "activity": "idle", "idle_min": 6},
+                "workers": [],
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+
+    response = client.get("/api/fleet/v1/epics/beta")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["data"]["state"] == "idle"
+    occupancy = next(item for item in body["sources"] if item["name"] == "occupancy")
+    assert occupancy["status"] == "stale"
+    assert occupancy["age_s"] == 90
+    assert occupancy["error"] is None
+    assert "row-1" not in response.text
+
+
+def test_derived_dead_delegate_row_marks_the_seat_dead(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    import scripts.api.delegate_router as delegate_router
+
+    monkeypatch.setattr(view_mod, "load_delegate_facts", activity_mod.load_delegate_facts)
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    (tasks_dir / "seat-row.json").write_text(
+        json.dumps(
+            {
+                "task_id": "seat-row",
+                "agent": "driver-alpha",
+                "status": "running",
+                "pid": 1,
+                "started_at": "2026-10-09T11:00:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
+    monkeypatch.setattr(delegate_router, "_pid_alive", lambda pid: False)
+    delegate_router._TASK_STATE_CACHE.clear()
+    delegate_router._LAST_TASKS_DIR_STR = ""
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "alpha",
+                "title": "Alpha",
+                "intended": "running",
+                "driver": {
+                    "agent_id": "driver-alpha",
+                    "pid_alive": True,
+                    "activity": "working",
+                    "pane_text": SCREEN,
+                },
+                "workers": [],
+            }
+        ],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+    try:
+        assert delegate_router.active_delegate_tasks()["total"] == 0
+        _report, facts = activity_mod.load_delegate_facts()
+        assert facts["driver-alpha"] == DelegateFact(False, "zombie")
+        response = client.get("/api/fleet/v1/now")
+        assert response.status_code == 200
+        epic = response.json()["data"]["epics"][0]
+        assert epic["state"] == "dead"
+        assert epic["state_reason"] == "process is not alive"
+        assert response.json()["data"]["attention"][0]["kind"] == "dead_driver"
+        assert "seat-row" not in response.text
+        assert SCREEN not in response.text
+        assert str(tasks_dir) not in response.text
+    finally:
+        delegate_router._TASK_STATE_CACHE.clear()
+        delegate_router._LAST_TASKS_DIR_STR = ""

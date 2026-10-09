@@ -70,7 +70,10 @@ def finite_number(value: object) -> float | None:
     """A finite non-negative number. Booleans and missing values are None."""
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
-    number = float(value)
+    try:
+        number = float(value)
+    except (OverflowError, ValueError):
+        return None
     if not math.isfinite(number) or number < 0:
         return None
     return number
