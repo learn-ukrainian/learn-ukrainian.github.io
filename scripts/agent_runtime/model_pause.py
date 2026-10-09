@@ -122,7 +122,8 @@ def routing_budget_used_pct(lane: str) -> float | None:
         return None
     agents = data.get("agents") if isinstance(data, dict) else None
     info = agents.get(lane) if isinstance(agents, dict) else None
-    if not isinstance(info, dict):
+    if not isinstance(info, dict) or info.get("status") == "unknown":
+        # Missing, or withdrawn as stale by Monitor: not a usable reading.
         return None
     codexbar = info.get("codexbar")
     for source in (codexbar if isinstance(codexbar, dict) else {}, info):

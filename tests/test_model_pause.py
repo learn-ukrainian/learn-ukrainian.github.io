@@ -154,15 +154,21 @@ def test_dispatch_admission_refuses_a_paused_model(tmp_path, monkeypatch) -> Non
         ta._refuse_paused(["claude-opus-5-5"])
 
 
-def test_selected_reviewer_not_the_paused_pin_is_admitted(monkeypatch) -> None:
-    from scripts.agent_runtime import target_admission as ta
-
-    seen: list = []
-    monkeypatch.setattr(ta, "_refuse_paused", lambda models: seen.append(list(models)))
+def test_pause_inputs_by_dispatch_kind() -> None:
     import inspect
 
+    from scripts.agent_runtime import target_admission as ta
+
     src = inspect.getsource(ta.resolve_and_admit)
-    assert "[*models," not in src.split("_refuse_paused(")[1].split(")")[0]
+    assert "selected if review_dispatch else [*models, *selected]" in src
+
+
+def test_withdrawn_reading_is_unavailable(monkeypatch) -> None:
+    import io
+
+    payload = '{"agents": {"claude": {"status": "unknown", "weekly_used_pct": 95}}}'
+    monkeypatch.setattr(mp.urllib.request, "urlopen", lambda *a, **k: io.StringIO(payload))
+    assert mp.routing_budget_used_pct("claude") is None
 
 
 def test_public_source_has_no_endpoint_literal() -> None:
