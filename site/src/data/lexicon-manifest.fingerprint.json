@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "sha256": "5f22cd2ef29be514ec293bd1f6d6d46f48e0255f4d84567389234375fac8e566"
+        "sha256": "bcae48d1d161ac5e7ea414a9d6cb36b06a8a7068f71a309a9678d39a45722e3e"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
