@@ -70,6 +70,18 @@ extraction pass, not a public row-window seed. First bind the local source
 shape before using an ignored tab/unit. This emits a safe checksum only: no
 lemmas, source text, filenames, paths, tab names, or teacher-identifying labels.
 
+Keep producer, review, promotion and membership consumption within one caller-owned
+`TMPDIR`/`task_scratch` lifecycle; separate scratch invocations do not share implicit
+artifacts. `TMPDIR` must be an existing absolute directory. Intake CLI omitted
+output flags write nothing; API omitted outputs and promotion CLI defaults use
+the current `TMPDIR`. Explicit paths override defaults, including `--plan-out`.
+Review intake candidates into approved ledgers before promotion. The intake
+review and promoter auto-merge JSON share a basename but have different schemas;
+retain an intake copy with its explicit output override if needed. Promotion
+consumes reviewed ledgers before replacing the candidate artifact. Candidate,
+decision and plan files remain for consumers after return or failed gates;
+the caller owns cleanup.
+
 ```bash
 .venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
   /absolute/path/to/local/private-source.docx \
@@ -102,7 +114,7 @@ repository:
   /absolute/path/to/local/private-source.docx \
   --ignore-tab-index 3 \
   --expect-source-shape-sha256 <sha256-from-preflight> \
-  --candidates-out /tmp/atlas-private-teacher-lesson-candidates.json \
+  --candidates-out "$TMPDIR/atlas-private-teacher-lesson-candidates.json" \
   --format markdown
 ```
 
@@ -133,8 +145,8 @@ Markdown includes derived lemmas and must be written outside the repository:
   --expect-source-shape-sha256 <sha256-from-preflight> \
   --manifest site/src/data/lexicon-manifest.json \
   --bulk-triage \
-  --triage-out /tmp/atlas-private-teacher-lesson-bulk-triage.json \
-  --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md \
+  --triage-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.json" \
+  --triage-report-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.md" \
   --format markdown
 ```
 

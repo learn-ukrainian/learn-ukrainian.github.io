@@ -865,8 +865,8 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 
 # 2) Full-document bulk triage — all three buckets, not just post-boundary.
 .venv/bin/python -m scripts.audit.private_teacher_lesson_intake "$SOURCE" \
-  --bulk-triage --triage-out /tmp/atlas-private-teacher-lesson-bulk-triage.json \
-  --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
+  --bulk-triage --triage-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.json" \
+  --triage-report-out "$TMPDIR/atlas-private-teacher-lesson-bulk-triage.md"
 
 # 3) Set-diff the triage lemmas against every lemma already approved in
 #    registry/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
@@ -884,16 +884,28 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 # 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
   --curated-inventory registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
-  --vesum-db /tmp/vesum-shadow.db --apply --write --report
+  --vesum-db "$TMPDIR/vesum-shadow.db" --apply --write --report
 
 # 6) Fold every approved lemma that already has an Atlas route (not just the newly
 #    promoted heads) into curated-practice membership, recognition-only:
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
   --emit-membership site/src/data/lexicon-teacher-curated-membership.json \
-  --decisions-in /tmp/atlas-private-teacher-lesson-decisions.yaml \
+  --decisions-in "$TMPDIR/atlas-private-teacher-lesson-decisions.yaml" \
   --manifest site/src/data/lexicon-manifest.json \
   --membership-in site/src/data/lexicon-teacher-curated-membership.json --report
 ```
+
+Keep producer, review, promotion and membership consumption within one caller-owned
+`TMPDIR`/`task_scratch` lifecycle; separate scratch invocations do not share implicit
+artifacts. `TMPDIR` must be an existing absolute directory. Intake CLI omitted
+output flags write nothing; API omitted outputs and promotion CLI defaults use
+the current `TMPDIR`. Explicit paths override defaults, including `--plan-out`.
+Review intake candidates into approved ledgers before promotion. The intake
+review and promoter auto-merge JSON share a basename but have different schemas;
+retain an intake copy with its explicit output override if needed. Promotion
+consumes reviewed ledgers before replacing the candidate artifact. Candidate,
+decision and plan files remain for consumers after return or failed gates;
+the caller owns cleanup.
 
 Step 6 matters even when step 5 promotes zero new heads: most approved lemmas already
 have an Atlas route from an earlier batch or an unrelated source, and `--emit-membership`

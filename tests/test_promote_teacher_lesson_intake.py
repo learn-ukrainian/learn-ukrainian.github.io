@@ -361,6 +361,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
         candidates.append(entry)
         decisions.append(decision)
 
+    _synthetic_inventory_reads(monkeypatch, candidates)
     report = {
         "source_rows": len(lemmas),
         "canonical_lemmas": len(lemmas),
@@ -378,7 +379,6 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(promote_module, "DEFAULT_LOCK", intake_dir / "promotion.lock")
     monkeypatch.setattr(promote_module, "STAGED_MANIFEST", tmp_path / "manifest.staged.json")
     monkeypatch.setattr(promote_module, "STAGED_FINGERPRINT", tmp_path / "manifest.staged.fingerprint.json")
-    monkeypatch.setattr(promote_module, "DEFAULT_PLAN", tmp_path / "plan.json")
 
     # Verification is exercised elsewhere; this test only guards the enrich fan-out.
     monkeypatch.setattr(promote_module.verify_manifest, "main", lambda argv: 0)
@@ -421,6 +421,7 @@ def test_promote_never_runs_full_manifest_enrich(tmp_path, monkeypatch) -> None:
         fingerprint=fingerprint_path,
         vesum_db=tmp_path / "unused-vesum.db",
         sources_db=sources_db_path,
+        plan_out=tmp_path / "plan.json",
         candidates_out=tmp_path / "candidates.json",
         decisions_out=tmp_path / "decisions.yaml",
         write=True,
@@ -441,6 +442,7 @@ def test_promote_resume_staged_skips_replan_and_reenrich(tmp_path, monkeypatch) 
     """``--resume-staged`` must reuse an already-staged manifest, not re-plan/re-enrich."""
     lemma = "тестлема-resume"
     entry, decision = _fake_candidate_and_decision(lemma, locator="private source unit 0 paragraph 1")
+    _synthetic_inventory_reads(monkeypatch, [entry])
     entry["enrichment"] = True  # simulate a prior interrupted run that already enriched it
 
     monkeypatch.setattr(
@@ -468,7 +470,6 @@ def test_promote_resume_staged_skips_replan_and_reenrich(tmp_path, monkeypatch) 
     monkeypatch.setattr(promote_module, "DEFAULT_LOCK", intake_dir / "promotion.lock")
     monkeypatch.setattr(promote_module, "STAGED_MANIFEST", staged_manifest_path)
     monkeypatch.setattr(promote_module, "STAGED_FINGERPRINT", tmp_path / "manifest.staged.fingerprint.json")
-    monkeypatch.setattr(promote_module, "DEFAULT_PLAN", tmp_path / "plan.json")
     monkeypatch.setattr(promote_module.verify_manifest, "main", lambda argv: 0)
     monkeypatch.setattr(
         promote_module,
@@ -518,6 +519,7 @@ def test_promote_resume_staged_skips_replan_and_reenrich(tmp_path, monkeypatch) 
         fingerprint=tmp_path / "manifest.fingerprint.json",
         vesum_db=tmp_path / "unused-vesum.db",
         sources_db=tmp_path / "unused-sources.db",
+        plan_out=tmp_path / "plan.json",
         candidates_out=tmp_path / "candidates.json",
         decisions_out=tmp_path / "decisions.yaml",
         write=True,
@@ -596,3 +598,208 @@ def test_build_teacher_lesson_membership_unions_existing_atlas_routes(tmp_path) 
     assert by_slug["абзац"]["sources"] == ["homework", "teacher_inventory"]
     assert by_slug["або"]["sources"] == ["teacher_inventory"]
     assert "не-в-атласі-placeholder" not in by_slug
+
+
+def _synthetic_inventory_reads(monkeypatch, candidates):
+    """Keep the real ledger validator; replace only its corpus input."""
+    from scripts.audit.source_inventory_intake import SourceInventoryRecord
+
+    records = [
+        SourceInventoryRecord(
+            lemma=entry["lemma"], source_family="teacher_lesson",
+            source_id=promote_module.PUBLIC_SOURCE_ID,
+            extraction_mode=promote_module.PUBLIC_EXTRACTION_MODE,
+            inventory_path=promote_module.PUBLIC_INVENTORY_PATH,
+            inventory_locator=entry["source_provenance"][0]["source_locator"],
+            source_locator=entry["source_provenance"][0]["source_locator"],
+        )
+        for entry in candidates
+    ]
+    monkeypatch.setattr(promote_module.planner.decisions, "read_source_inventories", lambda *a, **kw: records)
+
+
+@pytest.fixture
+def temp_promotion(tmp_path, monkeypatch):
+    candidates, decisions = zip(*[
+        _fake_candidate_and_decision(lemma, locator=f"private source unit {i} paragraph 1")
+        for i, lemma in enumerate(("fixture-routed", "fixture-unrouted"), 1)
+    ], strict=True)
+    candidates, decisions = list(candidates), list(decisions)
+    _synthetic_inventory_reads(monkeypatch, candidates)
+    reviewed = tmp_path / "reviewed.yaml"
+    promote_module._write_decisions(decisions, reviewed)
+    report = {"canonical_lemmas": 2, "held_without_english_anchor": 0}
+
+    def extract(full, curated, manifest, vesum, sources):
+        # Review ledger consumed before the shared candidate artifact is replaced.
+        assert yaml.safe_load(full.read_bytes())["decisions"] == decisions
+        return candidates, decisions, report
+
+    monkeypatch.setattr(promote_module, "_build_rows", extract)
+    for attr, filename in (
+        ("DEFAULT_INTAKE_DIR", "journal-dir"), ("DEFAULT_JOURNAL", "journal-dir/journal.json"),
+        ("DEFAULT_LOCK", "journal-dir/lock"), ("STAGED_MANIFEST", "staged.json"),
+        ("STAGED_FINGERPRINT", "staged-fingerprint.json"),
+    ):
+        monkeypatch.setattr(promote_module, attr, tmp_path / filename)
+    monkeypatch.setattr(promote_module, "_enrich_promoted_entries", lambda *a, **kw: None)
+    monkeypatch.setattr(promote_module.verify_manifest, "main", lambda argv: 0)
+    monkeypatch.setattr(promote_module, "_conformance_violation_keys", lambda path: set())
+    monkeypatch.setattr(promote_module, "write_fingerprint", lambda path, **kw: path.write_text('{"synthetic": true}'))
+    manifest = tmp_path / "manifest.json"
+    routed = {**candidates[0], "url_slug": "fixture-routed"}
+    manifest.write_text(json.dumps({"entries": [routed], "stats": {}}))
+    fingerprint = tmp_path / "fingerprint.json"
+    fingerprint.write_bytes(b'{"original": true}\n')
+    vesum = tmp_path / "unused.db"
+    vesum.touch()
+    membership = tmp_path / "membership-in.json"
+    membership.write_text('{"members": []}')
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    kwargs = dict(
+        full_decisions=reviewed, curated_inventory=tmp_path / "unused.yaml", manifest=manifest,
+        fingerprint=fingerprint, vesum_db=vesum, sources_db=None,
+        candidates_out=tmp_path / promote_module.CANDIDATES_FILENAME,
+        decisions_out=tmp_path / promote_module.DECISIONS_FILENAME, write=False,
+    )
+    return kwargs, candidates, decisions, report, membership
+
+
+def _read_temp_artifacts(root):
+    return (
+        json.loads((root / promote_module.CANDIDATES_FILENAME).read_bytes()),
+        yaml.safe_load((root / promote_module.DECISIONS_FILENAME).read_bytes()),
+        json.loads((root / promote_module.PLAN_FILENAME).read_bytes()),
+    )
+
+
+def test_temp_artifacts_destination_readback_and_lifetime(tmp_path, monkeypatch, temp_promotion):
+    kwargs, candidates, decisions, _, _ = temp_promotion
+    original = kwargs["manifest"].read_bytes(), kwargs["fingerprint"].read_bytes()
+    for label in ("first-root", "second-root"):
+        root = tmp_path / label
+        root.mkdir()
+        monkeypatch.setenv("TMPDIR", str(root))
+        argv = ["--apply", "--report", "--full-decisions", str(kwargs["full_decisions"]),
+                "--manifest", str(kwargs["manifest"]), "--fingerprint", str(kwargs["fingerprint"]),
+                "--vesum-db", str(kwargs["vesum_db"])]
+        assert promote_module.main(argv) == 0
+        payload, ledger, plan = _read_temp_artifacts(root)
+        assert payload["auto_merge"] == candidates and ledger["decisions"] == decisions
+        assert plan["counts"]["proposed_additions"] == 1
+        assert plan["counts"]["skipped_existing"] == 1
+        assert plan["counts"]["missing_candidates"] == 0
+        assert plan["source_candidate_payload"] == str(root / promote_module.CANDIDATES_FILENAME)
+        assert (kwargs["manifest"].read_bytes(), kwargs["fingerprint"].read_bytes()) == original
+        for entry in plan["proposed_manifest_additions"]:
+            assert _SAFE_LOCATOR.fullmatch(entry["source_inventory"]["locator"])
+    assert _read_temp_artifacts(tmp_path / "first-root")[0] == _read_temp_artifacts(tmp_path / "second-root")[0]
+
+
+def test_temp_decisions_default_membership_readback(tmp_path, monkeypatch, capsys, temp_promotion):
+    kwargs, _, _, _, membership = temp_promotion
+    assert promote_module.main([
+        "--apply", "--full-decisions", str(kwargs["full_decisions"]),
+        "--manifest", str(kwargs["manifest"]), "--vesum-db", str(kwargs["vesum_db"]),
+    ]) == 0
+    out = tmp_path / "membership-out.json"
+    reader_args = ["--emit-membership", str(out), "--membership-in", str(membership),
+                   "--manifest", str(kwargs["manifest"]), "--report"]
+    assert promote_module.main(reader_args) == 0
+    assert json.loads(capsys.readouterr().out)["resolved_atlas_routes"] == 1
+    members = json.loads(out.read_bytes())["members"]
+    assert members == [{"lemma": "fixture-routed", "slug": "fixture-routed", "sources": ["teacher_inventory"]}]
+    changed_root = tmp_path / "changed-root"
+    changed_root.mkdir()
+    monkeypatch.setenv("TMPDIR", str(changed_root))
+    with pytest.raises(FileNotFoundError):
+        promote_module.main(reader_args)
+    monkeypatch.delenv("TMPDIR")
+    assert promote_module.main([*reader_args, "--decisions-in", str(kwargs["decisions_out"])]) == 0
+    capsys.readouterr()
+
+
+def test_temp_plan_override_and_invalid_root(tmp_path, monkeypatch, capsys, temp_promotion):
+    kwargs, *_ = temp_promotion
+    monkeypatch.delenv("TMPDIR")
+    with pytest.raises(SystemExit) as help_exit:
+        promote_module.main(["--help"])
+    assert help_exit.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "--plan-out" in help_text and "Caller" in help_text and "Exit codes:" in help_text
+    plan_out = tmp_path / "explicit-plan.json"
+    assert promote(**kwargs, plan_out=plan_out)["plan"]["proposed_additions"] == 1
+    assert json.loads(plan_out.read_bytes())["counts"]["approved_decisions"] == 2
+    # CLI explicit destinations also work without TMPDIR.
+    assert promote_module.main([
+        "--apply", "--full-decisions", str(kwargs["full_decisions"]),
+        "--manifest", str(kwargs["manifest"]), "--vesum-db", str(kwargs["vesum_db"]),
+        "--candidates-out", str(kwargs["candidates_out"]), "--decisions-out", str(kwargs["decisions_out"]),
+        "--plan-out", str(plan_out),
+    ]) == 0
+    originals = {path: path.read_bytes() for path in (kwargs["candidates_out"], kwargs["decisions_out"], plan_out)}
+    file_root = tmp_path / "file-root"
+    file_root.touch()
+    for invalid in (None, "relative", str(tmp_path / "absent"), str(file_root)):
+        if invalid is not None:
+            monkeypatch.setenv("TMPDIR", invalid)
+        else:
+            monkeypatch.delenv("TMPDIR", raising=False)
+        with pytest.raises(ValueError, match="TMPDIR"):
+            promote(**kwargs)
+        with pytest.raises(ValueError, match="TMPDIR"):
+            promote_module.main(["--apply", "--vesum-db", str(kwargs["vesum_db"])])
+        assert all(path.read_bytes() == data for path, data in originals.items())
+    repo_link = tmp_path / "repo-link"
+    repo_link.symlink_to(PROJECT_ROOT, target_is_directory=True)
+    for root in (PROJECT_ROOT, repo_link):
+        monkeypatch.setenv("TMPDIR", str(root))
+        with pytest.raises(promote_module.planner.SourceInventoryError):
+            promote(**kwargs)
+        with pytest.raises(promote_module.planner.SourceInventoryError):
+            promote(**kwargs, plan_out=root / "private-plan.json")
+        assert all(path.read_bytes() == data for path, data in originals.items())
+
+
+@pytest.mark.parametrize("gate", ["missing_candidate", "held", "verification", "conformance", "cas"])
+def test_temp_artifact_failure_gates_preserve_outputs(tmp_path, monkeypatch, temp_promotion, gate):
+    kwargs, candidates, _, report, _ = temp_promotion
+    kwargs["write"] = True
+    original_manifest = kwargs["manifest"].read_bytes()
+    original_fingerprint = kwargs["fingerprint"].read_bytes()
+    if gate == "missing_candidate":
+        candidates.pop()
+        match = "missing candidates"
+    elif gate == "held":
+        report["held_without_english_anchor"] = 1
+        match = "refusing a partial"
+    elif gate == "verification":
+        monkeypatch.setattr(promote_module.verify_manifest, "main", lambda argv: 7)
+        match = "failed verification"
+    elif gate == "conformance":
+        monkeypatch.setattr(promote_module, "_conformance_violation_keys",
+                            lambda path: {("fixture-unrouted", "fixture-violation")} if path == promote_module.STAGED_MANIFEST else set())
+        match = "conformance"
+    else:
+        real_hash = promote_module._sha256_file
+        calls = 0
+
+        def changed_hash(path):
+            nonlocal calls
+            if path == kwargs["manifest"]:
+                calls += 1
+                if calls == 2:
+                    return "concurrent-change"
+            return real_hash(path)
+
+        monkeypatch.setattr(promote_module, "_sha256_file", changed_hash)
+        match = "CAS"
+    with pytest.raises(RuntimeError, match=match):
+        promote(**kwargs)
+    payload, ledger, plan = _read_temp_artifacts(tmp_path)
+    assert payload["generated_from"] == "promote_teacher_lesson_intake.v1"
+    assert len(ledger["decisions"]) == 2
+    assert plan["counts"]["approved_decisions"] == 2
+    assert plan["counts"]["missing_candidates"] == (1 if gate == "missing_candidate" else 0)
+    assert kwargs["manifest"].read_bytes() == original_manifest
+    assert kwargs["fingerprint"].read_bytes() == original_fingerprint

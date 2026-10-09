@@ -328,3 +328,110 @@ def test_private_teacher_source_id_must_be_neutral_slug(tmp_path: Path) -> None:
 
     with pytest.raises(SourceInventoryError, match="neutral slug"):
         build_private_teacher_lesson_intake([source], source_id="Private Teacher/Name")
+
+
+@pytest.fixture
+def temp_intake(tmp_path, monkeypatch):
+    from scripts.audit import private_teacher_lesson_intake as intake
+
+    source = tmp_path / "private-name-canary.txt"
+    source.write_text("приховане слово\n", encoding="utf-8")
+    result = build_private_teacher_lesson_intake([source])
+    triage = build_bulk_triage_payload(result, committed_inventory_paths=[])
+    monkeypatch.setattr(intake, "build_private_teacher_lesson_intake", lambda *a, **kw: result)
+    monkeypatch.setattr(intake, "build_bulk_triage_payload", lambda *a, **kw: triage)
+    writers = (
+        (intake.write_candidate_review_payload, result, intake.CANDIDATES_FILENAME),
+        (intake.write_bulk_triage_payload, triage, intake.BULK_TRIAGE_FILENAME),
+        (intake.write_bulk_triage_report, triage, intake.BULK_TRIAGE_REPORT_FILENAME),
+    )
+    return intake, source, result, triage, writers
+
+
+def test_temp_default_writers_destination_readback_and_lifetime(tmp_path, monkeypatch, temp_intake):
+    intake, source, result, triage, writers = temp_intake
+    monkeypatch.setenv("TMPDIR", str(tmp_path))
+    for writer, payload, filename in writers:
+        path = writer(payload)
+        assert path == tmp_path / filename
+        data = path.read_bytes()
+        assert data.endswith(b"\n")
+        assert source.name.encode() not in data and str(source).encode() not in data
+        assert source.read_bytes().strip() not in data
+        if path.suffix == ".json":
+            expected = intake.candidate_review_payload(result) if payload is result else triage
+            assert json.loads(data) == expected
+        else:
+            assert data.decode() == intake.format_bulk_triage_report(triage) + "\n"
+        assert path.is_file()  # The producer has returned; consumers still own the artifact.
+
+
+def test_temp_default_writers_resolve_at_call_time(tmp_path, monkeypatch, temp_intake):
+    *_, writers = temp_intake
+    for label in ("first", "second"):
+        root = tmp_path / label
+        root.mkdir()
+        monkeypatch.setenv("TMPDIR", str(root))
+        for writer, payload, filename in writers:
+            assert writer(payload) == root / filename
+    for _, _, filename in writers:
+        assert (tmp_path / "first" / filename).read_bytes() == (tmp_path / "second" / filename).read_bytes()
+
+
+def test_temp_writers_explicit_outputs_without_tmpdir(tmp_path, monkeypatch, temp_intake):
+    *_, writers = temp_intake
+    monkeypatch.delenv("TMPDIR", raising=False)
+    for writer, payload, filename in writers:
+        explicit = tmp_path / "explicit" / filename
+        assert writer(payload, explicit) == explicit
+        assert explicit.read_bytes()
+
+
+def test_temp_invalid_root_preserves_private_output_guard(tmp_path, monkeypatch, temp_intake):
+    *_, writers = temp_intake
+    file_root = tmp_path / "file-root"
+    file_root.write_text("unchanged")
+    for invalid in (None, "relative", str(tmp_path / "absent"), str(file_root)):
+        if invalid is None:
+            monkeypatch.delenv("TMPDIR", raising=False)
+        else:
+            monkeypatch.setenv("TMPDIR", invalid)
+        for writer, payload, _ in writers:
+            with pytest.raises(ValueError, match="TMPDIR"):
+                writer(payload)
+    repo_link = tmp_path / "repo-link"
+    repo_link.symlink_to(PROJECT_ROOT, target_is_directory=True)
+    for root in (PROJECT_ROOT, repo_link):
+        monkeypatch.setenv("TMPDIR", str(root))
+        for writer, payload, filename in writers:
+            with pytest.raises(SourceInventoryError, match="outside the repository"):
+                writer(payload)
+            assert not (PROJECT_ROOT / filename).exists()
+            with pytest.raises(SourceInventoryError, match="outside the repository"):
+                writer(payload, root / filename)
+    assert file_root.read_text() == "unchanged"
+
+
+def test_cli_optional_outputs_and_public_census(tmp_path, monkeypatch, capsys, temp_intake):
+    intake, source, _, _, writers = temp_intake
+    monkeypatch.delenv("TMPDIR", raising=False)
+    with pytest.raises(SystemExit) as help_exit:
+        intake.main(["--help"])
+    assert help_exit.value.code == 0
+    help_text = capsys.readouterr().out
+    assert "Outputs:" in help_text and "Exit codes:" in help_text and "Caller" in help_text
+    assert intake.main([str(source), "--bulk-triage"]) == 0
+    public = capsys.readouterr().out
+    assert json.loads(public)["production_outputs_updated"] == []
+    for canary in (source.name, str(source), "приховане", source.read_text().strip()):
+        assert canary not in public
+    for _, _, filename in writers:
+        assert not (tmp_path / filename).exists()
+    args = [str(source)]
+    for flag, (_, _, filename) in zip(
+        ("--candidates-out", "--triage-out", "--triage-report-out"), writers, strict=True
+    ):
+        args += [flag, str(tmp_path / filename)]
+    assert intake.main(args) == 0
+    capsys.readouterr()
+    assert all((tmp_path / filename).read_bytes() for _, _, filename in writers)
