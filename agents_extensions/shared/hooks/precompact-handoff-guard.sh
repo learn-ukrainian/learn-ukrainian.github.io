@@ -21,6 +21,7 @@ set -Eeuo pipefail
 # Bound the entire evidence path (including source, Git, stdin and the runtime)
 # below the registration deadline. Never trust partial output after a timeout.
 command -v timeout >/dev/null 2>&1 || exit 2
+command -v jq >/dev/null 2>&1 || exit 2
 # shellcheck disable=SC2016  # Expand variables in the bounded child, not this shell.
 RESULT=$(timeout --kill-after=1 3 bash -Eeuo pipefail -c '
   source "$1/context-rollover-lib.sh"

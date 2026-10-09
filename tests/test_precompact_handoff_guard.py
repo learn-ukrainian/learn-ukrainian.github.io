@@ -5,14 +5,19 @@ from __future__ import annotations
 import io
 import json
 import os
+import shutil
+import signal
 import subprocess
 import sys
 import time
+from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+from scripts.agent_runtime.env_sanitize import build_agent_env
 from scripts.orchestration import precompact_handoff_check as check
 from scripts.orchestration import thread_handoff as th
 
@@ -106,6 +111,92 @@ def _refused(result):
     assert "compaction refused" in result.stderr
     assert "thread-rollover" in result.stderr
     assert "HANDOFF-DONE <path>" in result.stderr
+
+
+@pytest.mark.parametrize("trigger", ["auto", "manual"])
+@pytest.mark.parametrize("headless", [False, True], ids=["interactive-driver", "headless-bridge"])
+def test_sanitized_non_dispatch_environment_preserves_session_class(monkeypatch, trigger, headless):
+    # The bridge's legacy pipeline markers are filtered out. Only the marker
+    # produced by the headless adapter can distinguish this non-dispatch call.
+    parent = {
+        "PATH": os.environ["PATH"], "TMPDIR": os.environ.get("TMPDIR", os.fspath(REPO)),
+        "LEARN_UKRAINIAN_PIPELINE": "1", "GEMINI_SESSION": "1",
+    }
+    for key in tuple(os.environ):
+        monkeypatch.delenv(key, raising=False)
+    for key, value in parent.items():
+        monkeypatch.setenv(key, value)
+    overrides = {}
+    if headless:
+        plan = ClaudeAdapter().build_invocation(
+            prompt="inspect", mode="read-only", cwd=REPO, model=None,
+            task_id=None, session_id="bridge-resume-session", tool_config={"cmd_prefix": ["claude"]},
+        )
+        overrides = plan.env_overrides
+    env = build_agent_env(provider="claude", overrides=overrides)
+    assert "LEARN_UKRAINIAN_DISPATCH_TASK_ID" not in env
+    assert "LEARN_UKRAINIAN_PIPELINE" not in env
+    assert "GEMINI_SESSION" not in env
+    result = subprocess.run(
+        [os.fspath(HOOK)], env=env, cwd=REPO,
+        input=json.dumps({"hook_event_name": "PreCompact", "trigger": trigger, "session_id": SESSION}),
+        capture_output=True, text=True, check=False, timeout=5,
+    )
+    (_allowed if headless else _refused)(result)
+
+
+def test_missing_jq_refuses_with_generic_message(prepared, tmp_path):
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    for name in ("timeout", "bash", "dirname"):
+        (bin_dir / name).symlink_to(shutil.which(name))
+    result = _run(prepared, PATH=os.fspath(bin_dir))
+    _refused(result)
+    assert "handoff is prepared" not in result.stderr
+    assert "jq" not in result.stderr
+
+
+@pytest.mark.parametrize("trigger", ["auto", "manual"])
+def test_registration_deadline_refuses_even_if_runner_child_escapes_group(prepared, tmp_path, trigger):
+    # The detached child keeps RESULT's pipe open after the inner timeout
+    # kills the runner's group. Test the real settings command's outer bound.
+    runner = tmp_path / "escaped-runner.py"
+    pid_file = tmp_path / "escaped.pid"
+    runner.write_text(
+        "import subprocess, sys, time\n"
+        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'], start_new_session=True)\n"
+        f"open({os.fspath(pid_file)!r}, 'w').write(str(child.pid))\n"
+        "print('prepared', flush=True)\ntime.sleep(30)\n"
+    )
+    project = tmp_path / "settings-project"
+    hook = project / ".claude/hooks" / HOOK.name
+    hook.parent.mkdir(parents=True)
+    hook.symlink_to(HOOK)
+    # The helper is sourced beside the deployed hook.
+    (hook.parent / "context-rollover-lib.sh").symlink_to(HOOK.with_name("context-rollover-lib.sh"))
+    settings = json.loads((REPO / "agents_extensions/shared/settings.json").read_text())
+    command = settings["hooks"]["PreCompact"][0]["hooks"][0]["command"]
+    env = {key: value for key, value in os.environ.items() if key in {"PATH", "HOME", "TMPDIR"}}
+    env.update(
+        CLAUDE_PROJECT_DIR=os.fspath(project), CODEX_CANONICAL_REPO_ROOT=os.fspath(prepared[0]),
+        THREAD_ROLLOVER_PYTHON=sys.executable, SESSION_BOUNDED_RUNNER=os.fspath(runner),
+        SESSION_HANDOFF_AGENT=AGENT,
+    )
+    start = time.monotonic()
+    try:
+        result = subprocess.run(
+            ["sh", "-c", command], env=env, cwd=REPO,
+            input=json.dumps({"hook_event_name": "PreCompact", "trigger": trigger, "session_id": SESSION}),
+            capture_output=True, text=True, check=False, timeout=5,
+        )
+        elapsed = time.monotonic() - start
+        _refused(result)
+        assert elapsed < settings["hooks"]["PreCompact"][0]["hooks"][0]["timeout"]
+        assert pid_file.is_file(), "the escaping-child path must actually run"
+    finally:
+        if pid_file.is_file():
+            with suppress(ProcessLookupError):
+                os.kill(int(pid_file.read_text()), signal.SIGKILL)
 
 
 @pytest.mark.parametrize("trigger", ["auto", "manual"])

@@ -879,7 +879,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c '\n  \"$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh\"\n  status=$?\n  [ \"$status\" -eq 0 ] && exit 0\n  [ \"$status\" -eq 2 ] && exit 2\n  case \"${SESSION_HANDOFF_AGENT:-claude}\" in claude|claude-*) ;; *) exit 0 ;; esac\n  [ -n \"${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}${CODEX_SESSION:-}${CLAUDE_NON_INTERACTIVE:-}${LEARN_UK_PIPELINE:-}${LEARN_UKRAINIAN_PIPELINE:-}${GEMINI_SESSION:-}${GROK_AGENT:-}${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}\" ] && exit 0\n  printf \"%s\\n\" \"Claude driver compaction refused: use thread-rollover (scripts/orchestration/thread_handoff.py prepare), print HANDOFF-DONE <path>, and exit.\" >&2\n  exit 2\n'",
+            "command": "sh -c '\n  timeout -k 1 4 \"$CLAUDE_PROJECT_DIR/.claude/hooks/precompact-handoff-guard.sh\"\n  status=$?\n  [ \"$status\" -eq 0 ] && exit 0\n  [ \"$status\" -eq 2 ] && exit 2\n  case \"${SESSION_HANDOFF_AGENT:-claude}\" in claude|claude-*) ;; *) exit 0 ;; esac\n  [ -n \"${CODEX_THREAD_ID:-}${CODEX_SESSION_ID:-}${CODEX_SESSION:-}${CLAUDE_NON_INTERACTIVE:-}${LEARN_UK_PIPELINE:-}${LEARN_UKRAINIAN_PIPELINE:-}${GEMINI_SESSION:-}${GROK_AGENT:-}${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}\" ] && exit 0\n  printf \"%s\\n\" \"Claude driver compaction refused: use thread-rollover (scripts/orchestration/thread_handoff.py prepare), print HANDOFF-DONE <path>, and exit.\" >&2\n  exit 2\n'",
             "timeout": 5
           }
         ]

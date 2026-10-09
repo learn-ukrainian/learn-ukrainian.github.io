@@ -23,6 +23,7 @@ def _stub_claude(tmp_path: Path) -> Path:
         "printf 'max=%s\\n' \"${CLAUDE_CODE_MAX_CONTEXT_TOKENS:-unset}\"\n"
         "printf 'compact=%s\\n' \"${CLAUDE_CODE_AUTO_COMPACT_WINDOW:-unset}\"\n"
         "printf 'profile=%s\\n' \"${LEARN_UKRAINIAN_PROFILE_ID:-unset}\"\n"
+        "printf 'noninteractive=%s\\n' \"${CLAUDE_NON_INTERACTIVE:-unset}\"\n"
         "printf 'args=%s\\n' \"$*\"\n",
         encoding="utf-8",
     )
@@ -201,6 +202,18 @@ def test_native_claude_clears_foreign_route_and_capacity_overrides(tmp_path: Pat
     assert "foreign-secret" not in result.stdout + result.stderr
 
 
+def test_interactive_launcher_scrubs_inherited_headless_marker(tmp_path):
+    bin_dir = _stub_claude(tmp_path)
+    result = run_launcher(
+        "start-claude.sh",
+        env={"PATH": f"{bin_dir}:{os.environ['PATH']}", "CLAUDE_NON_INTERACTIVE": "1"},
+        dry_run=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "noninteractive=unset" in result.stdout
+    assert "Never compact a Claude driver" in result.stdout
+
+
 @pytest.mark.parametrize(
     "launcher,args",
     [
@@ -219,23 +232,23 @@ def test_claude_launchers_always_carry_no_compaction_rule(launcher, args):
 
 
 @pytest.mark.parametrize(
-    "extra_env",
+    "extra_env,expected_rule",
     [
-        {"CLAUDE_NON_INTERACTIVE": "1"},
-        {"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"},
+        ({"CLAUDE_NON_INTERACTIVE": "1"}, True),
+        ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
     ],
 )
-def test_claude_worker_and_review_launches_do_not_receive_driver_rule(extra_env):
+def test_claude_launcher_rule_follows_fresh_session_class(extra_env, expected_rule):
     result = run_launcher("start-claude.sh", env=extra_env)
     assert result.returncode == 0, result.stderr
-    assert "HANDOFF-DONE" not in result.stdout
+    assert ("HANDOFF-DONE" in result.stdout) is expected_rule
 
 
 @pytest.mark.parametrize(
     "session_env,expected_rule",
     [
         ({}, True),
-        ({"CLAUDE_NON_INTERACTIVE": "1"}, False),
+        ({"CLAUDE_NON_INTERACTIVE": "1"}, True),
         ({"LEARN_UKRAINIAN_DISPATCH_TASK_ID": "worker"}, False),
     ],
 )
@@ -251,7 +264,7 @@ def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_r
                 [
                     'source "$1"',
                     'LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_FORWARD_ARGS=(); LC_DRY_RUN=0',
-                    'launcher_exec_command() { printf "%s\\n" "$@"; }',
+                    'launcher_exec_command() { printf "noninteractive=%s\\n" "${CLAUDE_NON_INTERACTIVE:-unset}"; printf "%s\\n" "$@"; }',
                     "launcher_adapter_exec",
                 ]
             ),
@@ -265,5 +278,6 @@ def test_claude_adapter_rule_is_independent_of_core_text(session_env, expected_r
         timeout=10,
     )
     assert result.returncode == 0, result.stderr
+    assert "noninteractive=unset" in result.stdout
     assert ("--append-system-prompt" in result.stdout) is expected_rule
     assert ("Never compact a Claude driver" in result.stdout) is expected_rule

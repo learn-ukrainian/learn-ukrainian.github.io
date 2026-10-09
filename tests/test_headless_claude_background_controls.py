@@ -1147,11 +1147,11 @@ _BOUNDS: dict[Any, dict[str, Any]] = {
 
 @pytest.mark.usefixtures("ambient_switch_off")
 @pytest.mark.parametrize("wrapper", list(_BOUNDS))
-def test_wrapper_child_gets_exactly_the_base_env_plus_the_switch(wrapper: Any, spawned: list[dict[str, Any]]) -> None:
+def test_wrapper_child_gets_exactly_the_base_env_plus_the_headless_controls(wrapper: Any, spawned: list[dict[str, Any]]) -> None:
     base = {"PATH": "/bin", SWITCH: "0"}
     wrapper(["claude", "-p", "x"], base_env=base, cwd="/w", **_BOUNDS[wrapper])
     (call,) = spawned
-    assert call["env"] == {"PATH": "/bin", SWITCH: "1"}, "ambient must not leak into an exact base env"
+    assert call["env"] == {"PATH": "/bin", SWITCH: "1", "CLAUDE_NON_INTERACTIVE": "1"}, "ambient must not leak into an exact base env"
     assert base == {"PATH": "/bin", SWITCH: "0"}, "the caller's mapping is copied, never mutated"
     assert call["argv"] == ["claude", "-p", "x", "--disallowedTools", DENIES]
     assert call["cwd"] == "/w" and call.items() >= _BOUNDS[wrapper].items()
@@ -1340,7 +1340,7 @@ def test_openai_proxy_claude_child_keeps_the_parent_env_exclusions(spawned: list
     assert response.content == "out"
     (call,) = spawned
     _assert_child_controlled(call["argv"], call["env"])
-    expected = {"TERM": "xterm-256color", "COLORTERM": "truecolor", **proxy._PARENT_ENV, SWITCH: "1"}
+    expected = {"TERM": "xterm-256color", "COLORTERM": "truecolor", **proxy._PARENT_ENV, SWITCH: "1", "CLAUDE_NON_INTERACTIVE": "1"}
     assert call["env"] == expected, "the child gets _PARENT_ENV, never the ambient env"
     assert "LU_AMBIENT_PROBE" not in call["env"]
     assert "hello" in call["input"]
@@ -1409,7 +1409,7 @@ def test_zno_eval_claude_child_keeps_its_restricted_env(monkeypatch: pytest.Monk
 
     assert result["responses"] == {"opaque-1": "A"}
     _assert_child_controlled(seen["argv"], seen["env"])
-    assert seen["env"] == {**adapters._child_env(100), SWITCH: "1"}, "only the allowlisted env reaches the child"
+    assert seen["env"] == {**adapters._child_env(100), SWITCH: "1", "CLAUDE_NON_INTERACTIVE": "1"}, "only the allowlisted env reaches the child"
     assert "LU_AMBIENT_PROBE" not in seen["env"]
     assert seen["argv"][seen["argv"].index("--tools") + 1] == ""
     assert seen["start_new_session"] is True
@@ -1439,7 +1439,7 @@ def test_zno_eval_timeout_kills_the_process_group_and_drains(monkeypatch: pytest
         adapters._run_claude_process(["claude", "-p"], cwd=tmp_path, env={"PATH": "/bin"}, prompt="exam", timeout=1)
     assert seen["kill"] == (321, adapters.signal.SIGKILL)
     assert seen["drained"] == 1
-    assert seen["env"] == {"PATH": "/bin", SWITCH: "1"}
+    assert seen["env"] == {"PATH": "/bin", SWITCH: "1", "CLAUDE_NON_INTERACTIVE": "1"}
 
 
 @pytest.mark.usefixtures("ambient_switch_off")
@@ -1459,7 +1459,7 @@ def test_isolated_claude_review_spawn_is_controlled_and_keeps_the_reviewer_env(
     assert completed.stdout == "out"
     (call,) = spawned
     _assert_child_controlled(call["argv"], call["env"])
-    assert call["env"] == {"HOME": "/h", "PATH": "/usr/bin", SWITCH: "1"}, "only the reviewer env reaches the child"
+    assert call["env"] == {"HOME": "/h", "PATH": "/usr/bin", SWITCH: "1", "CLAUDE_NON_INTERACTIVE": "1"}, "only the reviewer env reaches the child"
     assert call["argv"] == build_claude_review_argv(binary, prompt="review", json_schema={"type": "object"})
     assert call["argv"][call["argv"].index("--tools") + 1] == "Read,Grep,Glob"
     assert call["argv"][-2:] == ["--", "review"]

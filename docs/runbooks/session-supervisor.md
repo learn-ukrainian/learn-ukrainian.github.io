@@ -97,7 +97,7 @@ so the issue's manual-only prompt fallback is unnecessary.
 
 ### Denominator and failure posture
 
-| Trigger | Interactive driver | Headless dispatch worker | Isolated review |
+| Trigger | Interactive driver | Headless worker or bridge | Isolated review (no project hooks) |
 | --- | --- | --- | --- |
 | Automatic | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
 | Manual | Refuse, exit 2 | Allow, exit 0 | Allow, exit 0 |
@@ -105,16 +105,25 @@ so the issue's manual-only prompt fallback is unnecessary.
 The guard preserves the tracked hooks' environment exemptions:
 `CLAUDE_NON_INTERACTIVE`, the pipeline flags, and
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID` identify exempt work; other harnesses also
-remain exempt. A linked checkout alone is not an exemption: interactive drivers
-can run from linked checkouts too. Isolated review invocations must retain their
-existing noninteractive or dispatch flag.
+remain exempt. Every headless `-p` invocation in the Claude adapter sets
+`CLAUDE_NON_INTERACTIVE=1`, including bridge sessions with no dispatch id; the
+Claude environment sanitizer preserves it. Interactive launchers scrub an
+inherited marker before starting the session. A linked checkout alone is not an
+exemption: interactive drivers can run from linked checkouts too. Isolated
+reviews are unaffected because their `--safe-mode --setting-sources ''`
+invocation never loads project hooks (`scripts/review/isolation.py`), regardless
+of any environment marker.
 
 Refusal is independent of evidence. Missing Python, missing runner, unreadable
 or unsafe evidence, malformed input, helper exceptions, unexpected or partial
-output, and deadlines all refuse for a driver. A shell EXIT trap supplies the
-refusal even on unexpected exits. The full evidence subprocess has a three-second
-deadline with a one-second kill grace, below the five-second hook registration;
-the existing checker also has its two-second deadline. Partial `prepared` output
+output, and deadlines all refuse for a driver. The hook requires `jq` for the
+read-only trigger normalization and GNU `timeout` for deadlines; missing `jq`
+refuses with the generic handoff message. A shell EXIT trap supplies the refusal
+even on unexpected exits. The evidence subprocess has a three-second deadline
+with a one-second kill grace; the existing checker also has its two-second
+deadline. The settings command wraps the entire hook in `timeout -k 1 4`,
+bounding a runner child that escapes its process group and holds the evidence
+pipe open, below the five-second client deadline. Partial `prepared` output
 from a failed or timed-out process is never proof. The settings command converts
 hook startup errors or abnormal exits to refusal for drivers, retaining the
 same environment exemptions on that fallback path. Exempt sessions return before
@@ -131,8 +140,9 @@ supervisor lease.
 The common launcher's existing exit path closes its exact lease; its next fresh
 launch runs the supervisor bootstrap and existing rollover detection/import.
 This change introduces no restart mechanism. The tracked common supervisor and
-launcher currently have **no `HANDOFF-DONE` marker consumer**. Therefore marker
-printing alone is not verified automatic restart; the accountable driver must
+launcher currently have **no `HANDOFF-DONE` marker consumer**. Restart is not
+automatic. AC-03 remains a residual owned by `claude-monitor`; marker printing
+alone is not verified automatic restart. The accountable driver must
 supply an external supervisor restart receipt or resolve that integration before
 claiming AC-03 or closing #10265. Owner: `claude-monitor`; condition: demonstrate
 marker, predecessor exit, fresh replacement bootstrap and handoff consumption.

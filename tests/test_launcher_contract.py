@@ -1249,13 +1249,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     # Pinning precedes the mandatory policy prompt and the selected agent.
     assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high " in result.stdout
     assert "--append-system-prompt" in result.stdout
-    assert "--agent infra-orchestrator " in result.stdout
+    assert re.search(r"--append-system-prompt .* --agent infra-orchestrator ", result.stdout)
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
-    assert "--effort high " in explicit.stdout
-    assert "--agent curriculum-orchestrator " in explicit.stdout
+    assert re.search(r"--effort high --append-system-prompt .* --agent curriculum-orchestrator ", explicit.stdout)
 
     # A registry stream key with no roster slot would mint an unregistered handoff
     # identity, so the launcher refuses it instead of starting the session (#8303).

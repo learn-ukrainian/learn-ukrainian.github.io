@@ -4,9 +4,39 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter, _extract_stream_json_response
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+@pytest.mark.parametrize("session_id", [None, "bridge-resume-session"])
+def test_non_dispatch_headless_plan_marks_session(tmp_path, mode, session_id):
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode=mode, cwd=tmp_path, model=None,
+        task_id=None, session_id=session_id, tool_config={"cmd_prefix": ["claude"]},
+    )
+    assert "-p" in plan.cmd
+    assert plan.env_overrides["CLAUDE_NON_INTERACTIVE"] == "1"
+
+
+@pytest.mark.parametrize("wrapper", ["run_headless_claude", "popen_headless_claude"])
+def test_headless_wrappers_force_session_marker(monkeypatch, wrapper):
+    from agent_runtime.adapters import claude
+
+    seen = {}
+
+    def spawn(cmd, **kwargs):
+        seen.update(kwargs)
+
+    monkeypatch.setattr(claude.subprocess, "run" if wrapper == "run_headless_claude" else "Popen", spawn)
+    parent = {"CLAUDE_NON_INTERACTIVE": ""}
+    kwargs = {"timeout": 1} if wrapper == "run_headless_claude" else {}
+    getattr(claude, wrapper)(["claude", "-p", "--", "inspect"], base_env=parent, **kwargs)
+    assert seen["env"]["CLAUDE_NON_INTERACTIVE"] == "1"
+    assert parent == {"CLAUDE_NON_INTERACTIVE": ""}
 
 
 def test_claude_stream_single_turn_byte_identical() -> None:

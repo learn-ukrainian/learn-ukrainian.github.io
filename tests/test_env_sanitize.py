@@ -13,6 +13,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.env_sanitize import build_agent_env
 
 
+def test_headless_marker_is_claude_safe_only():
+    with patch.dict("os.environ", {"PATH": "/usr/bin"}, clear=True):
+        for provider in ("claude", "claude-tools", "codex", "agy", "kimi", "grok"):
+            env = build_agent_env(provider=provider, overrides={"CLAUDE_NON_INTERACTIVE": "1"})
+            assert (env.get("CLAUDE_NON_INTERACTIVE") == "1") is provider.startswith("claude")
+
+
 def test_user_and_logname_pass_through() -> None:
     with patch.dict(
         "os.environ",

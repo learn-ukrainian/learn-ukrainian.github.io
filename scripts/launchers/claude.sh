@@ -30,6 +30,8 @@ launcher_adapter_canary() {
   return 0
 }
 launcher_adapter_exec() {
+  # A headless parent cannot exempt a fresh interactive Claude session.
+  unset CLAUDE_NON_INTERACTIVE
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
   # high (launcher_defaults); interactive keeps the last TUI / user selection.
@@ -41,7 +43,7 @@ launcher_adapter_exec() {
   fi
   # Carry the rule even when the optional core loader supplies no prompt.
   local system_prompt="${LC_RULES_CORE:-}"
-  if [ -z "${CLAUDE_NON_INTERACTIVE:-}${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
+  if [ -z "${LEARN_UKRAINIAN_DISPATCH_TASK_ID:-}" ]; then
     system_prompt="${system_prompt:+$system_prompt$'\n'}Never compact a Claude driver; use thread-rollover to prepare the handoff, print HANDOFF-DONE <path>, and exit for a fresh launcher restart."
   fi
   if [ -n "$system_prompt" ]; then

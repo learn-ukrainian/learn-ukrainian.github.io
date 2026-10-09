@@ -180,6 +180,9 @@ _MCP_SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # only from adapter overrides. KimiccHarness reuses both constants; every
 # other headless run is spawned by ``run_headless_claude``/``popen_headless_claude``.
 HEADLESS_BACKGROUND_ENV = {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"}
+# Mark print-mode sessions at their producer, including non-dispatch bridge
+# calls. The Claude sanitizer retains this marker; interactive launchers scrub it.
+HEADLESS_SESSION_ENV = {"CLAUDE_NON_INTERACTIVE": "1"}
 HEADLESS_BACKGROUND_TOOL_DENIES = ("Monitor", "ScheduleWakeup", "CronCreate", "Workflow")
 _DISALLOWED_TOOLS_FLAGS = ("--disallowedTools", "--disallowed-tools")
 # The wrappers build the child environment and run the argv directly.
@@ -228,6 +231,7 @@ def _headless_spawn_args(
         raise TypeError("headless Claude argv must be a sequence of str, never a shell command")
     env = dict(os.environ if base_env is None else base_env)
     env.update(HEADLESS_BACKGROUND_ENV)
+    env.update(HEADLESS_SESSION_ENV)
     return headless_claude_argv(argv), env
 
 
@@ -240,7 +244,8 @@ def run_headless_claude(
     would be lost. The child environment is a copy of ``base_env`` exactly
     (the ambient environment only when it is omitted, so a caller's
     exclusions hold), with ``CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1`` set
-    last; the argv gains the background-tool denies. ``env``, ``shell`` and
+    last and ``CLAUDE_NON_INTERACTIVE=1`` marking the headless session; the
+    argv gains the background-tool denies. ``env``, ``shell`` and
     ``executable`` are refused: the argv runs directly. ``timeout`` is
     required, so every run is bounded; every other keyword passes to
     ``subprocess.run`` unchanged.
@@ -852,6 +857,7 @@ class ClaudeAdapter:
             output_file=None,
             env_overrides={
                 **HEADLESS_BACKGROUND_ENV,
+                **HEADLESS_SESSION_ENV,
                 **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
                 **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
             },
