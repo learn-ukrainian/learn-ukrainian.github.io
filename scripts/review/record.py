@@ -91,6 +91,7 @@ import yaml
 
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.curriculum.evidence import sense_cli
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
@@ -541,6 +542,24 @@ def _stale_message(root: Path, manifest: dict[str, Any]) -> str | None:
 # --- recording --------------------------------------------------------------------------
 
 
+def _needs_plan_admission(
+    root: Path, level: str, kind: str, receipt_inputs: sense_cli.LocalReceiptInputs | None
+) -> bool:
+    """Keep writes behind live plan validation when private proof need is unknown.
+
+    The validator owns safe integrity/authentication diagnostics. A failed
+    preliminary read must reach it, never bypass it or expose a raw exception.
+    """
+    if kind != "plan":
+        return False
+    if receipt_inputs is not None:
+        return True
+    try:
+        return sense_cli.private_proof_required(level, root / TREE / "evidence" / level)
+    except Exception:
+        return True
+
+
 def record_return(
     review_path: Path | None,
     *,
@@ -558,6 +577,8 @@ def record_return(
     second: bool = False,
     failure: str | None = None,
     now: str | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> Outcome:
     """Record one attempt (a return, or with ``failure`` a review that returned none). See the module docstring."""
     root = Path(repo_root if repo_root is not None else REPO_ROOT).resolve()
@@ -649,10 +670,28 @@ def record_return(
         if existing is None and seed_id is not None:
             _check_seed_identity(conn, root, seed_id, (level, slug, lesson_n), writer, identity["family"])
         name = f"lesson-{lesson_n}.review.{attempt_id}.yaml" if kind == "lesson" else f"plan-review.{attempt_id}.yaml"
-        saved, return_sha = _reserve_return(root, directory, name, data)
-        verify_saved = functools.partial(_require_saved, saved, return_sha, name)
+        private_plan = _needs_plan_admission(root, level, kind, receipt_inputs)
+        # New private-plan admission runs on the caller's clean HEAD before
+        # reserving the audit copy. Public/lesson reservation semantics stay intact.
+        if existing is not None or not private_plan:
+            saved, return_sha = _reserve_return(root, directory, name, data)
+            verify_saved = functools.partial(_require_saved, saved, return_sha, name)
         if existing is not None:
-            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n, moment)
+            return _replay(
+                conn,
+                root,
+                directory,
+                existing,
+                return_sha,
+                saved,
+                kind,
+                lesson_n,
+                moment,
+                manifest=manifest,
+                manifest_sha=manifest_sha,
+                receipt_inputs=receipt_inputs,
+                sources_instance=sources_instance,
+            )
         first = None
         preset: list[str] = []
         same_family = writer is not None and identity["family"] == writer
@@ -697,10 +736,15 @@ def record_return(
                         echoed,
                         ids,
                         identity["access"],
+                        receipt_inputs=receipt_inputs,
+                        sources_instance=sources_instance,
                     ),
                 ]
             )
         )
+        if private_plan:
+            saved, return_sha = _reserve_return(root, directory, name, data)
+            verify_saved = functools.partial(_require_saved, saved, return_sha, name)
         review = _load_yaml_bytes(data)
         verdict = "REJECTED" if codes else review_verdict(review)
         row = {
@@ -780,7 +824,21 @@ def record_return(
             existing = findings_db.get_attempt(conn, review_id, attempt_id)
             if existing is None:
                 raise
-            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n, moment)
+            return _replay(
+                conn,
+                root,
+                directory,
+                existing,
+                return_sha,
+                saved,
+                kind,
+                lesson_n,
+                moment,
+                manifest=manifest,
+                manifest_sha=manifest_sha,
+                receipt_inputs=receipt_inputs,
+                sources_instance=sources_instance,
+            )
         outcome.saved_return = _rel(root, saved)
         if seed_id is None and not second:
             _publish(outcome, conn, root, level, slug, kind, lesson_n)
@@ -847,6 +905,9 @@ def _rejection_codes(
     echoed: dict[str, Any],
     ids: dict[str, Any],
     review_access: str = "isolated",
+    *,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> list[str]:
     codes: list[str] = []
     for name in ("review_id", "attempt_id"):
@@ -863,6 +924,8 @@ def _rejection_codes(
         previous_ledger_path=previous_ledger_path,
         repo_root=root,
         review_access=review_access,
+        receipt_inputs=receipt_inputs,
+        sources_instance=sources_instance,
     )
     codes += [item.code for item in result.rejections]
     return list(dict.fromkeys(codes))
@@ -999,6 +1062,11 @@ def _replay(
     kind: str,
     lesson_n: int | None,
     moment: str,
+    *,
+    manifest: dict[str, Any],
+    manifest_sha: str,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> Outcome:
     """The same return recorded again: change no attempt or finding, close what is moot, re-project the latest attempt.
 
@@ -1010,6 +1078,21 @@ def _replay(
             f"attempt {existing['attempt_id']} of review {existing['review_id']} was recorded with a different return",
             ATTEMPT_RETURN_CONFLICT,
         )
+    if (
+        kind == "plan"
+        and existing["verdict"] in ("APPROVE", "REVISE")
+        and _needs_plan_admission(root, existing["level"], kind, receipt_inputs)
+    ):
+        from scripts.build.fresh import plan_manifest as pm
+        from scripts.review.validate import codes
+
+        freshness = pm.plan_review_freshness(
+            root, manifest, manifest_sha, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+        )
+        if freshness.stale:
+            raise RecordError(
+                "accepted plan replay refused: " + "; ".join(freshness.stale.values()), codes.PLAN_INPUTS_STALE
+            )
     outcome = Outcome(
         existing["verdict"] in ("APPROVE", "REVISE"),
         existing["verdict"],
@@ -1188,6 +1271,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--db", type=Path, default=None, help="findings database (default: batch_state/review-findings/<level>.sqlite)"
     )
     parser.add_argument("--tasks-dir", type=Path, default=None, help="dispatch records (default: batch_state/tasks)")
+    sense_cli.add_receipt_arguments(parser)
     return parser
 
 
@@ -1214,6 +1298,7 @@ def main(argv: list[str] | None = None) -> int:
             seed_id=args.seed_id,
             second=args.second_seat,
             failure=args.failure,
+            receipt_inputs=sense_cli.receipt_inputs(args),
         )
     except (RecordError, findings_db.FindingsDbError, OSError) as error:
         print(f"error: {error}", file=sys.stderr)

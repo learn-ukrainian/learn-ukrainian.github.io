@@ -19,7 +19,7 @@ import yaml
 
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.path_guard import checked_path
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import lock, sense_cli
 from scripts.curriculum.validate.validate import validate_plan
 
 
@@ -43,7 +43,15 @@ def _current_manifest(root: Path, level: str, slug: str) -> tuple[dict, str]:
     return manifest, digest
 
 
-def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None = None) -> dict[str, Any]:
+def promote_plan(
+    level: str,
+    slug: str,
+    *,
+    repo_root: Path,
+    now: datetime | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> dict[str, Any]:
     """Promote the reviewed plan; returns the receipt (plus ``already_promoted``).
 
     Raises PlanReviewError, having written nothing, when the review is not an
@@ -60,7 +68,9 @@ def promote_plan(level: str, slug: str, *, repo_root: Path, now: datetime | None
             "a new review is needed",
         )
 
-    freshness = pm.plan_review_freshness(root, manifest, digest)
+    freshness = pm.plan_review_freshness(
+        root, manifest, digest, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+    )
     directory = pm.state_dir(root, level, slug)
     if freshness.state == "promoted":
         receipt = yaml.safe_load((directory / pm.RECEIPT_NAME).read_bytes())

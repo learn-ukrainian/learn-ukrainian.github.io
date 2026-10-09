@@ -39,7 +39,7 @@ from scripts.build.fresh.prompt import (
 )
 from scripts.build.fresh.regeneration import writer_inputs
 from scripts.build.fresh.writer import ALLOWED_WRITERS, WRITER_EFFORTS, dispatch_writer
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock, lock, sense_cli
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.learner_state.planned import PlannedState, planned_state
 from scripts.curriculum.validate.loader import load_plan
@@ -426,7 +426,6 @@ def _build_parser() -> argparse.ArgumentParser:
             "  schemas/plan-review-manifest-v1.schema.json, issues #8397 #8430"
         ),
     )
-    from scripts.curriculum.evidence import sense_cli
 
     sense_cli.add_receipt_arguments(p_plan_manifest)
     p_plan_promote = subparsers.add_parser(
@@ -494,6 +493,8 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Exit 1 unless the plan is promoted (a pending promotion is not enough)",
     )
     sense_cli.add_receipt_arguments(p_plan_status)
+    sense_cli.add_receipt_arguments(p_plan_promote)
+    sense_cli.add_receipt_arguments(p_build)
 
     return parser
 
@@ -690,7 +691,14 @@ def _load_recap_built_lessons(
     return built
 
 
-def _stale_module_verdict_problems(level: str, slug: str, *, repo_root: Path) -> list[str]:
+def _stale_module_verdict_problems(
+    level: str,
+    slug: str,
+    *,
+    repo_root: Path,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
+) -> list[str]:
     """Problems from ``scripts.review.fixloop.module_verdict_problems``, when a module verdict already exists.
 
     A module that has never been reviewed has no ``module-verdict.yaml`` yet; that is not staleness,
@@ -706,7 +714,15 @@ def _stale_module_verdict_problems(level: str, slug: str, *, repo_root: Path) ->
         return []
     conn = findings_db.connect(findings_db.db_path(level, repo_root))
     try:
-        return fixloop.module_verdict_problems(conn, level, slug, root=repo_root, params=findings_db.load_parameters())
+        return fixloop.module_verdict_problems(
+            conn,
+            level,
+            slug,
+            root=repo_root,
+            params=findings_db.load_parameters(),
+            receipt_inputs=receipt_inputs,
+            sources_instance=sources_instance,
+        )
     finally:
         conn.close()
 
@@ -717,8 +733,6 @@ def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
 
     try:
         if args.command == "plan-manifest":
-            from scripts.curriculum.evidence import sense_cli
-
             manifest, digest = plan_manifest.write_plan_manifest(
                 args.level,
                 args.slug,
@@ -728,10 +742,11 @@ def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
             print(json.dumps({"manifest_sha256": digest, "manifest": manifest}, ensure_ascii=False, sort_keys=True))
             return 0
         if args.command == "plan-promote":
-            receipt = plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root)
+            receipt = plan_promote.promote_plan(
+                args.level, args.slug, repo_root=repo_root, receipt_inputs=sense_cli.receipt_inputs(args)
+            )
             print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
             return 0
-        from scripts.curriculum.evidence import sense_cli
 
         status = plan_manifest.plan_review_status(
             args.level, args.slug, repo_root=repo_root, receipt_inputs=sense_cli.receipt_inputs(args)
@@ -890,7 +905,9 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
             if args.module and report["complete"]:
-                stale = _stale_module_verdict_problems(args.level, args.slug, repo_root=repo_root)
+                stale = _stale_module_verdict_problems(
+                    args.level, args.slug, repo_root=repo_root, receipt_inputs=sense_cli.receipt_inputs(args)
+                )
                 for problem in stale:
                     print(f"module-verdict.yaml is stale: {problem}", file=sys.stderr)
                 if stale:

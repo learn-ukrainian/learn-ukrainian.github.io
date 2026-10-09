@@ -83,7 +83,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import lock, sense_cli
 from scripts.review import findings_db, second_seat
 from scripts.review.validate.validate import fold_quote
 
@@ -888,7 +888,15 @@ def module_verdict_fingerprint(
 
 
 def compute_module_verdict(
-    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+    conn: SQLiteConnection,
+    level: str,
+    slug: str,
+    *,
+    root: Path,
+    params: dict[str, Any],
+    now: str | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> dict[str, Any]:
     """The module verdict document. APPROVE only when nothing holds it (see ``holds``)."""
     root = Path(root).resolve()
@@ -899,7 +907,9 @@ def compute_module_verdict(
     holds: list[dict[str, Any]] = []
     if closure is None:
         holds.append({"code": "closure_missing", "detail": "module.closure.yaml has not been written by the engine"})
-    plan = pm.plan_review_status(level, slug, repo_root=root)
+    plan = pm.plan_review_status(
+        level, slug, repo_root=root, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+    )
     if plan["state"] != "reviewed_promoted":
         holds.append({"code": "plan_not_promoted", "detail": f"the plan review is {plan['state']}"})
     plan_problem = projection_problem(
@@ -1048,7 +1058,15 @@ def write_module_verdict(root: Path, document: dict[str, Any]) -> Path:
 
 
 def compute_and_write_module_verdict(
-    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+    conn: SQLiteConnection,
+    level: str,
+    slug: str,
+    *,
+    root: Path,
+    params: dict[str, Any],
+    now: str | None = None,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> tuple[dict[str, Any], Path]:
     """Compute the module verdict and publish it inside the one transaction that read it.
 
@@ -1069,13 +1087,29 @@ def compute_and_write_module_verdict(
     holds or ``input_fingerprint`` disagree with that fresh recomputation.
     """
     with findings_db.transaction(conn):
-        document = compute_module_verdict(conn, level, slug, root=root, params=params, now=now)
+        document = compute_module_verdict(
+            conn,
+            level,
+            slug,
+            root=root,
+            params=params,
+            now=now,
+            receipt_inputs=receipt_inputs,
+            sources_instance=sources_instance,
+        )
         path = write_module_verdict(root, document)
     return document, path
 
 
 def module_verdict_problems(
-    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any]
+    conn: SQLiteConnection,
+    level: str,
+    slug: str,
+    *,
+    root: Path,
+    params: dict[str, Any],
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> list[str]:
     """Why ``module-verdict.yaml`` disagrees with a fresh recomputation; empty when it does not.
 
@@ -1087,7 +1121,15 @@ def module_verdict_problems(
     """
     root = Path(root).resolve()
     path = state_dir(root, level, slug) / MODULE_VERDICT_NAME
-    fresh = compute_module_verdict(conn, level, slug, root=root, params=params)
+    fresh = compute_module_verdict(
+        conn,
+        level,
+        slug,
+        root=root,
+        params=params,
+        receipt_inputs=receipt_inputs,
+        sources_instance=sources_instance,
+    )
     if not path.is_file():
         return [f"{MODULE_VERDICT_NAME} is missing; a fresh recomputation is {fresh['verdict']}"]
     try:
@@ -1113,12 +1155,27 @@ def module_verdict_problems(
 
 
 def build_report(
-    conn: SQLiteConnection, level: str, slug: str, *, root: Path, params: dict[str, Any]
+    conn: SQLiteConnection,
+    level: str,
+    slug: str,
+    *,
+    root: Path,
+    params: dict[str, Any],
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> dict[str, Any]:
     """Everything the driver reads: verdict, layers of live findings, signal, gate candidates, budgets, transitions."""
     root = Path(root).resolve()
     directory = state_dir(root, level, slug)
-    module = compute_module_verdict(conn, level, slug, root=root, params=params)
+    module = compute_module_verdict(
+        conn,
+        level,
+        slug,
+        root=root,
+        params=params,
+        receipt_inputs=receipt_inputs,
+        sources_instance=sources_instance,
+    )
     latest = latest_first_attempts(conn, level, slug)
     plan_attempt = [a for a in findings_db.module_attempts(conn, level, slug) if a["kind"] == "plan"][-1:]
     rows = findings_db.module_findings(conn, level, slug)
@@ -1259,6 +1316,7 @@ def build_parser() -> argparse.ArgumentParser:
         item = sub.add_parser(name, help=help_text)
         item.add_argument("level")
         item.add_argument("slug")
+        sense_cli.add_receipt_arguments(item)
         item.add_argument("--json", action="store_true", help="print the report as one JSON object")
         item.add_argument(
             "--repair-projections",
@@ -1310,7 +1368,9 @@ def main(argv: list[str] | None = None) -> int:
             if args.repair_projections:
                 print("error: --check is read-only; it cannot be combined with --repair-projections", file=sys.stderr)
                 return 2
-            problems = module_verdict_problems(conn, args.level, args.slug, root=root, params=params)
+            problems = module_verdict_problems(
+                conn, args.level, args.slug, root=root, params=params, receipt_inputs=sense_cli.receipt_inputs(args)
+            )
             for problem in problems:
                 print(f"error: {problem}", file=sys.stderr)
             if problems:
@@ -1326,13 +1386,17 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
         if args.command == "report":
-            report = build_report(conn, args.level, args.slug, root=root, params=params)
+            report = build_report(
+                conn, args.level, args.slug, root=root, params=params, receipt_inputs=sense_cli.receipt_inputs(args)
+            )
             print(
                 json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) if args.json else render_report(report)
             )
             return 0
         if args.command == "verdict":
-            document, path = compute_and_write_module_verdict(conn, args.level, args.slug, root=root, params=params)
+            document, path = compute_and_write_module_verdict(
+                conn, args.level, args.slug, root=root, params=params, receipt_inputs=sense_cli.receipt_inputs(args)
+            )
             print(
                 json.dumps(
                     {

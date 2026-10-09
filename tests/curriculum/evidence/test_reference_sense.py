@@ -2270,3 +2270,588 @@ def test_shared_checker_rederives_reviewed_provenance(review_dispatch, tmp_path,
             tmp_path, tmp_path, store, context, {}, KEY, "fixture", api, {}
         )
         assert payload["head"] == "a" * 40 and scan["status"] == "checked"
+
+
+# Consumer integration fixtures remain synthetic mechanism evidence. Full
+# reselection/provenance/leakscan/HMAC is real; no linguistic approval is implied.
+def runtime_receipt_args(inputs):
+    if inputs is None:
+        return []
+    return [
+        "--private-input",
+        str(inputs.private_input),
+        "--key-file",
+        str(inputs.key_file),
+        "--key-id",
+        inputs.key_id,
+        "--receipt",
+        str(inputs.receipt),
+        "--receipt-base",
+        inputs.base,
+    ]
+
+
+def assert_runtime_absent(inputs, *documents):
+    text = "\n".join(str(document) for document in documents)
+    for path in (inputs.private_input, inputs.key_file, inputs.receipt):
+        assert str(path) not in text
+    assert "synthetic different meaning" not in text
+
+
+@pytest.fixture
+def consumer_world(reviewed_receipt_lifecycle, monkeypatch):
+    from types import SimpleNamespace
+
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh import plan_promote
+    from scripts.review import findings_db
+    from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _review
+
+    repo, evidence, plans, api, inputs, manifest, digest, reissue = reviewed_receipt_lifecycle
+    directory = pm.state_dir(repo, "a1", "synthetic")
+    outside = inputs.receipt.parent
+    # Runtime audit DB stays ignored, like the actual repository. No HEAD exemption.
+    (repo / ".git/info/exclude").write_text("/batch_state/\n")
+    tasks = outside / "consumer-tasks"
+    tasks.mkdir()
+    db = findings_db.db_path("a1", repo)
+    ledger_path = outside / "consumer-ledger.jsonl"
+    ledger.create_empty_ledger(ledger_path)
+
+    def make_return(token="accepted"):
+        review_path = outside / f"consumer-{token}.yaml"
+        review = _review(
+            kind="plan",
+            manifest_hash=digest,
+            checks={name: "clean" for name in PLAN_CHECKS},
+            findings=[],
+            review_id=f"review-{token}",
+            attempt_id=f"attempt-{token}",
+        )
+        data = yaml.safe_dump(review).encode()
+        review_path.write_bytes(data)
+        result_path = tasks / f"{token}.result"
+        result_path.write_bytes(data)
+        (tasks / f"{token}.json").write_text(
+            json.dumps(
+                {
+                    "agent": "claude",
+                    "model": "claude-opus-5-5",
+                    "status": "done",
+                    "review_attempt": {
+                        **{k: review["attempt"][k] for k in ("review_id", "attempt_id")},
+                        "manifest_sha256": digest,
+                    },
+                    "result_file": str(result_path),
+                    "result_sha256": hashlib.sha256(data).hexdigest(),
+                }
+            )
+        )
+        return review_path, dict(
+            manifest_path=directory / pm.MANIFEST_NAME,
+            ledger_path=ledger_path,
+            task_id=token,
+            repo_root=repo,
+            db_path=db,
+            tasks_dir=tasks,
+        )
+
+    def commit_reissue():
+        bindings.git(repo, "add", ".")
+        bindings.git(repo, "commit", "-qm", "Synthetic consumer artifacts")
+        reissue()
+        assert not bindings.git(repo, "status", "--porcelain").strip()
+
+    # Only the fixture's pedagogical strict validation is replaced, never any
+    # receipt checker, freshness, review validation, identity or recording gate.
+    monkeypatch.setattr(plan_promote, "validate_plan", lambda *a, **kw: SimpleNamespace(failures=[], waivers=[]))
+    return SimpleNamespace(
+        repo=repo,
+        evidence=evidence,
+        plans=plans,
+        api=api,
+        inputs=inputs,
+        manifest=manifest,
+        digest=digest,
+        directory=directory,
+        db=db,
+        make_return=make_return,
+        commit_reissue=commit_reissue,
+        runtime=dict(receipt_inputs=inputs, sources_instance=api),
+    )
+
+
+def consumer_record_args(review_path, kwargs, inputs):
+    return [
+        str(review_path),
+        "--manifest",
+        str(kwargs["manifest_path"]),
+        "--ledger",
+        str(kwargs["ledger_path"]),
+        "--task-id",
+        kwargs["task_id"],
+        "--repo-root",
+        str(kwargs["repo_root"]),
+        "--db",
+        str(kwargs["db_path"]),
+        "--tasks-dir",
+        str(kwargs["tasks_dir"]),
+        *runtime_receipt_args(inputs),
+    ]
+
+
+@pytest.mark.parametrize("cli", [False, True])
+def test_consumer_promotion_and_real_review_recording(consumer_world, cli, capsys, monkeypatch):
+    from scripts.build.fresh import cli as fresh_cli
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh import plan_promote
+    from scripts.review import record
+    from scripts.review.validate import validate as validator
+
+    w = consumer_world
+    review, kwargs = w.make_return()
+    validate_kwargs = {k: v for k, v in kwargs.items() if k in ("manifest_path", "ledger_path", "repo_root")}
+    if cli:
+        assert (
+            validator.main(
+                [
+                    str(review),
+                    "--manifest",
+                    str(kwargs["manifest_path"]),
+                    "--ledger",
+                    str(kwargs["ledger_path"]),
+                    "--repo-root",
+                    str(w.repo),
+                    "--json",
+                    *runtime_receipt_args(w.inputs),
+                ]
+            )
+            == 0
+        )
+        assert json.loads(capsys.readouterr().out)["ok"]
+        assert record.main(consumer_record_args(review, kwargs, w.inputs)) == 0
+        outcome = json.loads(capsys.readouterr().out)
+        assert outcome["accepted"] and outcome["verdict"] == "APPROVE"
+    else:
+        result = validator.validate_review(review, **validate_kwargs, **w.runtime)
+        assert result.ok and result.verdict == "APPROVE", result.payload()
+        outcome = record.record_return(review, **kwargs, **w.runtime)
+        assert outcome.accepted and outcome.verdict == "APPROVE"
+    w.commit_reissue()
+    # Accepted replay also authenticates afresh and preserves exact return identity.
+    outcome = record.record_return(review, **kwargs, **w.runtime)
+    assert outcome.accepted and outcome.replay
+    assert record.main(consumer_record_args(review, kwargs, w.inputs)) == 0
+    assert json.loads(capsys.readouterr().out)["replay"]
+    # A second recorder can discover the accepted attempt only after its real
+    # duplicate insert fails. Fresh admission also succeeds on that recovery.
+    from scripts.review import findings_db
+
+    original_get = findings_db.get_attempt
+    calls = []
+
+    def hide_first(conn, review_id, attempt_id):
+        calls.append(1)
+        return None if len(calls) == 1 else original_get(conn, review_id, attempt_id)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(findings_db, "get_attempt", hide_first)
+        outcome = record.record_return(review, **kwargs, **w.runtime)
+    assert outcome.accepted and outcome.replay and len(calls) == 2
+    if cli:
+        assert (
+            fresh_cli.main(
+                [
+                    "plan-promote",
+                    "a1",
+                    "synthetic",
+                    "--repo-root",
+                    str(w.repo),
+                    *runtime_receipt_args(w.inputs),
+                ]
+            )
+            == 0
+        )
+        assert json.loads(capsys.readouterr().out)["already_promoted"] is False
+    else:
+        assert not plan_promote.promote_plan("a1", "synthetic", repo_root=w.repo, **w.runtime)["already_promoted"]
+    w.commit_reissue()
+    assert pm.plan_review_status("a1", "synthetic", repo_root=w.repo, **w.runtime)["state"] == "reviewed_promoted"
+    assert plan_promote.promote_plan("a1", "synthetic", repo_root=w.repo, **w.runtime)["already_promoted"]
+    assert_runtime_absent(w.inputs, *(p.read_text() for p in w.directory.rglob("*") if p.is_file()))
+
+
+@pytest.fixture
+def promoted_consumer(consumer_world):
+    from scripts.build.fresh import plan_promote
+    from scripts.review import findings_db, fixloop, record
+
+    w = consumer_world
+    w.review, w.record_kwargs = w.make_return()
+    assert record.record_return(w.review, **w.record_kwargs, **w.runtime).accepted
+    w.commit_reissue()
+    assert not plan_promote.promote_plan("a1", "synthetic", repo_root=w.repo, **w.runtime)["already_promoted"]
+    w.commit_reissue()
+    conn = findings_db.connect(w.db)
+    try:
+        w.params = findings_db.load_parameters()
+        w.verdict, w.verdict_path = fixloop.compute_and_write_module_verdict(
+            conn,
+            "a1",
+            "synthetic",
+            root=w.repo,
+            params=w.params,
+            **w.runtime,
+        )
+    finally:
+        conn.close()
+    w.commit_reissue()
+    return w
+
+
+def test_all_module_consumer_routes_authenticate_without_discharging_other_holds(
+    promoted_consumer, monkeypatch, capsys
+):
+    from scripts.build.fresh import cli as fresh_cli
+    from scripts.review import findings_db, fixloop
+
+    w = promoted_consumer
+    conn = findings_db.connect(w.db)
+    try:
+        common = dict(root=w.repo, params=w.params, **w.runtime)
+        verdict = fixloop.compute_module_verdict(conn, "a1", "synthetic", **common)
+        assert "plan_not_promoted" not in {h["code"] for h in verdict["holds"]}
+        assert verdict["verdict"] == "HOLD"  # lessons/closure were never generated or reviewed
+        assert fixloop.build_report(conn, "a1", "synthetic", **common)["holds"] == verdict["holds"]
+        assert fixloop.module_verdict_problems(conn, "a1", "synthetic", **common) == []
+        assert fresh_cli._stale_module_verdict_problems("a1", "synthetic", repo_root=w.repo, **w.runtime) == []
+        assert_runtime_absent(
+            w.inputs,
+            verdict,
+            fixloop.module_verdict_fingerprint_inputs(
+                conn,
+                w.repo,
+                "a1",
+                "synthetic",
+                fixloop.plan_lessons(w.repo, "a1", "synthetic"),
+                None,
+                verdict["plan"],
+                params=w.params,
+            ),
+        )
+    finally:
+        conn.close()
+    base = ["--repo-root", str(w.repo), "--db", str(w.db)]
+    for command in (["report", "a1", "synthetic", "--json"], ["verdict", "a1", "synthetic", "--check"]):
+        assert fixloop.main([*base, *command, *runtime_receipt_args(w.inputs)]) == 0
+        output = capsys.readouterr()
+        assert_runtime_absent(w.inputs, output.out, output.err)
+
+    # CLI module build is synthetic: its completion report is supplied, but the
+    # owned gate and complete receipt checker execute. Credentials never go to the writer.
+    def synthetic_build(*args, **kwargs):
+        assert "receipt_inputs" not in kwargs and "sources_instance" not in kwargs
+        return {"complete": True, "lessons": []}
+
+    monkeypatch.setattr("scripts.build.fresh.module.build_module", synthetic_build)
+    assert (
+        fresh_cli.main(
+            [
+                "build",
+                "a1",
+                "synthetic",
+                "--module",
+                "--repo-root",
+                str(w.repo),
+                *runtime_receipt_args(w.inputs),
+            ]
+        )
+        == 0
+    )
+    assert_runtime_absent(w.inputs, capsys.readouterr())
+    assert fixloop.main([*base, "verdict", "a1", "synthetic", *runtime_receipt_args(w.inputs)]) == 0
+    output = capsys.readouterr()
+    assert "plan_not_promoted" not in output.out
+    assert_runtime_absent(w.inputs, output.out, output.err, w.verdict_path.read_text())
+
+
+def mutate_consumer(w, change):
+    from dataclasses import replace
+
+    from scripts.build.fresh import plan_manifest as pm
+
+    inputs = w.inputs
+    if change == "missing_runtime":
+        return None
+    if change == "head":
+        (w.repo / "public-change.txt").write_text("Synthetic public head change.\n")
+        bindings.git(w.repo, "add", ".")
+        bindings.git(w.repo, "commit", "-qm", "Synthetic stale HEAD")
+    elif change == "tampered_receipt":
+        document = json.loads(inputs.receipt.read_bytes())
+        document["seal"] = "0" * 64
+        inputs.receipt.write_text(json.dumps(document))
+    elif change == "wrong_identity":
+        return replace(inputs, key_id="unrelated-key-id")
+    elif change == "bindings_drift":
+        path = w.evidence / bindings.BINDINGS
+        lock.write(path, path.read_bytes() + b"# synthetic drift\n")
+        w.commit_reissue()  # valid new seal cannot rescue an old reviewed report
+    elif change == "cached_success":
+        path = w.directory / pm.PACK_VERIFY_REPORT_NAME
+        report = json.loads(path.read_bytes())
+        report["local_receipt"] = {"status": "verified"}
+        report.pop("bindings")
+        path.write_bytes(pm.json_bytes(report))
+        w.commit_reissue()  # edited status alone never confers admission
+    elif change == "private_input":
+        inputs.private_input.write_text(
+            json.dumps({**FIXTURE["private"], "meaning": "synthetic different meaning"}) + "\n"
+        )
+    else:
+        raise AssertionError(change)
+    return inputs
+
+
+def consumer_db_snapshot(w):
+    from scripts.review import findings_db
+
+    conn = findings_db.connect(w.db)
+    try:
+        return {
+            table: [dict(row) for row in conn.execute(f"SELECT * FROM {table}")]
+            for table in ("attempts", "findings", "settle_items")
+        }
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        "missing_runtime",
+        "head",
+        "tampered_receipt",
+        "wrong_identity",
+        "bindings_drift",
+        "cached_success",
+        "private_input",
+    ],
+)
+def test_all_consumer_routes_refuse_authentication_drift(promoted_consumer, change, monkeypatch, capsys):
+    from scripts.build.fresh import cli as fresh_cli
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh import plan_promote
+    from scripts.review import findings_db, fixloop, record
+    from scripts.review.validate import codes
+    from scripts.review.validate import validate as validator
+
+    w = promoted_consumer
+    inputs = mutate_consumer(w, change)
+    runtime = dict(receipt_inputs=inputs, sources_instance=w.api)
+    before = {p: p.read_bytes() for p in w.directory.rglob("*") if p.is_file()}
+    # Both direct promotion and its CLI refuse, even for an already promoted plan.
+    with pytest.raises(pm.PlanReviewError):
+        plan_promote.promote_plan("a1", "synthetic", repo_root=w.repo, **runtime)
+    assert (
+        fresh_cli.main(
+            [
+                "plan-promote",
+                "a1",
+                "synthetic",
+                "--repo-root",
+                str(w.repo),
+                *runtime_receipt_args(inputs),
+            ]
+        )
+        == 1
+    )
+    output = capsys.readouterr()
+    assert_runtime_absent(w.inputs, output.out, output.err)
+    assert before == {p: p.read_bytes() for p in w.directory.rglob("*") if p.is_file()}
+
+    common_validate = {k: v for k, v in w.record_kwargs.items() if k in ("manifest_path", "ledger_path", "repo_root")}
+    result = validator.validate_review(w.review, **common_validate, **runtime)
+    assert not result.ok and codes.PLAN_INPUTS_STALE in {r.code for r in result.rejections}
+    assert (
+        validator.main(
+            [
+                str(w.review),
+                "--manifest",
+                str(w.record_kwargs["manifest_path"]),
+                "--ledger",
+                str(w.record_kwargs["ledger_path"]),
+                "--repo-root",
+                str(w.repo),
+                "--json",
+                *runtime_receipt_args(inputs),
+            ]
+        )
+        == 1
+    )
+    output = capsys.readouterr()
+    assert not json.loads(output.out)["ok"]
+    assert_runtime_absent(w.inputs, result.payload(), output.out, output.err)
+
+    # Previously accepted replay must not restore a projection or close a moot item.
+    conn = findings_db.connect(w.db)
+    try:
+        findings_db.insert_finding(
+            conn,
+            "review-accepted",
+            "attempt-accepted",
+            {
+                "id": "F-old",
+                "status": "active",
+                "dimension": "plan_defect",
+                "severity": "MINOR",
+                "claim": "Synthetic earlier finding.",
+                "evidence": {"receipt": "synthetic-receipt"},
+                "locations": [],
+            },
+            layer="plan",
+            seed_id=None,
+        )
+        findings_db.open_settle_item(
+            conn,
+            ref=findings_db.finding_ref("review-accepted", "attempt-accepted", "F-old"),
+            kind="unsupported_by_source",
+            level="a1",
+            slug="synthetic",
+            lesson_n=None,
+            manifest_sha256="0" * 64,
+            opened_at="2026-01-01T00:00:00Z",
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    db_before = consumer_db_snapshot(w)
+    projection_before = (w.directory / pm.REVIEW_NAME).read_bytes()
+    original_get = findings_db.get_attempt
+    for concurrent in (False, True):
+        for cli in (False, True):
+            with monkeypatch.context() as patch:
+                if concurrent:
+                    calls = []
+
+                    def hide_first(conn, review_id, attempt_id, calls=calls):
+                        calls.append(1)
+                        return None if len(calls) == 1 else original_get(conn, review_id, attempt_id)
+
+                    patch.setattr(findings_db, "get_attempt", hide_first)
+                if cli:
+                    assert record.main(consumer_record_args(w.review, w.record_kwargs, inputs)) == 2
+                    assert "accepted plan replay refused" in capsys.readouterr().err
+                else:
+                    with pytest.raises(record.RecordError, match="accepted plan replay refused") as caught:
+                        record.record_return(w.review, **w.record_kwargs, **runtime)
+                    assert caught.value.code == codes.PLAN_INPUTS_STALE
+                if concurrent:
+                    assert len(calls) == 2  # real duplicate insert -> recovery replay
+            assert consumer_db_snapshot(w) == db_before
+            assert (w.directory / pm.REVIEW_NAME).read_bytes() == projection_before
+
+    conn = findings_db.connect(w.db)
+    try:
+        common = dict(root=w.repo, params=w.params, **runtime)
+        verdict = fixloop.compute_module_verdict(conn, "a1", "synthetic", **common)
+        assert verdict["plan"]["state"] == "stale" and "plan_not_promoted" in {h["code"] for h in verdict["holds"]}
+        report = fixloop.build_report(conn, "a1", "synthetic", **common)
+        assert "plan_not_promoted" in {h["code"] for h in report["holds"]}
+        assert fixloop.module_verdict_problems(conn, "a1", "synthetic", **common)
+        assert fresh_cli._stale_module_verdict_problems("a1", "synthetic", repo_root=w.repo, **runtime)
+        assert_runtime_absent(w.inputs, verdict, report)
+    finally:
+        conn.close()
+    base = ["--repo-root", str(w.repo), "--db", str(w.db)]
+    assert fixloop.main([*base, "report", "a1", "synthetic", "--json", *runtime_receipt_args(inputs)]) == 0
+    output = capsys.readouterr()
+    assert "plan_not_promoted" in output.out  # exit 0 is a report, never private success
+    assert_runtime_absent(w.inputs, output.out, output.err)
+    assert fixloop.main([*base, "verdict", "a1", "synthetic", "--check", *runtime_receipt_args(inputs)]) == 1
+    assert_runtime_absent(w.inputs, capsys.readouterr())
+    monkeypatch.setattr("scripts.build.fresh.module.build_module", lambda *a, **kw: {"complete": True, "lessons": []})
+    assert (
+        fresh_cli.main(
+            [
+                "build",
+                "a1",
+                "synthetic",
+                "--module",
+                "--repo-root",
+                str(w.repo),
+                *runtime_receipt_args(inputs),
+            ]
+        )
+        == 1
+    )
+    assert_runtime_absent(w.inputs, capsys.readouterr())
+
+    # A new attempt may be audited as rejected, but cannot write accepted state.
+    review, kwargs = w.make_return("refused")
+    outcome = record.record_return(review, **kwargs, **runtime)
+    assert not outcome.accepted and codes.PLAN_INPUTS_STALE in outcome.rejection_codes
+    assert (w.directory / pm.REVIEW_NAME).read_bytes() == projection_before
+    after = consumer_db_snapshot(w)
+    assert after["findings"] == db_before["findings"] and after["settle_items"] == db_before["settle_items"]
+    assert [r for r in after["attempts"] if r["verdict"] != "REJECTED"] == db_before["attempts"]
+    review, kwargs = w.make_return("cli-refused")
+    assert record.main(consumer_record_args(review, kwargs, inputs)) == 1
+    assert not json.loads(capsys.readouterr().out)["accepted"]
+    assert (w.directory / pm.REVIEW_NAME).read_bytes() == projection_before
+    # Writer publishes an honest HOLD. Checking that unchanged HOLD can be
+    # consistent; consistency is not successful admission.
+    conn = findings_db.connect(w.db)
+    try:
+        document, path = fixloop.compute_and_write_module_verdict(conn, "a1", "synthetic", **common)
+        assert "plan_not_promoted" in {h["code"] for h in document["holds"]}
+        assert fixloop.module_verdict_problems(conn, "a1", "synthetic", **common) == []
+    finally:
+        conn.close()
+    assert fixloop.main([*base, "verdict", "a1", "synthetic", *runtime_receipt_args(inputs)]) == 0
+    output = capsys.readouterr()
+    assert "plan_not_promoted" in output.out
+    assert_runtime_absent(
+        w.inputs,
+        output.out,
+        output.err,
+        path.read_text(),
+        *(p.read_text() for p in w.directory.rglob("*") if p.is_file()),
+    )
+
+
+@pytest.mark.parametrize("failure", ["invalid_store", "unexpected_detector_error"])
+def test_recording_keeps_preliminary_errors_in_safe_live_validation(promoted_consumer, failure, monkeypatch, capsys):
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.review import record
+    from scripts.review.validate import codes
+
+    w = promoted_consumer
+    if failure == "invalid_store":
+        (w.evidence / "_words.yaml").write_text("[]\n")
+    else:
+
+        def unavailable(*args, **kwargs):
+            raise ValueError(f"synthetic private body {w.inputs.key_file}")
+
+        monkeypatch.setattr(sense_cli, "private_proof_required", unavailable)
+    before = consumer_db_snapshot(w)
+    projection = (w.directory / pm.REVIEW_NAME).read_bytes()
+    with pytest.raises(record.RecordError, match="accepted plan replay refused") as caught:
+        record.record_return(w.review, **w.record_kwargs, sources_instance=w.api)
+    assert caught.value.code == codes.PLAN_INPUTS_STALE
+    assert "synthetic private body" not in str(caught.value)
+    assert_runtime_absent(w.inputs, caught.value)
+    assert consumer_db_snapshot(w) == before
+    assert (w.directory / pm.REVIEW_NAME).read_bytes() == projection
+    assert record.main(consumer_record_args(w.review, w.record_kwargs, None)) == 2
+    output = capsys.readouterr()
+    assert "synthetic private body" not in output.err
+    assert_runtime_absent(w.inputs, output.out, output.err)
+    review, kwargs = w.make_return("detector-refused")
+    outcome = record.record_return(review, **kwargs, sources_instance=w.api)
+    assert not outcome.accepted and codes.PLAN_INPUTS_STALE in outcome.rejection_codes
+    after = consumer_db_snapshot(w)
+    assert [r for r in after["attempts"] if r["verdict"] != "REJECTED"] == before["attempts"]
+    assert after["findings"] == before["findings"] and after["settle_items"] == before["settle_items"]
+    assert (w.directory / pm.REVIEW_NAME).read_bytes() == projection

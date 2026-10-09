@@ -277,7 +277,7 @@ counting all consume the same printed text and selected gloss.
 
 ## Consuming an existing local receipt
 
-`words-verify`, `pack-verify` and `fresh.cli plan-manifest` accept explicit local
+`words-verify`, `pack-verify` and the fresh-build/review consumers below accept explicit local
 runtime inputs for **read-only** verification of an existing receipt:
 
 ```bash
@@ -330,9 +330,61 @@ The `plan_review_freshness` and `plan_review_status` APIs accept explicit
 `receipt_inputs` and an optional source instance. Proof need comes from current
 bindings and word-store provenance; deleting a report field cannot make a
 private input public. Missing runtime inputs refuse private admission. Callers
-that do not pass these inputs also refuse private admission; promotion and
-review-consumer plumbing belongs to their existing lanes. This procedure does
+that do not pass these inputs also refuse private admission. This procedure does
 not provide implicit credentials or a cached-success fallback.
+
+The same optional `receipt_inputs: LocalReceiptInputs` and `sources_instance`
+arguments reach fresh admission through these APIs:
+
+| Family | Supported consumers |
+| --- | --- |
+| Promotion | `promote_plan` |
+| Review | `validate_review`, `record_return` (including accepted replay and concurrent-insert recovery) |
+| Module state | `compute_module_verdict`, `compute_and_write_module_verdict`, `module_verdict_problems`, `build_report`, fresh CLI `_stale_module_verdict_problems` |
+
+Their local entrypoints accept `--private-input`, `--key-file`, `--key-id`,
+`--receipt` and optional `--receipt-base`, with the same read-only receipt
+contract:
+
+```bash
+.venv/bin/python -m scripts.build.fresh.cli plan-promote a1 special-signs \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.review.validate REVIEW_YAML --manifest PLAN_MANIFEST --ledger REVIEW_LEDGER \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.review.record REVIEW_YAML --manifest PLAN_MANIFEST --ledger REVIEW_LEDGER --task-id REVIEW_TASK \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.review.fixloop report a1 special-signs --json \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+.venv/bin/python -m scripts.review.fixloop verdict a1 special-signs --check \
+  --private-input PRIVATE_JSONL --key-file PRIVATE_KEY --key-id build1 --receipt PRIVATE_RECEIPT
+```
+
+`fixloop verdict` without `--check` forwards the same inputs when computing and
+writing the verdict. `fresh.cli build --module` forwards them only to its module
+verdict consistency gate, never to a writer or model prompt. Runtime inputs are
+not review evidence and are excluded from manifests, reports and fingerprints.
+
+Promotion writes nothing when fresh admission refuses. Recording validates a
+new private plan attempt before reserving its audit copy, so reservation cannot
+dirty the HEAD being authenticated. A refusal may still leave a rejected attempt
+and saved return for auditing; it never creates accepted findings, projects an
+accepted verdict or closes moot items. Replaying a previously accepted plan,
+including recovery after a concurrent insert, must authenticate again before
+returning an accepted outcome or republishing a projection/closing moot items.
+Public-only recording and rejected-attempt replay retain their existing behavior.
+
+A report may exit 0 while naming a private-admission hold. Likewise, a stored
+HOLD can agree with a fresh recomputation and pass `verdict --check`; neither
+result certifies private admission. Authentic inputs remove only the private
+hold: lesson, closure, review, provenance and public-integrity gates still bind.
+Writing promotion/review/verdict artifacts changes the clean HEAD; use the
+external issuance procedure on that new HEAD before subsequent private use.
+
+`scripts/build/build_arc_landing.py::_module_verdict_reviewed` is a separate
+consumer: with a local findings database it calls `module_verdict_problems`
+without runtime inputs; without the database it reads the tracked verdict.
+Its integration remains with the landing/runtime owner and accountable driver,
+not a claim of delivery by the consumer plumbing above.
 
 Authenticated coverage removes only the covered private-commitment warnings.
 Unrelated public errors, reviewed-provenance notices and other warnings remain,

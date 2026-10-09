@@ -30,6 +30,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.curriculum.evidence import sense_cli
 from scripts.curriculum.resolver.codes import TABS
 from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records, review_tools
 
@@ -338,7 +339,14 @@ _MISSING = object()
 
 
 def _load_plan_document(
-    check: _Check, manifest: dict[str, Any], manifest_hash: str, document: Path | None, root: Path
+    check: _Check,
+    manifest: dict[str, Any],
+    manifest_hash: str,
+    document: Path | None,
+    root: Path,
+    *,
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> dict[str, Any] | None:
     """The plan a plan-manifest pins, verified against inputs.plan.sha256 before it is used.
 
@@ -355,7 +363,9 @@ def _load_plan_document(
         check.add(codes.PLAN_MANIFEST_INVALID, exc.message)
         return None
     pinned = manifest["inputs"]["plan"]
-    freshness = pm.plan_review_freshness(root, manifest, manifest_hash)
+    freshness = pm.plan_review_freshness(
+        root, manifest, manifest_hash, receipt_inputs=receipt_inputs, sources_instance=sources_instance
+    )
     candidates = [Path(document)] if document is not None else [root / pinned["path"]]
     if document is None and freshness.state == "promoted":
         candidates.append(
@@ -774,6 +784,8 @@ def validate_review(
     document_path: Path | None = None,
     repo_root: Path | None = None,
     review_access: str = "isolated",
+    receipt_inputs: sense_cli.LocalReceiptInputs | None = None,
+    sources_instance: Any = None,
 ) -> ValidationResult:
     """Validate one review file against its manifest, document, and receipt ledger.
 
@@ -807,7 +819,15 @@ def validate_review(
     units: list[dict[str, Any]] = []
     plan: dict[str, Any] | None = None
     if plan_mode:
-        plan = _load_plan_document(check, manifest, manifest_hash, document, root)
+        plan = _load_plan_document(
+            check,
+            manifest,
+            manifest_hash,
+            document,
+            root,
+            receipt_inputs=receipt_inputs,
+            sources_instance=sources_instance,
+        )
     else:
         try:
             if document is None:
@@ -997,6 +1017,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="print the verdict and rejections as one JSON object (default: human text)",
     )
+    sense_cli.add_receipt_arguments(parser)
     return parser
 
 
@@ -1013,6 +1034,7 @@ def main(argv: list[str] | None = None) -> int:
         previous_ledger_path=args.previous_ledger,
         repo_root=args.repo_root,
         review_access=args.review_access,
+        receipt_inputs=sense_cli.receipt_inputs(args),
     )
     _emit(result, as_json=args.json)
     return 0 if result.ok else 1
