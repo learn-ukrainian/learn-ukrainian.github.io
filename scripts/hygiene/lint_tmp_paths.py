@@ -285,11 +285,6 @@ ALLOWLIST: tuple[tuple[str, str, str], ...] = (
         "2ce02a78804e0f653d1c246f7af0915633877d64122160e4cdb0ca7fd493d89a:1",
     ),
     (
-        "scripts/projects/open_model_data/v4_mine_corpus_calques.py",
-        "Legacy persistent cache producer; follow-up outside this bounded packet (#8755).",
-        "0f94bae2ff084b9f0dfd3867dcb43baf049e3f42676f5def56966ccb1c2ab6ec:1 7398e34e317e427d0397d19f494ee6fd74385952e2e1dcddd447a5543e6d715a:1",
-    ),
-    (
         "scripts/projects/open_model_data/v4_native_extraction_validation.py",
         "Legacy persistent cache producer; follow-up outside this bounded packet (#8755).",
         "a0d729591d304503954d2be13948b1efd382cb29d88c1b845667c8fd0b711f40:1",
