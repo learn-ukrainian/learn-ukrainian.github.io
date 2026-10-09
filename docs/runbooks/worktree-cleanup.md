@@ -21,6 +21,12 @@ do not delete it while a task might be active. After the normal merged-PR guards
 pass, the P0 reaper removes the entire disposable worktree, including ignored
 environment residue.
 
+## Shared node_modules (npm shim)
+
+Dispatch worktrees receive `node_modules` and `site/node_modules` as symlinks into the primary checkout. The agent runtime provides an `npm` (and `npx`) shim that intercepts destructive commands to protect the shared tree.
+
+Every npm/npx call through the shim runs with umask 022 to prevent the tree from becoming group-writable. The refusal message from the ACP adapter prints the exact corrective command class.
+
 ## Safety contract
 
 Every Git-based worktree removal preserves ignored output at the sole raw
