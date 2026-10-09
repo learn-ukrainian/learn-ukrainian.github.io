@@ -127,7 +127,9 @@ source "$1" && launcher_selector_stream "$2"
         HYDRATION="No Codex/shared driver handoff selected by the Codex canary resolver. Repair the handoff before continuing."
       else
         HYDRATION_RC=0
-        HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
+        # Hydrate retries timeout-class failures up to 3 times (500 ms each plus
+        # interpreter start-up), so it needs more than the 2 s used elsewhere here.
+        HYDRATION=$(run_bounded 6 "$BOUNDED_PYTHON" \
           -m scripts.session_canary.codex_lane hydrate --epic "$SESSION_EPIC" --stream "$HYDRATION_STREAM" 2>&1) \
           || HYDRATION_RC=$?
       fi

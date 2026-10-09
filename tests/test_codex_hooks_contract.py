@@ -148,7 +148,7 @@ def test_codex_compaction_has_one_bounded_hydration_path() -> None:
     assert compact_group["matcher"] == "compact"
     assert "CODEX_COMPACT_SESSION_START=1" in compact_group["hooks"][0]["command"]
     assert 'post-compact.sh"' in compact_group["hooks"][0]["command"]
-    assert compact_group["hooks"][0]["timeout"] == 10
+    assert compact_group["hooks"][0]["timeout"] == 15
     assert compact_group["hooks"][0]["additionalContextLimit"] == 800
     assert "PostCompact" not in hooks
 
@@ -821,3 +821,17 @@ def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Pa
 
     assert completed.returncode == 0, completed.stderr
     assert not marker.exists()
+
+
+def test_compact_hydrate_bound_fits_its_retries() -> None:
+    source = (REPO_ROOT / "agents_extensions/shared/hooks/post-compact.sh").read_text(encoding="utf-8")
+    assert 'HYDRATION=$(run_bounded 6 "$BOUNDED_PYTHON"' in source
+    hooks = json.loads((REPO_ROOT / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
+    compact = [
+        hook
+        for group in hooks["hooks"]["SessionStart"]
+        if group.get("matcher") == "compact"
+        for hook in group["hooks"]
+    ]
+    # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
+    assert compact and compact[0]["timeout"] > 2 + 2 + 6
