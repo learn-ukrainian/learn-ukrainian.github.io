@@ -142,9 +142,10 @@ class FakeGitHub:
         transport.removed = bool(self.events)
         transport.removal_failure = self.removal_read_failure
         if self.events:
-            latest = max(self.events, key=lambda event: event["created_at"])
-            transport.removal_head = (latest.get("beforeCommit") or {"oid": HEAD_A})["oid"]
-            transport.removal_date = latest["created_at"]
+            transport.removal_history = [
+                {"beforeCommit": event.get("beforeCommit", {"oid": HEAD_A}), "createdAt": event["created_at"]}
+                for event in sorted(self.events, key=lambda event: event["created_at"])
+            ]
 
         def sender(argv: list[str], **kwargs: Any) -> subprocess.CompletedProcess:
             if any("/comments?" in arg for arg in argv):
@@ -796,7 +797,7 @@ def test_red_merge_group_drop_with_green_branch_checks(
     comments = [body for action, body in fake.actions if action == "comment"]
     state = json.loads(path.read_text())
     assert state["drops"][f"42:{HEAD_A}"] == 1
-    assert state["drop_events"][f"42:{HEAD_A}"] == [987]
+    assert "drop_events" not in state
     assert state["failures"][0]["job"] == "pytest"
     if granted:
         assert mutations(fake) == ["enqueue"]
@@ -1492,22 +1493,27 @@ def test_shared_record_unknown_holds_keeper_recovery(tmp_path: Path, monkeypatch
     assert "enqueue" not in mutations(fake)
 
 
-def test_multiple_removals_cannot_be_bound_to_one_head(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_multiple_removals_do_not_persist_obsolete_bindings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub(pr(headRefOid=HEAD_B))
     fake.events = [{"id": event_id, "event": "removed_from_merge_queue", "created_at": "2026-09-23T00:00:01Z"}
                    for event_id in (987, 988)]
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {"42": HEAD_A}, "drops": {}, "observed": "2026-09-23T00:00:00Z"}))
     run(fake, path, monkeypatch)
-    assert json.loads(path.read_text())["drop_events"][f"42:{HEAD_A}"] == []
+    state = json.loads(path.read_text())
+    assert "drop_events" not in state
+    assert state["drops"][f"42:{HEAD_A}"] == 1
 
 
-@pytest.mark.parametrize("drop_events", [[], {"42:head": [0]}, {"42:head": "unknown"}])
-def test_malformed_drop_event_binding_is_refused(tmp_path: Path, drop_events: Any) -> None:
+@pytest.mark.parametrize("drop_events", [[], {"42:head": [0]}, {"42:head": "unknown"}, {f"42:{HEAD_A}": [987]}])
+def test_obsolete_drop_event_state_is_ignored(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drop_events: Any) -> None:
     path = tmp_path / "state.json"
     path.write_text(json.dumps({"queued": {}, "drops": {}, "drop_events": drop_events}))
-    with pytest.raises(keeper.KeeperError, match="keeper state malformed"):
-        keeper.run(FakeGitHub(), path, apply=True)
+    fake = FakeGitHub()
+    _, failed = run(fake, path, monkeypatch)
+    assert not failed
+    assert mutations(fake) == ["enqueue"]
+    assert "drop_events" not in json.loads(path.read_text())
 
 
 @pytest.mark.parametrize("cause", ["unbound", "manual-dequeue", "red-checks", "changed-verdict", "hold-label", "blocked-squash", "predates-deploy"])

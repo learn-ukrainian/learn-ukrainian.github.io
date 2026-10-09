@@ -63,8 +63,8 @@ def _legacy_attempt(path: Path, number: int, head: str) -> dict | None:
     return None
 
 
-def queue_removal_at_head(data: dict, head: str) -> bool:
-    """Use GitHub's latest removal SHA, never keeper-local observation history.
+def queue_removal_at_head(data: dict | list[dict], head: str) -> bool:
+    """Check every GitHub removal, requiring complete, readable pagination.
 
     For a nullable removal commit, a later GitHub force-push event at this
     head can establish that the removal predates its push. A known same-SHA
@@ -72,37 +72,60 @@ def queue_removal_at_head(data: dict, head: str) -> bool:
     Commit author/committer dates cannot establish push time.
     """
     try:
-        if data.get("errors"):
+        pages = data if isinstance(data, list) else [data]
+        if not pages:
             raise ValueError
-        pull = data["data"]["repository"]["pullRequest"]
-        if pull["headRefOid"] != head:
-            raise ValueError
-        nodes = pull["removals"]["nodes"]
-        if not isinstance(nodes, list) or len(nodes) > 1:
-            raise ValueError
-        if not nodes:
-            return False
-        event = nodes[0]
-        removed_at = datetime.fromisoformat(event["createdAt"].replace("Z", "+00:00"))
-        if removed_at.tzinfo is None:
-            raise ValueError
-        commit = event["beforeCommit"]
-        removed_head = None if commit is None else commit["oid"]
-        if commit is not None and (not isinstance(removed_head, str) or not SHA.fullmatch(removed_head)):
-            raise ValueError
-        pushes = pull["pushes"]["nodes"]
-        if not isinstance(pushes, list) or len(pushes) > 1:
-            raise ValueError
-        if pushes:
-            push = pushes[0]
-            pushed_at = datetime.fromisoformat(push["createdAt"].replace("Z", "+00:00"))
-            if pushed_at.tzinfo is None:
+        total, count, at_head, cursors = None, 0, False, set()
+        for index, page in enumerate(pages):
+            if page.get("errors"):
                 raise ValueError
-            if commit is None and (push.get("afterCommit") or {}).get("oid") == head and pushed_at > removed_at:
-                return False
-        if commit is None:
+            pull = page["data"]["repository"]["pullRequest"]
+            if pull["headRefOid"] != head:
+                raise ValueError
+            removals = pull["removals"]
+            nodes, info = removals["nodes"], removals["pageInfo"]
+            if not isinstance(nodes, list) or type(removals["totalCount"]) is not int or removals["totalCount"] < 0:
+                raise ValueError
+            if total is None:
+                total = removals["totalCount"]
+            if removals["totalCount"] != total or type(info["hasNextPage"]) is not bool:
+                raise ValueError
+            if info["hasNextPage"] != (index < len(pages) - 1):
+                raise ValueError
+            cursor = info["endCursor"]
+            if nodes:
+                if not isinstance(cursor, str) or not cursor or cursor in cursors:
+                    raise ValueError
+                cursors.add(cursor)
+            elif info["hasNextPage"]:
+                raise ValueError
+            count += len(nodes)
+            pushes = pull["pushes"]["nodes"]
+            if not isinstance(pushes, list) or len(pushes) > 1:
+                raise ValueError
+            pushed_at, pushed_head = None, None
+            if pushes:
+                push = pushes[0]
+                pushed_at = datetime.fromisoformat(push["createdAt"].replace("Z", "+00:00"))
+                if pushed_at.tzinfo is None:
+                    raise ValueError
+                pushed_head = (push.get("afterCommit") or {}).get("oid")
+            for event in nodes:
+                removed_at = datetime.fromisoformat(event["createdAt"].replace("Z", "+00:00"))
+                if removed_at.tzinfo is None:
+                    raise ValueError
+                commit = event["beforeCommit"]
+                if commit is None:
+                    if pushed_head == head and pushed_at > removed_at:
+                        continue
+                    raise ValueError
+                removed_head = commit["oid"]
+                if not isinstance(removed_head, str) or not SHA.fullmatch(removed_head):
+                    raise ValueError
+                at_head |= removed_head == head
+        if count != total:
             raise ValueError
-        return removed_head == head
+        return at_head
     except (ValueError, KeyError, TypeError, AttributeError):
         raise PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None
 

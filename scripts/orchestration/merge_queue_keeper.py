@@ -523,12 +523,10 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
         or not isinstance(data.get("pending_comments", {}), dict)
-        or not isinstance(data.get("drop_events", {}), dict)
-        or any(not isinstance(key, str) or not isinstance(ids, list)
-               or any(type(event_id) is not int or event_id <= 0 for event_id in ids)
-               for key, ids in data.get("drop_events", {}).items())
     ):
         raise KeeperError("keeper state malformed")
+    # Obsolete bindings never affect admission; tolerate older state files.
+    data.pop("drop_events", None)
     return data
 
 
@@ -626,16 +624,14 @@ def _comment_once(
     comments.append({"body": marker, "user": {"login": login}})
 
 
-def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str], list[int]]:
+def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, list[str]]:
     events = [
         item
         for item in gh.timeline(number)
         if item.get("event") == "removed_from_merge_queue" and item.get("created_at", "") >= since
     ]
     if not events:
-        return "", [], []
-    # Multiple removals between observations cannot all be attributed to one head.
-    event_ids = [events[0]["id"]] if len(events) == 1 and type(events[0].get("id")) is int and events[0]["id"] > 0 else []
+        return "", []
     runs = [
         item
         for item in gh.runs(since)
@@ -645,10 +641,10 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
         and extract_pr_number(str(item.get("head_branch", ""))) == number
     ]
     if not runs:
-        return " Queue removal confirmed; failing merge_group run unknown.", [], event_ids
+        return " Queue removal confirmed; failing merge_group run unknown.", []
     run = max(runs, key=lambda item: item.get("created_at", ""))
     if not isinstance(run.get("id"), int):
-        return " Queue removal confirmed; failing merge_group run id unknown.", [], event_ids
+        return " Queue removal confirmed; failing merge_group run id unknown.", []
     jobs = gh.jobs(run["id"])
     failed = sorted(
         {str(job["name"]) for job in jobs if job.get("conclusion") == "failure" and isinstance(job.get("name"), str)}
@@ -656,7 +652,6 @@ def _drop_detail(gh: GitHub, number: int, head: str, since: str) -> tuple[str, l
     return (
         f" Failing merge_group: {run.get('html_url', 'unknown')}; failing jobs: {', '.join(failed) or 'unknown'}.",
         failed,
-        event_ids,
     )
 
 
@@ -736,10 +731,8 @@ def run(
         prior_drop_key = f"{number}:{dropped_head}"
         if queued is False and prior_drop_key in previous.get("undiagnosed", {}):
             try:
-                detail, failed_jobs, event_ids = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
+                detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
-                    known_ids = previous.setdefault("drop_events", {}).setdefault(prior_drop_key, [])
-                    known_ids.extend(event_id for event_id in event_ids if event_id not in known_ids)
                     previous["undiagnosed"].pop(prior_drop_key)
                     shared_count = previous.setdefault("shared_requeues", {})
                     shared = _shared_failure(previous.get("failures"), failed_jobs, number)

@@ -435,15 +435,18 @@ on the PR. All failing job IDs are required. Evidence must be posted by the
 authenticated login with OWNER, MEMBER or COLLABORATOR association, matching
 the verdict author filter. Retain any keeper requeue grant.
 
-The publisher reads GitHub's latest `RemovedFromMergeQueueEvent.beforeCommit.oid`
-to decide whether enqueue is recovery at the current head. An older head's
-removal permits normal initial enqueue without spending the new head's allowance,
+The publisher pages through all GitHub `RemovedFromMergeQueueEvent.beforeCommit.oid`
+values: any removal naming the current head makes enqueue a recovery. Removals
+only at other heads permit normal initial enqueue without spending the new head's allowance,
 including manual dequeue, keeper revocation and removals predating deployment.
 A later GitHub head force-push event can establish that a removal with a nullable
 commit predates the current head's push; commit dates and keeper-local removal
-history cannot. Pushing the same SHA never refunds a spent recovery allowance.
-Unreadable or ambiguous GitHub removal data refuses enqueue with
-`RECOVERY_REMOVAL_UNKNOWN`; restore the read or establish the current head with
+history cannot. Before normal initial enqueue, the publisher also checks the
+durable record for a prior re-enqueue at that head; a branch-run rerun alone
+does not block initial enqueue. Returning to the same SHA never refunds a spent
+recovery allowance, even when the latest removal names another head.
+Truncated, unreadable or ambiguous GitHub removal data refuses enqueue with
+`RECOVERY_REMOVAL_UNKNOWN`; restore the complete read or establish the current head with
 a GitHub force-push event before retrying. Failed push runs on `main`, scheduled
 runs and other runs without a PR retain normal failed-job rerun behavior. Ambiguous PR or
 merge-group associations remain refused.

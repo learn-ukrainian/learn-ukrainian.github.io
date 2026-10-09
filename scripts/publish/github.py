@@ -329,20 +329,40 @@ def _prepare_recovery(verb, fields, dest, cwd, environment, runner, *, queue=Fal
     elif queue or fields.get("recovery"):
         number, head = fields["number"], fields["match_head"]
         try:
-            removal = fetch("queue-removal", number=number)
-            at_head = recovery.queue_removal_at_head(removal, head)
+            pages, cursors = [], set()
+            selectors = {"number": number}
+            for _ in range(100):
+                page = fetch("queue-removal", **selectors)
+                pages.append(page)
+                info = page["data"]["repository"]["pullRequest"]["removals"]["pageInfo"]
+                if type(info["hasNextPage"]) is not bool:
+                    raise ValueError
+                if not info["hasNextPage"]:
+                    break
+                cursor = info["endCursor"]
+                if not isinstance(cursor, str) or not cursor or cursor in cursors:
+                    raise ValueError
+                cursors.add(cursor)
+                selectors["cursor"] = cursor
+            else:
+                raise ValueError
+            at_head = recovery.queue_removal_at_head(pages, head)
         except github_client.GitHubRateLimited:
             raise
-        except gate.PublishBlocked:
+        except (gate.PublishBlocked, ValueError, KeyError, TypeError, AttributeError):
             raise gate.PublishBlocked("RECOVERY_REMOVAL_UNKNOWN: GitHub removal head unreadable; enqueue refused") from None
         run = None
         action = "re-enqueue"
     else:
         return None
-    if run is None and not at_head:
-        return None
     path = recovery.ledger_path(cwd)
     prior = recovery.first_attempt(path, dest, number, head)
+    if run is None and not at_head:
+        # Branch-run reruns still allow initial queue admission; a re-enqueue
+        # record survives a later removal at another head or missing history.
+        if prior and prior["action"] != "run-rerun":
+            raise gate.PublishBlocked(recovery.spent_reason(prior))
+        return None
     if prior:
         raise gate.PublishBlocked(recovery.spent_reason(prior))
     comments = fetch("comments", number=number)
@@ -805,7 +825,7 @@ DIAGNOSTIC_READS = {
 }
 REST_COMPAT_READS = {'budget', 'issue-scope', 'subissues', 'subissues-next', 'default-head', 'pr-bases', 'issue-parent'}
 GQL_READS = {
-    "queue-removal": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid removals:timelineItems(last:1,itemTypes:[REMOVED_FROM_MERGE_QUEUE_EVENT]){nodes{... on RemovedFromMergeQueueEvent{beforeCommit{oid} createdAt reason}}} pushes:timelineItems(last:1,itemTypes:[HEAD_REF_FORCE_PUSHED_EVENT]){nodes{... on HeadRefForcePushedEvent{afterCommit{oid} createdAt}}}}}}",
+    "queue-removal": "query($owner:String!,$name:String!,$number:Int!,$cursor:String){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid removals:timelineItems(first:100,after:$cursor,itemTypes:[REMOVED_FROM_MERGE_QUEUE_EVENT]){totalCount pageInfo{hasNextPage endCursor} nodes{... on RemovedFromMergeQueueEvent{beforeCommit{oid} createdAt reason}}} pushes:timelineItems(last:1,itemTypes:[HEAD_REF_FORCE_PUSHED_EVENT]){nodes{... on HeadRefForcePushedEvent{afterCommit{oid} createdAt}}}}}}",
     "queue-status": "\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
@@ -907,6 +927,8 @@ def read(
                 if operation == "membership-head"
                 else {"number"}
             )
+            if operation == "queue-removal" and "cursor" in fields:
+                expected.add("cursor")
             if (
                 set(fields) != expected
                 or (
