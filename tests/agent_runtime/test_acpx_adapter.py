@@ -2303,7 +2303,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
         (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
-        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7", None),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", "grok-4.7-high", None),
         (AcpxPoolShadowAdapter, "pool", "pool", None, None),
     ],
 )
@@ -2416,7 +2416,7 @@ def _cursor_acp_plan(tmp_path, monkeypatch, model):
         )
 
 
-@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7"), ("grok-4.7", "grok-4.7"), ("composer-2.5", "composer-2.5")])
+@pytest.mark.parametrize(("model", "sent"), [(None, "grok-4.7-high"), ("grok-4.7-high", "grok-4.7-high"), ("composer-2.5", "composer-2.5")])
 def test_cursor_acp_invocation_carries_a_concrete_pin(tmp_path, monkeypatch, model, sent):
     """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never runs Auto."""
     plan = _cursor_acp_plan(tmp_path, monkeypatch, model)
@@ -2562,8 +2562,6 @@ def test_claude_acp_refuses_a_fable_pin(tmp_path, monkeypatch):
     [
         ("claude", "claude-fable-5-1"),
         ("claude", "claude-fable-5-1-thinking-high"),
-        ("cursor", "claude-fable-5-1-thinking-high"),
-        ("cursor", "claude-fable-5-1"),
     ],
 )
 def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participant, model):
@@ -2575,13 +2573,18 @@ def test_acp_consult_route_refuses_a_fable_pin_from_the_catalog_roles(participan
 
 
 @pytest.mark.parametrize(
-    "participant,model",
-    [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol"), ("codex", "gpt-6-luna"), ("cursor", "grok-4.7")],
+    "participant,model,expected",
+    [
+        ("claude", "claude-opus-5-5", "claude-opus-5-5"),
+        ("codex", "gpt-6.1-sol", "gpt-6.1-sol"),
+        ("codex", "gpt-6-luna", "gpt-6-luna"),
+        ("cursor", "grok-4.7", "grok-4.7"),
+    ],
 )
-def test_acp_consult_route_still_admits_opus_sol_and_recon_pins(participant, model):
+def test_acp_consult_route_still_admits_opus_sol_and_recon_pins(participant, model, expected):
     from scripts.agent_runtime import runner
 
-    assert runner.resolve_inter_agent_route(participant, model=model).model == model
+    assert runner.resolve_inter_agent_route(participant, model=model).model == expected
 
 
 @pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-opus-5-5"])
@@ -3433,3 +3436,14 @@ def test_codex_rejects_unapproved_model_before_binary_probe(tmp_path, monkeypatc
     monkeypatch.setattr(acpx_module, "_require_compatible_acpx_binary", unexpected_probe)
     with pytest.raises(AcpxShadowRefusalError, match=r"model=.*rejected"):
         _build(AcpxAdapter(), cwd=tmp_path, model=model)
+
+@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5-1-thinking-high"])
+def test_acp_consult_route_refuses_a_fable_pin_for_cursor_with_claude_refusal(monkeypatch, model):
+    import scripts.agent_runtime.adapters.claude as claude_module
+    from scripts.agent_runtime import runner
+
+    # Ensure native claude CLI is "found" to trigger the refusal
+    monkeypatch.setattr(claude_module, "_default_claude_bin", lambda: "/usr/bin/claude")
+
+    with pytest.raises(Exception, match="CURSOR_CLAUDE_REFUSED"):
+        runner.resolve_inter_agent_route("cursor", model=model)
