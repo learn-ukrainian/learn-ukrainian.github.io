@@ -22,6 +22,42 @@ def _oracle():
     return module
 
 
+@pytest.mark.parametrize("hook", ["merge", "admin"])
+@pytest.mark.parametrize(
+    "shell_options",
+    [
+        "bash -c --",
+        "sh -c --",
+        "bash -c -e",
+        "bash -c -x",
+        "bash -c +x",
+        "bash -ce --",
+        "bash -c -o errexit",
+        "bash -c +o errexit",
+        "bash -c -O extglob",
+        "bash -c +O extglob",
+    ],
+)
+def test_shell_options_after_c_execute_and_cannot_bypass_guards(hook, shell_options):
+    oracle = _oracle()
+    command = f"{shell_options} 'gh pr merge 5{' --admin' if hook == 'admin' else ''}'"
+    row = {
+        "id": "9484-c-options-guarded",
+        "family": "shell-c-options",
+        "command": command,
+        "hook": hook,
+        "accepted": False,
+        "oracle_pr": "5",
+    }
+    report = oracle.run_oracle(rows=[row], traffic=[])
+    observation = report["observations"][0]
+    # An invalid shell invocation is not proof that the guard stopped a merge.
+    assert observation["operation_executed"], observation
+    assert observation["blocked"], observation
+    assert report["failures"] == [], report
+    assert report["totals"]["misses"] == 0, report
+
+
 def _row(row_id, hook, disposition, reason=None, *, target=None, targets=None, supersedes=None, command="true"):
     expected = {"disposition": disposition, "reason_class": reason}
     if target is not None:

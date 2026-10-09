@@ -783,6 +783,11 @@ def read_commands(
                 for i, arg in enumerate(selected[1:], 1):
                     if arg.startswith("-") and "c" in arg[1:] and not arg.startswith("--"):
                         payload = selected[i + 1] if i + 1 < len(selected) else UNREADABLE
+                        # Shells keep processing options after -c, including --
+                        # and -o/-O/+o/+O with values. Do not parse an option as
+                        # code and silently lose the actual guarded payload.
+                        if payload.startswith(("-", "+")):
+                            raise ShellParseError("shell options after -c cannot establish execution payload")
                         break
                 if payload is None:
                     bodies = [
