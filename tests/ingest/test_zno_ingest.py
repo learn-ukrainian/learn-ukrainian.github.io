@@ -4,7 +4,10 @@ import io
 import json
 import os
 import sqlite3
+import threading
+import urllib.error
 import urllib.request
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 import pytest
@@ -25,6 +28,16 @@ from scripts.ingest.zno_ingest import (
     parse_and_insert_tasks,
     topic_norm_from_tag,
 )
+
+
+@pytest.fixture(autouse=True)
+def isolate_transport(monkeypatch):
+    monkeypatch.setattr(zno_ingest, "_access_stopped", False)
+    monkeypatch.setattr(zno_ingest, "_robots_delays", {"https://example.invalid": 0.0})
+    monkeypatch.setattr(zno_ingest, "_robots_states", {
+        "https://example.invalid": zno_ingest._robots_parse(b"", zno_ingest.USER_AGENT)
+    })
+    monkeypatch.setattr(zno_ingest, "_request_times", {})
 
 
 @pytest.fixture
@@ -358,13 +371,128 @@ def test_fetch_page_uses_bounded_request_timeout(tmp_path: Path, monkeypatch: py
         timeouts.append(timeout)
         return Response()
 
-    monkeypatch.setattr(zno_ingest.urllib.request, "urlopen", fake_urlopen)
-    monkeypatch.setattr(zno_ingest, "_last_request_time", 0.0)
+    class Opener:
+        open = staticmethod(fake_urlopen)
+
+    monkeypatch.setattr(zno_ingest.urllib.request, "build_opener", lambda *_handlers: Opener())
 
     html = fetch_page_with_rate_limit("https://example.invalid/test/", tmp_path / "page.html", rate_limit=0)
 
     assert html == "<html>тест</html>"
     assert timeouts == [FETCH_TIMEOUT_SECONDS]
+
+
+@pytest.fixture
+def zno_loopback():
+    """Exercise urllib's real status handling and body reads, without external traffic."""
+    requests = []
+    responses = {}
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            requests.append((self.path, self.headers.get("User-Agent")))
+            self.wfile.write(responses.get(self.path, b"HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n"))
+            self.close_connection = True
+
+        def log_message(self, *_args):
+            pass
+
+    with HTTPServer(("localhost", 0), Handler) as server:
+        thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.01})
+        thread.start()
+        try:
+            yield f"http://localhost:{server.server_port}", responses, requests
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+            assert not thread.is_alive()
+
+
+@pytest.mark.parametrize("status", [300, 302, 304])
+def test_nonfollowable_content_status_never_enters_cache(zno_loopback, tmp_path, status):
+    origin, responses, requests = zno_loopback
+    body = b"<html>moved</html>" if status != 304 else b""
+    responses["/page"] = f"HTTP/1.1 {status} Response\r\nContent-Length: {len(body)}\r\n\r\n".encode() + body
+    cache = tmp_path / "cache" / "page.html"
+
+    with pytest.raises(urllib.error.HTTPError) as error:
+        fetch_page_with_rate_limit(f"{origin}/page", cache, rate_limit=0)
+
+    assert error.value.code == status
+    assert error.value.url == f"{origin}/page"
+    assert not cache.exists()
+    assert not cache.parent.exists()
+    assert requests == [("/robots.txt", zno_ingest.USER_AGENT), ("/page", zno_ingest.USER_AGENT)]
+    assert not zno_ingest._access_stopped
+
+
+@pytest.mark.parametrize("status", [200, 206])
+def test_success_content_status_keeps_cache_hit_request_free(zno_loopback, tmp_path, status):
+    origin, responses, requests = zno_loopback
+    body = b"<html>valid page</html>"
+    responses["/page"] = f"HTTP/1.1 {status} Response\r\nContent-Length: {len(body)}\r\n\r\n".encode() + body
+    cache = tmp_path / "page.html"
+
+    assert fetch_page_with_rate_limit(f"{origin}/page", cache, rate_limit=0) == body.decode()
+    assert cache.read_bytes() == body
+    assert fetch_page_with_rate_limit(f"{origin}/page", cache, rate_limit=0) == body.decode()
+    assert requests == [("/robots.txt", zno_ingest.USER_AGENT), ("/page", zno_ingest.USER_AGENT)]
+
+
+@pytest.mark.parametrize(
+    ("wire", "error_name"),
+    [
+        (b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\n\r\nshort", "IncompleteRead"),
+        (b"not an HTTP status\r\n\r\n", "BadStatusLine"),
+        (b"HTTP/1.1 200 " + b"x" * 65537 + b"\r\n\r\n", "LineTooLong"),
+    ],
+    ids=["truncated-body", "bad-status-line", "oversize-status-line"],
+)
+def test_robots_protocol_failure_latches_stop_across_origins(zno_loopback, tmp_path, monkeypatch, wire, error_name):
+    origin, responses, requests = zno_loopback
+    responses["/robots.txt"] = wire
+    cache = tmp_path / "page.html"
+
+    with pytest.raises(zno_ingest.AccessStopped, match=f"robots_unreachable: {error_name}"):
+        fetch_page_with_rate_limit(f"{origin}/page", cache, rate_limit=0)
+
+    assert zno_ingest._access_stopped
+    assert zno_ingest._robots_states[origin] is None
+    assert not cache.exists()
+    assert requests == [("/robots.txt", zno_ingest.USER_AGENT)]
+
+    def forbidden_open(_request):
+        pytest.fail("latched STOP must prevent every subsequent transport call")
+
+    monkeypatch.setattr(zno_ingest, "_open", forbidden_open)
+    for later in (f"{origin}/again", "https://later.invalid/page"):
+        with pytest.raises(zno_ingest.AccessStopped):
+            fetch_page_with_rate_limit(later, cache, rate_limit=0)
+    assert not cache.exists()
+    assert requests == [("/robots.txt", zno_ingest.USER_AGENT)]
+
+
+@pytest.mark.parametrize("failure_stage", ["open", "read"])
+def test_robots_programming_failure_is_not_suppressed(tmp_path, monkeypatch, failure_stage):
+    requests = []
+
+    class Response(io.BytesIO):
+        def read(self):
+            raise RuntimeError("programming defect")
+
+    def broken_open(request):
+        requests.append(request.full_url)
+        if failure_stage == "open":
+            raise RuntimeError("programming defect")
+        return Response()
+
+    monkeypatch.setattr(zno_ingest, "_open", broken_open)
+    cache = tmp_path / "page.html"
+    with pytest.raises(RuntimeError, match="programming defect"):
+        fetch_page_with_rate_limit("https://broken.invalid/page", cache, rate_limit=0)
+    assert requests == ["https://broken.invalid/robots.txt"]
+    assert not zno_ingest._access_stopped
+    assert not cache.exists()
 
 
 @pytest.mark.skipif(os.getenv("ZNO_LIVE") != "1", reason="Requires ZNO_LIVE=1 env var")
