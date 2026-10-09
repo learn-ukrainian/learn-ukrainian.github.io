@@ -21,6 +21,7 @@ workers must not open sources.db).
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import re
 from dataclasses import dataclass
@@ -104,10 +105,18 @@ def _ulif_terms(node: Tag) -> list[dict[str, str]]:
     for bold in node.find_all("b"):
         # Preserve only source text-node whitespace; a synthetic separator
         # here moves commas and quotation marks away from their source token.
-        text = re.sub(r"\s+", " ", bold.get_text("", strip=False)).strip()
+        text = _ulif_term_text(bold)
         if text and any(char.isalpha() for char in text):
             terms.append({"text": text, "raw_html": str(bold)})
     return terms
+
+
+def _ulif_term_text(node: Tag) -> str:
+    """Normalize an explicit BR as a boundary without spacing inline tags."""
+    copied = copy.deepcopy(node)
+    for br in copied.find_all("br"):
+        br.replace_with(" ")
+    return re.sub(r"\s+", " ", copied.get_text("", strip=False)).strip()
 
 
 def correct_cached_ulif_relation_terms(payload: dict[str, Any], kind: str) -> None:
@@ -150,7 +159,7 @@ def correct_cached_ulif_relation_terms(payload: dict[str, Any], kind: str) -> No
             bold_nodes = soup.find_all("b")
             if len(bold_nodes) != 1 or str(bold_nodes[0]) != raw_html:
                 continue
-            text = re.sub(r"\s+", " ", bold_nodes[0].get_text("", strip=False)).strip()
+            text = _ulif_term_text(bold_nodes[0])
             if text and any(char.isalpha() for char in text):
                 term["text"] = text
 

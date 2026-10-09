@@ -29,6 +29,7 @@ Usage:
 
 from __future__ import annotations
 
+import copy
 import enum
 import re
 import time
@@ -649,7 +650,10 @@ def _ulif_terms(node: Tag) -> list[dict[str, str]]:
         # Relation tokens must retain the literal whitespace around inline
         # markup.  A separator between every text node invents spaces before
         # punctuation such as commas and quotation marks.
-        text = re.sub(r"\s+", " ", bold.get_text("", strip=False)).strip()
+        copied = copy.deepcopy(bold)
+        for br in copied.find_all("br"):
+            br.replace_with(" ")
+        text = re.sub(r"\s+", " ", copied.get_text("", strip=False)).strip()
         if text and any(char.isalpha() for char in text):
             terms.append({"text": text, "raw_html": str(bold)})
     return terms
