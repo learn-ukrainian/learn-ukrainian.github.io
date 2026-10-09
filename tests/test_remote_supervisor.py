@@ -379,7 +379,13 @@ def test_bridge_inbox_turn_preserves_occupied_remote_lease(supervisory_cycle, tm
     monkeypatch.setattr(
         _ui_codex, "find_live_session", lambda _: _ui_codex.LiveSession(thread, tmp_path, {}, rollout=rollout),
     )
-    send = Mock(return_value={"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]})
+    def resume(**kwargs):
+        kwargs["before_resume"]()
+        with rollout.open("a") as stream:
+            for kind in ("task_started", "task_complete"):
+                stream.write(json.dumps({"type": "event_msg", "payload": {"type": kind, "turn_id": "resume"}}) + "\n")
+        return {"exit_code": 0, "events": [{"type": "turn.started"}, {"type": "turn.completed"}]}
+    send = Mock(side_effect=resume)
     monkeypatch.setattr(_ui_codex, "send", send)
     start = Mock(side_effect=AssertionError("live lease forbids launcher"))
     assert wake_driver_once(
