@@ -17,7 +17,7 @@ def source(tmp_path):
     (root / "AGENTS.md").write_text("Reusable instructions.\n")
     (root / "config.toml").write_text(
         'model = "gpt-6.1-sol"\nmodel_reasoning_effort = "high"\n[agents]\n'
-        'default_subagent_model = "gpt-6-luna"\n'
+        'default_subagent_model = "gpt-6.1-sol"\n'
         'default_subagent_reasoning_effort = "high"\n'
     )
     for name, (model, effort, sandbox) in deployer.PROFILE_ROLES.items():
@@ -96,6 +96,7 @@ def test_preservation_idempotence_backups(source):
     assert deployer.deploy(source, home) == 0
     result = tomllib.loads(config.read_text())
     assert result["model_reasoning_effort"] == "high"
+    assert result["agents"]["default_subagent_model"] == "gpt-6.1-sol"
     assert result["future"] == {"enabled": True, "values": [1, 2]}
     assert result["agents"]["max_threads"] == 9
     assert result["mcp_servers"]["private"]["url"] == "private-sentinel"
@@ -354,7 +355,7 @@ def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
     assert config["model"] == "gpt-6.1-sol"
     assert config["model_reasoning_effort"] == "high"
     assert config["agents"] == {
-        "max_threads": 9, "default_subagent_model": "gpt-6-luna",
+        "max_threads": 9, "default_subagent_model": "gpt-6.1-sol",
         "default_subagent_reasoning_effort": "high",
     }
     assert config["features"]["multi_agent_v2"] == {"enabled": True, "tool_namespace": "agents"}
