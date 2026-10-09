@@ -782,8 +782,10 @@ def build(repo: Path, base: str) -> tuple[str, Counter[str], Counter[str]]:
     repo = repo.resolve()
     commit = git(repo, "rev-parse", "--verify", f"{base}^{{commit}}").decode().strip()
     # Use an isolated temporary index so `ls-files -s data` sees the requested
-    # commit without changing this worktree's live index or sparse settings.
-    with tempfile.TemporaryDirectory(prefix=".classification-index-", dir=repo) as scratch:
+    # commit without changing this worktree's live index or sparse settings.  It
+    # lives outside the checkout so a parallel test worker's write guard never
+    # sees it as a checkout mutation.
+    with tempfile.TemporaryDirectory(prefix="classification-index-") as scratch:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
         git(repo, "read-tree", commit, env=env)
         entries = git(repo, "ls-files", "-s", "-z", "--", "data", env=env).split(b"\0")

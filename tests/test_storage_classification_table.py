@@ -40,7 +40,7 @@ def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, s
 
     # A private base-commit index keeps this check valid after later migration
     # phases remove data/ paths from the live worktree index.
-    with tempfile.TemporaryDirectory(prefix=".classification-index-", dir=ROOT) as scratch:
+    with tempfile.TemporaryDirectory(prefix="classification-index-") as scratch:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
         subprocess.run(["git", "read-tree", BASE], cwd=ROOT, env=env, check=True, timeout=30)
         index = subprocess.check_output(["git", "ls-files", "-s", "data"], cwd=ROOT, env=env, timeout=30)
