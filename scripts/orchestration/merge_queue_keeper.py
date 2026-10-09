@@ -34,6 +34,8 @@ FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
 HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
+# No recorded approval for the head that would merge. All three surface as needs-CF.
+MISSING_CF_STATES = frozenset({"needs-CF", "CF-stale", "CF-unrecorded"})
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 # Dependency-update PRs get no per-language ``Analyze (…)`` CodeQL runs, only
 # the top-level CodeQL check from GitHub code scanning (#8587, #9921). That
@@ -394,9 +396,7 @@ def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: i
     if hold is not False:
         return "hold" if hold else "hold-unknown"
     if verdict.state != "APPROVED":
-        return (
-            "needs-CF" if verdict.state in {"needs-CF", "CF-stale", "CF-unrecorded"} else f"CF-{verdict.state.lower()}"
-        )
+        return "needs-CF" if verdict.state in MISSING_CF_STATES else f"CF-{verdict.state.lower()}"
     if check_state != "ok":
         return check_state
     if row.get("mergeStateStatus") in {"DIRTY", "UNKNOWN"} or not isinstance(row.get("mergeStateStatus"), str):
@@ -539,9 +539,18 @@ def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login
 
 
 def _revoke_reason(
-    row: Mapping[str, Any], verdict: Verdict, checks: str, approved_before: bool, verdict_lookup_ok: bool
+    row: Mapping[str, Any],
+    verdict: Verdict,
+    checks: str,
+    approved_before: bool,
+    verdict_lookup_ok: bool,
+    *,
+    queued: bool,
 ) -> str | None:
-    """Only fresh, positive blockers may remove a queued or armed PR."""
+    """Fresh, positive blockers that may remove a queued or armed PR.
+
+    A queued head with no cross-family approval at that head is removed.
+    """
     if row.get("isDraft") is True:
         return "draft"
     if _hold(row) is True:
@@ -552,6 +561,8 @@ def _revoke_reason(
         return f"CF-{verdict.state.lower()}"
     if verdict_lookup_ok and verdict.state == "unknown" and approved_before:
         return "CF-unknown-after-approval"
+    if queued and verdict_lookup_ok and verdict.state in MISSING_CF_STATES:
+        return "needs-CF"
     return None
 
 
@@ -758,7 +769,14 @@ def run(
                     and current.get("baseRefName") == pr.get("baseRefName")
                 )
                 revoke = (
-                    _revoke_reason(current, current_verdict, current_checks, approved_before, verdict_lookup_ok)
+                    _revoke_reason(
+                        current,
+                        current_verdict,
+                        current_checks,
+                        approved_before,
+                        verdict_lookup_ok,
+                        queued=queued is True,
+                    )
                     if fresh
                     else None
                 )
@@ -778,6 +796,8 @@ def run(
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
                         previous.setdefault("squash_revoked", {})[drop_key] = observed
+                    if revoke == "needs-CF" and comment_safe:
+                        _comment_once(gh, number, head, revoke, comments, login, detail)
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")

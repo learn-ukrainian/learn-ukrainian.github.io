@@ -187,12 +187,88 @@ def test_red_team_marker_without_mode_is_not_accepted_by_keeper(tmp_path: Path) 
     assert "reason=CF-unknown" in lines[0]
 
 
-def test_queued_legacy_approval_is_report_only(tmp_path: Path) -> None:
+def _keeper_comment(fake: FakeGitHub) -> str:
+    bodies = [body for kind, body in fake.actions if kind == "comment"]
+    assert len(bodies) == 1
+    return bodies[0]
+
+
+def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=ready" in lines[0]
+    assert not any("revoked" in line for line in lines)
+    assert json.loads(path.read_text())["queued"]["42"] == HEAD_A
+
+
+def test_queued_without_cf_at_head_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=True)
+    assert not failed
+    assert mutations(fake) == ["dequeue", "comment"]
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
+    body = _keeper_comment(fake)
+    assert body == (
+        "Merge queue keeper: #42 was not queued because needs-CF.\n\n"
+        f"<!-- mq-keeper head={HEAD_A} reason=needs-CF -->"
+    )
+    state = json.loads(path.read_text())
+    assert "42" not in state["queued"]
+    assert f"42:{HEAD_A}" not in state["drops"]
+    assert f"42:{HEAD_A}" not in state.get("squash_revoked", {})
+
+
+def test_queued_cf_only_at_old_head_is_revoked(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
+    fake.fresh["headRefOid"] = HEAD_B
+    fake.check_rows = checks(HEAD_B)
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00", head=HEAD_A)]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == ["dequeue", "comment"]
+    assert "#42 revoked: needs-CF" in lines
+    assert "reason=needs-CF" in lines[0]
+    body = _keeper_comment(fake)
+    assert f"head={HEAD_B} reason=needs-CF" in body
+    assert "was not queued because needs-CF." in body
+
+
+def test_armed_without_cf_stays_held(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(autoMergeRequest={"enabledAt": "2026-09-23T13:00:00Z"}))
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert "disarm" not in mutations(fake)
+    assert "dequeue" not in mutations(fake)
+    assert any(line == "#42 held: needs-CF" for line in lines)
+
+
+def test_queued_missing_cf_dry_run_reports_only(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    path = tmp_path / "state.json"
+    lines, failed = keeper.run(fake, path, apply=False)
+    assert not failed
+    assert mutations(fake) == []
+    assert not path.exists()
+    assert len(lines) == 1
+    assert "reason=needs-CF" in lines[0]
+    assert "queued=True" in lines[0]
+    assert "revoked" not in lines[0]
+
+
+def test_queued_legacy_approval_is_revoked(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == []
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
     assert "reason=needs-CF" in lines[0]
 
 
@@ -287,13 +363,14 @@ def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
     assert ("dequeue", "PR_node_42") in fake.actions
 
 
-def test_queued_stale_recorded_approval_is_report_only(tmp_path: Path) -> None:
+def test_queued_stale_recorded_approval_is_revoked(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
     fake.check_rows = checks(HEAD_B)
     fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
-    assert mutations(fake) == []
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: needs-CF" in lines
     assert "reason=needs-CF" in lines[0]
 
 
