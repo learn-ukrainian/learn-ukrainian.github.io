@@ -969,3 +969,38 @@ def test_agy_every_short_flag_group_rejects_an_unknown_member(key):
     command = " ".join(key)
     assert agy._read_only_killed_command(f"{command} {group} {operands}")
     assert not agy._read_only_killed_command(f"{command} {group}Z {operands}")
+
+def test_agy_impl_9747_timer_kill_excused_allows_completion(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="Timer: 20s, Prompt: Wait for tests"),
+            _start(_TASK_3, description="Timer: 60s, Prompt: wait"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _kill(_TASK_3),
+            _canceled(_TASK_3),
+            _reply("I am done with the timers."),
+        ],
+        envelope={"conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": "I am done with the timers."}
+    )
+    assert result.ok
+    assert result.response == "I am done with the timers."
+    assert "Timer: 20s, Prompt: Wait for tests" in result.agy_killed_commands
+
+def test_agy_incomplete_write_run_with_killed_background_command_fails(tmp_path):
+    result = _parse(
+        tmp_path,
+        [
+            _prompt(),
+            _start(_TASK_2, description="git push"),
+            _kill(_TASK_2),
+            _canceled(_TASK_2),
+            _reply("I killed git push."),
+        ],
+        envelope={"conversation_id": _FINISHED_CONVERSATION_ID, "status": "SUCCESS", "response": "I killed git push."}
+    )
+    assert not result.ok
+    assert result.failure_code == "provider_stream_incomplete"
+    assert "git push" in result.agy_killed_commands

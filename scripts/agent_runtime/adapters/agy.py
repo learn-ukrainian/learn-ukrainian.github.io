@@ -596,6 +596,7 @@ def _model_killed_tasks(
                 if (
                     blocked is not None
                     and (reply is None or position < reply)
+                    and not command.startswith("Timer: ")
                     and not _read_only_killed_command(command)
                 ):
                     blocked.append(command)
@@ -614,7 +615,7 @@ def _model_killed_tasks(
             and task in kills
             and kills[task] < position
             and (reply is None or position < reply)
-            and _read_only_killed_command(commands[task])
+            and (commands[task].startswith("Timer: ") or _read_only_killed_command(commands[task]))
         ):
             excused.add(task)
         # A past kill cannot authorize a later external cancellation.
@@ -916,6 +917,13 @@ class AgyAdapter:
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
         # Review: exact scoped grants plus the OS boundary and AGY --sandbox.
+
+        if mode in ("workspace-write", "danger"):
+            prompt += (
+                "\n\nCRITICAL: You are in a write-mode dispatch. Run tests and pushes "
+                "in the foreground to completion. Never start a background task or timer, "
+                "and never end your turn while waiting."
+            )
 
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
