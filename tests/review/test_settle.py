@@ -44,6 +44,7 @@ class World:
         result: str,
         *,
         hits: int = 1,
+        status: str = "ok",
         arguments: dict[str, Any] | None = None,
         review_id: str = "settle-R",
         attempt_id: str = "settle-A",
@@ -57,7 +58,7 @@ class World:
             server_version="fixture",
             arguments=arguments or {},
             snapshots={},
-            status="ok",
+            status=status,
             result=result,
             outcome_facts={
                 "call_status": "ok",
@@ -239,7 +240,9 @@ def test_source_conflict_refuses_a_second_source_without_hits(world: World) -> N
         settle.validate_reply(world.reply("source_conflict", evidence), world.manifest.read_bytes(), world.own_ledger)
 
 
-def _broadened(world: World) -> list[dict[str, str]]:
+def _broadened(
+    world: World, *, result: str | None = None, status: str = "ok", category_only: str | None = None
+) -> list[dict[str, str]]:
     calls = [
         ("lemma", "inspect_word", {}),
         ("construction", "search_style_guide", {}),
@@ -249,20 +252,62 @@ def _broadened(world: World) -> list[dict[str, str]]:
         ("pravopys", "query_pravopys", {}),
         ("counterevidence", "query_sum20", {}),
     ]
-    return [
-        {
-            "category": category,
-            "receipt": world.call(tool, f"{category}: no results", hits=0, arguments=arguments),
-            "quote": f"{category}: no results",
-        }
-        for category, tool, arguments in calls
-    ]
+    searches = []
+    for category, tool, arguments in calls:
+        selected = category_only is None or category == category_only
+        text = result if selected and result is not None else f"{category}: no results"
+        searches.append(
+            {
+                "category": category,
+                "receipt": world.call(tool, text, hits=0, arguments=arguments, status=status if selected else "ok"),
+                "quote": text,
+            }
+        )
+    return searches
 
 
 def test_unresolved_accepts_each_broadened_search(world: World) -> None:
     reply = world.reply("unresolved", searches=_broadened(world))
     result, receipts = settle.validate_reply(reply, world.manifest.read_bytes(), world.own_ledger)
     assert result == "unresolved" and len(receipts) == 7
+
+
+@pytest.mark.parametrize("result", ["No results found.", "Successful source excerpt."])
+def test_unresolved_accepts_successful_broadened_receipts(world: World, result: str) -> None:
+    searches = _broadened(world, result=result)
+    outcome, receipts = settle.validate_reply(
+        world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+    )
+    assert outcome == "unresolved"
+    assert receipts == [search["receipt"] for search in searches]
+
+
+@pytest.mark.parametrize("category_only", [None, *settle.SEARCH_TOOLS])
+@pytest.mark.parametrize(
+    "status,result,classified_status",
+    [
+        ("ok", "invalid_input: empty query", "error"),
+        ("ok", '{"status": "invalid_input"}', "error"),
+        ("ok", '{"error_code": "invalid_input"}', "error"),
+        ("ok", '{"disposition": "invalid_input"}', "error"),
+        ("error", "Sources call failed.", "error"),
+        ("refused", "Sources call refused.", "refused"),
+        ("ok", '{"status": "unavailable"}', "unavailable"),
+    ],
+)
+def test_unresolved_refuses_unsuccessful_broadened_receipts(
+    world: World, category_only: str | None, status: str, result: str, classified_status: str
+) -> None:
+    # World.call deliberately supplies no-hit facts: classify the stored call,
+    # rather than trusting stale or caller-supplied outcome_facts.
+    searches = _broadened(world, result=result, status=status, category_only=category_only)
+    category = category_only or "lemma"
+    with pytest.raises(
+        settle.SettleError, match=f"broadened_search_call_unsuccessful: {category}: {classified_status}"
+    ):
+        settle.validate_reply(
+            world.reply("unresolved", searches=searches), world.manifest.read_bytes(), world.own_ledger
+        )
 
 
 def test_unresolved_refuses_missing_broadened_search(world: World) -> None:
