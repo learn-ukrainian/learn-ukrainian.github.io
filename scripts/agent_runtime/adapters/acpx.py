@@ -1509,7 +1509,7 @@ def _require_local_claude_acp_adapter(
             return
 
         raise AcpxShadowRefusalError(
-            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} {name} failed check: {reason} ({rel_path}, mode {mode_oct})",
+            f"{adapter_label}: project-local {_CLAUDE_ACP_PACKAGE} {name} failed check: {reason} ({rel_path}, mode {mode_oct}) - clear group/other write bits on this path; reinstall under umask 022",
             failure_code="acp_adapter_incompatible",
         )
 

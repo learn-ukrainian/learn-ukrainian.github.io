@@ -73,7 +73,7 @@
     "build:starlight": "npm run build --prefix site",
     "build:starlight:full": "npm run build:full --prefix site",
     "dev:starlight": "npm run dev --prefix site",
-    "postinstall": "chmod -R go-w node_modules/@agentclientprotocol/claude-agent-acp || true"
+    "postinstall": "node scripts/agent_runtime/normalize_acp_modes.js"
   },
   "repository": {
     "type": "git",
