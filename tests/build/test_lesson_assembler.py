@@ -6,6 +6,7 @@ import pytest
 import yaml
 
 from scripts.build.lesson_assembler import assemble_lessons
+from scripts.curriculum.arc.loader import load_arc
 from tests.build.upgrade_fixtures import UPGRADED, extract_upgrade_fixtures, fixture_text
 
 pytestmark = pytest.mark.reads_content
@@ -97,6 +98,51 @@ def test_gold_activity_payloads_and_render(gold, tmp_path):
             assert f'<span id="{anchor}">' in mdx
 
 
+def _approved_a1_route_membership():
+    active = {position.slug for position in load_arc("a1")}
+    inventory = yaml.safe_load(Path("curriculum/l2-uk-en/lesson-plans/a1/_retired.yaml").read_text())
+    retired = {entry["slug"] for entry in inventory["routes"]}
+    assert retired == {"special-signs", "stress-and-melody"}
+    assert active.isdisjoint(retired)
+    return active, retired
+
+
+def _assert_a1_module_route_metadata(arc):
+    """Expected membership comes from the approved arc/inventory, never page kinds."""
+    active, retired = _approved_a1_route_membership()
+    module_routes = {route for route in arc if route.startswith("a1/") and route.count("/") == 1}
+    assert module_routes == {f"a1/{slug}" for slug in active | retired}
+    for slug in active | retired:
+        data = arc[f"a1/{slug}"]
+        assert (data["arc_kind"], data["arc_level"], data["arc_slug"]) == (
+            "retired" if slug in retired else "module", "a1", slug)
+        if slug in retired:
+            assert set(data) == {"title", "arc_kind", "arc_level", "arc_slug"}
+            assert data["title"] == {
+                "special-signs": "Retired · Special signs",
+                "stress-and-melody": "Retired · Stress and melody",
+            }[slug]
+
+
+@pytest.mark.parametrize("defect", ["unrecorded_retired", "active_as_retired", "retired_as_module"])
+def test_a1_route_oracle_rejects_unapproved_retirement(defect):
+    active, retired = _approved_a1_route_membership()
+    arc = {f"a1/{slug}": {"title": slug, "arc_kind": "module", "arc_level": "a1", "arc_slug": slug}
+           for slug in active}
+    arc.update({f"a1/{slug}": {"title": title, "arc_kind": "retired", "arc_level": "a1", "arc_slug": slug}
+                for slug, title in {"special-signs": "Retired · Special signs",
+                                    "stress-and-melody": "Retired · Stress and melody"}.items()})
+    _assert_a1_module_route_metadata(arc)
+    if defect == "unrecorded_retired":
+        arc["a1/unrecorded"] = {"arc_kind": "retired", "arc_level": "a1", "arc_slug": "unrecorded"}
+    else:
+        slug = "introduction-to-ukrainian" if defect == "active_as_retired" else "special-signs"
+        assert slug in (active if defect == "active_as_retired" else retired)
+        arc[f"a1/{slug}"]["arc_kind"] = "retired" if defect == "active_as_retired" else "module"
+    with pytest.raises(AssertionError):
+        _assert_a1_module_route_metadata(arc)
+
+
 def test_canonical_site_routes_and_frontmatter_groups(gold, tmp_path):
     """Execute the actual Astro route function and group builder with content entries."""
     import json
@@ -143,21 +189,26 @@ new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\
     pages = assemble_lessons(module, tmp_path / "site", plan)
     docs = [{"id": "a1-v1/things-have-gender", "data": {"title": "Original", "sidebar": {"order": 7}}}]
     docs.extend({"id": f"a1/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
-                for name, mdx in pages.items())
+                for name, mdx in pages.items() if name != "index")
     docs.append({"id": "a1/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
     # Feed the router the real generated pages (landing + every arc module page) from the working tree.
     real = Path("site/src/content/docs/a1")
     landing = yaml.safe_load((real / "index.mdx").read_text(encoding="utf-8").split("---", 2)[1])
     docs.append({"id": "a1/index", "data": landing})
-    module_slugs = []
+    active_slugs, retired_slugs = _approved_a1_route_membership()
+    generated_slugs = set()
     for page in sorted(real.glob("*/index.mdx")):
         slug = page.parent.name
-        if slug == "things-have-gender":  # this slug's pages come from the assembler fixture above
-            continue
-        module_slugs.append(slug)
-        docs.append({"id": f"a1/{slug}/index",
-                     "data": yaml.safe_load(page.read_text(encoding="utf-8").split("---", 2)[1])})
-    assert len(module_slugs) >= 50
+        generated_slugs.add(slug)
+        mdx = page.read_text(encoding="utf-8")
+        data = yaml.safe_load(mdx.split("---", 2)[1])
+        if slug == "things-have-gender":
+            # Real arc metadata, plus the fixture's independently assembled lesson map.
+            data["lessons"] = yaml.safe_load(pages["index"].split("---", 2)[1])["lessons"]
+        if slug in retired_slugs:
+            assert mdx.split("---", 2)[2].strip() == ""
+        docs.append({"id": f"a1/{slug}/index", "data": data})
+    assert generated_slugs == active_slugs | retired_slugs
     result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True, timeout=30))
     kinds = {route["params"]["slug"]: route["kind"] for route in result["routes"]}
     assert {
@@ -169,10 +220,9 @@ new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\
     # branch runs in the page body, not in getStaticPaths; so assert the props the branch reads.
     arc = {route["params"]["slug"]: route["arc"] for route in result["routes"]}
     assert (arc["a1"]["arc_kind"], arc["a1"]["arc_level"]) == ("landing", "a1")
-    for slug in module_slugs:
+    for slug in active_slugs | retired_slugs:
         assert kinds[f"a1/{slug}"] == "doc"
-        assert (arc[f"a1/{slug}"]["arc_kind"], arc[f"a1/{slug}"]["arc_level"], arc[f"a1/{slug}"]["arc_slug"]) == (
-            "module", "a1", slug)
+    _assert_a1_module_route_metadata(arc)
     assert kinds["a1/things-have-gender"] == kinds["a1/things-have-gender/2"] == "doc"
     assert "a1/draft" not in kinds
     assert "a1" in result["visible"]

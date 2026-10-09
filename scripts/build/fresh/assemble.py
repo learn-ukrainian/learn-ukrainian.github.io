@@ -189,7 +189,8 @@ from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import load_allowlist, resolve
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
-from scripts.curriculum.validate.loader import load_plan, retirement_record
+from scripts.curriculum.validate import codes as plan_codes
+from scripts.curriculum.validate.loader import PlanError, load_plan, retirement_record
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -3173,7 +3174,16 @@ def assemble_lesson(
     paths = lesson_lock.resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=root)
     if plan_dict is not None and not paths["plan"].is_file():
         retirement_record(paths["plan"].parent)
-    loaded_plan = load_plan(paths["plan"]) if plan_dict is None or paths["plan"].is_file() else plan_dict
+    try:
+        loaded_plan = load_plan(paths["plan"]) if plan_dict is None or paths["plan"].is_file() else plan_dict
+    except PlanError as err:
+        # Retirement remains a typed refusal before any other input is read.
+        if err.code in {plan_codes.PLAN_RETIRED, plan_codes.RETIREMENT_RECORD_INVALID}:
+            raise
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": str(err), "layer": "engine", "code": err.code},
+        }
     state_dir = output_dir or (paths["state_dir"] / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
@@ -3200,6 +3210,27 @@ def assemble_lesson(
             },
         }
 
+    # Validate locked disk inputs before assembly can write any state artifacts.
+    try:
+        allowlist = load_allowlist(
+            level, slug, lesson_n,
+            plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
+        )
+    except ResolverError as err:
+        code, message = err.code, err.message
+        layer = "pack" if code in {resolver_codes.UNKNOWN_WORD_ID, resolver_codes.LOCK_MISMATCH} else "engine"
+    except (OSError, ValueError) as err:
+        code, message, layer = "resolver_input_unavailable", str(err), "pack"
+    except Exception as err:
+        code, message, layer = "resolver_error", str(err), "engine"
+    else:
+        code = None
+    if code is not None:
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": f"{code}: {message}", "layer": layer, "code": code},
+        }
+
     # Check 5: Assembly
     c5 = check_5_assembly(draft, plan, pack, words_store, level, slug, lesson_n, output_dir=state_dir)
     if not c5.passed:
@@ -3209,10 +3240,6 @@ def assemble_lesson(
 
     # Resolver resolution
     try:
-        allowlist = load_allowlist(
-            level, slug, lesson_n,
-            plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
-        )
         with Sources() as sources:
             expanded_obj = ExpandedDocument.from_data(expanded_doc)
             lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)

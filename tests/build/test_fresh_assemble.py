@@ -2456,8 +2456,12 @@ def test_resolver_setup_failures_are_structured_and_close_sources(tmp_path, monk
     assert not (site / "1.mdx").exists()
 
 
-@pytest.mark.parametrize("defect", ["missing_plan", "invalid_plan", "missing_words_lock", "mismatched_words_lock"])
-def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, defect):
+@pytest.mark.parametrize("defect,code", [
+    ("missing_plan", "plan_not_found"), ("invalid_plan", "v1_plan"),
+    ("invalid_yaml", "plan_yaml_invalid"), ("removed_field", "removed_v1_field"),
+    ("missing_words_lock", "lock_mismatch"), ("mismatched_words_lock", "lock_mismatch"),
+], ids=["missing_plan", "invalid_plan", "invalid_yaml", "removed_field", "missing_words_lock", "mismatched_words_lock"])
+def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, defect, code):
     from scripts.build.fresh import assemble
     from scripts.curriculum.evidence import lock
     from tests.build.test_fresh_recap_contract import quoted_task_world
@@ -2470,11 +2474,21 @@ def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, d
     elif defect == "invalid_plan":
         plan_path.write_text("plan_schema: invalid\n")
         lock.write(plan_path)
+    elif defect == "invalid_yaml":
+        plan_path.write_text("invalid: [\n")
+        lock.write(plan_path)
+    elif defect == "removed_field":
+        disk_plan = {**world["plan"], "word_target": 10}
+        plan_path.write_text(yaml.safe_dump(disk_plan))
+        lock.write(plan_path)
     elif defect == "missing_words_lock":
         Path(f"{words_path}.lock").unlink()
     else:
         Path(f"{words_path}.lock").write_text("0" * 64 + "\n")
     # In-memory assembly inputs remain valid, but cannot replace locked disk state.
+    from tests.build.test_fresh_retirement import snapshot
+
+    before = snapshot(tmp_path)
     monkeypatch.setattr(assemble, "Sources", lambda: pytest.fail("Sources opened after invalid allowlist"))
     report = assemble.assemble_lesson(
         "a1", "sample-slug", 1, repo_root=tmp_path,
@@ -2485,9 +2499,9 @@ def test_real_allowlist_input_failures_never_write_site(tmp_path, monkeypatch, d
     assert failure["check"] == 9 and failure["passed"] is False
     assert failure["reason"].startswith(f"{failure['code']}: ")
     assert failure["layer"] == ("pack" if failure["code"] in {"lock_mismatch", "resolver_input_unavailable"} else "engine")
-    assert failure["code"] == ("plan_not_found" if defect == "missing_plan" else
-                               "v1_plan" if defect == "invalid_plan" else "lock_mismatch")
+    assert failure["code"] == code
     assert not (tmp_path / "site/src/content/docs/a1/sample-slug/1.mdx").exists()
+    assert snapshot(tmp_path) == before
 
 
 def test_recap_keeps_paradigm_table_and_bilingual_dialogue_units_on_page():

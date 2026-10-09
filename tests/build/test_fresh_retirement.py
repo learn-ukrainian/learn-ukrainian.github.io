@@ -53,6 +53,8 @@ def test_cli_refuses_before_missing_evidence_and_writes_nothing(root, command, m
     [
         lambda root: cli._load_lesson_data("a1", "old", 1, repo_root=root),
         lambda root: assemble.assemble_lesson("a1", "old", 1, repo_root=root),
+        lambda root: assemble.assemble_lesson(
+            "a1", "old", 1, repo_root=root, plan_dict={}, pack_dict={}, words_dict={}, draft_dict={}),
         lambda root: lesson_lock.compute_lesson_lock("a1", "old", repo_root=root),
         lambda root: plan_manifest.write_plan_manifest("a1", "old", repo_root=root),
         lambda root: plan_promote.promote_plan("a1", "old", repo_root=root),
@@ -134,3 +136,33 @@ def test_in_memory_inputs_cannot_bypass_invalid_record_without_disk_plan(tmp_pat
         with pytest.raises(PlanError, match="retirement_record_invalid"):
             operation()
         assert snapshot(tmp_path) == before
+
+
+def test_assembly_invalid_retirement_record_with_disk_plan_precedes_all_other_reads(root, monkeypatch):
+    plans = root / "curriculum/l2-uk-en/lesson-plans/a1"
+    (plans / "_retired.yaml").write_text("invalid: true\n")
+    before = snapshot(root)
+    read_text = Path.read_text
+
+    def guarded_text(path, *args, **kwargs):
+        assert path.name == "_retired.yaml", "other input read before inventory validation"
+        return read_text(path, *args, **kwargs)
+
+    with monkeypatch.context() as guard:
+        guard.setattr(Path, "read_text", guarded_text)
+        guard.setattr(Path, "read_bytes", lambda *_a: pytest.fail("plan bytes read before inventory validation"))
+        with pytest.raises(PlanError, match="retirement_record_invalid"):
+            assemble.assemble_lesson("a1", "old", 1, repo_root=root, plan_dict={})
+    assert snapshot(root) == before
+
+
+def test_changed_retired_bytes_get_ordinary_plan_failure_without_writes(root, monkeypatch):
+    path = root / "curriculum/l2-uk-en/lesson-plans/a1/old.yaml"
+    path.write_text("plan_schema: 2\nslug: old\nword_target: 10\n")
+    before = snapshot(root)
+    monkeypatch.setattr(assemble, "Sources", lambda: pytest.fail("Sources opened for invalid replacement"))
+    report = assemble.assemble_lesson("a1", "old", 1, repo_root=root, plan_dict={})
+    assert report["ok"] is False
+    assert report["failure"]["code"] == "removed_v1_field"
+    assert report["failure"]["check"] == 9
+    assert snapshot(root) == before
