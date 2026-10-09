@@ -215,7 +215,7 @@ def test_interactive_launcher_installs_guard_despite_inherited_markers(launcher,
     assert "Never compact a Claude driver" in result.stdout.replace("\\ ", " ")
     assert "HANDOFF-DONE" in result.stdout
 
-@pytest.mark.parametrize("flag", ["-p", "--print", "--print=true"])
+@pytest.mark.parametrize("flag", ["-p", "--print", "--print=true", "-cp", "-pc", "-ccpp"])
 def test_print_mode_launcher_omits_driver_guard(flag):
     result = run_launcher("start-claude.sh", "--", flag, "inspect")
     assert result.returncode == 0, result.stderr
@@ -223,6 +223,153 @@ def test_print_mode_launcher_omits_driver_guard(flag):
     assert "driver-compaction-guard" not in result.stdout
     assert "HANDOFF-DONE" not in result.stdout
 
+
+REFUSED_FORWARD_ARGS = [
+    ("--settings", "private-value"), ("--settings=private-value",),
+    ("--settings", '{"disableAllHooks":true}'),
+    ("--bare",), ("--bare=true",), ("--safe-mode",), ("--safe-mode=true",),
+    ("--setting-sources", "private-value"), ("--setting-sources=private-value",),
+    ("--managed-settings", "private-value"), ("--managed-settings=private-value",),
+    ("--client-data-url", "private-value"), ("--client-data-url=private-value",),
+    ("--project-config-root", "private-value"), ("--project-config-root=private-value",),
+    ("--restricted",), ("--desktop",), ("--cloud",), ("--environment", "private-value"),
+    ("--bg",), ("--background",), ("--worktree",), ("-w",), ("--tmux",),
+    ("--disable-hooks",), ("--no-hooks",), ("--future-option", "private-value"),
+    ("--set", "private-value"), ("--sett=private-value",), ("--bar",), ("--safe",),
+    ("-b",), ("-bc",), ("--settings\nprivate-value",),
+    ("attach", "private-value"), ("agents",), ("remote-control",),
+]
+
+
+@pytest.mark.parametrize("launcher,args", [
+    ("start-claude.sh", ()), ("start-claude-driver.sh", ("--epic", "devops")),
+])
+@pytest.mark.parametrize("forwarded", REFUSED_FORWARD_ARGS)
+def test_interactive_forwarding_refuses_unaudited_arguments(launcher, args, forwarded):
+    result = run_launcher(launcher, *args, "--", *forwarded)
+    assert result.returncode == 2, result.stderr
+    assert "refused in interactive Claude" in result.stderr
+    assert "preserve launcher settings and compaction hooks" in result.stderr
+    if "\n" not in forwarded[0]:
+        assert forwarded[0].split("=", 1)[0] in result.stderr
+    assert "private-value" not in result.stdout + result.stderr
+    assert "disableAllHooks" not in result.stdout + result.stderr
+    assert "would exec claude" not in result.stdout
+
+
+@pytest.mark.parametrize("forwarded", [
+    ("--model", "opus"), ("--model=opus",),
+    ("--effort", "high"), ("--effort=high",),
+    ("--resume",), ("--resume", "session"), ("--resume=session",),
+    ("-r",), ("-r", "session"), ("--continue",), ("-c",),
+    ("--append-system-prompt", "fixture prompt"), ("--append-system-prompt=fixture",),
+    ("--append-system-prompt-file", "fixture.txt"), ("--append-system-prompt-file=fixture.txt",),
+    ("--agent", "infra-orchestrator"), ("--agent=infra-orchestrator",),
+    ("--session-id", "session"), ("--session-id=session",),
+    ("--name", "fixture"), ("--name=fixture",), ("-n", "fixture"),
+    ("--permission-mode", "plan"), ("--permission-mode=plan",),
+    ("--debug",), ("--debug", "hooks"), ("--debug=hooks",), ("-d",), ("-d", "hooks"),
+    ("--fork-session",), ("--verbose",), ("--dangerously-skip-permissions",),
+    ("--allow-dangerously-skip-permissions",), ("--help",), ("-h",),
+    ("--version",), ("-v",), ("fixture prompt",),
+    ("--", "--settings", "fixture"), ("--", "--print"), ("--", "attach"),
+    # Required option values and embedded prose must not grant print exemption.
+    ("--append-system-prompt", "--print"), ("--append-system-prompt", "-p"),
+    ("--append-system-prompt=--print",), ("fixture --print prose",),
+])
+@pytest.mark.parametrize("launcher,args", [
+    ("start-claude.sh", ()), ("start-claude-driver.sh", ("--epic", "devops")),
+])
+def test_audited_interactive_forwarding_preserves_guard(launcher, args, forwarded):
+    result = run_launcher(launcher, *args, "--", *forwarded)
+    assert result.returncode == 0, result.stderr
+    assert "driver-compaction-guard.json" in result.stdout
+    assert "would exec claude" in result.stdout
+
+
+@pytest.mark.parametrize("forwarded", [
+    ("--settings", "fixture", "-p", "inspect"),
+    ("--settings=fixture", "--print", "inspect"),
+    ("--setting-sources", "", "-p", "inspect"),
+    ("--managed-settings", "{}", "--print", "inspect"),
+    ("--safe-mode", "-p", "inspect"), ("--bare", "--print", "inspect"),
+    ("-p", "--future-headless-option", "inspect"),
+    ("--mcp-config", "{}", "{}", "-p", "inspect"),
+    ("--resume", "session", "--print", "inspect"),
+])
+def test_headless_forwarding_retains_native_settings_behavior(forwarded):
+    result = run_launcher("start-claude.sh", "--", *forwarded)
+    assert result.returncode == 0, result.stderr
+    assert "driver-compaction-guard" not in result.stdout
+    assert "HANDOFF-DONE" not in result.stdout
+
+
+@pytest.mark.parametrize("forwarded", [
+    ("--settings", "--print"), ("--managed-settings", "--print"),
+    ("--client-data-url", "-p"), ("--project-config-root", "--print"),
+    ("--append-system-prompt", "--print", "--bare"),
+    ("--append-system-prompt", "-p", "--settings=private-value"),
+    ("--unknown", "--print"),
+])
+def test_option_values_cannot_hide_interactive_settings_bypass(forwarded):
+    result = run_launcher("start-claude.sh", "--", *forwarded)
+    assert result.returncode == 2, result.stderr
+    assert "would exec claude" not in result.stdout
+    assert "private-value" not in result.stdout + result.stderr
+
+
+AUDITED_REFUSED_SCALAR_FLAGS = [
+    "--settings", "--setting-sources", "--managed-settings", "--client-data-url",
+    "--project-config-root", "--debug-file", "--output-format", "--json-schema", "--input-format",
+    "--thinking", "--thinking-display", "--max-thinking-tokens", "--max-turns", "--max-budget-usd",
+    "--task-budget", "--permission-prompt-tool", "--permission-prompts", "--system-prompt",
+    "--system-prompt-file", "--system-prompt-snapshot", "--append-subagent-system-prompt",
+    "--append-subagent-system-prompt-file", "--plan-mode-instructions",
+    "--inherit-permission-mode", "--watch-artifact", "--watch-artifact-no-autoreact", "--prefill",
+    "--deep-link-repo", "--deep-link-last-fetch", "--prefill-b64", "--deep-link-cwd-b64",
+    "--resume-session-at", "--resume-drops-turn", "--rewind-files", "--fallback-model",
+    "--workload", "--agents", "--plugin-dir", "--plugin-dir-no-mcp", "--plugin-url",
+    "--autocompact", "--environment", "--from-pr", "--prompt-suggestions", "--cloud", "--teleport",
+    "--worktree", "-w", "--tmux", "--allowedTools", "--allowed-tools", "--tools",
+    "--disallowedTools", "--disallowed-tools", "--mcp-config", "--betas", "--add-dir", "--file",
+]
+AUDITED_REFUSED_BOOLEAN_FLAGS = [
+    "--bare", "--safe-mode", "--restricted", "--init", "--init-only", "--maintenance",
+    "--include-hook-events", "--include-partial-messages", "--forward-subagent-text",
+    "--session-mirror", "--await-claim", "--await-initialize", "--replay-user-messages",
+    "--enable-auth-status", "--exclude-dynamic-system-prompt-sections", "--deep-link-origin",
+    "--no-session-persistence", "--reply-on-resume", "--ide", "--desktop", "--strict-mcp-config",
+    "--disable-slash-commands", "--chrome", "--no-chrome", "--bg", "--background", "--brief",
+    "--ax-screen-reader",
+]
+
+
+@pytest.mark.parametrize("forwarded", [
+    *REFUSED_FORWARD_ARGS,
+    *((flag, "private-value") for flag in AUDITED_REFUSED_SCALAR_FLAGS),
+    *((flag + "=private-value",) for flag in AUDITED_REFUSED_SCALAR_FLAGS if flag.startswith("--")),
+    *((flag,) for flag in AUDITED_REFUSED_BOOLEAN_FLAGS),
+])
+def test_adapter_refuses_before_provider_exec(forwarded):
+    import subprocess
+
+    adapter = Path(__file__).resolve().parents[1] / "scripts/launchers/claude.sh"
+    result = subprocess.run(
+        ["bash", "-c", '\n'.join([
+            'source "$1"; LC_ROOT="$2"; shift 2',
+            'LC_FORWARD_ARGS=("$@"); LC_MODEL=""; LC_EFFORT=""; LC_RULES_CORE=""; LC_DRY_RUN=0',
+            'launcher_error() { printf "%s\\n" "$*" >&2; }',
+            'launcher_exec_command() { echo UNEXPECTED_LAUNCH; }',
+            'launcher_adapter_exec',
+        ]), "--", os.fspath(adapter), os.fspath(adapter.parents[2]), *forwarded],
+        capture_output=True, text=True, check=False, timeout=10, cwd=adapter.parents[2],
+    )
+    assert result.returncode == 2, result.stderr
+    assert "refused in interactive Claude" in result.stderr
+    assert "UNEXPECTED_LAUNCH" not in result.stdout
+    assert "private-value" not in result.stdout + result.stderr
+
+@pytest.mark.parametrize("forwarded", [(), ("--", "--settings", "fixture.json", "--bare", "--safe-mode")])
 @pytest.mark.parametrize(
     "launcher,args,credentials",
     [
@@ -231,11 +378,13 @@ def test_print_mode_launcher_omits_driver_guard(flag):
         ("start-glmcc.sh", (), {"GLMCC_AUTH_TOKEN": "test-key"}),
     ],
 )
-def test_other_model_launchers_omit_claude_driver_guard(tmp_path, launcher, args, credentials):
-    result = run_launcher(launcher, *args, env={"HOME": os.fspath(tmp_path / "home"), **credentials})
+def test_other_model_launchers_omit_claude_driver_guard(tmp_path, launcher, args, credentials, forwarded):
+    result = run_launcher(launcher, *args, *forwarded, env={"HOME": os.fspath(tmp_path / "home"), **credentials})
     assert result.returncode == 0, result.stderr
     assert "would exec claude" in result.stdout
-    assert "--settings" not in result.stdout
+    assert result.stdout.count("--settings") == (1 if forwarded else 0)
+    if forwarded:
+        assert "--settings fixture.json --bare --safe-mode" in result.stdout
     assert "driver-compaction-guard" not in result.stdout
 
 @pytest.mark.parametrize("failure", ["missing", "directory", "unreadable"])

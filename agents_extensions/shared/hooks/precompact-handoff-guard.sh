@@ -11,7 +11,7 @@ set -Eeuo pipefail
 command -v timeout >/dev/null 2>&1 || exit 2
 command -v jq >/dev/null 2>&1 || exit 2
 # shellcheck disable=SC2016  # Expand variables in the bounded child, not this shell.
-RESULT=$(timeout --kill-after=1 3 bash -Eeuo pipefail -c '
+RESULT=$(timeout --kill-after=0.5 2 bash -Eeuo pipefail -c '
   source "$1/context-rollover-lib.sh"
   PROJECT_DIR="$2"
   CANONICAL_ROOT=$(context_canonical_root "$PROJECT_DIR")
@@ -22,7 +22,7 @@ RESULT=$(timeout --kill-after=1 3 bash -Eeuo pipefail -c '
   # The existing proof checker accepts auto only. Normalize manual solely for
   # that read-only evidence check; both triggers receive the same refusal.
   jq '\''if .hook_event_name == "PreCompact" and .trigger == "manual" then .trigger = "auto" else . end'\'' \
-    | "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout 2 -- \
+    | "$BOUNDED_PYTHON" "$BOUNDED_RUNNER" --timeout 1 -- \
       "$BOUNDED_PYTHON" -m scripts.orchestration.precompact_handoff_check \
       --state-root "$CANONICAL_ROOT" --agent "${SESSION_HANDOFF_AGENT:-claude}"
 ' -- "$(dirname "${BASH_SOURCE[0]}")" "${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}" 2>/dev/null) || exit 2

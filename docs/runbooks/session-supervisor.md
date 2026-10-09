@@ -70,6 +70,83 @@ the fragment and policy prompt for forwarded `-p` / `--print` invocations.
 Resume, tmux and supervisor restarts that re-enter the interactive launcher
 receive the flag again. Neither the hook nor its policy prompt mutates a lease.
 
+### Forwarded-argument audit and enforcement
+
+The interactive launcher refuses forwarded `--settings` (separate value or
+`--settings=value`), `--bare` and `--safe-mode` before exec. The installed client
+keeps only the last `--settings`, and bare/safe mode skips the guard's hooks.
+Errors name the option, never its value. Interactive forwarding uses an
+allowlist, so unknown flags, abbreviations and unaudited short-option clusters are also
+refused instead of becoming an unaudited bypass after a client upgrade.
+
+The 2.1.295 audit covered `claude --help`, the embedded top-level CLI option
+definitions (including hidden options), and the
+[official CLI reference](https://code.claude.com/docs/en/cli-reference).
+The settings/hook surface includes `--settings`, `--setting-sources`, `--bare`,
+`--safe-mode`, hidden `--managed-settings`, `--client-data-url` and
+`--project-config-root`, plus `--restricted`, `--plugin-dir`,
+`--plugin-dir-no-mcp`, `--plugin-url`, `--agents`, `--agent`, `--add-dir`,
+`--mcp-config`, `--strict-mcp-config` and `--disable-slash-commands`.
+No `--disable-hooks` or `--no-hooks` option was found; both are refused anyway.
+`--setting-sources` selects user/project/local sources without removing the CLI
+overlay in the isolated manual-compaction probe; it is still refused because
+it changes which settings load. Client parser probes reject `--set`, `--sett`,
+`--bar`, `--safe` and `-b` rather than accepting abbreviations.
+
+Allowed interactive options are `--model`, `--effort`, `--resume`/`-r`,
+`--continue`/`-c`, `--append-system-prompt`, `--append-system-prompt-file`,
+`--agent`, `--session-id`, `--name`/`-n`, `--permission-mode`, `--debug`/`-d`,
+`--fork-session`, `--verbose`, `--dangerously-skip-permissions`,
+`--allow-dangerously-skip-permissions`, `--help`/`-h`, and `--version`/`-v`.
+Long options taking values accept both separate and equals forms. Prompt text
+remains allowed; a forwarded client `--` makes subsequent tokens literal text.
+The first positional token cannot be a client subcommand (for example `attach`
+or `agents`), which could enter a different session. Session relocation and
+remote/background flags (`--desktop`, `--cloud`, `--environment`, `--bg`,
+`--background`, `--worktree`/`-w`, `--tmux`, `--teleport`) are not allowlisted.
+
+Actual `-p`/`--print` options retain native headless forwarding and omit the
+guard, including Boolean `-c`/`-p` clusters such as `-cp` and `-pc` confirmed
+with the installed client. Required option values such as `--append-system-prompt --print`, or
+tokens after the client's `--`, cannot grant this exemption. Unknown syntax
+before a print option fails closed because its argument boundaries are unknown;
+put `-p` first for headless use of future flags. Other provider launchers,
+headless adapters and bridges are outside this interactive forwarding check.
+
+A project-local `.claude/settings.local.json` with `disableAllHooks: true`
+also disables the guard. This operator-owned configuration, like user or
+managed hook-disabling policy and ambient bare/safe-mode configuration, is
+outside forwarded-argument enforcement.
+
+Round-five probes used the same installed client and an isolated synthetic
+two-message fixture, with no provider credentials. A real-client control called
+the adapter's generated command with the offline manual-compaction fixture;
+refused invocations recorded whether provider exec was reached:
+
+```text
+guard exit=0 blocked=True refusal=True auth_error=False
+guard-setting-sources-user exit=0 blocked=True refusal=True auth_error=False
+guard-safe-mode exit=0 blocked=False refusal=False auth_error=True
+guard-bare exit=0 blocked=False refusal=False auth_error=True
+guard-replaced-settings exit=0 blocked=False refusal=False auth_error=True
+guard-local-disableAllHooks exit=0 blocked=False refusal=False auth_error=True
+launcher settings-space exit=2 provider_exec=False blocked=False refused=True
+launcher settings-equals exit=2 provider_exec=False blocked=False refused=True
+launcher settings-disable exit=2 provider_exec=False blocked=False refused=True
+launcher bare exit=2 provider_exec=False blocked=False refused=True
+launcher safe-mode exit=2 provider_exec=False blocked=False refused=True
+launcher setting-sources exit=2 provider_exec=False blocked=False refused=True
+launcher setting-sources-equals exit=2 provider_exec=False blocked=False refused=True
+launcher managed-settings exit=2 provider_exec=False blocked=False refused=True
+launcher guard-control exit=0 provider_exec=True blocked=True refused=False
+```
+
+Each abbreviation/nonexistent-hook flag listed above returned exit 1 and
+`unknown option` in a print-mode parser probe. Adding `--help` instead would
+short-circuit parsing, so it is not evidence that an option is accepted.
+Authentication errors on the bypass controls prove only that the refusal hook
+did not block; no unguarded provider compaction was attempted.
+
 At the rollover limit, follow
 `agents_extensions/shared/skills/thread-rollover/SKILL.md`, run
 `scripts/orchestration/thread_handoff.py prepare` with the exact active identity,
@@ -151,17 +228,19 @@ covered locally; a live interactive driver exhaustion run remains unverified.
 
 The hook refuses regardless of evidence, trigger input or inherited markers.
 Prepared evidence changes only its instruction to print `HANDOFF-DONE <path>`;
-it cannot allow compaction. Missing Python, runner, `jq` or GNU `timeout`, unsafe
+it cannot allow compaction. Missing Python, runner, `jq` or a coreutils-compatible
+`timeout` (GNU or uutils), unsafe
 or unreadable evidence, malformed or huge input, exceptions, partial/unexpected
 output and deadlines select the generic refusal. An EXIT trap handles internal
 shell failures. Manual input is normalized to `auto` only for the existing
 read-only evidence checker.
 
-The evidence path has a three-second deadline with one-second kill grace and
-the checker a two-second deadline. The fragment wraps the whole hook in
-`timeout -k 1 4` and converts every result, including unexpected success and
+The evidence path has a two-second deadline with half-second kill grace and
+the checker a one-second deadline. The fragment wraps the whole hook in
+`timeout -k 1 3` and converts every result, including unexpected success and
 startup errors, to exit 2. This bounds an escaped runner child holding the
-output pipe below the five-second client hook deadline. The command addresses
+output pipe with a tested one-second margin below the five-second client hook
+deadline. The command addresses
 the canonical tracked hook relative to `CLAUDE_PROJECT_DIR`; the existing
 `npm run agents:deploy` path also mirrors the sources and fragment.
 

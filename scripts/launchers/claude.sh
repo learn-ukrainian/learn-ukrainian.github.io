@@ -29,7 +29,74 @@ launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: would run provider canary'; fi
   return 0
 }
+
+launcher_claude_forward_preflight() {
+  # Audit: installed client 2.1.295 help and embedded option definitions.
+  # Parse values before detecting print mode: --append-system-prompt --print
+  # is an interactive invocation, not a headless exemption. Unknown syntax
+  # fails closed; no user-supplied value is included in the error.
+  local arg flag arity allowed refused='' unknown=0 positional=0
+  LC_CLAUDE_INTERACTIVE=1
+  while [ "$#" -gt 0 ]; do
+    arg="$1"; flag="${arg%%=*}"; arity=0; allowed=0
+    shift
+    case "$flag" in
+      --) break ;; # Everything after the client's delimiter is prompt text.
+      -p|--print) [ "$unknown" = 1 ] || LC_CLAUDE_INTERACTIVE=0; continue ;;
+      --model|--effort|--append-system-prompt|--append-system-prompt-file|--agent|--session-id|--name|-n|--permission-mode)
+        allowed=1; arity=1 ;;
+      --resume|-r|--debug|-d) allowed=1; arity=optional ;;
+      --continue|-c|--fork-session|--verbose|--dangerously-skip-permissions|--allow-dangerously-skip-permissions|--help|-h|--version|-v)
+        allowed=1 ;;
+      # Required and optional values from the full client surface, including
+      # hidden flags, are consumed even on exempt headless invocations.
+      --settings|--setting-sources|--managed-settings|--client-data-url|--project-config-root|--debug-file|--output-format|--json-schema|--input-format|--thinking|--thinking-display|--max-thinking-tokens|--max-turns|--max-budget-usd|--task-budget|--permission-prompt-tool|--permission-prompts|--system-prompt|--system-prompt-file|--system-prompt-snapshot|--append-subagent-system-prompt|--append-subagent-system-prompt-file|--plan-mode-instructions|--inherit-permission-mode|--watch-artifact|--watch-artifact-no-autoreact|--prefill|--deep-link-repo|--deep-link-last-fetch|--prefill-b64|--deep-link-cwd-b64|--resume-session-at|--resume-drops-turn|--rewind-files|--fallback-model|--workload|--agents|--plugin-dir|--plugin-dir-no-mcp|--plugin-url|--autocompact|--environment)
+        arity=1 ;;
+      --from-pr|--prompt-suggestions|--cloud|--teleport|--worktree|-w|--tmux) arity=optional ;;
+      --allowedTools|--allowed-tools|--tools|--disallowedTools|--disallowed-tools|--mcp-config|--betas|--add-dir|--file)
+        arity=variadic ;;
+      --bare|--safe-mode|--restricted|--init|--init-only|--maintenance|--include-hook-events|--include-partial-messages|--forward-subagent-text|--session-mirror|--await-claim|--await-initialize|--replay-user-messages|--enable-auth-status|--exclude-dynamic-system-prompt-sections|--deep-link-origin|--no-session-persistence|--reply-on-resume|--ide|--desktop|--strict-mcp-config|--disable-slash-commands|--chrome|--no-chrome|--bg|--background|--brief|--ax-screen-reader) ;;
+      -*)
+        # The client's Boolean -c/-p clusters are also genuine print mode.
+        # Optional/required-value short flags must not grant this exemption.
+        if [[ "$arg" =~ ^-[cp]+$ && "$arg" == *p* ]]; then
+          [ "$unknown" = 1 ] || LC_CLAUDE_INTERACTIVE=0
+        else
+          unknown=1
+        fi
+        ;;
+      *)
+        # A first positional command can attach to, or spawn, another session
+        # instead of running the guarded invocation. A client -- makes it text.
+        if [ "$positional" = 0 ]; then
+          case "$arg" in
+            agents|attach|auth|auto-mode|doctor|gateway|import|install|logs|mcp|plugin|plugins|purge|respawn|rm|setup-token|stop|kill|ultrareview|update|upgrade|daemon|remote-control|self-hosted-runner)
+              [ -n "$refused" ] || refused="$arg" ;;
+          esac
+        fi
+        positional=1
+        continue ;;
+    esac
+    if [ "$allowed" = 0 ] && [ -z "$refused" ]; then
+      # Only a syntactically safe option name can be quoted. In particular,
+      # malformed flags containing whitespace/control characters stay private.
+      if [[ "$flag" =~ ^--?[a-zA-Z][a-zA-Z0-9-]*$ ]]; then refused="$flag"; else refused='unrecognized option'; fi
+    fi
+    case "$arg" in *=*) continue ;; esac
+    case "$arity" in
+      1) [ "$#" -eq 0 ] || shift ;;
+      optional) if [ "$#" -gt 0 ] && [[ "$1" != -* ]]; then shift; fi ;;
+      variadic) while [ "$#" -gt 0 ] && [[ "$1" != -* ]]; do shift; done ;;
+    esac
+  done
+  if [ "$LC_CLAUDE_INTERACTIVE" = 1 ] && [ -n "$refused" ]; then
+    launcher_error "forwarded $refused is refused in interactive Claude: only audited session arguments are allowed, to preserve launcher settings and compaction hooks."
+    exit 2
+  fi
+}
+
 launcher_adapter_exec() {
+  launcher_claude_forward_preflight "${LC_FORWARD_ARGS[@]}"
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
   # high (launcher_defaults); interactive keeps the last TUI / user selection.
@@ -41,12 +108,8 @@ launcher_adapter_exec() {
   fi
   # CLI settings are scoped to this launch and cannot be inherited by children.
   # Print-mode invocations retain native compaction and the ordinary core prompt.
-  local interactive=1 arg
-  for arg in "${LC_FORWARD_ARGS[@]}"; do
-    case "$arg" in -p|--print|--print=*) interactive=0 ;; esac
-  done
   local system_prompt="${LC_RULES_CORE:-}"
-  if [ "$interactive" = 1 ]; then
+  if [ "$LC_CLAUDE_INTERACTIVE" = 1 ]; then
     local guard_settings="$LC_ROOT/agents_extensions/shared/settings/driver-compaction-guard.json"
     if [ ! -f "$guard_settings" ] || [ ! -r "$guard_settings" ]; then
       launcher_error "interactive Claude compaction guard settings are missing or unreadable."

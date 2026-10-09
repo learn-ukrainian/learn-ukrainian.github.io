@@ -182,7 +182,7 @@ def test_registration_deadline_refuses_even_if_runner_child_escapes_group(prepar
         )
         elapsed = time.monotonic() - start
         _refused(result)
-        assert elapsed < settings["hooks"]["PreCompact"][0]["hooks"][0]["timeout"]
+        assert elapsed < settings["hooks"]["PreCompact"][0]["hooks"][0]["timeout"] - 1
         assert pid_file.is_file(), "the escaping-child path must actually run"
         assert pipe_proof.read_text() == "holding-output-pipe"
     finally:
@@ -334,7 +334,7 @@ def test_timeout_refuses_and_discards_partial_output(prepared, tmp_path):
     module.write_bytes(runner.read_bytes())
     started = time.monotonic()
     _refused(_run(prepared, CLAUDE_PROJECT_DIR=os.fspath(project)))
-    assert 2 <= time.monotonic() - started < 8
+    assert 1 <= time.monotonic() - started < 3
 
 
 def test_validator_receives_descriptor_read_input_after_lease_redirect(prepared, tmp_path, monkeypatch):
@@ -482,7 +482,7 @@ def test_settings_registers_both_triggers_and_shell_parses():
     assert registration["type"] == "command"
     assert "precompact-handoff-guard.sh" in registration["command"]
     assert "exit 2" in registration["command"]
-    assert "timeout -k 1 4" in registration["command"]
+    assert "timeout -k 1 3" in registration["command"]
     assert set(settings) == {"hooks"}
     assert set(settings["hooks"]) == {"PreCompact"}
     assert registration["timeout"] == 5
