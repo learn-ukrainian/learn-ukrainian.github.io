@@ -20,6 +20,7 @@ from scripts.fleet_comms.paths import (
     RETIRED_LOCAL_PLANE_MESSAGE,
     local_plane_is_retired,
 )
+from tests._host_path_guard import assert_no_host_paths
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 # Synthetic checkout path: never a real deployment run-root.
@@ -109,11 +110,11 @@ def test_resolve_ask_forward_target_host_without_repo_fails_closed(
 def test_forward_module_and_publish_help_have_no_baked_run_root() -> None:
     """OPSEC: production sources must not embed a concrete run-root."""
     forward_source = (_REPO_ROOT / "scripts" / "ai_agent_bridge" / "_job_host_forward.py").read_text(encoding="utf-8")
-    assert "/home/ops" not in forward_source
+    assert_no_host_paths(forward_source)
     assert not hasattr(_job_host_forward, "DEFAULT_SERVICES_REPO")
 
     publish_source = (_REPO_ROOT / "scripts" / "practice_deck" / "publish.py").read_text(encoding="utf-8")
-    assert "/home/ops" not in publish_source
+    assert_no_host_paths(publish_source)
 
 
 def test_maybe_forward_refuses_cleanly_when_retired_without_config(

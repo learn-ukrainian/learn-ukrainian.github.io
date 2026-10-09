@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shlex
@@ -508,6 +509,228 @@ launcher_adapter_exec() {{ launcher_exec_command {os.fspath(provider)!r}; }}
     )
     assert initialized.returncode == 0, initialized.stderr
     return root / "start-claude-driver.sh", close_attempts, close_marker, child_started
+
+
+@pytest.mark.parametrize("resolution", ["recorded", "local-bin", "missing"])
+def test_supervisory_wake_preflights_cli_before_provider_stop_and_lease_close(
+    tmp_path: Path, resolution: str,
+) -> None:
+    """Exercise the real wait loop with a PATH change after the provider starts."""
+    events = tmp_path / "events"
+    ready = tmp_path / "ready"
+    finish = tmp_path / "finish"
+    resumed = tmp_path / "watch-resumed"
+    sent = tmp_path / "wake-sent"
+    home = tmp_path / "home"
+    cli = tmp_path / "cli with spaces" / "fixture-cli"
+    cli.parent.mkdir()
+    cli.write_text(
+        f"""#!/bin/bash
+if [ "${{1:-}}" = --successor ]; then
+  printf 'successor\\n' >> {shlex.quote(str(events))}
+  exit 0
+fi
+trap 'printf "stopped\\n" >> {shlex.quote(str(events))}; exit 0' TERM
+if [ {shlex.quote(resolution)} != recorded ]; then chmod -x "$0"; fi
+touch {shlex.quote(str(ready))}
+while [ ! -f {shlex.quote(str(finish))} ]; do sleep 0.05; done
+printf 'normal-exit\\n' >> {shlex.quote(str(events))}
+""",
+        encoding="utf-8",
+    )
+    cli.chmod(0o755)
+    if resolution == "local-bin":
+        fallback = home / ".local/bin/fixture-cli"
+        fallback.parent.mkdir(parents=True)
+        shutil.copy2(cli, fallback)
+    successor = tmp_path / "start-codex-driver.sh"
+    successor.write_text("#!/bin/bash\nexec fixture-cli --successor\n", encoding="utf-8")
+    successor.chmod(0o755)
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}
+source {shlex.quote(str(REPO / 'scripts/lib/session_supervisor.sh'))}
+LC_ROOT={shlex.quote(str(tmp_path))}
+LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
+LC_DRIVER_ORIGINAL_ARGS=()
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=1
+launcher_driver_renew_loop() {{ :; }}
+launcher_cursor_observer_renew_loop() {{ :; }}
+launcher_driver_wait_hook() {{ export PATH={shlex.quote(os.defpath)}; }}
+session_supervisor_start_inbox_watch() {{
+  LC_SUPERVISORY_DELIVERY=''
+  if [ -f {shlex.quote(str(sent))} ]; then
+    touch {shlex.quote(str(resumed))}
+    (exec sleep 300) &
+  else
+    (while [ ! -f {shlex.quote(str(ready))} ]; do sleep 0.01; done; exit 75) &
+    touch {shlex.quote(str(sent))}
+  fi
+  LC_SUPERVISORY_WATCH_PID=$!
+}}
+session_supervisor_read_wake() {{
+  local rc=0
+  wait "$LC_SUPERVISORY_WATCH_PID" || rc=$?
+  LC_SUPERVISORY_WATCH_PID=''
+  [ "$rc" = 75 ] || return 1
+  export PATH={shlex.quote(os.defpath)}
+  if type -P fixture-cli >/dev/null; then return 99; fi
+  LC_SUPERVISORY_DELIVERY=fixture-delivery
+}}
+launcher_close_driver_lease() {{
+  printf 'close\\n' >> {shlex.quote(str(events))}
+  LC_DRIVER_LEASE_CLOSED=1
+}}
+launcher_exec_command fixture-cli
+"""
+    env = {**os.environ, "HOME": str(home), "PATH": f"{cli.parent}{os.pathsep}{os.defpath}"}
+    process = subprocess.Popen(
+        ["/bin/bash", "-c", script], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        text=True, start_new_session=True,
+    )
+    try:
+        if resolution == "missing":
+            _wait_for_launcher_readiness(process, [ready, resumed])
+            assert not events.exists(), "preflight failure must not stop the provider or close its lease"
+            assert process.poll() is None
+            finish.touch()
+        stdout, stderr = process.communicate(timeout=15)
+        assert process.returncode == 0, stdout + stderr
+        if resolution == "missing":
+            assert "provider-cli-unavailable" in stderr
+            assert events.read_text().splitlines() == ["normal-exit", "close"]
+        else:
+            assert events.read_text().splitlines() == ["stopped", "close", "successor"]
+    finally:
+        with suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate(timeout=10)
+
+
+def test_restarted_watcher_retains_same_delivery_until_successor_cli_recovers(tmp_path: Path) -> None:
+    """Use real delivery claims and watcher ticks after a post-preparation CLI loss."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    events = tmp_path / "events"
+    ready = tmp_path / "ready"
+    polls = tmp_path / "polls"
+    plane = tmp_path / "fleet"
+    cli = tmp_path / "bin with spaces" / "fixture-cli"
+    cli.parent.mkdir()
+    cli.write_text(
+        f"""#!/bin/bash
+trap 'printf "stopped\\n" >> {shlex.quote(str(events))}; exit 0' TERM
+touch {shlex.quote(str(ready))}
+while :; do sleep 0.05; done
+""",
+        encoding="utf-8",
+    )
+    cli.chmod(0o755)
+    lib = tmp_path / "scripts/lib"
+    lib.mkdir(parents=True)
+    for name in ("launcher_core.sh", "session_supervisor.sh"):
+        shutil.copy2(REPO / "scripts/lib" / name, lib / name)
+    watcher = tmp_path / "scripts/ai_agent_bridge/inbox_watch.sh"
+    watcher.parent.mkdir()
+    harness = tmp_path / "watcher.py"
+    harness.write_text(
+        f"""import sys, time
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
+sys.path.insert(0, {str(REPO)!r})
+sys.path.insert(0, {str(REPO / 'scripts')!r})
+from scripts.ai_agent_bridge import _inbox_watch
+
+ready = Path({str(ready)!r})
+while not ready.exists(): time.sleep(0.01)
+events = Path({str(events)!r})
+polls = Path({str(polls)!r})
+cli = Path({str(cli)!r})
+lease = SimpleNamespace(stream_id='epic:9999', session_id='predecessor', generation=1)
+def handoff(**kwargs):
+    with events.open('a') as handle: handle.write('prepared\\n')
+    # Simulate the executable disappearing between watcher and launcher checks.
+    if events.read_text().splitlines().count('prepared') == 1: cli.chmod(0o644)
+supervisor = SimpleNamespace(
+    remote=SimpleNamespace(_lease_payload=lambda lease: {{'session_id': lease.session_id}}),
+    build_capsule=lambda **kwargs: None, handoff_driver=handoff,
+)
+consume = _inbox_watch.consume_supervisory_event
+def tick(*args, **kwargs):
+    count = len(polls.read_text().splitlines()) if polls.exists() else 0
+    # Cross delivery TTLs deterministically without a minute-long test. The
+    # remote lease remains live; only local delivery time is advanced.
+    result = consume(*args, now=(datetime.now(UTC) + timedelta(seconds=61 * count)).isoformat(), **kwargs)
+    with polls.open('a') as handle: handle.write('tick\\n')
+    return result
+with (
+    patch('agents_extensions.shared.session_streams.hooks.lease_from_environment', return_value=lease),
+    patch('scripts.session_supervisor.SessionSupervisor', return_value=supervisor),
+    patch.object(_inbox_watch, 'consume_supervisory_event', side_effect=tick),
+):
+    raise SystemExit(_inbox_watch.run_live_supervisory_watcher(interval_seconds=0.05))
+""",
+        encoding="utf-8",
+    )
+    watcher.write_text(f"#!/bin/bash\nexec {shlex.quote(sys.executable)} {shlex.quote(str(harness))}\n")
+    watcher.chmod(0o755)
+    successor = tmp_path / "start-codex-driver.sh"
+    successor.write_text(f"#!/bin/bash\nprintf 'successor\\n' >> {shlex.quote(str(events))}\n")
+    successor.chmod(0o755)
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(lib / 'launcher_core.sh'))}
+source {shlex.quote(str(lib / 'session_supervisor.sh'))}
+LC_ROOT={shlex.quote(str(tmp_path))}
+LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1
+LC_DRIVER_ORIGINAL_ARGS=()
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_GENERATION=1
+launcher_driver_renew_loop() {{ :; }}
+launcher_cursor_observer_renew_loop() {{ :; }}
+launcher_close_driver_lease() {{
+  printf 'close\\n' >> {shlex.quote(str(events))}
+  LC_DRIVER_LEASE_CLOSED=1
+}}
+launcher_exec_command fixture-cli
+"""
+    env = {
+        **os.environ, "HOME": str(tmp_path / "home"),
+        "PATH": f"{cli.parent}{os.pathsep}{os.defpath}", "FLEET_COMMS_ROOT": str(plane),
+    }
+    with AuthorityService(root=plane) as service:
+        did = service.publish_message(
+            sender="fixture-operator", recipients=("supervisor:epic:9999",),
+            body=json.dumps({"schema": "supervisory-wake.v1", "action": "restart",
+                             "stream_id": "epic:9999", "generation": 1}),
+            kind="supervisory-request", correlation_id="fixture-cycle", idempotency_key="restart",
+        ).delivery_ids[0]
+        process = subprocess.Popen(
+            ["/bin/bash", "-c", script], cwd=REPO, env=env,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True,
+        )
+        try:
+            deadline = time.monotonic() + 15
+            while not polls.exists() or len(polls.read_text().splitlines()) < 5:
+                assert time.monotonic() < deadline, "restarted watcher did not retry the retained delivery"
+                assert process.poll() is None, process.communicate(timeout=5)
+                time.sleep(0.02)
+            assert events.read_text().splitlines() == ["prepared"]
+            assert service.get_delivery(did).attempt_count == 1
+            assert service.supervisory_delivery_status(did) == "live_driver_consumed"
+            cli.chmod(0o755)
+            stdout, stderr = process.communicate(timeout=15)
+            assert process.returncode == 0, stdout + stderr
+            assert stderr.count("Predecessor retained") == 1
+            assert "restart retained for retry" in stderr
+            assert events.read_text().splitlines() == ["prepared", "prepared", "stopped", "close", "successor"]
+            assert service.get_delivery(did).attempt_count == 2
+            assert service.supervisory_delivery_status(did) == "live_driver_consumed"
+        finally:
+            with suppress(ProcessLookupError):
+                os.killpg(process.pid, signal.SIGKILL)
+            process.communicate(timeout=10)
 
 
 def test_driver_normal_exit_closes_with_bounded_idempotent_retry(tmp_path: Path) -> None:

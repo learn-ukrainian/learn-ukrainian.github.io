@@ -12,6 +12,7 @@ def family_exclusion(
     family: str,
     route: str,
     transport: str,
+    risk: str | None = None,
     author_family: str | None = None,
     advisory_only_for_author_families: frozenset[str] = frozenset(),
     union_family: str = "",
@@ -19,8 +20,12 @@ def family_exclusion(
 ) -> tuple[str, str] | None:
     """Return the unchanged role or author-family exclusion status and reason."""
     if author_family is None:
-        if family in {"google", "moonshot", "deepseek"} or route == "agy":
+        if family in {"moonshot", "deepseek"}:
             return "excluded", "code-review family exclusions"
+        if (family == "google" or route == "agy") and not (
+            family == "google" and route == "agy" and transport == "agy" and risk in {"low", "medium"}
+        ):
+            return "excluded", "Gemini code review requires AGY at low/medium risk (#10073)"
         return None
     reviewer_family = family
     family = author_family

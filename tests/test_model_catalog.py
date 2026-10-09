@@ -582,7 +582,7 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     assert defaults["grok"]["fallback_model_id"] == "grok-4.7"
     assert defaults["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert defaults["agy"]["effort"] == "high"
-    assert defaults["agy"]["formal_review_eligible"] is False
+    assert defaults["agy"]["formal_review_eligible"] is True
 
 
 def test_orchestrator_seats_include_agy_flash_38_high():
@@ -702,30 +702,33 @@ def test_bridge_only_reviewers_expose_executable_invocations():
     assert candidates["glm-5.3"]["invocation"].endswith("ask-glm")
 
 
-def test_gemini_remains_available_for_ukrainian_but_not_code_review():
+def test_gemini_native_review_catalog_and_risk_ladders():
     catalog = load_model_catalog()
-    assert catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] == "active"
-    assert catalog["orchestrator_seats"]["agy"]["model_id"] == "gemini-3.8-flash-high"
-    assert all(
-        not candidate["model_id"].startswith("gemini-")
-        for candidate in catalog["review_candidates"].values()
-    )
+    candidate = catalog["review_candidates"]["gemini-3.8-flash-high"]
+    assert candidate["route"] == candidate["transport"] == "agy"
+    assert "ukrainian_review" in catalog["models"][candidate["model_id"]]["roles"]
+    assert catalog["review_scheduler"]["endpoints"]["agy"]["adapter_transport"] == "native_agy"
+    for risk in ("low", "medium", "high", "critical"):
+        names = {name for rung in catalog["review_ladders"][risk] for name in rung}
+        assert ("gemini-3.8-flash-high" in names) == (risk in {"low", "medium"})
 
 
-def test_catalog_refuses_gemini_code_review_candidate():
+def test_catalog_refuses_gemini_on_other_review_transport():
     broken = deepcopy(load_model_catalog())
     broken["review_candidates"]["google_review"] = {
         **broken["review_candidates"]["openai_frontier"],
         "model_id": "gemini-3.8-flash-high",
     }
-    with pytest.raises(ModelCatalogError, match="Gemini reviews Ukrainian only, never code"):
+    with pytest.raises(ModelCatalogError, match="requires the native AGY route"):
         validate_catalog(broken)
 
 
 def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():
     candidates = load_model_catalog()["review_candidates"]
     assert {"code", "infra"} == VALID_REVIEW_PROFILES
-    assert all(set(candidate["review_profiles"]) == VALID_REVIEW_PROFILES for candidate in candidates.values())
+    for name, candidate in candidates.items():
+        expected = {"code"} if name == "gemini-3.8-flash-high" else VALID_REVIEW_PROFILES
+        assert set(candidate["review_profiles"]) == expected
     assert candidates["composer-2.5"]["model_id"] == "composer-2.5"
 
 
@@ -899,7 +902,9 @@ def test_cursor_pinned_models_lead_with_the_seat_pin():
         ("Cursor:Auto", "cursor_auto_outside_coding_task"),
         ("default", "cursor_auto_outside_coding_task"),
         ("composer-2.5-fast", "cursor_model_not_approved"),
-        ("grok-4.7-high", "cursor_model_not_approved"),
+        ("composer-2.5[fast=true]", "cursor_model_not_approved"),
+        ("composer-2.5[arbitrary=value]", "cursor_model_not_approved"),
+        ("grok-4.7-fast", "cursor_model_not_approved"),
         ("claude-opus-5-5", "cursor_model_not_approved"),
     ],
 )
@@ -910,7 +915,7 @@ def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str
     assert "pin grok-4.7 or composer-2.5" in refusal
 
 
-@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+@pytest.mark.parametrize("model", ["grok-4.7", "grok-4.7-high", "composer-2.5", "composer-2.5[fast=false]"])
 def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
     assert cursor_non_dispatch_model_refusal(model) is None
 

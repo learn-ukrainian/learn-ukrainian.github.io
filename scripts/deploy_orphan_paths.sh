@@ -24,7 +24,12 @@
 #          (#4717, public-repo privacy: carries local absolute paths). The deployed
 #          target copies are the live runtime config and must survive rsync --delete
 #          now that the shared source copy is gone from git/disk.
-ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic settings.local.json"
+# briefs, */briefs, handoff*, DRIVER-STATE* — driver runtime state (dispatch
+#          briefs, handoff notes, pinned driver state). Gitignored and machine-local;
+#          only config, code and prompts come from git, so deploy preserves these
+#          and never blocks on them.
+ORPHAN_PATHS_RUNTIME="briefs */briefs handoff* DRIVER-STATE*"
+ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic settings.local.json $ORPHAN_PATHS_RUNTIME"
 
 # --- shared → .agent ---
 # .agent/ is preserve-by-default (see #4741 and deploy_prompts.sh).
@@ -43,7 +48,7 @@ ORPHAN_PATHS_AGENTS=""
 # settings.local.json is machine-local runtime configuration.
 # retired-skills/ retains atomically captured legacy discovery trees, including
 # concurrent writes. Deploy never deletes or overwrites this recovery storage.
-ORPHAN_PATHS_CODEX="settings.local.json retired-skills"
+ORPHAN_PATHS_CODEX="settings.local.json retired-skills $ORPHAN_PATHS_RUNTIME"
 
 # --- deploy-owned: Codex overlay paths (checker mirrors for .codex drift) ---
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
@@ -56,7 +61,7 @@ CODEX_OVERLAY_PATHS="config.toml hooks.json memory"
 #        local working state, NOT a deploy artifact. Preserve across rsync --delete.
 # config.yaml — repository-level Gemini Code Assist for GitHub configuration.
 #        It disables GitHub PR reviews while preserving local Gemini CLI tooling.
-ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/"
+ORPHAN_PATHS_GEMINI="config.yaml docs/ rules/ tmp/ $ORPHAN_PATHS_RUNTIME"
 
 # Shared skills overlay into .gemini/skills. Gemini-specific skills remain
 # sourced from gemini_extensions/skills; shared skill names are overlaid after

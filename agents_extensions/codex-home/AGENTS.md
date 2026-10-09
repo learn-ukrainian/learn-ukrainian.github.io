@@ -47,7 +47,9 @@
 ## Worker preference
 
 - Use Sol at high reasoning as the regular accountable driver. The default
-  subagent is Luna at high reasoning for bounded work.
+  subagent is Sol at high reasoning for eligible code work.
+- Luna profiles remain available explicitly for bounded work with a complete
+  Sol advisory envelope; use them only when task fit and resource policy admit.
 - Use `luna_explorer_medium` for routine exploration and scouting. Use
   `luna_explorer_high` when ambiguity or complex call chains justify deeper
   investigation. Both explorer roles are read-only.

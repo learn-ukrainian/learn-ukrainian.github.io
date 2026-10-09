@@ -576,3 +576,79 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     assert epic_7919["lease"] is not None
     assert epic_7919["last_state"]["body"] == "working on graph"
     assert epic_7919["last_decision"]["body"] == "design approved"
+
+
+def test_epic_list_keeps_latest_typed_entries(tmp_path: Path, monkeypatch) -> None:
+    """The one-snapshot list still returns the newest state and decision."""
+    client = _client(tmp_path, monkeypatch)
+    claimed = _claim(client, "epic:7178")
+    lease = claimed["lease"]
+    for body, key in (("older state", "list-state-1"), ("newer state", "list-state-2")):
+        posted = client.post(
+            "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+            json={**lease, "type": "state", "body": body, "idempotency_key": key},
+        )
+        assert posted.status_code == 200, posted.text
+    decision = client.post(
+        "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+        json={**lease, "type": "decision", "body": "ship it", "idempotency_key": "list-dec-1"},
+    )
+    assert decision.status_code == 200, decision.text
+
+    listing = client.get("/api/epics/v1")
+    assert listing.status_code == 200
+    row = next(item for item in listing.json()["streams"] if item["stream_id"] == "epic:7178")
+    assert row["last_state"]["body"] == "newer state"
+    assert row["last_decision"]["body"] == "ship it"
+    assert row["last_next_action"] is None
+
+
+def test_epic_listing_ignores_history_on_other_streams(tmp_path: Path) -> None:
+    """Latest typed entries are an index lookup per epic, not a rank of every row."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import EntryType, LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+    store = SessionStreamStore(
+        SessionStreamDatabase(tmp_path / "streams.sqlite3"),
+        _process_probe=lambda _process_id: True,
+    )
+    holder = LeaseHolder(
+        agent="codex",
+        harness="codex",
+        instance_id="runtime-1",
+        process_id=41001,
+        task_id="task-runtime-1",
+    )
+    epic = store.open_session(
+        stream_id="epic:4707",  # allow-hardcoded-epic: listing fixture, not a live epic
+        holder=holder,
+        lineage_id="lineage-epic",
+        ttl_seconds=60,
+        session_id="session-epic",
+        lease_id="lease-epic",
+    )
+    other = store.open_session(
+        stream_id="shared:notes",
+        holder=holder,
+        lineage_id="lineage-other",
+        ttl_seconds=60,
+        session_id="session-other",
+        lease_id="lease-other",
+    )
+    for index in range(30):
+        store.append_entry(
+            other,
+            entry_type=EntryType.STATE,
+            body=f"other history {index}",
+            idempotency_key=f"other-{index}",
+        )
+    store.append_entry(epic, entry_type=EntryType.STATE, body="older state", idempotency_key="epic-state-1")
+    store.append_entry(epic, entry_type=EntryType.STATE, body="newer state", idempotency_key="epic-state-2")
+
+    bundle = store.load_remote_epic_listing(snapshot_sha256=None)
+    stream_ids = {str(row["stream_id"]) for row in bundle["projections"]}
+    assert stream_ids == {"epic:4707"}  # allow-hardcoded-epic: listing fixture, not a live epic
+    latest = bundle["latest_entries"]["epic:4707"][EntryType.STATE.value]  # allow-hardcoded-epic: listing fixture
+    assert latest.body == "newer state"
+    assert "shared:notes" not in bundle["latest_entries"]

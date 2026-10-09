@@ -113,7 +113,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-120 document families and 29 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+121 document families and 29 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
@@ -125,6 +125,7 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 | `corpus-inventory` | doc_family | current | `docs/corpus-inventory.md` | Prose inventory of data/sources.db tables and the local versus bulk-root storage layout; table counts were last refreshed 2026-07-31 and are stale against the live store. |
 | `top-level-references` | doc_family | current | `docs/ACTIVITY-YAML-REFERENCE.md`, `docs/CLAUDE-CODE-FEATURES.md`, `docs/DICTIONARY-PIPELINE-STATUS.md`, `docs/RUNBOOK-BUILD.md`, `docs/SCRIPTS.md`, `docs/WORKSTREAMS.md`, `docs/agent-bridge-setup-guide.md`, `docs/agent-runtime-guide.md`, `docs/review-protocol.md` | Maintained top-level references for scripts and commands, workstreams, the agent runtime, the review protocol, activity YAML and the dictionary pipeline status. |
 | `monitor-api-docs` | doc_family | current | `docs/MONITOR-API.md`, `docs/monitor-api/**` | Monitor (Ops) API reference, the read-only work-projection API spec and the agent cold-start measurement log. |
+| `fleet-v1-api` | doc_family | current | `docs/api/fleet-v1.md` | Read-only fleet board v1 contract - the response envelope, source status, and the index and schema routes. |
 | `core-lesson-contracts` | doc_family | current | `docs/north-star.md`, `docs/lesson-contract.md`, `docs/lesson-schema-design.md`, `docs/style-guide.md`, `docs/lesson-schema.yaml` | Curriculum north star, lesson contract v4, lesson schema design and the generated lesson schema, plus the human-editor style guide. |
 | `top-level-point-in-time-audits` | evidence | historical | `docs/api-endpoint-consumer-map-2026-05-06.md`, `docs/api-stability-audit-2026-05-06.md`, `docs/monitor-api-ui-audit-2026-06-07.md`, `docs/corpus-gap-audit.md`, `docs/personal-name-audit.md`, `docs/phase-2-config-audit-report.md`, `docs/phase-4-exemplar-report.md`, `docs/rag-gap-1026.md`, `docs/atlas-data-coverage-strategy.md` | One-time audit evidence at the docs root - Monitor API consumer and stability audits, corpus and RAG gap audits, config and exemplar reports, personal-name and Atlas coverage audits. |
 | `top-level-historical-notes` | doc_family | historical | `docs/MASTER-PLAN.md`, `docs/cleanup-plan-2026-q2.md`, `docs/orchestrator-frictions.md`, `docs/prompt-budgets.md`, `docs/rules-core-draft-notes.md`, `docs/salvage-manifest.md`, `docs/session-state-2026-04-04.md`, `docs/state-reconciliation.md`, `docs/v5-v3-to-v6-phase-mapping.md`, `docs/wiki-rebuild-plan.md` | Old plans, V6-era budgets and reconciliation notes, the reboot salvage manifest, a dated session snapshot and draft rule notes kept for history. |

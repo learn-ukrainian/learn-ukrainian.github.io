@@ -33,6 +33,7 @@ import asyncio
 import json
 import logging
 import math
+import os
 import re
 import threading
 from collections.abc import Mapping
@@ -130,8 +131,11 @@ from .state_coverage import (
 from .state_helpers import (
     cache_get,
     cache_get_or_compute,
+    cache_get_or_compute_async,
+    cache_get_stored,
     cache_get_with_age,
     cache_invalidate,
+    cache_retain,
     cache_set,
     ctx_scoped_ttl_key,
     detect_pipeline_version,
@@ -141,6 +145,7 @@ from .state_helpers import (
     get_word_target_from_plan,
     read_v2_state,
     read_v3_state,
+    schedule_cache_refresh,
 )
 from .state_issues import (
     compute_final_reviews,
@@ -211,6 +216,10 @@ STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
 STATE_WEAK_POINTS_TTL_S = 60.0
+ROUTING_BUDGET_TTL_S = 15.0
+# Past this age a stored snapshot must not authorize a lane. Same bound the
+# payload already publishes as diagnostics.stale_threshold_s.
+ROUTING_BUDGET_MAX_AGE_S = 900.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 _state_scan_warm_lock = threading.Lock()
 _state_scan_warm_thread: threading.Thread | None = None
@@ -352,6 +361,23 @@ def _run_state_scan_warmup(ctx: MonitorContext) -> None:
             _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
             STATE_WEAK_POINTS_TTL_S,
             lambda: _compute_weak_points_payload(ctx, None, 7, 20),
+        )
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "summary"),
+            STATE_SUMMARY_TTL_S,
+            lambda: compute_summary(
+                curriculum_root=ctx.roots.curriculum_root,
+                project_root=ctx.roots.project_root,
+                plans_root=ctx.roots.plans_root,
+            ),
+        )
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "research_coverage"),
+            STATE_RESEARCH_COVERAGE_TTL_S,
+            lambda: compute_research_coverage(
+                curriculum_root=ctx.roots.curriculum_root,
+                plans_root=ctx.roots.plans_root,
+            ),
         )
     except Exception as exc:
         logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
@@ -2208,7 +2234,92 @@ def compute_routing_budget(
     return budget
 
 
+def _aged_routing_budget(payload: object, age_s: float) -> object:
+    """Publish the real age of a stored routing snapshot without adding keys.
+
+    Within the stale threshold the recommendation stays, marked stale. Past
+    that threshold the snapshot must not authorize a lane. The threshold is
+    compared to source age plus time spent in this cache.
+    """
+    if not isinstance(payload, dict):
+        return payload
+    served = dict(payload)
+    diagnostics = payload.get("diagnostics")
+    threshold = ROUTING_BUDGET_MAX_AGE_S
+    reported_age = age_s
+    if isinstance(diagnostics, dict):
+        diagnostics = dict(diagnostics)
+        if isinstance(diagnostics.get("stale_threshold_s"), (int, float)):
+            threshold = float(diagnostics["stale_threshold_s"])
+        prior = diagnostics.get("data_age_s")
+        extra = float(prior) if isinstance(prior, (int, float)) else 0.0
+        reported_age = extra + age_s
+        diagnostics["data_age_s"] = round(reported_age, 1)
+        diagnostics["stale"] = True
+        served["diagnostics"] = diagnostics
+    if reported_age <= threshold:
+        return served
+    return _withdraw_routing_authorization(served)
+
+
+def _withdraw_routing_authorization(payload: dict[str, Any]) -> dict[str, Any]:
+    """Clear a lane choice on a snapshot that is too old to act on."""
+    recommendation = payload.get("recommendation")
+    if isinstance(recommendation, dict):
+        recommendation = dict(recommendation)
+        recommendation["primary_agent_for_code"] = None
+        warnings = list(recommendation.get("warnings") or [])
+        note = "snapshot older than the stale threshold; recommendation withdrawn"
+        if note not in warnings:
+            warnings.append(note)
+        recommendation["warnings"] = warnings
+        recommendation["rationale"] = "Snapshot is past the stale threshold and cannot authorize a lane."
+        payload["recommendation"] = recommendation
+    agents = payload.get("agents")
+    if isinstance(agents, dict):
+        rewritten: dict[str, Any] = {}
+        for lane, info in agents.items():
+            if not isinstance(info, dict):
+                rewritten[str(lane)] = info
+                continue
+            info = dict(info)
+            if "eligible" in info:
+                info["eligible"] = False
+            if "status" in info:
+                info["status"] = "unknown"
+            health = info.get("health")
+            if isinstance(health, dict) and "eligible" in health:
+                health = dict(health)
+                health["eligible"] = False
+                info["health"] = health
+            rewritten[str(lane)] = info
+        payload["agents"] = rewritten
+    if isinstance(payload.get("ranked_by_headroom"), list):
+        payload["ranked_by_headroom"] = []
+    return payload
+
+
 # ==================== ENDPOINTS ====================
+
+
+def _tasks_content_token(tasks_dir: Path) -> str:
+    """Generation for task JSON files: count plus the newest mtime."""
+    try:
+        directory = os.stat(tasks_dir)
+    except OSError:
+        return "missing"
+    newest = directory.st_mtime_ns
+    count = 0
+    try:
+        with os.scandir(tasks_dir) as entries:
+            for entry in entries:
+                if not entry.name.endswith(".json"):
+                    continue
+                count += 1
+                newest = max(newest, entry.stat(follow_symlinks=False).st_mtime_ns)
+    except OSError:
+        return f"unreadable:{directory.st_mtime_ns}"
+    return f"{count}:{newest}"
 
 
 @router.get("/routing-budget")
@@ -2226,19 +2337,35 @@ async def routing_budget(
     """
     if fresh_codexbar:
         trigger_background_refresh()
-    budget_config_path = ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml"
-    tasks_dir = ctx.roots.batch_state_dir / "tasks"
-    return await asyncio.to_thread(
-        compute_routing_budget,
-        transport=transport,
-        fresh_codexbar=False,
-        refresh_requested=fresh_codexbar,
-        budget_config_path=budget_config_path,
-        tasks_dir=tasks_dir,
-        project_root=ctx.roots.project_root,
-        curriculum_root=ctx.roots.curriculum_root,
-        batch_state_dir=ctx.roots.batch_state_dir,
-    )
+    prefix = _ctx_cache_key(ctx, "routing-budget", transport, int(fresh_codexbar))
+    # In-place task rewrites do not change the directory mtime. Stamp the
+    # newest task file so a new excerpt is not served from the previous snapshot.
+    cache_key = f"{prefix}:{_tasks_content_token(ctx.roots.batch_state_dir / 'tasks')}"
+    cache_retain(f"{prefix}:", cache_key)
+
+    def _compute() -> dict[str, Any]:
+        return compute_routing_budget(
+            transport=transport,
+            fresh_codexbar=False,
+            refresh_requested=fresh_codexbar,
+            budget_config_path=ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
+            tasks_dir=ctx.roots.batch_state_dir / "tasks",
+            project_root=ctx.roots.project_root,
+            curriculum_root=ctx.roots.curriculum_root,
+            batch_state_dir=ctx.roots.batch_state_dir,
+        )
+
+    # A warm snapshot returns on the event loop. After the TTL, the last
+    # snapshot is served with its real age and refreshed beside the request.
+    # Past the stale threshold it no longer authorizes a lane.
+    stored = cache_get_stored(cache_key)
+    if stored is not None:
+        value, age_s = stored
+        if age_s < ROUTING_BUDGET_TTL_S:
+            return value
+        schedule_cache_refresh(cache_key, ROUTING_BUDGET_TTL_S, _compute)
+        return _aged_routing_budget(value, age_s)
+    return await cache_get_or_compute_async(cache_key, ROUTING_BUDGET_TTL_S, _compute)
 
 
 @router.get("/github-budget")
@@ -2258,29 +2385,24 @@ async def state_summary(fresh: bool = Query(False), ctx: MonitorContext = Depend
     cache_key = _ctx_cache_key(ctx, "summary")
     if fresh:
         cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_SUMMARY_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:plans+orchestration+artifacts+research",
-            stale_after_s=STATE_SUMMARY_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_summary,
-        curriculum_root=ctx.roots.curriculum_root,
-        project_root=ctx.roots.project_root,
-        plans_root=ctx.roots.plans_root,
+    was_warm = (not fresh) and cache_get(cache_key, STATE_SUMMARY_TTL_S) is not None
+    result = await cache_get_or_compute_async(
+        cache_key,
+        STATE_SUMMARY_TTL_S,
+        lambda: compute_summary(
+            curriculum_root=ctx.roots.curriculum_root,
+            project_root=ctx.roots.project_root,
+            plans_root=ctx.roots.plans_root,
+        ),
+        force=fresh,
     )
-    cache_set(cache_key, result)
+    aged = cache_get_with_age(cache_key, STATE_SUMMARY_TTL_S)
     return _with_state_meta(
         result,
         source="fs:plans+orchestration+artifacts+research",
         stale_after_s=STATE_SUMMARY_TTL_S,
-        cache="miss",
-        age_s=0.0,
+        cache="hit" if was_warm else "miss",
+        age_s=0.0 if aged is None else aged[1],
     )
 
 
@@ -2329,8 +2451,7 @@ async def pipeline_versions(
     """All modules grouped by pipeline version."""
     cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
     was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
-    result = await asyncio.to_thread(
-        cache_get_or_compute,
+    result = await cache_get_or_compute_async(
         cache_key,
         STATE_PIPELINE_VERSIONS_TTL_S,
         lambda: _compute_pipeline_versions_payload(ctx, track),
@@ -2449,8 +2570,7 @@ async def weak_points(
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
     cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    return await asyncio.to_thread(
-        cache_get_or_compute,
+    return await cache_get_or_compute_async(
         cache_key,
         STATE_WEAK_POINTS_TTL_S,
         lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
@@ -2630,28 +2750,23 @@ async def research_coverage(fresh: bool = Query(False), ctx: MonitorContext = De
     cache_key = _ctx_cache_key(ctx, "research_coverage")
     if fresh:
         cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_RESEARCH_COVERAGE_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:research+dossiers",
-            stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(
-        compute_research_coverage,
-        curriculum_root=ctx.roots.curriculum_root,
-        plans_root=ctx.roots.plans_root,
+    was_warm = (not fresh) and cache_get(cache_key, STATE_RESEARCH_COVERAGE_TTL_S) is not None
+    result = await cache_get_or_compute_async(
+        cache_key,
+        STATE_RESEARCH_COVERAGE_TTL_S,
+        lambda: compute_research_coverage(
+            curriculum_root=ctx.roots.curriculum_root,
+            plans_root=ctx.roots.plans_root,
+        ),
+        force=fresh,
     )
-    cache_set(cache_key, result)
+    aged = cache_get_with_age(cache_key, STATE_RESEARCH_COVERAGE_TTL_S)
     return _with_state_meta(
         result,
         source="fs:research+dossiers",
         stale_after_s=STATE_RESEARCH_COVERAGE_TTL_S,
-        cache="miss",
-        age_s=0.0,
+        cache="hit" if was_warm else "miss",
+        age_s=0.0 if aged is None else aged[1],
     )
 
 

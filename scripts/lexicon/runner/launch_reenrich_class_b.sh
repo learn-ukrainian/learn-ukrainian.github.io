@@ -42,6 +42,35 @@ if [[ -z "${ATLAS_RUN_ROOT:-}" ]]; then
 fi
 RUN_ROOT="$ATLAS_RUN_ROOT"
 
+# Job memory caps (MiB): generic defaults (contracts.GENERIC_JOB_MEMORY_*);
+# a deployment sets LU_LEXICON_JOB_MEMORY_HIGH_MIB / LU_LEXICON_JOB_MEMORY_MAX_MIB.
+# Strip surrounding ASCII whitespace; unset or blank uses the default, like
+# contracts.env_mib(). Refuse non-positive values before any launch.
+_trim_mib() {
+  local s="$1"
+  local ws=$' \t\n\r\v\f'
+  s="${s#"${s%%[!$ws]*}"}"
+  s="${s%"${s##*[!$ws]}"}"
+  printf '%s' "$s"
+}
+_require_positive_mib() {
+  local name="$1" value="$2"
+  if [[ ! "$value" =~ ^[0-9]{1,18}$ ]] || (( 10#$value == 0 )); then
+    printf '%s must be a positive whole number of MiB, got %q\n' "$name" "$value" >&2
+    exit 2
+  fi
+}
+JOB_MEMORY_HIGH_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_HIGH_MIB-}")"
+[[ -n "$JOB_MEMORY_HIGH_MIB" ]] || JOB_MEMORY_HIGH_MIB=1280
+JOB_MEMORY_MAX_MIB="$(_trim_mib "${LU_LEXICON_JOB_MEMORY_MAX_MIB-}")"
+[[ -n "$JOB_MEMORY_MAX_MIB" ]] || JOB_MEMORY_MAX_MIB=1792
+_require_positive_mib LU_LEXICON_JOB_MEMORY_HIGH_MIB "$JOB_MEMORY_HIGH_MIB"
+_require_positive_mib LU_LEXICON_JOB_MEMORY_MAX_MIB "$JOB_MEMORY_MAX_MIB"
+JOB_MEMORY_HIGH_MIB="$((10#$JOB_MEMORY_HIGH_MIB))"
+JOB_MEMORY_MAX_MIB="$((10#$JOB_MEMORY_MAX_MIB))"
+# Children started without the service manager inherit the resolved values.
+export LU_LEXICON_JOB_MEMORY_HIGH_MIB="$JOB_MEMORY_HIGH_MIB" LU_LEXICON_JOB_MEMORY_MAX_MIB="$JOB_MEMORY_MAX_MIB"
+
 REPO="${ATLAS_REPO:-$RUN_ROOT/repo}"
 WORK_DIR="${ATLAS_RE_ENRICH_WORK_DIR:-$RUN_ROOT/run-class-b-reenrich}"
 CODE_ROOT="${ATLAS_RE_ENRICH_CODE_ROOT:-$WORK_DIR}"
@@ -209,6 +238,7 @@ run_cmd() {
 }
 WRAPPED="set -o pipefail; cd $(printf '%q' "$REPO") && PYTHONPATH=$(printf '%q' "$CODE_ROOT"):\$PYTHONPATH:$(printf '%q' "$REPO") exec /usr/bin/nice -n 10 /usr/bin/ionice -c3 $(run_cmd) 2>>$(printf '%q' "$LOG") | tee -a $(printf '%q' "$LOG") > $(printf '%q' "$SUMMARY_FILE")"
 
+
 if systemctl --user is-system-running >/dev/null 2>&1 && command -v systemd-run >/dev/null 2>&1; then
   rm -f "$PID_FILE" "$WRAPPER_PID_FILE"
   # Protocol path (atlas_job): Restart=no, optional RuntimeMaxSec, ExecStopPost
@@ -227,8 +257,10 @@ printf '{"service_result":"%s","exit_code":"%s","exit_status":"%s"}\n' \
 EOS
   chmod +x "$WORK_DIR/write-exit-status.sh"
   SYSTEMD_PROPS=(
-    --property=MemoryHigh=1536M
-    --property=MemoryMax=2048M
+    --property=MemoryHigh="${JOB_MEMORY_HIGH_MIB}M"
+    --property=MemoryMax="${JOB_MEMORY_MAX_MIB}M"
+    --property=Environment=LU_LEXICON_JOB_MEMORY_HIGH_MIB="${JOB_MEMORY_HIGH_MIB}"
+    --property=Environment=LU_LEXICON_JOB_MEMORY_MAX_MIB="${JOB_MEMORY_MAX_MIB}"
     --property=Restart="${ATLAS_RE_ENRICH_RESTART:-no}"
     --property="Environment=ATLAS_JOB_EXIT_STATUS_FILE=${EXIT_STATUS_FILE}"
     --property="ExecStopPost=${WORK_DIR}/write-exit-status.sh"
