@@ -173,8 +173,10 @@ def _nodes(tree: ast.AST) -> Iterable[tuple[ast.AST, tuple[int, ...]]]:
     """Visit dependencies and literals, avoiding millions of terminal AST leaves."""
     relevant = {
         ast.Import, ast.ImportFrom, ast.Attribute, ast.Assign, ast.AnnAssign,
-        ast.AugAssign, ast.For, ast.Call, ast.arg, ast.ClassDef,
+        ast.AugAssign, ast.For, ast.AsyncFor, ast.Call, ast.arg, ast.ClassDef,
         ast.FunctionDef, ast.AsyncFunctionDef, ast.Global, ast.Nonlocal,
+        ast.NamedExpr, ast.comprehension, ast.withitem, ast.ExceptHandler,
+        ast.MatchAs, ast.MatchStar, ast.MatchMapping,
     }
     pending = [(tree, ())]
     while pending:
@@ -293,15 +295,32 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             for scope in (node_scopes[id(node)][index:] for index in range(1, len(node_scopes[id(node)]) + 1)):
                 bindings[scope][name].append(ast.Constant(value=None))
 
+    unknown = ast.Constant(value=None)
+
+    def assign_unknown_target(node: ast.AST, target: ast.AST | None) -> None:
+        """Invalidate bound names in unpacking targets without following loads."""
+        pending = [target]
+        while pending:
+            current = pending.pop()
+            if isinstance(current, ast.Name):
+                assign(node, current.id, unknown)
+            elif isinstance(current, (ast.Tuple, ast.List)):
+                pending.extend(current.elts)
+            elif isinstance(current, ast.Starred):
+                pending.append(current.value)
+            elif isinstance(current, ast.Subscript) and isinstance(current.value, ast.Name):
+                assign(node, current.value.id, unknown)
+
     for node in groups[ast.Assign] + groups[ast.AnnAssign]:
         targets = node.targets if isinstance(node, ast.Assign) else [node.target]
         for target in targets:
             if isinstance(target, ast.Name) and node.value is not None:
                 assign(node, target.id, node.value)
+            else:
+                assign_unknown_target(node, target)
 
     # Retain unknown rebindings in the lexical scope. A local parameter cannot
     # borrow a module-level literal, nor obscure a literal in another function.
-    unknown = ast.Constant(value=None)
     for node in groups[ast.FunctionDef] + groups[ast.AsyncFunctionDef] + groups[ast.ClassDef]:
         assign(node, node.name, unknown)
     for node in groups[ast.Import] + groups[ast.ImportFrom]:
@@ -309,13 +328,19 @@ def _scan_source(item: tuple[str, bytes | str]) -> tuple:
             assign(node, alias.asname or alias.name.split(".")[0], unknown)
     for node in groups[ast.arg]:
         assign(node, node.arg, unknown)
-    for node in groups[ast.AugAssign]:
-        if isinstance(node.target, ast.Name):
-            assign(node, node.target.id, unknown)
-    for node in groups[ast.Assign]:
-        for target in node.targets:
-            if isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name):
-                assign(node, target.value.id, unknown)
+    for node in groups[ast.AugAssign] + groups[ast.NamedExpr] + groups[ast.comprehension] + groups[ast.AsyncFor]:
+        assign_unknown_target(node, node.target)
+    for node in groups[ast.For]:
+        if not isinstance(node.target, ast.Name):
+            assign_unknown_target(node, node.target)
+    for node in groups[ast.withitem]:
+        assign_unknown_target(node, node.optional_vars)
+    for node in groups[ast.ExceptHandler] + groups[ast.MatchAs] + groups[ast.MatchStar]:
+        if node.name is not None:
+            assign(node, node.name, unknown)
+    for node in groups[ast.MatchMapping]:
+        if node.rest is not None:
+            assign(node, node.rest, unknown)
     for node in groups[ast.Call]:
         if isinstance(node.func, ast.Attribute) and node.func.attr in {
             "append", "extend", "insert", "pop", "remove", "clear", "reverse", "sort",

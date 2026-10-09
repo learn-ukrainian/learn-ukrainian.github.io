@@ -498,6 +498,31 @@ def test_repeated_command_assignments_keep_all_edges_and_terminate_cycles():
         assert result.test_dependents([path]) == {"tests/test_use.py"}
 
 
+UNKNOWN_REBINDINGS = [
+    pytest.param('target, other = pick()', id='tuple-unpacking'),
+    pytest.param('[target, other] = pick()', id='list-unpacking'),
+    pytest.param('other, [target, *rest] = pick()', id='nested-unpacking'),
+    pytest.param('*target, = pick()', id='starred-unpacking'),
+    pytest.param('for target, flag in pairs:\n    pass', id='tuple-for'),
+    pytest.param('for [target, *rest] in pairs:\n    pass', id='list-starred-for'),
+    pytest.param('(target := pick())', id='walrus'),
+    pytest.param('[target for target in names]', id='list-comprehension'),
+    pytest.param('{target for target in names}', id='set-comprehension'),
+    pytest.param('{key: target for key, target in pairs}', id='dict-comprehension'),
+    pytest.param('(target for target in names)', id='generator-expression'),
+    pytest.param('[target for [target, *rest] in pairs]', id='unpacking-comprehension'),
+    pytest.param('with resource() as target:\n    pass', id='with-as'),
+    pytest.param('with resource() as (other, [target, *rest]):\n    pass', id='unpacking-with-as'),
+    pytest.param('try:\n    call()\nexcept Exception as target:\n    pass', id='except-as'),
+    pytest.param('try:\n    call()\nexcept* Exception as target:\n    pass', id='except-star-as'),
+    pytest.param('match value:\n    case target:\n        pass', id='case-capture'),
+    pytest.param('match value:\n    case [*target]:\n        pass', id='case-star-capture'),
+    pytest.param('match value:\n    case {"key": target}:\n        pass', id='case-mapping-capture'),
+    pytest.param('match value:\n    case {**target}:\n        pass', id='case-mapping-rest'),
+    pytest.param('match value:\n    case str() as target:\n        pass', id='case-as-capture'),
+]
+
+
 @pytest.mark.parametrize('command', [
     "cmd = ['git', *args]\nsubprocess.run(cmd)",
     "git_args = ['git', '-C', root]\nsubprocess.run([*git_args, 'status'])",
@@ -540,10 +565,25 @@ def test_resolved_python_argv_keeps_target_edges(command):
     'cmd = ["git", "status"]\ndef run(cmd):\n    subprocess.run(cmd)',
     'subprocess.run([sys.executable, "-c", source])',
     'subprocess.run([sys.executable, "-m", module])',
+    'target = ["git", "status"]\n[subprocess.run(target) for target in commands]',
+    'target = ["git", "status"]\nasync def load():\n    async for target in commands:\n        subprocess.run(target)',
+    'target = ["git", "status"]\nasync def load():\n    async with resource() as target:\n        subprocess.run(target)',
+    *[
+        pytest.param(f'target = ["git", "status"]\n{case.values[0]}\nsubprocess.run(target)', id=case.id)
+        for case in UNKNOWN_REBINDINGS
+    ],
 ])
 def test_unknown_argv_branches_remain_uncertain(command):
-    record = impact._scan_source(('scripts/consumer.py', 'import subprocess, sys\n' + command))
-    assert any(reason.startswith('nonliteral-subprocess:') for reason in record[3])
+    result = graph({
+        'scripts/target.py': '', 'scripts/unrelated.py': '',
+        'scripts/consumer.py': 'import subprocess, sys\n' + command,
+        'tests/test_use.py': 'import scripts.consumer', 'tests/test_outside.py': '',
+        'tests/test_static.py': 'import scripts.unrelated',
+    })
+    assert any(reason.startswith('nonliteral-subprocess:') for reason in result.uncertainty['scripts/consumer.py'])
+    assert result.impacted_tests(['scripts/unrelated.py']) == {
+        'full_suite': False, 'tests': ['tests/test_static.py', 'tests/test_use.py'], 'reasons': [],
+    }
 
 
 def test_literal_loop_imports_resolve_in_their_lexical_scope():
@@ -573,10 +613,40 @@ def fixture():
     "target = 'scripts.target'\ndef load(target):\n    importlib.import_module(target)",
     "target = 'scripts.target'\ntarget = unknown\nimportlib.import_module(target)",
     "target = target\nimportlib.import_module(target)",
+    "target = 'scripts.target'\n[importlib.import_module(target) for target in names]",
+    "target = 'scripts.target'\nasync def load():\n    async for target in names:\n        importlib.import_module(target)",
+    "target = 'scripts.target'\nasync def load():\n    async with resource() as target:\n        importlib.import_module(target)",
+    *[
+        pytest.param(f"target = 'scripts.target'\n{case.values[0]}\nimportlib.import_module(target)", id=case.id)
+        for case in UNKNOWN_REBINDINGS
+    ],
 ])
 def test_dynamic_loop_imports_and_parameter_shadowing_remain_uncertain(source):
-    record = impact._scan_source(('scripts/consumer.py', 'import importlib\n' + source))
-    assert any(reason.startswith('dynamic-import:') for reason in record[3])
+    result = graph({
+        'scripts/target.py': '', 'scripts/unrelated.py': '',
+        'scripts/consumer.py': 'import importlib\n' + source,
+        'tests/test_use.py': 'import scripts.consumer', 'tests/test_outside.py': '',
+        'tests/test_static.py': 'import scripts.unrelated',
+    })
+    assert any(reason.startswith('dynamic-import:') for reason in result.uncertainty['scripts/consumer.py'])
+    assert result.impacted_tests(['scripts/unrelated.py']) == {
+        'full_suite': False, 'tests': ['tests/test_static.py', 'tests/test_use.py'], 'reasons': [],
+    }
+
+
+@pytest.mark.parametrize('rebinding', UNKNOWN_REBINDINGS)
+def test_unknown_rebindings_stay_in_their_lexical_scope(rebinding):
+    prefix = "import importlib\ntarget = 'scripts.target'\ndef load():\n"
+    body = '\n'.join('    ' + line for line in rebinding.splitlines()) + '\n'
+    outside = impact._scan_source((
+        'scripts/consumer.py', prefix + body + 'importlib.import_module(target)',
+    ))
+    assert not outside[3]
+    assert ('scripts.target', True) in outside[1]
+    inside = impact._scan_source((
+        'scripts/consumer.py', prefix + body + '    importlib.import_module(target)',
+    ))
+    assert any(reason.startswith('dynamic-import:') for reason in inside[3])
 
 
 def test_scoped_uncertainty_includes_transitive_consumers_outside_change_closure():
