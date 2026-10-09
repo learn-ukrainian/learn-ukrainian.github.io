@@ -108,9 +108,11 @@ def test_tempfile_requires_explicit_approved_dir(method, arguments):
     [
         'os.environ["TMPDIR"]',
         'os.environ["LU_TASK_SCRATCH_DIR"]',
-        'os.getenv("LU_RUNTIME_TMP_ROOT")',
-        'os.environ.get("TMPDIR")',
+        'os.getenv("LU_RUNTIME_TMP_ROOT", ensure_scratch_root())',
+        'os.getenv("TMPDIR", os.environ["LU_TASK_SCRATCH_DIR"])',
         'os.environ.get("TMPDIR", ensure_scratch_root())',
+        f'os.getenv("TMPDIR", {lint.MANAGED_ROOT!r})',
+        f'os.environ.get("TMPDIR", {(lint.MANAGED_ROOT + "/probe")!r})',
         "TMPDIR",
         "LU_TASK_SCRATCH_DIR",
         "LU_RUNTIME_TMP_ROOT",
@@ -133,8 +135,18 @@ def test_approved_scratch_expressions_pass(method, directory):
     [
         'settings["TMPDIR"]',
         'os.environ["HOME"]',
+        'os.getenv("TMPDIR")',
+        'os.getenv("LU_RUNTIME_TMP_ROOT")',
+        'os.environ.get("TMPDIR")',
+        'os.environ.get("LU_RUNTIME_TMP_ROOT")',
         'os.getenv("TMPDIR", ".")',
+        'os.getenv("TMPDIR", None)',
         'os.environ.get("TMPDIR", None)',
+        'os.getenv("TMPDIR", os.environ.get("LU_TASK_SCRATCH_DIR"))',
+        'os.environ.get("TMPDIR", os.getenv("LU_RUNTIME_TMP_ROOT"))',
+        'os.getenv("TMPDIR", "")',
+        f'os.getenv("TMPDIR", {(lint.MANAGED_ROOT + "/../../outside")!r})',
+        f'os.environ.get("TMPDIR", {SYSTEM_TMP!r})',
         'tmp_path / "../outside"',
         'tmp_path / "/outside"',
         'ensure_scratch_root("unapproved")',
@@ -388,3 +400,30 @@ def test_python_multiline_unicode_call_fingerprint():
     finding = lint.scan_python(source, "scripts/probe.py")[0]
     assert finding.line == 2
     assert finding.message.endswith('tempfile.mkdtemp(\n    prefix="ü-",\n)')
+
+
+@pytest.mark.parametrize("separator", ["\u2028", "\u2029", "\x85"])
+@pytest.mark.parametrize("newline", ["\n", "\r", "\r\n"])
+def test_python_literal_fingerprint_uses_physical_lines(tmp_path, monkeypatch, separator, newline):
+    path = tmp_path / "tests/probe.py"
+    path.parent.mkdir()
+    line = f'ROOT = "{LITERAL}"'
+    path.write_bytes((f'label = "before{separator}after"' + newline + line + newline).encode())
+    assert lint.scan_lines(tmp_path) == [("tests/probe.py", 2, line)]
+    monkeypatch.setattr(lint, "ALLOWLIST", (("tests/probe.py", "fixture only", lint.line_digest(line) + ":1"),))
+    assert lint.find_literal_tmp_paths(tmp_path) == []
+    path.write_bytes((path.read_text() + line + newline).encode())
+    assert lint.find_literal_tmp_paths(tmp_path) == [("tests/probe.py", 3)]
+
+
+def test_shell_unicode_separator_preserves_physical_line_numbers(tmp_path):
+    path = tmp_path / "scripts/probe.sh"
+    path.parent.mkdir()
+    path.write_text('echo "before\u2028after"\nmktemp -d\n')
+    rows = lint.scan_lines(tmp_path)
+    assert rows == [("scripts/probe.sh", 2, "mktemp-call: mktemp -d")]
+
+
+def test_allowlist_residuals_reference_followup_issue():
+    assert all("#8755" not in reason for _, reason, _ in lint.ALLOWLIST)
+    assert all("#9702" in reason for _, reason, _ in lint.ALLOWLIST if "migration" in reason or "follow-up" in reason)
