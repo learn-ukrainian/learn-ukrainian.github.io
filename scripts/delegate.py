@@ -10519,12 +10519,14 @@ def _run_worker(
                 #
                 # Neither unknown can prove the work was committed, so either one surfaces
                 # the task for finalization rather than letting it settle as ``done``.
+                # Earlier pushed commits do not account for dirty continuation
+                # work (#10077): every dirty or unknown tree needs finalization.
                 # A worker cut off mid-work (#8502) leaves unfinished edits even
                 # when it had pushed earlier commits: surface them, never ``done``.
                 # Exit 0 does not override the adapter's provider-neutral verdict
                 # (#9771): rejected work stays unconfirmed, even after an earlier push.
                 run_incomplete = not ok_outcome or _worker_run_incomplete(stderr_excerpt) or leftovers_unconfirmed
-                if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
+                if dirty_on_exit in (True, None):
                     needs_finalize = True
 
                 # Catch committed-but-unpushed write dispatches (#7311):
