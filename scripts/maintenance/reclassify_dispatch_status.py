@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import shutil
 import sys
 from pathlib import Path
@@ -30,7 +31,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import delegate
 from agent_runtime.runner import _load_adapter
-from scripts.common.jsonl import jsonl_lines as split_jsonl_lines
+from agent_runtime.usage import _iter_usage_records
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records
 
@@ -52,20 +53,15 @@ def _backup_task_file(path: Path) -> Path:
     return backup_path
 
 
-def _load_usage_by_task_id(usage_dir: Path) -> dict[str, dict[str, Any]]:
+def _load_usage_by_task_id(usage_dir: Path, *, unreadable: dict[str, int] | None = None) -> dict[str, dict[str, Any]]:
     """Return the newest usage record we have for each task_id."""
+    counts = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
     records: dict[str, dict[str, Any]] = {}
     if not usage_dir.exists():
         return records
 
     for path in sorted(usage_dir.glob("usage_*.jsonl")):
-        for line in split_jsonl_lines(path.read_text()):
-            if not line.strip():
-                continue
-            try:
-                record = json.loads(line)
-            except json.JSONDecodeError:
-                continue
+        for record in _iter_usage_records(path, counts):
             task_id = record.get("task_id")
             ts = record.get("ts")
             if not task_id or not ts:
@@ -73,6 +69,8 @@ def _load_usage_by_task_id(usage_dir: Path) -> dict[str, dict[str, Any]]:
             existing = records.get(task_id)
             if existing is None or ts >= existing.get("ts", ""):
                 records[task_id] = record
+    if any(counts.values()):
+        logging.getLogger(__name__).warning("Dispatch reclassification: unreadable usage records %s", counts)
     return records
 
 
@@ -196,13 +194,14 @@ def reclassify_rate_limited_tasks(
     tasks_dir: Path | None = None,
     usage_dir: Path = DEFAULT_USAGE_DIR,
     dry_run: bool = False,
-) -> dict[str, list[tuple[str, str]]]:
+) -> dict[str, Any]:
     tasks_dir = tasks_dir or default_tasks_dir()
-    usage_by_task_id = _load_usage_by_task_id(usage_dir)
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+    usage_by_task_id = _load_usage_by_task_id(usage_dir, unreadable=unreadable)
     changes: list[tuple[str, str]] = []
     skipped: list[tuple[str, str]] = []
     if not tasks_dir.exists():
-        return {"changed": changes, "skipped": skipped}
+        return {"changed": changes, "skipped": skipped, "unreadable": unreadable}
 
     for task_path in iter_task_records(tasks_dir, include_archive=True):
         outcome = _reclassify_task(
@@ -217,7 +216,7 @@ def reclassify_rate_limited_tasks(
             changes.append((task_id, detail))
         else:
             skipped.append((task_id, detail))
-    return {"changed": changes, "skipped": skipped}
+    return {"changed": changes, "skipped": skipped, "unreadable": unreadable}
 
 
 def main() -> int:
@@ -248,6 +247,9 @@ def main() -> int:
     )
     changed = outcomes["changed"]
     skipped = outcomes["skipped"]
+    unreadable = outcomes["unreadable"]
+    if any(unreadable.values()):
+        print(f"Unreadable usage records: {unreadable}")
 
     for task_id, detail in changed:
         print(f"{task_id}: {detail}")

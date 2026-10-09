@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -108,6 +110,8 @@ def test_empty_everything_is_not_flagged(tmp_path, monkeypatch):
     for window in payload["windows"].values():
         assert window["runtime_calls_total"] == 0
         assert window["ledger_empty"] is False
+        assert window["unreadable"] == {"files": 0, "lines": 0, "records": 0}
+        assert not any("unreadable" in warning for warning in window["warnings"])
 
 
 def test_missing_usage_dir_is_not_flagged(tmp_path, monkeypatch):
@@ -155,19 +159,75 @@ def test_malformed_usage_lines_are_skipped(tmp_path, monkeypatch):
 
     assert payload["windows"]["last_7_days"]["runtime_calls_total"] == 1
     assert payload["windows"]["last_7_days"]["ledger_empty"] is True
+    for window in payload["windows"].values():
+        assert window["unreadable"] == {"files": 0, "lines": 2, "records": 0}
+        assert any("unreadable usage records" in warning and "'lines': 2" in warning for warning in window["warnings"])
+
+
+def test_unreadable_usage_counts_are_scoped_to_each_cost_window(tmp_path):
+    curriculum = tmp_path / "curriculum"
+    curriculum.mkdir()
+    usage_dir = tmp_path / "api_usage"
+    usage_dir.mkdir()
+    (usage_dir / "usage_codex-delegate_2026-08-22.jsonl").write_bytes(b'{}\n\xff\n{}\n')
+    (usage_dir / "usage_codex-delegate_2026-08-10.jsonl").write_bytes(b'not-json\n[]\n{}\n')
+    (usage_dir / "usage_codex-delegate_2026-07-01.jsonl").mkdir()
+
+    payload = cost_report.build_cost_windows(root=curriculum, usage_dir=usage_dir, now=_NOW)
+
+    for key, calls, files, lines in [
+        ("last_7_days", 2, 0, 1),
+        ("last_30_days", 3, 0, 3),
+        ("all_time", 3, 1, 3),
+    ]:
+        window = payload["windows"][key]
+        assert window["runtime_calls_total"] == calls
+        assert window["unreadable"] == {"files": files, "lines": lines, "records": 0}
+        assert any(str(window["unreadable"]) in warning for warning in window["warnings"])
+
+
+@pytest.mark.parametrize("scripts_on_path", [False, True])
+def test_usage_import_preserves_redactor_identity(scripts_on_path):
+    root = Path(__file__).resolve().parent.parent
+    probe = """
+import importlib
+import sys
+sys.path.insert(0, sys.argv[1])
+redactor = importlib.import_module(sys.argv[2])
+usage = importlib.import_module(sys.argv[3])
+assert usage.redact_text is redactor.redact_text
+assert usage.redact_value is redactor.redact_value
+"""
+    result = subprocess.run(
+        [
+            sys.executable, "-I", "-c", probe,
+            str(root / "scripts" if scripts_on_path else root),
+            "secret_redactor" if scripts_on_path else "scripts.secret_redactor",
+            "agent_runtime.usage" if scripts_on_path else "scripts.agent_runtime.usage",
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_cost_report_cli_still_runs():
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
     result = subprocess.run(
         [str(project_python()), "scripts/analytics/cost_report.py", "--all", "--json"],
         cwd=Path(__file__).resolve().parent.parent,
+        env=env,
         capture_output=True,
         text=True,
         check=False,
         timeout=30,
     )
 
-    assert result.returncode == 0
+    assert result.returncode == 0, result.stderr
     payload = json.loads(result.stdout)
     assert "records_total" in payload
 

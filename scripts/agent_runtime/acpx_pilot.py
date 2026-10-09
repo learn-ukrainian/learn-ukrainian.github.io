@@ -12,6 +12,7 @@ import argparse
 import fcntl
 import hashlib
 import json
+import logging
 import os
 import sys
 from collections.abc import Callable, Iterator
@@ -37,10 +38,9 @@ from .adapters.acpx import (
     _require_local_metadata_field,
 )
 from .errors import AgentStalledError, AgentTimeoutError, RateLimitedError
-from .jsonl import jsonl_lines
 from .result import Result
 from .runner import _invoke_direct_only, _invoke_native_once
-from .usage import _usage_dir, write_record
+from .usage import _iter_usage_records, _usage_dir, write_record
 
 PILOT_AGENT = "acpx-shadow-pilot"
 PILOT_ENTRYPOINT = "acpx-pilot"
@@ -161,25 +161,22 @@ def _comparison_record(
     }
 
 
-def _has_executed_digest(evidence_dir: Path, digest: str) -> bool:
-    for path in evidence_dir.glob(f"usage_{PILOT_AGENT}-{PILOT_ENTRYPOINT}_*.jsonl"):
-        try:
-            lines = jsonl_lines(path.read_text(encoding="utf-8"))
-        except OSError:
-            continue
-        for raw in lines:
-            try:
-                record = json.loads(raw)
-            except json.JSONDecodeError:
-                continue
-            if (
-                isinstance(record, dict)
-                and record.get("event") == PILOT_EVENT
-                and record.get("idempotency_digest") == digest
-                and record.get("executed") is True
-            ):
-                return True
-    return False
+def _has_executed_digest(evidence_dir: Path, digest: str, *, unreadable: dict[str, int] | None = None) -> bool:
+    """Check prior execution using the shared strict usage reader."""
+    counts = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
+    try:
+        for path in evidence_dir.glob(f"usage_{PILOT_AGENT}-{PILOT_ENTRYPOINT}_*.jsonl"):
+            for record in _iter_usage_records(path, counts):
+                if (
+                    record.get("event") == PILOT_EVENT
+                    and record.get("idempotency_digest") == digest
+                    and record.get("executed") is True
+                ):
+                    return True
+        return False
+    finally:
+        if any(counts.values()):
+            logging.getLogger(__name__).warning("ACPX pilot: unreadable usage records %s", counts)
 
 
 @contextmanager

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -303,46 +304,44 @@ def _parse_usage_window(window: str) -> int:
     return windows[window]
 
 
-def _iter_codex_usage_records(window: str, entrypoint: str):
-    """Yield Codex usage records within the reporting window."""
+def _iter_codex_usage_records(window: str, entrypoint: str, *, unreadable: dict[str, int] | None = None):
+    """Yield Codex usage records within the reporting window, counting corrupt rows."""
     cutoff_ts = datetime.now(UTC).timestamp() - _parse_usage_window(window)
+    counts = unreadable if unreadable is not None else {"files": 0, "lines": 0, "records": 0}
 
     for path in runtime_usage._usage_dir().glob("usage_codex-*.jsonl"):
         try:
             if path.stat().st_mtime < cutoff_ts:
                 continue
+        except FileNotFoundError:
+            if path.is_symlink():
+                counts["files"] += 1
+            continue
         except OSError:
+            counts["files"] += 1
             continue
 
-        try:
-            with open(path, encoding="utf-8") as handle:
-                for raw in handle:
-                    raw = raw.strip()
-                    if not raw:
-                        continue
-                    try:
-                        record = json.loads(raw)
-                    except json.JSONDecodeError:
-                        continue
-                    if entrypoint != "all" and record.get("entrypoint") != entrypoint:
-                        continue
-                    ts_str = record.get("ts")
-                    if not ts_str:
-                        continue
-                    try:
-                        record_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
-                    except (TypeError, ValueError):
-                        continue
-                    if record_ts < cutoff_ts:
-                        continue
-                    yield record
-        except OSError:
-            continue
+        for record in runtime_usage._iter_usage_records(path, counts):
+            if entrypoint != "all" and record.get("entrypoint") != entrypoint:
+                continue
+            ts_str = record.get("ts")
+            if not ts_str:
+                continue
+            try:
+                record_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
+            except (TypeError, ValueError):
+                continue
+            if record_ts < cutoff_ts:
+                continue
+            yield record
+    if any(counts.values()):
+        logging.getLogger(__name__).warning("Codex usage report: unreadable usage records %s", counts)
 
 
 def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
     """Aggregate usage records into a printable report."""
-    records = list(_iter_codex_usage_records(window, entrypoint))
+    unreadable = {"files": 0, "lines": 0, "records": 0}
+    records = list(_iter_codex_usage_records(window, entrypoint, unreadable=unreadable))
     outcomes = ("ok", "error", "rate_limited", "timeout")
     by_outcome: dict[str, dict[str, object]] = {}
     by_entrypoint: dict[str, int] = {}
@@ -385,6 +384,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "window": window,
         "entrypoint": entrypoint,
         "total_calls": len(records),
+        "unreadable": {**unreadable, "total": sum(unreadable.values())},
         "total_duration_s": round(total_duration_s, 1),
         "by_outcome": by_outcome,
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
@@ -402,6 +402,7 @@ def _print_codex_usage_report(report: dict) -> None:
     print(f"Codex usage report - window: {report['window']}, entrypoint: {report['entrypoint']}")
     print("-" * 48)
     print(f"Total calls: {report['total_calls']}")
+    print(f"Unreadable usage records: {report['unreadable']}")
     print(f"Total duration: {report['total_duration_s']:.1f}s")
     print("By outcome:")
 

@@ -110,7 +110,8 @@ from .result import ParseResult, Result
 from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
-from .usage import has_headroom, write_record
+from .usage import has_headroom as _usage_has_headroom
+from .usage import write_record
 from .watchdog import (
     WatchdogState,
     should_kill,
@@ -238,6 +239,16 @@ class CwdUnpinnedError(AgentRuntimeError):
 _CWD_PIN_READ_ONLY_AGENTS = frozenset({"agy"})
 _CWD_PIN_GRACE_ENV = "LU_DISPATCH_CWD_PIN_GRACE_S"
 _CWD_PIN_DEFAULT_GRACE_S = 45.0
+
+
+def has_headroom(agent: str, model: str, *, unreadable: dict[str, int] | None = None) -> tuple[bool, str]:
+    """Keep admission unchanged while surfacing unreadable usage evidence."""
+    if unreadable is None:
+        unreadable = {"files": 0, "lines": 0, "records": 0}
+    decision = _usage_has_headroom(agent, model, unreadable=unreadable)
+    if any(unreadable.values()):
+        _logger.warning("Headroom check for %s/%s: unreadable usage records %s", agent, model, unreadable)
+    return decision
 
 
 def _cwd_pin_grace_s() -> float:

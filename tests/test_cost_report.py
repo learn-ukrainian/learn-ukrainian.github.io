@@ -213,14 +213,17 @@ def test_json_output_is_valid_json(tmp_path, monkeypatch, capsys):
 
 
 def test_cost_report_smoke_runs_on_repo_data():
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
     result = subprocess.run(
         [str(project_python()), "scripts/analytics/cost_report.py", "--all"],
         cwd=Path(__file__).resolve().parent.parent,
+        env=env,
         capture_output=True,
         text=True,
         check=False,
         timeout=30,
     )
 
-    assert result.returncode == 0
+    assert result.returncode == 0, result.stderr
     assert "Estimated cost report" in result.stdout
