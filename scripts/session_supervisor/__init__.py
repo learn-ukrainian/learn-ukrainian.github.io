@@ -14,6 +14,7 @@ import os
 import sys
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ from agents_extensions.shared.session_streams.model import (
     StreamDigest,
     canonical_json,
     entry_as_dict,
+    parse_timestamp,
     sha256_text,
 )
 from agents_extensions.shared.session_streams.receipts import list_migration_state
@@ -396,6 +398,12 @@ class SessionSupervisor:
                     or any(current.get(key) != value for key, value in expected.items())
                 ):
                     raise RemoteLeaseLostError("LEASE LOST: live-state reconciliation fenced the bootstrap lease")
+                try:
+                    expires_at = parse_timestamp(current["expires_at"])
+                except (ArithmeticError, AttributeError, KeyError, TypeError, ValueError) as exc:
+                    raise RemoteLeaseLostError("LEASE LOST: live lease expiry is unavailable or malformed") from exc
+                if datetime.now(UTC) >= expires_at:
+                    raise RemoteLeaseLostError("LEASE LOST: live bootstrap lease expired")
             digest = self.remote.digest_from_response(response)
             handoff_paths = ()
             active = None
@@ -503,7 +511,11 @@ def build_parser() -> argparse.ArgumentParser:
     release.add_argument("--actor-host-id", default=None)
     release.add_argument("--reason", default=None)
 
-    capsule = commands.add_parser("capsule", help="Render a read-only bootstrap capsule.")
+    capsule = commands.add_parser(
+        "capsule",
+        help="Render a read-only capsule; drivers use the exact environment lease without renewal.",
+        description="Reconcile the exact launcher environment lease for drivers without renewal; workers receive no lease.",
+    )
     capsule.add_argument("--role", required=True, choices=tuple(LaunchRole))
     capsule.add_argument("--stream", required=True)
     capsule.add_argument("--digest-limit", type=int, default=20)
@@ -625,7 +637,10 @@ def main(argv: list[str] | None = None) -> int:
                 payload = supervisor.release_driver(role=args.role, lease=lease_from_environment())
         else:
             payload = supervisor.build_capsule(
-                role=args.role, stream_id=args.stream, digest_limit=args.digest_limit
+                role=args.role,
+                stream_id=args.stream,
+                digest_limit=args.digest_limit,
+                lease=lease_from_environment() if args.role == LaunchRole.DRIVER else None,
             ).as_dict()
     except (SessionStreamError, SupervisorError, RemoteSupervisorError, ValueError) as exc:
         print(f"session-supervisor: {exc}", file=sys.stderr)
