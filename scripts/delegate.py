@@ -10076,7 +10076,7 @@ def _run_worker(
             ):
                 tool_config["review_profile"] = state.get("review_profile")
                 if (
-                    state.get("review_profile") == "ukrainian"
+                    state.get("review_profile") in {"ukrainian", "code"}
                     and mcp_config_path is None
                     and review_id is None
                     and attempt_id is None

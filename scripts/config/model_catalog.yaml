@@ -633,6 +633,10 @@ models:
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
     # The first-choice Ukrainian reviewer (core.md P2). The 2026-10-08 approval adds low-risk and
     # medium-risk code review through native AGY; high/critical and security paths remain excluded.
+    # Low/medium code suitability ranks long_context_review before Grok's
+    # critical_review-only routes, even though Grok appears earlier in the ladder.
+    # Thus native AGY can precede Grok when higher-fit Sol/Claude seats are unavailable;
+    # hard gates, suitability and quality still precede health/quota tie-breaks.
     roles: [implementation, agentic_coding, subagent_work, multimodal_analysis, ukrainian_review, long_context_review]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]

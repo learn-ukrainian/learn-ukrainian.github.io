@@ -6911,7 +6911,8 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
 
 
-def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir, tmp_path, monkeypatch):
+@pytest.mark.parametrize("profile", ["ukrainian", "code"])
+def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir, tmp_path, monkeypatch, profile):
     token = tmp_path / "fixture-token"
     token.write_text("fixture")
     monkeypatch.setattr("scripts.agent_runtime.review_mcp._real_agy_token", lambda: token)
@@ -6920,18 +6921,38 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     task_id = "worker-agy-permission-home"
-    record = {"task_id": task_id, "review": True, "review_profile": "ukrainian", **_agy_ukrainian_exemption("read-only")}
+    record = {"task_id": task_id, "review": True, "review_profile": profile, **_agy_ukrainian_exemption("read-only")}
     record["advisory_exemption"]["review_profile"] = "ukrainian"
+    if profile == "code":
+        record.pop("advisory_exemption")
+        # This test isolates home provisioning and adapter permissions. The
+        # separate bounded-advisory suite proves admission before this seam.
+        monkeypatch.setattr(delegate, "_verify_bounded_worker", lambda *_args, **_kwargs: None)
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     monkeypatch.setattr(
         delegate, "_reap_runtime_tmp_lease", lambda *_args: {"tmp_bytes_freed": 0, "tmp_reap_error": None}
     )
 
     def invoke(*_args, **kwargs):
+        from scripts.agent_runtime.adapters import agy
+
         home = Path(kwargs["tool_config"]["agy_home_override"])
         settings = json.loads((home / ".gemini/antigravity-cli/settings.json").read_text())["permissions"]
         assert [r for r in settings["allow"] if r.startswith("read_file(")] == [f"read_file({checkout})"]
         assert not any(r.startswith(("command(", "write_file(")) for r in settings["allow"])
+        monkeypatch.setattr(agy, "_require_background_wait_support", lambda *_args: None)
+        plan = agy.AgyAdapter().build_invocation(
+            prompt="Review the tracked diff.",
+            mode="read-only",
+            cwd=checkout,
+            model=None,
+            task_id=task_id,
+            session_id=None,
+            tool_config=kwargs["tool_config"],
+        )
+        assert "--sandbox" in plan.cmd
+        assert "--dangerously-skip-permissions" not in plan.cmd
+        assert "command(*)" in settings["deny"]
         return _codex_worker_result()
 
     with patch("agent_runtime.runner.invoke", side_effect=invoke):

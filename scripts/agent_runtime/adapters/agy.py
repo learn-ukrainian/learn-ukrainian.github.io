@@ -885,7 +885,7 @@ class AgyAdapter:
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
         review_route = bool(
-            (mode == "read-only" and tc.get("review_profile") == "ukrainian")
+            (mode == "read-only" and tc.get("review_profile") in {"ukrainian", "code"})
             or review_isolation
             or tc.get("review_attempt_boundary")
             or tc.get("review_access")
@@ -1648,7 +1648,7 @@ def _write_review_permissions(tc: Mapping[str, Any], *, mode: str, session_id: s
         )
     if session_id:
         raise AgyReviewPermissionError("agy_review_permissions_require_fresh_session")
-    permission_only = tc.get("review_profile") == "ukrainian" and not any(
+    permission_only = tc.get("review_profile") in {"ukrainian", "code"} and not any(
         tc.get(key)
         for key in ("review_access", "review_id", "attempt_id", "review_attempt_boundary", "review_isolation")
     )

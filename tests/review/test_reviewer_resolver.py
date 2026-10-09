@@ -57,6 +57,27 @@ def test_automatic_ladder_can_use_gemini_when_other_routes_unavailable(risk):
     assert (result.selected.name if result.selected else None) == (GEMINI.name if risk in {"low", "medium"} else None)
 
 
+@pytest.mark.parametrize("risk", ["low", "medium"])
+def test_native_agy_suitability_precedes_grok_when_frontier_budgets_near_cap(risk):
+    result = resolve_reviewer(
+        ResolverInputs(
+            author_model="claude-opus-5-5",
+            risk=risk,
+            routing_snapshot={
+                "agents": {
+                    route: {"status": "near_cap", "remaining_pct": 5, "health": {"healthy": True}}
+                    for route in ("claude", "codex")
+                },
+                "diagnostics": {"stale": False},
+            },
+        )
+    )
+    assert result.selected.name == GEMINI.name
+    grok = next(row for row in result.trace if row.name == "grok-4.7")
+    assert grok.status == "eligible"
+    assert result.selected.suitability_rank < grok.suitability_rank
+
+
 @pytest.mark.parametrize("field,value", [("participant", "codex"), ("catalog_transport", "native_codex"), ("sealed_executable", "other.py"), ("adapter_transport", "acp")])
 def test_native_endpoint_identity_cannot_be_forged(field, value):
     forged = replace(GEMINI, **{field: value})

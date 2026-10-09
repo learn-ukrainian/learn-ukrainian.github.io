@@ -26,8 +26,9 @@ Sonnet (or any one model). The writer's family is never eligible.
 chosen from the "Code review" row of `model-assignment.md`
 (GLM from the Cloud catalog, Grok, GPT, … — never Kimi; whatever the
 live catalog lists that is outside the author's family and meets
-that Code review routing). Gemini/AGY reviews Ukrainian only, never code
-(operator 2026-09-25). **VPS drivers** may still
+that Code review routing). Native AGY admits low/medium risk code reviews through `delegate.py`;
+high/critical, infra and security reviews exclude Gemini. Ukrainian reviews
+require Sources MCP. The bridge refuses Gemini code reviews. **VPS drivers** may still
 use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
 in §7 is the same.
 

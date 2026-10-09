@@ -27,6 +27,19 @@ def test_missing_profile_names_the_flag() -> None:
     assert "ukrainian" in message
 
 
+@pytest.mark.parametrize("command", ["ask-agy", "ask-gemini", "post", "discuss"])
+def test_bridge_help_distinguishes_native_code_review(command, capsys):
+    from scripts.ai_agent_bridge._cli import _build_parser
+
+    with pytest.raises(SystemExit) as exit_info:
+        _build_parser().parse_args([command, "--help"])
+    assert exit_info.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "the bridge refuses code review" in help_text
+    assert "native AGY admits low/medium risk code reviews" in help_text
+    assert "never code" not in help_text
+
+
 def test_bridge_code_profile_requires_native_dispatch() -> None:
     message = gemini_review_profile_error("code")
     assert message is not None
