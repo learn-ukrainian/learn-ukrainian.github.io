@@ -96,7 +96,7 @@ import tempfile
 import unicodedata
 import urllib.parse
 import uuid
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -1519,8 +1519,8 @@ def _agy_review_route(tc: Mapping[str, Any]) -> bool:
     )
 
 
-# Literal POSIX path references, including quoted paths with spaces. This is
-# requirement admission, not a permission boundary or inference about prose:
+# Literal POSIX paths attached to explicit read requests, including quoted
+# paths with spaces. This is requirement admission, not a permission boundary:
 # native permissions still decide undeclared/model-generated tool requests.
 # URI tokens are consumed whole so their slash components are not file paths.
 _PROMPT_PATH_TOKEN_RE = re.compile(
@@ -1530,6 +1530,60 @@ _PROMPT_PATH_TOKEN_RE = re.compile(
     r"|(?P<bare>[^\s`\"'<>]+)"
 )
 _LITERAL_FILE_PATH_RE = re.compile(r"(?:/|~/|\.\.?/|[\w.-]+/|[\w.-]+\.[\w-]+$)")
+_READ_REQUEST_RE = re.compile(
+    r"\b(?:read|open|inspect|review|examine|load|cat|head|tail|less|"
+    r"view_file|view_file_outline|view_code_item|list_dir|grep_search|find_by_name)\b(?![-])",
+    re.IGNORECASE,
+)
+_FILESYSTEM_REQUEST_RE = re.compile(r"\b(?:files?|paths?|directories|directory|folders?|disk)\b", re.IGNORECASE)
+_API_REFERENCE_RE = re.compile(
+    r"\b(?:api|routes?|endpoints?|GET|POST|PUT|PATCH|DELETE|OPTIONS)\s+(?:at\s+)?$", re.IGNORECASE,
+)
+_FENCED_CODE_RE = re.compile(r"(?m)^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n(?P<body>.*?)^[ \t]*(?P=fence)[ \t]*$", re.DOTALL)
+_INTERPRETER_LINE_RE = re.compile(
+    r"(?m)^[ \t]*(?:#![^\n]*|(?:/|~/)[^\s]*?/(?:python[\d.]*|bash|sh|env)[ \t]+[^\n]*)$",
+)
+_NEGATED_READ_RE = re.compile(r"\b(?:do not|don't|never|not to|no need to)\s+$", re.IGNORECASE)
+
+
+def _agy_requested_file_paths(prompt: str) -> Iterator[str]:
+    """Yield literal read operands, never every slash-bearing prompt token.
+
+    A read verb must precede the operand in its sentence/paragraph (including
+    lists and command spans). API operands are recognized by HTTP/route wording
+    or /api/ syntax; explicit filesystem wording takes precedence. Interpreter
+    instructions, shebangs and incidental mentions are not read requirements.
+    No dispatcher-looking marker exempts text: a task cannot hide its read by
+    copying a preamble heading. This also avoids trusting prompt block provenance.
+    """
+    # Interpreter invocations and shebangs in fenced samples describe code;
+    # they do not request opening the executable. Preserve other operands,
+    # including cat commands and bare paths in an explicit read list.
+    prompt = _FENCED_CODE_RE.sub(lambda block: _INTERPRETER_LINE_RE.sub("", block.group()), prompt)
+    for span in re.split(r"\n\s*\n|(?<=[.;!?])\s+", prompt):
+        for token in _PROMPT_PATH_TOKEN_RE.finditer(span):
+            request = list(_READ_REQUEST_RE.finditer(span[:token.start()]))
+            if not request:
+                continue
+            if _NEGATED_READ_RE.search(span[:request[-1].start()]):
+                continue
+            context = span[request[-1].start():token.start()]
+            raw = next((part for part in token.groups() if part is not None), token.group())
+            if link := re.fullmatch(r"\[[^\]\n]*\]\(([^)\n]+)\)", raw):
+                raw = link[1]
+            # A quoted/code span can contain a command rather than just a path.
+            parts = [raw] if _LITERAL_FILE_PATH_RE.match(raw) else raw.split()
+            for part in parts:
+                part = part.strip("([]{},;")
+                if not _LITERAL_FILE_PATH_RE.match(part) or "://" in part:
+                    continue
+                if (
+                    part.startswith("/")
+                    and not _FILESYSTEM_REQUEST_RE.search(context)
+                    and (part.startswith("/api/") or _API_REFERENCE_RE.search(context))
+                ):
+                    continue
+                yield re.sub(r":\d+(?::\d+)?$", "", part.rstrip(".,;)]}"))
 
 
 def validate_agy_read_only_paths(
@@ -1550,24 +1604,13 @@ def validate_agy_read_only_paths(
         workspace = tc.get("repo_read_root") or tc.get("review_snapshot_root") or cwd
         if Path(workspace).resolve() != root:
             raise AgyReviewPermissionError("agy_read_only_workspace_mismatch")
-        for token in _PROMPT_PATH_TOKEN_RE.finditer(prompt):
-            raw = next((part for part in token.groups() if part is not None), token.group())
-            # Code/quoted spans can themselves contain a Markdown link.
-            if link := re.fullmatch(r"\[[^\]\n]*\]\(([^)\n]+)\)", raw):
-                raw = link[1]
-            # A quoted/code span may contain a command rather than just a path.
-            parts = [raw] if _LITERAL_FILE_PATH_RE.match(raw) else raw.split()
-            for part in parts:
-                part = part.strip("([]{},;")
-                if not _LITERAL_FILE_PATH_RE.match(part) or "://" in part:
-                    continue
-                part = re.sub(r":\d+(?::\d+)?$", "", part.rstrip(".,;)]}"))
-                if any(unicodedata.category(c) in {"Cc", "Cf", "Zl", "Zp"} for c in part):
-                    raise AgyReviewPermissionError("agy_read_only_path_unverifiable")
-                path = Path(part).expanduser()
-                target = path if path.is_absolute() else root / path
-                if not target.resolve().is_relative_to(root):
-                    raise AgyReviewPermissionError("agy_read_only_path_outside_workspace")
+        for part in _agy_requested_file_paths(prompt):
+            if any(unicodedata.category(c) in {"Cc", "Cf", "Zl", "Zp"} for c in part):
+                raise AgyReviewPermissionError("agy_read_only_path_unverifiable")
+            path = Path(part).expanduser()
+            target = path if path.is_absolute() else root / path
+            if not target.resolve().is_relative_to(root):
+                raise AgyReviewPermissionError("agy_read_only_path_outside_workspace")
     except AgyReviewPermissionError:
         raise
     except (OSError, RuntimeError, ValueError, TypeError):
