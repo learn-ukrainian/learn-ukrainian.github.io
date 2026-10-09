@@ -604,12 +604,17 @@ class Shadow:
             terminate_run(self.process, self.token)  # the selector exited; its detached descendants must not outlive it
             if self.process.returncode != 0:
                 return {"status": "unavailable", "detail": f"exit {self.process.returncode}"}
-            self.output.seek(0)
             try:
+                self.output.seek(0)
                 selection = json.loads(self.output.read().strip().splitlines()[-1])
-            except (ValueError, IndexError):
+            except (OSError, ValueError, IndexError):
                 return {"status": "unavailable", "detail": "unparseable output"}
-            selected = sorted(selection.get("selected_tests", ()))
+            if not isinstance(selection, dict):
+                return {"status": "unavailable", "detail": "unexpected result shape"}
+            selected = selection.get("selected_tests")
+            if not isinstance(selected, list) or not all(isinstance(test, str) for test in selected):
+                return {"status": "unavailable", "detail": "unexpected selected_tests shape"}
+            selected = sorted(selected)
             return {
                 "status": "recorded",
                 "selected_count": len(selected),
@@ -687,7 +692,11 @@ def validate(
         except GateOutcome:
             shadow.abandon()
             raise
-        write_receipt(state, plan, time.time())
+        try:
+            write_receipt(state, plan, time.time())
+        except OSError as error:
+            shadow.abandon()  # no verdict can be recorded, so the shadow must not outlive the hook
+            raise GateOutcome("receipt_unwritable", f"cannot persist the green receipt: {error}", incomplete=True) from error
         event["outcome"] = "green"
         event["shadow"] = shadow.finish()
 

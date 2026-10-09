@@ -934,3 +934,65 @@ def test_a_detached_shadow_descendant_does_not_outlive_the_shadow(
 
     assert time.monotonic() - started < 25.0
     assert _gone(int(pid_file.read_text(encoding="utf-8")))
+
+
+# ---- review round 3: receipt persistence and shadow result shapes ----------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("answer", "detail"),
+    [
+        ("[]", "unexpected result shape"),
+        ("None", "unexpected result shape"),
+        ("123", "unexpected result shape"),
+        ("'text'", "unexpected result shape"),
+        ("{'components': [], 'fallback_reasons': [], 'selected_tests': None}", "unexpected selected_tests shape"),
+        ("{'components': [], 'fallback_reasons': []}", "unexpected selected_tests shape"),
+        ("{'selected_tests': 'tests/test_x.py'}", "unexpected selected_tests shape"),
+        ("{'selected_tests': ['tests/test_x.py', 7]}", "unexpected selected_tests shape"),
+    ],
+)
+def test_a_misshapen_shadow_result_is_unavailable_not_a_crash(repo: Path, answer: str, detail: str) -> None:
+    _install_shadow(repo, f"import json\nprint(json.dumps({answer}))\n")
+    plan = gate.Plan("h", "t", "b", "v", (), (), ("scripts/x.py",))
+    shadow = gate.Shadow(plan, repo, str(repo / "scripts/pre_commit/project_python.sh"))
+
+    result = shadow.finish()
+
+    assert result == {"status": "unavailable", "detail": detail}
+
+
+def test_a_failed_receipt_write_abandons_the_shadow_and_is_incomplete(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _install_shadow(repo, "import time\ntime.sleep(60)\n")
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    _commit(repo, "green", "tests/test_new.py")
+    monkeypatch.setenv("PRE_COMMIT_HOME", str(tmp_path / "pre-commit-cache"))
+    monkeypatch.chdir(repo)
+    abandoned: list[bool] = []
+    real_abandon = gate.Shadow.abandon
+
+    def spy(self: gate.Shadow) -> None:
+        abandoned.append(True)
+        real_abandon(self)
+
+    def broken_receipt(*_args: object) -> None:
+        raise OSError("disk full")
+
+    monkeypatch.setattr(gate.Shadow, "abandon", spy)
+    monkeypatch.setattr(gate, "write_receipt", broken_receipt)
+    head = _git(repo, "rev-parse", "HEAD").stdout.strip()
+    update = gate.Update("refs/heads/feature", head, "refs/heads/feature", ZERO_SHA)
+
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(
+            update,
+            repo,
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            str(repo / ".pre-commit-config.yaml"),
+            {},
+        )
+
+    assert raised.value.reason == "receipt_unwritable" and raised.value.incomplete
+    assert abandoned == [True]
