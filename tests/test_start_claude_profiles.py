@@ -244,7 +244,6 @@ REFUSED_FORWARD_ARGS = [
     ("--disable-hooks",), ("--no-hooks",), ("--future-option", "private-value"),
     ("--set", "private-value"), ("--sett=private-value",), ("--bar",), ("--safe",),
     ("-b",), ("-bc",), ("--settings\nprivate-value",),
-    ("--=private-value", "--settings", "private-value"),
     ("attach", "private-value"), ("agents",), ("remote-control",),
 ]
 
@@ -337,6 +336,17 @@ AUDITED_REQUIRED_VALUE_FLAGS = [
     "--model", "--effort", "--append-system-prompt", "--append-system-prompt-file",
     "--agent", "--session-id", "--name", "-n", "--permission-mode",
 ]
+
+
+@pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
+def test_malformed_delimiter_does_not_end_argument_validation(launcher, args):
+    result = run_launcher(launcher, *args, "--=private-value", "--settings", "private-value")
+    assert result.returncode == 2, result.stderr
+    assert "unrecognized option" in result.stderr
+    assert "private-value" not in result.stdout + result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would run provider canary" not in result.stdout
+    assert "would exec claude" not in result.stdout
 
 
 @pytest.mark.parametrize("launcher,args", CLAUDE_LAUNCH_FORMS)
