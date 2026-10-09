@@ -27,14 +27,14 @@ def test_cursor_default_model_is_the_concrete_seat_pin():
         ("auto", "cursor_auto_outside_coding_task"),
         ("AUTO", "cursor_auto_outside_coding_task"),
         ("cursor/auto", "cursor_auto_outside_coding_task"),
-        ("grok-4.7-fast", "cursor_model_not_approved"),
+        ("grok-4.7-fast", "CURSOR_UNATTESTED_GROK_VARIANT"),
         ("grok-4.6", "cursor_model_not_approved"),
     ],
 )
 def test_invoke_cursor_refuses_non_pinned_models_before_spawn(model, code):
     with patch("shutil.which", side_effect=AssertionError("resolved the binary before refusing")):
         with patch("subprocess.run", side_effect=AssertionError("spawned before refusing")):
-            with pytest.raises(SystemExit, match=rf"ask-cursor: refused: .*\({code}\)"):
+            with pytest.raises(SystemExit, match=rf"ask-cursor: refused: .*{code}.*"):
                 _invoke_cursor("hello", model)
 
 
@@ -59,8 +59,8 @@ def test_ask_cursor_defaults_to_the_concrete_seat_pin(monkeypatch):
 
     _cursor.ask_cursor("hello", "t-9274")
 
-    assert invoked == ["grok-4.7"]
-    assert sent[0]["to_model"] == "grok-4.7"
+    assert invoked == ["grok-4.7-high"]
+    assert sent[0]["to_model"] == "grok-4.7-high"
 
 
 def test_invoke_cursor_constructs_correct_argv():
@@ -126,3 +126,36 @@ def test_invoke_cursor_strips_output():
             run_mock.return_value = MagicMock(returncode=0, stdout="  response with spaces  \n", stderr="")
             result = _invoke_cursor("hello", "composer-2.5")
             assert result == "response with spaces"
+
+def test_ask_cursor_regression_wire_normalization(monkeypatch):
+    sent = []
+    invoked = []
+    monkeypatch.setattr(_cursor, "send_message", lambda *a, **k: sent.append(k) or len(sent))
+    monkeypatch.setattr(_cursor, "register_ask", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cursor, "acknowledge", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cursor, "record_ask_reply", lambda *_a, **_k: None)
+
+    # Mock the subprocess inside _invoke_cursor
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
+        with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
+            run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
+
+            for m in [None, "grok-4.7", "grok-4.7-high"]:
+                run_mock.reset_mock()
+                _cursor.ask_cursor("hello", "t-9274", model=m)
+                argv = run_mock.call_args[0][0]
+                model_idx = argv.index("--model")
+                assert argv[model_idx + 1] == "grok-4.7-high"
+
+    # Refusals
+    with patch("scripts.agent_runtime.adapters.claude._default_claude_bin", return_value="/bin/claude"):
+        for m, code in [
+            ("grok-4.7[fast=false]", "CURSOR_UNATTESTED_GROK_VARIANT"),
+            ("grok-4.7-low", "CURSOR_UNATTESTED_GROK_VARIANT"),
+            ("grok-4.7-medium", "CURSOR_UNATTESTED_GROK_VARIANT"),
+            ("grok-4.7-xhigh", "CURSOR_UNATTESTED_GROK_VARIANT"),
+            ("opus", "CURSOR_CLAUDE_REFUSED"),
+            ("sonnet", "CURSOR_CLAUDE_REFUSED"),
+        ]:
+            with pytest.raises(SystemExit, match=rf"ask-cursor: refused: {code}"):
+                _cursor.ask_cursor("hello", "t-9274", model=m)

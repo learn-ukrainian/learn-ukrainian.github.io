@@ -169,6 +169,12 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
         "cursor:auto",
         "default",
         "grok-4.7-fast",
+        "grok-4.7-low",
+        "grok-4.7-medium",
+        "grok-4.7-xhigh",
+        "grok-4.7[context=500k]",
+        "grok-4.7[fast=false]",
+
         "grok-4.7-high-fast",
         "composer-2.5-fast",
         "grok-4.7[context=500k,fast=true]",
@@ -384,3 +390,9 @@ def test_cursor_claude_refusal_does_not_trip_for_non_claude() -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", "composer-2.5")
     assert result.returncode == 0, result.stderr
     assert "--model composer-2.5" in result.stdout
+
+@pytest.mark.parametrize("model", ["opus", "sonnet", "claude-3-5-sonnet-20241022", "claude-fable-5-1"])
+def test_cursor_driver_refuses_claude_models(model: str) -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", model)
+    assert result.returncode == 4, result.stderr
+    assert "CURSOR_CLAUDE_REFUSED" in result.stderr
