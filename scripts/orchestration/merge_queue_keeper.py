@@ -504,6 +504,7 @@ def _load(path: Path) -> dict[str, Any]:
         or not isinstance(data.get("requeued", {}), dict)
         or not isinstance(data.get("undiagnosed", {}), dict)
         or not isinstance(data.get("squash_revoked", {}), dict)
+        or not isinstance(data.get("pending_comments", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -564,6 +565,33 @@ def _revoke_reason(
     if queued and verdict_lookup_ok and verdict.state in MISSING_CF_STATES:
         return "needs-CF"
     return None
+
+
+def _flush_pending_comments(
+    gh: GitHub,
+    number: int,
+    comments: list[dict[str, Any]],
+    login: str,
+    previous: dict[str, Any],
+    *,
+    comment_safe: bool,
+) -> None:
+    """Post an owed removal note, including after the pull request has left the queue."""
+    pending = previous.get("pending_comments")
+    if not isinstance(pending, dict) or not pending or not comment_safe:
+        return
+    prefix = f"{number}:"
+    for key, reason in list(pending.items()):
+        if not isinstance(key, str) or not key.startswith(prefix):
+            continue
+        head = key.split(":", 1)[1]
+        if not isinstance(reason, str) or not SHA.fullmatch(head):
+            pending.pop(key, None)
+            continue
+        _comment_once(gh, number, head, reason, comments, login)
+        pending.pop(key, None)
+    if not pending:
+        previous.pop("pending_comments", None)
 
 
 def _comment_once(
@@ -711,6 +739,7 @@ def run(
             continue
         if queued is not True and not armed and queue_enabled is not True:
             continue
+        can_comment = comment_safe
         try:
             current_verdict = Verdict("unknown")
             current_checks = "CI-unknown"
@@ -746,6 +775,7 @@ def run(
                     verdict_lookup_ok = True
                     comments = current_comments
                     comment_safe = True
+                    can_comment = True
                     verdict = current_verdict
                     if _recorded_approval_for_head(current_comments, head, login):
                         approved_before = True
@@ -796,8 +826,10 @@ def run(
                         queued_now.pop(key, None)
                     if revoke == "squash-text-blocked":
                         previous.setdefault("squash_revoked", {})[drop_key] = observed
-                    if revoke == "needs-CF" and comment_safe:
-                        _comment_once(gh, number, head, revoke, comments, login, detail)
+                    if revoke == "needs-CF":
+                        # Count the removal so this head still faces the requeue rule.
+                        previous["drops"][drop_key] = int(previous["drops"].get(drop_key, 0)) + 1
+                        previous.setdefault("pending_comments", {})[drop_key] = revoke
                     estimated_remaining -= 30
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
@@ -815,6 +847,7 @@ def run(
                 if grants is not None and drops >= 1:
                     previous.setdefault("requeued", {})[drop_key] = observed
                 estimated_remaining -= 30
+            _flush_pending_comments(gh, number, comments, login, previous, comment_safe=can_comment)
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
                 and reason not in QUIET_GATE_REASONS
@@ -834,7 +867,7 @@ def run(
         previous["queued"] = queued_now
         previous["approved"] = approved_now
         previous["observed"] = observed
-        for name in ("requeued", "squash_revoked", "undiagnosed"):
+        for name in ("requeued", "squash_revoked", "undiagnosed", "pending_comments"):
             if name in previous:
                 previous[name] = {
                     item: value for item, value in previous[name].items() if item.split(":", 1)[0] in open_numbers
