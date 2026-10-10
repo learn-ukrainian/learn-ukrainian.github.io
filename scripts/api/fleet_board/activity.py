@@ -36,7 +36,8 @@ _EDGE_R = r"(?![^\W_])"
 # Capacity figures: a number with a unit, or a capacity word.
 _PUBLIC_CAPACITY_RE = re.compile(
     rf"(?i)\d[\d.,]*\s*(?:%|pct{_EDGE_R}|percent{_EDGE_R}|slots?{_EDGE_R}|seats?{_EDGE_R}"
-    rf"|tokens?{_EDGE_R}|requests?{_EDGE_R}|rpm{_EDGE_R}|tpm{_EDGE_R}|[kmgt]i?b{_EDGE_R}|bytes?{_EDGE_R})"
+    rf"|tokens?{_EDGE_R}|requests?{_EDGE_R}|(?:rpm|tpm|qps|rps|cps){_EDGE_R}"
+    rf"|[kmgt]i?b{_EDGE_R}|bytes?{_EDGE_R})"
     rf"|{_EDGE_L}(?:capacity|quota|budget|headroom|ceiling|hard[ _-]stop|rate[ _-]limit){_EDGE_R}"
     rf"|{_EDGE_L}\d+\s+of\s+\d+{_EDGE_R}"
 )

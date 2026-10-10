@@ -751,6 +751,15 @@ def test_capacity_figures_are_redacted(probe: str) -> None:
     assert activity_mod.text(probe) == "[redacted]"
 
 
+@pytest.mark.parametrize("unit", ["qps", "rps", "cps"])
+@pytest.mark.parametrize("template", ["7 {unit}", "7{unit}", "7.5 {unit}", "7 {unit}_peak"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_rate_figures_are_redacted(unit: str, template: str, uppercase: bool) -> None:
+    probe = template.format(unit=unit.upper() if uppercase else unit)
+    assert activity_mod.text(probe) == "[redacted]"
+    assert activity_mod.seat_id(probe) is None
+
+
 @pytest.mark.parametrize(
     "probe",
     [
