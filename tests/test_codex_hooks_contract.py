@@ -1435,6 +1435,37 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
         "nested >/dev/null PATH={stub_dir} g{{h..h..1}} api repos/o/r/issues -f title=t -f body=b".replace("nested ", ""),
         'bash -o pipefail -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
         'busybox sh -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'bash <<< \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        '<<< \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\' bash',
+        'bash -- <<< \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'bash 0<<< \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'flock -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\' /tmp/lock',
+        'flock --command \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\' /tmp/lock',
+        'flock --command=\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\' /tmp/lock',
+        'flock -c\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\' /tmp/lock',
+        'flock /tmp/lock -c\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'flock /tmp/lock --command=\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        r"a=issue b=create env --split-string=$'g\x68 $a $b --body safe'",
+        r"a=issue b=create env -S$'g\x68 $a $b --body safe'",
+        'busybox sh -c\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'dash -c\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        'ash -c\'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        r"sudo -R /dir PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"sudo -a pam PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        'env -a decoy -S \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        r"/usr/bin/time -f '%e' PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"time -o /tmp/out PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"exec -la name PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"printf x | xargs -i PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs -e PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs -l PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --replace PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --eof PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --max-lines PATH={stub_dir} $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"timeout .5 PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"timeout 5. PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        r"timeout 5e0 PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe",
+        'zsh --emulate sh -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
     ],
 )
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
@@ -1460,6 +1491,47 @@ def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
     assert result.returncode == 2, result.stderr
     assert not marker.exists()
     assert "not fully shim guarded" in result.stderr
+
+
+def test_codex_scan_tokens_fail_closed_contract():
+    def dummy_recognize_gh(_):
+        return False
+
+    cases = [
+        "bash <<< 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "<<< 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe' bash",
+        "bash -- <<< 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "bash 0<<< 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "flock -c 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe' /tmp/lock",
+        "flock --command 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe' /tmp/lock",
+        "flock --command='a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe' /tmp/lock",
+        "flock -c'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe' /tmp/lock",
+        "flock /tmp/lock -c'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "flock /tmp/lock --command='a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        r"a=issue b=create env --split-string=$'g\x68 $a $b --body safe'",
+        r"a=issue b=create env -S$'g\x68 $a $b --body safe'",
+        "busybox sh -c'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "dash -c'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        "ash -c'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        r"sudo -R /dir $'g\x68' $'issue' $'create'",
+        r"sudo -a pam $'g\x68' $'issue' $'create'",
+        "env -a decoy -S 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+        r"/usr/bin/time -f '%e' $'g\x68' $'issue' $'create'",
+        r"time -o /tmp/out $'g\x68' $'issue' $'create'",
+        r"exec -la name $'g\x68' $'issue' $'create'",
+        r"printf x | xargs -i $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs -e $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs -l $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --replace $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --eof $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"printf x | xargs --max-lines $'g\x68' api repos/o/r/issues -f title=t -f body=b",
+        r"timeout .5 PATH=/stub $'g\x68' $'issue' $'create'",
+        r"timeout 5. PATH=/stub $'g\x68' $'issue' $'create'",
+        r"timeout 5e0 PATH=/stub $'g\x68' $'issue' $'create'",
+        "zsh --emulate sh -c 'a=/stub/g; b=h; c=issue; d=create; \"$a$b\" \"$c\" \"$d\" --body safe'",
+    ]
+    for shape in cases:
+        assert codex_hook_policy._invokes_or_ambiguous_gh(shape, dummy_recognize_gh), f"Expected blocked: {shape}"
 
 
 @pytest.mark.parametrize("wrapper", ["", "env ", "/usr/bin/env ", "command ", "command -- ", "exec "])

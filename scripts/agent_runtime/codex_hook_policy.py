@@ -331,6 +331,8 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
     # Grouping and wrappers can carry pipeline input to a nested shell.
     # Do not attempt to prove which shell in a compound command consumes it.
     pipeline_input = any(token in {"|", "|&"} for token in tokens)
+    shell_in_segment = False
+    herestrings_in_segment: list[str] = []
 
     i = 0
     while i < len(tokens):
@@ -348,6 +350,8 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
             wrapper = False
             wrapper_name = None
             shell_dash_c = False
+            shell_in_segment = False
+            herestrings_in_segment = []
             continue
 
         if word in {")", "}"}:
@@ -362,6 +366,15 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
         ):
             word = tokens[i]
             i += 1
+
+        if word == "<<<" or word.endswith("<<<"):
+            if i < len(tokens):
+                herestring_body = tokens[i]
+                i += 1
+                herestrings_in_segment.append(herestring_body)
+                if (shell_in_segment or shell_dash_c) and _invokes_or_ambiguous_gh(herestring_body, recognize_gh):
+                    return True
+            continue
 
         if (
             word in {"<", ">", ">>", "<&", ">&", "&>", "<>", ">|", "&>>"}
@@ -398,6 +411,10 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                         return True
                     expecting_command = False
                     shell_dash_c = True
+                    shell_in_segment = True
+                    for hs in herestrings_in_segment:
+                        if _invokes_or_ambiguous_gh(hs, recognize_gh):
+                            return True
                     continue
                 else:
                     expecting_command = False
@@ -408,15 +425,23 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 continue
 
         if shell_dash_c:
-            if word in {"-o", "+o", "-O", "+O", "--rcfile", "--init-file"}:
+            if word in {"-o", "+o", "-O", "+O", "--rcfile", "--init-file", "--emulate"}:
                 if i < len(tokens):
                     i += 1
                 continue
+            if word.startswith(("--emulate=", "--rcfile=", "--init-file=")):
+                continue
 
-            if (word.startswith("-") and not word.startswith("--") and "c" in word[1:]) or word == "-c" or word == "<<<":
-                if i < len(tokens):
-                    subcmd = tokens[i]
-                    i += 1
+            if word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+                c_idx = word.find("c")
+                if c_idx == len(word) - 1:
+                    if i < len(tokens):
+                        subcmd = tokens[i]
+                        i += 1
+                        if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                            return True
+                else:
+                    subcmd = word[c_idx + 1:]
                     if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
                         return True
                 shell_dash_c = False
@@ -440,12 +465,44 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                     or (i < len(tokens) and tokens[i].startswith(("-c", "--command")))
                 ):
                     return True
+                if word == "-c" or word == "--command":
+                    if i < len(tokens):
+                        subcmd = tokens[i]
+                        i += 1
+                        if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                            return True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                if word.startswith("-c") and len(word) > 2:
+                    subcmd = word[2:]
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                if word.startswith("--command="):
+                    subcmd = word[len("--command="):]
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
                 if word in {"-w", "--wait", "--timeout", "-E", "--conflict-exit-code"}:
                     if i < len(tokens):
                         i += 1
                     continue
+                if word.startswith(("-w", "-E")) and len(word) > 2:
+                    continue
+                if word.startswith(("--wait=", "--timeout=", "--conflict-exit-code=")):
+                    continue
+
                 if word.startswith("-") and word != "--":
                     continue
+
+                if word == "--":
+                    continue
+
                 if i < len(tokens) and tokens[i] in {"-c", "--command"}:
                     i += 1
                     if i < len(tokens):
@@ -456,33 +513,65 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                     wrapper = False
                     wrapper_name = None
                     continue
-                else:
-                    expecting_command = True
+                if i < len(tokens) and tokens[i].startswith("-c") and len(tokens[i]) > 2:
+                    subcmd = tokens[i][2:]
+                    i += 1
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
                     wrapper = False
                     wrapper_name = None
                     continue
+                if i < len(tokens) and tokens[i].startswith("--command="):
+                    subcmd = tokens[i][len("--command="):]
+                    i += 1
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
 
             elif wrapper_name == "timeout":
                 if word in {"-s", "--signal", "-k", "--kill-after"}:
                     if i < len(tokens):
                         i += 1
                     continue
+                if (word.startswith(("-s", "-k")) and len(word) > 2) or word.startswith(("--signal=", "--kill-after=")):
+                    continue
                 if word.startswith("-") and word != "--":
                     continue
-                if re.match(r"^\d+(?:\.\d+)?[smhdSMHD]?$", word):
+                if word == "--":
+                    if i < len(tokens):
+                        i += 1
                     expecting_command = True
                     wrapper = False
                     wrapper_name = None
                     continue
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
 
             elif wrapper_name == "sudo":
                 if word in {
                     "-u", "--user", "-g", "--group", "-h", "--host", "-p", "--prompt",
                     "-r", "--role", "-t", "--type", "-C", "--close-from", "-D", "--chdir",
-                    "-T", "--command-timeout",
+                    "-T", "--command-timeout", "-R", "--chroot", "-a", "--auth-type",
+                    "-U", "--other-user",
                 }:
                     if i < len(tokens):
                         i += 1
+                    continue
+                if word.startswith(("-u", "-g", "-h", "-p", "-r", "-t", "-C", "-D", "-T", "-R", "-a", "-U")) and len(word) > 2:
+                    continue
+                if any(word.startswith(f"--{opt}=") for opt in [
+                    "user", "group", "host", "prompt", "role", "type", "close-from", "chdir",
+                    "command-timeout", "chroot", "auth-type", "other-user",
+                ]):
                     continue
                 if word.startswith("-") and word != "--":
                     continue
@@ -518,7 +607,7 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
             elif wrapper_name == "env":
                 if pipeline_input and word.startswith(("-S", "--split-string")):
                     return True
-                if word in {"-u", "--unset", "-C", "--chdir"}:
+                if word in {"-u", "--unset", "-C", "--chdir", "-f", "--file", "-a", "--argv0"}:
                     if i < len(tokens):
                         i += 1
                     continue
@@ -528,6 +617,20 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                         i += 1
                         if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
                             return True
+                    continue
+                if word.startswith("-S") and len(word) > 2:
+                    subcmd = word[2:]
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                    continue
+                if word.startswith("--split-string="):
+                    subcmd = word[len("--split-string="):]
+                    if _invokes_or_ambiguous_gh(subcmd, recognize_gh):
+                        return True
+                    continue
+                if word.startswith(("-u", "-C", "-f", "-a")) and len(word) > 2:
+                    continue
+                if any(word.startswith(f"--{opt}=") for opt in ["unset", "chdir", "file", "argv0", "block-signal", "default-signal", "ignore-signal"]):
                     continue
                 if word.startswith("-") and word != "--":
                     continue
@@ -542,8 +645,8 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 continue
 
             elif wrapper_name == "exec":
-                if word == "-a":
-                    if i < len(tokens):
+                if word.startswith("-") and not word.startswith("--") and "a" in word[1:]:
+                    if word.endswith("a") and i < len(tokens):
                         i += 1
                     continue
                 if word.startswith("-") and word != "--":
@@ -561,12 +664,20 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
 
             elif wrapper_name == "xargs":
                 if word in {
-                    "-a", "--arg-file", "-d", "--delimiter", "-E", "-e", "--eof",
-                    "-I", "-i", "--replace", "-L", "-l", "--max-lines", "-n", "--max-args",
+                    "-a", "--arg-file", "-d", "--delimiter", "-E",
+                    "-I", "-L", "-n", "--max-args",
                     "-P", "--max-procs", "-s", "--max-chars",
                 }:
                     if i < len(tokens):
                         i += 1
+                    continue
+                if word.startswith(("-a", "-d", "-E", "-I", "-L", "-n", "-P", "-s")) and len(word) > 2:
+                    continue
+                if any(word.startswith(f"--{opt}=") for opt in ["arg-file", "delimiter", "max-args", "max-procs", "max-chars"]):
+                    continue
+                if word in {"-i", "-e", "-l", "--replace", "--eof", "--max-lines"}:
+                    continue
+                if (word.startswith(("-i", "-e", "-l")) and len(word) > 2) or word.startswith(("--replace=", "--eof=", "--max-lines=")):
                     continue
                 if word.startswith("-") and word != "--":
                     continue
@@ -581,7 +692,27 @@ def _scan_tokens(tokens: list[str], recognize_gh: object) -> bool:
                 wrapper_name = None
                 continue
 
-            elif wrapper_name in {"nohup", "time", "command", "busybox"}:
+            elif wrapper_name == "time":
+                if word in {"-f", "--format", "-o", "--output"}:
+                    if i < len(tokens):
+                        i += 1
+                    continue
+                if (word.startswith(("-f", "-o")) and len(word) > 2) or word.startswith(("--format=", "--output=")):
+                    continue
+                if word.startswith("-") and word != "--":
+                    continue
+                if word == "--":
+                    expecting_command = True
+                    wrapper = False
+                    wrapper_name = None
+                    continue
+                i -= 1
+                expecting_command = True
+                wrapper = False
+                wrapper_name = None
+                continue
+
+            elif wrapper_name in {"nohup", "command", "busybox"}:
                 if word.startswith("-") and word != "--":
                     continue
                 if word == "--":
