@@ -9401,13 +9401,15 @@ def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
             "--prompt",
             "validate pin",
             "--mode",
-            "read-only",
+            "workspace-write",
             "--worktree",
             str(worktree),
             "--branch",
             branch,
             "--pinned-head",
             pinned,
+            "--owned-path",
+            "tracked.txt",
         ]
     )
     args.dry_run = dry_run
@@ -11930,6 +11932,121 @@ def test_default_read_only_dispatch_uses_detached_worktree(tmp_tasks_dir, tmp_pa
         timeout=30,
     )
     assert head.returncode == 1
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+@pytest.mark.parametrize("review", [False, True])
+@pytest.mark.parametrize("worktree_arg", [None, "auto", "explicit"])
+@pytest.mark.parametrize("holder", ["running", "dirty", "terminal", "detached", "local-commits"])
+def test_pinned_read_only_dispatch_detaches_without_disturbing_branch_holder(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, dry_run, review, worktree_arg, holder
+):
+    """#10302: only explicitly pinned read-only calls avoid branch attachment."""
+    main, author = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
+    monkeypatch.chdir(main)
+    env = delegate._sanitized_git_env()
+
+    def git(cwd, *args):
+        return subprocess.run(
+            ["git", "-C", str(cwd), *args],
+            check=True, capture_output=True, text=True, env=env, timeout=30,
+        ).stdout.strip()
+
+    # The reviewed commit differs from main, catching accidental base checkouts.
+    (author / "tracked.txt").write_text("reviewed commit\n")
+    git(author, "commit", "-qam", "review target\n\nX-Agent: codex/gpt-6.1-sol")
+    pinned = git(author, "rev-parse", "HEAD")
+    branch = "codex/task-1"
+    git(main, "update-ref", f"refs/remotes/origin/{branch}", pinned)
+    # Network fetch is the only Git observation doubled here; the remote ref
+    # stands in for its fetched object. Resolution and worktree creation are real.
+    monkeypatch.setattr(delegate, "_fetch_existing_branch", lambda _branch: None)
+    monkeypatch.setattr(delegate, "_ls_remote_branch_sha", lambda *_args, **_kwargs: pinned)
+    monkeypatch.setattr(delegate, "_heal_dead_task", lambda *_args, **_kwargs: None)
+    _patch_worker_popen(monkeypatch)
+    delegate._write_state_atomic(delegate._state_path("task-1"), {
+        "task_id": "task-1", "agent": "codex", "worktree_path": str(author),
+        "status": "running" if holder in {"running", "local-commits"} else "done",
+    })
+    if holder == "local-commits":
+        (author / "tracked.txt").write_text("unpublished author commit\n")
+        git(author, "commit", "-qam", "local author work\n\nX-Agent: codex/gpt-6.1-sol")
+    elif holder == "dirty":
+        (author / "tracked.txt").write_text("uncommitted author work\n")
+    elif holder == "detached":
+        git(author, "checkout", "--detach", "-q")
+    author_head = git(author, "rev-parse", "HEAD")
+    author_status = git(author, "status", "--porcelain")
+    author_contents = (author / "tracked.txt").read_bytes()
+    branch_head = git(main, "rev-parse", f"refs/heads/{branch}")
+    target = main / ".worktrees/dispatch/codex" / (
+        "custom-review-path" if worktree_arg == "explicit" else "pinned-review"
+    )
+    args = _write_args(
+        task_id="pinned-review", mode="read-only", review=review,
+        worktree=str(target) if worktree_arg == "explicit" else worktree_arg,
+        branch=branch, pinned_head=pinned, dry_run=dry_run,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0, capsys.readouterr().err
+    state = delegate._read_state(delegate._state_path("pinned-review"))
+    assert state["pinned_head"] == state["worktree_base_sha"] == pinned
+    assert state["worktree_branch"] == branch
+    assert state["worktree_path"] == str(target)
+    assert state["status"] == ("dry_run" if dry_run else "spawning")
+    if dry_run:
+        assert not target.exists()
+    else:
+        assert git(target, "rev-parse", "HEAD") == pinned
+        assert (target / "tracked.txt").read_text() == "reviewed commit\n"
+        symbolic = subprocess.run(
+            ["git", "-C", str(target), "symbolic-ref", "--quiet", "HEAD"],
+            capture_output=True, text=True, env=env, timeout=30,
+        )
+        assert symbolic.returncode == 1
+    assert author.exists()
+    assert git(author, "rev-parse", "HEAD") == author_head
+    assert git(author, "status", "--porcelain") == author_status
+    assert (author / "tracked.txt").read_bytes() == author_contents
+    assert git(main, "rev-parse", f"refs/heads/{branch}") == branch_head
+    with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
+        delegate._resolve_worktree_base_sha(
+            agent="codex", task_id="stale-pin", raw_path=str(target.parent / "stale-pin"),
+            base="main", branch=branch, detached=True, pinned_head_sha=git(main, "rev-parse", "HEAD"),
+        )
+
+    # The existing recorder reads the target ref and immutable SHA from the
+    # record. Detached checkout must not require changing verdict resolution.
+    from scripts.review import record_cf_verdict as recorder
+
+    completed = tmp_path / "completed-review"
+    completed.mkdir()
+    (completed / "pinned-review.json").write_text(json.dumps({**state, "status": "done"}))
+    (completed / "pinned-review.result").write_text("APPROVE\n")
+    recorded, _reply = recorder._task("pinned-review", completed)
+    assert recorded["worktree_branch"] == branch
+    assert recorded["worktree_base_sha"] == pinned
+
+    # Admission may internally pin an unpinned review; that must not change
+    # its attachment behavior. Both write modes also retain holder protection.
+    if holder in {"running", "dirty"}:
+        for mode in ("read-only", "workspace-write", "danger"):
+            # A refused preparation has no fake worker to settle its claims;
+            # isolate each control as independent dispatch tests are isolated.
+            monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(tmp_path / f"ownership-{mode}.sqlite3"))
+            control = _write_args(
+                task_id=f"held-{mode}", mode=mode, review=review if mode == "read-only" else False,
+                worktree="auto", branch=branch, pinned_head=pinned if mode != "read-only" else None,
+            )
+            assert delegate.cmd_dispatch(control) == 1
+            refusal = capsys.readouterr().err
+            assert "already checked out in" in refusal, refusal
+            assert "refusing to attach it to another worktree" in refusal
+            assert not (main / f".worktrees/dispatch/codex/{control.task_id}").exists()
+            assert git(author, "rev-parse", "HEAD") == author_head
+            assert (author / "tracked.txt").read_bytes() == author_contents
 
 
 def test_read_only_primary_opt_in_requires_cwd(tmp_tasks_dir, tmp_path, monkeypatch, capsys):

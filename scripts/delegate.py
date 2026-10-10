@@ -9047,7 +9047,14 @@ def _resolve_worktree_base_sha(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
-        origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
+        if detached and pinned_head_sha is not None:
+            # A reviewer never resets the author's local ref. Local-only
+            # commits therefore need no ancestry/attachment safety check.
+            origin_sha = _resolve_sha(_REPO_ROOT, f"origin/{requested_branch}")
+            if origin_sha is None:
+                raise RuntimeError(f"origin/{requested_branch} was not found after fetch")
+        else:
+            origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
         _refuse_if_gate_head_moved(origin_sha, pinned_head_sha)
         return pinned_head_sha or origin_sha
 
@@ -11910,6 +11917,13 @@ def _dispatch(
         print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
         return 2
 
+    # Capture the requested target before review admission may internally pin
+    # an unpinned branch. Only an explicit pin (including a resolved --pr head)
+    # changes the established branch-attachment behavior (#10302).
+    pinned_read_only = args.mode == "read-only" and bool(
+        getattr(args, "pinned_head", None) or getattr(args, "pr", None) is not None
+    )
+
     # Diagnose the required profile before route admission defaults to code
     # review and checks its explicit risk.
     if (
@@ -12191,7 +12205,7 @@ def _dispatch(
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
 
-    if review_dependencies and getattr(args, "branch", None) and worktree_arg == "auto":
+    if review_dependencies and getattr(args, "branch", None) and worktree_arg == "auto" and not pinned_read_only:
         try:
             reuse_target = _normalize_worktree_path(
                 str(_auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)),
@@ -12500,8 +12514,8 @@ def _dispatch(
     if primary_read_only_cwd:
         args.cwd = None
         validated_cwd = None
-    detached_read_only = args.mode == "read-only" and not worktree_arg and not args.cwd
-    if detached_read_only:
+    detached_read_only = pinned_read_only or (args.mode == "read-only" and not worktree_arg and not args.cwd)
+    if detached_read_only and not worktree_arg:
         worktree_arg = "auto"
 
     if not fleet_repo.default and not worktree_arg and not args.cwd:
@@ -12949,7 +12963,7 @@ def _dispatch(
     resolved_worktree_base_sha: str | None = None
     resolved_worktree_raw: str | None = None
     rebase_onto: str | None = None
-    if worktree_arg and not (detached_read_only and bool(getattr(args, "dry_run", False))):
+    if worktree_arg and not (detached_read_only and not pinned_read_only and bool(getattr(args, "dry_run", False))):
         resolved_worktree_raw = (
             str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
             if worktree_arg == "auto"
@@ -13154,8 +13168,14 @@ def _dispatch(
         dry_run_worktree_telemetry: dict[str, Any] = {}
         if detached_read_only:
             # A dry-run describes the eventual checkout without fetching the
-            # base or creating a worktree. Both can spawn git subprocesses.
-            dry_run_worktree = _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+            # default base or creating a worktree. Explicit pins were validated
+            # above and must be recorded, including an explicit target path.
+            dry_run_worktree = (
+                validated_worktree or _normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root)
+                if resolved_worktree_raw is not None
+                else _auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root)
+            )
+            dry_run_worktree_telemetry["base_sha"] = resolved_worktree_base_sha
         elif requested_branch:
             resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
             assert resolved_raw is not None  # --branch above supplies the auto sentinel.
@@ -13226,7 +13246,9 @@ def _dispatch(
                 "mode": args.mode,
                 "cwd": str(dry_run_worktree or (Path(args.cwd) if args.cwd else _REPO_ROOT)),
                 "worktree_path": str(dry_run_worktree) if dry_run_worktree else None,
-                "worktree_branch": dry_run_branch,
+                # Preserve the review target ref for verdict recording even
+                # though the checkout itself is detached (#10302).
+                "worktree_branch": requested_branch if pinned_read_only else dry_run_branch,
                 "worktree_base_sha": dry_run_worktree_telemetry.get("base_sha"),
                 "runtime_tmp_root": str(runtime_tmp_root),
                 "output_schema_path": output_schema_path,
@@ -13370,7 +13392,7 @@ def _dispatch(
                     raw_path=resolved_raw,
                     validated_path=validated_worktree,
                     base=worktree_base,
-                    branch=requested_branch,
+                    branch=None if detached_read_only else requested_branch,
                     detached=detached_read_only,
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
@@ -13688,7 +13710,9 @@ def _dispatch(
             "mode": args.mode,
             "cwd": cwd,
             "worktree_path": str(worktree_path) if worktree_path else None,
-            "worktree_branch": worktree_branch,
+            # Verdict binding still uses the target branch plus the immutable
+            # base SHA; detached checkout does not change that contract.
+            "worktree_branch": requested_branch if pinned_read_only else worktree_branch,
             "worktree_base_sha": worktree_telemetry.get("base_sha"),
             "worktree_base": worktree_base if worktree_path else None,
             "worktree_rebased": bool(worktree_telemetry.get("rebased")),
