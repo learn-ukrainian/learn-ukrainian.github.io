@@ -592,14 +592,29 @@ button { font: inherit; }
       return '<section class="detail-section"><h5>Cached issue membership</h5><div class="empty"><strong>Not yet cached.</strong><br>' + escapeHtml(message) + '</div></section>';
     }
 
-    const items = Array.isArray(bucket.items) ? bucket.items.filter(isObject) : [];
-    const totalOpen = nonNegativeInteger(bucket.total_open, items.length);
-    const truncated = bucket.truncated === true;
+    const feedIncomplete = Boolean(
+      state.data && (
+        state.data.membership_complete === false ||
+        (Array.isArray(state.data.incomplete_nodes) && state.data.incomplete_nodes.length > 0)
+      )
+    );
+    const hasValidItems = Array.isArray(bucket.items);
+    const items = hasValidItems ? bucket.items.filter(isObject) : [];
+    const totalOpen = nonNegativeInteger(bucket.total_open);
+    const isComplete = !feedIncomplete && hasValidItems && totalOpen !== null;
+    const truncated = isComplete && bucket.truncated === true;
     const cacheLabel = state.data.stale === true ? 'in the stale cache.' : 'in the cache.';
-    const summary = truncated
-      ? 'Showing ' + String(items.length) + ' of ' + String(totalOpen) + ' open issues.'
-      : String(totalOpen) + ' open issue' + (totalOpen === 1 ? '' : 's') + ' ' + cacheLabel;
-    const issueHtml = items.length
+    let summary;
+    if (feedIncomplete) {
+      summary = 'Open issue membership is incomplete ' + cacheLabel;
+    } else if (!isComplete) {
+      summary = 'Open issue membership is unknown ' + cacheLabel;
+    } else if (truncated) {
+      summary = 'Showing ' + String(items.length) + ' of ' + String(totalOpen) + ' open issues.';
+    } else {
+      summary = String(totalOpen) + ' open issue' + (totalOpen === 1 ? '' : 's') + ' ' + cacheLabel;
+    }
+    const issueHtml = isComplete && items.length
       ? '<ul class="issue-list">' + items.map(issue => {
         const issueNumber = positiveInteger(issue.number);
         const label = issueNumber === null ? short(issue.title, 'Issue') : '#' + String(issueNumber);
