@@ -653,13 +653,13 @@ def test_reuse_takes_the_first_matching_candidate() -> None:
 def test_pytest_shards_match_the_ci_matrix() -> None:
     matrix = _jobs_of_ci()["pytest"]["strategy"]["matrix"]["shard"]
     assert reuse_green_run.pytest_shards(_CI.read_text(encoding="utf-8")) == tuple(matrix)
-    # Every other ci.yml job name is required, queue-only, or explicitly advisory.
+    # Every other ci.yml job name is required or queue-only. The removed advisory
+    # shadow job stays reuse-neutral so PR runs recorded before its removal still reuse.
     names = {job.get("name") for job in _jobs_of_ci().values()}
     assert set(reuse_green_run.REUSE_NEUTRAL_JOBS) == {"Component shadow (advisory)"}
+    assert not set(reuse_green_run.REUSE_NEUTRAL_JOBS) & names
     assert (
-        set(reuse_green_run.EXPECTED_JOBS)
-        | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST)
-        | set(reuse_green_run.REUSE_NEUTRAL_JOBS)
+        set(reuse_green_run.EXPECTED_JOBS) | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST)
     ) == names - {"pytest (${{ matrix.shard }})"}
 
 
@@ -864,7 +864,7 @@ def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
     jobs = _jobs_of_ci()
-    assert jobs["pytest"]["needs"] == ["reuse", "freeze-durations"]
+    assert jobs["pytest"]["needs"] == ["reuse"]
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}
@@ -906,15 +906,9 @@ def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> No
         for step in job.get("steps", [])
         if "continue-on-error" in step
     ]
-    assert len(optional) == 1
-    job_id, telemetry = optional[0]
-    assert job_id == "pytest" and telemetry["continue-on-error"] is True
-    assert telemetry["uses"].startswith("actions/download-artifact@")
-    assert telemetry["with"]["name"] == "pytest-duration-snapshot"
-    # Only the report-only component shadow may tolerate a whole-job failure.
-    assert {
-        job_id: job["continue-on-error"] for job_id, job in _jobs_of_ci().items() if "continue-on-error" in job
-    } == {"component-shadow": True}
+    assert optional == []
+    # No job may tolerate a whole-job failure.
+    assert not any("continue-on-error" in job for job in _jobs_of_ci().values())
     for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")
