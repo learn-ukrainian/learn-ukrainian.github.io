@@ -20,6 +20,7 @@ from scripts.agent_runtime.codex_hook_policy import (
     LOCAL_BASH_GUARDS,
     MERGE_GUARDS,
     PRIMARY_WRITE_GUARD,
+    REWRITE_BASH_GUARDS,
     _result_code,
     _run_enforce_venv,
     run_guard,
@@ -145,7 +146,7 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
             for hook in group["hooks"]
             if ".claude/hooks/" in hook["command"]
         }
-        actual = {name for name, _ in (*LOCAL_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)}
+        actual = {name for name, _ in (*LOCAL_BASH_GUARDS, *REWRITE_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)}
         actual.add("enforce-venv.sh")
         actual.update(name for name in expected for group in groups[1:] for hook in group["hooks"]
                       if name in hook["command"])
@@ -186,7 +187,8 @@ def test_worker_appended_shared_guards_execute_through_shell(tmp_path):
         )
         groups = tomllib.loads(override)["hooks"]["PreToolUse"]
         appended = [hook for group in groups[1:] for hook in group["hooks"]]
-        assert any("guard-public-github-text.py" in hook["command"] for hook in appended)
+        assert not any("guard-public-github-text.py" in hook["command"] for hook in appended)
+        assert ("guard-public-github-text.py", 5) in REWRITE_BASH_GUARDS
         payload = {
             "hook_event_name": "PreToolUse", "cwd": str(worktree), "tool_name": "Bash",
             "tool_input": {"command": "echo hello"},
@@ -546,7 +548,7 @@ def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> No
 
     pre_groups = hooks["PreToolUse"]
     assert len(pre_groups) == 1
-    assert pre_groups[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
+    assert pre_groups[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch|write_stdin)$"
     assert len(pre_groups[0]["hooks"]) == 1
     pre_hook = pre_groups[0]["hooks"][0]
     assert 'codex_hook_entry.sh" pre-tool-use' in pre_hook["command"]
@@ -1306,7 +1308,7 @@ def test_codex_publication_data_words_remain_allowed(command):
     ) == 0
 
 
-@pytest.mark.parametrize('defect', ['missing-source', 'unavailable-source', 'symlink-loop'])
+@pytest.mark.parametrize('defect', ['missing-source', 'unavailable-source', 'symlink-loop', 'missing-entry'])
 def test_hook_resolution_errors_block_with_exit_two(tmp_path, defect):
     source, session = _make_linked_worktree(tmp_path)
     entry = source / 'entry.sh'
@@ -1320,6 +1322,8 @@ def test_hook_resolution_errors_block_with_exit_two(tmp_path, defect):
         env.pop('LU_CODEX_HOOK_SOURCE', None)
     elif defect == 'unavailable-source':
         env['LU_CODEX_HOOK_SOURCE'] = str(tmp_path / 'missing')
+    elif defect == 'missing-entry':
+        entry.unlink()
     else:
         entry.unlink()
         entry.symlink_to(entry.name)
@@ -1328,3 +1332,68 @@ def test_hook_resolution_errors_block_with_exit_two(tmp_path, defect):
         text=True, capture_output=True, timeout=2,
     )
     assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize("tool", ["write_stdin", "Bash"])
+@pytest.mark.parametrize("chars", ["", "echo synthetic\n"])
+def test_codex_interactive_input_is_blocked(monkeypatch, tool, chars):
+    import io
+    import re
+
+    matcher = _manifest()["hooks"]["PreToolUse"][0]["matcher"]
+    assert re.fullmatch(matcher, tool)
+    monkeypatch.setattr(sys, "argv", ["policy", "--python-bin", "synthetic",
+                                     "--hooks-dir", "synthetic", "--canonical-root", "synthetic"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({
+        "tool_name": tool, "tool_input": {"session_id": 1, "chars": chars},
+    })))
+    monkeypatch.setattr(codex_hook_policy, "_run_specs", lambda *args: pytest.fail("input admitted"))
+    assert codex_hook_policy.main() == 2
+
+
+@pytest.mark.parametrize("code", [1, 127, -9])
+def test_codex_guard_errors_always_block(code):
+    assert _result_code([codex_hook_policy.GuardResult("synthetic", code, "", "")]) == 2
+
+
+def test_codex_missing_guards_block(tmp_path):
+    result = run_guard(Path(sys.executable), tmp_path / "missing.py", "{}", 1)
+    assert _result_code([result]) == 2
+    result = run_guard(tmp_path / "missing-interpreter", tmp_path / "missing.py", "{}", 1)
+    assert _result_code([result]) == 2
+    result = _run_enforce_venv(tmp_path, tmp_path, "{}")
+    assert result.returncode == 127
+    assert _result_code([result]) == 2
+
+
+def test_codex_public_text_rewrite_without_decision_blocks(capsys):
+    result = codex_hook_policy.GuardResult(
+        "guard-public-github-text.py", 0,
+        json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                                           "updatedInput": {"command": "echo synthetic"}}}), "",
+    )
+    assert _result_code([result]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "blocking fail-closed" in captured.err
+
+
+@pytest.mark.parametrize("payload", ['{', '[]'])
+def test_codex_invalid_tool_payload_blocks(tmp_path, payload):
+    result = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=tmp_path,
+        input=payload, text=True, capture_output=True, timeout=5,
+    )
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize("tool", ["write_stdin", "Bash"])
+def test_codex_entry_blocks_interactive_input(tmp_path, tool):
+    result = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"], cwd=tmp_path,
+        input=json.dumps({"tool_name": tool, "tool_input": {"session_id": 1, "chars": "echo synthetic\n"}}),
+        text=True, capture_output=True, timeout=5,
+    )
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert "interactive input" in result.stderr

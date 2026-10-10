@@ -162,3 +162,30 @@ def test_nonzero_output_file_quota_text_is_agent_text(tmp_path):
     result = CodexAdapter().parse_response(stdout="", stderr="", returncode=1, output_file=output)
     assert not result.ok
     assert not result.rate_limited
+
+
+@pytest.mark.parametrize("session_id", [None, "synthetic-session"])
+def test_codex_feature_order_and_isolation_history(tmp_path, session_id):
+    import inspect
+
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="test", mode="workspace-write", cwd=tmp_path, model=None,
+        task_id=None, session_id=session_id,
+        tool_config={"disable_features": ["multi_agent", "apps"]},
+    )
+    try:
+        toggles = [(arg, plan.cmd[index + 1]) for index, arg in enumerate(plan.cmd[:-1])
+                   if arg in {"--enable", "--disable"}]
+        assert toggles.index(("--enable", "multi_agent")) < toggles.index(("--disable", "multi_agent"))
+        assert toggles.index(("--enable", "hooks")) < len(toggles) - 1
+        assert toggles[-1] == ("--disable", "apps")
+        source = inspect.getsource(adapter.build_invocation)
+        assert "ORDER MATTERS: Codex CLI processes --enable and --disable" in source
+        assert "PR #2230 follow-up" in source
+        assert "2026-05-22 ab ask-codex" in source
+        assert "codex-node-repl-leak-2026-05-22" in source
+        assert "regardless of argv order" not in source
+    finally:
+        adapter.cleanup_invocation(plan)
+        plan.output_file.unlink(missing_ok=True)

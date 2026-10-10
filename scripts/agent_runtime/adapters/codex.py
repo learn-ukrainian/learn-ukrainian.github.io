@@ -165,7 +165,12 @@ def _worker_hook_flags() -> list[str]:
     require trust even for session flags; this harness vets its tracked sources
     and uses the documented automation trust flag (learn.chatgpt.com/docs/hooks).
     """
-    from scripts.agent_runtime.codex_hook_policy import LOCAL_BASH_GUARDS, MERGE_GUARDS, PRIMARY_WRITE_GUARD
+    from scripts.agent_runtime.codex_hook_policy import (
+        LOCAL_BASH_GUARDS,
+        MERGE_GUARDS,
+        PRIMARY_WRITE_GUARD,
+        REWRITE_BASH_GUARDS,
+    )
 
     from .claude import _worker_guard_settings
 
@@ -184,7 +189,7 @@ def _worker_hook_flags() -> list[str]:
 
     # Reuse the tracked shared-settings reader. Keep the deterministic Codex
     # runner, adding shared guards it does not already execute (#10305).
-    covered = {name for name, _ in (*LOCAL_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)} | {"enforce-venv.sh"}
+    covered = {name for name, _ in (*LOCAL_BASH_GUARDS, *REWRITE_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)} | {"enforce-venv.sh"}
     for group in _json.loads(_worker_guard_settings())["hooks"]["PreToolUse"]:
         missing = [hook for hook in group["hooks"] if Path(shlex.split(hook["command"])[-1]).name not in covered]
         if missing:
@@ -592,8 +597,11 @@ class CodexAdapter:
         # modes (matches start-codex.sh). ``_tool_config_flags`` emits the
         # writer-isolation ``--disable shell_tool / goals / browser_use /
         # in_app_browser / image_generation / apps / plugins / multi_agent``
-        # list. Codex applies disables after enables regardless of argv order;
-        # caller isolation disables therefore suppress ``multi_agent``.
+        # list. ORDER MATTERS: Codex CLI processes --enable and --disable
+        # as ordered toggles. Keep mode enables before caller disables, and
+        # hook enables before the final apps disable (PR #2230 follow-up).
+        # Historical context: 2026-05-22 ab ask-codex
+        # `codex-node-repl-leak-2026-05-22` diagnosis; see env_sanitize.py.
         if has_session_to_resume and tc.get("review_isolation"):
             raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):
@@ -620,7 +628,7 @@ class CodexAdapter:
             # Sealed reviews run in an OS sandbox without tracked hook mounts.
             # Ordinary workers, including scoped homes and resumes, enable
             # tracked hooks. _tool_config_flags filters caller hooks disables:
-            # an explicit disable would defeat this enable in either order.
+            # an explicit disable must not override the required hook enable.
             cmd.extend(_worker_hook_flags())
         # Dispatched workers must have NO write-capable GitHub connector tools
         # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP

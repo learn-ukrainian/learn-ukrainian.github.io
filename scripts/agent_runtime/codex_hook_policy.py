@@ -58,6 +58,8 @@ def run_guard(
             check=False,
             timeout=timeout_seconds,
         )
+    except OSError:
+        return GuardResult(guard.name, 2, "", "Codex hook guard unavailable; blocking fail-closed.\n")
     except subprocess.TimeoutExpired as exc:
         return GuardResult(
             name=guard.name,
@@ -142,6 +144,8 @@ def _run_enforce_venv(
             timeout=ENFORCE_VENV_TIMEOUT,
             env=environment,
         )
+    except OSError:
+        return GuardResult(guard.name, 2, "", "Codex hook guard unavailable; blocking fail-closed.\n")
     except subprocess.TimeoutExpired as exc:
         return GuardResult(
             name=guard.name,
@@ -177,9 +181,7 @@ def _result_code(results: list[GuardResult]) -> int:
             )
         normalized.append(result)
         _emit(result)
-    if any(result.returncode == 2 for result in normalized):
-        return 2
-    return next((result.returncode for result in normalized if result.returncode), 0)
+    return 2 if any(result.returncode for result in normalized) else 0
 
 
 def _has_shell_substitution(command: str) -> bool:
@@ -259,15 +261,27 @@ def main() -> int:
     args = parser.parse_args()
     payload = sys.stdin.read()
     tool_name = _tool_name(payload)
+    try:
+        decoded = json.loads(payload or "{}")
+        if not isinstance(decoded, dict):
+            raise ValueError("invalid payload")
+    except ValueError:
+        print("Codex tool payload is invalid; blocking fail-closed.", file=sys.stderr)
+        return 2
+    tool_input = decoded.get("tool_input", {})
+    if tool_name == "write_stdin" or (
+        tool_name == "Bash" and isinstance(tool_input, dict) and "chars" in tool_input
+    ):
+        print("Codex interactive input cannot be command guarded; blocking fail-closed.", file=sys.stderr)
+        return 2
     if tool_name == "Bash":
         venv_result = _run_enforce_venv(
             args.hooks_dir,
             args.canonical_root,
             payload,
         )
-        if venv_result.returncode:
-            _emit(venv_result)
-            return venv_result.returncode
+        if _result_code([venv_result]):
+            return 2
         publication_code = _publication_command_code(payload, args.hooks_dir)
         if publication_code:
             return publication_code
