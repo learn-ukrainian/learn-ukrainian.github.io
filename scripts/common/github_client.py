@@ -255,26 +255,39 @@ class GitHubClient:
 
     @contextmanager
     def _db(self):
-        path = ":memory:"
-        if self.cache_dir is not None:
+        for attempt in range(2):
+            path = ":memory:"
+            if self.cache_dir is not None:
+                try:
+                    self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                    candidate = self.cache_dir / "cache.sqlite3"
+                    if candidate.exists() and not os.access(candidate, os.W_OK):
+                        raise OSError("cache database is read-only")
+                    path = candidate
+                except OSError:
+                    self.cache_dir = None
+                    path = ":memory:"
+            db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
+            if self.cache_dir is None:
+                self._memory_db = db
+            else:
+                with suppress(OSError):
+                    os.chmod(path, 0o600)
             try:
-                self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
-                path = self.cache_dir / "cache.sqlite3"
-            except OSError:
-                self.cache_dir = None
-                path = ":memory:"
-        db = self._memory_db if self._memory_db is not None else sqlite3.connect(path, timeout=5)
-        if self.cache_dir is None:
-            self._memory_db = db
-        else:
-            with suppress(OSError):
-                os.chmod(path, 0o600)
-        db.execute(
-            "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
-        )
-        db.execute(
-            "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
-        )
+                db.execute(
+                    "CREATE TABLE IF NOT EXISTS cache (scope TEXT, key TEXT, body BLOB, headers TEXT, at REAL, PRIMARY KEY(scope,key))"
+                )
+                db.execute(
+                    "CREATE TABLE IF NOT EXISTS budget (scope TEXT, resource TEXT, remaining INTEGER, reset INTEGER, PRIMARY KEY(scope,resource))"
+                )
+                break
+            except (sqlite3.OperationalError, sqlite3.DatabaseError, OSError):
+                if self.cache_dir is not None:
+                    db.close()
+                    self.cache_dir = None
+                    if attempt == 0:
+                        continue
+                raise
         try:
             with db:
                 yield db

@@ -1,6 +1,7 @@
 """Review commands may use their temp lease without making the checkout writable."""
 
 import os
+import sqlite3
 import subprocess
 import sys
 import tomllib
@@ -9,6 +10,7 @@ import pytest
 
 from scripts.agent_runtime.adapters import codex as codex_adapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
+from scripts.common.github_client import GitHubClient, Response
 
 
 @pytest.fixture(autouse=True)
@@ -204,3 +206,66 @@ def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypat
     err = capsys.readouterr().err
     assert "OPSEC: read command failed; verify repository and flags." in err
     assert "OPSEC: publishing input unresolved" not in err
+
+
+def test_review_gh_shim_read_only_with_readonly_sqlite_file(tmp_path, gh_shim_sandbox):
+    _root, shim, _tooling = gh_shim_sandbox
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    lease = tmp_path / "learn-ukrainian" / "review-test"
+    lease.mkdir(parents=True)
+    cache_dir = tmp_path / "writable-cache-dir"
+    cache_dir.mkdir()
+    database = cache_dir / "cache.sqlite3"
+    sqlite3.connect(database).close()
+    database.chmod(0o444)
+
+    # 1. Direct GitHubClient test
+    calls = []
+
+    def transport(*args):
+        calls.append(args[:2])
+        return Response(200, {}, b'{"number": 10108}')
+
+    client = GitHubClient(cache_dir=cache_dir, transport=transport)
+    resp = client.request("GET", "repos/unit/public/issues/10108")
+    assert resp.status == 200
+    assert client._memory_db is not None
+    assert len(calls) == 1
+
+    # 2. Subprocess shim test
+    backend = tmp_path / "fake-gh"
+    backend.write_text(
+        '#!/bin/sh\nset -eu\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{\\"number\\": 10108, \\"state\\": \\"OPEN\\", \\"body\\": \\"text\\", \\"url\\": \\"https://github.com/unit/public/issues/10108\\"}"\n'
+    )
+    backend.chmod(0o755)
+    plan = review_plan(checkout, lease)
+    env = {
+        **os.environ,
+        **plan.env_overrides,
+        "AGENT_REAL_GH": str(backend),
+        "AGENT_NO_MERGE": "1",
+        "LU_GITHUB_CACHE_DIR": str(cache_dir),
+    }
+    try:
+        result = subprocess.run(
+            [
+                str(shim),
+                "issue",
+                "view",
+                "10108",
+                "--repo",
+                "unit/public",
+                "--json",
+                "number,state,body,url",
+            ],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        assert result.returncode == 0, result.stderr
+        assert '"number": 10108' in result.stdout
+        assert "OPSEC: publishing input unresolved" not in result.stderr
+    finally:
+        database.chmod(0o600)
