@@ -342,7 +342,7 @@ PINNED_DIGESTS = {
     "routing-10305.json.gz": "e6860a690a9f89e5a55f4f762f926ea4278bed0ae5f21b85e44ed9cd4781c013",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "f8ca9432f21486963d27e5bf049e980927a5e592b7b946f20f3ee2697ef61d4b",
-    "SPEC.md": "d808f7cef2e75d4da021fb974c9ed3ccc4c32eed25641de742d22696237188dd",
+    "SPEC.md": "2c4ae5f525a6bf61a0bf6d20ea5f27f43759434a4c0be302045954379c549c0e",
     "baseline.json.gz": "632085d7c2dda5552f33feea23b3398d2406aad4bdfbc3d09b9f001cab8da518",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -360,6 +360,12 @@ def test_frozen_artifacts_are_pinned_independently_of_manifest():
     assert set(PINNED_DIGESTS) == {str(p.relative_to(FIXTURE)) for p in FIXTURE.rglob("*") if p.is_file()}
     for name, expected in PINNED_DIGESTS.items():
         assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == expected, name
+
+
+def test_spec_does_not_publish_hook_mechanism_details():
+    text = (FIXTURE / "SPEC.md").read_text(encoding="utf-8")
+    for leaked in ("codex_hook_entry", "guard-public-github-text", "Running Codex tool policy", "timeout 45", "timeout 5", "^(Bash"):
+        assert leaked not in text, leaked
 
 
 def test_frozen_hashes_and_matrix_denominator():

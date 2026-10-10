@@ -27,16 +27,11 @@ baseline, both captures change exactly four of the 112 adapter rows:
 Each changed row inserts five argv tokens immediately before the existing
 `--disable apps`: `--enable`, `hooks`, `--dangerously-bypass-hook-trust`, `-c`
 and the inline `hooks.PreToolUse` TOML value. That value contains exactly two
-groups. The `^(Bash|Write|Edit|MultiEdit|apply_patch)$` group runs the tracked
-`scripts/agent_runtime/codex_hook_entry.sh pre-tool-use` through `bash`, with
-timeout 45 and status message `Running Codex tool policy`. The `Bash` group
-runs the tracked shared `guard-public-github-text.py`, with timeout 5. Both
-hooks have type `command`. The literal commands are
-`bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use`
-and
-`"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"`.
-These Git-rooted commands match the current adapter rather than the older
-absolute-path capture. The trust flag admits these tracked non-managed hooks, while
+tracked command-hook groups. Their matchers, entry points, timeouts and status
+text are pinned by the scope test in `tests/review/test_model_catalog.py` and
+are not restated here. The Git-rooted commands match the current adapter
+rather than the older absolute-path capture. The trust flag admits these
+tracked non-managed hooks, while
 the inline binding avoids dependence on deployed project-hook discovery.
 
 Removing exactly those five tokens reproduces each layered approved row, including

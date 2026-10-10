@@ -656,6 +656,38 @@ def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
     assert f'{primary}/.venv/bin/python -c "print(1)"' in completed.stderr
 
 
+@pytest.mark.parametrize("shim_first", [False, True])
+def test_codex_entry_blocks_gh_rewrite_unless_shim_already_first(tmp_path: Path, shim_first: bool) -> None:
+    """Codex ignores updatedInput, so a gh command needing the shim must block, not run bare."""
+    _, worktree = _make_linked_worktree(tmp_path)
+    shim = REPO_ROOT / "scripts" / "agent_runtime" / "shims"
+    path = os.environ.get("PATH", "")
+    env = {**os.environ, "PATH": f"{shim}{os.pathsep}{path}" if shim_first else path}
+    payload = {
+        "hook_event_name": "PreToolUse",
+        "cwd": str(worktree),
+        "tool_name": "Bash",
+        "tool_input": {"command": "gh --version", "workdir": str(worktree)},
+    }
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "pre-tool-use"],
+        cwd=worktree,
+        env=env,
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+
+    if shim_first:
+        assert completed.returncode == 0, completed.stderr
+        assert completed.stdout == ""
+    else:
+        assert completed.returncode == 2
+        assert "guard-public-github-text.py wrote unexpected stdout" in completed.stderr
+
+
 def test_claude_bare_python_is_rejected_without_rewrite_output(tmp_path: Path) -> None:
     canonical = tmp_path / "canonical"
     canonical.mkdir()
