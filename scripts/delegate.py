@@ -7422,7 +7422,9 @@ def _build_worker_env(
     else:
         worker_env["AGENT_NO_MERGE"] = "1"
         worker_env.pop("AGENT_ALLOW_MERGE", None)
-    return worker_env
+    from agent_runtime.env_sanitize import without_unneeded_secrets
+
+    return without_unneeded_secrets(worker_env, dispatch_agent)
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:

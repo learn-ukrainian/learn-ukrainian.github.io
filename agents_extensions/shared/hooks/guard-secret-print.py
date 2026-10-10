@@ -523,10 +523,25 @@ def _is_dotenv_secret_file(path: str) -> bool:
     )
 
 
+def _is_secrets_directory(path: str) -> bool:
+    """True for ``~/.secrets`` and anything read from that directory."""
+    clean = _strip_quotes(path).replace("\\", "/").lower()
+    if not clean or clean == "-":
+        return False
+    folded = clean.replace("${home}", "~").replace("$home", "~")
+    if folded in {"~/.secrets", "~/.secrets/", "~/.secrets/*"}:
+        return True
+    if folded.startswith("~/.secrets/") or folded.startswith("~/.secrets*"):
+        return True
+    return "/.secrets/" in folded or folded.endswith("/.secrets") or folded.endswith("/.secrets/*")
+
+
 def _is_known_secret_file(path: str) -> bool:
     clean = _strip_quotes(path).lower()
     if not clean or clean == "-":
         return False
+    if _is_secrets_directory(clean):
+        return True
     name = _path_name(clean)
     if clean in {"~/.aws/credentials", "$home/.aws/credentials", "${home}/.aws/credentials", "~/.bash_secrets"}:
         return True
@@ -612,6 +627,36 @@ def _has_obvious_passthrough_downstream(pipeline: list[list[str]], seg_index: in
     return any(_is_obvious_passthrough(seg) for seg in pipeline[seg_index + 1 :])
 
 
+_SECRET_FILTER_RE = re.compile(r"(?i)(?:key|token|secret|password)")
+
+
+def _printenv_arg_is_secret(arg: str) -> bool:
+    """True when a printenv operand names or globs a credential."""
+    if not arg or arg.startswith("-"):
+        return False
+    if _is_secret_var_name(arg):
+        return True
+    return _SECRET_FILTER_RE.search(arg) is not None
+
+
+def _downstream_seeks_secret_names(pipeline: list[list[str]]) -> bool:
+    """True when a later grep filters an env dump for credential names."""
+    for segment in pipeline[1:]:
+        command = _command_at(segment)
+        if command is None:
+            continue
+        cmd, args, _idx = command
+        if cmd not in GREP_COMMANDS:
+            continue
+        for arg in args:
+            token = _strip_quotes(arg)
+            if token.startswith("-"):
+                continue
+            if _SECRET_FILTER_RE.search(token):
+                return True
+    return False
+
+
 def _env_dump_reason(pipeline: list[list[str]]) -> str | None:
     command = _command_at(pipeline[0])
     if command is None:
@@ -619,7 +664,11 @@ def _env_dump_reason(pipeline: list[list[str]]) -> str | None:
     cmd, args, _idx = command
     if cmd not in ENV_DUMP_COMMANDS:
         return None
-    if cmd in {"printenv", "set"} and args:
+    if cmd == "printenv" and args:
+        if any(_printenv_arg_is_secret(_strip_quotes(arg)) for arg in args):
+            return "`printenv` would print a secret variable"
+        return None
+    if cmd == "set" and args:
         return None
     if cmd == "env" and any(not _is_assignment(arg) for arg in args):
         # `env FOO=bar` with no command is still a dump; env options are
@@ -627,6 +676,8 @@ def _env_dump_reason(pipeline: list[list[str]]) -> str | None:
         return None
     if _has_safe_downstream(pipeline, 0):
         return None
+    if _downstream_seeks_secret_names(pipeline):
+        return f"`{cmd}` piped to a secret-name filter would print secret values"
     if len(pipeline) > 1 and not _has_obvious_passthrough_downstream(pipeline, 0):
         return None
     return f"`{cmd}` would print the full shell environment"
@@ -1047,7 +1098,24 @@ def _block_msg(reason: str) -> str:
     )
 
 
-def main() -> int:
+def _self_test() -> int:
+    """Block the seeded echo shapes. Used by pre-commit; prints no secret values."""
+    seeded = (
+        "cat ~/.secrets/*",
+        "env | grep KEY",
+        "printenv *_KEY",
+    )
+    for command in seeded:
+        if _scan_command(command, set()) is None:
+            sys.stderr.write("no-print hook did not block a seeded command\n")
+            return 1
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if args == ["--self-test"]:
+        return _self_test()
     if os.environ.get("LEARN_UK_SECRETS_OK") == "1":
         return 0
 

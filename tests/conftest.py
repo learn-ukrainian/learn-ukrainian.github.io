@@ -29,6 +29,7 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from agent_runtime.env_sanitize import CAPTURED_SECRET_MIN_LENGTH, credential_env_names
 from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
 from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, rerun_node_ids
 from scripts.common.repo_root import resolve_repo_root
@@ -158,6 +159,12 @@ SESSION_IDENTITY_ENV_VARS = (
 )
 
 
+# Original credential values for the in-flight test, keyed by node id. The
+# leak check compares captured output to these and never includes the value
+# in a failure. Cleared when the test protocol finishes.
+_SCRUBBED_SECRET_VALUES: dict[str, dict[str, str]] = {}
+
+
 @pytest.hookimpl(wrapper=True, tryfirst=True)
 def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> Generator[None, object, object]:
     """Run every test without the launching agent session's identity (#8778).
@@ -165,11 +172,50 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
     The outermost wrapper around setup, call, and teardown, so no fixture of
     any scope sees the identity. Tests that need a variable set it themselves;
     the original environment returns after teardown.
+
+    Credential-shaped variables (``*_API_KEY`` and token, secret, and password
+    names) are removed the same way. A long value that then shows up in
+    captured output fails the test without the value being repeated.
     """
+    secrets: dict[str, str] = {}
     with pytest.MonkeyPatch.context() as patch:
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
-        return (yield)
+        for name in credential_env_names(os.environ, keep=SESSION_IDENTITY_ENV_VARS):
+            value = os.environ.get(name, "")
+            if len(value) >= CAPTURED_SECRET_MIN_LENGTH:
+                secrets[name] = value
+            patch.delenv(name, raising=False)
+        _SCRUBBED_SECRET_VALUES[item.nodeid] = secrets
+        try:
+            return (yield)
+        finally:
+            _SCRUBBED_SECRET_VALUES.pop(item.nodeid, None)
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) -> Generator[None, object, pytest.TestReport]:
+    """Fail when captured output contains a credential stripped from the env."""
+    report = yield
+    secrets = _SCRUBBED_SECRET_VALUES.get(item.nodeid) or {}
+    if not secrets or report.outcome != "passed":
+        return report
+    chunks = [getattr(report, "capstdout", "") or "", getattr(report, "capstderr", "") or ""]
+    for title, content in getattr(report, "sections", []) or []:
+        if "stdout" in title.lower() or "stderr" in title.lower() or "captured" in title.lower():
+            chunks.append(content or "")
+    text = "\n".join(chunks)
+    for name, value in secrets.items():
+        if value and value in text:
+            report.outcome = "failed"
+            report.longrepr = f"captured output contained the value of scrubbed env var {name}"
+            # Drop the captured text so the value is not printed with the failure.
+            report.sections = [
+                (title, "" if value in (content or "") else content)
+                for title, content in report.sections
+            ]
+            break
+    return report
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
