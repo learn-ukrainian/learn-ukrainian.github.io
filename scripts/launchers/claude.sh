@@ -26,7 +26,7 @@ launcher_adapter_preflight() {
   launcher_require_binary claude 'Claude Code executable is unavailable.' 3 || exit $?
 }
 launcher_adapter_canary() {
-  if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: would run provider canary'; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: provider canary: not run'; fi
   return 0
 }
 launcher_adapter_exec() {

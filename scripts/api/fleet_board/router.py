@@ -1,4 +1,4 @@
-"""Fleet board v1 routes: index, schema, roster, budget, operations, and PRs."""
+"""Fleet board v1 routes: index, schema, roster, budget, operations, snapshots, and PRs."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from ..monitor_context import MonitorContext, get_ctx
 from . import prs as prs_api
 from .budget import load_budget, unknown_budget
 from .envelope import endpoint_schema, envelope, utc_timestamp
+from .file_sources import load_backups, load_downloads, load_harness, load_harness_driver
 from .http_sources import empty_stats, load_alerts, load_links, load_stats
 from .roster import empty_roster, load_roster
 from .sources import SourceReport, collect_source_reports, overlay_source, read_location, report
@@ -194,3 +195,33 @@ def read_prs(
 @router.get("/prs/{number}", name="pr")
 def read_pr(number: Annotated[int, Path(ge=1)]) -> dict[str, Any]:
     return prs_api.read_pr(number)
+
+
+@router.get("/backups", name="backups")
+def read_backups() -> dict[str, Any]:
+    return _publish(
+        "backups",
+        "backups",
+        lambda: {"age_h": None, "stale": None, "last_result": None, "restore_test": None},
+        load_backups,
+    )
+
+
+@router.get("/downloads", name="downloads")
+def read_downloads() -> dict[str, Any]:
+    return _publish("downloads", "downloads", lambda: {"state": None, "items": []}, load_downloads)
+
+
+@router.get("/harness", name="harness")
+def read_harness() -> dict[str, Any]:
+    return _publish("harness", "harness_snapshot", lambda: {"drivers": []}, load_harness)
+
+
+@router.get("/harness/{agent_id}", name="harness_driver")
+def read_harness_driver(agent_id: str) -> dict[str, Any]:
+    return _publish(
+        "harness_driver",
+        "harness_snapshot",
+        lambda: {"driver": None},
+        lambda: load_harness_driver(agent_id),
+    )

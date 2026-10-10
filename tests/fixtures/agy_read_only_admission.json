@@ -1,0 +1,48 @@
+{
+  "separators": [
+    "# Cross-Family Code Review Request: PR #8150 / Issue #8143",
+    "Review PR #10255 / issue #8506.",
+    "# Review of record (code, medium): PR #10255 / issue #8506",
+    "Review the read / write split.",
+    "Give an exact-head verdict: APPROVE / REQUEST_CHANGES.",
+    "Review the routing: OPSEC / Codex.",
+    "Review of record: author OpenAI / Codex, reviewer Anthropic / Claude.",
+    "Review correctness / regressions / missing tests.",
+    "Review the A/B test and/or the parser.",
+    "Review date 2026/10/09 and branch origin/main."
+  ],
+  "head_metadata": [
+    "Exact head: `9dc756cb` \u00b7 Author: gpt-6.1-sol (OpenAI / Codex)",
+    "Exact head: `9dc756cb`; worktree: /workspace/review.",
+    "Head Commit: `9dc756cb`\nWorktree: /workspace/review.",
+    "Compare the head commit `9dc756cb` inside /workspace/review.",
+    "Your round-1 review: /workspace/review.result.",
+    "Review the tail latency; output lives in /workspace/results.json.",
+    "Review fewer allocations and less / more logging."
+  ],
+  "slash_commands": [
+    "Inspect the `/code-review:code-review` skill.",
+    "Review the `/effort` command.",
+    "Inspect the /code-review:code-review slash command.",
+    "Review the /code-review:code-review command."
+  ],
+  "api_routes": [
+    "Review the API endpoint /health.",
+    "Read /api/rules?scope=core.",
+    "Review the implementation that returns 404 for /health.",
+    "Review `scripts/a.py`; the endpoint POST /api/v1/tasks returns 201.",
+    "Review the change: GET /health returns 200."
+  ],
+  "incidental_paths": [
+    "Review how the guard walks /proc/<pid>/fd for open files.",
+    "Review the change: the launcher calls /usr/bin/env bash.",
+    "Review the runbook; it mentions /etc/hosts as an example config.",
+    "Inspect the logs; the service listens on /var/run/app.sock.",
+    "Review the PR; CI runs `/workspace/project/.venv/bin/python -m pytest tests/`.",
+    "Review this snippet:\n```sh\n#!/usr/bin/env bash\n```",
+    "Review this snippet:\n```sh\n/workspace/project/.venv/bin/python -m pytest\n```",
+    "Full review: /workspace/review.result.",
+    "Review\n- `scripts/a.py` (audit script detecting hardcoded /workspace/bin/python paths)",
+    "Review: the open file descriptor is inspected using /proc/self/fd."
+  ]
+}

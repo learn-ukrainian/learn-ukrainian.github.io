@@ -106,8 +106,80 @@ GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
-APPROVED_BASELINE = {**REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"]}
+
+
+def approved_launcher_canary_baseline(baseline):
+    """Apply #10266's paragraph after surface overlays, preserving other help edits."""
+    canary = json.loads((CAPACITY_FIXTURE / "launcher-canary-10266.json").read_bytes())
+    launchers = deepcopy(baseline["launchers"])
+    for index in canary["launcher_rows"]:
+        for replacement in canary["launcher_help_replacements"]:
+            before, after = replacement["before"], replacement["after"]
+            assert launchers[index]["stdout"].count(before) == 1
+            launchers[index]["stdout"] = launchers[index]["stdout"].replace(before, after)
+    return {**baseline, "launchers": launchers}
+
+
+# Apply literal paragraph edits last: a surface overlay such as #10291's Grok
+# help revision must neither erase this wording nor have its other lines erased.
+APPROVED_BASELINE = approved_launcher_canary_baseline({
+    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+})
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
+
+
+@pytest.mark.parametrize("configuration", ["", "no-cli"])
+def test_launcher_canary_fixture_changes_only_driver_help_paragraph(configuration):
+    fixture_path = CAPACITY_FIXTURE / "launcher-canary-10266.json"
+    assert hashlib.sha256(fixture_path.read_bytes()).hexdigest() == (
+        "9dca36ee148f7d1e178c2ef2084da9be612e887b0c3c39365a9e35eefed8fef4"
+    )
+    canary = json.loads(fixture_path.read_bytes())
+    assert set(canary) == {"launcher_rows", "launcher_help_replacements"}
+    assert len(canary["launcher_help_replacements"]) == 1
+    baseline = json.loads(gzip.decompress((FIXTURE / configuration / "baseline.json.gz").read_bytes()))
+    original = deepcopy(baseline)
+    updated = approved_launcher_canary_baseline(baseline)
+    changed = []
+    assert len(baseline["launchers"]) == len(updated["launchers"]) == 70
+    for index, (before, after) in enumerate(zip(baseline["launchers"], updated["launchers"], strict=True)):
+        if before == after:
+            continue
+        changed.append(index)
+        assert INPUTS["launchers"][index]["variant"] == "help"
+        restored = deepcopy(after)
+        for replacement in canary["launcher_help_replacements"]:
+            assert restored["stdout"].count(replacement["after"]) == 1
+            restored["stdout"] = restored["stdout"].replace(replacement["after"], replacement["before"])
+        assert restored == before
+    assert changed == canary["launcher_rows"] == [4, 9, 14, 19, 24, 29, 34, 39, 44, 49]
+    for surface in baseline.keys() - {"launchers"}:
+        assert updated[surface] == baseline[surface]
+    assert baseline == original
+
+
+def test_launcher_canary_paragraph_preserves_independent_grok_help_edits():
+    def grok_help_edits(baseline):
+        updated = deepcopy(baseline)
+        row = updated["launchers"][39]
+        # #10291 changes the usage and adds a native-driver block, outside the
+        # driver paragraph. Exercise edits on both sides of that paragraph.
+        row["stdout"] = row["stdout"].replace(
+            "Usage: ./start-grok-driver.sh [OPTIONS] [PROMPT ...] [-- PROVIDER_ARGS ...]",
+            "Usage: ./start-grok-driver.sh [OPTIONS] [-- PROVIDER_ARGS ...]",
+        ).replace(
+            "Hermes (opt-in only):\n",
+            "Native Grok driver:\n"
+            "  Runs from the inspected checkout; positional prompts and subcommands are refused.\n\n"
+            "Hermes (opt-in only):\n",
+        )
+        assert row != baseline["launchers"][39]
+        return updated
+
+    baseline = deepcopy(REVIEW_CAPACITY_BASELINE)
+    assert approved_launcher_canary_baseline(grok_help_edits(baseline)) == grok_help_edits(
+        approved_launcher_canary_baseline(baseline),
+    )
 
 
 def test_resource_policy_fixture_changes_only_approved_fallback_rows():
@@ -607,9 +679,9 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    expected_baseline = {
+    expected_baseline = approved_launcher_canary_baseline({
         **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    }
+    })
     expected_baseline["adapters"] = parser_guard_adapter_baseline(
         expected_baseline["adapters"], parser_guard_interpreter(),
     )

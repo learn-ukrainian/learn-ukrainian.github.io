@@ -2,12 +2,24 @@
 
 import json
 import subprocess
+from pathlib import Path
 
 import pytest
 
 from scripts.opsec.prepublish import PublishBlocked
 from scripts.publish.merge_guard import ensure_merge_ready
 
+
+@pytest.fixture(autouse=True)
+def _advisory_fixture_workflow(monkeypatch):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
+    from scripts.ci import advisory_checks
+
+    monkeypatch.setattr(
+        advisory_checks,
+        "CI_WORKFLOW_PATH",
+        Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
+    )
 
 def merge_with_checks(stdout, returncode=0):
     def runner(args, **kwargs):

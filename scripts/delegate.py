@@ -4927,6 +4927,45 @@ def _report_dispatch_admission(
     return _ADMISSION_REFUSED_EXIT
 
 
+def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
+    """Read-only: True when an explicit ``--worktree`` path is an existing checkout (real reuse).
+
+    Resolves the path exactly as dispatch does, relative to the target repository.
+    """
+    if not worktree or worktree == "auto":
+        return False
+    try:
+        return (_normalize_worktree_path(str(worktree), repo_root=repo_root) / ".git").exists()
+    except (OSError, ValueError):
+        return False
+
+
+def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any, repo_root: Path | None = None) -> int | None:
+    """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
+
+    Runs before any task-record, archive, forward or worktree side effect.
+    """
+    from scripts.orchestration import pr_freeze
+
+    worktree = getattr(args, "worktree", None)
+    if not pr_freeze.opens_new_pr(
+        mode=str(getattr(args, "mode", "") or ""),
+        repo_role=str(getattr(fleet_repo, "role", "") or ""),
+        pr=getattr(args, "pr", None),
+        cwd=getattr(args, "cwd", None),
+        review=_dispatch_is_review_typed(args),
+        reused_worktree=_is_existing_worktree(worktree, repo_root=repo_root),
+    ):
+        return None
+    decision = pr_freeze.evaluate(fleet_repo.github, branch=getattr(args, "branch", None))
+    if decision.warning:
+        print(f"⚠️  {decision.warning}", file=sys.stderr)
+    if decision.refused:
+        print(f"❌ {decision.refusal_line(fleet_repo.github)}", file=sys.stderr)
+        return _ADMISSION_REFUSED_EXIT
+    return None
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -12027,6 +12066,11 @@ def _dispatch(
         print(f"❌ --repo {fleet_repo.key!r} has no valid owner/name in fleet_repos", file=sys.stderr)
         return 2
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
+
+    # Open-PR freeze: refuse before any task record, archive, forward or worktree side effect.
+    freeze_rc = _check_open_pr_freeze(args, fleet_repo, target_repo_root)
+    if freeze_rc is not None:
+        return freeze_rc
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry

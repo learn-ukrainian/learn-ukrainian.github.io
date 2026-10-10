@@ -43,7 +43,7 @@ without renewing the lease:
 ```
 
 This command reads the exact `SESSION_STREAM_*` lease and reconciles it with
-Monitor's active lease and expiry. A mismatch or expired lease is refused;
+Monitor's active lease and expiry (the local store with `--local`); the capsule reports that checked expiry. A mismatch or expired lease is refused;
 the command makes no claim, heartbeat, release or recovery call. Workers still
 receive no lease in `capsule --role worker`.
 

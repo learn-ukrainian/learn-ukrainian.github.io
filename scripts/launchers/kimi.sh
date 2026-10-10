@@ -33,7 +33,7 @@ launcher_adapter_preflight() {
   launcher_require_binary claude 'Claude Code executable is unavailable for the Kimi harness.' 3 || exit $?
 }
 launcher_adapter_canary() {
-  if [ "$LC_DRY_RUN" = 1 ]; then echo 'kimi adapter: would run provider canary'; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then echo 'kimi adapter: provider canary: not run'; fi
   return 0
 }
 # Kimi Code binds an agent at session creation, and the rules core rides in on

@@ -41,6 +41,18 @@ _GH_246_CHECKS_JSON_GAP = (
 )
 
 
+
+@pytest.fixture(autouse=True)
+def _advisory_fixture_workflow(monkeypatch):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
+    from scripts.ci import advisory_checks
+
+    monkeypatch.setattr(
+        advisory_checks,
+        "CI_WORKFLOW_PATH",
+        Path(__file__).resolve().parents[1] / "tests/fixtures/ci_advisory_workflow.yml",
+    )
+
 def _load_hook():
     spec = importlib.util.spec_from_file_location("guard_pr_merge", HOOK_PATH)
     assert spec and spec.loader, f"could not load hook at {HOOK_PATH}"

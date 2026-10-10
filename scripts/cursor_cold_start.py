@@ -42,12 +42,27 @@ def _lines_orient(orient: dict) -> list[str]:
         subject = str(commit.get("subject", ""))[:100]
         lines.append(f"  - `{sha}` {subject}")
 
-    health = orient.get("health") or {}
+    health = {}
+    for key, value in (orient.get("health") or {}).items():
+        # Monitor also supplies structured probe and backup receipts.
+        if isinstance(value, dict):
+            if value.get("probe_error"):
+                value = None
+            elif "ok" in value:
+                value = value["ok"]
+            else:
+                value = {"ok": True, "failed": False, "stale": False}.get(value.get("status"))
+        health[key] = value
     bad = [k for k, v in health.items() if v is False]
+    unknown = [k for k, v in health.items() if v is not True and v is not False]
+    summary = []
     if bad:
-        lines.append(f"- **health:** FAIL {', '.join(bad)}")
-    else:
-        lines.append("- **health:** all green")
+        summary.append(f"FAIL {', '.join(bad)}")
+    if unknown:
+        summary.append(f"UNKNOWN {', '.join(unknown)}")
+    if not health:
+        summary.append("UNKNOWN")
+    lines.append(f"- **health:** {'; '.join(summary) if summary else 'all green'}")
 
     delegate = orient.get("delegate") or {}
     active = delegate.get("active_count", 0)
@@ -115,13 +130,14 @@ def main() -> int:
     print("# Cursor cold start\n")
     print(_rules_briefing(manifest, rules) + "\n")
 
-    if orient:
+    if isinstance(orient, dict):
         print("## Live state\n")
         for line in _lines_orient(orient):
             print(line)
         print()
     else:
         print("## Live state\n")
+        print("- **health:** UNKNOWN (orientation unavailable)")
         print("- Monitor API down — run `git status --short --branch`\n")
 
     print("## Context budget (200k)\n")

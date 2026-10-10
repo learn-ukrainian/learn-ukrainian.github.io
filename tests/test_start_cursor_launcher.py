@@ -107,7 +107,8 @@ def test_cursor_driver_claims_lease_for_supported_selectors(selector: str) -> No
     result = run_launcher(DRIVER, "--epic", selector)
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
-    assert "would run provider canary" in result.stdout
+    assert "cursor adapter: provider canary: not run" in result.stdout
+    assert "ran its provider canary" not in result.stdout
     assert "would bind drive-epic" in result.stdout
     assert "would heartbeat observer presence agent=cursor" in result.stdout
     assert "would renew observer presence while the driver session runs" in result.stdout

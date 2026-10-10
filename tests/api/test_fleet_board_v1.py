@@ -48,6 +48,10 @@ def test_index_lists_every_registered_v1_route() -> None:
         ("GET", "/api/fleet/v1/prs/{number}"),
         ("GET", "/api/fleet/v1/roster"),
         ("GET", "/api/fleet/v1/schema"),
+        ("GET", "/api/fleet/v1/backups"),
+        ("GET", "/api/fleet/v1/downloads"),
+        ("GET", "/api/fleet/v1/harness"),
+        ("GET", "/api/fleet/v1/harness/{agent_id}"),
         ("GET", "/api/fleet/v1/stats"),
     }
     assert body["schema"] == "fleet.v1.index"
