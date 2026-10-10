@@ -13,6 +13,7 @@ import sys
 import textwrap
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -274,9 +275,17 @@ def test_a_green_receipt_is_reused_for_the_same_commit(repo: Path) -> None:
     _commit(repo, "green", "tests/test_new.py")
     assert _run_gate(repo).returncode == 0
 
-    assert _run_gate(repo).returncode == 0
+    # A rerun would fail the pre-commit stage, and admission would time out. Reuse bypasses both
+    # because the committed inputs and plan have not changed (this non-Python sentinel is scratch).
+    _write(repo, "BLOCK_PRE_PUSH", "rerunning the stage would fail")
+    with (repo / ".git/lu-pre-push-gate/admission.lock").open("r") as held:
+        fcntl.flock(held, fcntl.LOCK_EX)
+        result = _run_gate(repo, extra_env={"LU_PRE_PUSH_GATE_ADMISSION_WAIT_S": "0"})
+
+    assert result.returncode == 0, result.stderr
 
     assert _measurements(repo)[-1]["detail"] == "valid receipt"
+    assert _measurements(repo)[-1]["queue_depth"] == 0
 
 
 def test_receipt_is_rejected_after_the_commit_changes(repo: Path) -> None:
@@ -310,11 +319,13 @@ def _plan(**overrides):
 @pytest.mark.parametrize(
     "field,value",
     [
+        ("head", "f" * 40),
         ("tree", "d" * 40),
         ("base", "e" * 40),
         ("registry_version", "v1-y"),
         ("changed_tests", ("tests/test_b.py", "tests/test_c.py")),
         ("registry_nodes", ("tests/test_z.py",)),
+        ("changed_paths", ("scripts/other.py",)),
     ],
 )
 def test_receipt_is_stale_after_any_bound_input_changes(tmp_path: Path, field: str, value: object) -> None:
@@ -335,6 +346,321 @@ def test_receipt_expires_and_a_tampered_receipt_is_ignored(tmp_path: Path) -> No
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
     path.write_text("not json", encoding="utf-8")
     assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
+
+
+def test_gate_version_invalidates_a_green_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    plan = _plan()
+    gate.write_receipt(tmp_path, plan, 1000.0)
+    monkeypatch.setattr(gate, "GATE_VERSION", gate.GATE_VERSION + 1)
+
+    assert not gate.receipt_is_fresh(tmp_path, plan, 1001.0)
+
+
+class FakeClock:
+    def __init__(self) -> None:
+        self.now = 0.0
+        self.ticks = 0
+        self.on_sleep = lambda: None
+
+    def monotonic(self) -> float:
+        return self.now
+
+    def monotonic_ns(self) -> int:
+        self.ticks += 1
+        return int(self.now * 1_000_000_000) + self.ticks
+
+    def time(self) -> float:
+        return 1000.0 + self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.now += seconds
+        self.on_sleep()
+
+
+def _locked_ticket(state: Path, name: str) -> tuple[Path, int]:
+    path = state / "queue" / f"{name}.ticket"
+    fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    return path, fd
+
+
+def test_admission_reports_depth_and_waits_for_two_predecessors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    owner = gate.Admission(tmp_path, 1.0)
+    owner.__enter__()
+    other, fd = _locked_ticket(tmp_path, "00000000000000000000-other")
+    released = False
+
+    def release() -> None:
+        nonlocal released
+        if clock.now >= 1.2 and not released:
+            owner.__exit__()
+            other.unlink()
+            os.close(fd)
+            released = True
+
+    clock.on_sleep = release
+    try:
+        with gate.Admission(tmp_path, 1.0) as admitted:
+            assert admitted.waited >= 1.2  # exceeds the old fixed one-run bound
+            assert admitted.queue_depth == 3 and admitted.queue_position == 3
+            assert admitted.wait_limit == 2.0
+        assert "queue position 3/3" in capsys.readouterr().err
+        assert list((tmp_path / "queue").glob("*.ticket")) == []
+    finally:
+        if not released:
+            owner.__exit__()
+            other.unlink(missing_ok=True)
+            os.close(fd)
+
+
+def test_admission_hard_ceiling_refuses_and_removes_its_ticket(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
+    monkeypatch.setattr(gate, "ADMISSION_MAX_WAIT_S", 1.5)
+    with gate.Admission(tmp_path, 1.0):
+        other, fd = _locked_ticket(tmp_path, "00000000000000000000-other")
+        try:
+            admission = gate.Admission(tmp_path, 1.0)
+            with pytest.raises(gate.GateOutcome, match="admission_timeout") as raised, admission:
+                pytest.fail("a held lock must never grant admission")
+            assert raised.value.incomplete
+            assert admission.waited == 1.5 and admission.wait_limit == 1.5
+            assert admission.queue_depth == 3
+            assert len(list((tmp_path / "queue").glob("*.ticket"))) == 2
+        finally:
+            other.unlink()
+            os.close(fd)
+
+
+def test_abandoned_ticket_does_not_block_a_live_gate(tmp_path: Path) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    (queue / "00000000000000000000-abandoned.ticket").touch()
+    with gate.Admission(tmp_path, 0.0) as admitted:
+        assert admitted.queue_depth == 1 and admitted.queue_position == 1
+        assert len(list(queue.glob("*.ticket"))) == 1
+    assert list(queue.glob("*.ticket")) == []
+
+
+def test_queue_scan_is_bounded_and_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    (queue / "old.ticket").touch()
+    monkeypatch.setattr(gate, "MAX_QUEUE_ENTRIES", 1)
+    with pytest.raises(gate.GateOutcome, match="queue scan limit") as raised, gate.Admission(tmp_path, 0.0):
+        pytest.fail("oversized queue must not admit a gate")
+    assert raised.value.incomplete
+    assert list(queue.glob("*.ticket")) == [queue / "old.ticket"]
+
+
+def _fake_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: FakeClock) -> list[float]:
+    deadlines = []
+    monkeypatch.setattr(gate, "time", clock)
+    monkeypatch.setattr(gate, "build_plan", lambda *_args: _plan())
+    monkeypatch.setattr(gate, "state_dir", lambda *_args: tmp_path)
+
+    class WaitedAdmission:
+        waited = 500.0
+        queue_depth = 2
+        queue_position = 2
+        wait_limit = gate.ADMISSION_WAIT_S
+
+        def __init__(self, *_args: object):
+            pass
+
+        def __enter__(self):
+            clock.now += self.waited
+            return self
+
+        def __exit__(self, *_args: object):
+            pass
+
+    real_shadow = gate.Shadow
+
+    def popen(_command, **kwargs):
+        kwargs["stdout"].write('{"selected_tests": []}\n')
+        kwargs["stdout"].flush()
+        return SimpleNamespace(wait=lambda **_kwargs: 0, returncode=0)
+
+    def start_shadow(*args: object):
+        shadow = real_shadow(*args)
+        deadlines.append(shadow.deadline)
+        return shadow
+
+    def pre_commit(_plan, _root, _launcher, _config, deadline):
+        deadlines.append(deadline)
+        clock.now += 2.0
+
+    def pytest_stage(_plan, _root, _launcher, deadline):
+        deadlines.append(deadline)
+        clock.now += 3.0
+        return "passed"
+
+    monkeypatch.setattr(gate, "Admission", WaitedAdmission)
+    monkeypatch.setattr(
+        gate,
+        "subprocess",
+        SimpleNamespace(Popen=popen, DEVNULL=subprocess.DEVNULL, TimeoutExpired=subprocess.TimeoutExpired),
+    )
+    monkeypatch.setattr(gate, "terminate_run", lambda *_args: True)
+    monkeypatch.setattr(gate, "Shadow", start_shadow)
+    monkeypatch.setattr(gate, "run_pre_commit_stage", pre_commit)
+    monkeypatch.setattr(gate, "run_pytest_stage", pytest_stage)
+    return deadlines
+
+
+def test_run_and_shadow_budgets_start_after_admission(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    budget = gate.Budget(10.0)
+    event = {}
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event, budget)
+
+    assert deadlines == [500.0 + gate.SHADOW_BUDGET_S, 510.0, 510.0]
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+    assert event["queue_depth"] == 2
+
+
+def test_a_green_receipt_written_during_admission_is_reused_at_current_time(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    # The other gate completes at t=499, after this caller started waiting at t=0.
+    gate.write_receipt(tmp_path, _plan(), 1499.0)
+    event = {}
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
+
+    assert deadlines == []  # neither stage nor shadow started
+    assert event["detail"] == "valid receipt after admission"
+    assert event["outcome"] == "green" and event["admission_wait_s"] == 500.0
+
+
+def test_a_receipt_expired_while_waiting_cannot_be_reused(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    gate.write_receipt(tmp_path, _plan(), 1000.0)
+    monkeypatch.setattr(gate, "RECEIPT_TTL_S", 100.0)
+    # Force queue entry, then let the real freshness check reject the now-expired receipt.
+    real_fresh = gate.receipt_is_fresh
+    monkeypatch.setattr(gate, "receipt_is_fresh", lambda *args: clock.now > 0 and real_fresh(*args))
+    event = {}
+    gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
+
+    assert len(deadlines) == 3 and event["outcome"] == "green"
+    assert "detail" not in event
+
+
+@pytest.mark.parametrize("change", ["dirty_tree", "untracked_inputs", "different_plan"])
+def test_inputs_changed_while_queued_cannot_reuse_a_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, change: str
+) -> None:
+    clock = FakeClock()
+    deadlines = _fake_validation(tmp_path, monkeypatch, clock)
+    gate.write_receipt(tmp_path, _plan(), 1499.0)  # it becomes fresh during the wait
+
+    def changed_plan(*_args: object):
+        if clock.now == 0:
+            return _plan()
+        if change == "different_plan":
+            return _plan(tree="d" * 40)
+        raise gate.GateOutcome(change, "inputs changed while waiting")
+
+    monkeypatch.setattr(gate, "build_plan", changed_plan)
+    event = {}
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.validate(gate.Update("local", "a" * 40, "remote", ZERO_SHA), tmp_path, "x", "y", event)
+
+    assert raised.value.reason == ("tree_mismatch" if change == "different_plan" else change)
+    assert deadlines == [] and "outcome" not in event
+    assert event["admission_wait_s"] == 500.0 and event["queue_depth"] == 2
+
+
+def test_four_process_pushers_all_validate_without_wait_consuming_the_run_budget(tmp_path: Path) -> None:
+    """Actual flocks/processes, four distinct passing plans, shortened bounds and simulated stages."""
+    driver = textwrap.dedent(
+        """\
+        import importlib.util, sys, time
+        from pathlib import Path
+        spec = importlib.util.spec_from_file_location('gate', sys.argv[1])
+        gate = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = gate
+        spec.loader.exec_module(gate)
+        root = Path(sys.argv[2])
+        number = sys.argv[3]
+        plan = gate.Plan(number * 40, 't' * 40, 'b' * 40, 'v-test', ('tests/test_ok.py',), (), ())
+        gate.git_ok = lambda *args, **kwargs: str(root)
+        gate.build_plan = lambda *args: plan
+        gate.state_dir = lambda *args: root / 'state'
+        class Shadow:
+            def __init__(self, *args):
+                pass
+            def finish(self):
+                return {'status': 'recorded'}
+            def abandon(self):
+                pass
+        gate.Shadow = Shadow
+        def pre_commit(plan, root, launcher, config, deadline):
+            (root / ('pre-' + number)).write_text('ran')
+            if deadline - time.monotonic() < 2.5:
+                raise gate.GateOutcome('validation_incomplete', 'waiting consumed budget', incomplete=True)
+        def pytest_stage(plan, root, launcher, deadline):
+            time.sleep(2.0)
+            if time.monotonic() >= deadline:
+                raise gate.GateOutcome('validation_incomplete', 'pytest ran out of budget', incomplete=True)
+            (root / ('pytest-' + number)).write_text('passed')
+            return '1 simulated test passed'
+        gate.run_pre_commit_stage = pre_commit
+        gate.run_pytest_stage = pytest_stage
+        updates = f'refs/heads/p{number} {plan.head} refs/heads/p{number} {gate.ZERO_SHA}\\n'
+        sys.exit(gate.main(['--launcher', 'fixture', '--config', 'fixture'], stdin=updates))
+        """
+    )
+    state = tmp_path / "state"
+    state.mkdir()
+    processes = []
+    try:
+        # Hold admission until all four have published their live tickets. It models an existing
+        # (older, ticketless) gate and makes concurrent queue depth deterministic.
+        with (state / "admission.lock").open("w") as held:
+            fcntl.flock(held, fcntl.LOCK_EX)
+            for number in range(1, 5):
+                processes.append(
+                    subprocess.Popen(
+                        [sys.executable, "-c", driver, str(GATE_PATH), str(tmp_path), str(number)],
+                        cwd=tmp_path,
+                        env=_env({"LU_PRE_PUSH_GATE_RUN_BUDGET_S": "3", "LU_PRE_PUSH_GATE_ADMISSION_WAIT_S": "4"}),
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        text=True,
+                    )
+                )
+            deadline = time.monotonic() + 10.0
+            while len(list((state / "queue").glob("*.ticket"))) != 4:
+                assert time.monotonic() < deadline, "four pushers failed to register"
+                assert all(process.poll() is None for process in processes), "a pusher exited before admission"
+                time.sleep(0.02)
+        for process in processes:
+            stdout, stderr = process.communicate(timeout=30)
+            assert process.returncode == 0, stdout + stderr
+            assert "queue position" in stderr
+    finally:
+        for process in processes:
+            if process.poll() is None:
+                process.kill()
+            process.wait(timeout=5)
+    rows = [json.loads(line) for line in (state / "measurements.jsonl").read_text().splitlines()]
+    assert len(rows) == 4 and all(row["outcome"] == "green" for row in rows)
+    assert max(row["admission_wait_s"] for row in rows) > 4.0  # old fixed wait would refuse
+    assert max(row["queue_depth"] for row in rows) >= 4
+    assert all(row["admission_wait_s"] <= row["admission_wait_limit_s"] for row in rows)
+    assert len(list(tmp_path.glob("pre-*"))) == len(list(tmp_path.glob("pytest-*"))) == 4
+    assert len(list((state / "receipts").glob("*.json"))) == 4
+    assert list((state / "queue").glob("*.ticket")) == []
 
 
 # ---- bounded resources: validation_incomplete, never green ------------------------------------------------
@@ -366,6 +692,9 @@ def test_a_second_gate_waits_for_admission_then_reports_validation_incomplete(re
 
     assert result.returncode == gate.EXIT_INCOMPLETE
     assert "admission_timeout" in result.stderr
+    row = _measurements(repo)[-1]
+    assert row["queue_depth"] == 2 and row["queue_position"] == 2
+    assert row["admission_wait_s"] >= 1.0
     assert _receipts(repo) == []
 
 
@@ -576,9 +905,11 @@ def test_admission_wait_covers_one_full_gate_run() -> None:
     assert gate.ADMISSION_WAIT_S >= gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S + gate.CLEANUP_BUDGET_S
 
 
-def test_auto_finalize_push_timeout_covers_the_gate_bounds() -> None:
+def test_auto_finalize_push_timeout_covers_a_single_predecessor() -> None:
     from scripts import delegate
 
+    # This existing launcher guarantee covers one predecessor. Its separate outer timeout does
+    # not cover ADMISSION_MAX_WAIT_S; extending it is outside this gate's owned paths.
     gate_worst_case = gate.ADMISSION_WAIT_S + gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S
     assert gate_worst_case + delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S <= delegate.AUTO_FINALIZE_PUSH_TIMEOUT_S
 
@@ -800,8 +1131,7 @@ def test_every_ref_update_is_validated_with_its_own_base(repo: Path) -> None:
     head = _commit(repo, "green test", "tests/test_b.py")
     # The first update's range holds only the green test; the second's also holds the red one.
     updates = (
-        f"refs/heads/feature {head} refs/heads/narrow {first}\n"
-        f"refs/heads/feature {head} refs/heads/wide {ZERO_SHA}\n"
+        f"refs/heads/feature {head} refs/heads/narrow {first}\nrefs/heads/feature {head} refs/heads/wide {ZERO_SHA}\n"
     )
 
     result = _run_gate_with(repo, updates)
@@ -820,12 +1150,17 @@ def test_receipts_of_two_ranges_with_one_head_do_not_overwrite_each_other(tmp_pa
     assert gate.receipt_path(tmp_path, narrow) != gate.receipt_path(tmp_path, wide)
 
 
-def test_one_run_budget_covers_the_whole_push_attempt() -> None:
+def test_one_run_budget_covers_the_whole_push_attempt(monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = FakeClock()
+    monkeypatch.setattr(gate, "time", clock)
     budget = gate.Budget(600.0)
-    first = budget.deadline
-    time.sleep(0.05)
+    first = budget.after_admission(500.0)
+    clock.now += 100.0
 
-    assert budget.deadline == first  # later ref updates inherit the deadline, they do not restart it
+    assert budget.deadline == first  # execution still consumes the shared budget
+    clock.now += 500.0  # a later ref queues again
+    assert budget.after_admission(500.0) - clock.now == 500.0
+    assert budget.deadline == first + 500.0  # waiting consumes none of the remaining execution budget
 
 
 def test_a_changed_test_the_sparse_worktree_lacks_is_validation_incomplete(repo: Path) -> None:
@@ -893,9 +1228,7 @@ _DETACHED_CHILD = (
 
 
 @pytest.mark.parametrize("hang", [False, True], ids=["command-exits", "command-times-out"])
-def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(
-    tmp_path: Path, hang: bool
-) -> None:
+def test_a_detached_descendant_holding_the_output_cannot_stall_or_survive_the_gate(tmp_path: Path, hang: bool) -> None:
     pid_file = tmp_path / "child.pid"
     script = _DETACHED_CHILD + ("time.sleep(300)\n" if hang else "")
     started = time.monotonic()
