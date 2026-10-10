@@ -77,18 +77,33 @@ def test_schema_validates_the_index_response(monkeypatch: pytest.MonkeyPatch) ->
     }
 
 
-def test_schema_rejects_a_source_row_that_disagrees_with_its_status(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("schema_id", ["index", "prs", "pr", "now", "stats"])
+@pytest.mark.parametrize(
+    ("status", "age_s", "error"),
+    [
+        ("not_configured", 1, None),
+        ("not_configured", None, "detail"),
+        ("unavailable", 1, "unavailable"),
+        ("unavailable", None, None),
+        ("ok", 1, "detail"),
+        ("stale", 1, "detail"),
+    ],
+)
+def test_schema_rejects_a_source_row_that_disagrees_with_its_status(
+    monkeypatch: pytest.MonkeyPatch, schema_id: str, status: str, age_s: int | None, error: str | None
+) -> None:
     _clear_locations(monkeypatch)
-    document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]["fleet.v1.index"]
-    payload = client.get("/api/fleet/v1").json()
+    path = {"index": "", "pr": "/prs/42"}.get(schema_id, f"/{schema_id}")
+    document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"][f"fleet.v1.{schema_id}"]
+    payload = client.get(f"/api/fleet/v1{path}").json()
     validator = Draft202012Validator(document)
     validator.validate(payload)
 
     contradictory = {
         "name": payload["sources"][0]["name"],
-        "status": "not_configured",
-        "age_s": 1,
-        "error": "detail",
+        "status": status,
+        "age_s": age_s,
+        "error": error,
     }
     payload["sources"][0] = contradictory
     with pytest.raises(ValidationError):
@@ -211,6 +226,7 @@ def test_location_variables_match_the_optional_catalog() -> None:
         ("stats", "FLEET_PROMETHEUS_URL", "url"),
         ("alerts", "FLEET_ALERTMANAGER_URL", "url"),
         ("links", "FLEET_GRAFANA_URL", "url"),
+        ("stale_prs", "FLEET_STALE_PR_STATE", "json_file"),
     ]
 
 
