@@ -1351,7 +1351,8 @@ launcher_publication_path() {
 # Claude weekly cap guard (operator 2026-10-10). At or above
 # LU_CLAUDE_STOP_PCT (default 90) weekly used, no Claude seat launches.
 # At or above LU_CLAUDE_OPUS_MAX_PCT (default 80) a defaulted Opus driver
-# seat drops to Sonnet and an explicit Opus request is refused. Unknown usage
+# seat drops to Sonnet and an explicit Opus request is refused, unless the
+# operator sets LU_CLAUDE_CAP_OVERRIDE=1 to bypass both thresholds. Unknown usage
 # (Monitor down or stale) fails open with a warning, like other Monitor calls.
 launcher_claude_cap_guard() {
   [ "$LC_PROVIDER" = claude ] || return 0
@@ -1387,11 +1388,13 @@ launcher_claude_cap_guard() {
     return 0
   fi
   if awk -v p="$pct" -v t="$opus_max" 'BEGIN{exit !(p>=t)}'; then
-    if [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
+    if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
+      printf 'launcher: WARNING Claude weekly %s%% >= Opus limit %s%%; LU_CLAUDE_CAP_OVERRIDE=1 set by the operator\n' "$pct" "$opus_max" >&2
+    elif [ "${LC_CLAUDE_MODEL_DEFAULTED:-0}" = 1 ] && [ "$LC_MODEL" = 'claude-opus-5-5[1m]' ]; then
       printf 'launcher: Claude weekly %s%% (Opus allowed below %s%%); driver default switched from Opus to claude-sonnet-5-5\n' "$pct" "$opus_max" >&2
       LC_MODEL='claude-sonnet-5-5'
     else
-      launcher_error "Opus refused: Claude weekly usage ${pct}% (Opus allowed below ${opus_max}% only). Use --model sonnet."
+      launcher_error "Opus refused: Claude weekly usage ${pct}% (Opus allowed below ${opus_max}% only). Use --model sonnet. Operator-only override: LU_CLAUDE_CAP_OVERRIDE=1; or adjust the Opus limit with LU_CLAUDE_OPUS_MAX_PCT=100 (the stop threshold still applies)."
       exit 7
     fi
   fi

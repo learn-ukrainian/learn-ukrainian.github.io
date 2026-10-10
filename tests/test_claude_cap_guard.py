@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import shlex
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock
@@ -71,7 +72,57 @@ def test_explicit_opus_over_opus_max_is_refused(model: str, launch_with_usage) -
     result = launch_with_usage("85", "--epic", "infra", "--model", model)
     assert result.returncode == 7
     assert "Opus refused" in result.stderr
+    assert "LU_CLAUDE_CAP_OVERRIDE=1" in result.stderr
+    assert "LU_CLAUDE_OPUS_MAX_PCT=100" in result.stderr
+    assert "the stop threshold still applies" in result.stderr
     assert "would exec" not in result.stdout
+
+
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("model", ("opus", "claude-opus-5-5[1m]"))
+@pytest.mark.parametrize("pct", ("80", "85", "90", "97.5"))
+def test_operator_override_preserves_explicit_opus(name: str, model: str, pct: str, launch_with_usage) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    result = launch_with_usage(pct, *args, "--model", model, name=name, env={"LU_CLAUDE_CAP_OVERRIDE": "1"})
+    assert result.returncode == 0, result.stderr
+    command = shlex.split(_exec_line(result.stdout))
+    assert command[command.index("--model") + 1] == "claude-opus-5-5[1m]"
+    assert "WARNING" in result.stderr
+    assert "LU_CLAUDE_CAP_OVERRIDE=1 set by the operator" in result.stderr
+    assert "switched from Opus" not in result.stderr
+
+
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("pct", ("80", "90"))
+def test_operator_override_preserves_default_opus(pct: str, launch_with_usage) -> None:
+    result = launch_with_usage(pct, "--epic", "infra", env={"LU_CLAUDE_CAP_OVERRIDE": "1"})
+    assert result.returncode == 0, result.stderr
+    assert "--model claude-opus-5-5" in _exec_line(result.stdout)
+    assert "switched from Opus" not in result.stderr
+
+
+@pytest.mark.parametrize("override", ("0", "true", "yes", "2"))
+@pytest.mark.parametrize("pct", ("80", "90"))
+def test_invalid_operator_override_does_not_bypass_caps(override: str, pct: str, launch_with_usage) -> None:
+    result = launch_with_usage(pct, "--epic", "infra", "--model", "opus", env={"LU_CLAUDE_CAP_OVERRIDE": override})
+    assert result.returncode == 7
+    assert "would exec" not in result.stdout
+    assert ("Opus refused" if pct == "80" else "No Claude launch") in result.stderr
+
+
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("pct", ("85", "90"))
+def test_adjusted_opus_limit_keeps_stop_threshold(pct: str, launch_with_usage) -> None:
+    result = launch_with_usage(pct, "--epic", "infra", "--model", "opus", env={"LU_CLAUDE_OPUS_MAX_PCT": "100"})
+    if pct == "85":
+        assert result.returncode == 0, result.stderr
+        command = shlex.split(_exec_line(result.stdout))
+        assert command[command.index("--model") + 1] == "claude-opus-5-5[1m]"
+    else:
+        assert result.returncode == 7
+        assert "No Claude launch" in result.stderr
+        assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize("pct", ("90", "97.5"))
