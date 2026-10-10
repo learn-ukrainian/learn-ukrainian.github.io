@@ -34,9 +34,10 @@ class RedactedEnvDict(dict[str, str]):
 def install_redacted_environ_repr() -> None:
     """Make ``os.environ`` formatting omit values. Safe to call more than once."""
     global _INSTALLED
-    if _INSTALLED:
-        return
     cls = type(os.environ)
+    if _INSTALLED or getattr(cls, "_lu_redacted_environ", False):
+        _INSTALLED = True
+        return
 
     def _hide(self: object) -> str:
         try:
@@ -55,4 +56,5 @@ def install_redacted_environ_repr() -> None:
     cls.__str__ = _hide  # type: ignore[method-assign]
     cls.__format__ = _format  # type: ignore[method-assign]
     cls.copy = _copy  # type: ignore[method-assign]
+    cls._lu_redacted_environ = True  # type: ignore[attr-defined]
     _INSTALLED = True

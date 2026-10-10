@@ -14,13 +14,21 @@ def _install_redacted_environ() -> None:
 
     Callers load this module as ``common.repo_root`` with ``scripts/`` on
     ``sys.path``. A package import of ``scripts`` fails on that path.
+    A partial checkout that copied this module without ``scripts/lib`` still
+    imports: the formatter is optional there.
     """
-    path = Path(__file__).resolve().parents[1] / "lib" / "redacted_environ.py"
-    spec = importlib.util.spec_from_file_location("_lu_redacted_environ", path)
-    if spec is None or spec.loader is None:
-        return
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    name = "scripts.lib.redacted_environ"
+    module = sys.modules.get(name)
+    if module is None:
+        path = Path(__file__).resolve().parents[1] / "lib" / "redacted_environ.py"
+        if not path.is_file():
+            return
+        spec = importlib.util.spec_from_file_location(name, path)
+        if spec is None or spec.loader is None:
+            return
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
     module.install_redacted_environ_repr()
 
 
