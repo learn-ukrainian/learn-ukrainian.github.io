@@ -609,8 +609,8 @@ class CodexAdapter:
         # list. ORDER MATTERS: Codex CLI processes --enable and --disable
         # as ordered toggles. Keep mode enables before caller disables, and
         # hook enables before the final apps disable (PR #2230 follow-up).
-        # Historical context: 2026-05-22 ab ask-codex
-        # `codex-node-repl-leak-2026-05-22` diagnosis; see env_sanitize.py.
+        # Caller feature disables follow mode enables to keep writer tools disabled.
+        # Fresh and resumed invocations use the same feature-toggle ordering.
         if has_session_to_resume and tc.get("review_isolation"):
             raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):

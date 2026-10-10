@@ -120,6 +120,11 @@ _EXCLUDED: frozenset[str] = frozenset()
 # ``<enclosing scope>:<shape>`` — line-independent, so the pin survives edits, but hits are
 # counted: a second hit of the same identity (same scope, even the same line) fails too.
 ALLOWLIST: dict[str, tuple[str, dict[str, int]]] = {
+    "tests/test_codex_hooks_contract.py": (
+        "binds a controlled tmp_path checkout interpreter to test portable entry integrity; "
+        "the fixture shim delegates ordinary execution to project_python()",
+        {"test_portable_hook_rechecks_entry_before_execution:argv": 1},
+    ),
     "tests/helpers/python.py": (
         "require_repo_venv() is the sanctioned gate: it skips when the repo venv is absent",
         {"require_repo_venv:gate": 1},

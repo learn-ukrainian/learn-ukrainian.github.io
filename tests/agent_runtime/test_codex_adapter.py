@@ -183,8 +183,8 @@ def test_codex_feature_order_and_isolation_history(tmp_path, session_id):
         source = inspect.getsource(adapter.build_invocation)
         assert "ORDER MATTERS: Codex CLI processes --enable and --disable" in source
         assert "PR #2230 follow-up" in source
-        assert "2026-05-22 ab ask-codex" in source
-        assert "codex-node-repl-leak-2026-05-22" in source
+        assert "Caller feature disables follow mode enables to keep writer tools disabled." in source
+        assert "Fresh and resumed invocations use the same feature-toggle ordering." in source
         assert "regardless of argv order" not in source
     finally:
         adapter.cleanup_invocation(plan)
