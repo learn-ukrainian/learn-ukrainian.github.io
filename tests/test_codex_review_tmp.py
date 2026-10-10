@@ -148,12 +148,12 @@ def test_review_gh_shim_read_only_with_readonly_cache(tmp_path, gh_shim_sandbox)
     lease.mkdir(parents=True)
     ro_cache = tmp_path / "ro-cache"
     ro_cache.mkdir()
-    os.chmod(ro_cache, 0o555)
+    os.chmod(ro_cache, 0o500)
     backend = tmp_path / "fake-gh"
     backend.write_text(
         '#!/bin/sh\nset -eu\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{\\"number\\": 10108, \\"state\\": \\"OPEN\\", \\"body\\": \\"text\\", \\"url\\": \\"https://github.com/unit/public/issues/10108\\"}"\n'
     )
-    backend.chmod(0o755)
+    backend.chmod(0o700)
     plan = review_plan(checkout, lease)
     env = {
         **os.environ,
@@ -183,7 +183,7 @@ def test_review_gh_shim_read_only_with_readonly_cache(tmp_path, gh_shim_sandbox)
         assert '"number": 10108' in result.stdout
         assert "OPSEC: publishing input unresolved" not in result.stderr
     finally:
-        os.chmod(ro_cache, 0o755)
+        os.chmod(ro_cache, 0o700)
 
 
 def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypatch, capsys):
@@ -191,7 +191,7 @@ def test_raw_entry_read_failure_message_not_publishing_input(tmp_path, monkeypat
 
     executable = tmp_path / "real-gh"
     executable.write_text("#!/bin/sh\nexit 0\n")
-    executable.chmod(0o755)
+    executable.chmod(0o700)
     monkeypatch.setattr(
         sys,
         "argv",
@@ -218,7 +218,7 @@ def test_review_gh_shim_read_only_with_readonly_sqlite_file(tmp_path, gh_shim_sa
     cache_dir.mkdir()
     database = cache_dir / "cache.sqlite3"
     sqlite3.connect(database).close()
-    database.chmod(0o444)
+    database.chmod(0o400)
 
     # 1. Direct GitHubClient test
     calls = []
@@ -238,7 +238,7 @@ def test_review_gh_shim_read_only_with_readonly_sqlite_file(tmp_path, gh_shim_sa
     backend.write_text(
         '#!/bin/sh\nset -eu\nprintf "HTTP/2.0 200 OK\\r\\nX-RateLimit-Remaining: 100\\r\\nX-RateLimit-Reset: 2000000000\\r\\n\\r\\n{\\"number\\": 10108, \\"state\\": \\"OPEN\\", \\"body\\": \\"text\\", \\"url\\": \\"https://github.com/unit/public/issues/10108\\"}"\n'
     )
-    backend.chmod(0o755)
+    backend.chmod(0o700)
     plan = review_plan(checkout, lease)
     env = {
         **os.environ,
@@ -303,7 +303,7 @@ def test_review_gh_shim_read_only_with_readonly_populated_schema_and_directory(t
     with setup._db():
         pass
     database = cache_dir / "cache.sqlite3"
-    cache_dir.chmod(0o555)
+    cache_dir.chmod(0o500)
 
     calls = []
 
