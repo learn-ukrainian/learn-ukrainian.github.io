@@ -59,7 +59,7 @@ def test_plan_diagnostics_and_copies_redact_values(plan_type):
         assert make_plan(plan_type, {"B": "different"}) != candidate
 
 
-def run_failing_comparison(tmp_path, plan_type, verbosity, comparison, left_env, right_env):
+def run_failing_comparison(tmp_path, plan_type, verbosity, comparison, left_env, right_env, value=SENTINEL):
     repo = Path(__file__).resolve().parents[1]
     config = tmp_path / "pytest.ini"
     config.write_text("[pytest]\n", encoding="utf-8")
@@ -92,7 +92,7 @@ def run_failing_comparison(tmp_path, plan_type, verbosity, comparison, left_env,
         env={
             **os.environ,
             "PYTHONPATH": str(repo / "scripts"),
-            "PLAN_TEST_VALUE": SENTINEL,
+            "PLAN_TEST_VALUE": value,
             "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
             "PYTEST_ADDOPTS": "",
             "PYTEST_PLUGINS": "",
@@ -123,6 +123,34 @@ def test_real_pytest_plan_assertion_does_not_expose_values(tmp_path, plan_type, 
         "{'A': 'different', 'B': 'same'}",
     )
     assert SENTINEL not in output, output
+
+
+@pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
+@pytest.mark.parametrize("verbosity", ("-q", "-vv"))
+@pytest.mark.parametrize(
+    ("comparison", "right_env", "exposes_value"),
+    (
+        ("left == right", "{'K': 'x\\nother'}", False),
+        ("plan_env(left) == {'K': 'x\\nother'}", "{}", False),
+        ("plan_env(left)['K'] == 'x\\nother'", "{}", True),
+    ),
+    ids=("plan", "plain-dict", "direct-value-known-limit"),
+)
+def test_real_pytest_multiline_comparison_redaction_boundary(
+    tmp_path, plan_type, verbosity, comparison, right_env, exposes_value
+):
+    output = run_failing_comparison(
+        tmp_path,
+        plan_type,
+        verbosity,
+        comparison,
+        "{'K': os.environ['PLAN_TEST_VALUE']}",
+        right_env,
+        value="prefix\n" + SENTINEL,
+    )
+    assert (SENTINEL in output) is exposes_value, output
+    if exposes_value:
+        assert f"E         + {SENTINEL}" in output, output
 
 
 @pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
@@ -246,9 +274,12 @@ def test_env_setdefault_and_fromkeys_preserve_default_none():
 
 @pytest.mark.parametrize("plan_type", (InvocationPlan, HermesInvocationContext, CommitTree))
 @pytest.mark.parametrize("conversion", (dict, lambda env: {**env}), ids=("dict", "unpack"))
-def test_real_subprocess_receives_original_env_values(plan_type, conversion):
-    env = conversion(plan_env(make_plan(plan_type, {"A": SENTINEL})))
+@pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
+def test_real_subprocess_receives_original_env_values(plan_type, conversion, value):
+    env = conversion(plan_env(make_plan(plan_type, {"A": value})))
     assert type(env) is dict
+    assert str(env["A"]) == value
+    assert json.loads(json.dumps(env)) == {"A": value}
     result = subprocess.run(
         [sys.executable, "-c", "import os; print(os.environ['A'])"],
         env=env,
@@ -257,7 +288,7 @@ def test_real_subprocess_receives_original_env_values(plan_type, conversion):
         check=True,
         timeout=10,
     )
-    assert result.stdout == "sentinel-not-a-real-value-XYZ\n"
+    assert result.stdout == value + "\n"
     assert result.stderr == ""
 
 
@@ -279,21 +310,23 @@ def test_pickle_protocols_preserve_env_redaction(protocol):
     assert repr(restored) == "RedactedEnv(names=['A'])"
 
 
-def test_runner_passes_plain_dict_with_original_values_to_popen(monkeypatch, tmp_path):
-    plan = InvocationPlan(cmd=["agent"], cwd=tmp_path, env_overrides={"A": SENTINEL})
+@pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
+def test_runner_passes_plain_dict_with_original_values_to_popen(monkeypatch, tmp_path, value):
+    plan = InvocationPlan(cmd=["agent"], cwd=tmp_path, env_overrides={"A": value})
     popen = Mock()
     monkeypatch.setattr(runner.subprocess, "Popen", popen)
     runner._spawn_pipe_subprocess(plan.cmd, cwd=plan.cwd, env=plan.env_overrides, stdin=subprocess.DEVNULL)
     env = popen.call_args.kwargs["env"]
     assert type(env) is dict
-    assert env == {"A": SENTINEL}
+    assert env == {"A": value}
 
 
-def test_commit_tree_optional_env_and_plain_dict_subprocess_seam(monkeypatch):
+@pytest.mark.parametrize("value", (SENTINEL, "prefix\n" + SENTINEL), ids=("single-line", "multiline"))
+def test_commit_tree_optional_env_and_plain_dict_subprocess_seam(monkeypatch, value):
     assert CommitTree(repo=Path("."), commit="a" * 40).env is None
     run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout=b"result"))
     monkeypatch.setattr(subprocess, "run", run)
-    tree = make_plan(CommitTree, {"A": SENTINEL})
+    tree = make_plan(CommitTree, {"A": value})
     assert tree._git("show") == b"result"
     assert type(run.call_args.kwargs["env"]) is dict
-    assert run.call_args.kwargs["env"] == {"A": SENTINEL}
+    assert run.call_args.kwargs["env"] == {"A": value}

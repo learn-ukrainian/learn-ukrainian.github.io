@@ -1,4 +1,13 @@
-"""Environment mappings whose diagnostic representation contains names only."""
+"""Environment mappings whose diagnostic representation contains names only.
+
+Known limit: a failed direct credential-value comparison such as
+``assert plan.env_overrides["K"] == "x\\nother"`` exposes the real multiline
+value in pytest's text diff at both ``-q`` and ``-vv``.
+Plan and mapping comparisons keep the credential values redacted.
+JSON dumps and ``str(value)`` keep the real value, as do subprocess environments.
+A plan subclass that defines its own ``__post_init__`` must call
+``super().__post_init__()`` to retain environment redaction.
+"""
 
 from __future__ import annotations
 
