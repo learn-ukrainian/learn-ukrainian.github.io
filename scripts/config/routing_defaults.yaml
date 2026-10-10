@@ -1,0 +1,29 @@
+# Starting defaults for role lanes, executor-adviser pairs, and cap handoff.
+# Daily metrics may replace one job type. Hard safety rules are not in this file.
+schema_version: 1
+# Orchestrator lane changes stay off until the harness gates are landed.
+apply_orchestrator_defaults: false
+roles:
+  worker:
+    lanes: [claude, codex, agy, cursor, grok]
+  orchestrator:
+    lanes: [cursor, grok, agy]
+pairs:
+  - id: grok-with-claude
+    executor: grok
+    adviser: claude
+    checkpoints: [plan, review]
+  - id: gemini-with-sol
+    executor: agy
+    adviser: codex
+    checkpoints: [plan, review]
+handoff:
+  default: [cursor, codex]
+  language: [codex, agy]
+job_types:
+  implement:
+    role: worker
+    pair: grok-with-claude
+  orchestrate:
+    role: orchestrator
+    pair: grok-with-claude
