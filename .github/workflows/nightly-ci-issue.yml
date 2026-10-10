@@ -33,6 +33,7 @@ jobs:
             .github/
             scripts/ci/nightly_issue.py
             tests/
+            tests/
             scripts/__init__.py
             scripts/common/__init__.py
             scripts/common/github_client.py
@@ -50,14 +51,18 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          latest="$(gh run list -R "${REPO}" -w ci.yml --event schedule --status completed -L 1 --json conclusion,url)"
-          conclusion="$(jq -r '.[0].conclusion // ""' <<< "${latest}")"
-          run_url="$(jq -r '.[0].url // ""' <<< "${latest}")"
-          if [[ -z "${conclusion}" || "${conclusion}" == cancelled ]]; then
-            echo "latest nightly CI not finished or cancelled: no change"
-            exit 0
-          fi
-          status=failure
-          [[ "${conclusion}" == success ]] && status=success
-          python3 scripts/ci/nightly_issue.py --key "CI (nightly)" --status "${status}" \
-            --run-url "${run_url}" --workflow-path .github/workflows/ci.yml
+          # Every scheduled CI run completed in the last 25 hours, oldest first, so a
+          # late failure is reported even when a later run is green.
+          since="$(date -u -d '25 hours ago' +%Y-%m-%dT%H:%M:%SZ)"
+          gh run list -R "${REPO}" -w ci.yml --event schedule --status completed -L 20 \
+            --json conclusion,url,createdAt \
+            --jq "[.[] | select(.createdAt >= \"${since}\")] | sort_by(.createdAt) | .[] | \"\(.conclusion) \(.url)\"" |
+          while read -r conclusion run_url; do
+            case "${conclusion}" in
+              success) status=success ;;
+              failure|timed_out|startup_failure) status=failure ;;
+              *) echo "skip ${conclusion} ${run_url}"; continue ;;
+            esac
+            python3 scripts/ci/nightly_issue.py --key ci.yml --status "${status}" \
+              --run-url "${run_url}" --workflow-path .github/workflows/ci.yml
+          done

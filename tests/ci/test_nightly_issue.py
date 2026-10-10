@@ -140,3 +140,10 @@ def test_workflow_name_with_emoji_is_not_the_key() -> None:
 
     with pytest.raises(ValueError):
         ni.report(FakeGh(), key="Zizmor 🌈", status="failure", run_url=URL, owners=OWNERS)
+
+
+def test_green_closes_every_duplicate() -> None:
+    fake = FakeGh([{"number": 3, "title": "[nightly] nightly.yml failing"},
+                   {"number": 4, "title": "[nightly] nightly.yml failing"}])
+    assert ni.report(fake, key="nightly.yml", status="success", run_url=URL, owners=OWNERS) == [
+        "close #3 [nightly] nightly.yml failing", "close #4 [nightly] nightly.yml failing"]

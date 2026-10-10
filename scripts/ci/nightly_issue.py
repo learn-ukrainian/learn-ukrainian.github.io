@@ -111,13 +111,7 @@ def approved_groups(root: Path) -> set[str]:
 
 
 def safe_groups(files: Iterable[str] | None, approved: set[str]) -> set[str] | None:
-    """Groups only from the approved vocabulary; None means report at workflow level.
-
-    Public issue text is built only from the workflow file name, approved groups (names
-    already public in this repository's tree), the owner-map lane and a validated run
-    URL. The shared publisher needs the private OPSEC matcher, which Actions runners do
-    not have, so free text never reaches a public title or body instead.
-    """
+    """Groups only from the approved vocabulary; None means report at workflow level."""
     if files is None:
         return None
     groups = {group_for(f) for f in files}
@@ -128,12 +122,15 @@ def title_for(key: str, group: str | None) -> str:
     return f"{TITLE_PREFIX} {key}: {group} failing" if group else f"{TITLE_PREFIX} {key} failing"
 
 
-def open_issues(run: Runner, key: str) -> dict[str, int]:
+def open_issues(run: Runner, key: str) -> dict[str, list[int]]:
     out = run(["issue", "list", "--state", "open", "--label", LABEL, "--limit", "1000",
                "--search", f'in:title "{TITLE_PREFIX} {key}"', "--json", "number,title"])
     prefix = f"{TITLE_PREFIX} {key}"
-    return {i["title"]: i["number"] for i in json.loads(out or "[]")
-            if i["title"] == f"{prefix} failing" or i["title"].startswith(f"{prefix}: ")}
+    found: dict[str, list[int]] = {}
+    for i in json.loads(out or "[]"):
+        if i["title"] == f"{prefix} failing" or i["title"].startswith(f"{prefix}: "):
+            found.setdefault(i["title"], []).append(i["number"])
+    return found
 
 
 def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
@@ -150,9 +147,10 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
     actions: list[str] = []
     existing = open_issues(run, key)
     if status == "success":
-        for title, number in existing.items():
-            run(["issue", "close", str(number), "--comment", f"Green again: {run_url}"])
-            actions.append(f"close #{number} {title}")
+        for title, numbers in existing.items():
+            for number in sorted(numbers):
+                run(["issue", "close", str(number), "--comment", f"Green again: {run_url}"])
+                actions.append(f"close #{number} {title}")
         return actions
     wanted: dict[str, str] = {}
     groups = safe_groups(failing_test_files(junit), approved_groups(root))
@@ -166,8 +164,9 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
             raise ValueError("refusing unexpected lane")
         body = f"Scheduled run failed: {run_url}\n\nOwner: lane `{lane}`. Closes automatically when green."
         if title in existing:
-            run(["issue", "comment", str(existing[title]), "--body", body])
-            actions.append(f"comment #{existing[title]} {title}")
+            number = min(existing[title])
+            run(["issue", "comment", str(number), "--body", body])
+            actions.append(f"comment #{number} {title}")
         else:
             run(["issue", "create", "--title", title, "--label", LABEL, "--label", f"lane:{lane}",
                  "--body", body])

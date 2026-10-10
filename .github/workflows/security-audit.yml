@@ -161,8 +161,8 @@ jobs:
 
   nightly-issue:
     name: Nightly failure issue
-    needs: [pip-audit, npm-audit, advisory-issue]
-    if: ${{ always() && github.event_name == 'schedule' }}
+    needs: [pip-audit, npm-audit]
+    if: ${{ always() && github.event_name == 'schedule' && github.event.schedule == '0 9 * * 1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

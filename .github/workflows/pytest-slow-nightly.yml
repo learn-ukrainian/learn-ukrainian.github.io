@@ -167,7 +167,7 @@ jobs:
           retention-days: 14
 
       - name: Route failures to owned issues (one per failing test group)
-        if: always()
+        if: ${{ always() && github.event_name == 'schedule' }}
         uses: ./.github/actions/nightly-issue
         with:
           status: ${{ job.status }}
