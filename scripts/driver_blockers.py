@@ -224,24 +224,30 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                 continue
             item_id = item["id"]
             id_pattern = rf"(?<![A-Za-z0-9_.-]){re.escape(item_id)}(?![A-Za-z0-9_.-])"
-            if not re.search(id_pattern, posted_text):
+            matching_lines = [
+                line for line in posted_text.splitlines() if re.search(id_pattern, line)
+            ]
+            if not matching_lines:
                 raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
             if item["class"] in {"NEW", "CHANGED"}:
                 item_values = [v for k, v in item.items() if k != "class"]
-                matching_lines = [
-                    line for line in posted_text.splitlines() if re.search(id_pattern, line)
-                ]
                 line_matched = any(
-                    all(val in line for val in item_values) for line in matching_lines
+                    all(
+                        re.search(rf"(?<![A-Za-z0-9_.-]){re.escape(val)}(?![A-Za-z0-9_.-])", line)
+                        for val in item_values
+                    )
+                    for line in matching_lines
                 )
                 if not line_matched:
-                    blocks = re.split(r"\n(?=[#-]|(?:\w+[-_]))", posted_text)
-                    block_matched = any(
-                        re.search(id_pattern, b) and all(val in b for val in item_values)
-                        for b in blocks
-                    )
-                    if not block_matched:
-                        raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+                    raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+            elif item["class"] == "RESOLVED":
+                marker_regex = r"(?i)\b(?:resolved|cleared|fixed|closed|done|unblocked)\b"
+                line_matched = any(
+                    bool(re.search(marker_regex, re.sub(id_pattern, "", line, count=1)))
+                    for line in matching_lines
+                )
+                if not line_matched:
+                    raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
         updated = {
             "epic": epic,
             "generation": expect_generation + 1,

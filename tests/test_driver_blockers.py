@@ -110,7 +110,7 @@ def test_held_out_mixed_post_set_and_reappearance(ledger):
         "resolved": "RESOLVED",
     }
     assert {i["id"] for i in delta["items"] if i["class"] != "UNCHANGED"} == {"changed", "new", "resolved"}
-    body = posted(updated, new) + b"\nresolved"
+    body = posted(updated, new) + b"\nRESOLVED resolved"
     baseline = blockers.record(
         ledger, EPIC, current, receipt(body, key="message-2", stamp="2026-10-10T02:00:00Z"), body, 1
     )
@@ -357,7 +357,7 @@ def test_record_rejects_partial_substring_token_matches(ledger):
             1,
         )
     # 2. "ci" (NEW) item id embedded in word "ci-repair"
-    body2 = b"blocked by ci-repair task | blocked | monitor | review | get approval\nresolved"
+    body2 = b"blocked by ci-repair task | blocked | monitor | review | get approval\nRESOLVED resolved"
     with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
         blockers.record(
             ledger,
@@ -367,7 +367,101 @@ def test_record_rejects_partial_substring_token_matches(ledger):
             body2,
             1,
         )
+    # 3. "blocked" (state) embedded in "blocked-build" without standalone token
+    body3 = b"blocked-build | monitor | review | get approval\nRESOLVED resolved"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(item("blocked-build")),
+            receipt(body3, key="message-4", stamp="2026-10-10T04:00:00Z"),
+            body3,
+            1,
+        )
+    # 4. "open" embedded in "reopened"
+    q_item = item("queue-lag", state="open", owner="ci", waits_on="none", action="fix")
+    body4 = b"queue-lag | reopened | ci | none | fix\nRESOLVED resolved"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(q_item),
+            receipt(body4, key="message-5", stamp="2026-10-10T05:00:00Z"),
+            body4,
+            1,
+        )
+    # 5. "ci" embedded in "recipient"
+    body5 = b"queue-lag | open | recipient | none | fix\nRESOLVED resolved"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(q_item),
+            receipt(body5, key="message-6", stamp="2026-10-10T06:00:00Z"),
+            body5,
+            1,
+        )
+    # 6. "fix" embedded in "prefix"
+    body6 = b"queue-lag | open | ci | none | prefix\nRESOLVED resolved"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(q_item),
+            receipt(body6, key="message-7", stamp="2026-10-10T07:00:00Z"),
+            body6,
+            1,
+        )
+    # 7. Fields scattered across paragraphs / separate lines
+    body7 = (
+        b"queue-lag was discussed with the recipient.\n"
+        b"The service was reopened.\n"
+        b"There are none left in the prefix queue.\n"
+        b"RESOLVED resolved"
+    )
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(q_item),
+            receipt(body7, key="message-8", stamp="2026-10-10T08:00:00Z"),
+            body7,
+            1,
+        )
     assert ledger.read_bytes() == before
+
+
+def test_resolved_id_requires_same_line_resolution_marker(ledger):
+    cache = item("cache-warm")
+    api = item("api-latency", waits_on="cache-warm")
+    seed(ledger, observation(cache, api))
+    before = ledger.read_bytes()
+
+    # 1. cache-warm is RESOLVED, but appears only inside another item's field
+    body_missing_marker = b"api-latency | blocked | monitor | cache-warm | repair CI"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(api),
+            receipt(body_missing_marker, key="message-2", stamp="2026-10-10T02:00:00Z"),
+            body_missing_marker,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+    # 2. cache-warm accompanied by explicit same-line resolution marker
+    body_with_marker = b"api-latency | blocked | monitor | cache-warm | repair CI\nRESOLVED cache-warm"
+    updated = blockers.record(
+        ledger,
+        EPIC,
+        observation(api),
+        receipt(body_with_marker, key="message-2", stamp="2026-10-10T02:00:00Z"),
+        body_with_marker,
+        1,
+    )
+    assert "cache-warm" not in updated["items"]
+    assert updated["generation"] == 2
 
 
 def test_two_racing_records_have_one_winner(ledger, tmp_path):
