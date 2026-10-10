@@ -8,7 +8,6 @@ import io
 import json
 import os
 import subprocess
-import tempfile
 from collections import Counter
 from pathlib import Path
 
@@ -29,7 +28,7 @@ def generated() -> tuple[str, list[dict[str, str]]]:
 
 
 @pytest.mark.repo_wide
-def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, str]]]) -> None:
+def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, str]]], tmp_path: Path) -> None:
     table, rows = generated
     assert table == TABLE.read_text(encoding="utf-8")
     assert len(rows) == 1706
@@ -40,10 +39,9 @@ def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, s
 
     # A private base-commit index keeps this check valid after later migration
     # phases remove data/ paths from the live worktree index.
-    with tempfile.TemporaryDirectory(prefix="classification-index-") as scratch:
-        env = {**os.environ, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
-        subprocess.run(["git", "read-tree", BASE], cwd=ROOT, env=env, check=True, timeout=30)
-        index = subprocess.check_output(["git", "ls-files", "-s", "data"], cwd=ROOT, env=env, timeout=30)
+    env = {**os.environ, "GIT_INDEX_FILE": str(tmp_path / "index")}
+    subprocess.run(["git", "read-tree", BASE], cwd=ROOT, env=env, check=True, timeout=30)
+    index = subprocess.check_output(["git", "ls-files", "-s", "data"], cwd=ROOT, env=env, timeout=30)
     entries = [line.split(b"\t", 1) for line in index.splitlines()]
     assert len(entries) == len(rows)
     indexed = {path.decode(): (meta.split()[0].decode(), meta.split()[1].decode()) for meta, path in entries}
