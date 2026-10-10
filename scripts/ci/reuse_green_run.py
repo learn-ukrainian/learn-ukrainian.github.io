@@ -56,6 +56,7 @@ EXPECTED_JOBS = (
     "Frontend",
     "Dependency audit",
     "pytest report",
+    "Publication surfaces",
     "CI Gate",
 )
 # ci.yml jobs that run only in the merge queue.

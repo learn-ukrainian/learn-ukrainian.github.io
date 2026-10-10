@@ -1,9 +1,10 @@
 # CI Gate
 
 `.github/workflows/ci.yml` is one small workflow (ci-v3, 2026-09-30). `CI Gate`
-is the only required GitHub check. Every `pull_request`, `merge_group`,
-`schedule` (03:30 UTC on `main`) and `workflow_dispatch` run executes the same
-jobs and the full non-slow pytest suite. There are no path tiers, test areas,
+is the only required GitHub check. Every `pull_request` (including a title
+or body edit), direct `push` to `main`, `merge_group`, `schedule` (03:30 UTC
+on `main`) and `workflow_dispatch` run executes the same jobs and the full
+non-slow pytest suite. There are no path tiers, test areas,
 import-graph selection or labels: a change cannot pick which tests it runs.
 Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
@@ -33,6 +34,7 @@ Direct regression tests cover arbitrary module names and resolved-path boundarie
 | Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
 | Queue commit metadata scan | `merge_group` only, reuse or not. TruffleHog over the queue commit's message, author and committer (below). |
 | Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. Skipped only on a recorded merge-queue reuse. |
+| Publication surfaces | Title, body, branch, and commit messages, read from the event payload file. Required on edits, direct pushes, and merge-queue reuse. Not skipped when the tree is reused. |
 | Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. Skipped only on a recorded merge-queue reuse. |
 | Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. Skipped only on a recorded merge-queue reuse. |
 | pytest (1..N) | The full `not atlas_release and not slow` suite, split over N static shards. Skipped only on a recorded merge-queue reuse. |
@@ -114,9 +116,12 @@ CI Gate needs every other job and checks each result:
 
 - Reuse check and Queue commit metadata scan: `skipped` outside the merge
   queue, `success` inside it (the metadata scan also on a reuse).
-- Secret scan, Checks, Frontend, pytest and pytest report: `success`, except in
+- Publication surfaces: `success` on every event, including an edit, a direct
+  push, and a merge-queue reuse.
+- Secret scan, Checks, Frontend, Dependency audit, pytest and pytest report: `success`, except in
   a merge-queue run whose Reuse check reported `reuse=true` with a run id; then
-  all five must be `skipped`, and the gate logs the reused run for each.
+  those jobs must be `skipped`, and the gate logs the reused run for each.
+  Publication surfaces stays `success` on that reuse.
 
 `cancelled`, a missing result or any other value fails the gate. The gate runs
 under `always()` because GitHub treats a skipped required check as passing.

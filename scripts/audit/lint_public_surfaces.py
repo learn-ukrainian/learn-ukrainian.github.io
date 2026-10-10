@@ -1,0 +1,328 @@
+#!/usr/bin/env python3
+"""Scan public pull-request text for infrastructure leaks.
+
+The file scanner does not see a pull request title, body, branch name, or
+commit message. This command scans those four surfaces with the same home-path
+needles and the same IP and credential rules as the repository OPSEC lint.
+It prints the field, the rule, and the line number. It does not print the
+matched text.
+
+CI passes ``--event-file`` (the runner's event payload path). A title or body
+edit, a merge-queue commit, and a direct push are all read from that payload.
+The title, body, and branch are not taken from the process environment, because
+a step environment is copied into the public log.
+
+Examples:
+  .venv/bin/python scripts/audit/lint_public_surfaces.py \\
+    --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME"
+
+Outputs: one "field rule line" row per finding on stdout. Writes nothing.
+Exit codes: 0 when every supplied surface is clean, 1 when a surface is
+flagged or git cannot be read.
+Related: scripts/audit/lint_opsec_leaks.py, scripts/opsec/needles.py.
+"""
+
+from __future__ import annotations
+
+import argparse
+import importlib.util
+import json
+import os
+import re
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+from dataclasses import dataclass
+from pathlib import Path
+
+_HERE = Path(__file__).resolve().parent
+
+
+def _load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load {path.name}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_leaks = _load("_lu_opsec_leaks", _HERE / "lint_opsec_leaks.py")
+_needles = _load("_lu_opsec_needles", _HERE.parent / "opsec" / "needles.py")
+surface_infrastructure_rules = _leaks.surface_infrastructure_rules
+Needles = _needles.Needles
+home_dir_pattern = _needles.home_dir_pattern
+load_needles = _needles.load_needles
+
+_FILE_URI = re.compile(r"file://", re.IGNORECASE)
+_PRIVATE_HOST = re.compile(
+    r"\b(?:[a-z0-9-]+\.)+(?:local|internal|lan|localdomain|home\.arpa)\b",
+    re.IGNORECASE,
+)
+_GIT_TIMEOUT_SECONDS = 30.0
+_SHA = re.compile(r"^[0-9a-fA-F]{40}$")
+_ZERO_SHA = "0" * 40
+
+
+@dataclass(frozen=True)
+class SurfaceFinding:
+    field: str
+    rule: str
+    line: int
+
+
+def scan_text(text: str, *, field: str, needles: Needles | None = None) -> list[SurfaceFinding]:
+    """Return findings for one surface. ``needles`` defaults to the configured file."""
+    if not text:
+        return []
+    loaded = load_needles() if needles is None else needles
+    home = re.compile(home_dir_pattern(loaded))
+    findings: list[SurfaceFinding] = []
+    lines = text.splitlines() or [text]
+    for number, line in enumerate(lines, 1):
+        if home.search(line):
+            findings.append(SurfaceFinding(field, "host-path", number))
+        if _FILE_URI.search(line):
+            findings.append(SurfaceFinding(field, "file-uri", number))
+        if _PRIVATE_HOST.search(line):
+            findings.append(SurfaceFinding(field, "private-host", number))
+    findings.extend(
+        SurfaceFinding(field, rule, line) for line, rule in surface_infrastructure_rules(text)
+    )
+    return findings
+
+
+def _commit_range(base: str, head: str) -> tuple[str, str] | None:
+    if not _SHA.fullmatch(base) or not _SHA.fullmatch(head):
+        return None
+    if base in (_ZERO_SHA, head) or head == _ZERO_SHA:
+        return None
+    return base, head
+
+
+def event_surfaces(payload: dict, event_name: str) -> tuple[list[tuple[str, str]], tuple[str, str] | None]:
+    """Return text surfaces and a commit range from a GitHub event payload.
+
+    The returned strings are the surfaces to scan. This function does not
+    print them. A direct push contributes its commit messages from the payload
+    when the before/after range cannot be read from git.
+    """
+    name = event_name.strip()
+    if name == "pull_request" and isinstance(payload.get("pull_request"), dict):
+        pr = payload["pull_request"]
+        head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+        base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
+        texts = [
+            ("title", str(pr.get("title") or "")),
+            ("body", str(pr.get("body") or "")),
+            ("branch", str(head.get("ref") or "")),
+        ]
+        return texts, _commit_range(str(base.get("sha") or ""), str(head.get("sha") or ""))
+    if name == "merge_group" and isinstance(payload.get("merge_group"), dict):
+        group = payload["merge_group"]
+        texts = [("branch", str(group.get("head_ref") or ""))]
+        return texts, _commit_range(str(group.get("base_sha") or ""), str(group.get("head_sha") or ""))
+    if name == "push":
+        ref = str(payload.get("ref") or "")
+        branch = ref.removeprefix("refs/heads/") if ref.startswith("refs/heads/") else ref
+        messages: list[str] = []
+        commits = payload.get("commits")
+        if isinstance(commits, list):
+            for commit in commits:
+                if isinstance(commit, dict) and commit.get("message"):
+                    messages.append(str(commit["message"]))
+        head_commit = payload.get("head_commit")
+        if isinstance(head_commit, dict) and head_commit.get("message"):
+            message = str(head_commit["message"])
+            if message not in messages:
+                messages.append(message)
+        span = _commit_range(str(payload.get("before") or ""), str(payload.get("after") or ""))
+        return [("branch", branch), ("commit", "\n".join(messages))], span
+    if name in {"workflow_dispatch", "schedule"}:
+        return [("commit", "")], ("HEAD", "")
+    return [], None
+
+
+def current_pull_request(repo: str, number: str, token: str) -> dict:
+    """Return the live pull request. The caller must not print it."""
+    request = urllib.request.Request(
+        f"https://api.github.com/repos/{repo}/pulls/{number}",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "lint-public-surfaces",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, urllib.error.URLError) as exc:
+        raise RuntimeError(type(exc).__name__) from None
+    if not isinstance(payload, dict) or "title" not in payload:
+        raise RuntimeError("unexpected-payload")
+    return payload
+
+
+def overlay_live_pull_request(payload: dict, live: dict) -> dict:
+    """Replace title, body, and branch with the live pull request. Keep the SHAs."""
+    pr = dict(payload.get("pull_request") or {})
+    head = dict(pr.get("head") if isinstance(pr.get("head"), dict) else {})
+    live_head = live.get("head") if isinstance(live.get("head"), dict) else {}
+    head["ref"] = str(live_head.get("ref") or "")
+    pr["title"] = str(live.get("title") or "")
+    pr["body"] = live.get("body") if isinstance(live.get("body"), str) else ""
+    pr["head"] = head
+    updated = dict(payload)
+    updated["pull_request"] = pr
+    return updated
+
+
+def _refresh_pull_request(payload: dict) -> dict | None:
+    """Return the payload with the current title and body, or None when that read fails."""
+    if os.environ.get("LU_PUBLICATION_LIVE") != "1":
+        return payload
+    pr = payload.get("pull_request") if isinstance(payload.get("pull_request"), dict) else {}
+    number = str(pr.get("number") or os.environ.get("PR_NUMBER") or "")
+    repo = os.environ.get("GITHUB_REPOSITORY", "")
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or ""
+    if not number or not repo or not token:
+        return None
+    try:
+        live = current_pull_request(repo, number, token)
+    except RuntimeError:
+        return None
+    return overlay_live_pull_request(payload, live)
+
+
+def _is_shallow_checkout() -> bool:
+    result = subprocess.run(
+        ["git", "rev-parse", "--is-shallow-repository"],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+    )
+    return result.returncode == 0 and result.stdout.strip() == "true"
+
+
+def commit_message_text(base: str, head: str) -> str:
+    """Return commit messages reachable from ``head`` and not from ``base``."""
+    result = subprocess.run(
+        ["git", "log", "--format=%B%x1e", f"{base}..{head}"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+    )
+    return result.stdout
+
+
+def read_commit_messages(base: str, head: str) -> str | None:
+    """Return the range text, or None when a shallow checkout cannot see it.
+
+    None is not a failure. A full checkout that cannot read the range raises.
+    """
+    try:
+        return commit_message_text(base, head)
+    except subprocess.CalledProcessError:
+        if _is_shallow_checkout():
+            return None
+        raise
+
+
+def render(findings: list[SurfaceFinding]) -> str:
+    return "\n".join(f"{item.field} {item.rule} line={item.line}" for item in findings)
+
+
+def _apply_commit_range(surfaces: list[tuple[str, str]], base: str, head: str) -> list[tuple[str, str]] | None:
+    """Attach the git range, or keep the other surfaces when the checkout is shallow."""
+    try:
+        git_text = read_commit_messages(base, head)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        if not any(field == "commit" and text for field, text in surfaces):
+            print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+            return None
+        return surfaces
+    if git_text is None:
+        return surfaces
+    kept = [(field, text) for field, text in surfaces if field != "commit"]
+    kept.append(("commit", git_text))
+    return kept
+
+
+def _head_commit_text() -> str:
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%B"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+    )
+    return result.stdout
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--event-file", default="", help="Path to the GitHub event payload. Preferred over the environment.")
+    parser.add_argument("--event-name", default="", help="GitHub event name. Defaults to GITHUB_EVENT_NAME when an event file is set.")
+    parser.add_argument("--base", default="", help="Base commit for the commit-message range. Omit to skip commits.")
+    parser.add_argument("--head", default="", help="Head commit for the commit-message range.")
+    args = parser.parse_args(argv)
+
+    surfaces: list[tuple[str, str]] = []
+    commit_range: tuple[str, str] | None = None
+    if args.event_file:
+        try:
+            payload = json.loads(Path(args.event_file).read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            print("OPSEC publication surfaces: event payload could not be read.", file=sys.stderr)
+            return 1
+        if not isinstance(payload, dict):
+            print("OPSEC publication surfaces: event payload could not be read.", file=sys.stderr)
+            return 1
+        event_name = args.event_name or os.environ.get("GITHUB_EVENT_NAME", "")
+        if event_name == "pull_request":
+            refreshed = _refresh_pull_request(payload)
+            if refreshed is None:
+                print("OPSEC publication surfaces: current pull request text is unavailable.", file=sys.stderr)
+                return 1
+            payload = refreshed
+        surfaces, commit_range = event_surfaces(payload, event_name)
+        if event_name in {"workflow_dispatch", "schedule"}:
+            try:
+                surfaces = [("commit", _head_commit_text())]
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+                print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+                return 1
+            commit_range = None
+        elif commit_range is not None:
+            base, head = commit_range
+            if head:
+                surfaces = _apply_commit_range(surfaces, base, head)
+                if surfaces is None:
+                    return 1
+    else:
+        if bool(args.base) != bool(args.head):
+            print("OPSEC publication surfaces: pass both --base and --head, or neither.", file=sys.stderr)
+            return 1
+        if args.base and args.head:
+            surfaces = _apply_commit_range(surfaces, args.base, args.head)
+            if surfaces is None:
+                return 1
+
+    findings: list[SurfaceFinding] = []
+    for field, text in surfaces:
+        findings.extend(scan_text(text, field=field))
+    if findings:
+        print(render(findings))
+        print(f"OPSEC publication surfaces blocked: {len(findings)} finding(s).", file=sys.stderr)
+        return 1
+    print("OPSEC publication surfaces clean.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

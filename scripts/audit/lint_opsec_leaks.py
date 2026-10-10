@@ -265,6 +265,36 @@ def check_content(
     )
 
 
+def surface_infrastructure_rules(content: str) -> list[tuple[int, str]]:
+    """Return (line, rule) for IPs and credential markers in publication text.
+
+    Publication text is not a textbook, so section-number exemptions do not
+    apply. The matched text is not returned.
+    """
+    rules: list[tuple[int, str]] = []
+    for idx, line in enumerate(content.splitlines() or [content], 1):
+        for match in _IPV4_RE.finditer(line):
+            ip_str = match.group("ip")
+            if ip_str in _SAFE_IP_ALLOWLIST:
+                continue
+            parts = ip_str.split(".")
+            if not all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+                continue
+            p0, p1, p2, _p3 = (int(part) for part in parts)
+            if (p0 == 192 and p1 == 0 and p2 == 2) or (p0 == 198 and p1 == 51 and p2 == 100) or (
+                p0 == 203 and p1 == 0 and p2 == 113
+            ):
+                continue
+            if is_rfc1918(p0, p1):
+                rules.append((idx, "private-ipv4"))
+            else:
+                rules.append((idx, "ipv4"))
+        for pattern, _desc in _FORBIDDEN_PATTERNS:
+            if pattern.search(line):
+                rules.append((idx, "credential-marker"))
+    return rules
+
+
 def get_git_content(rel_path: str, rev: str = "") -> str | None:
     """Read exact blob content from git index or revision using 'git show <rev>:<path>'."""
     try:
