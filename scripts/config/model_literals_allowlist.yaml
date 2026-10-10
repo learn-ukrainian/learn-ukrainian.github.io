@@ -5500,9 +5500,9 @@ entries:
   scope: <module>
   context: expression
   id: composer-2.5
-  count: 1
-  kind: migration_debt
-  reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+  count: 3
+  kind: adapter_identity
+  reason: 'One legacy Cursor compatibility pin plus bare and fast=false wire pins in CURSOR_APPROVED_WIRE_PINS; #10273 extracted the existing runtime pin set without changing admission.'
 - path: scripts/review/model_catalog.py
   scope: <module>
   context: expression
@@ -5510,6 +5510,13 @@ entries:
   count: 1
   kind: migration_debt
   reason: 'Existing identity in <module>; #9302 consumer migration owned by infra.'
+- path: scripts/review/model_catalog.py
+  scope: <module>
+  context: expression
+  id: grok-4.7-high
+  count: 1
+  kind: adapter_identity
+  reason: 'Concrete Cursor wire pin in CURSOR_APPROVED_WIRE_PINS; #10273 extracted the existing runtime pin set without changing admission.'
 - path: scripts/review/model_catalog.py
   scope: _main
   context: expression
@@ -5541,13 +5548,6 @@ entries:
 - path: scripts/review/model_catalog.py
   scope: apply_cursor_model_pins
   context: expression
-  id: composer-2.5
-  count: 2
-  kind: migration_debt
-  reason: 'Existing identity in apply_cursor_model_pins; #9302 consumer migration owned by infra.'
-- path: scripts/review/model_catalog.py
-  scope: apply_cursor_model_pins
-  context: expression
   id: grok-4.7
   count: 2
   kind: migration_debt
@@ -5556,9 +5556,9 @@ entries:
   scope: apply_cursor_model_pins
   context: expression
   id: grok-4.7-high
-  count: 5
+  count: 4
   kind: migration_debt
-  reason: 'Existing identity in apply_cursor_model_pins; #9302 consumer migration owned by infra.'
+  reason: 'Existing pin normalization and refusal message; #10273 moved the runtime set occurrence to CURSOR_APPROVED_WIRE_PINS; remaining #9302 consumer migration owned by infra.'
 - path: scripts/review/model_catalog.py
   scope: canonical_model_id
   context: docstring
