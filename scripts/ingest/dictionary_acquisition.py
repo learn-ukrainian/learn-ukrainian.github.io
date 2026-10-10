@@ -377,7 +377,7 @@ def retry_after(headers: Any, now: float) -> float:
 
 
 def fetch_once(session: Any, spec: dict[str, Any], row: sqlite3.Row, now: float) -> tuple[str, int | None, Any, float]:
-    """Exactly one GET, no redirects/retries/challenge workarounds; existing parsers."""
+    """Exactly one GET, no redirects, retries, or challenge bypasses; existing parsers."""
     official = spec["dictionary"] == SUM20_SOURCE_ID
     url = (
         official_url_for_wordid(int(row["target"]))

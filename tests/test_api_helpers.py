@@ -291,7 +291,7 @@ class TestCacheFunctions:
     populate `orient_*`-prefixed keys via the `/api/orient` test suite),
     we clear the cache before AND after every test in this class.
 
-    See issue #2002 — replaces the prior CI workaround that re-ran these
+    See issue #2002 — replaces the prior CI rerun that re-ran these
     tests in a fresh subprocess.
     """
 

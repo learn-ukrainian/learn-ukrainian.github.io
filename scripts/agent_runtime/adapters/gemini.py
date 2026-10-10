@@ -282,27 +282,10 @@ class GeminiAdapter:
         elif not _has_gemini_api_key(os.environ):
             raise RuntimeError("GEMINI_AUTH_MODE=api selected but neither GEMINI_API_KEY nor GOOGLE_API_KEY is set")
 
-        # Gemini CLI 0.40.1 yargs parser bug (#1730 root cause, 2026-05-06):
-        # when the prompt content contains `-p` or `--prompt` substrings
-        # (which happens whenever a prior gemini failure stderr lands in
-        # the channel history seen by `ab discuss`), yargs mis-parses argv
-        # and fails with "Not enough arguments following: p" — even though
-        # subprocess.run passes argv as a list, not via shell.
-        #
-        # Workaround: pass the prompt via stdin instead of argv. Gemini's
-        # `-p` help text states "Appended to input on stdin (if any)", so
-        # we pass a single-space placeholder via -p and pipe the real
-        # prompt via stdin_payload. argv contains no prompt content,
-        # bypassing the yargs bug entirely.
-        #
-        # When upstream fixes yargs, revert to:
-        #     prompt_arg, prompt_file = _prompt_arg_for_cli(prompt)
-        #     cmd.extend(["-p", prompt_arg])
+        # Prompt bytes stay on stdin. Gemini CLI 0.40.1 mis-parses argv when
+        # the text contains an option-like substring (#1730).
         cmd.extend(["-p", " "])
-        _logger.debug(
-            "gemini prompt length=%d passed via stdin (yargs argv bug workaround)",
-            len(prompt),
-        )
+        _logger.debug("gemini prompt length=%d passed via stdin", len(prompt))
 
         return InvocationPlan(
             cmd=cmd,
