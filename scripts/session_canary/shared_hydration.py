@@ -34,12 +34,15 @@ from agents_extensions.shared.session_streams.model import parse_timestamp, vali
 from scripts.session_supervisor.remote import RemoteEpicClient, monitor_url
 
 ROOT = Path(__file__).resolve().parents[2]
-# One global monotonic budget per capsule. 0.5 s was too tight for a real
-# Monitor read over the loopback tunnel (stream-evidence-timeout blocked lanes),
-# so the default is 5 s; LU_HYDRATION_DEADLINE_SECONDS overrides it within bounds.
-HYDRATION_DEADLINE_SECONDS = 5.0
+# Per-attempt monotonic budget. 0.5 s was too tight for a real Monitor read
+# (stream-evidence-timeout blocked lanes), so the default is 2 s;
+# LU_HYDRATION_DEADLINE_SECONDS overrides it within bounds. All retries share
+# one total budget that fits inside the post-compact hook's 6 s bound
+# (run_bounded 6) with room for interpreter start-up.
+HYDRATION_DEADLINE_SECONDS = 2.0
 HYDRATION_DEADLINE_MIN_SECONDS = 0.5
-HYDRATION_DEADLINE_MAX_SECONDS = 30.0
+HYDRATION_DEADLINE_MAX_SECONDS = 4.5
+HYDRATION_TOTAL_BUDGET_SECONDS = 4.5
 HYDRATION_DEADLINE_ENV = "LU_HYDRATION_DEADLINE_SECONDS"
 _MAX_STREAM_RESPONSE_BYTES = 262_144
 _STREAM_READ_CHUNK_BYTES = 4_096
@@ -93,7 +96,7 @@ HYDRATION_CAPSULE_V1_SCHEMA: dict[str, Any] = {
         "schema_name": {"const": "HydrationCapsuleV1"},
         "schema_version": {"const": "1.3"},
         "generated_at": {"type": "string", "format": "date-time"},
-        "deadline_ms": {"type": "number", "minimum": 500.0, "maximum": 30000.0},
+        "deadline_ms": {"type": "number", "minimum": 500.0, "maximum": 4500.0},
         "elapsed_ms": {"type": "number", "minimum": 0},
         "state": {"enum": ["ready", "degraded", "blocked"]},
         "blocked": {"type": "boolean"},
@@ -456,9 +459,10 @@ def hydration_deadline_seconds() -> float:
     return min(max(value, HYDRATION_DEADLINE_MIN_SECONDS), HYDRATION_DEADLINE_MAX_SECONDS)
 
 
-def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
+def build_hydration_capsule(stream_id: str, lane_name: str, *, budget: float | None = None) -> dict[str, Any]:
     """Build and validate a v1.3 capsule within one global monotonic deadline."""
-    budget = hydration_deadline_seconds()
+    if budget is None:
+        budget = hydration_deadline_seconds()
     start = time.monotonic()
     deadline = start + budget
     fields: dict[str, dict[str, Any]] = {field: _unavailable("not-collected") for field in CRITICAL_FIELDS}
@@ -531,14 +535,21 @@ def _retryable_capsule(capsule: dict[str, Any]) -> bool:
 
 
 def build_hydration_capsule_with_retry(stream_id: str, lane_name: str) -> tuple[dict[str, Any], int]:
-    """Try at most three complete capsules (each within its deadline), 50 ms apart.
+    """Try at most three capsules, 50 ms apart, inside one total budget.
 
-    The final capsule keeps the unchanged schema and per-attempt timing;
-    callers report the separate attempt count on stderr.
+    Each attempt gets the per-attempt deadline capped by what is left of
+    HYDRATION_TOTAL_BUDGET_SECONDS; no attempt starts with less than the
+    0.5 s minimum left. The final capsule keeps the unchanged schema and
+    per-attempt timing; callers report the attempt count on stderr.
     """
+    per_attempt = hydration_deadline_seconds()
+    end = time.monotonic() + HYDRATION_TOTAL_BUDGET_SECONDS
     for attempt in range(1, 4):
-        capsule = build_hydration_capsule(stream_id, lane_name)
+        budget = max(HYDRATION_DEADLINE_MIN_SECONDS, min(per_attempt, end - time.monotonic()))
+        capsule = build_hydration_capsule(stream_id, lane_name, budget=budget)
         if attempt == 3 or not _retryable_capsule(capsule):
             return capsule, attempt
         time.sleep(0.050)
+        if end - time.monotonic() < HYDRATION_DEADLINE_MIN_SECONDS:
+            return capsule, attempt
     raise AssertionError("unreachable hydration attempt")  # pragma: no cover
