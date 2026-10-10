@@ -53,6 +53,19 @@ def test_unneeded_secret_names_drop_cursor_key_except_for_cursor() -> None:
     assert kept["GH_TOKEN"] == "ghp_synthetic"
 
 
+def test_conftest_keeps_harness_and_later_tokens() -> None:
+    from tests.conftest import _INHERITED_CREDENTIAL_NAMES, inherited_credential_names
+
+    env = {
+        "CURSOR_API_KEY": SYNTHETIC_KEY,
+        "LU_TEST_CURSOR_SESSION_TOKEN": "synthetic-session-token-0123456789",
+        "AGENT_MONITOR_TOKEN": "test-agent-monitor-token-5652",
+        "PATH": "/usr/bin",
+    }
+    assert inherited_credential_names(env) == ("CURSOR_API_KEY", "AGENT_MONITOR_TOKEN")
+    assert not any(name.startswith("LU_TEST_") for name in _INHERITED_CREDENTIAL_NAMES)
+
+
 def test_credential_env_names_keep_session_identity() -> None:
     env = {
         "CURSOR_API_KEY": SYNTHETIC_KEY,
@@ -76,6 +89,9 @@ def test_launchers_and_dispatcher_call_the_sanitizer() -> None:
     assert "unneeded_secret_names(os.environ, \"dispatcher\")" in dispatcher
     wrapper = (REPO / "run-dispatcher.sh").read_text(encoding="utf-8")
     assert "--provider dispatcher" in wrapper
+    for name in ("kimi.sh", "glm.sh"):
+        launcher_text = (REPO / "scripts" / "launchers" / name).read_text(encoding="utf-8")
+        assert "launcher_drop_unneeded_secrets" in launcher_text
 
 
 def test_no_print_hook_blocks_seeded_echo() -> None:
@@ -92,20 +108,28 @@ def test_no_print_hook_blocks_seeded_echo() -> None:
 
 
 def test_conftest_scrubs_api_keys_and_fails_when_output_contains_one() -> None:
-    sample = REPO / "tests" / "test_secret_redaction_scrub_sample.py"
-    secret_file = REPO / "tests" / "test_secret_redaction_scrub_sample.txt"
-    secret_file.write_text(SYNTHETIC_KEY, encoding="utf-8")
+    import shutil
+    import uuid
+
+    scratch = REPO / "tests" / f"_secret_redaction_scratch_{uuid.uuid4().hex}"
+    scratch.mkdir()
+    sample = scratch / "test_sample.py"
+    secret_file = scratch / "sample.txt"
+    other_key = "synthetic-openai-key-0123456789"
+    secret_file.write_text(SYNTHETIC_KEY + "\n" + other_key, encoding="utf-8")
     sample.write_text(
         "import os\n"
         "from pathlib import Path\n"
         "def test_api_key_is_absent():\n"
         "    assert 'CURSOR_API_KEY' not in os.environ\n"
+        "    assert 'OPENAI_API_KEY' not in os.environ\n"
         "def test_prints_the_parent_key():\n"
         f"    print(Path({str(secret_file)!r}).read_text())\n",
         encoding="utf-8",
     )
     env = os.environ.copy()
     env["CURSOR_API_KEY"] = SYNTHETIC_KEY
+    env["OPENAI_API_KEY"] = other_key
     env["GITHUB_TOKEN"] = "synthetic-github-token-0123456789"
     try:
         proc = subprocess.run(
@@ -129,14 +153,16 @@ def test_conftest_scrubs_api_keys_and_fails_when_output_contains_one() -> None:
             timeout=180,
         )
     finally:
-        sample.unlink(missing_ok=True)
-        secret_file.unlink(missing_ok=True)
+        shutil.rmtree(scratch, ignore_errors=True)
     combined = proc.stdout + proc.stderr
     assert "1 passed" in combined
     assert SYNTHETIC_KEY not in combined
+    assert other_key not in combined
     assert "synthetic-github-token-0123456789" not in combined
     assert proc.returncode != 0
-    assert "scrubbed env var CURSOR_API_KEY" in combined
+    assert "scrubbed env var" in combined
+    assert "CURSOR_API_KEY" in combined
+    assert "OPENAI_API_KEY" in combined
 
 
 def test_launcher_unsets_unneeded_api_key_and_fails_closed(tmp_path: Path) -> None:
