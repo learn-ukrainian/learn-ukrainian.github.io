@@ -5,6 +5,7 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import ast
+import atexit
 import contextlib
 import functools
 import ipaddress
@@ -173,11 +174,16 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
 
 
 # Credential-shaped names inherited from the developer or worker environment.
-# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``. Comparison is
-# case-insensitive. ``monkeypatch.delenv`` restores each name after the test,
-# and a test that calls ``monkeypatch.setenv`` on the same name still sees
-# its own value.
+# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY``
+# is not ``_API_KEY``. Comparison is case-insensitive. Names that merely look
+# secret stay visible: ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``.
+# The snapshot is taken while this module loads, before pytest imports
+# ``pytest_plugins``, configures, collects, or spawns xdist workers. Anything
+# written after that snapshot belongs to the suite and stays until the session
+# is torn down. Restoration is independent of ``monkeypatch``, so ``undo()``
+# cannot put an inherited value back.
 _CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
+_inherited_credential_env: dict[str, str] | None = None
 
 
 def _is_credential_shaped_env_name(name: str) -> bool:
@@ -185,40 +191,47 @@ def _is_credential_shaped_env_name(name: str) -> bool:
     return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
 
 
-def _suite_owned_credential_env() -> tuple[tuple[str, str], ...]:
-    """Values this process published and tests read back.
+def _hide_inherited_credential_env() -> None:
+    """Pop credential-shaped names that were already in the environment.
 
-    Both names match a credential suffix. They are not inherited secrets:
-    the cursor guard mints ``LU_TEST_CURSOR_SESSION_TOKEN`` at session start,
-    and ``tests/test_agent_monitor_router.py`` assigns ``AGENT_MONITOR_TOKEN``
-    at import. Put those published values back after the ambient strip so
-    those tests keep working. An inherited value of either name stays absent
-    unless the suite published one.
+    A second call does nothing. The first snapshot is the inherited set;
+    a later write, including a suite token minted at session start, must
+    not be recorded as inherited and then deleted.
     """
-    restores: list[tuple[str, str]] = []
-    tripwire = sys.modules.get("tests.cursor_exec_tripwire")
-    token = getattr(tripwire, "session_token", None) if tripwire is not None else None
-    if isinstance(token, str) and token:
-        restores.append(("LU_TEST_CURSOR_SESSION_TOKEN", token))
-    monitor = sys.modules.get("tests.test_agent_monitor_router")
-    monitor_token = getattr(monitor, "TEST_TOKEN", None) if monitor is not None else None
-    if isinstance(monitor_token, str) and monitor_token:
-        restores.append(("AGENT_MONITOR_TOKEN", monitor_token))
-    return tuple(restores)
-
-
-@pytest.fixture(autouse=True)
-def _strip_ambient_credential_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Hide inherited credential-shaped variables for one test.
-
-    A failing test must not print a developer or worker value whose name ends
-    with ``_API_KEY``, ``_TOKEN`` or ``_SECRET``.
-    """
+    global _inherited_credential_env
+    if _inherited_credential_env is not None:
+        return
+    snapshot: dict[str, str] = {}
     for name in tuple(os.environ):
         if _is_credential_shaped_env_name(name):
-            monkeypatch.delenv(name, raising=False)
-    for name, value in _suite_owned_credential_env():
-        monkeypatch.setenv(name, value)
+            snapshot[name] = os.environ.pop(name)
+    _inherited_credential_env = snapshot
+
+
+def _restore_inherited_credential_env() -> None:
+    """Put the inherited snapshot back and drop names the suite published."""
+    global _inherited_credential_env
+    if _inherited_credential_env is None:
+        return
+    snapshot = _inherited_credential_env
+    for name in tuple(os.environ):
+        if _is_credential_shaped_env_name(name) and name not in snapshot:
+            del os.environ[name]
+    os.environ.update(snapshot)
+    _inherited_credential_env = None
+
+
+class _CredentialEnvIsolation:
+    """Restore inherited credentials at unconfigure, including after a failed test."""
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_unconfigure(self, config: pytest.Config) -> None:
+        _restore_inherited_credential_env()
+        config._lu_inherited_credentials_restored = True
+
+
+atexit.register(_restore_inherited_credential_env)
+_hide_inherited_credential_env()
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
@@ -2080,6 +2093,9 @@ class _NeedsArtifactCollection:
 
 
 def pytest_configure(config: pytest.Config) -> None:
+    if not config.pluginmanager.has_plugin("credential-env-isolation"):
+        config.pluginmanager.register(_CredentialEnvIsolation(), "credential-env-isolation")
+    _hide_inherited_credential_env()
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
@@ -3116,6 +3132,4 @@ from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic
 def _no_operator_model_pause(monkeypatch, tmp_path_factory):
     """Tests never read the operator's live model-pause policy."""
     if "LU_MODEL_PAUSE_FILE" not in os.environ:
-        monkeypatch.setenv(
-            "LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json")
-        )
+        monkeypatch.setenv("LU_MODEL_PAUSE_FILE", str(tmp_path_factory.getbasetemp() / "no-model-pause.json"))
