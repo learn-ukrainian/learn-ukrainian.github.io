@@ -1030,7 +1030,48 @@ def test_nonfresh_harness_cannot_override_fresh_roster(
     assert SCREEN not in response.text
 
 
+@pytest.mark.parametrize("fields", [
+    {"idle_min": None, "activity": None},
+    {"idle_min": "invalid", "activity": "busy"},
+    {"idle_min": True, "activity": False},
+    {"idle_min": float("nan"), "activity": 7},
+    {"idle_min": float("inf"), "activity": {}},
+    {"idle_min": float("-inf"), "activity": []},
+    {"idle_min": {}, "activity": ""},
+    {"idle_min": [], "activity": "unknown"},
+])
+@pytest.mark.parametrize("idle,expected", [(6, "working"), (55, "stuck")])
+def test_fresh_harness_unusable_fields_preserve_roster(
+    monkeypatch: pytest.MonkeyPatch, tmp_path, fields, idle, expected,
+) -> None:
+    roster = _roster()
+    roster["epics"] = [roster["epics"][0]]
+    driver = roster["epics"][0]["driver"]
+    driver.update(idle_min=idle, activity="working")
+    _install(monkeypatch, tmp_path, roster, {
+        "generated_at": FRESH, "interval_s": 30, "agents": {"driver-alpha": fields}
+    })
+
+    response = client.get("/api/fleet/v1/now")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert next(row for row in body["sources"] if row["name"] == "harness_snapshot")["status"] == "ok"
+    assert activity_mod.resolve_idle_min(driver, fields) == idle
+    assert activity_mod.resolve_activity(driver, fields) == "working"
+    epic = body["data"]["epics"][0]
+    assert epic["state"] == expected
+    if expected == "stuck":
+        assert epic["state_reason"] == "idle while intended running"
+        assert any(item["kind"] == "stuck_driver" and item["title"] == "Alpha"
+                   for item in body["data"]["attention"])
+    else:
+        assert epic["state_reason"] == "recorded working"
+        assert not any(item["kind"] == "stuck_driver" for item in body["data"]["attention"])
+
+
 @pytest.mark.parametrize("fields,expected", [
+    ({"pid_alive": True, "idle_min": 0, "activity": "working"}, "working"),
     ({"pid_alive": True, "idle_min": 1, "activity": "working"}, "working"),
     ({"pid_alive": False, "idle_min": 1, "activity": "working"}, "dead"),
     ({"pid_alive": True, "idle_min": 45, "activity": "idle"}, "stuck"),

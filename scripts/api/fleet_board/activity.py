@@ -211,7 +211,9 @@ def resolve_pid(roster_pid: object, harness: Mapping[str, Any]) -> bool | None:
 
 def resolve_idle_min(roster: Mapping[str, Any], harness: Mapping[str, Any]) -> float | None:
     if "idle_min" in harness:
-        return finite_number(harness.get("idle_min"))
+        h_idle = finite_number(harness.get("idle_min"))
+        if h_idle is not None:
+            return h_idle
     if "idle_min" in roster:
         return finite_number(roster.get("idle_min"))
     return None
@@ -219,7 +221,9 @@ def resolve_idle_min(roster: Mapping[str, Any], harness: Mapping[str, Any]) -> f
 
 def resolve_activity(roster: Mapping[str, Any], harness: Mapping[str, Any]) -> str | None:
     if "activity" in harness:
-        return activity_token(harness.get("activity"))
+        h_act = activity_token(harness.get("activity"))
+        if h_act is not None:
+            return h_act
     if "activity" in roster:
         return activity_token(roster.get("activity"))
     return None
