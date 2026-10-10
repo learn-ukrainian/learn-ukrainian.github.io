@@ -32,5 +32,6 @@ def test_this_tree_matches_the_baseline() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
     assert completed.returncode == 0, completed.stdout
