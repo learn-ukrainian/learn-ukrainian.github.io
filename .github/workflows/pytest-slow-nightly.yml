@@ -22,6 +22,9 @@ jobs:
     name: Pytest slow (nightly)
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      # Same native services as the PR pytest job (nightly runs the groups moved off PRs).
+      LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
     # Job-scoped (zizmor excessive-permissions): only this job files/updates
     # the failure-tracking issue.
     permissions:
@@ -33,6 +36,8 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+
+      - run: bash scripts/ci/test_env.sh start postgres
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -118,6 +123,9 @@ jobs:
         with:
           path: ${{ env.STANZA_RESOURCES_DIR }}
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
+
+      - run: bash scripts/ci/test_env.sh wait
+        timeout-minutes: 5
 
       - name: Run slow pytest selection
         id: pytest-slow
