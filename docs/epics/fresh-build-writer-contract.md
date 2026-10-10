@@ -195,7 +195,20 @@ guidance. No word, activity, item or time quota applies; legacy `word_target` is
 | 11 | render: the four tabs build (`verify_shippable --astro-build`) | render | engine |
 | 12 | review — the LLM gate of #8430 — **a model's judgement with receipts** | judgement | assigned by the driver |
 
-**The immersion payload and counting contract (r3).** `compute_lesson_immersion_band` (#8414) is not implemented today; `compute_immersion_band` is module-indexed and the repository counts immersion two different ways (a character ratio in the audit cleaner, a token ratio in the linear pipeline). This contract fixes **one** contract for the fresh build, with R-30's numbers unchanged: the writer receives an **immersion payload** — for each field role (narration, dialogue line, activity instruction, activity item, gloss, quote, resource line) the permitted language(s), plus the structural targets of the band (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`) and the advisory share; the gate counts the advisory share as **Ukrainian tokens over all tokens of the expanded Урок tab**, with quoted terms counted as Ukrainian, glosses and `translation_en` counted as English, and Словник/Ресурси excluded; structural minimums are summed over the module's lessons until lesson-level minimums are calibrated (#8414). One function computes it, both the writer's payload and the gate read it.
+**The immersion payload and counting contract (#10105).** Fresh A1 selects the approved
+R-30 editorial bands from cumulative core vocabulary, or explicit `a1-orientation`.
+Its payload has permitted field languages and an advisory share (none for orientation),
+no `min_uk_dialogue_lines`, `min_uk_example_sentences` or `min_vocab_entries`;
+`lesson_structural_minimums_not_calibrated` remains. No replacement content quota or
+promise to calibrate A1 per-lesson floors is made. Legacy module overrides remain untouched.
+A2+ payloads and counting remain unchanged; module-to-lesson residual is #10132.
+Share is Ukrainian tokens over all tokens of the expanded Урок tab, including quoted terms
+as Ukrainian and gloss/translation support as English, excluding Словник/Ресурси.
+The assembler prints the approved plan-step practical task directly after its supporting
+blocks, as instruction and record-print units with existing provenance and page mapping.
+The draft supplies support, not an English echo, decision field or new task schema.
+Independent review judges doability, Ukrainian processing and meaningful decisions;
+a structural pass alone cannot certify them.
 
 **Regeneration.** The writer gets back a machine-readable failure — check, step or activity id, the token or item, the reason — never a log. **The same check failing twice on the same lesson is not retried**: the second failure goes to the plan or the pack. At most two regenerations of one lesson in all (operator decision 4), counted against the stable lesson identity (module slug, `n`) across every change of plan, pack, card or prompt — an upstream fix does not reset the count; then the driver. A regeneration invalidates that lesson's resolution receipts; the receipts of other lessons stand.
 

@@ -41,6 +41,7 @@ from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.path_guard import checked_existing_path, checked_path, public_diagnostic
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
+from scripts.curriculum.validate.loader import PlanError, load_plan
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
 from scripts.review.receipts.ledger import LedgerError
 from scripts.review.validate.validate import index_ledger, review_schema_errors
@@ -190,12 +191,12 @@ def _learner_state_change(doc: dict[str, Any], root: Path) -> dict[str, Any] | N
         level, slug, n = doc["level"], doc["slug"], doc["lesson"]
         plans_dir = root / "curriculum/l2-uk-en/lesson-plans" / level
         plan_path = checked_existing_path(root, plans_dir / f"{slug}.yaml", "curriculum/l2-uk-en/lesson-plans")
-        position = (yaml.safe_load(plan_path.read_bytes()).get("arc_ref") or {}).get("position", 1)
+        position = (load_plan(plan_path).get("arc_ref") or {}).get("position", 1)
         state = planned_state(
             level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=root / EVIDENCE_ROOT / level
         )
         current = learner_state_sha256(state)
-    except (OSError, yaml.YAMLError, KeyError, TypeError, AttributeError, ValueError, PlannedStateError):
+    except (OSError, yaml.YAMLError, KeyError, TypeError, AttributeError, ValueError, PlannedStateError, PlanError):
         current = None
     if current == recorded.get("sha256"):
         return None

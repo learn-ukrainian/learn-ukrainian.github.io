@@ -412,6 +412,10 @@ def test_each_check_failure_carries_layer():
 
 
 def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
+    # Supply an ordinary plan so this still tests the later driver admission.
+    plans = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
+    plans.mkdir(parents=True)
+    (plans / "sample-slug.yaml").write_text(yaml.safe_dump(_fixture()[1]))
     env = {"PATH": os.environ.get("PATH", ""), "LEARN_UKRAINIAN_REPO_ROOT": str(tmp_path)}
     completed = subprocess.run(
         [sys.executable, "-m", "scripts.build.fresh", "build", "a1", "sample-slug", "--lesson", "1"],

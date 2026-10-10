@@ -159,14 +159,37 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-29 Seminars later.** The same structure will reshape seminar modules; that is out of scope
   until A1 is done.
 
-### Immersion and pedagogy (carried over unchanged)
+### Immersion and pedagogy (A1 updated by #10105; A2+ unchanged)
 
-- **R-30 Keep the immersion settings that worked.** The live policy in `scripts/config.py`
-  (`IMMERSION_POLICIES`, `USE_ULP_IMMERSION_DERIVATION = True`) is carried into the new build as
-  is: A1 is ULP-derived and student-aware with a 40–55 % Ukrainian advisory share and structural
-  targets that tighten through the level; A2 runs 75–100 % at the bridge, 85–100 % through the
-  ramp and first 20 modules, 90–100 % to module 50 and 95–100 % to the end, with a little English
-  support. B1 onward is full immersion. Nobody re-tunes these numbers as part of this epic.
+- **R-30 Vocabulary-based A1 scaffolding (#10105, approved R1–R12).** Fresh A1 uses
+  unique cumulative core vocabulary before the lesson, excluding base/incidental vocabulary;
+  names retain the existing counting semantics. The preserved keys are compatibility identifiers,
+  not module selectors. Missing, noninteger, boolean or negative counts fail closed.
+
+  | Core count | Existing key | Advisory Ukrainian share |
+  | --- | --- | --- |
+  | 0–24 | a1-m01-03 | 0–15% |
+  | 25–59 | a1-m04-06 | 10–20% |
+  | 60–139 | a1-m07-14 | 15–30% |
+  | 140–241 | a1-m15-24 | 25–40% |
+  | 242–399 | a1-m25-34 | 35–50% |
+  | 400–599 | a1-m35-54 | 45–60% |
+  | 600+ | a1-m55+ | 55–70% |
+
+  These are uncalibrated editorial parameters. Authentic methodology supports scaffolding,
+  not these exact percentages. ULP observations are an attributed comparator, not calibration;
+  140/242 are inherited thresholds, while 25/60/400/600 are editorial additions.
+  Explicit `ArcPosition.band_key: a1-orientation` alone selects English orientation:
+  no advisory share, overview exemplars only, zero new core words, English practical recap
+  with no Ukrainian production requirement. Normal zero-core lessons select the first band.
+  Module position never selects orientation. #10108 owns the arc declaration/generation.
+  Fresh A1 payloads carry no dialogue/example/vocabulary minimums and no replacement quota;
+  the uncalibrated marker remains. Legacy structural overrides are unchanged.
+  A2 remains 75–100% bridge, 85–100% ramp/first 20, 90–100% through 50, 95–100% thereafter;
+  B1+ remains full immersion. A2+ module-to-lesson minimums are residual #10132.
+  Accepted legacy `a1-v1` audit range drift and top-band reachability at the plan milestone
+  belong to the curriculum-upgrade driver; no second policy is introduced. No automated
+  a1-v1 audit consumer was found in workflows. #10110 owns learner pilot proof/calibration.
 - **R-32 The State Standard is a minimum, ULP is the schedule.** Every A1–B2 requirement of the
   State Standard 2024 must be covered at its level. Teaching something earlier than the Standard
   places it is allowed when ULP does so at the matching point of its course; the arc records the

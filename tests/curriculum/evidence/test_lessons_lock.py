@@ -32,18 +32,7 @@ def committed_lesson_locks():
     for path in sorted(paths):
         lock_path = Path(path)
         level, slug = lock_path.parents[2].name, lock_path.parent.name
-        marks = ()
-        if (level, slug) == ("a1", "sounds-letters-and-hello"):
-            marks = pytest.mark.xfail(
-                strict=True,
-                raises=AssertionError,
-                reason=(
-                    "#9694: position 1's build PR owns the sounds-letters-and-hello "
-                    "lock refresh after #9693's gloss changes; remove this xfail "
-                    "when that build PR refreshes the lock (strict XPASS must fail)."
-                ),
-            )
-        parameters.append(pytest.param(level, slug, id=f"{level}/{slug}", marks=marks))
+        parameters.append(pytest.param(level, slug, id=f"{level}/{slug}"))
     return parameters
 
 
@@ -51,6 +40,14 @@ def committed_lesson_locks():
 @pytest.mark.parametrize("level,slug", committed_lesson_locks())
 def test_committed_lesson_lock_is_fresh(level, slug):
     """Word-store and pack changes cannot leave committed lesson locks stale."""
+    plans = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+    from scripts.curriculum.validate.loader import PlanError, load_plan, retired_plan_paths
+
+    if slug in {path.stem for path in retired_plan_paths(plans)}:
+        assert slug not in lesson_lock.find_level_slugs(level, plans_dir=plans)
+        with pytest.raises(PlanError, match="plan_retired"):
+            load_plan(plans / f"{slug}.yaml")
+        return
     ok, diff = lesson_lock.check_lesson_lock(level, slug, repo_root=REPO_ROOT)
     assert ok, diff
 
@@ -980,3 +977,18 @@ def test_diff_word_record_fix_without_rewriting_lock_reports_changed(tmp_path):
     assert len(rebuild) == 1
     assert rebuild[0]["lesson"] == 2
     assert rebuild[0]["reasons"] == ["word_record_changed W-002"]
+
+
+def test_lock_discovery_exclusion_is_exact_hash(tmp_path):
+    import hashlib
+
+    plans, evidence = setup_curriculum_fixture(tmp_path)
+    plan = plans / "mod-one.yaml"
+    record = {"retirement_schema": 1, "plans": [{"slug": "mod-one", "sha256": hashlib.sha256(plan.read_bytes()).hexdigest(), "old_position": 1}], "routes": []}
+    (plans / "_retired.yaml").write_text(yaml.safe_dump(record))
+    state = evidence / "_state/mod-one"
+    state.mkdir(parents=True, exist_ok=True)
+    (state / "lessons.lock.yaml").write_text("preserved: true")
+    assert "mod-one" not in lesson_lock.find_level_slugs("a1", repo_root=tmp_path)
+    plan.write_bytes(plan.read_bytes() + b"\n")
+    assert "mod-one" in lesson_lock.find_level_slugs("a1", repo_root=tmp_path)

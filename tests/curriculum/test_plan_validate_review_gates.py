@@ -1188,6 +1188,18 @@ CASES = [
 
 
 def run(root: Path, mutate: Mutate | None, strict: bool = False) -> Report:
+    # C7/C8 are now A2+ contracts. Keep their original negative and positive
+    # cases on that level, with all original assertions, independent of A1 tasks.
+    if any(case.name.startswith(("c7_", "c8_")) and case.mutate is mutate for case in CASES):
+        plan, pack, words, prior = mechanical_plan(), mechanical_pack(), mechanical_words(), prior_plan()
+        _activity(plan, 3, "c1")["focus"] = "Review quiz. kind: comprehension; host: {kind: dialogue}."
+        if mutate:
+            mutate(plan, pack, words, prior)
+        report = Report("a2", SLUG)
+        gates = ReviewGates(report, plan, "a2", None, None, None, Path("unused"), pack=None)
+        gates.check_recap_story()
+        gates.check_recap_order()
+        return report
     return validate_plan(LEVEL, SLUG, plan_path=_world(root, mutate), strict=strict)
 
 
@@ -1212,8 +1224,9 @@ def test_case(tmp_path: Path, case: Case) -> None:
     report = run(tmp_path, case.mutate)
     text = report.render_text()
     assert {o.code for o in report.failures} == set(case.failures), text
-    assert {o.code for o in report.notes} == set(case.notes) | {codes.OPTIONS_MISSING, codes.A1_REFERENCE_WORD_MISSING}, text
-    assert {o.code for o in report.not_checked} == NOT_CHECKED | set(case.not_checked), text
+    legacy_recap = case.name.startswith(("c7_", "c8_"))
+    assert {o.code for o in report.notes} == set(case.notes) | (set() if legacy_recap else {codes.OPTIONS_MISSING, codes.A1_REFERENCE_WORD_MISSING}), text
+    assert {o.code for o in report.not_checked} == (set() if legacy_recap else NOT_CHECKED) | set(case.not_checked), text
     if case.says:
         assert any(case.says in o.message for o in report.failures + report.notes + report.not_checked), text
 
