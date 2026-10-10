@@ -17,6 +17,18 @@ OTHER = "b" * 40
 START = "2026-09-23T12:00:00.000001+00:00"
 
 
+
+@pytest.fixture(autouse=True)
+def _advisory_fixture_workflow(monkeypatch):
+    """The real ci.yml has no advisory job; cover the rule with a fixture workflow."""
+    from scripts.ci import advisory_checks
+
+    monkeypatch.setattr(
+        advisory_checks,
+        "CI_WORKFLOW_PATH",
+        Path(__file__).resolve().parents[2] / "tests/fixtures/ci_advisory_workflow.yml",
+    )
+
 def comment(
     *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False,
     review_mode="cross_family", family="openai",
