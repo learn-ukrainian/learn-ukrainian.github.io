@@ -943,7 +943,8 @@ def read_commands(
             else:
                 payload = None
                 for i, arg in enumerate(selected[1:], 1):
-                    if arg.startswith("-") and "c" in arg[1:] and not arg.startswith("--"):
+                    if arg.startswith(("-", "+")) and "c" in arg[1:] and not arg.startswith("--"):
+                        # Bash accepts either sign for command options.
                         # Each packed -o/-O consumes an option name before the
                         # command string. Refuse rather than judge that name
                         # as code and silently miss the executable payload.
