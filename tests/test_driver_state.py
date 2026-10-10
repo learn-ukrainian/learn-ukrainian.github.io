@@ -375,6 +375,28 @@ def test_stop_continues_below_min_workers_counting_only_own_seat(driver):
     assert "below the privately configured target" in out["reason"]
 
 
+def test_stop_cli_checks_worker_floor_without_pythonpath(driver, state, monkeypatch):
+    monkeypatch.delenv("PYTHONPATH", raising=False)
+    _workers(driver, "gemini-infra", 0)
+    transcript = _transcript(driver, "Which should I take?")
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.driver_state", "agy-stop-hook"],
+        input=json.dumps({"workspacePaths": [str(driver)], "conversationId": "c1", "transcriptPath": str(transcript)}),
+        capture_output=True,
+        text=True,
+        cwd=REPO,
+        timeout=10,
+        check=True,
+    )
+    out = json.loads(result.stdout)
+    assert out["decision"] == "continue", (result.stdout, result.stderr)
+    assert "below the privately configured target" in out["reason"], (result.stdout, result.stderr)
+    assert "question" in out["reason"]
+    counter = driver_state._counter_path(state, "c1")
+    assert counter.read_text() == "1"
+    assert not counter.with_suffix(".failure.json").exists()
+
+
 def test_stop_requires_wakeup_when_fully_idle(driver):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
     out = _stop(driver, _transcript(driver, "All good."), fully_idle=True)
@@ -1005,7 +1027,17 @@ def test_clean_stop_resets_counter(driver, state):
 
 @pytest.mark.parametrize(
     "fault",
-    ["missing", "stale", "wrong-seat", "wrong-task", "unknown-status", "unavailable", "bad-json", "no-nonce"],
+    [
+        "missing",
+        "stale",
+        "wrong-seat",
+        "wrong-task",
+        "unknown-status",
+        "unavailable",
+        "unexpected-error",
+        "bad-json",
+        "no-nonce",
+    ],
 )
 def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     _workers(driver, "gemini-infra", SYNTHETIC_WORKER_TARGET)
@@ -1014,6 +1046,8 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     def fetch(task_id, *, run_nonce=None):
         if fault == "unavailable":
             raise delegate.MonitorApiUnavailable("synthetic outage")
+        if fault == "unexpected-error":
+            raise RuntimeError("synthetic Monitor failure")
         if fault == "missing":
             return None
         out = original(task_id, run_nonce=run_nonce)
@@ -1039,6 +1073,32 @@ def test_worker_count_unknown_never_satisfies_floor(driver, monkeypatch, fault):
     out = _stop(driver, _transcript(driver, "Work verified."))
     assert out["decision"] == "continue"
     assert "live worker count is unknown" in out["reason"]
+
+
+@pytest.mark.parametrize("error", [ImportError, RuntimeError])
+def test_worker_import_failure_keeps_floor_unknown(driver, state, monkeypatch, error):
+    import builtins
+
+    _workers(driver, "gemini-infra", 0)
+    original = builtins.__import__
+
+    def fail_delegate(name, *args, **kwargs):
+        if name == "scripts.delegate":
+            raise error("synthetic delegate import failure")
+        return original(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fail_delegate)
+    assert driver_state.running_workers("gemini-infra") is None
+    transcript = _transcript(driver, "Work verified.")
+    out = _stop(driver, transcript)
+    assert out["decision"] == "continue"
+    assert "live worker count is unknown" in out["reason"]
+    assert "DRIVER-GATE-FAILED" not in out["reason"]
+    for _ in range(driver_state.MAX_CONSECUTIVE_CONTINUES):
+        out = _stop(driver, transcript)
+    assert out == {"decision": "allow", "reason": "DRIVER-GATE-FAILED: corrective retry budget exhausted."}
+    failure = driver_state._counter_path(state, "c1").with_suffix(".failure.json")
+    assert json.loads(failure.read_text())["code"] == "corrective_retry_budget_exhausted"
 
 
 @pytest.mark.parametrize("all_dead", [False, True])
@@ -1442,10 +1502,8 @@ def test_stop_refuses_oversized_counter_before_read_or_parse(driver, state, monk
 
 
 def test_stop_cli_refuses_oversized_counter_within_hook_timeout(driver, state, monkeypatch):
-    # The question triggers continuation without unrelated worker telemetry.
-    # Pytest's configured scripts import path is not inherited by the child.
-    monkeypatch.delenv(driver_state.MIN_WORKERS_ENV)
     monkeypatch.delenv("PYTHONPATH", raising=False)
+    _workers(driver, "gemini-infra", 0)
     counter = driver_state._counter_path(state, "c1")
     content = b"1" * (4 * 1024 * 1024)
     counter.write_bytes(content)

@@ -343,7 +343,13 @@ def minimum_workers() -> int | None:
 
 def running_workers(initiator: str) -> int | None:
     """Count own workers only after a nonce-bound live Monitor status probe."""
-    from scripts.delegate import _TERMINAL_STATUSES, MonitorApiUnavailable, _fetch_monitor_task
+    try:
+        scripts_dir = str(Path(__file__).resolve().parent)
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        from scripts.delegate import _TERMINAL_STATUSES, _fetch_monitor_task
+    except Exception:
+        return None
 
     tasks = tasks_dir()
     if not initiator or not tasks.is_dir():
@@ -365,7 +371,7 @@ def running_workers(initiator: str) -> int | None:
                 return None
             try:
                 live = _fetch_monitor_task(task_id, run_nonce=nonce)
-            except MonitorApiUnavailable:
+            except Exception:
                 return None
             task = live.get("task") if isinstance(live, dict) else None
             if (
