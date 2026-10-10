@@ -22,6 +22,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 DEFAULT_THRESHOLD = 15
 DEFAULT_CACHE_S = 60.0
@@ -93,7 +94,8 @@ def fetch_open_pr_count(repo: str) -> int:
 def branch_has_open_pr(repo: str, branch: str) -> bool:
     """True when ``branch`` is the head of an open PR in ``repo``."""
     owner = repo.split("/", 1)[0]
-    data = _gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={owner}:{branch}")
+    head = quote(f"{owner}:{branch}", safe="")
+    data = _gh_get(f"repos/{repo}/pulls?state=open&per_page=1&head={head}")
     if not isinstance(data, list):
         raise RuntimeError("unexpected pulls response")
     return bool(data)

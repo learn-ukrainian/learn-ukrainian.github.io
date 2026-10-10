@@ -4921,6 +4921,16 @@ def _report_dispatch_admission(
     return _ADMISSION_REFUSED_EXIT
 
 
+def _has_prior_task_record(task_id: str) -> bool:
+    """Read-only: True when ``task_id`` already has a live or archived record (a real continuation)."""
+    if not task_id:
+        return False
+    try:
+        return _state_path_no_create(task_id).exists() or _archived_state_path(task_id).exists()
+    except OSError:
+        return False
+
+
 def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | None:
     """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
 
@@ -4936,7 +4946,7 @@ def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | No
         cwd=getattr(args, "cwd", None),
         review=_dispatch_is_review_typed(args),
         reused_worktree=bool(worktree) and worktree != "auto",
-        continuation=bool(getattr(args, "force_new", False)),
+        continuation=bool(getattr(args, "force_new", False)) and _has_prior_task_record(str(getattr(args, "task_id", "") or "")),
     ):
         return None
     decision = pr_freeze.evaluate(fleet_repo.github, branch=getattr(args, "branch", None))

@@ -146,3 +146,34 @@ def test_helper_allows_existing_pr_branch(monkeypatch) -> None:
     repo = SimpleNamespace(github=REPO, role="public-monorepo")
     args = argparse.Namespace(mode="workspace-write", branch="codex/fix-1", pr=None, cwd=None, worktree=None)
     assert delegate._check_open_pr_freeze(args, repo) is None
+
+
+def test_branch_lookup_encodes_head(monkeypatch) -> None:
+    seen = []
+
+    def fake_get(endpoint):
+        seen.append(endpoint)
+        return [{"number": 1}]
+
+    monkeypatch.setattr(pr_freeze, "_gh_get", fake_get)
+    assert pr_freeze.branch_has_open_pr(REPO, "codex/fix+123&x#y%z")
+    assert seen[0].endswith("head=example%3Acodex%2Ffix%2B123%26x%23y%25z")
+
+
+def test_force_new_without_prior_record_is_still_refused(monkeypatch, capsys, tmp_path) -> None:
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    monkeypatch.setattr(delegate, "tasks_dir", lambda: tmp_path / "tasks")
+    repo = SimpleNamespace(github=REPO, role="public-monorepo")
+    args = argparse.Namespace(
+        mode="workspace-write", branch=None, pr=None, cwd=None, worktree="auto", force_new=True, task_id="fresh-id"
+    )
+    assert delegate._check_open_pr_freeze(args, repo) == 3
+    assert not (tmp_path / "tasks").exists()
+
+    (tmp_path / "tasks").mkdir()
+    (tmp_path / "tasks" / "fresh-id.json").write_text("{}")
+    assert delegate._check_open_pr_freeze(args, repo) is None
