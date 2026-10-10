@@ -202,8 +202,10 @@ def init_repo(
                 "scripts/launchers/gemini.sh",
                 "scripts/launchers/grok.sh",
                 "scripts/orchestration/codex_transport_health.py",
-                # Codex and Gemini canaries import the shared blocker policy.
+                # Codex and Gemini canaries import the shared blocker policy,
+                # which imports the stdlib-only selector leaf.
                 "scripts/driver_blockers.py",
+                "scripts/common/epic_selector.py",
                 "scripts/agent_runtime/bounded_command.py",
                 "scripts/config/issue_streams.yaml",
                 "scripts/config/launcher_stream_aliases.tsv",
