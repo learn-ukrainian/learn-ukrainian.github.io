@@ -7002,7 +7002,7 @@ def test_run_worker_agy_nonreceipt_home_binds_checkout_at_creation(tmp_tasks_dir
         monkeypatch.setattr(delegate, "_verify_bounded_worker", lambda *_args, **_kwargs: None)
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     monkeypatch.setattr(
-        delegate, "_reap_runtime_tmp_lease", lambda *_args: {"tmp_bytes_freed": 0, "tmp_reap_error": None}
+        delegate, "_reap_runtime_tmp_lease", lambda *_args, **_kwargs: {"tmp_bytes_freed": 0, "tmp_reap_error": None}
     )
 
     def invoke(*_args, **kwargs):

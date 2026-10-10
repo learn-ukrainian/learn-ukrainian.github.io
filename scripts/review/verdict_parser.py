@@ -17,8 +17,10 @@ import re
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
 # full verdicts and must not be misread as missing (#8786). A verdict line
 # STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
-# emphasis/backticks/whitespace around its colon, then the token and a word
-# boundary. Anything may follow the token — reviewers write
+# either a colon surrounded by emphasis/backticks/whitespace or at least one
+# emphasis/backtick/whitespace separator, then the token and a word boundary
+# (#8532). This accepts ``VERDICT APPROVE`` and ``**VERDICT** APPROVE``.
+# Anything may follow the token — reviewers write
 # ``**VERDICT: APPROVE.** Both issues are fixed.`` and
 # ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
 # quoted example ("I will report ``VERDICT: APPROVE`` later",
@@ -33,7 +35,8 @@ import re
 # has no space, which CommonMark does not treat as a heading, and
 # ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT"
+    r"(?:[*_`\s]*:[*_`\s]*|[*_`\s]+)"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
