@@ -11,8 +11,7 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
   - inline interpreter environment access and environment pseudo-file reads
   - expanding here-documents and here-strings
   - redirected environment dumps displayed later in the same command
-  - display commands (`cat`, `bat`, `less`, `head`, `tail`) reading known
-    secret files
+  - commands reading sensitive file operands, except value-free checks
   - `grep` / `rg` / `ugrep` reading dotenv-style secret files without a
     key-only/count transform
   - `echo` / `printf` expanding known secret environment variables
@@ -20,13 +19,20 @@ This guard is deliberately narrow. It catches high-confidence dump shapes only:
     explicit `--all` form
 
 Quote-aware tokenization keeps dangerous-looking strings inside a quoted commit
-message from becoming false positives. External file lists (for example,
-``xargs cat < list``) and copies whose destination is read later (for example,
-``cp .env x; cat x``), as well as values loaded by ``source .env`` or
-``. .env`` and printed later, are not modeled. This is defense-in-depth,
-not a sandbox. Arbitrary programs cannot be analysed; interpreter checks cover
-only obvious inline environment access and environment pseudo-file reads.
+message from becoming false positives. This is defense-in-depth, not a sandbox.
 """
+
+# Known limits
+# A string-matching guard cannot be complete. It does not resolve aliases,
+# functions that shadow safe commands, external scripts or file lists, computed
+# paths, or arbitrary programs. Interpreter aliases and dynamically assembled
+# environment accesses are not modeled. Values loaded by `source .env` or
+# `. .env` and printed through other variable names remain a data-flow limit.
+# Captured dumps are tracked within one invocation, not across separate events.
+# Variable-name tracking covers configured names and suffixes, and their copies.
+# Nested script inputs retain literal expansion syntax rather than evaluating
+# Bash expansions, and script-word joining is conservative about adjacency.
+# Explicit override and value-free transform policies remain trusted boundaries.
 
 from __future__ import annotations
 
@@ -61,6 +67,8 @@ SEPARATORS = {"&&", "||", ";", "&", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set", "declare", "export", "typeset"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
+SHELL_COMMANDS = {"bash", "sh", "zsh", "dash", "ksh", "eval", "source", "."}
+NON_PRINTING_COMMANDS = {"test", "[", "stat", "ls", "file", "true", "false", ":"}
 SAFE_DOTENV_SUFFIXES = (".example", ".sample", ".template", ".dist")
 KNOWN_SECRET_VARS = {
     "ANTHROPIC_API_KEY",
@@ -686,6 +694,8 @@ def _env_source_reason(segment: list[str]) -> str | None:
     elif cmd == "set" and args:
         return None
     elif cmd in {"declare", "export", "typeset"}:
+        if _has_short_flag(args, "f") and not _has_short_flag(args, "p"):
+            return None
         names = [arg for arg in args if not arg.startswith("-")]
         if names and not _has_short_flag(args, "p"):
             return None
@@ -694,13 +704,22 @@ def _env_source_reason(segment: list[str]) -> str | None:
     return f"`{cmd}` would print shell environment values"
 
 
-def _env_dump_reason(pipeline: list[list[str]], dumped_files: set[str]) -> str | None:
+def _env_dump_reason(
+    pipeline: list[list[str]], dumped_files: set[str], substitutions: dict[str, tuple[str, str]]
+) -> str | None:
     for index, segment in enumerate(pipeline):
         reason = _env_source_reason(segment)
         if not reason or _has_override(segment):
             continue
         found = _command_at(segment)
         target = _stdout_target(found[1]) if found else None
+        # Process substitutions are output consumers, not capture filenames.
+        sinks = [substitutions[arg][1] for arg in segment if arg in substitutions and substitutions[arg][0] == ">("]
+        if sinks:
+            if not all(_output_sink_safe(sink) for sink in sinks):
+                return reason
+            if target in substitutions:
+                continue
         if not target:
             if _has_safe_downstream(pipeline, index):
                 continue
@@ -719,14 +738,20 @@ def _env_dump_reason(pipeline: list[list[str]], dumped_files: set[str]) -> str |
 def _program_reason(cmd: str, program: str) -> str | None:
     if _is_python_command(cmd):
         accesses_env = bool(re.search(r"\bos\s*\.\s*(?:environ|getenv)\b", program))
+        whole_env = bool(re.search(r"\bos\s*\.\s*environ\b(?!\s*(?:\[|\.\s*get\s*\())", program))
     elif cmd == "node":
         accesses_env = bool(re.search(r"\bprocess\s*\.\s*env\b", program))
+        whole_env = bool(re.search(r"\bprocess\s*\.\s*env\b(?!\s*(?:\[|\.\s*[A-Za-z_$]))", program))
     elif cmd == "perl":
         accesses_env = bool(re.search(r"\$ENV\s*\{", program))
+        whole_env = bool(re.search(r"%ENV\b", program))
     elif cmd == "ruby":
         accesses_env = bool(re.search(r"\bENV\s*\[", program))
+        whole_env = bool(re.search(r"\bENV\s*\.\s*(?:to_h|to_a|each|inspect)\b", program))
     else:
         return None
+    if whole_env:
+        return "inline program can expose the whole environment mapping"
     if accesses_env and any(_is_secret_var_name(name) for name in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", program)):
         return "inline program can expose a secret environment value"
     if re.search(r"/proc/(?:self|\$\$|[0-9]+)/environ\b", program):
@@ -742,19 +767,20 @@ def _inline_program_reason(segment: list[str], dumped_files: set[str]) -> str | 
     flag = "-c" if _is_python_command(cmd) else "-e"
     for index, token in enumerate(args[:-1]):
         if _strip_quotes(token) == flag:
-            program = _strip_quotes(args[index + 1])
-            reason = _program_reason(cmd, program)
-            if reason:
-                return reason
-            if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
-                paths = re.findall(r"[\"']([^\"']+)[\"']", program)
-                if any(os.path.normpath(path) in dumped_files for path in paths):
-                    return "inline program would display a redirected environment dump"
+            for program in _script_words(args, index + 1):
+                reason = _program_reason(cmd, program)
+                if reason:
+                    return reason
+                if _is_python_command(cmd) and re.search(r"\b(?:open|read_text|read_bytes)\s*\(", program):
+                    paths = re.findall(r"[\"']([^\"']+)[\"']", program)
+                    if any(os.path.normpath(path) in dumped_files for path in paths):
+                        return "inline program would display a redirected environment dump"
     return None
 
 
-def _heredoc_reason(command: str, copied: set[str], named: dict[str, str]) -> str | None:
-    """Inspect closed here-doc bodies before the shared parser removes them."""
+def _heredoc_inputs(command: str) -> dict[str, list[tuple[str, bool]]]:
+    """Retain closed script inputs for inspection at their consumer statement."""
+    documents: dict[str, list[tuple[str, bool]]] = {}
     lines = _collapse_shell_line_continuations(command).split("\n")
     index = 0
     quote = ""
@@ -765,27 +791,51 @@ def _heredoc_reason(command: str, copied: set[str], named: dict[str, str]) -> st
         quote = shell_quote_after(opener, quote)
         if not pending:
             continue
-        pipelines = _pipelines(opener)
-        segments = [segment for pipeline in pipelines for segment in pipeline]
-        owners = [segment for segment in segments for token in segment if token in {"<<", "<<-"}]
-        for body_index, (delimiter, strip_tabs, quoted) in enumerate(pending):
+        for delimiter, strip_tabs, quoted in pending:
             start = index
             while index < len(lines) and (lines[index].lstrip("\t") if strip_tabs else lines[index]) != delimiter:
                 index += 1
-            body = "\n".join(lines[start:index])
+            if index == len(lines):
+                break
+            body = "\n".join(line.lstrip("\t") if strip_tabs else line for line in lines[start:index])
             index += 1
-            owner = owners[body_index] if body_index < len(owners) else []
-            if _has_override(owner):
+            documents.setdefault(delimiter, []).append((body, quoted))
+    return documents
+
+
+def _heredoc_reason(
+    segment: list[str],
+    documents: dict[str, list[tuple[str, bool]]],
+    copied: set[str],
+    named: dict[str, str],
+    dumped_files: set[str],
+    depth: int,
+) -> str | None:
+    found = _command_at(segment)
+    if not found:
+        return None
+    cmd, args, _ = found
+    for index, token in enumerate(args[:-1]):
+        if token == "<<<" and cmd in SHELL_COMMANDS:
+            inputs = [(body, True) for body in _script_words(args, index + 1)]
+        elif token in {"<<", "<<-"}:
+            pending = documents.get(_strip_quotes(args[index + 1]), [])
+            inputs = [pending.pop(0)] if pending else []
+        else:
+            continue
+        for body, quoted in inputs:
+            if _has_override(segment):
                 continue
             if not quoted and _expanded_secret_var('"' + body + '"', copied, named):
                 return "expanding here-document can expose a secret value"
-            found = _command_at(owner)
-            if found:
-                cmd, args, _ = found
-                if _is_python_command(cmd) and (not args or "-" in args or "<<" in args or "<<-" in args):
-                    reason = _program_reason(cmd, body)
-                    if reason:
-                        return reason
+            if cmd in SHELL_COMMANDS:
+                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
+            elif _is_python_command(cmd):
+                reason = _program_reason(cmd, body)
+            else:
+                reason = None
+            if reason:
+                return reason
     return None
 
 
@@ -808,30 +858,6 @@ def _worker_env_reason(seg: list[str]) -> str | None:
                 and any(_strip_quotes(candidate) == WORKER_ENV_COMMAND for candidate in args[index + 2 :])
             ):
                 return "`python -m scripts.session_supervisor worker-env` can print environment values"
-    return None
-
-
-def _display_file_reason(pipeline: list[list[str]], seg_index: int, copied: set[str]) -> str | None:
-    command = _command_at(pipeline[seg_index])
-    if command is None:
-        return None
-    cmd, args, _idx = command
-    if cmd not in DISPLAY_FILE_COMMANDS:
-        return None
-    for index, arg in enumerate(args[:-1]):
-        operator = _strip_quotes(arg)
-        source = args[index + 1]
-        if operator == "<" and _is_known_secret_file(source) and not _has_safe_downstream(pipeline, seg_index):
-            return f"`{cmd}` would print a known secret file"
-        if operator == "<<<":
-            name = _expanded_secret_var(source, copied)
-            if name and not _has_safe_downstream(pipeline, seg_index):
-                return f"`{cmd}` would print ${name} from a here-string"
-    for arg in _file_args(cmd, args):
-        if _is_known_secret_file(arg):
-            if _has_safe_downstream(pipeline, seg_index):
-                return None
-            return f"`{cmd}` would print a known secret file"
     return None
 
 
@@ -930,21 +956,6 @@ def _grep_file_args(args: list[str]) -> list[str]:
     return positionals[1:] if len(positionals) > 1 else []
 
 
-def _grep_reason(pipeline: list[list[str]], seg_index: int) -> str | None:
-    command = _command_at(pipeline[seg_index])
-    if command is None:
-        return None
-    cmd, args, _idx = command
-    if cmd not in GREP_COMMANDS:
-        return None
-    if _grep_has_safe_flag(cmd, args) or _has_safe_downstream(pipeline, seg_index):
-        return None
-    for arg in _grep_file_args(args):
-        if _is_dotenv_secret_file(arg):
-            return f"`{cmd}` would print values from a secret file"
-    return None
-
-
 def _echo_secret_reason(seg: list[str], copied: set[str], named: dict[str, str]) -> str | None:
     command = _command_at(seg)
     if command is None:
@@ -999,34 +1010,45 @@ def _track_secret_copies(seg: list[str], copied: set[str], named: dict[str, str]
 
 
 def _danger_reason(
-    pipeline: list[list[str]], copied: set[str], named: dict[str, str], dumped_files: set[str]
+    pipeline: list[list[str]],
+    copied: set[str],
+    named: dict[str, str],
+    dumped_files: set[str],
+    documents: dict[str, list[tuple[str, bool]]],
+    substitutions: dict[str, tuple[str, str]],
+    depth: int,
 ) -> str | None:
-    if not pipeline or _has_override(pipeline[0]):
+    if not pipeline:
+        return None
+    if _has_override(pipeline[0]):
+        # Inputs still belong to this pipeline even when its policy is bypassed.
+        # Consume them so a later owner reusing a delimiter gets its own body.
+        for segment in pipeline:
+            for index, token in enumerate(segment[:-1]):
+                pending = documents.get(_strip_quotes(segment[index + 1]), [])
+                if token in {"<<", "<<-"} and pending:
+                    pending.pop(0)
         return None
 
-    reason = _env_dump_reason(pipeline, dumped_files)
+    reason = _env_dump_reason(pipeline, dumped_files, substitutions)
     if reason:
         return reason
 
     for i, segment in enumerate(pipeline):
-        found = _command_at(segment)
-        if found:
-            cmd, args, _ = found
-            readers = DISPLAY_FILE_COMMANDS | GREP_COMMANDS | {"strings", "tr", "xargs", "sed", "awk"}
-            if cmd in readers or _is_python_command(cmd):
-                for arg in args:
-                    path = _strip_quotes(arg)
-                    if re.fullmatch(r"/proc/(?:self|\$\$|[0-9]+)/environ", path):
-                        return "command can read environment values"
-                    if os.path.normpath(path) in dumped_files:
-                        return "command would display a redirected environment dump"
+        for token in segment:
+            for marker, (_, body) in substitutions.items():
+                if marker in token:
+                    reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
+                    if reason:
+                        return reason
+        reason = _sensitive_file_reason(pipeline, i, dumped_files)
+        if reason:
+            return reason
         reason = _inline_program_reason(segment, dumped_files)
         if reason:
             return reason
         for index, token in enumerate(segment[:-1]):
             source = segment[index + 1]
-            if token == "<" and _is_known_secret_file(source):
-                return "input redirection would read a known secret file"
             if token == "<<<" and _expanded_secret_var(source, copied, named):
                 found = _command_at(segment)
                 if found and found[0] != "read":
@@ -1034,17 +1056,64 @@ def _danger_reason(
         reason = _worker_env_reason(segment)
         if reason:
             return reason
-        reason = _display_file_reason(pipeline, i, copied)
-        if reason:
-            return reason
-        reason = _grep_reason(pipeline, i)
-        if reason:
-            return reason
         reason = _echo_secret_reason(segment, copied, named)
         if reason:
             return reason
         _track_secret_copies(segment, copied, named)
+        reason = _heredoc_reason(segment, documents, copied, named, dumped_files, depth)
+        if reason:
+            return reason
     return None
+
+
+def _sensitive_path(path: str) -> bool:
+    return _is_known_secret_file(path) or bool(re.fullmatch(r"/proc/[^/]+/environ", _strip_quotes(path)))
+
+
+def _non_printing_command(cmd: str, args: list[str]) -> bool:
+    if cmd in NON_PRINTING_COMMANDS:
+        return True
+    return cmd == "wc" and args in [["-c"], ["--bytes"], ["-l"], ["--lines"]]
+
+
+def _output_sink_safe(body: str) -> bool:
+    pipelines = _pipelines(body)
+    return bool(pipelines) and all(
+        (found := _command_at(segment)) is not None
+        and (_non_printing_command(found[0], _without_redirects(found[1])) or _is_safe_transform(segment))
+        for pipeline in pipelines
+        for segment in pipeline
+    )
+
+
+def _sensitive_file_reason(pipeline: list[list[str]], index: int, dumped_files: set[str]) -> str | None:
+    found = _command_at(pipeline[index])
+    if not found:
+        return None
+    cmd, args, _ = found
+    # Preserve the explicitly documented source-data-flow residual.
+    if cmd in {"source", "."}:
+        return None
+    # Echo/printf arguments are literal text, not file operands. Their input
+    # redirections still follow the sensitive-input policy below.
+    operands = (
+        [] if cmd in {"echo", "printf"} else _grep_file_args(args) if cmd in GREP_COMMANDS else _file_args(cmd, args)
+    )
+    operands += [args[i + 1] for i, token in enumerate(args[:-1]) if token in {"<", "<>"}]
+    # Named file operands (e.g. dd's if=) and long options carry the same path.
+    operands += [_strip_quotes(arg).split("=", 1)[1] for arg in args if "=" in arg and not _redirection_skip_count(arg)]
+    paths = [_strip_quotes(arg) for arg in operands]
+    sensitive = [path for path in paths if _sensitive_path(path) or os.path.normpath(path) in dumped_files]
+    if not sensitive:
+        return None
+    options = [arg for arg in _without_redirects(args) if arg not in sensitive]
+    if _non_printing_command(cmd, options) or _is_safe_transform([cmd, *options]):
+        return None
+    if cmd in GREP_COMMANDS and _grep_has_safe_flag(cmd, args):
+        return None
+    if cmd in DISPLAY_FILE_COMMANDS | GREP_COMMANDS and _has_safe_downstream(pipeline, index):
+        return None
+    return "command could expose contents of a sensitive file"
 
 
 def _substitution_spans(command: str, *, heredoc: bool = False) -> list[tuple[int, int, str]]:
@@ -1119,23 +1188,23 @@ def _eval_secret_source(args: list[str], copied: set[str], named: dict[str, str]
     return False
 
 
+def _script_words(args: list[str], index: int) -> list[str]:
+    """Decode adjacent quote fragments for shell and interpreter script words."""
+    if index >= len(args):
+        return []
+    try:
+        words = shlex.split("".join(args[index:]), posix=True)
+    except ValueError:
+        return [_strip_quotes(args[index])]
+    candidates = [words[0]] if words else []
+    first = _strip_quotes(args[index])
+    if first not in candidates:
+        candidates.append(first)
+    return candidates
+
+
 def _shell_script(args: list[str]) -> list[str]:
     """Extract the script operand of a shell -c invocation."""
-
-    def decode(index: int) -> list[str]:
-        if index >= len(args):
-            return []
-        # shlex in preservation mode separates adjacent quoted fragments.
-        # Bash concatenates them into one -c word before the child shell runs.
-        try:
-            words = shlex.split("".join(args[index:]), posix=True)
-        except ValueError:
-            return [_strip_quotes(args[index])]
-        candidates = [words[0]] if words else []
-        first = _strip_quotes(args[index])
-        if first not in candidates:
-            candidates.append(first)
-        return candidates
 
     i = 0
     while i < len(args):
@@ -1152,11 +1221,27 @@ def _shell_script(args: list[str]) -> list[str]:
         if option.startswith("-") and not option.startswith("--"):
             script_index = i + 1 + sum(flag in {"o", "O"} for flag in option[1:])
             if "c" in option[1:]:
-                return decode(script_index)
+                return _script_words(args, script_index)
             i = script_index
             continue
         break
     return []
+
+
+def _hide_substitutions(command: str) -> tuple[str, dict[str, tuple[str, str]]]:
+    """Keep each executable substitution attached to its containing statement."""
+    substitutions = {}
+    out = []
+    cursor = 0
+    for start, end, body in _substitution_spans(command):
+        marker = f"__GUARD_SUBSTITUTION_{len(substitutions)}__"
+        while marker in command:
+            marker += "_"
+        substitutions[marker] = ("`" if command[start] == "`" else command[start : start + 2], body)
+        out.extend((command[cursor:start], marker))
+        cursor = end
+    out.append(command[cursor:])
+    return "".join(out), substitutions
 
 
 def _scan_command(
@@ -1171,29 +1256,16 @@ def _scan_command(
         return "shell recursion limit reached while scanning for secret output"
     if named is None:
         named = {}
-    reason = _heredoc_reason(command, copied, named)
-    if reason:
-        return reason
+    documents = _heredoc_inputs(command)
     if dumped_files is None:
         # Files written by nested shells remain readable by their parent.
         dumped_files = set()
-    executable = _decode_ansi_c_quotes(preprocess_shell_command(command))
-    # Scan the complete text first: shlex may expose a separator inside a
-    # substitution as a top-level token, but Bash executes its whole body.
-    for body in _substitution_bodies(executable):
-        reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
-        if reason:
-            return reason
-    # _pipelines tokenizes and strips here-doc bodies itself. Passing the
-    # already decoded text would strip a second time and could turn an exotic
-    # delimiter into an identifier before its body is scanned.
-    for pipeline in _pipelines(command):
-        for segment in pipeline:
-            for body in _substitution_bodies(" ".join(segment)):
-                reason = _scan_command(body, set(copied), dict(named), depth=depth + 1, dumped_files=dumped_files)
-                if reason:
-                    return reason
-        reason = _danger_reason(pipeline, copied, named, dumped_files)
+    # Leave ANSI-C delimiters undecoded until tokenization, so the shared
+    # parser cannot strip an exotic here-doc on a second pass.
+    executable = preprocess_shell_command(command)
+    executable, substitutions = _hide_substitutions(executable)
+    for pipeline in _pipelines(executable):
+        reason = _danger_reason(pipeline, copied, named, dumped_files, documents, substitutions, depth)
         if reason:
             return reason
         for segment in pipeline:
@@ -1201,6 +1273,10 @@ def _scan_command(
             if found is None:
                 continue
             cmd, args, _ = found
+            # Restore substitution syntax for the dynamic-eval and -c checks.
+            for marker, (prefix, body) in substitutions.items():
+                spelling = prefix + body + ("`" if prefix.startswith("`") else ")")
+                args = [arg.replace(marker, spelling) for arg in args]
             if cmd == "__UNDECIDABLE_SECRET_COMMAND__":
                 return "shell command could not be parsed safely"
             if cmd == "eval" and args:

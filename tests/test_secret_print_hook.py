@@ -17,6 +17,26 @@ SENTINEL = "synthetic_adapter_value_91b8"
 NATIVE_ENV = {"PATH": "/usr/bin:/bin", "ARBITRARY_TOKEN": SENTINEL, "PYTHONDONTWRITEBYTECODE": "1"}
 
 
+@pytest.mark.parametrize("harness", HARNESS_NAMES)
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env > >(cat)",
+        "bash <<'EOF'\nprintenv\nEOF",
+        "export X=$ARBITRARY_TOKEN; cat <<EOF\n$X\nEOF",
+        "python -c 'import os; print(os.environ)'",
+        "base64 /proc/self/environ",
+    ],
+)
+def test_native_structural_dump_denials(harness, command, monkeypatch, capsys):
+    from scripts.agent_runtime import secret_print_hook as hook
+
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(event(harness, command))))
+    code = hook.main(["--harness", harness])
+    captured = capsys.readouterr()
+    assert_decision(harness, code, captured.out, captured.err, False)
+
+
 def event(harness, command):
     if harness == "cursor":
         return {"hook_event_name": "beforeShellExecution", "command": command}

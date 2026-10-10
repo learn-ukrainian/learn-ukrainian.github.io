@@ -855,3 +855,152 @@ def test_nested_dump_remains_visible_to_outer_shell(command):
     result = _subprocess_guard(command)
     assert result.returncode == 2
     assert SENTINEL not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env > >(cat)",
+        "printenv > >(tee /dev/tty)",
+        "env > >(base64)",
+        "env > >(wc -c; cat)",
+    ],
+)
+def test_output_substitution_dump_denied(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("consumer", ["bash", "sh", "zsh", "dash", "eval", "source", "."])
+@pytest.mark.parametrize("body", ["env", "printenv", "cat .env", "echo $ARBITRARY_TOKEN"])
+@pytest.mark.parametrize("redirect", ["<<'EOF'", "<<EOF", "<<<"])
+def test_shell_standard_input_denied(monkeypatch, consumer, body, redirect):
+    command = f"{consumer} <<< {shlex.quote(body)}" if redirect == "<<<" else f"{consumer} {redirect}\n{body}\nEOF"
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "prefix,body",
+    [
+        ("export X=$ARBITRARY_TOKEN;", "$X"),
+        ("name=ARBITRARY_TOKEN;", "${!name}"),
+        ("declare -n X=ARBITRARY_TOKEN;", "$X"),
+        ("export X=$ARBITRARY_TOKEN; Y=$X;", "$Y"),
+    ],
+)
+def test_expanding_heredoc_observes_prior_assignments(monkeypatch, prefix, body):
+    assert _run(monkeypatch, f"{prefix} cat <<EOF\n{body}\nEOF") == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "python -c 'import os; print(os.environ)'",
+        "python -c 'import os; print([*os.environ.values()])'",
+        "node -e 'console.log(process.env)'",
+        "node -e 'console.log(JSON.stringify(process.env))'",
+        "perl -e 'print %ENV'",
+        "ruby -e 'puts ENV.to_h'",
+        "ruby -e 'puts ENV.to_a'",
+        "ruby -e 'ENV.each { |k,v| puts v }'",
+        "ruby -e 'puts ENV.inspect'",
+        "python -c 'import os; print(os.en''viron)'",
+        "python -c 'import os; print(os.environ[\"ARBITRARY_''TOKEN\"])'",
+        "node -e 'console.log(process.en''v.ARBITRARY_TOKEN)'",
+        "python -c 'import os; print(os.environ.get(\"ARBITRARY_''TOKEN\"))'",
+    ],
+)
+def test_inline_environment_mapping_denied(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("path", ["/proc/self/environ", "/proc/$$/environ", "/proc/123/environ", ".env"])
+@pytest.mark.parametrize("reader", ["base64", "xxd", "od -An -tx1", "hexdump -C", "dd if=", "cut -c1-"])
+def test_sensitive_file_operand_denied(monkeypatch, path, reader):
+    separator = "" if reader.endswith("=") else " "
+    assert _run(monkeypatch, reader + separator + path) == 2
+
+
+@pytest.mark.parametrize("command", ["unknown-reader < .env", "unknown-reader < /proc/self/environ", "wc -L .env"])
+def test_sensitive_file_input_denied(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "declare -f",
+        "typeset -f",
+        "export -f",
+        "env > >(wc -c)",
+        "env > >(cut -d= -f1)",
+        "env > >(true)",
+        "echo ordinary > >(cat)",
+        "env > capture.txt",
+        "echo $PATH",
+        "compgen -v",
+        "bash <<'EOF'\necho ordinary\nEOF",
+        "sh <<EOF\ncat README.md\nEOF",
+        "bash <<<'echo $PATH'",
+        "cat <<'EOF'\nprintenv\nEOF",
+        "cat <<<'printenv'",
+        "X=ordinary; cat <<EOF\n$X\nEOF",
+        "name=PATH; cat <<EOF\n${!name}\nEOF",
+        "python -c 'import os; print(os.environ[\"PATH\"])'",
+        "python -c 'import os; print(os.environ.get(\"PATH\"))'",
+        "node -e 'console.log(process.env.PATH)'",
+        "node -e 'console.log(process.env[\"PATH\"])'",
+        "perl -e 'print $ENV{PATH}'",
+        "ruby -e 'puts ENV[\"PATH\"]'",
+        "python -c 'import os; print(os.environ[\"PA''TH\"])'",
+        "base64 README.md",
+        "xxd .env.example",
+        "dd if=README.md",
+        "cut -c1- notes.txt",
+        "test -f .env",
+        "[ -f .env ]",
+        "stat .env",
+        "ls .env",
+        "wc -c .env",
+        "file .env",
+        "wc -c < .env",
+        "stat /proc/self/environ",
+        "file /proc/self/environ",
+        "cut -d= -f1 .env",
+        "cut -d= -f1 < .env",
+        "sed 's/=.*//' .env",
+        "awk -F= '{print $1}' .env",
+        "cat .env | jq keys",
+        "grep TOKEN file",
+        "git log --grep=token",
+        'echo "set the token"',
+    ],
+)
+def test_structural_dump_rule_neighbors_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_later_substitution_does_not_preempt_earlier_denial(monkeypatch, capsys):
+    assert _run(monkeypatch, 'echo "$ARBITRARY_TOKEN"; echo $(cat .env)') == 2
+    assert "`echo` would print" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env > >(wc -c) > capture.txt; cat capture.txt",
+        "LEARN_UK_SECRETS_OK=1 cat <<'EOF'\nordinary\nEOF\ncat <<EOF\n$ARBITRARY_TOKEN\nEOF",
+    ],
+)
+def test_nested_input_owner_boundaries_denied(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "env > >(wc -c) > capture.txt",
+        "LEARN_UK_SECRETS_OK=1 cat <<'EOF'\nordinary\nEOF\ncat <<EOF\nordinary\nEOF",
+    ],
+)
+def test_nested_input_owner_neighbors_allowed(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
