@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -133,6 +134,37 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
     assert "not certified" in uncertified.stderr
     assert harness.returncode == 2
     assert "only --harness cursor-agent" in harness.stderr
+
+
+def test_cursor_launcher_pin_list_matches_python_admission() -> None:
+    from scripts.review.model_catalog import CURSOR_APPROVED_WIRE_PINS, apply_cursor_model_pins, cursor_pinned_models
+
+    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    function = re.search(r"launcher_cursor_model_certified\(\) \{(.*?)\n\}", core, re.DOTALL)
+    assert function is not None
+    case_arms = re.findall(r"^\s*(.*?)\) return 0 ;;", function[1], re.MULTILINE)
+    assert case_arms
+    shell_pins = {pin.replace("\\", "") for arm in case_arms for pin in arm.split("|")}
+    expected = CURSOR_APPROVED_WIRE_PINS | {apply_cursor_model_pins(pin) for pin in cursor_pinned_models()}
+    assert shell_pins == expected
+    # Execute the case arm as well as inspecting its declared pins.
+    for pin in sorted(expected):
+        result = subprocess.run(
+            ["bash", "-c", 'source "$1"; launcher_cursor_model_certified "$2"', "pin-check",
+             str(REPO / "scripts/lib/launcher_core.sh"), pin],
+            capture_output=True, text=True, check=False, timeout=10,
+        )
+        assert result.returncode == 0, (pin, result.stderr)
+        assert apply_cursor_model_pins(pin) == pin
+
+
+@pytest.mark.parametrize("model", ["auto", "grok-4.7-fast", "cursor-unknown"])
+def test_cursor_driver_refusal_restores_full_model_trailer(model: str) -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model", model)
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "never Auto, Fast or a previous generation" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize("model", ["grok-4.6", "grok-4.6[context=500k,reasoning_effort=high]"])

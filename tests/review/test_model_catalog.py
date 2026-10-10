@@ -103,6 +103,35 @@ def approved_review_baseline(baseline):
 REVIEW_CAPACITY_BASELINE = approved_review_baseline(BASELINE)
 GEMINI_OVERLAY_PATH = CAPACITY_FIXTURE / "routing-10073.json.gz"
 GEMINI_OVERLAY = json.loads(gzip.decompress(GEMINI_OVERLAY_PATH.read_bytes()))
+def approved_cursor_trailer_baseline(baseline):
+    """#10273 AC-04 changes only the two frozen Cursor refusal trailers."""
+    launchers = deepcopy(baseline["launchers"])
+    for index, seat in ((41, "interactive session"), (46, "driver")):
+        old = f"not certified for the cursor {seat}; pin grok-4.7-high or composer-2.5.\n"
+        new = old.removesuffix(".\n") + "; never Auto, Fast or a previous generation.\n"
+        assert launchers[index]["stderr"].endswith(old)
+        launchers[index]["stderr"] = launchers[index]["stderr"].removesuffix(old) + new
+    return {**baseline, "launchers": launchers}
+
+
+
+
+def test_cursor_trailer_revision_preserves_all_other_frozen_receipts():
+    revised = approved_cursor_trailer_baseline(BASELINE)
+    assert {key: value for key, value in revised.items() if key != "launchers"} == {
+        key: value for key, value in BASELINE.items() if key != "launchers"
+    }
+    changed = [index for index, (old, new) in enumerate(zip(BASELINE["launchers"], revised["launchers"], strict=True))
+               if old != new]
+    assert changed == [41, 46]
+    for index in changed:
+        old, new = BASELINE["launchers"][index], revised["launchers"][index]
+        assert {key: value for key, value in old.items() if key != "stderr"} == {
+            key: value for key, value in new.items() if key != "stderr"
+        }
+        assert new["stderr"] == old["stderr"].removesuffix(".\n") + "; never Auto, Fast or a previous generation.\n"
+
+
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
 
@@ -121,9 +150,11 @@ def approved_launcher_canary_baseline(baseline):
 
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_launcher_canary_baseline({
-    **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-})
+APPROVED_BASELINE = approved_cursor_trailer_baseline(
+    approved_launcher_canary_baseline({
+        **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    })
+)
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 
@@ -639,9 +670,11 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_launcher_canary_baseline({
-        **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    })
+    assert actual == approved_cursor_trailer_baseline(
+        approved_launcher_canary_baseline({
+            **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+        })
+    )
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

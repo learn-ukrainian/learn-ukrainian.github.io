@@ -807,12 +807,12 @@ except ModelCatalogError as exc:
     print(str(exc), file=sys.stderr)
     sys.exit(4)
 ' "$LC_ROOT" "$LC_MODEL")"; then
-    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
   LC_MODEL="$normalized"
   if ! launcher_cursor_model_certified "$LC_MODEL"; then
-    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5."
+    launcher_error "CURSOR_MODEL_NOT_APPROVED: model '$LC_MODEL' is not certified for the $seat; pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation."
     exit 4
   fi
 }

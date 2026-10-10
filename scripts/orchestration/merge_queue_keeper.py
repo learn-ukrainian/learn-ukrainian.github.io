@@ -28,6 +28,7 @@ from scripts.opsec.prepublish import (
     publication_cli,
 )
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
+from scripts.publish import recovery
 from scripts.publish.github import Request, request_run
 
 FLOOR = 500
@@ -250,8 +251,8 @@ class GitHub:
             return None
         return False
 
-    def enqueue(self, number: int, head: str) -> None:
-        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head))
+    def enqueue(self, number: int, head: str, *, recovery_attempt: bool = False) -> None:
+        self.call(Request("pr-merge", repo=self.repository, number=number, match_head=head, recovery=recovery_attempt))
 
     def dequeue(self, node_id: str) -> None:
         data = self.json(Request("pr-dequeue", repo=self.repository, node_id=node_id))
@@ -433,10 +434,10 @@ def _requeue_hold(
     drop_key: str, drops: int, grants: dict[str, dict[str, Any]] | None, previous: Mapping[str, Any]
 ) -> str | None:
     """Why the gate keeps an ejected head out of the queue, or None to let it through."""
+    if drop_key in previous.get("requeued", {}):
+        return recovery.spent_reason({"action": "re-enqueue (legacy)", "at": previous["requeued"][drop_key]})
     if drop_key in previous.get("shared_pass", {}):
         return None
-    if drop_key in previous.get("requeued", {}):
-        return "requeue-spent"
     if drop_key in previous.get("undiagnosed", {}):
         return "requeue-unknown"
     if drops < 1:
@@ -456,16 +457,34 @@ def _gate_hold(
     drops: int,
     grants: dict[str, dict[str, Any]] | None,
     previous: Mapping[str, Any],
+    comments: list[dict[str, Any]],
+    login: str,
 ) -> str | None:
     """Gate reason for a not-queued head that is otherwise ready; None when it may be enqueued."""
     drop_key = f"{number}:{head}"
+    needs_recovery = drops >= 1 or drop_key in previous.get("shared_pass", {})
+    if needs_recovery:
+        try:
+            prior = recovery.first_attempt(
+                recovery.ledger_path(gh.root), normalize_repository(gh.repository), number, head
+            )
+        except PublishBlocked as exc:
+            raise KeeperError(str(exc)) from exc
+        if prior:
+            return recovery.spent_reason(prior)
     if (
         grants is not None
         and drop_key in previous.get("squash_revoked", {})
         and gh.squash_blocked(number, head) is not False
     ):
         return "squash-text-blocked"
-    return _requeue_hold(drop_key, drops, grants, previous)
+    hold = _requeue_hold(drop_key, drops, grants, previous)
+    if hold is None and needs_recovery:
+        try:
+            recovery.evidence_from_comments(comments, number, head, authenticated_login=login)
+        except PublishBlocked as exc:
+            return str(exc)
+    return hold
 
 
 def _min_interval(environ: Mapping[str, str]) -> int:
@@ -722,6 +741,9 @@ def run(
                 detail, failed_jobs = _drop_detail(gh, number, head, previous["undiagnosed"][prior_drop_key])
                 if detail:
                     previous["undiagnosed"].pop(prior_drop_key)
+                    previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
+                    if dropped_head == head:
+                        drops = previous["drops"][drop_key]
                     shared_count = previous.setdefault("shared_requeues", {})
                     shared = _shared_failure(previous.get("failures"), failed_jobs, number)
                     if shared and int(shared_count.get(prior_drop_key, 0)) < SHARED_FAILURE_REQUEUE_LIMIT:
@@ -730,12 +752,8 @@ def run(
                         detail += (
                             " The same jobs also failed merge_group runs of "
                             + ", ".join(f"#{n}" for n in shared)
-                            + "; not counted against this head."
+                            + "; any re-enqueue uses this head's shared recovery allowance."
                         )
-                    else:
-                        previous["drops"][prior_drop_key] = int(previous["drops"].get(prior_drop_key, 0)) + 1
-                        if dropped_head == head:
-                            drops = previous["drops"][drop_key]
                 else:
                     detail = " Queue removal diagnosis unknown."
             except KeeperError:
@@ -743,7 +761,7 @@ def run(
         reason = _reason(pr, verdict, checks, drops, queue_enabled)
         if reason == "ready" and queued is not True and not armed:
             try:
-                reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+                reason = _gate_hold(gh, number, head, drops, grants, previous, comments, login) or reason
             except KeeperError:
                 reason = "requeue-unknown"
         rollup = [
@@ -827,7 +845,7 @@ def run(
                     else "fresh-evidence-unknown"
                 )
                 if reason == "ready" and queued is not True and not armed:
-                    reason = _gate_hold(gh, number, head, drops, grants, previous) or reason
+                    reason = _gate_hold(gh, number, head, drops, grants, previous, current_comments, login) or reason
             if queued is True or armed:
                 fresh = bool(
                     current
@@ -872,7 +890,10 @@ def run(
                 elif reason != "ready":
                     lines.append(f"#{number} held: {reason}")
             elif reason == "ready":
-                gh.enqueue(number, head)
+                if drops >= 1 or drop_key in previous.get("shared_pass", {}):
+                    gh.enqueue(number, head, recovery_attempt=True)
+                else:
+                    gh.enqueue(number, head)
                 if not gh.membership(number):
                     after_enqueue = gh.current(number)
                     if _auto_merge_armed(after_enqueue):
