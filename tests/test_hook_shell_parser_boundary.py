@@ -4,8 +4,10 @@ Only the two canonical shared modules are exempt. The fixture is a multiset of
 (path, enclosing symbol, normalized AST identity), not a line-number allowlist:
 formatting is harmless, duplicate sites and replacements are regressions, and
 removals require a corresponding fixture shrink. Never regenerate it to admit
-new parser sites. Scope resolution follows Python lexical binding rules; this
-is a static architecture check, not an evaluator of arbitrary Python code.
+new parser sites. The inventory includes directly imported scripts helpers and
+their package initializers. Scope resolution follows Python lexical binding
+rules; this is a static architecture check, not an evaluator of arbitrary Python
+code or a transitive scan of every dependency of those helpers.
 """
 
 from __future__ import annotations
@@ -13,6 +15,7 @@ from __future__ import annotations
 import ast
 import copy
 import hashlib
+import inspect
 import json
 import shlex
 from collections import Counter
@@ -83,6 +86,13 @@ class _Reference:
     name: str
 
 
+@dataclass(frozen=True)
+class _StringPrefix:
+    """Known text before the first dynamic part of a command string."""
+
+    text: str
+
+
 @dataclass
 class _Scope:
     symbol: str
@@ -125,7 +135,7 @@ def _position(node: ast.AST, *, end: bool = False) -> int:
 
 
 def _resolve(node: ast.AST, scope: _Scope, seen: frozenset = frozenset()) -> object:
-    """Resolve import/assignment aliases and literal argv without executing code."""
+    """Resolve aliases and known command prefixes without executing code."""
     if isinstance(node, ast.Name):
         return scope.lookup(node.id, _position(node), seen)
     if isinstance(node, ast.Attribute):
@@ -140,6 +150,19 @@ def _resolve(node: ast.AST, scope: _Scope, seen: frozenset = frozenset()) -> obj
         left, right = _resolve(node.left, scope, seen), _resolve(node.right, scope, seen)
         if isinstance(left, (str, list)) and type(left) is type(right):
             return left + right
+        if isinstance(left, list):
+            return [*left, None]  # Unknown tail cannot change the known argv prefix.
+        if isinstance(left, _StringPrefix):
+            return left
+        if isinstance(left, str):
+            return _StringPrefix(left + right.text if isinstance(right, _StringPrefix) else left)
+    if isinstance(node, ast.JoinedStr):
+        text = ""
+        for part in node.values:
+            if not isinstance(part, ast.Constant) or not isinstance(part.value, str):
+                return _StringPrefix(text)
+            text += part.value
+        return text
     if isinstance(node, ast.Call):
         func = _resolve(node.func, scope, seen)
         if func in (_Reference("getattr"), _Reference("builtins.getattr")) and len(node.args) >= 2:
@@ -289,7 +312,7 @@ def _shared_name(name: str) -> tuple[str, str] | None:
 
 
 def _parser_reference(name: str) -> bool:
-    return name in {"shlex.split", "shlex.shlex"} or name.split(".")[0] in PARSER_LIBRARIES
+    return name in {"shlex.split", "shlex.shlex", "shlex.*"} or name.split(".")[0] in PARSER_LIBRARIES
 
 
 def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
@@ -306,21 +329,31 @@ def _syntax_argv(node: ast.Call, scope: _Scope) -> list[str] | None:
     argv = _resolve(expression, scope)
     if func.name == "asyncio.create_subprocess_exec":
         argv = [_resolve(arg, scope) for arg in node.args]
-    if isinstance(argv, str):
+    if isinstance(argv, (str, _StringPrefix)):
+        partial = isinstance(argv, _StringPrefix)
+        text = argv.text if partial else argv
         try:
-            argv = shlex.split(argv)
+            # Appending a sentinel models the unknown text touching the final
+            # token, including escaped/quoted whitespace. Discard that token.
+            argv = shlex.split(text + "__dynamic__")[:-1] if partial else shlex.split(text)
         except ValueError:
             return None
-    if not isinstance(argv, list) or not argv or not all(isinstance(arg, str) for arg in argv):
+    if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
         return None
     if Path(argv[0]).name not in {"bash", "sh"}:
         return None
-    for option in argv[1:]:
-        if option in {"--", "-c"} or not option.startswith("-"):
+    for index, option in enumerate(argv[1:], 1):
+        if not isinstance(option, str) or option in {"--", "-c"} or not option.startswith("-"):
             break
         if option == "--noexec" or (not option.startswith("--") and "n" in option[1:]):
-            return argv
+            return argv[: index + 1]
     return None
+
+
+def _ast_identity(node: ast.AST) -> str:
+    """Keep the original frozen spelling on Python 3.12 and newer releases."""
+    kwargs = {"show_empty": True} if "show_empty" in inspect.signature(ast.dump).parameters else {}
+    return ast.dump(node, include_attributes=False, **kwargs)
 
 
 class _Normalize(ast.NodeTransformer):
@@ -380,7 +413,7 @@ def _scan(source: str, path: str) -> tuple[list[dict[str, str]], list[str]]:
                     context = parent if isinstance(parent, ast.Call) and parent.func is node else node
                     # Normalize a fresh AST so the lexical-scope map stays intact.
                     normalized = _Normalize(scope).visit(copy.deepcopy(context))
-                    identity = ast.dump(normalized, include_attributes=False)
+                    identity = _ast_identity(normalized)
                     record(node, "reference", identity)
                 shared = _shared_name(value.name)
                 if shared and not shared[1] and not boundary:
@@ -402,14 +435,65 @@ def _scan(source: str, path: str) -> tuple[list[dict[str, str]], list[str]]:
                 if argv:
                     normalized = _Normalize(scope).visit(copy.deepcopy(node))
                     record(
-                        node, "syntax-check", json.dumps(argv) + ":" + ast.dump(normalized, include_attributes=False)
+                        node, "syntax-check", json.dumps(argv) + ":" + _ast_identity(normalized)
                     )
     return sites, sorted(set(violations))
 
 
 def _hook_files(root: Path) -> list[Path]:
+    """Enumerate hook files and scripts modules they import, without executing imports."""
     roots = [*root.glob("agents_extensions/*/hooks"), root / "scripts/hooks"]
-    return sorted({path for directory in roots for path in directory.rglob("*.py")})
+    hooks = {path for directory in roots for path in directory.rglob("*.py")}
+    files = set(hooks)
+    for path in hooks:
+        files.update(_script_imports(path.read_text(encoding="utf-8"), path, root))
+    return sorted(files)
+
+
+def _script_imports(source: str, path: Path, root: Path) -> set[Path]:
+    """Resolve local module files and package initializers for scripts imports."""
+    tree = ast.parse(source, filename=str(path))
+    scopes = _Scopes(tree)
+    files: set[Path] = set()
+
+    def add_module(name: str, *, required: bool = True) -> None:
+        parts = name.split(".")
+        if parts[0] != "scripts":
+            return
+        target = root.joinpath(*parts)
+        module = target.with_suffix(".py")
+        if module.is_file():
+            files.add(module)
+        elif not target.is_dir():
+            if required:
+                raise FileNotFoundError(f"{path.relative_to(root)}: unresolved scripts import: {name}")
+            return  # A from-import member can be an exported name rather than a module.
+        for index in range(1, len(parts) + 1):
+            initializer = root.joinpath(*parts[:index], "__init__.py")
+            if initializer.is_file():
+                files.add(initializer)
+
+    for node, scope in scopes.by_node.items():
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                add_module(alias.name)
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            if node.level:
+                package = path.parent.relative_to(root).parts
+                module = ".".join((*package[: len(package) - node.level + 1], *filter(None, (module,))))
+            add_module(module)
+            for alias in node.names:
+                if alias.name != "*":
+                    add_module(f"{module}.{alias.name}", required=False)
+        elif isinstance(node, ast.Call) and _resolve(node.func, scope) in (
+            _Reference("__import__"),
+            _Reference("importlib.import_module"),
+        ):
+            value = _resolve(node, scope)
+            if isinstance(value, _Reference):
+                add_module(value.name)
+    return files
 
 
 def _assert_boundary(sites: list[dict[str, str]], violations: list[str], baseline: list[dict[str, str]]) -> None:
@@ -473,6 +557,92 @@ def test_new_parser_site_fails(source: str) -> None:
     assert sites
     with pytest.raises(AssertionError, match="New/replaced sites"):
         _assert_boundary(sites, violations, [])
+
+
+@pytest.mark.parametrize("use", ["", "split(command)", "shlex(command)"])
+def test_shlex_star_import_fails(use: str) -> None:
+    sites, violations = _scan(f"from shlex import *\n{use}", HOOK)
+    assert any(site["site"] == "import:shlex.*" for site in sites)
+    with pytest.raises(AssertionError, match="New/replaced sites"):
+        _assert_boundary(sites, violations, [])
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "import subprocess\nsubprocess.run(['bash', '-n', path])",
+        "import subprocess\nsubprocess.run(['bash', '-n'] + [path])",
+        "import subprocess\nsubprocess.run(['bash', '-n'] + paths)",
+        "import subprocess\nsubprocess.run(('bash', '-n', path))",
+        "import subprocess\nsubprocess.run(['bash', '-n', *paths])",
+        "import subprocess\nsubprocess.run('bash -n ' + path)",
+        "import subprocess\nsubprocess.run(f'bash -n {path}')",
+        "import subprocess\nsubprocess.run(f'bash -n {path!r}')",
+        "import subprocess\nsubprocess.run('bash ' + '-n ' + path)",
+        "from subprocess import check_output as run\nargv = ['sh', '-nv', path]\nrun(args=argv)",
+        "import os\nos.system('sh --noexec ' + path)",
+        "import os\nos.popen(f'/bin/sh -xn {path}')",
+        "import asyncio\nasyncio.create_subprocess_exec('bash', '-n', path)",
+        "import asyncio\nasyncio.create_subprocess_shell(f'bash -n {path}')",
+        "import subprocess\ncmd = 'bash -n ' + path\nsubprocess.run(cmd)",
+    ],
+)
+def test_syntax_check_with_dynamic_tail_fails(source: str) -> None:
+    sites, violations = _scan(source, HOOK)
+    assert len(sites) == 1 and sites[0]["site"].startswith("syntax-check:")
+    with pytest.raises(AssertionError, match="New/replaced sites"):
+        _assert_boundary(sites, violations, [])
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "[shell, '-n', path]",
+        "['bash', flag, '-n', path]",
+        "['bash', '-c', path, '-n']",
+        "['bash', '--', '-n', path]",
+        "['bash', path, '-n']",
+        "['bash', *flags, '-n']",
+        "'bash -' + flag",
+        "f'bash -{flag} {path}'",
+        "f'{shell} -n {path}'",
+        "'bash -n' + suffix",
+        "'bash -n\\\\ ' + suffix",
+        "f'bash -c {path} -n'",
+    ],
+)
+def test_syntax_check_requires_a_known_executable_and_option_prefix(command: str) -> None:
+    _assert_boundary(*_scan(f"import subprocess\nsubprocess.run({command})", HOOK), [])
+
+
+@pytest.mark.parametrize("supports_show_empty", [False, True])
+def test_site_identity_preserves_empty_fields_across_dump_versions(
+    monkeypatch: pytest.MonkeyPatch, supports_show_empty: bool
+) -> None:
+    legacy_dump = ast.dump
+    canonical_kwargs = {"show_empty": True} if "show_empty" in inspect.signature(legacy_dump).parameters else {}
+    source = "import shlex\nshlex.split(words[start:], posix=True)"
+    baseline, _ = _scan(source, HOOK)
+
+    def old_dump(node, *, include_attributes=False):
+        return legacy_dump(node, include_attributes=include_attributes, **canonical_kwargs)
+
+    def modern_dump(node, *, include_attributes=False, show_empty=False):
+        assert show_empty is True
+        return legacy_dump(node, include_attributes=include_attributes, **canonical_kwargs)
+
+    monkeypatch.setattr(ast, "dump", modern_dump if supports_show_empty else old_dump)
+    _assert_boundary(*_scan(source, HOOK), baseline)
+    assert "keywords=[]" in _ast_identity(ast.parse("parse()", mode="eval"))
+    # The existing six identities and their frozen digests stay byte-identical.
+    fixture = json.loads(BASELINE.read_text(encoding="utf-8"))
+    sites = []
+    for path in sorted({entry["path"] for entry in fixture}):
+        found, errors = _scan((ROOT / path).read_text(encoding="utf-8"), path)
+        assert not errors
+        sites.extend(found)
+    _assert_frozen_baseline(fixture)
+    _assert_boundary(sites, [], fixture)
 
 
 @pytest.mark.parametrize(
@@ -581,6 +751,90 @@ def test_scan_recurses_into_both_hook_roots(tmp_path: Path) -> None:
     assert [path.relative_to(tmp_path).as_posix() for path in _hook_files(tmp_path)] == paths
     with pytest.raises(SyntaxError):
         _scan("def broken(", HOOK)
+
+
+@pytest.mark.parametrize(
+    "hook_import",
+    [
+        "import scripts.helpers.parser as parser",
+        "import scripts.helpers.parser",
+        "from scripts.helpers import parser as parse",
+        "from scripts.helpers.parser import parse",
+        "from scripts.helpers.parser import *",
+        "from scripts import helpers",
+        "import importlib\nimportlib.import_module('scripts.helpers.parser')",
+        "from importlib import import_module as load\nload('scripts.helpers.parser')",
+        "__import__('scripts.helpers.parser')",
+    ],
+)
+def test_scan_includes_imported_scripts_and_package_initializers(tmp_path: Path, hook_import: str) -> None:
+    sources = {
+        HOOK: hook_import,
+        "scripts/__init__.py": "",
+        "scripts/helpers/__init__.py": "import shlex\nshlex.split(command)",
+        "scripts/helpers/parser.py": "import shlex\ndef parse(cmd):\n    return shlex.split(cmd)",
+    }
+    for path, source in {**sources, "scripts/unimported.py": "import bashlex"}.items():
+        target = tmp_path / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(source, encoding="utf-8")
+    files = _hook_files(tmp_path)
+    expected = set(sources)
+    if hook_import == "from scripts import helpers":
+        expected.remove("scripts/helpers/parser.py")
+    assert {path.relative_to(tmp_path).as_posix() for path in files} == expected
+    sites, violations = [], []
+    for path in files:
+        found, errors = _scan(path.read_text(encoding="utf-8"), path.relative_to(tmp_path).as_posix())
+        sites.extend(found)
+        violations.extend(errors)
+    assert {site["path"] for site in sites} == expected - {HOOK, "scripts/__init__.py"}
+    with pytest.raises(AssertionError, match="New/replaced sites"):
+        _assert_boundary(sites, violations, [])
+
+
+def test_scan_resolves_relative_scripts_imports_and_namespace_packages(tmp_path: Path) -> None:
+    hook = tmp_path / "scripts/hooks/example.py"
+    helper = tmp_path / "scripts/helpers/parser.py"
+    for path, source in [(hook, "from ..helpers import parser"), (helper, "import bashlex")]:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(source, encoding="utf-8")
+    assert _hook_files(tmp_path) == sorted([hook, helper])
+    with pytest.raises(AssertionError, match="New/replaced sites"):
+        _assert_boundary(*_scan(helper.read_text(encoding="utf-8"), "scripts/helpers/parser.py"), [])
+
+
+@pytest.mark.parametrize(
+    ("source", "error"),
+    [
+        ("import scripts.missing", FileNotFoundError),
+        ("from scripts.missing import parse", FileNotFoundError),
+    ],
+)
+def test_import_inventory_fails_closed_on_missing_modules(tmp_path: Path, source: str, error: type) -> None:
+    hook = tmp_path / HOOK
+    hook.parent.mkdir(parents=True)
+    hook.write_text(source, encoding="utf-8")
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    (scripts / "helper.py").write_text("def broken(", encoding="utf-8")
+    with pytest.raises(error):
+        _hook_files(tmp_path)
+
+
+def test_imported_helper_must_be_readable_and_parseable(tmp_path: Path) -> None:
+    hook = tmp_path / HOOK
+    hook.parent.mkdir(parents=True)
+    hook.write_text("import scripts.helper", encoding="utf-8")
+    helper = tmp_path / "scripts/helper.py"
+    helper.parent.mkdir()
+    for source, error in [(b"def broken(", SyntaxError), (b"\xff", UnicodeDecodeError)]:
+        helper.write_bytes(source)
+        files = _hook_files(tmp_path)
+        assert helper in files
+        with pytest.raises(error):
+            for path in files:
+                _scan(path.read_text(encoding="utf-8"), path.relative_to(tmp_path).as_posix())
 
 
 @pytest.mark.parametrize(
