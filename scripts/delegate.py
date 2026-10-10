@@ -191,15 +191,20 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
-
 # Resolve repo root from this file's location so we work from any cwd —
 # then hop to the primary checkout so worktree copies behave identically.
+# The insert precedes the first first-party import. ``python scripts/delegate.py``
+# puts ``scripts/`` on sys.path[0] and omits the repo root, so ``scripts.*`` is
+# not importable until then. The route key is a string constant, imported
+# through ``scripts.agent_runtime.routes`` so a clean ``import scripts.delegate``
+# does not need ``scripts/`` on sys.path (#10397). Adapters and tests keep the
+# bare ``agent_runtime`` module identity.
 _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.agent_runtime import bounded_advisory
+from scripts.agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
