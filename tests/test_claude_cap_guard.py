@@ -234,7 +234,9 @@ def test_weekly_reader_checks_claude_freshness(
     (
         ("2029-12-31T23:45:00Z", "95"),
         ("2029-12-31T23:44:59Z", "unknown"),
-        ("2030-01-01T00:00:01Z", "unknown"),
+        ("2030-01-01T00:00:01Z", "95"),
+        ("2030-01-01T00:01:00Z", "95"),
+        ("2030-01-01T00:01:01Z", "unknown"),
         ("2030-01-01T00:00:00", "unknown"),
         ("invalid", "unknown"),
         (None, "unknown"),
@@ -305,7 +307,17 @@ def test_weekly_reader_override_cannot_hide_request_failure(
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
 @pytest.mark.parametrize("pct", ("50", "85", "unknown"))
-@pytest.mark.parametrize("forwarded", (("--model", "opus"), ("--model=opus",), ("--model=",), ("--model",)))
+@pytest.mark.parametrize(
+    "forwarded",
+    (
+        ("--model", "opus"), ("--model=opus",), ("--model=",), ("--model",),
+        ("-m", "opus"), ("-mopus",), ("-m=opus",), ("-m",),
+        ("--m", "opus"), ("--m=opus",),
+        ("--mo", "opus"), ("--mo=opus",),
+        ("--mod", "opus"), ("--mod=opus",),
+        ("--mode", "opus"), ("--mode=opus",),
+    ),
+)
 def test_claude_refuses_forwarded_model_selectors(name: str, pct: str, forwarded: tuple[str, ...], launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
     result = launch_with_usage(pct, *args, "--", *forwarded, name=name, env={"LU_CLAUDE_CAP_OVERRIDE": "1"})
@@ -313,6 +325,29 @@ def test_claude_refuses_forwarded_model_selectors(name: str, pct: str, forwarded
     assert "model selectors must use the launcher --model" in result.stderr
     assert "would exec" not in result.stdout
     assert "switched from Opus" not in result.stderr
+
+
+@pytest.mark.parametrize("forwarded", (("-m", "opus"), ("--mod", "opus"), ("--mod=opus",)))
+@pytest.mark.parametrize("separator", ((), ("--",)))
+@pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
+def test_driver_rejects_forwarded_selectors_above_opus_limit(
+    forwarded: tuple[str, ...], separator: tuple[str, ...], model: tuple[str, ...], launch_with_usage,
+) -> None:
+    result = launch_with_usage("85", "--epic", "infra", *model, *separator, *forwarded)
+    assert result.returncode == 2, result.stderr
+    assert "model selectors must use the launcher --model" in result.stderr
+    assert "would exec" not in result.stdout
+
+
+@pytest.mark.rules_core_absent
+@pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
+@pytest.mark.parametrize("model", ((), ("--model", "sonnet"), ("--model", "opus")))
+def test_unknown_usage_warns_for_every_model(name: str, model: tuple[str, ...], launch_with_usage) -> None:
+    args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
+    result = launch_with_usage("unknown", *args, *model, name=name)
+    assert result.returncode == 0, result.stderr
+    assert result.stderr.count("WARNING Claude weekly usage unknown") == 1
+    assert "would exec" in result.stdout
 
 
 @pytest.mark.rules_core_absent

@@ -31,7 +31,7 @@ def main() -> None:
         if generated_at.tzinfo is None:
             raise ValueError("missing timezone")
         response_age = (datetime.now(UTC) - generated_at).total_seconds()
-        if not 0 <= response_age <= 900 or claude.get("stale") or bar.get("stale"):
+        if not -60 <= response_age <= 900 or claude.get("stale") or bar.get("stale"):
             raise ValueError("stale")
         pct = bar.get("weekly_used_pct")
         if pct is None:

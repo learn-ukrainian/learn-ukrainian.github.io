@@ -1359,7 +1359,7 @@ launcher_claude_cap_guard() {
   local arg
   for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
     case "$arg" in
-      --model|--model=*)
+      -m*|--m|--m=*|--mo|--mo=*|--mod|--mod=*|--mode|--mode=*|--model|--model=*)
         launcher_error "Claude model selectors must use the launcher --model, not forwarded provider arguments."
         exit 2
         ;;
@@ -1379,14 +1379,14 @@ launcher_claude_cap_guard() {
       exit 7
     fi
   fi
-  case "$LC_MODEL" in
-    *opus*) ;;
-    *) return 0 ;;
-  esac
   if [ "$pct" = unknown ]; then
     printf 'launcher: WARNING Claude weekly usage unknown (Monitor unreadable); cap guard not applied\n' >&2
     return 0
   fi
+  case "$LC_MODEL" in
+    *opus*) ;;
+    *) return 0 ;;
+  esac
   if awk -v p="$pct" -v t="$opus_max" 'BEGIN{exit !(p>=t)}'; then
     if [ "${LU_CLAUDE_CAP_OVERRIDE:-0}" = 1 ]; then
       printf 'launcher: WARNING Claude weekly %s%% >= Opus limit %s%%; LU_CLAUDE_CAP_OVERRIDE=1 set by the operator\n' "$pct" "$opus_max" >&2
