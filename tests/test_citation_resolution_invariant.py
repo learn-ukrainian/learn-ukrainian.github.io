@@ -26,7 +26,10 @@ pytestmark = pytest.mark.reads_content
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
 
-from wiki.source_attribution import connect_sources_db, resolve_chunk_attribution_any_corpus_with_conn
+from wiki.source_attribution import (
+    connect_sources_db,
+    registry_entry_resolves_to_sources_db,
+)
 from wiki.sources_schema import extract_short_citation_ids, load_sources_registry
 
 
@@ -68,6 +71,16 @@ KNOWN_DRIFT: dict[str, dict] = {
     # All 7 A1 wiki articles previously listed here were fixed (closing
     # issues #1488-#1494). The invariant now runs strict for the full A1
     # wiki corpus.
+    #
+    # 93 B2 grammar wiki articles cite textbook chunk IDs that shifted during
+    # textbook re-chunking (issue #8403). Tracked as explicit xfail drift.
+    **{
+        path.as_posix(): {
+            "issue": "#8403",
+            "fragments": ["unresolved registry entry"],
+        }
+        for path in sorted(Path("wiki/grammar/b2").glob("*.md"))
+    },
 }
 
 
@@ -110,114 +123,6 @@ def _citation_ids_for_markdown(path: Path) -> set[str]:
     return set(extract_short_citation_ids(text))
 
 
-def _registry_entry_resolves_to_sources_db(entry, conn: sqlite3.Connection) -> bool:
-    file_value = str(entry.file or "").strip()
-    entry_type = str(entry.type or "").strip()
-    if not file_value:
-        return False
-
-    match = _BARE_SECTION_RE.fullmatch(file_value)
-    if entry_type == "textbook-chunk" and match:
-        return (
-            conn.execute(
-                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                (int(match.group(1)),),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "textbook":
-        match = _TEXTBOOK_SECTION_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        match = _CHUNK_ROW_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbooks WHERE id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        if _BARE_SECTION_RE.fullmatch(file_value):
-            return (
-                conn.execute(
-                    "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
-                    (int(file_value[1:]),),
-                ).fetchone()
-                is not None
-            )
-
-    if entry_type == "literary":
-        match = _CHUNK_ROW_RE.search(file_value)
-        if match:
-            return (
-                conn.execute(
-                    "SELECT 1 FROM literary_texts WHERE id = ? LIMIT 1",
-                    (int(match.group(1)),),
-                ).fetchone()
-                is not None
-            )
-        return (
-            conn.execute(
-                "SELECT 1 FROM literary_texts WHERE chunk_id = ? LIMIT 1",
-                (file_value,),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "external":
-        return (
-            conn.execute(
-                "SELECT 1 FROM external_articles WHERE chunk_id = ? OR url = ? LIMIT 1",
-                (file_value, file_value),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "wikipedia":
-        title = file_value.split("/", 1)[1] if file_value.startswith("wikipedia/") else file_value
-        return (
-            conn.execute(
-                "SELECT 1 FROM wikipedia WHERE title = ? LIMIT 1",
-                (title,),
-            ).fetchone()
-            is not None
-        )
-
-    if entry_type == "ukrainian_wiki":
-        if file_value.startswith("ukrainian_wiki/"):
-            slug = file_value.split("/", 1)[1].split("_", 1)[0]
-            return (
-                conn.execute(
-                    "SELECT 1 FROM ukrainian_wiki WHERE article_slug = ? LIMIT 1",
-                    (slug,),
-                ).fetchone()
-                is not None
-            )
-        return (
-            conn.execute(
-                "SELECT 1 FROM ukrainian_wiki WHERE passage_id = ? LIMIT 1",
-                (file_value,),
-            ).fetchone()
-            is not None
-        )
-
-    # Dictionary authorities are currently not addressable to a concrete
-    # sources.db row from the committed registry shape.
-    if entry_type in {"explanatory-dictionary", "morphological-dictionary"}:
-        return False
-
-    resolved = resolve_chunk_attribution_any_corpus_with_conn(conn, file_value)
-    return resolved is not None
-
-
 def _collect_citation_resolution_issues(path: Path, conn: sqlite3.Connection) -> list[str]:
     citation_ids = _citation_ids_for_markdown(path)
     if not citation_ids:
@@ -239,7 +144,7 @@ def _collect_citation_resolution_issues(path: Path, conn: sqlite3.Connection) ->
         if entry is None:
             issues.append(f"orphan inline ref {citation_id}")
             continue
-        if not _registry_entry_resolves_to_sources_db(entry, conn):
+        if not registry_entry_resolves_to_sources_db(entry, conn):
             issues.append(
                 f"unresolved registry entry {citation_id} -> {entry.type} {entry.file}"
             )

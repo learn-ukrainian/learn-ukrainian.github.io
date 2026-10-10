@@ -434,3 +434,141 @@ def connect_sources_db() -> SQLiteConnection:
     conn = _open_readonly(_effective_db_path())
     conn.row_factory = sqlite3.Row
     return conn
+
+
+_INVARIANT_TEXTBOOK_SECTION_RE = re.compile(r"_s(\d+)$")
+_INVARIANT_CHUNK_ROW_RE = re.compile(r"_c(\d+)$")
+_INVARIANT_BARE_SECTION_RE = re.compile(r"^S(\d+)$")
+
+
+def registry_entry_resolves_to_sources_db(entry: object, conn: SQLiteConnection) -> bool:
+    """Return True if a sources registry entry resolves to a row in sources.db."""
+    file_value = str(getattr(entry, "file", None) or "").strip()
+    entry_type = str(getattr(entry, "type", None) or "").strip()
+    if not file_value:
+        return False
+
+    if file_value.startswith(("http://", "https://")):
+        if "wikipedia.org" in file_value:
+            title = file_value.rstrip("/").rsplit("/", 1)[-1]
+            return (
+                conn.execute(
+                    "SELECT 1 FROM wikipedia WHERE title = ? OR url = ? LIMIT 1",
+                    (title, file_value),
+                ).fetchone()
+                is not None
+            )
+        return (
+            conn.execute(
+                "SELECT 1 FROM external_articles WHERE url = ? OR chunk_id = ? LIMIT 1",
+                (file_value, file_value),
+            ).fetchone()
+            is not None
+        )
+
+    match = _INVARIANT_BARE_SECTION_RE.fullmatch(file_value)
+    if entry_type == "textbook-chunk" and match:
+        return (
+            conn.execute(
+                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
+                (int(match.group(1)),),
+            ).fetchone()
+            is not None
+        )
+
+    if entry_type == "textbook":
+        if (
+            conn.execute(
+                "SELECT 1 FROM textbooks WHERE chunk_id = ? LIMIT 1",
+                (file_value,),
+            ).fetchone()
+            is not None
+        ):
+            return True
+        match = _INVARIANT_TEXTBOOK_SECTION_RE.search(file_value)
+        if match and (
+            conn.execute(
+                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
+                (int(match.group(1)),),
+            ).fetchone()
+            is not None
+        ):
+            return True
+        match = _INVARIANT_CHUNK_ROW_RE.search(file_value)
+        if match and (
+            conn.execute(
+                "SELECT 1 FROM textbooks WHERE id = ? LIMIT 1",
+                (int(match.group(1)),),
+            ).fetchone()
+            is not None
+        ):
+            return True
+        if _INVARIANT_BARE_SECTION_RE.fullmatch(file_value) and (
+            conn.execute(
+                "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
+                (int(file_value[1:]),),
+            ).fetchone()
+            is not None
+        ):
+            return True
+
+    if entry_type == "literary":
+        match = _INVARIANT_CHUNK_ROW_RE.search(file_value)
+        if match:
+            return (
+                conn.execute(
+                    "SELECT 1 FROM literary_texts WHERE id = ? LIMIT 1",
+                    (int(match.group(1)),),
+                ).fetchone()
+                is not None
+            )
+        return (
+            conn.execute(
+                "SELECT 1 FROM literary_texts WHERE chunk_id = ? LIMIT 1",
+                (file_value,),
+            ).fetchone()
+            is not None
+        )
+
+    if entry_type == "external":
+        return (
+            conn.execute(
+                "SELECT 1 FROM external_articles WHERE chunk_id = ? OR url = ? LIMIT 1",
+                (file_value, file_value),
+            ).fetchone()
+            is not None
+        )
+
+    if entry_type == "wikipedia":
+        title = file_value.split("/", 1)[1] if file_value.startswith("wikipedia/") else file_value
+        return (
+            conn.execute(
+                "SELECT 1 FROM wikipedia WHERE title = ? LIMIT 1",
+                (title,),
+            ).fetchone()
+            is not None
+        )
+
+    if entry_type == "ukrainian_wiki":
+        if file_value.startswith("ukrainian_wiki/"):
+            slug = file_value.split("/", 1)[1].split("_", 1)[0]
+            return (
+                conn.execute(
+                    "SELECT 1 FROM ukrainian_wiki WHERE article_slug = ? LIMIT 1",
+                    (slug,),
+                ).fetchone()
+                is not None
+            )
+        return (
+            conn.execute(
+                "SELECT 1 FROM ukrainian_wiki WHERE passage_id = ? LIMIT 1",
+                (file_value,),
+            ).fetchone()
+            is not None
+        )
+
+    if entry_type in {"explanatory-dictionary", "morphological-dictionary"}:
+        return False
+
+    resolved = resolve_chunk_attribution_any_corpus_with_conn(conn, file_value)
+    return resolved is not None
