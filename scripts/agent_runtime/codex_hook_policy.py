@@ -7,6 +7,9 @@ import argparse
 import concurrent.futures
 import json
 import os
+import re
+import shlex
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -178,6 +181,43 @@ def _result_code(results: list[GuardResult]) -> int:
     return next((result.returncode for result in normalized if result.returncode), 0)
 
 
+def _publication_command_code(payload: str, hooks_dir: Path) -> int:
+    """Admit only a literal, single gh call resolving to the tracked shim.
+
+    Codex cannot apply updatedInput. Shell composition and expansions cannot
+    establish that every publication uses the shim, so refuse those calls.
+    Other commands still go through the existing shared guards.
+    """
+    decoded = json.loads(payload)
+    command = decoded.get("tool_input", {}).get("command", "")
+    if not isinstance(command, str):
+        return 2
+    try:
+        words = shlex.split(command)
+    except ValueError:
+        print("Codex publication command cannot be parsed; blocking fail-closed.", file=sys.stderr)
+        return 2
+    # Also inspect quoted nested shell scripts and substitution fragments.
+    publication = any(Path(word).name == "gh" for word in words) or re.search(r"\bgh\b", command)
+    if not publication:
+        return 0
+    # Even apparently safe early calls cannot license a later PATH replacement,
+    # absolute executable, env -S script, pipe, subshell, or substitution.
+    safe = not any(char in command for char in ";&|()$`\n<>\\")
+    while words and words[0] in {"env", "/usr/bin/env", "command", "exec"}:
+        words.pop(0)
+        if words and words[0] == "--":
+            words.pop(0)
+    safe = safe and bool(words) and words[0] == "gh"
+    shim = hooks_dir.parents[2] / "scripts/agent_runtime/shims/gh"
+    resolved = shutil.which("gh")
+    safe = safe and resolved is not None and Path(resolved).resolve() == shim.resolve()
+    if not safe:
+        print("Codex publication command is not fully shim guarded; blocking fail-closed.", file=sys.stderr)
+        return 2
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--python-bin", type=Path, required=True)
@@ -195,6 +235,9 @@ def main() -> int:
         if venv_result.returncode:
             _emit(venv_result)
             return venv_result.returncode
+        publication_code = _publication_command_code(payload, args.hooks_dir)
+        if publication_code:
+            return publication_code
 
     local_specs = (*LOCAL_BASH_GUARDS, *REWRITE_BASH_GUARDS) if tool_name == "Bash" else ()
     local_results = _run_specs(

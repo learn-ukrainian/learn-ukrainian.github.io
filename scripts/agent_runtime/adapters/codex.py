@@ -78,25 +78,65 @@ class CodexReviewConfigError(ValueError):
     """A review's config provenance cannot establish its MCP boundary."""
 
 
-def _portable_hook_command(command: str, root: Path) -> str:
-    """Spell a tracked hook command the way Codex's shell resolves it.
+_HOOK_SOURCE_ENV = "LU_CODEX_HOOK_SOURCE"
+# Execute the very bytes checked, avoiding a second, raceable read of the entry.
+# -I prevents the session cwd/PYTHONPATH from supplying bootstrap imports.
+_HOOK_BOOTSTRAP = """import hashlib, os, sys
+from pathlib import Path
+try:
+    root = Path(sys.argv[1]).resolve(strict=True)
+    if root != Path(os.environ['LU_CODEX_HOOK_SOURCE']).resolve(strict=True):
+        raise ValueError('source mismatch')
+    entry = (root / sys.argv[2]).resolve(strict=True)
+    if not entry.is_relative_to(root):
+        raise ValueError('entry escape')
+    content = entry.read_bytes()
+    if hashlib.sha256(content).hexdigest() != sys.argv[3]:
+        raise ValueError('entry changed')
+except (OSError, ValueError, KeyError):
+    print('Codex worker PreToolUse entry verification failed', file=sys.stderr)
+    sys.exit(2)
+args = sys.argv[4:]
+if entry.suffix == '.sh':
+    os.execv('/bin/bash', ['bash', '-c', content.decode(), str(entry), *args])
+sys.argv = [str(entry), *args]
+exec(compile(content, str(entry), 'exec'), {'__name__': '__main__', '__file__': str(entry)})
+"""
 
-    Codex runs hook commands through a shell from the session's working
-    directory. Words under ``root`` become ``$(git rev-parse --show-toplevel)``
-    relative, matching ``agents_extensions/codex/hooks.json``, so the generated
-    TOML never embeds this checkout's absolute path. Any other absolute word
-    fails closed rather than leaking into the overlay.
+
+def _portable_hook_command(command: str, root: Path) -> str:
+    """Bind a tracked entry to the source checkout, never the session's Git root.
+
+    Checkout locations live only in the private launch environment. The public
+    command contains a relative entry and its tracked content digest.
     """
-    words = []
-    for word in shlex.split(command):
-        if not word.startswith("/"):
-            words.append(shlex.quote(word))
-            continue
-        path = Path(word)
-        if not path.is_relative_to(root):
-            raise RuntimeError("Codex worker PreToolUse guard has an unportable path")
-        words.append(f'"$(git rev-parse --show-toplevel)/{path.relative_to(root).as_posix()}"')
-    return " ".join(words)
+    try:
+        root = root.resolve(strict=True)
+        words = shlex.split(command)
+        if words and words[0] in {"bash", "/bin/bash"}:
+            words.pop(0)
+        entry = Path(words.pop(0)).resolve(strict=True)
+        if not entry.is_relative_to(root):
+            raise ValueError("entry escape")
+        relative = entry.relative_to(root).as_posix()
+        tracked = subprocess.run(
+            ["/usr/bin/git", "-C", str(root), "show", f"HEAD:{relative}"],
+            env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+            capture_output=True, check=True, timeout=2,
+        ).stdout
+        if entry.read_bytes() != tracked:
+            raise ValueError("entry differs from tracked content")
+    except (OSError, ValueError, IndexError, subprocess.SubprocessError) as exc:
+        raise RuntimeError("Codex worker PreToolUse guard has an unportable or untracked path") from exc
+    git = '/usr/bin/env -i /usr/bin/git -C "${LU_CODEX_HOOK_SOURCE:?}"'
+    return (
+        f'root="$({git} rev-parse --show-toplevel)" && '
+        f'common="$({git} rev-parse --path-format=absolute --git-common-dir)" && '
+        '"${common%/*}/.venv/bin/python" -I -c '
+        + shlex.quote(_HOOK_BOOTSTRAP)
+        + ' "$root" '
+        + " ".join(shlex.quote(word) for word in [relative, hashlib.sha256(tracked).hexdigest(), *words])
+    )
 
 
 def _worker_hook_flags() -> list[str]:
@@ -121,6 +161,7 @@ def _worker_hook_flags() -> list[str]:
             expected = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
             if hook["command"] != expected:
                 raise RuntimeError("Codex worker PreToolUse runner has an unsupported form")
+            hook["command"] = _portable_hook_command(f"bash {shlex.quote(str(entry))} pre-tool-use", root)
 
     # Reuse the tracked shared-settings reader. Keep the deterministic Codex
     # runner, adding shared guards it does not already execute (#10305).
@@ -585,6 +626,8 @@ class CodexAdapter:
         cmd.append("-")  # Read prompt from stdin.
 
         env_overrides: dict[str, str] = {}
+        if not tc.get("review_isolation"):
+            env_overrides[_HOOK_SOURCE_ENV] = str(Path(__file__).resolve().parents[3])
         if _prompt_names_sources_mcp(prompt) and not _argv_can_call_sources_mcp(cmd):
             raise ValueError(
                 "CodexAdapter: this mode cannot call mcp__sources__* "

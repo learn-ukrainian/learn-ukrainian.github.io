@@ -11,21 +11,14 @@ set -u
 MODE="${1:-}"
 PAYLOAD=$(cat)
 
-SCRIPT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+SCRIPT_ROOT="$(cd "$(dirname "$0")/../.." && pwd -P)"
 HOOKS_DIR="$SCRIPT_ROOT/agents_extensions/shared/hooks"
 
-payload_cwd=$(printf '%s' "$PAYLOAD" | jq -r '
-  .tool_input.workdir
-  // .tool_input.cwd
-  // .tool_input.working_directory
-  // .cwd
-  // empty
-' 2>/dev/null)
-[ -n "$payload_cwd" ] || payload_cwd="$SCRIPT_ROOT"
-
-COMMON_DIR=$(git -C "$payload_cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
-  || COMMON_DIR=$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
-  || COMMON_DIR=""
+# The payload's checkout describes the attempted operation, never the runtime
+# interpreter. Resolve it solely from the verified source entry, with no
+# inherited Git overrides from the session.
+COMMON_DIR=$(/usr/bin/env -i /usr/bin/git -C "$SCRIPT_ROOT" \
+  rev-parse --path-format=absolute --git-common-dir 2>/dev/null) || COMMON_DIR=""
 
 if [ -n "$COMMON_DIR" ]; then
   CANONICAL_ROOT="$(dirname "$COMMON_DIR")"

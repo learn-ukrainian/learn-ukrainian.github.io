@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime import codex_hook_policy
-from scripts.agent_runtime.adapters.codex import CodexAdapter
+from scripts.agent_runtime.adapters.codex import CodexAdapter, _portable_hook_command
 from scripts.agent_runtime.codex_hook_policy import (
     ENFORCE_VENV_TIMEOUT,
     LOCAL_BASH_GUARDS,
@@ -132,7 +132,9 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
         assert str(REPO_ROOT) not in override
         assert str(PRIMARY_ROOT) not in override
         runner = groups[0]["hooks"][0]
-        assert runner["command"] == RUNNER_COMMAND
+        assert "git -C" in runner["command"]
+        assert "LU_CODEX_HOOK_SOURCE" in runner["command"]
+        assert "scripts/agent_runtime/codex_hook_entry.sh" in runner["command"]
         assert groups[0]["matcher"] == _manifest()["hooks"]["PreToolUse"][0]["matcher"]
         assert runner["timeout"] == 45
         # Freeze the independent shared-settings denominator, including the
@@ -146,7 +148,8 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
         }
         actual = {name for name, _ in (*LOCAL_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)}
         actual.add("enforce-venv.sh")
-        actual.update(Path(shlex.split(hook["command"])[-1]).name for group in groups[1:] for hook in group["hooks"])
+        actual.update(name for name in expected for group in groups[1:] for hook in group["hooks"]
+                      if name in hook["command"])
         assert actual == expected
         for tool in ("Write", "apply_patch", "Bash"):
             payload = {
@@ -155,10 +158,11 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
                                "command": f"echo forbidden > {shlex.quote(str(primary / 'README.md'))}",
                                "patch": f"*** Begin Patch\n*** Update File: {primary / 'README.md'}\n@@\n-hook test\n+forbidden\n*** End Patch"},
             }
-            # Codex runs hook commands through a shell; the checkout that holds
-            # the tracked entry supplies the rev-parse root, not the fixture.
+            # Use the actual session cwd and launch environment. Forcing the
+            # source cwd would hide session-checkout substitution (#10305).
             completed = subprocess.run(
-                ["bash", "-c", runner["command"]], cwd=REPO_ROOT, input=json.dumps(payload),
+                ["bash", "-c", runner["command"]], cwd=worktree,
+                env={**os.environ, **plan.env_overrides}, input=json.dumps(payload),
                 text=True, capture_output=True, check=False, timeout=30,
             )
             assert completed.returncode == 2, completed.stderr
@@ -183,14 +187,15 @@ def test_worker_appended_shared_guards_execute_through_shell(tmp_path):
         )
         groups = tomllib.loads(override)["hooks"]["PreToolUse"]
         appended = [hook for group in groups[1:] for hook in group["hooks"]]
-        assert {Path(shlex.split(hook["command"])[-1]).name for hook in appended} >= {"guard-public-github-text.py"}
+        assert any("guard-public-github-text.py" in hook["command"] for hook in appended)
         payload = {
             "hook_event_name": "PreToolUse", "cwd": str(worktree), "tool_name": "Bash",
             "tool_input": {"command": "echo hello"},
         }
         for hook in appended:
             completed = subprocess.run(
-                ["bash", "-c", hook["command"]], cwd=REPO_ROOT, input=json.dumps(payload),
+                ["bash", "-c", hook["command"]], cwd=worktree,
+                env={**os.environ, **plan.env_overrides}, input=json.dumps(payload),
                 text=True, capture_output=True, check=False, timeout=30,
             )
             assert completed.returncode == 0, (hook["command"], completed.stderr)
@@ -653,7 +658,7 @@ def test_codex_entry_rejects_bare_python_from_worktree_with_copyable_command(
     assert completed.returncode == 2
     assert completed.stdout == ""
     assert "Unqualified interpreter blocked" in completed.stderr
-    assert f'{primary}/.venv/bin/python -c "print(1)"' in completed.stderr
+    assert f'{PRIMARY_ROOT}/.venv/bin/python -c "print(1)"' in completed.stderr
 
 
 @pytest.mark.parametrize("shim_first", [False, True])
@@ -685,7 +690,7 @@ def test_codex_entry_blocks_gh_rewrite_unless_shim_already_first(tmp_path: Path,
         assert completed.stdout == ""
     else:
         assert completed.returncode == 2
-        assert "guard-public-github-text.py wrote unexpected stdout" in completed.stderr
+        assert "blocking fail-closed" in completed.stderr
 
 
 def test_claude_bare_python_is_rejected_without_rewrite_output(tmp_path: Path) -> None:
@@ -1053,8 +1058,139 @@ def test_portable_hook_command_rewrites_tracked_words_and_refuses_foreign_paths(
     from scripts.agent_runtime.adapters.codex import _portable_hook_command
 
     tracked = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "guard-public-github-text.py"
-    assert _portable_hook_command(shlex.quote(str(tracked)), REPO_ROOT) == (
-        '"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"'
-    )
-    with pytest.raises(RuntimeError, match="unportable path"):
+    command = _portable_hook_command(shlex.quote(str(tracked)), REPO_ROOT)
+    assert "agents_extensions/shared/hooks/guard-public-github-text.py" in command
+    assert "LU_CODEX_HOOK_SOURCE" in command
+    assert str(REPO_ROOT) not in command
+    with pytest.raises(RuntimeError, match="unportable"):
         _portable_hook_command(shlex.quote(str(tmp_path / "guard.py")), REPO_ROOT)
+
+
+def test_worker_rejects_substitute_entry_in_session_checkout(tmp_path):
+    primary, session = _make_linked_worktree(tmp_path)
+    substitute = session / 'scripts/agent_runtime/codex_hook_entry.sh'
+    substitute.parent.mkdir(parents=True)
+    marker = tmp_path / 'substitute-ran'
+    substitute.write_text(f'printf substitute > {shlex.quote(str(marker))}\nexit 0\n')
+    plan = CodexAdapter().build_invocation(
+        prompt='test', mode='workspace-write', cwd=session, model=None, task_id=None,
+        session_id=None, tool_config=None,
+    )
+    try:
+        override = next(plan.cmd[i + 1] for i, arg in enumerate(plan.cmd[:-1])
+                        if arg == '-c' and plan.cmd[i + 1].startswith('hooks.PreToolUse='))
+        command = tomllib.loads(override)['hooks']['PreToolUse'][0]['hooks'][0]['command']
+        payload = {'tool_name': 'Write', 'cwd': str(session),
+                   'tool_input': {'file_path': str(primary / 'README.md')}}
+        completed = subprocess.run(
+            ['bash', '-c', command], cwd=session, env={**os.environ, **plan.env_overrides},
+            input=json.dumps(payload), text=True, capture_output=True, timeout=2,
+        )
+        assert completed.returncode == 2, completed.stderr
+        assert not marker.exists()
+        assert 'guard-primary-checkout-write' in completed.stderr
+    finally:
+        plan.output_file.unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize('escape', ['parent-traversal', 'symlink'])
+def test_portable_hook_rejects_resolved_escape(tmp_path, escape):
+    root = tmp_path / 'source'
+    root.mkdir()
+    outside = tmp_path / 'outside.sh'
+    outside.write_text('exit 0\n')
+    if escape == 'parent-traversal':
+        entry = root / '..' / 'outside.sh'
+    else:
+        entry = root / 'entry.sh'
+        entry.symlink_to(outside)
+    with pytest.raises(RuntimeError, match='unportable'):
+        _portable_hook_command(f'bash {shlex.quote(str(entry))}', root)
+
+
+@pytest.mark.parametrize('defect', ['untracked', 'modified'])
+def test_portable_hook_rejects_untracked_content(tmp_path, defect):
+    source, _ = _make_linked_worktree(tmp_path)
+    entry = source / 'entry.sh'
+    entry.write_text('exit 0\n')
+    if defect == 'modified':
+        _run(['git', 'add', 'entry.sh'], cwd=source)
+        _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
+        entry.write_text('exit 1\n')
+    with pytest.raises(RuntimeError, match='untracked'):
+        _portable_hook_command(f'bash {shlex.quote(str(entry))}', source)
+
+
+@pytest.mark.parametrize('replacement', ['changed-content', 'symlink-escape'])
+def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement):
+    source, session = _make_linked_worktree(tmp_path)
+    entry = source / 'entry.sh'
+    entry.write_text('exit 0\n')
+    _run(['git', 'add', 'entry.sh'], cwd=source)
+    _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
+    command = _portable_hook_command(f'bash {shlex.quote(str(entry))}', source)
+    marker = tmp_path / 'replacement-ran'
+    substitute = f'printf ran > {shlex.quote(str(marker))}\nexit 0\n'
+    if replacement == 'changed-content':
+        entry.write_text(substitute)
+    else:
+        outside = tmp_path / 'outside.sh'
+        outside.write_text(substitute)
+        entry.unlink()
+        entry.symlink_to(outside)
+    # A same-relative-path substitute in the session must never be selected.
+    (session / 'entry.sh').write_text(substitute)
+    result = subprocess.run(
+        ['bash', '-c', command], cwd=session,
+        env={**os.environ, 'LU_CODEX_HOOK_SOURCE': str(source), 'GIT_WORK_TREE': str(session)},
+        input='{}', text=True, capture_output=True, timeout=2,
+    )
+    assert result.returncode == 2, result.stderr
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize('shape', [
+    'gh --version; PATH={stub_dir} gh issue create --body safe',
+    'gh --version && PATH={stub_dir} gh issue create --body safe',
+    'false || PATH={stub_dir} gh issue create --body safe',
+    'gh --version | {stub} issue create --body safe',
+    '(PATH={stub_dir} gh issue create --body safe)',
+    'echo $({stub} issue create --body safe)',
+    'echo `{stub} issue create --body safe`',
+    'PATH={stub_dir} gh issue create --body safe',
+    '{stub} issue create --body safe',
+    'env PATH={stub_dir} gh issue create --body safe',
+    '/usr/bin/env PATH={stub_dir} gh issue create --body safe',
+    'command {stub} issue create --body safe',
+    'exec {stub} issue create --body safe',
+    "bash -c 'PATH={stub_dir} gh issue create --body safe'",
+    "env -S '{stub} issue create --body safe'",
+])
+def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
+    marker = tmp_path / 'published'
+    stub = tmp_path / 'gh'
+    stub.write_text(f'#!/bin/bash\nprintf published > {shlex.quote(str(marker))}\n')
+    stub.chmod(0o755)
+    command = shape.format(stub_dir=shlex.quote(str(tmp_path)), stub=shlex.quote(str(stub)))
+    payload = {'tool_name': 'Bash', 'cwd': str(REPO_ROOT), 'tool_input': {'command': command}}
+    env = {**os.environ, 'PATH': str(REPO_ROOT / 'scripts/agent_runtime/shims') + os.pathsep + os.environ['PATH']}
+    result = subprocess.run(
+        ['bash', str(ENTRY), 'pre-tool-use'], cwd=REPO_ROOT, env=env,
+        input=json.dumps(payload), text=True, capture_output=True, timeout=2,
+    )
+    # Offline publication stub: if admission succeeds, prove whether it ran.
+    if result.returncode == 0:
+        subprocess.run(['bash', '-c', command], env=env, capture_output=True, timeout=10)
+    assert result.returncode == 2, result.stderr
+    assert not marker.exists()
+    assert 'not fully shim guarded' in result.stderr
+
+
+@pytest.mark.parametrize('wrapper', ['', 'env ', '/usr/bin/env ', 'command ', 'command -- ', 'exec '])
+def test_codex_admits_single_resolved_shim_call(monkeypatch, wrapper):
+    shim = REPO_ROOT / 'scripts/agent_runtime/shims'
+    monkeypatch.setenv('PATH', str(shim) + os.pathsep + os.environ['PATH'])
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({'tool_input': {'command': wrapper + 'gh --version'}}),
+        REPO_ROOT / 'agents_extensions/shared/hooks',
+    ) == 0
