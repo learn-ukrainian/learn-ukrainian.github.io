@@ -280,6 +280,7 @@ def test_queued_with_cf_at_head_is_kept(tmp_path: Path) -> None:
 
 def test_queued_without_cf_at_head_is_revoked(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = []
     path = tmp_path / "state.json"
     lines, failed = keeper.run(fake, path, apply=True)
     assert not failed
@@ -316,6 +317,7 @@ def test_queued_cf_only_at_old_head_is_revoked(tmp_path: Path) -> None:
 
 def test_armed_without_cf_stays_held(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(autoMergeRequest={"enabledAt": "2026-09-23T13:00:00Z"}))
+    fake.comments_rows = []
     lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
     assert not failed
     assert "disarm" not in mutations(fake)
@@ -327,12 +329,13 @@ def test_armed_without_cf_stays_held(tmp_path: Path) -> None:
 def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path, permission: str | None) -> None:
     path = tmp_path / "state.json"
     queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.comments_rows = []
     lines, failed = keeper.run(queued, path, apply=True)
     assert not failed and "#42 revoked: needs-CF" in lines
     assert json.loads(path.read_text())["drops"][f"42:{HEAD_A}"] == 1
 
     approved = FakeGitHub()
-    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    approved.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"), recovery_comment()]
     gate = None
     if permission == "absent":
         gate = _gate(tmp_path, {})
@@ -352,6 +355,7 @@ def test_approval_after_needs_cf_removal_obeys_requeue_permission(tmp_path: Path
 def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> None:
     path = tmp_path / "state.json"
     queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.comments_rows = []
     queued.check_rows = checks(conclusion="failure")
     lines, failed = keeper.run(queued, path, apply=True)
     assert not failed
@@ -370,6 +374,7 @@ def test_red_ci_with_missing_cf_still_records_the_removal(tmp_path: Path) -> Non
 def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp_path: Path) -> None:
     path = tmp_path / "state.json"
     queued = FakeGitHub(pr(isInMergeQueue=True))
+    queued.comments_rows = []
 
     def fail_comment(number: int, body: str) -> None:
         raise keeper.KeeperError("comment failed")
@@ -384,6 +389,7 @@ def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp
     assert "42" not in state["queued"]
 
     again = FakeGitHub()
+    again.comments_rows = []
     lines, failed = keeper.run(again, path, apply=True)
     assert not failed
     assert "enqueue" not in mutations(again)
@@ -399,6 +405,7 @@ def test_needs_cf_comment_is_retried_after_the_pull_request_leaves_the_queue(tmp
 
 def test_queued_missing_cf_dry_run_reports_only(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = []
     path = tmp_path / "state.json"
     lines, failed = keeper.run(fake, path, apply=False)
     assert not failed
