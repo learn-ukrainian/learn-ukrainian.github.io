@@ -172,6 +172,55 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
         return (yield)
 
 
+# Credential-shaped names inherited from the developer or worker environment.
+# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``. Comparison is
+# case-insensitive. ``monkeypatch.delenv`` restores each name after the test,
+# and a test that calls ``monkeypatch.setenv`` on the same name still sees
+# its own value.
+_CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
+
+
+def _is_credential_shaped_env_name(name: str) -> bool:
+    """True when ``name`` ends with a credential suffix, ignoring case."""
+    return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
+
+
+def _suite_owned_credential_env() -> tuple[tuple[str, str], ...]:
+    """Values this process published and tests read back.
+
+    Both names match a credential suffix. They are not inherited secrets:
+    the cursor guard mints ``LU_TEST_CURSOR_SESSION_TOKEN`` at session start,
+    and ``tests/test_agent_monitor_router.py`` assigns ``AGENT_MONITOR_TOKEN``
+    at import. Put those published values back after the ambient strip so
+    those tests keep working. An inherited value of either name stays absent
+    unless the suite published one.
+    """
+    restores: list[tuple[str, str]] = []
+    tripwire = sys.modules.get("tests.cursor_exec_tripwire")
+    token = getattr(tripwire, "session_token", None) if tripwire is not None else None
+    if isinstance(token, str) and token:
+        restores.append(("LU_TEST_CURSOR_SESSION_TOKEN", token))
+    monitor = sys.modules.get("tests.test_agent_monitor_router")
+    monitor_token = getattr(monitor, "TEST_TOKEN", None) if monitor is not None else None
+    if isinstance(monitor_token, str) and monitor_token:
+        restores.append(("AGENT_MONITOR_TOKEN", monitor_token))
+    return tuple(restores)
+
+
+@pytest.fixture(autouse=True)
+def _strip_ambient_credential_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Hide inherited credential-shaped variables for one test.
+
+    A failing test must not print a developer or worker value whose name ends
+    with ``_API_KEY``, ``_TOKEN`` or ``_SECRET``.
+    """
+    for name in tuple(os.environ):
+        if _is_credential_shaped_env_name(name):
+            monkeypatch.delenv(name, raising=False)
+    for name, value in _suite_owned_credential_env():
+        monkeypatch.setenv(name, value)
+
+
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
     parts = Path(path).parts
     return len(parts) >= 3 and parts[-3:-1] == ("agent_runtime", "shims")
