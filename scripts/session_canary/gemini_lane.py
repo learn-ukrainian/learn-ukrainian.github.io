@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.driver_blockers import USAGE_RULE
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
 
@@ -80,6 +81,7 @@ def _cold_start_body(
 2. Mint a canary: `.venv/bin/python -m scripts.session_canary.gemini_lane mint --epic {epic} --stream {stream_id}`.
 3. Score from memory. PASS auto-hydrates; FAIL-HANDOFF writes handback and closes the exact lease.
 4. Continue only when the hydration capsule has `execution_allowed: true`.
+5. {USAGE_RULE.replace("$SESSION_EPIC", epic)}
 """
 
 

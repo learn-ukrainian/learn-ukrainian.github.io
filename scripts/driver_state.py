@@ -62,6 +62,7 @@ if __package__ in (None, ""):
 
 from scripts.common.jsonl import jsonl_lines
 from scripts.common.task_store_paths import tasks_dir
+from scripts.driver_blockers import LEDGER_NAME, USAGE_RULE, show_summary
 
 STATE_ENV = "LU_DRIVER_STATE_FILE"
 STATE_NAME = "DRIVER-STATE.md"
@@ -81,9 +82,11 @@ POLICY = f"""## {POLICY_TITLE}
 - Ask the CTO only about deleting data, spending money, security or secrets, rule changes, or a true conflict between two operator rules. Post it through Fleet Comms and start the final message with `{ESCALATION_MARKER}`.
 - End every turn with the privately configured worker target met and a wake-up armed (a background `delegate.py wait` or the `schedule` tool), never with a question.
 """
+BLOCKER_POLICY_TITLE = "CTO blocker delta policy"
+BLOCKER_POLICY = f"## {BLOCKER_POLICY_TITLE}\n{USAGE_RULE}\n"
 # Preserve the former total envelope budget (state, policy and wrapper), but
 # apply it to the complete rendered message rather than truncating the state.
-MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + 600
+MAX_ENVELOPE_CHARS = MAX_INJECT_CHARS + len(POLICY) + len(BLOCKER_POLICY) + 600
 
 TEMPLATE = """# Driver state: {epic}
 
@@ -103,6 +106,7 @@ TEMPLATE = """# Driver state: {epic}
 - No secrets or deployment details in the public repo.
 
 {policy}
+{blocker_policy}
 ## Next step
 - <single next action>
 """
@@ -162,6 +166,18 @@ def _section(text: str, title: str) -> list[str]:
 def render_injection(text: str, path: Path) -> str:
     if POLICY_TITLE.lower() not in text.lower():
         text = text.rstrip() + "\n\n" + POLICY
+    tokens = MarkdownIt().parse(text)
+    lines = text.splitlines()
+    headings = {
+        tokens[index + 1].content
+        for index, token in enumerate(tokens)
+        if token.type == "heading_open"
+        and token.markup == "##"
+        and token.level == 0
+        and lines[token.map[0]].startswith("## ")
+    }
+    if BLOCKER_POLICY_TITLE not in headings:
+        text = text.rstrip() + "\n\n" + BLOCKER_POLICY
     message = (
         "PINNED DRIVER STATE (re-injected every model call; authoritative over any "
         "compacted summary). You are the driver for the epic below. Re-orient from it "
@@ -497,6 +513,7 @@ def cmd_whoami(path: Path | None) -> int:
         print("state: (no LU_DRIVER_STATE_FILE / SESSION_EPIC; not a driver session)")
         return 1
     print("state: (configured)")
+    print(show_summary(path.parent / LEDGER_NAME, epic))
     if not path.is_file():
         print("state file missing; create it with: init --epic <epic>")
         return 1
@@ -528,13 +545,13 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
 """,
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("whoami", help="Print epic, seat, goals and next step.")
+    sub.add_parser("whoami", help="Print epic, seat, goals, next step and CTO blocker baseline summary.")
     sub.add_parser("goals", help="Print the full pinned state file.")
     p_path = sub.add_parser("path", help="Print the state file path.")
     p_path.add_argument("--epic", help="Epic selector, for example infra (default: launcher environment).")
     p_init = sub.add_parser("init", help="Write a template state file for an epic.")
     p_init.add_argument("--epic", required=True, help="Epic selector to initialize, for example infra.")
-    p_init.add_argument("--force", action="store_true", help="Overwrite an existing file.")
+    p_init.add_argument("--force", action="store_true", help="Overwrite an existing file (default: false).")
     sub.add_parser("agy-hook", help="AGY PreInvocation hook: stdin payload -> injectSteps JSON.")
     sub.add_parser("agy-stop-hook", help="AGY Stop hook: continue when the turn ends against policy.")
     sub.add_parser("agy-pretool-hook", help="AGY PreToolUse hook: deny ask_question for drivers.")
@@ -586,7 +603,7 @@ Related: scripts/agy_hooks/driver_state_inject.sh; #10201, #10297.
             print(f"exists: {path} (use --force to overwrite)", file=sys.stderr)
             return 1
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY), encoding="utf-8")
+        path.write_text(TEMPLATE.format(epic=args.epic, policy=POLICY, blocker_policy=BLOCKER_POLICY), encoding="utf-8")
         print(path)
         return 0
     return 2

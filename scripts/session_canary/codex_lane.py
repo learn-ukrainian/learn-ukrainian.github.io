@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.driver_blockers import USAGE_RULE
 from scripts.session_canary import gemini_lane as _gemini_lane
 from scripts.session_canary import grok_lane as _gl
 from scripts.session_canary import handoff_select, shared_hydration
@@ -72,6 +73,7 @@ def _cold_start_body(
 5. Continue only when the hydration capsule has `execution_allowed: true`.
 6. Codex has no Monitor-equivalent background capability: use only a bounded manual watch.
 7. End on FAIL-HANDOFF or a `blocked` hydration capsule, never on compact count.
+8. {USAGE_RULE.replace("$SESSION_EPIC", epic)}
 """
 
 

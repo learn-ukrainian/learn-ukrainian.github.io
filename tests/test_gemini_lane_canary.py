@@ -14,9 +14,13 @@ def _allowed_capsule() -> dict[str, object]:
     return {"execution_allowed": True}
 
 
-def test_score_pass_hydrates_then_continues(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+def test_score_pass_hydrates_then_continues(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setattr(gemini_lane, "_with_gemini_handoffs", lambda function, args: 0)
-    monkeypatch.setattr(gemini_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule())
+    monkeypatch.setattr(
+        gemini_lane.shared_hydration, "build_hydration_capsule", lambda stream, lane, **_: _allowed_capsule()
+    )
 
     assert gemini_lane.main(["score", "--epic", "harness", "--answers", "answers.json"]) == 0
     assert "hydration ready — continue" in capsys.readouterr().out
@@ -58,9 +62,7 @@ def test_score_closes_lease_when_post_pass_hydration_blocks(monkeypatch: pytest.
 def test_lease_environment_parser_accepts_launcher_quotes(tmp_path: Path) -> None:
     env_path = tmp_path / "session-lease.env"
     env_path.write_text(
-        "export SESSION_STREAM_PROCESS_ID=\"1234\"\n"
-        "export SESSION_STREAM_GENERATION='2'\n"
-        "unrelated=value\n",
+        "export SESSION_STREAM_PROCESS_ID=\"1234\"\nexport SESSION_STREAM_GENERATION='2'\nunrelated=value\n",
         encoding="utf-8",
     )
 
@@ -102,3 +104,15 @@ def test_bootstrap_uses_normalized_epic_for_default_stream_id(tmp_path: Path) ->
 
     infra_stream = stream_anchor_id("infra-harness", Path(__file__).resolve().parents[1])
     assert f"**Stream:** `{infra_stream}`" in board
+
+
+def test_cold_start_blocker_delta_policy():
+    from scripts.driver_blockers import USAGE_RULE
+    from scripts.session_canary import gemini_lane
+
+    body = gemini_lane._cold_start_body(
+        epic="infra", stream_id="epic:7919", handoff_rel="handoff.md", lease_summary="fixture", binding_line="fixture"
+    )
+    assert USAGE_RULE.replace("$SESSION_EPIC", "infra") in body
+    assert body.count("scripts.driver_blockers delta") == 1
+    assert body.count("scripts.driver_blockers record") == 1

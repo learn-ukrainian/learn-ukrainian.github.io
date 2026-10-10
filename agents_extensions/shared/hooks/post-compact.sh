@@ -142,6 +142,7 @@ source "$1" && launcher_selector_stream "$2"
         else
           BOUNDARY_RULE="Native Codex still owns compaction; continue only from the capsule's next_drive_boundary."
         fi
+        BOUNDARY_RULE="$BOUNDARY_RULE Put every owned blocker in --current with complete: true; run .venv/bin/python -m scripts.driver_blockers delta --epic ${SESSION_EPIC} --current blockers.json; post each item that is not UNCHANGED; if delta fails or the baseline is unknown, post everything currently blocking; after the post succeeds, record with the receipt and the exact posted body using .venv/bin/python -m scripts.driver_blockers record --epic ${SESSION_EPIC} --current blockers.json --receipt receipt.json --body-file posted.md --expect-generation N (N is the generation from delta)."
         CONTEXT="CODEX FLEET-DRIVER HYDRATION
 $HYDRATION
 Shadow diary: $DIARY_REL
