@@ -38,6 +38,7 @@ PRIMARY_ROOT = Path(
 HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
 ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
+RUNNER_COMMAND = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
 VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
 INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
 SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
@@ -126,8 +127,12 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
                    if arg in {"--enable", "--disable"} and plan.cmd[index + 1] == "hooks"]
         assert toggles == ["--enable"]
         assert "--dangerously-bypass-hook-trust" in plan.cmd
+        # The TOML overlay must never embed this checkout's absolute paths.
+        override = next(value for value in overrides if value.startswith("hooks.PreToolUse="))
+        assert str(REPO_ROOT) not in override
+        assert str(PRIMARY_ROOT) not in override
         runner = groups[0]["hooks"][0]
-        assert shlex.split(runner["command"]) == ["bash", str(ENTRY), "pre-tool-use"]
+        assert runner["command"] == RUNNER_COMMAND
         assert groups[0]["matcher"] == _manifest()["hooks"]["PreToolUse"][0]["matcher"]
         assert runner["timeout"] == 45
         # Freeze the independent shared-settings denominator, including the
@@ -150,8 +155,10 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
                                "command": f"echo forbidden > {shlex.quote(str(primary / 'README.md'))}",
                                "patch": f"*** Begin Patch\n*** Update File: {primary / 'README.md'}\n@@\n-hook test\n+forbidden\n*** End Patch"},
             }
+            # Codex runs hook commands through a shell; the checkout that holds
+            # the tracked entry supplies the rev-parse root, not the fixture.
             completed = subprocess.run(
-                shlex.split(runner["command"]), cwd=worktree, input=json.dumps(payload),
+                ["bash", "-c", runner["command"]], cwd=REPO_ROOT, input=json.dumps(payload),
                 text=True, capture_output=True, check=False, timeout=30,
             )
             assert completed.returncode == 2, completed.stderr
@@ -159,6 +166,37 @@ def test_worker_binds_tracked_guards_without_deployed_config(tmp_path, session_i
         assert (primary / "README.md").read_text() == "hook test\n"
     finally:
         plan.output_file.unlink()
+
+
+def test_worker_appended_shared_guards_execute_through_shell(tmp_path):
+    """Appended shared guards must resolve and run under Codex's shell, not exit 127."""
+    _, worktree = _make_linked_worktree(tmp_path)
+    plan = CodexAdapter().build_invocation(
+        prompt="test", mode="workspace-write", cwd=worktree, model=None, task_id=None,
+        session_id=None,
+        tool_config={"codex_home_override": str(tmp_path / "private-home"), "disable_features": ["hooks"]},
+    )
+    try:
+        override = next(
+            plan.cmd[index + 1] for index, arg in enumerate(plan.cmd[:-1])
+            if arg == "-c" and plan.cmd[index + 1].startswith("hooks.PreToolUse=")
+        )
+        groups = tomllib.loads(override)["hooks"]["PreToolUse"]
+        appended = [hook for group in groups[1:] for hook in group["hooks"]]
+        assert {Path(shlex.split(hook["command"])[-1]).name for hook in appended} >= {"guard-public-github-text.py"}
+        payload = {
+            "hook_event_name": "PreToolUse", "cwd": str(worktree), "tool_name": "Bash",
+            "tool_input": {"command": "echo hello"},
+        }
+        for hook in appended:
+            completed = subprocess.run(
+                ["bash", "-c", hook["command"]], cwd=REPO_ROOT, input=json.dumps(payload),
+                text=True, capture_output=True, check=False, timeout=30,
+            )
+            assert completed.returncode == 0, (hook["command"], completed.stderr)
+            assert "No such file" not in completed.stderr
+    finally:
+        plan.output_file.unlink(missing_ok=True)
 
 
 @pytest.mark.parametrize("session_id", [None, "worker-thread"])
@@ -977,3 +1015,14 @@ def test_compact_hydrate_bound_fits_its_retries() -> None:
     ]
     # Selector (2 s) + stream (2 s) + hydrate (6 s) must fit inside the hook timeout.
     assert compact and compact[0]["timeout"] > 2 + 2 + 6
+
+
+def test_portable_hook_command_rewrites_tracked_words_and_refuses_foreign_paths(tmp_path):
+    from scripts.agent_runtime.adapters.codex import _portable_hook_command
+
+    tracked = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "guard-public-github-text.py"
+    assert _portable_hook_command(shlex.quote(str(tracked)), REPO_ROOT) == (
+        '"$(git rev-parse --show-toplevel)/agents_extensions/shared/hooks/guard-public-github-text.py"'
+    )
+    with pytest.raises(RuntimeError, match="unportable path"):
+        _portable_hook_command(shlex.quote(str(tmp_path / "guard.py")), REPO_ROOT)

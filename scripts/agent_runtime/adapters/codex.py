@@ -78,6 +78,27 @@ class CodexReviewConfigError(ValueError):
     """A review's config provenance cannot establish its MCP boundary."""
 
 
+def _portable_hook_command(command: str, root: Path) -> str:
+    """Spell a tracked hook command the way Codex's shell resolves it.
+
+    Codex runs hook commands through a shell from the session's working
+    directory. Words under ``root`` become ``$(git rev-parse --show-toplevel)``
+    relative, matching ``agents_extensions/codex/hooks.json``, so the generated
+    TOML never embeds this checkout's absolute path. Any other absolute word
+    fails closed rather than leaking into the overlay.
+    """
+    words = []
+    for word in shlex.split(command):
+        if not word.startswith("/"):
+            words.append(shlex.quote(word))
+            continue
+        path = Path(word)
+        if not path.is_relative_to(root):
+            raise RuntimeError("Codex worker PreToolUse guard has an unportable path")
+        words.append(f'"$(git rev-parse --show-toplevel)/{path.relative_to(root).as_posix()}"')
+    return " ".join(words)
+
+
 def _worker_hook_flags() -> list[str]:
     """Bind tracked pre-tool policy, independent of deployed project discovery.
 
@@ -100,7 +121,6 @@ def _worker_hook_flags() -> list[str]:
             expected = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
             if hook["command"] != expected:
                 raise RuntimeError("Codex worker PreToolUse runner has an unsupported form")
-            hook["command"] = shlex.join(["bash", str(entry), "pre-tool-use"])
 
     # Reuse the tracked shared-settings reader. Keep the deterministic Codex
     # runner, adding shared guards it does not already execute (#10305).
@@ -108,7 +128,8 @@ def _worker_hook_flags() -> list[str]:
     for group in _json.loads(_worker_guard_settings())["hooks"]["PreToolUse"]:
         missing = [hook for hook in group["hooks"] if Path(shlex.split(hook["command"])[-1]).name not in covered]
         if missing:
-            groups.append({**group, "hooks": missing})
+            portable = [{**hook, "command": _portable_hook_command(hook["command"], root)} for hook in missing]
+            groups.append({**group, "hooks": portable})
     return [
         "--enable", "hooks", "--dangerously-bypass-hook-trust",
         "-c", "hooks.PreToolUse=" + CodexAdapter._encode_config_value(groups),
