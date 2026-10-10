@@ -1,0 +1,56 @@
+#!/bin/sh
+# AGY hook entry point for the pinned driver state (scripts/driver_state.py).
+#   driver_state_inject.sh [agy-hook|agy-stop-hook|agy-pretool-hook]
+# AGY runs hooks from the directory that holds hooks.json (.agents/), so
+# resolve the checkout from this script. Fail-open: always print a JSON
+# object and exit 0, so a broken hook never blocks the agent loop.
+mode="${1:-agy-hook}"
+case "$mode" in
+  agy-hook|agy-stop-hook|agy-pretool-hook) ;;
+  *) mode=agy-hook ;;
+esac
+fallback='{}'
+[ "$mode" != agy-hook ] && fallback='{"decision": "allow"}'
+# Drain the hook input before any child can fail without reading it. Keep the
+# original bytes in a file because shell variables cannot preserve NULs.
+input_file=$(mktemp --tmpdir="$TMPDIR" agy-in.XXXXXX) || { cat >/dev/null; echo "$fallback"; exit 0; }
+output_file=
+trap 'rm -f "$input_file"; [ -z "$output_file" ] || rm -f "$output_file"' 0
+if ! cat >"$input_file"; then
+  cat >/dev/null
+  echo "$fallback"
+  exit 0
+fi
+root=$(cd "$(dirname "$0")/../.." 2>/dev/null && pwd) || { echo "$fallback"; exit 0; }
+if [ -z "${LU_DRIVER_STATE_FILE:-}" ] || [ -z "${SESSION_HANDOFF_AGENT:-}" ]; then
+  echo "$fallback"
+  exit 0
+fi
+py="${LU_DRIVER_STATE_PYTHON:-$root/.venv/bin/python}"
+if [ ! -x "$py" ]; then
+  echo "$fallback"
+  exit 0
+fi
+# Validate output without storing its bytes in a shell variable.
+output_file=$(mktemp --tmpdir="$TMPDIR" agy-out.XXXXXX) || { echo "$fallback"; exit 0; }
+if (cd "$root" && "$py" -m scripts.driver_state "$mode" <"$input_file" >"$output_file" 2>/dev/null); then
+  # A successful child must produce exactly one strict JSON object. Keep the
+  # validator's output private too: a broken interpreter is not validation.
+  if validation=$("$py" -c '
+import json
+import sys
+
+def reject_constant(value):
+    raise ValueError("Invalid JSON constant")
+
+value = json.load(sys.stdin, parse_constant=reject_constant)
+if not isinstance(value, dict):
+    sys.exit(1)
+print("valid")
+' <"$output_file" 2>/dev/null) && [ "$validation" = valid ]; then
+    cat "$output_file"
+    exit 0
+  fi
+fi
+printf '%s\n' "$fallback"
+exit 0
