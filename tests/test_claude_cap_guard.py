@@ -89,6 +89,41 @@ def test_weekly_reader_ignores_environment_override(
     assert capsys.readouterr().out == f"{pct}\n"
 
 
+@pytest.mark.parametrize(
+    ("snapshot_stale", "agent_stale", "bar_stale", "expected"),
+    (
+        (True, False, False, "unknown"),
+        (False, True, False, "unknown"),
+        (False, False, True, "unknown"),
+        (False, False, False, "95"),
+    ),
+)
+def test_weekly_reader_checks_snapshot_and_nested_freshness(
+    snapshot_stale: bool,
+    agent_stale: bool,
+    bar_stale: bool,
+    expected: str,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    payload = {
+        "diagnostics": {"stale": snapshot_stale},
+        "agents": {
+            "claude": {
+                "stale": agent_stale,
+                "codexbar": {"stale": bar_stale, "weekly_used_pct": 95},
+            }
+        },
+    }
+    urlopen = Mock(return_value=io.BytesIO(json.dumps(payload).encode()))
+    monkeypatch.setattr(claude_weekly_used.urllib.request, "urlopen", urlopen)
+
+    claude_weekly_used.main()
+
+    urlopen.assert_called_once()
+    assert capsys.readouterr().out == f"{expected}\n"
+
+
 def test_weekly_reader_override_cannot_hide_request_failure(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

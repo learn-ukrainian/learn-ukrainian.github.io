@@ -19,7 +19,8 @@ def main() -> None:
             data = json.load(r)
         claude = data["agents"]["claude"]
         bar = claude.get("codexbar") or {}
-        if claude.get("stale") or bar.get("stale"):
+        diagnostics = data.get("diagnostics") or {}
+        if diagnostics.get("stale") or claude.get("stale") or bar.get("stale"):
             raise ValueError("stale")
         pct = bar.get("weekly_used_pct")
         if pct is None:
