@@ -175,7 +175,8 @@ def polite_get(
         if resp.status_code == 200:
             parsed_orig = urllib.parse.urlsplit(url)
             if parsed_orig.netloc:
-                resp_url = getattr(resp, "url", None) or url
+                raw_resp_url = getattr(resp, "url", None)
+                resp_url = raw_resp_url if isinstance(raw_resp_url, str) and raw_resp_url else url
                 resp_netloc = urllib.parse.urlsplit(resp_url).netloc
                 if resp_netloc and resp_netloc != parsed_orig.netloc:
                     raise UsageAdviceIngestError(f"Off-host redirect refused: {url} -> {resp_url}")
@@ -404,12 +405,12 @@ def extract_movne_word_pairs(
 
         # Match verdict patterns up to end of sentence or clause, preserving list items
         m_prav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])правильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?<!не\s)(?<!не)правильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
             first_ans,
             flags=re.IGNORECASE,
         )
         m_neprav = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])неправильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])неправильно(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+писати|\s+казати|\s+вживати)?(?:\s*[:–—-])?\s*([^.!\n]+)",
             first_ans,
             flags=re.IGNORECASE,
         )
@@ -450,9 +451,11 @@ def extract_movne_word_pairs(
         if len(quotes) == 2:
             q1, q2 = quotes[0].strip(), quotes[1].strip()
             if verdict_type == "preferred" and verdict_form:
-                if q1.lower() in verdict_form.lower() or verdict_form.lower() in q1.lower():
+                q1_in = _contains_token(verdict_form, q1) or _contains_token(q1, verdict_form)
+                q2_in = _contains_token(verdict_form, q2) or _contains_token(q2, verdict_form)
+                if q1_in and not q2_in:
                     questioned_form = q2
-                elif q2.lower() in verdict_form.lower() or verdict_form.lower() in q2.lower():
+                elif q2_in and not q1_in:
                     questioned_form = q1
                 else:
                     questioned_form = f"{q1} чи {q2}"
@@ -465,11 +468,13 @@ def extract_movne_word_pairs(
         elif " чи " in question_body:
             m_chi = re.search(r"([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)\s+чи\s+([А-Яа-яЄєІіЇїҐґ'’ʼ\-]+)", question_body)
             if m_chi:
-                w1, w2 = m_chi.group(1), m_chi.group(2)
+                w1, w2 = m_chi.group(1).strip(), m_chi.group(2).strip()
                 if verdict_type == "preferred" and verdict_form:
-                    if w1.lower() in verdict_form.lower():
+                    w1_in = _contains_token(verdict_form, w1) or _contains_token(w1, verdict_form)
+                    w2_in = _contains_token(verdict_form, w2) or _contains_token(w2, verdict_form)
+                    if w1_in and not w2_in:
                         questioned_form = w2
-                    elif w2.lower() in verdict_form.lower():
+                    elif w2_in and not w1_in:
                         questioned_form = w1
                     else:
                         questioned_form = f"{w1} чи {w2}"
@@ -517,12 +522,13 @@ def clean_movaua_title(title: str) -> str:
 
 
 def _contains_token(text: str, token: str) -> bool:
-    """Check if token appears as a whole word or phrase in text, respecting Ukrainian letters."""
-    tok = token.strip().lower()
-    if not tok:
+    """Check if token appears as a whole word or phrase in text, respecting Ukrainian letters, apostrophes, and hyphens."""
+    norm_text = re.sub(r"['’ʼ]", "'", text).lower()
+    norm_tok = re.sub(r"['’ʼ]", "'", token).strip(' «"“”».,:;!?-').lower()
+    if not norm_tok:
         return False
-    pattern = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9]){re.escape(tok)}(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])"
-    return bool(re.search(pattern, text, re.IGNORECASE))
+    pattern = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:{re.escape(norm_tok)})(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
+    return bool(re.search(pattern, norm_text, re.IGNORECASE))
 
 
 def extract_movaua_usage_pairs(
@@ -548,17 +554,34 @@ def extract_movaua_usage_pairs(
         # Search for patterns like "правильно: X" or "треба казати: X"
         # Disallow leading negation ("неправильно", "не варто", "не треба", "не слід")
         m_rec = re.search(
-            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?<!не\s)(?<!не)(?:правильно|варто|слід|треба)(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9])(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.,;]+)",
+            r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?<!не\s)(?<!не)(?:правильно|варто|слід|треба)(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'’ʼ\-])(?:\s+(?:писати|казати|вживати))?[:\s]+«?([^»\n.!?]+)",
             text,
             re.IGNORECASE,
         )
         if m_rec:
             rec = m_rec.group(1).strip()
+
+            def _is_negated(target: str, context: str) -> bool:
+                norm_ctx = re.sub(r"['’ʼ]", "'", context).lower()
+                norm_tgt = re.sub(r"['’ʼ]", "'", target).strip(' «"“”».,:;!?-').lower()
+                if not norm_tgt:
+                    return False
+                pat = rf"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|а\s+не|ані|замість)\s+«?{re.escape(norm_tgt)}(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])"
+                return bool(re.search(pat, norm_ctx, re.IGNORECASE))
+
+            p1_neg = _is_negated(p1, rec)
+            p2_neg = _is_negated(p2, rec)
             p1_in = _contains_token(rec, p1)
             p2_in = _contains_token(rec, p2)
-            if p1_in and not p2_in:
+
+            if p1_neg and (p2_in or not p2_neg):
+                return p1, p2
+            if p2_neg and (p1_in or not p1_neg):
                 return p2, p1
-            if p2_in and not p1_in:
+
+            if p1_in and not p2_in and not p1_neg:
+                return p2, p1
+            if p2_in and not p1_in and not p2_neg:
                 return p1, p2
         return f"{p1} / {p2}", ""
 

@@ -754,6 +754,32 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(stats2.fetched_new, 1)
         self.assertEqual(session.get.call_count, 1)
 
+    def test_find_body_recommendation_contrastive_negation(self) -> None:
+        # Contrastive negation ("не X, а Y", "Y, а не X", "«не X, а Y»") must recommend Y, not X
+        t1 = "Правильно: не квиток, а білет."
+        pairs1 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t1", "antusurzhuk", "квиток чи білет", "", t1)
+        self.assertEqual(len(pairs1), 1)
+        self.assertEqual(pairs1[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs1[0]["recommended_form"], "білет")
+
+        t2 = "Треба казати: білет, а не квиток."
+        pairs2 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t2", "antusurzhuk", "квиток чи білет", "", t2)
+        self.assertEqual(len(pairs2), 1)
+        self.assertEqual(pairs2[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs2[0]["recommended_form"], "білет")
+
+        t3 = "Правильно: «не квиток, а білет»."
+        pairs3 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t3", "antusurzhuk", "квиток чи білет", "", t3)
+        self.assertEqual(len(pairs3), 1)
+        self.assertEqual(pairs3[0]["questioned_form"], "квиток")
+        self.assertEqual(pairs3[0]["recommended_form"], "білет")
+
+        t4 = "Правильно: не білет, а квиток."
+        pairs4 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t4", "antusurzhuk", "квиток чи білет", "", t4)
+        self.assertEqual(len(pairs4), 1)
+        self.assertEqual(pairs4[0]["questioned_form"], "білет")
+        self.assertEqual(pairs4[0]["recommended_form"], "квиток")
+
     def test_find_body_recommendation_negation_rejection(self) -> None:
         # Negation ("неправильно", "не варто", "не треба", "не слід") must not match as a recommendation
         text_neg = "Неправильно: квиток. Треба казати: білет на потяг."
@@ -781,6 +807,53 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs[0]["questioned_form"], "в")
         self.assertEqual(pairs[0]["recommended_form"], "у")
 
+    def test_contains_token_apostrophes_and_hyphens(self) -> None:
+        from scripts.ingest.usage_advice_ingest import _contains_token
+
+        # Letters before/after apostrophe must not match as isolated tokens
+        self.assertFalse(_contains_token("в'їзд заборонено", "в"))
+        self.assertFalse(_contains_token("в’їзд заборонено", "в"))
+        self.assertFalse(_contains_token("з'явитися зненацька", "з"))
+        self.assertFalse(_contains_token("пів'яблука", "яблука"))
+        self.assertFalse(_contains_token("пів’яблука", "яблука"))
+
+        # Exact compound words and words with apostrophes match
+        self.assertTrue(_contains_token("в'їзд заборонено", "в'їзд"))
+        self.assertTrue(_contains_token("в’їзд заборонено", "в'їзд"))
+        self.assertTrue(_contains_token("пів'яблука чи груша", "пів'яблука"))
+        self.assertTrue(_contains_token("пів’яблука чи груша", "пів'яблука"))
+
+        # Hyphenated words
+        self.assertFalse(_contains_token("будь-який день", "будь"))
+        self.assertTrue(_contains_token("будь-який день", "будь-який"))
+
+    def test_glavcom_short_words_token_isolation(self) -> None:
+        # Quoted «в» чи «у» with verdict 'у вашому тексті' must not match 'в' inside 'вашому'
+        html_quoted = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Олег: Як правильно писати: «в» чи «у»?</p>
+            <p>Правильно: у вашому тексті.</p>
+        </div>
+        """
+        pairs_q = extract_movne_word_pairs(1, 1, html_quoted)
+        self.assertEqual(len(pairs_q), 1)
+        self.assertEqual(pairs_q[0]["questioned_form"], "в")
+        self.assertEqual(pairs_q[0]["verdict_form"], "у вашому тексті")
+
+        # Unquoted в чи у with verdict 'у вашому тексті'
+        html_unquoted = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Олег: Як правильно писати в чи у?</p>
+            <p>Правильно: у вашому тексті.</p>
+        </div>
+        """
+        pairs_u = extract_movne_word_pairs(1, 1, html_unquoted)
+        self.assertEqual(len(pairs_u), 1)
+        self.assertEqual(pairs_u[0]["questioned_form"], "в")
+        self.assertEqual(pairs_u[0]["verdict_form"], "у вашому тексті")
+
     def test_glavcom_verdict_word_boundary(self) -> None:
         # Glavcom word boundary prevents capturing trailing letters like 'ю' from 'правильною'
         html_wrong = """
@@ -794,6 +867,18 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(len(pairs), 1)
         self.assertNotEqual(pairs[0]["verdict_form"], "ю")
         self.assertFalse(pairs[0]["verdict_form"].startswith("ю"))
+
+        # Spaced negation "не правильно: X" must not trigger m_prav
+        html_spaced_neg = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: Чи правильно так писати?</p>
+            <p>Це не правильно: на протязі. Треба казати: протягом.</p>
+        </div>
+        """
+        pairs_spaced = extract_movne_word_pairs(1, 1, html_spaced_neg)
+        self.assertEqual(len(pairs_spaced), 1)
+        self.assertNotEqual(pairs_spaced[0]["verdict_form"], "на протязі")
 
         html_correct = """
         <div class="post_text">
@@ -834,6 +919,17 @@ class TestUsageAdviceIngest(unittest.TestCase):
         pairs = extract_movne_word_pairs(1, 1, html)
         self.assertEqual(len(pairs), 1)
         self.assertEqual(pairs[0]["question_num"], 1)
+
+    def test_polite_get_mock_non_string_url_fallback(self) -> None:
+        # Mock Response without string url should not fail urlsplit and should use request url
+        session = MagicMock(spec=requests.Session)
+        mock_resp = MagicMock(spec=requests.Response)
+        mock_resp.status_code = 200
+        # When spec=requests.Response, mock_resp.url is a MagicMock, not a str
+        session.get.return_value = mock_resp
+
+        resp = polite_get(session, "https://example.com/test-mock", delay=0)
+        self.assertEqual(resp.status_code, 200)
 
     def test_movaua_non_200_error_status_recording(self) -> None:
         ensure_movaua_schema(self.conn)
