@@ -37,6 +37,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
+_ROOT = _HERE.parents[1]
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
+from scripts.common import github_client
 
 
 def _load(name: str, path: Path):
@@ -157,7 +162,7 @@ def current_pull_request(repo: str, number: str, token: str) -> dict:
         },
     )
     try:
-        with urllib.request.urlopen(request, timeout=30) as response:
+        with github_client.http_open(request, timeout=30) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError, urllib.error.URLError) as exc:
         raise RuntimeError(type(exc).__name__) from None
