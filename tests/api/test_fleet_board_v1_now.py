@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import inspect
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
@@ -571,69 +571,19 @@ def test_schema_validates_now_epic_and_agent(monkeypatch: pytest.MonkeyPatch, tm
     Draft202012Validator(schema["fleet.v1.agents"]).validate(client.get("/api/fleet/v1/agents").json())
 
 
-def test_harness_health_projects_known_metrics_and_keeps_missing_null(
-    monkeypatch: pytest.MonkeyPatch, tmp_path
-) -> None:
-    roster = {
-        "generated_at": FRESH,
-        "interval_s": 30,
-        "epics": [
-            {
-                "epic": "alpha",
-                "title": "Alpha",
-                "intended": "running",
-                "driver": {
-                    "agent_id": "driver-alpha",
-                    "cli": "codex",
-                    "model": "model-a",
-                    "harness": "codex",
-                    "pid_alive": True,
-                    "activity": "working",
-                },
-                "workers": [],
-            },
-            {
-                "epic": "beta",
-                "title": "Beta",
-                "intended": "running",
-                "driver": {
-                    "agent_id": "driver-beta",
-                    "cli": "codex",
-                    "model": "model-a",
-                    "harness": "codex",
-                    "pid_alive": True,
-                },
-                "workers": [],
-            },
-        ],
-    }
-    harness = {
-        "generated_at": FRESH,
-        "interval_s": 30,
-        "agents": {
-            "driver-alpha": {
-                "pid_alive": True,
-                "activity": "working",
-                "context_pct": 0,
-                "compactions": 0,
-                "stop_to_ask_count": 0,
-                "idle_min": 0,
-            }
-        },
-    }
+def test_harness_health_projects_known_metrics_and_keeps_missing_null(monkeypatch, tmp_path):
+    roster = _roster()
+    roster["epics"][0]["driver"]["agent_id"] = "codex"
+    harness = {"interval_s": 30, "measured_at": FRESH, "drivers": [{
+        "agent_id": "codex", "context_pct": 0, "compactions": 0,
+        "stop_count": 0, "ask_count": 2.5, "idle_min": 0,
+    }]}
     _install(monkeypatch, tmp_path, roster, harness)
-
-    response = client.get("/api/fleet/v1/epics/alpha")
-
-    assert response.status_code == 200
-    assert response.json()["data"]["health"] == {
-        "context_pct": 0,
-        "compactions": 0,
-        "stop_to_ask_count": 0,
-        "idle_min": 0,
-    }
-    beta = client.get("/api/fleet/v1/epics/beta").json()["data"]["health"]
-    assert beta == {"context_pct": None, "compactions": None, "stop_to_ask_count": None, "idle_min": None}
+    health = client.get("/api/fleet/v1/epics/alpha").json()["data"]["health"]
+    assert health == {"agent_id": "codex", "status": "ok", "measured_at": FRESH,
+                      "context_pct": 0, "compactions": 0, "stop_count": 0, "ask_count": 2.5, "idle_min": 0}
+    from scripts.api.fleet_board.file_sources import unknown_health
+    assert client.get("/api/fleet/v1/epics/beta").json()["data"]["health"] == unknown_health()
 
 
 def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -656,7 +606,7 @@ def test_delegate_and_occupancy_wrappers_call_the_collectors(monkeypatch: pytest
     assert delegate_report.as_dict() == {"name": "delegate", "status": "ok", "age_s": None, "error": None}
     assert "secret-task" not in repr(delegate_report)
     assert occupancy_report.status == "ok"
-    assert activity == {"driver-beta": "idle"}
+    assert activity == {}  # Unbound label-only observations cannot supply seat activity.
     assert "row-1" not in repr(activity)
 
 
@@ -789,6 +739,84 @@ def test_machine_names_are_redacted(probe: str) -> None:
 )
 def test_security_mechanism_details_are_redacted(probe: str) -> None:
     assert activity_mod.text(probe) == "[redacted]"
+
+
+@pytest.mark.parametrize("token", ["password", "quota", "firewall", "buildbox7", "7 qps"])
+@pytest.mark.parametrize("stress", ["\u0301", "\u0301\u0301"])
+def test_combining_stress_cannot_bypass_publication_filter(token: str, stress: str) -> None:
+    for position in range(1, len(token)):
+        marked = token[:position] + stress + token[position:]
+        for probe in (marked, marked.upper()):
+            assert activity_mod.text(probe) == "[redacted]"
+            assert activity_mod.seat_id(probe) is None
+
+
+@pytest.mark.parametrize("key", ["id_rsa", "id_ed25519"])
+@pytest.mark.parametrize("template", ["{}", "Review {} status", "check_{}_state", "check-{}-state"])
+@pytest.mark.parametrize("uppercase", [False, True])
+def test_key_file_identifiers_are_redacted(key: str, template: str, uppercase: bool) -> None:
+    for spelling in (key, key[:4] + "\u0301" + key[4:]):
+        probe = template.format(spelling.upper() if uppercase else spelling)
+        assert activity_mod.text(probe) == "[redacted]"
+        assert activity_mod.seat_id(probe) is None
+
+
+@pytest.mark.parametrize("probe", ["Поя\u0301снення", "Украї\u0301на", "Review gpt4 compatibility", "driver-2"])
+def test_benign_stress_and_existing_labels_are_preserved(probe: str) -> None:
+    assert activity_mod.text(probe) == probe
+    assert activity_mod.seat_id(probe) == probe
+
+
+@pytest.mark.parametrize("probe", ["pa\u0301ssword", "quo\u0301ta", "id_rsa", "id_ed25519"])
+def test_publication_gaps_are_closed_across_board_routes(monkeypatch, tmp_path, probe: str) -> None:
+    roster = {
+        "generated_at": FRESH,
+        "interval_s": 30,
+        "epics": [
+            {
+                "epic": "kept", "title": "Kept", "intended": "running",
+                "driver": {"agent_id": "driver-kept", "pid_alive": False}, "workers": [],
+            },
+            {
+                "epic": "marked", "title": probe, "focus": probe, "intended": "running",
+                "driver": {"agent_id": probe},
+                "task": {"kind": "issue", "number": 22, "title": probe},
+                "workers": [{"agent_id": "worker-marked", "task": probe}, {"agent_id": probe}],
+            },
+            {"epic": probe, "title": "Omitted identity"},
+        ],
+        "foundations": [{"foundation": "queue", "red": True, "reasons": [probe]}],
+        "alerts": [{"name": "ExampleWarning", "severity": "warning", "summary": probe}],
+        "prs": [{"number": 31, "title": probe, "ci": "green", "cf_at_head": True,
+                 "mq": "not_queued", "unqueued_min": 74}],
+    }
+    _install(monkeypatch, tmp_path, roster, None)
+    now = client.get("/api/fleet/v1/now")
+    assert now.status_code == 200
+    body = now.json()
+    schemas = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]
+    Draft202012Validator(schemas[body["schema"]]).validate(body)
+    by_epic = {row["epic"]: row for row in body["data"]["epics"]}
+    assert set(by_epic) == {"kept", "marked"}
+    assert by_epic["kept"]["title"] == "Kept"
+    assert by_epic["kept"]["state"] == "dead"
+    marked = by_epic["marked"]
+    assert marked["driver"] is None
+    assert marked["title"] == marked["focus"] == marked["task"]["title"] == "[redacted]"
+    assert marked["workers"] == [{
+        "agent_id": "worker-marked", "cli": None, "model": None, "task": "[redacted]",
+        "state": "idle", "state_reason": "idle", "since": None,
+    }]
+    for kind in ("red_foundation", "alert", "unqueued_pr"):
+        item = next(row for row in body["data"]["attention"] if row["kind"] == kind)
+        assert item["title" if kind == "unqueued_pr" else "summary"] == "[redacted]"
+    for route in ("epics", "epics/marked", "agents", "agents/worker-marked"):
+        response = client.get("/api/fleet/v1/" + route)
+        assert response.status_code == 200
+        payload = response.json()
+        Draft202012Validator(schemas[payload["schema"]]).validate(payload)
+        assert probe not in response.text
+    assert client.get("/api/fleet/v1/agents/worker-marked").json()["data"]["task"] == "[redacted]"
 
 
 @pytest.mark.parametrize(
@@ -1031,11 +1059,7 @@ def test_occupancy_host_health_matrix(
     monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: {"hosts": hosts})
     monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
     source, activity = activity_mod.load_occupancy_activity()
-    has_fresh = "fresh" in host_states
-    assert activity == (
-        {"driver-alpha": "working", "worker-alpha": "idle", "bot-check": "working"}
-        if has_fresh else {}
-    )
+    assert activity == {}  # These observations intentionally have no canonical session binding.
     expected_source = {
         "name": "occupancy",
         "status": expected_status,
@@ -1049,7 +1073,7 @@ def test_occupancy_host_health_matrix(
     roster["bots"] = roster["bots"][:1]
     _install(monkeypatch, tmp_path, roster, None)
     schema = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"]
-    expected_alpha = "working" if has_fresh else "idle"
+    expected_alpha = "idle"
     for path in ("now", "epics", "epics/alpha", "agents", "agents/driver-alpha"):
         response = client.get(f"/api/fleet/v1/{path}")
         assert response.status_code == 200
@@ -1073,15 +1097,15 @@ def test_occupancy_host_health_matrix(
 
 
 @pytest.mark.parametrize("status,expected", [
-    ("working", {"driver-alpha": "working"}),
-    ("idle", {"driver-alpha": "idle"}),
+    ("working", {("driver-alpha", "session-alpha"): "working"}),
+    ("idle", {("driver-alpha", "session-alpha"): "idle"}),
     ("running", {}), ("live", {}), ("active", {}), ("blocked", {}), (None, {}),
 ])
 def test_occupancy_activity_contract_rejects_unsupported_aliases(
     monkeypatch: pytest.MonkeyPatch, status, expected
 ) -> None:
     monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: {"hosts": {
-        "row-1": {"status": "fresh", "occupants": [{"agent": "driver-alpha", "status": status}]}
+        "row-1": {"status": "fresh", "occupants": [{"kind": "observer", "agent": "driver-alpha", "session_id": "session-alpha", "instance_id": "instance-alpha", "status": status}]}
     }})
     source, activity = activity_mod.load_occupancy_activity()
     assert source.status == "ok"
@@ -1128,10 +1152,8 @@ def test_unknown_pid_precedence_for_each_role(monkeypatch: pytest.MonkeyPatch, t
     agents = client.get("/api/fleet/v1/agents").json()["data"]["agents"]
     assert {agent["role"] for agent in agents} == {"driver", "worker", "bot"}
     for agent in agents:
-        expected = (
-            ("working", "recorded working") if signal else
-            ("stuck", "liveness unknown") if agent["role"] == "driver" else ("idle", "idle")
-        )
+        expected = (("stuck", "liveness unknown") if agent["role"] == "driver" else
+                    ("working", "recorded working") if signal in {"roster", "harness"} else ("idle", "idle"))
         assert (agent["state"], agent["state_reason"]) == expected
 
 
@@ -1399,3 +1421,95 @@ def test_single_item_error_fallback_preserves_null(
         assert body["generated_at"] == "1970-01-01T00:00:00Z"
     Draft202012Validator(endpoint_schema(schema_id)).validate(body)
     assert "private-error-marker" not in response.text
+
+
+@pytest.mark.parametrize("case", ["matching", "wrong-session", "wrong-instance", "wrong-host", "no-observer", "duplicate", "expired", "closed", "unknown-pid"])
+def test_canonical_lease_presence_chain_controls_driver_activity(monkeypatch, tmp_path, case):
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import LeaseHolder
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.api import occupancy as occ
+    from scripts.api.observer_presence import ObserverPresence
+
+    database = SessionStreamDatabase(tmp_path / "sessions.sqlite3")
+    store = SessionStreamStore(database)
+    lease = store.open_session(stream_id="epic:7101", session_id="session-alpha", lease_id="lease-alpha",
+                       lineage_id="lineage-alpha", ttl_seconds=600,
+                       holder=LeaseHolder(agent="driver-alpha", harness="sample", instance_id="instance-alpha",
+                                          process_id=41001, task_id="task-alpha"))
+    if case == "duplicate":
+        store.open_session(stream_id="epic:7102", session_id="session-beta", lease_id="lease-beta",
+                           lineage_id="lineage-beta", ttl_seconds=600,
+                           holder=LeaseHolder(agent="driver-alpha", harness="sample", instance_id="instance-beta",
+                                              process_id=41002, task_id="task-beta"))
+    if case == "closed":
+        store.close_session(lease)
+    observer = ObserverPresence(agent="driver-alpha", kind="driver", task_id="task-alpha", epic="7101",
+                                status="working", summary=None, host_id="sample-host" if case != "wrong-host" else "other-host",
+                                instance_id="instance-alpha" if case != "wrong-instance" else "other-instance",
+                                ctx_tokens=None, window_tokens=None, updated_at=FRESH,
+                                updated_at_mono=100, expires_at_mono=200)
+    snapshot = occ.OccupancySnapshot({"sample-box": "sample-host"},
+                                    () if case == "no-observer" else (observer,), 100, datetime.now(UTC) + (timedelta(seconds=601) if case == "expired" else timedelta()))
+    monkeypatch.setattr(occ, "_build_snapshot", lambda **kwargs: snapshot)
+    monkeypatch.setattr(occ, "_load_entry_for_selected", lambda *args, **kwargs: {"status": "fresh", "age_seconds": 0})
+    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: database.path)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "sample-host")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(tmp_path / "no-markers"))
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "no-jobs"))
+    monkeypatch.setattr(activity_mod, "occupancy_payload", lambda: occ.occupancy_payload(host_id="sample-host"))
+    monkeypatch.setattr(view_mod, "load_occupancy_activity", activity_mod.load_occupancy_activity)
+    roster = _roster()
+    roster["epics"] = roster["epics"][:1]
+    roster["epics"][0]["driver"].update(session_id="other-session" if case == "wrong-session" else "session-alpha",
+                                          activity="idle", pid_alive=None if case == "unknown-pid" else True)
+    _install(monkeypatch, tmp_path, roster, None)
+    raw = occ.occupancy_payload(host_id="sample-host")
+    if case in {"matching", "unknown-pid"}:
+        presence = next(row for row in raw["hosts"]["sample-host"]["occupants"] if row["kind"] == "observer")
+        assert presence["session_id"] == "session-alpha"
+        assert presence["instance_id"] == "instance-alpha"
+    response = client.get("/api/fleet/v1/now")
+    assert response.status_code == 200
+    body = response.json()
+    expected = "working" if case == "matching" else "stuck" if case == "unknown-pid" else "idle"
+    assert body["data"]["epics"][0]["state"] == expected
+    assert any(row["kind"] == "stuck_driver" for row in body["data"]["attention"]) == (case == "unknown-pid")
+    assert "session-alpha" not in response.text
+    assert "instance-alpha" not in response.text
+
+
+@pytest.mark.parametrize("stamp,interval,status", [
+    (FRESH, 30, "ok"), ("2026-10-09T11:59:00Z", 30, "ok"),
+    ("2026-10-09T11:58:59Z", 30, "stale"), (None, 30, "unknown"),
+    ("bad", 30, "unknown"), ("2026-10-09T12:00:01Z", 30, "unknown"),
+    (FRESH, None, "unknown"), (FRESH, 0, "unknown"), (FRESH, -1, "unknown"),
+    (FRESH, True, "unknown"), (FRESH, float("inf"), "unknown"),
+])
+def test_canonical_health_measurement_window_and_independent_counters(monkeypatch, tmp_path, stamp, interval, status):
+    roster = _roster()
+    roster["epics"][0]["driver"]["agent_id"] = "codex"
+    harness = {"interval_s": interval, "drivers": [{"agent_id": "codex", "measured_at": stamp,
+                                                 "stop_count": 0, "idle_min": 1.5, "context_pct": 2.5}]}
+    _install(monkeypatch, tmp_path, roster, harness)
+    body = client.get("/api/fleet/v1/now").json()
+    health = body["data"]["epics"][0]["health"]
+    assert health["status"] == status
+    assert health["agent_id"] == "codex"
+    assert health["stop_count"] == (0 if status == "ok" else None)
+    assert health["ask_count"] is None
+    assert health["context_pct"] == (2.5 if status == "ok" else None)
+    assert health["idle_min"] == (1.5 if status == "ok" else None)
+    from scripts.api.fleet_board.envelope import endpoint_schema
+    Draft202012Validator(endpoint_schema("fleet.v1.now")).validate(body)
+
+
+@pytest.mark.parametrize("rows", [[], [{"agent_id": "other"}], [{"agent_id": "codex"}, {"agent_id": "codex"}]])
+def test_canonical_health_never_guesses_driver_identity(monkeypatch, tmp_path, rows):
+    roster = _roster()
+    roster["epics"][0]["driver"].update(agent_id="codex", cli="codex", harness="codex")
+    _install(monkeypatch, tmp_path, roster, {"interval_s": 30, "measured_at": FRESH, "drivers": rows})
+    health = client.get("/api/fleet/v1/epics/alpha").json()["data"]["health"]
+    assert health["status"] == "unknown"
+    assert health["agent_id"] is None
+    assert all(health[key] is None for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min"))

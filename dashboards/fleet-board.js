@@ -196,11 +196,18 @@
 
   function harnessTiles(health) {
     const row = health || {};
+    const current = row.status === "ok";
+    function value(key, suffix) {
+      if (row.status === "stale") return "stale";
+      if (!current || typeof row[key] !== "number" || !Number.isFinite(row[key])) return "unknown";
+      return metricText(row[key], suffix);
+    }
     return `<div class="fb-tiles">
-      ${tile("context", "context", metricText(row.context_pct, "%"), contextClass(row.context_pct))}
-      ${tile("compactions", "compactions", metricText(row.compactions, ""), "")}
-      ${tile("stops", "stops / asks", metricText(row.stop_to_ask_count, ""), stopsClass(row.stop_to_ask_count))}
-      ${tile("idle", "idle", metricText(row.idle_min, " m"), idleClass(row.idle_min))}
+      ${tile("context", "context", value("context_pct", "%"), current ? contextClass(row.context_pct) : "")}
+      ${tile("compactions", "compactions", value("compactions", ""), "")}
+      ${tile("stops", "stops", value("stop_count", ""), current ? stopsClass(row.stop_count) : "")}
+      ${tile("asks", "asks", value("ask_count", ""), current ? stopsClass(row.ask_count) : "")}
+      ${tile("idle", "idle", value("idle_min", " m"), current ? idleClass(row.idle_min) : "")}
     </div>`;
   }
 

@@ -105,14 +105,14 @@ _WORKER: dict[str, Any] = {
 }
 
 _HEALTH: dict[str, Any] = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": ["context_pct", "compactions", "stop_to_ask_count", "idle_min"],
+    "type": "object", "additionalProperties": False,
+    "required": ["agent_id", "status", "measured_at", "context_pct", "compactions", "stop_count", "ask_count", "idle_min"],
     "properties": {
-        "context_pct": {"type": ["number", "null"], "minimum": 0},
-        "compactions": {"type": ["integer", "null"], "minimum": 0},
-        "stop_to_ask_count": {"type": ["integer", "null"], "minimum": 0},
-        "idle_min": {"type": ["number", "null"], "minimum": 0},
+        "agent_id": {"type": ["string", "null"]},
+        "status": {"enum": ["ok", "stale", "unknown"]},
+        "measured_at": {"type": ["string", "null"], "pattern": TIMESTAMP_PATTERN},
+        **{key: {"type": ["number", "null"], "minimum": 0}
+           for key in ("context_pct", "compactions", "stop_count", "ask_count", "idle_min")},
     },
 }
 

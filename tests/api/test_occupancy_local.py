@@ -254,7 +254,7 @@ def test_occupants_from_session_streams_preserves_distinct_epics_sharing_task_id
     ]
 
 
-def test_read_session_streams_dedupes_same_epic_and_task_id(
+def test_read_session_streams_preserves_distinct_session_identity(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     db_path = tmp_path / "session-streams.sqlite3"
@@ -275,6 +275,8 @@ def test_read_session_streams_dedupes_same_epic_and_task_id(
             "stream_id": "epic:7177",
             "holder_agent": "grok",
             "holder_task_id": "launcher-grok-driver",
+            "session_id": "session-one",
+            "holder_instance_id": "instance-one",
             "heartbeat_at": clock.isoformat().replace("+00:00", "Z"),
             "expires_at": (clock + timedelta(minutes=10)).isoformat().replace("+00:00", "Z"),
         },
@@ -282,6 +284,8 @@ def test_read_session_streams_dedupes_same_epic_and_task_id(
             "stream_id": "epic:7177",
             "holder_agent": "grok",
             "holder_task_id": "launcher-grok-driver",
+            "session_id": "session-two",
+            "holder_instance_id": "instance-two",
             "heartbeat_at": clock.isoformat().replace("+00:00", "Z"),
             "expires_at": (clock + timedelta(minutes=10)).isoformat().replace("+00:00", "Z"),
         },
@@ -314,9 +318,13 @@ def test_read_session_streams_dedupes_same_epic_and_task_id(
         now=clock,
     )
     assert read.readable is True
-    assert len(read.occupants) == 1
+    assert len(read.occupants) == 2
     assert read.occupants == [
-        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177"}
+        {
+            "kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177",
+            "session_id": session, "instance_id": instance,
+        }
+        for session, instance in [("session-one", "instance-one"), ("session-two", "instance-two")]
     ]
 
 
@@ -472,3 +480,34 @@ def test_occupancy_marker_scope_is_opt_in(tmp_path: Path, monkeypatch: pytest.Mo
         assert written is not None
         assert occupants_from_markers(host_id="host-teacher", root=tmp_path / "markers")
     assert occupants_from_markers(host_id="host-teacher", root=tmp_path / "markers") == []
+
+
+def test_session_read_filesystem_failure_is_unknown(tmp_path, monkeypatch):
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "sample-host")
+    def fail(_self):
+        raise OSError("synthetic read failure")
+    monkeypatch.setattr(Path, "is_file", fail)
+    result = read_session_streams(host_id="sample-host", mapping={}, selected={"sample-host": None},
+                                  db_path=tmp_path / "sessions.sqlite3")
+    assert result.readable is False
+    assert result.occupants == []
+
+
+def test_session_read_invalid_timestamp_cannot_attest(tmp_path, monkeypatch):
+    from contextlib import nullcontext
+    from types import SimpleNamespace
+    path = tmp_path / "sessions.sqlite3"
+    _open_lease(path, session_id="session-one")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "sample-host")
+    cursor = SimpleNamespace(fetchall=lambda: [{"heartbeat_at": "invalid", "expires_at": "invalid"}])
+    monkeypatch.setattr(SessionStreamDatabase, "connect", lambda *args, **kwargs: nullcontext(
+        SimpleNamespace(execute=lambda sql: cursor)))
+    result = read_session_streams(host_id="sample-host", mapping={}, selected={"sample-host": None}, db_path=path)
+    assert result.readable is False
+    assert result.occupants == []
+
+
+@pytest.mark.parametrize("value", [None, "", "invalid"])
+def test_marker_timestamp_invalidity_stays_unknown(value):
+    from scripts.api.occupancy_local import _parse_when
+    assert _parse_when(value) is None

@@ -269,7 +269,7 @@ function assertClean(text, label) {
     [/localhost/i, "localhost"],
     [/127\.0\.0\.1/, "loopback"],
     [/https?:\/\//i, "absolute url"],
-    [/github\.com/i, "github"],
+    [/^[\s\S]*github\.com[\s\S]*$/i, "github"],
     [/\/home\//, "home path"],
     [/\/Users\//, "users path"],
     [/\/tmp\//, "tmp path"],
@@ -279,6 +279,16 @@ function assertClean(text, label) {
     assert.doesNotMatch(text, pattern, `${label} contains ${name}`);
   });
 }
+
+test("publication assertions reject forbidden domain text at any position", () => {
+  for (const text of [
+    "github.com", "GITHUB.COM", "before github.com after",
+    "github.com.example", "examplegithub.com", "before\ngithub.com\nafter",
+  ]) {
+    assert.throws(() => assertClean(text, "probe"), /probe contains github/);
+  }
+  assert.doesNotThrow(() => assertClean("clean public label", "probe"));
+});
 
 test("page shell follows the dashboard conventions", () => {
   assert.match(html, /<link rel="stylesheet" href="\/monitor\.css">/);
@@ -327,9 +337,9 @@ test("home renders attention, cards, unknown harness, and not installed", () => 
   assert.match(textContent(cedarCard), /stuck/);
 
   const tiles = queryAll(doc, "fb-tile");
-  assert.equal(tiles.length, 12);
+  assert.equal(tiles.length, 15);
   tiles.forEach((tile) => {
-    assert.match(textContent(tile), /\?/);
+    assert.match(textContent(tile), /unknown/);
     assert.doesNotMatch(textContent(tile), /0/);
   });
   assert.match(rendered, /Harness health: not installed/);
@@ -395,14 +405,16 @@ test("unknown harness values stay unknown and a real zero stays zero", () => {
   const rendered = FB.harnessTiles({
     context_pct: null,
     compactions: null,
-    stop_to_ask_count: null,
+    status: "ok",
+    stop_count: null,
+    ask_count: 0,
     idle_min: 0,
   });
   const doc = parseHtml(rendered);
   const idle = queryAll(doc, "fb-tile").find((el) => el.attrs["data-metric"] === "idle");
   const context = queryAll(doc, "fb-tile").find((el) => el.attrs["data-metric"] === "context");
   assert.match(textContent(idle), /0 m/);
-  assert.match(textContent(context), /\?/);
+  assert.match(textContent(context), /unknown/);
   assert.doesNotMatch(textContent(context), /0/);
 });
 
@@ -819,4 +831,22 @@ test("mounted board reports initial fetch and malformed JSON failures", async ()
   board.setMode("invalid-json"); board.key("r"); await board.settle();
   assert.match(board.nodes.get("fb-app").innerHTML, /could not be read/);
   assert.equal(board.nodes.get("fb-stale").hidden, false);
+});
+
+
+test("health tiles keep separate counters and withhold stale or unknown values", () => {
+  const row = { status: "ok", stop_count: 0, ask_count: 2.5, context_pct: 0, idle_min: 0 };
+  const current = parseHtml(FB.harnessTiles(row));
+  const get = (doc, name) => textContent(queryAll(doc, "fb-tile").find((el) => el.attrs["data-metric"] === name));
+  assert.match(get(current, "stops"), /stops\s*0$/);
+  assert.match(get(current, "asks"), /asks\s*2\.5$/);
+  assert.match(get(current, "compactions"), /unknown/);
+  for (const status of ["stale", "unknown"]) {
+    const rendered = FB.harnessTiles({ ...row, status });
+    const doc = parseHtml(rendered);
+    for (const name of ["context", "compactions", "stops", "asks", "idle"]) {
+      assert.match(get(doc, name), new RegExp(status));
+      assert.doesNotMatch(get(doc, name), /[0-9]/);
+    }
+  }
 });

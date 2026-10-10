@@ -299,7 +299,7 @@ a.fb-card.is-off { border-left-color: var(--off); }
 
 .fb-tiles {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
   font-size: 11.5px;
 }

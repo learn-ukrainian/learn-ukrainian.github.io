@@ -16,6 +16,7 @@ from typing import Any
 from scripts.api.delegate_router import seat_delegate_tasks
 from scripts.api.epics_router import _response_registry_text
 from scripts.api.occupancy import occupancy_payload
+from scripts.api.occupancy_sanitize import producer_identity
 
 from .snapshot import finite_number, mapping
 from .sources import SourceReport, report
@@ -47,13 +48,13 @@ _PUBLIC_SECURITY_RE = re.compile(
     rf"|passphrases?|passwords?|credentials?|keychain|cookies?|sudo|sshd?|authorized[_ ]keys|pubkeys?"
     rf"|private[_ -]keys?|hmac|csrf|cors|firewalls?|iptables|ufw|selinux|apparmor|fail2ban|vpn"
     rf"|wireguard|allow ?lists?|white ?lists?|block ?lists?|deny ?lists?|api[_ -]?keys?"
-    rf"|session[_ -]?tokens?|bearer|jwts?|rbac|admins?|secrets?|root (?:access|login|shell)){_EDGE_R}"
+    rf"|session[_ -]?tokens?|bearer|jwts?|rbac|admins?|secrets?|id_(?:rsa|ed25519)|root (?:access|login|shell)){_EDGE_R}"
 )
 # Match complete numbered labels, including hyphenated ones. Known technical
 # terms and numbered seat labels remain publishable; substrings never match.
 _PUBLIC_HOST_RE = re.compile(
     rf"(?i){_EDGE_L}(?:hostname|host|server|machine|localhost|vps|nas|laptop|workstation|desktop|box|runner)s?{_EDGE_R}"
-    rf"|{_EDGE_L}(?<!-)(?!(?:gpt4|ipv4|utf8|base64|html5|(?:driver|worker)-\d+){_EDGE_R}(?!-))"
+    rf"|{_EDGE_L}(?<!-)(?!(?:gpt[4]|ipv4|utf8|base64|html5|(?:driver|worker)-\d+){_EDGE_R}(?!-))"
     rf"[a-z]{{2,}}(?:-[a-z]+)*-?\d+{_EDGE_R}(?!-)"
 )
 
@@ -90,7 +91,7 @@ def _observation_age(host: Mapping[str, Any]) -> float | None:
     return number
 
 
-def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
+def load_occupancy_activity() -> tuple[SourceReport, dict[tuple[str, str], str]]:
     """Working or idle per agent id. Host identity is not copied out.
 
     Only fresh hosts contribute explicit working/idle activity. With no fresh
@@ -107,7 +108,7 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
     hosts = payload.get("hosts")
     if not isinstance(hosts, dict):
         return report("occupancy", "unavailable"), {}
-    activity: dict[str, str] = {}
+    candidates: dict[tuple[str, str], list[str | None]] = {}
     saw_fresh = False
     saw_stale = False
     saw_unavailable = False
@@ -133,20 +134,19 @@ def load_occupancy_activity() -> tuple[SourceReport, dict[str, str]]:
         for occupant in occupants:
             if not isinstance(occupant, dict):
                 continue
-            agent = occupant.get("agent")
-            if not isinstance(agent, str) or not agent.strip():
+            agent = producer_identity(occupant.get("agent"))
+            session = producer_identity(occupant.get("session_id"))
+            instance = producer_identity(occupant.get("instance_id"))
+            if occupant.get("kind") != "observer" or not agent or not session or not instance:
                 continue
             token = _occupant_activity(occupant.get("status"))
-            if token is None:
-                continue
-            agent_id = agent.strip()
-            if activity.get(agent_id) == "working":
-                continue
-            activity[agent_id] = token
+            candidates.setdefault((agent, session), []).append(token)
     if saw_stale and not saw_fresh:
         return report("occupancy", "stale", age_s=stale_age), {}
     if saw_unavailable and not saw_fresh:
         return report("occupancy", "unavailable"), {}
+    activity = {key: tokens[0] for key, tokens in candidates.items()
+                if len(tokens) == 1 and tokens[0] is not None}
     return report("occupancy", "ok"), activity
 
 
@@ -162,8 +162,10 @@ def activity_token(value: object) -> str | None:
 def _publishable(projected: str) -> bool:
     if not _PUBLIC_SHAPE_RE.fullmatch(projected):
         return False
+    # Stress remains in published prose, but cannot split a denied token.
+    screened = projected.replace("\u0301", "")
     return not any(
-        pattern.search(projected)
+        pattern.search(screened)
         for pattern in (_PUBLIC_CAPACITY_RE, _PUBLIC_SECURITY_RE, _PUBLIC_HOST_RE)
     )
 
@@ -217,10 +219,10 @@ def derive_state(
     long_idle = idle_min is not None and idle_min >= STUCK_IDLE_MIN
     if norm == "running" and long_idle:
         return "stuck", "idle while intended running"
-    if activity == "working" or occupancy == "working":
-        return "working", "recorded working"
     if require_liveness and norm == "running" and pid_alive is None:
         return "stuck", "liveness unknown"
+    if activity == "working" or occupancy == "working":
+        return "working", "recorded working"
     return "idle", "idle"
 
 
