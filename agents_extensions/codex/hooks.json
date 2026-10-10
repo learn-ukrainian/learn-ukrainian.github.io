@@ -34,7 +34,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch)$",
+        "matcher": "^(Bash|Write|Edit|MultiEdit|apply_patch|write_stdin)$",
         "hooks": [
           {
             "type": "command",

@@ -592,9 +592,13 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert "test-task" in plan.output_file.name
     # Read-only keeps lane effort and grants only individually approved readers.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags
+    from scripts.agent_runtime.adapters.codex import _sources_read_only_flags, _worker_hook_flags
 
-    assert config_values == ["model_reasoning_effort=high", *_sources_read_only_flags()[1::2]]
+    assert config_values == [
+        "model_reasoning_effort=high",
+        _worker_hook_flags()[4],
+        *_sources_read_only_flags()[1::2],
+    ]
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 
@@ -613,7 +617,15 @@ def test_codex_adapter_discussion_readonly_sets_env(tmp_path):
 
     assert "-s" in plan.cmd
     assert "read-only" in plan.cmd
-    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
+    try:
+        assert plan.env_overrides.keys() == {"AB_DISCUSS_READONLY", "LU_CODEX_HOOK_SOURCE"}
+        assert plan.env_overrides["AB_DISCUSS_READONLY"] == "1"
+        source = Path(__file__).resolve().parents[1]
+        locator = plan.env_overrides["LU_CODEX_HOOK_SOURCE"]
+        assert str(source) not in locator
+        assert Path(locator).resolve(strict=True) == source
+    finally:
+        adapter.cleanup_invocation(plan)
 
 
 def test_codex_adapter_bridge_creates_then_resumes(tmp_path):
@@ -752,7 +764,7 @@ def test_codex_adapter_disable_features_multiple(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
+    assert disable_pairs == ["shell_tool", "browser_use", "apps"]
 
 
 @pytest.mark.parametrize(
@@ -793,7 +805,8 @@ def test_codex_adapter_disables_apps_connector_across_all_invocations(tmp_path, 
         assert apps_indices[0] > max(enable_indices)
 
 
-def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
+@pytest.mark.parametrize("disable_features", [None, ["hooks"]])
+def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path, disable_features):
     """Dispatched review isolation workers must also disable apps connector (#7181)."""
     from scripts.review.isolation import review_isolation_tool_config
     from tests.agent_runtime.test_codex_sources_config_layers import write_config_probe_binary
@@ -819,6 +832,7 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
         session_id=None,
         tool_config={
             **config_without_disable_features,
+            "disable_features": disable_features,
             "review_engine_binary": str(fake.resolve()),
             "review_snapshot_root": str(snapshot),
             "review_reject_root": str(snapshot),
@@ -828,9 +842,29 @@ def test_codex_adapter_disables_apps_connector_in_review_isolation(tmp_path):
         },
     )
     bypass_idx = plan.cmd.index("--dangerously-bypass-approvals-and-sandbox")
-    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "apps"]
+    assert plan.cmd[bypass_idx + 1 : bypass_idx + 3] == ["--disable", "hooks" if disable_features else "apps"]
     disable_flags = [plan.cmd[i + 1] for i, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_flags == ["apps"]
+    assert disable_flags == [*(disable_features or []), "apps"]
+    assert not any(
+        token == "--enable" and plan.cmd[index + 1] == "hooks"
+        for index, token in enumerate(plan.cmd[:-1])
+    )
+    assert not any(token.startswith("hooks.PreToolUse=") for token in plan.cmd)
+
+
+@pytest.mark.parametrize("container", [list, tuple])
+@pytest.mark.parametrize("review_isolation", [False, True])
+def test_codex_adapter_filters_only_bound_feature_disables(container, review_isolation):
+    flags = CodexAdapter._tool_config_flags({
+        "review_isolation": review_isolation,
+        "disable_features": container(["hooks", "shell_tool", "apps", "hooks", None, ""]),
+        "enable_features": ["apps"],
+        "config_overrides": {"features.hooks": False},
+    })
+    expected = ["--disable", "shell_tool"]
+    if review_isolation:
+        expected = ["--disable", "hooks", *expected, "--disable", "hooks"]
+    assert flags == expected
 
 
 def test_codex_adapter_binds_valid_output_schema(tmp_path):
@@ -930,7 +964,7 @@ def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
         },
     )
     disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
-    assert disable_pairs == ["apps", "shell_tool", "browser_use"]
+    assert disable_pairs == ["shell_tool", "browser_use", "apps"]
 
 
 def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
@@ -1832,6 +1866,8 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
     raw FileNotFoundError. It must also write a usage record for
     observability.
     """
+    from unittest.mock import MagicMock
+
     from agent_runtime.errors import AgentUnavailableError
 
     # Patch Popen to raise FileNotFoundError as if the codex binary
@@ -1846,7 +1882,7 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
         ) as mock_write,
         patch(
             "agent_runtime.runner.subprocess.Popen",
-            side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
+            _agent_only_popen(MagicMock(side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"))),
         ),
         pytest.raises(AgentUnavailableError, match="Popen failed"),
     ):
@@ -1885,8 +1921,14 @@ def _agent_only_popen(agent_popen):
     or inflate ``call_count`` / ``call_args_list`` assertions (#7020).
     """
     from unittest.mock import MagicMock
+    real_popen = subprocess.Popen
 
     def _wrapper(*args, **kwargs):
+        command = args[0] if args else kwargs.get("args", ())
+        # Source hook attestation is a real, read-only Git probe, independent
+        # of the agent spawn whose lifecycle this mock exercises.
+        if command and command[0] == "/usr/bin/git":
+            return real_popen(*args, **kwargs)
         if "env" not in kwargs:
             isolation_proc = MagicMock()
             _popen_proc_for_subprocess_run(isolation_proc)
@@ -1980,9 +2022,11 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, re
 
     watchdog_state = WatchdogState(start_time=base_time, last_activity=base_time)
     poll_ticks = 0
+    watchdog_started = False
 
     def fake_start_watchdog(proc, *args, **kwargs):
-        nonlocal simulated_now
+        nonlocal simulated_now, watchdog_started
+        watchdog_started = True
         simulated_now += 10.0  # Past the 5s warmup before the first check.
         if stdout_delay_ticks == 0:
             _stdout_streamer(proc, watchdog_state)
@@ -1990,9 +2034,9 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, re
 
     def poll_tick(_interval):
         nonlocal poll_ticks, simulated_now
-        # The time module is shared by telemetry/background threads. Their
-        # sleeps must not advance this test's simulated runner poll counter.
-        if get_ident() != caller_thread:
+        # The time module is also shared by source-attestation subprocesses
+        # and background threads; count only sleeps after watchdog startup.
+        if get_ident() != caller_thread or not watchdog_started:
             return real_sleep(_interval)
         poll_ticks += 1
         # A broken fixture must fail in bounded simulated ticks, never hang CI.

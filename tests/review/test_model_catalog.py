@@ -5,11 +5,13 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import os
 import pickle
 import runpy
 import shutil
 import subprocess
 import sys
+import tomllib
 from contextlib import contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
@@ -28,24 +30,57 @@ BASELINE = json.loads(gzip.decompress((FIXTURE / "baseline.json.gz").read_bytes(
 INPUTS = json.loads((FIXTURE / "inputs.json").read_bytes())
 CAPTURE = runpy.run_path(str(FIXTURE / "capture.py"))
 
-# Keep the frozen capture script byte-pinned. Apply the cache only inside its
-# fresh subprocess, leaving production catalog validation unchanged.
+# Keep the frozen capture script byte-pinned. Scope caching and verified source
+# handle normalization to its fresh subprocess, leaving production unchanged.
 CAPTURE_RUNNER = """
 import runpy
 import sys
+from unittest.mock import patch
 source = sys.argv[sys.argv.index("--source-root") + 1]
 sys.path[:0] = [source, source + "/scripts", source + "/packages/v4-runtime/src"]
-cached_capture_reads = runpy.run_path(source + "/tests/review/test_model_catalog.py")["cached_capture_reads"]
+helpers = runpy.run_path(source + "/tests/review/test_model_catalog.py")
+cached_capture_reads = helpers["cached_capture_reads"]
+captured_invocation = helpers["captured_invocation"]
 sys.argv = sys.argv[1:]
 capture = runpy.run_path(sys.argv[0])
 original = capture["capture"]
+plain = capture["plain"]
+def capture_plain(value):
+    return captured_invocation(value, source, plain)
 def cached_capture(*args, **kwargs):
     # Enter only after main has installed its hermetic environment.
-    with cached_capture_reads():
+    with cached_capture_reads(), patch.dict(original.__globals__, {"plain": capture_plain}):
         return original(*args, **kwargs)
 capture["main"].__globals__["capture"] = cached_capture
 capture["main"]()
 """
+
+
+def captured_invocation(value, source, plain):
+    """Normalize only an owned Codex directory handle verified against the source.
+
+    Capture invocation data before releasing the construction-only handle.
+    Keep the frozen serializer and all other invocation fields unchanged.
+    """
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES, CodexAdapter
+
+    if not isinstance(value, InvocationPlan) or "LU_CODEX_HOOK_SOURCE" not in value.env_overrides:
+        return plain(value)
+    try:
+        owned = _HOOK_SOURCE_HANDLES.get(id(value))
+        if owned is None or owned[0]() is not value:
+            raise ValueError("capture source binding is not an owned handle")
+        locator = value.env_overrides["LU_CODEX_HOOK_SOURCE"]
+        if locator != f"/proc/{os.getpid()}/fd/{owned[1]}":
+            raise ValueError("capture source binding differs from its owned handle")
+        if Path(locator).resolve(strict=True) != Path(source).resolve(strict=True):
+            raise ValueError("capture source handle targets a different checkout")
+        result = plain(value)
+        result["env_overrides"]["LU_CODEX_HOOK_SOURCE"] = str(Path(source).resolve(strict=True))
+        return result
+    finally:
+        CodexAdapter().cleanup_invocation(value)
 
 
 @contextmanager
@@ -134,6 +169,94 @@ def test_cursor_trailer_revision_preserves_all_other_frozen_receipts():
 
 RESOURCE_OVERLAY_PATH = FIXTURE / "routing-10263.json.gz"
 RESOURCE_OVERLAY = json.loads(gzip.decompress(RESOURCE_OVERLAY_PATH.read_bytes()))
+CODEX_OVERLAY_PATH = FIXTURE / "routing-10305.json.gz"
+CODEX_OVERLAY = json.loads(gzip.decompress(CODEX_OVERLAY_PATH.read_bytes()))
+
+
+def approved_prior_baseline(baseline):
+    """Layer every earlier approved overlay, including #10083 and #10355, before #10305."""
+    return approved_claude_cap_baseline(approved_cursor_trailer_baseline(approved_launcher_canary_baseline({
+        **approved_review_baseline(baseline),
+        **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
+    })))
+
+
+def approved_codex_baseline(baseline):
+    """Insert #10305 hook flags by row without replacing other adapter data."""
+    adapters = deepcopy(baseline["adapters"])
+    for index in CODEX_OVERLAY["adapter_rows"]:
+        cmd = adapters[index]["value"]["cmd"]
+        position = cmd.index("--disable")
+        assert cmd[position:position + 2] == ["--disable", "apps"]
+        cmd[position:position] = CODEX_OVERLAY["hook_flags"]
+        adapters[index]["value"]["env_overrides"].update(CODEX_OVERLAY["env_overrides"])
+    return {**baseline, "adapters": adapters}
+
+
+@pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
+def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuration):
+    assert set(CODEX_OVERLAY) == {"adapter_rows", "hook_flags", "env_overrides"}
+    assert CODEX_OVERLAY["env_overrides"] == {"LU_CODEX_HOOK_SOURCE": "<SOURCE_ROOT>"}
+    assert CODEX_OVERLAY["adapter_rows"] == [0, 2, 4, 6]
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    baseline = approved_prior_baseline(json.loads(gzip.decompress(path.read_bytes())))
+    before = baseline["adapters"]
+    after = approved_codex_baseline(baseline)["adapters"]
+    assert len(before) == len(after) == len(INPUTS["adapters"]) == 112
+    changed_rows = []
+    expected_hooks = tomllib.loads(CODEX_OVERLAY["hook_flags"][-1])["hooks"]["PreToolUse"]
+    assert len(expected_hooks) == 1
+    assert expected_hooks[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch|write_stdin)$"
+    assert expected_hooks[0]["hooks"][0]["timeout"] == 45
+    command_digests = ['5f7bf49e59d9889b405e2000291e485fba57b405c1b1e7bbcbd7a793c9c873d6']
+    metadata = [
+        {"type": "command", "timeout": 45, "statusMessage": "Running Codex tool policy"},
+    ]
+    for index, (group, relative) in enumerate(zip(expected_hooks, (
+        "scripts/agent_runtime/codex_hook_entry.sh",
+    ), strict=True)):
+        assert len(group["hooks"]) == 1
+        command = group["hooks"][0]["command"]
+        assert group["hooks"][0] == {"command": command, **metadata[index]}
+        assert hashlib.sha256(command.encode()).hexdigest() == command_digests[index]
+        assert relative in command
+        assert "LU_CODEX_HOOK_SOURCE" in command and "git -C" in command
+        assert "<SOURCE_ROOT>" not in command
+    for index, (old, new, inputs) in enumerate(zip(before, after, INPUTS["adapters"], strict=True)):
+        if old == new:
+            continue
+        changed_rows.append(index)
+        assert inputs["agent"] in {"codex", "codex-desktop"}
+        assert inputs["isolation"] is False
+        restored = deepcopy(new)
+        cmd = restored["value"]["cmd"]
+        position = cmd.index("--dangerously-bypass-hook-trust") - 2
+        assert cmd[position:position + 4] == ["--enable", "hooks", "--dangerously-bypass-hook-trust", "-c"]
+        assert tomllib.loads(cmd[position + 4]) == {"hooks": {"PreToolUse": expected_hooks}}
+        assert cmd[position + 5:position + 7] == ["--disable", "apps"]
+        del cmd[position:position + 5]
+        assert restored["value"]["env_overrides"].pop("LU_CODEX_HOOK_SOURCE") == "<SOURCE_ROOT>"
+        assert restored == old
+    assert changed_rows == [0, 2, 4, 6]
+
+
+@pytest.mark.parametrize("configuration", ["host-cli", "no-cli"])
+def test_codex_hook_overlay_preserves_other_adapter_data(configuration):
+    path = FIXTURE / ("baseline.json.gz" if configuration == "host-cli" else "no-cli/baseline.json.gz")
+    baseline = approved_prior_baseline(json.loads(gzip.decompress(path.read_bytes())))
+    # A future disjoint overlay must survive, including metadata on Codex rows.
+    baseline["adapters"][8]["value"]["env_overrides"]["future_claude_override"] = "preserved"
+    baseline["adapters"][0]["value"]["env_overrides"]["future_codex_override"] = "preserved"
+    original = deepcopy(baseline)
+    updated = approved_codex_baseline(baseline)
+    assert baseline == original
+    assert updated["adapters"][8:] == original["adapters"][8:]
+    assert updated["adapters"][0]["value"]["env_overrides"] == {
+        **original["adapters"][0]["value"]["env_overrides"], **CODEX_OVERLAY["env_overrides"],
+    }
+    assert {key: value for key, value in updated.items() if key != "adapters"} == {
+        key: value for key, value in original.items() if key != "adapters"
+    }
 
 
 def approved_launcher_canary_baseline(baseline):
@@ -162,11 +285,8 @@ def approved_claude_cap_baseline(baseline):
 
 # Apply literal paragraph edits last: a surface overlay such as #10291's Grok
 # help revision must neither erase this wording nor have its other lines erased.
-APPROVED_BASELINE = approved_claude_cap_baseline(approved_cursor_trailer_baseline(
-    approved_launcher_canary_baseline({
-        **REVIEW_CAPACITY_BASELINE, **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-    })
-))
+# #10305 composes after #10355: the Codex insertion never replaces launcher help.
+APPROVED_BASELINE = approved_codex_baseline(approved_prior_baseline(BASELINE))
 APPROVED_INPUTS = {**INPUTS, **GEMINI_OVERLAY["inputs"]}
 
 
@@ -396,12 +516,13 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
     assert (semantic_changes, selection_changes) == (24, 8)
 
 
-# Literal digests bind the #10205 Cursor wire pin and allowlist revision and
-# the #10262 explicit AGY review-risk refusals in both configurations; see SPEC.md.
+# Literal digests bind the #10205 Cursor revision, #10262 AGY review-risk
+# refusals and approved overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
+    "routing-10305.json.gz": "0473f73f5e50f3d851c2b023d9e7f251a61a13d884036e3e725ec090291ae7fd",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "958f43d7368d0552cbf1b5706df35da56cdc9408e4834e05bb0911754ae58455",
+    "SPEC.md": "3a0db40914a9155f6041dd4acd7764bde550af39121cafa8795fdafc29bbb8f7",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",
@@ -419,6 +540,12 @@ def test_frozen_artifacts_are_pinned_independently_of_manifest():
     assert set(PINNED_DIGESTS) == {str(p.relative_to(FIXTURE)) for p in FIXTURE.rglob("*") if p.is_file()}
     for name, expected in PINNED_DIGESTS.items():
         assert hashlib.sha256((FIXTURE / name).read_bytes()).hexdigest() == expected, name
+
+
+def test_spec_does_not_publish_hook_mechanism_details():
+    text = (FIXTURE / "SPEC.md").read_text(encoding="utf-8")
+    for leaked in ("codex_hook_entry", "guard-public-github-text", "Running Codex tool policy", "timeout 45", "timeout 5", "^(Bash"):
+        assert leaked not in text, leaked
 
 
 def test_frozen_hashes_and_matrix_denominator():
@@ -523,15 +650,23 @@ from scripts.review import model_catalog
 original_validator = model_catalog.validate_catalog
 original_parser = delegate.build_parser
 
+def plain(value):
+    return value
+
+original_plain = plain
+
 def capture():
     assert model_catalog.validate_catalog is not original_validator
     assert delegate.build_parser is not original_parser
+    assert plain is not original_plain
+    assert plain({"unrelated": "preserved"}) == {"unrelated": "preserved"}
     print("caches active")
 
 def main():
     capture()
     assert model_catalog.validate_catalog is original_validator
     assert delegate.build_parser is original_parser
+    assert plain is original_plain
     print("caches restored")
 ''')
     result = subprocess.run(
@@ -540,6 +675,47 @@ def main():
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "caches active\ncaches restored\n"
+
+
+@pytest.mark.parametrize("defect", [None, "unowned", "wrong-locator", "wrong-source", "closed"])
+def test_capture_source_handle_normalization_requires_exact_owned_source(tmp_path, defect):
+    import weakref
+
+    from scripts.agent_runtime.adapters.base import InvocationPlan
+    from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES
+
+    source = tmp_path / "source"
+    source.mkdir()
+    fd = os.open(source, os.O_RDONLY | os.O_DIRECTORY)
+    locator = f"/proc/{os.getpid()}/fd/{fd}"
+    binding = str(source) if defect == "wrong-locator" else locator
+    plan = InvocationPlan(
+        cmd=["codex", "exec"], cwd=tmp_path, stdin_payload="fixture", output_file=None,
+        env_overrides={"LU_CODEX_HOOK_SOURCE": binding, "unrelated": "preserved"},
+    )
+    if defect != "unowned":
+        _HOOK_SOURCE_HANDLES[id(plan)] = (weakref.ref(plan), fd)
+    expected_source = tmp_path if defect == "wrong-source" else source
+    if defect == "closed":
+        os.close(fd)
+        # Keep the registry's ownership check intact while supplying a closed locator.
+        with patch("scripts.agent_runtime.adapters.codex.os.close"):
+            with pytest.raises(FileNotFoundError):
+                captured_invocation(plan, expected_source, CAPTURE["plain"])
+    elif defect:
+        with pytest.raises(ValueError, match="capture source"):
+            captured_invocation(plan, expected_source, CAPTURE["plain"])
+    else:
+        expected = CAPTURE["plain"](plan)
+        expected["env_overrides"]["LU_CODEX_HOOK_SOURCE"] = str(source)
+        assert captured_invocation(plan, source, CAPTURE["plain"]) == expected
+    assert plan.env_overrides["LU_CODEX_HOOK_SOURCE"] == binding
+    assert id(plan) not in _HOOK_SOURCE_HANDLES
+    if defect == "unowned":
+        # The capture must not release a handle whose ownership is unproven.
+        assert Path(locator).resolve(strict=True) == source
+        os.close(fd)
+    assert not Path(locator).exists()
 
 
 @pytest.mark.parametrize("surface", BASELINE)
@@ -714,11 +890,7 @@ def test_no_cli_capture_equals_separate_frozen_surface(tmp_path):
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
     actual = json.loads(gzip.decompress((output / "baseline.json.gz").read_bytes()))
     original = json.loads(gzip.decompress((expected / "baseline.json.gz").read_bytes()))
-    assert actual == approved_claude_cap_baseline(approved_cursor_trailer_baseline(
-        approved_launcher_canary_baseline({
-            **approved_review_baseline(original), **GEMINI_OVERLAY["surfaces"], **RESOURCE_OVERLAY["surfaces"],
-        })
-    ))
+    assert actual == approved_codex_baseline(approved_prior_baseline(original))
     assert len(actual["launchers"]) == 70
     errors = [row.get("error", "") for row in actual["adapters"]]
     assert any("grok" in error and "PATH" in error for error in errors)

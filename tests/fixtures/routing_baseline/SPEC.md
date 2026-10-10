@@ -1,5 +1,88 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Codex worker safety-hook overlay (#10305)
+
+`routing-10305.json.gz` is a per-row insertion fixture, applied after all earlier
+approved overlays: review-capacity, Claude advisor/launcher help (#10083),
+Gemini, resource-policy, launcher wording, and Claude weekly-cap help (#10355).
+Its `adapter_rows` are exactly
+`[0, 2, 4, 6]` and
+its `hook_flags` are the five inserted argv tokens. Its `env_overrides` adds
+one private source binding to those rows. It never replaces complete rows or
+surfaces. The same insertion applies independently to the host-CLI
+and no-CLI baselines, preserving their binary discovery and refusal results.
+
+Both configurations were freshly captured after merging main into the
+#10305 branch, preserving the implementation at `789610c93a`, using
+the byte-pinned `capture.py` through the test module's scoped `CAPTURE_RUNNER`
+cache, with `--configuration host-cli` (the default) and
+`--configuration no-cli`. Extracting the insertion from each changed row
+produces identical flags in both captures. Against the layered approved
+baseline, both captures change exactly four of the 112 adapter rows:
+
+| Row | Agent | Mode | Isolation |
+| --- | --- | --- | --- |
+| 0 | `codex` | read-only | false |
+| 2 | `codex` | workspace-write | false |
+| 4 | `codex-desktop` | read-only | false |
+| 6 | `codex-desktop` | workspace-write | false |
+
+Each changed row inserts five argv tokens immediately before the existing
+`--disable apps`: `--enable`, `hooks`, `--dangerously-bypass-hook-trust`, `-c`
+and the inline `hooks.PreToolUse` TOML value. That value contains exactly one
+tracked command-hook group. Its matcher, entry point, timeout and status
+text are pinned by the scope test in `tests/review/test_model_catalog.py` and
+are not restated here. The relative commands resolve using the private source
+binding supplied by the adapter. The trust flag admits these
+tracked non-managed hooks, while
+the inline binding avoids dependence on deployed project-hook discovery.
+
+Removing exactly those five tokens and the source binding reproduces each layered
+approved row, including
+all metadata, mode flags, output paths and the final apps disable. Every other
+adapter row, including isolated-review refusals, is unchanged. Claude rows
+8, 10, 12, 14, 16, 18, 20 and 22 retain #10083's
+`CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1` override unchanged. Fresh captures
+also reproduce every other approved surface, input matrix and historical
+occurrence artifact unchanged. The Codex overlay leaves the compressed baselines, capture
+driver and checksum manifests unchanged; the independent #10262 refresh
+described below updates only the approved AGY dispatch refusals.
+
+Independent literal digests in `tests/review/test_model_catalog.py` pin the
+overlay and this specification. Its scope test verifies both configurations,
+the exact changed-row denominator, complete hook values and full layered
+row equality after removing only the approved insertion and source binding. A separate mutation
+test proves unrelated adapter changes survive without mutating the input.
+The scope check rejects the stale whole-surface overlay and its obsolete
+hook commands; independent full captures verify the composed baseline.
+This fixture proves
+invocation construction; runtime hook behavior is checked separately by
+`tests/test_codex_hooks_contract.py`.
+
+The #10325 merge onto current main regenerates the insertion with the adapter's
+hook constructor against the merged tracked sources. That constructor reproduces
+the pinned five-token insertion, so `routing-10305.json.gz` stays byte-identical.
+The row denominator, source binding, matchers and hook metadata remain unchanged.
+The Claude weekly-cap help overlay below is applied first and changes only
+launcher help; this insertion does not alter those rows. Both fresh-capture
+configurations must reproduce that composed baseline.
+
+The ordinary worker's private source binding is now an owned directory handle,
+whose process and descriptor numbers vary between captures. The scoped
+`CAPTURE_RUNNER` wraps the frozen serializer for invocation plans only. Before
+mapping that binding to the existing `<SOURCE_ROOT>` token, it verifies the
+exact plan's registered ownership, the current process and descriptor locator,
+and resolution to the supplied source checkout. It rejects unowned, replaced,
+closed or differently targeted bindings, leaves every other field unchanged,
+and releases owned handles after serialization, including on failure.
+This normalization retains the source-identity assertion without freezing
+process-local numbers. The constructor's command digest already matches the
+merged committed sources; the overlay, historical baselines, capture driver
+and manifests therefore remain byte-identical. Reproduce both configurations
+with the scoped runner above; standalone `capture.py` intentionally retains
+raw handle bindings. Negative tests cover each rejected binding and verify
+that invocation data and unowned handles are preserved.
+
 ## Claude weekly cap help (#10355)
 
 `tests/review/fixtures/claude-cap-10355.json` records the launcher help lines
@@ -16,7 +99,7 @@ the other overlays as exact-once literal insertions. Its digest is pinned in
 `tests/review/test_model_catalog.py`, and a scope test checks that no other row,
 field or surface changes. Historical baselines, inputs, the occurrence ledger,
 `SHA256SUMS` and `capture.py` stay byte-identical. Any other difference blocks
-regeneration.
+regeneration. The Codex insertion above is applied after this launcher overlay.
 
 ## Explicit AGY review risk (#10262)
 

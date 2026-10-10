@@ -38,10 +38,12 @@ import logging
 import os
 import re
 import selectors
+import shlex
 import shutil
 import subprocess
 import tempfile
 import time
+import weakref
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -75,6 +77,137 @@ _EXCERPT_CHARS = 500
 
 class CodexReviewConfigError(ValueError):
     """A review's config provenance cannot establish its MCP boundary."""
+
+
+_HOOK_SOURCE_ENV = "LU_CODEX_HOOK_SOURCE"
+_HOOK_SOURCE_HANDLES: dict[int, tuple[weakref.ReferenceType[InvocationPlan], int]] = {}
+
+
+def _release_hook_source(plan_id: int) -> None:
+    owned = _HOOK_SOURCE_HANDLES.pop(plan_id, None)
+    if owned is not None:
+        os.close(owned[1])
+
+
+# Execute the very bytes checked, avoiding a second, raceable read of the entry.
+# -I prevents the session cwd/PYTHONPATH from supplying bootstrap imports.
+_HOOK_BOOTSTRAP = """import hashlib, os, stat, sys
+from pathlib import Path
+try:
+    root = Path(sys.argv[1]).resolve(strict=True)
+    if root != Path(os.environ['LU_CODEX_HOOK_SOURCE']).resolve(strict=True):
+        raise ValueError('source mismatch')
+    candidate = root / sys.argv[2]
+    entry = candidate.resolve(strict=True)
+    if not entry.is_relative_to(root) or entry != candidate:
+        raise ValueError('entry escape')
+    fd = os.open(entry, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 1048576:
+            raise ValueError('entry is not a bounded regular file')
+        content = handle.read(1048577)
+    if hashlib.sha256(content).hexdigest() != sys.argv[3]:
+        raise ValueError('entry changed')
+except (OSError, ValueError, KeyError, RuntimeError):
+    print('Codex worker PreToolUse entry verification failed', file=sys.stderr)
+    sys.exit(2)
+args = sys.argv[4:]
+if entry.suffix == '.sh':
+    os.execv('/bin/bash', ['bash', '-c', content.decode(), str(entry), *args])
+sys.argv = [str(entry), *args]
+exec(compile(content, str(entry), 'exec'), {'__name__': '__main__', '__file__': str(entry)})
+"""
+
+
+def _portable_hook_command(command: str, root: Path) -> str:
+    """Bind a tracked entry to the source checkout, never the session's Git root.
+
+    The public command contains a relative entry and its tracked content digest.
+    The launch environment uses an opaque source-directory handle.
+    """
+    try:
+        root = root.resolve(strict=True)
+        words = shlex.split(command)
+        from scripts.common.repo_root import project_interpreter
+
+        python_entry = False
+        if words and words[0] in {"bash", "/bin/bash"}:
+            words.pop(0)
+        elif len(words) > 1 and words[0] == str(project_interpreter(root)):
+            python_entry = True
+            words.pop(0)
+        candidate = Path(words.pop(0))
+        if python_entry and candidate.suffix != ".py":
+            raise ValueError("unsupported Python entry")
+        entry = candidate.resolve(strict=True)
+        if not entry.is_relative_to(root):
+            raise ValueError("entry escape")
+        if entry != candidate or not entry.is_file():
+            raise ValueError("entry is not a regular source path")
+        relative = candidate.relative_to(root).as_posix()
+        tracked = subprocess.run(
+            ["/usr/bin/git", "-C", str(root), "show", f"HEAD:{relative}"],
+            env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+            capture_output=True, check=True, timeout=2,
+        ).stdout
+        if entry.read_bytes() != tracked:
+            raise ValueError("entry differs from tracked content")
+    except (OSError, ValueError, IndexError, subprocess.SubprocessError) as exc:
+        raise RuntimeError("Codex worker PreToolUse guard has an unportable or untracked path") from exc
+    git = '/usr/bin/env -i /usr/bin/git -C "${LU_CODEX_HOOK_SOURCE:?}"'
+    return (
+        f'root="$({git} rev-parse --show-toplevel)" && '
+        f'common="$({git} rev-parse --path-format=absolute --git-common-dir)" && '
+        '"${common%/*}/.venv/bin/python" -I -c '
+        + shlex.quote(_HOOK_BOOTSTRAP)
+        + ' "$root" '
+        + " ".join(shlex.quote(word) for word in [relative, hashlib.sha256(tracked).hexdigest(), *words])
+        + " || exit 2"
+    )
+
+
+def _worker_hook_flags() -> list[str]:
+    """Bind tracked pre-tool policy, independent of deployed project discovery.
+
+    Codex supports inline hooks through TOML CLI overrides. Non-managed hooks
+    require trust even for session flags; this harness vets its tracked sources
+    and uses the documented automation trust flag (learn.chatgpt.com/docs/hooks).
+    """
+    from scripts.agent_runtime.codex_hook_policy import (
+        LOCAL_BASH_GUARDS,
+        MERGE_GUARDS,
+        PRIMARY_WRITE_GUARD,
+        REWRITE_BASH_GUARDS,
+    )
+
+    from .claude import _worker_guard_settings
+
+    root = Path(__file__).resolve().parents[3]
+    manifest = _json.loads((root / "agents_extensions/codex/hooks.json").read_text(encoding="utf-8"))
+    groups = manifest["hooks"]["PreToolUse"]
+    entry = root / "scripts/agent_runtime/codex_hook_entry.sh"
+    if not entry.is_file() or not groups:
+        raise RuntimeError("Codex worker PreToolUse guards unavailable")
+    for group in groups:
+        for hook in group["hooks"]:
+            expected = 'bash "$(git rev-parse --show-toplevel)/scripts/agent_runtime/codex_hook_entry.sh" pre-tool-use'
+            if hook["command"] != expected:
+                raise RuntimeError("Codex worker PreToolUse runner has an unsupported form")
+            hook["command"] = _portable_hook_command(f"bash {shlex.quote(str(entry))} pre-tool-use", root)
+
+    # Reuse the tracked shared-settings reader. Keep the deterministic Codex
+    # runner, adding shared guards it does not already execute (#10305).
+    covered = {name for name, _ in (*LOCAL_BASH_GUARDS, *REWRITE_BASH_GUARDS, PRIMARY_WRITE_GUARD, *MERGE_GUARDS)} | {"enforce-venv.sh"}
+    for group in _json.loads(_worker_guard_settings())["hooks"]["PreToolUse"]:
+        missing = [hook for hook in group["hooks"] if Path(shlex.split(hook["command"])[-1]).name not in covered]
+        if missing:
+            portable = [{**hook, "command": _portable_hook_command(hook["command"], root)} for hook in missing]
+            groups.append({**group, "hooks": portable})
+    return [
+        "--enable", "hooks", "--dangerously-bypass-hook-trust",
+        "-c", "hooks.PreToolUse=" + CodexAdapter._encode_config_value(groups),
+    ]
 
 
 def _codex_config_layers(
@@ -473,11 +606,11 @@ class CodexAdapter:
         # modes (matches start-codex.sh). ``_tool_config_flags`` emits the
         # writer-isolation ``--disable shell_tool / goals / browser_use /
         # in_app_browser / image_generation / apps / plugins / multi_agent``
-        # list. ORDER MATTERS: Codex CLI processes ``--enable`` and
-        # ``--disable`` as ordered toggles, so the disable list MUST come
-        # after the enable to actually suppress ``multi_agent``. The 2026-05-22
-        # ab ask-codex `codex-node-repl-leak-2026-05-22` diagnosis flagged
-        # this ordering as a secondary leak path (see PR #2230 follow-up).
+        # list. ORDER MATTERS: Codex CLI processes --enable and --disable
+        # as ordered toggles. Keep mode enables before caller disables, and
+        # hook enables before the final apps disable (PR #2230 follow-up).
+        # Historical context: 2026-05-22 ab ask-codex
+        # `codex-node-repl-leak-2026-05-22` diagnosis; see env_sanitize.py.
         if has_session_to_resume and tc.get("review_isolation"):
             raise ValueError("CodexAdapter: sealed review sessions cannot resume")
         if tc.get("review_isolation"):
@@ -499,14 +632,19 @@ class CodexAdapter:
             cmd.extend(["-c", 'sandbox_mode="read-only"'])
         else:
             cmd.extend(self._mode_flags(mode))
+        cmd.extend(self._tool_config_flags(tool_config))
+        if not tc.get("review_isolation"):
+            # Sealed reviews run in an OS sandbox without tracked hook mounts.
+            # Ordinary workers, including scoped homes and resumes, enable
+            # tracked hooks. _tool_config_flags filters caller hooks disables:
+            # an explicit disable must not override the required hook enable.
+            cmd.extend(_worker_hook_flags())
         # Dispatched workers must have NO write-capable GitHub connector tools
         # (#7181). Disabling the `apps` feature suppresses `codex_apps` MCP
         # connectors (including `github.create_commit`, `github.update_ref`,
         # `github.create_pr`) across all runtime invocations (fresh & resume).
-        # ORDER MATTERS: must come after `_mode_flags` in case any mode
-        # enables toggles.
+        # Keep the unconditional apps disable after every feature enable.
         cmd.extend(["--disable", "apps"])
-        cmd.extend(self._tool_config_flags(tool_config))
         mcp_servers = tc.get("mcp_servers")
         sources = mcp_servers.get("sources") if isinstance(mcp_servers, dict) else None
         sources_defined = isinstance(sources, dict) and bool(sources.get("command") or sources.get("url"))
@@ -546,15 +684,40 @@ class CodexAdapter:
             # real ``$CODEX_HOME/auth.json``).
             env_overrides["CODEX_HOME"] = str(codex_home_override)
 
-        return InvocationPlan(
-            cmd=cmd,
-            cwd=execution_cwd,
-            stdin_payload=prompt,
-            output_file=output_path,
-            env_overrides=env_overrides,
-            liveness_paths=(output_path,),
-            metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
-        )
+        source_fd = None
+        if not tc.get("review_isolation"):
+            # Keep the source pinned without publishing its checkout location.
+            # The runner closes this parent-owned handle after the invocation.
+            source_fd = os.open(Path(__file__).resolve().parents[3], os.O_RDONLY | os.O_DIRECTORY)
+            locator = f"/proc/{os.getpid()}/fd/{source_fd}"
+            if not Path(locator).is_dir():
+                os.close(source_fd)
+                raise RuntimeError("Codex worker source handle unavailable")
+            env_overrides[_HOOK_SOURCE_ENV] = locator
+
+        try:
+            plan = InvocationPlan(
+                cmd=cmd,
+                cwd=execution_cwd,
+                stdin_payload=prompt,
+                output_file=output_path,
+                env_overrides=env_overrides,
+                liveness_paths=(output_path,),
+                metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
+            )
+            if source_fd is not None:
+                plan_id = id(plan)
+                owner = weakref.ref(plan, lambda _: _release_hook_source(plan_id))
+                _HOOK_SOURCE_HANDLES[plan_id] = (owner, source_fd)
+            return plan
+        except Exception:
+            if source_fd is not None:
+                os.close(source_fd)
+            raise
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Release only the source handle owned by this invocation."""
+        _release_hook_source(id(plan))
 
     @classmethod
     def _tool_config_flags(cls, tool_config: dict | None) -> list[str]:
@@ -573,7 +736,9 @@ class CodexAdapter:
           before invocation so the model can't reach for them and trip
           the ``writer_trace_isolation`` gate with ``wrong_tool_family``
           (``apps`` is filtered here because it is emitted unconditionally
-          in ``build_invocation``).
+          in ``build_invocation``; ``hooks`` is filtered for ordinary workers
+          because they bind tracked safety hooks. Sealed reviews do not bind
+          those hooks and retain caller disables).
           See ``codex_home_override`` for the companion MCP-scoping fix.
         - ``codex_home_override``: NOT translated to flags here — it's a
           companion ``env_overrides`` key handled in
@@ -606,8 +771,11 @@ class CodexAdapter:
 
         disable_features = tool_config.get("disable_features")
         if isinstance(disable_features, (list, tuple)):
+            bound_features = {"apps"}
+            if not tool_config.get("review_isolation"):
+                bound_features.add("hooks")
             for feature in disable_features:
-                if isinstance(feature, str) and feature and feature != "apps":
+                if isinstance(feature, str) and feature and feature not in bound_features:
                     flags.extend(["--disable", feature])
 
         output_schema_path = tool_config.get("output_schema_path")
@@ -661,9 +829,15 @@ class CodexAdapter:
 
     @staticmethod
     def _encode_config_value(value: Any) -> str:
-        """Encode a Python scalar/list into a TOML-compatible literal."""
+        """Encode a scalar, array or inline table into a TOML-compatible literal."""
         if isinstance(value, tuple):
             value = list(value)
+        if isinstance(value, dict):
+            return "{" + ",".join(
+                f"{_json.dumps(key)}={CodexAdapter._encode_config_value(nested)}" for key, nested in value.items()
+            ) + "}"
+        if isinstance(value, list):
+            return "[" + ",".join(CodexAdapter._encode_config_value(nested) for nested in value) + "]"
         return _json.dumps(value)
 
     def parse_response(

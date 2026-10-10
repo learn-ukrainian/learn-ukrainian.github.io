@@ -79,9 +79,16 @@ without letting one slow merge guard starve the other.
 
 `codex_hook_policy.py` converts an individual guard timeout into exit code `2`
 with a concrete reason. Per the Codex `PreToolUse` contract, exit `2` blocks the
-tool call; a timeout therefore fails closed. The manifest's 45-second outer
+tool call; a timeout therefore fails closed. The injected worker hook also
+converts interpreter launch failures and exit `127` to exit `2`; missing
+commands do not fail open. The manifest's 45-second outer
 timeout remains a last-resort ceiling above the 3-second venv guard, local-chain,
 and concurrent network-guard budgets.
+
+Interactive stdin is unsupported by this command policy: `write_stdin` and
+`Bash` payloads containing `chars` are blocked with exit `2`, including empty
+polls. They do not bypass the guards. Workers must use complete command calls
+rather than interactive sessions for guarded operations.
 
 No policy guard writes a Codex JSON response to stdout. Unexpected stdout is
 redirected to diagnostics and fails closed, preventing multiple payloads from
