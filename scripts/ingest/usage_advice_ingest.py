@@ -348,6 +348,29 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
     if m_cue:
         clean = m_cue.group(1).strip()
 
+    # Pattern 0: Paired / multi-negation:
+    #   - "ані X, ані Y, а Z" -> ("X / Y", "Z")
+    #   - "ані X, ані Y [не підходять]" -> ("X / Y", "")
+    #   - "не X, а не Y, а Z" -> ("X / Y", "Z")
+    #   - "не X, а не Y" -> ("X / Y", "")
+    #   - "не X і/та не Y, а Z" -> ("X / Y", "Z")
+    #   - "не X і/та не Y" -> ("X / Y", "")
+    m_multi_neg = re.search(
+        r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,.\n!?]+?)»?\s*(?:,\s*а\s+не\s+|\s+(?:і|та|ані)\s+не\s+|,\s*ані\s+)«?([^»,.\n!?]+?)»?(?:,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^».\n!?]+)»?|(?=\s+не\b|[.,;!\n]|$))",
+        clean,
+        re.IGNORECASE,
+    )
+    if m_multi_neg:
+        q1 = m_multi_neg.group(1).strip(' «"“”».,;!?-')
+        q2 = m_multi_neg.group(2).strip(' «"“”».,;!?-')
+        q2 = re.split(r"\s+не\s+(?:підходять|вживаються|є|можна)\b", q2, flags=re.IGNORECASE)[0].strip(' «"“”».,;!?-')
+        raw_r = m_multi_neg.group(3)
+        r = raw_r.strip(' «"“”».,;!?-') if raw_r else ""
+        if r:
+            r = re.split(r",\s+(?:бо|оскільки|тому що|адже|якщо)\b", r, flags=re.IGNORECASE)[0].strip(' «"“”».,;!?-')
+        if q1 and q2 and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
+            return f"{q1} / {q2}", r
+
     # Pattern 1: [не|ані] X, а/але [вживайте...] Y
     m1 = re.search(
         r"(?:(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:не|ані)\s+«?([^»,\n.!?]+?)»?,\s*(?:а|але)\s+(?:вживайте\s+|казати\s+|писати\s+)?«?([^»\n.!?]+?)»?)(?:[.,;!\n]|$)",
@@ -357,31 +380,31 @@ def _parse_contrastive_verdict(text: str) -> tuple[str, str] | None:
     if m1:
         q = m1.group(1).strip(' «"“”».,;!?-')
         r = m1.group(2).strip(' «"“”».,;!?-')
-        if q and r:
+        if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
             return q, r
 
-    # Pattern 2a: Quoted «Y», а не/ані «X» anywhere
+    # Pattern 2a: Quoted «Y», а не «X» anywhere
     m_quoted = re.search(
-        r"«([^»\n.!?]+)»,\s*(?:а\s+не|ані)\s+«([^»\n.!?]+)»",
+        r"«([^»\n.!?]+)»,\s*а\s+не\s+«([^»\n.!?]+)»",
         clean,
         re.IGNORECASE,
     )
     if m_quoted:
         r = m_quoted.group(1).strip(' «"“”».,;!?-')
         q = m_quoted.group(2).strip(' «"“”».,;!?-')
-        if q and r:
+        if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
             return q, r
 
-    # Pattern 2b: Y, а не/ані X from start of clean text
+    # Pattern 2b: Y, а не X from start of clean text
     m2 = re.search(
-        r"^(«?[^»\n.!?:]+?»?),\s*(?:а\s+не|ані)\s+«?([^»\n.!?]+?)»?(?:[.,;!\n]|$)",
+        r"^(«?[^»\n.!?:]+?»?),\s*а\s+не\s+«?([^»\n.!?]+?)»?(?:[.,;!\n]|$)",
         clean,
         re.IGNORECASE,
     )
     if m2:
         r = m2.group(1).strip(' «"“”».,;!?-')
         q = m2.group(2).strip(' «"“”».,;!?-')
-        if q and r:
+        if q and r and not re.search(r"^(?:не|ані)\b", r, re.IGNORECASE):
             return q, r
 
     return None
@@ -489,13 +512,18 @@ def extract_movne_word_pairs(
         contrastive = _parse_contrastive_verdict(first_ans)
         if contrastive:
             q_cand, r_cand = contrastive
-            verdict_form = _clean_verdict(r_cand)
-            verdict_type = "preferred"
-            questioned_form = _clean_verdict(q_cand)
+            if r_cand:
+                verdict_form = _clean_verdict(r_cand)
+                verdict_type = "preferred"
+                questioned_form = _clean_verdict(q_cand)
+            else:
+                verdict_form = ""
+                verdict_type = "incorrect"
+                questioned_form = _clean_verdict(q_cand)
 
         pos_cues: list[str] = []
         neg_cues: list[str] = []
-        if not verdict_form:
+        if not contrastive and not verdict_form:
             for m in re.finditer(
                 r"(?<![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:(не\s+)?(правильно|неправильно|варто|слід|треба))(?![а-яА-ЯєіїґЄІЇҐa-zA-Z0-9'\-])(?:\s+(?:писати|казати|вживати))?[:\s—–-]+([^.!\n]+)",
                 first_ans,
@@ -519,7 +547,7 @@ def extract_movne_word_pairs(
                 verdict_type = "incorrect"
 
         first_ans_lower = first_ans.lower()
-        if not verdict_form:
+        if not contrastive and not verdict_form:
             if "обидві" in first_ans_lower or "обидва" in first_ans_lower or "і так, і так" in first_ans_lower:
                 verdict_type = "both_valid"
                 verdict_form = _clean_verdict(first_ans)
@@ -602,13 +630,13 @@ def extract_movne_word_pairs(
         if not questioned_form:
             questioned_form = question_body[:60].strip()
 
-        if not verdict_form and quotes:
+        if not contrastive and not verdict_form and quotes:
             for q in quotes:
                 if _contains_token(first_ans, q) and q != questioned_form:
                     verdict_form = q
                     break
 
-        if not verdict_form:
+        if not contrastive and not verdict_form:
             verdict_form = first_ans.split(".")[0].strip()[:80]
 
         reasoning = "\n\n".join(ans_parts)

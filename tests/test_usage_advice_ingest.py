@@ -808,6 +808,33 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs8[0]["questioned_form"], "квиток / білет")
         self.assertEqual(pairs8[0]["recommended_form"], "")
 
+        # Real lead-in with paired ані without alternative:
+        t_ani_no_alt = "Правильно: ані квиток, ані білет не підходять."
+        pairs_ani_no = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_ani1", "antusurzhuk", "квиток чи білет", "", t_ani_no_alt
+        )
+        self.assertEqual(len(pairs_ani_no), 1)
+        self.assertEqual(pairs_ani_no[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_ani_no[0]["recommended_form"], "")
+
+        # Real lead-in with paired ані with alternative:
+        t_ani_alt = "Правильно: ані квиток, ані білет, а талон."
+        pairs_ani_alt = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_ani2", "antusurzhuk", "квиток чи білет", "", t_ani_alt
+        )
+        self.assertEqual(len(pairs_ani_alt), 1)
+        self.assertEqual(pairs_ani_alt[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_ani_alt[0]["recommended_form"], "талон")
+
+        # Real lead-in with paired не ... а не ... with alternative:
+        t_ne_alt = "Правильно: не квиток, а не білет, а талон."
+        pairs_ne_alt = extract_movaua_usage_pairs(
+            1, "https://ukr-mova.in.ua/t_ne1", "antusurzhuk", "квиток чи білет", "", t_ne_alt
+        )
+        self.assertEqual(len(pairs_ne_alt), 1)
+        self.assertEqual(pairs_ne_alt[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_ne_alt[0]["recommended_form"], "талон")
+
         # Lead-in words ending in 'не': Для мене правильно, Головне правильно
         t9 = "Для мене правильно: білет, а не квиток."
         pairs9 = extract_movaua_usage_pairs(1, "https://ukr-mova.in.ua/t9", "antusurzhuk", "квиток чи білет", "", t9)
@@ -963,6 +990,34 @@ class TestUsageAdviceIngest(unittest.TestCase):
         self.assertEqual(pairs_mene[0]["questioned_form"], "квиток")
         self.assertEqual(pairs_mene[0]["verdict_form"], "білет")
         self.assertEqual(pairs_mene[0]["verdict_type"], "preferred")
+
+        # Real lead-in with paired ані with alternative in Glavcom:
+        html_ani_alt = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: «квиток» чи «білет»?</p>
+            <p>Правильно: ані квиток, ані білет, а талон.</p>
+        </div>
+        """
+        pairs_ani_g = extract_movne_word_pairs(1, 1, html_ani_alt)
+        self.assertEqual(len(pairs_ani_g), 1)
+        self.assertEqual(pairs_ani_g[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_ani_g[0]["verdict_form"], "талон")
+        self.assertEqual(pairs_ani_g[0]["verdict_type"], "preferred")
+
+        # Real lead-in with paired ані without alternative in Glavcom:
+        html_ani_none = """
+        <div class="post_text">
+            <h2>• 1 •</h2>
+            <p>Андрій: «квиток» чи «білет»?</p>
+            <p>Правильно: ані квиток, ані білет не підходять.</p>
+        </div>
+        """
+        pairs_ani_gn = extract_movne_word_pairs(1, 1, html_ani_none)
+        self.assertEqual(len(pairs_ani_gn), 1)
+        self.assertEqual(pairs_ani_gn[0]["questioned_form"], "квиток / білет")
+        self.assertEqual(pairs_ani_gn[0]["verdict_form"], "")
+        self.assertEqual(pairs_ani_gn[0]["verdict_type"], "incorrect")
 
         html_correct = """
         <div class="post_text">
