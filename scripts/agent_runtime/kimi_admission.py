@@ -42,6 +42,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from .redacted_env import RedactedEnv, env_safe_dataclass_eq
+
 POLICY_LINE = (
     "Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules."
 )
@@ -327,6 +329,12 @@ class CommitTree:
     repo: Path
     commit: str
     env: Mapping[str, str] | None = None
+
+    def __post_init__(self) -> None:
+        if self.env is not None:
+            object.__setattr__(self, "env", RedactedEnv(self.env))
+
+    __eq__ = env_safe_dataclass_eq
 
     def __str__(self) -> str:
         return f"in commit {self.commit[:12]}"

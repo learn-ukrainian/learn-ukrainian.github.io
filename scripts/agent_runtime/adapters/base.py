@@ -27,6 +27,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from ..redacted_env import RedactedEnv, env_safe_dataclass_eq
 from ..result import ParseResult
 
 
@@ -89,6 +90,11 @@ class InvocationPlan:
     liveness_paths: tuple[Path, ...] = ()
     metadata: dict[str, object] = field(default_factory=dict)
     host_harness: str | None = None
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "env_overrides", RedactedEnv(self.env_overrides))
+
+    __eq__ = env_safe_dataclass_eq
 
 
 @runtime_checkable
