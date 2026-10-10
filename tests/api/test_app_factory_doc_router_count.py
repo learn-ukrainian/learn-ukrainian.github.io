@@ -296,3 +296,10 @@ def test_inventory_names_no_retired_rag_router_module() -> None:
     # The one allowed mention is the deviation row that records the rename.
     mentions = [line for line in text.splitlines() if "rag_router" in line]
     assert len(mentions) == 1 and mentions[0].startswith("| `rag_router.py` naming |"), mentions
+
+
+def test_inventory_fleet_board_row_matches_merged_router() -> None:
+    source = _router_source("fleet_board.router")
+    cells = _inventory_rows()["fleet_board.router"]
+    assert int(cells[1]) == _decorator_count(source)
+    assert int(cells[2].replace(",", "")) == len(source.read_text().splitlines())

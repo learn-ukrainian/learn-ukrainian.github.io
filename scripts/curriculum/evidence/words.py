@@ -20,6 +20,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.curriculum.validate.loader import active_plan_paths, read_plan_text, retirement_record
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
@@ -146,15 +147,12 @@ def find_plans_citing(word_id: str, plans_dir: Path | None) -> list[str]:
         return []
     pattern = re.compile(r"\b" + re.escape(word_id) + r"\b")
     citing: list[str] = []
-    for plan_file in sorted(plans_dir.rglob("*.yaml")):
+    for plan_file in active_plan_paths(plans_dir):
         if plan_file.name.startswith("."):
             continue
-        try:
-            text = plan_file.read_text(encoding="utf-8")
-            if pattern.search(text):
-                citing.append(str(plan_file.relative_to(plans_dir)))
-        except OSError:
-            continue
+        text = read_plan_text(plan_file)
+        if pattern.search(text):
+            citing.append(str(plan_file.relative_to(plans_dir)))
     return citing
 
 
@@ -174,6 +172,8 @@ def build_words(
     key_id: str | None = None,
 ) -> dict[str, Any]:
     """Build or update a level word store from a validated request file."""
+    plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+    retirement_record(plans_base)
     request_path = Path(request_path)
     if not request_path.is_file():
         raise FileNotFoundError(f"{codes.INVALID_REQUEST}: request file not found: {request_path}")
@@ -190,8 +190,6 @@ def build_words(
     evidence_base = (
         Path(evidence_dir) if evidence_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/evidence" / level
     )
-    plans_base = Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
-
     binding_context = sense_bindings.Context.read(level, evidence_base)
     store_path = evidence_base / "_words.yaml"
     registry_path = evidence_base / "_words.registry.yaml"

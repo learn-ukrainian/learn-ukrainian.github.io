@@ -346,6 +346,8 @@ def test_private_destination_last_selector_and_resource_url(selectors, environme
     "operation,fields",
     [
         ("membership", {"number": 1}),
+        ("queue-removal", {"number": 1}),
+        ("queue-removal", {"number": 1, "cursor": 'cursor") { mutation {x} }'}),
         ("queue-snapshot", {"branches": ['unit") { mutation {x} }']}),
             ("squash-text", {"number": 1}),
     ],

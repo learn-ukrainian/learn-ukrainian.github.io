@@ -985,8 +985,8 @@ def test_empty_ledger_reports_agentic_pool_unknown(monkeypatch, tmp_path):
     assert "agentic pool" not in recommendation["rationale"]
 
 
-def test_records_present_keep_agentic_pool_recommendation(monkeypatch, tmp_path):
-    """#9172: with ledger records, the active cool agentic pool still recommends claude."""
+def test_records_present_do_not_override_capacity_order_with_agentic_pool(monkeypatch, tmp_path):
+    """#10279: pool telemetry remains visible without overriding code capacity order."""
     now = datetime(2026, 9, 1, 12, 0, tzinfo=UTC)
     _configure(monkeypatch, tmp_path, [_record("claude (sonnet)", 10.0, now)])
 
@@ -997,5 +997,6 @@ def test_records_present_keep_agentic_pool_recommendation(monkeypatch, tmp_path)
     assert pool["burn_pct_cycle"] == 5.0
     assert pool["status"] == "cool"
     recommendation = data["recommendation"]
-    assert recommendation["primary_agent_for_code"] == "claude"
-    assert "agentic pool" in recommendation["rationale"]
+    assert recommendation["primary_agent_for_code"] == "codex"
+    assert "capacity picker order" in recommendation["rationale"]
+    assert "agentic pool" not in recommendation["rationale"]

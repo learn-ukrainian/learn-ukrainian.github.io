@@ -171,8 +171,8 @@ entries:
   - id: fleet-v1-api
     kind: doc_family
     paths: [docs/api/fleet-v1.md]
-    purpose: Read-only fleet board v1 contract - the response envelope, source status, and the index and schema routes.
-    keywords: [fleet board, fleet v1, response envelope, source status, JSON schema]
+    purpose: Read-only fleet board v1 contract - the response envelope, source status, and the who-is-doing-what routes.
+    keywords: [fleet board, fleet v1, response envelope, source status, epics, agents]
     lifecycle: active
     owner: docs-knowledge
     entrypoints:

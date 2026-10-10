@@ -157,24 +157,12 @@ def test_refreshed_partition_preserves_every_collected_case_and_history_pin() ->
     assert pinned[0] in shards[0]
 
 
-def test_workflow_freezes_once_and_publishes_after_partition_proof() -> None:
+def test_workflow_uses_committed_weights_and_publishes_after_partition_proof() -> None:
     workflow = Path(__file__).resolve().parents[2] / ".github/workflows/ci.yml"
     jobs = yaml.safe_load(workflow.read_text())["jobs"]
-    freeze = jobs["freeze-durations"]
-    assert freeze["needs"] == ["reuse"]
-    assert freeze["if"] == jobs["checks"]["if"] == jobs["pytest"]["if"]
-    assert freeze["permissions"] == {"contents": "read", "actions": "read"}
-    assert "permissions" not in jobs["checks"]
-    checkout = next(step for step in freeze["steps"] if "checkout@" in step.get("uses", ""))
-    assert "scripts/ci/" in checkout["with"]["sparse-checkout"]
-    assert any("python3 -m scripts.ci.split_tests refresh" in step.get("run", "") for step in freeze["steps"])
-    assert not any("split_tests refresh" in step.get("run", "") for step in jobs["checks"]["steps"])
-    uploads = [step["with"]["name"] for step in freeze["steps"] if "upload-artifact@" in step.get("uses", "")]
-    assert uploads == ["pytest-duration-snapshot"]
-    assert jobs["pytest"]["needs"] == ["reuse", "freeze-durations"]
-    download = next(step for step in jobs["pytest"]["steps"] if "download-artifact@" in step.get("uses", ""))
-    assert download["with"]["name"] == "pytest-duration-snapshot"
-    assert download["continue-on-error"] is True
+    assert "freeze-durations" not in jobs
+    assert jobs["pytest"]["needs"] == ["reuse"]
+    assert not any("split_tests refresh" in step.get("run", "") for job in jobs.values() for step in job["steps"])
     steps = jobs["pytest-report"]["steps"]
     proof = next(i for i, s in enumerate(steps) if "scripts.ci.pytest_report" in s.get("run", ""))
     record = next(i for i, s in enumerate(steps) if s.get("name") == "Record pytest durations")

@@ -426,3 +426,44 @@ saving. The shadow job is explicitly reuse-neutral in `REUSE_NEUTRAL_JOBS`;
 `projected_cost_after_lost_reuse` receipt key is retained for reader compatibility.
 The driver must measure combined PR/queue cost before decision A; all other
 reuse eligibility checks remain unchanged.
+
+CI recovery uses one durable Git-common-directory `ci-recovery.sqlite3` record per
+repository/PR/head on each host for both failed-job reruns and keeper/direct
+re-enqueue. Before recovery, post
+`<!-- ci-recovery-evidence {"pr":42,"head":"<PR SHA>","run_id":123,"job_ids":[456],"tested_sha":"<tested SHA>","failure_evidence":"<failure evidence>","unrelated_to_diff":"<diff diagnosis>"} -->`
+on the PR. All failing job IDs are required. Evidence must be posted by the
+authenticated login with OWNER, MEMBER or COLLABORATOR association, matching
+the verdict author filter. Retain any keeper requeue grant.
+
+The publisher pages through all GitHub `RemovedFromMergeQueueEvent.beforeCommit.oid`
+values, using `pageInfo` rather than `totalCount` to establish completeness.
+Manual, `merge_conflict` and `behind` removals are exempt from CI recovery, including at
+the current head and with a null commit; manual removals include keeper revocations.
+Other removals naming the current head make enqueue a recovery. CI removals
+(`failed_checks` or `timeout`) with a null commit always count as at-head.
+Force-push history cannot clear a null-commit CI removal, including a force-push
+to another SHA followed by a fast-forward back to the current head. These recognized reasons
+accept both uppercase and lowercase values. Unknown null-commit reasons require
+recovery evidence and consume the allowance rather than blocking recovery as
+unreadable data. Removals only at other heads permit normal initial enqueue
+without spending the new head's allowance.
+Only an explicit different `beforeCommit.oid` establishes a removal at another head.
+Before normal initial enqueue, the publisher also checks the
+durable record for a prior re-enqueue at that head; a branch-run rerun alone
+does not block initial enqueue. Returning to the same SHA never refunds a spent
+recovery allowance, even when the latest removal names another head.
+Truncated, unreadable or ambiguous GitHub removal data refuses enqueue with
+`RECOVERY_REMOVAL_UNKNOWN`; restore the complete read before retrying.
+Failed push runs on `main`, scheduled runs and other runs without a PR retain
+normal failed-job rerun behavior. Ambiguous PR or
+merge-group associations remain refused.
+
+A spent allowance has two ways out: a new PR head with fresh exact-head approval
+and green CI, or an attributed operator action. Record an operator-authorized
+exception as a separate attributed PR comment naming the exact head, first
+attempt and authorization. The exception comment does not itself unblock the
+tools, erase or reset the shared record, or grant an automatic bypass; any
+exceptional action remains the operator's responsibility. One workflow run per
+PR head can be rerun, and reservations are not refunded after a crash or uncertain
+transport. The legacy-table edge case fails closed. These limits remain
+documented residuals, not additional recovery paths.

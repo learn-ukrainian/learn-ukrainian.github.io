@@ -120,6 +120,7 @@
       "items": { "$ref": "#/$defs/lesson" }
     }
   },
+  "allOf": [{"if": {"properties": {"level": {"const": "a1"}}}, "else": {"properties": {"lessons": {"items": {"properties": {"steps": {"items": {"not": {"required": ["task"]}}}}}}}}}],
   "$defs": {
     "a1ReferenceException": {
       "oneOf": [
@@ -193,6 +194,88 @@
       "type": "string",
       "pattern": "^[А-Яа-яЇїІіЄєҐґЬь]$",
       "description": "One Ukrainian Cyrillic letter"
+    },
+    "recapTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "action",
+        "context_en",
+        "instruction_en",
+        "response_mode",
+        "success_criteria_en",
+        "learner_reads"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "enum": [
+            "select_for_context",
+            "personalize",
+            "label",
+            "respond",
+            "read_and_use"
+          ]
+        },
+        "context_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instruction_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "response_mode": {
+          "enum": [
+            "spoken",
+            "written",
+            "selection",
+            "spoken_or_written"
+          ]
+        },
+        "success_criteria_en": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "learner_reads": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/packId"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "ref",
+                  "words"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "ref": {
+                    "$ref": "#/$defs/packId"
+                  },
+                  "words": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Exact learner-read pack print, optionally narrowed to source-attested words or formulas."
+        }
+      }
     },
     "lesson": {
       "type": "object",
@@ -346,6 +429,7 @@
                 "enum": ["teach", "practice", "recap"],
                 "description": "Step kind (§2a); teach steps exist only in teach lessons"
               },
+              "task": { "$ref": "#/$defs/recapTask" },
               "teach": {
                 "type": "string",
                 "description": "Point taught, in one sentence; Ukrainian allowed (rule 7)"

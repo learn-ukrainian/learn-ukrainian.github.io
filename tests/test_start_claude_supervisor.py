@@ -20,8 +20,8 @@ def test_driver_accepts_canonical_and_legacy_lane_selectors(selector: str) -> No
 def test_claude_driver_claims_before_canary_and_drive_epic() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "devops")
     assert result.returncode == 0, result.stderr
-    assert result.stdout.index("would claim lease") < result.stdout.index("would run provider canary")
-    assert result.stdout.index("would run provider canary") < result.stdout.index("would bind drive-epic")
+    assert result.stdout.index("would claim lease") < result.stdout.index("claude adapter: provider canary: not run")
+    assert result.stdout.index("claude adapter: provider canary: not run") < result.stdout.index("would bind drive-epic")
 
 
 @pytest.mark.parametrize("arguments", (("--epic",), ("--epic", "unknown-lane"), ("--governor", "AUTO")))

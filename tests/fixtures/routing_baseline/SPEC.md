@@ -1,5 +1,16 @@
 # Routing baseline v1 (#9302), approved Cursor revision (#9951)
 
+## Explicit AGY review risk (#10262)
+
+The fresh capture changes only the refusal field in 32 dispatch rows for AGY
+and its Gemini alias when a review attempt omits `--review-risk`. Both CLI
+configurations now capture `REVIEW_ROUTE_REFUSED` with the explicit-risk
+requirement before attempting to read the review target, replacing the former
+`REVIEW_TARGET_UNRESOLVED` refusal. All other dispatch fields and baseline
+surfaces, input matrices, occurrence ledgers and approved overlays remain
+unchanged. The checksum manifests and independent literal digest pins bind
+the refreshed baselines and this specification.
+
 ## Worker resource-policy overlay (#10263)
 
 The 2026-10-09 resource-policy order is represented by the hash-pinned

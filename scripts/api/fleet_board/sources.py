@@ -134,3 +134,29 @@ def collect_source_reports(environ: Mapping[str, str] | None = None) -> tuple[So
         except Exception:
             reports.append(report(source.name, "unavailable"))
     return tuple(reports)
+
+
+def overlay_source(
+    extra: SourceReport,
+    environ: Mapping[str, str] | None = None,
+) -> tuple[SourceReport, ...]:
+    """Configuration rows, with ``extra`` replacing the row of the same name.
+
+    A row that is not in the location catalog is appended. A collector failure
+    keeps ``extra`` and does not raise.
+    """
+    try:
+        current = collect_source_reports(environ)
+    except Exception:
+        current = (report("sources", "unavailable"),)
+    rows: list[SourceReport] = []
+    replaced = False
+    for item in current:
+        if item.name == extra.name:
+            rows.append(extra)
+            replaced = True
+        else:
+            rows.append(item)
+    if not replaced:
+        rows.append(extra)
+    return tuple(rows)

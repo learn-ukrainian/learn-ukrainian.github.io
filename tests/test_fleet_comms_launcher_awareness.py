@@ -68,6 +68,7 @@ def test_epic_launchers_source_shared_helper_or_rule_pointer() -> None:
 def test_prompt_injecting_launchers_include_plane_and_cf_surfaces() -> None:
     """The shared driver prompt must include dual-aware fleet-comms surfaces."""
     text = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert "merge when CI green" not in text
     assert "fleet_comms_cold_clause" in text or "plane-status" in text
     assert "fleet-comms" in text
     assert 'source "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh"' in text
@@ -91,6 +92,59 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
         "RETIRED",
     ):
         assert required in helper
+
+
+def test_rendered_cold_clause_requires_ordered_landing_and_closeout() -> None:
+    env = os.environ.copy()
+    env["FLEET_COMMS_PLANE_MODE"] = "authority"
+    proc = subprocess.run(
+        ["bash", "-c", 'source "$1"; fleet_comms_cold_clause', "bash", str(HELPER)],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert (
+        "Landing: obtain independent exact-head cross-family APPROVE before opening the PR; "
+        "then require CI Gate green on that same head. "
+        "Then the driver enqueues through the merge queue "
+        "(never --auto, never ask the operator to merge), confirms MERGED and runs closeout. "
+    ) in proc.stdout
+    assert "-m scripts.orchestration.merge_closeout <N> --apply" in proc.stdout
+    assert "require the common-reaper cleanup receipt" in proc.stdout
+    assert "merge when CI green" not in proc.stdout
+    assert "arm auto-merge" not in proc.stdout
+
+
+def test_driver_binding_fallback_requires_ordered_landing(tmp_path: Path) -> None:
+    """A checkout without the shared helper must inject the current landing order."""
+    proc = subprocess.run(
+        [
+            "bash",
+            "-c",
+            'set -euo pipefail; source "$1"; '
+            'LC_ROOT="$2"; LC_PROVIDER=codex; LC_EPIC=devops; LC_DRY_RUN=0; '
+            'LC_FORWARD_ARGS=(); launcher_bind_drive_epic; '
+            'printf "%s\\n" "${LC_FORWARD_ARGS[@]}"',
+            "bash",
+            str(REPO / "scripts/lib/launcher_core.sh"),
+            str(tmp_path),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=10,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert (
+        "exact-head cross-family APPROVE before opening PR, same-head CI Gate green, "
+        "driver enqueue through merge queue, closeout"
+    ) in proc.stdout
+    assert "merge when CI green" not in proc.stdout
 
 
 def test_cursor_cold_start_points_to_same_acp_contract() -> None:

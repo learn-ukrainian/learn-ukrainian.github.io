@@ -215,7 +215,9 @@ def test_flake_deny_holds_and_a_grant_is_reported() -> None:
         keeper={"queued": {}, "drops": {key: 2}, "requeued": {key: "2026-10-09T09:30:00Z"}},
         grants={key: {"decision": "grant"}},
     )
-    assert spent[0]["keeper"]["reason"] == "requeue-spent"
+    assert spent[0]["keeper"]["reason"] == (
+        "RECOVERY_ALLOWANCE_SPENT: first=re-enqueue (legacy) at=2026-10-09T09:30:00Z run=unknown"
+    )
     assert spent[0]["flake_grant"]["used"] is True
     assert spent[0]["flake_grant"]["at"] == "2026-10-09T09:30:00Z"
 
@@ -732,7 +734,31 @@ def test_open_base_pr_is_the_stacked_blocker() -> None:
     assert parent["blocker"] == {"kind": "none"}
 
 
-def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize("board_signals", [False, True])
+def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(
+    tmp_path, monkeypatch: pytest.MonkeyPatch, board_signals: bool,
+) -> None:
+    from scripts.api.fleet_board import router as router_mod
+    from scripts.api.fleet_board.sources import report
+    from scripts.api.fleet_board.view import Board
+
+    board_alert = {
+        "severity": "bad", "kind": "dead_driver", "title": "Driver stopped",
+        "summary": "process is not alive", "target": {"type": "epic", "id": "alpha"},
+    }
+    if board_signals:
+        monkeypatch.setattr(
+            router_mod, "load_board",
+            lambda: Board((report("roster_snapshot", "ok"),), [], [], [board_alert]),
+        )
+    measurements = [
+        {"name": name, "value": 7, "status": "ok"}
+        for name in ("disk_pct", "memory_pct", "drivers_live", "probe_status")
+    ]
+    if board_signals:
+        monkeypatch.setattr(
+            router_mod, "load_stats", lambda: ({"stats": measurements}, (report("stats", "ok"),)),
+        )
     fresh = _pull(number=1, sha="d" * 40, head_ref="cursor/fresh", commit_at="2026-10-09T09:00:00Z")
     day = _pull(number=2, sha="e" * 40, head_ref="codex/day", commit_at="2026-10-08T10:00:00Z")
     older = _pull(number=3, sha="f" * 40, head_ref="codex/older", commit_at="2026-10-07T09:00:00Z")
@@ -768,7 +794,14 @@ def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(tmp_path, mo
     now = client.get("/api/fleet/v1/now")
     assert now.status_code == 200
     attention = now.json()["data"]["attention"]
+    if board_signals:
+        assert attention[0] == board_alert
+        attention = attention[1:]
     assert [row["number"] for row in attention] == [3, 2]
+    if board_signals:
+        assert {row["name"] for row in now.json()["sources"]} == {
+            "roster_snapshot", "github", "mq_state", "stale_prs",
+        }
     assert attention[0]["idle_48h"] is True
     assert attention[0]["owner_lane"] == "agy"
     assert attention[1]["idle_48h"] is False
@@ -779,6 +812,9 @@ def test_now_lists_idle_pull_requests_and_stats_cover_fourteen_days(tmp_path, mo
     assert stats.status_code == 200
     body = stats.json()
     assert body["schema"] == "fleet.v1.stats"
+    if board_signals:
+        assert body["data"]["stats"] == measurements
+    assert {row["name"] for row in body["sources"]} == {"stats", "github", "mq_state", "stale_prs"}
     assert body["data"]["window_days"] == 14
     by_repo = {row["repo"]: row for row in body["data"]["by_repo"]}
     assert set(by_repo) == {REPO, "example/other"}

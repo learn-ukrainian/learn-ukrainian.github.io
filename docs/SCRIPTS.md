@@ -357,7 +357,7 @@ Native Codex children remain OpenAI-family and do not satisfy the repository's
 independent cross-family review gate.
 
 Start a lease-bound Codex driver so the core claims the one lane lease before
-the provider canary and the injected `drive-epic` binding:
+the adapter's canary step and the injected `drive-epic` binding:
 
 ```bash
 ./start-codex-driver.sh --epic hramatka
@@ -367,7 +367,8 @@ the provider canary and the injected `drive-epic` binding:
 
 Interactive launchers reject `--epic`, so they cannot accidentally claim a
 driver lease. The driver core validates the selector, exports the provider
-handoff identity, claims the stream, runs the provider canary, and only then
+handoff identity, claims the stream, runs a provider canary only where the
+adapter has a semantic canary (otherwise reports `not run`), and only then
 injects the `drive-epic` binding.
 
 Override before launch if needed:

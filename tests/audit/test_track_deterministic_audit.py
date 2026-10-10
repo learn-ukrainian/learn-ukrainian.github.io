@@ -270,7 +270,7 @@ print(json.dumps([shared('a1', 1), shared('a2', 4), shared('b1', 3)]))
     )
 
     assert result.returncode == 0, result.stdout + result.stderr
-    assert json.loads(result.stdout) == [[40, 55], [85, 100], [100, 100]]
+    assert json.loads(result.stdout) == [[0, 15], [85, 100], [100, 100]]
     assert result.stderr == ""
 
 
@@ -308,7 +308,7 @@ canonical = importlib.import_module('scripts.config')
 assert Path(canonical.__file__).resolve() == root / 'scripts/config.py'
 assert config._shared_config is canonical
 assert [config.get_a1_immersion_range(1), config.get_a2_immersion_range(4), config.get_b1_immersion_range(3)] == [
-    (40, 55), (85, 100), (100, 100)
+    (0, 15), (85, 100), (100, 100)
 ]
 a1_min, a1_max, a2_min, a2_max, b1_min, b1_max = {mutations!r}
 for family, module_num, minimum, maximum in (
@@ -400,7 +400,7 @@ checks = importlib.import_module('audit.checks.learner_state')
 canonical = importlib.import_module('scripts.config')
 assert Path(canonical.__file__).resolve() == root / 'scripts/config.py'
 assert checks.get_immersion_structural is canonical.get_immersion_structural
-assert canonical.get_immersion_range('a1', 1) == (40, 55)
+assert canonical.get_immersion_range('a1', 1) == (0, 15)
 assert package.__all__ == ['audit_module', 'check_learner_state']
 assert package.check_learner_state is checks.check_learner_state
 assert package.audit_module is importlib.import_module('audit.core').audit_module

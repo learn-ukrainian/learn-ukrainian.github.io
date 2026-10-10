@@ -13,7 +13,7 @@ import json
 import os
 import sys
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
@@ -404,6 +404,7 @@ class SessionSupervisor:
                     raise RemoteLeaseLostError("LEASE LOST: live lease expiry is unavailable or malformed") from exc
                 if datetime.now(UTC) >= expires_at:
                     raise RemoteLeaseLostError("LEASE LOST: live bootstrap lease expired")
+                lease = replace(lease, expires_at=current["expires_at"])
             digest = self.remote.digest_from_response(response)
             handoff_paths = ()
             active = None
@@ -411,6 +412,10 @@ class SessionSupervisor:
             digest_source = "monitor-api"
         else:
             store = self._require_store()
+            if lease is not None:
+                with store._read_snapshot() as connection:
+                    current = store._require_current_lease(connection, lease, require_valid_at=datetime.now(UTC))
+                    lease = store._lease_from_row(current)
             digest = store.load_digest(stream_id, limit=digest_limit)
             handoff_paths = tuple(epic_handoff_map(self.repo_root).get(stream_id, ()))
             active = resolve_handoff_path(stream_id, self.repo_root)

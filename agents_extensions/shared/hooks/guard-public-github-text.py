@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Put the shared gh shim first for Claude Bash tools; routing only."""
+"""Put the shared gh shim first for Bash and Cursor Shell tools; routing only."""
 
 from __future__ import annotations
 
@@ -9,6 +9,9 @@ import os
 import shlex
 import sys
 from pathlib import Path
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
 def invokes_gh(command: str) -> bool:
@@ -69,7 +72,9 @@ def invokes_gh(command: str) -> bool:
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
-        if payload.get("tool_name") != "Bash":
+        from tool_names import is_shell_tool
+
+        if not is_shell_tool(payload.get("tool_name")):
             return 0
         root = next(parent for parent in Path(__file__).resolve().parents if (parent / "scripts/opsec").is_dir())
         sys.path.insert(0, str(root))

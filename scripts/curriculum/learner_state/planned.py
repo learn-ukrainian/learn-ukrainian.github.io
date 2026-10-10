@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.curriculum.validate.loader import PlanError, load_plan
+from scripts.curriculum.validate.loader import PlanError, active_plan_paths, load_plan
 
 from . import codes
 from .base_layer import BaseLayerError, resolve_base_ids
@@ -129,6 +129,11 @@ def planned_state(
             f"plans directory does not exist: {plans_root}",
         )
 
+    try:
+        plan_files = active_plan_paths(plans_root)
+    except PlanError as err:
+        raise PlannedStateError(err.code, err.message) from err
+
     # 1. Resolve base layer IDs
     try:
         base_ids = resolve_base_ids(
@@ -142,8 +147,6 @@ def planned_state(
 
     # 2. Discover and load all module plans in level
     plans_by_position: dict[int, dict[str, Any]] = {}
-    plan_files = sorted(p for p in plans_root.glob("*.yaml") if not p.name.startswith("_"))
-
     for p_path in plan_files:
         try:
             data = load_plan(p_path)

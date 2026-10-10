@@ -117,9 +117,16 @@ def _close_exact_lease(repo: Path, epic: str) -> bool:
 
 
 def cmd_hydrate(args: argparse.Namespace) -> int:
-    launcher_agent = os.environ.get("SESSION_STREAM_AGENT", _HOLDER_AGENT)
-    lane = launcher_agent if launcher_agent == _HOLDER_AGENT or launcher_agent.startswith("codex-") else _HOLDER_AGENT
-    capsule, attempts = shared_hydration.build_hydration_capsule_with_retry(_stream_id(args), lane)
+    stream_id = _stream_id(args)
+    lane = os.environ.get("SESSION_STREAM_AGENT", _HOLDER_AGENT)
+    if lane != _HOLDER_AGENT:
+        # The registry imports the bridge; bare-provider hooks do not need it.
+        from scripts.orchestration.handoff_slot_registry import registered_slots
+
+        if lane not in registered_slots(_HOLDER_AGENT):
+            print("ACTION: hydration blocked — unregistered lane identity for this provider.", file=sys.stderr)
+            return 2
+    capsule, attempts = shared_hydration.build_hydration_capsule_with_retry(stream_id, lane)
     print(f"hydration_attempts: {attempts}", file=sys.stderr)
     print(json.dumps(capsule, ensure_ascii=False, sort_keys=True))
     if not capsule["execution_allowed"]:

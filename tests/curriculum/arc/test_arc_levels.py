@@ -32,13 +32,14 @@ FIRST_BAND_KEY = {"a2": "a2-bridge", "b1": "b1-core", "b2": "b2+"}
 
 A1_ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
 A1_ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
-# sha256 of the committed A1 _arc.yaml from the "positions:" line to EOF.
-# Pinned when `level: a1` was added (#8424): regenerating A1 may add that one
-# key and nothing else — the positions block stays byte-identical.
-# Updated for the one-sentence-one-language fix (position 1 job rewritten to drop
-# a Ukrainian/English mix; positions 5, 24, 34, 39, 45 jobs lose a leaked source line
-# reference, moved into their skills-duty cell).
-A1_POSITIONS_BLOCK_SHA256 = "4b4125226de168b4befea8f0115f955983411c4d13dc2096b998627141ddb90b"
+# Pinned candidate's positions block before the #10108 orientation-marker repair.
+# Removing only the marker must recover these exact bytes for all 55 rows.
+A1_POSITIONS_BLOCK_SHA256 = "da425d882220c8f5b8fb5a311e443bf5a58ad7c3fb42f5d83dd00a14f3aeff59"
+NON_A1_ARC_SHA256 = {
+    "a2": "d9419ea84a8f3bac3d1ba9159061e25ffd8a126813986c5e5efbd8e164db03aa",
+    "b1": "274cbfdf28f7c7193d5efd4b4cd623d4ebb0933fd20e391303d3cd36bcf5390f",
+    "b2": "01fadc3e6528146b231d0bea562a48c80b263b76c0f9fa3cd047fbb711234fbc",
+}
 
 
 def _doc(level: str) -> Path:
@@ -94,6 +95,14 @@ def test_check_green(level: str) -> None:
     assert generate_arc.main(["--level", level, "--check"]) == 0
 
 
+@pytest.mark.parametrize("level", sorted(LEVELS))
+def test_non_a1_output_bytes_unchanged(level: str) -> None:
+    generated = generate_arc.generate_yaml(_doc(level), level).encode("utf-8")
+    committed = (REPO_ROOT / generate_arc.ARC_OUT_REL.format(level=level)).read_bytes()
+    assert generated == committed
+    assert hashlib.sha256(generated).hexdigest() == NON_A1_ARC_SHA256[level]
+
+
 def test_loader_band_keys() -> None:
     for level, band_key in FIRST_BAND_KEY.items():
         positions = loader.load_arc(level)
@@ -102,17 +111,23 @@ def test_loader_band_keys() -> None:
     assert loader.load_arc("a2")[0].band_key == "a2-bridge"
     assert loader.load_arc("b1")[0].band_key == "b1-core"
     assert loader.load_arc("b2")[0].band_key == "b2+"
-    assert loader.load_arc("a1")[0].band_key is None
+    a1 = loader.load_arc("a1")
+    assert a1[0].band_key == "a1-orientation"
+    assert all(position.band_key is None for position in a1[1:])
 
 
-def test_a1_arc_gains_only_the_level_key() -> None:
+def test_a1_arc_gains_only_position_1_orientation_marker() -> None:
     text = A1_ARC_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     assert data["level"] == "a1"
     assert "immersion_bands" not in data
-    assert all("band_key" not in record for record in data["positions"])
+    assert len(data["positions"]) == 55
+    declared = [(record["position"], record["band_key"]) for record in data["positions"] if "band_key" in record]
+    assert declared == [(1, "a1-orientation")]
     block = text[text.index("positions:\n") :]
-    assert hashlib.sha256(block.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
+    assert block.count("  band_key: a1-orientation\n") == 1
+    original = block.replace("  band_key: a1-orientation\n", "", 1)
+    assert hashlib.sha256(original.encode()).hexdigest() == A1_POSITIONS_BLOCK_SHA256
 
 
 def test_a1_check_green_with_empty_manifest_list() -> None:
@@ -175,9 +190,9 @@ def test_mutation_letters_at_a2_fail(tmp_path: Path) -> None:
 def test_literacy_table_at_a2_fails(tmp_path: Path) -> None:
     header = "| Pos | Slug | Phase | One-sentence job | Skills duty | L |"
     literacy_table = (
-        "| Pos | Slug | Job | Inventory (letters / signs) | Est. lessons |\n"
+        "| Pos | Slug | Phase | Job | Inventory (letters / signs) | Skills duty | Est. lessons |\n"
         "| --- | --- | --- | --- | --- |\n"
-        "| 1 | `letters` | Letters | **1 letters** А | 1 |\n\n"
+        "| 1 | `letters` | A1.1 | Letters | **1 letters** А | Li | 1 |\n\n"
     )
     mutated = _mutated_doc("a2", tmp_path, header, literacy_table + header)
     with pytest.raises(generate_arc.ArcGenerationError, match="no literacy phase"):

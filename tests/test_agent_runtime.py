@@ -1900,7 +1900,7 @@ def _agent_only_popen(agent_popen):
 
 
 @pytest.mark.parametrize("stdout_delay_ticks", [0, 10], ids=["immediate-stdout", "late-stdout"])
-def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, stdout_delay_ticks):
+def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, request, stdout_delay_ticks):
     """Regression pin (2026-04-10, reworked for #9532): when Codex hangs after
     finishing its turn, the runner hands check_early_reap the captured
     ``--json`` stream; once the turn completed and its ``-o`` bytes are stable
@@ -1913,7 +1913,19 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
     from threading import get_ident
     from unittest.mock import MagicMock
 
+    from agent_runtime import telemetry
     from agent_runtime.watchdog import _stdout_streamer
+
+    # subprocess.communicate(timeout=...) polls using the shared time module.
+    # A real --version probe therefore consumes the runner's simulated ticks
+    # before its process starts. Keep the real telemetry path, but isolate its
+    # captured Popen seam and force a cold cache so test order cannot hide it.
+    telemetry._reset_version_cache_for_tests()
+    version_proc = MagicMock()
+    version_proc.communicate.return_value = ("codex 0.0.0\n", "")
+    version_popen = MagicMock(return_value=version_proc)
+    monkeypatch.setattr(telemetry, "_ORIGINAL_SUBPROCESS_POPEN", version_popen)
+    request.addfinalizer(telemetry._reset_version_cache_for_tests)
 
     monkeypatch.setenv("DELEGATE_DISABLE_PTY", "1")
     stream_lines = iter(completed_stream().splitlines(keepends=True))
@@ -2031,6 +2043,8 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch, st
         )
 
     # Runner must have killed the proc via _kill_process_tree (early reap)
+    version_popen.assert_called_once()
+    assert version_popen.call_args.args[0][-1] == "--version"
     mock_kill_tree.assert_called_once()
     assert poll_ticks == stdout_delay_ticks + 1
     assert "".join(watchdog_state.stdout_lines) == completed_stream()
@@ -3517,8 +3531,12 @@ def test_claude_adapter_discussion_readonly_uses_restricted_tools_without_plan_m
     assert "--permission-mode" not in plan.cmd
     assert "--tools" in plan.cmd
     assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
-    # Every headless Claude run also disables background tasks (#9690).
-    assert plan.env_overrides == {"CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1", "AB_DISCUSS_READONLY": "1"}
+    # Every headless Claude run disables background tasks and the advisor.
+    assert plan.env_overrides == {
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
+        "CLAUDE_CODE_DISABLE_ADVISOR_TOOL": "1",
+        "AB_DISCUSS_READONLY": "1",
+    }
 
 
 def test_claude_adapter_resume_existing_session(tmp_path):

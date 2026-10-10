@@ -1,0 +1,17 @@
+# Append-only exact-byte retirement, #10108. Replacements require ordinary gates.
+retirement_schema: 1
+plans:
+- slug: sounds-letters-and-hello
+  sha256: 23fd9608a2ef84c23001b05768ebf9aa0360302e05dbf99f34857452f2700e75
+  old_position: 1
+- slug: reading-ukrainian
+  sha256: d7561a1505d84ad0646574c25999442e95a4657318350a61d77726a298269309
+  old_position: 2
+- slug: special-signs
+  sha256: 74f2fca8de73eecf402c0795b19c93bbb8a9f59d9b1cad431cc389ffcfdcf373
+  old_position: 3
+routes:
+- slug: special-signs
+  old_position: 3
+- slug: stress-and-melody
+  old_position: 4

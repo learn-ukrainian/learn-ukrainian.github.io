@@ -312,7 +312,7 @@ def test_every_event_runs_every_job(event: str) -> None:
 
 def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    reused = {"secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"}
+    reused = {"secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"}
     assert {job for job, result in results.items() if result != "success"} == reused
     # The queue commit's message, author and committer are scanned even on reuse.
     assert results["queue-metadata-scan"] == "success"
@@ -380,23 +380,9 @@ def test_ci_gate_needs_every_other_job() -> None:
     assert set(_ci_gate_job()["needs"]) == jobs - {"ci-gate"}
 
 
-def test_component_shadow_is_separate_advisory_and_runs_on_red_pytest() -> None:
-    jobs = _load("ci.yml")["jobs"]
-    shadow = jobs["component-shadow"]
-    assert shadow["needs"] == ["pytest"]
-    assert shadow["continue-on-error"] is True
-    context = {"github": _EVENTS["synchronize"], "needs": {"pytest": {"result": "failure"}},
-               "job": {"status": "failure"}}
-    assert _condition(shadow["if"], context) is True
-    assert _condition(shadow["if"], {**context, "job": {"status": "cancelled"}}) is False
-    checkout = next(step for step in shadow["steps"] if step.get("uses", "").startswith("actions/checkout@"))
-    assert checkout["with"]["fetch-depth"] == 0
-    assert "pull_request.head.sha" in checkout["with"]["ref"]
-    writer = next(step for step in shadow["steps"] if step.get("name") == "Write advisory component receipt")
-    assert writer["run"].rstrip().endswith("|| true")
-    assert "LU_PYTEST_SHARD_FILES" not in writer["run"]
+def test_component_shadow_is_gone() -> None:
+    assert "component-shadow" not in _load("ci.yml")["jobs"]
     assert "component-shadow" not in _gate_script()
-    assert all("component_shadow" not in step.get("run", "") for step in jobs["pytest-report"]["steps"])
 
 
 def test_ci_gate_runs_after_cancel() -> None:
@@ -411,7 +397,6 @@ def test_ci_gate_runs_after_cancel() -> None:
 _GREEN = {
     "SECRET_SCAN": "success",
     "CHECKS": "success",
-    "FREEZE_DURATIONS": "success",
     "FRONTEND": "success",
     "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
@@ -449,7 +434,6 @@ def test_gate_passes_a_green_pull_request_run() -> None:
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"FREEZE_DURATIONS": "failure"},
         {"PYTEST": "failure"},
         {"PYTEST": "skipped"},
         {"PYTEST_REPORT": "skipped"},
@@ -479,7 +463,7 @@ _REUSED = {name: "skipped" for name in _GREEN}
 def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
     assert result.returncode == 0, result.stdout
-    for job in ("secret-scan", "checks", "freeze-durations", "frontend", "dependency-audit", "pytest", "pytest-report"):
+    for job in ("secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"):
         assert f"{job} reused from run 123" in result.stdout
 
 
@@ -510,8 +494,8 @@ def test_gate_passes_a_full_merge_queue_run() -> None:
     assert result.returncode == 0, result.stdout
 
 
-@pytest.mark.parametrize("failed_job", ["checks", "freeze-durations"])
-def test_pytest_runs_after_lint_or_freeze_failure(failed_job: str) -> None:
+@pytest.mark.parametrize("failed_job", ["checks"])
+def test_pytest_runs_after_lint_failure(failed_job: str) -> None:
     results, _ = _simulate(_EVENTS["workflow_dispatch"], failures={failed_job})
     assert results[failed_job] == "failure"
     assert results["pytest"] == "success"

@@ -102,6 +102,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_lint_fleet_roster.py",
         "tests/test_lint_prompts.py",
         "tests/test_lint_test_assertions.py",
+        "tests/test_model_catalog_literals_guard.py",
         "tests/test_no_rewrite_contract.py",
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
@@ -153,6 +154,7 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/review/test_prompts.py::test_the_shipped_templates_pass_the_lint_and_are_all_linted",
     "tests/review/test_prompts.py::test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_shipped_templates",
     "tests/storage/test_no_tracked_data.py::test_tracked_data_paths_are_all_allowlisted",
+    "tests/test_agent_definitions.py::test_reserved_agent_inventory",
     "tests/test_agent_seat_onboarding_docs.py::test_live_driver_diagnostics_never_claim_again",
     "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
     "tests/test_conftest_task_store_guard.py::test_task_store_consumers_use_call_time_resolver",
@@ -293,9 +295,6 @@ NOT_REPO_WIDE = {
         "Scans data/projects/open_model_data for named artifacts (metadata-only existence "
         "check, not a content read); data/ is not a test or script candidate, so any change "
         "already forces the full tier."
-    ),
-    "tests/test_paths_filter_fail_open.py::test_workflows_only_consume_valid_action_outputs": (
-        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change already forces the full tier."
     ),
     "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
         "Reads the site/src/content/docs content tree as a content reader; the module "

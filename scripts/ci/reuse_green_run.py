@@ -53,7 +53,6 @@ WORKFLOW = ".github/workflows/ci.yml"
 EXPECTED_JOBS = (
     "Secret scan",
     "Checks",
-    "Freeze pytest durations",
     "Frontend",
     "Dependency audit",
     "pytest report",

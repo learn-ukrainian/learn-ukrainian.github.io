@@ -26,13 +26,19 @@ launcher_adapter_preflight() {
   launcher_require_binary claude 'Claude Code executable is unavailable.' 3 || exit $?
 }
 launcher_adapter_canary() {
-  if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: would run provider canary'; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then echo 'claude adapter: provider canary: not run'; fi
   return 0
 }
 launcher_adapter_exec() {
+  # Drivers already use the reserved model and must not inherit the routine
+  # interactive session's advisor, even when the caller explicitly enables it.
+  # shellcheck disable=SC2153 # LC_MODE is set by launcher_main.
+  if [ "$LC_MODE" = driver ]; then
+    export CLAUDE_CODE_DISABLE_ADVISOR_TOOL=1
+  fi
   local cmd=(claude)
   # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
-  # high (launcher_defaults); interactive keeps the last TUI / user selection.
+  # high (launcher_defaults); interactive uses the project Sonnet 5.5 setting.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi

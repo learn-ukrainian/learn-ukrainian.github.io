@@ -74,7 +74,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 - **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
 - **DeepSeek:** excluded from dispatch, implementation and review. Flash remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, LOCAL-ONLY, via first-party `deepseek/` through OpenCode.
 - **OpenRouter:** mainly Pool + Gemma; not a general multi-model bus.
-- **Timed pauses:** near_cap/paused lanes carry **return-at** (e.g. Codex 2026-08-10T19:47Z) — auto-return, never permanent neglect.
+- **Timed pauses:** near_cap/paused lanes carry **return-at** — auto-return, never permanent neglect.
 - **Cursor gate:** #6469 plan-only adapter **fixed** — cursor-first mechanical tier is active.
 
 - Use ceiling models **often** on *qualifying* hard work — not rarely, and not as free general labor.
