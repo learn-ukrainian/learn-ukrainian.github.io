@@ -580,3 +580,23 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def test_auto_finalize_push_timeout_tracks_gate_budgets(tmp_path: Path) -> None:
+    import runpy
+
+    from scripts import delegate
+
+    gate_path = Path(delegate.__file__).resolve().parents[1] / ".githooks/pre_push_gate.py"
+    bounds = runpy.run_path(str(gate_path))
+    required = DEFAULT_NETWORK_GIT_TIMEOUT_S + bounds["ADMISSION_MAX_WAIT_S"] + bounds["ADMISSION_WAIT_S"]
+    calls: list[float] = []
+
+    def run(cmd, **kwargs):
+        calls.append(kwargs["timeout"])
+        return _completed(cmd)
+
+    with patch("subprocess.run", side_effect=run):
+        _push_auto_finalize_branch(tmp_path, "feature")
+
+    assert calls == [required]

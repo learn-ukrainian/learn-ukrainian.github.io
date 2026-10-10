@@ -449,12 +449,15 @@ def test_abandoned_ticket_does_not_block_a_live_gate(tmp_path: Path) -> None:
 def test_queue_scan_is_bounded_and_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     queue = tmp_path / "queue"
     queue.mkdir()
-    (queue / "old.ticket").touch()
+    other, fd = _locked_ticket(tmp_path, "old")
     monkeypatch.setattr(gate, "MAX_QUEUE_ENTRIES", 1)
-    with pytest.raises(gate.GateOutcome, match="queue scan limit") as raised, gate.Admission(tmp_path, 0.0):
-        pytest.fail("oversized queue must not admit a gate")
-    assert raised.value.incomplete
-    assert list(queue.glob("*.ticket")) == [queue / "old.ticket"]
+    try:
+        with pytest.raises(gate.GateOutcome, match="queue scan limit") as raised, gate.Admission(tmp_path, 0.0):
+            pytest.fail("oversized live queue must not admit a gate")
+        assert raised.value.incomplete
+        assert list(queue.glob("*.ticket")) == [other]
+    finally:
+        os.close(fd)
 
 
 def _fake_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, clock: FakeClock) -> list[float]:
@@ -905,12 +908,10 @@ def test_admission_wait_covers_one_full_gate_run() -> None:
     assert gate.ADMISSION_WAIT_S >= gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S + gate.CLEANUP_BUDGET_S
 
 
-def test_auto_finalize_push_timeout_covers_a_single_predecessor() -> None:
+def test_auto_finalize_push_timeout_covers_the_queue_ceiling() -> None:
     from scripts import delegate
 
-    # This existing launcher guarantee covers one predecessor. Its separate outer timeout does
-    # not cover ADMISSION_MAX_WAIT_S; extending it is outside this gate's owned paths.
-    gate_worst_case = gate.ADMISSION_WAIT_S + gate.RUN_BUDGET_S + gate.SHADOW_BUDGET_S
+    gate_worst_case = gate.ADMISSION_MAX_WAIT_S + gate.ADMISSION_WAIT_S
     assert gate_worst_case + delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S <= delegate.AUTO_FINALIZE_PUSH_TIMEOUT_S
 
 
@@ -1496,3 +1497,250 @@ def test_a_startup_io_error_is_a_typed_incomplete_outcome_and_leaks_nothing(
     monkeypatch.undo()
     with gate.Admission(state, 0.0):  # the admission lock was released, not leaked
         pass
+
+
+# ---- #10383: private pytest temps and safe queue admission ----------------------------------------------
+
+
+@pytest.mark.parametrize("ending", ["green", "red", "timeout", "startup-error"])
+def test_pytest_stage_owns_and_cleans_a_private_base_temp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ending: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    seen: list[Path] = []
+
+    def run(command: list[str], **_kwargs: object) -> tuple[int, str]:
+        assert "--basetemp" in command
+        base = Path(command[command.index("--basetemp") + 1])
+        assert base.parent == state and base.name.startswith("pytest-")
+        base.mkdir(exist_ok=True)
+        (base / "probe").touch()
+        seen.append(base)
+        if ending == "timeout":
+            raise gate.GateOutcome("time_budget_exhausted", "pytest stage timed out", incomplete=True)
+        if ending == "startup-error":
+            raise OSError("cannot start pytest")
+        return (1, "FAILED tests/test_a.py::test_bad") if ending == "red" else (0, "1 passed in 0.1s")
+
+    monkeypatch.setattr(gate, "run_bounded", run)
+    if ending == "green":
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+    else:
+        with pytest.raises(OSError if ending == "startup-error" else gate.GateOutcome):
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert len(seen) == 1 and not seen[0].exists()
+    assert list(state.glob("pytest-*")) == []
+
+
+def test_stale_and_dangling_tickets_are_reaped_before_the_live_cap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    for number in range(5):
+        (queue / f"{number}-stale.ticket").touch()
+        (queue / f"{number}-dangling.ticket").symlink_to(tmp_path / "missing")
+    monkeypatch.setattr(gate, "MAX_QUEUE_ENTRIES", 1)
+
+    with gate.Admission(tmp_path, 0.0) as admitted:
+        assert admitted.queue_depth == 1 and admitted.queue_position == 1
+        assert list(queue.glob("*.ticket")) == [admitted._ticket]
+    assert list(queue.glob("*.ticket")) == []
+
+
+@pytest.mark.parametrize("tampering", ["missing", "symlink", "replacement"])
+def test_an_invalid_own_ticket_is_typed_incomplete_without_a_traceback(
+    repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tampering: str
+) -> None:
+    monkeypatch.chdir(repo)
+    _write(repo, "tests/test_new.py", GREEN_TEST)
+    head = _commit(repo, "green", "tests/test_new.py")
+    original = gate.Admission._register
+
+    def register(admission: gate.Admission) -> None:
+        original(admission)
+        ticket = admission._ticket
+        assert ticket is not None
+        target = ticket.parent / "original"
+        ticket.rename(target)
+        if tampering == "symlink":
+            ticket.symlink_to(target)
+        elif tampering == "replacement":
+            ticket.touch()
+
+    monkeypatch.setattr(gate.Admission, "_register", register)
+    result = gate.main(
+        ["--launcher", "unused", "--config", "unused"],
+        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+    )
+    error = capsys.readouterr().err
+
+    assert result == gate.EXIT_INCOMPLETE
+    assert _verdict(subprocess.CompletedProcess([], result, stderr=error))["reason"] == "validation_incomplete"
+    assert "Traceback" not in error
+    assert _receipts(repo) == []
+
+
+@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo"])
+def test_nonregular_predecessors_cannot_count_as_live_tickets(tmp_path: Path, kind: str) -> None:
+    queue = tmp_path / "queue"
+    queue.mkdir()
+    target = tmp_path / "target"
+    target.touch()
+    fd = os.open(target, os.O_RDONLY)
+    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    ticket = queue / "00000000000000000000-other.ticket"
+    if kind == "symlink":
+        ticket.symlink_to(target)
+    elif kind == "directory":
+        ticket.mkdir()
+    else:
+        os.mkfifo(ticket)
+    try:
+        with pytest.raises(gate.GateOutcome) as raised, gate.Admission(tmp_path, 0.0):
+            pytest.fail("a nonregular ticket cannot grant admission")
+        assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+        assert "admission_timeout" not in raised.value.detail
+    finally:
+        os.close(fd)
+
+
+def test_ticket_open_uses_nofollow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_open = os.open
+    flags_seen: list[int] = []
+
+    def recording_open(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        if str(path).endswith(".ticket"):
+            flags_seen.append(flags)
+        return real_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(gate.os, "open", recording_open)
+    with gate.Admission(tmp_path, 0.0):
+        pass
+    assert flags_seen and all(flags & os.O_NOFOLLOW for flags in flags_seen)
+
+
+def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_path: Path) -> None:
+    marker = tmp_path / "gate-temp.txt"
+    release = tmp_path / "release"
+    shared = tmp_path / "shared"
+    shared.mkdir()
+    # The pruner must actually delete an abandoned shared base, not merely run beside the gate.
+    import getpass
+
+    user_root = shared / f"pytest-of-{getpass.getuser()}"
+    user_root.mkdir(mode=0o700)
+    victim = user_root / "pytest-0"
+    victim.mkdir()
+    (victim / "abandoned").touch()
+    body = (
+        "from pathlib import Path\nimport time\n"
+        "def test_temp_survives(tmp_path):\n"
+        "    probe = tmp_path / 'survives'\n    probe.write_text('gate')\n"
+        f"    Path({str(marker)!r}).write_text(str(probe))\n"
+        f"    release = Path({str(release)!r})\n"
+        "    deadline = time.monotonic() + 40\n"
+        "    while not release.exists() and time.monotonic() < deadline:\n        time.sleep(0.05)\n"
+        "    assert release.exists(), 'pruner did not finish'\n"
+        "    assert probe.read_text() == 'gate'\n"
+    )
+    _write(repo, "tests/test_private_temp.py", body)
+    head = _commit(repo, "temp survival", "tests/test_private_temp.py")
+    pruner = tmp_path / "test_pruner.py"
+    pruner.write_text("def test_prune(tmp_path):\n    assert tmp_path.is_dir()\n", encoding="utf-8")
+    env = _env({"PYTEST_DEBUG_TEMPROOT": str(shared), "PRE_COMMIT_HOME": str(tmp_path / "pc")})
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            str(repo / ".githooks/pre_push_gate.py"),
+            "--launcher",
+            str(repo / "scripts/pre_commit/project_python.sh"),
+            "--config",
+            str(repo / ".pre-commit-config.yaml"),
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=repo,
+        env=env,
+        text=True,
+    )
+    try:
+        assert process.stdin is not None
+        process.stdin.write(f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n")
+        process.stdin.close()
+        process.stdin = None
+        for _ in range(600):
+            if marker.exists() and marker.read_text(encoding="utf-8"):
+                break
+            if process.poll() is not None:
+                pytest.fail(str(process.communicate()))
+            time.sleep(0.05)
+        assert marker.exists(), "gate pytest did not start"
+        # Expire the default-base lock, reproducing the stale-base pruning failure deterministically.
+        for lock in user_root.glob("pytest-*/.lock"):
+            os.utime(lock, (time.time() - 4 * 86400,) * 2)
+        pruned = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                str(pruner),
+                "-q",
+                "-p",
+                "no:cacheprovider",
+                "-o",
+                "tmp_path_retention_count=0",
+                "-o",
+                "tmp_path_retention_policy=all",
+            ],
+            cwd=tmp_path,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        assert pruned.returncode == 0, pruned.stdout + pruned.stderr
+        assert not victim.exists(), "the unrelated session must prune shared state"
+        release.touch()
+        stdout, stderr = process.communicate(timeout=60)
+        assert process.returncode == 0, stdout + stderr
+        probe = Path(marker.read_text(encoding="utf-8"))
+        assert probe.is_relative_to(gate.state_dir(repo))
+        assert not probe.exists()  # the gate cleaned its private base on completion
+        assert list(gate.state_dir(repo).glob("pytest-*")) == []
+    finally:
+        release.touch()
+        if process.poll() is None:
+            process.kill()
+        process.communicate(timeout=60)
+
+
+def test_next_pytest_stage_reaps_the_base_of_a_killed_gate(repo: Path, tmp_path: Path) -> None:
+    marker = tmp_path / "killed-base.txt"
+    script = (
+        f"import runpy, pathlib, os, signal, time\ng = runpy.run_path({str(GATE_PATH)!r})\n"
+        "def kill(command, **kwargs):\n"
+        "    base = pathlib.Path(command[command.index('--basetemp') + 1])\n"
+        "    (base / 'leftover').touch()\n"
+        f"    pathlib.Path({str(marker)!r}).write_text(str(base))\n"
+        "    os.kill(os.getpid(), signal.SIGKILL)\n"
+        "g['run_pytest_stage'].__globals__['run_bounded'] = kill\n"
+        "plan = g['Plan']('h', 't', 'b', 'v', ('tests/test_invariant.py',), (), ())\n"
+        f"g['run_pytest_stage'](plan, pathlib.Path({str(repo)!r}), 'unused', time.monotonic() + 30)\n"
+    )
+    killed = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=30, check=False)
+    assert killed.returncode == -9, killed.stdout + killed.stderr
+    stale = Path(marker.read_text(encoding="utf-8"))
+    assert (stale / "leftover").exists()
+    plan = _plan(registry_nodes=("tests/test_invariant.py",), changed_tests=())
+    with gate.Admission(gate.state_dir(repo), 0.0):
+        result = gate.run_pytest_stage(
+            plan, repo, str(repo / "scripts/pre_commit/project_python.sh"), time.monotonic() + 30
+        )
+    assert "1 passed" in result
+    assert not stale.exists()
+    assert list(gate.state_dir(repo).glob("pytest-*")) == []
