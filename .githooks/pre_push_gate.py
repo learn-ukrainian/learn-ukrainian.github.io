@@ -27,14 +27,16 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
+import errno
 import fcntl
 import hashlib
 import importlib.util
-import itertools
 import json
 import os
 import re
+import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tempfile
@@ -43,7 +45,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GATE_VERSION = 2
+GATE_VERSION = 3
 REGISTRY_FILE = "tests/test_repo_wide_marker_invariant.py"
 REGISTRY_NAMES = ("KNOWN_REPO_WIDE_MODULES", "KNOWN_REPO_WIDE_FUNCTIONS")
 MAX_TEST_PROCESSES_ENV = "LU_PRE_PUSH_GATE_MAX_TEST_PROCESSES"
@@ -54,7 +56,7 @@ ADMISSION_WAIT_S = RUN_BUDGET_S + SHADOW_BUDGET_S + 2 * CLEANUP_BUDGET_S
 # Each predecessor gets one complete gate allowance. The 7,400 second ceiling covers a burst of
 # ten predecessors, while bounding overload or a stuck holder. Environment overrides only shorten it.
 ADMISSION_MAX_WAIT_S = 10 * ADMISSION_WAIT_S
-MAX_QUEUE_ENTRIES = 256  # bound local queue scans even if abandoned tickets accumulate
+MAX_QUEUE_ENTRIES = 256  # cap live tickets after reaping abandoned entries
 RUN_TOKEN_ENV = "LU_PRE_PUSH_GATE_RUN_TOKEN"
 RECEIPT_TTL_S = 3600.0
 # Registered modules exceeding the cost threshold are explicitly deferred to CI
@@ -377,6 +379,38 @@ def record(state: Path, event: dict[str, object]) -> None:
 # ---- bounded execution ----------------------------------------------------
 
 
+def reap_stale_node(path: Path) -> None:
+    """Unlink nodes; remove directory contents through a verified, non-following fd."""
+    try:
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+        except OSError as error:
+            if error.errno not in (errno.ELOOP, errno.ENOTDIR):
+                raise
+            path.unlink(missing_ok=True)
+            return
+        try:
+            info = os.fstat(fd)
+            if not os.path.samestat(info, path.lstat()):
+                raise GateOutcome("validation_incomplete", "stale directory was replaced", incomplete=True)
+            if not shutil.rmtree.avoids_symlink_attacks:
+                raise GateOutcome("validation_incomplete", "safe directory removal is unavailable", incomplete=True)
+            for name in os.listdir(fd):
+                try:
+                    os.unlink(name, dir_fd=fd)
+                except IsADirectoryError:
+                    shutil.rmtree(name, dir_fd=fd)
+            if not os.path.samestat(info, path.lstat()):
+                raise GateOutcome("validation_incomplete", "stale directory was replaced", incomplete=True)
+            path.rmdir()
+        finally:
+            os.close(fd)
+    except FileNotFoundError:  # another reaper already removed it
+        return
+    except OSError as error:
+        raise GateOutcome("validation_incomplete", f"stale node cleanup failed: {error}", incomplete=True) from None
+
+
 class Admission:
     """One gate per repository, ordered by live local tickets across all worktrees.
 
@@ -410,19 +444,40 @@ class Admission:
 
     def _live_tickets(self) -> list[Path]:
         assert self._ticket is not None
-        tickets = list(itertools.islice(self._ticket.parent.glob("*.ticket"), MAX_QUEUE_ENTRIES + 1))
-        if len(tickets) > MAX_QUEUE_ENTRIES:
-            raise GateOutcome("validation_incomplete", "admission queue scan limit exceeded", incomplete=True)
         live = []
-        for ticket in sorted(tickets):
-            if ticket == self._ticket:
-                live.append(ticket)
-                continue
+        for ticket in sorted(self._ticket.parent.glob("*.ticket")):
             try:
-                fd = os.open(ticket, os.O_RDONLY)
+                fd = os.open(ticket, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             except FileNotFoundError:  # a holder finished between listing and opening
                 continue
+            except OSError as error:
+                if ticket != self._ticket:
+                    try:
+                        regular = stat.S_ISREG(ticket.lstat().st_mode)
+                    except FileNotFoundError:
+                        continue
+                    if not regular:
+                        reap_stale_node(ticket)
+                        continue
+                if error.errno != errno.ELOOP:
+                    raise
+                raise GateOutcome("validation_incomplete", "admission ticket is a symlink", incomplete=True) from None
             try:
+                info = os.fstat(fd)
+                if not stat.S_ISREG(info.st_mode):
+                    if ticket != self._ticket:
+                        reap_stale_node(ticket)
+                        continue
+                    raise GateOutcome(
+                        "validation_incomplete", "admission ticket is not a regular file", incomplete=True
+                    )
+                if ticket == self._ticket:
+                    assert self._ticket_fd is not None
+                    own = os.fstat(self._ticket_fd)
+                    if (info.st_dev, info.st_ino) != (own.st_dev, own.st_ino):
+                        raise GateOutcome("validation_incomplete", "own admission ticket was replaced", incomplete=True)
+                    live.append(ticket)
+                    continue
                 try:
                     fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 except BlockingIOError:
@@ -431,6 +486,8 @@ class Admission:
                     ticket.unlink(missing_ok=True)
             finally:
                 os.close(fd)
+        if len(live) > MAX_QUEUE_ENTRIES:
+            raise GateOutcome("validation_incomplete", "admission queue scan limit exceeded", incomplete=True)
         return live
 
     def __enter__(self) -> Admission:
@@ -443,7 +500,12 @@ class Admission:
             self._register()
             while True:
                 live = self._live_tickets()
-                position, depth = live.index(self._ticket) + 1, len(live)
+                try:
+                    position, depth = live.index(self._ticket) + 1, len(live)
+                except ValueError:
+                    raise GateOutcome(
+                        "validation_incomplete", "own admission ticket is missing", incomplete=True
+                    ) from None
                 if position == 1:
                     try:
                         fcntl.flock(self._fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -638,26 +700,35 @@ def parallel_options() -> list[str]:
 
 
 def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> str:
+    # Admission serializes these directories. A killed gate leaves no live owner, so the next
+    # admitted stage can reap its base without touching another pytest session's shared temp.
+    state = state_dir(root)
+    state.mkdir(parents=True, exist_ok=True)
+    for stale in state.glob("pytest-*"):
+        reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
-    code, output = run_bounded(
-        [
-            "bash",
-            launcher,
-            "-m",
-            "pytest",
-            *plan.node_ids,
-            "-rfE",
-            "-q",
-            "--tb=short",
-            "-p",
-            "no:cacheprovider",
-            *parallel_options(),
-        ],
-        cwd=root,
-        deadline=deadline,
-        label="pytest stage",
-    )
+    with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:
+        code, output = run_bounded(
+            [
+                "bash",
+                launcher,
+                "-m",
+                "pytest",
+                *plan.node_ids,
+                "-rfE",
+                "-q",
+                "--tb=short",
+                "-p",
+                "no:cacheprovider",
+                "--basetemp",
+                base_temp,
+                *parallel_options(),
+            ],
+            cwd=root,
+            deadline=deadline,
+            label="pytest stage",
+        )
     failing = failing_node_ids(output)
     if code == 0:
         match = SUMMARY_RE.findall(output)
