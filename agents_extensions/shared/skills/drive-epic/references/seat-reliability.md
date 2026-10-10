@@ -24,12 +24,14 @@ evidence and it passes the done-check:
 - cleanup is complete: head branch deleted, worktrees and temp dirs reaped, no stale open
   PRs or branches left for the issue.
 
-Use pstack for the evidence (prove-it-works, verify-* skills). An autopilot or `/loop`
+On Cursor CLI seats, use pstack for the evidence (prove-it-works, verify-* skills); other
+seats use the repository's existing verify tooling. An autopilot or `/loop`
 finish condition is "all children pass the done-check", never "all children closed".
 
-## pstack before custom code
+## Existing tooling before custom code
 
-If a pstack playbook, skill or principle covers the need, use it. Build custom code only
+If an existing playbook, skill or principle covers the need (pstack on Cursor CLI seats, the
+repository's shared skills everywhere), use it. Build custom code only
 for a gap, and say in the PR body which gap it fills.
 
 ## Escalation
