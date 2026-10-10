@@ -1,0 +1,9 @@
+{
+  "launcher_rows": [4, 9, 14, 19, 24, 29, 34, 39, 44, 49],
+  "launcher_help_replacements": [
+    {
+      "before": "  driver       Validates a certified model and lane, claims its lease, runs the\n               provider canary, then injects the drive-epic binding.",
+      "after": "  driver       Validates a certified model and lane, claims its lease, runs a\n               semantic canary where available (otherwise reports not run),\n               then injects the drive-epic binding."
+    }
+  ]
+}
