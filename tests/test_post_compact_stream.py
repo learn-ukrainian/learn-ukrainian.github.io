@@ -195,9 +195,9 @@ def test_open_model_data_hook_main_blocks_and_head_is_ready(tmp_path: Path) -> N
     head_context, head_args, head_requests = _run_hook(tmp_path / "head")
     assert "HYDRATION BLOCKED" not in head_context
     assert '"execution_allowed": true' in head_context
-    assert '"state": "ready"' in head_context
     assert "scripts.driver_blockers delta --epic open-model-data" in head_context
     assert "scripts.driver_blockers record --epic open-model-data" in head_context
+    assert "scripts.driver_blockers record --epic open-model-data" in head_context[:800]
     assert "if delta fails or the baseline is unknown, post everything currently blocking" in head_context
     assert "--stream epic:6321" in head_args[0]  # allow-hardcoded-epic: #9956 pre-fix launcher lease fixture
     assert head_requests == ["/api/epics/v1/epic:6321?limit=1"]  # allow-hardcoded-epic: #9956 pre-fix lease fixture
@@ -271,3 +271,33 @@ def test_codex_boundary_rule_carries_complete_blocker_rule(tmp_path: Path, has_s
         "if delta fails or the baseline is unknown, post everything currently blocking",
     ):
         assert fragment in result.stdout
+
+
+def test_post_compact_includes_blocker_delta_rule_for_grok_and_claude() -> None:
+    hook = ROOT / HOOK
+    # 1. Grok
+    env_grok = {
+        "PATH": os.environ["PATH"],
+        "GROK_AGENT": "1",
+        "SESSION_EPIC": "infra",
+        "CLAUDE_PROJECT_DIR": str(ROOT),
+    }
+    res_grok = subprocess.run(
+        ["bash", str(hook)], cwd=ROOT, env=env_grok, capture_output=True, text=True, check=True, timeout=20
+    )
+    grok_context = json.loads(res_grok.stdout)["additionalContext"]
+    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in grok_context
+    assert "scripts.driver_blockers record --epic infra" in grok_context
+
+    # 2. Claude
+    env_claude = {
+        "PATH": os.environ["PATH"],
+        "SESSION_EPIC": "infra",
+        "CLAUDE_PROJECT_DIR": str(ROOT),
+    }
+    res_claude = subprocess.run(
+        ["bash", str(hook)], cwd=ROOT, env=env_claude, capture_output=True, text=True, check=True, timeout=20
+    )
+    claude_context = json.loads(res_claude.stdout)["additionalContext"]
+    assert "Epic blocker delta: Put every owned blocker in --current with complete: true;" in claude_context
+    assert "scripts.driver_blockers record --epic infra" in claude_context

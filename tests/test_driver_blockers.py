@@ -342,6 +342,34 @@ def test_record_requires_resolved_id_in_exact_body(ledger):
     assert ledger.read_bytes() == before
 
 
+def test_record_rejects_partial_substring_token_matches(ledger):
+    seed(ledger, observation(item("resolved")))
+    before = ledger.read_bytes()
+    # 1. "resolved" (RESOLVED) item id embedded in word "unresolved"
+    body1 = b"Status is unresolved at this time"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(),
+            receipt(body1, key="message-2", stamp="2026-10-10T02:00:00Z"),
+            body1,
+            1,
+        )
+    # 2. "ci" (NEW) item id embedded in word "ci-repair"
+    body2 = b"blocked by ci-repair task | blocked | monitor | review | get approval\nresolved"
+    with pytest.raises(ValueError, match="omits a non-UNCHANGED item or RESOLVED id verbatim"):
+        blockers.record(
+            ledger,
+            EPIC,
+            observation(item("ci")),
+            receipt(body2, key="message-3", stamp="2026-10-10T03:00:00Z"),
+            body2,
+            1,
+        )
+    assert ledger.read_bytes() == before
+
+
 def test_two_racing_records_have_one_winner(ledger, tmp_path):
     seed(ledger)
     current = observation(item(action="repair CI"))

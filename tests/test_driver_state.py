@@ -79,6 +79,7 @@ def test_whoami_prints_goals_and_next(state, capsys):
     assert "epic: infra" in out
     assert "fix X" in out
     assert "open PR" in out
+    assert "blocker-policy: Put every owned blocker in --current with complete: true;" in out
 
 
 @pytest.mark.parametrize("missing", [False, True])

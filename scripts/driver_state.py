@@ -514,6 +514,9 @@ def cmd_whoami(path: Path | None) -> int:
         return 1
     print("state: (configured)")
     print(show_summary(path.parent / LEDGER_NAME, epic))
+    from scripts.driver_blockers import USAGE_RULE
+
+    print(f"blocker-policy: {USAGE_RULE}")
     if not path.is_file():
         print("state file missing; create it with: init --epic <epic>")
         return 1

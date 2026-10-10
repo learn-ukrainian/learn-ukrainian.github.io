@@ -218,11 +218,30 @@ def record(path: Path, epic: str, observation: dict, receipt: dict, body: bytes,
                 raise ValueError("receipt message_id was already recorded")
             if _timestamp(anchor["created_at"]) <= _timestamp(old["created_at"]):
                 raise ValueError("receipt created_at must be later than recorded anchor")
+        posted_text = posted
         for item in delta["items"]:
-            if item["class"] != "UNCHANGED" and not all(
-                value in posted for key, value in item.items() if key != "class"
-            ):
+            if item["class"] == "UNCHANGED":
+                continue
+            item_id = item["id"]
+            id_pattern = rf"(?<![A-Za-z0-9_.-]){re.escape(item_id)}(?![A-Za-z0-9_.-])"
+            if not re.search(id_pattern, posted_text):
                 raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
+            if item["class"] in {"NEW", "CHANGED"}:
+                item_values = [v for k, v in item.items() if k != "class"]
+                matching_lines = [
+                    line for line in posted_text.splitlines() if re.search(id_pattern, line)
+                ]
+                line_matched = any(
+                    all(val in line for val in item_values) for line in matching_lines
+                )
+                if not line_matched:
+                    blocks = re.split(r"\n(?=[#-]|(?:\w+[-_]))", posted_text)
+                    block_matched = any(
+                        re.search(id_pattern, b) and all(val in b for val in item_values)
+                        for b in blocks
+                    )
+                    if not block_matched:
+                        raise ValueError("posted body omits a non-UNCHANGED item or RESOLVED id verbatim")
         updated = {
             "epic": epic,
             "generation": expect_generation + 1,
