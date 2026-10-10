@@ -526,9 +526,9 @@ require_initialized_repository() {
 # loses every other path. Warn, exclude it, and record it in the receipt.
 # Absolute and escaping links that do resolve still fail closed.
 skip_broken_symlink() {
-  local link=$1 label=$2 relative=$3 target=$4
+  local link=$1 label=$2 relative=$3 target=$4 reason=${5:-broken symlink}
 
-  echo "WARNING: Skipping broken symlink in $label: $relative -> $target" >&2
+  echo "WARNING: Skipping $reason in $label: $relative -> $target" >&2
   BROKEN_SYMLINK_EXCLUDES+=("$link")
 }
 
@@ -588,10 +588,20 @@ validate_tree_symlinks() {
       skip_broken_symlink "$link" "$label" "$relative" "$target"
       continue
     fi
-    [[ "$target" != /* ]] ||
+    if [[ "$target" == /* ]]; then
+      if [[ "$label" == "batch_state" ]]; then
+        skip_broken_symlink "$link" "$label" "$relative" "$target" "absolute symlink"
+        continue
+      fi
       die "Absolute symlink is not backup-safe in $label: $relative -> $target"
-    path_is_within "$resolved" "$tree_real" ||
+    fi
+    if ! path_is_within "$resolved" "$tree_real"; then
+      if [[ "$label" == "batch_state" ]]; then
+        skip_broken_symlink "$link" "$label" "$relative" "$target" "escaping symlink"
+        continue
+      fi
       die "Symlink escapes $label: $relative -> $target"
+    fi
   done < <(find "$tree" -type l -print0)
 }
 

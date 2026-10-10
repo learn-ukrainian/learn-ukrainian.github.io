@@ -361,9 +361,15 @@ def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
 
     other = source.parent / "batch_state" / "unsafe-link"
     other.symlink_to(credential)
+    doctor_batch_state = _run(environment, "doctor")
+    assert doctor_batch_state.returncode == 0, doctor_batch_state.stderr
+    assert "WARNING: Skipping absolute symlink in batch_state: unsafe-link" in doctor_batch_state.stdout
+
+    agent_link = source.parent / ".agent" / "unsafe-link"
+    agent_link.symlink_to(credential)
     rejected = _run(environment, "doctor")
     assert rejected.returncode != 0
-    assert "Absolute symlink is not backup-safe in batch_state" in rejected.stderr
+    assert "Absolute symlink is not backup-safe in .agent" in rejected.stderr
 
 
 def test_linux_checks_free_space_before_each_database(
