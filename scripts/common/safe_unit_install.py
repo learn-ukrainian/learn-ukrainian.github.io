@@ -170,8 +170,15 @@ def open_state_log(path: Path, *, home: Path | None = None) -> int:
         os.close(dir_fd)
 
 
-def read_unit(dir_fd: int, name: str) -> tuple[bytes, int] | None:
-    """Return an installed unit's bytes and permission bits; refuse anything but a regular file."""
+def read_unit(dir_fd: int, name: str, *, max_bytes: int | None = None) -> tuple[bytes, int] | None:
+    """Return a regular unit's bytes and permission bits, optionally bounding the read.
+
+    A bounded read uses the checked descriptor and reads at most ``max_bytes + 1``
+    bytes, so growth after the inode check cannot cause an unbounded read.
+    ``None`` preserves the full read used by existing unit installers.
+    """
+    if max_bytes is not None and max_bytes < 0:
+        raise ValueError("max_bytes must be non-negative")
     try:
         info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
     except FileNotFoundError:
@@ -183,7 +190,10 @@ def read_unit(dir_fd: int, name: str) -> tuple[bytes, int] | None:
         held = os.fstat(handle.fileno())
         if (held.st_dev, held.st_ino) != (info.st_dev, info.st_ino):
             raise InstallError(f"unit file changed while reading: {name}")
-        return handle.read(), stat.S_IMODE(info.st_mode)
+        content = handle.read() if max_bytes is None else handle.read(max_bytes + 1)
+        if max_bytes is not None and len(content) > max_bytes:
+            raise InstallError(f"unit file {name} exceeds {max_bytes} bytes")
+        return content, stat.S_IMODE(info.st_mode)
 
 
 def write_unit(dir_fd: int, name: str, content: bytes, *, mode: int) -> None:
