@@ -231,7 +231,7 @@ def _publication_command_code(payload: str, hooks_dir: Path) -> int:
     # The shared recognizer does not see quoted substitutions, absolute env,
     # or env split-string arguments. Those ambiguous forms remain blocked.
     publication = publication or _has_shell_substitution(command) or any(
-        word in {"/usr/bin/env", "/bin/env", "-S", "--split-string"}
+        word in {"/usr/bin/env", "/bin/env", "-S", "--split-string", "eval"}
         or word.startswith("--split-string=") for word in words
     )
     if not publication:

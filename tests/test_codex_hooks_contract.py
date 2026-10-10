@@ -1254,6 +1254,7 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
     'exec {stub} issue create --body safe',
     "bash -c 'PATH={stub_dir} gh issue create --body safe'",
     "env -S '{stub} issue create --body safe'",
+    "eval 'PATH={stub_dir} gh issue create --body safe'",
 ])
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
     marker = tmp_path / 'published'

@@ -42,7 +42,7 @@ case "$MODE" in
         --hooks-dir "$HOOKS_DIR" \
         --canonical-root "$CANONICAL_ROOT"
     policy_rc=${PIPESTATUS[1]}
-    [ "$policy_rc" -eq 0 ] || exit "$policy_rc"
+    [ "$policy_rc" -eq 0 ] || exit 2
     ;;
 
   post-tool-use)

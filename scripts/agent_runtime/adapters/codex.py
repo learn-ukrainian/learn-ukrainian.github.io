@@ -686,18 +686,23 @@ class CodexAdapter:
                 raise RuntimeError("Codex worker source handle unavailable")
             env_overrides[_HOOK_SOURCE_ENV] = locator
 
-        plan = InvocationPlan(
-            cmd=cmd,
-            cwd=execution_cwd,
-            stdin_payload=prompt,
-            output_file=output_path,
-            env_overrides=env_overrides,
-            liveness_paths=(output_path,),
-            metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
-        )
-        if source_fd is not None:
-            _HOOK_SOURCE_HANDLES[id(plan)] = (plan, source_fd)
-        return plan
+        try:
+            plan = InvocationPlan(
+                cmd=cmd,
+                cwd=execution_cwd,
+                stdin_payload=prompt,
+                output_file=output_path,
+                env_overrides=env_overrides,
+                liveness_paths=(output_path,),
+                metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
+            )
+            if source_fd is not None:
+                _HOOK_SOURCE_HANDLES[id(plan)] = (plan, source_fd)
+            return plan
+        except Exception:
+            if source_fd is not None:
+                os.close(source_fd)
+            raise
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
         """Release only the source handle owned by this invocation."""
