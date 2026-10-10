@@ -61,35 +61,67 @@ def group_for(test_path: str) -> str:
     return f"tests/test_{match.group(1)}*" if match else test_path
 
 
-def failing_test_files(junit_paths: Iterable[Path]) -> set[str]:
+def _case_file(case: ET.Element) -> str | None:
+    """Repository-relative test file of a testcase; absolute or odd paths give None."""
+    name = case.get("file")
+    if not name:
+        parts = (case.get("classname") or "").split(".")
+        for index, part in enumerate(parts):
+            if part.startswith("test_"):
+                name = "/".join(parts[: index + 1]) + ".py"
+                break
+    if not name or not name.startswith("tests/") or ".." in name.split("/"):
+        return None
+    return name
+
+
+def failing_test_files(junit_paths: Iterable[Path]) -> set[str] | None:
+    """Failing repository test files; None when a report is unreadable or a path is odd."""
     files: set[str] = set()
     for report in junit_paths:
         if not report.is_file():
             continue
-        for case in ET.parse(report).getroot().iter("testcase"):
+        try:
+            root = ET.parse(report).getroot()
+        except ET.ParseError:
+            return None
+        for case in root.iter("testcase"):
             if case.find("failure") is None and case.find("error") is None:
                 continue
-            name = case.get("file") or (case.get("classname") or "").replace(".", "/") + ".py"
-            if name:
-                files.add(name if name.startswith("tests/") else f"tests/{name.split('tests/')[-1]}")
+            name = _case_file(case)
+            if name is None:
+                return None
+            files.add(name)
     return files
 
 
 _GROUP = re.compile(r"^tests/(?:[a-z0-9_]+/|test_[a-z0-9]+\*)$")
 _RUN_URL = re.compile(r"^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/actions/runs/[0-9]+$")
-_KEY = re.compile(r"^[A-Za-z0-9 ()._-]{1,80}$")
+_KEY = re.compile(r"^[a-z0-9_-]{1,60}\.ya?ml$")
 _LANE = re.compile(r"^[a-z0-9-]{1,40}$")
 
 
-def safe_groups(files: Iterable[str]) -> set[str] | None:
-    """Closed vocabulary only: None when any failing file maps to an unexpected group.
+def approved_groups(root: Path) -> set[str]:
+    """The approved vocabulary: groups of test files tracked in this public checkout."""
+    tests = root / "tests"
+    if not tests.is_dir():
+        return set()
+    groups = {group_for(path.relative_to(root).as_posix()) for path in tests.rglob("test_*.py")}
+    return {group for group in groups if _GROUP.match(group)}
 
-    Public issue text is built only from these validated pieces (the shared publisher's
-    private OPSEC matcher is not available on Actions runners), so free JUnit text
-    can never reach a public title or body.
+
+def safe_groups(files: Iterable[str] | None, approved: set[str]) -> set[str] | None:
+    """Groups only from the approved vocabulary; None means report at workflow level.
+
+    Public issue text is built only from the workflow file name, approved groups (names
+    already public in this repository's tree), the owner-map lane and a validated run
+    URL. The shared publisher needs the private OPSEC matcher, which Actions runners do
+    not have, so free text never reaches a public title or body instead.
     """
+    if files is None:
+        return None
     groups = {group_for(f) for f in files}
-    return groups if all(_GROUP.match(g) for g in groups) else None
+    return groups if groups and groups <= approved else None
 
 
 def title_for(key: str, group: str | None) -> str:
@@ -105,7 +137,8 @@ def open_issues(run: Runner, key: str) -> dict[str, int]:
 
 
 def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
-           junit: Sequence[Path] = (), workflow_path: str = "") -> list[str]:
+           junit: Sequence[Path] = (), workflow_path: str = "",
+           root: Path = Path(".")) -> list[str]:
     """Return a list of actions taken (for logs and tests).
 
     A failed run opens or comments; it never closes anything. Only a successful run
@@ -122,7 +155,7 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
             actions.append(f"close #{number} {title}")
         return actions
     wanted: dict[str, str] = {}
-    groups = safe_groups(failing_test_files(junit))
+    groups = safe_groups(failing_test_files(junit), approved_groups(root))
     if groups:
         for group in sorted(groups):
             wanted[title_for(key, group)] = lane_for(group.rstrip("*"), owners)
@@ -144,7 +177,7 @@ def report(run: Runner, *, key: str, status: str, run_url: str, owners: dict,
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--key", required=True, help="workflow name")
+    parser.add_argument("--key", required=True, help="workflow file name, e.g. zizmor.yml")
     parser.add_argument("--status", required=True, help="job status: success, failure, cancelled")
     parser.add_argument("--run-url", required=True)
     parser.add_argument("--workflow-path", default="")

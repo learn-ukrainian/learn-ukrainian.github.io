@@ -171,4 +171,4 @@ jobs:
         uses: ./.github/actions/nightly-issue
         with:
           status: ${{ job.status }}
-          junit: ci-artifacts/slow-junit.xml
+          junit: ci-artifacts/slow-junit.xml ci-artifacts/quarantine-junit.xml

@@ -32,6 +32,7 @@ jobs:
           sparse-checkout: |
             .github/
             scripts/ci/nightly_issue.py
+            tests/
             scripts/__init__.py
             scripts/common/__init__.py
             scripts/common/github_client.py

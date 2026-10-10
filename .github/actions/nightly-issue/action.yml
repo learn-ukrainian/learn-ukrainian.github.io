@@ -18,7 +18,6 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
-        KEY: ${{ github.workflow }}
         WORKFLOW_PATH: ${{ github.workflow_ref }}
         STATUS: ${{ inputs.status }}
         JUNIT: ${{ inputs.junit }}
@@ -28,5 +27,5 @@ runs:
         wf_path="${WORKFLOW_PATH#*/*/}"
         wf_path="${wf_path%@*}"
         read -r -a reports <<< "${JUNIT}"
-        python3 scripts/ci/nightly_issue.py --key "${KEY}" --status "${STATUS}" \
+        python3 scripts/ci/nightly_issue.py --key "${wf_path##*/}" --status "${STATUS}" \
           --run-url "${RUN_URL}" --workflow-path "${wf_path}" --junit "${reports[@]}"
