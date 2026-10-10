@@ -33,8 +33,8 @@ jobs:
           grep -q 'without_unneeded_secrets(worker_env, dispatch_agent)' scripts/delegate.py
           grep -q 'launcher_drop_unneeded_secrets || exit 1' scripts/lib/launcher_core.sh
           grep -q 'no-secret-print-hook' .pre-commit-config.yaml
+          rm -f "$patch"
           git rm -f \
-            "$patch" \
             scripts/ci/issue-867-secret-redaction.patch.1 \
             scripts/ci/issue-867-secret-redaction.patch.2 \
             scripts/ci/issue-867-secret-redaction.patch.3 \
