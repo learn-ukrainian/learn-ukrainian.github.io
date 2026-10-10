@@ -4921,15 +4921,16 @@ def _report_dispatch_admission(
     return _ADMISSION_REFUSED_EXIT
 
 
-def _is_existing_worktree(worktree: Any) -> bool:
-    """Read-only: True when an explicit ``--worktree`` path is an existing checkout (real reuse)."""
+def _is_existing_worktree(worktree: Any, *, repo_root: Path | None = None) -> bool:
+    """Read-only: True when an explicit ``--worktree`` path is an existing checkout (real reuse).
+
+    Resolves the path exactly as dispatch does, relative to the target repository.
+    """
     if not worktree or worktree == "auto":
         return False
-    raw = Path(str(worktree)).expanduser()
-    candidates = [raw] if raw.is_absolute() else [Path.cwd() / raw, _REPO_ROOT / raw]
     try:
-        return any((c / ".git").exists() for c in candidates)
-    except OSError:
+        return (_normalize_worktree_path(str(worktree), repo_root=repo_root) / ".git").exists()
+    except (OSError, ValueError):
         return False
 
 
@@ -4943,7 +4944,7 @@ def _has_prior_task_record(task_id: str) -> bool:
         return False
 
 
-def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | None:
+def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any, repo_root: Path | None = None) -> int | None:
     """Refuse a new PR-opening implementation dispatch while too many public PRs are open.
 
     Runs before any task-record, archive, forward or worktree side effect.
@@ -4957,7 +4958,7 @@ def _check_open_pr_freeze(args: argparse.Namespace, fleet_repo: Any) -> int | No
         pr=getattr(args, "pr", None),
         cwd=getattr(args, "cwd", None),
         review=_dispatch_is_review_typed(args),
-        reused_worktree=_is_existing_worktree(worktree),
+        reused_worktree=_is_existing_worktree(worktree, repo_root=repo_root),
         continuation=bool(getattr(args, "force_new", False)) and _has_prior_task_record(str(getattr(args, "task_id", "") or "")),
     ):
         return None
@@ -12064,7 +12065,7 @@ def _dispatch(
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
     # Open-PR freeze: refuse before any task record, archive, forward or worktree side effect.
-    freeze_rc = _check_open_pr_freeze(args, fleet_repo)
+    freeze_rc = _check_open_pr_freeze(args, fleet_repo, target_repo_root)
     if freeze_rc is not None:
         return freeze_rc
 

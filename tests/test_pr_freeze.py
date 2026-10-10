@@ -194,3 +194,26 @@ def test_fresh_explicit_worktree_path_is_still_refused(monkeypatch, tmp_path) ->
     fresh.mkdir(parents=True)
     (fresh / ".git").write_text("gitdir: elsewhere\n")
     assert delegate._check_open_pr_freeze(args, repo) is None
+
+
+def test_relative_worktree_resolves_against_target_repo(monkeypatch, tmp_path) -> None:
+    from scripts import delegate
+
+    monkeypatch.setenv(pr_freeze.THRESHOLD_ENV, "15")
+    monkeypatch.setattr(pr_freeze, "fetch_open_pr_count", lambda repo: 30)
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+    repo = SimpleNamespace(github=REPO, role="public-monorepo")
+    target_root = tmp_path / "target"
+    target_root.mkdir()
+    other_cwd = tmp_path / "elsewhere"
+    decoy = other_cwd / "wt" / "new-target"
+    decoy.mkdir(parents=True)
+    (decoy / ".git").write_text("gitdir: x\n")
+    monkeypatch.chdir(other_cwd)
+    args = argparse.Namespace(mode="workspace-write", branch=None, pr=None, cwd=None, worktree="wt/new-target")
+    assert delegate._check_open_pr_freeze(args, repo, target_root) == 3
+
+    real = target_root / "wt" / "new-target"
+    real.mkdir(parents=True)
+    (real / ".git").write_text("gitdir: x\n")
+    assert delegate._check_open_pr_freeze(args, repo, target_root) is None
