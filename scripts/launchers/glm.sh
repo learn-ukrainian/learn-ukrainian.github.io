@@ -37,6 +37,7 @@ launcher_adapter_preflight() {
 launcher_adapter_canary() { return 0; }
 
 launcher_adapter_exec() {
+  launcher_drop_unneeded_secrets || exit 1
   if _glm_opencode_flash; then
     local cmd=(opencode run --auto --format json -m zai-coding-plan/glm-5.3-flash)
     # `opencode run` joins its message arguments; the rules core leads them.
