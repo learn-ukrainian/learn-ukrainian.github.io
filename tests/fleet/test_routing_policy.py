@@ -6,6 +6,7 @@ import pytest
 
 from scripts.fleet.routing_policy import (
     HardRuleRefused,
+    _filter_handoff,
     done_check_pass_rate,
     log_overrides,
     projected_unused_pct,
@@ -34,6 +35,15 @@ def test_hard_rule_rejects_a_metric_that_puts_grok_on_language_work() -> None:
             language=True,
             metrics={"job_types": {"implement": {"pair": "grok-with-claude"}}},
         )
+
+
+def test_removed_subscription_lane_does_not_suppress_later_api_key_lane(monkeypatch) -> None:
+    monkeypatch.setattr("scripts.fleet.routing_policy.API_KEY_LANES", frozenset({"metered"}))
+    monkeypatch.setattr(
+        "scripts.fleet.routing_policy.LANGUAGE_LANES",
+        frozenset({"claude", "codex", "agy", "metered"}),
+    )
+    assert _filter_handoff(["grok", "metered"], language=True) == ["metered"]
 
 
 def test_language_handoff_stays_on_sol_or_gemini() -> None:

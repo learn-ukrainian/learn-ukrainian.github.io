@@ -80,11 +80,17 @@ def _pair(defaults: Mapping[str, Any], pair_id: str | None) -> dict[str, Any] | 
 
 
 def _filter_handoff(order: list[str], *, language: bool) -> list[str]:
-    chosen: list[str] = []
+    eligible: list[str] = []
     for lane in order:
         if language and (lane in CHINESE_LANES or lane not in LANGUAGE_LANES):
             continue
-        if lane in API_KEY_LANES and any(item in SUBSCRIPTION_LANES for item in order):
+        eligible.append(lane)
+    # A subscription lane removed by the language rule must not keep suppressing
+    # an API-key lane. Only a subscription lane that is still eligible does.
+    subscription_left = any(lane in SUBSCRIPTION_LANES for lane in eligible)
+    chosen: list[str] = []
+    for lane in eligible:
+        if lane in API_KEY_LANES and subscription_left:
             continue
         chosen.append(lane)
     if language and not chosen:
