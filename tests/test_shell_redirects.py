@@ -550,3 +550,51 @@ def test_directory_function_binding_mutation_cannot_license_an_operation(tmp_pat
 def test_command_local_repository_cannot_be_lost_in_a_nested_shell(shell):
     with pytest.raises(ShellParseError, match="repository environment"):
         read_commands(f"GH_REPO=fixture/other {shell} -c 'gh pr merge 5'")
+
+
+@pytest.mark.parametrize("option", ["+c", "+xc", "+cx"])
+@pytest.mark.parametrize("trailing", [[], ["-c", "printf second"]])
+def test_plus_command_option_selects_first_payload(option, trailing):
+    result = subprocess.run(
+        ["bash", option, "printf first", *trailing], capture_output=True, text=True, timeout=5
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "first"
+    suffix = " -c 'echo harmless'" if trailing else ""
+    rows = read_commands(f"bash {option} 'gh pr merge 5 --admin'{suffix}")
+    assert [row.argv for row in rows if row.argv[:3] == ["gh", "pr", "merge"]] == [
+        ["gh", "pr", "merge", "5", "--admin"]
+    ]
+    assert not any(row.argv[:2] == ["echo", "harmless"] for row in rows)
+
+
+@pytest.mark.parametrize("hook", ["guard-pr-merge", "guard-admin-merge"])
+@pytest.mark.parametrize("option", ["+c", "+xc", "+cx"])
+def test_plus_command_payload_cannot_bypass_merge_guards(hook, option, tmp_path):
+    import io
+
+    module = _oracle_module().load_hook(hook)
+    command = f"bash {option} 'gh pr merge 5 --admin' -c 'echo harmless'"
+    payload = {"cwd": str(tmp_path), "tool_input": {"command": command}}
+    if hook == "guard-pr-merge":
+        judge = patch.object(module, "_judge", return_value="fixture red check")
+    else:
+        judge = patch.object(module, "_failing_blocking_checks", return_value=["fixture red check"])
+    with judge as seen, patch.object(sys, "stdin", io.StringIO(json.dumps(payload))):
+        assert module.main() == 2
+    seen.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "arguments, reason",
+    [
+        ("+co fixture 'gh pr merge 5' -c 'echo harmless'", "packed shell"),
+        ("+cO fixture 'gh pr merge 5' -c 'echo harmless'", "packed shell"),
+        ("+c -x 'gh pr merge 5' -c 'echo harmless'", "shell options"),
+        ('+c "$payload" -c \'echo harmless\'', "shell options"),
+        ("+c", "shell options"),
+    ],
+)
+def test_plus_command_options_with_unknown_payload_fail_closed(arguments, reason):
+    with pytest.raises(ShellParseError, match=reason):
+        read_commands(f"bash {arguments}")
