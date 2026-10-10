@@ -269,3 +269,54 @@ def test_review_gh_shim_read_only_with_readonly_sqlite_file(tmp_path, gh_shim_sa
         assert "OPSEC: publishing input unresolved" not in result.stderr
     finally:
         database.chmod(0o600)
+
+
+def test_review_gh_shim_read_only_with_connection_error_and_write_only_file(tmp_path, gh_shim_sandbox):
+    _root, _shim, _tooling = gh_shim_sandbox
+    cache_dir = tmp_path / "cache"
+    cache_dir.mkdir(parents=True)
+    database = cache_dir / "cache.sqlite3"
+    sqlite3.connect(database).close()
+    database.chmod(0o200)
+
+    calls = []
+
+    def transport(*args):
+        calls.append(args[:2])
+        return Response(200, {}, b'{"number": 10108}')
+
+    client = GitHubClient(cache_dir=cache_dir, transport=transport)
+    try:
+        resp = client.request("GET", "repos/unit/public/issues/10108")
+        assert resp.status == 200
+        assert client._memory_db is not None
+        assert len(calls) == 1
+    finally:
+        database.chmod(0o600)
+
+
+def test_review_gh_shim_read_only_with_readonly_populated_schema_and_directory(tmp_path, gh_shim_sandbox):
+    _root, _shim, _tooling = gh_shim_sandbox
+    cache_dir = tmp_path / "cache"
+    cache_dir.mkdir(parents=True)
+    setup = GitHubClient(cache_dir=cache_dir)
+    with setup._db():
+        pass
+    database = cache_dir / "cache.sqlite3"
+    cache_dir.chmod(0o555)
+
+    calls = []
+
+    def transport(*args):
+        calls.append(args[:2])
+        return Response(200, {}, b'{"number": 10108}')
+
+    client = GitHubClient(cache_dir=cache_dir, transport=transport)
+    try:
+        resp = client.request("GET", "repos/unit/public/issues/10108")
+        assert resp.status == 200
+        assert client._memory_db is not None
+        assert len(calls) == 1
+    finally:
+        cache_dir.chmod(0o700)
+        database.chmod(0o600)
