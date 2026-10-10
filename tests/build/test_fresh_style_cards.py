@@ -35,6 +35,7 @@ def test_card_sidecar_hash_matches(band: str) -> None:
     sidecar = (CARDS / f"{band}.sha256").read_text(encoding="utf-8")
     digest, _, name = sidecar.strip().partition("  ")
     assert name == f"{band}.md"
+    assert sidecar == f"{digest}  {band}.md\n"
     assert digest == hashlib.sha256(raw).hexdigest(), "the sidecar must be regenerated when the card changes"
     assert front["card_version"] == 1
     assert front["band"] == band

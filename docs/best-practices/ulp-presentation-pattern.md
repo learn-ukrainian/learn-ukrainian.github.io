@@ -24,6 +24,12 @@ with side-by-side English support for added A1 passages of three or more sentenc
 Dialogues use blockquotes rendered as DialogueBox, never code fences. Stress marks
 are added deterministically after review and checked for correctness against ULIF.
 
+Fresh A1 adapts these observations under #10105: early A1 is defined by
+`activity_instruction: [en]` in `immersion_table.yaml`, with English-supported practical
+recaps rather than story comprehension questions. Explicit orientation uses English and
+Ukrainian overview exemplars only. The observations below do not set advisory percentages
+or override the language-role table; the displayed stress is added by the engine.
+
 ## The seven Ohoiko practices (extracted from ULP 1-00, S1 lessons 1, 10, 20)
 
 ### Practice 1 — UK first, EN gloss after, em-dash separator
@@ -39,7 +45,7 @@ Verbatim (Lesson 11 intro):
 
 Notice: the Ukrainian term is embedded INSIDE the English narration where it appears naturally, with the gloss following. This is NOT "vocabulary list at end" pedagogy — the UK appears in the prose, where the student encounters it in context.
 
-**A1 writer-prompt directive**: Every UK term in EN narration → em-dash gloss pattern. Never gloss-first.
+**Attributed ULP presentation pattern**: Every UK term in EN narration → em-dash gloss pattern. Never gloss-first.
 
 ### Practice 2 — Side-by-side bilingual story format
 
@@ -55,7 +61,7 @@ Verbatim (Lesson 10 "Я і моя сім'я" review story, lines 2015-2032 of so
 
 The student SEES Ukrainian first (left = where the eye starts in left-to-right reading) and can glance right for the gloss. NOT translation-pair drilling.
 
-**A1 writer-prompt directive**: For narrative passages ≥3 sentences, use side-by-side bilingual MD-table or `<DialogueBox>`-style two-column rendering. Single-column EN-only with a vocab footnote is foreigner-textbook anti-pattern.
+**Attributed ULP presentation pattern**: For narrative passages ≥3 sentences, use side-by-side bilingual MD-table or `<DialogueBox>`-style two-column rendering. Single-column EN-only with a vocab footnote is foreigner-textbook anti-pattern.
 
 ### Practice 3 — Stress marks on every multi-syllable UK term
 
@@ -66,7 +72,7 @@ Verbatim (Lesson 20 "Моє улюблене місто" review story, line 4284
 
 Six words, six stress marks. By Lesson 20 stress marks have NOT been dropped — they're still on every multi-syllable form.
 
-**A1 writer-prompt directive**: Mandatory IPA-style stress marks on every multi-syllable UK term throughout Tab 1 prose AND Tab 2 vocab AND Tab 3 activity prompts. Drop only at B2+. The deterministic gate `vesum_verified` does NOT enforce this — needs to be a writer-prompt obligation or new audit check.
+**Attributed ULP presentation pattern**: Displayed Ukrainian carries stress marks throughout the observed material. Fresh writers supply plain text; the deterministic engine annotates stress after review, as the style card requires.
 
 ### Practice 4 — Dialogue presented Ukrainian-only first, breakdown after
 
@@ -86,11 +92,11 @@ THEN (lines 100+) the per-phrase breakdown begins: "Hi! — Привіт! The ba
 
 This is a teach-by-immersion practice. The dialogue is the *artifact* the student encounters; the explanation follows the artifact. Dialogues are NOT pre-glossed line-by-line.
 
-**A1 writer-prompt directive**: Dialogues in Tab 1 should be pure Ukrainian. Translation, when needed, lives in a follow-up table or paragraph AFTER the dialogue ends, not interleaved per-turn.
+**Attributed ULP presentation pattern**: Dialogues in Tab 1 should be pure Ukrainian. Translation, when needed, lives in a follow-up table or paragraph AFTER the dialogue ends, not interleaved per-turn.
 
 ### Practice 5 — Comprehension Q&A in Ukrainian-only
 
-After a story or dialogue, comprehension questions and their model answers are BOTH in Ukrainian. No English crutches in the recall layer.
+In the observed ULP lesson, story/dialogue comprehension questions and their model answers are both Ukrainian. This is attributed source methodology; fresh early A1 applies the English-supported practical-recap adaptation below.
 
 Verbatim (Lesson 10 comprehension section, lines 2036-2044):
 ```
@@ -105,7 +111,7 @@ Verbatim (Lesson 10 comprehension section, lines 2036-2044):
 
 The section *labels* have EN glosses (`Запитання — questions`, `Відповіді — answers`), but the questions and answers themselves are 100% Ukrainian. The student is being asked to comprehend + recall in Ukrainian, not translate.
 
-**A1 writer-prompt directive**: Tab 3 activities of type `Quiz`, `MatchUp`, `OddOneOut`, `TrueFalse` should have Ukrainian-only question stems and Ukrainian-only answer options for content questions. EN appears only in the activity's UI affordances (e.g. "Choose the correct form" → "Оберіть правильну форму" with optional EN secondary). Foreigner-textbook anti-pattern: "What does the dialogue say about X?" with EN question + UK answers.
+**Attributed ULP presentation pattern**: Tab 3 activities of type `Quiz`, `MatchUp`, `OddOneOut`, `TrueFalse` should have Ukrainian-only question stems and Ukrainian-only answer options for content questions. EN appears only in the activity's UI affordances (e.g. "Choose the correct form" → "Оберіть правильну форму" with optional EN secondary). Foreigner-textbook anti-pattern: "What does the dialogue say about X?" with EN question + UK answers.
 
 ### Practice 6 — Bonus exercises mix translate-EN-to-UK and form-correction
 
@@ -123,7 +129,7 @@ Translate to Ukrainian:
 
 This is the ONE place EN-first appears, and it's explicitly labeled as the exercise mode (translate). The student is in a different cognitive mode here.
 
-**A1 writer-prompt directive**: EN→UK translate activities go in workbook (Tab 3, workbook section), NOT inline in Tab 1. Tab 1's purpose is immersive exposure; translation is a recall/test mechanic that belongs in the practice tab.
+**Attributed ULP presentation pattern**: EN→UK translate activities go in workbook (Tab 3, workbook section), NOT inline in Tab 1. Tab 1's purpose is immersive exposure; translation is a recall/test mechanic that belongs in the practice tab.
 
 ### Practice 7 — Cultural framing via Ukrainian first-person voice
 
@@ -137,7 +143,7 @@ Verbatim (Lesson 11, lines 2140-2145):
 
 She names herself, names locations she visits (Kyiv parks, Khmelnytska oblast, Полонне, Хрещатик, Поділ, кав'ярня "Living Room"), and ties grammatical concepts to lived experience.
 
-**A1 writer-prompt directive**: Use a direct teaching voice without a named narrator. Named characters belong inside dialogues. Use source-grounded Ukrainian cultural contexts; reference-author first-person examples above remain attributed quotations, not a persona for our lessons.
+**Attributed ULP presentation pattern**: Use a direct teaching voice without a named narrator. Named characters belong inside dialogues. Use source-grounded Ukrainian cultural contexts; reference-author first-person examples above remain attributed quotations, not a persona for our lessons.
 
 ---
 
@@ -154,7 +160,7 @@ For A1 modules (sequence ≤ 55) and early-A2 modules (sequence ≤ 90), the wri
 2. SIDE-BY-SIDE BILINGUAL — narrative passages ≥3 sentences render as two-column MD-table (UK left, EN right), not single-column EN with vocab footnote.
 3. STRESS MARKS — every multi-syllable UK term marked (Приві́т, спра́ви, чудо́во). Throughout Tab 1, Tab 2, Tab 3.
 4. DIALOGUE UK-ONLY — Tab 1 dialogues are pure Ukrainian with named speakers. Translation follows the dialogue, never interleaved per turn.
-5. UK-ONLY Q&A — Tab 3 comprehension/recall activities have Ukrainian-only stems and options. EN appears only in UI affordances.
+5. COMPREHENSION — ULP uses Ukrainian questions; fresh early A1 uses English-supported practical recaps under the data-defined instruction role. Later A1 can use supported Ukrainian comprehension; A2+ is unchanged.
 6. TRANSLATE → WORKBOOK — EN→UK translation prompts go in Tab 3 workbook activities, never in Tab 1 prose.
 7. NAMED PERSONA — Tab 1 prose voiced from a Ukrainian teacher persona or named characters; cultural anchors are real Ukrainian places/foods/activities.
 
@@ -269,7 +275,13 @@ The CORE A1/A2 levels span 55 + 69 = 124 modules. Ohoiko's S1-S6 covers ~240 pod
 
 ### Implications for `compute_immersion_band`
 
-The function at `scripts/config.py:718` derives a band from cumulative_vocabulary + plan.targets.new_vocabulary + lemma-frequency. The calibration constants live in code (`_ULP_VOCAB_KNEE_PER_BAND`). **Open question — needs replay verification**: does the current calibration capture the S1→S2 step-change, or does it interpolate smoothly through it? If smooth, the band derivation will under-immerse around A1 m41-m55 (where Ohoiko bumps UK density discretely). This is a calibration follow-up, NOT a code change today.
+Fresh A1 selection now uses unique cumulative core vocabulary under R-30 (#10105), not
+module positions or a ULP-derived calibration. The seven ranges are editorial, uncalibrated.
+ULP lesson-note density remains an attributed comparator: Season 1 median 37.4% (23.6–54.8%,
+n=40), Season 2 median 49.3%, using its own measurement metric. It does not calibrate our
+thresholds or lesson targets. #10110 owns pilot measurement and calibration; the driver
+checks whether 600 core words is reachable at the plan milestone. Legacy a1-v1 audit range
+drift is accepted with the curriculum-upgrade driver as owner; no second policy is added.
 
 Filed as a deferred follow-up under "calibration replay tasks" (see Decision Card 2026-05-13 Phase 4).
 

@@ -420,6 +420,8 @@ def _materialize_ulif_dictua_entry(
     else:
         section_rows = []
     sections: dict[str, list[dict]] = {}
+    from scripts.lexicon.runner.ulif_dictua_parse import correct_cached_ulif_relation_terms
+
     for row in section_rows:
         try:
             payload = json.loads(row["payload_json"])
@@ -429,6 +431,7 @@ def _materialize_ulif_dictua_entry(
             payload = {"value": payload}
         payload.setdefault("source_order", row["source_order"])
         payload.setdefault("sense_or_group_id", row["sense_or_group_id"])
+        correct_cached_ulif_relation_terms(payload, str(row["kind"]))
         sections.setdefault(row["kind"], []).append(payload)
 
     materialized_sections: dict[str, object] = {}
@@ -1108,6 +1111,8 @@ def get_ulif_word_records(
 
                 # Verified entry: load complete section payloads without collapsing
                 if has_sections_table:
+                    from scripts.lexicon.runner.ulif_dictua_parse import correct_cached_ulif_relation_terms
+
                     sections: dict[str, list[dict]] = {k: [] for k in ULIF_DICTUA_SECTION_KINDS}
                     sections_state = "complete"
                     sec_rows = conn.execute(
@@ -1143,6 +1148,7 @@ def get_ulif_word_records(
                             payload_copy["sense_or_group_id"] = group_id
                         if "locator" not in payload_copy:
                             payload_copy["locator"] = f"ulif:section:{sec_id}"
+                        correct_cached_ulif_relation_terms(payload_copy, kind)
                         sections.setdefault(kind, []).append(payload_copy)
                 else:
                     sections = {}

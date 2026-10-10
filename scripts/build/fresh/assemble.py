@@ -186,9 +186,11 @@ from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver import receipts
-from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
-from scripts.curriculum.resolver.stream import resolve
+from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+from scripts.curriculum.resolver.stream import load_allowlist, resolve
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.validate import codes as plan_codes
+from scripts.curriculum.validate.loader import PlanError, load_plan, retirement_record
 from scripts.generate_mdx.atlas_links import atlas_href_for
 from scripts.generate_mdx.converters import (
     DIALOGUE_BOX_CLOSING_LINE,
@@ -374,6 +376,9 @@ LEARNER_TEXT_ALLOWLIST = {
 # Writer-controlled bilingual prose is separate from assembler additions;
 # classification records that boundary and grants no new publication rights.
 ENGLISH_CHANNELS = {
+    "plan.lessons.*.steps.*.task.context_en": "plan_task_scaffolding",
+    "plan.lessons.*.steps.*.task.instruction_en": "plan_task_scaffolding",
+    "plan.lessons.*.steps.*.task.success_criteria_en.*": "plan_task_scaffolding",
     "pack.examples.*.translation_en": "body_support",
     "draft.dialogue.translation_en.*": "body_support",
     "draft.steps.*.blocks.*.en.*": "writer_bilingual",
@@ -425,6 +430,37 @@ def learner_text_allowed(path: str, record: dict[str, Any] | None = None) -> boo
         url = record.get(path.rsplit(".", 1)[-1])
         return bool(isinstance(permission, dict) and url and permission.get("description") == f"<{url}>")
     return True
+
+
+def recap_learner_print(selection: str | dict, evidence: list[str], pack: dict) -> tuple[str, str | None]:
+    """Check every source field before selecting recap print; retain quote attribution."""
+    from scripts.curriculum.validate.review_gates import _print_holds
+
+    ref = selection if isinstance(selection, str) else selection["ref"]
+    found = [(section, record) for section in ("texts", "examples", "exercises")
+             for record in pack.get(section, []) if record.get("id") == ref]
+    if len(found) != 1 or ref not in evidence:
+        raise AssemblerError("recap_task_print", "recap print must be cited printable evidence")
+    section, record = found[0]
+    field = {"texts": "quote", "examples": "text"}.get(section)
+    prefix = {"texts": "T-", "examples": "EX-"}.get(section)
+    if field is None or not ref.startswith(prefix):
+        raise AssemblerError("learner_text_not_allowed", "unclassified recap record kind")
+    attribution = None
+    for key in ("quote", "text", "items_sample"):
+        if key in record:
+            permission = learner_text_permission(f"pack.{section}.*.{key}", record)
+            if key == field:
+                attribution = permission
+    text = record.get(field)
+    if not isinstance(text, str) or not text:
+        raise AssemblerError("recap_task_print", "recap source has no printable text")
+    if isinstance(selection, dict):
+        if not selection["words"] or any(not _print_holds(strip_accents(text), word, exact=True)
+                                         for word in selection["words"]):
+            raise AssemblerError("recap_task_print", "recap words must occur in the exact source print")
+        text = " / ".join(selection["words"])
+    return text, attribution
 
 
 def body_english_support_allowed(level: str, module_num: int = 1) -> bool:
@@ -952,6 +988,9 @@ def assemble_expanded_document(
     if not lesson_entry:
         raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
 
+    planned_tasks = {step["id"]: step["task"] for step in lesson_entry.get("steps", []) if "task" in step} if level == "a1" else {}
+    if planned_tasks and [step.get("id") for step in draft.get("steps", [])] != [step["id"] for step in lesson_entry["steps"]]:
+        raise AssemblerError("recap_task_order", "draft must preserve approved recap step order")
     literacy = bool((lesson_entry.get("inventory", {}).get("phonetics") or {}).get("letters"))
     include_english = body_english_support_allowed(level, plan_arc_position(plan))
 
@@ -1240,6 +1279,21 @@ def assemble_expanded_document(
                         str(line),
                         source="writer_prose",
                     )
+
+        task = planned_tasks.get(step_id)
+        if task:
+            for key, text in [("context_en", task["context_en"]), ("instruction_en", task["instruction_en"]),
+                              ("response_mode", "Response: " + task["response_mode"].replace("_", " ")),
+                              *[(f"criterion_{i}", value) for i, value in enumerate(task["success_criteria_en"])]]:
+                add_unit("urok", step_id, None, None, f"recap_{key}", "instruction", page_text(text), source="writer_prose")
+            for i, selection in enumerate(task["learner_reads"]):
+                ref = selection if isinstance(selection, str) else selection["ref"]
+                evidence = next(st for st in lesson_entry["steps"] if st["id"] == step_id).get("evidence", [])
+                selected, attribution = recap_learner_print(selection, evidence, pack)
+                add_unit("urok", step_id, None, None, f"recap_print_{i}", "record_print", page_text(selected), source="record", ref=ref)
+                if attribution:
+                    add_unit("urok", step_id, None, None, f"recap_attribution_{i}", "vesum_exempt",
+                             attribution, source="record", ref=ref)
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
@@ -2477,6 +2531,14 @@ def _render_urok_markdown(
                     w.line(f"<!-- INJECT_ACTIVITY: {ref_id} -->")
                     w.blank()
 
+        for key, indices in unit_indices_by_block.items():
+            if key[0] == "urok" and key[1] == step_id and isinstance(key[2], str) and key[2].startswith("recap_"):
+                if key[2].startswith("recap_attribution_"):
+                    w.line("> — *", *unit_fragments(indices), "*")
+                else:
+                    w.line(*unit_fragments(indices))
+                w.blank()
+
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:
         w.line(*block_fragments(None, "consolidation_lead_in", consol_lead))
@@ -3104,14 +3166,28 @@ def assemble_lesson(
     """End-to-end assembly pipeline for one lesson (checks 5, 9, 11).
 
     Refuses site write on failures or open tokens, writing only state files.
+    In-memory plan_dict/words_dict do not override the resolver allowlist:
+    its learner state always comes from the locked plan and word store on disk.
     """
     root = repo_root or REPO_ROOT
 
     paths = lesson_lock.resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=root)
-    state_dir = output_dir or (paths["evidence_dir"] / "_state" / slug)
+    if plan_dict is not None and not paths["plan"].is_file():
+        retirement_record(paths["plan"].parent)
+    try:
+        loaded_plan = load_plan(paths["plan"]) if plan_dict is None or paths["plan"].is_file() else plan_dict
+    except PlanError as err:
+        # Retirement remains a typed refusal before any other input is read.
+        if err.code in {plan_codes.PLAN_RETIRED, plan_codes.RETIREMENT_RECORD_INVALID}:
+            raise
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": str(err), "layer": "engine", "code": err.code},
+        }
+    state_dir = output_dir or (paths["state_dir"] / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
-    plan = plan_dict if plan_dict is not None else yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    plan = plan_dict if plan_dict is not None else loaded_plan
     pack = pack_dict if pack_dict is not None else yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
     words_store = words_dict if words_dict is not None else yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
 
@@ -3134,6 +3210,27 @@ def assemble_lesson(
             },
         }
 
+    # Validate locked disk inputs before assembly can write any state artifacts.
+    try:
+        allowlist = load_allowlist(
+            level, slug, lesson_n,
+            plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
+        )
+    except ResolverError as err:
+        code, message = err.code, err.message
+        layer = "pack" if code in {resolver_codes.UNKNOWN_WORD_ID, resolver_codes.LOCK_MISMATCH} else "engine"
+    except (OSError, ValueError) as err:
+        code, message, layer = "resolver_input_unavailable", str(err), "pack"
+    except Exception as err:
+        code, message, layer = "resolver_error", str(err), "engine"
+    else:
+        code = None
+    if code is not None:
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": f"{code}: {message}", "layer": layer, "code": code},
+        }
+
     # Check 5: Assembly
     c5 = check_5_assembly(draft, plan, pack, words_store, level, slug, lesson_n, output_dir=state_dir)
     if not c5.passed:
@@ -3143,22 +3240,27 @@ def assemble_lesson(
 
     # Resolver resolution
     try:
-        from scripts.curriculum.resolver.stream import allowlist_for_lesson
-
-        allowlist = allowlist_for_lesson(level, slug, lesson_n, evidence_dir=evidence_dir, plans_dir=plans_dir)
-    except Exception:
-        allowlist = Allowlist.from_records(words_store.get("words", []))
-
-    try:
-        sources = Sources()
-    except Exception:
-        sources = None
-    expanded_obj = ExpandedDocument.from_data(expanded_doc)
-    lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
-    stream = resolve(
-        expanded_obj, allowlist, sources,
-        source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
-    )
+        with Sources() as sources:
+            expanded_obj = ExpandedDocument.from_data(expanded_doc)
+            lesson = next(entry for entry in plan["lessons"] if entry["n"] == lesson_n)
+            stream = resolve(
+                expanded_obj, allowlist, sources,
+                source_quote_units=plan_quote_units(expanded_obj, c5.artifacts["provenance"], draft, lesson, pack),
+            )
+    except ResolverError as err:
+        code, message = err.code, err.message
+        layer = "pack" if code in {resolver_codes.UNKNOWN_WORD_ID, resolver_codes.LOCK_MISMATCH} else "engine"
+    except (OSError, ValueError) as err:
+        code, message, layer = "resolver_input_unavailable", str(err), "pack"
+    except Exception as err:
+        code, message, layer = "resolver_error", str(err), "engine"
+    else:
+        code = None
+    if code is not None:
+        return {
+            "ok": False,
+            "failure": {"check": 9, "passed": False, "reason": f"{code}: {message}", "layer": layer, "code": code},
+        }
 
     # Major 4: Check if stream has any failures or open tokens
     stream_failures = list(getattr(stream, "failures", []) or [])
@@ -3194,6 +3296,7 @@ def assemble_lesson(
             },
             "check_5": c5.to_dict(),
             "blocking_tokens": [str(t.get("token", "")) for t in blocking_tokens],
+            "blocking_token_classes": [str(t.get("class", "")) for t in blocking_tokens],
             "stream_failures": [str(f) for f in stream_failures],
             "message": f"stream has {len(blocking_tokens)} blocking token(s) and {len(stream_failures)} failure(s); refusing site write",
         }

@@ -202,6 +202,61 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
 - it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
 - it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
 
+### Finished branch-holder scratch hand-off (#10227, first slice)
+
+Dispatch/review branch attachment may release a terminal, unambiguously bound
+holder with only untracked `*.orig`, `*.patch`, or `pytest_out.txt` scratch.
+The closed classifier lives in `scripts/fleet/regenerable_output.py`;
+these patterns do not become auto-finalize exclusions. Each eligible file is
+regular, has one hard link, and is at most 256 MiB. An `.orig` stem must be a
+tracked path. A filesystem scan also rejects special files that Git omits.
+Tracked changes (including concealed index-flag edits), submodules, nested
+repositories, arbitrary links and any other untracked output refuse the entire
+release. Ignored output is inventoried separately and archived, with existing
+cache and verified provisioned-link exemptions unchanged. The shared 256 MiB
+aggregate archive cap also applies.
+
+Under the existing attachment/removal lock, the active-task API must return a
+valid `tasks` list with no matching active task; missing or malformed `tasks`
+is unknown. Process-CWD and open-file/mapping probes must prove absence, including
+the open-file probe's visibility check. These gates bind clean legacy holders
+too, regardless of whether an owner record exists. HEAD must equal the exact
+live remote branch tip from `git ls-remote`; cached tracking refs cannot prove
+that equality.
+
+Before unlinking scratch, the shared preservation boundary copies and retrieves
+every selected file, verifies names/sizes/SHA-256, publishes a manifest, and
+records `branch_holder_archive` on the canonical task. Hand-off output includes
+the repository-relative `manifest_path`, `content_sha256` and
+`retrieval_proof_sha256`. Archive or receipt failure deletes nothing. Claims,
+liveness, task/run identity, HEAD and the complete inventory are rechecked;
+every receipt-covered regular source is renamed descriptor-relatively to an exclusively
+reserved private name in its own directory, without following links. The moved
+inode must match the open source descriptor and its bytes must match the archived
+digest. The entire private set is revalidated before the first unlink. A mismatch
+restores staged names without overwriting any new arrivals and refuses release.
+A failed restoration retains the bytes under the private name and records typed
+`source_restore_failed` evidence with both repository-relative names in
+`branch_holder_release_refusal`. Archived ignored output is retired in the same
+verified pass, so the common boundary does not archive it again or replace the
+receipt; existing regenerable-output exemptions remain unchanged.
+Non-force worktree removal then uses the existing common boundary. Dry-run
+neither archives nor unlinks.
+
+This lock coordinates cooperating attachment/removal callers; it cannot freeze
+an unrelated filesystem writer or a new process after the final absence probe.
+Replacement at an ordinary source name between final stat and staging is now
+caught and preserved. An unrelated writer targeting a private staging name can
+still race its reservation/rename or final verification/unlink; an inode writer
+can also change bytes after final private-set verification. The attachment lock
+does not exclude unrelated writers from those windows.
+Git still refuses new ordinary untracked/modified files at non-force removal;
+already archived scratch remains retrievable if removal fails. Unknown state
+always refuses release. This slice adds no probe retry, identity bypass,
+retention release or automatic archive deletion. The reaper's dirty-tree and
+activity refusals and `delegate.py rescue` identity/activity refusals remain
+residuals owned by the accountable driver (`claude-monitor`).
+
 The scheduled job reports terminal non-success dispatches older than six hours
 as rescue candidates in its result and status; it does not commit or push them.
 A clean tree with unpushed commits is flagged at task exit as
@@ -900,6 +955,32 @@ The batch-state sweep lists regular files at least 100 MiB outside managed
 entry has a batch-state-relative path, bytes, age in days and `report_only` action.
 Owners use this list to decide disposition; the one-off report never removes
 these files. Scheduled public summaries expose their count and total bytes.
+
+## Worker-held runtime scratch (#10000)
+
+Keep held patches, handoffs and diagnostics in the dispatch worktree's
+`batch_state/reports/` and cite each file in the final response. If a worker
+holds a file under its runtime temporary root instead, delegate preserves
+absolute file citations (including Markdown links, code spans, file URIs and
+line-number suffixes), runtime-root relative code spans or links, and
+`$TMPDIR/<file>` citations, before removing the lease.
+Task records may also declare `held_work` as a list of runtime-root relative or
+absolute file paths. Unreferenced scratch remains disposable.
+
+Both worker exit and the terminal orphan sweep copy cited regular files to
+`batch_state/preserved/<task-id>/held-<attempt>/`. The task's
+`preserved_held_work` receipt names that repository-relative `location` and
+each relative file path, size and SHA-256. The adjacent `.manifest.json`
+contains the same receipt, including `retrieval_proof_sha256`; retrieve files
+by joining the primary repository, `location`, and the entry's `path`.
+Preserved copies survive later runtime and worktree reaping.
+
+The existing 256 MiB preservation cap applies. Symlink citations, traversal,
+missing declarations, failed copy or retrieval, and failed manifest or task
+metadata publication refuse runtime deletion with
+`runtime_tmp_held_work_preservation_failed`. The worker records this in
+`tmp_reap_error`; orphan sweeps include the typed reason in `error_details`.
+The original lease remains available for the accountable driver's disposition.
 
 ## Task-owned scratch for large ad-hoc runs (#8738)
 

@@ -1,15 +1,20 @@
-"""Fleet board v1 routes: an endpoint index, a JSON Schema document, and the PR pipeline."""
+"""Fleet board v1 routes: index, schema, roster, budget, operations, and PRs."""
 
 from __future__ import annotations
 
 import re
+from collections.abc import Callable, Sequence
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Path, Query, Request
+from fastapi import APIRouter, Depends, Path, Query, Request
 
+from ..monitor_context import MonitorContext, get_ctx
 from . import prs as prs_api
+from .budget import load_budget, unknown_budget
 from .envelope import endpoint_schema, envelope, utc_timestamp
-from .sources import SourceReport, collect_source_reports, report
+from .http_sources import empty_stats, load_alerts, load_links, load_stats
+from .roster import empty_roster, load_roster
+from .sources import SourceReport, collect_source_reports, overlay_source, read_location, report
 
 router = APIRouter()
 
@@ -77,10 +82,29 @@ def _sources() -> tuple[SourceReport, ...]:
         return (report("sources", "unavailable"),)
 
 
-def respond(name: str, data: Any) -> dict[str, Any]:
+def _publish(
+    schema_name: str,
+    source_name: str,
+    empty: Callable[[], dict[str, Any]],
+    loader: Callable[[], tuple[dict[str, Any], tuple[SourceReport, ...]]],
+) -> dict[str, Any]:
+    """Run one loader. A bug becomes ``unavailable`` and HTTP 200."""
+    try:
+        data, reports = loader()
+        return envelope(schema_name, data, reports)
+    except Exception:
+        return envelope(schema_name, empty(), (report(source_name, "unavailable"),))
+
+
+def respond(
+    name: str,
+    data: Any,
+    sources: Sequence[SourceReport] | None = None,
+) -> dict[str, Any]:
     """Envelope ``data``. A source failure stays inside ``sources``."""
     try:
-        return envelope(name, data, _sources())
+        chosen = _sources() if sources is None else tuple(sources)
+        return envelope(name, data, chosen)
     except Exception:
         try:
             generated_at = utc_timestamp()
@@ -120,6 +144,43 @@ def read_schema(request: Request) -> dict[str, Any]:
             }
         }
     return respond("schema", data)
+
+
+@router.get("/roster", name="roster")
+def read_roster() -> dict[str, Any]:
+    try:
+        loaded = load_roster(read_location("FLEET_ROSTER_SNAPSHOT"))
+        data: dict[str, Any] = loaded.data
+        source = loaded.source
+    except Exception:
+        data = empty_roster()
+        source = report("roster_snapshot", "unavailable")
+    return respond("roster", data, overlay_source(source))
+
+
+@router.get("/budget", name="budget")
+def read_budget(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
+    try:
+        data, source = load_budget(ctx)
+    except Exception:
+        data = unknown_budget()
+        source = report("routing_budget", "unavailable")
+    return respond("budget", data, overlay_source(source))
+
+
+@router.get("/alerts", name="alerts")
+def read_alerts() -> dict[str, Any]:
+    return _publish("alerts", "alerts", lambda: {"alerts": []}, load_alerts)
+
+
+@router.get("/stats", name="stats")
+def read_stats() -> dict[str, Any]:
+    return _publish("stats", "stats", empty_stats, load_stats)
+
+
+@router.get("/links", name="links")
+def read_links() -> dict[str, Any]:
+    return _publish("links", "links", lambda: {"links": []}, load_links)
 
 
 @router.get("/prs", name="prs")

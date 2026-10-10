@@ -65,7 +65,7 @@ class ImmersionPayload:
     """Deterministic immersion payload for a lesson position (#8431 §7)."""
 
     band_key: str
-    advisory_uk_share: tuple[int, int]
+    advisory_uk_share: tuple[int, int] | None
     structural_targets: dict[str, int]
     permitted_languages: dict[str, tuple[str, ...]]
     source: str
@@ -76,7 +76,7 @@ class ImmersionPayload:
         """Machine-readable dictionary representation."""
         result: dict[str, Any] = {
             "band_key": self.band_key,
-            "advisory_uk_share": list(self.advisory_uk_share),
+            "advisory_uk_share": list(self.advisory_uk_share) if self.advisory_uk_share is not None else None,
             "structural_targets": dict(self.structural_targets),
             "permitted_languages": {k: list(v) for k, v in self.permitted_languages.items()},
             "source": self.source,
@@ -148,7 +148,7 @@ def compute_immersion_payload(
     return ImmersionPayload(
         band_key=lesson_band.band_key,
         advisory_uk_share=lesson_band.advisory_uk_share,
-        structural_targets=dict(lesson_band.module_structural),
+        structural_targets={} if track.lower().split("-")[0] == "a1" else dict(lesson_band.module_structural),
         permitted_languages=permitted,
         source=lesson_band.source,
         not_checked=list(lesson_band.not_checked),

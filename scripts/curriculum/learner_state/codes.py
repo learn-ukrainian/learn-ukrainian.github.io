@@ -28,6 +28,7 @@ ARC_BAND_TABLE_MISSING = "arc_band_table_missing"
 ULP_DERIVATION_DISABLED = "ulp_derivation_disabled"
 ULP_IMMERSION_DERIVATION_DISABLED = ULP_DERIVATION_DISABLED
 CUMULATIVE_CORE_COUNT_MISSING = "cumulative_core_count_missing"
+CUMULATIVE_CORE_COUNT_INVALID = "cumulative_core_count_invalid"
 CUMULATIVE_COUNT_MISSING = CUMULATIVE_CORE_COUNT_MISSING
 
 # --- Failures: Part 2 inventory gate (registered for Part 2 SSOT) ------------
@@ -74,6 +75,7 @@ DESCRIPTIONS: dict[str, str] = {
     ARC_BAND_TABLE_MISSING: "failure: arc position has no band_key defined in _arc.yaml",
     ULP_DERIVATION_DISABLED: "failure: USE_ULP_IMMERSION_DERIVATION is disabled for A1 immersion calculation",
     CUMULATIVE_CORE_COUNT_MISSING: "failure: cumulative_core_count is required for A1 immersion band computation",
+    CUMULATIVE_CORE_COUNT_INVALID: "failure: A1 core count must be a nonnegative integer",
     LEMMA_OUTSIDE_STATE: "failure: token resolves to a lemma outside allowed learner state",
     CORE_NOT_INTRODUCED: "failure: core vocabulary item declared in plan is not introduced in lesson",
     RECYCLED_NOT_USED: "failure: recycled vocabulary item declared in plan is not used in lesson",
@@ -116,6 +118,7 @@ FAILURE_CODES = frozenset(
         ARC_BAND_TABLE_MISSING,
         ULP_DERIVATION_DISABLED,
         CUMULATIVE_CORE_COUNT_MISSING,
+        CUMULATIVE_CORE_COUNT_INVALID,
         LEMMA_OUTSIDE_STATE,
         CORE_NOT_INTRODUCED,
         RECYCLED_NOT_USED,
