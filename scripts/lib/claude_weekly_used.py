@@ -56,9 +56,11 @@ def main() -> None:
         if not -60 <= response_age <= 900 or claude.get("stale") or bar.get("stale"):
             raise ValueError("stale")
         pct = bar.get("weekly_used_pct")
-        if isinstance(pct, bool) or not isinstance(pct, (int, float)) or not math.isfinite(pct) or not 0 <= pct <= 100:
+        # Overshoot above 100% is real usage: clamp it so the cap fails closed.
+        if isinstance(pct, bool) or not isinstance(pct, (int, float)) or not math.isfinite(pct) or pct < 0:
             raise ValueError("invalid percentage")
-        print(f"{pct:g}")
+        # Fixed-point output: the launcher accepts only plain decimal digits.
+        print(f"{min(pct, 100):.6f}".rstrip("0").rstrip("."))
     except Exception:  # any failure reads as unknown
         print("unknown")
 

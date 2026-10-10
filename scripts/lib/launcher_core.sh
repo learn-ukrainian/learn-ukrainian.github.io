@@ -1426,7 +1426,8 @@ launcher_claude_cap_guard() {
   local -r stop=99
   local py; py="$(launcher_project_python 2>/dev/null || true)"
   pct=unknown; [ -n "$py" ] && pct="$("$py" -I "$LC_ROOT/scripts/lib/claude_weekly_used.py" 2>/dev/null || echo unknown)"
-  if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0 && p<=100)}'; then
+  # Any non-negative decimal is usage; overshoot above 100% still stops.
+  if ! [[ "$pct" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v p="$pct" 'BEGIN{exit !(p>=0)}'; then
     printf 'launcher: warning: Claude weekly usage unknown or invalid; allowing launch without a usage check.\n' >&2
     return 0
   fi

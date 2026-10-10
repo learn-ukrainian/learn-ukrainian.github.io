@@ -85,7 +85,7 @@ def test_explicit_opus_is_always_refused(name, model, pct, via_env, launch_with_
 
 
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("99", "99.1", "100"))
+@pytest.mark.parametrize("pct", ("99", "99.1", "100", "100.1", "101"))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet"), ("--model", "haiku")))
 def test_stop_threshold_refuses_every_claude_launch(name, pct, model, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
@@ -201,7 +201,15 @@ def test_weekly_reader_refuses_redirects() -> None:
         claude_weekly_used._NoRedirect().redirect_request(None, None, 302, "", {}, "https://untrusted.invalid")
 
 
-@pytest.mark.parametrize("pct", (None, True, -1, 101, "0", float("nan"), float("inf")))
+@pytest.mark.parametrize("pct, expected", ((0, "0"), (1e-05, "0.00001"), (98.5, "98.5"), (99, "99"), (100, "100"), (100.1, "100"), (250, "100")))
+def test_weekly_reader_prints_plain_decimal_and_clamps_overshoot(pct, expected, monkeypatch, capsys) -> None:
+    payload = {"generated_at": "2030-01-01T00:00:00Z", "agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}}}
+    _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
+    claude_weekly_used.main()
+    assert capsys.readouterr().out == expected + "\n"
+
+
+@pytest.mark.parametrize("pct", (None, True, -1, -0.5, "0", float("nan"), float("inf")))
 def test_weekly_reader_rejects_invalid_percentages(pct, monkeypatch, capsys) -> None:
     payload = {"generated_at": "2030-01-01T00:00:00Z", "agents": {"claude": {"codexbar": {"weekly_used_pct": pct}}}}
     _mock_request(monkeypatch, io.BytesIO(json.dumps(payload).encode()))
@@ -369,7 +377,7 @@ def test_driver_rejects_forwarded_selectors_before_percentage_check(
 
 @pytest.mark.rules_core_absent
 @pytest.mark.parametrize("name", ("start-claude.sh", "start-claude-driver.sh"))
-@pytest.mark.parametrize("pct", ("unknown", "", "nan", "inf", "-1", "101", "0\n95"))
+@pytest.mark.parametrize("pct", ("unknown", "", "nan", "inf", "-1", "1e-05", "0\n95"))
 @pytest.mark.parametrize("model", ((), ("--model", "sonnet")))
 def test_unknown_or_invalid_usage_warns_and_allows_launch(name, pct, model, launch_with_usage) -> None:
     args = ("--epic", "infra") if name == "start-claude-driver.sh" else ()
