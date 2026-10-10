@@ -10,6 +10,7 @@ import signal
 import sqlite3
 import subprocess
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -38,6 +39,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     parse_stored,
     resolve_progress_interval,
     run_fetch,
+    run_walk,
     status_text,
 )
 from scripts.lexicon.runner.ulif_dictua_parse import parse_ulif_entry
@@ -2390,6 +2392,18 @@ def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interru
 _SIGTERM_REAP_SECONDS = 5.0
 
 
+def _sigterm_is_blocked() -> bool:
+    return signal.SIGTERM in signal.pthread_sigmask(signal.SIG_BLOCK, set())
+
+
+def _discard_pending_sigterm_and_restore(previous_mask: set[int], previous_handler: object) -> None:
+    """Drop a SIGTERM left pending, then restore the caller's mask and handler."""
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
+    signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+    signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
+    signal.signal(signal.SIGTERM, previous_handler)
+
+
 @contextmanager
 def _fifo_input_ready(proc: subprocess.Popen, fifo_path: Path, *, timeout: float = 10.0):
     """Pair with the child's FIFO reader, keeping input blocked without payload or EOF."""
@@ -2452,8 +2466,11 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
         ]
     # signal.signal does not unblock. Block in the parent so the child inherits
     # the mask the CI hang died on, then require the child to clear it (#10374).
+    # Restore that saved mask. An unconditional unblock would clear a SIGTERM
+    # the parent had already blocked.
+    parent_mask = None
     if block_inherited_sigterm:
-        signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+        parent_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
     try:
         proc = subprocess.Popen(command, stderr=subprocess.PIPE, text=True)
         try:
@@ -2471,8 +2488,8 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
                 proc.kill()
             proc.communicate(timeout=_SIGTERM_REAP_SECONDS)
     finally:
-        if block_inherited_sigterm:
-            signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
+        if parent_mask is not None:
+            signal.pthread_sigmask(signal.SIG_SETMASK, parent_mask)
 
     assert proc.returncode == EXIT_INTERRUPTED
     assert "=== ULIF Fetch Stop Summary ===" in err
@@ -2481,6 +2498,126 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path, startup_dela
     assert "Requests in run:      0" in err
     assert not (tmp_path / "state").exists()
     assert not (tmp_path / "cache.db").exists()
+
+
+def test_run_fetch_preserves_caller_blocked_sigterm(tmp_path, capsys):
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    # Queue on this thread. A process-directed SIGTERM can be taken by another
+    # thread whose mask is still open.
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+
+    def no_network(_method, _fields):
+        raise AssertionError("network")
+
+    code = None
+    escaped: BaseException | None = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = run_fetch(
+                spellings=[],
+                state_dir=tmp_path / "state",
+                db_path=tmp_path / "cache.db",
+                transport=no_network,
+                sleep=_noop_sleep,
+                scanner=lambda: False,
+            )
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        assert escaped is None
+        assert code == EXIT_OK
+        assert _sigterm_is_blocked()
+        assert signal.SIGTERM in signal.sigpending()
+        assert signal.getsignal(signal.SIGTERM) == previous_handler
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+    capsys.readouterr()
+
+
+def test_run_walk_preserves_caller_blocked_sigterm(tmp_path, capsys):
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+
+    def no_network(_method, _fields):
+        raise RuntimeError("no-network")
+
+    code = None
+    escaped: BaseException | None = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = run_walk(
+                state_dir=tmp_path / "state",
+                db_path=tmp_path / "cache.db",
+                transport=no_network,
+                sleep=_noop_sleep,
+                scanner=lambda: False,
+            )
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        assert escaped is None
+        assert _sigterm_is_blocked()
+        assert signal.SIGTERM in signal.sigpending()
+        assert signal.getsignal(signal.SIGTERM) == previous_handler
+        err = capsys.readouterr().err
+        assert "no-network" in err
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+    assert code is not None
+
+
+@pytest.mark.parametrize("command", ["run", "walk"])
+def test_pending_sigterm_at_main_install_prints_stop_summary_and_restores_handler(tmp_path, capsys, command):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    if command == "run":
+        argv = [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Fetch Stop Summary ==="
+        reason = "Reason:               interrupted by operator"
+    else:
+        argv = [
+            "walk",
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+        summary = "=== ULIF Walk Stop Summary ==="
+        reason = "Reason:                 interrupted by operator"
+
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGTERM})
+    signal.pthread_kill(threading.get_ident(), signal.SIGTERM)
+    code = None
+    escaped: BaseException | None = None
+    handler_after = None
+    try:
+        assert signal.SIGTERM in signal.sigpending()
+        try:
+            code = main(argv)
+        except (KeyboardInterrupt, InterruptedByOperator) as exc:
+            escaped = exc
+        handler_after = signal.getsignal(signal.SIGTERM)
+    finally:
+        _discard_pending_sigterm_and_restore(previous_mask, previous_handler)
+
+    assert escaped is None
+    assert code == EXIT_INTERRUPTED
+    assert handler_after == previous_handler
+    err = capsys.readouterr().err
+    assert summary in err
+    assert reason in err
+    assert "Resume command:" in err
 
 
 @pytest.mark.parametrize(

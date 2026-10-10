@@ -103,12 +103,16 @@ class InterruptedByOperator(KeyboardInterrupt):
 def _install_sigterm_handler() -> Any:
     """Install the operator SIGTERM handler and return the previous one.
 
-    ``signal.signal`` does not change the thread mask, and the mask is inherited
-    across fork and exec. A blocked SIGTERM never runs the handler, so a blocking
-    read of the spellings FIFO sleeps until the caller's wait gives up (#10374).
-    The handler is installed before the signal is unblocked, so a signal that was
-    already pending is delivered to this handler rather than the default terminate
-    action. Returns None off the main thread, where ``signal.signal`` is illegal.
+    Does not change the thread signal mask. The mask is inherited across fork
+    and exec, and ``signal.signal`` does not clear it, so a blocked SIGTERM
+    never runs the handler (#10374). Unblocking is reserved for ``main`` via
+    ``_unblock_inherited_sigterm``, and only after the caller has stored this
+    return value and armed the ``finally`` that restores it. ``run_fetch`` and
+    ``run_walk`` leave a caller-blocked SIGTERM blocked.
+
+    If a signal is delivered after the handler is installed but before this
+    returns, the previous handler is restored and the exception propagates.
+    Returns None off the main thread, where ``signal.signal`` is illegal.
     """
     if threading.current_thread() is not threading.main_thread():
         return None
@@ -116,12 +120,31 @@ def _install_sigterm_handler() -> Any:
     def _on_sigterm(signum: int, frame: Any) -> None:
         raise InterruptedByOperator("SIGTERM")
 
-    previous = None
-    with contextlib.suppress(ValueError, OSError):
-        previous = signal.signal(signal.SIGTERM, _on_sigterm)
+    unset = object()
+    previous: Any = unset
+    try:
+        with contextlib.suppress(ValueError, OSError):
+            previous = signal.signal(signal.SIGTERM, _on_sigterm)
+        return None if previous is unset else previous
+    except (KeyboardInterrupt, InterruptedByOperator):
+        if previous is not unset:
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(signal.SIGTERM, previous)
+        raise
+
+
+def _unblock_inherited_sigterm() -> None:
+    """Unblock SIGTERM so a pending inherited signal reaches the handler.
+
+    Only ``main`` may call this, and only from inside the ``try`` that restores
+    the handler saved by ``_install_sigterm_handler``. A pending SIGTERM is
+    delivered here, as ``InterruptedByOperator``, instead of killing the process
+    or sleeping through a blocked FIFO read (#10374).
+    """
+    if threading.current_thread() is not threading.main_thread():
+        return
     if hasattr(signal, "pthread_sigmask"):
         signal.pthread_sigmask(signal.SIG_UNBLOCK, {signal.SIGTERM})
-    return previous
 
 
 def declared_user_agent() -> str:
@@ -2505,8 +2528,6 @@ def run_fetch(
     cache: sqlite3.Connection | None = None
     client: PoliteClient | None = None
 
-    old_sigterm = _install_sigterm_handler()
-
     def _emit_fetch_progress() -> None:
         if ledger is None:
             return
@@ -2534,7 +2555,9 @@ def run_fetch(
         emit=_emit_fetch_progress,
     )
 
+    old_sigterm = None
     try:
+        old_sigterm = _install_sigterm_handler()
         try:
             _ensure_private_dir(state_dir)
             lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
@@ -2834,6 +2857,17 @@ def run_fetch(
                     "===============================",
                 ]
                 print("\n".join(lines), file=sys.stderr, flush=True)
+    except (KeyboardInterrupt, InterruptedByOperator):
+        stop_reason = "interrupted by operator"
+        return_code = EXIT_INTERRUPTED
+        with contextlib.suppress(BaseException):
+            _print_stop_summary(
+                reason=stop_reason,
+                ledger=ledger,
+                requests_in_process=client.requests_made if client else 0,
+                elapsed_seconds=clock() - start_time,
+                resume_cmd=resolved_resume_cmd,
+            )
     finally:
         try:
             if cache is not None:
@@ -3873,8 +3907,6 @@ def run_walk(
     cache: sqlite3.Connection | None = None
     client: PoliteClient | None = None
 
-    old_sigterm = _install_sigterm_handler()
-
     def _emit_walk_progress() -> None:
         if ledger is None:
             return
@@ -3901,7 +3933,9 @@ def run_walk(
         emit=_emit_walk_progress,
     )
 
+    old_sigterm = None
     try:
+        old_sigterm = _install_sigterm_handler()
         try:
             _ensure_private_dir(state_dir)
             lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
@@ -4456,7 +4490,17 @@ def run_walk(
                     "==============================",
                 ]
                 print("\n".join(lines), file=sys.stderr, flush=True)
-
+    except (KeyboardInterrupt, InterruptedByOperator):
+        stop_reason = "interrupted by operator"
+        return_code = EXIT_INTERRUPTED
+        with contextlib.suppress(BaseException):
+            _print_walk_stop_summary(
+                reason=stop_reason,
+                ledger=ledger,
+                requests_in_process=client.requests_made if client else 0,
+                elapsed_seconds=clock() - start_time,
+                resume_cmd=resolved_resume_cmd,
+            )
     finally:
         try:
             if cache is not None:
@@ -5227,10 +5271,12 @@ Related:
             cmd_parts.extend(["--progress-interval", f"{args.progress_interval:g}"])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = _install_sigterm_handler()
-
+        old_sigterm = None
         try:
             try:
+                old_sigterm = _install_sigterm_handler()
+                if old_sigterm is not None:
+                    _unblock_inherited_sigterm()
                 spellings = _spellings_from_file(args.spellings_file)
             except (KeyboardInterrupt, InterruptedByOperator):
                 _print_stop_summary(
@@ -5318,9 +5364,21 @@ Related:
             cmd_parts.extend(["--start-headword", args.start_headword])
         resume_cmd = shlex.join(cmd_parts)
 
-        old_sigterm = _install_sigterm_handler()
-
+        old_sigterm = None
         try:
+            try:
+                old_sigterm = _install_sigterm_handler()
+                if old_sigterm is not None:
+                    _unblock_inherited_sigterm()
+            except (KeyboardInterrupt, InterruptedByOperator):
+                _print_walk_stop_summary(
+                    reason="interrupted by operator",
+                    ledger=None,
+                    requests_in_process=0,
+                    elapsed_seconds=0.0,
+                    resume_cmd=resume_cmd,
+                )
+                return EXIT_INTERRUPTED
             code = run_walk(
                 state_dir=args.state_dir,
                 db_path=args.db,
