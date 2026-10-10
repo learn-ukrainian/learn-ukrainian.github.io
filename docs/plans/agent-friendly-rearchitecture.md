@@ -251,3 +251,32 @@ No other operator decision came out of the counts. The facade stays rejected. Th
 ## Branches this work did not touch
 
 Open #9737 pull requests at the time of the census: [#9781](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9781) `claude/impl-9739`, [#9779](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9779) `codex/impl-9742`, [#9800](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9800) `grok/impl-9741-c`, [#9798](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9798) `codex/impl-9785`, [#9802](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9802) `codex/impl-9797`. Also left alone: #9721's [#9784](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/9784) `codex/publish-9721-approved-plan`, and #9718's `cursor/ci-frontend-speed-9718`.
+
+## 7. Week of 2026-10-03 through 2026-10-10
+
+Frozen quarter figures above stay frozen. This section is the refresh at head `5844f2b65ceaa9ba54a634352bb82eea4cee2d6f`. Machine-readable snapshot: [agent-friendly-rearchitecture-week.json](agent-friendly-rearchitecture-week.json). Regenerate with:
+
+```bash
+.venv/bin/python scripts/evidence/agent_pitfall_census.py --since 2026-10-03 --until 2026-10-11 --pretty
+```
+
+The window is 2026-10-03 inclusive through 2026-10-11 exclusive, full UTC midnights. Counted: 434 non-merge commits, 209 of them `fix`, 139 without an `X-Agent` trailer, 0 subjects that start with `revert`.
+
+Leading `fix` scopes: review 16, runtime 13, hooks 9, dispatch 9, delegate 8, opsec 7, ci 7, orchestration 7, lexicon 6. Subject-regex hits, not a second ranking: removal or reap 12, timeout or cache 11, review machinery 9, opsec path 8, source evidence 6, test isolation 3, routing credit 3, CI selection 1. Fix commits touching tests: 203. Delivery trees: 110. `ci.yml`: 1.
+
+**Inferred:** the week does not revive the quarter's practice and atlas lead, and it does not revive the rejected facade. Review and runtime repairs still dominate the fix scopes. The approved owner-interface choice stands. The 139 missing trailers are a counted hygiene gap. They are not a new architecture.
+
+Operator-named classes for this week, with what was counted:
+
+| Class | Counted evidence | Enforcement that fits the ladder |
+| --- | --- | --- |
+| Environment values in formatted output | On this checkout, `repr` of `os.environ` included a planted value. One week commit redacts a key pattern in worker output, [a38217a40e](https://github.com/learn-ukrainian/learn-ukrainian.github.io/commit/a38217a40e). | The environment object's formatting omits values. Lookups stay intact. A rule file would not stop `print` of the object. |
+| Infrastructure text on a public pull request | `fix(opsec)` is 7. The file scanner in CI does not receive the title, body, or branch. Commit messages are scanned on the local push hook, not as those four CI surfaces. | The existing IP, credential, and home-path rules run in CI on title, body, branch, and commits. This is move 5 applied to pull-request text. It does not change path filters or the Frontend job, so it is not move 3. |
+| Ukrainian-language work on other model families | `fix(routing)` is 4. Dispatch already refuses a language lane outside Claude, Codex, and AGY. | Open pull request [#10372](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/10372) on `sre/rel1251-model` is that enforcement. It is not merged. CI Gate was red on pytest shards at head `c96eb72730`. This refresh does not open a second change to `scripts/delegate.py`. |
+| Flaky timing tests | Subject regex `test_isolation` is 3. `timeout_or_cache` is 11. The quarantine file has an empty `entries` list. AST count of `time.sleep` in tests, excluding `tests/wait_helpers.py`: 124 calls in 58 files. | New sleeps fail CI. Existing deadline sleeps stay on a baseline that may only shrink. Rewriting all 58 files would change timeout tests that are not the copy class. |
+| Bypass notes agents copy | Before removal, the word appeared on 9 lines under `scripts/` and `tests/` (the Gemini stdin note, the audit allowlist note, and four test or docstring lines). | The stdin path stays. The note that told the next agent to revert to argv is gone. A lint fails if the word returns under `scripts/` or `tests/`. |
+
+Owned elsewhere, so this refresh does not open a competing change:
+
+* Move 2, one hook parser. Open issue [#9807](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9807) has no pull request. Open pull request [#10293](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/10293) on `codex/impl-9484` already edits hook files. The check waits.
+* Moves 3 and 4 stay deferred. One `ci.yml` fix commit and lexicon 6 do not overturn the quarter's yield to #9718, #9721, #8977, and #8400.

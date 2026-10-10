@@ -305,6 +305,7 @@ def main(argv: list[str] | None = None) -> int:
             "Examples:\n"
             "  .venv/bin/python scripts/evidence/agent_pitfall_census.py\n"
             "  .venv/bin/python scripts/evidence/agent_pitfall_census.py --pretty\n"
+            "  .venv/bin/python scripts/evidence/agent_pitfall_census.py --since 2026-10-03 --until 2026-10-11 --pretty\n"
             "\n"
             "Outputs: JSON on stdout. Writes nothing.\n"
             "Exit codes: 0 on success, 1 if git fails, times out, or output contains a host path.\n"
@@ -322,9 +323,30 @@ def main(argv: list[str] | None = None) -> int:
         default=".",
         help="Repository root for the structure scan only; git reads the current directory. Default: .",
     )
+    parser.add_argument(
+        "--since",
+        help="Extra window start date, YYYY-MM-DD, UTC midnight. Requires --until. Skips the frozen report.",
+    )
+    parser.add_argument(
+        "--until",
+        help="Extra window end date, YYYY-MM-DD, exclusive UTC midnight. Requires --since.",
+    )
     args = parser.parse_args(argv)
+    if bool(args.since) != bool(args.until):
+        parser.error("--since and --until are a pair")
+    for label, value in (("since", args.since), ("until", args.until)):
+        if value is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            parser.error(f"--{label} must be YYYY-MM-DD")
     root = Path(args.root).resolve()
-    report = build_report(root)
+    if args.since:
+        head = _git("rev-parse", "HEAD").strip()
+        report = {
+            "head": head,
+            "timezone": "UTC",
+            "window": _window(args.since, args.until),
+        }
+    else:
+        report = build_report(root)
     # Never emit an absolute path. Structure locations are repo-relative.
     encoded = json.dumps(report, indent=2 if args.pretty else None, sort_keys=True)
     if "/home/" in encoded or "/Users/" in encoded or "file://" in encoded:
