@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import os
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -33,22 +33,58 @@ def test_clean_learner_text_has_no_findings() -> None:
     assert scan_text("Fix the learner card for module 3.", field="title", needles=_NEEDLES) == []
 
 
-def test_cli_reports_the_rule_and_not_the_matched_text(tmp_path: Path) -> None:
-    env = os.environ.copy()
-    env["PR_TITLE"] = f"wip {_SECRET_PATH}"
-    env["PR_BODY"] = ""
-    env["PR_BRANCH"] = "cursor/example"
-    completed = subprocess.run(
-        [sys.executable, "scripts/audit/lint_public_surfaces.py"],
+def _run_event(tmp_path: Path, payload: dict, event_name: str) -> subprocess.CompletedProcess[str]:
+    event = tmp_path / "event.json"
+    event.write_text(json.dumps(payload), encoding="utf-8")
+    return subprocess.run(
+        [
+            sys.executable,
+            "scripts/audit/lint_public_surfaces.py",
+            "--event-file",
+            str(event),
+            "--event-name",
+            event_name,
+        ],
         cwd=_ROOT,
-        env=env,
         capture_output=True,
         text=True,
         check=False,
         timeout=30,
+    )
+
+
+def test_cli_reports_the_rule_and_not_the_matched_text(tmp_path: Path) -> None:
+    completed = _run_event(
+        tmp_path,
+        {
+            "pull_request": {
+                "title": f"wip {_SECRET_PATH}",
+                "body": "",
+                "head": {"ref": "cursor/example", "sha": ""},
+                "base": {"sha": ""},
+            }
+        },
+        "pull_request",
     )
     assert completed.returncode == 1
     assert "title host-path" in completed.stdout
     assert _SECRET_PATH not in completed.stdout
     assert _SECRET_PATH not in completed.stderr
     assert "example" not in completed.stdout
+
+
+def test_direct_push_commit_message_is_scanned(tmp_path: Path) -> None:
+    completed = _run_event(
+        tmp_path,
+        {
+            "ref": "refs/heads/main",
+            "before": "0" * 40,
+            "after": "a" * 40,
+            "commits": [{"message": f"land {_SECRET_PATH}"}],
+        },
+        "push",
+    )
+    assert completed.returncode == 1
+    assert "commit host-path" in completed.stdout
+    assert _SECRET_PATH not in completed.stdout
+    assert _SECRET_PATH not in completed.stderr

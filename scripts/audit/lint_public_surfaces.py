@@ -7,9 +7,14 @@ needles and the same IP and credential rules as the repository OPSEC lint.
 It prints the field, the rule, and the line number. It does not print the
 matched text.
 
+CI passes ``--event-file`` (the runner's event payload path). A title or body
+edit, a merge-queue commit, and a direct push are all read from that payload.
+The title, body, and branch are not taken from the process environment, because
+a step environment is copied into the public log.
+
 Examples:
-  PR_TITLE=... PR_BODY=... PR_BRANCH=... \\
-    .venv/bin/python scripts/audit/lint_public_surfaces.py --base <sha> --head <sha>
+  .venv/bin/python scripts/audit/lint_public_surfaces.py \\
+    --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME"
 
 Outputs: one "field rule line" row per finding on stdout. Writes nothing.
 Exit codes: 0 when every supplied surface is clean, 1 when a surface is
@@ -21,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import os
 import re
 import subprocess
@@ -54,6 +60,8 @@ _PRIVATE_HOST = re.compile(
     re.IGNORECASE,
 )
 _GIT_TIMEOUT_SECONDS = 30.0
+_SHA = re.compile(r"^[0-9a-fA-F]{40}$")
+_ZERO_SHA = "0" * 40
 
 
 @dataclass(frozen=True)
@@ -84,6 +92,57 @@ def scan_text(text: str, *, field: str, needles: Needles | None = None) -> list[
     return findings
 
 
+def _commit_range(base: str, head: str) -> tuple[str, str] | None:
+    if not _SHA.fullmatch(base) or not _SHA.fullmatch(head):
+        return None
+    if base in (_ZERO_SHA, head) or head == _ZERO_SHA:
+        return None
+    return base, head
+
+
+def event_surfaces(payload: dict, event_name: str) -> tuple[list[tuple[str, str]], tuple[str, str] | None]:
+    """Return text surfaces and a commit range from a GitHub event payload.
+
+    The returned strings are the surfaces to scan. This function does not
+    print them. A direct push contributes its commit messages from the payload
+    when the before/after range cannot be read from git.
+    """
+    name = event_name.strip()
+    if name == "pull_request" and isinstance(payload.get("pull_request"), dict):
+        pr = payload["pull_request"]
+        head = pr.get("head") if isinstance(pr.get("head"), dict) else {}
+        base = pr.get("base") if isinstance(pr.get("base"), dict) else {}
+        texts = [
+            ("title", str(pr.get("title") or "")),
+            ("body", str(pr.get("body") or "")),
+            ("branch", str(head.get("ref") or "")),
+        ]
+        return texts, _commit_range(str(base.get("sha") or ""), str(head.get("sha") or ""))
+    if name == "merge_group" and isinstance(payload.get("merge_group"), dict):
+        group = payload["merge_group"]
+        texts = [("branch", str(group.get("head_ref") or ""))]
+        return texts, _commit_range(str(group.get("base_sha") or ""), str(group.get("head_sha") or ""))
+    if name == "push":
+        ref = str(payload.get("ref") or "")
+        branch = ref.removeprefix("refs/heads/") if ref.startswith("refs/heads/") else ref
+        messages: list[str] = []
+        commits = payload.get("commits")
+        if isinstance(commits, list):
+            for commit in commits:
+                if isinstance(commit, dict) and commit.get("message"):
+                    messages.append(str(commit["message"]))
+        head_commit = payload.get("head_commit")
+        if isinstance(head_commit, dict) and head_commit.get("message"):
+            message = str(head_commit["message"])
+            if message not in messages:
+                messages.append(message)
+        span = _commit_range(str(payload.get("before") or ""), str(payload.get("after") or ""))
+        return [("branch", branch), ("commit", "\n".join(messages))], span
+    if name in {"workflow_dispatch", "schedule"}:
+        return [("commit", "")], ("HEAD", "")
+    return [], None
+
+
 def commit_message_text(base: str, head: str) -> str:
     """Return commit messages reachable from ``head`` and not from ``base``."""
     result = subprocess.run(
@@ -100,29 +159,67 @@ def render(findings: list[SurfaceFinding]) -> str:
     return "\n".join(f"{item.field} {item.rule} line={item.line}" for item in findings)
 
 
+def _head_commit_text() -> str:
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%B"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=_GIT_TIMEOUT_SECONDS,
+    )
+    return result.stdout
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--title-env", default="PR_TITLE", help="Environment variable holding the title.")
-    parser.add_argument("--body-env", default="PR_BODY", help="Environment variable holding the body.")
-    parser.add_argument("--branch-env", default="PR_BRANCH", help="Environment variable holding the branch name.")
+    parser.add_argument("--event-file", default="", help="Path to the GitHub event payload. Preferred over the environment.")
+    parser.add_argument("--event-name", default="", help="GitHub event name. Defaults to GITHUB_EVENT_NAME when an event file is set.")
     parser.add_argument("--base", default="", help="Base commit for the commit-message range. Omit to skip commits.")
     parser.add_argument("--head", default="", help="Head commit for the commit-message range.")
     args = parser.parse_args(argv)
 
-    surfaces: list[tuple[str, str]] = [
-        ("title", os.environ.get(args.title_env, "")),
-        ("body", os.environ.get(args.body_env, "")),
-        ("branch", os.environ.get(args.branch_env, "")),
-    ]
-    if bool(args.base) != bool(args.head):
-        print("OPSEC publication surfaces: pass both --base and --head, or neither.", file=sys.stderr)
-        return 1
-    if args.base and args.head:
+    surfaces: list[tuple[str, str]] = []
+    commit_range: tuple[str, str] | None = None
+    if args.event_file:
         try:
-            surfaces.append(("commit", commit_message_text(args.base, args.head)))
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-            print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+            payload = json.loads(Path(args.event_file).read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            print("OPSEC publication surfaces: event payload could not be read.", file=sys.stderr)
             return 1
+        if not isinstance(payload, dict):
+            print("OPSEC publication surfaces: event payload could not be read.", file=sys.stderr)
+            return 1
+        event_name = args.event_name or os.environ.get("GITHUB_EVENT_NAME", "")
+        surfaces, commit_range = event_surfaces(payload, event_name)
+        if event_name in {"workflow_dispatch", "schedule"}:
+            try:
+                surfaces = [("commit", _head_commit_text())]
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+                print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+                return 1
+            commit_range = None
+        elif commit_range is not None:
+            base, head = commit_range
+            if head:
+                try:
+                    git_text = commit_message_text(base, head)
+                except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+                    if not any(field == "commit" and text for field, text in surfaces):
+                        print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+                        return 1
+                else:
+                    surfaces = [(field, text) for field, text in surfaces if field != "commit"]
+                    surfaces.append(("commit", git_text))
+    else:
+        if bool(args.base) != bool(args.head):
+            print("OPSEC publication surfaces: pass both --base and --head, or neither.", file=sys.stderr)
+            return 1
+        if args.base and args.head:
+            try:
+                surfaces.append(("commit", commit_message_text(args.base, args.head)))
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+                print(f"OPSEC publication surfaces: git log failed ({type(exc).__name__}).", file=sys.stderr)
+                return 1
 
     findings: list[SurfaceFinding] = []
     for field, text in surfaces:

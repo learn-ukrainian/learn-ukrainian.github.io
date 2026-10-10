@@ -44,12 +44,18 @@ jobs:
         with:
           python-version-file: '.python-version'
       - name: Reject negated closing references
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
+        run: |
+          python3 - <<'PY' | python3 scripts/audit/lint_pr_closing_references.py --stdin
+          import json
+          import os
+          import sys
+          from pathlib import Path
+          event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
+          body = (event.get("pull_request") or {}).get("body") or ""
+          sys.stdout.write(body)
+          PY
       - name: Scan pull request title, body, and branch
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title || '' }}
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-          PR_BRANCH: ${{ github.head_ref || '' }}
-        run: python3 scripts/audit/lint_public_surfaces.py
+        run: |
+          python3 scripts/audit/lint_public_surfaces.py \
+            --event-file "$GITHUB_EVENT_PATH" \
+            --event-name "$GITHUB_EVENT_NAME"

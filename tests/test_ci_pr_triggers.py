@@ -4,9 +4,11 @@ Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every required job running (or, in the merge
 queue only, a recorded reuse of a green full run of the same tree).
 
-- ci.yml fires on opened/synchronize/reopened only, never `edited` or
-  `labeled`. The negated-closing-reference body guard lives in
-  pr-body-guard.yml, the only workflow subscribed to `edited`.
+- ci.yml fires on opened/synchronize/reopened/edited, and on a direct push
+  to main. `labeled` does not start CI. An edit uses its own concurrency
+  group so it does not cancel the in-flight code run. The publication-surface
+  scan is required on every event, including that edit, a direct push, and a
+  merge-queue reuse.
 - Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
   and fails when a required job was cancelled or skipped unexpectedly;
   GitHub treats a skipped required job as success.
@@ -245,6 +247,8 @@ _EVENTS = {
     ),
     "schedule": _github("schedule", {"schedule": "30 3 * * *"}, ref="refs/heads/main"),
     "workflow_dispatch": _github("workflow_dispatch", {}, ref="refs/heads/main"),
+    "edited": _pr_event("edited"),
+    "push": _github("push", {"before": "a" * 40, "after": "b" * 40}, ref="refs/heads/main"),
 }
 
 
@@ -288,9 +292,12 @@ def _concurrency_group(github: dict[str, Any]) -> str:
     return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
 
 
-def test_ci_triggers_on_code_events_only() -> None:
-    # Neither `edited` nor `labeled` may start CI on an unchanged SHA.
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
+def test_ci_triggers_on_code_events_edits_and_direct_pushes() -> None:
+    # `labeled` must not start CI. A title or body edit must, so the required
+    # Gate sees the current metadata. A direct push to main must too.
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened", "edited"}
+    assert "labeled" not in _pr_types(_load("ci.yml"))
+    assert _triggers(_load("ci.yml"))["push"] == {"branches": ["main"]}
 
 
 def test_no_workflow_reruns_ci_on_a_label() -> None:
@@ -336,9 +343,18 @@ def test_only_the_history_shard_checks_out_full_history() -> None:
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:
     # A push cancels the in-flight run for the previous SHA of the PR.
+    # A title or body edit does not share that group, so it does not cancel it.
     groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened")}
     assert groups == {"CI-pull_request-7"}
+    assert _concurrency_group(_EVENTS["edited"]) == "CI-pull_request-7-edited"
     assert _concurrency_group(_EVENTS["merge_group"]).startswith("CI-merge_group-refs/heads/gh-readonly-queue/")
+
+
+def test_workflows_do_not_put_pull_request_text_in_step_env() -> None:
+    for name in ("ci.yml", "pr-body-guard.yml"):
+        text = (_WORKFLOWS / name).read_text(encoding="utf-8")
+        for key in ("PR_TITLE:", "PR_BODY:", "PR_BRANCH:"):
+            assert key not in text, f"{name} still passes {key} through step env"
 
 
 def test_body_guard_lives_in_pr_body_guard() -> None:
@@ -413,6 +429,7 @@ def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
         "REUSED_RUN": "",
         "METADATA_SCAN": metadata_scan,
         **_GREEN,
+        "PUBLICATION": "success",
         **results,
     }
     return subprocess.run(
@@ -444,6 +461,8 @@ def test_gate_passes_a_green_pull_request_run() -> None:
         {"DEPENDENCY_AUDIT": "skipped"},
         {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1"},  # reuse outside the queue
         {"METADATA_SCAN": "success"},  # a queue-only job outside the queue
+        {"PUBLICATION": "failure"},
+        {"PUBLICATION": "skipped"},
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:

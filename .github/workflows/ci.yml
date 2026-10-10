@@ -4,11 +4,14 @@ name: CI
 # non-slow pytest suite (slow tests: pytest-slow-nightly.yml). The merge queue
 # reuses a green full run of the identical tree instead of rerunning its jobs
 # (scripts/ci/reuse_green_run.py), but always scans the queue commit's own
-# metadata for secrets. The one required context is "CI Gate".
+# metadata for secrets. A title or body edit and a direct push to main run
+# the same required Gate, including the publication-surface scan. The one
+# required context is "CI Gate".
 
 concurrency:
-  # A push cancels the stale pull_request run; other events are never cancelled.
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
+  # A code push cancels the stale pull_request run. A title or body edit uses
+  # its own group so it does not cancel that run. Other events are never cancelled.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.action == 'edited' && format('{0}-edited', github.event.pull_request.number) || github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -22,7 +25,9 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened]
+  push:
+    branches: [main]
   merge_group:
   workflow_dispatch:
   schedule:  # nightly full run on main; also saves main's uv cache
@@ -135,19 +140,6 @@ jobs:
           else
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
-      - name: Scan pull request title, body, branch, and commits
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title || '' }}
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-          PR_BRANCH: ${{ github.event.pull_request.head.ref || github.event.merge_group.head_ref || '' }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || '' }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || '' }}
-        run: |
-          args=()
-          if [ -n "$BASE_SHA" ] && [ -n "$HEAD_SHA" ]; then
-            args+=(--base "$BASE_SHA" --head "$HEAD_SHA")
-          fi
-          python3 scripts/audit/lint_public_surfaces.py "${args[@]}"
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
       # Same scanner pin as the queue-metadata step. Bump both together:
       # newest trufflesecurity/trufflehog release, never an older tag to clear
@@ -404,11 +396,30 @@ jobs:
           python -m pip install --upgrade pip pip-audit PyYAML
           python scripts/ci/audit_dependencies.py
 
+  publication-surfaces:
+    # Runs on every event, including a title or body edit, a direct push to
+    # main, and a merge-queue reuse. The event file is the runner default.
+    # Title, body, and branch are not copied into step env (that text is logged).
+    name: Publication surfaces
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Scan title, body, branch, and commit messages
+        run: python3 scripts/audit/lint_public_surfaces.py --event-file "$GITHUB_EVENT_PATH" --event-name "$GITHUB_EVENT_NAME"
+
   ci-gate:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pytest, pytest-report]
+    needs: [reuse, queue-metadata-scan, publication-surfaces, secret-scan, checks, frontend, dependency-audit, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -449,6 +460,7 @@ jobs:
           REUSE: ${{ needs.reuse.outputs.reuse }}
           REUSED_RUN: ${{ needs.reuse.outputs.run_id }}
           METADATA_SCAN: ${{ needs.queue-metadata-scan.result }}
+          PUBLICATION: ${{ needs.publication-surfaces.result }}
           SECRET_SCAN: ${{ needs.secret-scan.result }}
           CHECKS: ${{ needs.checks.result }}
           FRONTEND: ${{ needs.frontend.result }}
@@ -462,6 +474,7 @@ jobs:
               [ "$2" != cancelled ] || echo "::error::required job was cancelled: $1"
               echo "::error::$1 is '${2:-missing}', expected '$3'"; status=1; fi
           }
+          want publication-surfaces "$PUBLICATION" success
           if [ "$EVENT_NAME" = merge_group ]; then
             want reuse "$REUSE_JOB" success; want queue-metadata-scan "$METADATA_SCAN" success
           else
