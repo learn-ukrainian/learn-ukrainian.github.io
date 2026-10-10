@@ -20,6 +20,7 @@ Related: scripts/audit/lint_opsec_leaks.py, scripts/opsec/needles.py.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import os
 import re
 import subprocess
@@ -27,12 +28,25 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-_ROOT = Path(__file__).resolve().parents[2]
-if str(_ROOT) not in sys.path:
-    sys.path.insert(0, str(_ROOT))
+_HERE = Path(__file__).resolve().parent
 
-from scripts.audit.lint_opsec_leaks import surface_infrastructure_rules
-from scripts.opsec.needles import Needles, home_dir_pattern, load_needles
+
+def _load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load {path.name}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_leaks = _load("_lu_opsec_leaks", _HERE / "lint_opsec_leaks.py")
+_needles = _load("_lu_opsec_needles", _HERE.parent / "opsec" / "needles.py")
+surface_infrastructure_rules = _leaks.surface_infrastructure_rules
+Needles = _needles.Needles
+home_dir_pattern = _needles.home_dir_pattern
+load_needles = _needles.load_needles
 
 _FILE_URI = re.compile(r"file://", re.IGNORECASE)
 _PRIVATE_HOST = re.compile(

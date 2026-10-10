@@ -45,6 +45,7 @@ def test_cli_reports_the_rule_and_not_the_matched_text(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=30,
     )
     assert completed.returncode == 1
     assert "title host-path" in completed.stdout
