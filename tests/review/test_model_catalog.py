@@ -205,19 +205,15 @@ def test_codex_hook_fixture_changes_only_ordinary_worker_hook_flags(configuratio
     assert len(before) == len(after) == len(INPUTS["adapters"]) == 112
     changed_rows = []
     expected_hooks = tomllib.loads(CODEX_OVERLAY["hook_flags"][-1])["hooks"]["PreToolUse"]
-    assert len(expected_hooks) == 2
-    assert expected_hooks[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch)$"
-    assert expected_hooks[1]["matcher"] == "Bash"
+    assert len(expected_hooks) == 1
+    assert expected_hooks[0]["matcher"] == "^(Bash|Write|Edit|MultiEdit|apply_patch|write_stdin)$"
     assert expected_hooks[0]["hooks"][0]["timeout"] == 45
-    assert expected_hooks[1]["hooks"][0]["timeout"] == 5
-    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d', 'c3dd6489f1e800411294c88d5b7b20e3ad9cb195f5f4326caa68a773285914f9']
+    command_digests = ['29631fde2a2dd39bdfe27574cc06d7a3ca800642e228548733e2e3d4c146364d']
     metadata = [
         {"type": "command", "timeout": 45, "statusMessage": "Running Codex tool policy"},
-        {"type": "command", "timeout": 5},
     ]
     for index, (group, relative) in enumerate(zip(expected_hooks, (
         "scripts/agent_runtime/codex_hook_entry.sh",
-        "agents_extensions/shared/hooks/guard-public-github-text.py",
     ), strict=True)):
         assert len(group["hooks"]) == 1
         command = group["hooks"][0]["command"]
@@ -478,10 +474,10 @@ def test_review_capacity_fixture_is_pinned_and_scope_bounded():
 # Literal digests bind the #10205 Cursor revision, #10262 AGY review-risk
 # refusals and approved overlays for both configurations; see SPEC.md.
 PINNED_DIGESTS = {
-    "routing-10305.json.gz": "2596f911d4b8238cad24513ac666b8f4618d9c5783c6f6ff989a53c7131625c8",
+    "routing-10305.json.gz": "34f3510fa6b01726896f4dca1adfa929354d4f5f9a1c39745a1f385394500a7d",
     "routing-10263.json.gz": "3385853a0070ab9a2f77e1fb40d9178ce195e44e7fd6b8c8245702ec529b7d16",
     "SHA256SUMS": "43c6936a6e4864a245e630af2286f63f9dabb1bbe70cd5a29bad16b46fdaba76",
-    "SPEC.md": "a32c53a8b518d70e8e1b9497527be8b8593410495391fff188c14b78c709510b",
+    "SPEC.md": "f0ad2c557525b9681b0741f0a36e0e6579286a47e60a028d3165284a2e9679b3",
     "baseline.json.gz": "17e8448e163677920a9a6c7a357c84ea28eac2f7e65380cfe013dbb10d1dddc2",
     "capture.py": "4593850ca030a5e25fe7b0d09d629bc8014322a1c574070fb0b317e3bc368b3b",
     "inputs.json": "4f9d9dd89acff3872a9e627a9627516c65b7e410da28464a4dda9105c0ec34b0",

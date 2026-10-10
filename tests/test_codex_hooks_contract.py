@@ -1099,7 +1099,7 @@ def test_portable_python_hook_rejects_invalid_entry(tmp_path, defect):
         _run(['git', 'commit', '-m', 'tracked hook'], cwd=source)
     if defect == 'modified':
         entry.write_text('raise SystemExit(1)\n')
-    argv = [str(source / '.venv/bin/python'), str(entry)]
+    argv = [project_python(), str(entry)]
     if defect == 'option':
         argv.insert(1, '-c')
     with pytest.raises(RuntimeError, match='unportable'):

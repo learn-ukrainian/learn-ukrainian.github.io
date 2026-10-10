@@ -28,8 +28,8 @@ baseline, both captures change exactly four of the 112 adapter rows:
 
 Each changed row inserts five argv tokens immediately before the existing
 `--disable apps`: `--enable`, `hooks`, `--dangerously-bypass-hook-trust`, `-c`
-and the inline `hooks.PreToolUse` TOML value. That value contains exactly two
-tracked command-hook groups. Their matchers, entry points, timeouts and status
+and the inline `hooks.PreToolUse` TOML value. That value contains exactly one
+tracked command-hook group. Its matcher, entry point, timeout and status
 text are pinned by the scope test in `tests/review/test_model_catalog.py` and
 are not restated here. The relative commands resolve using the private source
 binding supplied by the adapter. The trust flag admits these
