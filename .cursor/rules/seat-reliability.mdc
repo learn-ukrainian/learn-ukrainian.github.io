@@ -1,0 +1,17 @@
+---
+description: Seat reliability — DoR first, done-check finish line, escalate after 2 tries, priority order
+alwaysApply: true
+---
+
+# Seat reliability (Cursor Cloud and drivers)
+
+Full text: `agents_extensions/shared/skills/drive-epic/references/seat-reliability.md`.
+
+1. **DoR first.** No implementation without a complete DoR block on the issue (goal, scope, acceptance, dependencies, data/access, allowed model, verify plan). Missing? Write it and stop. Use pstack `/architect` or the Multi-phase plan playbook.
+2. **Finish line = DoD plus done-check.** Merged via the normal landing path; CI and verify-*/QA passed on the merged head with evidence in an issue comment; docs updated or "no docs needed"; branch, worktree and temp dirs cleaned. Every DoD item ticked with evidence (pstack prove-it-works, verify-*). Your finish condition is "passes the done-check", not "closed".
+3. **pstack before custom code.** Build custom only for a named gap.
+4. **Escalate after 2 tries.** One line, exactly what you need, then move on. No idle-waiting, no re-asking.
+5. **Priority:** security/OPSEC > operator-task > broken main/CI > epic work > cleanup.
+6. **Owners** come from the private ownership map (located via your private instructions). Handoffs name an owner and confirm receipt.
+7. **Long jobs** run detached under `systemd-run` or `tmux`, never in an interactive session.
+8. **Model budget:** top models are the default; per job type follow the measured Pareto line. Grok and Gemini also take every job where they sit on or near it (not a leftovers tier); top-model work is never downgraded. No Chinese models on Ukrainian work. Haiku stays the mechanical default until the Pareto data says otherwise. Subscriptions before API keys; on quota exhaustion say so once and switch to the next allowed lane.
