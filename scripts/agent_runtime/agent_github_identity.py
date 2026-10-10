@@ -19,7 +19,7 @@ import sys
 import time
 import urllib.request
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -46,7 +46,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 class GitHubIdentity:
     """A resolved token and its deliberately non-secret provenance."""
 
-    token: str | None
+    token: str | None = field(repr=False)
     source: str | None
 
 
