@@ -11,6 +11,15 @@ from scripts.audit.lint_workaround_comments import findings
 _ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_a_shell_bypass_comment_is_a_finding(tmp_path: Path) -> None:
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    word = "work" "around"
+    (scripts / "sample.sh").write_text(f"# {word}: set the flag in the spawn path\n", encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    assert findings(tmp_path) == ["scripts/sample.sh:1"]
+
+
 def test_a_bypass_comment_is_a_finding(tmp_path: Path) -> None:
     scripts = tmp_path / "scripts"
     scripts.mkdir()

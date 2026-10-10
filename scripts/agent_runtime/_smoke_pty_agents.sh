@@ -22,10 +22,6 @@
 # response, regression, etc.) the script prints the failure and
 # continues to the next agent. Final exit code = number of failed
 # agents (0 = all green).
-#
-# Per-agent regression workaround: set DELEGATE_DISABLE_PTY=1 in the
-# adapter's spawn path. Document the issue, file a follow-up, restore
-# PTY mode once the agent-specific fix lands.
 
 set -uo pipefail
 

@@ -2,8 +2,8 @@
 """Fail when scripts or tests contain the copy-bait word for a local bypass.
 
 Agents copy the nearest comment. A comment that names a bypass becomes the
-next implementation. The supported path belongs in the code. This lint reads
-``scripts/`` and ``tests/`` and exits 1 when that word appears.
+next implementation. The supported path belongs in the code. This lint reads Python and shell
+under ``scripts/`` and ``tests/`` and exits 1 when that word appears.
 
 Examples:
   .venv/bin/python scripts/audit/lint_workaround_comments.py
@@ -34,13 +34,14 @@ def findings(root: Path | None = None) -> list[str]:
         tree = base / name
         if not tree.is_dir():
             continue
-        for path in tree.rglob("*.py"):
-            if any(part in _SKIP for part in path.parts):
-                continue
-            text = path.read_text(encoding="utf-8", errors="replace")
-            for number, line in enumerate(text.splitlines(), 1):
-                if _PATTERN.search(line):
-                    hits.append(f"{path.relative_to(base).as_posix()}:{number}")
+        for pattern in ("*.py", "*.sh"):
+            for path in tree.rglob(pattern):
+                if any(part in _SKIP for part in path.parts):
+                    continue
+                text = path.read_text(encoding="utf-8", errors="replace")
+                for number, line in enumerate(text.splitlines(), 1):
+                    if _PATTERN.search(line):
+                        hits.append(f"{path.relative_to(base).as_posix()}:{number}")
     return hits
 
 
