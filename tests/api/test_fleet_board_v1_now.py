@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.api import main as api_main
 from scripts.api.fleet_board import activity as activity_mod
+from scripts.api.fleet_board import router as router_mod
 from scripts.api.fleet_board import sources as sources_mod
 from scripts.api.fleet_board import view as view_mod
 from scripts.api.fleet_board.activity import DelegateFact
@@ -429,6 +430,52 @@ def test_collector_failure_stays_http_200(monkeypatch: pytest.MonkeyPatch) -> No
     occupancy = next(item for item in response.json()["sources"] if item["name"] == "occupancy")
     assert occupancy["status"] == "unavailable"
     assert "boom-token" not in response.text
+
+
+@pytest.mark.parametrize(
+    ("path", "schema_name", "data"),
+    [
+        ("/now", "now", {"attention": [], "epics": []}),
+        ("/epics", "epics", {"epics": []}),
+        ("/epics/missing", "epic", None),
+        ("/agents", "agents", {"agents": []}),
+        ("/agents/missing", "agent", None),
+    ],
+)
+def test_board_failure_retains_endpoint_schema(monkeypatch: pytest.MonkeyPatch, path, schema_name, data) -> None:
+    def explode():
+        raise RuntimeError("board-failure-private-marker")
+
+    monkeypatch.setattr(router_mod, "load_board", explode)
+
+    response = client.get("/api/fleet/v1" + path)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["schema"] == "fleet.v1." + schema_name
+    assert body["data"] == data
+    assert body["sources"] == [{"name": "board", "status": "unavailable", "age_s": None, "error": "unavailable"}]
+    assert "board-failure-private-marker" not in response.text
+    document = client.get("/api/fleet/v1/schema").json()["data"]["endpoints"][body["schema"]]
+    Draft202012Validator(document).validate(body)
+
+
+def test_delegate_failure_is_unavailable_without_erasing_snapshot(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    def explode():
+        raise RuntimeError("delegate-failure-private-marker")
+
+    _install(monkeypatch, tmp_path, _roster(), _harness())
+    monkeypatch.setattr(activity_mod, "seat_delegate_tasks", explode)
+    monkeypatch.setattr(view_mod, "load_delegate_facts", activity_mod.load_delegate_facts)
+
+    response = client.get("/api/fleet/v1/now")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert {item["epic"] for item in body["data"]["epics"]} == {item["epic"] for item in _roster()["epics"]}
+    delegate = next(item for item in body["sources"] if item["name"] == "delegate")
+    assert delegate == {"name": "delegate", "status": "unavailable", "age_s": None, "error": "unavailable"}
+    assert "delegate-failure-private-marker" not in response.text
 
 
 def test_role_bot_and_agent_lookup(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
