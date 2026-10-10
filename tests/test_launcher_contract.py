@@ -1272,10 +1272,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    # Trusted fixture usage admits the defaulted Sonnet seat before injection.
-    assert (
-        r"would exec claude --model claude-sonnet-5-5 --effort high --agent infra-orchestrator " in result.stdout
-    )
+    # Usage below the Opus threshold retains the default driver seat.
+    command = shlex.split(next(line for line in result.stdout.splitlines() if line.startswith("would exec ")))
+    assert command[:9] == [
+        "would", "exec", "claude", "--model", "claude-opus-5-5[1m]",
+        "--effort", "high", "--agent", "infra-orchestrator",
+    ]
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr

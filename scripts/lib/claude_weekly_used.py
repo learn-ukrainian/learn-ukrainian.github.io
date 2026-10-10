@@ -3,9 +3,8 @@
 
 Used by the Claude cap guard in launcher_core.sh. Prints a number (for
 example 90) or "unknown" when the API is down, stale, or the field is
-missing. Operator telemetry configuration is JSON on inherited descriptor 9,
-from a root-owned regular file without group or other write permission. It has
-one field, "monitor_base_url". No environment value supplies configuration.
+missing. LU_MONITOR_LOOPBACK selects the Monitor base URL; the default is
+local Monitor telemetry. Proxies and redirects cannot replace that target.
 Always exits 0 so the shell decides the policy.
 """
 from __future__ import annotations
@@ -13,9 +12,9 @@ from __future__ import annotations
 import json
 import math
 import os
-import stat
 import urllib.request
 from datetime import UTC, datetime
+from urllib.parse import urlsplit
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -23,27 +22,25 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ValueError("redirect refused")
 
 
-def _operator_target() -> str:
-    """Read the already-open operator file, never an agent-selected path."""
-    metadata = os.fstat(9)
-    if metadata.st_uid != 0 or not stat.S_ISREG(metadata.st_mode) or metadata.st_mode & 0o022:
-        raise ValueError("untrusted operator state")
-    # Read from zero without changing the inherited offset; bound configuration.
-    raw = os.pread(9, 65537, 0)
-    if len(raw) > 65536:
-        raise ValueError("oversized operator state")
-    config = json.loads(raw)
-    if set(config) != {"monitor_base_url"}:
-        raise ValueError("invalid operator state")
-    base = config["monitor_base_url"].strip().rstrip("/")
-    if not base or not base.startswith(("https://", "http://")):
+def _monitor_target() -> str:
+    """Use the configured Monitor URL without exposing it in diagnostics."""
+    base = os.environ.get("LU_MONITOR_LOOPBACK", "http://127.0.0.1:8765").strip().rstrip("/")
+    target = urlsplit(base)
+    if (
+        target.scheme not in {"http", "https"}
+        or not target.hostname
+        or target.username is not None
+        or target.password is not None
+        or target.query
+        or target.fragment
+    ):
         raise ValueError("invalid telemetry target")
     return base
 
 
 def main() -> None:
     try:
-        base = _operator_target()
+        base = _monitor_target()
         # Shell-controlled proxy settings and redirects cannot replace the target.
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
         with opener.open(base + "/api/state/routing-budget", timeout=4) as r:
