@@ -1,0 +1,34 @@
+{
+  "driver-state-pin": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-hook",
+        "timeout": 10
+      }
+    ]
+  },
+  "driver-keep-driving": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-stop-hook",
+        "timeout": 20
+      }
+    ]
+  },
+  "driver-no-ask-question": {
+    "PreToolUse": [
+      {
+        "matcher": "ask_question",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ../scripts/agy_hooks/driver_state_inject.sh agy-pretool-hook",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
