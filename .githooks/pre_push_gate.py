@@ -379,6 +379,38 @@ def record(state: Path, event: dict[str, object]) -> None:
 # ---- bounded execution ----------------------------------------------------
 
 
+def reap_stale_node(path: Path) -> None:
+    """Unlink nodes; remove directory contents through a verified, non-following fd."""
+    try:
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_DIRECTORY)
+        except OSError as error:
+            if error.errno not in (errno.ELOOP, errno.ENOTDIR):
+                raise
+            path.unlink(missing_ok=True)
+            return
+        try:
+            info = os.fstat(fd)
+            if not os.path.samestat(info, path.lstat()):
+                raise GateOutcome("validation_incomplete", "stale directory was replaced", incomplete=True)
+            if not shutil.rmtree.avoids_symlink_attacks:
+                raise GateOutcome("validation_incomplete", "safe directory removal is unavailable", incomplete=True)
+            for name in os.listdir(fd):
+                try:
+                    os.unlink(name, dir_fd=fd)
+                except IsADirectoryError:
+                    shutil.rmtree(name, dir_fd=fd)
+            if not os.path.samestat(info, path.lstat()):
+                raise GateOutcome("validation_incomplete", "stale directory was replaced", incomplete=True)
+            path.rmdir()
+        finally:
+            os.close(fd)
+    except FileNotFoundError:  # another reaper already removed it
+        return
+    except OSError as error:
+        raise GateOutcome("validation_incomplete", f"stale node cleanup failed: {error}", incomplete=True) from None
+
+
 class Admission:
     """One gate per repository, ordered by live local tickets across all worktrees.
 
@@ -419,15 +451,23 @@ class Admission:
             except FileNotFoundError:  # a holder finished between listing and opening
                 continue
             except OSError as error:
+                if ticket != self._ticket:
+                    try:
+                        regular = stat.S_ISREG(ticket.lstat().st_mode)
+                    except FileNotFoundError:
+                        continue
+                    if not regular:
+                        reap_stale_node(ticket)
+                        continue
                 if error.errno != errno.ELOOP:
                     raise
-                if ticket != self._ticket and ticket.is_symlink() and not ticket.exists():
-                    ticket.unlink(missing_ok=True)
-                    continue
                 raise GateOutcome("validation_incomplete", "admission ticket is a symlink", incomplete=True) from None
             try:
                 info = os.fstat(fd)
                 if not stat.S_ISREG(info.st_mode):
+                    if ticket != self._ticket:
+                        reap_stale_node(ticket)
+                        continue
                     raise GateOutcome(
                         "validation_incomplete", "admission ticket is not a regular file", incomplete=True
                     )
@@ -665,10 +705,7 @@ def run_pytest_stage(plan: Plan, root: Path, launcher: str, deadline: float) -> 
     state = state_dir(root)
     state.mkdir(parents=True, exist_ok=True)
     for stale in state.glob("pytest-*"):
-        if stale.is_symlink():
-            stale.unlink()
-        else:
-            shutil.rmtree(stale)
+        reap_stale_node(stale)
     if not plan.node_ids:
         return "no tests selected"
     with tempfile.TemporaryDirectory(prefix="pytest-", dir=state) as base_temp:

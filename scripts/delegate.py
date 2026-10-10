@@ -525,15 +525,26 @@ _KIMICC_OAUTH_SESSION_LIFE_S = 840
 DEFAULT_GIT_TIMEOUT_S: float = 30.0
 DEFAULT_NETWORK_GIT_TIMEOUT_S: float = 180.0
 # The auto-finalize push runs the pre-push gate (.githooks/pre_push_gate.py, #10033) before the
-# network push. Load its bounds from this checkout so queue, run, shadow and cleanup allowances
-# cannot drift from the hook (#10383). run_path defines the gate without invoking its CLI.
-_PRE_PUSH_GATE_BOUNDS = runpy.run_path(str(_local_repo_root / ".githooks/pre_push_gate.py"))
-AUTO_FINALIZE_PUSH_TIMEOUT_S: float = (
-    DEFAULT_NETWORK_GIT_TIMEOUT_S
-    + _PRE_PUSH_GATE_BOUNDS["ADMISSION_MAX_WAIT_S"]
-    + _PRE_PUSH_GATE_BOUNDS["ADMISSION_WAIT_S"]
-)
+# network push. Read this checkout's bounds only when needed (#10383), so a missing hook
+# blocks pushes without breaking unrelated delegate imports.
 DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
+
+
+def _auto_finalize_push_timeout_s() -> float:
+    try:
+        bounds = runpy.run_path(str(_local_repo_root / ".githooks/pre_push_gate.py"))
+        return DEFAULT_NETWORK_GIT_TIMEOUT_S + bounds["ADMISSION_MAX_WAIT_S"] + bounds["ADMISSION_WAIT_S"]
+    except (OSError, KeyError, SyntaxError, TypeError, ValueError) as exc:
+        raise _TypedFailure(
+            "cannot load pre-push gate timeout bounds",
+            _exception_cause("auto_finalize_push_failed", exc, command=["pre_push_gate"]),
+        ) from exc
+
+
+def __getattr__(name: str) -> float:
+    if name == "AUTO_FINALIZE_PUSH_TIMEOUT_S":
+        return _auto_finalize_push_timeout_s()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
 # ---------------------------------------------------------------------------
@@ -4105,7 +4116,12 @@ def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
     head = _resolve_sha(path, "HEAD")
     try:
         result = _run_git_stdout(
-            path, "ls-remote", "--exit-code", "--refs", "origin", f"refs/heads/{branch}",
+            path,
+            "ls-remote",
+            "--exit-code",
+            "--refs",
+            "origin",
+            f"refs/heads/{branch}",
         )
     except (OSError, subprocess.SubprocessError):
         return False
@@ -4113,10 +4129,7 @@ def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
         return False
     returncode, stdout = result
     lines = stdout.splitlines()
-    return bool(
-        head and returncode == 0 and len(lines) == 1
-        and lines[0].split("\t") == [head, f"refs/heads/{branch}"]
-    )
+    return bool(head and returncode == 0 and len(lines) == 1 and lines[0].split("\t") == [head, f"refs/heads/{branch}"])
 
 
 def _branch_holder_active_task_ids() -> set[str] | None:
@@ -4129,7 +4142,10 @@ def _branch_holder_active_task_ids() -> set[str] | None:
         if not isinstance(data, dict) or not isinstance(data.get("tasks"), list):
             return None
         tasks = data["tasks"]
-        if any(not isinstance(task, dict) or not isinstance(task.get("task_id"), str) or not task["task_id"] for task in tasks):
+        if any(
+            not isinstance(task, dict) or not isinstance(task.get("task_id"), str) or not task["task_id"]
+            for task in tasks
+        ):
             return None
         return {task["task_id"] for task in tasks}
     except (OSError, ValueError, TimeoutError):
@@ -4175,7 +4191,9 @@ def _branch_holder_activity_reason(
             active_ids = _branch_holder_active_task_ids() if complete else reap_worktrees._active_task_ids()
         except reap_worktrees._ActiveTaskProbeFailure as exc:
             _record_diagnostic(
-                candidate_task_ids[0], _exception_cause("activity probe unavailable", exc), source="branch_hand_off",
+                candidate_task_ids[0],
+                _exception_cause("activity probe unavailable", exc),
+                source="branch_hand_off",
             )
             active_ids = None
         live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
@@ -4263,10 +4281,16 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
             if worktree_claims.checked_out_branch(path) != branch:
                 return False, "holder_branch_unknown_or_changed"
             try:
-                record_path, owner = resolve_worktree_record(path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False)
+                record_path, owner = resolve_worktree_record(
+                    path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False
+                )
             except ValueError:
                 return False, "scratch_owner_ambiguous"
-            if record_path is None or owner.get("task_id") != task_id or owner.get("status") not in _RELEASED_TASK_STATUSES:
+            if (
+                record_path is None
+                or owner.get("task_id") != task_id
+                or owner.get("status") not in _RELEASED_TASK_STATUSES
+            ):
                 return False, "scratch_owner_ambiguous"
     except Exception as exc:
         kind = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[a-z_]+", str(exc)) else "unknown"
@@ -4292,19 +4316,24 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
             return True, detail
         head = _resolve_sha(path, "HEAD")
         record_path, owner = ignored_task_output.resolve_worktree_record(
-            path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False,
+            path,
+            tasks_dir(),
+            repo_root=_REPO_ROOT,
+            publish_cache=False,
         )
         if record_path is None:
             return False, "scratch_owner_unknown"
         ok, refusal, receipt = ignored_task_output.preserve_worktree_artifacts(
-            path, primary=_REPO_ROOT, tasks_dir=tasks_dir(), task_id=owner["task_id"],
-            repo_root=_REPO_ROOT, extra_files=[entry["path"] for entry in scratch],
+            path,
+            primary=_REPO_ROOT,
+            tasks_dir=tasks_dir(),
+            task_id=owner["task_id"],
+            repo_root=_REPO_ROOT,
+            extra_files=[entry["path"] for entry in scratch],
         )
         if not ok or receipt is None:
             return False, refusal or "archive_receipt_missing"
-        archive_receipt = {
-            key: receipt[key] for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256")
-        }
+        archive_receipt = {key: receipt[key] for key in ("manifest_path", "content_sha256", "retrieval_proof_sha256")}
         # Publish the locator even if the final recheck/removal later refuses.
         print("Branch holder archive: " + json.dumps(archive_receipt, sort_keys=True), file=sys.stderr)
 
@@ -4314,12 +4343,16 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
                 raise ValueError(claims)
             valid, reason = _stale_branch_holder_releasable(path, branch)
             current_path, current_owner = ignored_task_output.resolve_worktree_record(
-                path, tasks_dir(), repo_root=_REPO_ROOT, publish_cache=False,
+                path,
+                tasks_dir(),
+                repo_root=_REPO_ROOT,
+                publish_cache=False,
             )
             if not valid:
                 raise ValueError(reason)
             if (
-                current_path != record_path or current_owner.get("task_id") != owner.get("task_id")
+                current_path != record_path
+                or current_owner.get("task_id") != owner.get("task_id")
                 or current_owner.get("run_nonce") != owner.get("run_nonce")
                 or _resolve_sha(path, "HEAD") != head
                 or branch_holder_scratch_inventory(path, primary=_REPO_ROOT) != inventory
@@ -4339,8 +4372,11 @@ def _prepare_branch_holder_release(path: Path, branch: str) -> tuple[bool, str]:
             recovery = dict(exc.receipt)
             try:
                 recovery["receipt_recorded"] = ignored_task_output._update_bound_task_record(
-                    record_path, path, {"branch_holder_release_refusal": exc.receipt},
-                    repo_root=_REPO_ROOT, expected_record=owner,
+                    record_path,
+                    path,
+                    {"branch_holder_release_refusal": exc.receipt},
+                    repo_root=_REPO_ROOT,
+                    expected_record=owner,
                 )
             except (OSError, ValueError):
                 recovery["receipt_recorded"] = False
@@ -5630,8 +5666,10 @@ def _read_only_checkout_snapshot(cwd: Path) -> tuple[dict[str, str] | None, str 
                 fingerprints.append(digest)
         except (OSError, RuntimeError) as exc:
             return None, f"linked database snapshot failed: {relative_path}: {type(exc).__name__}"
-        entries[relative_path] = entries.get(relative_path, "!!") + ":" + json.dumps(
-            {"link_text": link_text, "resolved_path": str(target), "contents": fingerprints}
+        entries[relative_path] = (
+            entries.get(relative_path, "!!")
+            + ":"
+            + json.dumps({"link_text": link_text, "resolved_path": str(target), "contents": fingerprints})
         )
     return entries, None
 
@@ -6787,23 +6825,37 @@ def _kimi_worker_refusal(
             scope = mechanical_worker_scope(launch, mode=mode, model=model, prompt=prompt)
             scope["review"] = review or bool(launch.get("review")) or bool(scope.get("review"))
             (target,) = resolve_and_admit(
-                (agent,), model=model, mode=mode, repo_root=_REPO_ROOT,
-                trees=lambda: _kimi_worktree_trees(cwd), new_dispatch=True, harness=harness, **scope,
+                (agent,),
+                model=model,
+                mode=mode,
+                repo_root=_REPO_ROOT,
+                trees=lambda: _kimi_worktree_trees(cwd),
+                new_dispatch=True,
+                harness=harness,
+                **scope,
             )
         except (MechanicalAdmissionRefused, ReviewAdmissionRefused, KimiAdmissionRefused) as exc:
             code = (
-                "mechanical_admission_refused" if isinstance(exc, MechanicalAdmissionRefused)
-                else "review_admission_refused" if isinstance(exc, ReviewAdmissionRefused)
+                "mechanical_admission_refused"
+                if isinstance(exc, MechanicalAdmissionRefused)
+                else "review_admission_refused"
+                if isinstance(exc, ReviewAdmissionRefused)
                 else "kimi_admission_refused"
             )
             cause = _publish_cause(task_id, _TypedCause(code, diagnostic=str(exc)), source="worker")
             if launch:
-                launch.update({
-                    "status": "failed", "finished_at": datetime.now(UTC).isoformat(),
-                    "failure_reason": cause, "last_error": cause,
-                    "returncode_reason": cause, "returncode": None, "exit_code": 1,
-                    "stderr_excerpt": str(exc),
-                })
+                launch.update(
+                    {
+                        "status": "failed",
+                        "finished_at": datetime.now(UTC).isoformat(),
+                        "failure_reason": cause,
+                        "last_error": cause,
+                        "returncode_reason": cause,
+                        "returncode": None,
+                        "exit_code": 1,
+                        "stderr_excerpt": str(exc),
+                    }
+                )
                 _write_state_atomic(_state_path_no_create(task_id), launch)
             return cause, None
         return None, target
@@ -6834,12 +6886,18 @@ def _kimi_worker_refusal(
         )
         record = _read_state_json(_state_path_no_create(task_id)) or {}
         if record:
-            record.update({
-                "status": "failed", "finished_at": datetime.now(UTC).isoformat(),
-                "failure_reason": cause, "last_error": cause,
-                "returncode_reason": cause, "returncode": None, "exit_code": 1,
-                "stderr_excerpt": str(exc),
-            })
+            record.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "failure_reason": cause,
+                    "last_error": cause,
+                    "returncode_reason": cause,
+                    "returncode": None,
+                    "exit_code": 1,
+                    "stderr_excerpt": str(exc),
+                }
+            )
             _write_state_atomic(_state_path_no_create(task_id), record)
         return cause, None
     except KimiAdmissionRefused as exc:
@@ -6938,7 +6996,12 @@ def _kimi_changes_refusal(agent: str, read: Callable[[], Any]) -> tuple[str | No
 
 
 def _advisory_ceiling_check(
-    worktree: Path | None, base_branch: str, envelope: Mapping[str, Any], *, base_sha: str | None = None, round_start_head: str | None = None
+    worktree: Path | None,
+    base_branch: str,
+    envelope: Mapping[str, Any],
+    *,
+    base_sha: str | None = None,
+    round_start_head: str | None = None,
 ) -> dict[str, Any]:
     """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
 
@@ -7032,7 +7095,11 @@ def _advisory_worker_diff(
             output, why = _worktree_diff_read(worktree, [*diff_args, merge_base, "--"])
             if output is not None:
                 return output, None
-            error_detail = f"the worker's diff could not be read ({why.public()})" if why else "the worker's diff could not be read"
+            error_detail = (
+                f"the worker's diff could not be read ({why.public()})"
+                if why
+                else "the worker's diff could not be read"
+            )
     return None, error_detail
 
 
@@ -7056,8 +7123,7 @@ def _advisory_completion_gate(
     round_start_head = str(round_start_head).strip() if isinstance(round_start_head, str) else None
     admission = record.get(AUTHORING_REVIEW_STATE_KEY)
     if not round_start_head and (
-        record.get("worktree_reused")
-        or (isinstance(admission, dict) and admission.get("target") == "existing-branch")
+        record.get("worktree_reused") or (isinstance(admission, dict) and admission.get("target") == "existing-branch")
     ):
         # A plain --branch attach has no pin; its recorded base is the round's
         # starting head. A fresh branch keeps the merge-base measurement.
@@ -7076,9 +7142,7 @@ def _advisory_completion_gate(
         detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
         return "advisory_ceiling_check", ceiling, failure, detail
     if isinstance(record.get("advisory_exemption"), dict):
-        check = _exempt_change_check(
-            worktree, base_branch, base_sha=base_sha, round_start_head=round_start_head
-        )
+        check = _exempt_change_check(worktree, base_branch, base_sha=base_sha, round_start_head=round_start_head)
         failure = (
             bounded_advisory.EXEMPT_CHANGES_UNMEASURED
             if not check.get("measured")
@@ -7433,6 +7497,7 @@ def _build_worker_env(
 
 
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
+    timeout = _auto_finalize_push_timeout_s()
     try:
         proc = subprocess.run(
             ["git", "push", "-u", "origin", branch],
@@ -7441,11 +7506,11 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
             text=True,
             check=False,
             env=_sanitized_git_env(),
-            timeout=AUTO_FINALIZE_PUSH_TIMEOUT_S,
+            timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
         raise _TypedFailure(
-            f"git push timed out after {AUTO_FINALIZE_PUSH_TIMEOUT_S}s",
+            f"git push timed out after {timeout}s",
             _exception_cause("auto_finalize_push_failed", exc, command=["git", "push"]),
         ) from exc
     if proc.returncode != 0:
@@ -7713,6 +7778,7 @@ _RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
 class _RescueFailure(_TypedFailure):
     """A rescue step failed: its row shows only the :class:`_TypedCause`; the raw error goes to the ``.diag`` file."""
 
+
 def _rescue_git(context: SafeGitContext, *args: str, **kwargs) -> subprocess.CompletedProcess[str]:
     """All rescue execution uses the fresh context, including checking and network proof."""
     return context.run(*args, **kwargs)
@@ -7746,8 +7812,10 @@ def _rescue_execution_context(repo: _RescueRepo) -> SafeGitContext:
     if not identity.token:
         raise _RescueFailure("driver identity unavailable", _TypedCause("rescue_identity_unavailable"))
     return SafeGitContext(
-        objects=repo.git_dir / "objects", origin=_rescue_canonical_push_url(),
-        token=identity.token, temp_root=Path(tempfile.gettempdir()),
+        objects=repo.git_dir / "objects",
+        origin=_rescue_canonical_push_url(),
+        token=identity.token,
+        temp_root=Path(tempfile.gettempdir()),
     )
 
 
@@ -7785,7 +7853,9 @@ def _rescue_head(repo: _RescueRepo, context: SafeGitContext) -> tuple[str, str] 
     if commit.returncode or name.returncode or not commit.stdout.strip():
         return None
     full_name = name.stdout.strip()
-    return commit.stdout.strip(), full_name.removeprefix("refs/heads/") if full_name.startswith("refs/heads/") else "HEAD"
+    return commit.stdout.strip(), full_name.removeprefix("refs/heads/") if full_name.startswith(
+        "refs/heads/"
+    ) else "HEAD"
 
 
 def _rescue_base(repo: _RescueRepo, context: SafeGitContext, state: Mapping[str, Any]) -> str:
@@ -7807,7 +7877,13 @@ def _rescue_commit(context: SafeGitContext, tree: str, parent: str, *, agent: st
     """Fixed driver commit identity, never the source repository's user config."""
     message = f"chore(dispatch): rescue {task_id}\n\nX-Agent: {agent}/{task_id}"
     proc = _rescue_git(
-        context, "commit-tree", tree, "-p", parent, "-m", message,
+        context,
+        "commit-tree",
+        tree,
+        "-p",
+        parent,
+        "-m",
+        message,
     )
     if proc.returncode or not proc.stdout.strip():
         raise _RescueFailure("cannot commit rescue work", _git_cause("rescue_commit_failed", proc))
@@ -7869,7 +7945,9 @@ def _clean_rescue_junk(repo: _RescueRepo, context: SafeGitContext, head: str, ch
     for name in changed:
         path = repo.worktree / name
         if name in tracked:
-            proc = _rescue_git(context, "restore", f"--source={head}", "--worktree", "--", name, work_tree=repo.worktree)
+            proc = _rescue_git(
+                context, "restore", f"--source={head}", "--worktree", "--", name, work_tree=repo.worktree
+            )
             if proc.returncode:
                 return False
         elif path.is_file() or path.is_symlink():
@@ -7879,12 +7957,20 @@ def _clean_rescue_junk(repo: _RescueRepo, context: SafeGitContext, head: str, ch
     # The source index may still stage classified residue after its files
     # are restored/deleted. Reset only those paths through the fresh context.
     staged = _rescue_git(
-        context, "--literal-pathspecs", "reset", head, "--", *changed,
-        work_tree=repo.worktree, index=repo.admin_dir / "index",
+        context,
+        "--literal-pathspecs",
+        "reset",
+        head,
+        "--",
+        *changed,
+        work_tree=repo.worktree,
+        index=repo.admin_dir / "index",
     )
     if staged.returncode:
         return False
-    return context.capture(repo.worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude") == context.checked("rev-parse", f"{head}^{{tree}}")
+    return context.capture(
+        repo.worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude"
+    ) == context.checked("rev-parse", f"{head}^{{tree}}")
 
 
 def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
@@ -7945,7 +8031,10 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 active_ids = reap_worktrees._active_task_ids()
             except reap_worktrees._ActiveTaskProbeFailure as exc:
                 diagnostic = _record_diagnostic(
-                    task_id, _exception_cause("activity probe unavailable", exc), source="rescue", field="reason",
+                    task_id,
+                    _exception_cause("activity probe unavailable", exc),
+                    source="rescue",
+                    field="reason",
                 )
                 if diagnostic:
                     row["diagnostic"] = diagnostic
@@ -7961,7 +8050,9 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
             with _rescue_execution_context(repo) as context:
                 return _rescue_in_context(repo, context, state, state_path, row, apply=apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
-        cause = _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
+        cause = (
+            _TypedCause(exc.code) if isinstance(exc, SnapshotRefusal) else _exception_cause("rescue_step_failed", exc)
+        )
         reason = cause.public()
         row.update(action="error", reason=reason, failure_code=reason.split(", ")[0])
         diagnostic = _record_diagnostic(task_id, cause, source="rescue", field="reason")
@@ -7971,8 +8062,13 @@ def _rescue_task_row(state_path: Path, *, apply: bool) -> dict[str, Any]:
 
 
 def _rescue_in_context(
-    repo: _RescueRepo, context: SafeGitContext, state: Mapping[str, Any],
-    state_path: Path, row: dict[str, Any], *, apply: bool,
+    repo: _RescueRepo,
+    context: SafeGitContext,
+    state: Mapping[str, Any],
+    state_path: Path,
+    row: dict[str, Any],
+    *,
+    apply: bool,
 ) -> dict[str, Any]:
     from scripts.agent_runtime import kimi_boundary
 
@@ -7989,8 +8085,12 @@ def _rescue_in_context(
     if current_branch not in {recorded_branch, branch}:
         row["reason"] = "worktree branch differs from task record"
         return row
-    tree = context.capture(worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude")
-    changed = tuple(path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path)
+    tree = context.capture(
+        worktree, head, worker_index=repo.admin_dir / "index", exclude_file=repo.git_dir / "info/exclude"
+    )
+    changed = tuple(
+        path for path in context.checked("diff-tree", "-r", "-z", "--name-only", head, tree).split("\0") if path
+    )
     large = []
     for name in changed:
         try:
@@ -8022,7 +8122,9 @@ def _rescue_in_context(
     rescued = state.get("rescue_head_commit") if state.get("rescue_status") == "rescued" else None
     if isinstance(rescued, str) and changed:
         _rescue_git(context, "fetch", "--no-tags", "origin", f"refs/heads/{branch}", network=True)
-    if isinstance(rescued, str) and (rescued == head if not changed else _rescue_commit_matches(context, rescued, tree, head)):
+    if isinstance(rescued, str) and (
+        rescued == head if not changed else _rescue_commit_matches(context, rescued, tree, head)
+    ):
         row["reason"] = "already rescued at HEAD"
         return row
     if not changed:
@@ -8031,9 +8133,18 @@ def _rescue_in_context(
             row["reason"] = "ahead count unavailable"
             return row
         tracking = context.read_source_ref(repo.git_dir, f"refs/remotes/origin/{recorded_branch}")
-        unpushed = _rescue_git(context, "rev-list", "--count", f"{tracking.stdout.strip()}..{head}") if tracking.returncode == 0 else None
-        if count.stdout.strip() == "0" or (unpushed is not None and unpushed.returncode == 0 and unpushed.stdout.strip() == "0"):
-            row.update(action="cleaned" if cleaned_junk else "skipped", reason="disposable residue removed" if cleaned_junk else "no provable unpushed work")
+        unpushed = (
+            _rescue_git(context, "rev-list", "--count", f"{tracking.stdout.strip()}..{head}")
+            if tracking.returncode == 0
+            else None
+        )
+        if count.stdout.strip() == "0" or (
+            unpushed is not None and unpushed.returncode == 0 and unpushed.stdout.strip() == "0"
+        ):
+            row.update(
+                action="cleaned" if cleaned_junk else "skipped",
+                reason="disposable residue removed" if cleaned_junk else "no provable unpushed work",
+            )
             return row
     if kimi_boundary.is_installed(worktree) or _is_kimi_task_record(state):
         refusal, unreadable = _kimi_tree_refusal(context, merge_base, agent, tree=tree)
@@ -8499,9 +8610,7 @@ def _validate_existing_worktree(
     return True
 
 
-def _withdraw_primary_database_links(
-    worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]
-) -> None:
+def _withdraw_primary_database_links(worktree_path: Path, main_repo_root: Path, relative_paths: Sequence[str]) -> None:
     """Remove a reused worktree's database links that resolve to the primary databases (#9421).
 
     A read-only dispatch must carry no such link: a symlink cannot be made
@@ -9799,6 +9908,7 @@ def _compose_dispatch_prompt(
         prompt = cored_prompt
     if agent == "agy" and mode in ("workspace-write", "danger") and not review_route:
         from scripts.agent_runtime.adapters.agy import _WRITE_MODE_PROMPT_CONTRACT
+
         prompt += _WRITE_MODE_PROMPT_CONTRACT
         if blocks is not None:
             blocks.append("agy_write_contract")
@@ -10075,10 +10185,7 @@ def _sources_mcp_call_count(result: Any) -> int | None:
         if not isinstance(call, dict) or not isinstance(call.get("name"), str) or not call["name"].strip():
             return None
         names.append(call["name"])
-    return sum(
-        bool(re.fullmatch(r"(?:mcp__sources__|mcp_sources_)[A-Za-z][A-Za-z0-9_]*", name))
-        for name in names
-    )
+    return sum(bool(re.fullmatch(r"(?:mcp__sources__|mcp_sources_)[A-Za-z][A-Za-z0-9_]*", name)) for name in names)
 
 
 def _emit_terminal_dispatch_event(
@@ -10403,13 +10510,10 @@ def _run_worker(
             tool_config: dict[str, Any] = {}
             if state.get("mechanical_task"):
                 tool_config["mechanical_task"] = state["mechanical_task"]
-            if (
-                agent in {"agy", "gemini"}
-                and (
-                    _dispatch_is_review_typed(argparse.Namespace(**state))
-                    or require_review_verdict
-                    or review_id is not None
-                )
+            if agent in {"agy", "gemini"} and (
+                _dispatch_is_review_typed(argparse.Namespace(**state))
+                or require_review_verdict
+                or review_id is not None
             ):
                 tool_config["review_profile"] = state.get("review_profile") or "code"
                 if (
@@ -12637,9 +12741,7 @@ def _dispatch(
     # Explicit primary-root callers need the same isolation as the default
     # read-only flow (#10025). Keep their dispatch working without snapshotting
     # other drivers' local edits in that shared checkout.
-    primary_read_only_cwd = (
-        args.mode == "read-only" and not worktree_arg and validated_cwd == target_repo_root
-    )
+    primary_read_only_cwd = args.mode == "read-only" and not worktree_arg and validated_cwd == target_repo_root
     if primary_read_only_cwd:
         args.cwd = None
         validated_cwd = None
@@ -13351,8 +13453,7 @@ def _dispatch(
                 "review_author_model": getattr(args, "review_author_model", None),
                 "review_risk": getattr(args, "review_risk", None),
                 "review_profile": getattr(args, "review_profile", None),
-                "review_language_lane": _dispatch_is_language_lane(args)
-                or is_ukrainian_review(vars(args)),
+                "review_language_lane": _dispatch_is_language_lane(args) or is_ukrainian_review(vars(args)),
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
@@ -13819,8 +13920,7 @@ def _dispatch(
             "review_author_model": getattr(args, "review_author_model", None),
             "review_risk": getattr(args, "review_risk", None),
             "review_profile": getattr(args, "review_profile", None),
-            "review_language_lane": _dispatch_is_language_lane(args)
-            or is_ukrainian_review(vars(args)),
+            "review_language_lane": _dispatch_is_language_lane(args) or is_ukrainian_review(vars(args)),
             "task_id": task_id,
             "review": bool(getattr(args, "review", False))
             or str(getattr(args, "type", "") or "").strip().casefold() == "review",
@@ -16358,11 +16458,20 @@ def _admit_dispatch_target(
             task_prompt=getattr(args, "prompt", None),
         )
         if mechanical_task != _mechanical_task_scope(args):
-            raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
+            raise MechanicalAdmissionRefused(
+                "MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)"
+            )
         args._mechanical_admitted_scope = mechanical_task
         if target.recipient == "cursor":
             apply_cursor_model_pins(target.model)
-    except (KimiAdmissionRefused, MechanicalAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError, ModelCatalogError) as exc:
+    except (
+        KimiAdmissionRefused,
+        MechanicalAdmissionRefused,
+        ReviewAdmissionRefused,
+        _DispatchRouteRefused,
+        BudgetGuardRefuseError,
+        ModelCatalogError,
+    ) as exc:
         return str(exc), None
     return None, target
 
@@ -16382,7 +16491,9 @@ def _mechanical_task_scope(args: argparse.Namespace, *, admitted: bool = False) 
     try:
         prompt_file_sha256 = hashlib.sha256(Path(prompt_file).read_bytes()).hexdigest() if prompt_file else None
     except OSError as exc:
-        raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: task input unavailable at prompt file (#10079)") from exc
+        raise MechanicalAdmissionRefused(
+            "MECHANICAL_TASK_REFUSED: task input unavailable at prompt file (#10079)"
+        ) from exc
     paths = []
     for value in (getattr(args, "owned_path", None), getattr(args, "research_owned_path", None)):
         paths.extend([value] if isinstance(value, str) else value or [])
@@ -16782,8 +16893,7 @@ def _resolve_agent_with_budget_guard(
     codexbar_data_available = bool(diags.get("codexbar_data_available", False))
     subscription_data_available = codexbar_data_available or bool(agents)
     initial_review_substitution = (
-        review_select is not None
-        and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
+        review_select is not None and (model_resolution or {}).get("record", {}).get("source") == "reviewer-resolver"
     )
     if initial_review_substitution and not (isinstance(agents.get(requested), Mapping) and agents[requested]):
         raise BudgetGuardRefuseError(
@@ -16954,10 +17064,7 @@ def _resolve_agent_with_budget_guard(
             if not needs_action:
                 return requested
             if status in {"cool", "warm"} and "deficit" in reason:
-                note = (
-                    "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer "
-                    "on pace-only deficit."
-                )
+                note = "NOTE: REVIEW_BUDGET_RETAINED: retaining resolver-selected reviewer on pace-only deficit."
             else:
                 note = "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer" + (
                     ";" if not review_trusted_inputs else "."
@@ -18320,9 +18427,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--research-task-family",
         default=None,
         metavar="FAMILY",
-        help=("ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
-              "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
-              "declare narrow safe owned paths. Classification and recon use read-only mode."),
+        help=(
+            "ADR-011 P3 research context: the task's single task family (e.g. difficulty-gate). "
+            "Mechanical-only models require routine_mechanical, mechanical_classification or readonly_recon; "
+            "declare narrow safe owned paths. Classification and recon use read-only mode."
+        ),
     )
     d.add_argument(
         "--research-track",

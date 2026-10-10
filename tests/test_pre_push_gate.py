@@ -1554,7 +1554,7 @@ def test_stale_and_dangling_tickets_are_reaped_before_the_live_cap(
     assert list(queue.glob("*.ticket")) == []
 
 
-@pytest.mark.parametrize("tampering", ["missing", "symlink", "replacement"])
+@pytest.mark.parametrize("tampering", ["missing", "symlink", "replacement", "fifo", "directory"])
 def test_an_invalid_own_ticket_is_typed_incomplete_without_a_traceback(
     repo: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tampering: str
 ) -> None:
@@ -1573,6 +1573,10 @@ def test_an_invalid_own_ticket_is_typed_incomplete_without_a_traceback(
             ticket.symlink_to(target)
         elif tampering == "replacement":
             ticket.touch()
+        elif tampering == "fifo":
+            os.mkfifo(ticket)
+        elif tampering == "directory":
+            ticket.mkdir()
 
     monkeypatch.setattr(gate.Admission, "_register", register)
     result = gate.main(
@@ -1587,12 +1591,12 @@ def test_an_invalid_own_ticket_is_typed_incomplete_without_a_traceback(
     assert _receipts(repo) == []
 
 
-@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo"])
+@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo", "dangling-symlink"])
 def test_nonregular_predecessors_cannot_count_as_live_tickets(tmp_path: Path, kind: str) -> None:
     queue = tmp_path / "queue"
     queue.mkdir()
     target = tmp_path / "target"
-    target.touch()
+    target.write_text("preserve me")
     fd = os.open(target, os.O_RDONLY)
     fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     ticket = queue / "00000000000000000000-other.ticket"
@@ -1600,13 +1604,18 @@ def test_nonregular_predecessors_cannot_count_as_live_tickets(tmp_path: Path, ki
         ticket.symlink_to(target)
     elif kind == "directory":
         ticket.mkdir()
+        (ticket / "nested").mkdir()
+        (ticket / "nested" / "stale").touch()
+    elif kind == "dangling-symlink":
+        ticket.symlink_to(tmp_path / "missing")
     else:
         os.mkfifo(ticket)
     try:
-        with pytest.raises(gate.GateOutcome) as raised, gate.Admission(tmp_path, 0.0):
-            pytest.fail("a nonregular ticket cannot grant admission")
-        assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
-        assert "admission_timeout" not in raised.value.detail
+        for _ in range(2):
+            with gate.Admission(tmp_path, 0.0) as admitted:
+                assert admitted.queue_depth == admitted.queue_position == 1
+                assert not os.path.lexists(ticket)
+        assert target.read_text() == "preserve me"
     finally:
         os.close(fd)
 
@@ -1624,6 +1633,112 @@ def test_ticket_open_uses_nofollow(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     with gate.Admission(tmp_path, 0.0):
         pass
     assert flags_seen and all(flags & os.O_NOFOLLOW for flags in flags_seen)
+
+
+def test_hard_link_to_own_locked_ticket_waits_then_is_reaped(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    original = gate.Admission._register
+    predecessor = tmp_path / "queue" / "00000000000000000000-hardlink.ticket"
+
+    def register(admission: gate.Admission) -> None:
+        original(admission)
+        os.link(admission._ticket, predecessor)
+
+    monkeypatch.setattr(gate.Admission, "_register", register)
+    with pytest.raises(gate.GateOutcome) as raised, gate.Admission(tmp_path, 0.0):
+        pytest.fail("the locked hard link must wait")
+    assert raised.value.reason == "validation_incomplete"
+    assert "admission_timeout" in raised.value.detail
+    assert predecessor.exists()
+    monkeypatch.undo()
+    with gate.Admission(tmp_path, 0.0) as admitted:
+        assert admitted.queue_depth == admitted.queue_position == 1
+        assert not predecessor.exists()
+
+
+@pytest.mark.parametrize("kind", ["file", "fifo", "symlink", "directory"])
+def test_pytest_stage_reaps_stale_nodes_without_following_links(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    state = tmp_path / "state"
+    state.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    stale = state / "pytest-stale"
+    if kind == "file":
+        stale.touch()
+    elif kind == "fifo":
+        os.mkfifo(stale)
+    elif kind == "symlink":
+        stale.symlink_to(outside, target_is_directory=True)
+    else:
+        stale.mkdir()
+        (stale / "nested").mkdir()
+        (stale / "nested" / "file").touch()
+        (stale / "link").symlink_to(outside, target_is_directory=True)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: state)
+    monkeypatch.setattr(gate, "run_bounded", lambda *_args, **_kwargs: (0, "1 passed in 0.1s"))
+
+    for _ in range(2):
+        assert gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30) == "1 passed in 0.1s"
+        assert not os.path.lexists(stale)
+        assert (outside / "preserved").read_text() == "preserve me"
+
+
+def test_pytest_stale_reap_io_error_is_typed_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    stale = tmp_path / "pytest-stale"
+    stale.mkdir()
+    (stale / "nested").mkdir()
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path)
+
+    def refuse(*_args: object, **_kwargs: object) -> None:
+        raise PermissionError("cleanup denied")
+
+    refuse.avoids_symlink_attacks = True
+    monkeypatch.setattr(gate.shutil, "rmtree", refuse)
+    with pytest.raises(gate.GateOutcome) as raised:
+        gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+
+
+@pytest.mark.parametrize("area", ["pytest", "queue"])
+def test_stale_directory_swap_is_refused_without_touching_the_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, area: str
+) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "preserved").write_text("preserve me")
+    if area == "queue":
+        (tmp_path / "queue").mkdir()
+        stale = tmp_path / "queue" / "00000000000000000000-other.ticket"
+    else:
+        stale = tmp_path / "pytest-stale"
+    stale.mkdir()
+    (stale / "preserved").touch()
+    displaced = tmp_path / "displaced"
+    original = os.open
+    opened: list[int] = []
+
+    def swap(path: object, flags: int, *args: object, **kwargs: object) -> int:
+        fd = original(path, flags, *args, **kwargs)
+        if Path(path) == stale and flags & os.O_DIRECTORY:
+            opened.append(flags)
+            stale.rename(displaced)
+            stale.symlink_to(outside, target_is_directory=True)
+        return fd
+
+    monkeypatch.setattr(gate.os, "open", swap)
+    monkeypatch.setattr(gate, "state_dir", lambda _root: tmp_path)
+    with pytest.raises(gate.GateOutcome) as raised:
+        if area == "queue":
+            with gate.Admission(tmp_path, 0.0):
+                pytest.fail("a replaced directory cannot be reaped")
+        else:
+            gate.run_pytest_stage(_plan(), tmp_path, "launcher", time.monotonic() + 30)
+    assert raised.value.reason == "validation_incomplete" and raised.value.incomplete
+    assert opened and all(flags & os.O_NOFOLLOW for flags in opened)
+    assert (outside / "preserved").read_text() == "preserve me"
+    assert (displaced / "preserved").exists()
 
 
 def test_a_concurrent_pytest_pruner_cannot_remove_the_gate_temp(repo: Path, tmp_path: Path) -> None:
