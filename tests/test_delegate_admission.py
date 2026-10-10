@@ -38,7 +38,7 @@ def test_ukrainian_content_model_families_pass(task_family, model):
     assert target.model == model
 
 
-@pytest.mark.parametrize("model", ["grok-4.7", "glm-5", "other-model", "unknown", "", None])
+@pytest.mark.parametrize("model", ["grok-4.7", "glm-5", "other-model", "unknown", ""])
 def test_ukrainian_content_unknown_or_disallowed_model_refused(model):
     args = delegate.build_parser().parse_args([
         "dispatch", "--task-id", "synthetic-language-job", "--agent", "codex", "--language-lane", "--research-task-family", "data",
@@ -59,6 +59,23 @@ def test_ukrainian_content_unknown_language_refused(task_family, language_lane):
     refusal, target = delegate._admit_dispatch_target(args, agent="codex", trees=None)
     assert "language is missing or unknown" in refusal
     assert target is None
+
+
+def test_omitted_model_on_allowed_agent_waits_for_resolution():
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "claude", "--language-lane",
+        "--research-task-family", "reviews",
+    ])
+    delegate._require_ukrainian_model_family(args, None)
+
+
+def test_omitted_model_on_disallowed_agent_refused():
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--task-id", "synthetic-language-job", "--agent", "grok", "--language-lane",
+        "--research-task-family", "data",
+    ])
+    with pytest.raises(delegate._DispatchRouteRefused, match="UKRAINIAN_MODEL_REFUSED"):
+        delegate._require_ukrainian_model_family(args, None)
 
 
 def test_ukrainian_lane_without_content_family_refuses_other_model():

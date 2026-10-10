@@ -14792,19 +14792,44 @@ def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None
     bounded_advisory.require_unchanged(validated, current)
 
 
-def _require_ukrainian_model_family(args: argparse.Namespace, model: str | None) -> None:
-    """Fail closed for Ukrainian content using the declared language lane."""
+_UKRAINIAN_MODEL_FAMILIES = frozenset({"openai", "google", "anthropic"})
+# An omitted --model on these seats is the seat's own model, checked again
+# after resolution. An explicit model is checked immediately.
+_UKRAINIAN_AGENT_FAMILIES = {
+    "claude": "anthropic",
+    "codex": "openai",
+    "agy": "google",
+    "gemini": "google",
+}
+
+
+def _require_ukrainian_model_family(
+    args: argparse.Namespace, model: str | None, *, resolved: bool = False
+) -> None:
+    """Fail closed for Ukrainian content using the declared language lane.
+
+    An omitted model on an allowed seat waits for resolution. A resolved
+    model that is still missing is a refusal.
+    """
     from scripts.review.reviewer_resolver import resolve_family
 
     family = str(getattr(args, "research_task_family", None) or "").strip().casefold()
     content_task = family in {"data", "text", "word cards", "word-cards", "word_cards", "dataset", "reviews"}
     language_lane = getattr(args, "language_lane", None)
     if content_task and language_lane is not True:
-        raise _DispatchRouteRefused("UKRAINIAN_MODEL_REFUSED: content task language is missing or unknown; use --language-lane")
-    if (content_task or _dispatch_is_language_lane(args)) and (
-        not model or resolve_family(model) not in {"openai", "google", "anthropic"}
-    ):
-        raise _DispatchRouteRefused("UKRAINIAN_MODEL_REFUSED: Ukrainian jobs require a known GPT, Gemini or Claude model")
+        raise _DispatchRouteRefused(
+            "UKRAINIAN_MODEL_REFUSED: content task language is missing or unknown; use --language-lane"
+        )
+    if not (content_task or _dispatch_is_language_lane(args)):
+        return
+    if model is None and not resolved:
+        agent = str(getattr(args, "agent", "") or "").strip().lower()
+        if _UKRAINIAN_AGENT_FAMILIES.get(agent) in _UKRAINIAN_MODEL_FAMILIES:
+            return
+    if not model or resolve_family(model) not in _UKRAINIAN_MODEL_FAMILIES:
+        raise _DispatchRouteRefused(
+            "UKRAINIAN_MODEL_REFUSED: Ukrainian jobs require a known GPT, Gemini or Claude model"
+        )
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
@@ -16366,7 +16391,7 @@ def _admit_dispatch_target(
             task_role=getattr(args, "research_role", None),
             task_prompt=getattr(args, "prompt", None),
         )
-        _require_ukrainian_model_family(args, target.model)
+        _require_ukrainian_model_family(args, target.model, resolved=True)
         if mechanical_task != _mechanical_task_scope(args):
             raise MechanicalAdmissionRefused("MECHANICAL_TASK_REFUSED: admission inputs changed during dispatch (#10079)")
         args._mechanical_admitted_scope = mechanical_task
