@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 import json
 import os
 import shlex
@@ -9,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tomllib
+import weakref
 from pathlib import Path
 
 import pytest
@@ -1412,6 +1414,13 @@ def test_portable_hook_rechecks_entry_before_execution(tmp_path, replacement, ki
         r"cat <(PATH={stub_dir} $'g\x68' $'issue' $'create' --body safe)",
         'eval \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
         'bash -c \'a={stub_dir}/g; b=h; c=issue; d=create; "$a$b" "$c" "$d" --body safe\'',
+        "a=issue; b=create; {stub_dir}/g? $a $b",
+        "a=issue; b=create; {stub_dir}/g* $a $b",
+        "a=issue; b=create; {stub_dir}/g[h] $a $b",
+        "a=issue; b=create; env {stub_dir}/g? $a $b",
+        "a=issue; b=create; command {stub_dir}/g? $a $b",
+        "a=issue; b=create; find . -exec {stub_dir}/g? $a $b \\;",
+        "bash -c 'a=issue; b=create; {stub_dir}/g? $a $b'",
     ],
 )
 def test_codex_blocks_publication_bypass_shapes(tmp_path, shape):
@@ -1453,13 +1462,27 @@ def test_codex_admits_single_resolved_shim_call(monkeypatch, wrapper):
 
 
 def test_codex_entry_never_uses_session_selected_interpreter(tmp_path):
-    primary, session = _make_linked_worktree(tmp_path)
+    source_base = tmp_path / "source-fixture"
+    source_base.mkdir()
+    source, _ = _make_linked_worktree(source_base)
+    entry = source / "scripts/agent_runtime/codex_hook_entry.sh"
+    entry.parent.mkdir(parents=True)
+    shutil.copyfile(ENTRY, entry)
+    source_marker = tmp_path / "source-interpreter-ran"
+    # A distinctive result proves this copied entry used the source interpreter.
+    (source / ".venv/bin/python").write_text(
+        f"#!/bin/bash\nprintf ran > {shlex.quote(str(source_marker))}\nexit 2\n"
+    )
+    session_base = tmp_path / "session-fixture"
+    session_base.mkdir()
+    primary, session = _make_linked_worktree(session_base)
     marker = tmp_path / "foreign-interpreter-ran"
-    interpreter = primary / ".venv/bin/python"
-    interpreter.write_text(f"#!/bin/bash\nprintf ran > {shlex.quote(str(marker))}\nexit 0\n")
+    (primary / ".venv/bin/python").write_text(
+        f"#!/bin/bash\nprintf ran > {shlex.quote(str(marker))}\nexit 0\n"
+    )
     payload = {"tool_name": "Write", "cwd": str(session), "tool_input": {"file_path": str(primary / "README.md")}}
     result = subprocess.run(
-        ["bash", str(ENTRY), "pre-tool-use"],
+        ["bash", str(entry), "pre-tool-use"],
         cwd=session,
         input=json.dumps(payload),
         text=True,
@@ -1467,11 +1490,20 @@ def test_codex_entry_never_uses_session_selected_interpreter(tmp_path):
         timeout=2,
     )
     assert result.returncode == 2, result.stderr
+    assert source_marker.read_text() == "ran"
     assert not marker.exists()
-    assert "guard-primary-checkout-write" in result.stderr
 
 
-@pytest.mark.parametrize("command", ["echo gh", 'git commit -m "fix gh routing"', "git commit -m 'fix gh $(pwd)'"])
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo gh",
+        'git commit -m "fix gh routing"',
+        "git commit -m 'fix gh $(pwd)'",
+        "echo g? '$a'",
+        "pytest tests/test_*.py",
+    ],
+)
 def test_codex_publication_data_words_remain_allowed(command):
     assert (
         codex_hook_policy._publication_command_code(
@@ -1514,7 +1546,7 @@ def test_hook_resolution_errors_block_with_exit_two(tmp_path, defect):
 
 
 @pytest.mark.parametrize("tool", ["write_stdin", "Bash"])
-@pytest.mark.parametrize("chars", ["", "echo synthetic\n"])
+@pytest.mark.parametrize("chars", ["", "echo synthetic\n", "gh issue create --body synthetic\n"])
 def test_codex_interactive_input_is_blocked(monkeypatch, tool, chars):
     import io
     import re
@@ -1598,3 +1630,61 @@ def test_codex_entry_blocks_interactive_input(tmp_path, tool):
     assert result.returncode == 2
     assert result.stdout == ""
     assert "interactive input" in result.stderr
+
+
+@pytest.mark.parametrize("explicit_cleanup", [False, True])
+def test_worker_source_handle_has_weak_owner(tmp_path, explicit_cleanup):
+    from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES
+
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="test", mode="workspace-write", cwd=tmp_path,
+        model=None, task_id=None, session_id=None, tool_config=None,
+    )
+    plan_id = id(plan)
+    owner = weakref.ref(plan)
+    source_fd = _HOOK_SOURCE_HANDLES[plan_id][1]
+    output = plan.output_file
+    assert _HOOK_SOURCE_HANDLES[plan_id][0]() is plan
+    os.fstat(source_fd)
+    if explicit_cleanup:
+        adapter.cleanup_invocation(plan)
+        adapter.cleanup_invocation(plan)
+    del plan
+    gc.collect()
+    assert owner() is None
+    assert plan_id not in _HOOK_SOURCE_HANDLES
+    with pytest.raises(OSError):
+        os.fstat(source_fd)
+    output.unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize("defect", ["missing-interpreter", "exit-127"])
+def test_portable_hook_interpreter_failure_blocks(tmp_path, defect):
+    source, session = _make_linked_worktree(tmp_path)
+    entry = source / "entry.sh"
+    marker = tmp_path / "entry-ran"
+    entry.write_text(f"printf ran > {shlex.quote(str(marker))}\n")
+    _run(["git", "add", "entry.sh"], cwd=source)
+    _run(["git", "commit", "-m", "tracked hook"], cwd=source)
+    command = _portable_hook_command(f"bash {shlex.quote(str(entry))}", source)
+    interpreter = source / ".venv/bin/python"
+    if defect == "missing-interpreter":
+        interpreter.unlink()
+    else:
+        interpreter.write_text("#!/bin/bash\nexit 127\n")
+    result = subprocess.run(
+        ["bash", "-c", command], cwd=session,
+        env={**os.environ, "LU_CODEX_HOOK_SOURCE": str(source)},
+        input="{}", text=True, capture_output=True, timeout=2,
+    )
+    assert result.returncode == 2, result.stderr
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("command", ["synthetic*/echo gh", "synthetic?/git commit -m gh"])
+def test_codex_data_mention_requires_literal_executable(command):
+    assert codex_hook_policy._publication_command_code(
+        json.dumps({"tool_input": {"command": command}}),
+        REPO_ROOT / "agents_extensions/shared/hooks",
+    ) == 2

@@ -69,7 +69,7 @@ def captured_invocation(value, source, plain):
         return plain(value)
     try:
         owned = _HOOK_SOURCE_HANDLES.get(id(value))
-        if owned is None or owned[0] is not value:
+        if owned is None or owned[0]() is not value:
             raise ValueError("capture source binding is not an owned handle")
         locator = value.env_overrides["LU_CODEX_HOOK_SOURCE"]
         if locator != f"/proc/{os.getpid()}/fd/{owned[1]}":
@@ -634,6 +634,8 @@ def main():
 
 @pytest.mark.parametrize("defect", [None, "unowned", "wrong-locator", "wrong-source", "closed"])
 def test_capture_source_handle_normalization_requires_exact_owned_source(tmp_path, defect):
+    import weakref
+
     from scripts.agent_runtime.adapters.base import InvocationPlan
     from scripts.agent_runtime.adapters.codex import _HOOK_SOURCE_HANDLES
 
@@ -647,7 +649,7 @@ def test_capture_source_handle_normalization_requires_exact_owned_source(tmp_pat
         env_overrides={"LU_CODEX_HOOK_SOURCE": binding, "unrelated": "preserved"},
     )
     if defect != "unowned":
-        _HOOK_SOURCE_HANDLES[id(plan)] = (plan, fd)
+        _HOOK_SOURCE_HANDLES[id(plan)] = (weakref.ref(plan), fd)
     expected_source = tmp_path if defect == "wrong-source" else source
     if defect == "closed":
         os.close(fd)

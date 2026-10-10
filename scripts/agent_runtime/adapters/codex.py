@@ -43,6 +43,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+import weakref
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -79,7 +80,15 @@ class CodexReviewConfigError(ValueError):
 
 
 _HOOK_SOURCE_ENV = "LU_CODEX_HOOK_SOURCE"
-_HOOK_SOURCE_HANDLES: dict[int, tuple[InvocationPlan, int]] = {}
+_HOOK_SOURCE_HANDLES: dict[int, tuple[weakref.ReferenceType[InvocationPlan], int]] = {}
+
+
+def _release_hook_source(plan_id: int) -> None:
+    owned = _HOOK_SOURCE_HANDLES.pop(plan_id, None)
+    if owned is not None:
+        os.close(owned[1])
+
+
 # Execute the very bytes checked, avoiding a second, raceable read of the entry.
 # -I prevents the session cwd/PYTHONPATH from supplying bootstrap imports.
 _HOOK_BOOTSTRAP = """import hashlib, os, stat, sys
@@ -697,7 +706,9 @@ class CodexAdapter:
                 metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
             )
             if source_fd is not None:
-                _HOOK_SOURCE_HANDLES[id(plan)] = (plan, source_fd)
+                plan_id = id(plan)
+                owner = weakref.ref(plan, lambda _: _release_hook_source(plan_id))
+                _HOOK_SOURCE_HANDLES[plan_id] = (owner, source_fd)
             return plan
         except Exception:
             if source_fd is not None:
@@ -706,9 +717,7 @@ class CodexAdapter:
 
     def cleanup_invocation(self, plan: InvocationPlan) -> None:
         """Release only the source handle owned by this invocation."""
-        owned = _HOOK_SOURCE_HANDLES.pop(id(plan), None)
-        if owned is not None:
-            os.close(owned[1])
+        _release_hook_source(id(plan))
 
     @classmethod
     def _tool_config_flags(cls, tool_config: dict | None) -> list[str]:

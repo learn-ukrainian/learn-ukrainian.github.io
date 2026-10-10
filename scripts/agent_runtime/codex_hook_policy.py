@@ -272,6 +272,8 @@ def _is_safe_data_mention(command: str) -> bool:
         return False
     if not words:
         return False
+    if _is_ambiguous_or_gh_word(words[0]):
+        return False
     cmd = Path(words[0]).name
     if cmd in {"echo", "printf"}:
         return True
@@ -295,7 +297,7 @@ def _is_safe_data_mention(command: str) -> bool:
 def _is_ambiguous_or_gh_word(word: str) -> bool:
     if Path(word).name == "gh":
         return True
-    if any(c in word for c in "$`{}<>"):
+    if any(c in word for c in "$`{}<>*?["):
         return True
     return bool("\\x" in word or "\\0" in word)
 
