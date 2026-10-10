@@ -4,13 +4,46 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
+import os
+
+# Credential-shaped names are removed once, at import, and never put back.
+# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY``
+# is not ``_API_KEY``. Comparison is case-insensitive. Names that merely look
+# secret stay visible: ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``.
+# This process owns its environment, so the parent shell is unchanged.
+# ``LU_TEST_CREDENTIAL_STRIP`` marks the process tree: an xdist worker, a
+# nested ``pytest.main``, or a child pytest that already has the marker must
+# not strip again, or it would discard a name the suite published after the
+# first strip. The marker is outside the suffix contract.
+# Residual: installed third-party plugins and explicit ``-p`` plugins load
+# before any conftest. The pytest plugins in this repo's venv do not read a
+# credential-shaped environment name, so that load order does not retain one.
+_CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
+_CREDENTIAL_STRIP_MARKER = "LU_TEST_CREDENTIAL_STRIP"
+
+
+def _is_credential_shaped_env_name(name: str) -> bool:
+    """True when ``name`` ends with a credential suffix, ignoring case."""
+    return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
+
+
+def _strip_ambient_credential_env() -> None:
+    """Drop ambient credential-shaped names once per process tree."""
+    if _CREDENTIAL_STRIP_MARKER in os.environ:
+        return
+    for name in tuple(os.environ):
+        if _is_credential_shaped_env_name(name):
+            del os.environ[name]
+    os.environ[_CREDENTIAL_STRIP_MARKER] = "1"
+
+
+_strip_ambient_credential_env()
+
 import ast
-import atexit
 import contextlib
 import functools
 import ipaddress
 import itertools
-import os
 import shutil
 import socket
 import sqlite3
@@ -173,67 +206,6 @@ def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> 
         for name in SESSION_IDENTITY_ENV_VARS:
             patch.delenv(name, raising=False)
         return (yield)
-
-
-# Credential-shaped names inherited from the developer or worker environment.
-# Match the suffix only: ``..._TOKENS`` is not ``_TOKEN``, and a bare ``_KEY``
-# is not ``_API_KEY``. Comparison is case-insensitive. Names that merely look
-# secret stay visible: ``AWS_SECRET_ACCESS_KEY``, ``*_PASSWORD``, ``*_KEY``.
-# The snapshot is taken while this module loads, before pytest imports
-# ``pytest_plugins``, configures, collects, or spawns xdist workers. Anything
-# written after that snapshot belongs to the suite and stays until the session
-# is torn down. Restoration is independent of ``monkeypatch``, so ``undo()``
-# cannot put an inherited value back.
-_CREDENTIAL_ENV_SUFFIXES = ("_API_KEY", "_TOKEN", "_SECRET")
-_inherited_credential_env: dict[str, str] | None = None
-
-
-def _is_credential_shaped_env_name(name: str) -> bool:
-    """True when ``name`` ends with a credential suffix, ignoring case."""
-    return name.upper().endswith(_CREDENTIAL_ENV_SUFFIXES)
-
-
-def _hide_inherited_credential_env() -> None:
-    """Pop credential-shaped names that were already in the environment.
-
-    A second call does nothing. The first snapshot is the inherited set;
-    a later write, including a suite token minted at session start, must
-    not be recorded as inherited and then deleted.
-    """
-    global _inherited_credential_env
-    if _inherited_credential_env is not None:
-        return
-    snapshot: dict[str, str] = {}
-    for name in tuple(os.environ):
-        if _is_credential_shaped_env_name(name):
-            snapshot[name] = os.environ.pop(name)
-    _inherited_credential_env = snapshot
-
-
-def _restore_inherited_credential_env() -> None:
-    """Put the inherited snapshot back and drop names the suite published."""
-    global _inherited_credential_env
-    if _inherited_credential_env is None:
-        return
-    snapshot = _inherited_credential_env
-    for name in tuple(os.environ):
-        if _is_credential_shaped_env_name(name) and name not in snapshot:
-            del os.environ[name]
-    os.environ.update(snapshot)
-    _inherited_credential_env = None
-
-
-class _CredentialEnvIsolation:
-    """Restore inherited credentials at unconfigure, including after a failed test."""
-
-    @pytest.hookimpl(tryfirst=True)
-    def pytest_unconfigure(self, config: pytest.Config) -> None:
-        _restore_inherited_credential_env()
-        config._lu_inherited_credentials_restored = True
-
-
-atexit.register(_restore_inherited_credential_env)
-_hide_inherited_credential_env()
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
@@ -2095,9 +2067,6 @@ class _NeedsArtifactCollection:
 
 
 def pytest_configure(config: pytest.Config) -> None:
-    if not config.pluginmanager.has_plugin("credential-env-isolation"):
-        config.pluginmanager.register(_CredentialEnvIsolation(), "credential-env-isolation")
-    _hide_inherited_credential_env()
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")

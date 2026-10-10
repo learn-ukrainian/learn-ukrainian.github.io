@@ -1,9 +1,11 @@
 """Ambient credential-shaped names are absent inside every test.
 
 ``tests/conftest.py`` drops names ending in ``_API_KEY``, ``_TOKEN`` or
-``_SECRET`` before collection. A subprocess pytest, started with those names
-set and with cwd at the repo root, loads the real conftest and checks the
-result. Failure text names variables and never prints their values.
+``_SECRET`` when it is imported, and does not put them back. A subprocess
+pytest, started with those names set and with cwd at the repo root, loads
+the real conftest and checks the result. A child that already has
+``LU_TEST_CREDENTIAL_STRIP`` keeps names published after the first strip.
+Failure text names variables and never prints their values.
 """
 
 from __future__ import annotations
@@ -16,7 +18,15 @@ import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 
+import pytest
+
+from tests.conftest import _CREDENTIAL_STRIP_MARKER, _is_credential_shaped_env_name
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
+# Gitignored, and not a norecursedirs pattern, so a child pytest can collect it
+# while the checkout write guard's git status does not see it. An xdist
+# controller can observe a tests/ path before the worker deletes it.
+_PROBE_PARENT = REPO_ROOT / "tests" / "__pycache__" / "zz_strip_probes"
 SENTINEL = "sentinel-not-a-real-value"
 SET_INSIDE = "set-inside-the-test"
 _STRIPPED = (
@@ -250,9 +260,24 @@ def _note_map(text: str) -> dict[str, str]:
     return notes
 
 
-def _child_env(after_path: Path, order_log: Path) -> dict[str, str]:
+_CHILD_RUNTIME_DROPS = (
+    "PYTEST_CURRENT_TEST",
+    "PYTEST_XDIST_WORKER",
+    "PYTEST_XDIST_WORKER_COUNT",
+    "PYTEST_XDIST_TESTRUNUID",
+)
+
+
+def _fresh_pytest_env() -> dict[str, str]:
+    """Child environment that must strip for itself, as a developer shell would."""
     env = os.environ.copy()
-    env.pop("PYTEST_CURRENT_TEST", None)
+    for name in (*_CHILD_RUNTIME_DROPS, _CREDENTIAL_STRIP_MARKER):
+        env.pop(name, None)
+    return env
+
+
+def _child_env(after_path: Path, order_log: Path) -> dict[str, str]:
+    env = _fresh_pytest_env()
     env["ZZ_STRIP_PROBE_AFTER"] = str(after_path)
     env["ZZ_STRIP_ORDER_LOG"] = str(order_log)
     for name in (*_STRIPPED, _PLAIN, _PLURAL, *_OUTSIDE_CONTRACT, _CURSOR_TOKEN):
@@ -285,9 +310,13 @@ def _run_child_pytest(probe_dir: Path, env: dict[str, str]) -> subprocess.Comple
     )
 
 
+def _probe_workspace(prefix: str) -> tempfile.TemporaryDirectory[str]:
+    _PROBE_PARENT.mkdir(parents=True, exist_ok=True)
+    return tempfile.TemporaryDirectory(prefix=prefix, dir=_PROBE_PARENT)
+
+
 def _run_recorded_probe(files: dict[str, str]) -> _ChildPytest:
     """Run a child pytest after this test's own strip, so the copy has no host secret."""
-    tests_dir = REPO_ROOT / "tests"
     after_descriptor, after_name = tempfile.mkstemp(prefix="zz-strip-after-")
     os.close(after_descriptor)
     order_descriptor, order_name = tempfile.mkstemp(prefix="zz-strip-order-")
@@ -295,7 +324,7 @@ def _run_recorded_probe(files: dict[str, str]) -> _ChildPytest:
     after_path = Path(after_name)
     order_path = Path(order_name)
     try:
-        with tempfile.TemporaryDirectory(prefix="_zz_strip_probe_", dir=tests_dir) as raw:
+        with _probe_workspace("_zz_strip_probe_") as raw:
             probe_dir = Path(raw)
             for name, source in files.items():
                 (probe_dir / name).write_text(source, encoding="utf-8")
@@ -333,19 +362,17 @@ def _require_child_ok(child: _ChildPytest) -> None:
 
 
 def test_ambient_credential_env_is_stripped_for_every_test() -> None:
-    """A real conftest session hides credential suffixes and restores them after."""
-    tests_dir = REPO_ROOT / "tests"
+    """A real conftest session hides credential suffixes and leaves them hidden."""
     descriptor, after_name = tempfile.mkstemp(prefix="zz-strip-after-")
     os.close(descriptor)
     after_path = Path(after_name)
     try:
-        with tempfile.TemporaryDirectory(prefix="_zz_strip_probe_", dir=tests_dir) as raw:
+        with _probe_workspace("_zz_strip_probe_") as raw:
             probe_dir = Path(raw)
             probe = probe_dir / "test_probe.py"
             probe.write_text(_PROBE, encoding="utf-8")
             (probe_dir / "conftest.py").write_text(_PROBE_CONFTEST, encoding="utf-8")
-            env = os.environ.copy()
-            env.pop("PYTEST_CURRENT_TEST", None)
+            env = _fresh_pytest_env()
             env["ZZ_STRIP_PROBE_AFTER"] = str(after_path)
             for name in (*_STRIPPED, _PLAIN, _PLURAL):
                 env[name] = SENTINEL
@@ -372,15 +399,13 @@ def test_ambient_credential_env_is_stripped_for_every_test() -> None:
                 check=False,
             )
             assert result.returncode == 0, result.stdout + "\n" + result.stderr
-            assert after_path.read_text(encoding="utf-8") == "sentinel"
+            assert after_path.read_text(encoding="utf-8") == "absent"
     finally:
         after_path.unlink(missing_ok=True)
 
 
 def test_suffix_match_ignores_case_and_plural_tokens() -> None:
     """Suffix matching is case-insensitive and does not treat ``_TOKENS`` as ``_TOKEN``."""
-    from tests.conftest import _is_credential_shaped_env_name
-
     assert _is_credential_shaped_env_name("ZZ_STRIP_PROBE_API_KEY")
     assert _is_credential_shaped_env_name("zz_strip_probe_api_key")
     assert _is_credential_shaped_env_name("Zz_Strip_Probe_Secret")
@@ -419,18 +444,18 @@ def test_monkeypatch_undo_does_not_restore_ambient_credentials() -> None:
 
 
 def test_module_fixture_published_credential_remains_visible() -> None:
-    """A value the suite writes after the snapshot stays, before and after undo."""
+    """A value the suite writes after the strip stays through the test and at session end."""
     child = _early_probe()
     _require_child_ok(child)
     assert child.notes["suite_before_undo"] == "yes"
     assert child.notes["suite_after_undo"] == "yes"
     assert child.notes["import_published"] == "yes"
     assert child.notes["cursor_token"] == "suite"
-    restored = _note_map(child.after)
-    assert restored["ambient"] == "sentinel"
-    assert restored["suite"] == "absent"
-    assert restored["import_published"] == "absent"
-    assert restored["plain"] == "sentinel"
+    observed = _note_map(child.after)
+    assert observed["ambient"] == "absent"
+    assert observed["suite"] == "present"
+    assert observed["import_published"] == "present"
+    assert observed["plain"] == "sentinel"
 
 
 def test_names_outside_the_suffix_contract_stay_visible() -> None:
@@ -444,8 +469,8 @@ def test_names_outside_the_suffix_contract_stay_visible() -> None:
     assert child.notes["aws_secret_access_key"] == "yes"
 
 
-def test_ambient_environment_is_restored_after_a_failing_test() -> None:
-    """A failed test still ends with the inherited environment, and the next test stays hidden."""
+def test_failing_test_does_not_restore_ambient_credentials() -> None:
+    """A failed test does not put the ambient names back, and the next test stays hidden."""
     child = _run_recorded_probe(
         {
             "conftest.py": _PROBE_CONFTEST,
@@ -456,4 +481,82 @@ def test_ambient_environment_is_restored_after_a_failing_test() -> None:
     assert "intentional failure" in child.stdout
     assert child.notes["failing_test"] == "absent"
     assert child.notes["later_test"] == "absent"
-    assert child.after == "sentinel"
+    assert child.after == "absent"
+
+
+def _credential_snapshot() -> dict[str, str]:
+    """Credential-shaped names plus the strip marker, without the cursor session token.
+
+    The cursor process guard mints a new token at every session start, including
+    a nested ``pytest.main``. That publication is not a restore of an ambient value.
+    """
+    snapshot = {
+        name: value
+        for name, value in os.environ.items()
+        if name == _CREDENTIAL_STRIP_MARKER or _is_credential_shaped_env_name(name)
+    }
+    snapshot.pop(_CURSOR_TOKEN, None)
+    return snapshot
+
+
+def test_nested_pytest_main_leaves_the_outer_environment_unchanged() -> None:
+    """``pytest.main(["--collect-only", ...])`` must not restore or delete names."""
+    published = "ZZ_NESTED_OUTER_API_KEY"
+    assert published not in os.environ
+    assert "ZZ_STRIP_PROBE_API_KEY" not in os.environ
+    os.environ[published] = "published-by-outer-session"
+    try:
+        with _probe_workspace("_zz_nested_main_") as raw:
+            inner = Path(raw) / "test_inner.py"
+            inner.write_text("def test_inner():\n    pass\n", encoding="utf-8")
+            before = _credential_snapshot()
+            code = pytest.main(
+                [
+                    "--collect-only",
+                    "-q",
+                    "-p",
+                    "no:cacheprovider",
+                    "-o",
+                    "addopts=",
+                    "--rootdir",
+                    str(REPO_ROOT),
+                    str(inner),
+                ]
+            )
+            after = _credential_snapshot()
+    finally:
+        os.environ.pop(published, None)
+    assert code == 0
+    assert before == after
+    assert before[published] == "published-by-outer-session"
+    assert before[_CREDENTIAL_STRIP_MARKER] == "1"
+    assert "ZZ_STRIP_PROBE_API_KEY" not in before
+
+
+_MARKER_PROBE = textwrap.dedent(
+    """\
+    import os
+
+    def test_published_name_remains():
+        if os.environ.get("LU_TEST_CREDENTIAL_STRIP") != "1":
+            raise AssertionError("strip marker missing")
+        if os.environ.get("ZZ_PUBLISHED_AFTER_STRIP_API_KEY") != "published-after-strip":
+            raise AssertionError("name published after the strip was removed")
+    """
+)
+
+
+def test_child_with_strip_marker_keeps_a_name_published_after_the_strip() -> None:
+    """A child pytest that already carries the marker does not strip again."""
+    assert os.environ.get(_CREDENTIAL_STRIP_MARKER) == "1"
+    assert not _is_credential_shaped_env_name(_CREDENTIAL_STRIP_MARKER)
+    with _probe_workspace("_zz_strip_marker_") as raw:
+        probe_dir = Path(raw)
+        (probe_dir / "test_marker.py").write_text(_MARKER_PROBE, encoding="utf-8")
+        env = os.environ.copy()
+        for name in _CHILD_RUNTIME_DROPS:
+            env.pop(name, None)
+        env[_CREDENTIAL_STRIP_MARKER] = "1"
+        env["ZZ_PUBLISHED_AFTER_STRIP_API_KEY"] = "published-after-strip"
+        result = _run_child_pytest(probe_dir, env)
+    assert result.returncode == 0, result.stdout + "\n" + result.stderr
