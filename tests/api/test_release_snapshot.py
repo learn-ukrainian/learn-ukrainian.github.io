@@ -29,6 +29,17 @@ pytestmark = pytest.mark.reads_content
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 VENV_PYTHON = project_python()
 
+# Cold artifact collection can exceed one 10s read on a loaded four-core shard.
+# Retry a timed-out GET once with a 0.1s backoff; each blocking socket operation
+# keeps the 10s timeout, and pytest retains its 120s wall-clock cap. Do not retry
+# response errors or assertions. Readiness probes have their own retry loop.
+HTTP_READ_TIMEOUT_S = 10.0
+HTTP_READY_TIMEOUT_S = 1.0
+HTTP_RETRY_DELAY_S = 0.1
+# Imports and lifespan startup share CPUs with other merge-group workers.
+API_START_TIMEOUT_S = 60.0
+API_STOP_TIMEOUT_S = 10.0
+
 
 def _run_git(repo_root: Path, *args: str) -> str:
     result = subprocess.run(
@@ -128,14 +139,134 @@ def _free_port() -> int:
         return int(server.getsockname()[1])
 
 
-def _read_json(url: str, *, timeout: float = 0.5) -> dict:
-    with urllib.request.urlopen(url, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
+def _read_json(url: str, *, timeout: float = HTTP_READ_TIMEOUT_S) -> dict:
+    return json.loads(_read_text(url, timeout=timeout))
 
 
-def _read_text(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=0.5) as response:
-        return response.read().decode("utf-8")
+def _read_text(url: str, *, timeout: float = HTTP_READ_TIMEOUT_S) -> str:
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as response:
+                return response.read().decode("utf-8")
+        except (TimeoutError, urllib.error.URLError) as exc:
+            if isinstance(exc, urllib.error.URLError) and not isinstance(exc.reason, TimeoutError):
+                raise
+            if attempt:
+                raise
+            time.sleep(HTTP_RETRY_DELAY_S)
+    raise AssertionError("unreachable")
+
+
+def _stop_process(process: subprocess.Popen) -> None:
+    process.terminate()
+    try:
+        process.wait(timeout=API_STOP_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=API_STOP_TIMEOUT_S)
+
+
+@pytest.mark.parametrize("reader", [_read_json, _read_text])
+def test_http_reads_have_a_loaded_shard_socket_budget(reader, mocker) -> None:
+    """Guard both default readers against restoring a sub-second timeout."""
+    opener = mocker.patch.object(urllib.request, "urlopen", return_value=io.BytesIO(b'{"ready": true}'))
+
+    payload = reader("http://example.invalid/report")
+
+    assert payload in ({"ready": True}, '{"ready": true}')
+    assert opener.call_args.kwargs["timeout"] >= 10
+    assert HTTP_READY_TIMEOUT_S >= 1
+
+
+@pytest.mark.parametrize("reader", [_read_json, _read_text])
+@pytest.mark.parametrize("wrapped", [False, True])
+@pytest.mark.parametrize("failure_at", ["open", "body"])
+def test_http_reads_retry_one_socket_timeout(reader, wrapped, failure_at, mocker) -> None:
+    error = TimeoutError("warming server")
+    if wrapped:
+        error = urllib.error.URLError(error)
+    if failure_at == "body":
+        response = mocker.MagicMock()
+        response.__enter__.return_value = response
+        response.read.side_effect = error
+        first = response
+    else:
+        first = error
+    opener = mocker.patch.object(
+        urllib.request, "urlopen", side_effect=[first, io.BytesIO(b'{"ready": true}')]
+    )
+    sleep = mocker.patch.object(time, "sleep")
+
+    payload = reader("http://example.invalid/report")
+
+    assert payload in ({"ready": True}, '{"ready": true}')
+    assert opener.call_count == 2
+    assert all(call.kwargs["timeout"] >= 10 for call in opener.call_args_list)
+    sleep.assert_called_once_with(HTTP_RETRY_DELAY_S)
+    if failure_at == "body":
+        response.__exit__.assert_called_once()
+
+
+@pytest.mark.parametrize("wrapped", [False, True])
+def test_http_read_timeout_retry_is_bounded(wrapped, mocker) -> None:
+    error = TimeoutError("server still unavailable")
+    if wrapped:
+        error = urllib.error.URLError(error)
+    opener = mocker.patch.object(urllib.request, "urlopen", side_effect=error)
+    sleep = mocker.patch.object(time, "sleep")
+
+    with pytest.raises(type(error)) as exc_info:
+        _read_text("http://example.invalid/report")
+
+    assert exc_info.value is error
+    assert opener.call_count == 2
+    sleep.assert_called_once_with(HTTP_RETRY_DELAY_S)
+
+
+@pytest.mark.parametrize(
+    "error",
+    [urllib.error.URLError("connection refused"), urllib.error.HTTPError("report", 404, "missing", {}, None)],
+)
+def test_http_reads_do_not_retry_non_timeout_errors(error, mocker) -> None:
+    opener = mocker.patch.object(urllib.request, "urlopen", side_effect=error)
+    sleep = mocker.patch.object(time, "sleep")
+
+    with pytest.raises(type(error)) as exc_info:
+        _read_text("http://example.invalid/report")
+
+    assert exc_info.value is error
+    opener.assert_called_once()
+    sleep.assert_not_called()
+
+
+def test_http_json_decode_errors_are_not_retried(mocker) -> None:
+    opener = mocker.patch.object(urllib.request, "urlopen", return_value=io.BytesIO(b"invalid JSON"))
+
+    with pytest.raises(json.JSONDecodeError):
+        _read_json("http://example.invalid/report")
+
+    opener.assert_called_once()
+
+
+def test_stop_process_waits_for_graceful_exit(mocker) -> None:
+    process = mocker.Mock()
+
+    _stop_process(process)
+
+    process.terminate.assert_called_once()
+    process.wait.assert_called_once_with(timeout=API_STOP_TIMEOUT_S)
+    process.kill.assert_not_called()
+
+
+def test_stop_process_kills_and_reaps_a_server_that_does_not_stop(mocker) -> None:
+    process = mocker.Mock()
+    process.wait.side_effect = [subprocess.TimeoutExpired("test server", API_STOP_TIMEOUT_S), 0]
+
+    _stop_process(process)
+
+    process.terminate.assert_called_once()
+    process.kill.assert_called_once()
+    assert process.wait.call_args_list == [mocker.call(timeout=API_STOP_TIMEOUT_S)] * 2
 
 
 def _provision_missing_live_data_roots(repo_root: Path) -> list[Path]:
@@ -254,7 +385,7 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
         deadline = time.monotonic() + 10
         while True:
             try:
-                if _read_json(f"http://127.0.0.1:{port}/value") == {"value": "snapshot"}:
+                if _read_json(f"http://127.0.0.1:{port}/value", timeout=HTTP_READY_TIMEOUT_S) == {"value": "snapshot"}:
                     break
             except (urllib.error.URLError, TimeoutError):
                 pass
@@ -268,8 +399,7 @@ def test_running_release_keeps_serving_archived_code_after_checkout_mutation(tmp
         )
         assert _read_json(f"http://127.0.0.1:{port}/value") == {"value": "snapshot"}
     finally:
-        process.terminate()
-        process.wait(timeout=5)
+        _stop_process(process)
 
     assert release_snapshot.verify_release(release_dir, sha).sha == sha
     assert not list((release_dir / "scripts").rglob("*.pyc"))
@@ -479,10 +609,10 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
             )
             agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
             try:
-                deadline = time.monotonic() + 15
+                deadline = time.monotonic() + API_START_TIMEOUT_S
                 while True:
                     try:
-                        agent_payload = _read_json(agent_url)
+                        agent_payload = _read_json(agent_url, timeout=HTTP_READY_TIMEOUT_S)
                         if agent_payload.get("key_paths"):
                             break
                     except (urllib.error.URLError, TimeoutError):
@@ -491,21 +621,19 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
                         pytest.fail(f"release API did not become ready:\n{log_path.read_text(encoding='utf-8')}")
                     time.sleep(0.05)
 
-                curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status", timeout=10)
+                curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/state/build-status")
                 preparation_payload = _read_json(
                     f"http://127.0.0.1:{port}/api/state/preparation/a1/sounds-letters-and-hello",
-                    timeout=10,
                 )
-                artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
+                artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html")
                 docs_text = _read_text(
                     f"http://127.0.0.1:{port}/files/docs/research/2026-06-12-atlas-synonym-sense-fix-report.md"
                 )
             finally:
-                process.terminate()
-                process.wait(timeout=5)
+                _stop_process(process)
 
         key_paths = agent_payload["key_paths"]
-        assert curriculum_payload["tracks"]["a1"]["total"] >= 0
+        assert curriculum_payload["tracks"]["a1-v1"]["total"] >= 0
         assert preparation_payload["track"] == "a1-v1"
         assert preparation_payload["publication"]["source"]["path"].startswith("site/src/content/docs/a1-v1/")
         assert "data_checkout" not in preparation_payload["authority"]
